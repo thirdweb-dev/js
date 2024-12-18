@@ -10,7 +10,8 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { IconButton } from "../../ui/components/buttons.js";
 import { Input, InputContainer } from "../../ui/components/formElements.js";
 import { Text } from "../../ui/components/text.js";
-import { CountrySelector } from "./CountrySelector.js";
+import { CountrySelector, getCountrySelector } from "./CountrySelector.js";
+import type { SupportedSmsCountry } from "./supported-sms-countries.js";
 
 export function InputSelectionUI(props: {
   onSelect: (data: string) => void;
@@ -22,8 +23,13 @@ export function InputSelectionUI(props: {
   submitButtonText: string;
   format?: "phone";
   disabled?: boolean;
+  defaultSmsCountryCode?: SupportedSmsCountry;
 }) {
-  const [countryCodeInfo, setCountryCodeInfo] = useState("US +1");
+  const [countryCodeInfo, setCountryCodeInfo] = useState(
+    props.defaultSmsCountryCode
+      ? getCountrySelector(props.defaultSmsCountryCode)
+      : "US +1",
+  );
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);

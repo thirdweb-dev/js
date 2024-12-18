@@ -77,6 +77,20 @@ export function LoginAndOnboardingPage(props: {
         </header>
       </div>
 
+      <LoginAndOnboardingPageContent
+        account={props.account}
+        redirectPath={props.redirectPath}
+      />
+    </div>
+  );
+}
+
+export function LoginAndOnboardingPageContent(props: {
+  account: Account | undefined;
+  redirectPath: string;
+}) {
+  return (
+    <div className="relative flex grow flex-col">
       <main className="container z-10 flex grow flex-col justify-center gap-6 py-12">
         <ClientOnly
           ssr={

@@ -2,7 +2,7 @@ name: Auto Author Assign
 
 on:
   pull_request:
-    types: [ opened, reopened ]
+    types: [opened, reopened]
 
 permissions:
   pull-requests: write
@@ -10,5 +10,9 @@ permissions:
 jobs:
   assign-author:
     runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.author_association == 'MEMBER' ||
+      github.event.pull_request.author_association == 'OWNER' ||
+      github.event.pull_request.author_association == 'COLLABORATOR'
     steps:
       - uses: toshimaru/auto-author-assign@v2.1.1

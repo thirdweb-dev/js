@@ -7,6 +7,7 @@ import type { ExecuteConfig } from "./types";
 export type ContextFilters = {
   chainIds?: string[];
   contractAddresses?: string[];
+  walletAddresses?: string[];
 };
 
 export async function promptNebula(params: {

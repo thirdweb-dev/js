@@ -14,7 +14,7 @@ export function ProfileUI(props: {
 
   return (
     <div className="container pt-8 pb-20">
-      <ProfileHeader profileAddress={profileAddress} />
+      <ProfileHeader profileAddress={profileAddress} ensName={ensName} />
       <div className="h-8" />
 
       <div>

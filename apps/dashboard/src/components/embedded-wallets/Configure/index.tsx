@@ -422,6 +422,10 @@ function AuthEndpointFields(props: {
     name: "customAuthEndpoint.customHeaders",
   });
 
+  const expandCustomAuthEndpointField =
+    form.watch("customAuthEndpoint")?.authEndpoint !== undefined &&
+    canEditAdvancedFeatures;
+
   return (
     <div>
       <SwitchContainer
@@ -445,9 +449,7 @@ function AuthEndpointFields(props: {
       >
         <GatedSwitch
           trackingLabel="customAuthEndpoint"
-          checked={
-            !!form.watch("customAuthEndpoint") && canEditAdvancedFeatures
-          }
+          checked={expandCustomAuthEndpointField}
           upgradeRequired={!canEditAdvancedFeatures}
           onCheckedChange={(checked) => {
             form.setValue(
@@ -464,7 +466,7 @@ function AuthEndpointFields(props: {
       </SwitchContainer>
 
       <AdvancedConfigurationContainer
-        show={canEditAdvancedFeatures && !!form.watch("customAuthEndpoint")}
+        show={expandCustomAuthEndpointField}
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
       >
         <FormField
@@ -561,7 +563,10 @@ function NativeAppsFieldset(props: {
           <FormItem>
             <FormLabel>Allowed redirect URIs</FormLabel>
             <FormControl>
-              <Textarea {...field} placeholder="appName://" />
+              <Textarea
+                {...field}
+                placeholder="appName://, localhost:3000, https://example.com"
+              />
             </FormControl>
             <FormDescription>
               Enter redirect URIs separated by commas or new lines. This is

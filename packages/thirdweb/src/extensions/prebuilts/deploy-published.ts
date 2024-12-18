@@ -150,28 +150,35 @@ export async function deployContractfromDeployMetadata(
     salt,
   } = options;
 
-  const processedImplParams: Record<string, string | string[]> = {};
-  for (const key in implementationConstructorParams) {
-    processedImplParams[key] = await processRefDeployments({
-      client,
-      account,
-      chain,
-      paramValue: implementationConstructorParams[key] as
-        | string
-        | ImplementationConstructorParam,
-    });
+  let processedImplParams: Record<string, string | string[]> | undefined;
+  let processedInitializeParams: Record<string, string | string[]> | undefined;
+
+  if (implementationConstructorParams) {
+    processedImplParams = {};
+    for (const key in implementationConstructorParams) {
+      processedImplParams[key] = await processRefDeployments({
+        client,
+        account,
+        chain,
+        paramValue: implementationConstructorParams[key] as
+          | string
+          | ImplementationConstructorParam,
+      });
+    }
   }
 
-  const processedInitializeParams: Record<string, string | string[]> = {};
-  for (const key in initializeParams) {
-    processedInitializeParams[key] = await processRefDeployments({
-      client,
-      account,
-      chain,
-      paramValue: initializeParams[key] as
-        | string
-        | ImplementationConstructorParam,
-    });
+  if (initializeParams) {
+    processedInitializeParams = {};
+    for (const key in initializeParams) {
+      processedInitializeParams[key] = await processRefDeployments({
+        client,
+        account,
+        chain,
+        paramValue: initializeParams[key] as
+          | string
+          | ImplementationConstructorParam,
+      });
+    }
   }
 
   switch (deployMetadata?.deployType) {

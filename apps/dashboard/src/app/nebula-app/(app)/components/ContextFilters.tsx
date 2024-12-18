@@ -1,6 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -42,14 +43,46 @@ export default function ContextFiltersButton(props: {
     mutationFn: props.updateContextFilters,
   });
 
+  const chainIds = props.contextFilters?.chainIds;
+  const contractAddresses = props.contextFilters?.contractAddresses;
+  const walletAddresses = props.contextFilters?.walletAddresses;
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" className="gap-2">
-          <SlidersHorizontalIcon className="size-4" />
-          {props.contextFilters
-            ? "Edit Context Filters"
-            : "Set context filters"}
+        <Button size="sm" variant="outline" className="max-w-full gap-2">
+          <SlidersHorizontalIcon className="size-3.5 shrink-0 text-muted-foreground" />
+          Context Filters
+          <div className="flex gap-1 overflow-hidden">
+            {chainIds && chainIds.length > 0 && (
+              <Badge className="gap-1 truncate">
+                Chain
+                <span className="max-sm:hidden">{chainIds.join(", ")}</span>
+              </Badge>
+            )}
+
+            {contractAddresses && contractAddresses.length > 0 && (
+              <Badge className="gap-1 truncate">
+                Contract
+                <span className="max-sm:hidden">
+                  {contractAddresses
+                    .map((add) => `${add.trim().slice(0, 6)}..`)
+                    .join(", ")}
+                </span>
+              </Badge>
+            )}
+
+            {walletAddresses && walletAddresses.length > 0 && (
+              <Badge className="gap-1 truncate">
+                Wallet
+                <span className="max-sm:hidden">
+                  {walletAddresses
+                    .map((add) => `${add.trim().slice(0, 6)}..`)
+                    .join(", ")}
+                </span>
+              </Badge>
+            )}
+          </div>
         </Button>
       </DialogTrigger>
       <DialogContent className="p-0">
@@ -74,6 +107,18 @@ export default function ContextFiltersButton(props: {
   );
 }
 
+const commaSeparateListOfAddresses = z.string().refine(
+  (s) => {
+    if (s.trim() === "") {
+      return true;
+    }
+    return s.split(",").every((s) => isAddress(s.trim()));
+  },
+  {
+    message: "Must be a comma-separated list of valid addresses",
+  },
+);
+
 const formSchema = z.object({
   chainIds: z.string().refine(
     (s) => {
@@ -89,18 +134,8 @@ const formSchema = z.object({
       message: "Chain IDs must be a comma-separated list of integers",
     },
   ),
-  contractAddresses: z.string().refine(
-    (s) => {
-      if (s.trim() === "") {
-        return true;
-      }
-      return s.trim().split(",").every(isAddress);
-    },
-    {
-      message:
-        "Contract addresses must be a comma-separated list of valid addresses",
-    },
-  ),
+  contractAddresses: commaSeparateListOfAddresses,
+  walletAddresses: commaSeparateListOfAddresses,
 });
 
 function ContextFilterDialogContent(props: {
@@ -117,25 +152,31 @@ function ContextFilterDialogContent(props: {
       contractAddresses: props.contextFilters?.contractAddresses
         ? props.contextFilters.contractAddresses.join(",")
         : "",
+      walletAddresses: props.contextFilters?.walletAddresses
+        ? props.contextFilters.walletAddresses.join(",")
+        : "",
     },
     reValidateMode: "onChange",
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { chainIds, contractAddresses } = values;
-    const chainIdsArray = chainIds.trim().split(",").filter(Boolean);
+    const { chainIds, contractAddresses, walletAddresses } = values;
+
+    const chainIdsArray = chainIds.split(",").filter((id) => id.trim());
+
     const contractAddressesArray = contractAddresses
-      .trim()
       .split(",")
-      .filter(Boolean);
-    if (chainIdsArray.length === 0 && contractAddressesArray.length === 0) {
-      props.updateFilters(undefined);
-    } else {
-      props.updateFilters({
-        chainIds: chainIdsArray,
-        contractAddresses: contractAddressesArray,
-      });
-    }
+      .filter((v) => v.trim());
+
+    const walletAddressesArray = walletAddresses
+      .split(",")
+      .filter((v) => v.trim());
+
+    props.updateFilters({
+      chainIds: chainIdsArray,
+      contractAddresses: contractAddressesArray,
+      walletAddresses: walletAddressesArray,
+    });
   }
 
   return (
@@ -190,6 +231,27 @@ function ContextFilterDialogContent(props: {
                 </FormControl>
                 <FormDescription>
                   Comma separated list of contract addresses
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="walletAddresses"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Wallet Addresses</FormLabel>
+                <FormControl>
+                  <AutoResizeTextarea
+                    {...field}
+                    placeholder="0x123..., 0x456..."
+                    className="min-h-[32px] resize-none"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Comma separated list of wallet addresses
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -1,5 +1,19 @@
 # @thirdweb-dev/service-utils
 
+## 0.5.1
+
+### Patch Changes
+
+- [#5728](https://github.com/thirdweb-dev/js/pull/5728) [`a077023`](https://github.com/thirdweb-dev/js/commit/a0770238d45f831c50a7c6b7bafa2e45a749d49f) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing `null` to service scope, do not validate domains/bundleids when using secretKey auth method
+
+- [#5724](https://github.com/thirdweb-dev/js/pull/5724) [`90a16da`](https://github.com/thirdweb-dev/js/commit/90a16da48ef2d0f1f31fc4753f42b347d782da2c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Accept Request in authorizeNode
+
+## 0.5.0
+
+### Minor Changes
+
+- [#5708](https://github.com/thirdweb-dev/js/pull/5708) [`3ec808d`](https://github.com/thirdweb-dev/js/commit/3ec808dc782489ecf8cde136b36106793babe7ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update /use endpoint and types to v2
+
 ## 0.4.52
 
 ### Patch Changes

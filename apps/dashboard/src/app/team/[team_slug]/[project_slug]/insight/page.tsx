@@ -98,26 +98,24 @@ function BlueprintCard(props: {
   description: string;
 }) {
   return (
-    <div className="relative rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted/70">
-      <div className="flex items-center gap-3">
-        <div className="rounded-xl border p-1">
-          <div className="rounded-lg border bg-muted p-1">
-            <BoxIcon className="size-5 text-muted-foreground" />
-          </div>
+    <div className="relative flex items-center gap-3 rounded-lg border border-border bg-muted/50 px-4 py-5 hover:bg-muted/70">
+      <div className="shrink-0 rounded-xl border p-1">
+        <div className="rounded-lg border bg-muted p-1">
+          <BoxIcon className="size-5 text-muted-foreground" />
         </div>
+      </div>
 
-        <div>
-          <Link
-            className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
-            href={props.href}
-          >
-            <h2 className="font-medium text-base">{props.title}</h2>
-          </Link>
+      <div className="flex flex-col gap-1">
+        <Link
+          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
+          href={props.href}
+        >
+          <h2 className="font-medium text-base">{props.title}</h2>
+        </Link>
 
-          <p className="line-clamp-1 text-muted-foreground text-sm">
-            {props.description}
-          </p>
-        </div>
+        <p className="line-clamp-1 text-muted-foreground text-sm">
+          {props.description}
+        </p>
       </div>
     </div>
   );

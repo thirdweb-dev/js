@@ -17,6 +17,8 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
 import etherlinkBanner from "./temp-assets/etherlinkBanner.png";
 import etherlinkCTA from "./temp-assets/etherlinkCTA.png";
+import funkiBanner from "./temp-assets/funkiBanner.jpg";
+import funkiCTA from "./temp-assets/funkiCTA.jpg";
 import hashfireBanner from "./temp-assets/hashfireBanner.png";
 import hashfireCTA from "./temp-assets/hashfireCTA.png";
 import laosBanner from "./temp-assets/laosBanner.jpg";
@@ -26,8 +28,9 @@ import liskCTA from "./temp-assets/liskCTA.png";
 
 import creatorBanner from "./temp-assets/creatorBanner.png";
 import creatorCTA from "./temp-assets/creatorCTA.png";
-import lumiaCTA from "./temp-assets/lumia-cta.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
+import somniaBanner from "./temp-assets/somniaBanner.png";
+
 import mantleBanner from "./temp-assets/mantle.png";
 import metalBanner from "./temp-assets/metalBanner.png";
 import metalCTA from "./temp-assets/metalCTA.png";
@@ -213,6 +216,11 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Superseed
+  5330: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
   // vanar
   2040: {
     headerImgUrl: vanarBanner.src,
@@ -229,11 +237,27 @@ const chainMetaRecord = {
   994873017: {
     headerImgUrl: lumiaBanner.src,
     about:
-      "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
+      "Lumia is the only full-cycle RWA chain, merging zkEVM technology with a robust infrastructure purpose-built for institutional and retail asset tokenization. Featuring advanced compliance tools such as on-chain KYC/AML via PolygonID, OFAC sanctions screening at the sequencer level, and AI-powered threat detection, Lumia Chain ensures security and regulatory adherence. Its unique volition architecture enables users to toggle between cost-efficient validium mode and highly secure rollup mode, providing flexibility for diverse needs. Lumia goes beyond tokenization by seamlessly integrating RWAs into DeFi. RWAs minted on Lumia Chain are instantly composable with native DeFi protocols like lending, AMMs, and perpetual markets, creating a tailored environment for RWA owners. With ERC-20 compatibility, native interoperability, and integration with major DeFi aggregators like 1inch and 0x, Lumia ensures that tokenized RWAs are not only secure and scalable but also accessible across the broader DeFi ecosystem.",
     cta: {
-      backgroundImageUrl: lumiaCTA.src,
-      title: "",
-      buttonLink: "https://docs.lumia.org/",
+      backgroundImageUrl: lumiaBanner.src,
+      title:
+        "Build Smarter. Scale Faster. Lumia - The Only Full-Cycle RWA Chain",
+      buttonLink:
+        "https://docs.lumia.org/build/smartcontracts/deployment#deploy-contract-on-shiden",
+      buttonText: "Learn more",
+    },
+  },
+  // lumia Testnet
+  1952959480: {
+    headerImgUrl: lumiaBanner.src,
+    about:
+      "Lumia is the only full-cycle RWA chain, merging zkEVM technology with a robust infrastructure purpose-built for institutional and retail asset tokenization. Featuring advanced compliance tools such as on-chain KYC/AML via PolygonID, OFAC sanctions screening at the sequencer level, and AI-powered threat detection, Lumia Chain ensures security and regulatory adherence. Its unique volition architecture enables users to toggle between cost-efficient validium mode and highly secure rollup mode, providing flexibility for diverse needs. Lumia goes beyond tokenization by seamlessly integrating RWAs into DeFi. RWAs minted on Lumia Chain are instantly composable with native DeFi protocols like lending, AMMs, and perpetual markets, creating a tailored environment for RWA owners. With ERC-20 compatibility, native interoperability, and integration with major DeFi aggregators like 1inch and 0x, Lumia ensures that tokenized RWAs are not only secure and scalable but also accessible across the broader DeFi ecosystem.",
+    cta: {
+      backgroundImageUrl: lumiaBanner.src,
+      title:
+        "Build Smarter. Scale Faster. Lumia - The Only Full-Cycle RWA Chain",
+      buttonLink:
+        "https://docs.lumia.org/build/smartcontracts/deployment#deploy-contract-on-shiden",
       buttonText: "Learn more",
     },
   },
@@ -358,6 +382,30 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Funki Mainnet
+  33979: {
+    headerImgUrl: funkiBanner.src,
+    about:
+      "Funki is a fun-first L2 using OP stack, focused on onchain gaming and social experiments.\nFunki is the playground where innovative ideas come to life. We’re dedicated to building an ecosystem that upholds bold, persistent experiments.",
+    cta: {
+      backgroundImageUrl: funkiCTA.src,
+      title: "Enter the Rabbit hole",
+      buttonLink: "https://docs.funkichain.com/docs",
+      buttonText: "Learn More",
+    },
+  },
+  //Funki Testnet
+  3397901: {
+    headerImgUrl: funkiBanner.src,
+    about:
+      "Funki is a fun-first L2 using OP stack, focused on onchain gaming and social experiments.\nFunki is the playground where innovative ideas come to life. We’re dedicated to building an ecosystem that upholds bold, persistent experiments.",
+    cta: {
+      backgroundImageUrl: funkiCTA.src,
+      title: "Enter the Rabbit hole",
+      buttonLink: "https://docs.funkichain.com/docs",
+      buttonText: "Learn More",
+    },
+  },
   //Gemuchain
   1903648807: {
     headerImgUrl: thirdwebBanner.src,
@@ -455,6 +503,18 @@ const chainMetaRecord = {
       title: "Participate on the Testnet Now!",
       buttonLink: "https://miles.plumenetwork.xyz/",
       buttonText: "Learn more",
+    },
+  },
+  //Somnia Devnet
+  50311: {
+    headerImgUrl: somniaBanner.src,
+    about:
+      "We are committed to building technology to make fully on-chain, real-time mass-scale applications possible and practical. We believe this is essential for creating a composable, open internet. We believe in a collection of applications, each with distinct, interconnected experiences, much like countries within a global community, sharing utilities that enhance mutual growth. \nCentral to our vision is the principle of composability—the ability for builders to build upon each other’s work, creating a culture of collaboration in which the collective output surpasses the sum of its parts. We will empower builders with the freedom to build sustainable models of engagement and ownership. This includes safeguarding the rights to digital assets and creating an environment where platform constraints do not stifle innovation.",
+    cta: {
+      backgroundImageUrl: somniaBanner.src,
+      title: "Somnia Devnet",
+      buttonLink: "https://codex.somnia.network",
+      buttonText: "Learn More",
     },
   },
   //zkCandy

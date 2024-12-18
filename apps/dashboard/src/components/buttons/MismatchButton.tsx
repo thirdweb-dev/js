@@ -59,6 +59,8 @@ const GAS_FREE_CHAINS = [
   4457845, // zero testnet
   978658, // treasure topaz
   300, // zksync sepolia
+  7225878, // Saakuru Mainnet
+  247253, // Saakuru Testnet
 ];
 
 function useNetworkMismatchAdapter(desiredChainId: number) {
@@ -127,6 +129,7 @@ export const MismatchButton = forwardRef<
       </Button>
     );
   }
+
   const notEnoughBalance =
     (evmBalance.data?.value || 0n) === 0n && !GAS_FREE_CHAINS.includes(chainId);
 

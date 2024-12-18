@@ -65,7 +65,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
                   <AccountBlobbie className="size-14 rounded-full" />
                 }
                 loadingComponent={<Skeleton className="size-14 rounded-full" />}
-                className="size-14 rounded-full"
+                className="size-14 rounded-full object-cover"
               />
             </Link>
 

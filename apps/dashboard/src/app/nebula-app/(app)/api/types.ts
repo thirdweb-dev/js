@@ -19,6 +19,12 @@ type ClientConfig = {
 
 export type ExecuteConfig = EngineConfig | SessionKeyConfig | ClientConfig;
 
+type SessionContextFilter = {
+  chain_ids: string[] | null;
+  contract_addresses: string[] | null;
+  wallet_addresses: string[] | null;
+};
+
 export type SessionInfo = {
   id: string;
   account_id: string;
@@ -37,10 +43,7 @@ export type SessionInfo = {
   archived_at: string | null;
   title: string | null;
   is_public: boolean | null;
-  context_filter: {
-    chain_ids: string[];
-    contract_addresses: string[];
-  } | null;
+  context_filter: SessionContextFilter | null;
   // memory
   // action: array<object> | null; <-- type of this is not available on https://nebula-api.thirdweb-dev.com/docs#/default/get_session_session__session_id__get
 };
@@ -50,10 +53,7 @@ export type UpdatedSessionInfo = {
   modal_name: string;
   account_id: string;
   execute_config: ExecuteConfig | null;
-  context_filter: {
-    chain_ids: string[];
-    contract_addresses: string[];
-  } | null;
+  context_filter: SessionContextFilter | null;
 };
 
 export type DeletedSessionInfo = {

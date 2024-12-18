@@ -31,16 +31,8 @@ jobs:
           # Do not use the GITHUB_TOKEN by default
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
-      - name: Setup bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: 1.0.35
-
       - name: Install
         uses: ./.github/composite-actions/install
-
-      - name: Build
-        run: pnpm build:release
 
       - name: Create release Pull Request or publish to NPM
         id: changesets

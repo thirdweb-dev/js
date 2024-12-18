@@ -1,5 +1,56 @@
 # thirdweb
 
+## 5.79.0
+
+### Minor Changes
+
+- [#5691](https://github.com/thirdweb-dev/js/pull/5691) [`5be197b`](https://github.com/thirdweb-dev/js/commit/5be197bac97393edf39bf7287b5fa258cf83ec06) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add headless components for Wallets: WalletProvider, WalletIcon and WalletName
+
+### Patch Changes
+
+- [#5746](https://github.com/thirdweb-dev/js/pull/5746) [`e42ffc6`](https://github.com/thirdweb-dev/js/commit/e42ffc6a931a8d80492a091d79e2d9b38e4ba1d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix migration to enclave in react native
+
+## 5.78.0
+
+### Minor Changes
+
+- [#5709](https://github.com/thirdweb-dev/js/pull/5709) [`cd55ada`](https://github.com/thirdweb-dev/js/commit/cd55ada5b2c1924911a0b3c95c07926062447d54) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds a defaultSmsCountryCode configuration option to In-App and Ecosystem Wallets
+
+  ```ts
+  createWallet("inApp", {
+      auth: {
+        options: [
+          "email",
+          "phone",
+        ],
+        mode: "redirect",
+        defaultSmsCountryCode: "IN", // Default country code for SMS
+      },
+    }),
+  ```
+
+- [#5604](https://github.com/thirdweb-dev/js/pull/5604) [`03b6d0d`](https://github.com/thirdweb-dev/js/commit/03b6d0d516c7fb809ad66f1021281a74b48356e1) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Support the ability to unlink accounts for in app wallet with more than 1 linked account.
+
+  It's supported out of the box in the connect UI.
+
+  For typescript users, the following code snippet is a simple example of how it'd work.
+
+  ```typescript
+  import { inAppWallet } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+  wallet.connect({ strategy: "google" });
+
+  const profiles = await getProfiles({
+    client,
+  });
+
+  const updatedProfiles = await unlinkProfile({
+    client,
+    profileToUnlink: profiles[1], // assuming there is more than 1 profile linked to the user.
+  });
+  ```
+
 ## 5.77.0
 
 ### Minor Changes

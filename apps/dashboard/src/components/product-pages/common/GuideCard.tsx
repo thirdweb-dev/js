@@ -1,5 +1,4 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import NextImage from "next/image";
 import {
   Heading,
@@ -14,7 +13,6 @@ interface GuideCardProps
   title: string;
   description?: string;
   link: string;
-  index: number;
 }
 
 export const GuideCard: React.FC<GuideCardProps> = ({
@@ -22,7 +20,6 @@ export const GuideCard: React.FC<GuideCardProps> = ({
   title,
   description,
   link,
-  index,
   category,
   label,
   trackingProps,
@@ -37,10 +34,6 @@ export const GuideCard: React.FC<GuideCardProps> = ({
       textDecor="none !important"
     >
       <Flex
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0, transition: { delay: index / 20 } }}
-        exit={{ opacity: 0, y: -10, transition: { delay: index / 20 } }}
-        as={motion.div}
         willChange="opacity"
         h="full"
         direction="column"

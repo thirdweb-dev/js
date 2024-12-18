@@ -37,7 +37,7 @@ export default function Page() {
               complete control over your dApp&apos;s design.
             </>
           }
-          docsLink="https://portal.thirdweb.com/react/v5/connecting-wallets/ui-components"
+          docsLink="https://portal.thirdweb.com/react/v5/components/account"
           heroLink="/headless-ui-header.png"
         />
 

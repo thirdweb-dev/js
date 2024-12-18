@@ -1,0 +1,58 @@
+{
+  "name": "@thirdweb-dev/wagmi-adapter",
+  "version": "0.1.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "type": "module",
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/exports/thirdweb.d.ts",
+      "import": "./dist/esm/exports/thirdweb.js",
+      "default": "./dist/cjs/exports/thirdweb.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "devDependencies": {
+    "@wagmi/core": "2.16.0",
+    "rimraf": "6.0.1",
+    "thirdweb": "workspace:*"
+  },
+  "peerDependencies": {
+    "@wagmi/core": "^2.16.0",
+    "thirdweb": "^5",
+    "typescript": ">=5.0.4"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src",
+    "fix": "biome check ./src --fix",
+    "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
+    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "clean": "rimraf dist"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

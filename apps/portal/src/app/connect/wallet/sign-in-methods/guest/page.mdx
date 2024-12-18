@@ -20,7 +20,7 @@ export const metadata = createMetadata({
 
 # Guest Mode
 
-Sometimes users want to get started using your app without signing in. You can now give users an in-memory "guest account" that can then be converted into a standard account by linking another auth method.
+Sometimes users want to get started using your app without signing in. You can now give users an in-memory "guest account" that can then be converted into a standard account by linking another auth method. An example is if you want to wait til a user tries to make a transaction before forcing them to onboard. A guest mode account is not persisted durably and only exists in memory until linked to an Auth method.
 
 ## Logging in with Guest Mode
 

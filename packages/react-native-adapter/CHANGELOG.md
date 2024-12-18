@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.5.3
+
+### Patch Changes
+
+- [#5746](https://github.com/thirdweb-dev/js/pull/5746) [`e42ffc6`](https://github.com/thirdweb-dev/js/commit/e42ffc6a931a8d80492a091d79e2d9b38e4ba1d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Downgrade aws libraries
+
 ## 1.5.2
 
 ### Patch Changes

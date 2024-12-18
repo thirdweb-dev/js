@@ -4,11 +4,7 @@ import type {
   Response,
 } from "@cloudflare/workers-types";
 import type { Request } from "@cloudflare/workers-types";
-import type {
-  AccountMetadata,
-  ApiKeyMetadata,
-  CoreServiceConfig,
-} from "../core/api.js";
+import type { CoreServiceConfig, TeamAndProjectResponse } from "../core/api.js";
 import { authorize } from "../core/authorize/index.js";
 import type { AuthorizationInput } from "../core/authorize/index.js";
 import type { AuthorizationResult } from "../core/authorize/types.js";
@@ -17,7 +13,6 @@ import type { CoreAuthInput } from "../core/types.js";
 export * from "./usage.js";
 export * from "../core/services.js";
 export * from "../core/rateLimit/index.js";
-export * from "../core/usageLimit/index.js";
 
 export type WorkerServiceConfig = CoreServiceConfig & {
   kvStore: KVNamespace;
@@ -57,13 +52,13 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig, {
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
-    put: (clientId: string, apiKeyMeta: ApiKeyMetadata | AccountMetadata) =>
+    put: (clientId: string, data: TeamAndProjectResponse) =>
       serviceConfig.ctx.waitUntil(
         serviceConfig.kvStore.put(
           clientId,
           JSON.stringify({
             updatedAt: Date.now(),
-            apiKeyMeta,
+            data,
           }),
           {
             expirationTtl:
@@ -134,14 +129,6 @@ export async function extractAuthorizationData(
   if (secretKey) {
     // hash the secret key
     secretKeyHash = await hashSecretKey(secretKey);
-    // derive the client id from the secret key hash
-    const derivedClientId = deriveClientIdFromSecretKeyHash(secretKeyHash);
-    // if we already have a client id passed in we need to make sure they match
-    if (clientId && clientId !== derivedClientId) {
-      throw new Error("KEY_CONFLICT");
-    }
-    // otherwise set the client id to the derived client id (client id based off of secret key)
-    clientId = derivedClientId;
   }
 
   let jwt: string | null = null;
@@ -173,10 +160,6 @@ export async function hashSecretKey(secretKey: string) {
   return bufferToHex(
     await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secretKey)),
   );
-}
-
-export function deriveClientIdFromSecretKeyHash(secretKeyHash: string) {
-  return secretKeyHash.slice(0, 32);
 }
 
 function bufferToHex(buffer: ArrayBuffer) {

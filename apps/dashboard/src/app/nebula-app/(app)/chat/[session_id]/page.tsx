@@ -44,6 +44,7 @@ export default async function Page(props: {
       session={session}
       type="new-chat"
       account={account}
+      initialPrompt={undefined}
     />
   );
 }

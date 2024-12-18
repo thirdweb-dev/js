@@ -1,0 +1,50 @@
+name: TypeDoc
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "typedoc"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: "Generate TypeDoc"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install
+        uses: ./.github/composite-actions/install
+
+      - name: Run TypeDoc
+        run: pnpm typedoc
+
+      - name: Update Gist
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GIST_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('./packages/thirdweb/typedoc/parsed.json', 'utf8');
+            const gistId = '678fe1f331a01270bb002fee660f285d';
+            
+            await github.rest.gists.update({
+              gist_id: gistId,
+              files: {
+                'data.json': {
+                  content: content
+                }
+              }
+            });
+          
+            console.log(`Permalink: https://gist.githubusercontent.com/raw/${gistId}/data.json`);

@@ -4,7 +4,6 @@ import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getAbsoluteUrl } from "../../../../../../lib/vercel-utils";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionPage } from "./AccountAbstractionPage";
 
@@ -14,10 +13,7 @@ export default async function Page(props: {
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const [account, team, project] = await Promise.all([
-    getValidAccount(
-      `/${team_slug}/${project_slug}/connect/account-abstraction`,
-    ),
+  const [team, project] = await Promise.all([
     getTeamBySlug(team_slug),
     getProject(team_slug, project_slug),
   ]);
@@ -45,7 +41,6 @@ export default async function Page(props: {
         projectKey={project.publishableKey}
         apiKeyServices={apiKey.services || []}
         tab={(await props.searchParams).tab}
-        twAccount={account}
       />
     </ChakraProviderSetup>
   );

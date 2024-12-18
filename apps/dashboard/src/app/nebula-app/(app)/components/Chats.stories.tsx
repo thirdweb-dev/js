@@ -157,6 +157,8 @@ function Story() {
             },
           ]}
           client={getThirdwebClient()}
+          enableAutoScroll={true}
+          setEnableAutoScroll={() => {}}
         />
       </BadgeContainer>
 
@@ -167,6 +169,8 @@ function Story() {
           isChatStreaming={false}
           sessionId="xxxxx"
           twAccount={accountStub()}
+          enableAutoScroll={true}
+          setEnableAutoScroll={() => {}}
           messages={[
             {
               text: randomLorem(10),
@@ -182,6 +186,8 @@ function Story() {
 
       <BadgeContainer label="User + Assistant responses">
         <Chats
+          enableAutoScroll={true}
+          setEnableAutoScroll={() => {}}
           client={getThirdwebClient()}
           authToken="xxxxx"
           isChatStreaming={false}

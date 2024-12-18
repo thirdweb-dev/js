@@ -6,8 +6,15 @@ import {
 import { loginRedirect } from "../../login/loginRedirect";
 import { ChatPageContent } from "./components/ChatPageContent";
 
-export default async function Page() {
-  const authToken = await getAuthToken();
+export default async function Page(props: {
+  searchParams: Promise<{
+    prompt?: string;
+  }>;
+}) {
+  const [searchParams, authToken] = await Promise.all([
+    props.searchParams,
+    getAuthToken(),
+  ]);
 
   if (!authToken) {
     loginRedirect();
@@ -27,6 +34,7 @@ export default async function Page() {
       session={undefined}
       type="landing"
       account={account}
+      initialPrompt={searchParams.prompt}
     />
   );
 }

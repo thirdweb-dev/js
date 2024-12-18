@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { getThirdwebDomains } from "../../../src/utils/domains.js";
+import type { AsyncStorage } from "../../../src/utils/storage/AsyncStorage.js";
 
 export const handlers = [
   http.post(
@@ -7,11 +8,11 @@ export const handlers = [
     async ({ request }) => {
       console.log("MSW handler hit for IPFS upload");
       const formData = await request.formData();
-      const files = formData.getAll('file');
+      const files = formData.getAll("file");
       const fileNames = files.map((file: any) => file.name);
-      
+
       const mockIpfsHash = "QmTest1234567890TestHash";
-      
+
       if (fileNames.length === 1 && fileNames[0] === "file.txt") {
         return HttpResponse.json({ IpfsHash: mockIpfsHash });
       } else {
@@ -20,7 +21,7 @@ export const handlers = [
           files: fileNames.reduce((acc, fileName) => {
             acc[fileName] = { cid: mockIpfsHash };
             return acc;
-          }, {})
+          }, {}),
         });
       }
     },
@@ -40,3 +41,19 @@ export const handlers = [
     });
   }),
 ];
+
+export class MockStorage implements AsyncStorage {
+  private storage: Map<string, string> = new Map();
+
+  getItem(key: string): Promise<string | null> {
+    return Promise.resolve(this.storage.get(key) ?? null);
+  }
+  setItem(key: string, value: string): Promise<void> {
+    this.storage.set(key, value);
+    return Promise.resolve();
+  }
+  removeItem(key: string): Promise<void> {
+    this.storage.delete(key);
+    return Promise.resolve();
+  }
+}

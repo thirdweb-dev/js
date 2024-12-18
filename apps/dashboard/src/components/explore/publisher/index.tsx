@@ -30,7 +30,7 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
         <AccountAvatar
           fallbackComponent={<AccountBlobbie className="size-5 rounded-full" />}
           loadingComponent={<Skeleton className="size-5 rounded-full" />}
-          className="size-5 rounded-full"
+          className="size-5 rounded-full object-cover"
         />
 
         <AccountName

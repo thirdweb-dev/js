@@ -3,7 +3,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Box, Flex, List, SimpleGrid, Tag } from "@chakra-ui/react";
 import { getAllRoleMembers } from "contract-ui/hooks/permissions";
-import { AnimatePresence, motion } from "framer-motion";
 import { useClipboard } from "hooks/useClipboard";
 import { CopyIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -100,11 +99,11 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
                 </Flex>
               </div>
             )}
-            <AnimatePresence initial={false}>
+            <div>
               {members.map((e) => (
                 <PermissionsItem key={e.member} data={e} />
               ))}
-            </AnimatePresence>
+            </div>
           </List>
         </Card>
       )}
@@ -124,31 +123,7 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
       <SimpleGrid
         columns={9}
         gap={2}
-        as={motion.li}
-        initial={{
-          y: -30,
-          opacity: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          height: 0,
-        }}
-        animate={{
-          y: 0,
-          opacity: 1,
-          height: "auto",
-          paddingTop: "var(--chakra-space-3)",
-          paddingBottom: "var(--chakra-space-3)",
-          transition: { duration: 0.15 },
-        }}
-        exit={{
-          y: 30,
-          opacity: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          height: 0,
-          transition: { duration: 0.3 },
-        }}
-        willChange="opacity, height, paddingTop, paddingBottom"
+        as="li"
         borderBottomWidth="1px"
         borderColor="borderColor"
         padding={4}

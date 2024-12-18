@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { validApiKeyMeta } from "../../mocks.js";
+import {
+  validProjectResponse,
+  validTeamAndProjectResponse,
+} from "../../mocks.js";
 import { type ClientAuthorizationPayload, authorizeClient } from "./client.js";
 
 describe("authorizeClient", () => {
@@ -10,10 +13,13 @@ describe("authorizeClient", () => {
   };
 
   it("should authorize client with valid secret key", () => {
-    // biome-ignore lint/suspicious/noExplicitAny: test only
-    const result = authorizeClient(validAuthOptions, validApiKeyMeta) as any;
+    const result = authorizeClient(
+      validAuthOptions,
+      validTeamAndProjectResponse,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
+    ) as any;
     expect(result.authorized).toBe(true);
-    expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
+    expect(result.project).toEqual(validProjectResponse);
   });
 
   it("should authorize client with matching wildcard domain", () => {
@@ -25,11 +31,11 @@ describe("authorizeClient", () => {
 
     const result = authorizeClient(
       authOptionsWithWildcardDomain,
-      validApiKeyMeta,
+      validTeamAndProjectResponse,
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
-    expect(result.apiKeyMeta).toEqual(validApiKeyMeta);
+    expect(result.project).toEqual(validProjectResponse);
   });
 
   it("should authorize client with any domain w/o origin check", () => {
@@ -39,18 +45,21 @@ describe("authorizeClient", () => {
       origin: null,
     };
 
-    const validApiKeyMetaAnyDomain = {
-      ...validApiKeyMeta,
-      domains: ["*"],
+    const validProjectResponseAnyDomain = {
+      ...validTeamAndProjectResponse,
+      project: {
+        ...validProjectResponse,
+        domains: ["*"],
+      },
     };
 
     const result = authorizeClient(
       authOptionsWithAnyDomain,
-      validApiKeyMetaAnyDomain,
+      validProjectResponseAnyDomain,
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(true);
-    expect(result.apiKeyMeta).toEqual(validApiKeyMetaAnyDomain);
+    expect(result.project).toEqual(validProjectResponseAnyDomain.project);
   });
 
   it("should not authorize client with non-matching bundle id", () => {
@@ -62,7 +71,7 @@ describe("authorizeClient", () => {
 
     const result = authorizeClient(
       authOptionsWithBundleId,
-      validApiKeyMeta,
+      validTeamAndProjectResponse,
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
@@ -70,26 +79,6 @@ describe("authorizeClient", () => {
       "Invalid request: Unauthorized Bundle ID: com.foo.bar. You can view the restrictions on this API key at https://thirdweb.com/create-api-key",
     );
     expect(result.errorCode).toBe("BUNDLE_UNAUTHORIZED");
-    expect(result.status).toBe(401);
-  });
-
-  it("should not authorize client with invalid secret key", () => {
-    const authOptionsWithInvalidSecret: ClientAuthorizationPayload = {
-      secretKeyHash: "invalid-secret-hash",
-      bundleId: null,
-      origin: null,
-    };
-
-    const result = authorizeClient(
-      authOptionsWithInvalidSecret,
-      validApiKeyMeta,
-      // biome-ignore lint/suspicious/noExplicitAny: test only
-    ) as any;
-    expect(result.authorized).toBe(false);
-    expect(result.errorMessage).toBe(
-      "Incorrect key provided. You can view your active API keys at https://thirdweb.com/create-api-key",
-    );
-    expect(result.errorCode).toBe("SECRET_INVALID");
     expect(result.status).toBe(401);
   });
 
@@ -102,7 +91,7 @@ describe("authorizeClient", () => {
 
     const result = authorizeClient(
       authOptionsWithUnauthorizedOrigin,
-      validApiKeyMeta,
+      validTeamAndProjectResponse,
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);

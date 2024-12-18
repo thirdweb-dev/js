@@ -2,10 +2,10 @@ name: Linked Issue
 
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, ready_for_review]
 
 env:
-  VALID_ISSUE_PREFIXES: "CNCT|DASH|PROT|INSIGHT"
+  VALID_ISSUE_PREFIXES: "CORE|TOOL"
 
 jobs:
   linear:
@@ -21,6 +21,17 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.issue.number
             });
+
+            // Check if contributor is external
+            const isInternalContributor = ['MEMBER', 'OWNER', 'COLLABORATOR'].includes(
+              context.payload.pull_request.author_association
+            );
+
+            // Automatically pass for external contributors
+            if (!isInternalContributor) {
+              console.log('External contributor detected - automatically passing check');
+              return;
+            }
 
             const body = pr.data.body || '';
             const branchName = pr.data.head.ref;

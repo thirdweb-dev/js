@@ -1,6 +1,6 @@
+import { type Project, getProject } from "@/api/projects";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { notFound } from "next/navigation";
-
-import { getProject } from "@/api/projects";
 
 import {
   type DurationId,
@@ -22,6 +22,7 @@ import {
   isProjectActive,
 } from "@/api/analytics";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
+import { Suspense } from "react";
 import {
   type ChainMetadata,
   defineChain,
@@ -69,6 +70,43 @@ export default async function ProjectOverviewPage(props: PageProps) {
 
   const isActive = await isProjectActive({ clientId: project.publishableKey });
 
+  return (
+    <div className="flex grow flex-col">
+      <div className="w-full border-border border-b">
+        <AnalyticsHeader
+          title={project.name}
+          interval={interval}
+          range={range}
+        />
+      </div>
+      {!isActive ? (
+        <div className="container p-6">
+          <EmptyState />
+        </div>
+      ) : (
+        <div className="container flex grow flex-col py-6">
+          <Suspense fallback={<GenericLoadingPage />}>
+            <ProjectAnalytics
+              project={project}
+              range={range}
+              interval={interval}
+              searchParams={searchParams}
+            />
+          </Suspense>
+        </div>
+      )}
+    </div>
+  );
+}
+
+async function ProjectAnalytics(props: {
+  project: Project;
+  range: Range;
+  interval: "day" | "week";
+  searchParams: PageSearchParams;
+}) {
+  const { project, range, interval, searchParams } = props;
+
   // Fetch all analytics data in parallel
   const [
     walletConnections,
@@ -114,79 +152,64 @@ export default async function ProjectOverviewPage(props: PageProps) {
   ]);
 
   return (
-    <div className="md:pb-16">
-      <div className="w-full border-border-800 border-b px-6 dark:bg-muted/50">
-        <AnalyticsHeader
-          title={project.name}
-          interval={interval}
-          range={range}
-        />
-      </div>
-      {!isActive ? (
-        <div className="container p-6">
-          <EmptyState />
+    <div className="flex grow flex-col gap-6">
+      {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
+        <div className="">
+          <UsersChartCard
+            chartKey={
+              (searchParams.usersChart as
+                | "totalUsers"
+                | "activeUsers"
+                | "newUsers"
+                | "returningUsers") ?? "activeUsers"
+            }
+            userStats={walletUserStatsTimeSeries}
+            searchParams={searchParams}
+          />
         </div>
       ) : (
-        <div className="space-y-6 md:container md:p-6">
-          {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
-            <div className="">
-              <UsersChartCard
-                chartKey={
-                  (searchParams.usersChart as
-                    | "totalUsers"
-                    | "activeUsers"
-                    | "newUsers"
-                    | "returningUsers") ?? "activeUsers"
-                }
-                userStats={walletUserStatsTimeSeries}
-                searchParams={searchParams}
-              />
-            </div>
-          ) : (
-            <EmptyStateCard
-              metric="Connect"
-              link="https://portal.thirdweb.com/connect/quickstart"
-            />
-          )}
-          <RpcMethodBarChartCard
-            from={range.from}
-            to={range.to}
-            period={interval}
-            clientId={project.publishableKey}
+        <EmptyStateCard
+          metric="Connect"
+          link="https://portal.thirdweb.com/connect/quickstart"
+        />
+      )}
+      <RpcMethodBarChartCard
+        from={range.from}
+        to={range.to}
+        period={interval}
+        clientId={project.publishableKey}
+      />
+      <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+        {walletConnections.length > 0 ? (
+          <WalletDistributionCard data={walletConnections} />
+        ) : (
+          <EmptyStateCard
+            metric="Connect"
+            link="https://portal.thirdweb.com/connect/quickstart"
           />
-          <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
-            {walletConnections.length > 0 ? (
-              <WalletDistributionCard data={walletConnections} />
-            ) : (
-              <EmptyStateCard
-                metric="Connect"
-                link="https://portal.thirdweb.com/connect/quickstart"
-              />
-            )}
-            {inAppWalletUsage.length > 0 ? (
-              <AuthMethodDistributionCard data={inAppWalletUsage} />
-            ) : (
-              <EmptyStateCard
-                metric="In-App Wallets"
-                link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-              />
-            )}
-          </div>
-          {userOpUsage.length > 0 ? (
-            <div className="">
-              <TotalSponsoredCard
-                searchParams={searchParams}
-                data={userOpUsageTimeSeries}
-                aggregatedData={userOpUsage}
-              />
-            </div>
-          ) : (
-            <EmptyStateCard
-              metric="Sponsored Transactions"
-              link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-            />
-          )}
+        )}
+        {inAppWalletUsage.length > 0 ? (
+          <AuthMethodDistributionCard data={inAppWalletUsage} />
+        ) : (
+          <EmptyStateCard
+            metric="In-App Wallets"
+            link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
+          />
+        )}
+      </div>
+      {userOpUsage.length > 0 ? (
+        <div className="">
+          <TotalSponsoredCard
+            searchParams={searchParams}
+            data={userOpUsageTimeSeries}
+            aggregatedData={userOpUsage}
+          />
         </div>
+      ) : (
+        <EmptyStateCard
+          metric="Sponsored Transactions"
+          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
+        />
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import type { SupportedSmsCountry } from "../../react/web/wallets/in-app/supported-sms-countries.js";
 import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
@@ -13,6 +14,10 @@ export type EcosystemWalletCreationOptions = {
      * Optional url to redirect to after authentication
      */
     redirectUrl?: string;
+    /**
+     * The default country code to use for SMS authentication
+     */
+    defaultSmsCountryCode?: SupportedSmsCountry;
   };
   /**
    * The partnerId of the ecosystem wallet to connect to

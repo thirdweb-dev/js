@@ -2,7 +2,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
-  type Account,
   type ApiKeyService,
   accountStatus,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -25,7 +24,6 @@ export function AccountAbstractionPage(props: {
   apiKeyServices: ApiKeyService[];
   billingStatus: "validPayment" | (string & {}) | null;
   tab?: string;
-  twAccount: Account;
 }) {
   const { apiKeyServices } = props;
 
@@ -81,11 +79,9 @@ export function AccountAbstractionPage(props: {
 
         <SmartWallets
           smartWalletsLayoutSlug={`/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`}
-          apiKeyServices={apiKeyServices}
           trackingCategory={TRACKING_CATEGORY}
           clientId={props.projectKey}
           tab={props.tab}
-          twAccount={props.twAccount}
         />
       </div>
       <div className="h-14" />

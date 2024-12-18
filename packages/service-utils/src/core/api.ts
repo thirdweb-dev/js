@@ -1,3 +1,4 @@
+import type { AuthorizationInput } from "./authorize/index.js";
 import type { ServiceName } from "./services.js";
 
 export type UserOpData = {
@@ -14,58 +15,23 @@ export type PolicyResult = {
 };
 
 export type CoreServiceConfig = {
-  enforceAuth?: boolean;
   apiUrl: string;
-  serviceScope: ServiceName;
+  // if EXPLICITLY set to null, service will not be checked for authorization
+  // this is meant for services that are not possible to be turned off by users, such as "social" and "analytics"
+  serviceScope: ServiceName | null;
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
-  includeUsage?: boolean;
 };
 
-type Usage = {
-  storage?: {
-    sumFileSizeBytes: number;
-  };
-  embeddedWallets?: {
-    countWalletAddresses: number;
-  };
-};
-
-export type ApiKeyMetadata = {
-  id: string;
-  key: string;
-  accountId: string;
-  accountStatus: "noCustomer" | "noPayment" | "validPayment" | "invalidPayment";
-  accountPlan: "free" | "growth" | "pro" | "enterprise";
-  creatorWalletAddress: string;
-  secretHash: string;
-  walletAddresses: string[];
-  domains: string[];
-  bundleIds: string[];
-  redirectUrls: string[];
-  services: {
-    name: string;
-    targetAddresses: string[];
-    actions: string[];
-  }[];
-  usage?: Usage;
-  limits: Partial<Record<ServiceName, number>>;
-  rateLimits: Partial<Record<ServiceName, number>>;
-  policyResult?: PolicyResult;
-};
-
-export type AccountMetadata = {
-  id: string;
-  name: string;
-  creatorWalletAddress: string;
-  usage?: Usage;
-  limits: Partial<Record<ServiceName, number>>;
-  rateLimits: Partial<Record<ServiceName, number>>;
+export type TeamAndProjectResponse = {
+  authMethod: "secretKey" | "publishableKey" | "jwt" | "teamId";
+  team: TeamResponse;
+  project?: ProjectResponse | null;
 };
 
 export type ApiResponse = {
-  data: ApiKeyMetadata | null;
+  data: TeamAndProjectResponse | null;
   error: {
     code: string;
     statusCode: number;
@@ -73,24 +39,115 @@ export type ApiResponse = {
   };
 };
 
-export type ApiAccountResponse = {
-  data: AccountMetadata | null;
-  error: {
-    code: string;
-    statusCode: number;
-    message: string;
-  };
+export type TeamResponse = {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+  billingPlan: "free" | "starter" | "growth" | "pro";
+  createdAt: Date;
+  updatedAt: Date | null;
+  billingEmail: string | null;
+  billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
+  growthTrialEligible: boolean | null;
+  enabledScopes: ServiceName[];
 };
 
-export async function fetchKeyMetadataFromApi(
-  clientId: string,
+export type ProjectResponse = {
+  id: string;
+  teamId: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  publishableKey: string;
+  name: string;
+  slug: string;
+  image: string | null;
+  domains: string[];
+  bundleIds: string[];
+  services: (
+    | {
+        name: "pay";
+        actions: never[];
+        payoutAddress: string | null;
+      }
+    | {
+        name: "storage";
+        actions: ("read" | "write")[];
+      }
+    | {
+        name: "rpc";
+        actions: never[];
+      }
+    | {
+        name: "insight";
+        actions: never[];
+      }
+    | {
+        name: "nebula";
+        actions: never[];
+      }
+    | {
+        name: "bundler";
+        actions: never[];
+        allowedChainIds?: number[] | null;
+        allowedContractAddresses?: string[] | null;
+        allowedWallets?: string[] | null;
+        blockedWallets?: string[] | null;
+        bypassWallets?: string[] | null;
+        limits?: {
+          global?: {
+            maxSpend: string;
+            maxSpendUnit: "usd" | "native";
+          } | null;
+        } | null;
+        serverVerifier?: {
+          url: string;
+          headers?: {
+            key: string;
+            value: string;
+          }[];
+        } | null;
+      }
+    | {
+        name: "embeddedWallets";
+        actions: never[];
+        redirectUrls?: string[] | null;
+        applicationName?: string | null;
+        applicationImageUrl?: string | null;
+        recoveryShareManagement?: string | null;
+        customAuthentication?: CustomAuthenticationServiceSchema | null;
+        customAuthEndpoint?: CustomAuthEndpointServiceSchema | null;
+      }
+  )[];
+  walletAddresses: string[];
+};
+
+type CustomAuthenticationServiceSchema = {
+  jwksUri: string;
+  aud: string;
+};
+
+type CustomAuthEndpointServiceSchema = {
+  authEndpoint: string;
+  customHeaders: {
+    key: string;
+    value: string;
+  }[];
+};
+
+export async function fetchTeamAndProject(
+  authData: AuthorizationInput,
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
-  const { apiUrl, serviceScope, serviceApiKey, includeUsage = true } = config;
-  const url = `${apiUrl}/v1/keys/use?clientId=${clientId}&scope=${serviceScope}&includeUsage=${includeUsage}`;
+  const { apiUrl, serviceApiKey } = config;
+
+  const clientId = authData.clientId;
+  const url = `${apiUrl}/v2/keys/use${clientId ? `?clientId=${clientId}` : ""}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
+      ...(authData.secretKey ? { "x-secret-key": authData.secretKey } : {}),
+      ...(authData.jwt ? { Authorization: `Bearer ${authData.jwt}` } : {}),
       "x-service-api-key": serviceApiKey,
       "content-type": "application/json",
     },
@@ -107,37 +164,8 @@ export async function fetchKeyMetadataFromApi(
   }
 }
 
-export async function fetchAccountFromApi(
-  jwt: string,
-  config: CoreServiceConfig,
-  useWalletAuth: boolean,
-): Promise<ApiAccountResponse> {
-  const { apiUrl, serviceApiKey, includeUsage = true } = config;
-  const url = useWalletAuth
-    ? `${apiUrl}/v1/wallet/me?includeUsage=${includeUsage}`
-    : `${apiUrl}/v1/account/me?includeUsage=${includeUsage}`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "x-service-api-key": serviceApiKey,
-      "content-type": "application/json",
-      authorization: `Bearer ${jwt}`,
-    },
-  });
-
-  let text = "";
-  try {
-    text = await response.text();
-    return JSON.parse(text);
-  } catch {
-    throw new Error(
-      `Error fetching account from API: ${response.status} - ${text}`,
-    );
-  }
-}
-
 export async function updateRateLimitedAt(
-  apiKeyId: string,
+  projectId: string,
   config: CoreServiceConfig,
 ): Promise<void> {
   const { apiUrl, serviceScope: scope, serviceApiKey } = config;
@@ -151,7 +179,7 @@ export async function updateRateLimitedAt(
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      apiKeyId,
+      apiKeyId: projectId, // projectId is the apiKeyId
       scope,
     }),
   });

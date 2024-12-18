@@ -448,6 +448,9 @@ export const ConnectWalletSocialOptions = (
             disabled={props.disabled}
             emptyErrorMessage={emptyErrorMessage}
             submitButtonText={locale.submitEmail}
+            defaultSmsCountryCode={
+              wallet.getConfig()?.auth?.defaultSmsCountryCode
+            }
           />
         ) : (
           <WalletTypeRowButton

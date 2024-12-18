@@ -5,12 +5,18 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "@aws-sdk/client-kms"
+        versions: ["3.592.0"]
+      - dependency-name: "@aws-sdk/client-lambda"
+        versions: ["3.592.0"]
+      - dependency-name: "@aws-sdk/credential-providers"
+        versions: ["3.592.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions every week
       interval: "weekly"

@@ -26,6 +26,7 @@ const chainIdNameMap = [
   { id: 660279, name: "xai", label: "Xai" },
   { id: 324, name: "zksync-era", label: "zkSync Era" },
   { id: 7777777, name: "zora", label: "Zora" },
+  { id: 61166, name: "treasure", label: "Treasure" },
 ];
 
 if (process.env.NEXT_PUBLIC_INCLUDE_TESTNETS) {

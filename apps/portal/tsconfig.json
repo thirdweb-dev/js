@@ -28,13 +28,7 @@
     },
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/app/react/v5/components/onchain/page.mdx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
