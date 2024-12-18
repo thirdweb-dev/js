@@ -1,5 +1,4 @@
-import { Book, CodeIcon, ZapIcon } from "lucide-react";
-import type { FunctionDoc } from "typedoc-better-json";
+import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
@@ -22,51 +21,38 @@ export const sidebar: SideBar = {
       href: `${slug}/getting-started`,
       icon: <ZapIcon />,
     },
+    {
+      name: "Live Playground",
+      href: "https://playground.thirdweb.com/",
+      icon: <ExternalLink />,
+    },
+    {
+      name: "API Reference",
+      href: "/references/typescript/v5",
+      icon: <CodeIcon />,
+    },
     { separator: true },
     {
-      name: "Core",
+      name: "Core Concepts",
       isCollapsible: false,
       links: [
         {
           name: "Client",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/client`,
-            },
-            ...["createThirdwebClient"].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
+          href: `${slug}/client`,
         },
         {
-          name: "Adapters",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/adapters`,
-            },
-            ...[
-              "createWalletAdapter",
-              "viemAdapter",
-              "ethers6Adapter",
-              "ethers5Adapter",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
+          name: "Chains",
+          href: `${slug}/chain`,
+        },
+        {
+          name: "Contracts",
+          href: `${slug}/contract`,
         },
       ],
     },
     { separator: true },
     {
-      name: "Wallets",
+      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
@@ -74,50 +60,16 @@ export const sidebar: SideBar = {
           href: `${slug}/wallets`,
         },
         {
-          name: "Supported Wallets",
+          name: "External Wallets",
           href: `${slug}/supported-wallets`,
         },
         {
-          name: "External Wallets",
-          links: [
-            "createWallet",
-            "createWalletAdapter",
-            "privateKeyToAccount",
-            "generateAccount",
-            "injectedProvider",
-          ].map((name) => ({
-            name,
-            href: `${slug}/${name}`,
-            icon: <CodeIcon />,
-          })),
-        },
-        {
           name: "In-App Wallets",
-          links: [
-            "inAppWallet",
-            "preAuthenticate",
-            "linkProfile",
-            "getProfiles",
-            "hasStoredPasskey",
-          ].map((name) => ({
-            name,
-            href: `${slug}/${name}`,
-            icon: <CodeIcon />,
-          })),
+          href: `${slug}/in-app-wallet`,
         },
         {
           name: "Ecosystem Wallets",
-          links: [
-            "ecosystemWallet",
-            "preAuthenticate",
-            "linkProfile",
-            "getProfiles",
-            "hasStoredPasskey",
-          ].map((name) => ({
-            name,
-            href: `${slug}/${name}`,
-            icon: <CodeIcon />,
-          })),
+          href: `${slug}/ecosystem-wallet`,
         },
         {
           name: "Account Abstraction",
@@ -125,299 +77,54 @@ export const sidebar: SideBar = {
             {
               name: "Getting Started",
               href: `${slug}/account-abstraction/get-started`,
-              icon: <Book />,
-            },
-            {
-              name: "Admins & Session Keys",
-              href: `${slug}/account-abstraction/permissions`,
-              icon: <Book />,
             },
             {
               name: "Batching Transactions",
               href: `${slug}/account-abstraction/batching-transactions`,
-              icon: <Book />,
             },
-            ...[
-              "smartWallet",
-              "predictSmartAccountAddress",
-              "createAndSignUserOp",
-              "createUnsignedUserOp",
-              "signUserOp",
-              "bundleUserOp",
-              "getUserOpReceipt",
-              "waitForUserOpReceipt",
-              "getUserOpGasFees",
-              "estimateUserOpGas",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-            ...[
-              "addAdmin",
-              "removeAdmin",
-              "addSessionKey",
-              "removeSessionKey",
-              "getAccountsOfSigner",
-              "getAllActiveSigners",
-              "getPermissionsForSigner",
-            ].map((name) => ({
-              name,
-              href: `${slug}/erc4337/${name}`,
-              icon: <CodeIcon />,
-            })),
           ],
         },
+      ],
+    },
+    { separator: true },
+    {
+      name: "Identity Management",
+      isCollapsible: false,
+      links: [
         {
-          name: "Auth (SIWE)",
+          name: "Sign In With Ethereum",
           href: `${slug}/auth`,
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/auth`,
-            },
-            ...(docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@auth";
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
+        },
+        {
+          name: "Link Profiles",
+          href: `${slug}/linkProfile`,
+        },
+        {
+          name: "Web3 Social Identities",
+          href: `${slug}/getSocialProfiles`,
+        },
+        {
+          name: "Permissions",
+          href: `${slug}/account-abstraction/permissions`,
         },
       ],
     },
     { separator: true },
     {
-      name: "Pay",
+      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
-        {
-          name: "Buy with Fiat",
-          links:
-            docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Fiat");
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || [],
-        },
-        {
-          name: "Buy with Crypto",
-          links:
-            docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Crypto");
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || [],
-        },
-      ],
-    },
-    { separator: true },
-    {
-      name: "Social API",
-      isCollapsible: false,
-      links: ["getSocialProfiles"].map((name) => ({
-        name,
-        href: `${slug}/${name}`,
-        icon: <CodeIcon />,
-      })),
-    },
-    { separator: true },
-    {
-      name: "Blockchain API",
-      isCollapsible: false,
-      links: [
-        {
-          name: "Chains",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/chain`,
-            },
-            ...(docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@chain";
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
-        },
-        {
-          name: "Contracts",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/contract`,
-            },
-            ...[
-              "getContract",
-              "getBytecode",
-              "verifyContract",
-              "resolveContractAbi",
-              "fetchPublishedContract",
-              "resolveMethod",
-              "detectMethod",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
-        },
         {
           name: "Reading state",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/transactions/read`,
-            },
-            ...["readContract", "prepareEvent", "getContractEvents"].map(
-              (name) => ({
-                name,
-                href: `${slug}/${name}`,
-                icon: <CodeIcon />,
-              }),
-            ),
-          ],
+          href: `${slug}/transactions/read`,
         },
         {
           name: "Preparing transactions",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/transactions/prepare`,
-            },
-            ...[
-              "prepareContractCall",
-              "prepareTransaction",
-              "encode",
-              "signTransaction",
-              "simulateTransaction",
-              "estimateGas",
-              "estimateGasCost",
-              "toSerializableTransaction",
-              "serializeTransaction",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
+          href: `${slug}/transactions/prepare`,
         },
         {
           name: "Sending transactions",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/transactions/send`,
-            },
-            ...[
-              "sendTransaction",
-              "sendAndConfirmTransaction",
-              "sendBatchTransaction",
-              "waitForReceipt",
-              "getTransactionStore",
-            ].map((name) => ({
-              name,
-              href: `${slug}/${name}`,
-              icon: <CodeIcon />,
-            })),
-          ],
-        },
-        {
-          name: "Deploying contracts",
-          links:
-            docs.functions
-              ?.filter((f) => {
-                const [tag, extensionName] = getCustomTag(f) || [];
-                return tag === "@extension" && extensionName === "DEPLOY";
-              })
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((f) => ({
-                name: f.name,
-                href: `${slug}/deploy/${f.name}`,
-                icon: <CodeIcon />,
-              })) || [],
-        },
-        {
-          name: "Modular contracts",
-          links: [
-            {
-              name: "Introduction",
-              href: `${slug}/modular`,
-              icon: <Book />,
-            },
-            {
-              name: "Deploying",
-              href: `${slug}/modular/deploy`,
-              icon: <Book />,
-            },
-            {
-              name: "Upgrading",
-              href: `${slug}/modular/upgrade`,
-              icon: <Book />,
-            },
-            {
-              name: "Interacting",
-              href: `${slug}/modular/interact`,
-              icon: <Book />,
-            },
-            {
-              name: "Available Modules",
-              href: `${slug}/modular/built-in`,
-              isCollapsible: false,
-              links: Object.entries(
-                docs.functions
-                  ?.filter((f) => {
-                    const [tag] = getCustomTag(f) || [];
-                    return tag === "@modules";
-                  })
-                  ?.reduce(
-                    (acc, f) => {
-                      const [, extensionName] = getCustomTag(f) || [];
-                      if (extensionName) {
-                        acc[extensionName] = acc[extensionName] || [];
-                        acc[extensionName]?.push(f);
-                      }
-                      return acc;
-                    },
-                    {} as Record<string, FunctionDoc[]>,
-                  ) || [],
-              ).map(([extensionName, extensionFunctions]) => ({
-                name: extensionName,
-                links: extensionFunctions
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((f) => ({
-                    name: f.name,
-                    href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
-                    icon: <CodeIcon />,
-                  })),
-              })),
-            },
-          ],
+          href: `${slug}/transactions/send`,
         },
         {
           name: "Extensions",
@@ -425,21 +132,21 @@ export const sidebar: SideBar = {
             {
               name: "Using Extensions",
               href: `${slug}/extensions/use`,
-              icon: <Book />,
             },
             {
               name: "Generating Extensions",
               href: `${slug}/extensions/generate`,
-              icon: <Book />,
             },
             {
               name: "Writing Extensions",
               href: `${slug}/extensions/create`,
-              icon: <Book />,
+            },
+            {
+              name: "Available Extensions",
+              href: `${slug}/extensions/built-in`,
             },
             {
               name: "Examples",
-              icon: <Book />,
               links: [
                 {
                   name: "Lens Protocol",
@@ -455,42 +162,49 @@ export const sidebar: SideBar = {
                 },
               ],
             },
+          ],
+        },
+        {
+          name: "Deploying contracts",
+          links:
+            docs.functions
+              ?.filter((f) => {
+                const [tag, extensionName] = getCustomTag(f) || [];
+                return tag === "@extension" && extensionName === "DEPLOY";
+              })
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((f) => ({
+                name: f.name,
+                href: `${slug}/deploy/${f.name}`,
+              })) || [],
+        },
+        {
+          name: "Modular contracts",
+          links: [
             {
-              name: "Available Extensions",
-              href: `${slug}/extensions/built-in`,
-              isCollapsible: false,
-              links: Object.entries(
-                docs.functions
-                  ?.filter((f) => {
-                    const [tag, extensionName] = getCustomTag(f) || [];
-                    return tag === "@extension" && extensionName !== "DEPLOY";
-                  })
-                  ?.reduce(
-                    (acc, f) => {
-                      const [, extensionName] = getCustomTag(f) || [];
-                      if (extensionName) {
-                        acc[extensionName] = acc[extensionName] || [];
-                        acc[extensionName]?.push(f);
-                      }
-                      return acc;
-                    },
-                    {} as Record<string, FunctionDoc[]>,
-                  ) || [],
-              ).map(([extensionName, extensionFunctions]) => ({
-                name: extensionName,
-                links: extensionFunctions
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((f) => ({
-                    name: f.name,
-                    href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
-                    icon: <CodeIcon />,
-                  })),
-              })),
+              name: "Introduction",
+              href: `${slug}/modular`,
+            },
+            {
+              name: "Deploying",
+              href: `${slug}/modular/deploy`,
+            },
+            {
+              name: "Upgrading",
+              href: `${slug}/modular/upgrade`,
+            },
+            {
+              name: "Interacting",
+              href: `${slug}/modular/interact`,
+            },
+            {
+              name: "Available Modules",
+              href: `${slug}/modular/built-in`,
             },
           ],
         },
         {
-          name: "RPC",
+          name: "RPC Methods",
           links:
             docs.functions
               ?.filter((f) => {
@@ -500,61 +214,48 @@ export const sidebar: SideBar = {
               ?.map((f) => ({
                 name: f.name,
                 href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
               })) || [],
         },
         {
-          name: "Storage",
-          links: [
-            {
-              name: "Introduction",
-              icon: <Book />,
-              href: `${slug}/storage`,
-            },
-            ...(docs.functions
+          name: "IPFS Storage",
+          href: `${slug}/storage`,
+        },
+        {
+          name: "Pay with Fiat",
+          links:
+            docs.functions
               ?.filter((f) => {
                 const [tag] = getCustomTag(f) || [];
-                return tag === "@storage";
+                return tag === "@buyCrypto" && f.name.includes("Fiat");
               })
               ?.map((f) => ({
                 name: f.name,
                 href: `${slug}/${f.name}`,
-                icon: <CodeIcon />,
-              })) || []),
-          ],
+              })) || [],
         },
         {
-          name: "Utils",
-          links: [
-            "toEther",
-            "toTokens",
-            "toWei",
-            "toUnits",
-            "shortenAddress",
-            "shortenHex",
-            "encodeAbiParameters",
-            "encodePacked",
-            "sha256",
-            "keccak256",
-            "keccakId",
-          ].map((name) => ({
-            name,
-            href: `${slug}/${name}`,
-            icon: <CodeIcon />,
-          })),
+          name: "Bridge & Swap",
+          links:
+            docs.functions
+              ?.filter((f) => {
+                const [tag] = getCustomTag(f) || [];
+                return tag === "@buyCrypto" && f.name.includes("Crypto");
+              })
+              ?.map((f) => ({
+                name: f.name,
+                href: `${slug}/${f.name}`,
+              })) || [],
         },
       ],
     },
+    { separator: true },
     {
-      separator: true,
+      name: "Usage with other libraries",
+      href: `${slug}/adapters`,
     },
     {
       name: "Migrate from v4",
       href: `${slug}/migrate`,
-    },
-    {
-      name: "Full Reference",
-      href: "/references/typescript/v5",
     },
   ],
 };
