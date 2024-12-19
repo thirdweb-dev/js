@@ -21,6 +21,7 @@ import funkiBanner from "./temp-assets/funkiBanner.jpg";
 import funkiCTA from "./temp-assets/funkiCTA.jpg";
 import hashfireBanner from "./temp-assets/hashfireBanner.png";
 import hashfireCTA from "./temp-assets/hashfireCTA.png";
+import inkBanner from "./temp-assets/inkBanner.jpg";
 import laosBanner from "./temp-assets/laosBanner.jpg";
 import laosCTA from "./temp-assets/laosCTA.jpg";
 import liskBanner from "./temp-assets/liskBanner.png";
@@ -223,9 +224,10 @@ const chainMetaRecord = {
   },
   // Ink
   57073: {
-    cta: OP_CTA,
+    headerImgUrl: inkBanner.src,
     about:
       "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain. Ink is a powerful base layer for deploying innovative DeFi protocols.",
+    cta: OP_CTA,
     gasSponsored: true,
   },
   // vanar
