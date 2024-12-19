@@ -101,7 +101,8 @@ export function LinkedProfilesScreen(props: {
             ?.filter(
               (profile) =>
                 profile.type.toLowerCase() !== "guest" &&
-                profile.type.toLowerCase() !== "custom_jwt",
+                profile.type.toLowerCase() !== "custom_jwt" &&
+                profile.type.toLowerCase() !== "custom_auth_endpoint",
             )
             .map((profile) => (
               <LinkedProfile
