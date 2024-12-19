@@ -2,6 +2,7 @@
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import { getChainMetadata } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getFunctionId } from "../../../../../utils/function-id.js";
@@ -122,37 +123,8 @@ export function ChainIcon({
 }: ChainIconProps) {
   const { chain } = useChainContext();
   const iconQuery = useQuery({
-    queryKey: [
-      "_internal_chain_icon_",
-      chain.id,
-      {
-        resolver:
-          typeof iconResolver === "string"
-            ? iconResolver
-            : typeof iconResolver === "function"
-              ? getFunctionId(iconResolver)
-              : undefined,
-      },
-    ] as const,
-    queryFn: async () => {
-      if (typeof iconResolver === "string") {
-        return iconResolver;
-      }
-      if (typeof iconResolver === "function") {
-        return iconResolver();
-      }
-      // Check if the chain object already has "icon"
-      if (chain.icon?.url) {
-        return resolveScheme({ uri: chain.icon.url, client });
-      }
-      const possibleUrl = await getChainMetadata(chain).then(
-        (data) => data.icon?.url,
-      );
-      if (!possibleUrl) {
-        throw new Error("Failed to resolve icon for chain");
-      }
-      return resolveScheme({ uri: possibleUrl, client });
-    },
+    queryKey: getQueryKeys({ chainId: chain.id, iconResolver }),
+    queryFn: async () => fetchChainIcon({ chain, client, iconResolver }),
     ...queryOptions,
   });
 
@@ -165,4 +137,54 @@ export function ChainIcon({
   }
 
   return <img src={iconQuery.data} {...restProps} alt={restProps.alt} />;
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchChainIcon(props: {
+  chain: Chain;
+  client: ThirdwebClient;
+  iconResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { chain, client, iconResolver } = props;
+  if (typeof iconResolver === "string") {
+    return iconResolver;
+  }
+  if (typeof iconResolver === "function") {
+    return iconResolver();
+  }
+  // Check if the chain object already has "icon"
+  if (chain.icon?.url) {
+    return resolveScheme({ uri: chain.icon.url, client });
+  }
+  const possibleUrl = await getChainMetadata(chain)
+    .then((data) => data.icon?.url)
+    .catch(() => undefined);
+  if (!possibleUrl) {
+    throw new Error("Failed to resolve icon for chain");
+  }
+  return resolveScheme({ uri: possibleUrl, client });
+}
+
+/**
+ * @internal
+ */
+export function getQueryKeys(props: {
+  chainId: number;
+  iconResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { chainId, iconResolver } = props;
+  return [
+    "_internal_chain_icon_",
+    chainId,
+    {
+      resolver:
+        typeof iconResolver === "string"
+          ? iconResolver
+          : typeof iconResolver === "function"
+            ? getFunctionId(iconResolver)
+            : undefined,
+    },
+  ] as const;
 }

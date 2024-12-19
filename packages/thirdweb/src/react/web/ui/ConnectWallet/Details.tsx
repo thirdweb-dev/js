@@ -9,7 +9,15 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { type JSX, useCallback, useContext, useEffect, useState } from "react";
+import {
+  type Dispatch,
+  type JSX,
+  type SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -51,11 +59,7 @@ import type {
   ConnectButton_detailsModalOptions,
   PayUIOptions,
 } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import {
-  useChainFaucets,
-  useChainIconUrl,
-  useChainName,
-} from "../../../core/hooks/others/useChainQuery.js";
+import { useChainFaucets } from "../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
@@ -70,7 +74,7 @@ import type {
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
-import { ChainIcon } from "../components/ChainIcon.js";
+import { ChainActiveDot } from "../components/ChainActiveDot.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { IconContainer } from "../components/IconContainer.js";
 import { Modal } from "../components/Modal.js";
@@ -81,6 +85,7 @@ import { ToolTip } from "../components/Tooltip.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
+import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
 import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
@@ -95,6 +100,9 @@ import {
 import { AccountBlobbie } from "../prebuilt/Account/blobbie.js";
 import { AccountName } from "../prebuilt/Account/name.js";
 import { AccountProvider } from "../prebuilt/Account/provider.js";
+import { ChainIcon } from "../prebuilt/Chain/icon.js";
+import { ChainName } from "../prebuilt/Chain/name.js";
+import { ChainProvider } from "../prebuilt/Chain/provider.js";
 import type { LocaleId } from "../types.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
 import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
@@ -386,8 +394,6 @@ export function DetailsModal(props: {
   const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
-  const chainIconQuery = useChainIconUrl(walletChain);
-  const chainNameQuery = useChainName(walletChain);
   const chainFaucetsQuery = useChainFaucets(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
@@ -416,93 +422,6 @@ export function DetailsModal(props: {
       closeModal();
     }
   }, [activeAccount, closeModal]);
-
-  const networkSwitcherButton = (
-    <MenuButton
-      type="button"
-      disabled={disableSwitchChain}
-      onClick={() => {
-        setScreen("network-switcher");
-      }}
-      data-variant="primary"
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
-        {!chainIconQuery.isLoading ? (
-          <ChainIcon
-            chainIconUrl={chainIconQuery.url}
-            size={iconSize.md}
-            active
-            client={client}
-          />
-        ) : (
-          <Skeleton height={`${iconSize.md}px`} width={`${iconSize.md}px`} />
-        )}
-      </div>
-
-      {chainNameQuery.isLoading ? (
-        <Skeleton height="16px" width="150px" />
-      ) : (
-        <Text color="primaryText" size="md" multiline>
-          {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
-          <Text color="secondaryText" size="xs">
-            {props.showBalanceInFiat ? (
-              <>
-                <AccountBalance
-                  fallbackComponent={<Skeleton height="1em" width="70px" />}
-                  loadingComponent={<Skeleton height="1em" width="70px" />}
-                  chain={walletChain}
-                  tokenAddress={
-                    props.displayBalanceToken?.[Number(walletChain?.id)]
-                  }
-                  formatFn={(props: AccountBalanceInfo) =>
-                    formatAccountTokenBalance({ ...props, decimals: 7 })
-                  }
-                />{" "}
-                <AccountBalance
-                  loadingComponent={<Skeleton height="1em" width="30px" />}
-                  chain={walletChain}
-                  tokenAddress={
-                    props.displayBalanceToken?.[Number(walletChain?.id)]
-                  }
-                  formatFn={(props: AccountBalanceInfo) =>
-                    ` (${formatAccountFiatBalance({ ...props, decimals: 3 })})`
-                  }
-                  showBalanceInFiat="USD"
-                />
-              </>
-            ) : (
-              <AccountBalance
-                fallbackComponent={<Skeleton height="1em" width="100px" />}
-                loadingComponent={<Skeleton height="1em" width="100px" />}
-                formatFn={(props: AccountBalanceInfo) =>
-                  formatAccountTokenBalance({ ...props, decimals: 7 })
-                }
-                chain={walletChain}
-                tokenAddress={
-                  props.displayBalanceToken?.[Number(walletChain?.id)]
-                }
-              />
-            )}
-          </Text>
-        </Text>
-      )}
-
-      <StyledChevronRightIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          flexShrink: 0,
-          marginLeft: "auto",
-        }}
-      />
-    </MenuButton>
-  );
 
   const { hideSendFunds, hideReceiveFunds, hideBuyFunds } =
     props.detailsModal || {};
@@ -749,7 +668,13 @@ export function DetailsModal(props: {
           }}
         >
           {/* Network Switcher */}
-          {networkSwitcherButton}
+          <NetworkSwitcherButton
+            client={props.client}
+            setScreen={() => setScreen("network-switcher")}
+            disableSwitchChain={disableSwitchChain}
+            showBalanceInFiat={props.detailsModal?.showBalanceInFiat}
+            displayBalanceToken={props.displayBalanceToken}
+          />
 
           {/* Transactions */}
           <MenuButton
@@ -1084,6 +1009,9 @@ export function DetailsModal(props: {
             setOpen={(_open) => {
               if (!_open) {
                 closeModal();
+                if (props.detailsModal?.onClose) {
+                  props.detailsModal?.onClose(screen);
+                }
               }
             }}
           >
@@ -1096,6 +1024,136 @@ export function DetailsModal(props: {
         </ScreenSetupContext.Provider>
       </WalletUIStatesProvider>
     </CustomThemeProvider>
+  );
+}
+
+/**
+ * When this button is clicked, it will switch to the screen where users
+ * can select a chain to switch to.
+ * @internal
+ */
+export function NetworkSwitcherButton(props: {
+  setScreen: Dispatch<SetStateAction<"network-switcher">>;
+  disableSwitchChain: boolean;
+  displayBalanceToken: Record<number, string> | undefined;
+  client: ThirdwebClient;
+  showBalanceInFiat?: SupportedFiatCurrency;
+}) {
+  const { disableSwitchChain, setScreen, showBalanceInFiat, client } = props;
+  const walletChain = useActiveWalletChain();
+  if (!walletChain) {
+    return null;
+  }
+  return (
+    <MenuButton
+      type="button"
+      disabled={disableSwitchChain}
+      onClick={() => {
+        setScreen("network-switcher");
+      }}
+      data-variant="primary"
+      className="tw-internal-network-switcher-button"
+    >
+      <ChainProvider chain={walletChain}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Container
+            style={{
+              position: "relative",
+              display: "flex",
+              flexShrink: 0,
+              alignItems: "center",
+            }}
+          >
+            <ChainIcon
+              client={client}
+              loadingComponent={
+                <Skeleton
+                  height={`${iconSize.md}px`}
+                  width={`${iconSize.md}px`}
+                />
+              }
+              fallbackComponent={
+                <img
+                  src={fallbackChainIcon}
+                  alt=""
+                  style={{
+                    width: `${iconSize.md}px`,
+                    height: `${iconSize.md}px`,
+                  }}
+                />
+              }
+              style={{
+                width: `${iconSize.md}px`,
+                height: `${iconSize.md}px`,
+              }}
+            />
+            <ChainActiveDot className="tw-chain-active-dot-details-button" />
+          </Container>
+        </div>
+
+        <Text color="primaryText" size="md" multiline>
+          <ChainName
+            loadingComponent={<Skeleton height="16px" width="150px" />}
+            fallbackComponent={<span>Unknown chain #{walletChain?.id}</span>}
+          />
+          <Text color="secondaryText" size="xs">
+            {showBalanceInFiat ? (
+              <>
+                <AccountBalance
+                  fallbackComponent={<Skeleton height="1em" width="70px" />}
+                  loadingComponent={<Skeleton height="1em" width="70px" />}
+                  chain={walletChain}
+                  tokenAddress={
+                    props.displayBalanceToken?.[Number(walletChain?.id)]
+                  }
+                  formatFn={(props: AccountBalanceInfo) =>
+                    formatAccountTokenBalance({ ...props, decimals: 7 })
+                  }
+                />{" "}
+                <AccountBalance
+                  loadingComponent={<Skeleton height="1em" width="30px" />}
+                  chain={walletChain}
+                  tokenAddress={
+                    props.displayBalanceToken?.[Number(walletChain?.id)]
+                  }
+                  formatFn={(props: AccountBalanceInfo) =>
+                    ` (${formatAccountFiatBalance({ ...props, decimals: 3 })})`
+                  }
+                  showBalanceInFiat="USD"
+                />
+              </>
+            ) : (
+              <AccountBalance
+                fallbackComponent={<Skeleton height="1em" width="100px" />}
+                loadingComponent={<Skeleton height="1em" width="100px" />}
+                formatFn={(props: AccountBalanceInfo) =>
+                  formatAccountTokenBalance({ ...props, decimals: 7 })
+                }
+                chain={walletChain}
+                tokenAddress={
+                  props.displayBalanceToken?.[Number(walletChain?.id)]
+                }
+              />
+            )}
+          </Text>
+        </Text>
+      </ChainProvider>
+
+      <StyledChevronRightIcon
+        width={iconSize.sm}
+        height={iconSize.sm}
+        style={{
+          flexShrink: 0,
+          marginLeft: "auto",
+        }}
+      />
+    </MenuButton>
   );
 }
 
@@ -1125,7 +1183,10 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   };
 });
 
-const StyledChevronRightIcon = /* @__PURE__ */ styled(
+/**
+ * @internal Export for tests
+ */
+export const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
 )(() => {
   const theme = useCustomTheme();
@@ -1614,12 +1675,19 @@ export type UseWalletDetailsModalOptions = {
    * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
    */
   showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   * The callback function for when the modal is closed
+   * @param screen The name of the screen that was being shown when user closed the modal
+   */
+  onClose?: (screen: string) => void;
 };
 
 /**
  * Hook to open the Wallet Details Modal that shows various information about the connected wallet and allows users to perform various actions like sending funds, receiving funds, switching networks, Buying tokens, etc.
  *
  * @example
+ * ### Basic usage
  * ```tsx
  * import { createThirdwebClient } from "thirdweb";
  * import { useWalletDetailsModal } from "thirdweb/react";
@@ -1638,6 +1706,15 @@ export type UseWalletDetailsModalOptions = {
  *   return <button onClick={handleClick}> Show Wallet Details </button>
  * }
  * ```
+ *
+ * ### Callback for when the modal is closed
+ * ```tsx
+ * detailsModal.open({
+ *   client,
+ *   onClose: (screen: string) => console.log({ screen })
+ * });
+ * ```
+ *
  * @wallet
  */
 export function useWalletDetailsModal() {
@@ -1672,6 +1749,7 @@ export function useWalletDetailsModal() {
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
               assetTabs: props.assetTabs,
+              onClose: props.onClose,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}

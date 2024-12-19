@@ -27,32 +27,35 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import {
-  useChainIconUrl,
-  useChainName,
-  useChainsQuery,
-} from "../../../core/hooks/others/useChainQuery.js";
+import { useChainsQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import { ChainIcon } from "../components/ChainIcon.js";
+import { ChainActiveDot } from "../components/ChainActiveDot.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
+import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
 import { Input } from "../components/formElements.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Text } from "../components/text.js";
 import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
+import { ChainIcon } from "../prebuilt/Chain/icon.js";
+import { ChainName } from "../prebuilt/Chain/name.js";
+import { ChainProvider } from "../prebuilt/Chain/provider.js";
 import type { LocaleId } from "../types.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 
-type NetworkSelectorChainProps = {
+/**
+ * @internal
+ */
+export type NetworkSelectorChainProps = {
   /**
    * `Chain` object to be displayed
    */
@@ -548,7 +551,10 @@ type NetworkListProps = {
   connectLocale: ConnectLocale;
 };
 
-const NetworkList = /* @__PURE__ */ memo(function NetworkList(
+/**
+ * @internal Exported for tests
+ */
+export const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   props: NetworkListProps,
 ) {
   // show 10 items first, when reaching the last item, show 10 more
@@ -626,6 +632,9 @@ const NetworkList = /* @__PURE__ */ memo(function NetworkList(
   );
 } as React.FC<NetworkListProps>);
 
+/**
+ * @internal
+ */
 export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
   chain: Chain;
   onClick: () => void;
@@ -636,72 +645,95 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
 }) {
   const locale = props.connectLocale;
   const { chain, confirming, switchingFailed } = props;
-
   const activeChain = useActiveWalletChain();
 
-  const chainNameQuery = useChainName(chain);
-  const chainIconQuery = useChainIconUrl(chain);
-
-  let chainName: React.ReactNode;
-  if (chainNameQuery.name) {
-    chainName = <span>{chainNameQuery.name} </span>;
-  } else {
-    chainName = <Skeleton width="150px" height="20px" />;
-  }
-
   return (
-    <NetworkButton
-      data-active={activeChain?.id === chain.id}
-      onClick={props.onClick}
-    >
-      {!chainIconQuery.isLoading ? (
-        <ChainIcon
-          chainIconUrl={chainIconQuery.url}
-          size={iconSize.lg}
-          active={activeChain?.id === chain.id}
-          loading="lazy"
-          client={props.client}
-        />
-      ) : (
-        <Skeleton width={`${iconSize.lg}px`} height={`${iconSize.lg}px`} />
-      )}
-
-      {confirming || switchingFailed ? (
-        <div
+    <ChainProvider chain={chain}>
+      <NetworkButton
+        data-active={activeChain?.id === chain.id}
+        onClick={props.onClick}
+      >
+        <Container
           style={{
+            position: "relative",
             display: "flex",
-            flexDirection: "column",
-            gap: spacing.xs,
+            flexShrink: 0,
+            alignItems: "center",
           }}
         >
-          {chainName}
-          <Container animate="fadein" flex="row" gap="xxs" center="y">
-            {confirming && (
-              <>
-                <Text size="xs" color="accentText">
-                  {locale.confirmInWallet}
-                </Text>
-                <Spinner size="xs" color="accentText" />
-              </>
-            )}
+          <ChainIcon
+            client={props.client}
+            loadingComponent={
+              <Skeleton
+                width={`${iconSize.lg}px`}
+                height={`${iconSize.lg}px`}
+              />
+            }
+            fallbackComponent={
+              <img
+                src={fallbackChainIcon}
+                alt=""
+                style={{
+                  width: `${iconSize.lg}px`,
+                  height: `${iconSize.lg}px`,
+                }}
+              />
+            }
+            style={{
+              width: `${iconSize.lg}px`,
+              height: `${iconSize.lg}px`,
+            }}
+            loading="lazy"
+          />
+          {activeChain?.id === chain.id && (
+            <ChainActiveDot className="tw-chain-active-dot-button-network-selector" />
+          )}
+        </Container>
+        {confirming || switchingFailed ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: spacing.xs,
+            }}
+          >
+            <ChainName
+              loadingComponent={<Skeleton width="150px" height="20px" />}
+            />
+            <Container animate="fadein" flex="row" gap="xxs" center="y">
+              {confirming && (
+                <>
+                  <Text size="xs" color="accentText">
+                    {locale.confirmInWallet}
+                  </Text>
+                  <Spinner size="xs" color="accentText" />
+                </>
+              )}
 
-            {switchingFailed && (
-              <Container animate="fadein">
-                <Text size="xs" color="danger">
-                  {locale.networkSelector.failedToSwitch}
-                </Text>
-              </Container>
-            )}
-          </Container>
-        </div>
-      ) : (
-        chainName
-      )}
-    </NetworkButton>
+              {switchingFailed && (
+                <Container animate="fadein">
+                  <Text size="xs" color="danger">
+                    {locale.networkSelector.failedToSwitch}
+                  </Text>
+                </Container>
+              )}
+            </Container>
+          </div>
+        ) : (
+          <ChainName
+            loadingComponent={<Skeleton width="150px" height="20px" />}
+            className="tw-chain-icon-none-confirming"
+          />
+        )}
+      </NetworkButton>
+    </ChainProvider>
   );
 });
 
-const TabButton = /* @__PURE__ */ (() =>
+/**
+ * @internal Exported for tests
+ */
+export const TabButton = /* @__PURE__ */ (() =>
   styled.button((_) => {
     const theme = useCustomTheme();
     return {
@@ -722,7 +754,10 @@ const TabButton = /* @__PURE__ */ (() =>
     };
   }))();
 
-const SectionLabel = /* @__PURE__ */ StyledP(() => {
+/**
+ * @internal Exported for tests
+ */
+export const SectionLabel = /* @__PURE__ */ StyledP(() => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.sm,
@@ -743,7 +778,10 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
   boxSizing: "border-box",
 });
 
-const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
+/**
+ * @internal Exported for tests
+ */
+export const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -769,16 +807,19 @@ const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   };
 });
 
-const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-  (_) => {
-    const theme = useCustomTheme();
-    return {
-      color: theme.colors.secondaryText,
-      position: "absolute",
-      left: spacing.sm,
-    };
-  },
-);
+/**
+ * @internal Exported for tests
+ */
+export const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(
+  MagnifyingGlassIcon,
+)((_) => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+    position: "absolute",
+    left: spacing.sm,
+  };
+});
 
 /**
  * Options for the `useNetworkSwitcherModal` hook's returned `open` function
