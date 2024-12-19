@@ -196,7 +196,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           });
         }}
       >
-        <ChainIcon ipfsSrc={chain?.icon?.url} size={20} />
+        <ChainIcon ipfsSrc={chain?.icon?.url} className="size-5" />
         {chain?.name || "Select Network"}
 
         <ChevronDownIcon className="ml-auto size-4" />

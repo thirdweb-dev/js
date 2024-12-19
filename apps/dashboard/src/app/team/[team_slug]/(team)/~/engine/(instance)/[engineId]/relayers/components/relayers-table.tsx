@@ -71,7 +71,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+            <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -405,7 +405,7 @@ const RemoveModal = ({
               <FormLabel>Chain</FormLabel>
               <Flex align="center" gap={2}>
                 <ChainIcon
-                  size={12}
+                  className="size-3"
                   ipfsSrc={
                     idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url
                   }
