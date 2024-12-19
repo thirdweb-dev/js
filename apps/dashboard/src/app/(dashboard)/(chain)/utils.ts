@@ -221,6 +221,13 @@ const chainMetaRecord = {
     cta: OP_CTA,
     gasSponsored: true,
   },
+  // Ink
+  57073: {
+    cta: OP_CTA,
+    about:
+      "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain. Ink is a powerful base layer for deploying innovative DeFi protocols.",
+    gasSponsored: true,
+  },
   // vanar
   2040: {
     headerImgUrl: vanarBanner.src,
