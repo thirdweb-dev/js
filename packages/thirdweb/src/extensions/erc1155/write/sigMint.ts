@@ -1,5 +1,5 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
-import { maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
 import {
   NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
