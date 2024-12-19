@@ -175,9 +175,14 @@ function SessionCard(props: {
   });
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-muted/50 p-4">
+    <div className="relative overflow-hidden rounded-lg border bg-muted/50 p-4">
       <h3 className="line-clamp-3 break-all">
-        {props.session.title || "Untitled"}
+        <Link
+          className="before:absolute before:inset-0"
+          href={`/chat/${props.session.id}`}
+        >
+          {props.session.title || "Untitled"}
+        </Link>
       </h3>
       <div className="mt-4 flex items-center justify-between gap-6 border-t pt-3">
         <p className="text-muted-foreground text-sm">
@@ -189,7 +194,10 @@ function SessionCard(props: {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="h-auto w-auto p-1.5" variant="ghost">
+            <Button
+              className="relative z-10 h-auto w-auto p-1.5"
+              variant="ghost"
+            >
               <EllipsisIcon className="size-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
