@@ -7,7 +7,6 @@ import PlausibleProvider from "next-plausible";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
-import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
 import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
 import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { PostHogProvider } from "./components/root-providers";
@@ -72,7 +71,7 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <UnlimitedWalletsBanner />
+          {/* Banner goes here */}
           <AppRouterProviders>
             {children}
             <Suspense fallback={null}>

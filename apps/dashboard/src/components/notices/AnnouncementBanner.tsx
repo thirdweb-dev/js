@@ -5,7 +5,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { ChevronRightIcon, XIcon } from "lucide-react";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-function AnnouncementBanner(props: {
+export function AnnouncementBanner(props: {
   href: string;
   label: string;
   trackingLabel: string;
@@ -54,15 +54,5 @@ function AnnouncementBanner(props: {
         <XIcon className="size-5" />
       </Button>
     </div>
-  );
-}
-
-export function UnlimitedWalletsBanner() {
-  return (
-    <AnnouncementBanner
-      href="/team/~/~/settings/billing?coupon=FREEWALLETS24"
-      label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS24". Redeem offer by December 31st!'
-      trackingLabel="unlimited-wallets"
-    />
   );
 }
