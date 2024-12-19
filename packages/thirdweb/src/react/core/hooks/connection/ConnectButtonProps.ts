@@ -327,6 +327,18 @@ export type ConnectButton_detailsModalOptions = {
    * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
    */
   showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   * Configure options for managing the connected wallet.
+   */
+  manageWallet?: {
+    /**
+     * Allow linking other profiles to the connected wallet.
+     *
+     * By default it is `true`.
+     */
+    allowLinkingProfiles?: boolean;
+  };
 };
 
 /**
