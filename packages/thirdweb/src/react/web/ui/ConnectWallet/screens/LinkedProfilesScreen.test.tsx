@@ -99,17 +99,6 @@ describe("LinkedProfilesScreen", () => {
       expect(screen.getByText("cognito@example.com")).toBeInTheDocument();
     });
 
-    it("should display Custom Profile for custom_auth_endpoint", () => {
-      vi.mocked(useProfiles).mockReturnValue({
-        data: [{ type: "Custom_auth_endpoint", details: {} }],
-        isLoading: false,
-        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
-      } as any);
-
-      render(<LinkedProfilesScreen {...mockProps} />);
-      expect(screen.getByText("Custom Profile")).toBeInTheDocument();
-    });
-
     it("should capitalize unknown profile types", () => {
       vi.mocked(useProfiles).mockReturnValue({
         data: [{ type: "unknown", details: {} }],
