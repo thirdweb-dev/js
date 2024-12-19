@@ -194,7 +194,7 @@ const ContractTable: React.FC<ContractTableProps> = ({
             `Unknown Network (#${cell.row.original.chainId})`;
           return (
             <div className="flex items-center gap-2">
-              <ChainIcon size={24} ipfsSrc={data?.icon?.url} />
+              <ChainIcon className="size-5" ipfsSrc={data?.icon?.url} />
               <SkeletonContainer
                 loadedData={data ? cleanedChainName : undefined}
                 skeletonData={`Chain ID ${cell.row.original.chainId}`}

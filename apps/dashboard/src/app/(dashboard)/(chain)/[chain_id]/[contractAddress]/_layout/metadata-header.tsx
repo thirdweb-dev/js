@@ -85,7 +85,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 href={`/${chain.slug}`}
                 className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-muted/50 px-2.5 py-1.5 hover:bg-muted"
               >
-                <ChainIcon ipfsSrc={chain.icon?.url} size={16} />
+                <ChainIcon ipfsSrc={chain.icon?.url} className="size-4" />
                 {cleanedChainName && (
                   <span className="text-xs">{cleanedChainName}</span>
                 )}

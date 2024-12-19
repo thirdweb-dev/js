@@ -326,9 +326,8 @@ const SearchResult: React.FC<SearchResultProps> = ({
       )}
     >
       <ChainIcon
-        size={24}
+        className="size-6 shrink-0"
         ipfsSrc={result.chainMetadata?.icon?.url}
-        className="shrink-0"
       />
       <div className="flex flex-col gap-1">
         <h3 className="line-clamp-2 font-semibold text-foreground">

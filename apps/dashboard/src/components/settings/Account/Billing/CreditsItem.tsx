@@ -51,7 +51,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             <ChainIcon
               ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
               "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
-              size={24}
+              className="size-6"
             />
           ) : isTwCredit ? (
             <Image
