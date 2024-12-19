@@ -14,6 +14,64 @@ Adapters allow you to use contracts, providers and wallets from these libraries 
 
 ## Wagmi
 
+### Using thirdweb in-app wallets with wagmi
+
+You can use in-app and ecosystem wallets in your wagmi application by using the `@thirdweb-dev/wagmi-adapter` package.
+
+```shell
+npm install thirdweb @thirdweb-dev/wagmi-adapter
+```
+
+Make sure you're running wagmi 2.14.1 or above.
+
+You probably already have a wagmi config with some connectors, simply add the inAppWalletConnector to the list, along with the desired options.
+
+```ts
+import { http, createConfig } from "wagmi";
+import { inAppWalletConnector } from "@thirdweb-dev/wagmi-adapter";
+import { createThirdwebClient, defineChain as thirdwebChain } from "thirdweb";
+
+const client = createThirdwebClient({
+  clientId: "your-client-id",
+});
+
+export const config = createConfig({
+  chains: [sepolia],
+  connectors: [
+    // add the in-app wallet connector
+    inAppWalletConnector({
+      client,
+      // optional: turn on smart accounts!
+      smartAccounts: {
+        sponsorGas: true,
+        chain: thirdwebChain(sepolia),
+      },
+    }),
+  ],
+  transports: {
+    [sepolia.id]: http(),
+  },
+});
+```
+
+Then in your application, you can use the connector to trigger the in-app wallet connection.
+
+```ts
+const { connect, connectors } = useConnect();
+
+const onClick = () => {
+  // grab the connector
+  const inAppWallet = connectors.find((x) => x.id === "in-app-wallet");
+  // call connect with the desired strategy
+  connect({
+    connector: inAppWallet,
+    strategy: "google",
+  });
+};
+```
+
+### Converting a wagmi wallet client to a thirdweb wallet
+
 You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
 
 ```ts
@@ -28,37 +86,28 @@ import { viemAdapter } from "thirdweb/adapters/viem";
 import { client } from './client'
 
 
-const { data: walletClient } = useWalletClient(); // from wagmi 
-const { disconnectAsync } = useDisconnect(); // from wagmi
-const { switchChainAsync } = useSwitchChain(); // from wagmi
+const account = useAccount(); // from wagmi
 const setActiveWallet = useSetActiveWallet(); // from thirdweb/react
 
-// whenever the walletClient changes, 
-// we adapt it to a thirdweb account and set it as the active wallet
-useEffect(() => {
+// whenever the wagmi account changes, 
+// we adapt it to a thirdweb wallet and set it as the active wallet
+  useEffect(() => {
     const setActive = async () => {
-        if (walletClient) {
-            // adapt the walletClient to a thirdweb account
-            const adaptedAccount = viemAdapter.walletClient.fromViem({
-                walletClient: walletClient as any, // accounts for wagmi/viem version mismatches
-            });
-            // create the thirdweb wallet with the adapted account
-            const thirdwebWallet = createWalletAdapter({
-		            client,
-                adaptedAccount,
-                chain: defineChain(await walletClient.getChainId()),
-                onDisconnect: async () => {
-                    await disconnectAsync();
-                },
-                switchChain: async (chain) => {
-                    await switchChainAsync({ chainId: chain.id as any });
-                },
-            });
-            setActiveWallet(thirdwebWallet);
-        }
+      if (account?.connector?.getProvider) {
+        const provider = await account?.connector?.getProvider({
+          chainId,
+        });
+        const thirdwebWallet = EIP1193.fromProvider({
+          provider,
+        });
+        await thirdwebWallet.connect({
+          client,
+        });
+        setActiveWallet(thirdwebWallet);
+      }
     };
     setActive();
-}, [walletClient]);
+  }, [account?.connector?.getProvider, setActiveWallet]);
 ```
 
 You can view a fully functioning wagmi + thirdweb app in this [github repository](https://github.com/thirdweb-example/wagmi-thirdweb).
@@ -89,22 +138,12 @@ useEffect(() => {
         const privyWallet = wallets[0];
         if (privyWallet) {
           const ethersProvider = await privyWallet.getEthersProvider();
-            // adapt privy wallet to a thirdweb account
-            const adaptedAccount = await ethers5Adapter.signer.fromEthers({
-                signer: ethersProvider.getSigner(),
+            // create a thirdweb wallet with the privy provider
+            const thirdwebWallet = EIP1193.fromProvider({
+                provider: ethersProvider,
             });
-            // create the thirdweb wallet with the adapted account
-            const thirdwebWallet = createWalletAdapter({
-		            client,
-                adaptedAccount,
-                // chainId is in the format of "eip155:1"
-                chain: defineChain(Number(privyWallet.chainId.split(":")[1])),
-                onDisconnect: async () => {
-                    privyWallet.disconnect();
-                },
-                switchChain: async (chain) => {
-                    await privyWallet.switchChain(chain.id);
-                },
+            await thirdwebWallet.connect({
+                client,
             });
             setActiveWallet(thirdwebWallet);
         }
