@@ -1,4 +1,4 @@
-import { maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { SetClaimConditionsParams as GeneratedParams } from "../../../extensions/erc1155/__generated__/IDrop1155/write/setClaimConditions.js";

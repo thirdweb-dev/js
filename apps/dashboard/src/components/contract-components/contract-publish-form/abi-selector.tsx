@@ -32,14 +32,12 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
         options={options}
         defaultValue={options.find((o) => o.value === defaultValue)}
         chakraStyles={{
-          // @ts-expect-error - this works fine
           container: (provided) => ({
             ...provided,
             width: "full",
           }),
         }}
         value={options.find((o) => o.value === value)}
-        // @ts-expect-error - this works fine
         onChange={(selectedFn) => {
           if (selectedFn) {
             onChange((selectedFn as { label: string; value: string }).value);

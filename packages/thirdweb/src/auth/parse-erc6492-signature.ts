@@ -1,4 +1,6 @@
-import { decodeAbiParameters, isErc6492Signature } from "viem";
+import * as ox__AbiParameters from "ox/AbiParameters";
+import * as ox__Address from "ox/Address";
+import { WrappedSignature as ox__WrappedSignature } from "ox/erc6492";
 import type { Hex } from "../utils/encoding/hex.js";
 import type { OneOf } from "../utils/type-utils.js";
 import type { Erc6492Signature } from "./types.js";
@@ -29,13 +31,17 @@ export type ParseErc6492SignatureReturnType = OneOf<
 export function parseErc6492Signature(
   signature: Hex,
 ): ParseErc6492SignatureReturnType {
-  if (!isErc6492Signature(signature)) {
+  if (!ox__WrappedSignature.validate(signature)) {
     return { signature };
   }
 
-  const [address, data, originalSignature] = decodeAbiParameters(
+  const [address, data, originalSignature] = ox__AbiParameters.decode(
     [{ type: "address" }, { type: "bytes" }, { type: "bytes" }],
     signature,
   );
-  return { address: address, data, signature: originalSignature };
+  return {
+    address: ox__Address.checksum(address),
+    data,
+    signature: originalSignature,
+  };
 }

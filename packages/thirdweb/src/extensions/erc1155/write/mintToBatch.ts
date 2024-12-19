@@ -1,4 +1,4 @@
-import { maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
 import { multicall } from "../../../extensions/common/__generated__/IMulticall/write/multicall.js";
 import { upload } from "../../../storage/upload.js";
 import type {

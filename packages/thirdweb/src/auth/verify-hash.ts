@@ -1,12 +1,8 @@
-import {
-  type Signature,
-  encodeDeployData,
-  encodeFunctionData,
-  isErc6492Signature,
-  serializeSignature,
-  universalSignatureValidatorAbi,
-  universalSignatureValidatorByteCode,
-} from "viem";
+import * as ox__Abi from "ox/Abi";
+import * as ox__AbiConstructor from "ox/AbiConstructor";
+import * as ox__AbiFunction from "ox/AbiFunction";
+import * as ox__Signature from "ox/Signature";
+import { WrappedSignature as ox__WrappedSignature } from "ox/erc6492";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { type ThirdwebContract, getContract } from "../contract/contract.js";
@@ -20,7 +16,7 @@ import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
 
 export type VerifyHashParams = {
   hash: Hex;
-  signature: string | Uint8Array | Signature;
+  signature: string | Uint8Array | ox__Signature.Signature;
   address: string;
   client: ThirdwebClient;
   chain: Chain;
@@ -71,7 +67,7 @@ export async function verifyHash({
   const signatureHex = (() => {
     if (isHex(signature)) return signature;
     if (typeof signature === "object" && "r" in signature && "s" in signature)
-      return serializeSignature(signature);
+      return ox__Signature.toHex(signature);
     if (signature instanceof Uint8Array) return fromBytes(signature, "hex");
     // We should never hit this but TS doesn't know that
     throw new Error(
@@ -85,7 +81,7 @@ export async function verifyHash({
     if (!accountFactory) return signatureHex;
 
     // If this sigature was already wrapped for ERC-6492, carry on
-    if (isErc6492Signature(signatureHex)) return signatureHex;
+    if (ox__WrappedSignature.validate(signatureHex)) return signatureHex;
 
     // Otherwise, serialize the signature for ERC-6492 validation
     return serializeErc6492Signature({
@@ -100,23 +96,23 @@ export async function verifyHash({
     data: Hex;
   };
   const zkSyncChain = await isZkSyncChain(chain);
+  const abi = ox__Abi.from(ox__WrappedSignature.universalSignatureValidatorAbi);
   if (zkSyncChain) {
     // zksync chains dont support deploying code with eth_call
     // need to call a deployed contract instead
     verificationData = {
       to: ZKSYNC_VALIDATOR_ADDRESS,
-      data: encodeFunctionData({
-        abi: universalSignatureValidatorAbi,
-        functionName: "isValidSig",
-        args: [address, hash, wrappedSignature],
-      }),
+      data: ox__AbiFunction.encodeData(
+        ox__AbiFunction.fromAbi(abi, "isValidSig"),
+        [address, hash, wrappedSignature],
+      ),
     };
   } else {
+    const validatorConstructor = ox__AbiConstructor.fromAbi(abi);
     verificationData = {
-      data: encodeDeployData({
-        abi: universalSignatureValidatorAbi,
+      data: ox__AbiConstructor.encode(validatorConstructor, {
         args: [address, hash, wrappedSignature],
-        bytecode: universalSignatureValidatorByteCode,
+        bytecode: ox__WrappedSignature.universalSignatureValidatorBytecode,
       }),
     };
   }

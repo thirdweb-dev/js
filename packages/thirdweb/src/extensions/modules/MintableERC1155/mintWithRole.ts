@@ -1,4 +1,4 @@
-import { maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getAddress } from "../../../utils/address.js";
 import {
