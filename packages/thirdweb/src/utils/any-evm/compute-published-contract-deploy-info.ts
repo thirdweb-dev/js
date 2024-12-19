@@ -3,6 +3,8 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { computeCreate2FactoryAddress } from "../../contract/deployment/utils/create-2-factory.js";
+import { computeRefDeployments } from "../../extensions/prebuilts/compute-ref-deployments.js";
+import type { ImplementationConstructorParam } from "../../extensions/prebuilts/process-ref-deployments.js";
 import { encodeAbiParameters } from "../abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../abi/normalizeFunctionParams.js";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
@@ -51,6 +53,20 @@ export async function computeDeploymentInfoFromMetadata(args: {
   constructorParams?: Record<string, unknown>;
   salt?: string;
 }) {
+  const { client, chain, constructorParams, contractMetadata } = args;
+  const definedConstructorParams =
+    constructorParams || contractMetadata.constructorParams;
+  const processedConstructorParams: Record<string, string | string[]> = {};
+  for (const key in definedConstructorParams) {
+    processedConstructorParams[key] = await computeRefDeployments({
+      client,
+      chain,
+      paramValue: definedConstructorParams[key] as
+        | string
+        | ImplementationConstructorParam,
+    });
+  }
+
   return computeDeploymentInfoFromBytecode({
     client: args.client,
     chain: args.chain,
@@ -60,7 +76,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
       client: args.client,
       chain: args.chain,
     }),
-    constructorParams: args.constructorParams,
+    constructorParams: processedConstructorParams,
     salt: args.salt,
   });
 }
