@@ -2,6 +2,7 @@ import * as ox__Hex from "ox/Hex";
 import * as ox__Signature from "ox/Signature";
 import * as ox__TransactionEnvelopeEip1559 from "ox/TransactionEnvelopeEip1559";
 import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
+import * as ox__TransactionEnvelopeEip7702 from "ox/TransactionEnvelopeEip7702";
 import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
 import type { Hex } from "../utils/encoding/hex.js";
 
@@ -24,6 +25,9 @@ export type SerializableTransaction = {
   value?: bigint | undefined;
   gas?: bigint | undefined;
   gasLimit?: bigint | undefined;
+  authorizationList?:
+    | ox__TransactionEnvelopeEip7702.TransactionEnvelopeEip7702["authorizationList"]
+    | undefined;
 };
 
 export type SerializeTransactionOptions = {
@@ -141,6 +145,16 @@ export function serializeTransaction(
     });
   }
 
+  if (type === "eip7702") {
+    const typedTransaction =
+      transaction as ox__TransactionEnvelopeEip7702.TransactionEnvelopeEip7702;
+    ox__TransactionEnvelopeEip7702.assert(typedTransaction);
+
+    return ox__TransactionEnvelopeEip7702.serialize(typedTransaction, {
+      signature,
+    });
+  }
+
   throw new Error("Invalid transaction type");
 }
 
@@ -152,6 +166,10 @@ function getTransactionEnvelopeType(
 ) {
   if (typeof transactionEnvelope.type !== "undefined") {
     return transactionEnvelope.type;
+  }
+
+  if (typeof transactionEnvelope.authorizationList !== "undefined") {
+    return "eip7702";
   }
 
   if (

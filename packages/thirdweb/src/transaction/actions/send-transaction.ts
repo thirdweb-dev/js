@@ -110,6 +110,32 @@ export interface SendTransactionOptions {
  * });
  * ```
  *
+ * ### Send an EIP-7702 Transaction
+ *
+ * **Note: This feature is in beta and is subject to breaking changes**
+ *
+ * ```ts
+ * import { sendTransaction, prepareTransaction } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const transaction = prepareTransaction({
+ *   chain: sepolia,
+ *   client: client,
+ *   authorizations: [
+ *     {
+ *       address: "0x...",
+ *       chainId: 1,
+ *       nonce: 420n,
+ *     },
+ *   ],
+ * });
+ *
+ * const { transactionHash } = await sendTransaction({
+ *  account,
+ *  transaction,
+ * });
+ * ```
+ *
  * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
  * ```ts
  * const { transactionHash } = await sendTransaction({
@@ -166,9 +192,8 @@ export async function sendTransaction(
 
   const serializableTransaction = await toSerializableTransaction({
     transaction: transaction,
-    from: account.address,
+    from: account,
   });
-
   // branch for gasless transactions
   if (gasless) {
     // lazy load the gasless tx function because it's only needed for gasless transactions

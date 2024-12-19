@@ -1,8 +1,8 @@
-import { serializeTransaction } from "viem";
 import { getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { readContract } from "../transaction/read-contract.js";
+import { serializeTransaction } from "../transaction/serialize-transaction.js";
 
 type EstimateL1FeeOptions = {
   transaction: PreparedTransaction;
@@ -29,8 +29,7 @@ export async function estimateL1Fee(options: EstimateL1FeeOptions) {
     transaction,
   });
   const serialized = serializeTransaction({
-    ...serializableTx,
-    type: "eip1559",
+    transaction: serializableTx,
   });
   //serializeTransaction(transaction);
   return readContract({
