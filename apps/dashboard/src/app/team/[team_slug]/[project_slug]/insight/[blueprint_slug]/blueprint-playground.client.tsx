@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -422,8 +421,32 @@ function RequestConfigSection(props: {
   path: string;
   supportedChainIds: number[];
 }) {
-  const pathVariables = props.parameters.filter((param) => param.in === "path");
-  const queryParams = props.parameters.filter((param) => param.in === "query");
+  const { pathVariables, queryParams, filterQueryParams } = useMemo(() => {
+    const pathVariables: OpenAPIV3.ParameterObject[] = [];
+    const queryParams: OpenAPIV3.ParameterObject[] = [];
+    const filterQueryParams: OpenAPIV3.ParameterObject[] = [];
+
+    for (const param of props.parameters) {
+      if (param.in === "path") {
+        pathVariables.push(param);
+      }
+
+      if (param.in === "query") {
+        if (param.name.startsWith("filter_")) {
+          filterQueryParams.push(param);
+        } else {
+          queryParams.push(param);
+        }
+      }
+    }
+
+    return {
+      pathVariables,
+      queryParams,
+      filterQueryParams,
+    };
+  }, [props.parameters]);
+
   const showError =
     !props.form.formState.isValid &&
     props.form.formState.isDirty &&
@@ -451,12 +474,23 @@ function RequestConfigSection(props: {
           />
         )}
 
-        {pathVariables.length > 0 && queryParams.length > 0 && <Separator />}
-
         {queryParams.length > 0 && (
           <ParameterSection
+            className="border-t"
             parameters={queryParams}
             title="Query Parameters"
+            form={props.form}
+            domain={props.domain}
+            path={props.path}
+            supportedChainIds={props.supportedChainIds}
+          />
+        )}
+
+        {filterQueryParams.length > 0 && (
+          <ParameterSection
+            className="border-t"
+            parameters={filterQueryParams}
+            title="Filter Query Parameters"
             form={props.form}
             domain={props.domain}
             path={props.path}
@@ -479,10 +513,11 @@ function ParameterSection(props: {
   domain: string;
   path: string;
   supportedChainIds: number[];
+  className?: string;
 }) {
   const url = `${props.domain}${props.path}`;
   return (
-    <div className="p-4 py-6">
+    <div className={cn("p-4 py-6", props.className)}>
       <h3 className="mb-3 font-medium text-sm"> {props.title} </h3>
       <div className="overflow-hidden rounded-lg border">
         {props.parameters.map((param, i) => {
