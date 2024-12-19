@@ -1,7 +1,7 @@
 import * as ox__Authorization from "ox/Authorization";
 import * as ox__Signature from "ox/Signature";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import type { Authorization, SignedAuthorization } from "./authorization.js";
+import type { SignedAuthorization } from "./authorization.js";
 
 /**
  * Signs a single EIP-7702 authorization using the provided account.
@@ -19,11 +19,10 @@ import type { Authorization, SignedAuthorization } from "./authorization.js";
  * });
  * ```
  *
- * @beta
- * @transaction
+ * @internal
  */
 export async function signAuthorization(options: {
-  authorization: Authorization;
+  authorization: ox__Authorization.List[number];
   account: Account;
 }): Promise<SignedAuthorization> {
   const { authorization, account } = options;
@@ -51,17 +50,16 @@ export async function signAuthorization(options: {
  * });
  * ```
  *
- * @beta
- * @transaction
+ * @internal
  */
 export async function signAuthorizations(options: {
-  authorizations: Authorization[];
+  authorizations: ox__Authorization.List;
   account: Account;
 }): Promise<SignedAuthorization[]> {
   const { authorizations, account } = options;
 
   return Promise.all(
-    authorizations.map(async (authorization: Authorization) =>
+    authorizations.map(async (authorization) =>
       signAuthorization({
         authorization,
         account,

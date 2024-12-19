@@ -1,6 +1,6 @@
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { getRpcClient } from "../../rpc/rpc.js";
-import { checksumAddress } from "../../utils/address.js";
+import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
@@ -59,9 +59,9 @@ export async function toSerializableTransaction(
       transaction: options.transaction,
       from:
         typeof options.from === "string" // Is this just an address?
-          ? checksumAddress(options.from)
+          ? getAddress(options.from)
           : options.from !== undefined // Is this an account?
-            ? checksumAddress(options.from.address)
+            ? getAddress(options.from.address)
             : undefined,
     });
     // passing these values here will avoid re-fetching them below
@@ -90,12 +90,12 @@ export async function toSerializableTransaction(
 
         return from // otherwise get the next nonce (import the method to do so)
           ? await import("../../rpc/actions/eth_getTransactionCount.js").then(
-              ({ eth_getTransactionCount }) =>
-                eth_getTransactionCount(rpcRequest, {
-                  address: typeof from === "string" ? from : from?.address,
-                  blockTag: "pending",
-                }),
-            )
+            ({ eth_getTransactionCount }) =>
+              eth_getTransactionCount(rpcRequest, {
+                address: typeof from === "string" ? from : from?.address,
+                blockTag: "pending",
+              }),
+          )
           : undefined;
       })(),
       // takes the same options as the sendTransaction function thankfully!
@@ -110,9 +110,12 @@ export async function toSerializableTransaction(
       resolvePromisedValue(options.transaction.to),
       resolvePromisedValue(options.transaction.accessList),
       resolvePromisedValue(options.transaction.value),
-      resolvePromisedValue(options.transaction.authorizations),
       resolveAndSignAuthorizations(options),
     ]);
+
+  if (typeof authorizationList !== "undefined" && typeof to === "undefined") {
+    to = authorizationList[0]?.address;
+  }
 
   const extraGas = await resolvePromisedValue(options.transaction.extraGas);
   if (extraGas) {
@@ -128,8 +131,7 @@ export async function toSerializableTransaction(
     accessList,
     value,
     ...feeData,
-    // For some reason authorizationList is not getting properly typed when returned from resolveAndSignAuthorizations?
-    authorizationList: authorizationList as SignedAuthorization[] | undefined,
+    authorizationList,
   } satisfies SerializableTransaction;
 }
 
@@ -144,15 +146,17 @@ async function resolveAndSignAuthorizations(
     return undefined;
   }
 
-  if (options.transaction.authorizations.length === 0) {
-    return [];
-  }
-
-  if (typeof options.from === "string" || typeof options.from === "undefined") {
-    throw new Error(
-      "toSerializableTransaction - This transaction has authorizations specified, please provide an account to sign them.",
-    );
-  }
+  const account = (() => {
+    if (
+      typeof options.from === "string" ||
+      typeof options.from === "undefined"
+    ) {
+      throw new Error(
+        "toSerializableTransaction - This transaction has authorizations specified, please provide an account to sign them.",
+      );
+    }
+    return options.from;
+  })();
 
   const authorizations = await resolvePromisedValue(
     options.transaction.authorizations,
@@ -170,8 +174,36 @@ async function resolveAndSignAuthorizations(
     "./eip7702/sign-authorization.js"
   );
 
+  const startingNonce = authorizations.some(
+    (a) => typeof a.nonce === "undefined",
+  )
+    ? await (async () => {
+      const nonce = await resolvePromisedValue(options.transaction.nonce);
+      if (typeof nonce !== "undefined") {
+        return nonce;
+      }
+
+      const rpcRequest = getRpcClient(options.transaction);
+      const { eth_getTransactionCount } = await import(
+        "../../rpc/actions/eth_getTransactionCount.js"
+      );
+      return await eth_getTransactionCount(rpcRequest, {
+        address: account.address,
+        blockTag: "pending",
+      });
+    })()
+    : 0;
+
+  const formattedAuthorizations = authorizations.map((auth, idx) => {
+    return {
+      ...auth,
+      chainId: auth.chainId ?? options.transaction.chain.id,
+      nonce: auth.nonce ?? BigInt(startingNonce + idx),
+    };
+  });
+
   return signAuthorizations({
-    authorizations,
-    account: options.from,
+    authorizations: formattedAuthorizations,
+    account,
   });
 }

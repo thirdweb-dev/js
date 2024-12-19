@@ -1,13 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { wagmiTokenContractConfig } from "../../../test/src/abis/wagmiToken.js";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import type { Address } from "../../utils/address.js";
 import { prepareTransaction } from "../prepare-transaction.js";
 import * as TransactionStore from "../transaction-store.js";
 import { sendTransaction } from "./send-transaction.js";
+import { defineChain } from "src/chains/utils.js";
 
 const addTransactionToStore = vi.spyOn(
   TransactionStore,
@@ -32,20 +31,13 @@ describe("sendTransaction", () => {
 
   it("should send an eip7702 transaction", async () => {
     const transaction = prepareTransaction({
-      chain: ANVIL_CHAIN,
+      chain: defineChain(911867),
       client: TEST_CLIENT,
       value: 100n,
       to: TEST_WALLET_B,
       authorizations: [
         {
-          address: wagmiTokenContractConfig.address.toLowerCase() as Address,
-          chainId: 1,
-          nonce: 420n,
-        },
-        {
-          address: "0x0000000000000000000000000000000000000000",
-          chainId: 10,
-          nonce: 69n,
+          address: "0x238c8CD93ee9F8c7Edf395548eF60c0d2e46665E", // Experimental ERC20 on Odyssey
         },
       ],
     });
