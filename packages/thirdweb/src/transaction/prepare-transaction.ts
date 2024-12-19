@@ -5,7 +5,10 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import type { PreparedMethod } from "../utils/abi/prepare-method.js";
 import type { PromisedObject } from "../utils/promise/resolve-promised-value.js";
-import type { Authorization } from "./actions/eip7702/authorization.js";
+import type {
+  Authorization,
+  SignedAuthorization,
+} from "./actions/eip7702/authorization.js";
 
 export type StaticPrepareTransactionOptions = {
   accessList?: AccessList | undefined;
@@ -21,6 +24,7 @@ export type StaticPrepareTransactionOptions = {
   extraGas?: bigint | undefined;
   // eip7702
   authorizations?: Authorization[] | undefined;
+  authorizationList?: SignedAuthorization[] | undefined;
   // zksync specific
   eip712?: EIP712TransactionOptions | undefined;
   // tw specific

@@ -143,6 +143,10 @@ export async function toSerializableTransaction(
 export async function resolveAndSignAuthorizations(
   options: ToSerializableTransactionOptions,
 ): Promise<SignedAuthorization[] | undefined> {
+  if (typeof options.transaction.authorizationList !== "undefined") {
+    return await resolvePromisedValue(options.transaction.authorizationList);
+  }
+
   if (typeof options.transaction.authorizations === "undefined") {
     return undefined;
   }
