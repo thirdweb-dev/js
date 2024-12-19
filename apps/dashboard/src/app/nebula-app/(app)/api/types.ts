@@ -35,7 +35,7 @@ export type SessionInfo = {
   created_at: string;
   deleted_at: string | null;
   history: Array<{
-    role: "user" | "assistant"; // role: action is coming up
+    role: "user" | "assistant" | "action";
     content: string;
     timestamp: number;
   }> | null;

@@ -15,16 +15,20 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
+import { type ThirdwebClient, prepareTransaction } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
-import type { Account } from "thirdweb/wallets";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 
-type SendTransactionOption = Parameters<Account["sendTransaction"]>[0];
+export type NebulaTxData = {
+  chainId: number;
+  data: `0x${string}`;
+  to: string;
+  value: string;
+};
 
 export type ChatMessage =
   | {
@@ -39,7 +43,7 @@ export type ChatMessage =
     }
   | {
       type: "send_transaction";
-      data: SendTransactionOption | null;
+      data: NebulaTxData | null;
     };
 
 export function Chats(props: {
@@ -203,7 +207,7 @@ export function Chats(props: {
 }
 
 function ExecuteTransaction(props: {
-  txData: SendTransactionOption | null;
+  txData: NebulaTxData | null;
   twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
@@ -319,7 +323,7 @@ function MessageActions(props: {
 }
 
 function SendTransactionButton(props: {
-  txData: SendTransactionOption;
+  txData: NebulaTxData;
   twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
@@ -333,13 +337,15 @@ function SendTransactionButton(props: {
       transactionCount={1}
       txChainID={txData.chainId}
       onClick={() => {
-        const promise = sendTransaction.mutateAsync({
-          ...props.txData,
-          nonce: Number(txData.nonce),
-          to: txData.to || undefined, // Get rid of the potential null value
+        const tx = prepareTransaction({
           chain: chain,
           client: props.client,
+          data: txData.data,
+          to: txData.to,
+          value: BigInt(txData.value),
         });
+
+        const promise = sendTransaction.mutateAsync(tx);
 
         toast.promise(promise, {
           success: "Transaction sent successfully",

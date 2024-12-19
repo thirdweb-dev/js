@@ -26,11 +26,44 @@ export function ChatPageContent(props: {
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
     if (props.session?.history) {
-      return props.session.history.map((message) => ({
-        text: message.content,
-        type: message.role,
-        request_id: undefined,
-      }));
+      const _messages: ChatMessage[] = [];
+
+      for (const message of props.session.history) {
+        if (message.role === "action") {
+          try {
+            const content = JSON.parse(message.content) as {
+              session_id: string;
+              request_id: string;
+              data: string;
+              type: "sign_transaction" | (string & {});
+            };
+
+            if (content.type === "sign_transaction") {
+              const txData = JSON.parse(content.data);
+              if (
+                typeof txData === "object" &&
+                txData !== null &&
+                txData.chainId
+              ) {
+                _messages.push({
+                  type: "send_transaction",
+                  data: txData,
+                });
+              }
+            }
+          } catch {
+            // ignore
+          }
+        } else {
+          _messages.push({
+            text: message.content,
+            type: message.role,
+            request_id: undefined,
+          });
+        }
+      }
+
+      return _messages;
     }
     return [];
   });

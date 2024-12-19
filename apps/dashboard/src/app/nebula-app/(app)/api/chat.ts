@@ -1,7 +1,7 @@
 import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
 // TODO - copy the source of this library to dashboard
 import { stream } from "fetch-event-stream";
-import type { SendTransactionOption } from "thirdweb/dist/types/wallets/interfaces/wallet";
+import type { NebulaTxData } from "../components/Chats";
 import type { ExecuteConfig } from "./types";
 
 export type ContextFilters = {
@@ -140,7 +140,7 @@ type ChatStreamedResponse =
   | {
       event: "action";
       type: "sign_transaction" & (string & {});
-      data: SendTransactionOption;
+      data: NebulaTxData;
     };
 
 type ChatStreamedEvent =
