@@ -9,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -27,7 +34,11 @@ import {
 import Link from "next/link";
 import type { OpenAPIV3 } from "openapi-types";
 import { useEffect, useMemo, useState } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import {
+  type ControllerRenderProps,
+  type UseFormReturn,
+  useForm,
+} from "react-hook-form";
 import { z } from "zod";
 import { useTrack } from "../../../../../../hooks/analytics/useTrack";
 import { getVercelEnv } from "../../../../../../lib/vercel-utils";
@@ -412,14 +423,20 @@ function RequestConfigSection(props: {
   supportedChainIds: number[];
 }) {
   const pathVariables = props.parameters.filter((param) => param.in === "path");
-
   const queryParams = props.parameters.filter((param) => param.in === "query");
+  const showError =
+    !props.form.formState.isValid &&
+    props.form.formState.isDirty &&
+    props.form.formState.isSubmitted;
 
   return (
     <div className="flex grow flex-col overflow-hidden">
-      <div className="flex min-h-[60px] items-center gap-2 border-b p-4 text-sm">
-        <ArrowUpRightIcon className="size-5" />
-        Request
+      <div className="flex min-h-[60px] items-center justify-between gap-2 border-b p-4 text-sm">
+        <div className="flex items-center gap-2">
+          <ArrowUpRightIcon className="size-5" />
+          Request
+        </div>
+        {showError && <Badge variant="destructive">Invalid Request</Badge>}
       </div>
 
       <ScrollShadow className="flex-1" scrollableClassName="max-h-full">
@@ -474,7 +491,25 @@ function ParameterSection(props: {
               ? param.schema.description
               : undefined;
 
+          const example =
+            param.schema && "type" in param.schema
+              ? param.schema.example
+              : undefined;
+          const exampleToShow =
+            typeof example === "string" || typeof example === "number"
+              ? example
+              : undefined;
+
+          const showTip = description !== undefined || example !== undefined;
+
           const hasError = !!props.form.formState.errors[param.name];
+
+          const placeholder = url.includes(`{${param.name}}`)
+            ? `{${param.name}}`
+            : url.includes(`:${param.name}`)
+              ? `:${param.name}`
+              : "Value";
+
           return (
             <FormField
               key={param.name}
@@ -530,23 +565,39 @@ function ParameterSection(props: {
                         />
                       ) : (
                         <>
-                          <Input
-                            {...field}
-                            className={cn(
-                              "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-                              description && "lg:pr-10",
-                              hasError && "text-destructive-text",
-                            )}
-                            placeholder={
-                              url.includes(`{${param.name}}`)
-                                ? `{${param.name}}`
-                                : url.includes(`:${param.name}`)
-                                  ? `:${param.name}`
-                                  : "Value"
-                            }
+                          <ParameterInput
+                            param={param}
+                            field={field}
+                            showTip={showTip}
+                            hasError={hasError}
+                            placeholder={placeholder}
                           />
-                          {description && (
-                            <ToolTipLabel label={description}>
+
+                          {showTip && (
+                            <ToolTipLabel
+                              hoverable
+                              contentClassName="max-w-[100vw] break-all"
+                              label={
+                                <div className="flex flex-col gap-2">
+                                  {description && (
+                                    <p className="text-foreground">
+                                      {description}
+                                    </p>
+                                  )}
+
+                                  {exampleToShow !== undefined && (
+                                    <div>
+                                      <p className="mb-1 text-muted-foreground">
+                                        Example:{" "}
+                                        <span className="font-mono">
+                                          {exampleToShow}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              }
+                            >
                               <Button
                                 asChild
                                 variant="ghost"
@@ -570,6 +621,66 @@ function ParameterSection(props: {
         })}
       </div>
     </div>
+  );
+}
+
+function ParameterInput(props: {
+  param: OpenAPIV3.ParameterObject;
+  field: ControllerRenderProps<
+    {
+      [x: string]: string | number;
+    },
+    string
+  >;
+  showTip: boolean;
+  hasError: boolean;
+  placeholder: string;
+}) {
+  const { param, field, showTip, hasError, placeholder } = props;
+
+  if (param.schema && "type" in param.schema && param.schema.enum) {
+    const { value, onChange, ...restField } = field;
+    return (
+      <Select
+        {...restField}
+        value={value.toString()}
+        onValueChange={(v) => {
+          onChange({ target: { value: v } });
+        }}
+      >
+        <SelectTrigger
+          className={cn(
+            "border-none bg-transparent pr-10 font-mono focus:ring-0 focus:ring-offset-0",
+            value === "" && "text-muted-foreground",
+          )}
+          chevronClassName="hidden"
+        >
+          <SelectValue placeholder="Select" />
+        </SelectTrigger>
+
+        <SelectContent className="font-mono">
+          {param.schema.enum.map((val) => {
+            return (
+              <SelectItem value={val} key={val}>
+                {val}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    );
+  }
+
+  return (
+    <Input
+      {...field}
+      className={cn(
+        "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
+        showTip && "lg:pr-10",
+        hasError && "text-destructive-text",
+      )}
+      placeholder={placeholder}
+    />
   );
 }
 
@@ -675,6 +786,21 @@ function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
 
   if (!("type" in param.schema)) {
     return;
+  }
+
+  // if enum values
+  const enumValues = param.schema.enum;
+  if (enumValues) {
+    const enumSchema = z.enum(
+      // @ts-expect-error - Its correct
+      enumValues,
+    );
+
+    if (param.required) {
+      return enumSchema;
+    }
+
+    return enumSchema.or(z.literal(""));
   }
 
   switch (param.schema.type) {
