@@ -1,4 +1,4 @@
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 # ERC-20 Paymaster
 
@@ -7,17 +7,20 @@ In traditional Ethereum transactions, users pay gas fees in the native cryptocur
 ### Get Started
 
 
-1. Install Connect SDK
-
-```bash
-npm install thirdweb
-```
-
-2. Configure the Paymaster In your SDK code, specify the ERC-20 token you wish to use for gas fees. 
+Configure the Paymaster In your SDK code, specify the ERC-20 token you wish to use for gas fees. 
 
 Currently you may use Lisk LSK, Base USDC or Celo CUSD.
 
+<Tabs>
 
+<TabsList>
+	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+  <TabsTrigger value="react">React</TabsTrigger>
+	<TabsTrigger value="dotnet">.NET</TabsTrigger>
+	<TabsTrigger value="unity">Unity</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
 ```tsx
 import { base, lisk, celo } from "thirdweb/chains";
 import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
@@ -49,3 +52,51 @@ const cusdWallet = smartWallet({
   },
 });
 ```
+</TabsContent>
+
+<TabsContent value="react">
+```tsx
+import { base, lisk, celo } from "thirdweb/chains";
+import { TokenPaymaster, smartWallet } from "thirdweb/wallets";
+
+// Have users pay for gas in Base USDC
+<ConnectButton 
+  client={client} 
+  accountAbstraction={{
+    chain: base,
+    sponsorGas: true,
+    overrides: {
+      tokenPaymaster: TokenPaymaster.BASE_USDC,
+    },
+  });
+```
+</TabsContent>
+
+<TabsContent value="dotnet">
+```csharp
+var chainId = 1135; // lisk
+
+var erc20SmartWallet = await SmartWallet.Create(
+  personalWallet: privateKeyWallet, 
+  chainId: chainId, 
+  tokenPaymaster: TokenPaymaster.LISK_LSK
+);
+```
+</TabsContent>
+
+<TabsContent value="unity">
+```csharp
+var chainId = 8453; // base
+
+var erc20SmartWallet = await ConnectWallet(
+    new WalletOptions(
+        WalletProvider.InAppWallet,
+        chainId,
+        inAppWalletOptions: new InAppWalletOptions(authprovider: AuthProvider.Steam),
+        smartWalletOptions: new SmartWalletOptions(sponsorGas: true, tokenPaymaster: TokenPaymaster.BASE_USDC)
+    )
+);
+```
+</TabsContent>
+
+</Tabs>

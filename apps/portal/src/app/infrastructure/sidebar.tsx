@@ -30,6 +30,10 @@ export const sidebar: SideBar = {
           name: "How to Use Storage",
           links: [
             {
+              name: "Connect SDK",
+              href: "/connect",
+            },
+            {
               name: "Upload Files to IPFS",
               href: `${storageSlug}/how-to-use-storage/upload-files-to-ipfs`,
             },
@@ -38,10 +42,6 @@ export const sidebar: SideBar = {
               href: `${storageSlug}/how-to-use-storage/host-web-app`,
             },
           ],
-        },
-        {
-          name: "Storage SDK",
-          href: "/storage-sdk/latest",
         },
       ],
     },
