@@ -14,6 +14,7 @@ export type InstallPublishedModuleOptions = {
   version?: string;
   constructorParams?: Record<string, unknown>;
   moduleData?: `0x${string}`;
+  nonce?: number;
 };
 
 /**
@@ -43,10 +44,14 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
     constructorParams,
     publisher,
     moduleData,
+    nonce,
   } = options;
 
   return installModule({
     contract,
+    overrides: {
+      nonce,
+    },
     asyncParams: async () => {
       const deployedModule = await getOrDeployInfraForPublishedContract({
         chain: contract.chain,
