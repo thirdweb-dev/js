@@ -25,6 +25,7 @@ import {
   PlayIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type { OpenAPIV3 } from "openapi-types";
 import { useEffect, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -118,8 +119,10 @@ function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
       name: "chainId",
       in: "path",
       required: true,
-      description: "Chain ID",
-      type: "integer",
+      schema: {
+        type: "integer",
+        description: "Chain ID of the blockchain",
+      },
     });
   }
 
@@ -156,7 +159,10 @@ export function BlueprintPlaygroundUI(props: {
 }) {
   const trackEvent = useTrack();
   const parameters = useMemo(() => {
-    return modifyParametersForPlayground(props.metadata.parameters);
+    const filteredParams = props.metadata.parameters?.filter(
+      isOpenAPIV3ParameterObject,
+    );
+    return modifyParametersForPlayground(filteredParams || []);
   }, [props.metadata.parameters]);
 
   const formSchema = useMemo(() => {
@@ -166,7 +172,11 @@ export function BlueprintPlaygroundUI(props: {
   const defaultValues = useMemo(() => {
     const values: Record<string, string | number> = {};
     for (const param of parameters) {
-      values[param.name] = param.default || "";
+      if (param.schema && "type" in param.schema && param.schema.default) {
+        values[param.name] = param.schema.default;
+      } else {
+        values[param.name] = "";
+      }
     }
     return values;
   }, [parameters]);
@@ -200,7 +210,7 @@ export function BlueprintPlaygroundUI(props: {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex grow flex-col">
           <BlueprintMetaHeader
-            title={props.metadata.summary}
+            title={props.metadata.summary || "Blueprint Playground"}
             description={props.metadata.description}
             backLink={props.backLink}
           />
@@ -263,7 +273,7 @@ export function BlueprintPlaygroundUI(props: {
 
 function BlueprintMetaHeader(props: {
   title: string;
-  description: string;
+  description: string | undefined;
   backLink: string;
 }) {
   return (
@@ -285,9 +295,11 @@ function BlueprintMetaHeader(props: {
             <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
               {props.title}
             </h1>
-            <p className="mt-1 text-muted-foreground text-sm">
-              {props.description}
-            </p>
+            {props.description && (
+              <p className="mt-1 text-muted-foreground text-sm">
+                {props.description}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -457,6 +469,11 @@ function ParameterSection(props: {
       <h3 className="mb-3 font-medium text-sm"> {props.title} </h3>
       <div className="overflow-hidden rounded-lg border">
         {props.parameters.map((param, i) => {
+          const description =
+            param.schema && "type" in param.schema
+              ? param.schema.description
+              : undefined;
+
           const hasError = !!props.form.formState.errors[param.name];
           return (
             <FormField
@@ -517,7 +534,7 @@ function ParameterSection(props: {
                             {...field}
                             className={cn(
                               "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-                              param.description && "lg:pr-10",
+                              description && "lg:pr-10",
                               hasError && "text-destructive-text",
                             )}
                             placeholder={
@@ -528,8 +545,8 @@ function ParameterSection(props: {
                                   : "Value"
                             }
                           />
-                          {param.description && (
-                            <ToolTipLabel label={param.description}>
+                          {description && (
+                            <ToolTipLabel label={description}>
                               <Button
                                 asChild
                                 variant="ghost"
@@ -651,11 +668,17 @@ function ResponseSection(props: {
   );
 }
 
-function createParametersFormSchema(parameters: BlueprintParameter[]) {
-  const shape: z.ZodRawShape = {};
-  for (const param of parameters) {
-    // integer
-    if (param.type === "integer") {
+function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
+  if (!param.schema) {
+    return;
+  }
+
+  if (!("type" in param.schema)) {
+    return;
+  }
+
+  switch (param.schema.type) {
+    case "integer": {
       const intSchema = z.coerce
         .number({
           message: "Must be an integer",
@@ -663,20 +686,45 @@ function createParametersFormSchema(parameters: BlueprintParameter[]) {
         .int({
           message: "Must be an integer",
         });
-      shape[param.name] = param.required
+      return param.required
         ? intSchema.min(1, {
             message: "Required",
           })
         : intSchema.optional();
     }
 
-    // default: string
-    else {
-      shape[param.name] = param.required
-        ? z.string().min(1, {
+    case "number": {
+      const numberSchema = z.coerce.number();
+      return param.required
+        ? numberSchema.min(1, {
             message: "Required",
           })
-        : z.string().optional();
+        : numberSchema.optional();
+    }
+
+    case "boolean": {
+      const booleanSchema = z.coerce.boolean();
+      return param.required ? booleanSchema : booleanSchema.optional();
+    }
+
+    // everything else - just accept it as a string;
+    default: {
+      const stringSchema = z.string();
+      return param.required
+        ? stringSchema.min(1, {
+            message: "Required",
+          })
+        : stringSchema.optional();
+    }
+  }
+}
+
+function createParametersFormSchema(parameters: BlueprintParameter[]) {
+  const shape: z.ZodRawShape = {};
+  for (const param of parameters) {
+    const paramSchema = openAPIV3ParamToZodFormSchema(param);
+    if (paramSchema) {
+      shape[param.name] = paramSchema;
     }
   }
 
@@ -746,4 +794,10 @@ function ElapsedTimeCounter() {
       {formatMilliseconds(ms)}
     </span>
   );
+}
+
+function isOpenAPIV3ParameterObject(
+  x: OpenAPIV3.ParameterObject | OpenAPIV3.ReferenceObject,
+): x is OpenAPIV3.ParameterObject {
+  return !("$ref" in x);
 }
