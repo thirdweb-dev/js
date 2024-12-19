@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.80.0
+
+### Minor Changes
+
+- [#5799](https://github.com/thirdweb-dev/js/pull/5799) [`90e2b97`](https://github.com/thirdweb-dev/js/commit/90e2b9740d1e53f764f569724ea679fe6a373b06) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Allows hiding the "Linked Profiles" button in the `ConnectButton` Details Modal
+
+  ```tsx
+  <ConnectButton
+    detailsModal={{ manageWallet: { allowLinkingProfiles: false } }}
+  />
+  ```
+
+### Patch Changes
+
+- [#5780](https://github.com/thirdweb-dev/js/pull/5780) [`a2a61df`](https://github.com/thirdweb-dev/js/commit/a2a61df0293a29ba9855efea692681dbd530a2bd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Validate getContract params
+
+- [#5783](https://github.com/thirdweb-dev/js/pull/5783) [`e818f0e`](https://github.com/thirdweb-dev/js/commit/e818f0ec871298e9c6bb5c24f4b9c9002dd2d939) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds Humanity Testnet as a legacy transaction chain
+
 ## 5.79.0
 
 ### Minor Changes
