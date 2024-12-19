@@ -3,7 +3,6 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { cn } from "@/lib/utils";
 import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
@@ -17,8 +16,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import { sendTransaction } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { useSendTransaction } from "thirdweb/react";
 import type { Account } from "thirdweb/wallets";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
@@ -170,9 +168,10 @@ export function Chats(props: {
                           {message.text}
                         </span>
                       ) : message.type === "send_transaction" ? (
-                        <SendTransactionButton
+                        <ExecuteTransaction
                           txData={message.data}
                           twAccount={props.twAccount}
+                          client={props.client}
                         />
                       ) : (
                         <span className="leading-loose">{message.text}</span>
@@ -200,6 +199,29 @@ export function Chats(props: {
         </div>
       </ScrollShadow>
     </div>
+  );
+}
+
+function ExecuteTransaction(props: {
+  txData: SendTransactionOption | null;
+  twAccount: TWAccount;
+  client: ThirdwebClient;
+}) {
+  if (!props.txData) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircleIcon className="size-5" />
+        <AlertTitle>Failed to parse transaction data</AlertTitle>
+      </Alert>
+    );
+  }
+
+  return (
+    <SendTransactionButton
+      txData={props.txData}
+      twAccount={props.twAccount}
+      client={props.client}
+    />
   );
 }
 
@@ -297,51 +319,28 @@ function MessageActions(props: {
 }
 
 function SendTransactionButton(props: {
-  txData: SendTransactionOption | null;
+  txData: SendTransactionOption;
   twAccount: TWAccount;
+  client: ThirdwebClient;
 }) {
-  const account = useActiveAccount();
-  const chain = useV5DashboardChain(props.txData?.chainId);
-
-  const sendTxMutation = useMutation({
-    mutationFn: () => {
-      if (!account) {
-        throw new Error("No active account");
-      }
-
-      if (!props.txData || !chain) {
-        throw new Error("Invalid transaction");
-      }
-
-      return sendTransaction({
-        account,
-        transaction: {
-          ...props.txData,
-          nonce: Number(props.txData.nonce),
-          to: props.txData.to || undefined, // Get rid of the potential null value
-          chain,
-          client: getThirdwebClient(),
-        },
-      });
-    },
-  });
-
-  if (!props.txData) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircleIcon className="size-5" />
-        <AlertTitle>Failed to parse transaction data</AlertTitle>
-      </Alert>
-    );
-  }
+  const { txData } = props;
+  const sendTransaction = useSendTransaction();
+  const chain = useV5DashboardChain(txData.chainId);
 
   return (
     <TransactionButton
-      isPending={sendTxMutation.isPending}
+      isPending={sendTransaction.isPending}
       transactionCount={1}
-      txChainID={props.txData.chainId}
+      txChainID={txData.chainId}
       onClick={() => {
-        const promise = sendTxMutation.mutateAsync();
+        const promise = sendTransaction.mutateAsync({
+          ...props.txData,
+          nonce: Number(txData.nonce),
+          to: txData.to || undefined, // Get rid of the potential null value
+          chain: chain,
+          client: props.client,
+        });
+
         toast.promise(promise, {
           success: "Transaction sent successfully",
           error: "Failed to send transaction",
