@@ -38,4 +38,7 @@ module.exports = [
   "/community/startup-program",
   // -- grants --
   "/grant/superchain",
+  // -- templates --
+  "/templates",
+  "/templates/:template_slug",
 ];
