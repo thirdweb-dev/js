@@ -1,7 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "next": true,
-  "ignore": ["src/@/components/ui/**"],
+  "ignore": [
+    "src/@/components/ui/**",
+    "src/components/notices/AnnouncementBanner.tsx"
+  ],
   "project": ["src/**"],
   "ignoreBinaries": ["only-allow", "biome"],
   "ignoreDependencies": ["@storybook/blocks", "@thirdweb-dev/service-utils"]
