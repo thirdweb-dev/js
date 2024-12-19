@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { isAfter } from "date-fns";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ChevronRightIcon, XIcon } from "lucide-react";
 import { useSelectedLayoutSegment } from "next/navigation";
@@ -54,5 +55,22 @@ export function AnnouncementBanner(props: {
         <XIcon className="size-5" />
       </Button>
     </div>
+  );
+}
+
+export function UnlimitedWalletsBanner() {
+  // hide banner after 31st December 2024
+  const shouldHideBanner = isAfter(new Date(), new Date("31 Dec 2024"));
+
+  if (shouldHideBanner) {
+    return null;
+  }
+
+  return (
+    <AnnouncementBanner
+      href="/team/~/~/settings/billing?coupon=FREEWALLETS24"
+      label='Claim 12 months of free in-app wallets. Use code "FREEWALLETS24". Redeem offer by December 31st!'
+      trackingLabel="unlimited-wallets"
+    />
   );
 }
