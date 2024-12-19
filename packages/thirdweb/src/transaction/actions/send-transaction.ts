@@ -194,6 +194,7 @@ export async function sendTransaction(
     transaction: transaction,
     from: account,
   });
+  console.log("SERIALIZE", serializableTransaction);
 
   // branch for gasless transactions
   if (gasless) {

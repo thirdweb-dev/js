@@ -168,6 +168,10 @@ function getTransactionEnvelopeType(
     return transactionEnvelope.type;
   }
 
+  if (typeof transactionEnvelope.authorizationList !== "undefined") {
+    return "eip7702";
+  }
+
   if (
     typeof transactionEnvelope.maxFeePerGas !== "undefined" ||
     typeof transactionEnvelope.maxPriorityFeePerGas !== "undefined"
@@ -180,10 +184,6 @@ function getTransactionEnvelopeType(
       return "eip2930";
     }
     return "legacy";
-  }
-
-  if (typeof transactionEnvelope.authorizationList !== "undefined") {
-    return "eip7702";
   }
 
   throw new Error("Invalid transaction type");
