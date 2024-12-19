@@ -226,7 +226,7 @@ const chainMetaRecord = {
   57073: {
     headerImgUrl: inkBanner.src,
     about:
-      "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain. Ink is a powerful base layer for deploying innovative DeFi protocols.",
+      "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain, a powerful base layer for deploying innovative DeFi protocols.",
     cta: OP_CTA,
     gasSponsored: true,
   },
