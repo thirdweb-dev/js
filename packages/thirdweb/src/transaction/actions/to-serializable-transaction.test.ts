@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { toWei } from "../../utils/units.js";
 import {
@@ -269,6 +270,98 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
         }),
       ).not.toThrow();
       expect(serializableTransaction.gas).toBe(0n);
+    });
+  });
+
+  describe("authorizations", () => {
+    test("should be able to be set", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          authorizations: [
+            {
+              address: TEST_WALLET_B,
+              chainId: 1,
+              nonce: 420n,
+            },
+          ],
+        },
+        from: TEST_ACCOUNT_A,
+      });
+
+      expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
+        [
+          {
+            "address": "0x0000000000000000000000000000000000000002",
+            "chainId": 1,
+            "nonce": 420n,
+          },
+        ]
+      `);
+    });
+
+    test("should be able to be a promised value", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          authorizations: async () =>
+            Promise.resolve([
+              {
+                address: TEST_WALLET_B,
+                chainId: 1,
+                nonce: 420n,
+              },
+            ]),
+        },
+        from: TEST_ACCOUNT_A,
+      });
+
+      expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
+        [
+          {
+            "address": "0x0000000000000000000000000000000000000002",
+            "chainId": 1,
+            "nonce": 420n,
+          },
+        ]
+      `);
+    });
+
+    test("should throw if no account is provided", async () => {
+      await expect(
+        toSerializableTransaction({
+          transaction: {
+            ...transaction,
+            authorizations: [
+              {
+                address: TEST_WALLET_B,
+                chainId: 1,
+                nonce: 420n,
+              },
+            ],
+          },
+        }),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `[Error: toSerializableTransaction - This transaction has authorizations specified, please provide an account to sign them.]`,
+      );
+
+      await expect(
+        toSerializableTransaction({
+          transaction: {
+            ...transaction,
+            authorizations: [
+              {
+                address: TEST_WALLET_B,
+                chainId: 1,
+                nonce: 420n,
+              },
+            ],
+          },
+          from: "0x...",
+        }),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `[Error: toSerializableTransaction - This transaction has authorizations specified, please provide an account to sign them.]`,
+      );
     });
   });
 
