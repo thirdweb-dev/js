@@ -22,7 +22,7 @@ export function ChatPageContent(props: {
 }) {
   const address = useActiveAccount()?.address;
   const activeChain = useActiveWalletChain();
-  const client = useThirdwebClient();
+  const client = useThirdwebClient(props.authToken);
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
     if (props.session?.history) {
