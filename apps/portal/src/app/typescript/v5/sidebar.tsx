@@ -48,6 +48,10 @@ export const sidebar: SideBar = {
           name: "Contracts",
           href: `${slug}/contract`,
         },
+        {
+          name: "Accounts & Wallets",
+          href: `${slug}/wallets`,
+        },
       ],
     },
     { separator: true },
@@ -55,10 +59,6 @@ export const sidebar: SideBar = {
       name: "Onboarding Users",
       isCollapsible: false,
       links: [
-        {
-          name: "Overview",
-          href: `${slug}/wallets`,
-        },
         {
           name: "External Wallets",
           href: `${slug}/supported-wallets`,
