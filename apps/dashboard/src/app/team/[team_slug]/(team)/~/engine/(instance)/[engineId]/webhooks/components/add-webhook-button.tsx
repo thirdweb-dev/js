@@ -20,6 +20,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button, FormLabel } from "tw-components";
 import { beautifyString } from "./webhooks-table";
 
@@ -74,7 +75,18 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
           className="!bg-background rounded-lg border border-border"
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            createWebhook(data, {
+            const { config, ..._data } = data;
+            const finalData: CreateWebhookInput = _data;
+            if (config) {
+              try {
+                finalData.config = JSON.parse(config);
+              } catch (_) {
+                toast.error("Config must be a valid json string");
+                return;
+              }
+            }
+
+            createWebhook(finalData, {
               onSuccess: () => {
                 onSuccess();
                 onClose();
@@ -126,6 +138,14 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   type="url"
                   placeholder="https://"
                   {...form.register("url", { required: true })}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Config</FormLabel>
+                <Input
+                  type="json"
+                  placeholder={`{"address": "0x1234...5678", "chainId": 1, "threshold": 200.5}`}
+                  {...form.register("config")}
                 />
               </FormControl>
             </Flex>

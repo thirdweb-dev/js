@@ -835,6 +835,7 @@ export interface EngineWebhook {
   active: boolean;
   createdAt: string;
   id: number;
+  config?: string;
 }
 
 export function useEngineWebhooks(params: {
@@ -1246,6 +1247,7 @@ export type CreateWebhookInput = {
   url: string;
   name: string;
   eventType: string;
+  config?: string;
 };
 
 export function useEngineCreateWebhook(params: {

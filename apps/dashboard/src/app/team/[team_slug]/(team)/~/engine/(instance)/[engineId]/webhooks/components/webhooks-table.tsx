@@ -39,6 +39,11 @@ export function beautifyString(str: string): string {
     .join(" ");
 }
 
+function jsonStringify(data: unknown | undefined): string {
+  if (!data) return "";
+  return JSON.stringify(data, null, 2);
+}
+
 interface WebhooksTableProps {
   instanceUrl: string;
   webhooks: EngineWebhook[];
@@ -84,6 +89,13 @@ const columns = [
           {url}
         </Text>
       );
+    },
+  }),
+  columnHelper.accessor("config", {
+    header: "Config",
+    cell: (cell) => {
+      const config = cell.getValue();
+      return <Text>{jsonStringify(config)}</Text>;
     },
   }),
   columnHelper.accessor("createdAt", {
@@ -243,6 +255,10 @@ function DeleteWebhookModal({
               <Text>{webhook.url}</Text>
             </FormControl>
             <FormControl>
+              <FormLabel>Config</FormLabel>
+              <Text className="font-mono">{jsonStringify(webhook.config)}</Text>
+            </FormControl>
+            <FormControl>
               <FormLabel>Created at</FormLabel>
               <Text>
                 {format(new Date(webhook.createdAt ?? ""), "PP pp z")}
@@ -307,6 +323,10 @@ function TestWebhookModal({
             <FormItem>
               <FormLabel>URL</FormLabel>
               <span className="font-mono">{webhook.url}</span>
+            </FormItem>
+            <FormItem>
+              <FormLabel>Config</FormLabel>
+              <span className="font-mono">{webhook.config}</span>
             </FormItem>
 
             <Button type="submit" onClick={onTest} disabled={isPending}>
