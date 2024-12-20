@@ -118,7 +118,8 @@ type EngineFeature =
   | "CONTRACT_SUBSCRIPTIONS"
   | "IP_ALLOWLIST"
   | "HETEROGENEOUS_WALLET_TYPES"
-  | "SMART_BACKEND_WALLETS";
+  | "SMART_BACKEND_WALLETS"
+  | "WEBHOOK_CONFIG";
 
 interface EngineSystemHealth {
   status: string;

@@ -27,6 +27,7 @@ import { beautifyString } from "./webhooks-table";
 interface AddWebhookButtonProps {
   instanceUrl: string;
   authToken: string;
+  supportesWebhookConfig: boolean;
 }
 
 const WEBHOOK_EVENT_TYPES = [
@@ -42,6 +43,7 @@ const WEBHOOK_EVENT_TYPES = [
 export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
   instanceUrl,
   authToken,
+  supportesWebhookConfig = false,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createWebhook } = useEngineCreateWebhook({
@@ -75,14 +77,18 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
           className="!bg-background rounded-lg border border-border"
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            const { config, ..._data } = data;
-            const finalData: CreateWebhookInput = _data;
-            if (config) {
-              try {
-                finalData.config = JSON.parse(config);
-              } catch (_) {
-                toast.error("Config must be a valid json string");
-                return;
+            let finalData: CreateWebhookInput = data;
+
+            if (supportesWebhookConfig) {
+              const { config, ..._data } = data;
+              finalData = _data;
+              if (config) {
+                try {
+                  finalData.config = JSON.parse(config);
+                } catch (_) {
+                  toast.error("Config must be a valid json string");
+                  return;
+                }
               }
             }
 
@@ -140,14 +146,16 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   {...form.register("url", { required: true })}
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel>Config</FormLabel>
-                <Input
-                  type="json"
-                  placeholder={`{"address": "0x1234...5678", "chainId": 1, "threshold": 200.5}`}
-                  {...form.register("config")}
-                />
-              </FormControl>
+              {supportesWebhookConfig && (
+                <FormControl>
+                  <FormLabel>Config</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder={`{"address": "0x1234...5678", "chainId": 1, "threshold": 200.5}`}
+                    {...form.register("config")}
+                  />
+                </FormControl>
+              )}
             </Flex>
           </ModalBody>
 
