@@ -1,5 +1,6 @@
 "use client";
 
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb";
 import { z } from "zod";
-import { MultiNetworkSelector } from "../../../../@/components/blocks/NetworkSelectors";
 import type { ContextFilters } from "../api/chat";
 
 export default function ContextFiltersButton(props: {
@@ -55,14 +55,14 @@ export default function ContextFiltersButton(props: {
           Context Filters
           <div className="flex gap-1 overflow-hidden">
             {chainIds && chainIds.length > 0 && (
-              <Badge className="gap-1 truncate">
+              <Badge className="gap-1 truncate" variant="secondary">
                 Chain
                 <span className="max-sm:hidden">{chainIds.join(", ")}</span>
               </Badge>
             )}
 
             {contractAddresses && contractAddresses.length > 0 && (
-              <Badge className="gap-1 truncate">
+              <Badge className="gap-1 truncate" variant="secondary">
                 Contract
                 <span className="max-sm:hidden">
                   {contractAddresses
@@ -73,7 +73,7 @@ export default function ContextFiltersButton(props: {
             )}
 
             {walletAddresses && walletAddresses.length > 0 && (
-              <Badge className="gap-1 truncate">
+              <Badge className="gap-1 truncate" variant="secondary">
                 Wallet
                 <span className="max-sm:hidden">
                   {walletAddresses

@@ -81,12 +81,13 @@ export function ChatHistoryPageUI(props: {
 
       {filteredSessions.length > 0 && (
         <ScrollShadow
-          className="container max-w-[800px] flex-1"
+          className="flex-1"
           scrollableClassName="max-h-full py-6"
           shadowColor="hsl(var(--background))"
+          shadowClassName="z-10"
         >
           {filteredSessions.length > 0 && (
-            <div className="flex flex-col gap-5">
+            <div className="container flex max-w-[800px] flex-col gap-5">
               {filteredSessions.map((session) => (
                 <SessionCard
                   key={session.id + session.updated_at + session.created_at}
