@@ -19,7 +19,9 @@ export async function siweAuthenticate(args: {
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   const { wallet, chain } = args;
-  const account = await wallet.connect({ client: args.client });
+  // only connect if the wallet doesn't already have an account
+  const account =
+    wallet.getAccount() || (await wallet.connect({ client: args.client }));
   const clientFetch = getClientFetch(args.client, args.ecosystem);
 
   const payload = await (async () => {
