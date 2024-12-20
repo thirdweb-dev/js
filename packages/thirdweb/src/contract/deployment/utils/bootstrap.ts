@@ -7,6 +7,10 @@ import { isZkSyncChain } from "../../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { type ThirdwebContract, getContract } from "../../contract.js";
 import { fetchPublishedContractMetadata } from "../publisher.js";
+import {
+  ZKSYNC_IMPLEMENTATIONS,
+  ZKSYNC_WETH,
+} from "../zksync/implementations.js";
 import { zkDeployCreate2Factory } from "../zksync/zkDeployCreate2Factory.js";
 import { zkDeployContractDeterministic } from "../zksync/zkDeployDeterministic.js";
 import { getDeployedCloneFactoryContract } from "./clone-factory.js";
@@ -69,18 +73,29 @@ export async function getOrDeployInfraForPublishedContract(
       publisher,
       version,
     });
-    const implementationContract = await zkDeployContractDeterministic({
-      chain,
-      client,
-      account,
-      abi: compilerMetadata.abi,
-      bytecode: await fetchBytecodeFromCompilerMetadata({
-        compilerMetadata,
-        client,
+
+    const zksyncImplementations = ZKSYNC_IMPLEMENTATIONS[chain.id];
+    let implementationContract: string | undefined;
+
+    if (zksyncImplementations) {
+      implementationContract = zksyncImplementations[contractId];
+    }
+
+    if (!implementationContract) {
+      implementationContract = await zkDeployContractDeterministic({
         chain,
-      }),
-      params: constructorParams,
-    });
+        client,
+        account,
+        abi: compilerMetadata.abi,
+        bytecode: await fetchBytecodeFromCompilerMetadata({
+          compilerMetadata,
+          client,
+          chain,
+        }),
+        params: constructorParams,
+      });
+    }
+
     return {
       cloneFactoryContract: getContract({
         address: cloneFactoryContract,
@@ -188,6 +203,18 @@ export async function getOrDeployInfraContract(
     version?: string;
   },
 ) {
+  if (options.contractId === "WETH9" && (await isZkSyncChain(options.chain))) {
+    const weth = ZKSYNC_WETH[options.chain.id];
+
+    if (weth) {
+      return getContract({
+        client: options.client,
+        chain: options.chain,
+        address: weth,
+      });
+    }
+  }
+
   const contractMetadata = await fetchPublishedContractMetadata({
     client: options.client,
     contractId: options.contractId,
