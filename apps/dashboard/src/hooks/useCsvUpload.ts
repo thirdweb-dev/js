@@ -134,10 +134,11 @@ export function useCsvUpload<
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
   });
+
   const normalizeQuery = useQueries({
-    queries: rawData.map((o) => ({
-      queryKey: ["snapshot-check-isAddress", o.address],
-      queryFn: () => checkIsAddress({ item: o, thirdwebClient }),
+    queries: rawData.map((item) => ({
+      queryKey: ["snapshot-check-isAddress", item],
+      queryFn: () => checkIsAddress({ item: item, thirdwebClient }),
     })),
     combine: (results) => {
       return {
@@ -149,6 +150,7 @@ export function useCsvUpload<
       };
     },
   });
+
   const removeInvalid = useCallback(() => {
     const filteredData = normalizeQuery.data?.result.filter(
       ({ isValid }) => isValid,
