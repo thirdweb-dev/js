@@ -223,15 +223,8 @@ const chainMetaRecord = {
   },
   // Flare
   14: {
-    //   headerImgUrl: flareChainBanner.src,
     about:
       "Flare is the blockchain for data, offering developers and users secure, decentralized access to high-integrity data from other chains and the internet. Flare's Layer-1 network uniquely supports enshrined data protocols at the network layer, making it the only EVM-compatible smart contract platform optimized for decentralized data acquisition, including price and time-series data, blockchain event and state data, and Web2 API data.",
-    //   cta: {
-    //     backgroundImageUrl: flareCTA.src,
-    //     title: "Build on Flare, the full-stack solution with enshrined oracles",
-    //     buttonLink: "https://dev.flare.network",
-    //     buttonText: "Learn more",
-    //   },
   },
   // rootstock
   30: {
