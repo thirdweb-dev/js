@@ -339,6 +339,12 @@ export type ConnectButton_detailsModalOptions = {
      */
     allowLinkingProfiles?: boolean;
   };
+
+  /**
+   * @param screen The screen's name that was last shown when user closed the modal
+   * @returns
+   */
+  onClose?: (screen: string) => void;
 };
 
 /**
