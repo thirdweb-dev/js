@@ -1,9 +1,6 @@
 import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../account/settings/getAccount";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
 import { getSessionById } from "../../api/session";
 import { ChatPageContent } from "../../components/ChatPageContent";
@@ -22,12 +19,6 @@ export default async function Page(props: {
     loginRedirect(pagePath);
   }
 
-  const accountAddress = await getAuthTokenWalletAddress();
-
-  if (!accountAddress) {
-    loginRedirect(pagePath);
-  }
-
   const session = await getSessionById({
     authToken,
     sessionId: params.session_id,
@@ -39,7 +30,6 @@ export default async function Page(props: {
 
   return (
     <ChatPageContent
-      accountAddress={accountAddress}
       authToken={authToken}
       session={session}
       type="new-chat"

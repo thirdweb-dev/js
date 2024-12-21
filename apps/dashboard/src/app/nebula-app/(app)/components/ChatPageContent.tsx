@@ -1,6 +1,17 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { type ContextFilters, promptNebula } from "../api/chat";
@@ -15,7 +26,6 @@ import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 export function ChatPageContent(props: {
   session: SessionInfo | undefined;
   authToken: string;
-  accountAddress: string;
   type: "landing" | "new-chat";
   account: Account;
   initialPrompt: string | undefined;
@@ -95,12 +105,7 @@ export function ChatPageContent(props: {
   // update the context filters to the current user's wallet address and chain id
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (
-      !isNewSession ||
-      hasUserUpdatedContextFilters ||
-      !address ||
-      !activeChain
-    ) {
+    if (!isNewSession || hasUserUpdatedContextFilters) {
       return;
     }
 
@@ -109,19 +114,23 @@ export function ChatPageContent(props: {
         ? { ..._contextFilters }
         : {};
 
-      updatedContextFilters.walletAddresses = [address];
-      updatedContextFilters.chainIds = [activeChain.id.toString()];
+      updatedContextFilters.walletAddresses = address ? [address] : [];
+      updatedContextFilters.chainIds = activeChain
+        ? [activeChain.id.toString()]
+        : [];
 
       return updatedContextFilters;
     });
   }, [address, isNewSession, hasUserUpdatedContextFilters, activeChain]);
 
-  const config: ExecuteConfig = useMemo(() => {
-    return {
-      mode: "client",
-      signer_wallet_address: props.accountAddress,
-    };
-  }, [props.accountAddress]);
+  const config: ExecuteConfig | null = useMemo(() => {
+    return address
+      ? {
+          mode: "client",
+          signer_wallet_address: address,
+        }
+      : null;
+  }, [address]);
 
   const [sessionId, _setSessionId] = useState<string | undefined>(
     props.session?.id,
@@ -150,6 +159,7 @@ export function ChatPageContent(props: {
 
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
 
   const initSession = useCallback(async () => {
     const session = await createSession({
@@ -163,6 +173,10 @@ export function ChatPageContent(props: {
 
   const handleSendMessage = useCallback(
     async (message: string) => {
+      if (!address) {
+        setShowConnectModal(true);
+        return;
+      }
       setUserHasSubmittedMessage(true);
       setMessages((prev) => [
         ...prev,
@@ -329,6 +343,7 @@ export function ChatPageContent(props: {
       props.authToken,
       messages.length,
       initSession,
+      address,
     ],
   );
 
@@ -350,6 +365,10 @@ export function ChatPageContent(props: {
 
   return (
     <div className="flex grow flex-col overflow-hidden">
+      <WalletDisconnectedDialog
+        open={showConnectModal}
+        onOpenChange={setShowConnectModal}
+      />
       <header className="flex justify-start border-b bg-background p-4">
         <ContextFiltersButton
           contextFilters={contextFilters}
@@ -409,5 +428,37 @@ export function ChatPageContent(props: {
         </p>
       </div>
     </div>
+  );
+}
+
+function WalletDisconnectedDialog(props: {
+  open: boolean;
+  onOpenChange: (value: boolean) => void;
+}) {
+  return (
+    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+      <DialogContent className="p-0">
+        <div className="p-6">
+          <DialogHeader>
+            <DialogTitle> Wallet Disconnected </DialogTitle>
+            <DialogDescription>
+              Connect your wallet to continue
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <div className="flex justify-end gap-3 border-t bg-muted/50 p-6">
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button asChild>
+            <Link href="/login" className="gap-2">
+              Connect Wallet
+              <ArrowRightIcon className="size-4" />
+            </Link>
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
