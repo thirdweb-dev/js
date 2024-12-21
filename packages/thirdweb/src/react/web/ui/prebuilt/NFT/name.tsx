@@ -94,19 +94,11 @@ export function NFTName({
   const { contract, tokenId } = useNFTContext();
 
   const nameQuery = useQuery({
-    queryKey: [
-      "_internal_nft_name_",
-      contract.chain.id,
-      tokenId.toString(),
-      {
-        resolver:
-          typeof nameResolver === "string"
-            ? nameResolver
-            : typeof nameResolver === "function"
-              ? getFunctionId(nameResolver)
-              : undefined,
-      },
-    ],
+    queryKey: getQueryKey({
+      chainId: contract.chain.id,
+      tokenId,
+      nameResolver,
+    }),
     queryFn: async (): Promise<string> =>
       fetchNftName({ nameResolver, contract, tokenId }),
     ...queryOptions,
@@ -120,6 +112,30 @@ export function NFTName({
     return fallbackComponent || null;
   }
   return <span {...restProps}>{nameQuery.data}</span>;
+}
+
+/**
+ * @internal
+ */
+export function getQueryKey(props: {
+  chainId: number;
+  tokenId: bigint;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { chainId, tokenId, nameResolver } = props;
+  return [
+    "_internal_nft_name_",
+    chainId,
+    tokenId.toString(),
+    {
+      resolver:
+        typeof nameResolver === "string"
+          ? nameResolver
+          : typeof nameResolver === "function"
+            ? getFunctionId(nameResolver)
+            : undefined,
+    },
+  ] as const;
 }
 
 /**

@@ -4,7 +4,8 @@ import {
   DROP1155_CONTRACT,
   UNISWAPV3_FACTORY_CONTRACT,
 } from "~test/test-contracts.js";
-import { fetchNftMedia } from "./media.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
+import { fetchNftMedia, getQueryKey } from "./media.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   it("fetchNftMedia should work with ERC721", async () => {
@@ -73,5 +74,61 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
         tokenId: 0n,
       }),
     ).rejects.toThrowError("Failed to resolve NFT info");
+  });
+
+  it("getQueryKey should work without mediaResolver", () => {
+    expect(getQueryKey({ chainId: 1, tokenId: 1n })).toStrictEqual([
+      "_internal_nft_media_",
+      1,
+      "1",
+      {
+        resolver: undefined,
+      },
+    ]);
+  });
+
+  it("getQueryKey should work with mediaResolver being an object", () => {
+    expect(
+      getQueryKey({
+        chainId: 1,
+        tokenId: 1n,
+        mediaResolver: {
+          src: "test",
+          poster: "test",
+        },
+      }),
+    ).toStrictEqual([
+      "_internal_nft_media_",
+      1,
+      "1",
+      {
+        resolver: {
+          src: "test",
+          poster: "test",
+        },
+      },
+    ]);
+  });
+
+  it("getQueryKey should work with mediaResolver being a function", () => {
+    const fn = () => ({
+      src: "test",
+      poster: "test",
+    });
+    const fnId = getFunctionId(fn);
+    expect(
+      getQueryKey({
+        chainId: 1,
+        tokenId: 1n,
+        mediaResolver: fn,
+      }),
+    ).toStrictEqual([
+      "_internal_nft_media_",
+      1,
+      "1",
+      {
+        resolver: fnId,
+      },
+    ]);
   });
 });
