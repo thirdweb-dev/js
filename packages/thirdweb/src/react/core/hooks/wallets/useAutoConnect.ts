@@ -121,10 +121,11 @@ export function useAutoConnectCore(
           setConnectionStatus("disconnected");
         }
       } catch (e) {
+        setConnectionStatus("disconnected");
         if (e instanceof Error) {
           console.warn("Error auto connecting wallet:", e.message);
+          throw e;
         }
-        setConnectionStatus("disconnected");
       }
     } else {
       setConnectionStatus("disconnected");
