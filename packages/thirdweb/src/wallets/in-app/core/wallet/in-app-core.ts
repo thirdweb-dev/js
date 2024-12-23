@@ -48,6 +48,7 @@ export function createInAppWallet(args: {
   const emitter = createWalletEmitter<"inApp">();
   let createOptions = _createOptions;
   let account: Account | undefined = undefined;
+  let adminAccount: Account | undefined = undefined; // Admin account if smartAccountOptions were provided with connection
   let chain: Chain | undefined = undefined;
   let client: ThirdwebClient | undefined;
 
@@ -98,15 +99,16 @@ export function createInAppWallet(args: {
         }
       }
 
-      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
-        options,
-        createOptions,
-        connector,
-      );
+      const {
+        account: connectedAccount,
+        chain: connectedChain,
+        adminAccount: _adminAccount,
+      } = await autoConnectInAppWallet(options, createOptions, connector);
 
       // set the states
       client = options.client;
       account = connectedAccount;
+      adminAccount = _adminAccount;
       chain = connectedChain;
       trackConnect({
         client: options.client,
@@ -151,14 +153,16 @@ export function createInAppWallet(args: {
         }
       }
 
-      const [connectedAccount, connectedChain] = await connectInAppWallet(
-        options,
-        createOptions,
-        connector,
-      );
+      const {
+        account: connectedAccount,
+        chain: connectedChain,
+        adminAccount: _adminAccount,
+      } = await connectInAppWallet(options, createOptions, connector);
+
       // set the states
       client = options.client;
       account = connectedAccount;
+      adminAccount = _adminAccount;
       chain = connectedChain;
       trackConnect({
         client: options.client,
@@ -184,6 +188,7 @@ export function createInAppWallet(args: {
         }
       }
       account = undefined;
+      adminAccount = undefined;
       chain = undefined;
       emitter.emit("disconnect", undefined);
     },
@@ -212,7 +217,11 @@ export function createInAppWallet(args: {
           }
         }
 
-        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+        const {
+          account: connectedAccount,
+          chain: connectedChain,
+          adminAccount: _adminAccount,
+        } = await autoConnectInAppWallet(
           {
             chain: newChain,
             client,
@@ -220,6 +229,7 @@ export function createInAppWallet(args: {
           createOptions,
           connector,
         );
+        adminAccount = _adminAccount;
         account = connectedAccount;
         chain = connectedChain;
       } else {
@@ -228,5 +238,6 @@ export function createInAppWallet(args: {
       }
       emitter.emit("chainChanged", newChain);
     },
+    getAdminAccount: () => adminAccount,
   };
 }

@@ -69,28 +69,26 @@ export function isSmartWallet(
 }
 
 /**
- * We can get the personal account for given smart account but not the other way around - this map gives us the reverse lookup
+ * For in-app wallets, the smart wallet creation is implicit so we track these to be able to retrieve the personal account for a smart account on the wallet API.
+ * Note: We have to go account to account here and NOT wallet to account because the smart wallet itself is never exposed to the in-app wallet, only the account.
  * @internal
  */
-const personalAccountToSmartAccountMap = new WeakMap<
-  Account,
-  Wallet<"smart">
->();
-
-const smartWalletToPersonalAccountMap = new WeakMap<Wallet<"smart">, Account>();
+const adminAccountToSmartAccountMap = new WeakMap<Account, Account>();
+const smartAccountToAdminAccountMap = new WeakMap<Account, Account>();
 
 /**
  * @internal
  */
-export async function connectSmartWallet(
-  wallet: Wallet<"smart">,
+export async function connectSmartAccount(
   connectionOptions: SmartWalletConnectionOptions,
   creationOptions: SmartWalletOptions,
 ): Promise<[Account, Chain]> {
   const { personalAccount, client, chain: connectChain } = connectionOptions;
 
   if (!personalAccount) {
-    throw new Error("Personal wallet does not have an account");
+    throw new Error(
+      "No personal account provided for smart account connection",
+    );
   }
 
   const options = creationOptions;
@@ -177,8 +175,8 @@ export async function connectSmartWallet(
     client,
   });
 
-  personalAccountToSmartAccountMap.set(personalAccount, wallet);
-  smartWalletToPersonalAccountMap.set(wallet, personalAccount);
+  adminAccountToSmartAccountMap.set(personalAccount, account);
+  smartAccountToAdminAccountMap.set(account, personalAccount);
 
   return [account, chain] as const;
 }
@@ -186,15 +184,13 @@ export async function connectSmartWallet(
 /**
  * @internal
  */
-export async function disconnectSmartWallet(
-  wallet: Wallet<"smart">,
-): Promise<void> {
+export async function disconnectSmartAccount(account: Account): Promise<void> {
   // look up the personalAccount for the smart wallet
-  const personalAccount = smartWalletToPersonalAccountMap.get(wallet);
+  const personalAccount = smartAccountToAdminAccountMap.get(account);
   if (personalAccount) {
     // remove the mappings
-    personalAccountToSmartAccountMap.delete(personalAccount);
-    smartWalletToPersonalAccountMap.delete(wallet);
+    adminAccountToSmartAccountMap.delete(personalAccount);
+    smartAccountToAdminAccountMap.delete(account);
   }
 }
 
