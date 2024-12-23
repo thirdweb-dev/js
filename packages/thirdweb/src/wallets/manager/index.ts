@@ -247,11 +247,11 @@ export function createConnectionManager(storage: AsyncStorage) {
   const switchActiveWalletChain = async (chain: Chain) => {
     const wallet = activeWalletStore.getValue();
     if (!wallet) {
-      throw new Error("no wallet found");
+      throw new Error("No active wallet found");
     }
 
     if (!wallet.switchChain) {
-      throw new Error("wallet does not support switching chains");
+      throw new Error("Wallet does not support switching chains");
     }
 
     if (wallet.id === "smart") {
