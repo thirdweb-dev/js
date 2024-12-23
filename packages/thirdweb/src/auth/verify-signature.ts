@@ -1,5 +1,4 @@
 import * as ox__Bytes from "ox/Bytes";
-import * as ox__Hex from "ox/Hex";
 import * as ox__Secp256k1 from "ox/Secp256k1";
 import * as ox__Signature from "ox/Signature";
 import type { Chain } from "../chains/types.js";
@@ -21,7 +20,7 @@ type Message = Prettify<
  */
 export type VerifyEOASignatureParams = {
   message: string | Message;
-  signature: string | Uint8Array | ox__Signature.Signature;
+  signature: string | Uint8Array;
   address: string;
 };
 
@@ -116,32 +115,14 @@ export async function verifyContractWalletSignature({
 
   const parsedSignature = (() => {
     if (ox__Bytes.validate(signature)) {
-      const sig = ox__Signature.fromBytes(signature);
-      return {
-        r: ox__Hex.fromNumber(sig.r),
-        s: ox__Hex.fromNumber(sig.s),
-        yParity: sig.yParity,
-      };
-    } else if (typeof signature === "object") {
-      return {
-        r: ox__Hex.fromNumber(signature.r),
-        s: ox__Hex.fromNumber(signature.s),
-        yParity: signature.yParity,
-      };
+      return ox__Bytes.toHex(signature);
     }
     return signature;
   })();
 
   return verifyHash({
     hash: messageHash,
-    signature:
-      typeof parsedSignature === "string"
-        ? parsedSignature
-        : {
-            r: ox__Hex.toBigInt(parsedSignature.r),
-            s: ox__Hex.toBigInt(parsedSignature.s),
-            yParity: parsedSignature.yParity,
-          },
+    signature: parsedSignature,
     address,
     client,
     chain,
