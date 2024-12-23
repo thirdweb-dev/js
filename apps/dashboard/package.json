@@ -122,7 +122,7 @@
     "@types/papaparse": "^5.3.15",
     "@types/pluralize": "^0.0.33",
     "@types/qrcode": "^1.5.5",
-    "@types/react": "19.0.1",
+    "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
     "@types/react-table": "^7.7.20",
     "@types/spdx-correct": "^3.1.3",
