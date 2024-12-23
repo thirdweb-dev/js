@@ -13,7 +13,7 @@ export type ContextFilters = {
 export async function promptNebula(params: {
   message: string;
   sessionId: string;
-  config: ExecuteConfig;
+  config: ExecuteConfig | null;
   authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
   abortController: AbortController;
@@ -24,7 +24,6 @@ export async function promptNebula(params: {
     user_id: "default-user",
     session_id: params.sessionId,
     stream: true,
-    execute_config: params.config,
   };
 
   if (params.contextFilters) {
@@ -32,6 +31,10 @@ export async function promptNebula(params: {
       chain_ids: params.contextFilters.chainIds || [],
       contract_addresses: params.contextFilters.contractAddresses || [],
     };
+  }
+
+  if (params.config) {
+    body.execute_config = params.config;
   }
 
   const events = await stream(`${NEXT_PUBLIC_NEBULA_URL}/chat`, {

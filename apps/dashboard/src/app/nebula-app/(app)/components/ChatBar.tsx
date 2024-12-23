@@ -25,6 +25,7 @@ export function Chatbar(props: {
             return;
           }
           if (e.key === "Enter" && !props.isChatStreaming) {
+            e.preventDefault();
             setMessage("");
             props.sendMessage(message);
           }
