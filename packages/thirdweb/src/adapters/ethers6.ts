@@ -166,7 +166,7 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
       },
     },
     /**
-     * Converts an ethers6 Signer into an Wallet object or the other way around.
+     * Converts an ethers6 Signer into a Wallet object or the other way around.
      * @example
      *
      * ### fromEthersSigner
