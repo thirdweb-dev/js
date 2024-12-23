@@ -10,15 +10,21 @@ import ancient8Banner from "./temp-assets/ancient8-banner.png";
 import assetChainBanner from "./temp-assets/assetChainBanner.png";
 import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 
+import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
+import appchainCTA from "./temp-assets/appchainCTA.png";
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
+import cyberCTA from "./temp-assets/cyberCTA.png";
+import cyberChainBanner from "./temp-assets/cyberChainBanner.png";
 import etherlinkBanner from "./temp-assets/etherlinkBanner.png";
 import etherlinkCTA from "./temp-assets/etherlinkCTA.png";
 import funkiBanner from "./temp-assets/funkiBanner.jpg";
 import funkiCTA from "./temp-assets/funkiCTA.jpg";
+import gptCTA from "./temp-assets/gptCTA.jpg";
+import gptChainBanner from "./temp-assets/gptChainBanner.jpg";
 import hashfireBanner from "./temp-assets/hashfireBanner.png";
 import hashfireCTA from "./temp-assets/hashfireCTA.png";
 import inkBanner from "./temp-assets/inkBanner.jpg";
@@ -50,6 +56,8 @@ import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
+import zetachainBanner from "./temp-assets/zetachainBanner.png";
+import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
@@ -176,7 +184,15 @@ const chainMetaRecord = {
   },
   // cyber
   7560: {
-    cta: OP_CTA,
+    headerImgUrl: cyberChainBanner.src,
+    about:
+      "Cyber is a Layer 2 blockchain specifically designed for social applications. Built on the Optimism Superchain, it combines high-performance infrastructure with specialized tools for social features to simplify developer workflows and accelerate their time to market.",
+    cta: {
+      backgroundImageUrl: cyberCTA.src,
+      title: "Discover Web3 Social with Cyber",
+      buttonLink: "https://cyber.co/",
+      buttonText: "Learn more",
+    },
     gasSponsored: true,
   },
   // redstone
@@ -204,6 +220,11 @@ const chainMetaRecord = {
       buttonLink: "https://x.com/0xMantleDevs",
     },
     gasSponsored: true,
+  },
+  // Flare
+  14: {
+    about:
+      "Flare is the blockchain for data, offering developers and users secure, decentralized access to high-integrity data from other chains and the internet. Flare's Layer-1 network uniquely supports enshrined data protocols at the network layer, making it the only EVM-compatible smart contract platform optimized for decentralized data acquisition, including price and time-series data, blockchain event and state data, and Web2 API data.",
   },
   // rootstock
   30: {
@@ -310,6 +331,18 @@ const chainMetaRecord = {
   7897: {
     cta: OP_CTA,
     gasSponsored: true,
+  },
+  //Appchain
+  466: {
+    headerImgUrl: appChainBanner.src,
+    about:
+      "Appchain is building useful onchain apps. We're an L2 on top of Ethereum, built on the Arbitrum Orbit stack. We are a low cost, high throughput chain with the goal of building apps for all internet users",
+    cta: {
+      title: "Bringing the world onchain through useful apps.",
+      backgroundImageUrl: appchainCTA.src,
+      buttonLink: "https://appchain.xyz/",
+      buttonText: "Learn more",
+    },
   },
   // B3 Mainnet
   8333: {
@@ -424,6 +457,18 @@ const chainMetaRecord = {
       backgroundImageUrl: thirdwebCTA.src,
       title: "",
       buttonLink: "https://gemuchain.io/",
+      buttonText: "Learn more",
+    },
+  },
+  //GPT Mainnet
+  1511670449: {
+    headerImgUrl: gptChainBanner.src,
+    about:
+      "GPT Protocol combines cutting-edge L2 EVM technology with seamless AI integration to power the future of decentralized applications. By enabling ultra-fast transactions, unmatched scalability, and eco-friendly solutions, GPT Protocol opens doors to developers, brands, and users alike. With innovative tools, a robust ecosystem, and low transaction costs, GPT Protocol is designed for a smarter, more connected blockchain experience. Join us in building the next generation of decentralized innovation.",
+    cta: {
+      backgroundImageUrl: gptCTA.src,
+      title: "Build on the blockchain for AI",
+      buttonLink: "https://www.gptprotocol.com/",
       buttonText: "Learn more",
     },
   },
@@ -595,6 +640,30 @@ const chainMetaRecord = {
       backgroundImageUrl: assetChainCTABG.src,
       title: "Start Building",
       buttonLink: "https://docs.assetchain.org",
+      buttonText: "Learn more",
+    },
+  },
+  // Zetachain
+  7000: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
+      buttonText: "Learn more",
+    },
+  },
+  // ZetaChain Testnet
+  7001: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
       buttonText: "Learn more",
     },
   },
