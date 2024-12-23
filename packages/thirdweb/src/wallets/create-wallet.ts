@@ -32,7 +32,7 @@ import { createWalletEmitter } from "./wallet-emitter.js";
 /**
  * Creates a wallet based on the provided ID and arguments.
  *
- * - Supports 350+ wallets
+ * - Supports 500+ wallets
  * - Handles both injected browser wallets and WalletConnect sessions
  *
  * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)

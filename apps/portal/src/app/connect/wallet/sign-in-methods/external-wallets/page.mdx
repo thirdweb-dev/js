@@ -1,4 +1,4 @@
-import { createMetadata, ArticleIconCard, Callout } from "@doc";
+import { createMetadata, ArticleIconCard, Callout, Grid } from "@doc";
 import { 
   WalletsAuthIcon, 
   WalletsConnectIcon,     
@@ -23,7 +23,7 @@ export const metadata = createMetadata({
 
 # External wallets
 
-thirdweb natively supports 350+ first-party wallets and all wallets that implement EIP-6963 (Multi-injected Provider Discovery). For the full list, please consult [this list](/typescript/v5/supported-wallets).
+thirdweb natively supports 500+ first-party wallets and all wallets that implement EIP-6963 (Multi-injected Provider Discovery). For the full list, please consult [this list](/typescript/v5/supported-wallets).
 
 You can use an external wallet in many ways. We've outlined these different use cases below:
 
@@ -84,11 +84,9 @@ thirdweb wallets provide a seamless web3 experience with minimal prompts and dis
 
 Note, however, that the wallet interacting with your application will be a thirdweb wallet, not the user's external wallet. While we provide methods to export keys and see how the external wallet and thirdweb wallet are linked, if your app requires the user's external wallet, you should use [SIWE](#authenticating-with-external-wallets) instead.
 
-### Implementation
+#### Authenticate to an In App Wallet with SIWE
 
-#### In App Wallet
-
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+<Grid>
     <ArticleIconCard
         title="TypeScript"
         icon={TypeScriptIcon}
@@ -115,11 +113,11 @@ Note, however, that the wallet interacting with your application will be a third
         icon={UnityIcon}
         href="/unity/v5/wallets/in-app-wallet#login-with-siwe"
     />
-</div>
+</Grid>
 
-#### Ecosystem Wallet
+#### Authenticate to an Ecosystem Wallet with SIWE
 
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+<Grid>
     <ArticleIconCard
         title="TypeScript"
         icon={TypeScriptIcon}
@@ -146,4 +144,4 @@ Note, however, that the wallet interacting with your application will be a third
         icon={UnityIcon}
         href="/unity/v5/wallets/ecosystem-wallet#login-with-siwe"
     />
-</div>
+</Grid>

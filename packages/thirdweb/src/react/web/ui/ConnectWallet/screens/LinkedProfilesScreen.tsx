@@ -98,7 +98,12 @@ export function LinkedProfilesScreen(props: {
           <Spacer y="xs" />
           {/* Exclude guest as a profile */}
           {connectedProfiles
-            ?.filter((profile) => profile.type !== "guest")
+            ?.filter(
+              (profile) =>
+                profile.type.toLowerCase() !== "guest" &&
+                profile.type.toLowerCase() !== "custom_jwt" &&
+                profile.type.toLowerCase() !== "custom_auth_endpoint",
+            )
             .map((profile) => (
               <LinkedProfile
                 key={`${JSON.stringify(profile)}`}

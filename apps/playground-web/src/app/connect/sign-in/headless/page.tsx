@@ -4,6 +4,7 @@ import { HooksPreview } from "@/components/sign-in/hooks";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
+import { ModalPreview } from "../../../../components/sign-in/modal";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -28,10 +29,41 @@ export default function Page() {
           docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
           heroLink="/connectors.png"
         />
-
+        <Modal />
+        <div className="h-6" />
         <Hooks />
       </main>
     </ThirdwebProvider>
+  );
+}
+
+function Modal() {
+  return (
+    <>
+      <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
+        Open the connect modal from anywhere
+      </h2>
+
+      <p className="mb-5 max-w-[600px]">
+        You can open the connect modal from anywhere in your app.
+      </p>
+
+      <CodeExample
+        preview={<ModalPreview />}
+        code={`// Using your own UI
+        import { useConnectModal } from "thirdweb/react";
+
+        function App(){
+          const { connect } = useConnectModal();
+
+          return (
+          // pass modal configuration options here
+      <button onClick={() => connect({ client })}>Sign in</button>
+      );
+      };`}
+        lang="tsx"
+      />
+    </>
   );
 }
 
@@ -43,7 +75,7 @@ function Hooks() {
       </h2>
 
       <p className="mb-5 max-w-[600px]">
-        Build your own connect UI using react hooks.
+        Full control over your UI using react hooks.
         <br />
         Wallet state management is all handled for you.
       </p>
@@ -57,14 +89,14 @@ function Hooks() {
         function App(){
           const { connect } = useConnect();
 
-          return (<>
+          return (
       <button onClick={() => connect(async () => {
-        // 350+ wallets supported with id autocomplete
+        // 500+ wallets supported with id autocomplete
         const wallet = createWallet("io.metamask");
         await wallet.connect({ client });
         return wallet;
       })}>Connect with Metamask</button>
-      </>);
+      );
       };`}
         lang="tsx"
       />

@@ -1,4 +1,4 @@
-import { ArticleIconCard, AuthList, Callout, DocImage } from "@doc";
+import { ArticleIconCard, AuthList, Callout, DocImage, Grid, Stack } from "@doc";
 import {UserIcon} from 'lucide-react'
 import {
     ReactIcon,
@@ -31,7 +31,7 @@ For all login methods, thirdweb generates a non-custodial [wallet](/connect/wall
 
 To enable a given sign-in method for the thirdweb wallet, refer to the following guides:
 
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+<Grid>
     <ArticleIconCard
         title="TypeScript"
         icon={TypeScriptIcon}
@@ -63,17 +63,19 @@ To enable a given sign-in method for the thirdweb wallet, refer to the following
         icon={UnrealEngineIcon}
         href="/unreal-engine/blueprints/in-app-wallet#otp"
     />
-</div>
+</Grid>
 
 ### Ecosystem Wallets
 
-In order to configure sign-in options within your ecosystem, first configure the allowed sign-in methods on [your dashboard](https://thirdweb.com/team/~/~/ecosystem). 
+
+In order to configure sign-in options for all apps within your ecosystem, first configure the allowed sign-in methods on [your dashboard](https://thirdweb.com/team/~/~/ecosystem). 
+
 
 <DocImage src={EcosystemSocialConfig}/>
 
 Once configured, refer to the following guides to use the various login options within your ecosystem:
 
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+<Grid>
     <ArticleIconCard
         title="TypeScript"
         icon={TypeScriptIcon}
@@ -100,7 +102,7 @@ Once configured, refer to the following guides to use the various login options 
         icon={UnityIcon}
         href="/unity/v5/wallets/ecosystem-wallet#login-methods"
     />
-</div>
+</Grid>
 
 <Callout variant="warning" title="Using disabled auth strategies">
 	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
@@ -111,26 +113,26 @@ Once configured, refer to the following guides to use the various login options 
 
 Most authentication option are that straight forward. However, some options require additional setup or nuances. See below for more information on these options:
 
-<div className="flex flex-col space-y-4">
+<Stack>
     <ArticleIconCard
-        href="/wallet/sign-in-methods/guest"
+        href="/connect/wallet/sign-in-methods/guest"
         icon={UserIcon}
         title="Guest Mode"
         description="Learn more about guest mode"
     />
     <ArticleIconCard
-        href="/wallet/sign-in-methods/external-wallets"
+        href="/connect/wallet/sign-in-methods/external-wallets#authenticating-with-external-wallets-into-thirdweb-wallets"
         icon={WalletsConnectIcon}
         title="External Wallet"
         description="Learn more about external wallet authentication"
     />
     <ArticleIconCard
-        href="/wallet/sign-in-methods/custom-auth/overview"
+        href="/connect/in-app-wallet/custom-auth/configuration"
         icon={EcosystemWalletsIcon}
         title="Custom Authentication"
         description="Learn more about custom authentication with your own auth system"
     />
-</div>
+</Stack>
 
 ## Interacting with your App
 

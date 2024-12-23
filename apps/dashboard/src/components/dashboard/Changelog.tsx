@@ -1,20 +1,16 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { formatDistance } from "date-fns/formatDistance";
+import { formatDistance } from "date-fns";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { ClientOnly } from "../ClientOnly/ClientOnly";
 
-export interface ChangelogItem {
+type ChangelogItem = {
   published_at: string;
   title: string;
   url: string;
-}
+};
 
-interface ChangelogProps {
-  changelog: ChangelogItem[];
-}
+export async function Changelog() {
+  const changelog = await getChangelog();
 
-export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
   return (
     <div className="relative flex flex-col gap-6 border-border border-l py-2">
       {changelog.map((item) => (
@@ -31,11 +27,9 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
               {item.title}
             </Link>
             <div className="mt-1 text-muted-foreground text-xs opacity-70">
-              <ClientOnly ssr={<Skeleton className="h-2 w-28" />}>
-                {formatDistance(new Date(item.published_at), Date.now(), {
-                  addSuffix: true,
-                })}
-              </ClientOnly>
+              {formatDistance(new Date(item.published_at), Date.now(), {
+                addSuffix: true,
+              })}
             </div>
           </div>
         </div>
@@ -49,4 +43,12 @@ export const Changelog: React.FC<ChangelogProps> = ({ changelog }) => {
       </Link>
     </div>
   );
-};
+}
+
+async function getChangelog() {
+  const res = await fetch(
+    "https://thirdweb.ghost.io/ghost/api/content/posts/?key=49c62b5137df1c17ab6b9e46e3&fields=title,url,published_at&filter=tag:changelog&visibility:public&limit=10",
+  );
+  const json = await res.json();
+  return json.posts as ChangelogItem[];
+}

@@ -1,6 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
-import { ExternalLink, ZapIcon } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: move the following two slugs to walletSlug with updated docs
@@ -22,11 +22,6 @@ export const sidebar: SideBar = {
     {
       name: "Why thirdweb?",
       href: "/connect/why-thirdweb",
-    },
-    {
-      name: "Quickstart",
-      href: "/connect/quickstart",
-      icon: <ZapIcon />,
     },
     {
       name: "Playground",
@@ -127,6 +122,10 @@ export const sidebar: SideBar = {
               name: "Integrating with Partners",
               href: `${walletSlug}/ecosystem/integrating-partners`,
             },
+            {
+              name: "Register with WalletConnect",
+              href: `${walletSlug}/ecosystem/register-walletconnect`,
+            },
           ],
         },
         //Account abstraction
@@ -188,29 +187,6 @@ export const sidebar: SideBar = {
               name: "Sponsorship rules",
               href: `${aAslug}/sponsorship-rules`,
             },
-            // {
-            // 	name: "References",
-            // 	isCollapsible: true,
-            // 	expanded: true,
-            // 	links: [
-            // 		{
-            // 			name: "React",
-            // 			href: `/references/typescript/v5/smartWallet`,
-            // 		},
-            // 		{
-            // 			name: "React Native",
-            // 			href: `/react-native/v0/wallets/smartwallet`,
-            // 		},
-            // 		{
-            // 			name: "TypeScript",
-            // 			href: `/references/wallets/v2/SmartWallet`,
-            // 		},
-            // 		{
-            // 			name: "Unity",
-            // 			href: `/unity/wallets/providers/smart-wallet`,
-            // 		},
-            // 	],
-            // },
             {
               name: "FAQs",
               href: `${aAslug}/faq`,
@@ -375,40 +351,42 @@ export const sidebar: SideBar = {
             },
           ],
         },
+      ],
+    },
+    { separator: true },
+    {
+      name: "API References",
+      isCollapsible: false,
+      links: [
         {
-          name: "API References",
-          links: [
-            {
-              name: "TypeScript",
-              href: "/typescript/v5",
-              icon: <TypeScriptIcon />,
-            },
-            {
-              name: "React",
-              href: "/react/v5",
-              icon: <ReactIcon />,
-            },
-            {
-              name: "React Native",
-              href: "/react-native/v5",
-              icon: <ReactIcon />,
-            },
-            {
-              name: "Dotnet",
-              href: "/dotnet",
-              icon: <DotNetIcon />,
-            },
-            {
-              name: "Unity",
-              href: "/unity",
-              icon: <UnityIcon />,
-            },
-            {
-              name: "Unreal Engine",
-              href: "/unreal-engine",
-              icon: <UnrealEngineIcon />,
-            },
-          ],
+          name: "TypeScript",
+          href: "/typescript/v5",
+          icon: <TypeScriptIcon />,
+        },
+        {
+          name: "React",
+          href: "/react/v5",
+          icon: <ReactIcon />,
+        },
+        {
+          name: "React Native",
+          href: "/react-native/v5",
+          icon: <ReactIcon />,
+        },
+        {
+          name: "Dotnet",
+          href: "/dotnet",
+          icon: <DotNetIcon />,
+        },
+        {
+          name: "Unity",
+          href: "/unity",
+          icon: <UnityIcon />,
+        },
+        {
+          name: "Unreal Engine",
+          href: "/unreal-engine",
+          icon: <UnrealEngineIcon />,
         },
       ],
     },

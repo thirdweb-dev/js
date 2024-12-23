@@ -7,12 +7,6 @@ export enum PageId {
   //  marketing / growth pages
   // ---------------------------------------------------------------------------
 
-  // thirdweb.com/templates
-  Templates = "templates-page",
-
-  // thirdweb.com/template/[templateId]
-  Template = "template-page",
-
   // thirdweb.com/account-abstraction
   SmartWalletLanding = "smart-wallet-landing",
 

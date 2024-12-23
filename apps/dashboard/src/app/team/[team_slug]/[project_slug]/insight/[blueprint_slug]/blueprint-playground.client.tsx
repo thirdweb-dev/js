@@ -9,7 +9,13 @@ import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,8 +31,13 @@ import {
   PlayIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type { OpenAPIV3 } from "openapi-types";
 import { useEffect, useMemo, useState } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import {
+  type ControllerRenderProps,
+  type UseFormReturn,
+  useForm,
+} from "react-hook-form";
 import { z } from "zod";
 import { useTrack } from "../../../../../../hooks/analytics/useTrack";
 import { getVercelEnv } from "../../../../../../lib/vercel-utils";
@@ -118,8 +129,10 @@ function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
       name: "chainId",
       in: "path",
       required: true,
-      description: "Chain ID",
-      type: "integer",
+      schema: {
+        type: "integer",
+        description: "Chain ID of the blockchain",
+      },
     });
   }
 
@@ -156,7 +169,10 @@ export function BlueprintPlaygroundUI(props: {
 }) {
   const trackEvent = useTrack();
   const parameters = useMemo(() => {
-    return modifyParametersForPlayground(props.metadata.parameters);
+    const filteredParams = props.metadata.parameters?.filter(
+      isOpenAPIV3ParameterObject,
+    );
+    return modifyParametersForPlayground(filteredParams || []);
   }, [props.metadata.parameters]);
 
   const formSchema = useMemo(() => {
@@ -166,7 +182,11 @@ export function BlueprintPlaygroundUI(props: {
   const defaultValues = useMemo(() => {
     const values: Record<string, string | number> = {};
     for (const param of parameters) {
-      values[param.name] = param.default || "";
+      if (param.schema && "type" in param.schema && param.schema.default) {
+        values[param.name] = param.schema.default;
+      } else {
+        values[param.name] = "";
+      }
     }
     return values;
   }, [parameters]);
@@ -200,7 +220,7 @@ export function BlueprintPlaygroundUI(props: {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex grow flex-col">
           <BlueprintMetaHeader
-            title={props.metadata.summary}
+            title={props.metadata.summary || "Blueprint Playground"}
             description={props.metadata.description}
             backLink={props.backLink}
           />
@@ -263,7 +283,7 @@ export function BlueprintPlaygroundUI(props: {
 
 function BlueprintMetaHeader(props: {
   title: string;
-  description: string;
+  description: string | undefined;
   backLink: string;
 }) {
   return (
@@ -285,9 +305,11 @@ function BlueprintMetaHeader(props: {
             <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
               {props.title}
             </h1>
-            <p className="mt-1 text-muted-foreground text-sm">
-              {props.description}
-            </p>
+            {props.description && (
+              <p className="mt-1 text-muted-foreground text-sm">
+                {props.description}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -399,15 +421,45 @@ function RequestConfigSection(props: {
   path: string;
   supportedChainIds: number[];
 }) {
-  const pathVariables = props.parameters.filter((param) => param.in === "path");
+  const { pathVariables, queryParams, filterQueryParams } = useMemo(() => {
+    const pathVariables: OpenAPIV3.ParameterObject[] = [];
+    const queryParams: OpenAPIV3.ParameterObject[] = [];
+    const filterQueryParams: OpenAPIV3.ParameterObject[] = [];
 
-  const queryParams = props.parameters.filter((param) => param.in === "query");
+    for (const param of props.parameters) {
+      if (param.in === "path") {
+        pathVariables.push(param);
+      }
+
+      if (param.in === "query") {
+        if (param.name.startsWith("filter_")) {
+          filterQueryParams.push(param);
+        } else {
+          queryParams.push(param);
+        }
+      }
+    }
+
+    return {
+      pathVariables,
+      queryParams,
+      filterQueryParams,
+    };
+  }, [props.parameters]);
+
+  const showError =
+    !props.form.formState.isValid &&
+    props.form.formState.isDirty &&
+    props.form.formState.isSubmitted;
 
   return (
     <div className="flex grow flex-col overflow-hidden">
-      <div className="flex min-h-[60px] items-center gap-2 border-b p-4 text-sm">
-        <ArrowUpRightIcon className="size-5" />
-        Request
+      <div className="flex min-h-[60px] items-center justify-between gap-2 border-b p-4 text-sm">
+        <div className="flex items-center gap-2">
+          <ArrowUpRightIcon className="size-5" />
+          Request
+        </div>
+        {showError && <Badge variant="destructive">Invalid Request</Badge>}
       </div>
 
       <ScrollShadow className="flex-1" scrollableClassName="max-h-full">
@@ -422,12 +474,23 @@ function RequestConfigSection(props: {
           />
         )}
 
-        {pathVariables.length > 0 && queryParams.length > 0 && <Separator />}
-
         {queryParams.length > 0 && (
           <ParameterSection
+            className="border-t"
             parameters={queryParams}
             title="Query Parameters"
+            form={props.form}
+            domain={props.domain}
+            path={props.path}
+            supportedChainIds={props.supportedChainIds}
+          />
+        )}
+
+        {filterQueryParams.length > 0 && (
+          <ParameterSection
+            className="border-t"
+            parameters={filterQueryParams}
+            title="Filter Query Parameters"
             form={props.form}
             domain={props.domain}
             path={props.path}
@@ -450,14 +513,38 @@ function ParameterSection(props: {
   domain: string;
   path: string;
   supportedChainIds: number[];
+  className?: string;
 }) {
   const url = `${props.domain}${props.path}`;
   return (
-    <div className="p-4 py-6">
+    <div className={cn("p-4 py-6", props.className)}>
       <h3 className="mb-3 font-medium text-sm"> {props.title} </h3>
       <div className="overflow-hidden rounded-lg border">
         {props.parameters.map((param, i) => {
+          const description =
+            param.schema && "type" in param.schema
+              ? param.schema.description
+              : undefined;
+
+          const example =
+            param.schema && "type" in param.schema
+              ? param.schema.example
+              : undefined;
+          const exampleToShow =
+            typeof example === "string" || typeof example === "number"
+              ? example
+              : undefined;
+
+          const showTip = description !== undefined || example !== undefined;
+
           const hasError = !!props.form.formState.errors[param.name];
+
+          const placeholder = url.includes(`{${param.name}}`)
+            ? `{${param.name}}`
+            : url.includes(`:${param.name}`)
+              ? `:${param.name}`
+              : "Value";
+
           return (
             <FormField
               key={param.name}
@@ -513,23 +600,39 @@ function ParameterSection(props: {
                         />
                       ) : (
                         <>
-                          <Input
-                            {...field}
-                            className={cn(
-                              "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-                              param.description && "lg:pr-10",
-                              hasError && "text-destructive-text",
-                            )}
-                            placeholder={
-                              url.includes(`{${param.name}}`)
-                                ? `{${param.name}}`
-                                : url.includes(`:${param.name}`)
-                                  ? `:${param.name}`
-                                  : "Value"
-                            }
+                          <ParameterInput
+                            param={param}
+                            field={field}
+                            showTip={showTip}
+                            hasError={hasError}
+                            placeholder={placeholder}
                           />
-                          {param.description && (
-                            <ToolTipLabel label={param.description}>
+
+                          {showTip && (
+                            <ToolTipLabel
+                              hoverable
+                              contentClassName="max-w-[100vw] break-all"
+                              label={
+                                <div className="flex flex-col gap-2">
+                                  {description && (
+                                    <p className="text-foreground">
+                                      {description}
+                                    </p>
+                                  )}
+
+                                  {exampleToShow !== undefined && (
+                                    <div>
+                                      <p className="mb-1 text-muted-foreground">
+                                        Example:{" "}
+                                        <span className="font-mono">
+                                          {exampleToShow}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              }
+                            >
                               <Button
                                 asChild
                                 variant="ghost"
@@ -553,6 +656,66 @@ function ParameterSection(props: {
         })}
       </div>
     </div>
+  );
+}
+
+function ParameterInput(props: {
+  param: OpenAPIV3.ParameterObject;
+  field: ControllerRenderProps<
+    {
+      [x: string]: string | number;
+    },
+    string
+  >;
+  showTip: boolean;
+  hasError: boolean;
+  placeholder: string;
+}) {
+  const { param, field, showTip, hasError, placeholder } = props;
+
+  if (param.schema && "type" in param.schema && param.schema.enum) {
+    const { value, onChange, ...restField } = field;
+    return (
+      <Select
+        {...restField}
+        value={value.toString()}
+        onValueChange={(v) => {
+          onChange({ target: { value: v } });
+        }}
+      >
+        <SelectTrigger
+          className={cn(
+            "border-none bg-transparent pr-10 font-mono focus:ring-0 focus:ring-offset-0",
+            value === "" && "text-muted-foreground",
+          )}
+          chevronClassName="hidden"
+        >
+          <SelectValue placeholder="Select" />
+        </SelectTrigger>
+
+        <SelectContent className="font-mono">
+          {param.schema.enum.map((val) => {
+            return (
+              <SelectItem value={val} key={val}>
+                {val}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+    );
+  }
+
+  return (
+    <Input
+      {...field}
+      className={cn(
+        "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
+        showTip && "lg:pr-10",
+        hasError && "text-destructive-text",
+      )}
+      placeholder={placeholder}
+    />
   );
 }
 
@@ -651,11 +814,32 @@ function ResponseSection(props: {
   );
 }
 
-function createParametersFormSchema(parameters: BlueprintParameter[]) {
-  const shape: z.ZodRawShape = {};
-  for (const param of parameters) {
-    // integer
-    if (param.type === "integer") {
+function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
+  if (!param.schema) {
+    return;
+  }
+
+  if (!("type" in param.schema)) {
+    return;
+  }
+
+  // if enum values
+  const enumValues = param.schema.enum;
+  if (enumValues) {
+    const enumSchema = z.enum(
+      // @ts-expect-error - Its correct
+      enumValues,
+    );
+
+    if (param.required) {
+      return enumSchema;
+    }
+
+    return enumSchema.or(z.literal(""));
+  }
+
+  switch (param.schema.type) {
+    case "integer": {
       const intSchema = z.coerce
         .number({
           message: "Must be an integer",
@@ -663,20 +847,45 @@ function createParametersFormSchema(parameters: BlueprintParameter[]) {
         .int({
           message: "Must be an integer",
         });
-      shape[param.name] = param.required
+      return param.required
         ? intSchema.min(1, {
             message: "Required",
           })
         : intSchema.optional();
     }
 
-    // default: string
-    else {
-      shape[param.name] = param.required
-        ? z.string().min(1, {
+    case "number": {
+      const numberSchema = z.coerce.number();
+      return param.required
+        ? numberSchema.min(1, {
             message: "Required",
           })
-        : z.string().optional();
+        : numberSchema.optional();
+    }
+
+    case "boolean": {
+      const booleanSchema = z.coerce.boolean();
+      return param.required ? booleanSchema : booleanSchema.optional();
+    }
+
+    // everything else - just accept it as a string;
+    default: {
+      const stringSchema = z.string();
+      return param.required
+        ? stringSchema.min(1, {
+            message: "Required",
+          })
+        : stringSchema.optional();
+    }
+  }
+}
+
+function createParametersFormSchema(parameters: BlueprintParameter[]) {
+  const shape: z.ZodRawShape = {};
+  for (const param of parameters) {
+    const paramSchema = openAPIV3ParamToZodFormSchema(param);
+    if (paramSchema) {
+      shape[param.name] = paramSchema;
     }
   }
 
@@ -746,4 +955,10 @@ function ElapsedTimeCounter() {
       {formatMilliseconds(ms)}
     </span>
   );
+}
+
+function isOpenAPIV3ParameterObject(
+  x: OpenAPIV3.ParameterObject | OpenAPIV3.ReferenceObject,
+): x is OpenAPIV3.ParameterObject {
+  return !("$ref" in x);
 }

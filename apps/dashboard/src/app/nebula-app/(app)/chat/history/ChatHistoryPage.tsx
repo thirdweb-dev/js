@@ -81,12 +81,13 @@ export function ChatHistoryPageUI(props: {
 
       {filteredSessions.length > 0 && (
         <ScrollShadow
-          className="container max-w-[800px] flex-1"
+          className="flex-1"
           scrollableClassName="max-h-full py-6"
           shadowColor="hsl(var(--background))"
+          shadowClassName="z-10"
         >
           {filteredSessions.length > 0 && (
-            <div className="flex flex-col gap-5">
+            <div className="container flex max-w-[800px] flex-col gap-5">
               {filteredSessions.map((session) => (
                 <SessionCard
                   key={session.id + session.updated_at + session.created_at}
@@ -175,9 +176,14 @@ function SessionCard(props: {
   });
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-muted/50 p-4">
+    <div className="relative overflow-hidden rounded-lg border bg-muted/50 p-4">
       <h3 className="line-clamp-3 break-all">
-        {props.session.title || "Untitled"}
+        <Link
+          className="before:absolute before:inset-0"
+          href={`/chat/${props.session.id}`}
+        >
+          {props.session.title || "Untitled"}
+        </Link>
       </h3>
       <div className="mt-4 flex items-center justify-between gap-6 border-t pt-3">
         <p className="text-muted-foreground text-sm">
@@ -189,7 +195,10 @@ function SessionCard(props: {
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="h-auto w-auto p-1.5" variant="ghost">
+            <Button
+              className="relative z-10 h-auto w-auto p-1.5"
+              variant="ghost"
+            >
               <EllipsisIcon className="size-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>

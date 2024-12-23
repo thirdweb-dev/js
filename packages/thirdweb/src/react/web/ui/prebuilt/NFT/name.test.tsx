@@ -4,7 +4,8 @@ import {
   DROP1155_CONTRACT,
   UNISWAPV3_FACTORY_CONTRACT,
 } from "~test/test-contracts.js";
-import { fetchNftName } from "./name.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
+import { fetchNftName, getQueryKey } from "./name.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
   it("fetchNftName should work with ERC721", async () => {
@@ -57,5 +58,40 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
         tokenId: 0n,
       }),
     ).rejects.toThrowError("Failed to resolve NFT info");
+  });
+
+  it("getQueryKey should work without nameResolver", () => {
+    expect(getQueryKey({ chainId: 1, tokenId: 1n })).toStrictEqual([
+      "_internal_nft_name_",
+      1,
+      "1",
+      { resolver: undefined },
+    ]);
+  });
+
+  it("getQueryKey should work with nameResolver being a string", () => {
+    expect(
+      getQueryKey({ chainId: 1, tokenId: 1n, nameResolver: "test" }),
+    ).toStrictEqual(["_internal_nft_name_", 1, "1", { resolver: "test" }]);
+  });
+
+  it("getQueryKey should work with nameResolver being a () => string", () => {
+    const fn = () => "test";
+    const fnId = getFunctionId(fn);
+    expect(
+      getQueryKey({ chainId: 1, tokenId: 1n, nameResolver: fn }),
+    ).toStrictEqual(["_internal_nft_name_", 1, "1", { resolver: fnId }]);
+  });
+
+  it("getQueryKey should work with nameResolver being a async () => string", () => {
+    const fn = async () => "test";
+    const fnId = getFunctionId(fn);
+    expect(
+      getQueryKey({
+        chainId: 1,
+        tokenId: 1n,
+        nameResolver: fn,
+      }),
+    ).toStrictEqual(["_internal_nft_name_", 1, "1", { resolver: fnId }]);
   });
 });

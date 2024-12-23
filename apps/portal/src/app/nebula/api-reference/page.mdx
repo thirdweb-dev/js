@@ -151,7 +151,7 @@ data: {
   "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
   "type": "sign_transaction",
   "source": "executor",
-  "data": "{\"maxPriorityFeePerGas\": 13620452, \"maxFeePerGas\": 53197870998, \"chainId\": 11155111, \"from\": \"0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\", \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": 100000000000000, \"gas\": 0}"
+  "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
 }
 
 event: delta
@@ -290,18 +290,18 @@ Chat actions represent blockchain transactions or operations that Nebula has pre
 **Example Response with Chat Action:**
 ```json
 {
-  "message": "You need to sign the following blockchain transaction to transfer 0.0001 ETH to the address resolved from the ENS name `vitalik.eth`, which is `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`. The transaction simulation shows that it will most likely succeed.\n\nHere are the transaction details:\n\n- **From:** 0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\n- **To:** 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\n- **Value:** 0.0001 ETH\n- **Gas Limit:** 0 (will be set automatically)\n- **Chain ID:** 11155111 (Sepolia)\n\nPlease sign the transaction with the following details:\n\n<UnsignedTransaction>{\"maxPriorityFeePerGas\":16142638,\"maxFeePerGas\":2673759432,\"chainId\":11155111,\"from\":\"0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\",\"to\":\"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\",\"data\":\"0x\",\"value\":100000000000000,\"gas\":0}</UnsignedTransaction>",
+  "message": "The transaction to transfer 0.0001 ETH to the address resolved from the ENS name `vitalik.eth` (which is `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`) is set up successfully. The simulation indicates that the transaction is likely to succeed.\n\nPlease proceed by signing and confirming the transaction.",
   "actions": [
     {
-      "session_id": "41d577b7-87d0-40fd-9a82-6dac2783e340",
-      "request_id": "d5caf693-775f-4906-ac18-d98163474dfa",
+      "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+      "request_id": "c2b51ed6-da79-49ac-b411-206a42059509",
       "type": "sign_transaction",
       "source": "executor",
-      "data": "{\"maxPriorityFeePerGas\": 16142638, \"maxFeePerGas\": 2673759432, \"chainId\": 11155111, \"from\": \"0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\", \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": 100000000000000, \"gas\": 0}"
+      "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
     }
   ],
-  "session_id": "41d577b7-87d0-40fd-9a82-6dac2783e340",
-  "request_id": "d5caf693-775f-4906-ac18-d98163474dfa"
+  "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+  "request_id": "c2b51ed6-da79-49ac-b411-206a42059509"
 }
 ```
 
@@ -311,14 +311,10 @@ Chat actions represent blockchain transactions or operations that Nebula has pre
 - `type`: The type of action (e.g., "sign_transaction")
 - `source`: Origin of the action (e.g., "executor")
 - `data`: Transaction parameters including:
-  - `maxPriorityFeePerGas`: Maximum priority fee per gas unit
-  - `maxFeePerGas`: Maximum total fee per gas unit
   - `chainId`: Network identifier (e.g., 11155111 for Sepolia)
-  - `from`: Sender's address
   - `to`: Recipient's address
   - `data`: Transaction data (if any)
   - `value`: Amount to send in wei
-  - `gas`: Gas limit (0 for automatic estimation)
 
 When handling actions:
 1. Parse the `message` field for human-readable transaction details
@@ -362,8 +358,6 @@ async function handleNebulaResponse(response) {
         to: txData.to,
         data: txData.data,
         value: BigInt(txData.value),
-        maxFeePerGas: BigInt(txData.maxFeePerGas),
-        maxPriorityFeePerGas: BigInt(txData.maxPriorityFeePerGas),
         chain: txData.chainId,
         client
       });
@@ -434,18 +428,18 @@ Execute specific blockchain commands or actions. This endpoint is designed for d
 **Example Response:**
 ```json
 {
-  "message": "The transaction is to transfer 0.0001 ETH to the address 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045. The transaction simulation indicates that it will most likely succeed. \n\nPlease go ahead and sign and confirm the transaction.",
+  "message": "The transaction to transfer 0.0001 ETH to the address resolved from the ENS name `vitalik.eth` (which is `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`) is set up successfully. The simulation indicates that the transaction is likely to succeed.\n\nPlease proceed by signing and confirming the transaction.",
   "actions": [
     {
-      "session_id": "d8ca7326-fea4-4bcc-9bb7-9c84dd138379",
-      "request_id": "40404a54-be4a-4540-8c97-d74f8c454d0e",
+      "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+      "request_id": "c2b51ed6-da79-49ac-b411-206a42059509",
       "type": "sign_transaction",
       "source": "executor",
-      "data": "{\"maxPriorityFeePerGas\": \"0x6a392bd\", \"maxFeePerGas\": \"0x546126ce9\", \"chainId\": 11155111, \"from\": \"0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE\", \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\", \"gas\": \"0x5208\"}"
+      "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
     }
   ],
-  "session_id": "d8ca7326-fea4-4bcc-9bb7-9c84dd138379",
-  "request_id": "40404a54-be4a-4540-8c97-d74f8c454d0e"
+  "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+  "request_id": "c2b51ed6-da79-49ac-b411-206a42059509"
 }
 ```
 
@@ -473,14 +467,10 @@ curl -X POST https://nebula-api.thirdweb.com/execute \
   - `type`: The type of action (e.g., "sign_transaction")
   - `source`: Origin of the action
   - `data`: Transaction data in hexadecimal format including:
-    - `maxPriorityFeePerGas`: Maximum priority fee per gas in hex
-    - `maxFeePerGas`: Maximum fee per gas in hex
     - `chainId`: Network identifier
-    - `from`: Sender's address
     - `to`: Recipient's address
     - `data`: Transaction data
     - `value`: Amount to send in hex
-    - `gas`: Gas limit in hex
 - `session_id`: Session identifier for this execution
 - `request_id`: Unique identifier for this request
 

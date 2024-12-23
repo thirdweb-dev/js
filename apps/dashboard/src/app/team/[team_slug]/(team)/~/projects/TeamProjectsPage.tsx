@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { ChevronDownIcon, SearchIcon } from "lucide-react";
+import { ChevronDownIcon, PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -58,9 +58,7 @@ export function TeamProjectsPage(props: {
   }
 
   return (
-    <div className="container ">
-      <div className="h-10" />
-
+    <div className="flex grow flex-col">
       {/* Filters + Add New */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <SearchInput value={searchTerm} onValueChange={setSearchTerm} />
@@ -77,11 +75,21 @@ export function TeamProjectsPage(props: {
 
       {/* Projects */}
       {projectsToShow.length === 0 ? (
-        <div className="flex h-[450px] items-center justify-center rounded-lg border border-border ">
-          No projects found
+        <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+          <div className="flex flex-col items-center">
+            <p className="mb-5 text-center">No projects created</p>
+            <Button
+              className="gap-2"
+              onClick={() => setIsCreateProjectDialogOpen(true)}
+              variant="outline"
+            >
+              <PlusIcon className="size-4" />
+              Create a Project
+            </Button>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {projectsToShow.map((project) => {
             return (
               <ProjectCard
@@ -93,8 +101,6 @@ export function TeamProjectsPage(props: {
           })}
         </div>
       )}
-
-      <div className="h-10" />
 
       <LazyCreateAPIKeyDialog
         open={isCreateProjectDialogOpen}

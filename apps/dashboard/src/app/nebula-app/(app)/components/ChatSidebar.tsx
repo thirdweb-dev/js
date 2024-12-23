@@ -3,11 +3,7 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  ChevronRightIcon,
-  FlaskConicalIcon,
-  MessageSquareDashedIcon,
-} from "lucide-react";
+import { MessagesSquareIcon, SquareDashedBottomCodeIcon } from "lucide-react";
 import Link from "next/link";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -33,31 +29,45 @@ export function ChatSidebar(props: {
           <NebulaIcon className="size-8 text-foreground" />
         </Link>
 
-        <Badge variant="outline" className="gap-1">
-          <FlaskConicalIcon className="size-2.5" />
+        <Badge variant="secondary" className="gap-1 py-1">
           Alpha
         </Badge>
       </div>
 
-      <div className="p-2">
-        <div className="h-3" />
-        <Button asChild variant="primary" className="w-full gap-2">
-          <Link href={newChatPage}>
-            <MessageSquareDashedIcon className="size-4" />
-            New Chat
-          </Link>
+      <div className="h-4" />
+
+      <div className="flex flex-col gap-2 px-2">
+        <Button asChild variant="outline" className="w-full gap-2 rounded-lg">
+          <Link href={newChatPage}>New Chat</Link>
         </Button>
+      </div>
+
+      <div className="h-4" />
+
+      <div>
+        <SidebarIconLink
+          href="/chat/history"
+          icon={MessagesSquareIcon}
+          label="All Chats"
+        />
+
+        <SidebarIconLink
+          href="https://portal.thirdweb.com/nebula"
+          icon={SquareDashedBottomCodeIcon}
+          label="Documentation"
+          target="_blank"
+        />
       </div>
 
       {sessionsToShow.length > 0 && (
         <ScrollShadow
-          className="my-5 flex-1 border-t border-dashed pt-2"
+          className="my-4 flex-1 border-t border-dashed pt-2"
           scrollableClassName="max-h-full"
-          shadowColor="hsl(var(--muted))"
+          shadowColor="transparent"
           shadowClassName="z-10"
         >
           <div className="flex flex-col gap-1">
-            <h3 className="px-2 py-3 text-muted-foreground text-sm">
+            <h3 className="px-2 py-3 text-muted-foreground text-xs">
               Recent Chats
             </h3>
             {sessionsToShow.map((session) => {
@@ -70,13 +80,6 @@ export function ChatSidebar(props: {
                 />
               );
             })}
-
-            <Link
-              href="/chat/history"
-              className="inline-flex items-center gap-1.5 px-2 py-3 text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
-            >
-              View All <ChevronRightIcon className="size-4 text-foreground" />
-            </Link>
           </div>
         </ScrollShadow>
       )}
@@ -87,5 +90,25 @@ export function ChatSidebar(props: {
         type="full"
       />
     </div>
+  );
+}
+
+function SidebarIconLink(props: {
+  icon: React.FC<{ className?: string }>;
+  label: string;
+  target?: "_blank";
+  href: string;
+}) {
+  return (
+    <Button asChild variant="ghost">
+      <Link
+        href={props.href}
+        target={props.target}
+        className="!justify-start !px-3 w-full gap-2.5 rounded-lg text-left"
+      >
+        <props.icon className="size-4" />
+        {props.label}
+      </Link>
+    </Button>
   );
 }

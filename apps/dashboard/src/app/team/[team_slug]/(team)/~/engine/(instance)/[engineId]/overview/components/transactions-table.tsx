@@ -128,7 +128,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         if (chain) {
           return (
             <Flex align="center" gap={2} className="py-2">
-              <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+              <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
               <Text maxW={150} isTruncated>
                 {chain?.name ?? "N/A"}
               </Text>
@@ -359,7 +359,7 @@ const TransactionDetailsDrawer = ({
           <FormControl>
             <FormLabel>Chain</FormLabel>
             <Flex align="center" gap={2}>
-              <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+              <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
               <Text>{chain?.name}</Text>
             </Flex>
           </FormControl>

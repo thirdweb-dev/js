@@ -65,8 +65,9 @@ export default async function Page(props: {
   const isInsightEnabled = !!apiKey.services?.find((s) => s.name === "insight");
 
   const supportedChainIds =
-    blueprintSpec.openapiJson.servers[0]?.variables.chainId.enum.map(Number) ||
-    [];
+    blueprintSpec.openapiJson.servers?.[0]?.variables?.chainId?.enum?.map(
+      Number,
+    ) || [];
 
   return (
     <BlueprintPlayground

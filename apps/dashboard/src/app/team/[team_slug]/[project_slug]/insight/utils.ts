@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { OpenAPIV3 } from "openapi-types";
 import { getVercelEnv } from "../../../../../lib/vercel-utils";
 
 type BlueprintListItem = {
@@ -34,44 +35,14 @@ async function fetchBlueprintList(props: {
   return json.data;
 }
 
-export type BlueprintParameter = {
-  type: string;
-  description: string;
-  name: string;
-  in: "path" | "query";
-  required?: boolean;
-  default?: string | number;
-};
+export type BlueprintParameter = OpenAPIV3.ParameterObject;
+export type BlueprintPathMetadata = OpenAPIV3.PathItemObject;
 
-// NOTE: this is not the full object type, irrelevant fields are omitted
 type BlueprintSpec = {
   id: string;
   name: string;
   description: string;
-  openapiJson: {
-    servers: Array<{
-      url: string;
-      variables: {
-        chainId: {
-          // Note: This list is current empty on dev, but works on prod
-          // so we show all chains in playground if this list is empty, and only show chains in this list if it's not empty
-          enum: string[];
-        };
-      };
-    }>;
-    paths: Record<
-      string,
-      {
-        get: BlueprintPathMetadata;
-      }
-    >;
-  };
-};
-
-export type BlueprintPathMetadata = {
-  description: string;
-  summary: string;
-  parameters: BlueprintParameter[];
+  openapiJson: OpenAPIV3.Document;
 };
 
 export async function fetchBlueprintSpec(params: {

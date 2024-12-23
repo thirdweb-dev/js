@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum.js";
+import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
@@ -14,6 +14,7 @@ import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
 import { smartWallet } from "./smart-wallet.js";
 let wallet: Wallet;
+
 let smartAccount: Account;
 let smartWalletAddress: Address;
 let personalAccount: Account;

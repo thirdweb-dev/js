@@ -76,8 +76,8 @@ async function BlueprintsSection(params: {
                   }
                   return (
                     <BlueprintCard
-                      description={pathObj.get.description}
-                      title={pathObj.get.summary}
+                      description={pathObj.get?.description}
+                      title={pathObj.get?.summary || pathName}
                       href={`${params.layoutPath}/${blueprint.id}?path=${pathName}`}
                       key={pathName}
                     />
@@ -95,7 +95,7 @@ async function BlueprintsSection(params: {
 function BlueprintCard(props: {
   href: string;
   title: string;
-  description: string;
+  description: string | undefined;
 }) {
   return (
     <div className="relative flex items-center gap-3 rounded-lg border border-border bg-muted/50 px-4 py-5 hover:bg-muted/70">
@@ -113,9 +113,11 @@ function BlueprintCard(props: {
           <h2 className="font-medium text-base">{props.title}</h2>
         </Link>
 
-        <p className="line-clamp-1 text-muted-foreground text-sm">
-          {props.description}
-        </p>
+        {props.description && (
+          <p className="line-clamp-1 text-muted-foreground text-sm">
+            {props.description}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ import {
   type SnapshotEntry,
 } from "../legacy-zod-schema";
 import { ResetClaimEligibility } from "../reset-claim-eligibility";
-import { SnapshotUpload } from "../snapshot-upload";
+import { SnapshotViewerSheet } from "../snapshot-upload";
 import { getClaimPhasesInLegacyFormat, setClaimPhasesTx } from "./hooks";
 import { ClaimConditionsPhase } from "./phase";
 
@@ -511,11 +511,12 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
             return (
               <Fragment key={`snapshot_${field.id}_${index}`}>
-                <SnapshotUpload
+                <SnapshotViewerSheet
                   dropType={dropType}
-                  snapshotIndex={openSnapshotIndex}
-                  index={index}
-                  setOpenSnapshotIndex={setOpenSnapshotIndex}
+                  isOpen={openSnapshotIndex === index}
+                  onClose={() => {
+                    setOpenSnapshotIndex(-1);
+                  }}
                   value={snapshotValue}
                   setSnapshot={(snapshot) =>
                     form.setValue(`phases.${index}.snapshot`, snapshot)
