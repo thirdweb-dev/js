@@ -1,4 +1,3 @@
-import { editionDropContract } from './../../../playground-web/src/components/account-abstraction/sponsored-tx';
 // sdks
 export { GoIcon } from "./sdks/GoIcon";
 export { PythonIcon } from "./sdks/PythonIcon";
@@ -36,13 +35,13 @@ export { NebulaIcon } from "./products/nebula/NebulaIcon";
 export { GamingIcon } from "./solutions/GamingIcon";
 
 //sidebar
-export { EditIcon} from "./sidebar/EditIcon";
-export { CodeIcon} from "./sidebar/CodeIcon";
-export { BrickIcon} from "./sidebar/BrickIcon";
-export {NebulaSideIcon} from "./sidebar/NebulaSideIcon";
+export { EditIcon } from "./sidebar/EditIcon";
+export { CodeIcon } from "./sidebar/CodeIcon";
+export { BrickIcon } from "./sidebar/BrickIcon";
+export { NebulaSideIcon } from "./sidebar/NebulaSideIcon";
 
 //api icons
-export {GetIcon} from "./API/GetIcon";
+export { GetIcon } from "./API/GetIcon";
 
 // general purposes
 export { ExternalLinkIcon } from "./ExternalLinkIcon";

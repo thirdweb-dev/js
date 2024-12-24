@@ -1,5 +1,11 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { NebulaSideIcon, EditIcon, CodeIcon, GetIcon, BrickIcon } from "@/icons";
+import {
+  BrickIcon,
+  CodeIcon,
+  EditIcon,
+  GetIcon,
+  NebulaSideIcon,
+} from "@/icons";
 
 export const sidebar: SideBar = {
   name: "Nebula",
@@ -7,32 +13,32 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/nebula",
-      icon: <NebulaSideIcon/>,
+      icon: <NebulaSideIcon />,
     },
     {
       name: "Use Cases",
       href: "/nebula/use-cases",
-      icon: <BrickIcon/>,
+      icon: <BrickIcon />,
     },
     {
       name: "Prompt Guide",
       href: "/nebula/prompt-guide",
-      icon: <EditIcon/>,
+      icon: <EditIcon />,
     },
     {
       name: "API Reference",
       href: "/nebula/api-reference",
-      icon: <CodeIcon/>,
+      icon: <CodeIcon />,
       links: [
         {
           name: "Send Message",
           href: "/nebula/api-reference/chat",
-          icon: <GetIcon />
+          icon: <GetIcon />,
         },
         {
           name: "Execute Transaction",
           href: "/nebula/api-reference/execute",
-          icon: <GetIcon />
+          icon: <GetIcon />,
         },
         {
           name: "List Sessions",
@@ -53,7 +59,7 @@ export const sidebar: SideBar = {
         {
           name: "Update Session",
           href: "/nebula/api-reference/update-session",
-          icon: <GetIcon />
+          icon: <GetIcon />,
         },
         {
           name: "Clear Session",
@@ -64,8 +70,8 @@ export const sidebar: SideBar = {
           name: "Delete Session",
           href: "/nebula/api-reference/delete-session",
           icon: <GetIcon />,
-        }
-      ]
+        },
+      ],
     },
   ],
 };
