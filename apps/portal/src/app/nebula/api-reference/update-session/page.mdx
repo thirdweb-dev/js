@@ -24,29 +24,3 @@ curl -X PUT https://nebula-api.thirdweb.com/session/abc123 \
   "is_public": boolean
 }
 ```
-
-#### Delete Session
-
-```bash
-DELETE /session/{session_id}
-```
-
-Delete a session.
-
-**Example curl:**
-```bash
-curl -X DELETE https://nebula-api.thirdweb.com/session/abc123 \
-  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
-```
-
-## Error Handling
-
-The API uses standard HTTP status codes and returns errors in this format:
-
-```bash
-{
-  "error": {
-    "message": "Error description"
-  }
-}
-```
