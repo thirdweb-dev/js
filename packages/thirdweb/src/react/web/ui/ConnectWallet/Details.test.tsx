@@ -21,6 +21,8 @@ import {
   ConnectedWalletDetails,
   DetailsModal,
   InAppWalletUserInfo,
+  NetworkSwitcherButton,
+  StyledChevronRightIcon,
   SwitchNetworkButton,
   detailsBtn_formatFiatBalanceForButton,
   detailsBtn_formatTokenBalanceForButton,
@@ -583,5 +585,58 @@ describe("Details Modal", () => {
     await waitFor(() => {
       expect(closeModalMock).toHaveBeenCalled();
     });
+  });
+
+  it("NetworkSwitcherButton should not render if no active chain", () => {
+    const { container } = render(
+      <AccountProvider address={VITALIK_WALLET} client={client}>
+        <NetworkSwitcherButton
+          setScreen={(scr) => console.log(scr)}
+          disableSwitchChain={false}
+          displayBalanceToken={undefined}
+          client={client}
+        />
+      </AccountProvider>,
+    );
+
+    const element = container.querySelector(
+      ".tw-internal-network-switcher-button",
+    );
+    expect(element).toBeFalsy();
+  });
+
+  it("NetworkSwitcherButton should render if there is an active chain", async () => {
+    vi.mock(
+      "../../../../react/core/hooks/wallets/useActiveWalletChain.js",
+      () => ({
+        useActiveWalletChain: vi.fn(),
+      }),
+    );
+    vi.mocked(useActiveWalletChain).mockReturnValue(base);
+    const { container } = render(
+      <AccountProvider address={VITALIK_WALLET} client={client}>
+        <NetworkSwitcherButton
+          setScreen={(scr) => console.log(scr)}
+          disableSwitchChain={false}
+          displayBalanceToken={undefined}
+          client={client}
+        />
+      </AccountProvider>,
+    );
+    await waitFor(
+      () => {
+        const element = container.querySelector(
+          ".tw-internal-network-switcher-button",
+        );
+        expect(element).toBeTruthy();
+      },
+      { timeout: 2000 },
+    );
+  });
+
+  it("StyledChevronRightIcon should render a svg element", () => {
+    const { container } = render(<StyledChevronRightIcon />);
+    const svg = container.querySelector("svg");
+    expect(svg).toBeTruthy();
   });
 });
