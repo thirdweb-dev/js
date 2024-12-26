@@ -292,3 +292,10 @@ _ = await inAppWalletMain.LinkAccount(walletToLink: phoneWallet, otp: otp);
 ```csharp
 List<LinkedAccount> linkedAccounts = await inAppWalletMain.GetLinkedAccounts();
 ```
+
+### Unlinking Accounts
+
+```csharp
+List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();
+List<LinkedAccount> linkedAccountsAfterUnlinking = await inAppWallet.UnlinkAccount(linkedAccounts[0]);
+```

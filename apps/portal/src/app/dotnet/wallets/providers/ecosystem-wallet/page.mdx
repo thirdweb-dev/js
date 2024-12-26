@@ -287,3 +287,10 @@ _ = await ecosystemWalletMain.LinkAccount(walletToLink: phoneWallet, otp: otp);
 ```csharp
 List<LinkedAccount> linkedAccounts = await ecosystemWalletMain.GetLinkedAccounts();
 ```
+
+### Unlinking Accounts
+
+```csharp
+List<LinkedAccount> linkedAccounts = await ecosystemWallet.GetLinkedAccounts();
+List<LinkedAccount> linkedAccountsAfterUnlinking = await ecosystemWallet.UnlinkAccount(linkedAccounts[0]);
+```
