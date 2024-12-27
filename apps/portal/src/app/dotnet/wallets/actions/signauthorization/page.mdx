@@ -1,0 +1,100 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.SignAuthorization | Thirdweb .NET SDK",
+	description: "Sign an EIP-7702 Payload to Set Code to your EOA.",
+});
+
+# [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) Integration (Experimental)
+Integrates `authorizationList` for any transactions.
+This EIP essentially allows you to set code to an EOA, unlocking a world of possibilities to enhance their functionality.
+
+The best way to understand it outside of reading the EIP is looking at the example below; to preface it: we sign an authorization using the wallet we want to set code to. Another wallet sends a transaction with said authorization passed in, essentially activating it. The authority wallet now has code set to it pointing to an (insecure) [Delegation](https://thirdweb.com/odyssey-911867/0x654F42b74885EE6803F403f077bc0409f1066c58) contract in this case, which allows any wallet to execute any call through it on behalf of the authority. In this example, we call the wallet executing both the authorization and the claim transaction afterwards, the exectuor.
+
+An authority may execute its own authorization, the only difference is internal whereby the authorization nonce is incremented by 1.
+
+```csharp
+// Chain and contract addresses
+var chainWith7702 = 911867;
+var erc20ContractAddress = "0xAA462a5BE0fc5214507FDB4fB2474a7d5c69065b"; // Fake ERC20
+var delegationContractAddress = "0x654F42b74885EE6803F403f077bc0409f1066c58"; // BatchCallDelegation
+
+// Initialize contracts normally
+var erc20Contract = await ThirdwebContract.Create(client: client, address: erc20ContractAddress, chain: chainWith7702);
+var delegationContract = await ThirdwebContract.Create(client: client, address: delegationContractAddress, chain: chainWith7702);
+
+// Initialize a (to-be) 7702 EOA
+var eoaWallet = await PrivateKeyWallet.Generate(client);
+var eoaWalletAddress = await eoaWallet.GetAddress();
+Console.WriteLine($"EOA address: {eoaWalletAddress}");
+
+// Initialize another wallet, the "executor" that will hit the eoa's (to-be) execute function
+var executorWallet = await PrivateKeyWallet.Generate(client);
+var executorWalletAddress = await executorWallet.GetAddress();
+Console.WriteLine($"Executor address: {executorWalletAddress}");
+
+// Fund the executor wallet
+var fundingWallet = await PrivateKeyWallet.Create(client, privateKey);
+var fundingHash = (await fundingWallet.Transfer(chainWith7702, executorWalletAddress, BigInteger.Parse("0.001".ToWei()))).TransactionHash;
+Console.WriteLine($"Funded Executor Wallet: {fundingHash}");
+
+// Sign the authorization to make it point to the delegation contract
+var authorization = await eoaWallet.SignAuthorization(chainId: chainWith7702, contractAddress: delegationContractAddress, willSelfExecute: false);
+Console.WriteLine($"Authorization: {JsonConvert.SerializeObject(authorization, Formatting.Indented)}");
+
+// Execute the delegation
+var tx = await ThirdwebTransaction.Create(executorWallet, new ThirdwebTransactionInput(chainId: chainWith7702, to: executorWalletAddress, authorization: authorization));
+var hash = (await ThirdwebTransaction.SendAndWaitForTransactionReceipt(tx)).TransactionHash;
+Console.WriteLine($"Authorization execution transaction hash: {hash}");
+
+// Prove that code has been deployed to the eoa
+var rpc = ThirdwebRPC.GetRpcInstance(client, chainWith7702);
+var code = await rpc.SendRequestAsync<string>("eth_getCode", eoaWalletAddress, "latest");
+Console.WriteLine($"EOA code: {code}");
+
+// Log erc20 balance of executor before the claim
+var executorBalanceBefore = await erc20Contract.ERC20_BalanceOf(executorWalletAddress);
+Console.WriteLine($"Executor balance before: {executorBalanceBefore}");
+
+// Prepare the claim call
+var claimCallData = erc20Contract.CreateCallData(
+    "claim",
+    new object[]
+    {
+        executorWalletAddress, // receiver
+        100, // quantity
+        Constants.NATIVE_TOKEN_ADDRESS, // currency
+        0, // pricePerToken
+        new object[] { Array.Empty<byte>(), BigInteger.Zero, BigInteger.Zero, Constants.ADDRESS_ZERO }, // allowlistProof
+        Array.Empty<byte>() // data
+    }
+);
+
+// Embed the claim call in the execute call
+var executeCallData = delegationContract.CreateCallData(
+    method: "execute",
+    parameters: new object[]
+    {
+        new List<Thirdweb.Console.Call>
+        {
+            new()
+            {
+                Data = claimCallData.HexToBytes(),
+                To = erc20ContractAddress,
+                Value = BigInteger.Zero
+            }
+        }
+    }
+);
+
+// Execute from the executor wallet targeting the eoa which is pointing to the delegation contract
+var tx2 = await ThirdwebTransaction.Create(executorWallet, new ThirdwebTransactionInput(chainId: chainWith7702, to: eoaWalletAddress, data: executeCallData));
+var hash2 = (await ThirdwebTransaction.SendAndWaitForTransactionReceipt(tx2)).TransactionHash;
+Console.WriteLine($"Token claim transaction hash: {hash2}");
+
+// Log erc20 balance of executor after the claim
+var executorBalanceAfter = await erc20Contract.ERC20_BalanceOf(executorWalletAddress);
+Console.WriteLine($"Executor balance after: {executorBalanceAfter}");
+```
+
+_Note that for the time being this only works on 7702-enabled chains such as [Odyssey](https://thirdweb.com/odyssey-911867) and the feature has only been integrated with `PrivateKeyWallet`._
