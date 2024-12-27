@@ -38,10 +38,14 @@ import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import somniaBanner from "./temp-assets/somniaBanner.png";
 
+import plumeBannerv2 from "./temp-assets/plumev2Banner.png";
+import plumeCTAv2 from "./temp-assets/plumev2CTA.png";
+
 import mantleBanner from "./temp-assets/mantle.png";
 import metalBanner from "./temp-assets/metalBanner.png";
 import metalCTA from "./temp-assets/metalCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
+
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
@@ -60,6 +64,9 @@ import zetachainBanner from "./temp-assets/zetachainBanner.png";
 import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
+
+import fhenixBanner from "./temp-assets/fhenixBanner.png";
+import fhenixCTA from "./temp-assets/fhenixCTA.png";
 
 // END TEMPORARY
 
@@ -412,6 +419,18 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
+  //fhenix Nitrogen
+  8008148: {
+    headerImgUrl: fhenixBanner.src,
+    about:
+      "Discover Fhenix—the first-ever FHE-based blockchain. Fhenix is an L2 built on Ethereum that brings powerful Fully Homomorphic Encryption (FHE) into the EVM space. This technology enables confidential computation on-chain, allowing users to explore a new generation of use cases.",
+    cta: {
+      backgroundImageUrl: fhenixCTA.src,
+      title: "Onchain confidentiality powered by the first FHE L2 Rollup",
+      buttonLink: "https://thirdweb.com/fhenix-nitrogen",
+      buttonText: "Learn More",
+    },
+  },
   //Fuse
   122: {
     headerImgUrl: thirdwebBanner.src,
@@ -556,6 +575,29 @@ const chainMetaRecord = {
       backgroundImageUrl: plumeCTA.src,
       title: "Participate on the Testnet Now!",
       buttonLink: "https://miles.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  98864: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://www.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  //Plume
+  98865: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://www.plumenetwork.xyz/",
       buttonText: "Learn more",
     },
   },
