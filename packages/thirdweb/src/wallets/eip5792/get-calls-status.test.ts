@@ -92,7 +92,7 @@ describe.sequential("injected wallet", async () => {
       bundleId: "test",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       `[Error: Failed to get call status, no account found for wallet ${wallet.id}]`,
     );
   });
@@ -130,7 +130,7 @@ describe.sequential("injected wallet", async () => {
       bundleId: "test",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: io.metamask does not support wallet_getCallsStatus, reach out to them directly to request EIP-5792 support.]",
     );
   });
@@ -224,7 +224,7 @@ describe.sequential("in-app wallet", async () => {
       bundleId: "unknown",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Failed to get calls status, unknown bundle id]",
     );
   });
@@ -238,7 +238,7 @@ describe.sequential("in-app wallet", async () => {
       bundleId: "test",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Failed to get calls status, no active chain found]",
     );
   });

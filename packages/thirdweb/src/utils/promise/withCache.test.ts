@@ -95,3 +95,76 @@ it("behavior: programmatic removal", async () => {
 
   expect(fn).toBeCalledTimes(2);
 });
+
+describe("getCache", () => {
+  it("should return an object with clear, get, and set methods", () => {
+    const cacheKey = "testKey";
+    const cache = getCache<string>(cacheKey);
+
+    expect(typeof cache.clear).toBe("function");
+    expect(typeof cache.promise.get).toBe("function");
+    expect(typeof cache.promise.set).toBe("function");
+    expect(typeof cache.response.get).toBe("function");
+    expect(typeof cache.response.set).toBe("function");
+  });
+
+  it("should allow setting and getting values from the promise cache", () => {
+    const cacheKey = "testKey";
+    const cache = getCache<string>(cacheKey);
+    const testPromise = Promise.resolve("testValue");
+
+    cache.promise.set(testPromise);
+    expect(cache.promise.get()).toBe(testPromise);
+  });
+
+  it("should allow clearing the cache", () => {
+    const cacheKey = "testKey";
+    const cache = getCache<string>(cacheKey);
+    const testPromise = Promise.resolve("testValue");
+
+    cache.promise.set(testPromise);
+    cache.clear();
+    expect(cache.promise.get()).toBeUndefined();
+  });
+});
+
+describe("withCache", () => {
+  it("should execute the function and cache the result", async () => {
+    const cacheKey = "testKey1";
+    const fn = vi.fn().mockResolvedValue("testValue");
+
+    const result1 = await withCache(fn, { cacheKey });
+    const result2 = await withCache(fn, { cacheKey });
+
+    expect(result1).toBe("testValue");
+    expect(result2).toBe("testValue");
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not return expired cache data", async () => {
+    const cacheKey = "testKey2";
+    const fn = vi.fn().mockResolvedValue("newValue");
+
+    const result1 = await withCache(fn, { cacheKey, cacheTime: 10 });
+    await new Promise((resolve) => setTimeout(resolve, 20)); // Wait for cache to expire
+    const result2 = await withCache(fn, { cacheKey, cacheTime: 10 });
+
+    expect(result1).toBe("newValue");
+    expect(result2).toBe("newValue");
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should deduplicate concurrent calls to the same cache key", async () => {
+    const cacheKey = "testKey3";
+    const fn = vi.fn().mockResolvedValue("testValue");
+
+    const [result1, result2] = await Promise.all([
+      withCache(fn, { cacheKey, cacheTime: 100 }),
+      withCache(fn, { cacheKey, cacheTime: 100 }),
+    ]);
+
+    expect(result1).toBe("testValue");
+    expect(result2).toBe("testValue");
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+});

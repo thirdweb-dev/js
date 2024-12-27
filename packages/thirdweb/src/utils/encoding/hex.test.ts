@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { numberToHex } from "./hex.js";
+import { fromHex, numberToHex, padHex, toHex } from "./hex.js";
 
 describe("hex.ts", () => {
   it("should convert number with no padding", () => {
@@ -51,6 +51,168 @@ describe("hex.ts", () => {
     const result = numberToHex("100", { size: 32, signed: false });
     expect(result).toBe(
       "0x0000000000000000000000000000000000000000000000000000000000000064",
+    );
+  });
+});
+
+describe("toHex without parameters", () => {
+  it("should convert number to hex", () => {
+    expect(toHex(1)).toBe("0x1");
+  });
+
+  it("should convert bigint to hex", () => {
+    expect(toHex(1n)).toBe("0x1");
+  });
+
+  it("should convert string to hex", () => {
+    expect(toHex("1")).toBe("0x31");
+  });
+
+  it("should convert boolean to hex", () => {
+    expect(toHex(true)).toBe("0x1");
+    expect(toHex(false)).toBe("0x0");
+  });
+
+  it("should convert uint8 array to hex", () => {
+    expect(toHex(new Uint8Array([42, 255, 0, 128, 64]))).toBe("0x2aff008040");
+  });
+});
+
+describe("toHex WITH parameters", () => {
+  it("should convert number to hex", () => {
+    expect(toHex(1, { size: 32 })).toBe(
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
+    );
+  });
+
+  it("should convert bigint to hex", () => {
+    expect(toHex(1n, { size: 32 })).toBe(
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
+    );
+  });
+
+  it("should convert string to hex", () => {
+    expect(toHex("1", { size: 32 })).toBe(
+      "0x3100000000000000000000000000000000000000000000000000000000000000",
+    );
+  });
+
+  it("should convert boolean to hex", () => {
+    expect(toHex(true, { size: 32 })).toBe(
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
+    );
+    expect(toHex(false, { size: 32 })).toBe(
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+    );
+  });
+
+  it("should convert uint8 array to hex", () => {
+    expect(toHex(new Uint8Array([42, 255, 0, 128, 64]), { size: 32 })).toBe(
+      "0x2aff008040000000000000000000000000000000000000000000000000000000",
+    );
+  });
+});
+
+describe("fromHex without parameter", () => {
+  it("should convert hex to number", () => {
+    expect(fromHex("0x1", { to: "number" })).toBe(1);
+  });
+
+  it("should convert hex to bigint", () => {
+    expect(fromHex("0x1", { to: "bigint" })).toBe(1n);
+  });
+
+  it("should convert hex to string", () => {
+    expect(fromHex("0x31", "string")).toBe("1");
+  });
+
+  it("should convert hex to boolean:true", () => {
+    expect(fromHex("0x1", "boolean")).toBe(true);
+  });
+
+  it("should convert hex to boolean:false", () => {
+    expect(fromHex("0x0", "boolean")).toBe(false);
+  });
+
+  it("should convert hex to uint8 array", () => {
+    expect(fromHex("0x2aff008040", "bytes")).toStrictEqual(
+      new Uint8Array([42, 255, 0, 128, 64]),
+    );
+  });
+});
+
+describe("fromHex WITH parameter", () => {
+  it("should convert hex to number", () => {
+    expect(
+      fromHex(
+        "0x0000000000000000000000000000000000000000000000000000000000000001",
+        { to: "number", size: 32 },
+      ),
+    ).toBe(1);
+  });
+
+  it("should convert hex to bigint", () => {
+    expect(
+      fromHex(
+        "0x0000000000000000000000000000000000000000000000000000000000000001",
+        { to: "bigint", size: 32 },
+      ),
+    ).toBe(1n);
+  });
+
+  it("should convert hex to string", () => {
+    expect(
+      fromHex(
+        "0x3100000000000000000000000000000000000000000000000000000000000000",
+        { to: "string", size: 32 },
+      ),
+    ).toBe("1");
+  });
+
+  it("should convert hex to boolean:true", () => {
+    expect(
+      fromHex(
+        "0x0000000000000000000000000000000000000000000000000000000000000001",
+        { to: "boolean", size: 32 },
+      ),
+    ).toBe(true);
+  });
+
+  it("should convert hex to boolean:false", () => {
+    expect(
+      fromHex(
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        { to: "boolean", size: 32 },
+      ),
+    ).toBe(false);
+  });
+
+  it("should convert hex to uint8 array", () => {
+    expect(
+      fromHex(
+        "0x2aff008040000000000000000000000000000000000000000000000000000000",
+        { to: "bytes", size: 32 },
+      ).toString(),
+    ).toStrictEqual(
+      "42,255,0,128,64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+    );
+  });
+});
+
+describe("padHex", () => {
+  it("should return the original value if size is undefined", () => {
+    expect(padHex("0x0", { size: null })).toBe("0x0");
+  });
+
+  it("should produce correct result if padding direction is right", () => {
+    expect(padHex("0x1", { size: 10, dir: "right" })).toBe(
+      "0x10000000000000000000",
+    );
+  });
+
+  it("should produce correct result if padding direction is Left", () => {
+    expect(padHex("0x1", { size: 10, dir: "left" })).toBe(
+      "0x00000000000000000001",
     );
   });
 });
