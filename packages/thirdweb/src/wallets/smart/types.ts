@@ -21,6 +21,7 @@ export type SmartWalletOptions = Prettify<
   {
     chain: Chain; // TODO consider making default chain optional
     factoryAddress?: string;
+    eagerDeployment?: boolean;
     overrides?: {
       bundlerUrl?: string;
       accountAddress?: string;
