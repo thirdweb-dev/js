@@ -8,6 +8,10 @@ export const sidebar: SideBar = {
       href: "/nebula",
     },
     {
+      name: "Test",
+      href: "/nebula/test",
+    },
+    {
       name: "API Reference",
       href: "/nebula/api-reference",
     },
