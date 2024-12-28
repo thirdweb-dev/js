@@ -1,8 +1,54 @@
+import { PencilRulerIcon, HandCoinsIcon, BlocksIcon, WorkflowIcon, ShieldCheckIcon, CirclePlusIcon } from "lucide-react";
+import { DocImage, createMetadata, FeatureCard } from "@doc";
+
+
 # What is Nebula?
 
 Natural language model with blockchain reasoning, autonomous transaction capabilities and real-time access to the blockchain.
 
 Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.com/nebula)
+
+## Features
+
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
+>
+	<FeatureCard
+		title="Customizable"
+		description="Build contracts to only add features relevant to your use case"
+		iconUrl={<PencilRulerIcon />}
+	/>
+
+    <FeatureCard
+    	title="Upgradeable"
+    	description="Enable ability to add, configure, and remove modules post-deployment"
+		iconUrl={<CirclePlusIcon/>}
+    />
+
+	<FeatureCard
+    	title="Secure"
+    	description="Core & Module contracts published by thirdweb are audited"
+		iconUrl={<ShieldCheckIcon/>}
+    />
+
+	<FeatureCard
+    	title="Interoperable"
+    	description="Usable with frameworks such as Hardhat and Foundry"
+    	iconUrl={<WorkflowIcon/>}
+    />
+
+	<FeatureCard
+    	title="Gas-optimized"
+    	description="Increased gas-savings on deployment and for end-users"
+    	iconUrl={<HandCoinsIcon/>}
+    />
+
+	<FeatureCard
+    	title="Integration Options"
+    	description="Deploy through Explore, SDKs, or Contract Wizard (coming soon)"
+		iconUrl={<BlocksIcon/>}
+    />
+</div>
 
 ## Supported Chains
 Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).

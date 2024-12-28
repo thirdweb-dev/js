@@ -5,6 +5,9 @@ import {
   EditIcon,
   GetIcon,
   NebulaSideIcon,
+  PluginIcon,
+  QuestionIcon,
+  TroubleshootIcon,
 } from "@/icons";
 
 export const sidebar: SideBar = {
@@ -24,6 +27,17 @@ export const sidebar: SideBar = {
       name: "Prompt Guide",
       href: "/nebula/prompt-guide",
       icon: <EditIcon />,
+    },
+    {
+      name: "Plugins",
+      href: "/nebula/plugins",
+      icon: <PluginIcon />,
+      links: [
+        {
+          name: "Eliza",
+          href: "/nebula/plugins/eliza",
+        },
+      ],
     },
     {
       name: "API Reference",
@@ -72,6 +86,16 @@ export const sidebar: SideBar = {
           icon: <GetIcon />,
         },
       ],
+    },
+    {
+      name: "Troubleshoot",
+      href: "/nebula/troubleshoot",
+      icon: <TroubleshootIcon />,
+    },
+    {
+      name: "FAQs",
+      href: "/nebula/faqs",
+      icon: <QuestionIcon />,
     },
   ],
 };
