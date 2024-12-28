@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { max, min, toBigInt } from "./bigint.js";
+import { max, min, replaceBigInts, toBigInt } from "./bigint.js";
 
 describe("min", () => {
   it("should return the smaller value when a is smaller than b", () => {
@@ -78,5 +78,95 @@ describe("toBigInt", () => {
     expect(() => toBigInt(value)).toThrow(
       `Expected value to be an integer to convert to a bigint, got ${value} of type number`,
     );
+  });
+
+  it("should convert a Uint8Array to a BigInt", () => {
+    const uint8Array = new Uint8Array([1, 2, 3, 4]);
+    const result = toBigInt(uint8Array);
+    expect(result).toBe(BigInt("0x01020304"));
+  });
+
+  it("should handle a Uint8Array with leading zeros", () => {
+    const uint8Array = new Uint8Array([0, 0, 1, 2]);
+    const result = toBigInt(uint8Array);
+    expect(result).toBe(BigInt("0x00000102"));
+  });
+
+  it("should handle a large Uint8Array", () => {
+    const uint8Array = new Uint8Array([255, 255, 255, 255]);
+    const result = toBigInt(uint8Array);
+    expect(result).toBe(BigInt("0xffffffff"));
+  });
+
+  describe("replaceBigInts", () => {
+    it("should replace a single bigint value", () => {
+      const input = BigInt(123);
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toBe("123");
+    });
+
+    it("should handle arrays containing bigints", () => {
+      const input = [BigInt(1), BigInt(2), BigInt(3)];
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual(["1", "2", "3"]);
+    });
+
+    it("should handle nested arrays with bigints", () => {
+      const input = [BigInt(1), [BigInt(2), BigInt(3)]];
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual(["1", ["2", "3"]]);
+    });
+
+    it("should handle objects containing bigints", () => {
+      const input = { a: BigInt(1), b: BigInt(2) };
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual({ a: "1", b: "2" });
+    });
+
+    it("should handle nested objects with bigints", () => {
+      const input = { a: BigInt(1), b: { c: BigInt(2), d: BigInt(3) } };
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual({ a: "1", b: { c: "2", d: "3" } });
+    });
+
+    it("should handle mixed arrays and objects", () => {
+      const input = {
+        a: [BigInt(1), { b: BigInt(2), c: [BigInt(3)] }],
+      };
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual({ a: ["1", { b: "2", c: ["3"] }] });
+    });
+
+    it("should handle empty arrays and objects", () => {
+      expect(replaceBigInts([], (x) => x.toString())).toEqual([]);
+      expect(replaceBigInts({}, (x) => x.toString())).toEqual({});
+    });
+
+    it("should leave other types untouched", () => {
+      const input = {
+        a: "string",
+        b: 42,
+        c: null,
+        d: undefined,
+        e: true,
+        f: [1, "test"],
+      };
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual(input);
+    });
+
+    it("should handle complex deeply nested structures", () => {
+      const input = {
+        a: BigInt(1),
+        b: [BigInt(2), { c: [BigInt(3), { d: BigInt(4) }] }],
+        e: { f: { g: BigInt(5) } },
+      };
+      const result = replaceBigInts(input, (x) => x.toString());
+      expect(result).toEqual({
+        a: "1",
+        b: ["2", { c: ["3", { d: "4" }] }],
+        e: { f: { g: "5" } },
+      });
+    });
   });
 });

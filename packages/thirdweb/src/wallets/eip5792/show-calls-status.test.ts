@@ -41,7 +41,7 @@ describe.sequential("injected wallet", async () => {
       bundleId: "test",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: io.metamask does not support wallet_showCallsStatus, reach out to them directly to request EIP-5792 support.]",
     );
   });
@@ -56,7 +56,7 @@ describe.sequential("other wallets", async () => {
       bundleId: "test",
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: showCallsStatus is currently unsupported for this wallet type]",
     );
   });
