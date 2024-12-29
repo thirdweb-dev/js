@@ -1,0 +1,94 @@
+import { describe, expect, it } from "vitest";
+import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
+import { getRpcClient } from "../rpc.js";
+import { eth_getBlockByHash } from "./eth_getBlockByHash.js";
+
+const client = TEST_CLIENT;
+const chain = FORKED_ETHEREUM_CHAIN;
+
+describe.runIf(process.env.TW_SECRET_KEY)("get_getBlockByHash", () => {
+  it("should get Ethereum genesis block", async () => {
+    const rpcRequest = getRpcClient({ client, chain });
+    const block = await eth_getBlockByHash(rpcRequest, {
+      blockHash:
+        "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+      includeTransactions: true,
+    });
+    expect(block).toStrictEqual({
+      hash: "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+      parentHash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      sha3Uncles:
+        "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      miner: "0x0000000000000000000000000000000000000000",
+      stateRoot:
+        "0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544",
+      transactionsRoot:
+        "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      receiptsRoot:
+        "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      logsBloom:
+        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      difficulty: 17179869184n,
+      number: 0n,
+      gasLimit: 5000n,
+      gasUsed: 0n,
+      timestamp: 0n,
+      totalDifficulty: 17179869184n,
+      extraData:
+        "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
+      mixHash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      nonce: "0x0000000000000042",
+      uncles: [],
+      transactions: [],
+      size: 540n,
+      baseFeePerGas: null,
+      blobGasUsed: undefined,
+      excessBlobGas: undefined,
+    });
+  });
+
+  it("should work for a block", async () => {
+    const rpcRequest = getRpcClient({ client, chain });
+    const block = await eth_getBlockByHash(rpcRequest, {
+      blockHash:
+        "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+      includeTransactions: true,
+    });
+    expect(block).toStrictEqual({
+      hash: "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",
+      parentHash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      sha3Uncles:
+        "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      miner: "0x0000000000000000000000000000000000000000",
+      stateRoot:
+        "0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544",
+      transactionsRoot:
+        "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      receiptsRoot:
+        "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      logsBloom:
+        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      difficulty: 17179869184n,
+      number: 0n,
+      gasLimit: 5000n,
+      gasUsed: 0n,
+      timestamp: 0n,
+      totalDifficulty: 17179869184n,
+      extraData:
+        "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
+      mixHash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      nonce: "0x0000000000000042",
+      uncles: [],
+      transactions: [],
+      size: 540n,
+      baseFeePerGas: null,
+      blobGasUsed: undefined,
+      excessBlobGas: undefined,
+    });
+  });
+});

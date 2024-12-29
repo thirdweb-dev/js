@@ -209,7 +209,10 @@ export async function getZkGasFees(args: {
   };
 }
 
-async function formatTransaction(args: {
+/**
+ * @internal
+ */
+export async function formatTransaction(args: {
   transaction: PreparedTransaction;
   from?: Address;
 }) {

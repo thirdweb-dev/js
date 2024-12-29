@@ -142,7 +142,7 @@ export function updateListing(
         throw new Error("Start time must be before end time.");
       }
 
-      // valdiate quantity
+      // validate quantity
       let quantity: bigint;
       if (assetIsERC721) {
         // force quantity to 1 for ERC721s

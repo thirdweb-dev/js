@@ -102,4 +102,16 @@ describe("pLimit", () => {
 
     expect(results).toStrictEqual([1, 2, "Task failed"]);
   });
+
+  it("should throw an error when concurrency is not an integer", () => {
+    expect(() => pLimit(1.2)).toThrow(
+      "Expected `concurrency` to be a number from 1 and up",
+    );
+  });
+
+  it("should throw an error when concurrency is a negative number", () => {
+    expect(() => pLimit(-1)).toThrow(
+      "Expected `concurrency` to be a number from 1 and up",
+    );
+  });
 });

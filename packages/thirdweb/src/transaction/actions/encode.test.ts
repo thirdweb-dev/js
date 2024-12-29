@@ -193,6 +193,21 @@ describe("transaction: encode", () => {
     expect(result).toBe(extraCallData);
   });
 
+  it("internal func: getExtraCallDataFromTx | should return correct extraCallData for a function", async () => {
+    const tx = prepareTransaction({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      to: TEST_WALLET_B,
+      value: toWei("0.1"),
+      data: toHex("getExtraCallDataFromTx-should-not-return-this"),
+      // @ts-ignore
+      extraCallData: () =>
+        toHex("getExtraCallDataFromTx-should-not-return-this"),
+    });
+    const result = await getExtraCallDataFromTx(tx);
+    expect(result).toBe(toHex("getExtraCallDataFromTx-should-not-return-this"));
+  });
+
   it("internal func: getExtraCallDataFromTx | should throw error if extraCallData is not hex-encoded", async () => {
     const tx = prepareTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
@@ -206,5 +221,34 @@ describe("transaction: encode", () => {
     await expect(() => getExtraCallDataFromTx(tx)).rejects.toThrowError(
       "Invalid extra calldata - must be a hex string",
     );
+  });
+
+  it("internal func: getExtraCallDataFromTx | should throw if the function does not return a hex string", async () => {
+    const tx = prepareTransaction({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      to: TEST_WALLET_B,
+      value: toWei("0.1"),
+      data: toHex("getExtraCallDataFromTx-should-not-return-this"),
+      // @ts-ignore Intentionally for the test purpose
+      extraCallData: () => "I'm a cat",
+    });
+    await expect(() => getExtraCallDataFromTx(tx)).rejects.toThrowError(
+      "Invalid extra calldata - must be a hex string",
+    );
+  });
+
+  it("internal func: getExtraCallDataFromTx | should return undefined if the function returns `0x`", async () => {
+    const tx = prepareTransaction({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      to: TEST_WALLET_B,
+      value: toWei("0.1"),
+      data: toHex("getExtraCallDataFromTx-should-not-return-this"),
+      // @ts-ignore Intentionally for the test purpose
+      extraCallData: () => "0x",
+    });
+    const result = await getExtraCallDataFromTx(tx);
+    expect(result).toBe(undefined);
   });
 });
