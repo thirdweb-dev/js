@@ -585,7 +585,7 @@ const chainMetaRecord = {
     cta: {
       backgroundImageUrl: plumeCTAv2.src,
       title: "Bringing the Real World Onchain",
-      buttonLink: "https://www.plumenetwork.xyz/",
+      buttonLink: "https://plumenetwork.xyz/",
       buttonText: "Learn more",
     },
   },
@@ -597,7 +597,7 @@ const chainMetaRecord = {
     cta: {
       backgroundImageUrl: plumeCTAv2.src,
       title: "Bringing the Real World Onchain",
-      buttonLink: "https://www.plumenetwork.xyz/",
+      buttonLink: "https://plumenetwork.xyz/",
       buttonText: "Learn more",
     },
   },
