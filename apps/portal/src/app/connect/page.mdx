@@ -8,8 +8,10 @@ import {
 	Stack,
 	ConnectCard,
 	SDKCard,
-	Callout
+	Callout,
+	ArticleIconCard,
 } from "@doc";
+import { ExternalLink } from "lucide-react";
 import { TypeScriptIcon, ReactIcon, DotNetIcon, UnityIcon, UnrealEngineIcon } from "@/icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -28,29 +30,27 @@ export const metadata = createMetadata({
 
 Connect is the complete toolkit for connecting every user to your application. It features customizable onboarding flows, self-custodial in-app wallets, account abstraction, onramps, and a performant API to interact with the blockchain.
 
-<div
-	className={cn(
-		"my-4 grid gap-4 md:grid-cols-2 lg:grid-cols-2",
-		props.className,
-	)}
->
-	<ConnectCard
-		title="Playground"
-		href="https://playground.thirdweb.com"
-		iconUrl="/icons/connect/intros/demo.svg"
-		isExternal={true}
-	/>
-	<ConnectCard
-		title="Templates"
-		href="https://thirdweb.com/templates"
-		iconUrl="/icons/connect/intros/quickstart.svg"
-	/>
-</div>
+## Live Playground
 
-### Quick starts
+You can interact with the React SDK in the [Live Playground](https://playground.thirdweb.com/).
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Quick starts
+
+Get started with Connect in your preferred language.
 
 <Grid>
-<SDKCard
+	<SDKCard
 		title="TypeScript"
 		href="/typescript/v5/getting-started"
 		icon={TypeScriptIcon}
@@ -82,9 +82,9 @@ Connect is the complete toolkit for connecting every user to your application. I
 	/>
 </Grid>
 
-### With Connect, you can
+## With Connect, you can
 
-- **Connect to 350+ different wallet providers** with support for every EVM network
+- **Connect to 500+ different wallet providers** with support for every EVM network
 - **Log in and authenticate your users** with customizable and secure [email, phone, passkeys and social login](https://portal.thirdweb.com/connect/in-app-wallet/overview) flows.
 - **Sponsor transactions** to seamlessly onboard non-native or new crypto users with [Account Abstraction](https://portal.thirdweb.com/connect/account-abstraction/overview).
 - **Perform wallet actions** like connecting and disconnecting wallets, viewing balance, displaying ENS names, and execute transactions with our [perfomant, reliable and type safe API](https://portal.thirdweb.com/connect/blockchain-api)
@@ -107,11 +107,11 @@ Connect is the complete toolkit for connecting every user to your application. I
 	</div>
 </Callout>
 
-### Supported Chains
+## Supported Chains
 
 Connect is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
 
-### Starter Kits & demos
+## Starter Kits & demos
 
 View all available starter kits, demos and templates on Github.
 

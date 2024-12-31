@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { CLEAN_ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { defineChain } from "../../chains/utils.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import { getRequiredTransactions } from "./get-required-transactions.js";
+import {
+  getAllDefaultConstructorParamsForImplementation,
+  getRequiredTransactions,
+} from "./get-required-transactions.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "getRequiredTransactions",
@@ -58,6 +62,15 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ),
       });
       expect(results.length).toBe(7);
+    });
+
+    it("should return default constructor params for zksync chains", async () => {
+      const params = await getAllDefaultConstructorParamsForImplementation({
+        chain: defineChain(300),
+        client: TEST_CLIENT,
+      });
+
+      expect(params.nativeTokenWrapper).toBeDefined();
     });
   },
 );

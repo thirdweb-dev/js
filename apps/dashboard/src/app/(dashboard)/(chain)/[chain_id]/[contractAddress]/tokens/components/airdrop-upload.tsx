@@ -1,4 +1,5 @@
 import { UnorderedList } from "@/components/ui/List/List";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Link } from "@chakra-ui/react";
@@ -44,15 +45,8 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     removeInvalid,
   } = useCsvUpload<AirdropAddressInput>({ csvParser });
   const paginationPortalRef = useRef<HTMLDivElement>(null);
-  const onSave = () => {
-    setAirdrop(
-      normalizeQuery.data.result.map((o) => ({
-        address: o.resolvedAddress,
-        quantity: o.quantity,
-      })),
-    );
-    onClose();
-  };
+
+  const normalizeData = normalizeQuery.data;
 
   const columns = useMemo(() => {
     return [
@@ -91,10 +85,27 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     ] as Column<AirdropAddressInput>[];
   }, []);
 
+  if (!normalizeData) {
+    return (
+      <div className="flex min-h-[400px] w-full grow items-center justify-center rounded-lg border border-border">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
+  const onSave = () => {
+    setAirdrop(
+      normalizeData.result.map((o) => ({
+        address: o.resolvedAddress,
+        quantity: o.quantity,
+      })),
+    );
+    onClose();
+  };
+
   return (
     <div className="flex w-full flex-col gap-6">
-      {normalizeQuery.pending && <div>Loading... </div>}
-      {normalizeQuery.data?.result.length && rawData.length > 0 ? (
+      {normalizeData.result.length && rawData.length > 0 ? (
         <>
           <CsvDataTable<AirdropAddressInput>
             portalRef={paginationPortalRef}

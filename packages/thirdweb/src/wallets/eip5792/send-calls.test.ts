@@ -85,22 +85,22 @@ describe.sequential("injected wallet", () => {
     vi.clearAllMocks();
   });
 
-  test("with no chain should fail to send calls", () => {
+  test("with no chain should fail to send calls", async () => {
     wallet.getChain = vi.fn().mockReturnValue(undefined);
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
 
     const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Cannot send calls, no active chain found for wallet: io.metamask]",
     );
   });
 
-  test("with no account should fail to send calls", () => {
+  test("with no account should fail to send calls", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
     wallet.getAccount = vi.fn().mockReturnValue(undefined);
 
     const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Cannot send calls, no account connected for wallet: io.metamask]",
     );
   });
@@ -227,7 +227,7 @@ describe.sequential("injected wallet", () => {
       ...SEND_CALLS_OPTIONS,
     });
 
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: io.metamask does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.]",
     );
   });
@@ -252,7 +252,7 @@ describe.sequential("in-app wallet", () => {
   test("without account should fail", async () => {
     wallet.getAccount = vi.fn().mockReturnValue(undefined);
     const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Cannot send calls, no account connected for wallet: inApp]",
     );
   });
@@ -260,7 +260,7 @@ describe.sequential("in-app wallet", () => {
   test("without account should fail", async () => {
     wallet.getAccount = vi.fn().mockReturnValue(undefined);
     const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    expect(promise).rejects.toMatchInlineSnapshot(
+    await expect(promise).rejects.toMatchInlineSnapshot(
       "[Error: Cannot send calls, no account connected for wallet: inApp]",
     );
   });

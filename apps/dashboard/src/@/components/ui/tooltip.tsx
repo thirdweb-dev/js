@@ -35,6 +35,7 @@ export function ToolTipLabel(props: {
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   hoverable?: boolean;
+  contentClassName?: string;
 }) {
   if (!props.label) {
     return props.children;
@@ -48,7 +49,10 @@ export function ToolTipLabel(props: {
         </TooltipTrigger>
         <TooltipContent
           sideOffset={10}
-          className="max-w-[400px] whitespace-normal leading-relaxed"
+          className={cn(
+            "max-w-[400px] whitespace-normal leading-relaxed",
+            props.contentClassName,
+          )}
         >
           <div className="flex items-center gap-1.5 p-2 text-sm">
             {props.leftIcon}

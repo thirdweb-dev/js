@@ -10,17 +10,24 @@ import ancient8Banner from "./temp-assets/ancient8-banner.png";
 import assetChainBanner from "./temp-assets/assetChainBanner.png";
 import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 
+import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
+import appchainCTA from "./temp-assets/appchainCTA.png";
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
+import cyberCTA from "./temp-assets/cyberCTA.png";
+import cyberChainBanner from "./temp-assets/cyberChainBanner.png";
 import etherlinkBanner from "./temp-assets/etherlinkBanner.png";
 import etherlinkCTA from "./temp-assets/etherlinkCTA.png";
 import funkiBanner from "./temp-assets/funkiBanner.jpg";
 import funkiCTA from "./temp-assets/funkiCTA.jpg";
+import gptCTA from "./temp-assets/gptCTA.jpg";
+import gptChainBanner from "./temp-assets/gptChainBanner.jpg";
 import hashfireBanner from "./temp-assets/hashfireBanner.png";
 import hashfireCTA from "./temp-assets/hashfireCTA.png";
+import inkBanner from "./temp-assets/inkBanner.jpg";
 import laosBanner from "./temp-assets/laosBanner.jpg";
 import laosCTA from "./temp-assets/laosCTA.jpg";
 import liskBanner from "./temp-assets/liskBanner.png";
@@ -31,10 +38,14 @@ import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import somniaBanner from "./temp-assets/somniaBanner.png";
 
+import plumeBannerv2 from "./temp-assets/plumev2Banner.png";
+import plumeCTAv2 from "./temp-assets/plumev2CTA.png";
+
 import mantleBanner from "./temp-assets/mantle.png";
 import metalBanner from "./temp-assets/metalBanner.png";
 import metalCTA from "./temp-assets/metalCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
+
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
@@ -49,8 +60,13 @@ import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
+import zetachainBanner from "./temp-assets/zetachainBanner.png";
+import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
+
+import fhenixBanner from "./temp-assets/fhenixBanner.png";
+import fhenixCTA from "./temp-assets/fhenixCTA.png";
 
 // END TEMPORARY
 
@@ -175,7 +191,15 @@ const chainMetaRecord = {
   },
   // cyber
   7560: {
-    cta: OP_CTA,
+    headerImgUrl: cyberChainBanner.src,
+    about:
+      "Cyber is a Layer 2 blockchain specifically designed for social applications. Built on the Optimism Superchain, it combines high-performance infrastructure with specialized tools for social features to simplify developer workflows and accelerate their time to market.",
+    cta: {
+      backgroundImageUrl: cyberCTA.src,
+      title: "Discover Web3 Social with Cyber",
+      buttonLink: "https://cyber.co/",
+      buttonText: "Learn more",
+    },
     gasSponsored: true,
   },
   // redstone
@@ -204,6 +228,11 @@ const chainMetaRecord = {
     },
     gasSponsored: true,
   },
+  // Flare
+  14: {
+    about:
+      "Flare is the blockchain for data, offering developers and users secure, decentralized access to high-integrity data from other chains and the internet. Flare's Layer-1 network uniquely supports enshrined data protocols at the network layer, making it the only EVM-compatible smart contract platform optimized for decentralized data acquisition, including price and time-series data, blockchain event and state data, and Web2 API data.",
+  },
   // rootstock
   30: {
     headerImgUrl: rootStockBanner.src,
@@ -218,6 +247,14 @@ const chainMetaRecord = {
   },
   //Superseed
   5330: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // Ink
+  57073: {
+    headerImgUrl: inkBanner.src,
+    about:
+      "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain, a powerful base layer for deploying innovative DeFi protocols.",
     cta: OP_CTA,
     gasSponsored: true,
   },
@@ -302,6 +339,18 @@ const chainMetaRecord = {
     cta: OP_CTA,
     gasSponsored: true,
   },
+  //Appchain
+  466: {
+    headerImgUrl: appChainBanner.src,
+    about:
+      "Appchain is building useful onchain apps. We're an L2 on top of Ethereum, built on the Arbitrum Orbit stack. We are a low cost, high throughput chain with the goal of building apps for all internet users",
+    cta: {
+      title: "Bringing the world onchain through useful apps.",
+      backgroundImageUrl: appchainCTA.src,
+      buttonLink: "https://appchain.xyz/",
+      buttonText: "Learn more",
+    },
+  },
   // B3 Mainnet
   8333: {
     headerImgUrl: thirdwebBanner.src,
@@ -370,6 +419,18 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
+  //fhenix Nitrogen
+  8008148: {
+    headerImgUrl: fhenixBanner.src,
+    about:
+      "Discover Fhenix—the first-ever FHE-based blockchain. Fhenix is an L2 built on Ethereum that brings powerful Fully Homomorphic Encryption (FHE) into the EVM space. This technology enables confidential computation on-chain, allowing users to explore a new generation of use cases.",
+    cta: {
+      backgroundImageUrl: fhenixCTA.src,
+      title: "Onchain confidentiality powered by the first FHE L2 Rollup",
+      buttonLink: "https://thirdweb.com/fhenix-nitrogen",
+      buttonText: "Learn More",
+    },
+  },
   //Fuse
   122: {
     headerImgUrl: thirdwebBanner.src,
@@ -415,6 +476,18 @@ const chainMetaRecord = {
       backgroundImageUrl: thirdwebCTA.src,
       title: "",
       buttonLink: "https://gemuchain.io/",
+      buttonText: "Learn more",
+    },
+  },
+  //GPT Mainnet
+  1511670449: {
+    headerImgUrl: gptChainBanner.src,
+    about:
+      "GPT Protocol combines cutting-edge L2 EVM technology with seamless AI integration to power the future of decentralized applications. By enabling ultra-fast transactions, unmatched scalability, and eco-friendly solutions, GPT Protocol opens doors to developers, brands, and users alike. With innovative tools, a robust ecosystem, and low transaction costs, GPT Protocol is designed for a smarter, more connected blockchain experience. Join us in building the next generation of decentralized innovation.",
+    cta: {
+      backgroundImageUrl: gptCTA.src,
+      title: "Build on the blockchain for AI",
+      buttonLink: "https://www.gptprotocol.com/",
       buttonText: "Learn more",
     },
   },
@@ -505,6 +578,29 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  98864: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://www.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  //Plume
+  98865: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://www.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
   //Somnia Devnet
   50311: {
     headerImgUrl: somniaBanner.src,
@@ -586,6 +682,30 @@ const chainMetaRecord = {
       backgroundImageUrl: assetChainCTABG.src,
       title: "Start Building",
       buttonLink: "https://docs.assetchain.org",
+      buttonText: "Learn more",
+    },
+  },
+  // Zetachain
+  7000: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
+      buttonText: "Learn more",
+    },
+  },
+  // ZetaChain Testnet
+  7001: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
       buttonText: "Learn more",
     },
   },

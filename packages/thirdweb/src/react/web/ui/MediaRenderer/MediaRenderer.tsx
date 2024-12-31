@@ -521,7 +521,10 @@ const AudioPlayer = /* @__PURE__ */ (() =>
     );
   }))();
 
-const IframePlayer = /* @__PURE__ */ (() =>
+/**
+ * @internal Exported for tests
+ */
+export const IframePlayer = /* @__PURE__ */ (() =>
   React.forwardRef<
     HTMLIFrameElement,
     Omit<
@@ -588,7 +591,10 @@ const IframePlayer = /* @__PURE__ */ (() =>
     );
   }))();
 
-const LinkPlayer = /* @__PURE__ */ (() =>
+/**
+ * @internal Exported for tests
+ */
+export const LinkPlayer = /* @__PURE__ */ (() =>
   React.forwardRef<
     HTMLAnchorElement,
     Pick<MediaRendererProps, "src" | "alt" | "style" | "className">
@@ -640,8 +646,11 @@ const LinkPlayer = /* @__PURE__ */ (() =>
     );
   }))();
 
+/**
+ * @internal
+ */
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-function mergeRefs<T = any>(
+export function mergeRefs<T = any>(
   refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>,
 ): React.RefCallback<T> {
   return (value) => {

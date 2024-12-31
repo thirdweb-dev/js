@@ -233,7 +233,7 @@ export type UseConnectModalOptions = {
    * ]
    * ```
    *
-   * Connect Modal also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 350+ wallets
+   * Connect Modal also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 500+ wallets
    */
   wallets?: Wallet[];
 
@@ -357,7 +357,7 @@ export type UseConnectModalOptions = {
   recommendedWallets?: Wallet[];
 
   /**
-   * By default, Connect modal shows a "All Wallets" button that shows a list of 350+ wallets.
+   * By default, Connect modal shows a "All Wallets" button that shows a list of 500+ wallets.
    *
    * You can disable this button by setting `showAllWallets` prop to `false`
    */

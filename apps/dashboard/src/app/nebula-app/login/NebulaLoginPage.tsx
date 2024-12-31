@@ -12,10 +12,12 @@ export function NebulaLoginPage(props: {
   account: Account | undefined;
 }) {
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const [showLoginPage, setShowLoginPage] = useState<boolean>(false);
-
+  const [showPage, setShowPage] = useState<"connect" | "welcome">(
+    props.account ? "connect" : "welcome",
+  );
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+      {/* nav */}
       <header className="border-b">
         <div className="container flex items-center justify-between p-4">
           <NebulaIcon className="size-8 shrink-0 text-foreground" />
@@ -37,8 +39,8 @@ export function NebulaLoginPage(props: {
               Docs
             </Link>
 
-            {!showLoginPage && (
-              <Button size="sm" onClick={() => setShowLoginPage(true)}>
+            {showPage === "welcome" && (
+              <Button size="sm" onClick={() => setShowPage("connect")}>
                 Sign in
               </Button>
             )}
@@ -46,19 +48,21 @@ export function NebulaLoginPage(props: {
         </div>
       </header>
 
-      {showLoginPage ? (
+      {showPage === "connect" && (
         <LoginAndOnboardingPageContent
           account={props.account}
           redirectPath={
             message ? `/?prompt=${encodeURIComponent(message)}` : "/"
           }
         />
-      ) : (
+      )}
+
+      {showPage === "welcome" && (
         <div className="container relative flex max-w-[800px] grow flex-col justify-center overflow-hidden rounded-lg pb-6">
           <EmptyStateChatPageContent
             sendMessage={(msg) => {
               setMessage(msg);
-              setShowLoginPage(true);
+              setShowPage("connect");
             }}
           />
         </div>

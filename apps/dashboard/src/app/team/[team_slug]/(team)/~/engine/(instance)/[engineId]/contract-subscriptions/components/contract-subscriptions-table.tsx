@@ -81,7 +81,7 @@ export const ContractSubscriptionTable: React.FC<
         const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+            <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -399,7 +399,7 @@ const RemoveModal = ({
               <FormControl>
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>
-                  <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+                  <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
                   <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>
               </FormControl>

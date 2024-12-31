@@ -5,7 +5,9 @@ const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd HH:mm";
 
 export function toDateTimeLocal(date?: Date | number | string) {
   let parsedDate: Date | undefined = undefined;
-  if (typeof date === "number") {
+  if (date instanceof Date) {
+    parsedDate = date;
+  } else if (typeof date === "number") {
     parsedDate = new Date(date * 1000);
   } else if (typeof date === "string") {
     parsedDate = new Date(date);

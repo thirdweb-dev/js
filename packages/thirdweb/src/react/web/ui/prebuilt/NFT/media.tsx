@@ -132,19 +132,11 @@ export function NFTMedia({
 }: NFTMediaProps) {
   const { contract, tokenId } = useNFTContext();
   const mediaQuery = useQuery({
-    queryKey: [
-      "_internal_nft_media_",
-      contract.chain.id,
-      tokenId.toString(),
-      {
-        resolver:
-          typeof mediaResolver === "object"
-            ? mediaResolver
-            : typeof mediaResolver === "function"
-              ? getFunctionId(mediaResolver)
-              : undefined,
-      },
-    ],
+    queryKey: getQueryKey({
+      chainId: contract.chain.id,
+      tokenId,
+      mediaResolver,
+    }),
     queryFn: async (): Promise<NFTMediaInfo> =>
       fetchNftMedia({ mediaResolver, contract, tokenId }),
     ...queryOptions,
@@ -166,6 +158,33 @@ export function NFTMedia({
       {...mediaRendererProps}
     />
   );
+}
+
+/**
+ * @internal
+ */
+export function getQueryKey(props: {
+  chainId: number;
+  tokenId: bigint;
+  mediaResolver?:
+    | NFTMediaInfo
+    | (() => NFTMediaInfo)
+    | (() => Promise<NFTMediaInfo>);
+}) {
+  const { chainId, tokenId, mediaResolver } = props;
+  return [
+    "_internal_nft_media_",
+    chainId,
+    tokenId.toString(),
+    {
+      resolver:
+        typeof mediaResolver === "object"
+          ? mediaResolver
+          : typeof mediaResolver === "function"
+            ? getFunctionId(mediaResolver)
+            : undefined,
+    },
+  ] as const;
 }
 
 /**

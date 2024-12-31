@@ -34,6 +34,7 @@ import {
 } from "thirdweb/deploys";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
@@ -426,7 +427,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         }
       }
 
-      if (metadata.name === "MarketplaceV3") {
+      if (
+        metadata.name === "MarketplaceV3" &&
+        !(await isZkSyncChain(walletChain))
+      ) {
         // special case for marketplace
         return await deployMarketplaceContract({
           account: activeAccount,

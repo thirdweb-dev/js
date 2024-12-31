@@ -49,7 +49,7 @@ export const CustomChainRenderer = ({
             }
           }}
         >
-          <ChainIcon ipfsSrc={chain.icon?.url} size={32} />
+          <ChainIcon ipfsSrc={chain.icon?.url} className="size-8" />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <p

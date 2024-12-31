@@ -46,3 +46,31 @@ export function useResolvedMediaType(
     isFetched: resolvedMimeType.isFetched || !!mimeType,
   };
 }
+
+/**
+ * @internal Exported for tests
+ */
+export function resolveMediaTypeFromUri(props: {
+  uri?: string;
+  client: ThirdwebClient;
+  gatewayUrl?: string;
+}) {
+  const { uri, client, gatewayUrl } = props;
+  if (!uri) {
+    return "";
+  }
+  if (uri.startsWith("ar://")) {
+    return resolveArweaveScheme({ uri, gatewayUrl });
+  }
+  if (gatewayUrl) {
+    return uri.replace("ipfs://", gatewayUrl);
+  }
+  try {
+    return resolveScheme({
+      client,
+      uri,
+    });
+  } catch {
+    return uri.replace("ipfs://", "https://ipfs.io/ipfs/");
+  }
+}

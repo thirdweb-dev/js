@@ -27,7 +27,7 @@ function WalletsSection() {
         <ArticleCardIndex
           href="/connect/sign-in"
           title="Sign In"
-          description="Integrate 350+ web3 wallets, in-app wallets, and smart accounts"
+          description="Integrate 500+ web3 wallets, in-app wallets, and smart accounts"
           icon={WalletsConnectIcon}
         />
         <ArticleCardIndex

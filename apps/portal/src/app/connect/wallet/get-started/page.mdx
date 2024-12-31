@@ -1,12 +1,12 @@
-import { Callout, OpenSourceCard, createMetadata, InstallTabs, ArticleIconCard } from "@doc";
+import { Callout, OpenSourceCard, createMetadata, InstallTabs, SDKCard, Grid, ArticleIconCard } from "@doc";
 import {
     ReactIcon,
     TypeScriptIcon,
     UnityIcon,
     DotNetIcon,
-    ExternalLinkIcon,
     UnrealEngineIcon
 } from "@/icons"
+import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
@@ -27,13 +27,13 @@ thirdweb offers multiple ways to add wallets to your application. Choose the met
 
 These methods can be used independently or together in the same application to provide the best experience for your users.
 
-## Try the demo
+## Live Playground
 
-We have a playground that lets you see all the various options via our prebuilt UI:
+Check out the playground that lets you see all the various capabilities of Connect.
 
 <ArticleIconCard
-    title="Connect demo"
-    icon={ExternalLinkIcon}
+    title="Try the demo"
+    icon={ExternalLink}
     description="Play around with various wallet connection options"
     href="https://playground.thirdweb.com/connect/sign-in/button"
 />
@@ -42,103 +42,40 @@ We have a playground that lets you see all the various options via our prebuilt 
 
 To use in-app wallets in your applications, you will need a client ID. You can get one for free on [your thirdweb dashboard](https://thirdweb.com/create-api-key).
 
-## External Wallets
+## Pick your language
 
-Connect to popular external wallets like Metamask, Rainbow, Coinbase, etc.
+Start with Connect in your preferred language.
 
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-    <ArticleIconCard
-        title="TypeScript"
-        icon={TypeScriptIcon}
-        href="/typescript/v5/createWallet"
-    />
-    <ArticleIconCard
-        title="React"
-        icon={ReactIcon}
-        href="/react/v5/connecting-wallets/ui-components"
-    />
-    <ArticleIconCard
-        title="React Native"
-        icon={ReactIcon}
-        href="/react-native/v5/ConnectButton"
-    />
-    <ArticleIconCard
-        title="Unity"
-        icon={UnityIcon}
-        href="/unity/v5/wallets/walletconnect"
-    />
-</div>
-
-## In-App Wallets
-
-Create in-app wallets with social/email/sms/passkey login.
-
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-    <ArticleIconCard
-        title="TypeScript"
-        icon={TypeScriptIcon}
-        href="/typescript/v5/inAppWallet"
-    />
-    <ArticleIconCard
-        title="React"
-        icon={ReactIcon}
-        href="/react/v5/in-app-wallet/get-started"
-    />
-    {/* TODO: Link to react native getting started for in appw allet */}
-    <ArticleIconCard
-        title="React Native"
-        icon={ReactIcon}
-        href="/react/v5/in-app-wallet/get-started"
-    />
-      <ArticleIconCard
-        title=".NET"
-        icon={DotNetIcon}
-        href="/dotnet/wallets/providers/in-app-wallet"
-    />
-    <ArticleIconCard
-        title="Unity"
-        icon={UnityIcon}
-        href="/unity/v5/wallets/in-app-wallet"
-    />
-    <ArticleIconCard
-        title="Unreal Engine"
-        icon={UnrealEngineIcon}
-        href="/unreal-engine/blueprints/in-app-wallet"
-    />
-</div>
-
-## Ecosystem Wallets
-
-If you're looking to set up an ecosystem from scratch, refer to the [set-up guide](/connect/wallet/ecosystem/set-up)
-
-If you're looking to integrate ecosystem wallets in your aplication, refer to the following guides:
-
-<div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-    <ArticleIconCard
-        title="TypeScript"
-        icon={TypeScriptIcon}
-        href="/typescript/v5/ecosystemWallet"
-    />
-    <ArticleIconCard
-        title="React"
-        icon={ReactIcon}
-        href="/react/v5/ecosystem-wallet/get-started"
-    />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
-    <ArticleIconCard
-        title="React Native"
-        icon={ReactIcon}
-        href="/react/v5/ecosystem-wallet/get-started"
-    />
-     <ArticleIconCard
-        title=".NET"
-        icon={DotNetIcon}
-        href="/dotnet/wallets/providers/ecosystem-wallet"
-    />
-    <ArticleIconCard
-        title="Unity"
-        icon={UnityIcon}
-        href="/unity/v5/wallets/ecosystem-wallet"
-    />
-</div>
+<Grid>
+	<SDKCard
+		title="TypeScript"
+		href="/typescript/v5/getting-started"
+		icon={TypeScriptIcon}
+	/>
+	<SDKCard
+		title="React"
+		href="/react/v5/getting-started"
+		icon={ReactIcon}
+	/>
+	<SDKCard
+		title="React Native"
+		href="/react-native/v5/getting-started"
+		icon={ReactIcon}
+	/>
+	<SDKCard
+		title="DotNet"
+		href="/dotnet/getting-started"
+		icon={DotNetIcon}
+	/>
+	<SDKCard
+		title="Unity"
+		href="/unity/v5/getting-started"
+		icon={UnityIcon}
+	/>
+	<SDKCard
+		title="Unreal Engine"
+		href="/unreal-engine/getting-started"
+		icon={UnrealEngineIcon}
+	/>
+</Grid>
 

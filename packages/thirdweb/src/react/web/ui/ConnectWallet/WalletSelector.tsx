@@ -667,7 +667,7 @@ const WalletSelection: React.FC<{
             </ShowAllWalletsIcon>
             <Container flex="row" gap="xs">
               <Text color="primaryText">All Wallets</Text>
-              <BadgeText> 350+ </BadgeText>
+              <BadgeText> 500+ </BadgeText>
             </Container>
           </WalletButtonEl>
         </ButtonContainer>

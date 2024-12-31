@@ -72,6 +72,14 @@ const walletActions: SidebarLink = (() => {
             name: "Transfer",
             href: `${parentSlug}/transfer`,
           },
+          {
+            name: "SwitchNetwork",
+            href: `${parentSlug}/switchnetwork`,
+          },
+          {
+            name: "SignAuthorization (Experimental)",
+            href: `${parentSlug}/signauthorization`,
+          },
         ],
       },
       {
@@ -81,6 +89,10 @@ const walletActions: SidebarLink = (() => {
           {
             name: "GetUserDetails",
             href: `${parentSlug}/getuserdetails`,
+          },
+          {
+            name: "GetUserAuthDetails",
+            href: `${parentSlug}/getuserauthdetails`,
           },
           {
             name: "GetEcosystemDetails",

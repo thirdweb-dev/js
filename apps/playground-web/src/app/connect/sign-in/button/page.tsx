@@ -65,7 +65,7 @@ export default function Page(props: {
           description={
             <>
               A fully featured wallet connection component that allows to
-              Connect to 350+ external wallets, connect via email, phone number,
+              Connect to 500+ external wallets, connect via email, phone number,
               passkey or social logins, Convert any wallet to a ERC4337 smart
               wallet for gasless transactions and provides SIWE (Sign In With
               Ethereum)

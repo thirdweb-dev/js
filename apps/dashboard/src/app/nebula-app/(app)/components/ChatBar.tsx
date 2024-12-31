@@ -25,6 +25,7 @@ export function Chatbar(props: {
             return;
           }
           if (e.key === "Enter" && !props.isChatStreaming) {
+            e.preventDefault();
             setMessage("");
             props.sendMessage(message);
           }
@@ -50,7 +51,6 @@ export function Chatbar(props: {
           <Button
             aria-label="Send"
             disabled={message.trim() === ""}
-            variant="primary"
             className={cn(
               "!h-auto w-auto border border-transparent p-2 disabled:opacity-100",
               message === "" &&

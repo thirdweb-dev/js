@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { randomLorem } from "../../../../../../stories/stubs";
 import { mobileViewport } from "../../../../../../stories/utils";
 import type { BlueprintPathMetadata } from "../utils";
 import { BlueprintPlaygroundUI } from "./blueprint-playground.client";
@@ -37,15 +36,11 @@ export const Mobile: Story = {
 function Story() {
   return (
     <div className="flex flex-col gap-10">
-      <Variant metadata={getBlueprintMetadata().test1} isInsightEnabled />
       <Variant
-        metadata={getBlueprintMetadata().largeNumberOfParamsMetadata}
-        isInsightEnabled
+        metadata={getBlueprintMetadata().test1}
+        isInsightEnabled={true}
       />
-      <Variant
-        metadata={getBlueprintMetadata().largeNumberOfParamsMetadata}
-        isInsightEnabled
-      />
+
       <Variant
         metadata={getBlueprintMetadata().test1}
         isInsightEnabled={false}
@@ -118,72 +113,432 @@ function Variant(props: {
 }
 
 function getBlueprintMetadata() {
-  const fewParams: BlueprintPathMetadata = {
+  const test1: BlueprintPathMetadata = {
+    description: "Get transactions",
+    summary: "Get transactions",
     parameters: [
       {
-        type: "string",
-        description: "Filter parameters",
-        name: "filter",
+        schema: {
+          type: "number",
+          description: "Filter by block number",
+          example: 1000000,
+        },
+        required: false,
+        name: "filter_block_number",
         in: "query",
       },
       {
-        type: "string",
-        description: "Field to group results by",
-        name: "group_by",
+        schema: {
+          type: "number",
+          description: "Filter by block number greater than or equal to",
+          example: 1000000,
+        },
+        required: false,
+        name: "filter_block_number_gte",
         in: "query",
       },
       {
-        type: "string",
-        description: "Field to sort results by",
+        schema: {
+          type: "number",
+          description: "Filter by block number greater than",
+          example: 1000000,
+        },
+        required: false,
+        name: "filter_block_number_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block number less than or equal to",
+          example: 1000000,
+        },
+        required: false,
+        name: "filter_block_number_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block number less than",
+          example: 1000000,
+        },
+        required: false,
+        name: "filter_block_number_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          description: "Filter by block hash",
+          example:
+            "0x3a1fba5abd9d41457944e91ed097e039b7b12d3d7ba324a3f422db2277a48e28",
+        },
+        required: false,
+        name: "filter_block_hash",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block timestamp",
+          example: 1715222400,
+        },
+        required: false,
+        name: "filter_block_timestamp",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block timestamp greater than or equal to",
+          example: 1715222400,
+        },
+        required: false,
+        name: "filter_block_timestamp_gte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block timestamp greater than",
+          example: 1715222400,
+        },
+        required: false,
+        name: "filter_block_timestamp_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block timestamp less than or equal to",
+          example: 1715222400,
+        },
+        required: false,
+        name: "filter_block_timestamp_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by block timestamp less than",
+          example: 1715222400,
+        },
+        required: false,
+        name: "filter_block_timestamp_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by transaction index",
+          example: 5,
+        },
+        required: false,
+        name: "filter_transaction_index",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by transaction index greater than or equal to",
+          example: 5,
+        },
+        required: false,
+        name: "filter_transaction_index_gte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by transaction index greater than",
+          example: 5,
+        },
+        required: false,
+        name: "filter_transaction_index_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by transaction index less than or equal to",
+          example: 5,
+        },
+        required: false,
+        name: "filter_transaction_index_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by transaction index less than",
+          example: 5,
+        },
+        required: false,
+        name: "filter_transaction_index_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          enum: ["block_number", "block_timestamp", "transaction_index"],
+          description: "Field to sort results by",
+          example: "block_number",
+        },
+        required: false,
         name: "sort_by",
         in: "query",
       },
       {
-        type: "string",
-        description: "Sort order (asc or desc)",
+        schema: {
+          type: "string",
+          enum: ["asc", "desc"],
+          description: "Sort order (asc or desc)",
+          example: "desc",
+        },
+        required: false,
         name: "sort_order",
         in: "query",
       },
       {
-        type: "integer",
-        description: "Page number for pagination",
-        name: "page",
+        schema: {
+          type: "string",
+        },
+        required: false,
+        name: "group_by",
         in: "query",
       },
       {
-        type: "integer",
-        default: 5,
-        description: "Number of items per page",
+        schema: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+        },
+        required: false,
+        name: "aggregate",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          description: "Filter by transaction hash",
+          example:
+            "0x218b632d932371478d1ae5a01620ebab1a2030f9dad6f8fba4a044ea6335a57e",
+        },
+        required: false,
+        name: "filter_hash",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          description: "Filter by from address",
+          example: "0xa1e4380a3b1f749673e270229993ee55f35663b4",
+        },
+        required: false,
+        name: "filter_from_address",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by value",
+          example: 21000000000000,
+        },
+        required: false,
+        name: "filter_value",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by value greater than or equal to",
+          example: 21000000000000,
+        },
+        required: false,
+        name: "filter_value_gte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by value greater than",
+          example: 21000000000000,
+        },
+        required: false,
+        name: "filter_value_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by value less than or equal to",
+          example: 21000000000000,
+        },
+        required: false,
+        name: "filter_value_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by value less than",
+          example: 21000000000000,
+        },
+        required: false,
+        name: "filter_value_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas price",
+          example: 50000000000000,
+        },
+        required: false,
+        name: "filter_gas_price",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas price greater than or equal to",
+          example: 50000000000000,
+        },
+        required: false,
+        name: "filter_gas_price_gte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas price greater than",
+          example: 50000000000000,
+        },
+        required: false,
+        name: "filter_gas_price_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas price less than or equal to",
+          example: 50000000000000,
+        },
+        required: false,
+        name: "filter_gas_price_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas price less than",
+          example: 50000000000000,
+        },
+        required: false,
+        name: "filter_gas_price_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas",
+          example: 21000,
+        },
+        required: false,
+        name: "filter_gas",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas greater than or equal to",
+          example: 21000,
+        },
+        required: false,
+        name: "filter_gas_gte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas greater than",
+          example: 21000,
+        },
+        required: false,
+        name: "filter_gas_gt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas less than or equal to",
+          example: 21000,
+        },
+        required: false,
+        name: "filter_gas_lte",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "number",
+          description: "Filter by gas less than",
+          example: 21000,
+        },
+        required: false,
+        name: "filter_gas_lt",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          description: "Filter by function selector",
+          example: "0x095ea7b3",
+        },
+        required: false,
+        name: "filter_function_selector",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "string",
+          description: "Filter by to address",
+          example: "0xa1e4380a3b1f749673e270229993ee55f35663b4",
+        },
+        required: false,
+        name: "filter_to_address",
+        in: "query",
+      },
+      {
+        schema: {
+          type: "integer",
+          minimum: 0,
+          exclusiveMinimum: true,
+          default: 20,
+          description: "The number of items to return",
+          example: 20,
+        },
+        required: false,
         name: "limit",
         in: "query",
       },
       {
-        type: "array",
-        description: "List of aggregate functions to apply",
-        name: "aggregate",
+        schema: {
+          type: "integer",
+          nullable: true,
+          minimum: 0,
+          default: 0,
+          example: 0,
+        },
+        required: false,
+        name: "page",
         in: "query",
       },
     ],
-    description: randomLorem(15),
-    summary: "Test 1",
-  };
-
-  const largeNumberOfParamsMetadata: BlueprintPathMetadata = {
-    parameters: new Array(20).fill(null).map((_v, i) => {
-      return {
-        name: `param-name-${i}`,
-        in: Math.random() > 0.5 ? "path" : "query",
-        type: "string",
-        required: Math.random() > 0.5,
-        description: `Description for param ${i}`,
-      };
-    }),
-    description: "This blueprint has a large number of parameters",
-    summary: "Large number of parameters",
   };
 
   return {
-    test1: fewParams,
-    largeNumberOfParamsMetadata,
+    test1: test1,
   };
 }

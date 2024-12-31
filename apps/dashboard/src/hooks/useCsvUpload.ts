@@ -1,12 +1,12 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import pLimit from "p-limit";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { type ThirdwebClient, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { csvMimeTypes } from "utils/batch";
-
 /**
  * Validate if the item.address is a valid ethereum address
  * Take in an { address: string, ...rest } object and return a new object, with 2 new props: `isValid` and `resolvedAddress`
@@ -134,21 +134,24 @@ export function useCsvUpload<
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
   });
-  const normalizeQuery = useQueries({
-    queries: rawData.map((o) => ({
-      queryKey: ["snapshot-check-isAddress", o.address],
-      queryFn: () => checkIsAddress({ item: o, thirdwebClient }),
-    })),
-    combine: (results) => {
+
+  const normalizeQuery = useQuery({
+    queryKey: ["snapshot-check-isAddress", rawData],
+    queryFn: async () => {
+      const limit = pLimit(50);
+      const results = await Promise.all(
+        rawData.map((item) => {
+          return limit(() => checkIsAddress({ item: item, thirdwebClient }));
+        }),
+      );
       return {
-        data: {
-          result: processAirdropData(results.map((result) => result.data)),
-          invalidFound: !!results.find((o) => !o.data?.isValid),
-        },
-        pending: results.some((result) => result.isPending),
+        result: processAirdropData(results),
+        invalidFound: !!results.find((item) => !item?.isValid),
       };
     },
+    retry: false,
   });
+
   const removeInvalid = useCallback(() => {
     const filteredData = normalizeQuery.data?.result.filter(
       ({ isValid }) => isValid,
@@ -156,7 +159,7 @@ export function useCsvUpload<
     // double type assertion is save here because we don't really use this variable (only check for its length)
     // Also filteredData's type is the superset of T[]
     setRawData(filteredData as unknown as T[]);
-  }, [normalizeQuery.data.result]);
+  }, [normalizeQuery.data?.result]);
   return {
     normalizeQuery,
     getInputProps,

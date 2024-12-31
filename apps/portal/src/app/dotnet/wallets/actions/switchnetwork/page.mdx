@@ -1,0 +1,26 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.SwitchNetwork | Thirdweb .NET SDK",
+	description: "Enables setting the active chain of the wallet if applicable.",
+});
+
+# IThirdwebWallet.SwitchNetwork
+
+This method allows setting the active chain of the wallet if applicable.
+
+When using Smart Wallets, make sure any overrides to default contracts, such as factories, are deployed on all chains you intend to switch to. We also support switching between zksync and non-zksync chains.
+
+## Usage
+
+```csharp
+await wallet.SwitchNetwork(chainId);
+```
+
+<Details summary="Parameters">
+
+### chainId (required)
+
+The chain ID to which you want to switch the wallet.
+
+</Details>

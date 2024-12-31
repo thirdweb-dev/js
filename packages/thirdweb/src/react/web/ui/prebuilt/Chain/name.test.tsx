@@ -13,13 +13,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainName component", () => {
         <ChainName />
       </ChainProvider>,
     );
-    await waitFor(() =>
-      expect(
-        screen.getByText("Ethereum", {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.getByText("Ethereum", {
+            exact: true,
+            selector: "span",
+          }),
+        ).toBeInTheDocument(),
+      { timeout: 2000 },
     );
   });
 
@@ -29,13 +31,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainName component", () => {
         <ChainName />
       </ChainProvider>,
     );
-    await waitFor(() =>
-      expect(
-        screen.getByText("Ethereum Mainnet", {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.getByText("Ethereum Mainnet", {
+            exact: true,
+            selector: "span",
+          }),
+        ).toBeInTheDocument(),
+      { timeout: 2000 },
     );
   });
 
@@ -45,13 +49,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainName component", () => {
         <ChainName formatFn={(str: string) => `${str}-formatted`} />
       </ChainProvider>,
     );
-    await waitFor(() =>
-      expect(
-        screen.getByText("Ethereum-formatted", {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.getByText("Ethereum-formatted", {
+            exact: true,
+            selector: "span",
+          }),
+        ).toBeInTheDocument(),
+      { timeout: 2000 },
     );
   });
 
@@ -62,13 +68,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainName component", () => {
       </ChainProvider>,
     );
 
-    await waitFor(() =>
-      expect(
-        screen.getByText("oops", {
-          exact: true,
-          selector: "span",
-        }),
-      ).toBeInTheDocument(),
+    await waitFor(
+      () =>
+        expect(
+          screen.getByText("oops", {
+            exact: true,
+            selector: "span",
+          }),
+        ).toBeInTheDocument(),
+      { timeout: 2000 },
     );
   });
 

@@ -132,7 +132,10 @@ function isViemChain(
   return "rpcUrls" in chain && !("rpc" in chain);
 }
 
-function convertViemChain(viemChain: ViemChain): Chain {
+/**
+ * @internal
+ */
+export function convertViemChain(viemChain: ViemChain): Chain {
   const RPC_URL = getThirdwebDomains().rpc;
   return {
     id: viemChain.id,

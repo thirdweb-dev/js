@@ -141,6 +141,9 @@ var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet,
 
 // You can also fetch linked accounts at any time
 List<LinkedAccount> linkedAccounts = await mainInAppWallet.GetLinkedAccounts();
+
+// Unlink an account
+List<LinkedAccount> linkedAccounts = await mainInAppWallet.UnlinkAccount(linkedAccounts[0]);
 ```
 
 <ArticleIconCard

@@ -36,7 +36,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
 /**
  * A fully featured wallet connection component that allows to:
  *
- * - Connect to 350+ external wallets
+ * - Connect to 500+ external wallets
  * - Connect with email, phone, passkey or socials
  * - Convert any wallet to a ERC4337 smart wallet for gasless transactions
  * - Sign in with ethereum (Auth)
@@ -258,6 +258,17 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *   client={client}
  *   detailsModal={{
  *     assetTabs: ["nft", "token"],
+ *   }}
+ * />
+ * ```
+ *
+ * ### Callback for when the details modal is closed
+ * ```tsx
+ * <ConnectButton
+ *   detailsModal={{
+ *     onClose: (screen: string) => {
+ *       console.log({ screen });
+ *     }
  *   }}
  * />
  * ```

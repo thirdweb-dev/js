@@ -1,10 +1,10 @@
 "use client";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
+import type { ConnectButton_detailsModalOptions } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -26,6 +26,7 @@ export function ManageWalletScreen(props: {
   closeModal: () => void;
   locale: ConnectLocale;
   client: ThirdwebClient;
+  manageWallet?: ConnectButton_detailsModalOptions["manageWallet"];
 }) {
   const activeWallet = useAdminWallet();
 
@@ -57,10 +58,9 @@ export function ManageWalletScreen(props: {
             connectLocale={props.locale}
           />
 
-          {/* Multi-auth */}
-          {activeWallet &&
-            (activeWallet?.id === "inApp" ||
-              isEcosystemWallet(activeWallet)) && (
+          {/* Unified Identity */}
+          {typeof activeWallet !== "undefined" &&
+            props.manageWallet?.allowLinkingProfiles !== false && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("linked-profiles");

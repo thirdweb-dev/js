@@ -122,6 +122,10 @@ export const sidebar: SideBar = {
               name: "Integrating with Partners",
               href: `${walletSlug}/ecosystem/integrating-partners`,
             },
+            {
+              name: "Register with WalletConnect",
+              href: `${walletSlug}/ecosystem/register-walletconnect`,
+            },
           ],
         },
         //Account abstraction

@@ -39,14 +39,17 @@ This command adds the Thirdweb SDK to your project, allowing you to interact wit
 Create a new instance of the Thirdweb client in your application:
 
 ```csharp
-// For Frontend Applications
+// For Web Applications
+var client = ThirdwebClient.Create(clientId: "yourClientId");
+
+// For Native Applications
 var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
 
 // For Backend Applications
 var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
 ```
 
-Replace "yourClientId" and "yourBundleId" with your actual client ID and bundle ID. Note that a bundle ID is only required if you are not using the SDK from a web application.
+Replace "yourClientId" and "yourBundleId" with your actual client ID and bundle ID.
 
 </Step>
 <Step title="Interact with Smart Contracts" >
@@ -55,7 +58,7 @@ Now, you can start interacting with smart contracts. For example, to read from a
 
 ```csharp
 var contract = await ThirdwebContract.Create(client: client, address: "contractAddress", chain: chainId);
-var readResult = await ThirdwebContract.Read<string>(contract, "methodName");
+var readResult = await contract.Read<string>(contract, "methodName");
 Console.WriteLine($"Contract read result: {readResult}");
 ```
 
