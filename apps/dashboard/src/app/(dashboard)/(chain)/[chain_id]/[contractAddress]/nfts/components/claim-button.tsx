@@ -12,6 +12,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,6 +47,10 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
   const [open, setOpen] = useState(false);
+  const claimNFTNotifications = useTxNotifications(
+    "NFT claimed successfully",
+    "Failed to claim NFT",
+  );
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -135,7 +140,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
                   await promise;
                 }
 
-                const promise = sendAndConfirmTx.mutateAsync(transaction, {
+                await sendAndConfirmTx.mutateAsync(transaction, {
                   onSuccess: () => {
                     trackEvent({
                       category: "nft",
@@ -154,14 +159,10 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
                   },
                 });
 
-                toast.promise(promise, {
-                  loading: "Claiming NFT(s)",
-                  success: "NFT(s) claimed successfully",
-                  error: "Failed to claim NFT(s)",
-                });
+                claimNFTNotifications.onSuccess();
               } catch (error) {
                 console.error(error);
-                toast.error((error as Error).message || "Error claiming NFT");
+                claimNFTNotifications.onError(error);
                 trackEvent({
                   category: "nft",
                   action: "claim",

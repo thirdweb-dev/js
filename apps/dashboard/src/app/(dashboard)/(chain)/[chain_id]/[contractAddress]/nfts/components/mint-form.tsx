@@ -18,6 +18,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -133,13 +134,17 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     watch("external_url") instanceof File;
 
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const nftMintNotifications = useTxNotifications(
+    "NFT minted successfully",
+    "Failed to mint NFT",
+  );
 
   return (
     <>
       <form
         className="mt-6 flex flex-col gap-6"
         id={MINT_FORM_ID}
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (data) => {
           if (!address) {
             toast.error("Please connect your wallet to mint.");
             return;
@@ -166,7 +171,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   nft,
                   supply: BigInt(data.supply),
                 });
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -186,14 +191,10 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               },
             });
 
-            toast.promise(promise, {
-              loading: "Minting NFT",
-              success: "NFT minted successfully",
-              error: "Failed to mint NFT",
-            });
+            nftMintNotifications.onSuccess();
           } catch (err) {
+            nftMintNotifications.onError(err);
             console.error(err);
-            toast.error("Failed to mint NFT");
           }
         })}
       >

@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -49,6 +50,10 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
   const [open, setOpen] = useState(false);
+  const airdropNotifications = useTxNotifications(
+    "NFTs airdropped successfully",
+    "Failed to airdrop NFTs",
+  );
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -86,7 +91,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
               }),
             );
             const transaction = multicall({ contract, data });
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -108,14 +113,11 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
                 });
               },
             });
-            toast.promise(promise, {
-              loading: "Airdropping NFTs",
-              success: "Airdropped successfully",
-              error: "Failed to airdrop",
-            });
+
+            airdropNotifications.onSuccess();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to airdrop NFTs");
+            airdropNotifications.onError(err);
           }
         })}
       >
