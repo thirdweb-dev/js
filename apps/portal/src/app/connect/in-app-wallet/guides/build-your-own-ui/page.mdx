@@ -79,7 +79,7 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -194,7 +194,7 @@ import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		const hasPasskey = await hasStoredPasskey(client);
 		await wallet.connect({
