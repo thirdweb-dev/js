@@ -27,7 +27,7 @@ import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { MailQuestion, TrashIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Card, FormLabel, Text } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
@@ -39,80 +39,21 @@ export function beautifyString(str: string): string {
     .join(" ");
 }
 
+function jsonStringify(data: unknown | undefined): string {
+  if (!data) return "";
+  return JSON.stringify(data, null, 2);
+}
+
 interface WebhooksTableProps {
   instanceUrl: string;
   webhooks: EngineWebhook[];
   isPending: boolean;
   isFetched: boolean;
   authToken: string;
+  supportedWebhookConfig: boolean;
 }
 
 const columnHelper = createColumnHelper<EngineWebhook>();
-
-const columns = [
-  columnHelper.accessor("name", {
-    header: "Name",
-    cell: (cell) => {
-      return <Text>{cell.getValue()}</Text>;
-    },
-  }),
-  columnHelper.accessor("eventType", {
-    header: "Event Type",
-    cell: (cell) => {
-      return <Text>{beautifyString(cell.getValue())}</Text>;
-    },
-  }),
-  columnHelper.accessor("secret", {
-    header: "Secret",
-    cell: (cell) => {
-      return (
-        <CopyTextButton
-          textToCopy={cell.getValue() || ""}
-          textToShow={shortenString(cell.getValue() || "")}
-          tooltip="Secret"
-          copyIconPosition="right"
-        />
-      );
-    },
-  }),
-  columnHelper.accessor("url", {
-    header: "URL",
-    cell: (cell) => {
-      const url = cell.getValue();
-      return (
-        <Text maxW={300} isTruncated>
-          {url}
-        </Text>
-      );
-    },
-  }),
-  columnHelper.accessor("createdAt", {
-    header: "Created At",
-    cell: (cell) => {
-      const value = cell.getValue();
-      if (!value) {
-        return;
-      }
-
-      const date = new Date(value);
-      return (
-        <Tooltip
-          borderRadius="md"
-          bg="transparent"
-          boxShadow="none"
-          label={
-            <Card bgColor="backgroundHighlight">
-              <Text>{format(date, "PP pp z")}</Text>
-            </Card>
-          }
-          shouldWrapChildren
-        >
-          <Text>{formatDistanceToNowStrict(date, { addSuffix: true })}</Text>
-        </Tooltip>
-      );
-    },
-  }),
-];
 
 export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   instanceUrl,
@@ -120,6 +61,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   isPending,
   isFetched,
   authToken,
+  supportedWebhookConfig = false,
 }) => {
   const [selectedWebhook, setSelectedWebhook] = useState<EngineWebhook>();
   const deleteDisclosure = useDisclosure();
@@ -127,12 +69,95 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
 
   const activeWebhooks = webhooks.filter((webhook) => webhook.active);
 
+  const columns = useMemo(() => {
+    const _columns = [
+      columnHelper.accessor("name", {
+        header: "Name",
+        cell: (cell) => {
+          return <Text>{cell.getValue()}</Text>;
+        },
+      }),
+      columnHelper.accessor("eventType", {
+        header: "Event Type",
+        cell: (cell) => {
+          return <Text>{beautifyString(cell.getValue())}</Text>;
+        },
+      }),
+      columnHelper.accessor("secret", {
+        header: "Secret",
+        cell: (cell) => {
+          return (
+            <CopyTextButton
+              textToCopy={cell.getValue() || ""}
+              textToShow={shortenString(cell.getValue() || "")}
+              tooltip="Secret"
+              copyIconPosition="right"
+            />
+          );
+        },
+      }),
+      columnHelper.accessor("url", {
+        header: "URL",
+        cell: (cell) => {
+          const url = cell.getValue();
+          return (
+            <Text maxW={300} isTruncated>
+              {url}
+            </Text>
+          );
+        },
+      }),
+      columnHelper.accessor("createdAt", {
+        header: "Created At",
+        cell: (cell) => {
+          const value = cell.getValue();
+          if (!value) {
+            return;
+          }
+
+          const date = new Date(value);
+          return (
+            <Tooltip
+              borderRadius="md"
+              bg="transparent"
+              boxShadow="none"
+              label={
+                <Card bgColor="backgroundHighlight">
+                  <Text>{format(date, "PP pp z")}</Text>
+                </Card>
+              }
+              shouldWrapChildren
+            >
+              <Text>
+                {formatDistanceToNowStrict(date, { addSuffix: true })}
+              </Text>
+            </Tooltip>
+          );
+        },
+      }),
+    ];
+
+    if (supportedWebhookConfig) {
+      _columns.push(
+        columnHelper.accessor("config", {
+          header: "Config",
+          cell: (cell) => {
+            const config = cell.getValue();
+            return <Text>{jsonStringify(config)}</Text>;
+          },
+        }),
+      );
+    }
+
+    return _columns;
+  }, [supportedWebhookConfig]);
+
   return (
     <>
       <TWTable
         title="webhooks"
         data={activeWebhooks}
-        columns={columns}
+        columns={columns || []}
         isPending={isPending}
         isFetched={isFetched}
         onMenuClick={[
@@ -162,6 +187,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
           disclosure={deleteDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          supportedWebhookConfig={supportedWebhookConfig}
         />
       )}
       {selectedWebhook && testDisclosure.isOpen && (
@@ -170,6 +196,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
           disclosure={testDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          supportedWebhookConfig={supportedWebhookConfig}
         />
       )}
     </>
@@ -181,12 +208,14 @@ interface DeleteWebhookModalProps {
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  supportedWebhookConfig: boolean;
 }
 function DeleteWebhookModal({
   webhook,
   disclosure,
   instanceUrl,
   authToken,
+  supportedWebhookConfig = false,
 }: DeleteWebhookModalProps) {
   const deleteWebhook = useEngineDeleteWebhook({
     authToken,
@@ -242,6 +271,14 @@ function DeleteWebhookModal({
               <FormLabel>URL</FormLabel>
               <Text>{webhook.url}</Text>
             </FormControl>
+            {supportedWebhookConfig && (
+              <FormControl>
+                <FormLabel>Config</FormLabel>
+                <Text className="font-mono">
+                  {jsonStringify(webhook.config)}
+                </Text>
+              </FormControl>
+            )}
             <FormControl>
               <FormLabel>Created at</FormLabel>
               <Text>
@@ -269,12 +306,14 @@ interface TestWebhookModalProps {
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  supportedWebhookConfig: boolean;
 }
 function TestWebhookModal({
   webhook,
   disclosure,
   instanceUrl,
   authToken,
+  supportedWebhookConfig = false,
 }: TestWebhookModalProps) {
   const { mutate: testWebhook, isPending } = useEngineTestWebhook({
     instanceUrl,
@@ -306,8 +345,20 @@ function TestWebhookModal({
           <div className="flex flex-col gap-4 pb-2">
             <FormItem>
               <FormLabel>URL</FormLabel>
-              <span className="font-mono">{webhook.url}</span>
+              <Text>
+                <span className="font-mono">{webhook.url}</span>
+              </Text>
             </FormItem>
+            {supportedWebhookConfig && (
+              <FormItem>
+                <FormLabel>Config</FormLabel>
+                <Text>
+                  <span className="font-mono">
+                    {jsonStringify(webhook.config)}
+                  </span>
+                </Text>
+              </FormItem>
+            )}
 
             <Button type="submit" onClick={onTest} disabled={isPending}>
               {isPending && <Spinner className="mr-2 size-4" />}
