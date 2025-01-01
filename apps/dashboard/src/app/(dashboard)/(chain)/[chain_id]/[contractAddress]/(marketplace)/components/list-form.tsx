@@ -21,7 +21,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
-import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
+import { useSimplehashSupport } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
@@ -112,10 +112,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const { idToChain } = useAllChainsData();
   const network = idToChain.get(chainId);
   const [isFormLoading, setIsFormLoading] = useState(false);
-
+  const simplehashQuery = useSimplehashSupport(contract.chain.id);
   const isSupportedChain =
     chainId &&
-    (isSimpleHashSupported(chainId) ||
+    (!!simplehashQuery.data ||
       isAlchemySupported(chainId) ||
       isMoralisSupported(chainId));
 
