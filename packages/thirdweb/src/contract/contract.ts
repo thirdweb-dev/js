@@ -1,14 +1,14 @@
 import type { Abi } from "abitype";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { type Address, isAddress } from "../utils/address.js";
+import { isAddress } from "../utils/address.js";
 
 /**
  * @contract
  */
 export type ContractOptions<abi extends Abi = []> = {
   client: ThirdwebClient;
-  address: Address;
+  address: string;
   chain: Chain;
   readonly abi?: abi;
 };
