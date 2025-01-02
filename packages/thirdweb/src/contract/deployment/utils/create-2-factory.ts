@@ -6,6 +6,7 @@ import { getRpcClient } from "../../../rpc/rpc.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import { getAddress } from "../../../utils/address.js";
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
 import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
@@ -234,7 +235,7 @@ async function _getCreate2FactoryDeploymentInfo(
   return {
     ...deploymentTransaction,
     valueToSend: gasPrice * gas,
-    predictedAddress: create2FactoryAddress,
+    predictedAddress: getAddress(create2FactoryAddress),
   };
 }
 
