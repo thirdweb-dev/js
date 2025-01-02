@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, waitFor } from "~test/react-render.js";
-import { WalletIcon, fetchWalletImage } from "./icon.js";
+import { SocialIcon, WalletIcon, fetchWalletImage } from "./icon.js";
 import { WalletProvider } from "./provider.js";
 
 describe("WalletIcon", () => {
@@ -23,6 +23,15 @@ describe("WalletIcon", () => {
         <WalletIcon />
       </WalletProvider>,
     );
+    await waitFor(() => {
+      expect(container.querySelector("img")).not.toBe(null);
+    });
+  });
+});
+
+describe("SocialIcon", () => {
+  it("should render an image", async () => {
+    const { container } = render(<SocialIcon provider="google" />);
     await waitFor(() => {
       expect(container.querySelector("img")).not.toBe(null);
     });
