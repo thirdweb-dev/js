@@ -5,7 +5,9 @@ import { verifySignature } from "../../auth/verify-signature.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
 
+import { TEST_WALLET_A } from "~test/addresses.js";
 import { verifyTypedData } from "../../auth/verify-typed-data.js";
+import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
 import {
   addAdmin,
@@ -18,6 +20,7 @@ import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js"
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { getAddress } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { sleep } from "../../utils/sleep.js";
@@ -105,6 +108,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ...typedData.basic,
       });
       expect(isValid).toEqual(true);
+    });
+
+    it("can send a transaction on another chain", async () => {
+      const tx = await sendAndConfirmTransaction({
+        transaction: prepareTransaction({
+          to: TEST_WALLET_A,
+          client: TEST_CLIENT,
+          chain: baseSepolia,
+          value: 0n,
+        }),
+        // biome-ignore lint/style/noNonNullAssertion: Just trust me
+        account: wallet.getAccount()!,
+      });
+      expect(tx.transactionHash).toHaveLength(66);
     });
 
     it("should revert on unsuccessful transactions", async () => {
