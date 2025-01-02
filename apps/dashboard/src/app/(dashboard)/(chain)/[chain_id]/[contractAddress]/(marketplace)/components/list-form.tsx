@@ -18,6 +18,7 @@ import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
@@ -125,6 +126,15 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     walletAddress: account?.address,
   });
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const listingNotifications = useTxNotifications(
+    "NFT listed Successfully",
+    "Failed to list NFT",
+  );
+
+  const auctionNotifications = useTxNotifications(
+    "Auction created successfully",
+    "Failed to create an auction",
+  );
 
   const form = useForm<ListForm>({
     defaultValues:
@@ -351,14 +361,11 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               endTimestamp,
             });
 
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => setOpen(false),
             });
-            toast.promise(promise, {
-              loading: "Listing NFT",
-              success: "NFT listed successfully",
-              error: "Failed to list NFT",
-            });
+
+            listingNotifications.onSuccess();
           } else if (formData.listingType === "auction") {
             let minimumBidAmountWei: bigint;
             let buyoutBidAmountWei: bigint;
@@ -403,7 +410,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               buyoutBidAmountWei: buyoutBidAmountWei * selectedQuantity,
             });
 
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "marketplace",
@@ -423,15 +430,15 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 });
               },
             });
-            toast.promise(promise, {
-              loading: "Creating auction",
-              success: "Auction created successfully",
-              error: "Failed to create auction",
-            });
+            auctionNotifications.onSuccess();
           }
         } catch (err) {
           console.error(err);
-          toast.error("Failed to list NFT");
+          if (formData.listingType === "auction") {
+            auctionNotifications.onError(err);
+          } else {
+            listingNotifications.onError(err);
+          }
         }
 
         setIsFormLoading(false);

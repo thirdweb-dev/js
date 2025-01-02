@@ -61,7 +61,7 @@ export async function getGasOverridesForTransaction(
       maxPriorityFeePerGas,
     };
   }
-  if (gasPrice) {
+  if (typeof gasPrice === "bigint") {
     return { gasPrice };
   }
 

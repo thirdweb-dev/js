@@ -49,6 +49,8 @@ string toAmount; // Optional, amount of to token
 string toAmountWei; // Optional, amount of to token in wei
 double? maxSlippageBPS; // Optional, maximum slippage in basis points
 bool isTestMode; // Optional, enters test mode onramp flow, defaults to false
+string preferredProvider; // Optional, can be set to "STRIPE", "KADO", etc.
+object purchaseData; // Optional, additional data to be passed and retained during the flow
 ```
 
 </Details>

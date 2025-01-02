@@ -5,7 +5,7 @@ on:
     types: [opened, edited, ready_for_review]
 
 env:
-  VALID_ISSUE_PREFIXES: "CORE|TOOL"
+  VALID_ISSUE_PREFIXES: "CORE|TOOL|NEB|INFRA"
 
 jobs:
   linear:

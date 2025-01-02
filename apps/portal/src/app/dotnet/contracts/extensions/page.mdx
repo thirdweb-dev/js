@@ -12,24 +12,32 @@ Thirdweb's .NET SDK provides a set of useful type-safe extensions for calling sm
 ## Usage
 
 ```csharp
-// Without extensions
+// Write without extensions
 var receiver = await wallet.GetAddress();
 var quantity = BigInteger.One;
 var currency = Constants.NATIVE_TOKEN_ADDRESS;
 var pricePerToken = BigInteger.Zero;
 var allowlistProof = new object[] { new byte[] { }, BigInteger.Zero, BigInteger.Zero, Constants.ADDRESS_ZERO };
 var data = new byte[] { };
-var receipt = await ThirdwebContract.Write(smartAccount, contract, "claim", 0, receiver, quantity, currency, pricePerToken, allowlistProof, data);
+var receipt = await contract.Write(smartAccount, contract, "claim", 0, receiver, quantity, currency, pricePerToken, allowlistProof, data);
 
-// With extensions
+// Write with extensions
 var receipt = await contract.DropERC20_Claim(wallet, receiver, amount);
 
-// Can also do read operations and much more
+// Read without extensions
+var balance = await contract.Read<string>("balanceOf", "0xOwnerAddress");
+
+// Read with extensions
 var balance = await contract.ERC20_BalanceOf("0xOwnerAddress");
+
+// Generate low level calldata
+var calldata = contract.CreateCallData("myFunction", param1, param2);
 ```
 
 ## Available Contract Extensions
 
 Please refer to the `ThirdwebExtensions` [full reference](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebExtensions.html) for a complete list of available contract extensions.
+
+If you are using our [Marketplace](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract, check out our [Marketplace-specific](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebMarketplaceExtensions.html) extensions.
 
 

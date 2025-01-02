@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { TEST_WALLET_A } from "~test/addresses.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verify-signature.js";
@@ -307,6 +308,20 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
     it("can switch chains", async () => {
       await wallet.switchChain(baseSepolia);
       expect(wallet.getChain()?.id).toEqual(baseSepolia.id);
+    });
+
+    it("can send a transaction on another chain", async () => {
+      const tx = await sendAndConfirmTransaction({
+        transaction: prepareTransaction({
+          to: TEST_WALLET_A,
+          client: TEST_CLIENT,
+          chain: baseSepolia,
+          value: 0n,
+        }),
+        // biome-ignore lint/style/noNonNullAssertion: Just trust me
+        account: wallet.getAccount()!,
+      });
+      expect(tx.transactionHash).toHaveLength(66);
     });
 
     it("can execute 2 tx in parallel", async () => {

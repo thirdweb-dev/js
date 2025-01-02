@@ -17,7 +17,7 @@ type Semver = {
  * @internal
  * @param version - The version to convert to a Semver
  */
-function toSemver(version: string): Semver {
+export function toSemver(version: string): Semver {
   if (version.length > MAX_LENGTH) {
     throw new Error(`version is longer than ${MAX_LENGTH} characters`);
   }

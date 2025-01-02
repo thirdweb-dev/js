@@ -18,6 +18,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -166,12 +167,16 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const updateMetadataNotifications = useTxNotifications(
+    "NFT metadata updated successfully",
+    "Failed to update NFT metadata",
+  );
 
   return (
     <form
       className="flex flex-col gap-6"
       id={UPDATE_METADATA_FORM_ID}
-      onSubmit={handleSubmit((data) => {
+      onSubmit={handleSubmit(async (data) => {
         if (!address) {
           toast.error("Please connect your wallet to update metadata.");
           return;
@@ -217,7 +222,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                   tokenId: BigInt(nft.id),
                   newMetadata,
                 });
-          const promise = sendAndConfirmTx.mutateAsync(transaction, {
+          await sendAndConfirmTx.mutateAsync(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "nft",
@@ -237,13 +242,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
             },
           });
 
-          toast.promise(promise, {
-            error: "Failed to update NFT metadata",
-            success: "NFT metadata updated successfully",
-          });
+          updateMetadataNotifications.onSuccess();
         } catch (err) {
           console.error(err);
-          toast.error("Failed to update NFT metadata");
+          updateMetadataNotifications.onError(err);
         }
       })}
     >

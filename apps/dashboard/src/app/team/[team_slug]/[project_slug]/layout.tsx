@@ -20,7 +20,9 @@ export default async function TeamLayout(props: {
     redirect("/login");
   }
 
-  const team = teams.find((t) => t.slug === params.team_slug);
+  const team = teams.find(
+    (t) => t.slug === decodeURIComponent(params.team_slug),
+  );
 
   if (!team) {
     // not a valid team, redirect back to 404
@@ -35,7 +37,7 @@ export default async function TeamLayout(props: {
   );
 
   const project = teamsAndProjects
-    .find((t) => t.team.slug === params.team_slug)
+    .find((t) => t.team.slug === decodeURIComponent(params.team_slug))
     ?.projects.find((p) => p.slug === params.project_slug);
 
   if (!project) {

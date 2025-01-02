@@ -5,7 +5,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { readContract } from "../../transaction/read-contract.js";
 import { isAddress } from "../address.js";
 import type { Hex } from "../encoding/hex.js";
-import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
+import { extractMinimalProxyImplementationAddress } from "./extractMinimalProxyImplementationAddress.js";
 
 // TODO: move to const exports
 const AddressZero = "0x0000000000000000000000000000000000000000";

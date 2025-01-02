@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/stale@v9
         with:
-          stale-issue-message: 'This issue has been inactive for 30 days. It is now marked as stale and will be closed in 5 days if no further activity occurs.'
-          stale-pr-message: 'This PR has been inactive for 30 days. It is now marked as stale and will be closed in 5 days if no further activity occurs.'
+          stale-issue-message: 'This issue has been inactive for 7 days. It is now marked as stale and will be closed in 2 days if no further activity occurs.'
+          stale-pr-message: 'This PR has been inactive for 7 days. It is now marked as stale and will be closed in 2 days if no further activity occurs.'
           days-before-stale: 7
           days-before-close: 2

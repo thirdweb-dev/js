@@ -1,15 +1,19 @@
 import { describe, expect, it } from "vitest";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import {
   type NFT,
   type NFTMetadata,
   type ParseNFTOptions,
   parseNFT,
+  parseNftUri,
 } from "./parseNft.js";
 
 const base: NFTMetadata = {
   id: 0n,
   uri: "ipfs://",
 };
+
+const client = TEST_CLIENT;
 
 describe("parseNft", () => {
   it("should parse ERC721 token", () => {
@@ -56,5 +60,40 @@ describe("parseNft", () => {
     };
     // @ts-ignore For testing purpose
     expect(() => parseNFT(base, option)).toThrowError(/Invalid NFT type/);
+  });
+
+  it("should throw an error for an invalid EIP namespace", async () => {
+    const uri = "invalid:1/erc721:0x1234567890abcdef1234567890abcdef12345678/1";
+    await expect(parseNftUri({ client, uri })).rejects.toThrow(
+      'Invalid EIP namespace, expected EIP155, got: "invalid"',
+    );
+  });
+
+  it("should throw an error for a missing chain ID", async () => {
+    const uri = "eip155:/erc721:0x1234567890abcdef1234567890abcdef12345678/1";
+    await expect(parseNftUri({ client, uri })).rejects.toThrow(
+      "Chain ID not found",
+    );
+  });
+
+  it("should throw an error for an invalid contract address", async () => {
+    const uri = "eip155:1/erc721:invalid-address/1";
+    await expect(parseNftUri({ client, uri })).rejects.toThrow(
+      "Contract address not found",
+    );
+  });
+
+  it("should throw an error for a missing token ID", async () => {
+    const uri = "eip155:1/erc721:0x1234567890abcdef1234567890abcdef12345678/";
+    await expect(parseNftUri({ client, uri })).rejects.toThrow(
+      "Token ID not found",
+    );
+  });
+
+  it("should throw an error for an invalid ERC namespace", async () => {
+    const uri = "eip155:1/invalid:0x1234567890abcdef1234567890abcdef12345678/1";
+    await expect(parseNftUri({ client, uri })).rejects.toThrow(
+      'Invalid ERC namespace, expected ERC721 or ERC1155, got: "invalid"',
+    );
   });
 });

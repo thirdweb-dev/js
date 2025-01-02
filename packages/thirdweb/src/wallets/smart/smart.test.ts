@@ -5,7 +5,7 @@ import { generateAccount } from "../utils/generateAccount.js";
 import { connectSmartWallet, disconnectSmartWallet } from "./index.js";
 import { smartWallet } from "./smart-wallet.js";
 
-describe("Smart Wallet Index", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Smart Wallet Index", () => {
   const chain = defineChain(1); // Ethereum mainnet
   const client = TEST_CLIENT;
 

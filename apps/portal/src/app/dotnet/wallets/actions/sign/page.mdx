@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 
 This method allows signing a string message using the wallet's private key. The signed message proves the message's integrity and authenticity, demonstrating that the message was indeed created by the owner of the private key.
 
-**Note:** When using `SmartWallet`, calling this method will deploy a smart contract account if it hasn't been deployed yet.
+**Note:** When using `SmartWallet`, calling this method from an undeployed smart account will make use of [EIP-6492](https://eips.ethereum.org/EIPS/eip-6492).
 
 ## Usage
 
