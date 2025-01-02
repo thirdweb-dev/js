@@ -83,6 +83,20 @@ import type { SmartWalletOptions } from "./types.js";
  * });
  * ```
  *
+ * ## Opt out of ERC-6492 signatures (use ERC-1271)
+ *
+ * This will deploy your smart account before signing any messages. This could slow down user logins but is useful if you need to verify signatures on-chain.
+ *
+ * ```ts
+ * import { smartWallet } from "thirdweb/wallets";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const wallet = smartWallet({
+ *  chain: sepolia,
+ *  eagerDeployment: true, // deploy the smart account before signing messages
+ * });
+ * ```
+ *
  * ## Using v0.7 Entrypoint
  *
  * Both v0.6 (default) and v0.7 ERC4337 Entrypoints are supported. To use the v0.7 Entrypoint, simply pass in a compatible account factory.
