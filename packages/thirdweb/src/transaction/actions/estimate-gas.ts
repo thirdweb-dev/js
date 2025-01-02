@@ -1,3 +1,4 @@
+import * as ox__Hex from "ox/Hex";
 import { formatTransactionRequest } from "viem";
 import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
@@ -5,8 +6,6 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { extractError } from "../extract-error.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
-import { resolveAndSignAuthorizations } from "./to-serializable-transaction.js";
-import * as ox__Hex from "ox/Hex";
 
 export type EstimateGasOptions = Prettify<
   {
@@ -18,21 +17,21 @@ export type EstimateGasOptions = Prettify<
     transaction: PreparedTransaction<any>;
   } & (
     | {
-      /**
-       * The account the transaction would be sent from.
-       *
-       * @deprecated Use `from` instead
-       */
-      account: Account;
-      from?: never;
-    }
+        /**
+         * The account the transaction would be sent from.
+         *
+         * @deprecated Use `from` instead
+         */
+        account: Account;
+        from?: never;
+      }
     | {
-      account?: never;
-      /**
-       * The address the transaction would be sent from.
-       */
-      from?: string | Account;
-    }
+        account?: never;
+        /**
+         * The address the transaction would be sent from.
+         */
+        from?: string | Account;
+      }
   )
 >;
 
@@ -66,8 +65,8 @@ export async function estimateGas(
   // 3. the passed in wallet's account address
   const fromAddress =
     typeof options.from === "string"
-      ? options.from ?? undefined
-      : options.from?.address ?? options.account?.address;
+      ? (options.from ?? undefined)
+      : (options.from?.address ?? options.account?.address);
   const txWithFrom = { ...options.transaction, from: fromAddress };
   if (cache.has(txWithFrom)) {
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
@@ -104,7 +103,7 @@ export async function estimateGas(
         encode(options.transaction),
         resolvePromisedValue(options.transaction.to),
         resolvePromisedValue(options.transaction.value),
-        resolveAndSignAuthorizations(options),
+        resolvePromisedValue(options.transaction.authorizationList),
       ]);
 
     // load up the rpc client and the estimateGas function if we need it
@@ -132,6 +131,7 @@ export async function estimateGas(
           })),
         }),
       );
+
       if (options.transaction.chain.experimental?.increaseZeroByteCount) {
         gas = roundUpGas(gas);
       }

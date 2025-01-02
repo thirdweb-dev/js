@@ -3,7 +3,7 @@ import type * as ox__TypedData from "ox/TypedData";
 import type { Hex, SignableMessage } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type {
-  PreparedAuthorization,
+  AuthorizationRequest,
   SignedAuthorization,
 } from "../../transaction/actions/eip7702/authorization.js";
 import type {
@@ -207,7 +207,7 @@ export type Account = {
    * ```
    */
   signAuthorization?: (
-    authorization: PreparedAuthorization,
+    authorization: AuthorizationRequest,
   ) => Promise<SignedAuthorization>;
 
   /**

@@ -7,7 +7,7 @@ import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import type { PreparedAuthorization } from "../transaction/actions/eip7702/authorization.js";
+import type { AuthorizationRequest } from "../transaction/actions/eip7702/authorization.js";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
 import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
@@ -122,7 +122,7 @@ export function privateKeyToAccount(
         privateKey,
       });
     },
-    signAuthorization: async (authorization: PreparedAuthorization) => {
+    signAuthorization: async (authorization: AuthorizationRequest) => {
       const signature = ox__Secp256k1.sign({
         payload: ox__Authorization.getSignPayload(authorization),
         privateKey: privateKey,

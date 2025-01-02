@@ -6,10 +6,6 @@ import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { SerializableTransaction } from "../serialize-transaction.js";
-import type {
-  PreparedAuthorization,
-  SignedAuthorization,
-} from "./eip7702/authorization.js";
 import { encode } from "./encode.js";
 import { estimateGas } from "./estimate-gas.js";
 
@@ -110,13 +106,8 @@ export async function toSerializableTransaction(
       resolvePromisedValue(options.transaction.to),
       resolvePromisedValue(options.transaction.accessList),
       resolvePromisedValue(options.transaction.value),
-      resolveAndSignAuthorizations(options),
+      resolvePromisedValue(options.transaction.authorizationList),
     ]);
-
-  // If this is an EIP-7702 transaction, we default the `to` address to the sender themselves as they are authorizing their EOA to point to the contract
-  if (typeof authorizationList !== "undefined" && typeof to === "undefined") {
-    to = typeof from === "string" ? from : from?.address;
-  }
 
   const extraGas = await resolvePromisedValue(options.transaction.extraGas);
   if (extraGas) {
@@ -131,86 +122,7 @@ export async function toSerializableTransaction(
     nonce,
     accessList,
     value,
-    ...feeData,
     authorizationList,
+    ...feeData,
   } satisfies SerializableTransaction;
-}
-
-/**
- * Helper function to resolve and sign authorizations if they are present.
- * @internal
- */
-export async function resolveAndSignAuthorizations(
-  options: ToSerializableTransactionOptions,
-): Promise<SignedAuthorization[] | undefined> {
-  if (typeof options.transaction.authorizationList !== "undefined") {
-    return await resolvePromisedValue(options.transaction.authorizationList);
-  }
-
-  if (typeof options.transaction.authorizations === "undefined") {
-    return undefined;
-  }
-
-  const account = (() => {
-    if (
-      typeof options.from === "string" ||
-      typeof options.from === "undefined"
-    ) {
-      throw new Error(
-        "This transaction has authorizations specified, please provide an account to sign them.",
-      );
-    }
-    return options.from;
-  })();
-
-  const authorizations = await resolvePromisedValue(
-    options.transaction.authorizations,
-  );
-
-  if (typeof authorizations === "undefined") {
-    return undefined;
-  }
-
-  if (authorizations.length === 0) {
-    return [];
-  }
-
-  if (typeof account.signAuthorization === "undefined") {
-    throw new Error(
-      "This account does not support signing EIP-7702 authorizations.",
-    );
-  }
-
-  const startingNonce = authorizations.some(
-    (a) => typeof a.nonce === "undefined",
-  )
-    ? await (async () => {
-        const nonce = await resolvePromisedValue(options.transaction.nonce);
-        if (typeof nonce !== "undefined") {
-          return nonce;
-        }
-
-        const rpcRequest = getRpcClient(options.transaction);
-        const { eth_getTransactionCount } = await import(
-          "../../rpc/actions/eth_getTransactionCount.js"
-        );
-        return await eth_getTransactionCount(rpcRequest, {
-          address: account.address,
-          blockTag: "pending",
-        });
-      })()
-    : 0;
-
-  const formattedAuthorizations: PreparedAuthorization[] = authorizations.map(
-    (authorization, idx) => {
-      return {
-        ...authorization,
-        // Use provided values if available, otherwise fallback to the transaction values
-        chainId: authorization.chainId ?? options.transaction.chain.id,
-        nonce: authorization.nonce ?? BigInt(startingNonce + idx + 1),
-      };
-    },
-  );
-
-  return Promise.all(formattedAuthorizations.map(account.signAuthorization));
 }

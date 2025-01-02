@@ -115,19 +115,24 @@ export interface SendTransactionOptions {
  * **Note: This feature is in beta and is subject to breaking changes**
  *
  * ```ts
- * import { sendTransaction, prepareTransaction } from "thirdweb";
+ * import { sendTransaction, prepareTransaction, signAuthorization } from "thirdweb";
  * import { sepolia } from "thirdweb/chains";
+ *
+ * const authorization = await signAuthorization({
+ *   request: {
+ *     address: "0x...",
+ *     chainId: 1,
+ *     nonce: 0n,
+ *   },
+ *   account: myAccount,
+ * });
  *
  * const transaction = prepareTransaction({
  *   chain: sepolia,
  *   client: client,
- *   authorizations: [
- *     {
- *       address: "0x...",
- *       chainId: 1,
- *       nonce: 420n,
- *     },
- *   ],
+ *   to: "0x...",
+ *   value: 0n,
+ *   authorizationList: [authorization],
  * });
  *
  * const { transactionHash } = await sendTransaction({

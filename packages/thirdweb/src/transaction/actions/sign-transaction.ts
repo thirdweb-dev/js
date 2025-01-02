@@ -35,7 +35,6 @@ export function signTransaction({
   privateKey,
 }: SignTransactionOptions): Hex {
   const serializedTransaction = serializeTransaction({ transaction });
-  console.log("serializedTransaction", serializedTransaction);
 
   const signature = ox__Secp256k1.sign({
     payload: ox__Hash.keccak256(serializedTransaction),

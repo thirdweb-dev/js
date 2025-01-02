@@ -9,8 +9,8 @@ import type { Prettify } from "../type-utils.js";
 type Message = Prettify<
   | string
   | {
-    raw: Hex | Uint8Array;
-  }
+      raw: Hex | Uint8Array;
+    }
 >;
 export type SignMessageOptions = {
   message: Message;
