@@ -1,0 +1,32 @@
+#### Create Session
+
+Create a new chat session.
+
+```bash
+POST /session
+```
+**Request Body:**
+```tsx
+{
+  "title": "My DeFi Research",     // Optional: Custom session title
+  "is_public": true,               // Optional: Make session publicly accessible
+  "context_filter": {              // Optional: Filter data sources
+    "chain_ids": [1],             
+    "contract_addresses": ["0x..."]
+  }
+}
+```
+
+**Example curl:**
+```bash
+curl -X POST https://nebula-api.thirdweb.com/session \
+  -H "Content-Type: application/json" \
+  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
+  -d '{
+    "title": "My DeFi Research",
+    "is_public": true,
+    "context_filter": {
+      "chain_ids": [1]
+    }
+  }'
+```

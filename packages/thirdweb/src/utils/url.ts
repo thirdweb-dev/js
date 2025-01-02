@@ -1,7 +1,7 @@
 /**
  * @internal
  */
-function isHttpUrl(url: string) {
+export function isHttpUrl(url: string) {
   return url.startsWith("http://") || url.startsWith("https://");
 }
 
@@ -13,7 +13,10 @@ type LinkingRecord = {
 /**
  * @internal
  */
-function formatUniversalUrl(appUrl: string, wcUri: string): LinkingRecord {
+export function formatUniversalUrl(
+  appUrl: string,
+  wcUri: string,
+): LinkingRecord {
   if (!isHttpUrl(appUrl)) {
     return formatNativeUrl(appUrl, wcUri);
   }
@@ -32,7 +35,7 @@ function formatUniversalUrl(appUrl: string, wcUri: string): LinkingRecord {
 /**
  * @internal
  */
-function formatNativeUrl(appUrl: string, wcUri: string): LinkingRecord {
+export function formatNativeUrl(appUrl: string, wcUri: string): LinkingRecord {
   if (isHttpUrl(appUrl)) {
     return formatUniversalUrl(appUrl, wcUri);
   }

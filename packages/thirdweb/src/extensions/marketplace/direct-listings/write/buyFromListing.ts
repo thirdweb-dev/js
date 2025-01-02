@@ -34,6 +34,8 @@ export type BuyFromListingParams = {
  *
  * await sendTransaction({ transaction, account });
  * ```
+ *
+ * When using `buyFromListing` with Pay, the `erc20Value` will be automatically set to the listing currency.
  */
 export function buyFromListing(
   options: BaseTransactionOptions<BuyFromListingParams>,
