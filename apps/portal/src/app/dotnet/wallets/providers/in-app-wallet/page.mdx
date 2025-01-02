@@ -46,7 +46,7 @@ var isConnected = await wallet.IsConnected();
 
 // Email & Phone (OTP)
 await wallet.SendOTP(); // and fetch the otp
-var (address, canRetry) = await wallet.LoginWithOtp("userEnteredOTP");
+var address = await wallet.LoginWithOtp("userEnteredOTP"); // try catch and retry if needed
 
 // Socials (OAuth)
 var address = await wallet.LoginWithOauth(
@@ -121,12 +121,8 @@ await wallet.SendOTP();
 **Submit OTP:** Once the user receives the OTP, they submit it back to the application, which then calls LoginWithOtp on the InAppWallet instance to verify the OTP and complete the login process.
 
 ```csharp
-var (address, canRetry) = await wallet.LoginWithOtp("userEnteredOTP");
-if (address != null) {
-    // Login successful
-} else if (canRetry) {
-    // Ask user to retry entering OTP
-}
+var address = await wallet.LoginWithOtp("userEnteredOTP");
+// If this fails, feel free to catch and take in another OTP and retry the login process
 ```
 
 ## Example
@@ -143,18 +139,7 @@ if (!await inAppWallet.IsConnected())
     await inAppWallet.SendOTP();
     Console.WriteLine("Please submit the OTP.");
     var otp = Console.ReadLine();
-    (var inAppWalletAddress, var canRetry) = await inAppWallet.LoginWithOtp(otp);
-    if (inAppWalletAddress == null && canRetry)
-    {
-        Console.WriteLine("Please submit the OTP again.");
-        otp = Console.ReadLine();
-        (inAppWalletAddress, _) = await inAppWallet.LoginWithOtp(otp);
-    }
-    if (inAppWalletAddress == null)
-    {
-        Console.WriteLine("OTP login failed. Please try again.");
-        return;
-    }
+    var inAppWalletAddress = await inAppWallet.LoginWithOtp(otp); // try catch and retry if needed
 }
 
 Console.WriteLine($"InAppWallet address: {await inAppWallet.GetAddress()}");
@@ -291,4 +276,11 @@ _ = await inAppWalletMain.LinkAccount(walletToLink: phoneWallet, otp: otp);
 
 ```csharp
 List<LinkedAccount> linkedAccounts = await inAppWalletMain.GetLinkedAccounts();
+```
+
+### Unlinking Accounts
+
+```csharp
+List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();
+List<LinkedAccount> linkedAccountsAfterUnlinking = await inAppWallet.UnlinkAccount(linkedAccounts[0]);
 ```

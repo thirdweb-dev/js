@@ -82,7 +82,7 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -113,7 +113,7 @@ const preLogin = async (email: string) => {
 
 const handleLogin = async (email: string, verificationCode: string) => {
 	// verify email and connect
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -144,7 +144,7 @@ const preLogin = async (phoneNumber: string) => {
 
 const handleLogin = async (phoneNumber: string, verificationCode: string) => {
 	// verify phone number and connect
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -171,7 +171,7 @@ import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet({
 			auth: {
 				passkeyDomain: "example.com", // defaults to current url

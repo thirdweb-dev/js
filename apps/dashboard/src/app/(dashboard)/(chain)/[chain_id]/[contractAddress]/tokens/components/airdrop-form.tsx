@@ -3,10 +3,10 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleCheck, Upload } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { transferBatch } from "thirdweb/extensions/erc20";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
@@ -37,11 +37,17 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   // The real number should be slightly higher since there's a lil bit of overhead cost
   const estimateGasCost =
     GAS_COST_PER_ERC20_TRANSFER * (addresses || []).length;
+
+  const airdropNotifications = useTxNotifications(
+    "Tokens airdropped successfully",
+    "Failed to airdrop tokens",
+  );
+
   return (
     <>
       <div className="pt-3">
         <form
-          onSubmit={handleSubmit((data) => {
+          onSubmit={handleSubmit(async (data) => {
             try {
               trackEvent({
                 category: "token",
@@ -58,7 +64,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                     amount: address.quantity,
                   })),
               });
-              const promise = sendTransaction.mutateAsync(tx, {
+              await sendTransaction.mutateAsync(tx, {
                 onSuccess: () => {
                   trackEvent({
                     category: "token",
@@ -82,14 +88,10 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                   console.error(error);
                 },
               });
-              toast.promise(promise, {
-                loading: "Airdropping tokens",
-                success: "Tokens airdropped successfully",
-                error: "Failed to airdrop tokens",
-              });
+              airdropNotifications.onSuccess();
             } catch (err) {
+              airdropNotifications.onError(err);
               console.error(err);
-              toast.error("Failed to airdrop tokens");
             }
           })}
         >

@@ -262,6 +262,17 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * />
  * ```
  *
+ * ### Callback for when the details modal is closed
+ * ```tsx
+ * <ConnectButton
+ *   detailsModal={{
+ *     onClose: (screen: string) => {
+ *       console.log({ screen });
+ *     }
+ *   }}
+ * />
+ * ```
+ *
  * @param props
  * Props for the `ConnectButton` component
  *

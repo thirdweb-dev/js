@@ -11,10 +11,14 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   [11124]: {
     MarketplaceV3: "0x2dA4Dd326A6482679547071be21f74685d730504",
   },
+  [37111]: {
+    MarketplaceV3: "0x56Abb6a3f25DCcdaDa106191053b1CC54C196DEE",
+  },
 };
 
 export const ZKSYNC_WETH: Record<number, string> = {
   [300]: "0x0462C05457Fed440740Ff3696bDd2D0577411e34",
   [324]: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
   [11124]: "0x9EDCde0257F2386Ce177C3a7FCdd97787F0D841d",
+  [37111]: "0xaA91D645D7a6C1aeaa5988e0547267B77d33fe16",
 };
