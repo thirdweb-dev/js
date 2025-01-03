@@ -27,3 +27,4 @@ export { ConnectCard } from "./Cards/ConnectCard";
 export { AAChainList } from "./AAChainList";
 export { AuthList } from "./AuthList";
 export { FeatureCard } from "./FeatureCard";
+export { ApiEndpoint } from "./ApiEndpointComponent";
