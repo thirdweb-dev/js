@@ -4,7 +4,7 @@
 
 Add support for backend wallets.
 
-This is useful is you have a backend that is connected to an agent or what not that you want to have programmatic access to a wallet without managing private keys.
+This is useful is you have a backend that is connected to an that you want to have programmatic access to a wallet without managing private keys.
 
 Here's how you'd do it:
 
