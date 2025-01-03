@@ -216,10 +216,15 @@ export type ConnectButton_detailsModalOptions = {
   /**
    * Show a "Request Testnet funds" link in `ConnectButton` Details Modal when user is connected to a testnet.
    *
-   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`
+   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`.
+   * Keep in mind that the link will only be shown if there are faucet links registered with the chain.
    * @example
    * ```tsx
-   * <ConnectButton showTestnetFaucet={true} />
+   * <ConnectButton
+   *   detailsModal={{
+   *     showTestnetFaucet: true,
+   *   }}
+   * />
    * ```
    */
   showTestnetFaucet?: boolean;
