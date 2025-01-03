@@ -1,29 +1,4 @@
-#### List Sessions
+import { ApiEndpoint} from '@doc';
+import { listSessionsEndpointData } from './data';
 
-Retrieve available sessions for the authenticated account.
-
-```bash
-GET /session/list
-```
-
-**Example curl:**
-```bash
-curl -X GET https://nebula-api.thirdweb.com/session/list \
-  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"
-```
-
-**Response:**
-```bash
-{
-  "result": [
-    {
-      "id": "string",
-      "title": "string",
-      "model_name": "string",
-      "is_public": boolean,
-      "created_at": "datetime",
-      "updated_at": "datetime"
-    }
-  ]
-}
-```
+<ApiEndpoint {...listSessionsEndpointData} />

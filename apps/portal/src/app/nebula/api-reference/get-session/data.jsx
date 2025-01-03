@@ -1,5 +1,7 @@
-export const sessionEndpointData = {
-	title: "Update Session",
+// data.js
+
+export const getSessionEndpointData = {
+	title: "Get Session",
 	method: "GET",
 	description: "Fetches details of a specific session using the session ID.",
 	endpointUrl: "/session/{session_id}",
@@ -24,7 +26,7 @@ export const sessionEndpointData = {
 		{
 			language: "curl",
 			code: `curl -X GET https://nebula-api.thirdweb.com/session/{session_id} \\
-  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"`,
+    -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"`,
 		},
 	],
 	apiResponses: [
@@ -32,23 +34,25 @@ export const sessionEndpointData = {
 			status: "200",
 			description: "Session details retrieved successfully.",
 			code: `{
-  "session_id": "abc123",
-  "created_at": "2024-01-01T00:00:00Z",
-  "last_active": "2024-01-02T12:34:56Z",
-  "messages": [
-      "message_id": "msg1",
-      "content": "Hello, how can I assist you?",
-      "timestamp": "2024-01-01T01:23:45Z"
-    // Additional messages...
-  ]
-}`,
+    "session_id": "abc123",
+    "created_at": "2024-01-01T00:00:00Z",
+    "last_active": "2024-01-02T12:34:56Z",
+    "messages": [
+      {
+        "message_id": "msg1",
+        "content": "Hello, how can I assist you?",
+        "timestamp": "2024-01-01T01:23:45Z"
+      }
+      // Additional messages...
+    ]
+  }`,
 		},
 		{
 			status: "404",
 			description: "Session not found.",
 			code: `{
-  "error": "Session with ID 'abc123' not found."
-}`,
+    "error": "Session with ID 'abc123' not found."
+  }`,
 		},
 	],
 };
