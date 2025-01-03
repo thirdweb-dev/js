@@ -40,7 +40,7 @@ describe("signMessage", async () => {
         privateKey: ANVIL_PKEY_A,
       }),
     ).toMatchInlineSnapshot(
-      '"0xa461f509887bd19e312c0c58467ce8ff8e300d3c1a90b608a760c5b80318eaf15fe57c96f9175d6cd4daad4663763baa7e78836e067d0163e9a2ccf2ff753f5b1b"',
+      `"0xa461f509887bd19e312c0c58467ce8ff8e300d3c1a90b608a760c5b80318eaf15fe57c96f9175d6cd4daad4663763baa7e78836e067d0163e9a2ccf2ff753f5b1b"`,
     );
 
     expect(
@@ -53,7 +53,7 @@ describe("signMessage", async () => {
         privateKey: ANVIL_PKEY_A,
       }),
     ).toMatchInlineSnapshot(
-      '"0xa461f509887bd19e312c0c58467ce8ff8e300d3c1a90b608a760c5b80318eaf15fe57c96f9175d6cd4daad4663763baa7e78836e067d0163e9a2ccf2ff753f5b1b"',
+      `"0xa461f509887bd19e312c0c58467ce8ff8e300d3c1a90b608a760c5b80318eaf15fe57c96f9175d6cd4daad4663763baa7e78836e067d0163e9a2ccf2ff753f5b1b"`,
     );
   });
 

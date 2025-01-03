@@ -78,3 +78,12 @@ export type { GaslessOptions } from "../transaction/actions/gasless/types.js";
 export type { EngineOptions } from "../transaction/actions/gasless/providers/engine.js";
 export type { OpenZeppelinOptions } from "../transaction/actions/gasless/providers/openzeppelin.js";
 export type { BiconomyOptions } from "../transaction/actions/gasless/providers/biconomy.js";
+
+/**
+ * EIP-7702
+ */
+export type {
+  AuthorizationRequest,
+  SignedAuthorization,
+} from "../transaction/actions/eip7702/authorization.js";
+export { signAuthorization } from "../transaction/actions/eip7702/authorization.js";

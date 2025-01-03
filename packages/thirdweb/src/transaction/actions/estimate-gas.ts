@@ -1,3 +1,4 @@
+import * as ox__Hex from "ox/Hex";
 import { formatTransactionRequest } from "viem";
 import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
@@ -18,6 +19,8 @@ export type EstimateGasOptions = Prettify<
     | {
         /**
          * The account the transaction would be sent from.
+         *
+         * @deprecated Use `from` instead
          */
         account: Account;
         from?: never;
@@ -27,7 +30,7 @@ export type EstimateGasOptions = Prettify<
         /**
          * The address the transaction would be sent from.
          */
-        from?: string;
+        from?: string | Account;
       }
   )
 >;
@@ -60,8 +63,11 @@ export async function estimateGas(
   // 1. the user specified from address
   // 2. the passed in account address
   // 3. the passed in wallet's account address
-  const from = options.from ?? options.account?.address ?? undefined;
-  const txWithFrom = { ...options.transaction, from };
+  const fromAddress =
+    typeof options.from === "string"
+      ? (options.from ?? undefined)
+      : (options.from?.address ?? options.account?.address);
+  const txWithFrom = { ...options.transaction, from: fromAddress };
   if (cache.has(txWithFrom)) {
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return cache.get(txWithFrom)!;
@@ -92,11 +98,13 @@ export async function estimateGas(
 
     // load up encode function if we need it
     const { encode } = await import("./encode.js");
-    const [encodedData, toAddress, value] = await Promise.all([
-      encode(options.transaction),
-      resolvePromisedValue(options.transaction.to),
-      resolvePromisedValue(options.transaction.value),
-    ]);
+    const [encodedData, toAddress, value, authorizationList] =
+      await Promise.all([
+        encode(options.transaction),
+        resolvePromisedValue(options.transaction.to),
+        resolvePromisedValue(options.transaction.value),
+        resolvePromisedValue(options.transaction.authorizationList),
+      ]);
 
     // load up the rpc client and the estimateGas function if we need it
     const [{ getRpcClient }, { eth_estimateGas }] = await Promise.all([
@@ -111,10 +119,19 @@ export async function estimateGas(
         formatTransactionRequest({
           to: toAddress,
           data: encodedData,
-          from,
+          from: fromAddress,
           value,
+          // TODO: Remove this casting when we migrate this file to Ox
+          authorizationList: authorizationList?.map((auth) => ({
+            ...auth,
+            r: ox__Hex.fromNumber(auth.r),
+            s: ox__Hex.fromNumber(auth.s),
+            nonce: Number(auth.nonce),
+            contractAddress: auth.address,
+          })),
         }),
       );
+
       if (options.transaction.chain.experimental?.increaseZeroByteCount) {
         gas = roundUpGas(gas);
       }

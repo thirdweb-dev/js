@@ -3,6 +3,7 @@ import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { SerializableTransaction } from "../serialize-transaction.js";
 import { encode } from "./encode.js";
@@ -15,9 +16,9 @@ export type ToSerializableTransactionOptions = {
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   transaction: PreparedTransaction<any>;
   /**
-   * The from address to use for gas estimation.
+   * The from address or account to use for gas estimation and authorization signing.
    */
-  from?: string;
+  from?: string | Account;
 };
 
 /**
@@ -55,7 +56,12 @@ export async function toSerializableTransaction(
     );
     const { gas, maxFeePerGas, maxPriorityFeePerGas } = await getZkGasFees({
       transaction: options.transaction,
-      from: options.from ? getAddress(options.from) : undefined,
+      from:
+        typeof options.from === "string" // Is this just an address?
+          ? getAddress(options.from)
+          : options.from !== undefined // Is this an account?
+            ? getAddress(options.from.address)
+            : undefined,
     });
     // passing these values here will avoid re-fetching them below
     options.transaction = {
@@ -69,34 +75,39 @@ export async function toSerializableTransaction(
   const rpcRequest = getRpcClient(options.transaction);
   const chainId = options.transaction.chain.id;
   const from = options.from;
-  let [data, nonce, gas, feeData, to, accessList, value] = await Promise.all([
-    encode(options.transaction),
-    (async () => {
-      // if the user has specified a nonce, use that
-      const resolvedNonce = await resolvePromisedValue(
-        options.transaction.nonce,
-      );
-      if (resolvedNonce !== undefined) {
-        return resolvedNonce;
-      }
+  let [data, nonce, gas, feeData, to, accessList, value, authorizationList] =
+    await Promise.all([
+      encode(options.transaction),
+      (async () => {
+        // if the user has specified a nonce, use that
+        const resolvedNonce = await resolvePromisedValue(
+          options.transaction.nonce,
+        );
+        if (resolvedNonce !== undefined) {
+          return resolvedNonce;
+        }
 
-      return from // otherwise get the next nonce (import the method to do so)
-        ? await import("../../rpc/actions/eth_getTransactionCount.js").then(
-            ({ eth_getTransactionCount }) =>
-              eth_getTransactionCount(rpcRequest, {
-                address: from,
-                blockTag: "pending",
-              }),
-          )
-        : undefined;
-    })(),
-    // takes the same options as the sendTransaction function thankfully!
-    estimateGas(options),
-    getGasOverridesForTransaction(options.transaction),
-    resolvePromisedValue(options.transaction.to),
-    resolvePromisedValue(options.transaction.accessList),
-    resolvePromisedValue(options.transaction.value),
-  ]);
+        return from // otherwise get the next nonce (import the method to do so)
+          ? await import("../../rpc/actions/eth_getTransactionCount.js").then(
+              ({ eth_getTransactionCount }) =>
+                eth_getTransactionCount(rpcRequest, {
+                  address: typeof from === "string" ? from : from?.address,
+                  blockTag: "pending",
+                }),
+            )
+          : undefined;
+      })(),
+      // takes the same options as the sendTransaction function thankfully!
+      estimateGas({
+        ...options,
+        from: options.from,
+      }),
+      getGasOverridesForTransaction(options.transaction),
+      resolvePromisedValue(options.transaction.to),
+      resolvePromisedValue(options.transaction.accessList),
+      resolvePromisedValue(options.transaction.value),
+      resolvePromisedValue(options.transaction.authorizationList),
+    ]);
 
   const extraGas = await resolvePromisedValue(options.transaction.extraGas);
   if (extraGas) {
@@ -111,6 +122,7 @@ export async function toSerializableTransaction(
     nonce,
     accessList,
     value,
+    authorizationList,
     ...feeData,
   } satisfies SerializableTransaction;
 }

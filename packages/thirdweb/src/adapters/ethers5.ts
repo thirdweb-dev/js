@@ -483,7 +483,7 @@ export async function toEthersSigner(
 
       const response: ethers5.ethers.providers.TransactionResponse = {
         ...serialized,
-        nonce: serialized.nonce ?? 0,
+        nonce: Number(serialized.nonce ?? 0),
         from: account.address,
         maxFeePerGas: serialized.maxFeePerGas
           ? ethers.BigNumber.from(serialized.maxFeePerGas)

@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { toWei } from "../../utils/units.js";
 import {
@@ -10,6 +11,7 @@ import {
   prepareTransaction,
 } from "../prepare-transaction.js";
 import { serializeTransaction } from "../serialize-transaction.js";
+import { signAuthorization } from "./eip7702/authorization.js";
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
@@ -269,6 +271,72 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
         }),
       ).not.toThrow();
       expect(serializableTransaction.gas).toBe(0n);
+    });
+  });
+
+  describe("authorizations", () => {
+    test("should be able to be set", async () => {
+      const authorization = await signAuthorization({
+        account: TEST_ACCOUNT_A,
+        request: {
+          address: TEST_WALLET_B,
+          chainId: 1,
+          nonce: 100n,
+        },
+      });
+
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          authorizationList: [authorization],
+        },
+        from: TEST_ACCOUNT_A,
+      });
+
+      expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
+        [
+          {
+            "address": "0x0000000000000000000000000000000000000002",
+            "chainId": 1,
+            "nonce": 100n,
+            "r": 80806665504145908662094143605220407474886149466352261863122583017203514896219n,
+            "s": 35406481756212480507222011619049260135807579374282360733409834151386668114999n,
+            "yParity": 1,
+          },
+        ]
+      `);
+    });
+
+    test("should be able to be a promised value", async () => {
+      const authorization = await signAuthorization({
+        account: TEST_ACCOUNT_A,
+        request: {
+          address: TEST_WALLET_B,
+          chainId: 1,
+          nonce: 100n,
+        },
+      });
+
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          authorizationList: async () => Promise.resolve([authorization]),
+        },
+        from: TEST_ACCOUNT_A,
+      });
+
+      expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
+        [
+          {
+            "address": "0x0000000000000000000000000000000000000002",
+            "chainId": 1,
+            "nonce": 100n,
+            "r": 80806665504145908662094143605220407474886149466352261863122583017203514896219n,
+            "s": 35406481756212480507222011619049260135807579374282360733409834151386668114999n,
+            "yParity": 1,
+          },
+        ]
+      `);
     });
   });
 
