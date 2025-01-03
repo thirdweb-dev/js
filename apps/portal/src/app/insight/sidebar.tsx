@@ -14,6 +14,10 @@ export const sidebar: SideBar = {
       href: `${insightSlug}/get-started`,
     },
     {
+      name: "For AI Agents & LLMs",
+      href: `${insightSlug}/agents-and-llms`,
+    },
+    {
       name: "Supported Chains",
       href: `${insightSlug}/supported-chains`,
     },
