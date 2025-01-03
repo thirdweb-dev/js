@@ -1,26 +1,4 @@
-#### Update Session
+import { ApiEndpoint} from '@doc';
+import { sessionEndpointData } from './data';
 
-Update an existing session.
-
-```bash
-PUT /session/{session_id}
-```
-
-**Example curl:**
-```bash
-curl -X PUT https://nebula-api.thirdweb.com/session/abc123 \
-  -H "Content-Type: application/json" \
-  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
-  -d '{
-    "title": "Updated Title",
-    "is_public": true
-  }'
-```
-
-**Request Body:**
-```tsx
-{
-  "title": "string",
-  "is_public": boolean
-}
-```
+<ApiEndpoint {...sessionEndpointData} />
