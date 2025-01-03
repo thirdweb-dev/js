@@ -4,7 +4,7 @@
 export const wallet = {
   id: "com.coinomi",
   name: "Coinomi",
-  homepage: "https://www.coinomi.com/",
+  homepage: "https://www.coinomi.com",
   image_id: "3b446d16-a908-40c8-5835-9a6efe90dd00",
   app: {
     browser: null,

@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.trustwallet.app",
   name: "Trust Wallet",
   homepage: "https://trustwallet.com/",
-  image_id: "7677b54f-3486-46e2-4e37-bf8747814f00",
+  image_id: "3386dde1-8b24-48c8-4b81-16979e342000",
   app: {
     browser: null,
     ios: "https://apps.apple.com/app/apple-store/id1288339409",

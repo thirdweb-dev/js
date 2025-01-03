@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.roninchain.wallet",
   name: "Ronin Wallet",
   homepage: "https://wallet.roninchain.com/",
-  image_id: "bd78de7e-36da-4552-ebdd-2e420ba05900",
+  image_id: "689f6eb4-0378-41e1-0993-0767400cb600",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/ronin-wallet/id1592675001",

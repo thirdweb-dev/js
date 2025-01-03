@@ -23,7 +23,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "<root>://",
+    native: "crypto.noone.wallet://walletcon",
     universal: null,
   },
   desktop: {

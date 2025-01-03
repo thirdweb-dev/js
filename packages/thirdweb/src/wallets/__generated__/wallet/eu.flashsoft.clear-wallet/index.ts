@@ -2,25 +2,25 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.xdefi",
-  name: "XDEFI Wallet",
-  homepage: "https://www.xdefi.io/",
-  image_id: "efec6318-7f96-4b30-9287-6c287660cd00",
+  id: "eu.flashsoft.clear-wallet",
+  name: "clear-wallet",
+  homepage: "https://clear-wallet.flashsoft.eu",
+  image_id: "a6d4c2de-1bd9-404f-f3d2-3d2ed9bf5000",
   app: {
-    browser: "https://www.xdefi.io/",
+    browser: null,
     ios: null,
     android: null,
     mac: null,
     windows: null,
     linux: null,
     chrome:
-      "https://chrome.google.com/webstore/detail/xdefi-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf?hl=en",
+      "https://chromewebstore.google.com/detail/clear-evm-wallet-clw/djlahdpfkflehaepgohnnodmaajabdlg?hl=en&authuser=0",
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "io.xdefi",
+  rdns: "eu.flashsoft.clear-wallet",
   mobile: {
     native: null,
     universal: null,

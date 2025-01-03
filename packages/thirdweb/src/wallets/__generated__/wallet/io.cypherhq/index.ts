@@ -2,9 +2,9 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.cypherwallet",
+  id: "io.cypherhq",
   name: "Cypher Wallet",
-  homepage: "https://cypherwallet.io",
+  homepage: "https://cypherhq.io",
   image_id: "7bce0965-a4cc-4aad-6217-009d51017500",
   app: {
     browser: null,
@@ -27,7 +27,7 @@ export const wallet = {
     universal: null,
   },
   desktop: {
-    native: null,
+    native: "cypherwallet://",
     universal: null,
   },
 } as const;

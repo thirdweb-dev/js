@@ -273,6 +273,13 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/com.mewwallet/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "app.phantom": {
+      return (
+        image
+          ? import("./wallet/app.phantom/image.js").then((img) => img.default)
+          : import("./wallet/app.phantom/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "com.fireblocks": {
       return (
         image
@@ -298,6 +305,17 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/com.alphawallet/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "com.roninchain.wallet": {
+      return (
+        image
+          ? import("./wallet/com.roninchain.wallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/com.roninchain.wallet/index.js").then(
+              (w) => w.wallet,
+            )
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "com.unstoppabledomains": {
@@ -334,13 +352,6 @@ export async function getWalletInfo<TImage extends boolean>(
         image
           ? import("./wallet/app.omni/image.js").then((img) => img.default)
           : import("./wallet/app.omni/index.js").then((w) => w.wallet)
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "co.lobstr": {
-      return (
-        image
-          ? import("./wallet/co.lobstr/image.js").then((img) => img.default)
-          : import("./wallet/co.lobstr/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "technology.obvious": {
@@ -569,13 +580,11 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/network.cvl/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
-    case "io.cypherwallet": {
+    case "io.cypherhq": {
       return (
         image
-          ? import("./wallet/io.cypherwallet/image.js").then(
-              (img) => img.default,
-            )
-          : import("./wallet/io.cypherwallet/index.js").then((w) => w.wallet)
+          ? import("./wallet/io.cypherhq/image.js").then((img) => img.default)
+          : import("./wallet/io.cypherhq/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "app.status": {
@@ -1270,6 +1279,13 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/com.kriptonio/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "xyz.ctrl": {
+      return (
+        image
+          ? import("./wallet/xyz.ctrl/image.js").then((img) => img.default)
+          : import("./wallet/xyz.ctrl/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "io.streakk": {
       return (
         image
@@ -1286,13 +1302,13 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/com.saitamatoken/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
-    case "group.com.flowfoundation.wallet": {
+    case "com.flowfoundation.wallet": {
       return (
         image
-          ? import("./wallet/group.com.flowfoundation.wallet/image.js").then(
+          ? import("./wallet/com.flowfoundation.wallet/image.js").then(
               (img) => img.default,
             )
-          : import("./wallet/group.com.flowfoundation.wallet/index.js").then(
+          : import("./wallet/com.flowfoundation.wallet/index.js").then(
               (w) => w.wallet,
             )
       ) as Promise<[TImage] extends [true] ? string : any>;
@@ -1701,17 +1717,6 @@ export async function getWalletInfo<TImage extends boolean>(
         image
           ? import("./wallet/app.ryipay/image.js").then((img) => img.default)
           : import("./wallet/app.ryipay/index.js").then((w) => w.wallet)
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "com.roninchain.wallet": {
-      return (
-        image
-          ? import("./wallet/com.roninchain.wallet/image.js").then(
-              (img) => img.default,
-            )
-          : import("./wallet/com.roninchain.wallet/index.js").then(
-              (w) => w.wallet,
-            )
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "org.dota168": {
@@ -2714,6 +2719,13 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/fun.tobi/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "inc.tomo": {
+      return (
+        image
+          ? import("./wallet/inc.tomo/image.js").then((img) => img.default)
+          : import("./wallet/inc.tomo/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "app.clot": {
       return (
         image
@@ -2806,6 +2818,15 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/io.uptn.dapp-web/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "io.compasswallet": {
+      return (
+        image
+          ? import("./wallet/io.compasswallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.compasswallet/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "app.nicegram": {
       return (
         image
@@ -2891,6 +2912,138 @@ export async function getWalletInfo<TImage extends boolean>(
             )
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "com.companyname.swaptobe": {
+      return (
+        image
+          ? import("./wallet/com.companyname.swaptobe/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/com.companyname.swaptobe/index.js").then(
+              (w) => w.wallet,
+            )
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "finance.porta": {
+      return (
+        image
+          ? import("./wallet/finance.porta/image.js").then((img) => img.default)
+          : import("./wallet/finance.porta/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "org.alephium": {
+      return (
+        image
+          ? import("./wallet/org.alephium/image.js").then((img) => img.default)
+          : import("./wallet/org.alephium/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "network.over": {
+      return (
+        image
+          ? import("./wallet/network.over/image.js").then((img) => img.default)
+          : import("./wallet/network.over/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.walletverse": {
+      return (
+        image
+          ? import("./wallet/io.walletverse/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.walletverse/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "com.berasig": {
+      return (
+        image
+          ? import("./wallet/com.berasig/image.js").then((img) => img.default)
+          : import("./wallet/com.berasig/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "org.shefi": {
+      return (
+        image
+          ? import("./wallet/org.shefi/image.js").then((img) => img.default)
+          : import("./wallet/org.shefi/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "com.wemixplay": {
+      return (
+        image
+          ? import("./wallet/com.wemixplay/image.js").then((img) => img.default)
+          : import("./wallet/com.wemixplay/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "co.family.wallet": {
+      return (
+        image
+          ? import("./wallet/co.family.wallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/co.family.wallet/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.legionnetwork": {
+      return (
+        image
+          ? import("./wallet/io.legionnetwork/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.legionnetwork/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "com.bitnovo": {
+      return (
+        image
+          ? import("./wallet/com.bitnovo/image.js").then((img) => img.default)
+          : import("./wallet/com.bitnovo/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.safecryptowallet": {
+      return (
+        image
+          ? import("./wallet/io.safecryptowallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.safecryptowallet/index.js").then(
+              (w) => w.wallet,
+            )
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "ag.jup": {
+      return (
+        image
+          ? import("./wallet/ag.jup/image.js").then((img) => img.default)
+          : import("./wallet/ag.jup/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.koalawallet": {
+      return (
+        image
+          ? import("./wallet/io.koalawallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.koalawallet/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.nonbank": {
+      return (
+        image
+          ? import("./wallet/io.nonbank/image.js").then((img) => img.default)
+          : import("./wallet/io.nonbank/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.universaleverything": {
+      return (
+        image
+          ? import("./wallet/io.universaleverything/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.universaleverything/index.js").then(
+              (w) => w.wallet,
+            )
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "com.coinbase.wallet": {
       return (
         image
@@ -2900,13 +3053,6 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/com.coinbase.wallet/index.js").then(
               (w) => w.wallet,
             )
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "app.phantom": {
-      return (
-        image
-          ? import("./wallet/app.phantom/image.js").then((img) => img.default)
-          : import("./wallet/app.phantom/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "io.rabby": {
@@ -2923,13 +3069,6 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/com.brave.wallet/index.js").then((w) => w.wallet)
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "io.xdefi": {
-      return (
-        image
-          ? import("./wallet/io.xdefi/image.js").then((img) => img.default)
-          : import("./wallet/io.xdefi/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "com.moongate.one": {
@@ -2980,13 +3119,6 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/io.finoa/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
-    case "inc.tomo": {
-      return (
-        image
-          ? import("./wallet/inc.tomo/image.js").then((img) => img.default)
-          : import("./wallet/inc.tomo/index.js").then((w) => w.wallet)
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
     case "com.walletconnect.com": {
       return (
         image
@@ -2994,17 +3126,6 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/com.walletconnect.com/index.js").then(
-              (w) => w.wallet,
-            )
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "io.leapwallet.CompassWallet": {
-      return (
-        image
-          ? import("./wallet/io.leapwallet.CompassWallet/image.js").then(
-              (img) => img.default,
-            )
-          : import("./wallet/io.leapwallet.CompassWallet/index.js").then(
               (w) => w.wallet,
             )
       ) as Promise<[TImage] extends [true] ? string : any>;
@@ -3023,6 +3144,40 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/com.blazpay.wallet/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.getjoin.prd": {
+      return (
+        image
+          ? import("./wallet/io.getjoin.prd/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.getjoin.prd/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "xyz.talisman": {
+      return (
+        image
+          ? import("./wallet/xyz.talisman/image.js").then((img) => img.default)
+          : import("./wallet/xyz.talisman/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "eu.flashsoft.clear-wallet": {
+      return (
+        image
+          ? import("./wallet/eu.flashsoft.clear-wallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/eu.flashsoft.clear-wallet/index.js").then(
+              (w) => w.wallet,
+            )
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "app.berasig": {
+      return (
+        image
+          ? import("./wallet/app.berasig/image.js").then((img) => img.default)
+          : import("./wallet/app.berasig/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "com.lootrush": {

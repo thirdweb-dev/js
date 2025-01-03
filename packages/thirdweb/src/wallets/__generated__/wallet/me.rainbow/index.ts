@@ -5,7 +5,7 @@ export const wallet = {
   id: "me.rainbow",
   name: "Rainbow",
   homepage: "https://rainbow.me/",
-  image_id: "7a33d7f1-3d12-4b5c-f3ee-5cd83cb1b500",
+  image_id: "a9978739-0685-43d5-bb3c-c11545d91300",
   app: {
     browser: null,
     ios: "https://apps.apple.com/app/apple-store/id1457119021?pt=119997837&ct=wc&mt=8",
