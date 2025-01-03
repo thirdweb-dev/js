@@ -74,7 +74,10 @@ export type SingleStepAuthArgsType =
     }
   | {
       strategy: "guest";
-      client: ThirdwebClient;
+    }
+  | {
+      strategy: "backend";
+      walletSecret: string;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
@@ -89,6 +92,7 @@ type RecoveryShareManagement = "USER_MANAGED" | "AWS_MANAGED" | "ENCLAVE";
 export type AuthProvider =
   | "Cognito"
   | "Guest"
+  | "Backend"
   | "Google"
   | "EmailOtp"
   | "CustomJWT"
