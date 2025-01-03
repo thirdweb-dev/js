@@ -6,7 +6,7 @@ import { getLoginUrl } from "./getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 
 /**
- * Does no real authentication, just issues a temporary token for the user.
+ * Authenticates via the wallet secret
  * @internal
  */
 export async function backendAuthenticate(args: {
