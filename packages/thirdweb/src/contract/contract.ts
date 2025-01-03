@@ -11,7 +11,7 @@ export type ContractOptions<
   address extends string = string,
 > = {
   client: ThirdwebClient;
-  address: Address;
+  address: address;
   chain: Chain;
   readonly abi?: abi;
 };
