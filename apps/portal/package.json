@@ -33,7 +33,7 @@
     "flexsearch": "^0.7.43",
     "github-slugger": "^2.0.0",
     "lucide-react": "0.468.0",
-    "next": "15.1.0",
+    "next": "15.1.2",
     "nextjs-toploader": "^1.6.12",
     "node-html-parser": "^6.1.13",
     "posthog-js": "1.67.1",
