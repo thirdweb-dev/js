@@ -1,5 +1,31 @@
 # thirdweb
 
+## 5.80.1
+
+### Patch Changes
+
+- [#5837](https://github.com/thirdweb-dev/js/pull/5837) [`ce3e850`](https://github.com/thirdweb-dev/js/commit/ce3e850fdbf34911e20919ecc2674e4a63f08fa3) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations
+
+- [#5865](https://github.com/thirdweb-dev/js/pull/5865) [`a9547c5`](https://github.com/thirdweb-dev/js/commit/a9547c561f885cc343da8c4a018ba95d1dc91179) Thanks [@gregfromstl](https://github.com/gregfromstl)! - SDK: Fix chain switching in smart account transactions
+
+- [#5605](https://github.com/thirdweb-dev/js/pull/5605) [`e9c23ad`](https://github.com/thirdweb-dev/js/commit/e9c23ade6799f2509175dabc3bc077b7a37a961b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - - Add onClose callback to Connect Details modal
+
+  ```tsx
+  <ConnectButton
+    detailsModal={{
+      onClose: (screen: string) => {
+        // The last screen name that was being shown when user closed the modal
+        console.log({ screen });
+      },
+    }}
+  />
+  ```
+
+  - Small fix for ChainIcon: Always resolve IPFS URI
+  - Improve test coverage
+
+- [#5869](https://github.com/thirdweb-dev/js/pull/5869) [`273a320`](https://github.com/thirdweb-dev/js/commit/273a320ae8189a76b67de105c1ae66b7dfb618b0) Thanks [@gregfromstl](https://github.com/gregfromstl)! - SDK: Removed co.lobstr from the available wallets (an unsupported non-EVM wallet)
+
 ## 5.80.0
 
 ### Minor Changes
