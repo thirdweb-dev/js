@@ -6,8 +6,13 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { zkSyncSepolia } from "../../../chains/chain-definitions/zksync-sepolia.js";
 import { deployPublishedContract } from "../../../extensions/prebuilts/deploy-published.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 import { prepareTransaction } from "../../prepare-transaction.js";
-import { sendEip712Transaction } from "./send-eip712-transaction.js";
+import {
+  formatTransaction,
+  getZkGasFees,
+  sendEip712Transaction,
+} from "./send-eip712-transaction.js";
 
 describe("sendEip712Transaction", () => {
   // re-enable for testing, but disable for CI since it requires testnet funds
@@ -51,5 +56,57 @@ describe("sendEip712Transaction", () => {
     });
     expect(address).toBeDefined();
     expect(address.length).toBe(42);
+  });
+
+  it("should formatTransaction", async () => {
+    const transaction = prepareTransaction({
+      chain: zkSyncSepolia, // TODO make zksync fork chain work
+      client: TEST_CLIENT,
+      value: 0n,
+      to: TEST_ACCOUNT_B.address,
+      eip712: {
+        paymaster: "0xbA226d47Cbb2731CBAA67C916c57d68484AA269F",
+        paymasterInput:
+          "0x8c5a344500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000",
+      },
+    });
+    const formatted = await formatTransaction({ transaction });
+    expect(formatted).toStrictEqual({
+      from: undefined,
+      to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      data: "0x",
+      value: 0n,
+      gasPerPubdata: undefined,
+      eip712Meta: {
+        paymaster: "0xbA226d47Cbb2731CBAA67C916c57d68484AA269F",
+        paymasterInput:
+          "0x8c5a344500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000",
+        gasPerPubdata: 50000n,
+        factoryDeps: undefined,
+      },
+      type: "0x71",
+    });
+  });
+
+  it("should getZkGasFees", async () => {
+    const transaction = prepareTransaction({
+      chain: zkSyncSepolia, // TODO make zksync fork chain work
+      client: TEST_CLIENT,
+      value: 0n,
+      to: TEST_ACCOUNT_B.address,
+      eip712: {
+        paymaster: "0xbA226d47Cbb2731CBAA67C916c57d68484AA269F",
+        paymasterInput:
+          "0x8c5a344500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000",
+      },
+    });
+    const data = await getZkGasFees({
+      transaction,
+      from: TEST_ACCOUNT_A.address as Hex,
+    });
+    expect(typeof data.gas).toBe("bigint");
+    expect(typeof data.maxFeePerGas).toBe("bigint");
+    expect(typeof data.maxPriorityFeePerGas).toBe("bigint");
+    expect(typeof data.gasPerPubdata).toBe("bigint");
   });
 });

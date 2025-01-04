@@ -27,7 +27,7 @@ export function getValidPublicRPCUrl(chain: ChainMetadata) {
  * Get valid RPCs for given chain
  * @internal
  */
-function getValidChainRPCs(
+export function getValidChainRPCs(
   chain: Pick<ChainMetadata, "rpc" | "chainId">,
   clientId?: string,
   mode: "http" | "ws" = "http",

@@ -1,3 +1,5 @@
+import { AbiFunction } from "ox";
+import type { Abi } from "ox/Abi";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
@@ -7,6 +9,7 @@ import {
   TEST_ACCOUNT_B,
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
+import { resolveContractAbi } from "../../../contract/actions/resolve-abi.js";
 import {
   type ThirdwebContract,
   getContract,
@@ -33,7 +36,10 @@ import { getAllValidListings } from "./read/getAllValidListings.js";
 import { getListing } from "./read/getListing.js";
 import { isListingValid } from "./utils.js";
 import { buyFromListing } from "./write/buyFromListing.js";
-import { createListing } from "./write/createListing.js";
+import {
+  createListing,
+  isCreateListingSupported,
+} from "./write/createListing.js";
 
 const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
@@ -445,4 +451,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     });
     expect(approveTx).not.toBe(null);
   }, 120_000);
+
+  it("isCreateListingSupported should return TRUE for thirdweb marketplace contract", async () => {
+    const abi = await resolveContractAbi<Abi>(marketplaceContract);
+    const selectors = abi
+      .filter((f) => f.type === "function")
+      .map((f) => AbiFunction.getSelector(f));
+    expect(isCreateListingSupported(selectors)).toBe(true);
+  });
 });
