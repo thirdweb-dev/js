@@ -15,7 +15,7 @@ export const metadata = createMetadata({
 # AccountFactory
 
 ```solidity
-import "@thirdweb-dev/contracts/smart-wallet/non-upgradeable/AccountFactory.sol";
+import "@thirdweb-dev/contracts/prebuilts/account/non-upgradeable/AccountFactory.sol";
 ```
 
 This contract inherits from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWalletFactory) contract.
@@ -54,17 +54,23 @@ npx thirdweb create contract
 ```bash
 npx thirdweb deploy
 ```
+> **Note: secret key required for this command `-k <YOUR_SECRET_KEY>`**
 
 Or import the contract into your existing project and inherit from it.
 
 ```solidity
-import "@thirdweb-dev/contracts/smart-wallet/non-upgradable/AccountFactory.sol";
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.12;
+
+import "@thirdweb-dev/contracts/prebuilts/account/non-upgradeable/AccountFactory.sol";
 
 contract MyAccountFactory is AccountFactory {
 	  constructor(
+	address _defaultAdmin,
         IEntryPoint _entrypoint
     )
         AccountFactory(
+	    _defaultAdmin,
             _entrypoint
         )
     {}
