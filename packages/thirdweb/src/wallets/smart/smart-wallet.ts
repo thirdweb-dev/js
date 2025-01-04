@@ -137,7 +137,7 @@ export function smartWallet(
   let chain: Chain | undefined = undefined;
   let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
-  const _smartWallet: Wallet<"smart"> = {
+  return {
     id: "smart",
     subscribe: emitter.subscribe,
     getChain() {
@@ -152,9 +152,10 @@ export function smartWallet(
     getAccount: () => account,
     getAdminAccount: () => adminAccount,
     autoConnect: async (options) => {
-      const { connectSmartWallet } = await import("./index.js");
+      const { connectSmartAccount: connectSmartWallet } = await import(
+        "./index.js"
+      );
       const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
         options,
         createOptions,
       );
@@ -172,9 +173,8 @@ export function smartWallet(
       return account;
     },
     connect: async (options) => {
-      const { connectSmartWallet } = await import("./index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
+      const { connectSmartAccount } = await import("./index.js");
+      const [connectedAccount, connectedChain] = await connectSmartAccount(
         options,
         createOptions,
       );
@@ -194,10 +194,13 @@ export function smartWallet(
       return account;
     },
     disconnect: async () => {
+      if (account) {
+        const { disconnectSmartAccount } = await import("./index.js");
+        await disconnectSmartAccount(account);
+      }
       account = undefined;
+      adminAccount = undefined;
       chain = undefined;
-      const { disconnectSmartWallet } = await import("./index.js");
-      await disconnectSmartWallet(_smartWallet);
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain: Chain) => {
@@ -223,9 +226,8 @@ export function smartWallet(
           );
         }
       }
-      const { connectSmartWallet } = await import("./index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
+      const { connectSmartAccount } = await import("./index.js");
+      const [connectedAccount, connectedChain] = await connectSmartAccount(
         { ...lastConnectOptions, chain: newChain },
         createOptions,
       );
@@ -235,6 +237,4 @@ export function smartWallet(
       emitter.emit("chainChanged", newChain);
     },
   };
-
-  return _smartWallet;
 }

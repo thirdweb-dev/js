@@ -8,6 +8,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { stringify } from "../../../../utils/json.js";
 import { getEcosystemInfo } from "../../../ecosystem/get-ecosystem-wallet-auth-options.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
+import { getAdminAccountForSmartAccount } from "../../../smart/index.js";
 import { createWalletEmitter } from "../../../wallet-emitter.js";
 import type {
   CreateWalletArgs,
@@ -46,6 +47,7 @@ export function createInAppWallet(args: {
   const { createOptions: _createOptions, connectorFactory, ecosystem } = args;
   const walletId = ecosystem ? ecosystem.id : "inApp";
   const emitter = createWalletEmitter<"inApp">();
+  let isSmartWallet = false;
   let createOptions = _createOptions;
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
@@ -77,6 +79,7 @@ export function createInAppWallet(args: {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
+          isSmartWallet = true;
           const { defaultChainId } = ecosystemOptions.smartAccountOptions;
           const preferredChain =
             options.chain ??
@@ -95,6 +98,8 @@ export function createInAppWallet(args: {
               factoryAddress: smartAccountOptions.accountFactoryAddress,
             },
           };
+        } else {
+          isSmartWallet = false;
         }
       }
 
@@ -130,6 +135,7 @@ export function createInAppWallet(args: {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
+          isSmartWallet = true;
           const { defaultChainId } = ecosystemOptions.smartAccountOptions;
           const preferredChain =
             options.chain ??
@@ -149,6 +155,8 @@ export function createInAppWallet(args: {
             },
           };
         }
+      } else {
+        isSmartWallet = false;
       }
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
@@ -188,7 +196,7 @@ export function createInAppWallet(args: {
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {
-      if (createOptions?.smartAccount && client && account) {
+      if (isSmartWallet && client && account) {
         // if account abstraction is enabled, reconnect to smart account on the new chain
         const { autoConnectInAppWallet } = await import("./index.js");
         const connector = await getOrCreateInAppWalletConnector(
@@ -227,6 +235,15 @@ export function createInAppWallet(args: {
         chain = newChain;
       }
       emitter.emit("chainChanged", newChain);
+    },
+    getAdminAccount: () => {
+      if (!account) {
+        // If we don't have an account at all, it's definitely not a smart account and it absolutely doesn't have an admin account
+        return undefined;
+      } else {
+        // This might return an admin account (if the main account is a smart account), otherwise it'll return undefined
+        return getAdminAccountForSmartAccount(account);
+      }
     },
   };
 }

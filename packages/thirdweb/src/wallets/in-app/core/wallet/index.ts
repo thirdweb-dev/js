@@ -121,14 +121,9 @@ async function convertToSmartAccount(options: {
   smartAccountOptions: CreateWalletArgs<"smart">[1];
   chain?: Chain;
 }) {
-  const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
-    import("../../../smart/smart-wallet.js"),
-    import("../../../smart/index.js"),
-  ]);
+  const { connectSmartAccount } = await import("../../../smart/index.js");
 
-  const sa = smartWallet(options.smartAccountOptions);
-  return connectSmartWallet(
-    sa,
+  return connectSmartAccount(
     {
       client: options.client,
       personalAccount: options.authAccount,
