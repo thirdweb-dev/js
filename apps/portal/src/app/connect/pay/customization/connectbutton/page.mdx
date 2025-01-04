@@ -86,6 +86,23 @@ If you'd like to prefill a purchase with a native token, you can set the chain w
 
 ---
 
+## Preferred Provider
+
+You can specify which onramp provider to present to your users. By default, we choose a recommended provider based on the location of the user, KYC status, and currency. Please make sure your set provider is [available in your country](../onramp-providers).
+
+```tsx
+<ConnectButton
+	client={client}
+	detailsModal={{
+		payOptions: {
+			preferredProvider: "STRIPE" | "KADO" | "TRANSAK",
+		},
+	}}
+/>
+```
+
+---
+
 ## Disable Payment Methods
 
 In some cases, you may only want to show users fiat or crypto payment options for your onchain goods or services. You can do this by setting either `buyWithCrypto` or `buyWithFiat` to `false`.

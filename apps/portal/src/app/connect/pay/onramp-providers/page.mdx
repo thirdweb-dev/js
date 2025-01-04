@@ -1,0 +1,25 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Pay - Onramp Providers",
+		icon: "thirdweb",
+	},
+	title: "thirdweb Pay - Onramp Providers | thirdweb",
+	description:
+		"Integrate onramp providers for any onchain transaction and set preferred providers",
+});
+
+# Onramp Providers
+
+thirdweb Pay integrates with Stripe, Kado and Transak to power our onramp. By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
+
+| Provider | Supported Countries                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------- |
+| Transak  | https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5 |
+| Kado     | https://www.kado.money/supported-countries                                                              |
+| Stripe   | https://docs.stripe.com/crypto/onramp                                                                   |
+
+## Choosing a Preferred Provider
+
+It is possible to specify a preferred onramp provider by setting the `preferredProvider` parameter in the ConnectButton, PayEmbed, or Headless Integration. Go to [customizations](../pay/customization/connectbutton#preferredProvider) for more detail, or checkout the [API Reference for preferredProvider](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithFiatQuoteParams).

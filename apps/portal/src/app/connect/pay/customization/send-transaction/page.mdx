@@ -20,7 +20,7 @@ Learn how to customize the Pay interface when executing a transaction with `useS
 You can enable users to select your token on a given chain by passing an array of `SupportedTokens`. Note that this array overrides all default tokens listed for that chain.
 
 ```tsx
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		supportedTokens: {
 			"1": [
@@ -32,7 +32,7 @@ const { mutate: sendTransaction } = useSendTransaction({
 				},
 			],
 		},
-	}
+	},
 });
 ```
 
@@ -47,7 +47,7 @@ For example, if you wanted users to only purchase Ethereum on Base network, you 
 ```tsx
 import { base } from "thirdweb/chains";
 
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		prefillBuy: {
 			token: {
@@ -63,19 +63,34 @@ const { mutate: sendTransaction } = useSendTransaction({
 				chain: false, // disable selecting buy chain
 			},
 		},
-	}});
+	},
+});
 ```
 
 If you'd like to prefill a purchase with a native token, you can set the chain without passing a token:
 
 ```tsx
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		prefillBuy: {
 			chain: base,
 		},
-	}}
-);
+	},
+});
+```
+
+---
+
+## Preferred Provider
+
+You can specify which onramp provider to present to your users. By default, we choose a recommended provider based on the location of the user, KYC status, and currency. Please make sure your set provider is [available in your country](../onramp-providers).
+
+```tsx
+const { mutate: sendTransaction } = useSendTransaction({
+	payModal: {
+		preferredProvider: "STRIPE" | "KADO" | "TRANSAK",
+	},
+});
 ```
 
 ---
@@ -87,21 +102,21 @@ In some cases, you may only want to show users fiat or crypto payment options fo
 #### Disable Buy With Crypto
 
 ```tsx
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		buyWithCrypto: false,
-	}}
-);
+	},
+});
 ```
 
 #### Disable Buy With Fiat
 
 ```tsx
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		buyWithFiat: false,
-	}}
-);
+	},
+});
 ```
 
 ---
@@ -117,11 +132,11 @@ You can refer to our [`Theme`](/references/typescript/v5/Theme) page for a full 
 #### Provided Themes
 
 ```tsx
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		theme: "dark", // or "light"
-	}}
-);
+	},
+});
 ```
 
 #### Custom Theme
@@ -130,7 +145,7 @@ const { mutate: sendTransaction } = useSendTransaction({
 import { darkTheme } from 'thirdweb/react';
 
 // Using custom theme
-const { mutate: sendTransaction } = useSendTransaction({ 
+const { mutate: sendTransaction } = useSendTransaction({
 	payModal: {
 		theme: darkTheme({ ... },
 	}}
