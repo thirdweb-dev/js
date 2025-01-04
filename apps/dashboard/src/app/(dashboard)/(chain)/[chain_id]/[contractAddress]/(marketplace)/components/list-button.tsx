@@ -13,7 +13,7 @@ import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
-import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
+import { useSimplehashSupport } from "lib/wallet/nfts/simpleHash";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -40,9 +40,12 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   const [open, setOpen] = useState(false);
   const [listingMode, setListingMode] =
     useState<(typeof LISTING_MODES)[number]>("Select NFT");
+
+  const simplehashQuery = useSimplehashSupport(contract.chain.id);
+
   const isSupportedChain =
     contract.chain.id &&
-    (isSimpleHashSupported(contract.chain.id) ||
+    (simplehashQuery.data ||
       isAlchemySupported(contract.chain.id) ||
       isMoralisSupported(contract.chain.id));
   return (

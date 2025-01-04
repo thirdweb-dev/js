@@ -38,8 +38,10 @@ const handler = async (
   }
   const chainId = Number.parseInt(queryChainId);
 
-  if (isSimpleHashSupported(chainId) && process.env.SIMPLEHASH_API_KEY) {
-    const url = generateSimpleHashUrl({ chainId, owner });
+  const supportedChainSlug = await isSimpleHashSupported(chainId);
+
+  if (supportedChainSlug && process.env.SIMPLEHASH_API_KEY) {
+    const url = generateSimpleHashUrl({ chainSlug: supportedChainSlug, owner });
 
     const options = {
       method: "GET",

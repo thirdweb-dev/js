@@ -1,25 +1,50 @@
-import {
-  type GenerateURLParams,
-  type SimpleHashSupportedChainId,
-  type WalletNFT,
-  simpleHashSupportedChainIdsMap,
-  simpleHashSupportedNetworks,
-} from "./types";
+import { useQuery } from "@tanstack/react-query";
+import type { WalletNFT } from "./types";
 
-export function isSimpleHashSupported(
+/**
+ * Return the chain slug if the chain is supported by Simplehash, otherwise `undefined`
+ * Chain slug because we need it to fetch the owned NFTs using another endpoint
+ */
+export async function isSimpleHashSupported(
   chainId: number,
-): chainId is SimpleHashSupportedChainId {
-  return simpleHashSupportedNetworks.includes(chainId.toString());
-}
-
-export function generateSimpleHashUrl({ chainId, owner }: GenerateURLParams) {
-  const url = new URL("https://api.simplehash.com/api/v0/nfts/owners");
-
-  url.searchParams.append("wallet_addresses", owner);
-  if (simpleHashSupportedChainIdsMap[chainId]) {
-    url.searchParams.append("chains", simpleHashSupportedChainIdsMap[chainId]);
+): Promise<string | undefined> {
+  if (!process.env.SIMPLEHASH_API_KEY) {
+    throw new Error("No Simplehash API Key");
   }
 
+  const options = {
+    method: "GET",
+    headers: {
+      "X-API-KEY": process.env.SIMPLEHASH_API_KEY,
+    },
+  };
+  const response: Array<{
+    chain: string;
+    eip155_network_id: number;
+    is_testnet: boolean;
+  }> = await fetch("https://api.simplehash.com/api/v0/chains", options)
+    .then((r) => r.json())
+    .catch(() => []);
+
+  const found = response.find((chain) => chain.eip155_network_id === chainId);
+  return found?.chain;
+}
+
+export function useSimplehashSupport(chainId: number) {
+  return useQuery({
+    queryKey: ["simplehash-supported", chainId],
+    queryFn: () => isSimpleHashSupported(chainId),
+    enabled: !!chainId,
+  });
+}
+
+export function generateSimpleHashUrl({
+  chainSlug,
+  owner,
+}: { chainSlug: string; owner: string }) {
+  const url = new URL("https://api.simplehash.com/api/v0/nfts/owners");
+  url.searchParams.append("wallet_addresses", owner);
+  url.searchParams.append("chains", chainSlug);
   return url.toString();
 }
 
