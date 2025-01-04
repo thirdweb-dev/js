@@ -2,10 +2,10 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.leapwallet.CompassWallet",
-  name: "Compass Wallet",
-  homepage: "https://compasswallet.io/",
-  image_id: "1d7dea00-96be-4ce8-ca15-d14bddbb5000",
+  id: "app.berasig",
+  name: "BeraSig",
+  homepage: "https://www.berasig.com/",
+  image_id: "4b9e9716-c86d-4f1e-4bcc-12af74af7400",
   app: {
     browser: null,
     ios: null,
@@ -14,13 +14,13 @@ export const wallet = {
     windows: null,
     linux: null,
     chrome:
-      "https://chromewebstore.google.com/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb",
+      "https://chromewebstore.google.com/detail/berasig/ckedkkegjbflcfblcjklibnedmfjppbj",
     firefox: null,
     safari: null,
-    edge: "https://chromewebstore.google.com/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb",
+    edge: null,
     opera: null,
   },
-  rdns: "io.leapwallet.CompassWallet",
+  rdns: "app.berasig",
   mobile: {
     native: null,
     universal: null,

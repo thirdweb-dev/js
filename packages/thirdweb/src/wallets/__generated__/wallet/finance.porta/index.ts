@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "co.lobstr",
-  name: "LOBSTR Wallet",
-  homepage: "https://lobstr.co/",
-  image_id: "0dafcaab-0852-47f7-85dd-436b86491d00",
+  id: "finance.porta",
+  name: "PortaWallet",
+  homepage: "https://porta.finance",
+  image_id: "07bc52e6-c402-439d-faea-a5736cd25300",
   app: {
-    browser: "https://lobstr.co/",
-    ios: "https://apps.apple.com/us/app/lobstr-stellar-wallet/id1404357892",
-    android: "https://play.google.com/store/apps/details?id=com.lobstr.client",
+    browser: null,
+    ios: null,
+    android:
+      "https://play.google.com/store/apps/details?id=com.wallet.porta.android",
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "lobstr://",
-    universal: "https://lobstr.co/uni/wc",
+    native: "porta://",
+    universal: null,
   },
   desktop: {
     native: null,

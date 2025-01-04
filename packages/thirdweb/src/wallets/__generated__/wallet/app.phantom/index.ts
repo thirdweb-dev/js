@@ -8,8 +8,8 @@ export const wallet = {
   image_id: "c38443bb-b3c1-4697-e569-408de3fcc100",
   app: {
     browser: null,
-    ios: null,
-    android: null,
+    ios: "https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977",
+    android: "https://play.google.com/store/apps/details?id=app.phantom&hl=en",
     mac: null,
     windows: null,
     linux: null,
@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: "app.phantom",
   mobile: {
-    native: null,
+    native: "phantom://",
     universal: null,
   },
   desktop: {

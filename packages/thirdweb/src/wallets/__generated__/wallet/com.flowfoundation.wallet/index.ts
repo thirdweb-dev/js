@@ -2,7 +2,7 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "group.com.flowfoundation.wallet",
+  id: "com.flowfoundation.wallet",
   name: "Flow Wallet",
   homepage: "https://wallet.flow.com/",
   image_id: "f67a1db8-5704-4353-ead8-bd85c02a8700",
@@ -21,10 +21,10 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: "group.com.flowfoundation.wallet",
+  rdns: "com.flowfoundation.wallet",
   mobile: {
     native: "frw://",
-    universal: "https://frw-link.lilico.app/wc",
+    universal: "https://frw-link.lilico.app",
   },
   desktop: {
     native: null,

@@ -8,7 +8,8 @@ export const wallet = {
     "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
   image_id: "35f9c46e-cc57-4aa7-315d-e6ccb2a1d600",
   app: {
-    browser: null,
+    browser:
+      "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
     ios: "https://apps.apple.com/us/app/core-crypto-wallet-nfts/id6443685999",
     android:
       "https://play.google.com/store/apps/details?id=com.avaxwallet&hl=en_US&gl=US",
@@ -28,7 +29,7 @@ export const wallet = {
     universal: "https://core.app",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "core://",
+    universal: "https://core.app",
   },
 } as const;

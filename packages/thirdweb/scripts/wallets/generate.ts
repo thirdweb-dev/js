@@ -4,6 +4,10 @@ import { join } from "node:path";
 import { format } from "prettier";
 import sharp from "sharp";
 
+const EXCLUDED_WALLETS = [
+  "co.lobstr", // Not EVM compatible
+];
+
 const walletConnectWallets = await fetch(
   "https://explorer-api.walletconnect.com/w3m/v1/getAllListings?projectId=145769e410f16970a79ff77b2d89a1e0",
 ).then(async (res) => {
@@ -96,24 +100,26 @@ function rdns(wallet: Wallet) {
     .join(".");
 }
 
-const allWalletsWithIds = allWalletsArray.map((wallet) => {
-  // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
-  // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
-  delete (wallet as any).order;
-  // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
-  // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
-  delete (wallet as any).injected;
+const allWalletsWithIds = allWalletsArray
+  .map((wallet) => {
+    // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
+    // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
+    delete (wallet as any).order;
+    // biome-ignore lint/performance/noDelete: aware it's bad but it's OK in generate script
+    // biome-ignore lint/suspicious/noExplicitAny: aware it's bad but it's OK in generate script
+    delete (wallet as any).injected;
 
-  const id = rdns(wallet);
+    const id = rdns(wallet);
 
-  if (id && id in deepLinkSupportedWalletsRecord) {
-    wallet.deepLink = {
-      mobile: deepLinkSupportedWalletsRecord[id].mobile,
-    };
-  }
+    if (id && id in deepLinkSupportedWalletsRecord) {
+      wallet.deepLink = {
+        mobile: deepLinkSupportedWalletsRecord[id].mobile,
+      };
+    }
 
-  return { ...wallet, id: id };
-});
+    return { ...wallet, id: id };
+  })
+  .filter((w) => !EXCLUDED_WALLETS.includes(w.id));
 
 // filter duplicate ids, we'll keep the first ones
 

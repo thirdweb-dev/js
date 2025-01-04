@@ -5,7 +5,7 @@ export const wallet = {
   id: "xyz.timelesswallet",
   name: "Timeless X",
   homepage: "https://timelesswallet.xyz",
-  image_id: "92f1ead4-0bc4-4932-10d3-761c509b4d00",
+  image_id: "7870d465-6028-49cb-6667-d0a2cc509400",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/timeless-x/id6470180600",
