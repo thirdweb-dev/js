@@ -4,6 +4,7 @@ import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { getUserStatus } from "../core/actions/get-enclave-user-status.js";
 import { authEndpoint } from "../core/authentication/authEndpoint.js";
+import { backendAuthenticate } from "../core/authentication/backend.js";
 import { ClientScopedStorage } from "../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../core/authentication/guest.js";
 import { customJwt } from "../core/authentication/jwt.js";
@@ -171,6 +172,13 @@ export class InAppNativeConnector implements InAppConnector {
           storage: nativeLocalStorage,
         });
       }
+      case "backend": {
+        return backendAuthenticate({
+          client: this.client,
+          walletSecret: params.walletSecret,
+          ecosystem: params.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
           client: this.client,
@@ -179,6 +187,11 @@ export class InAppNativeConnector implements InAppConnector {
           ecosystem: params.ecosystem,
         });
       }
+      case "github":
+      case "twitch":
+      case "steam":
+      case "farcaster":
+      case "telegram":
       case "google":
       case "facebook":
       case "discord":

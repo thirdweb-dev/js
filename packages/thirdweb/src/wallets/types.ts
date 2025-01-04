@@ -39,6 +39,7 @@ export type OAuthOption = SocialAuthOption | "guest";
 export const authOptions = [
   ...socialAuthOptions,
   "guest",
+  "backend",
   "email",
   "phone",
   "passkey",
