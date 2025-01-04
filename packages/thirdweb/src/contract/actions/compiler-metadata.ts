@@ -9,6 +9,11 @@ export type CompilerMetadata = {
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later by updating this type to match the specs here: https://docs.soliditylang.org/en/latest/metadata.html
   metadata: Record<string, any> & {
     sources: Record<string, { content: string } | { urls: string[] }>;
+    output: {
+      abi: Abi;
+      devdoc?: Record<string, Record<string, { details: string }>>;
+      userdoc?: Record<string, Record<string, { notice: string }>>;
+    };
   };
   info: {
     title?: string;
