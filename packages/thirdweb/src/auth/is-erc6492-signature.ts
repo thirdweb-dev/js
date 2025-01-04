@@ -1,4 +1,4 @@
-import { sliceHex } from "viem";
+import * as ox__Hex from "ox/Hex";
 import type { Hex } from "../utils/encoding/hex.js";
 import { ERC_6492_MAGIC_VALUE } from "./constants.js";
 
@@ -19,5 +19,5 @@ import { ERC_6492_MAGIC_VALUE } from "./constants.js";
  * @auth
  */
 export function isErc6492Signature(signature: Hex): boolean {
-  return sliceHex(signature, -32) === ERC_6492_MAGIC_VALUE;
+  return ox__Hex.slice(signature, -32) === ERC_6492_MAGIC_VALUE;
 }

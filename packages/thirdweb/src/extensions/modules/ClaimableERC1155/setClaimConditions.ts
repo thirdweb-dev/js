@@ -1,4 +1,5 @@
-import { encodePacked, maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
+import { encodePacked } from "viem";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";

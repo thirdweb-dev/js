@@ -1,5 +1,6 @@
 import type { AbiParameter, AbiParameterToPrimitiveType } from "abitype";
-import type { Hex, LogTopic } from "viem";
+import type * as ox__Hex from "ox/Hex";
+import type { Log as ox__Log } from "ox/Log";
 import type { Filter, MaybeRequired, Prettify } from "../utils/type-utils.js";
 
 //////////////////////////////////////////////////////////////////////
@@ -83,11 +84,11 @@ type _HasUnnamedAbiParameter<TAbiParameters extends readonly AbiParameter[]> =
  * @internal
  */
 type LogTopicType<
-  TPrimitiveType = Hex,
-  TTopic extends LogTopic = LogTopic,
-> = TTopic extends Hex
+  TPrimitiveType = ox__Hex.Hex,
+  TTopic extends ox__Log["topics"][0] = ox__Log["topics"][0],
+> = TTopic extends ox__Hex.Hex
   ? TPrimitiveType
-  : TTopic extends Hex[]
+  : TTopic extends ox__Hex.Hex[]
     ? TPrimitiveType[]
     : TTopic extends null
       ? null

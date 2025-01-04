@@ -1,4 +1,4 @@
-import { getContractAddress } from "viem";
+import * as ox__ContractAddress from "ox/ContractAddress";
 import { getGasPrice } from "../../../gas/get-gas-price.js";
 import { eth_getBalance } from "../../../rpc/actions/eth_getBalance.js";
 import { eth_sendRawTransaction } from "../../../rpc/actions/eth_sendRawTransaction.js";
@@ -6,6 +6,7 @@ import { getRpcClient } from "../../../rpc/rpc.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
+import { getAddress } from "../../../utils/address.js";
 import { isEIP155Enforced } from "../../../utils/any-evm/is-eip155-enforced.js";
 import { getKeylessTransaction } from "../../../utils/any-evm/keyless-transaction.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
@@ -226,7 +227,7 @@ async function _getCreate2FactoryDeploymentInfo(
     },
     signature: SIGNATURE,
   });
-  const create2FactoryAddress = getContractAddress({
+  const create2FactoryAddress = ox__ContractAddress.from({
     from: deploymentTransaction.signerAddress,
     nonce: 0n,
   });
@@ -234,7 +235,7 @@ async function _getCreate2FactoryDeploymentInfo(
   return {
     ...deploymentTransaction,
     valueToSend: gasPrice * gas,
-    predictedAddress: create2FactoryAddress,
+    predictedAddress: getAddress(create2FactoryAddress),
   };
 }
 

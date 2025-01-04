@@ -3,7 +3,7 @@ import type {
   AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
 } from "abitype";
-import { concat, slice } from "viem/utils";
+import * as ox__Hex from "ox/Hex";
 import { isAddress } from "../address.js";
 import { byteSize } from "../encoding/helpers/byte-size.js";
 import {
@@ -149,7 +149,7 @@ function encodeParams(preparedParams: PreparedParam[]): Hex {
   }
 
   // 3. Concatenate static and dynamic parts.
-  return concat([...staticParams, ...dynamicParams]);
+  return ox__Hex.concat(...[...staticParams, ...dynamicParams]);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -200,7 +200,10 @@ function encodeArray<const TParam extends AbiParameter>(
       const length_ = numberToHex(preparedParams.length, { size: 32 });
       return {
         dynamic: true,
-        encoded: preparedParams.length > 0 ? concat([length_, data]) : length_,
+        encoded:
+          preparedParams.length > 0
+            ? ox__Hex.concat(...[length_, data])
+            : length_,
       };
     }
     if (dynamicChild) {
@@ -209,7 +212,7 @@ function encodeArray<const TParam extends AbiParameter>(
   }
   return {
     dynamic: false,
-    encoded: concat(preparedParams.map(({ encoded }) => encoded)),
+    encoded: ox__Hex.concat(...preparedParams.map(({ encoded }) => encoded)),
   };
 }
 
@@ -231,7 +234,9 @@ function encodeBytes<const TParam extends AbiParameter>(
     }
     return {
       dynamic: true,
-      encoded: concat([padHex(numberToHex(bytesSize, { size: 32 })), value_]),
+      encoded: ox__Hex.concat(
+        ...[padHex(numberToHex(bytesSize, { size: 32 })), value_],
+      ),
     };
   }
   if (bytesSize !== Number.parseInt(paramSize)) {
@@ -263,17 +268,16 @@ function encodeString(value: string): PreparedParam {
   const parts: Hex[] = [];
   for (let i = 0; i < partsLength; i++) {
     parts.push(
-      padHex(slice(hexValue, i * 32, (i + 1) * 32), {
+      padHex(ox__Hex.slice(hexValue, i * 32, (i + 1) * 32), {
         dir: "right",
       }),
     );
   }
   return {
     dynamic: true,
-    encoded: concat([
-      padHex(numberToHex(byteSize(hexValue), { size: 32 })),
-      ...parts,
-    ]),
+    encoded: ox__Hex.concat(
+      ...[padHex(numberToHex(byteSize(hexValue), { size: 32 })), ...parts],
+    ),
   };
 }
 
@@ -304,7 +308,7 @@ function encodeTuple<
     dynamic,
     encoded: dynamic
       ? encodeParams(preparedParams)
-      : concat(preparedParams.map(({ encoded }) => encoded)),
+      : ox__Hex.concat(...preparedParams.map(({ encoded }) => encoded)),
   };
 }
 
