@@ -115,6 +115,24 @@ describe("fromProvider", () => {
     expect(chain).toBe(ANVIL_CHAIN);
   });
 
+  test("should handle connection with no chainId", async () => {
+    const wallet = fromProvider({
+      provider: {
+        ...mockProvider,
+        request: () => Promise.resolve([mockAccount.address]),
+      },
+    });
+
+    await wallet.connect({
+      client: TEST_CLIENT,
+      chain: {
+        ...ANVIL_CHAIN,
+        id: undefined,
+        // biome-ignore lint/suspicious/noExplicitAny: Testing unexpected input data
+      } as any,
+    });
+  });
+
   test("should reset state on disconnect", async () => {
     const wallet = fromProvider({
       provider: {
