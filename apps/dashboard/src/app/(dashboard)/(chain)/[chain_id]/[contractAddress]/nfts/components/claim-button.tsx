@@ -17,7 +17,7 @@ import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -40,7 +40,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, setValue } = useForm({
     defaultValues: { amount: "1", to: address },
   });
   const { errors } = formState;
@@ -67,7 +67,24 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
           <div className="flex w-full flex-col gap-6 md:flex-row">
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>To Address</FormLabel>
-              <Input placeholder={ZERO_ADDRESS} {...register("to")} />
+              <Input
+                placeholder={ZERO_ADDRESS}
+                {...register("to", {
+                  validate: (value) => {
+                    if (!value) {
+                      return "Enter a recipient address";
+                    }
+                    if (!isAddress(value.trim())) {
+                      return "Invalid EVM address";
+                    }
+                  },
+                  onChange: (e) => {
+                    setValue("to", e.target.value.trim(), {
+                      shouldValidate: true,
+                    });
+                  },
+                })}
+              />
               <FormHelperText>Enter the address to claim to.</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>
@@ -115,7 +132,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
                 const transaction = claimTo({
                   contract,
-                  to: d.to,
+                  to: d.to.trim(),
                   quantity: BigInt(d.amount),
                   from: account.address,
                 });

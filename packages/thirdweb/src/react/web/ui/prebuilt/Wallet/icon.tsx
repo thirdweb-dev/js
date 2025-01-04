@@ -3,7 +3,9 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { getWalletInfo } from "../../../../../wallets/__generated__/getWalletInfo.js";
+import type { AuthOption } from "../../../../../wallets/types.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
 import { useWalletContext } from "./provider.js";
 
 export interface WalletIconProps
@@ -20,11 +22,11 @@ export interface WalletIconProps
    */
   loadingComponent?: JSX.Element;
   /**
-   * This component will be shown if the icon fails to be retreived
+   * This component will be shown if the icon fails to be retrieved
    * If not passed, the component will return `null`.
    *
    * You can/should pass a descriptive text/component to this prop, indicating that the
-   * icon was not fetched succesfully
+   * icon was not fetched successfully
    * @example
    * ```tsx
    * <WalletIcon fallbackComponent={<span>Failed to load</span>}
@@ -115,6 +117,35 @@ function useWalletIcon(props: {
 export async function fetchWalletImage(props: {
   id: WalletId;
 }) {
-  const image_src = await getWalletInfo(props.id, true);
-  return image_src;
+  return getWalletInfo(props.id, true);
+}
+
+interface SocialIconProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  provider: AuthOption | string;
+}
+
+/**
+ * Social auth provider icon
+ * @returns an <img /> component with the src set to the svg
+ *
+ * @example
+ * ```tsx
+ * import { SocialIcon } from "thirdweb/react";
+ *
+ * <SocialIcon provider="google" />
+ * ```
+ *
+ * Result: An <img /> component with the src of the icon
+ * ```html
+ * <img src="google-icon-svg" />
+ * ```
+ *
+ * @component
+ * @wallet
+ * @beta
+ */
+export function SocialIcon({ provider, ...restProps }: SocialIconProps) {
+  const src = getSocialIcon(provider);
+  return <img src={src} {...restProps} alt={restProps.alt} />;
 }

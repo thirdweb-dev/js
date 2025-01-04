@@ -138,46 +138,41 @@ export function getRpcClient(
         requestTimeoutMs: options.config?.requestTimeoutMs,
       })
         .then((responses) => {
-          // for each response, resolve the inflight request
           activeBatch.forEach((inflight, index) => {
+            // Handle the inflight request promise for each response.
             const response = responses[index];
-            // if we didn't get a response at all, reject the inflight request
+
+            // No response.
             if (!response) {
               inflight.reject(new Error("No response"));
-              return;
             }
-            // handle errors in the response
-            if (response instanceof Error) {
+            // Response is an error or error string.
+            else if (response instanceof Error) {
               inflight.reject(response);
-              return;
-            }
-
-            // handle strings as responses??
-            if (typeof response === "string") {
-              inflight.reject(new Error(response));
-              return;
-            }
-
-            if ("error" in response) {
+            } else if ("error" in response) {
               inflight.reject(response.error);
-              // otherwise, resolve the inflight request
-            } else if (response.method === "eth_subscription") {
-              // TODO: handle subscription responses
-              throw new Error("Subscriptions not supported yet");
-            } else {
+            } else if (typeof response === "string") {
+              inflight.reject(new Error(response));
+            }
+            // eth_subscription is not supported yet.
+            else if (response.method === "eth_subscription") {
+              inflight.reject("Subscriptions not supported yet");
+            }
+            // Else return the successful response for the inflight request.
+            else {
               inflight.resolve(response.result);
             }
-            // remove the inflight request from the inflightRequests map
-            inflightRequests.delete(inflight.requestKey);
           });
         })
         .catch((err) => {
           // http call failed, reject all inflight requests
           for (const inflight of activeBatch) {
             inflight.reject(err);
-            // remove the inflight request from the inflightRequests map
-            inflightRequests.delete(inflight.requestKey);
           }
+        })
+        .finally(() => {
+          // Clear the inflight requests map so any new requests are re-fetched.
+          inflightRequests.clear();
         });
     }
 

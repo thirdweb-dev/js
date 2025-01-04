@@ -1,14 +1,17 @@
 import type { Abi } from "abitype";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { isAddress } from "../utils/address.js";
+import { type Address, isAddress } from "../utils/address.js";
 
 /**
  * @contract
  */
-export type ContractOptions<abi extends Abi = []> = {
+export type ContractOptions<
+  abi extends Abi = [],
+  address extends string = string,
+> = {
   client: ThirdwebClient;
-  address: string;
+  address: address;
   chain: Chain;
   readonly abi?: abi;
 };
@@ -16,9 +19,10 @@ export type ContractOptions<abi extends Abi = []> = {
 /**
  * @contract
  */
-export type ThirdwebContract<abi extends Abi = []> = Readonly<
-  ContractOptions<abi>
->;
+export type ThirdwebContract<
+  abi extends Abi = [],
+  address extends string = string,
+> = Readonly<ContractOptions<abi, address>>;
 
 /**
  * Creates a Thirdweb contract by combining the Thirdweb client and contract options.
@@ -42,7 +46,7 @@ export type ThirdwebContract<abi extends Abi = []> = Readonly<
  */
 export function getContract<const abi extends Abi = []>(
   options: ContractOptions<abi>,
-): ThirdwebContract<abi> {
+): ThirdwebContract<abi, Address> {
   if (!options.client) {
     throw new Error(
       `getContract validation error - invalid client: ${options.client}`,
@@ -58,5 +62,5 @@ export function getContract<const abi extends Abi = []>(
       `getContract validation error - invalid chain: ${options.chain}`,
     );
   }
-  return options;
+  return options as ThirdwebContract<abi, Address>;
 }
