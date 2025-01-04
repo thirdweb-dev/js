@@ -35,27 +35,6 @@ export const createSessionEndpointData = {
     -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \\
     -d '{"session_name": "my_new_session", "metadata": {"key": "value"}}'`,
 		},
-		{
-			language: "JavaScript",
-			code: `const axios = require('axios');
-  
-  const secretKey = 'YOUR_THIRDWEB_SECRET_KEY';
-  
-  axios.post('https://nebula-api.thirdweb.com/session', {
-    session_name: 'my_new_session',
-    metadata: { key: 'value' },
-  }, {
-    headers: {
-      'x-secret-key': secretKey,
-    },
-  })
-  .then(response => {
-    console.log("Session created successfully.", response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });`,
-		},
 	],
 	apiResponses: [
 		{

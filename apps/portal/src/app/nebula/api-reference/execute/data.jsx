@@ -40,28 +40,6 @@ export const executeEndpointData = {
     -H "Content-Type: application/json" \\
     -d '{"action": "your_action", "parameters": {"key": "value"}}'`,
 		},
-		{
-			language: "JavaScript",
-			code: `const axios = require('axios');
-  
-  const secretKey = 'YOUR_THIRDWEB_SECRET_KEY';
-  
-  axios.post('https://nebula-api.thirdweb.com/execute', {
-    action: 'your_action',
-    parameters: { key: 'value' },
-  }, {
-    headers: {
-      'x-secret-key': secretKey,
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    console.log("Action executed successfully.", response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });`,
-		},
 	],
 	apiResponses: [
 		{

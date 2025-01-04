@@ -1,5 +1,3 @@
-// data.js
-
 export const chatEndpointData = {
 	title: "Initiate Chat",
 	method: "POST",
@@ -47,29 +45,6 @@ export const chatEndpointData = {
     -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \\
     -H "Content-Type: application/json" \\
     -d '{"user_id": "user123", "message": "Hello!", "metadata": {"topic": "support"}}'`,
-		},
-		{
-			language: "JavaScript",
-			code: `const axios = require('axios');
-  
-  const secretKey = 'YOUR_THIRDWEB_SECRET_KEY';
-  
-  axios.post('https://nebula-api.thirdweb.com/chat', {
-    user_id: 'user123',
-    message: 'Hello!',
-    metadata: { topic: 'support' },
-  }, {
-    headers: {
-      'x-secret-key': secretKey,
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => {
-    console.log("Chat initiated successfully.", response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });`,
 		},
 	],
 	apiResponses: [

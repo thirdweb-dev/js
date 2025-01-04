@@ -21,24 +21,6 @@ export const listSessionsEndpointData = {
 			code: `curl -X GET https://nebula-api.thirdweb.com/session/list \\
     -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY"`,
 		},
-		{
-			language: "JavaScript",
-			code: `const axios = require('axios');
-  
-  const secretKey = 'YOUR_THIRDWEB_SECRET_KEY';
-  
-  axios.get('https://nebula-api.thirdweb.com/session/list', {
-    headers: {
-      'x-secret-key': secretKey,
-    },
-  })
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });`,
-		},
 	],
 	apiResponses: [
 		{
