@@ -1,7 +1,6 @@
-import { ApiEndpoint} from '@doc';
-import { chatEndpointData } from './data';
+import { EndpointMetadata } from './EndpointMetadata';
 
-<ApiEndpoint {...chatEndpointData} />
+<EndpointMetadata />
 
 #### Chat Actions
 
@@ -45,11 +44,11 @@ When handling actions:
 
 **Example Implementation with thirdweb SDK:**
 ```javascript
-import { 
-  createThirdwebClient, 
-  prepareTransaction, 
+import {
+  createThirdwebClient,
+  prepareTransaction,
   sendTransaction,
-  privateKeyToAccount 
+  privateKeyToAccount
 } from "thirdweb";
 
 // Example function to handle the API response
@@ -68,7 +67,7 @@ async function handleNebulaResponse(response) {
   // Check if we have any actions
   if (response.actions && response.actions.length > 0) {
     const action = response.actions[0];
-    
+
     // Parse the transaction data from the action
     const txData = JSON.parse(action.data);
 
@@ -87,7 +86,7 @@ async function handleNebulaResponse(response) {
         transaction,
         account
       });
-      
+
       return result;
     } catch (error) {
       console.error("Error processing transaction:", error);

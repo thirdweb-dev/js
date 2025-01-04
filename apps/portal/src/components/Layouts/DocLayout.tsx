@@ -24,7 +24,7 @@ export type DocLayoutProps = {
 export function DocLayout(props: DocLayoutProps) {
   return (
     <div
-      className="container relative flex flex-col gap-6 xl:grid xl:grid-cols-[280px_820px_1fr]"
+      className={`container relative flex flex-col gap-6 xl:grid ${props.showTableOfContents !== false ? "xl:grid-cols-[280px_820px_1fr]" : "xl:grid-cols-[280px_1100px]"}`}
       style={{
         minHeight: "calc(100vh - var(--sticky-top-height))",
       }}

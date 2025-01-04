@@ -31,6 +31,9 @@ export async function CodeBlock(props: {
   code: string;
   lang: BuiltinLanguage | SpecialLanguage;
   tokenLinks?: Map<string, string>;
+  className?: string;
+  containerClassName?: string;
+  scrollContainerClassName?: string;
 }) {
   let code = props.code;
   let lang = props.lang;
@@ -38,6 +41,14 @@ export async function CodeBlock(props: {
 
   if (lang === "shell" || lang === "sh") {
     lang = "bash";
+  }
+
+  if (lang === "json") {
+    try {
+      code = JSON.stringify(JSON.parse(code), null, 2);
+    } catch {
+      // ignore
+    }
   }
 
   // format code
@@ -54,12 +65,18 @@ export async function CodeBlock(props: {
   }
 
   return (
-    <div className="group/code relative mb-5">
+    <div className={cn("group/code relative mb-5", props.containerClassName)}>
       <code
-        className="relative block rounded-lg border bg-code-bg font-mono text-sm leading-relaxed"
+        className={cn(
+          "relative block rounded-lg border bg-code-bg font-mono text-sm leading-relaxed",
+          props.className,
+        )}
         lang={lang}
       >
-        <ScrollShadow scrollableClassName="p-4" className="">
+        <ScrollShadow
+          scrollableClassName={cn("p-4", props.scrollContainerClassName)}
+          className=""
+        >
           <RenderCode code={code} lang={lang} tokenLinks={tokenLinks} />
         </ScrollShadow>
       </code>
@@ -68,23 +85,6 @@ export async function CodeBlock(props: {
         <CopyButton text={code} />
       </div>
     </div>
-  );
-}
-
-export function InlineCode(props: { code: string; className?: string }) {
-  return (
-    <code
-      className={cn(
-        "max-h-20 rounded-md border bg-b-700 px-1.5 py-0.5 text-[0.875em]",
-        props.className,
-      )}
-      style={{
-        boxDecorationBreak: "clone",
-        WebkitBoxDecorationBreak: "clone",
-      }}
-    >
-      {props.code}
-    </code>
   );
 }
 
