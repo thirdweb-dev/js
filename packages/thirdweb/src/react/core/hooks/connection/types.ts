@@ -113,4 +113,9 @@ export type AutoConnectProps = {
    * Optional chain to autoconnect to
    */
   chain?: Chain;
+
+  /**
+   * Callback to be called when the connection is timeout-ed
+   */
+  onTimeout?: () => void;
 };
