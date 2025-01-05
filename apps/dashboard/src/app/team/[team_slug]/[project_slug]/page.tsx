@@ -279,7 +279,10 @@ function UsersChartCard({
       queryKey="usersChart"
       data={timeSeriesData}
       aggregateFn={(_data, key) =>
-        timeSeriesData[timeSeriesData.length - 2]?.[key]
+        // If there is only one data point, use that one, otherwise use the previous
+        timeSeriesData.filter((d) => (d[key] as number) > 0).length >= 2
+          ? timeSeriesData[timeSeriesData.length - 2]?.[key]
+          : timeSeriesData[timeSeriesData.length - 1]?.[key]
       }
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
