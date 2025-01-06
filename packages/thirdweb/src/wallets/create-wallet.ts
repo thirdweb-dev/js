@@ -116,6 +116,22 @@ import { createWalletEmitter } from "./wallet-emitter.js";
  *
  * [View Coinbase wallet creation options](https://portal.thirdweb.com/references/typescript/v5/CoinbaseWalletCreationOptions)
  *
+ * ## Connecting with a smart wallet
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const wallet = createWallet("smart", {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * });
+ *
+ * const account = await wallet.connect({
+ *  client,
+ *  personalAccount, // pass the admin account
+ * });
+ * ```
+ *
  * @wallet
  */
 export function createWallet<const ID extends WalletId>(

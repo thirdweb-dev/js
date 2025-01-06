@@ -129,8 +129,7 @@ export async function verifyHash({
   try {
     const result = await eth_call(rpcRequest, verificationData);
     return hexToBool(result);
-  } catch (err) {
-    console.error("Error verifying ERC-6492 signature", err);
+  } catch {
     // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
     const validEip1271 = await verifyEip1271Signature({
       hash,
@@ -154,7 +153,7 @@ export async function verifyHash({
 }
 
 const EIP_1271_MAGIC_VALUE = "0x1626ba7e";
-async function verifyEip1271Signature({
+export async function verifyEip1271Signature({
   hash,
   signature,
   contract,
@@ -163,10 +162,14 @@ async function verifyEip1271Signature({
   signature: Hex;
   contract: ThirdwebContract;
 }): Promise<boolean> {
-  const result = await isValidSignature({
-    hash,
-    signature,
-    contract,
-  });
-  return result === EIP_1271_MAGIC_VALUE;
+  try {
+    const result = await isValidSignature({
+      hash,
+      signature,
+      contract,
+    });
+    return result === EIP_1271_MAGIC_VALUE;
+  } catch {
+    return false;
+  }
 }
