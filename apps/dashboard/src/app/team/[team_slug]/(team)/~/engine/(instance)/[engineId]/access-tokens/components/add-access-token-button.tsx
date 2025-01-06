@@ -1,3 +1,4 @@
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -14,7 +15,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Checkbox, Text } from "tw-components";
+import { Button, Text } from "tw-components";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;
@@ -92,12 +93,13 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
               <Text color="red.500">
                 This access token will not be shown again.
               </Text>
-              <Checkbox
-                checked={hasStoredToken}
-                onChange={(e) => setHasStoredToken(e.target.checked)}
-              >
-                I have securely stored this access token.
-              </Checkbox>
+              <CheckboxWithLabel>
+                <Checkbox
+                  checked={hasStoredToken}
+                  onCheckedChange={(val) => setHasStoredToken(!!val)}
+                />
+                <span>I have securely stored this access token.</span>
+              </CheckboxWithLabel>
             </div>
           </ModalBody>
 

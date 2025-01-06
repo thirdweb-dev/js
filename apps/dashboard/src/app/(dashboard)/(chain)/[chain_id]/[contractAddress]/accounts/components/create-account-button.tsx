@@ -1,9 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Tooltip } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
@@ -53,23 +52,11 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   if (isAccountDeployedQuery.data && accountsForAddressQuery.data?.length) {
     return (
-      <Tooltip
-        label={
-          <Card className="bg-card px-4 py-2">
-            <p>You can only initialize one account per EOA.</p>
-          </Card>
-        }
-        bg="transparent"
-        boxShadow="none"
-        bgColor="backgroundHighlight"
-        borderRadius="lg"
-        placement="right"
-        shouldWrapChildren
-      >
+      <ToolTipLabel label="You can only initialize one account per EOA.">
         <Button variant="primary" disabled>
           Account Created
         </Button>
-      </Tooltip>
+      </ToolTipLabel>
     );
   }
 
