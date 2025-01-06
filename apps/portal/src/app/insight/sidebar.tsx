@@ -28,6 +28,12 @@ export const sidebar: SideBar = {
     {
       name: "Agents & LLMs",
       href: `${insightSlug}/agents-and-llms`,
+      links: [
+        {
+          name: "llms.txt",
+          href: `${insightSlug}/agents-and-llms/llmstxt`,
+        },
+      ],
     },
     {
       name: "API Reference",
