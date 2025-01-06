@@ -20,7 +20,9 @@ export default async function TeamLayout(props: {
     redirect("/login");
   }
 
-  const team = teams.find((t) => t.slug === params.team_slug);
+  const team = teams.find(
+    (t) => t.slug === decodeURIComponent(params.team_slug),
+  );
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
       team,

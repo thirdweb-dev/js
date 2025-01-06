@@ -8,10 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type React from "react";
-import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { balanceOf as balanceOfERC721 } from "thirdweb/extensions/erc721";
 import { balanceOf as balanceOfERC1155 } from "thirdweb/extensions/erc1155";
@@ -88,6 +88,11 @@ export function NftMint(props: Props) {
   const fullyMinted =
     props.noActiveClaimCondition === false &&
     props.quantityLimitPerWallet === ownedAmount;
+
+  const mintNotifications = useTxNotifications(
+    "NFT minted successfully",
+    "Failed to mint NFT",
+  );
 
   return (
     <div className="mx-4 my-16 flex flex-col items-center justify-center transition-colors duration-200">
@@ -201,15 +206,14 @@ export function NftMint(props: Props) {
                 isMinting || props.noActiveClaimCondition || fullyMinted
               }
               onTransactionSent={() => {
-                toast.loading("Minting NFT", { id: "toastId" });
                 setIsMinting(true);
               }}
               onTransactionConfirmed={() => {
-                toast.success("Minted successfully", { id: "toastId" });
+                mintNotifications.onSuccess();
                 setIsMinting(false);
               }}
               onError={(err) => {
-                toast.error(err.message, { id: "toastId" });
+                mintNotifications.onError(err);
                 setIsMinting(false);
               }}
             >

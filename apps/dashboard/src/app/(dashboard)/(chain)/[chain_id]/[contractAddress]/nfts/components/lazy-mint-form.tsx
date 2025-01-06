@@ -19,6 +19,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -134,6 +135,11 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
+  const lazyMintNotifications = useTxNotifications(
+    "NFT lazy minted successfully",
+    "Failed to lazy mint NFT",
+  );
+
   return (
     <>
       <form
@@ -155,7 +161,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               ? lazyMint721({ contract, nfts })
               : lazyMint1155({ contract, nfts });
 
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -174,14 +180,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               },
             });
 
-            toast.promise(promise, {
-              loading: "Lazy minting NFT",
-              error: "Failed to lazy mint NFT",
-              success: "Lazy minted successfully",
-            });
+            lazyMintNotifications.onSuccess();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to lazy mint NFT");
+            lazyMintNotifications.onError(err);
           }
         })}
       >

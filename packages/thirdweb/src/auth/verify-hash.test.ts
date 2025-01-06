@@ -16,7 +16,7 @@ describe("verifyHash", async () => {
         privateKey: ANVIL_PKEY_A,
       });
 
-      expect(
+      await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
           hash: hashMessage("hello world"),
@@ -33,7 +33,7 @@ describe("verifyHash", async () => {
         privateKey: ANVIL_PKEY_A,
       });
 
-      expect(
+      await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
           hash: hashMessage("hello world"),
@@ -50,7 +50,7 @@ describe("verifyHash", async () => {
         privateKey: ANVIL_PKEY_A,
       });
 
-      expect(
+      await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
           hash: hashMessage("hello world"),

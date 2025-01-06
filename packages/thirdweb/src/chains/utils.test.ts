@@ -9,12 +9,15 @@ import { toSerializableTransaction } from "../transaction/actions/to-serializabl
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import { avalanche } from "./chain-definitions/avalanche.js";
 import { ethereum } from "./chain-definitions/ethereum.js";
-import type { LegacyChain } from "./types.js";
+import type { ChainMetadata, LegacyChain } from "./types.js";
 
+import { base } from "viem/chains";
 import {
   CUSTOM_CHAIN_MAP,
   cacheChains,
+  convertApiChainToChain,
   convertLegacyChain,
+  convertViemChain,
   defineChain,
   getCachedChain,
   getChainDecimals,
@@ -236,5 +239,71 @@ describe("defineChain", () => {
   it("should cache chains properly", () => {
     cacheChains([scroll]);
     expect(CUSTOM_CHAIN_MAP.get(scroll.id)).toStrictEqual(scroll);
+  });
+
+  it("Chain converted from viem should have the blockExplorers being an array", () => {
+    expect(Array.isArray(convertViemChain(base).blockExplorers)).toBe(true);
+  });
+
+  it("convertApiChainToChain should work", () => {
+    const ethChain: ChainMetadata = {
+      chainId: 1,
+      name: "Ethereum Mainnet",
+      chain: "ETH",
+      shortName: "eth",
+      icon: {
+        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+        width: 512,
+        height: 512,
+        format: "png",
+      },
+      nativeCurrency: {
+        name: "Ether",
+        symbol: "ETH",
+        decimals: 18,
+      },
+      ens: {
+        registry: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+      },
+      explorers: [
+        {
+          name: "etherscan",
+          url: "https://etherscan.io",
+          standard: "EIP3091",
+        },
+      ],
+      rpc: ["https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+      testnet: false,
+      infoURL: "https://ethereum.org",
+      slug: "ethereum",
+      networkId: 1,
+      stackType: "l1",
+    };
+
+    expect(convertApiChainToChain(ethChain)).toStrictEqual({
+      blockExplorers: [
+        {
+          apiUrl: "https://etherscan.io",
+          name: "etherscan",
+          url: "https://etherscan.io",
+        },
+      ],
+      faucets: undefined,
+      icon: {
+        format: "png",
+        height: 512,
+        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+        width: 512,
+      },
+      id: 1,
+      name: "Ethereum Mainnet",
+      nativeCurrency: {
+        decimals: 18,
+        name: "Ether",
+        symbol: "ETH",
+      },
+      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+      testnet: undefined,
+    });
   });
 });

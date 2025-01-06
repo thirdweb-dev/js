@@ -97,8 +97,8 @@ function TeamSlugFormControl(props: {
   updateTeamField: (team: Partial<Team>) => Promise<void>;
 }) {
   const [teamSlug, setTeamSlug] = useState(props.team.slug);
-  const [isTeamTaken] = useState(false);
   const maxTeamURLLength = 48;
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   const updateTeamMutation = useMutation({
     mutationFn: (slug: string) => props.updateTeamField({ slug: slug }),
@@ -120,14 +120,10 @@ function TeamSlugFormControl(props: {
           "This is your team's URL namespace on thirdweb. All your team's projects and settings can be accessed using this URL",
       }}
       bottomText={`Please use ${maxTeamURLLength} characters at maximum.`}
-      errorText={
-        isTeamTaken
-          ? "Team URL is taken, Please choose another one."
-          : undefined
-      }
+      errorText={errorMessage}
       saveButton={{
         onClick: handleSave,
-        disabled: teamSlug.length === 0,
+        disabled: errorMessage !== undefined,
         isPending: updateTeamMutation.isPending,
       }}
       noPermissionText={undefined} // TODO
@@ -139,7 +135,17 @@ function TeamSlugFormControl(props: {
         <Input
           value={teamSlug}
           onChange={(e) => {
-            setTeamSlug(e.target.value.slice(0, maxTeamURLLength));
+            const value = e.target.value.slice(0, maxTeamURLLength);
+            setTeamSlug(value);
+            if (value.trim().length === 0) {
+              setErrorMessage("Team URL can not be empty");
+            } else if (/[^a-zA-Z0-9-]/.test(value)) {
+              setErrorMessage(
+                "Invalid Team URL. Only letters, numbers and hyphens are allowed",
+              );
+            } else {
+              setErrorMessage(undefined);
+            }
           }}
           className="truncate border-0 font-mono"
         />

@@ -240,8 +240,22 @@ async function createSmartAccount(
       } else {
         paymasterOverride = options.overrides?.paymaster;
       }
+
+      const accountContractForTransaction = (() => {
+        // If this transaction is for a different chain than the initial one, get the account contract for that chain
+        if (transaction.chainId !== accountContract.chain.id) {
+          return getContract({
+            address: account.address,
+            chain: getCachedChain(transaction.chainId),
+            client: options.client,
+          });
+        }
+        // Default to the existing account contract
+        return accountContract;
+      })();
+
       const executeTx = prepareExecute({
-        accountContract,
+        accountContract: accountContractForTransaction,
         transaction,
         executeOverride: options.overrides?.execute,
       });
@@ -249,6 +263,7 @@ async function createSmartAccount(
         executeTx,
         options: {
           ...options,
+          chain: getCachedChain(transaction.chainId),
           overrides: {
             ...options.overrides,
             paymaster: paymasterOverride,

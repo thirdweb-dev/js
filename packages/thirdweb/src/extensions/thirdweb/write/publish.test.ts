@@ -105,7 +105,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
 
     expect(publishedContracts.length).toBe(1);
 
-    expect(
+    await expect(
       sendAndConfirmTransaction({
         account: TEST_ACCOUNT_D,
         transaction: publishContract({
