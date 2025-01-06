@@ -1,5 +1,39 @@
 # thirdweb
 
+## 5.81.0
+
+### Minor Changes
+
+- [#5829](https://github.com/thirdweb-dev/js/pull/5829) [`e01193a`](https://github.com/thirdweb-dev/js/commit/e01193a659160fc84fcd54047043b23da56e3a90) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Adds getAdminAccount to inAppWallet interface for AA ecosystem wallets
+
+### Patch Changes
+
+- [#5837](https://github.com/thirdweb-dev/js/pull/5837) [`ce3e850`](https://github.com/thirdweb-dev/js/commit/ce3e850fdbf34911e20919ecc2674e4a63f08fa3) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations
+
+- [#5865](https://github.com/thirdweb-dev/js/pull/5865) [`a9547c5`](https://github.com/thirdweb-dev/js/commit/a9547c561f885cc343da8c4a018ba95d1dc91179) Thanks [@gregfromstl](https://github.com/gregfromstl)! - SDK: Fix chain switching in smart account transactions
+
+- [#5879](https://github.com/thirdweb-dev/js/pull/5879) [`810f319`](https://github.com/thirdweb-dev/js/commit/810f3195793203446b76f2f6d50ba3e9d8eefc3f) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add onTimeout callback to useAutoConnect
+
+- [#5605](https://github.com/thirdweb-dev/js/pull/5605) [`e9c23ad`](https://github.com/thirdweb-dev/js/commit/e9c23ade6799f2509175dabc3bc077b7a37a961b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - - Add onClose callback to Connect Details modal
+
+  ```tsx
+  <ConnectButton
+    detailsModal={{
+      onClose: (screen: string) => {
+        // The last screen name that was being shown when user closed the modal
+        console.log({ screen });
+      },
+    }}
+  />
+  ```
+
+  - Small fix for ChainIcon: Always resolve IPFS URI
+  - Improve test coverage
+
+- [#5869](https://github.com/thirdweb-dev/js/pull/5869) [`273a320`](https://github.com/thirdweb-dev/js/commit/273a320ae8189a76b67de105c1ae66b7dfb618b0) Thanks [@gregfromstl](https://github.com/gregfromstl)! - SDK: Removed co.lobstr from the available wallets (an unsupported non-EVM wallet)
+
+- [#5871](https://github.com/thirdweb-dev/js/pull/5871) [`1e8ddcb`](https://github.com/thirdweb-dev/js/commit/1e8ddcb3998d024cad794a2ee77100bd10a14f20) Thanks [@gregfromstl](https://github.com/gregfromstl)! - SDK: Gracefully ignore chain with no chain ID in `fromEip1193Provider`
+
 ## 5.80.0
 
 ### Minor Changes
