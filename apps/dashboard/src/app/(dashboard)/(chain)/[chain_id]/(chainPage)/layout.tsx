@@ -162,7 +162,7 @@ export default async function ChainPageLayout(props: {
             {/* Gas Sponsored badge - Mobile */}
             {chainMetadata?.gasSponsored && (
               <div className="flex md:hidden">
-                <GasSponseredBadge />
+                <GasSponsoredBadge />
               </div>
             )}
 
@@ -182,7 +182,7 @@ export default async function ChainPageLayout(props: {
               {/* Gas Sponsored badge - Desktop */}
               {chainMetadata?.gasSponsored && (
                 <div className="hidden md:block">
-                  <GasSponseredBadge />
+                  <GasSponsoredBadge />
                 </div>
               )}
             </div>
@@ -221,7 +221,7 @@ export default async function ChainPageLayout(props: {
   );
 }
 
-function GasSponseredBadge() {
+function GasSponsoredBadge() {
   return (
     <div className="flex items-center gap-2 rounded-full bg-[hsla(335,57%,51%,0.2)] px-2.5 py-1 text-[hsl(334,81.12%,69.65%)]">
       <TicketCheckIcon className="size-4" />

@@ -20,7 +20,7 @@ export const partnerFormSchema = z.object({
     .refine((domains) => domains.every((d) => isDomainRegex.test(d)), {
       message: "Invalid domain format", // This error message CANNOT be within the array iteration, or the FormMessage won't be able to find it in the form state
     })
-    .transform((s) => s.join(",")), // This is rejoined to return a string (and later split again) since react-hook-form's typings can't hnadle different input vs output types
+    .transform((s) => s.join(",")), // This is rejoined to return a string (and later split again) since react-hook-form's typings can't handle different input vs output types
   bundleIds: z
     .string()
     .trim()

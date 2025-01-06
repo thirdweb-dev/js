@@ -52,7 +52,7 @@ export default async function Layout(props: {
   // check if the contract exists
   const isValidContract = await isContractDeployed(contract).catch(() => false);
   if (!isValidContract) {
-    // TODO - replace 404 with a better page to upsale deploy or other thirdweb products
+    // TODO - replace 404 with a better page to upsell deploy or other thirdweb products
     notFound();
   }
   const contractPageMetadata = await getContractPageMetadata(contract);

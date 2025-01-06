@@ -2,7 +2,7 @@ import { getProject } from "@/api/projects";
 import { getAPIKeyForProjectId } from "app/api/lib/getAPIKeys";
 import { notFound } from "next/navigation";
 import { TabPathLinks } from "../../../../../../@/components/ui/tabs";
-import { InAppWaletFooterSection } from "./_components/footer";
+import { InAppWalletFooterSection } from "./_components/footer";
 import { InAppWalletsHeader } from "./_components/header";
 import { TRACKING_CATEGORY } from "./_constants";
 
@@ -51,7 +51,7 @@ export default async function Layout(props: {
       <div className="h-8" />
       {props.children}
       <div className="h-8" />
-      <InAppWaletFooterSection trackingCategory={TRACKING_CATEGORY} />
+      <InAppWalletFooterSection trackingCategory={TRACKING_CATEGORY} />
     </div>
   );
 }

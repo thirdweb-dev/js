@@ -18,7 +18,7 @@ import { type ContextFilters, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { ExecuteConfig, SessionInfo } from "../api/types";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
-import { Chatbar } from "./ChatBar";
+import { ChatBar } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
 import ContextFiltersButton from "./ContextFilters";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
@@ -406,7 +406,7 @@ export function ChatPageContent(props: {
             />
 
             <div className="container max-w-[800px]">
-              <Chatbar
+              <ChatBar
                 sendMessage={handleSendMessage}
                 isChatStreaming={isChatStreaming}
                 abortChatStream={() => {

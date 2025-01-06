@@ -33,7 +33,7 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
-import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
+import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 
 function shortenAddress(address: string) {
@@ -42,7 +42,7 @@ function shortenAddress(address: string) {
   }
 
   try {
-    return shortenAddresThrows(address);
+    return shortenAddressThrows(address);
   } catch {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   }

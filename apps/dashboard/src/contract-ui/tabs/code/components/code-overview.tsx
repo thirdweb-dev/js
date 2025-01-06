@@ -251,7 +251,7 @@ const chain = defineChain({{chainId}});
 
 // First, connect the personal wallet, which can be any wallet (metamask, in-app, etc.)
 const personalWallet = inAppWallet();
-const peronalAccount = await personalWallet.connect({
+const personalAccount = await personalWallet.connect({
   client,
   chain,
   strategy: "google",

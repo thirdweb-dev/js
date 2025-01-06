@@ -45,7 +45,7 @@ export default async function PublishedContractPage(
       >
         <PublishedActions
           {...params}
-          dispayName={publishedContract.displayName || publishedContract.name}
+          displayName={publishedContract.displayName || publishedContract.name}
         />
       </DeployContractHeader>
       <Separator />

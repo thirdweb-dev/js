@@ -82,7 +82,7 @@ export function AdvancedNFTMetadataFormGroup<
               <Input {...field} />
             </FormControl>
             <FormDescription>
-              If you already have your NFT Animation URL preuploaded, you can
+              If you already have your NFT Animation URL pre-uploaded, you can
               set the URL or URI here.
             </FormDescription>
             <FormMessage />

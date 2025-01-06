@@ -2,7 +2,7 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon } from "lucide-react";
 import { SupportedPlatformLink } from "../../../../../../../components/wallets/SupportedPlatformLink";
 
-export function InAppWaletFooterSection(props: {
+export function InAppWalletFooterSection(props: {
   trackingCategory: string;
 }) {
   return (

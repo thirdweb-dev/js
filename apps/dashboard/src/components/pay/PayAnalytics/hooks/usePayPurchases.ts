@@ -52,7 +52,7 @@ type Response = {
   };
 };
 
-type PayPurcaseOptions = {
+type PayPurchaseOptions = {
   clientId: string;
   from: Date;
   to: Date;
@@ -60,7 +60,7 @@ type PayPurcaseOptions = {
   count: number;
 };
 
-export function usePayPurchases(options: PayPurcaseOptions) {
+export function usePayPurchases(options: PayPurchaseOptions) {
   const address = useActiveAccount()?.address;
   return useQuery({
     queryKey: ["usePayPurchases", address, options],
@@ -70,7 +70,7 @@ export function usePayPurchases(options: PayPurcaseOptions) {
   });
 }
 
-export async function getPayPurchases(options: PayPurcaseOptions) {
+export async function getPayPurchases(options: PayPurchaseOptions) {
   const searchParams = new URLSearchParams();
   searchParams.append("skip", `${options.start}`);
   searchParams.append("take", `${options.count}`);

@@ -23,7 +23,7 @@ import { ChevronDownIcon, PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-type SortyById = "name" | "createdAt";
+type SortById = "name" | "createdAt";
 
 export function TeamProjectsPage(props: {
   projects: Project[];
@@ -31,7 +31,7 @@ export function TeamProjectsPage(props: {
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<SortyById>("createdAt");
+  const [sortBy, setSortBy] = useState<SortById>("createdAt");
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
     useState(false);
   const router = useDashboardRouter();
@@ -206,11 +206,11 @@ function AddNewButton(props: {
 }
 
 function SelectBy(props: {
-  value: SortyById;
-  onChange: (value: SortyById) => void;
+  value: SortById;
+  onChange: (value: SortById) => void;
 }) {
-  const values: SortyById[] = ["name", "createdAt"];
-  const valueToLabel: Record<SortyById, string> = {
+  const values: SortById[] = ["name", "createdAt"];
+  const valueToLabel: Record<SortById, string> = {
     name: "Name",
     createdAt: "Creation Date",
   };
@@ -219,7 +219,7 @@ function SelectBy(props: {
     <Select
       value={props.value}
       onValueChange={(v) => {
-        props.onChange(v as SortyById);
+        props.onChange(v as SortById);
       }}
     >
       <SelectTrigger className="min-w-[200px] bg-muted/50 capitalize">

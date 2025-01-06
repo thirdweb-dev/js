@@ -48,7 +48,7 @@ function processQuery(
     return { isEmpty: true };
   }
 
-  const newCusomtersData: GraphDataItem[] =
+  const newCustomersData: GraphDataItem[] =
     newCustomersQuery.data.intervalResults.map((x) => {
       return {
         date: format(new Date(x.interval), "LLL dd"),
@@ -60,7 +60,7 @@ function processQuery(
 
   return {
     data: {
-      graphData: newCusomtersData,
+      graphData: newCustomersData,
       totalNewCustomers,
       percentChange:
         newCustomersQuery.data.aggregate.bpsIncreaseFromPriorRange / 100,

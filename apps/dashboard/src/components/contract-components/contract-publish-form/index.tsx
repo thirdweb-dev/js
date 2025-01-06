@@ -59,8 +59,8 @@ export function ContractPublishForm(props: {
 
   const placeholderVersion = useMemo(() => {
     if (latestVersion) {
-      const versplit = latestVersion.split(".");
-      return `${versplit[0]}.${versplit[1]}.${Number(versplit[2]) + 1 || 0}`;
+      const versionSplit = latestVersion.split(".");
+      return `${versionSplit[0]}.${versionSplit[1]}.${Number(versionSplit[2]) + 1 || 0}`;
     }
     return "1.0.0";
   }, [latestVersion]);

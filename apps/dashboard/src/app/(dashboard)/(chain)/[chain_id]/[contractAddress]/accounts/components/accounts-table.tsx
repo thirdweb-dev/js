@@ -51,7 +51,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
   const totalAccountsQuery = useReadContract(totalAccounts, { contract });
 
   // the total size should never be more than max int size (that would be hella wallets!)
-  // so converting the totalAccounts to a nunber should be safe here
+  // so converting the totalAccounts to a number should be safe here
   const totalAccountsNum = useMemo(
     () => Number(totalAccountsQuery.data || 0),
     [totalAccountsQuery.data],
