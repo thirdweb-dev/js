@@ -1,5 +1,54 @@
 # thirdweb
 
+## 5.82.0
+
+### Minor Changes
+
+- [#5801](https://github.com/thirdweb-dev/js/pull/5801) [`429e112`](https://github.com/thirdweb-dev/js/commit/429e1127b27354386cd2be1838c1b9e25c956117) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Adds beta support for EIP-7702 authorization lists
+
+  ```ts
+  import {
+    prepareTransaction,
+    sendTransaction,
+    signAuthorization,
+  } from "thirdweb";
+
+  const authorization = await signAuthorization({
+    request: {
+      address: "0x...",
+      chainId: 911867,
+      nonce: 100n,
+    },
+    account: myAccount,
+  });
+
+  const transaction = prepareTransaction({
+    chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
+    value: 100n,
+    to: TEST_WALLET_B,
+    authorizationList: [authorization],
+  });
+
+  const res = await sendTransaction({
+    account,
+    transaction,
+  });
+  ```
+
+- [#5845](https://github.com/thirdweb-dev/js/pull/5845) [`b058f68`](https://github.com/thirdweb-dev/js/commit/b058f688a751486de1cffdcd5db4c846db6bb2ab) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Adds `deploySmartAccount` function to force the deployment of a smart account.
+
+  ```ts
+  const account = await deploySmartAccount({
+    smartAccount,
+    chain,
+    client,
+    accountContract,
+  });
+  ```
+
+  Fix: Uses 1271 signatures if the smart account is already deployed.
+
 ## 5.81.0
 
 ### Minor Changes
