@@ -87,7 +87,7 @@ export async function getAllInBatches<const T>(
   let start = options.start;
   const batches: Promise<T>[] = [];
   while (options.end - start > options.maxSize) {
-    batches.push(fn(start, options.end + options.maxSize - 1n));
+    batches.push(fn(start, start + options.maxSize - 1n));
     start += options.maxSize;
   }
   batches.push(fn(start, options.end - 1n));
