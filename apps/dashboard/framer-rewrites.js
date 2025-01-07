@@ -26,7 +26,7 @@ module.exports = [
   "/solutions/defi",
   "/solutions/ecosystem",
   // -- campaigns --
-  "/unlimited-wallets",
+  // "/unlimited-wallets", -- OFF for now
   // -- TPP --
   "/trusted-partner-program",
   "/trusted-partner-program/:partner_slug",
