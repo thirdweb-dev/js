@@ -67,6 +67,21 @@ export default async function globalSetup() {
     },
   });
 
+  // const shutdownOdyssey = await startProxy({
+  //   port: 8652,
+  //   options: {
+  //     chainId: 911867,
+  //     forkUrl: `https://911867.rpc.thirdweb.com/${clientId}`,
+  //     forkHeader: SECRET_KEY ? { "x-secret-key": SECRET_KEY } : {},
+  //     forkChainId: 911867,
+  //     forkBlockNumber: 5989977,
+  //     noMining: true,
+  //     startTimeout: 20000,
+  //     // biome-ignore lint/suspicious/noExplicitAny: Let me do it
+  //     hardfork: "prague" as any,
+  //   },
+  // });
+
   // TODO re-enable thirdweb RPC for this fork
   // forkUrl: SECRET_KEY
   //       ? `https://137.rpc.thirdweb.com/${clientId}`
@@ -113,5 +128,6 @@ export default async function globalSetup() {
     await shutdownPolygon();
     await shutdownBase();
     await shutdownCleanAnvil();
+    // await shutdownOdyssey();
   };
 }

@@ -417,6 +417,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(txs.every((t) => t.transactionHash.length === 66)).toBe(true);
 
       isDeployed = await isContractDeployed(newSmartAccountContract);
+      await sleep(1000);
       expect(isDeployed).toEqual(true);
       const balance = await balanceOf({
         contract,

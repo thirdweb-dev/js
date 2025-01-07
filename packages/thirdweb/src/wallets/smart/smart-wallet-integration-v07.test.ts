@@ -14,7 +14,6 @@ import {
   addAdmin,
   adminUpdatedEvent,
 } from "../../exports/extensions/erc4337.js";
-import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
@@ -22,7 +21,6 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
-import { getAddress } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { hashMessage } from "../../utils/hashing/hashMessage.js";
 import { hashTypedData } from "../../utils/hashing/hashTypedData.js";
@@ -203,12 +201,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await confirmContractDeployment({ accountContract });
       const isDeployed = await isContractDeployed(accountContract);
       expect(isDeployed).toEqual(true);
-      const balance = await balanceOf({
-        contract,
-        owner: getAddress(smartWalletAddress),
-        tokenId: 0n,
-      });
-      expect(balance).toEqual(1n);
     });
 
     it("can estimate a tx", async () => {

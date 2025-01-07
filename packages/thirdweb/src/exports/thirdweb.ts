@@ -303,4 +303,12 @@ export {
   verifyTypedData,
 } from "../auth/verify-typed-data.js";
 
+/**
+ * EIP-7702
+ */
+export type {
+  AuthorizationRequest,
+  SignedAuthorization,
+} from "../transaction/actions/eip7702/authorization.js";
+export { signAuthorization } from "../transaction/actions/eip7702/authorization.js";
 export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

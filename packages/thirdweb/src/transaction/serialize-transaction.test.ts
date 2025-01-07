@@ -1,13 +1,15 @@
 import * as ox__Hex from "ox/Hex";
 import * as ox__TransactionEnvelopeEip1559 from "ox/TransactionEnvelopeEip1559";
 import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
+import * as ox__TransactionEnvelopeEip7702 from "ox/TransactionEnvelopeEip7702";
 import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
-import { describe, expect, test } from "vitest";
+import { assertType, describe, expect, test } from "vitest";
 
 import { type Address, checksumAddress } from "../utils/address.js";
 import { fromGwei, toWei } from "../utils/units.js";
 import { serializeTransaction } from "./serialize-transaction.js";
 
+import { wagmiTokenContractConfig } from "../../test/src/abis/wagmiToken.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import { sign } from "../utils/signatures/sign.js";
@@ -527,6 +529,111 @@ describe("eip2930", () => {
         }),
       ).toThrow();
     });
+  });
+});
+
+describe("eip7702", () => {
+  const baseEip7702 = {
+    ...BASE_TRANSACTION,
+    authorizationList: [
+      {
+        address: wagmiTokenContractConfig.address.toLowerCase() as Address,
+        chainId: 1,
+        nonce: 420n,
+        r: ox__Hex.toBigInt(
+          "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+        ),
+        s: ox__Hex.toBigInt(
+          "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+        ),
+        yParity: 0,
+      },
+      {
+        address: "0x0000000000000000000000000000000000000000",
+        chainId: 10,
+        nonce: 69n,
+        r: ox__Hex.toBigInt(
+          "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+        ),
+        s: ox__Hex.toBigInt(
+          "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+        ),
+        yParity: 1,
+      },
+    ],
+    chainId: 1,
+  } as const;
+
+  test("default", () => {
+    const serialized = serializeTransaction({ transaction: baseEip7702 });
+    assertType<ox__TransactionEnvelopeEip7702.Serialized>(
+      serialized as `0x04${string}`,
+    );
+    expect(serialized).toMatchInlineSnapshot(
+      `"0x04f8e3018203118080809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0f8baf85c0194fba3912ca04dd458c843e2ee08967fc04f3579c28201a480a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fef85a0a9400000000000000000000000000000000000000004501a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe"`,
+    );
+    const tx = ox__TransactionEnvelopeEip7702.deserialize(
+      serialized as ox__TransactionEnvelopeEip7702.Serialized,
+    );
+    expect({
+      ...tx,
+      to: tx.to ? checksumAddress(tx.to) : undefined,
+    }).toEqual({
+      ...baseEip7702,
+      nonce: BigInt(baseEip7702.nonce),
+      type: "eip7702",
+    });
+  });
+
+  test("signature", () => {
+    expect(
+      serializeTransaction({
+        transaction: {
+          ...baseEip7702,
+          r: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          s: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          yParity: 1,
+        },
+      }),
+    ).toMatchInlineSnapshot(
+      `"0x04f90126018203118080809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0f8baf85c0194fba3912ca04dd458c843e2ee08967fc04f3579c28201a480a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fef85a0a9400000000000000000000000000000000000000004501a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe01a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe"`,
+    );
+    expect(
+      serializeTransaction({
+        transaction: {
+          ...baseEip7702,
+          r: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          s: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          yParity: 0,
+        },
+      }),
+    ).toMatchInlineSnapshot(
+      `"0x04f90126018203118080809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0f8baf85c0194fba3912ca04dd458c843e2ee08967fc04f3579c28201a480a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fef85a0a9400000000000000000000000000000000000000004501a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe80a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe"`,
+    );
+    expect(
+      serializeTransaction({
+        transaction: {
+          ...baseEip7702,
+          r: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          s: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          v: 0n,
+        },
+      }),
+    ).toMatchInlineSnapshot(
+      `"0x04f90126018203118080809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0f8baf85c0194fba3912ca04dd458c843e2ee08967fc04f3579c28201a480a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fef85a0a9400000000000000000000000000000000000000004501a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe80a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe"`,
+    );
+    expect(
+      serializeTransaction({
+        transaction: {
+          ...baseEip7702,
+          r: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          s: "0x60fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
+          v: 1n,
+        },
+      }),
+    ).toMatchInlineSnapshot(
+      `"0x04f90126018203118080809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080c0f8baf85c0194fba3912ca04dd458c843e2ee08967fc04f3579c28201a480a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fef85a0a9400000000000000000000000000000000000000004501a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe01a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fea060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe"`,
+    );
   });
 });
 
