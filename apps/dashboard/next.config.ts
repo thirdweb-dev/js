@@ -192,13 +192,17 @@ function getConfig(): NextConfig {
             ...baseNextConfig,
             experimental: {
               webpackBuildWorker: true,
+              webpackMemoryOptimizations: true,
             },
             // @ts-expect-error - this is a valid option
-            webpack: (config, { dev }) => {
-              if (config.cache && !dev) {
+            webpack: (config) => {
+              if (config.cache) {
                 config.cache = Object.freeze({
                   type: "filesystem",
                   maxMemoryGenerations: 0,
+                });
+                config.cache = Object.freeze({
+                  type: "memory",
                 });
               }
               config.externals.push("pino-pretty");

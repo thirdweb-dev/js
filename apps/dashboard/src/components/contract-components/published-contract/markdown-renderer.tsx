@@ -91,7 +91,7 @@ export const MarkdownRenderer: React.FC<{
 
           a: (props) => (
             <Link
-              href={props.href}
+              href={props.href ?? "#"}
               target="_blank"
               {...cleanedProps(props)}
               className="mt-4 text-link-foreground hover:text-foreground"
@@ -103,6 +103,7 @@ export const MarkdownRenderer: React.FC<{
               if (code?.disableCodeHighlight) {
                 return (
                   <div className="my-4">
+                    {/* @ts-expect-error - TODO: fix this */}
                     <PlainTextCodeBlock
                       {...cleanedProps(props)}
                       code={onlyText(props.children).trim()}
@@ -114,6 +115,7 @@ export const MarkdownRenderer: React.FC<{
               return (
                 <div className="my-4">
                   <CodeClient
+                    // @ts-expect-error - TODO: fix this
                     lang={language}
                     {...cleanedProps(props)}
                     code={onlyText(props.children).trim()}

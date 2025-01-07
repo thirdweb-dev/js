@@ -191,7 +191,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             }))}
             placeholder="Select industry"
             isRequired
-            // @ts-expect-error - this works fine
             onChange={(value) => {
               if (value?.value) {
                 form.setValue("superchain_verticals", value.value);
@@ -222,14 +221,10 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
               label: chain === "Optimism" ? "OP Mainnet" : chain,
               value: chain,
             }))}
-            // @ts-expect-error - this works fine
             onChange={(values) => {
               form.setValue(
                 "superchain_chain",
-                values
-                  // @ts-expect-error - this works fine
-                  .map(({ value }) => value)
-                  .join(";"),
+                values.map(({ value }) => value).join(";"),
               );
             }}
             isMulti
