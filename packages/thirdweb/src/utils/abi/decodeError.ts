@@ -1,4 +1,5 @@
-import { type Abi, AbiError } from "ox";
+import type * as ox__Abi from "ox/Abi";
+import * as ox__AbiError from "ox/AbiError";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { Hex } from "../encoding/hex.js";
@@ -17,7 +18,7 @@ import type { Hex } from "../encoding/hex.js";
  *
  * @utils
  */
-export async function decodeError<abi extends Abi.Abi>(options: {
+export async function decodeError<abi extends ox__Abi.Abi>(options: {
   contract: ThirdwebContract<abi>;
   data: Hex;
 }) {
@@ -31,6 +32,6 @@ export async function decodeError<abi extends Abi.Abi>(options: {
       `No ABI found for contract ${contract.address} on chain ${contract.chain.id}`,
     );
   }
-  const abiError = AbiError.fromAbi(abi, data) as AbiError.AbiError;
-  return AbiError.decode(abiError, data);
+  const abiError = ox__AbiError.fromAbi(abi, data) as ox__AbiError.AbiError;
+  return ox__AbiError.decode(abiError, data);
 }

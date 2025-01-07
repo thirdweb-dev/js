@@ -302,3 +302,5 @@ export {
   type VerifyTypedDataParams,
   verifyTypedData,
 } from "../auth/verify-typed-data.js";
+
+export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

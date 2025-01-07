@@ -210,7 +210,7 @@ async function createSmartAccount(
     }
   }
 
-  const { accountContract } = options;
+  let accountContract = options.accountContract;
   const account: Account = {
     address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
@@ -237,21 +237,17 @@ async function createSmartAccount(
         paymasterOverride = options.overrides?.paymaster;
       }
 
-      const accountContractForTransaction = (() => {
-        // If this transaction is for a different chain than the initial one, get the account contract for that chain
-        if (transaction.chainId !== accountContract.chain.id) {
-          return getContract({
-            address: account.address,
-            chain: getCachedChain(transaction.chainId),
-            client: options.client,
-          });
-        }
-        // Default to the existing account contract
-        return accountContract;
-      })();
+      // If this transaction is for a different chain than the initial one, get the account contract for that chain
+      if (transaction.chainId !== accountContract.chain.id) {
+        accountContract = getContract({
+          address: account.address,
+          chain: getCachedChain(transaction.chainId),
+          client: options.client,
+        });
+      }
 
       const executeTx = prepareExecute({
-        accountContract: accountContractForTransaction,
+        accountContract: accountContract,
         transaction,
         executeOverride: options.overrides?.execute,
       });
@@ -260,6 +256,7 @@ async function createSmartAccount(
         options: {
           ...options,
           chain: getCachedChain(transaction.chainId),
+          accountContract,
           overrides: {
             ...options.overrides,
             paymaster: paymasterOverride,
@@ -275,7 +272,11 @@ async function createSmartAccount(
       });
       return _sendUserOp({
         executeTx,
-        options,
+        options: {
+          ...options,
+          chain: getCachedChain(transactions[0]?.chainId ?? options.chain.id),
+          accountContract,
+        },
       });
     },
     async signMessage({ message }: { message: SignableMessage }) {
@@ -288,8 +289,8 @@ async function createSmartAccount(
         });
       }
 
-      const { deployAndSignMessage } = await import("./lib/signing.js");
-      return deployAndSignMessage({
+      const { smartAccountSignMessage } = await import("./lib/signing.js");
+      return smartAccountSignMessage({
         accountContract,
         factoryContract: options.factoryContract,
         options,
@@ -309,8 +310,8 @@ async function createSmartAccount(
         });
       }
 
-      const { deployAndSignTypedData } = await import("./lib/signing.js");
-      return deployAndSignTypedData({
+      const { smartAccountSignTypedData } = await import("./lib/signing.js");
+      return smartAccountSignTypedData({
         accountContract,
         factoryContract: options.factoryContract,
         options,

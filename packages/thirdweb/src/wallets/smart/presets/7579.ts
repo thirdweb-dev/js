@@ -1,4 +1,5 @@
-import { AbiParameters, Hex } from "ox";
+import * as ox__AbiParameters from "ox/AbiParameters";
+import * as ox__Hex from "ox/Hex";
 import { serializeErc6492Signature } from "../../../auth/serialize-erc6492-signature.js";
 import { verifyHash } from "../../../auth/verify-hash.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
@@ -56,9 +57,9 @@ export type ERC7579Config = SmartWalletOptions & {
 export function erc7579(options: ERC7579Config): SmartWalletOptions {
   const saltHex =
     options.overrides?.accountSalt &&
-    Hex.validate(options.overrides.accountSalt)
+    ox__Hex.validate(options.overrides.accountSalt)
       ? options.overrides.accountSalt
-      : Hex.fromString(options.overrides?.accountSalt ?? "");
+      : ox__Hex.fromString(options.overrides?.accountSalt ?? "");
   const defaultValidator = getAddress(options.validatorAddress);
   const modularAccountOptions: SmartWalletOptions = {
     ...options,
@@ -75,7 +76,7 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
               {
                 moduleTypeId: 1n, // validator type id
                 module: defaultValidator,
-                initData: Hex.fromString(""),
+                initData: ox__Hex.fromString(""),
               },
             ];
             return {
@@ -99,8 +100,8 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
           contract: accountContract,
           async asyncParams() {
             return {
-              mode: Hex.padRight("0x00", 32), // single execution
-              executionCalldata: AbiParameters.encodePacked(
+              mode: ox__Hex.padRight("0x00", 32), // single execution
+              executionCalldata: ox__AbiParameters.encodePacked(
                 ["address", "uint256", "bytes"],
                 [
                   transaction.to || ZERO_ADDRESS,
@@ -117,8 +118,8 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
           contract: accountContract,
           async asyncParams() {
             return {
-              mode: Hex.padRight("0x01", 32), // batch execution
-              executionCalldata: AbiParameters.encode(
+              mode: ox__Hex.padRight("0x01", 32), // batch execution
+              executionCalldata: ox__AbiParameters.encode(
                 [
                   {
                     type: "tuple[]",
@@ -152,10 +153,10 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
           sender: accountContract.address,
         });
         // TODO (msa) - could be different if validator for the deployed account is different
-        const withValidator = Hex.from(
-          `${defaultValidator}${Hex.fromNumber(entryPointNonce).slice(42)}`,
+        const withValidator = ox__Hex.from(
+          `${defaultValidator}${ox__Hex.fromNumber(entryPointNonce).slice(42)}`,
         );
-        return Hex.toBigInt(withValidator);
+        return ox__Hex.toBigInt(withValidator);
       },
       async signMessage(options) {
         const { accountContract, factoryContract, adminAccount, message } =
@@ -201,7 +202,7 @@ async function generateSignature(options: {
   accountContract: ThirdwebContract;
   factoryContract: ThirdwebContract;
   adminAccount: Account;
-  originalMsgHash: Hex.Hex;
+  originalMsgHash: ox__Hex.Hex;
   defaultValidator: string;
   createAccount: (
     factoryContract: ThirdwebContract,
