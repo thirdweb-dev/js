@@ -324,7 +324,7 @@
   "devDependencies": {
     "@aws-sdk/client-kms": "3.592.0",
     "@aws-sdk/client-lambda": "3.592.0",
-    "@aws-sdk/credential-providers": "3.592.0",
+    "@aws-sdk/credential-providers": "3.723.0",
     "@biomejs/biome": "1.9.4",
     "@chromatic-com/storybook": "3.2.2",
     "@codspeed/vitest-plugin": "4.0.0",
