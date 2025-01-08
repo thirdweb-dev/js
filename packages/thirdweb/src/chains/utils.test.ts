@@ -23,6 +23,7 @@ import {
   getChainDecimals,
   getChainNativeCurrencyName,
   getChainSymbol,
+  getRpcUrlForChain,
 } from "./utils.js";
 
 const legacyChain: LegacyChain = {
@@ -304,6 +305,77 @@ describe("defineChain", () => {
       },
       rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
       testnet: undefined,
+    });
+  });
+
+  describe("getRpcUrlForChain", () => {
+    it("should construct RPC URL using chain ID and client ID when chain is a number", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: 1,
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
+    });
+
+    it("should return the custom RPC URL if provided", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: {
+          id: 1,
+          rpc: "https://custom-rpc.com",
+        },
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://custom-rpc.com");
+    });
+
+    it("should add client ID to thirdweb RPC URL", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: {
+          id: 1,
+          rpc: "https://1.rpc.thirdweb.com",
+        },
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
+    });
+
+    it("should honor client ID passed directly in rpc field", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: {
+          id: 1,
+          rpc: "https://1.rpc.thirdweb.com/abc",
+        },
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://1.rpc.thirdweb.com/abc");
+    });
+
+    it("should replace template string in rpc url", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: {
+          id: 1,
+          rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+        },
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
+    });
+
+    it("should return the RPC URL without modification if it's not a thirdweb URL", () => {
+      const options = {
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
+        chain: {
+          id: 1,
+          rpc: "https://custom-rpc.com",
+        },
+      };
+      const result = getRpcUrlForChain(options);
+      expect(result).toBe("https://custom-rpc.com");
     });
   });
 });

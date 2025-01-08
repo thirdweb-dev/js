@@ -193,7 +193,9 @@ export function getRpcUrlForChain(options: GetRpcUrlForChainOptions): string {
     const rpcUrl = new URL(
       options.chain.rpc.replace(DEFAULT_RPC_URL, baseRpcUrl),
     );
-    rpcUrl.pathname = `/${options.client.clientId}`;
+    if (rpcUrl.pathname === "/" || rpcUrl.pathname.startsWith("/$")) {
+      rpcUrl.pathname = `/${options.client.clientId}`;
+    }
     return rpcUrl.toString();
   }
   return rpc;
