@@ -213,7 +213,7 @@ function DeleteAccountCard() {
 
 function AccountEmailFormControl(props: {
   email: string;
-  status: "unverified" | "verfication-sent" | "verified";
+  status: "unverified" | "verified";
   sendEmail: (email: string) => Promise<void>;
   updateEmailWithOTP: (otp: string) => Promise<void>;
 }) {

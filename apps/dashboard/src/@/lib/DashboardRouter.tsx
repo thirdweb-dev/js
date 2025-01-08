@@ -100,7 +100,7 @@ function DashboardRouterTopProgressBarInner() {
     }
 
     async function startEffect() {
-      // if the loading state remains for atleast 500ms start the progress bar
+      // if the loading state remains for at least 500ms start the progress bar
       await wait(500);
       if (isMounted) {
         updateProgressBar(0, 100);

@@ -32,7 +32,7 @@ export function useThirdwebClient(jwt?: string) {
   });
 
   return useMemo(
-    // prfer jwt from props over the one from the token query if it exists
+    // prefer jwt from props over the one from the token query if it exists
     () => getThirdwebClient(jwt || query.data),
     [jwt, query.data],
   );

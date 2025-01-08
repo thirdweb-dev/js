@@ -1,6 +1,7 @@
 "use client";
 
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type AddContractSubscriptionInput,
@@ -36,7 +37,6 @@ import { getContract, isAddress } from "thirdweb";
 import {
   Button,
   Card,
-  Checkbox,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -327,8 +327,8 @@ const ModalBodyInputData = ({
               <Checkbox
                 {...form.register("processEventLogs")}
                 checked={form.getValues("processEventLogs")}
-                onChange={(e) => {
-                  const { checked } = e.target;
+                onCheckedChange={(val) => {
+                  const checked = !!val;
                   form.setValue("processEventLogs", checked);
                   if (checked) {
                     processEventLogsDisclosure.onOpen();
@@ -380,21 +380,22 @@ const ModalBodyInputData = ({
                 </div>
               </Collapse>
 
-              <Checkbox
-                {...form.register("processTransactionReceipts")}
-                checked={form.getValues("processTransactionReceipts")}
-                onChange={(e) => {
-                  const { checked } = e.target;
-                  form.setValue("processTransactionReceipts", checked);
-                  if (checked) {
-                    processTransactionReceiptsDisclosure.onOpen();
-                  } else {
-                    processTransactionReceiptsDisclosure.onClose();
-                  }
-                }}
-              >
+              <CheckboxWithLabel>
+                <Checkbox
+                  {...form.register("processTransactionReceipts")}
+                  checked={form.getValues("processTransactionReceipts")}
+                  onCheckedChange={(val) => {
+                    const checked = !!val;
+                    form.setValue("processTransactionReceipts", checked);
+                    if (checked) {
+                      processTransactionReceiptsDisclosure.onOpen();
+                    } else {
+                      processTransactionReceiptsDisclosure.onClose();
+                    }
+                  }}
+                />
                 <Text>Transaction Receipts</Text>
-              </Checkbox>
+              </CheckboxWithLabel>
               {/* Shows all/specific functions if processing transaction receipts */}
               <Collapse in={processTransactionReceiptsDisclosure.isOpen}>
                 <div className="flex flex-col gap-2 px-4">

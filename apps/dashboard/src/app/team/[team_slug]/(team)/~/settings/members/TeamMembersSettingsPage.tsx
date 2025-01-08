@@ -18,7 +18,7 @@ export function TeamMembersSettingsPage(props: {
           Inviting and Managing Team Members is not available yet
         </AlertTitle>
         <AlertDescription>
-          This feature will be available in Q4 2024
+          This feature will be available in Q1 2025
         </AlertDescription>
       </Alert>
       <div className="h-10" />

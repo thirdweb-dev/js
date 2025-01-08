@@ -361,7 +361,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormLabel>Image URL</FormLabel>
               <Input max="6" {...register("customImage")} />
               <FormHelperText>
-                If you already have your NFT image preuploaded, you can set the
+                If you already have your NFT image pre-uploaded, you can set the
                 URL or URI here.
               </FormHelperText>
               <FormErrorMessage>
@@ -372,7 +372,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormLabel>Animation URL</FormLabel>
               <Input max="6" {...register("customAnimationUrl")} />
               <FormHelperText>
-                If you already have your NFT Animation URL preuploaded, you can
+                If you already have your NFT Animation URL pre-uploaded, you can
                 set the URL or URI here.
               </FormHelperText>
               <FormErrorMessage>

@@ -1,9 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { ClientScopedStorage } from "../../../../wallets/in-app/core/authentication/client-scoped-storage.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../../../wallets/in-app/core/authentication/types.js";
 import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -83,14 +86,6 @@ export function useAutoConnectCore(
     const lastConnectedChain =
       (await getLastConnectedChain(storage)) || props.chain;
 
-    async function handleWalletConnection(wallet: Wallet) {
-      return wallet.autoConnect({
-        client: props.client,
-        chain: lastConnectedChain ?? undefined,
-        authResult,
-      });
-    }
-
     const availableWallets = [...wallets, ...(getInstalledWallets?.() ?? [])];
     const activeWallet =
       lastActiveWalletId &&
@@ -100,9 +95,22 @@ export function useAutoConnectCore(
     if (activeWallet) {
       try {
         setConnectionStatus("connecting"); // only set connecting status if we are connecting the last active EOA
-        await timeoutPromise(handleWalletConnection(activeWallet), {
-          ms: timeout,
-          message: `AutoConnect timeout: ${timeout}ms limit exceeded.`,
+        await timeoutPromise(
+          handleWalletConnection({
+            wallet: activeWallet,
+            client: props.client,
+            lastConnectedChain,
+            authResult,
+          }),
+          {
+            ms: timeout,
+            message: `AutoConnect timeout: ${timeout}ms limit exceeded.`,
+          },
+        ).catch((err) => {
+          console.warn(err.message);
+          if (props.onTimeout) {
+            props.onTimeout();
+          }
         });
 
         // connected wallet could be activeWallet or smart wallet
@@ -138,7 +146,12 @@ export function useAutoConnectCore(
 
     for (const wallet of otherWallets) {
       try {
-        await handleWalletConnection(wallet);
+        await handleWalletConnection({
+          wallet,
+          client: props.client,
+          lastConnectedChain,
+          authResult,
+        });
         manager.addConnectedWallet(wallet);
       } catch {
         // no-op
@@ -157,4 +170,20 @@ export function useAutoConnectCore(
   });
 
   return query;
+}
+
+/**
+ * @internal
+ */
+export async function handleWalletConnection(props: {
+  wallet: Wallet;
+  client: ThirdwebClient;
+  authResult: AuthStoredTokenWithCookieReturnType | undefined;
+  lastConnectedChain: Chain | undefined;
+}) {
+  return props.wallet.autoConnect({
+    client: props.client,
+    chain: props.lastConnectedChain,
+    authResult: props.authResult,
+  });
 }

@@ -140,8 +140,8 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
                 },
               });
               toast.promise(promise, {
-                loading: "Transfering tokens",
-                success: "Successfully transfered tokens",
+                loading: "Transferring tokens",
+                success: "Successfully transferred tokens",
                 error: "Failed to transfer tokens",
               });
             })}

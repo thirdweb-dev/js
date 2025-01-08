@@ -145,7 +145,7 @@ function TeamRow(props: {
               href={`/team/${props.team.slug}/~/settings`}
               className="w-full p-1 "
             >
-              Manange
+              Manage
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -13,7 +13,7 @@ import type { Balance } from "../ContractSplitPage";
 interface DistributeButtonProps {
   contract: ThirdwebContract;
   balances: Balance[];
-  balancesisPending: boolean;
+  balancesIsPending: boolean;
   balancesIsError: boolean;
   twAccount: Account | undefined;
 }
@@ -21,7 +21,7 @@ interface DistributeButtonProps {
 export const DistributeButton: React.FC<DistributeButtonProps> = ({
   contract,
   balances,
-  balancesisPending,
+  balancesIsPending,
   balancesIsError,
   twAccount,
   ...restButtonProps
@@ -37,13 +37,13 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     ) {
       return 1;
     }
-    if (!validBalances || balancesisPending) {
+    if (!validBalances || balancesIsPending) {
       return 0;
     }
     return validBalances?.filter(
       (b) => b.display_balance !== "0.0" && b.display_balance !== "0",
     ).length;
-  }, [validBalances, balancesisPending]);
+  }, [validBalances, balancesIsPending]);
 
   const mutation = useSplitDistributeFunds(contract);
 

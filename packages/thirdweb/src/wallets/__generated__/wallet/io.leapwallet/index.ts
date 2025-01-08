@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.leapwallet",
   name: "Leap Cosmos Wallet",
   homepage: "https://leapwallet.io/",
-  image_id: "73e6b2b2-8c02-42e9-84f5-82a859978200",
+  image_id: "d64ae9c7-c0be-495d-041e-35c6bb2cc100",
   app: {
     browser: null,
     ios: "https://apps.apple.com/in/app/leap-cosmos/id1642465549/",

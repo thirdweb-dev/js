@@ -49,13 +49,13 @@ function Story() {
         }}
         client={getThirdwebClient()}
       />
-      <ComponentVariantions />
+      <ComponentVariants />
       <Toaster richColors />
     </div>
   );
 }
 
-function ComponentVariantions() {
+function ComponentVariants() {
   return (
     <div className="border-border border-t p-6 pt-20">
       <div className="mx-auto max-w-[1100px]">

@@ -9,7 +9,7 @@ import { SearchInput } from "../components/SearchInput";
 export function LinkWalletUI(props: {
   wallets: string[];
 }) {
-  const [searchValue, setSerchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const walletsToShow = !searchValue
     ? props.wallets
     : props.wallets.filter((v) => {
@@ -40,7 +40,7 @@ export function LinkWalletUI(props: {
       <SearchInput
         placeholder="Search wallet address"
         value={searchValue}
-        onValueChange={setSerchValue}
+        onValueChange={setSearchValue}
       />
 
       <div className="h-4" />

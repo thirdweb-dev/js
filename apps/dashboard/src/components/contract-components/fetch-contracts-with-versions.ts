@@ -47,7 +47,18 @@ export async function fetchPublishedContractVersions(
     ),
   );
 
-  return responses.filter((r) => r.status === "fulfilled").map((r) => r.value);
+  const publishedContracts = responses
+    .filter((r) => r.status === "fulfilled")
+    .map((r) => r.value);
+
+  // if there are two published contract with same version, keep the latest (first in list - list is already sorted) one
+  const uniquePublishedContracts = publishedContracts.filter(
+    (contract, idx, arr) =>
+      // if this is the first occurrence of this version in list - keep it
+      arr.findIndex((c) => c.version === contract.version) === idx,
+  );
+
+  return uniquePublishedContracts;
 }
 
 export async function fetchPublishedContractVersion(

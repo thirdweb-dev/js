@@ -1,4 +1,6 @@
-import { type Abi, AbiFunction, type Hex } from "ox";
+import type * as ox__Abi from "ox/Abi";
+import * as ox__AbiFunction from "ox/AbiFunction";
+import type * as ox__Hex from "ox/Hex";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 
@@ -16,9 +18,9 @@ import type { ThirdwebContract } from "../../contract/contract.js";
  *
  * @utils
  */
-export async function decodeFunctionData<abi extends Abi.Abi>(options: {
+export async function decodeFunctionData<abi extends ox__Abi.Abi>(options: {
   contract: ThirdwebContract<abi>;
-  data: Hex.Hex;
+  data: ox__Hex.Hex;
 }) {
   const { contract, data } = options;
   let abi = contract?.abi;
@@ -30,6 +32,6 @@ export async function decodeFunctionData<abi extends Abi.Abi>(options: {
       `No ABI found for contract ${contract.address} on chain ${contract.chain.id}`,
     );
   }
-  const abiFunction = AbiFunction.fromAbi(abi, data);
-  return AbiFunction.decodeData(abiFunction, data);
+  const abiFunction = ox__AbiFunction.fromAbi(abi, data);
+  return ox__AbiFunction.decodeData(abiFunction, data);
 }

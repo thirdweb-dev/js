@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.bybit",
   name: "Bybit Wallet",
   homepage: "https://www.bybit.com/web3/",
-  image_id: "b9e64f74-0176-44fd-c603-673a45ed5b00",
+  image_id: "fa6b5b14-b135-43ea-b6c4-f33570dd5a00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/US/app/id1488296980",

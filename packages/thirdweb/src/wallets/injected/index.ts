@@ -85,7 +85,8 @@ export async function connectEip1193Wallet({
     chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  if (chain && chain.id !== chainId) {
+  // we check for undefined chain ID since some chain-specific wallets like Abstract will not send a chain ID on connection
+  if (chain && typeof chain.id !== "undefined" && chain.id !== chainId) {
     await switchChain(provider, chain);
     connectedChain = chain;
   }

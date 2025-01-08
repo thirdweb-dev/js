@@ -64,7 +64,7 @@ export async function getTeams() {
   return null;
 }
 
-type TeamNebulWaitList = {
+type TeamNebulaWaitList = {
   onWaitlist: boolean;
   createdAt: null | string;
 };
@@ -86,7 +86,7 @@ export async function getTeamNebulaWaitList(teamSlug: string) {
   );
 
   if (res.ok) {
-    return (await res.json()).result as TeamNebulWaitList;
+    return (await res.json()).result as TeamNebulaWaitList;
   }
 
   return null;

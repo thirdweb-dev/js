@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "com.crypto.wallet",
-  name: "Crypto.com | DeFi Wallet",
-  homepage: "https://crypto.com/",
-  image_id: "88388eb4-4471-4e72-c4b4-852d496fea00",
+  name: "Crypto.com Onchain",
+  homepage: "https://crypto.com/onchain",
+  image_id: "4903acdd-6463-44b6-3cf9-f23f4c75ca00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/US/app/id1512048310?mt=8",

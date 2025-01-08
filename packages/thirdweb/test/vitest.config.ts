@@ -31,7 +31,7 @@ export default defineConfig({
       ],
       include: ["src/**"],
     },
-    environmentMatchGlobs: [["src/react/**/*.test.tsx", "happy-dom"]],
+    environmentMatchGlobs: [["src/**/*.test.tsx", "happy-dom"]],
     environment: "node",
     include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],

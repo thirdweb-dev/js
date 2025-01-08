@@ -59,7 +59,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           if (approveTx) {
             const approvalPromise = sendAndConfirmTx.mutateAsync(approveTx);
             toast.promise(approvalPromise, {
-              success: "Approved succesfully",
+              success: "Approved successfully",
               error: "Failed to approve ERC20",
             });
             await approvalPromise;

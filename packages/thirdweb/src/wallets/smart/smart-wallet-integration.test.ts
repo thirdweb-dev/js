@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
+import { verifyEip1271Signature } from "../../auth/verify-hash.js";
 import { verifySignature } from "../../auth/verify-signature.js";
 import { verifyTypedData } from "../../auth/verify-typed-data.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
@@ -22,10 +23,13 @@ import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
+import { hashMessage } from "../../utils/hashing/hashMessage.js";
+import { hashTypedData } from "../../utils/hashing/hashTypedData.js";
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
 import { predictSmartAccountAddress } from "./lib/calls.js";
+import { deploySmartAccount } from "./lib/signing.js";
 import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
@@ -94,6 +98,27 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(isValid).toEqual(true);
     });
 
+    it("should use ERC-1271 signatures after deployment", async () => {
+      await deploySmartAccount({
+        chain,
+        client,
+        smartAccount,
+        accountContract,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // pause for a second to prevent race condition
+
+      const signature = await smartAccount.signMessage({
+        message: "hello world",
+      });
+
+      const isValid = await verifyEip1271Signature({
+        hash: hashMessage("hello world"),
+        signature,
+        contract: accountContract,
+      });
+      expect(isValid).toEqual(true);
+    });
+
     it("can sign typed data", async () => {
       const signature = await smartAccount.signTypedData(typedData.basic);
       const isValid = await verifyTypedData({
@@ -102,6 +127,27 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         chain,
         client,
         ...typedData.basic,
+      });
+      expect(isValid).toEqual(true);
+    });
+
+    it("should use ERC-1271 typed data signatures after deployment", async () => {
+      await deploySmartAccount({
+        chain,
+        client,
+        smartAccount,
+        accountContract,
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // pause for a second to prevent race condition
+
+      const signature = await smartAccount.signTypedData(typedData.basic);
+
+      const messageHash = hashTypedData(typedData.basic);
+      const isValid = await verifyEip1271Signature({
+        signature,
+        hash: messageHash,
+        contract: accountContract,
       });
       expect(isValid).toEqual(true);
     });
@@ -185,7 +231,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(result.status).toEqual("success");
     });
 
-    it("can sign and verify 1271 with replay protection", async () => {
+    it("can sign and verify with replay protection", async () => {
       const message = "hello world";
       const signature = await smartAccount.signMessage({ message });
       const isValidV1 = await verifySignature({
@@ -372,6 +418,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(txs.every((t) => t.transactionHash.length === 66)).toBe(true);
 
       isDeployed = await isContractDeployed(newSmartAccountContract);
+      await sleep(1000);
       expect(isDeployed).toEqual(true);
       const balance = await balanceOf({
         contract,

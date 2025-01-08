@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
-import { Chatbar } from "./ChatBar";
+import { ChatBar } from "./ChatBar";
 
 const meta = {
   title: "Nebula/Chatbar",
@@ -30,7 +30,7 @@ function Story() {
   return (
     <div className="container flex max-w-[800px] flex-col gap-14 py-10">
       <BadgeContainer label="Not Streaming">
-        <Chatbar
+        <ChatBar
           abortChatStream={() => {}}
           isChatStreaming={false}
           sendMessage={() => {}}
@@ -38,7 +38,7 @@ function Story() {
       </BadgeContainer>
 
       <BadgeContainer label="Streaming ">
-        <Chatbar
+        <ChatBar
           abortChatStream={() => {}}
           isChatStreaming={true}
           sendMessage={() => {}}

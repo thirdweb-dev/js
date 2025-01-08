@@ -137,7 +137,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                         header.column.columnDef.header,
                         header.getContext(),
                       )}
-                      {/* TODO add fitlering? */}
+                      {/* TODO add filtering? */}
                       {/* {header.column.getCanFilter() ? (
                         <div>
                           <Filter column={header.column} table={table} />

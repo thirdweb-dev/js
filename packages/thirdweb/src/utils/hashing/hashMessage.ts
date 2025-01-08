@@ -1,4 +1,4 @@
-import { Bytes as ox__Bytes } from "ox";
+import * as ox__Bytes from "ox/Bytes";
 import type { Hex } from "../encoding/hex.js";
 import { stringToBytes, toBytes } from "../encoding/to-bytes.js";
 import type { SignableMessage } from "../types.js";

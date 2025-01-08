@@ -133,6 +133,17 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  *  verificationCode: "123456",
  * });
  * ```
+ *
+ * Authenticate to a backend account (only do this on your backend):
+ * ```ts
+ * import { authenticate } from "thirdweb/wallets/in-app";
+ *
+ * const result = await authenticate({
+ *  client,
+ *  strategy: "backend",
+ *  walletSecret: "...", // Provided by your app
+ * });
+ * ```
  * @wallet
  */
 export async function authenticate(args: AuthArgsType) {

@@ -63,17 +63,17 @@ function getContractUrl(
   if (isDeploy) {
     pathName += "/deploy";
   }
-  const moudleUrl = new URLSearchParams();
+  const moduleUrl = new URLSearchParams();
 
   for (const m of modules) {
-    moudleUrl.append("module", moduleToBase64(m));
+    moduleUrl.append("module", moduleToBase64(m));
   }
 
   if (titleOverride) {
-    moudleUrl.append("displayName", titleOverride);
+    moduleUrl.append("displayName", titleOverride);
   }
 
-  pathName += moudleUrl.toString() ? `?${moudleUrl.toString()}` : "";
+  pathName += moduleUrl.toString() ? `?${moduleUrl.toString()}` : "";
   return replaceDeployerAddress(pathName);
 }
 

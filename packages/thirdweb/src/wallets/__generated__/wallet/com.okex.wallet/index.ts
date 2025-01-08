@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.okex.wallet",
   name: "OKX Wallet",
   homepage: "https://www.okx.com/web3",
-  image_id: "45f2f08e-fc0c-4d62-3e63-404e72170500",
+  image_id: "b011bd5a-a887-44e2-12b0-39efbd9e5600",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/okx-buy-bitcoin-eth-crypto/id1327268470",

@@ -6,11 +6,11 @@ import { Grid2X2Icon, ListIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-type hainListViewProps = {
+type ChainListViewProps = {
   activeView: "grid" | "table";
 };
 
-export const ChainListView: React.FC<hainListViewProps> = ({ activeView }) => {
+export const ChainListView: React.FC<ChainListViewProps> = ({ activeView }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useDashboardRouter();

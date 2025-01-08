@@ -70,7 +70,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
     );
   }
 
-  return batchesQuery.data?.length ? (
+  return (
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
@@ -168,5 +168,5 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
         </SheetContent>
       </Sheet>
     </MinterOnly>
-  ) : null;
+  );
 };

@@ -30,7 +30,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
       enabled: !!account,
     },
   });
-  const delgateMutation = useDelegateMutation();
+  const delegateMutation = useDelegateMutation();
 
   if (tokensDelegatedQuery.data || tokensDelegatedQuery.isPending) {
     return null;
@@ -44,7 +44,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
         transactionCount={1}
         onClick={() => {
           toast.promise(
-            delgateMutation.mutateAsync(contract, {
+            delegateMutation.mutateAsync(contract, {
               onSuccess: () => {
                 trackEvent({
                   category: "vote",
@@ -68,7 +68,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
             },
           );
         }}
-        isPending={delgateMutation.isPending}
+        isPending={delegateMutation.isPending}
       >
         Delegate Tokens
       </TransactionButton>

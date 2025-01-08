@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { ArrowUpIcon, CircleStopIcon } from "lucide-react";
 import { useState } from "react";
 
-export function Chatbar(props: {
+export function ChatBar(props: {
   sendMessage: (message: string) => void;
   isChatStreaming: boolean;
   abortChatStream: () => void;

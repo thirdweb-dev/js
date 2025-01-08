@@ -12,14 +12,23 @@ export const metadata = createMetadata({
 
 # For Agents & LLMs
 
-The schema below can be copied and pasted into the AI assistant of your choice. Feed this to your assistant, then ask your assistant to construct Insight queries on your behalf, asking it for certain onchain information.
+
+Insight is a powerful tool that can be used to power AI agents and LLMs with blockchain data. To use the API in your AI agent you can use the llms.txt file bellow.
+
+
+- [llms.txt file](/insight/agents-and-llms/llmstxt)
+- For developers who prefer working with OpenAPI specifications, our complete API documentation is available in OpenAPI format [here](https://insight.thirdweb.com/openapi.json).
+
+If you prefer to use the API in an LLM prompt, the schema below can be copied and pasted into the AI assistant of your choice. Feed this to your assistant, then ask your assistant to construct Insight queries on your behalf, asking it for certain onchain information.
 
 ````markdown
 # ATTENTION LLMs - API Usage Instructions
 
 ## API URL
 
-https://{chain-id}.insight.thirdweb.com
+```typescript
+const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
+```
 
 ## Authentication
 
@@ -28,22 +37,22 @@ The API supports three authentication methods:
 ```typescript
 // 1. Header Authentication
 const headers = {
-	"x-client-id": "YOUR_CLIENT_ID", // thirdweb Client ID
+	"x-client-id": "{{clientId}}", // thirdweb Client ID
 };
 
 // 2. Query Parameter
-const url = "https://1.insight.thirdweb.com/v1/events?clientId=YOUR_CLIENT_ID";
+const url = "https://{{chainId}}.insight.thirdweb.com/v1/events?clientId={{clientId}}";
 
 // 3. Bearer Token
 const headers = {
-	Authorization: "Bearer YOUR_JWT_TOKEN",
+	Authorization: "Bearer {{jwtToken}}",
 };
 
 // Example using fetch with header auth
 async function getEvents() {
-	const response = await fetch("https://1.insight.thirdweb.com/v1/events", {
+	const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
 		headers: {
-			"x-client-id": "YOUR_CLIENT_ID",
+			"x-client-id": "{{clientId}}",
 		},
 	});
 	return await response.json();
@@ -54,49 +63,11 @@ async function getEvents() {
 
 ### Chain IDs
 
-The API supports the following chain IDs (with 1 as default):
-
 ```typescript
-type ChainId =
-	| "1"
-	| "2039"
-	| "30"
-	| "98865"
-	| "42793"
-	| "1952959480"
-	| "98864"
-	| "466"
-	| "37714555429"
-	| "8008135"
-	| "55244"
-	| "42019"
-	| "8453"
-	| "480"
-	| "84532"
-	| "888888888"
-	| "43113"
-	| "19934"
-	| "7897"
-	| "2040"
-	| "37111"
-	| "33139"
-	| "80002"
-	| "8333"
-	| "660279"
-	| "42161"
-	| "11155111"
-	| "421614"
-	| "994873017"
-	| "42026"
-	| "43114"
-	| "1946"
-	| "31"
-	| "41455"
-	| "1993"
-	| "98985";
+type ChainId = number; // Chain ID of the network you want to query (e.g., 1 for Ethereum mainnet)
 
 // Example: Using a specific chain
-const chainId = "1"; // Ethereum Mainnet
+const chainId = 1; // Ethereum mainnet
 const baseUrl = `https://${chainId}.insight.thirdweb.com`;
 ```
 
@@ -121,11 +92,11 @@ interface BaseResponse<T> {
   "data": [
     {
       "chain_id": 1,
-      "block_number": "17859301",
-      "transaction_hash": "0x123...",
-      "address": "0x456...",
-      "data": "0x789...",
-      "topics": ["0xabc..."]
+      "block_number": "{{blockNumber}}",
+      "transaction_hash": "{{transactionHash}}",
+      "address": "{{contractAddress}}",
+      "data": "{{data}}",
+      "topics": ["{{topic}}"]
     }
   ],
   "meta": {
@@ -145,8 +116,8 @@ interface BaseResponse<T> {
 ```typescript
 // 1. Get All Events
 async function getAllEvents() {
-	const response = await fetch("https://1.insight.thirdweb.com/v1/events", {
-		headers: { "x-client-id": "YOUR_CLIENT_ID" },
+	const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
+		headers: { "x-client-id": "{{clientId}}" },
 	});
 	return await response.json();
 }
@@ -154,15 +125,15 @@ async function getAllEvents() {
 // 2. Get Contract Events with Filtering
 async function getContractEvents(contractAddress: string) {
 	const params = new URLSearchParams({
-		filter_block_number_gte: "17000000",
+		filter_block_number_gte: blockNumber,
 		sort_by: "block_timestamp",
 		sort_order: "desc",
-		limit: "50",
+		limit: "{{limit}}",
 	});
 
-	const url = `https://1.insight.thirdweb.com/v1/events/${contractAddress}?${params}`;
+	const url = `https://{{chainId}}.insight.thirdweb.com/v1/events/{{contractAddress}}?${params}`;
 	const response = await fetch(url, {
-		headers: { "x-client-id": "YOUR_CLIENT_ID" },
+		headers: { "x-client-id": "{{clientId}}" },
 	});
 	return await response.json();
 }
@@ -174,8 +145,8 @@ async function getContractEvents(contractAddress: string) {
 // 1. Get ERC20 Balances
 async function getERC20Balances(ownerAddress: string) {
 	const response = await fetch(
-		`https://1.insight.thirdweb.com/v1/tokens/erc20/${ownerAddress}`,
-		{ headers: { "x-client-id": "YOUR_CLIENT_ID" } },
+		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc20/${ownerAddress}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
 	);
 	const data = await response.json();
 	// Example response:
@@ -193,8 +164,8 @@ async function getERC20Balances(ownerAddress: string) {
 // 2. Get NFT Balances
 async function getNFTBalances(ownerAddress: string) {
 	const response = await fetch(
-		`https://1.insight.thirdweb.com/v1/tokens/erc721/${ownerAddress}`,
-		{ headers: { "x-client-id": "YOUR_CLIENT_ID" } },
+		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc721/${ownerAddress}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
 	);
 	const data = await response.json();
 	// Example response:
@@ -218,28 +189,28 @@ async function getNFTBalances(ownerAddress: string) {
 async function getFilteredEvents() {
 	const params = new URLSearchParams({
 		// Block filters
-		filter_block_number_gte: "17000000",
-		filter_block_number_lte: "17859301",
+		filter_block_number_gte: blockNumberStart,
+		filter_block_number_lte: blockNumberEnd,
 
 		// Time filters
-		filter_block_timestamp_gte: "1715222400",
+		filter_block_timestamp_gte: "{{timestamp}}",
 
 		// Transaction filters
-		filter_from_address: "0x123...",
-		filter_value_gte: "1000000000000000000", // 1 ETH
+		filter_from_address: "{{fromAddress}}",
+		filter_value_gte: "{{value}}", // 1 ETH
 
 		// Pagination
-		page: "0",
-		limit: "20",
+		page: "{{page}}",
+		limit: "{{limit}}",
 
 		// Sorting
-		sort_by: "block_timestamp",
-		sort_order: "desc",
+		sort_by: "{{sortBy}}",
+		sort_order: "{{sortOrder}}",
 	});
 
 	const response = await fetch(
-		`https://1.insight.thirdweb.com/v1/events?${params}`,
-		{ headers: { "x-client-id": "YOUR_CLIENT_ID" } },
+		`https://{{chainId}}.insight.thirdweb.com/v1/events?${params}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
 	);
 	return await response.json();
 }
@@ -250,8 +221,8 @@ async function getFilteredEvents() {
 ```typescript
 async function safeApiCall() {
 	try {
-		const response = await fetch("https://1.insight.thirdweb.com/v1/events", {
-			headers: { "x-client-id": "YOUR_CLIENT_ID" },
+		const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
+			headers: { "x-client-id": "{{clientId}}" },
 		});
 
 		if (!response.ok) {
@@ -276,7 +247,12 @@ async function safeApiCall() {
 1. **Get All Events**
 
 ```typescript
-GET /v1/events;
+GET /v1/events
+
+interface EventsResponse {
+  data: Event[];
+  meta: MetaData;
+}
 ```
 
 2. **Get Contract Events**
@@ -296,7 +272,7 @@ GET /v1/events/:contractAddress/:signature
 1. **Get All Transactions**
 
 ```typescript
-GET / v1 / transactions;
+GET /v1/transactions
 ```
 
 2. **Get Contract Transactions**
@@ -332,7 +308,7 @@ interface ERC20Response {
 GET /v1/tokens/erc721/:ownerAddress
 GET /v1/tokens/erc1155/:ownerAddress
 
-interface TokenBalance {
+interface TokenBalanceResponse {
   data: {
     collectionAddress: string;  // Required
     tokenId: string;           // Required
@@ -347,12 +323,12 @@ interface TokenBalance {
 
 ```typescript
 interface CommonQueryParams {
-	page?: number; // Default: 0
-	limit?: number; // Default: 20, must be > 0
+	page?: number;      // Default: 0
+	limit?: number;     // Default: 20, must be > 0
 	sort_by?: "block_number" | "block_timestamp" | "transaction_index";
 	sort_order?: "asc" | "desc";
-	group_by?: string;
-	aggregate?: string[];
+	group_by?: string;  // Group results by a specific field
+	aggregate?: string[]; // Apply aggregate functions (count, sum, avg, etc.) to grouped results
 }
 ```
 
@@ -390,7 +366,11 @@ interface TransactionFilters {
 	filter_transaction_index?: number;
 	filter_transaction_hash?: string;
 	filter_from_address?: string;
-	filter_value?: number;
+	filter_value?: string;    // Value in wei (e.g., "1000000000000000000" for 1 ETH)
+	filter_value_gte?: string;
+	filter_value_gt?: string;
+	filter_value_lte?: string;
+	filter_value_lt?: string;
 	filter_gas_price?: number;
 	filter_gas?: number;
 	// Additional gte, gt, lte, lt variants for numeric fields

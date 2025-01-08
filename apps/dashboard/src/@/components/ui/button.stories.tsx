@@ -20,7 +20,7 @@ export const AllVariants: Story = {
 
 function Component() {
   return (
-    <div className="flex min-h-screen flex-col gap-6 bg-background p-6 text-foregroun">
+    <div className="flex min-h-screen flex-col gap-6 bg-background p-6 text-foreground">
       <Variants size="default" />
       <Variants size="sm" />
       <Variants size="icon" />
@@ -58,7 +58,7 @@ function Variants(props: {
           {props.size === "icon" ? (
             <StarIcon className="size-4" />
           ) : (
-            "Desctructive"
+            "Destructive"
           )}
         </Button>
       </div>

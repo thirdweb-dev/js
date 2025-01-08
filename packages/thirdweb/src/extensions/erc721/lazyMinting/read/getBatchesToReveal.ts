@@ -15,7 +15,7 @@ import * as TokenURI from "../../__generated__/IERC721A/read/tokenURI.js";
 export interface BatchToReveal {
   batchId: bigint;
   batchUri: string;
-  placeholderMetadata: NFTMetadata;
+  placeholderMetadata: NFTMetadata | undefined;
 }
 
 /**
@@ -82,7 +82,7 @@ export async function getBatchesToReveal(
         tokenId: BigInt(i),
         tokenUri: uri,
         client: options.contract.client,
-      });
+      }).catch(() => undefined);
     }),
   );
 

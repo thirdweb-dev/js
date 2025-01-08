@@ -331,6 +331,12 @@ async function redirects() {
       destination: "/templates/:slug",
       permanent: false,
     },
+    // PREVIOUS CAMPAIGNS
+    {
+      source: "/unlimited-wallets",
+      destination: "/",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }

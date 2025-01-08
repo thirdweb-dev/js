@@ -12,7 +12,7 @@ export async function FaucetSection(props: {
 }) {
   const { chain, twAccount } = props;
 
-  // Check eligibilty.
+  // Check eligibility.
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
   const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 

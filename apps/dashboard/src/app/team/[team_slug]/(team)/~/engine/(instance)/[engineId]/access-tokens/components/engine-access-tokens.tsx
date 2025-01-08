@@ -150,7 +150,7 @@ const KeypairAuthenticationPanel = ({
   return (
     <>
       <Text>
-        Keypair authentication allows your app to geneate short-lived access
+        Keypair authentication allows your app to generate short-lived access
         tokens.
         <br />
         They are securely signed by your backend and verified with a public key.{" "}

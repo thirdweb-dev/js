@@ -162,7 +162,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <RadioGroupItem value="mainnets" id="mainnets" />
-          <Label htmlFor="mainnest">Mainnets Only</Label>
+          <Label htmlFor="mainnets">Mainnets Only</Label>
         </div>
         <div className="flex items-center gap-2">
           <RadioGroupItem value="testnets" id="testnets" />

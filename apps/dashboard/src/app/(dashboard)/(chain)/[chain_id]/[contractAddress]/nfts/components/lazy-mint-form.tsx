@@ -294,7 +294,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 <FormLabel>Image URL</FormLabel>
                 <Input max="6" {...register("customImage")} />
                 <FormHelperText>
-                  If you already have your NFT image preuploaded, you can set
+                  If you already have your NFT image pre-uploaded, you can set
                   the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -305,7 +305,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 <FormLabel>Animation URL</FormLabel>
                 <Input max="6" {...register("customAnimationUrl")} />
                 <FormHelperText>
-                  If you already have your NFT Animation URL preuploaded, you
+                  If you already have your NFT Animation URL pre-uploaded, you
                   can set the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>

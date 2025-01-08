@@ -416,7 +416,7 @@ function PlaygroundHeader(props: {
 
 function RequestConfigSection(props: {
   parameters: BlueprintParameter[];
-  form: ParamtersForm;
+  form: ParametersForm;
   domain: string;
   path: string;
   supportedChainIds: number[];
@@ -502,14 +502,14 @@ function RequestConfigSection(props: {
   );
 }
 
-type ParamtersForm = UseFormReturn<{
+type ParametersForm = UseFormReturn<{
   [x: string]: string | number;
 }>;
 
 function ParameterSection(props: {
   parameters: BlueprintParameter[];
   title: string;
-  form: ParamtersForm;
+  form: ParametersForm;
   domain: string;
   path: string;
   supportedChainIds: number[];

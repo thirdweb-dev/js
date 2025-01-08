@@ -3,7 +3,7 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import { Button } from "../../../../@/components/ui/button";
 import { NebulaIcon } from "../icons/NebulaIcon";
-import { Chatbar } from "./ChatBar";
+import { ChatBar } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
   sendMessage: (message: string) => void;
@@ -26,7 +26,7 @@ export function EmptyStateChatPageContent(props: {
         </h1>
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
-          <Chatbar
+          <ChatBar
             sendMessage={props.sendMessage}
             isChatStreaming={false}
             abortChatStream={() => {

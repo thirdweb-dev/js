@@ -104,7 +104,7 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
     <Form {...form}>
       <form onSubmit={handleSubmit} autoComplete="off">
         <SettingsCard
-          bottomText="Shared Fees will are sent to receipient address"
+          bottomText="Shared Fees will are sent to recipient address"
           errorText={form.getFieldState("payoutAddress").error?.message}
           saveButton={{
             type: "submit",

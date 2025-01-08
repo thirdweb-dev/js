@@ -439,7 +439,7 @@ export function AccountAbstractionSettingsPage(
                   Allowlisted/Blocklisted accounts
                 </FormLabel>
                 <Text>
-                  Select either allowlisted or blockedlisted accounts. Disabling
+                  Select either allowlisted or blocklisted accounts. Disabling
                   this option will allow all accounts.
                 </Text>
               </div>
@@ -460,8 +460,8 @@ export function AccountAbstractionSettingsPage(
                 placeholder="Select allowed or blocked wallets"
                 {...form.register("allowedOrBlockedWallets")}
               >
-                <option value="allowed">Allowedlisted wallets</option>
-                <option value="blocked">Blockedlisted wallets</option>
+                <option value="allowed">Allowlisted wallets</option>
+                <option value="blocked">Blocklisted wallets</option>
               </Select>
             )}
 
