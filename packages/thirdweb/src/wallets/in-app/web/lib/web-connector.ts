@@ -5,6 +5,7 @@ import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import { getUserStatus } from "../../core/actions/get-enclave-user-status.js";
 import { authEndpoint } from "../../core/authentication/authEndpoint.js";
+import { backendAuthenticate } from "../../core/authentication/backend.js";
 import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../../core/authentication/guest.js";
 import { customJwt } from "../../core/authentication/jwt.js";
@@ -351,6 +352,13 @@ export class InAppWebConnector implements InAppConnector {
           storage: webLocalStorage,
         });
       }
+      case "backend": {
+        return backendAuthenticate({
+          client: this.client,
+          walletSecret: args.walletSecret,
+          ecosystem: this.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
           ecosystem: this.ecosystem,
@@ -387,6 +395,7 @@ export class InAppWebConnector implements InAppConnector {
         const authToken = await this.passkeyAuth(args);
         return this.loginWithAuthToken(authToken);
       }
+      case "backend":
       case "phone":
       case "email":
       case "wallet":

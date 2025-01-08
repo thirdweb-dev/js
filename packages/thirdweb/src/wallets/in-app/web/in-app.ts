@@ -139,6 +139,20 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
+ * ### Connect to a backend account
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "backend",
+ *   walletSecret: "...", // Provided by your app
+ * });
+ * ```
+ *
  * ### Connect with custom JWT (any OIDC provider)
  *
  * You can use any OIDC provider to authenticate your users. Make sure to configure it in your dashboard under in-app wallet settings.

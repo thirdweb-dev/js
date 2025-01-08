@@ -26,7 +26,11 @@ export async function getOrCreateInAppWalletConnector(
   connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>,
   ecosystem?: Ecosystem,
 ) {
-  const key = stringify({ clientId: client.clientId, ecosystem });
+  const key = stringify({
+    clientId: client.clientId,
+    ecosystem,
+    partialSecretKey: client.secretKey?.slice(0, 5),
+  });
   if (connectorCache.has(key)) {
     return connectorCache.get(key) as InAppConnector;
   }
