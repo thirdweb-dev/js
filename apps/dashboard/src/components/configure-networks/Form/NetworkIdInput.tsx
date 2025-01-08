@@ -8,9 +8,7 @@ export const NetworkIDInput: React.FC<{
   form: UseFormReturn<NetworkConfigFormData>;
   disabled?: boolean;
 }> = ({ form, disabled }) => {
-  const slug = form.watch("slug");
   const { slugToChain } = useAllChainsData();
-  const existingChain = slugToChain.get(slug);
 
   return (
     <FormFieldSetup
@@ -29,12 +27,7 @@ export const NetworkIDInput: React.FC<{
       }
       errorMessage={
         form.formState.errors.slug?.type === "taken" ? (
-          <>
-            Can not use {`"${slug}"`}.{" "}
-            {slug &&
-              existingChain &&
-              `It is being used by "${existingChain.name}"`}
-          </>
+          <>Slug is taken by other network</>
         ) : undefined
       }
     >
@@ -59,7 +52,13 @@ export const NetworkIDInput: React.FC<{
                 return true;
               }
 
-              return !slugToChain.has(_slug);
+              const chainForSlug = slugToChain.get(_slug);
+
+              if (chainForSlug && !chainForSlug.isCustom) {
+                return false;
+              }
+
+              return true;
             },
           },
         })}
