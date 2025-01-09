@@ -7,6 +7,7 @@ import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { AssetTabs } from "../../../../react/web/ui/ConnectWallet/screens/ViewAssets.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import type { Hex } from "../../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
@@ -114,6 +115,11 @@ export type PayUIOptions = Prettify<
         | {
             type: "fiat";
             status: BuyWithFiatStatus;
+          }
+        | {
+            type: "transaction";
+            chainId: number;
+            transactionHash: Hex;
           },
     ) => void;
     /**

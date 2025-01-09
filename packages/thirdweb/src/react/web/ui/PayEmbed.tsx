@@ -365,7 +365,13 @@ export function PayEmbed(props: PayEmbedProps) {
               onBack={() => {
                 setScreen("buy");
               }}
-              onTxSent={() => {}}
+              onTxSent={(data) => {
+                props.payOptions?.onPurchaseSuccess?.({
+                  type: "transaction",
+                  chainId: data.chain.id,
+                  transactionHash: data.transactionHash,
+                });
+              }}
             />
           )}
       </>
