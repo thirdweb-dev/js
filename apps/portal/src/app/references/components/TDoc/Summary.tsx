@@ -1,9 +1,10 @@
 import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import type { FunctionSignature } from "typedoc-better-json";
-import { CodeBlock, InlineCode } from "../../../../components/Document/Code";
+import { CodeBlock } from "../../../../components/Document/Code";
 import { DocLink } from "../../../../components/Document/DocLink";
 import { Heading } from "../../../../components/Document/Heading";
+import { InlineCode } from "../../../../components/Document/InlineCode";
 import {
   OrderedList,
   UnorderedList,
