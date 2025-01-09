@@ -1,4 +1,5 @@
 import { DocLink, Paragraph } from "@/components/Document";
+import { InlineCode } from "@/components/Document/InlineCode";
 import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import {
@@ -11,7 +12,7 @@ import {
   getFunctionSignature,
 } from "typedoc-better-json";
 import { Callout } from "../../../../components/Document/Callout";
-import { CodeBlock, InlineCode } from "../../../../components/Document/Code";
+import { CodeBlock } from "../../../../components/Document/Code";
 import { Details } from "../../../../components/Document/Details";
 import { Heading } from "../../../../components/Document/Heading";
 import { DeprecatedCalloutTDoc } from "./Deprecated";
