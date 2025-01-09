@@ -167,7 +167,7 @@ export { stringify } from "../utils/json.js";
 // ------------------------------------------------
 // values
 // ------------------------------------------------
-export { maxUint256 } from "viem";
+export { maxUint256 } from "ox/Solidity";
 
 // ------------------------------------------------
 // jwt

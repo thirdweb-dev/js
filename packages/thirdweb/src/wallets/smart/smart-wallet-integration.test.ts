@@ -180,6 +180,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         account: smartAccount,
       });
       expect(tx.transactionHash).toHaveLength(66);
+      await sleep(1000);
       const isDeployed = await isContractDeployed(accountContract);
       expect(isDeployed).toEqual(true);
       const balance = await balanceOf({
