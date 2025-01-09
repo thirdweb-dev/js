@@ -8,6 +8,7 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../../transaction/utils.js";
+import type { Hex } from "../../../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
@@ -74,6 +75,11 @@ export type SendTransactionPayModalConfig =
           | {
               type: "fiat";
               status: BuyWithFiatStatus;
+            }
+          | {
+              type: "transaction";
+              chainId: number;
+              transactionHash: Hex;
             },
       ) => void;
     }
