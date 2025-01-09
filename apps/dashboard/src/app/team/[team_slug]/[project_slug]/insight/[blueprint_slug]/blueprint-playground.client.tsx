@@ -111,7 +111,7 @@ export function BlueprintPlayground(props: {
           abortController.abort();
         }
       }}
-      domain={`https://{chainId}.insight.${thirdwebDomain}.com`}
+      domain={`https://insight.${thirdwebDomain}.com`}
       path={props.path}
       isInsightEnabled={props.isInsightEnabled}
       projectSettingsLink={props.projectSettingsLink}
@@ -122,12 +122,12 @@ export function BlueprintPlayground(props: {
 
 function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
   const parameters = [..._parameters];
-  // if chainId parameter is not already present - add it, because we need it for the domain
-  const chainIdParameter = parameters.find((p) => p.name === "chainId");
+  // if chain parameter is not already mentioned - add it, its required
+  const chainIdParameter = parameters.find((p) => p.name === "chain");
   if (!chainIdParameter) {
     parameters.unshift({
-      name: "chainId",
-      in: "path",
+      name: "chain",
+      in: "query",
       required: true,
       schema: {
         type: "integer",
@@ -561,14 +561,14 @@ function ParameterSection(props: {
                     key={param.name}
                     className={cn(
                       "grid items-center",
-                      param.name === "chainId"
+                      param.name === "chain"
                         ? "grid-cols-1 lg:grid-cols-2"
                         : "grid-cols-2",
                     )}
                   >
                     <div className="flex h-full flex-row flex-wrap items-center justify-between gap-1 border-r px-3 py-2">
                       <div className="font-medium font-mono text-sm">
-                        {param.name === "chainId" ? "chainId" : param.name}
+                        {param.name}
                       </div>
                       {param.required && (
                         <Badge
@@ -580,7 +580,7 @@ function ParameterSection(props: {
                       )}
                     </div>
                     <div className="relative">
-                      {param.name === "chainId" ? (
+                      {param.name === "chain" ? (
                         <SingleNetworkSelector
                           chainId={
                             field.value ? Number(field.value) : undefined
@@ -886,6 +886,8 @@ function createParametersFormSchema(parameters: BlueprintParameter[]) {
     const paramSchema = openAPIV3ParamToZodFormSchema(param);
     if (paramSchema) {
       shape[param.name] = paramSchema;
+    } else {
+      shape[param.name] = z.string();
     }
   }
 
