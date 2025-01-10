@@ -211,8 +211,10 @@ export async function deployContractfromDeployMetadata(
             (await getAllDefaultConstructorParamsForImplementation({
               chain,
               client,
+              contractId: deployMetadata.name,
             })),
           publisher: deployMetadata.publisher,
+          version: deployMetadata.version,
         });
 
       const initializeTransaction = await getInitializeTransaction({

@@ -36,6 +36,8 @@ export type MarketplaceContractParams = {
 export type DeployMarketplaceContractOptions = Prettify<
   ClientAndChainAndAccount & {
     params: MarketplaceContractParams;
+  } & {
+    version?: string;
   }
 >;
 
@@ -46,7 +48,7 @@ export type DeployMarketplaceContractOptions = Prettify<
 export async function deployMarketplaceContract(
   options: DeployMarketplaceContractOptions,
 ) {
-  const { chain, client, account, params } = options;
+  const { chain, client, account, params, version } = options;
   const WETH = await getOrDeployInfraContract({
     chain,
     client,
@@ -127,6 +129,7 @@ export async function deployMarketplaceContract(
           nativeTokenWrapper: WETH.address,
         } as MarketplaceConstructorParams[number],
       },
+      version,
     });
 
   const initializeTransaction = await getInitializeTransaction({

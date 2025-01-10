@@ -88,7 +88,7 @@ export async function deployPackContract(options: DeployPackContractOptions) {
       chain,
       client,
       account,
-      contractId: "Forwarder",
+      contractId: "ForwarderEOAOnly",
     }),
   ]);
   const { cloneFactoryContract, implementationContract } =

@@ -136,6 +136,7 @@ async function getTransactionsForImplementation(options: {
     (await getAllDefaultConstructorParamsForImplementation({
       chain,
       client,
+      contractId: deployMetadata.name,
     }));
 
   const result = await getDeployedInfraContract({
@@ -224,6 +225,7 @@ async function getTransactionsForMaketplaceV3(options: {
 export async function getAllDefaultConstructorParamsForImplementation(args: {
   chain: Chain;
   client: ThirdwebClient;
+  contractId: string;
 }) {
   const { chain, client } = args;
   const isZkSync = await isZkSyncChain(chain);
@@ -234,11 +236,14 @@ export async function getAllDefaultConstructorParamsForImplementation(args: {
       nativeTokenWrapper: weth,
     };
   }
+
+  const forwarderContractId =
+    args.contractId === "Pack" ? "ForwarderEOAOnly" : "Forwarder";
   const [forwarder, weth] = await Promise.all([
     computePublishedContractAddress({
       chain,
       client,
-      contractId: "Forwarder",
+      contractId: forwarderContractId,
     }),
     computePublishedContractAddress({
       chain,
