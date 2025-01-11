@@ -1,4 +1,3 @@
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
@@ -13,6 +12,7 @@ import {
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { type ThirdwebClient, prepareTransaction } from "thirdweb";
@@ -20,6 +20,7 @@ import { useSendTransaction } from "thirdweb/react";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
+import { getSDKTheme } from "../../../components/sdk-component-theme";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 
@@ -97,7 +98,7 @@ export function Chats(props: {
 
   return (
     <div
-      className="flex max-h-full flex-1 flex-col overflow-hidden"
+      className="relative flex max-h-full flex-1 flex-col overflow-hidden"
       ref={chatContainerRef}
     >
       <ScrollShadow
@@ -113,27 +114,34 @@ export function Chats(props: {
                 props.isChatStreaming && index === props.messages.length - 1;
               return (
                 <div
+                  className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
                   key={index}
                 >
-                  <div
-                    className={cn(
-                      "fade-in-0 flex min-w-0 animate-in gap-3 duration-300",
-                    )}
-                  >
-                    <div className="-translate-y-[2px] relative shrink-0 ">
-                      {message.type === "user" ? (
-                        <GradientAvatar
-                          id={props.twAccount?.id || "default"}
-                          // TODO- set account image when available in account object
-                          src={""}
-                          className="size-8 shrink-0 rounded-lg"
-                          client={props.client}
+                  {message.type === "user" ? (
+                    <div className="flex justify-end gap-3">
+                      <div className="max-w-[80%] overflow-auto rounded-xl border bg-muted/50 px-4 py-2">
+                        <MarkdownRenderer
+                          skipHtml
+                          markdownText={message.text}
+                          code={{
+                            ignoreFormattingErrors: true,
+                            className: "bg-transparent",
+                          }}
+                          className="text-foreground [&>*:last-child]:mb-0"
+                          p={{ className: "text-foreground leading-normal" }}
+                          li={{ className: "text-foreground" }}
+                          inlineCode={{ className: "border-none" }}
                         />
-                      ) : (
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      {/* Left Icon */}
+                      <div className="-translate-y-[2px] relative shrink-0">
                         <div
                           className={cn(
-                            "flex size-8 items-center justify-center rounded-lg",
+                            "flex size-9 items-center justify-center rounded-full",
                             message.type === "assistant" &&
                               "border bg-muted/50",
                             message.type === "error" && "border",
@@ -152,49 +160,57 @@ export function Chats(props: {
                             <AlertCircleIcon className="size-5 text-destructive-text" />
                           )}
                         </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 grow">
-                      {message.type === "assistant" ? (
-                        <MarkdownRenderer
-                          skipHtml
-                          markdownText={message.text}
-                          code={{
-                            disableCodeHighlight: isMessagePending,
-                            ignoreFormattingErrors: true,
-                          }}
-                          className="text-foreground"
-                          p={{ className: "text-foreground" }}
-                          li={{ className: "text-foreground" }}
-                        />
-                      ) : message.type === "error" ? (
-                        <span className="text-destructive-text leading-loose">
-                          {message.text}
-                        </span>
-                      ) : message.type === "send_transaction" ? (
-                        <ExecuteTransaction
-                          txData={message.data}
-                          twAccount={props.twAccount}
-                          client={props.client}
-                        />
-                      ) : (
-                        <span className="leading-loose">{message.text}</span>
-                      )}
+                      </div>
 
-                      {message.type === "assistant" &&
-                        !props.isChatStreaming &&
-                        props.sessionId &&
-                        message.request_id && (
-                          <MessageActions
-                            messageText={message.text}
-                            authToken={props.authToken}
-                            requestId={message.request_id}
-                            sessionId={props.sessionId}
-                            className="mt-4"
-                          />
-                        )}
+                      {/* Right Message */}
+                      <div className="min-w-0 grow">
+                        <ScrollShadow className="rounded-lg">
+                          {message.type === "assistant" ? (
+                            <MarkdownRenderer
+                              skipHtml
+                              markdownText={message.text}
+                              code={{
+                                disableCodeHighlight: isMessagePending,
+                                ignoreFormattingErrors: true,
+                              }}
+                              className="text-foreground [&>*:last-child]:mb-0"
+                              p={{
+                                className: "text-foreground",
+                              }}
+                              li={{ className: "text-foreground" }}
+                            />
+                          ) : message.type === "error" ? (
+                            <span className="text-destructive-text leading-loose">
+                              {message.text}
+                            </span>
+                          ) : message.type === "send_transaction" ? (
+                            <ExecuteTransaction
+                              txData={message.data}
+                              twAccount={props.twAccount}
+                              client={props.client}
+                            />
+                          ) : (
+                            <span className="leading-loose">
+                              {message.text}
+                            </span>
+                          )}
+                        </ScrollShadow>
+
+                        {message.type === "assistant" &&
+                          !props.isChatStreaming &&
+                          props.sessionId &&
+                          message.request_id && (
+                            <MessageActions
+                              messageText={message.text}
+                              authToken={props.authToken}
+                              requestId={message.request_id}
+                              sessionId={props.sessionId}
+                              className="mt-4"
+                            />
+                          )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
@@ -327,8 +343,13 @@ function SendTransactionButton(props: {
   twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
+  const { theme } = useTheme();
   const { txData } = props;
-  const sendTransaction = useSendTransaction();
+  const sendTransaction = useSendTransaction({
+    payModal: {
+      theme: getSDKTheme(theme === "light" ? "light" : "dark"),
+    },
+  });
   const chain = useV5DashboardChain(txData.chainId);
 
   return (

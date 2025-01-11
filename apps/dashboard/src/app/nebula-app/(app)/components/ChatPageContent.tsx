@@ -398,7 +398,7 @@ export function ChatPageContent(props: {
               isChatStreaming={isChatStreaming}
               authToken={props.authToken}
               sessionId={sessionId}
-              className="min-w-0 pt-10 pb-32"
+              className="min-w-0 pt-6 pb-32"
               twAccount={props.account}
               client={client}
               enableAutoScroll={enableAutoScroll}
