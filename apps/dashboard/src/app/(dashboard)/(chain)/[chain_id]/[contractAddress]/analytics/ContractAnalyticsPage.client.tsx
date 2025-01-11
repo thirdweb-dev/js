@@ -8,6 +8,8 @@ import { ContractAnalyticsPage } from "./ContractAnalyticsPage";
 
 export function ContractAnalyticsPageClient(props: {
   contract: ThirdwebContract;
+  writeFnSelectorToNameRecord: Record<string, string>;
+  eventSelectorToNameRecord: Record<string, string>;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -23,5 +25,11 @@ export function ContractAnalyticsPageClient(props: {
     return <RedirectToContractOverview contract={props.contract} />;
   }
 
-  return <ContractAnalyticsPage contract={props.contract} />;
+  return (
+    <ContractAnalyticsPage
+      contract={props.contract}
+      writeFnSelectorToNameRecord={props.writeFnSelectorToNameRecord}
+      eventSelectorToNameRecord={props.eventSelectorToNameRecord}
+    />
+  );
 }

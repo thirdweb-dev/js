@@ -195,6 +195,7 @@ export { parseAbiParams } from "../utils/contract/parse-abi-params.js";
 export { max, min } from "../utils/bigint.js";
 
 export { toFunctionSelector } from "viem";
+export { toEventSelector } from "viem";
 export type {
   Abi,
   AbiFunction,
