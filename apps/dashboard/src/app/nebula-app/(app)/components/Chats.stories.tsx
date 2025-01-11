@@ -216,6 +216,28 @@ function Story() {
           ]}
         />
       </BadgeContainer>
+
+      <BadgeContainer label="User Markdown">
+        <Chats
+          enableAutoScroll={true}
+          setEnableAutoScroll={() => {}}
+          client={getThirdwebClient()}
+          authToken="xxxxx"
+          isChatStreaming={false}
+          sessionId="xxxxx"
+          twAccount={accountStub()}
+          messages={[
+            {
+              text: responseWithCodeMarkdown,
+              type: "user",
+            },
+            {
+              text: randomLorem(20),
+              type: "presence",
+            },
+          ]}
+        />
+      </BadgeContainer>
       <Toaster richColors />
     </div>
   );

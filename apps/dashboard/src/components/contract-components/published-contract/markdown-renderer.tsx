@@ -22,6 +22,10 @@ export const MarkdownRenderer: React.FC<{
   code?: {
     disableCodeHighlight?: boolean;
     ignoreFormattingErrors?: boolean;
+    className?: string;
+  };
+  inlineCode?: {
+    className?: string;
   };
   p?: {
     className?: string;
@@ -107,6 +111,7 @@ export const MarkdownRenderer: React.FC<{
                     <PlainTextCodeBlock
                       {...cleanedProps(props)}
                       code={onlyText(props.children).trim()}
+                      className={markdownProps.code?.className}
                     />
                   </div>
                 );
@@ -120,12 +125,18 @@ export const MarkdownRenderer: React.FC<{
                     {...cleanedProps(props)}
                     code={onlyText(props.children).trim()}
                     ignoreFormattingErrors={code?.ignoreFormattingErrors}
+                    className={markdownProps.code?.className}
                   />
                 </div>
               );
             }
 
-            return <InlineCode code={onlyText(props.children).trim()} />;
+            return (
+              <InlineCode
+                code={onlyText(props.children).trim()}
+                className={markdownProps.inlineCode?.className}
+              />
+            );
           },
 
           p: (props) => (
@@ -178,7 +189,7 @@ export const MarkdownRenderer: React.FC<{
           li: ({ children: c, ...props }) => (
             <li
               className={cn(
-                "mb-2 text-muted-foreground [&>p]:m-0",
+                "mb-2 text-muted-foreground leading-loose [&>p]:m-0",
                 markdownProps.li?.className,
               )}
               {...cleanedProps(props)}

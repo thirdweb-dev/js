@@ -106,7 +106,7 @@ export async function ContractCard({
   return (
     <article
       className={
-        "relative flex min-h-[220px] flex-col rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted"
+        "relative flex min-h-[220px] flex-col rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted/70"
       }
     >
       <TrackedLinkTW
@@ -203,9 +203,9 @@ export async function ContractCard({
 
         <div className="flex items-center justify-between">
           <Button
-            variant="primary"
+            variant="outline"
             size="sm"
-            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs"
+            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs hover:bg-inverted hover:text-inverted-foreground"
             asChild
           >
             <Link
