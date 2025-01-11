@@ -15,7 +15,7 @@ Useful for preparing, simulating and manipulating transactions before sending th
 ## Usage
 
 ```csharp
-ThirdwebTransaction transaction = await ThirdwebContract.Prepare(wallet, contract, "methodName", weiValue, parameters);
+ThirdwebTransaction transaction = await contract.Prepare(wallet, contract, "methodName", weiValue, parameters);
 ```
 
 <Details summary="Parameters">

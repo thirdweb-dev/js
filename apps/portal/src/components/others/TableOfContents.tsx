@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -29,6 +30,7 @@ export function TableOfContentsSideBar(props: {
 }) {
   const [nodes, setNodes] = useState<TableOfContentNode[]>([]);
   const tocRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const [hideNav, setHideNav] = useState(false);
   const { filterHeading } = props;
@@ -44,6 +46,9 @@ export function TableOfContentsSideBar(props: {
     const anchorsAll = Array.from(
       root.querySelectorAll("a[href^='#']"),
     ) as HTMLAnchorElement[];
+
+    // using pathname to fix exhaustive dependency lint warning without suppressing it entirely
+    tocRef.current?.setAttribute("data-pathname", pathname);
 
     // hide anchors inside hidden elements
     const anchors = anchorsAll.filter((anchor) => {
@@ -104,7 +109,7 @@ export function TableOfContentsSideBar(props: {
     return () => {
       observer.disconnect();
     };
-  }, [filterHeading]);
+  }, [filterHeading, pathname]);
 
   return (
     <nav

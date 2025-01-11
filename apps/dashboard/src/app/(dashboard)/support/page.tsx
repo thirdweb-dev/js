@@ -201,7 +201,7 @@ export default function SupportPage() {
           <div className="flex flex-col gap-2">
             <CardHeader>
               <CardTitle className="font-bold text-3xl">
-                Discord Comunity
+                Discord Community
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-6">

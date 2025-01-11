@@ -13,7 +13,6 @@ import {
 	Step
 } from "@doc";
 import {ExternalLink} from "lucide-react";
-import ConnectWalletHero from "./connect-wallet-hero.webp";
 
 export const metadata = createMetadata({
 	title: "Connect users with In-App Wallet",
@@ -137,7 +136,7 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -168,7 +167,7 @@ const preLogin = async (email: string) => {
 
 const handleLogin = async (email: string, verificationCode: string) => {
 	// verify email and connect
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -199,7 +198,7 @@ const preLogin = async (phoneNumber: string) => {
 
 const handleLogin = async (phoneNumber: string, verificationCode: string) => {
 	// verify phone number and connect
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -226,7 +225,7 @@ import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet({
 			auth: {
 				passkeyDomain: "example.com", // defaults to current url
@@ -254,7 +253,7 @@ import { sepolia } from "thirdweb/chains";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -277,7 +276,7 @@ import { inAppWallet } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -303,7 +302,7 @@ import { inAppWallet } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -325,7 +324,7 @@ import { inAppWallet } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,

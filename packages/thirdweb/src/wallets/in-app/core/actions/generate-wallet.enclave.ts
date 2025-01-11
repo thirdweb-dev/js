@@ -31,7 +31,9 @@ export async function generateWallet({
   );
 
   if (!response.ok) {
-    throw new Error("Failed to generate wallet");
+    throw new Error(
+      `Failed to generate wallet - ${response.status} ${response.statusText}`,
+    );
   }
 
   const { wallet } = (await response.json()) as {

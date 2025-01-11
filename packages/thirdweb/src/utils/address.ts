@@ -5,7 +5,7 @@ import { keccak256 } from "./hashing/keccak256.js";
 export type AddressInput = string;
 export type Address = `0x${string}`;
 
-const ADRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const IS_ADDRESS_CACHE = new LruMap<boolean>(4096);
 
 /**
@@ -26,16 +26,9 @@ export function isAddress(address: string): address is Address {
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return IS_ADDRESS_CACHE.get(address)!;
   }
-  const result = (() => {
-    if (!ADRESS_REGEX.test(address)) {
-      return false;
-    }
-    if (address.toLowerCase() === address) {
-      return true;
-    }
-
-    return checksumAddress(address) === address;
-  })();
+  const result =
+    ADDRESS_REGEX.test(address) &&
+    (address.toLowerCase() === address || checksumAddress(address) === address);
   IS_ADDRESS_CACHE.set(address, result);
   return result;
 }

@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.bitget.web3",
   name: "Bitget Wallet",
   homepage: "https://web3.bitget.com",
-  image_id: "68e8063a-ff69-4941-3b40-af09e2fcd700",
+  image_id: "ac927cca-531b-40e1-0ff2-4eefe946d100",
   app: {
     browser: "https://bitkeep.com",
     ios: "https://web3.bitget.com/en/wallet-download?type=0",

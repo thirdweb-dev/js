@@ -2,13 +2,18 @@ import { getProject } from "@/api/projects";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { notFound } from "next/navigation";
 import { AccountAbstractionSettingsPage } from "../../../../../../components/smart-wallets/SponsorshipPolicies";
+import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const { team_slug, project_slug } = await props.params;
-  const project = await getProject(team_slug, project_slug);
+
+  const [account, project] = await Promise.all([
+    getValidAccount(),
+    getProject(team_slug, project_slug),
+  ]);
 
   if (!project) {
     notFound();
@@ -25,6 +30,7 @@ export default async function Page(props: {
       <AccountAbstractionSettingsPage
         apiKeyServices={apiKey.services || []}
         trackingCategory="account-abstraction-project-settings"
+        twAccount={account}
       />
     </ChakraProviderSetup>
   );

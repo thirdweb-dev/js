@@ -1,5 +1,11 @@
 /**
- * @internal
+ * Round up a number to a certain decimal place
+ * @example
+ * ```ts
+ * import { formatNumber } from "thirdweb/utils";
+ * const value = formatNumber(12.1214141, 1); // 12.1
+ * ```
+ * @utils
  */
 export function formatNumber(value: number, decimalPlaces: number) {
   if (value === 0) return 0;

@@ -26,6 +26,16 @@ export const sidebar: SideBar = {
       href: `${insightSlug}/use-cases`,
     },
     {
+      name: "Agents & LLMs",
+      href: `${insightSlug}/agents-and-llms`,
+      links: [
+        {
+          name: "llms.txt",
+          href: `${insightSlug}/agents-and-llms/llmstxt`,
+        },
+      ],
+    },
+    {
       name: "API Reference",
       href: "https://insight-api.thirdweb.com/reference",
     },

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -15,6 +16,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,7 +38,8 @@ const SHARED_METADATA_FORM_ID = "shared-metadata-form";
 export const SharedMetadataForm: React.FC<{
   contract: ThirdwebContract;
   setOpen: Dispatch<SetStateAction<boolean>>;
-}> = ({ contract, setOpen }) => {
+  twAccount: Account | undefined;
+}> = ({ contract, setOpen, twAccount }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
@@ -114,12 +117,17 @@ export const SharedMetadataForm: React.FC<{
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
+  const setSharedMetaNotifications = useTxNotifications(
+    "Shared metadata updated successfully",
+    "Failed to update shared metadata",
+  );
+
   return (
     <>
       <form
         className="mt-6 flex flex-col gap-6"
         id={SHARED_METADATA_FORM_ID}
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (data) => {
           if (!address) {
             toast.error("Please connect your wallet.");
             return;
@@ -141,7 +149,7 @@ export const SharedMetadataForm: React.FC<{
               contract,
               nft: parseAttributes(dataWithCustom),
             });
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -161,14 +169,10 @@ export const SharedMetadataForm: React.FC<{
               },
             });
 
-            toast.promise(promise, {
-              loading: "Setting shared metadata",
-              error: "Error setting NFT metadata",
-              success: "Shared metadata updated successfully",
-            });
+            setSharedMetaNotifications.onSuccess();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to set shared metadata");
+            setSharedMetaNotifications.onError(err);
           }
         })}
       >
@@ -243,7 +247,7 @@ export const SharedMetadataForm: React.FC<{
                 <FormLabel>Image URL</FormLabel>
                 <Input max="6" {...register("customImage")} />
                 <FormHelperText>
-                  If you already have your NFT image preuploaded, you can set
+                  If you already have your NFT image pre-uploaded, you can set
                   the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -254,7 +258,7 @@ export const SharedMetadataForm: React.FC<{
                 <FormLabel>Animation URL</FormLabel>
                 <Input max="6" {...register("customAnimationUrl")} />
                 <FormHelperText>
-                  If you already have your NFT Animation URL preuploaded, you
+                  If you already have your NFT Animation URL pre-uploaded, you
                   can set the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -277,11 +281,11 @@ export const SharedMetadataForm: React.FC<{
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={SHARED_METADATA_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
+          twAccount={twAccount}
         >
           Set NFT Metadata
         </TransactionButton>

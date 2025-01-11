@@ -12,6 +12,10 @@ export type CodeProps = {
   scrollableClassName?: string;
   keepPreviousDataOnCodeChange?: boolean;
   copyButtonClassName?: string;
+  scrollableContainerClassName?: string;
+  shadowColor?: string;
+  ignoreFormattingErrors?: boolean;
+  onCopy?: (code: string) => void;
 };
 
 export const CodeClient: React.FC<CodeProps> = ({
@@ -21,10 +25,17 @@ export const CodeClient: React.FC<CodeProps> = ({
   scrollableClassName,
   keepPreviousDataOnCodeChange = false,
   copyButtonClassName,
+  ignoreFormattingErrors,
+  scrollableContainerClassName,
+  shadowColor,
+  onCopy,
 }) => {
   const codeQuery = useQuery({
     queryKey: ["html", code],
-    queryFn: () => getCodeHtml(code, lang),
+    queryFn: () =>
+      getCodeHtml(code, lang, {
+        ignoreFormattingErrors: ignoreFormattingErrors,
+      }),
     placeholderData: keepPreviousDataOnCodeChange
       ? keepPreviousData
       : undefined,
@@ -38,6 +49,9 @@ export const CodeClient: React.FC<CodeProps> = ({
         className={className}
         scrollableClassName={scrollableClassName}
         copyButtonClassName={copyButtonClassName}
+        scrollableContainerClassName={scrollableContainerClassName}
+        shadowColor={shadowColor}
+        onCopy={onCopy}
       />
     );
   }
@@ -49,6 +63,9 @@ export const CodeClient: React.FC<CodeProps> = ({
       className={className}
       scrollableClassName={scrollableClassName}
       copyButtonClassName={copyButtonClassName}
+      scrollableContainerClassName={scrollableContainerClassName}
+      shadowColor={shadowColor}
+      onCopy={onCopy}
     />
   );
 };

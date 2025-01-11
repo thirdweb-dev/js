@@ -14,7 +14,6 @@ import {
   useConfirmEmail,
   useResendEmailConfirmation,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -22,6 +21,7 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useActiveAccount } from "thirdweb/react";
 import { shortenString } from "utils/usedapp-external";
 import { TitleAndDescription } from "./Title";
 import {
@@ -53,7 +53,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const trackEvent = useTrack();
-  const { user } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
 
   const { onSuccess: onResendSuccess, onError: onResendError } =
     useTxNotifications(
@@ -183,9 +183,9 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
           ) : (
             <>
               We've linked{" "}
-              <span className="font-mono">
-                {shortenString(user?.address ?? "")}
-              </span>{" "}
+              {address && (
+                <span className="font-mono">{shortenString(address)}</span>
+              )}
               wallet to <span className="font-medium">{email}</span> thirdweb
               account.
             </>

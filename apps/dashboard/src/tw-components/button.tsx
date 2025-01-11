@@ -79,7 +79,7 @@ export const Button = forwardRef<ButtonProps, "button">(
   },
 );
 
-export interface LinkButtonProps extends ButtonProps {
+interface LinkButtonProps extends ButtonProps {
   href: string;
   isExternal?: boolean;
   noIcon?: true;

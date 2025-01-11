@@ -1,5 +1,11 @@
 import { DocImage } from "@doc";
+import billingSettings from "../assets/billing-settings.png";
+import invoicesSettings from "../assets/invoices-settings.png";
 import usageSettings from "../assets/usage-settings.png";
+import rpcSettings from "../assets/rpc-settings.png";
+import storageSettings from "../assets/storage-settings.png";
+
+
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
@@ -18,27 +24,42 @@ export const metadata = createMetadata({
 
 To update your billing information:
 
-1. Navigate to the Billing section in settings.
-2. Select “Manage Billing” to redirect you to the Stripe Customer portal
-3. Select “Update information” under the **BILLING INFORMATION** section
-4. Update any changes and save.
+1. On your dashboard, navigate to **Settings > Billing > Manage Billing**.
+2. This will redirect you to the Stripe Customer Portal.
+3. In the Stripe Customer Portal, you can:
+   - Update the card used for payments or add a new one.
+   - Update billing information, such as your address.
+   - Save any changes made.
 
-## View past invoices
+<DocImage src={billingSettings} />
 
-To view past invoices:
+## View Past Invoices
 
-1. Navigate to the Billing section in settings.
-2. Select “Manage Billing” to redirect you to the Stripe Customer portal
-3. View each past invoices below the INVOICE HISTORY section.
+To view your past invoices:
 
-## View account usage
+1. On your dashboard, navigate to **Settings > Billing > Manage Billing**.
+2. In the Stripe Customer Portal, scroll to the **Invoice History** section.
+3. View or download your past invoices.
 
-Check your current usage and limitations by visiting the 'Usage' section in your account settings
+<DocImage src={invoicesSettings} />
 
-- Number of RPC requests
-- Number of Storage Gateway requests
-- Total size of files pinned
-- Number of In-App Wallets created
-- Total sponsored fees using paymaster for wallets with account abstraction enabled
+## View Account Usage
+
+To check your current usage and limits:
+
+1. Visit the **Usage** tab in your dashboard.
+2. The **Usage** tab is divided into two sections:
+
+#### Overview
+   - Number of In-App Wallets created
+   - Total sponsored fees for wallets with account abstraction enabled
+   - Number of RPC requests
+   - Number of Storage Gateway requests
 
 <DocImage src={usageSettings} />
+<DocImage src={rpcSettings} />
+
+#### Storage
+   - Total size of files pinned
+
+<DocImage src={storageSettings} />

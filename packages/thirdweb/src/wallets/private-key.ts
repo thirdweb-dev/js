@@ -1,19 +1,19 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import type {
-  SignableMessage,
-  TransactionSerializable,
-  TypedData,
-  TypedDataDefinition,
-} from "viem";
+import * as ox__Authorization from "ox/Authorization";
+import * as ox__Secp256k1 from "ox/Secp256k1";
+import type * as ox__TypedData from "ox/TypedData";
 import { publicKeyToAddress } from "viem/utils";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import type { AuthorizationRequest } from "../transaction/actions/eip7702/authorization.js";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
+import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
+import type { Prettify } from "../utils/type-utils.js";
 import type { Account } from "./interfaces/wallet.js";
 
 export type PrivateKeyToAccountOptions = {
@@ -46,6 +46,13 @@ export type PrivateKeyToAccountOptions = {
   privateKey: string;
 };
 
+type Message = Prettify<
+  | string
+  | {
+      raw: Hex | Uint8Array;
+    }
+>;
+
 /**
  * Get an `Account` object from a private key.
  * @param options - The options for `privateKeyToAccount`
@@ -69,14 +76,12 @@ export function privateKeyToAccount(
   const privateKey = `0x${options.privateKey.replace(/^0x/, "")}` satisfies Hex;
 
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
-  const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
+  const address = publicKeyToAddress(publicKey);
 
   const account = {
     address,
     sendTransaction: async (
-      // TODO: figure out how we would pass our "chain" object in here?
-      // maybe we *do* actually have to take in a tx object instead of the raw tx?
-      tx: TransactionSerializable & { chainId: number },
+      tx: SerializableTransaction & { chainId: number },
     ) => {
       const rpcRequest = getRpcClient({
         client: client,
@@ -94,28 +99,35 @@ export function privateKeyToAccount(
         transactionHash,
       };
     },
-    signMessage: async ({ message }: { message: SignableMessage }) => {
+    signMessage: async ({ message }: { message: Message }) => {
       return signMessage({
         message,
         privateKey,
       });
     },
     signTypedData: async <
-      const typedData extends TypedData | Record<string, unknown>,
+      const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
     >(
-      _typedData: TypedDataDefinition<typedData, primaryType>,
+      _typedData: ox__TypedData.Definition<typedData, primaryType>,
     ) => {
       return signTypedData({
         ..._typedData,
         privateKey,
       });
     },
-    signTransaction: async (tx: TransactionSerializable) => {
+    signTransaction: async (tx: SerializableTransaction) => {
       return signTransaction({
         transaction: tx,
         privateKey,
       });
+    },
+    signAuthorization: async (authorization: AuthorizationRequest) => {
+      const signature = ox__Secp256k1.sign({
+        payload: ox__Authorization.getSignPayload(authorization),
+        privateKey: privateKey,
+      });
+      return ox__Authorization.from(authorization, { signature });
     },
   };
 

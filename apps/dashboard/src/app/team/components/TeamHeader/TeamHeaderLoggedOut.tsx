@@ -35,7 +35,7 @@ export function TeamHeaderLoggedOutDesktopUI(props: {
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
-            Sign in
+            Connect Wallet
           </Link>
         </Button>
       </div>
@@ -64,7 +64,7 @@ export function TeamHeaderLoggedOutMobileUI(props: {
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
-            Sign in
+            Connect Wallet
           </Link>
         </Button>
         <MobileBurgerMenuButton type="loggedOut" />

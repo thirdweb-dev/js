@@ -1,32 +1,26 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { isAfter } from "date-fns";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ChevronRightIcon, XIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
-function shouldHideAnnouncement(pathname: string) {
-  const paths = pathname.slice(1).split("/");
-
-  // hide on /login
-  if (paths.length === 1 && paths[0] === "login") {
-    return true;
-  }
-
-  return false;
-}
-
-function AnnouncementBanner(props: {
+export function AnnouncementBanner(props: {
   href: string;
   label: string;
   trackingLabel: string;
 }) {
-  const pathname = usePathname();
-
+  const layoutSegment = useSelectedLayoutSegment();
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
     useLocalStorage(`dismissed-${props.trackingLabel}`, false, true);
 
-  if (hasDismissedAnnouncement || shouldHideAnnouncement(pathname || "")) {
+  if (
+    layoutSegment === "/_not-found" ||
+    hasDismissedAnnouncement ||
+    layoutSegment === "login" ||
+    layoutSegment === "nebula-app"
+  ) {
     return null;
   }
 
@@ -65,6 +59,13 @@ function AnnouncementBanner(props: {
 }
 
 export function UnlimitedWalletsBanner() {
+  // hide banner after 31st December 2024
+  const shouldHideBanner = isAfter(new Date(), new Date("31 Dec 2024"));
+
+  if (shouldHideBanner) {
+    return null;
+  }
+
   return (
     <AnnouncementBanner
       href="/team/~/~/settings/billing?coupon=FREEWALLETS24"

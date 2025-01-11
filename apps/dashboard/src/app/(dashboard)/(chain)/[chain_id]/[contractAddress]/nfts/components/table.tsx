@@ -41,7 +41,6 @@ import type { NFT, ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import { Heading, Text } from "tw-components";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
@@ -61,11 +60,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       {
         Header: "Token Id",
         accessor: (row) => row.id?.toString(),
-        Cell: (cell: CellProps<NFT, string>) => (
-          <Text size="body.md" fontFamily="mono">
-            {cell.value}
-          </Text>
-        ),
+        Cell: (cell: CellProps<NFT, string>) => <p>{cell.value}</p>,
       },
       {
         Header: "Media",
@@ -140,9 +135,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Cell: (cell: CellProps<NFT, number>) => {
           if (cell.row.original.type === "ERC1155") {
             return (
-              <Text noOfLines={4} size="body.md" fontFamily="mono">
+              <p className="line-clamp-4 font-mono text-base">
                 {cell.row.original.supply.toString()}
-              </Text>
+              </p>
             );
           }
         },
@@ -267,9 +262,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
-                    <Text as="label" size="label.sm" color="faded">
+                    <p className="text-muted-foreground">
                       {column.render("Header")}
-                    </Text>
+                    </p>
                   </Th>
                 ))}
                 {/* Need to add an empty header for the drawer button */}
@@ -352,7 +347,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
               >
                 <Flex align="center" gap={4}>
                   <Spinner size="sm" />
-                  <Heading size="label.lg">Fetching new page</Heading>
+                  <p className="text-lg">Fetching new page</p>
                 </Flex>
               </Flex>
             )}
@@ -373,12 +368,12 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             icon={<ChevronLeftIcon className="size-4" />}
             onClick={() => previousPage()}
           />
-          <Text whiteSpace="nowrap">
+          <p className="whitespace-nowrap">
             Page <strong>{pageIndex + 1}</strong> of{" "}
             <Skeleton as="span" display="inline" isLoaded={querySuccess}>
               <strong>{pageCount}</strong>
             </Skeleton>
-          </Text>
+          </p>
           <IconButton
             isDisabled={!canNextPage || queryLoading}
             aria-label="next page"

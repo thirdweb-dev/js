@@ -1,11 +1,9 @@
-import type { AccountMetadata, ApiKeyMetadata } from "../api.js";
+import type { TeamAndProjectResponse } from "../api.js";
 
 export type AuthorizationResult =
-  | {
+  | ({
       authorized: true;
-      apiKeyMeta: ApiKeyMetadata | null;
-      accountMeta: AccountMetadata | null;
-    }
+    } & TeamAndProjectResponse)
   | {
       authorized: false;
       status: number;

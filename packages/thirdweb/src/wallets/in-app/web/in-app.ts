@@ -4,7 +4,7 @@ import type { CreateWalletArgs } from "../../wallet-types.js";
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
 
 /**
- * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/overview).
+ * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure).
  *
  * Can also be configured to use Account Abstraction to directly connect to a ERC4337 smart account based on those authentication methods.
  *
@@ -27,7 +27,27 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
- * [View all available social auth methods](https://portal.thirdweb.com/connect/wallet/sign-in-methods/overview)
+ * [View all available social auth methods](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure)
+ *
+ * ### Enable smart accounts and sponsor gas for your users:
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const wallet = inAppWallet({
+ *  smartAccount: {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * },
+ * });
+ *
+ * // account will be a smart account with sponsored gas enabled
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "google",
+ * });
+ * ```
  *
  * ### Login with email
  *
@@ -107,26 +127,6 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
- * ### Enable smart accounts and sponsor gas for your users:
- *
- * ```ts
- * import { inAppWallet } from "thirdweb/wallets";
- * import { sepolia } from "thirdweb/chains";
- *
- * const wallet = inAppWallet({
- *  smartAccount: {
- *   chain: sepolia,
- *   sponsorGas: true,
- * },
- * });
- *
- * // account will be a smart account with sponsored gas enabled
- * const account = await wallet.connect({
- *   client,
- *   strategy: "google",
- * });
- * ```
- *
  * ### Connect to a guest account
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
@@ -136,6 +136,52 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * const account = await wallet.connect({
  *   client,
  *   strategy: "guest",
+ * });
+ * ```
+ *
+ * ### Connect to a backend account
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "backend",
+ *   walletSecret: "...", // Provided by your app
+ * });
+ * ```
+ *
+ * ### Connect with custom JWT (any OIDC provider)
+ *
+ * You can use any OIDC provider to authenticate your users. Make sure to configure it in your dashboard under in-app wallet settings.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "jwt",
+ *   jwt: "your_jwt_here",
+ * });
+ * ```
+ *
+ * ### Connect with custom endpoint
+ *
+ * You can also use your own endpoint to authenticate your users. Make sure to configure it in your dashboard under in-app wallet settings.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   strategy: "auth_endpoint",
+ *   payload: "your_auth_payload_here",
  * });
  * ```
  *

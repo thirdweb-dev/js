@@ -14,7 +14,25 @@ const balance = await readContract({
 
 This will execute the read immediately and return the result from the blockchain.
 
-### Generating all read functions for a deployed contract
+## Reading contract events
+
+The recommended way to read the contract events is to use the `getContractEvents` function and passing a prepared event with the Solidity event signature and the params. This is type-safe based on the Solidity event signature you define. You can get your desired contract event signature from the solidity code directly.
+
+```ts
+import { getContractEvents, prepareEvent } from "thirdweb";
+
+const myEvent = prepareEvent({
+  signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
+});
+
+const events = await getContractEvents({
+  contract: myContract,
+  events: [myEvent],
+  blockRange: 1000,
+});
+```
+
+### Generating all read functions and events for a deployed contract
 
 Using the CLI, you can generate optimized functions for all the possible calls to a contract. This saves you time and precomputes all the necessary encoding.
 

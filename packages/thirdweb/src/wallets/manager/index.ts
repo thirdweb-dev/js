@@ -125,47 +125,49 @@ export function createConnectionManager(storage: AsyncStorage) {
   ) => {
     const account = wallet.getAccount();
     if (!account) {
-      throw new Error("Can not set a wallet without an account as active");
+      throw new Error("Cannot set a wallet without an account as active");
     }
 
-    const personalWallet = wallet;
-    let activeWallet = personalWallet;
-    const isInAppSmartAccount = hasSmartAccount(wallet);
-    if (options?.accountAbstraction && !isInAppSmartAccount) {
-      activeWallet = smartWallet(options.accountAbstraction);
-      await activeWallet.connect({
-        personalAccount: wallet.getAccount(),
-        client: options.client,
-      });
-    }
+    const activeWallet = await (async () => {
+      if (options?.accountAbstraction && !hasSmartAccount(wallet)) {
+        return await handleSmartWalletConnection(
+          wallet,
+          options.client,
+          options.accountAbstraction,
+          onWalletDisconnect,
+        );
+      } else {
+        return wallet;
+      }
+    })();
 
-    // add personal wallet to connected wallets list
-    addConnectedWallet(personalWallet);
+    await storage.setItem(LAST_ACTIVE_EOA_ID, wallet.id);
 
-    if (personalWallet.id !== "smart") {
-      await storage.setItem(LAST_ACTIVE_EOA_ID, personalWallet.id);
-    }
+    // add personal wallet to connected wallets list even if it's not the active one
+    addConnectedWallet(wallet);
+
+    handleSetActiveWallet(activeWallet);
+
+    wallet.subscribe("accountChanged", async () => {
+      // We reimplement connect here to prevent memory leaks
+      const newWallet = await handleConnection(wallet, options);
+      options?.onConnect?.(newWallet);
+    });
 
     return activeWallet;
   };
 
   const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
-    // connectedWallet can be either wallet or smartWallet based on
+    // connectedWallet can be either wallet or smartWallet
     const connectedWallet = await handleConnection(wallet, options);
     options?.onConnect?.(connectedWallet);
-    handleSetActiveWallet(connectedWallet);
-    wallet.subscribe("accountChanged", async () => {
-      const newConnectedWallet = await handleConnection(wallet, options);
-      options?.onConnect?.(newConnectedWallet);
-      handleSetActiveWallet(newConnectedWallet);
-    });
     return connectedWallet;
   };
 
   const handleSetActiveWallet = (activeWallet: Wallet) => {
     const account = activeWallet.getAccount();
     if (!account) {
-      throw new Error("Can not set a wallet without an account as active");
+      throw new Error("Cannot set a wallet without an account as active");
     }
 
     // also add it to connected wallets if it's not already there
@@ -228,11 +230,15 @@ export function createConnectionManager(storage: AsyncStorage) {
 
   // save last connected wallet ids to storage
   effect(
-    () => {
+    async () => {
+      const prevAccounts = (await getStoredConnectedWalletIds(storage)) || [];
       const accounts = connectedWallets.getValue();
       const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
-      storage.setItem(CONNECTED_WALLET_IDS, stringify(ids));
+      storage.setItem(
+        CONNECTED_WALLET_IDS,
+        stringify(Array.from(new Set([...prevAccounts, ...ids]))),
+      );
     },
     [connectedWallets],
     false,
@@ -241,11 +247,11 @@ export function createConnectionManager(storage: AsyncStorage) {
   const switchActiveWalletChain = async (chain: Chain) => {
     const wallet = activeWalletStore.getValue();
     if (!wallet) {
-      throw new Error("no wallet found");
+      throw new Error("No active wallet found");
     }
 
     if (!wallet.switchChain) {
-      throw new Error("wallet does not support switching chains");
+      throw new Error("Wallet does not support switching chains");
     }
 
     if (wallet.id === "smart") {
@@ -338,11 +344,9 @@ export async function getStoredActiveWalletId(
     if (value) {
       return value as WalletId;
     }
+  } catch {}
 
-    return null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /**
@@ -356,9 +360,41 @@ export async function getLastConnectedChain(
     if (value) {
       return JSON.parse(value) as Chain;
     }
+  } catch {}
 
-    return null;
-  } catch {
-    return null;
-  }
+  return null;
 }
+
+/**
+ * @internal
+ */
+export const handleSmartWalletConnection = async (
+  eoaWallet: Wallet,
+  client: ThirdwebClient,
+  options: SmartWalletOptions,
+  onWalletDisconnect: (wallet: Wallet) => void,
+) => {
+  const signer = eoaWallet.getAccount();
+  if (!signer) {
+    throw new Error("Cannot set a wallet without an account as active");
+  }
+
+  const wallet = smartWallet(options);
+
+  await wallet.connect({
+    personalAccount: signer,
+    client: client,
+    chain: options.chain,
+  });
+
+  // Disconnect the active wallet when the EOA disconnects if it the active wallet is a smart wallet
+  const disconnectUnsub = eoaWallet.subscribe("disconnect", () => {
+    handleDisconnect();
+  });
+  const handleDisconnect = () => {
+    disconnectUnsub();
+    onWalletDisconnect(wallet);
+  };
+
+  return wallet;
+};

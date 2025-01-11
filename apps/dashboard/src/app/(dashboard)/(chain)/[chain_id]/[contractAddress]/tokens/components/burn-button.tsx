@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -32,12 +33,14 @@ import {
 
 interface TokenBurnButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const BURN_FORM_ID = "token-burn-form";
 
 export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
@@ -95,13 +98,13 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={BURN_FORM_ID}
-            isLoading={sendConfirmation.isPending}
+            isPending={sendConfirmation.isPending}
             type="submit"
-            colorScheme="primary"
-            isDisabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty}
             onClick={form.handleSubmit((data) => {
               if (address) {
                 trackEvent({

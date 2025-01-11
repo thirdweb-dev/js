@@ -21,7 +21,7 @@ export function usePreloadWalletProviders({
           switch (true) {
             case COINBASE === w.id: {
               const { getCoinbaseWebProvider } = await import(
-                "../../../wallets/coinbase/coinbaseWebSDK.js"
+                "../../../wallets/coinbase/coinbase-web.js"
               );
               await getCoinbaseWebProvider(
                 w.getConfig() as CreateWalletArgs<typeof COINBASE>[1],

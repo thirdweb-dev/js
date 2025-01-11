@@ -37,7 +37,7 @@ export async function connectInAppWallet(
     | CreateWalletArgs<"inApp">[1]
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
-): Promise<[Account, Chain]> {
+): Promise<{ account: Account; chain: Chain; adminAccount?: Account }> {
   if (
     // if auth mode is not specified, the default is popup
     createOptions?.auth?.mode !== "popup" &&
@@ -65,15 +65,16 @@ export async function connectInAppWallet(
     "smartAccount" in createOptions &&
     createOptions?.smartAccount
   ) {
-    return convertToSmartAccount({
+    const [account, chain] = await convertToSmartAccount({
       client: options.client,
       authAccount,
       smartAccountOptions: createOptions.smartAccount,
       chain: options.chain,
     });
+    return { account, chain, adminAccount: authAccount };
   }
 
-  return [authAccount, options.chain || ethereum] as const;
+  return { account: authAccount, chain: options.chain || ethereum } as const;
 }
 
 /**
@@ -87,7 +88,7 @@ export async function autoConnectInAppWallet(
     | CreateWalletArgs<"inApp">[1]
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
-): Promise<[Account, Chain]> {
+): Promise<{ account: Account; chain: Chain; adminAccount?: Account }> {
   if (options.authResult && connector.loginWithAuthToken) {
     await connector.loginWithAuthToken(options.authResult);
   }
@@ -104,15 +105,16 @@ export async function autoConnectInAppWallet(
     "smartAccount" in createOptions &&
     createOptions?.smartAccount
   ) {
-    return convertToSmartAccount({
+    const [account, chain] = await convertToSmartAccount({
       client: options.client,
       authAccount,
       smartAccountOptions: createOptions.smartAccount,
       chain: options.chain,
     });
+    return { account, chain, adminAccount: authAccount };
   }
 
-  return [authAccount, options.chain || ethereum] as const;
+  return { account: authAccount, chain: options.chain || ethereum } as const;
 }
 
 async function convertToSmartAccount(options: {
@@ -121,14 +123,9 @@ async function convertToSmartAccount(options: {
   smartAccountOptions: CreateWalletArgs<"smart">[1];
   chain?: Chain;
 }) {
-  const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
-    import("../../../smart/smart-wallet.js"),
-    import("../../../smart/index.js"),
-  ]);
+  const { connectSmartAccount } = await import("../../../smart/index.js");
 
-  const sa = smartWallet(options.smartAccountOptions);
-  return connectSmartWallet(
-    sa,
+  return connectSmartAccount(
     {
       client: options.client,
       personalAccount: options.authAccount,

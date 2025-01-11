@@ -8,6 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -16,11 +17,13 @@ import { LazyMintNftForm } from "./lazy-mint-form";
 interface NFTLazyMintButtonProps {
   contract: ThirdwebContract;
   isErc721: boolean;
+  twAccount: Account | undefined;
 }
 
 export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
   contract,
   isErc721,
+  twAccount,
   ...restButtonProps
 }) => {
   const [open, setOpen] = useState(false);
@@ -41,6 +44,7 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
             contract={contract}
             isErc721={isErc721}
             setOpen={setOpen}
+            twAccount={twAccount}
           />
         </SheetContent>
       </Sheet>

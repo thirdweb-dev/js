@@ -22,23 +22,29 @@ import { useAddPartner } from "../../hooks/use-add-partner";
 export function AddPartnerForm({
   ecosystem,
   onPartnerAdded,
-}: { ecosystem: Ecosystem; onPartnerAdded: () => void }) {
+  authToken,
+}: { authToken: string; ecosystem: Ecosystem; onPartnerAdded: () => void }) {
   const form = useForm<z.input<typeof partnerFormSchema>>({
     resolver: zodResolver(partnerFormSchema),
   });
 
-  const { mutateAsync: addPartner, isPending } = useAddPartner({
-    onSuccess: () => {
-      onPartnerAdded();
+  const { mutateAsync: addPartner, isPending } = useAddPartner(
+    {
+      authToken,
     },
-    onError: (error) => {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to add ecosystem partner";
-      toast.error(message);
+    {
+      onSuccess: () => {
+        onPartnerAdded();
+      },
+      onError: (error) => {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to add ecosystem partner";
+        toast.error(message);
+      },
     },
-  });
+  );
 
   return (
     <Form {...form}>

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ClaimConditions } from "../_components/claim-conditions/claim-conditions";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
@@ -8,6 +9,7 @@ import { useContractPageMetadata } from "../_hooks/useContractPageMetadata";
 
 export function ClaimConditionsClient(props: {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -33,6 +35,7 @@ export function ClaimConditionsClient(props: {
     <ClaimConditions
       contract={props.contract}
       isERC20={supportedERCs.isERC20}
+      twAccount={props.twAccount}
     />
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -24,9 +25,10 @@ import {
 interface BurnTabProps {
   tokenId: string;
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
-const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
+const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId, twAccount }) => {
   const account = useActiveAccount();
   const trackEvent = useTrack();
   const {
@@ -130,12 +132,12 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
           )}
           <TransactionButton
             transactionCount={1}
-            isLoading={isPending}
-            isDisabled={checking1155 || checking721 || isPending || !account}
+            isPending={isPending}
+            disabled={checking1155 || checking721 || isPending || !account}
             type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
+            className="self-end"
             txChainID={contract.chain.id}
+            twAccount={twAccount}
           >
             Burn
           </TransactionButton>

@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,6 +24,7 @@ import { z } from "zod";
 interface MintSupplyTabProps {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 }
 
 const mintAdditionalSupplyFormSchema = z.object({
@@ -32,7 +34,11 @@ const mintAdditionalSupplyFormSchema = z.object({
   amount: z.coerce.number().int().min(1, "Amount must be at least 1"),
 });
 
-const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
+const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
+  contract,
+  tokenId,
+  twAccount,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
 
@@ -123,10 +129,10 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           type="submit"
-          colorScheme="primary"
-          alignSelf="flex-end"
+          className="self-end"
+          twAccount={twAccount}
         >
           Mint
         </TransactionButton>

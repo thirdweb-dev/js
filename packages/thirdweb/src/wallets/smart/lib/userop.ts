@@ -1,4 +1,5 @@
-import { concat } from "viem";
+import { maxUint96 } from "ox/Solidity";
+import { concat, keccak256, toHex } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
@@ -13,6 +14,7 @@ import { encode } from "../../../transaction/actions/encode.js";
 import { toSerializableTransaction } from "../../../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
+import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
@@ -101,7 +103,9 @@ export async function waitForUserOpReceipt(
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
   }
-  throw new Error("Timeout waiting for userOp to be mined");
+  throw new Error(
+    `Timeout waiting for userOp to be mined on chain ${args.chain.id} with UserOp hash: ${args.userOpHash}`,
+  );
 }
 
 /**
@@ -361,17 +365,38 @@ async function populateUserOp_v0_7(args: {
         paymasterResult.paymasterVerificationGasLimit;
     } else {
       // otherwise fallback to bundler for gas limits
-      const estimates = await estimateUserOpGas({
-        userOp: partialOp,
-        options: bundlerOptions,
-      });
+      const stateOverrides = overrides?.tokenPaymaster
+        ? {
+            [overrides.tokenPaymaster.tokenAddress]: {
+              stateDiff: {
+                [keccak256(
+                  encodeAbiParameters(
+                    [{ type: "address" }, { type: "uint256" }],
+                    [
+                      accountContract.address,
+                      overrides.tokenPaymaster.balanceStorageSlot,
+                    ],
+                  ),
+                )]: toHex(maxUint96, { size: 32 }),
+              },
+            },
+          }
+        : undefined;
+      const estimates = await estimateUserOpGas(
+        {
+          userOp: partialOp,
+          options: bundlerOptions,
+        },
+        stateOverrides,
+      );
       partialOp.callGasLimit = estimates.callGasLimit;
       partialOp.verificationGasLimit = estimates.verificationGasLimit;
       partialOp.preVerificationGas = estimates.preVerificationGas;
-      partialOp.paymasterPostOpGasLimit =
-        paymasterResult.paymasterPostOpGasLimit || 0n;
+      partialOp.paymasterPostOpGasLimit = overrides?.tokenPaymaster
+        ? 500000n // TODO: estimate this better, needed if there's an extra swap needed in the paymaster
+        : estimates.paymasterPostOpGasLimit || 0n;
       partialOp.paymasterVerificationGasLimit =
-        paymasterResult.paymasterVerificationGasLimit || 0n;
+        estimates.paymasterVerificationGasLimit || 0n;
       // need paymaster to re-sign after estimates
       const paymasterResult2 = (await getPaymasterAndData({
         userOp: partialOp,
@@ -609,6 +634,7 @@ async function getAccountInitCode(options: {
   accountSalt?: string;
   createAccountOverride?: (
     factoryContract: ThirdwebContract,
+    adminAddress: string,
   ) => PreparedTransaction;
 }): Promise<Hex> {
   const { factoryContract, adminAddress, accountSalt, createAccountOverride } =
@@ -628,7 +654,7 @@ async function getAccountNonce(options: {
   client: ThirdwebClient;
   entrypointAddress?: string;
   getNonceOverride?: (accountContract: ThirdwebContract) => Promise<bigint>;
-}) {
+}): Promise<bigint> {
   const {
     accountContract,
     chain,
@@ -639,7 +665,7 @@ async function getAccountNonce(options: {
   if (getNonceOverride) {
     return getNonceOverride(accountContract);
   }
-  return getNonce({
+  return await getNonce({
     contract: getContract({
       address: entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
       chain,

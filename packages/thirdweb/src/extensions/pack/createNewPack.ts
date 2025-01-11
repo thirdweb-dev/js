@@ -13,6 +13,7 @@ import {
   createPack,
 } from "./__generated__/IPack/write/createPack.js";
 
+// biome-ignore lint/nursery/noEnum: fine here
 export enum PACK_TOKEN_TYPE {
   ERC20 = 0,
   ERC721 = 1,

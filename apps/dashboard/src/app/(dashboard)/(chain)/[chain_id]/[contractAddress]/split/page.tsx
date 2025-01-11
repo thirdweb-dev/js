@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractSplitPage } from "./ContractSplitPage";
@@ -18,8 +19,13 @@ export default async function Page(props: {
     notFound();
   }
   const { contract } = info;
+
+  const twAccount = await getRawAccount();
+
   if (contract.chain.id === localhost.id) {
-    return <ContractSplitPageClient contract={contract} />;
+    return (
+      <ContractSplitPageClient contract={contract} twAccount={twAccount} />
+    );
   }
 
   const { isSplitSupported } = await getContractPageMetadata(contract);
@@ -28,5 +34,5 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractSplitPage contract={contract} />;
+  return <ContractSplitPage contract={contract} twAccount={twAccount} />;
 }

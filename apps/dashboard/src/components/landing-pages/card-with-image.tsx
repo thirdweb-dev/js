@@ -1,5 +1,4 @@
 import { Flex, GridItem, LinkBox, LinkOverlay } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 import { Card, type CardProps, Text, TrackedLink } from "tw-components";
@@ -86,61 +85,5 @@ export const LandingCardWithImage: React.FC<LandingCardWithImageProps> = ({
         </Card>
       </LinkBox>
     </GridItem>
-  );
-};
-
-interface LandingImageProps {
-  title: ReactNode;
-  gap: string | number;
-  images: { height: number; width: number; src: string; title: string }[];
-}
-
-export const LandingImages: React.FC<LandingImageProps> = ({
-  title,
-  images,
-  gap,
-}) => {
-  return (
-    <Flex flexDir="column" alignItems="center" justifyContent="center" gap={8}>
-      {title && title}
-
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        flexWrap="wrap"
-        gap={gap}
-        marginTop="24px"
-      >
-        {images.length
-          ? images.map(({ src, height, width, title: imgTitle }, idx) => {
-              return (
-                <Flex
-                  flexDir="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  key={idx}
-                >
-                  <ChakraNextImage
-                    src={src}
-                    height={height}
-                    width={width}
-                    alt="card-with-image"
-                  />
-
-                  <Text
-                    marginTop="16px"
-                    fontWeight={500}
-                    fontSize="14px"
-                    color="#fff"
-                  >
-                    {imgTitle}
-                  </Text>
-                </Flex>
-              );
-            })
-          : null}
-      </Flex>
-    </Flex>
   );
 };

@@ -10,24 +10,42 @@ import ancient8Banner from "./temp-assets/ancient8-banner.png";
 import assetChainBanner from "./temp-assets/assetChainBanner.png";
 import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 
+import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
+import appchainCTA from "./temp-assets/appchainCTA.png";
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
+import cyberCTA from "./temp-assets/cyberCTA.png";
+import cyberChainBanner from "./temp-assets/cyberChainBanner.png";
 import etherlinkBanner from "./temp-assets/etherlinkBanner.png";
 import etherlinkCTA from "./temp-assets/etherlinkCTA.png";
+import funkiBanner from "./temp-assets/funkiBanner.jpg";
+import funkiCTA from "./temp-assets/funkiCTA.jpg";
+import gptCTA from "./temp-assets/gptCTA.jpg";
+import gptChainBanner from "./temp-assets/gptChainBanner.jpg";
 import hashfireBanner from "./temp-assets/hashfireBanner.png";
 import hashfireCTA from "./temp-assets/hashfireCTA.png";
+import inkBanner from "./temp-assets/inkBanner.jpg";
 import laosBanner from "./temp-assets/laosBanner.jpg";
 import laosCTA from "./temp-assets/laosCTA.jpg";
 import liskBanner from "./temp-assets/liskBanner.png";
 import liskCTA from "./temp-assets/liskCTA.png";
 
-import lumiaCTA from "./temp-assets/lumia-cta.png";
+import creatorBanner from "./temp-assets/creatorBanner.png";
+import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
+import somniaBanner from "./temp-assets/somniaBanner.png";
+
+import plumeBannerv2 from "./temp-assets/plumev2Banner.png";
+import plumeCTAv2 from "./temp-assets/plumev2CTA.png";
+
 import mantleBanner from "./temp-assets/mantle.png";
+import metalBanner from "./temp-assets/metalBanner.png";
+import metalCTA from "./temp-assets/metalCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
+
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
@@ -42,8 +60,13 @@ import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
+import zetachainBanner from "./temp-assets/zetachainBanner.png";
+import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
+
+import fhenixBanner from "./temp-assets/fhenixBanner.png";
+import fhenixCTA from "./temp-assets/fhenixCTA.png";
 
 // END TEMPORARY
 
@@ -168,7 +191,15 @@ const chainMetaRecord = {
   },
   // cyber
   7560: {
-    cta: OP_CTA,
+    headerImgUrl: cyberChainBanner.src,
+    about:
+      "Cyber is a Layer 2 blockchain specifically designed for social applications. Built on the Optimism Superchain, it combines high-performance infrastructure with specialized tools for social features to simplify developer workflows and accelerate their time to market.",
+    cta: {
+      backgroundImageUrl: cyberCTA.src,
+      title: "Discover Web3 Social with Cyber",
+      buttonLink: "https://cyber.co/",
+      buttonText: "Learn more",
+    },
     gasSponsored: true,
   },
   // redstone
@@ -197,6 +228,11 @@ const chainMetaRecord = {
     },
     gasSponsored: true,
   },
+  // Flare
+  14: {
+    about:
+      "Flare is the blockchain for data, offering developers and users secure, decentralized access to high-integrity data from other chains and the internet. Flare's Layer-1 network uniquely supports enshrined data protocols at the network layer, making it the only EVM-compatible smart contract platform optimized for decentralized data acquisition, including price and time-series data, blockchain event and state data, and Web2 API data.",
+  },
   // rootstock
   30: {
     headerImgUrl: rootStockBanner.src,
@@ -208,6 +244,19 @@ const chainMetaRecord = {
       buttonLink: "https://rootstock.io/",
       buttonText: "Learn more",
     },
+  },
+  //Superseed
+  5330: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // Ink
+  57073: {
+    headerImgUrl: inkBanner.src,
+    about:
+      "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain, a powerful base layer for deploying innovative DeFi protocols.",
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   // vanar
   2040: {
@@ -225,11 +274,27 @@ const chainMetaRecord = {
   994873017: {
     headerImgUrl: lumiaBanner.src,
     about:
-      "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
+      "Lumia is the only full-cycle RWA chain, merging zkEVM technology with a robust infrastructure purpose-built for institutional and retail asset tokenization. Featuring advanced compliance tools such as on-chain KYC/AML via PolygonID, OFAC sanctions screening at the sequencer level, and AI-powered threat detection, Lumia Chain ensures security and regulatory adherence. Its unique volition architecture enables users to toggle between cost-efficient validium mode and highly secure rollup mode, providing flexibility for diverse needs. Lumia goes beyond tokenization by seamlessly integrating RWAs into DeFi. RWAs minted on Lumia Chain are instantly composable with native DeFi protocols like lending, AMMs, and perpetual markets, creating a tailored environment for RWA owners. With ERC-20 compatibility, native interoperability, and integration with major DeFi aggregators like 1inch and 0x, Lumia ensures that tokenized RWAs are not only secure and scalable but also accessible across the broader DeFi ecosystem.",
     cta: {
-      backgroundImageUrl: lumiaCTA.src,
-      title: "",
-      buttonLink: "https://docs.lumia.org/",
+      backgroundImageUrl: lumiaBanner.src,
+      title:
+        "Build Smarter. Scale Faster. Lumia - The Only Full-Cycle RWA Chain",
+      buttonLink:
+        "https://docs.lumia.org/build/smartcontracts/deployment#deploy-contract-on-shiden",
+      buttonText: "Learn more",
+    },
+  },
+  // lumia Testnet
+  1952959480: {
+    headerImgUrl: lumiaBanner.src,
+    about:
+      "Lumia is the only full-cycle RWA chain, merging zkEVM technology with a robust infrastructure purpose-built for institutional and retail asset tokenization. Featuring advanced compliance tools such as on-chain KYC/AML via PolygonID, OFAC sanctions screening at the sequencer level, and AI-powered threat detection, Lumia Chain ensures security and regulatory adherence. Its unique volition architecture enables users to toggle between cost-efficient validium mode and highly secure rollup mode, providing flexibility for diverse needs. Lumia goes beyond tokenization by seamlessly integrating RWAs into DeFi. RWAs minted on Lumia Chain are instantly composable with native DeFi protocols like lending, AMMs, and perpetual markets, creating a tailored environment for RWA owners. With ERC-20 compatibility, native interoperability, and integration with major DeFi aggregators like 1inch and 0x, Lumia ensures that tokenized RWAs are not only secure and scalable but also accessible across the broader DeFi ecosystem.",
+    cta: {
+      backgroundImageUrl: lumiaBanner.src,
+      title:
+        "Build Smarter. Scale Faster. Lumia - The Only Full-Cycle RWA Chain",
+      buttonLink:
+        "https://docs.lumia.org/build/smartcontracts/deployment#deploy-contract-on-shiden",
       buttonText: "Learn more",
     },
   },
@@ -269,6 +334,23 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Arena Z Mainnet
+  7897: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //Appchain
+  466: {
+    headerImgUrl: appChainBanner.src,
+    about:
+      "Appchain is building useful onchain apps. We're an L2 on top of Ethereum, built on the Arbitrum Orbit stack. We are a low cost, high throughput chain with the goal of building apps for all internet users",
+    cta: {
+      title: "Bringing the world onchain through useful apps.",
+      backgroundImageUrl: appchainCTA.src,
+      buttonLink: "https://appchain.xyz/",
+      buttonText: "Learn more",
+    },
+  },
   // B3 Mainnet
   8333: {
     headerImgUrl: thirdwebBanner.src,
@@ -291,6 +373,18 @@ const chainMetaRecord = {
       title: "",
       buttonLink: "https://www.campnetwork.xyz/",
       buttonText: "Learn more",
+    },
+  },
+  //Creator Mainnet
+  66665: {
+    headerImgUrl: creatorBanner.src,
+    about:
+      "From Builders to Builders, From Idea to Creation ⚡\nCreator is AI Superhero Layer 2 Blockchain 🦇\nBuilt on the OP Stack, leveraging the robust foundation of Optimism 🟡🔴. We adopt the OP Stack's design principles because, as builders, we know they work and align perfectly with our values.\nWhy Creator?\nWe're constructing our Testnet on the Bedrock release of the OP Stack, ensuring a scalable and modular infrastructure that supports innovative and decentralized applications.\nCore Features:\n- Lightning Fast Transactions: Say goodbye to slow speeds with Creator's Layer 2 technology.\n- Low Fees: Lower transaction costs make blockchain accessible to all.\n- Scalable Infrastructure: Creator's network adapts effortlessly as you grow.",
+    cta: {
+      backgroundImageUrl: creatorCTA.src,
+      title: "From Builders to Builders, From Idea to Creation ⚡",
+      buttonLink: "https://www.creatorchain.io/",
+      buttonText: "Learn More",
     },
   },
   //Donatuz
@@ -325,6 +419,18 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
+  //fhenix Nitrogen
+  8008148: {
+    headerImgUrl: fhenixBanner.src,
+    about:
+      "Discover Fhenix—the first-ever FHE-based blockchain. Fhenix is an L2 built on Ethereum that brings powerful Fully Homomorphic Encryption (FHE) into the EVM space. This technology enables confidential computation on-chain, allowing users to explore a new generation of use cases.",
+    cta: {
+      backgroundImageUrl: fhenixCTA.src,
+      title: "Onchain confidentiality powered by the first FHE L2 Rollup",
+      buttonLink: "https://thirdweb.com/fhenix-nitrogen",
+      buttonText: "Learn More",
+    },
+  },
   //Fuse
   122: {
     headerImgUrl: thirdwebBanner.src,
@@ -337,6 +443,30 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Funki Mainnet
+  33979: {
+    headerImgUrl: funkiBanner.src,
+    about:
+      "Funki is a fun-first L2 using OP stack, focused on onchain gaming and social experiments.\nFunki is the playground where innovative ideas come to life. We’re dedicated to building an ecosystem that upholds bold, persistent experiments.",
+    cta: {
+      backgroundImageUrl: funkiCTA.src,
+      title: "Enter the Rabbit hole",
+      buttonLink: "https://docs.funkichain.com/docs",
+      buttonText: "Learn More",
+    },
+  },
+  //Funki Testnet
+  3397901: {
+    headerImgUrl: funkiBanner.src,
+    about:
+      "Funki is a fun-first L2 using OP stack, focused on onchain gaming and social experiments.\nFunki is the playground where innovative ideas come to life. We’re dedicated to building an ecosystem that upholds bold, persistent experiments.",
+    cta: {
+      backgroundImageUrl: funkiCTA.src,
+      title: "Enter the Rabbit hole",
+      buttonLink: "https://docs.funkichain.com/docs",
+      buttonText: "Learn More",
+    },
+  },
   //Gemuchain
   1903648807: {
     headerImgUrl: thirdwebBanner.src,
@@ -346,6 +476,18 @@ const chainMetaRecord = {
       backgroundImageUrl: thirdwebCTA.src,
       title: "",
       buttonLink: "https://gemuchain.io/",
+      buttonText: "Learn more",
+    },
+  },
+  //GPT Mainnet
+  1511670449: {
+    headerImgUrl: gptChainBanner.src,
+    about:
+      "GPT Protocol combines cutting-edge L2 EVM technology with seamless AI integration to power the future of decentralized applications. By enabling ultra-fast transactions, unmatched scalability, and eco-friendly solutions, GPT Protocol opens doors to developers, brands, and users alike. With innovative tools, a robust ecosystem, and low transaction costs, GPT Protocol is designed for a smarter, more connected blockchain experience. Join us in building the next generation of decentralized innovation.",
+    cta: {
+      backgroundImageUrl: gptCTA.src,
+      title: "Build on the blockchain for AI",
+      buttonLink: "https://www.gptprotocol.com/",
       buttonText: "Learn more",
     },
   },
@@ -391,11 +533,25 @@ const chainMetaRecord = {
     headerImgUrl: liskBanner.src,
     about:
       "Lisk is focused on serving builders in high-growth markets like Africa and Southeast Asia. When you build on Lisk, you become part of the strongest Ethereum collective, alongside Coinbase, Sony, World, Kraken and Uniswap -- the OP Superchain.",
+    // cta: {
+    //   backgroundImageUrl: liskCTA.src,
+    //   title: "Ready to reshape the world?",
+    //   buttonLink: "https://lisk.com",
+    //   buttonText: "Learn more",
+    // },
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //Metal L2
+  1750: {
+    headerImgUrl: metalBanner.src,
+    about:
+      "Metal L2 is a banking-focused Layer 2 blockchain built on the Optimism Superchain, designed to enable direct on-chain fiat deposits through its connection to The Digital Banking Network—an open-source blockchain banking protocol developed by Metallicus",
     cta: {
-      backgroundImageUrl: liskCTA.src,
-      title: "Ready to reshape the world?",
-      buttonLink: "https://lisk.com",
-      buttonText: "Learn more",
+      backgroundImageUrl: metalCTA.src,
+      title: "Connect to The Banking Layer, Metal L2",
+      buttonLink: "https://metall2.com/",
+      buttonText: "Connect Here",
     },
   },
   //0G-Newton-Testnet
@@ -422,6 +578,41 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  98864: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  //Plume
+  98865: {
+    headerImgUrl: plumeBannerv2.src,
+    about:
+      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+    cta: {
+      backgroundImageUrl: plumeCTAv2.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  //Somnia Devnet
+  50311: {
+    headerImgUrl: somniaBanner.src,
+    about:
+      "We are committed to building technology to make fully on-chain, real-time mass-scale applications possible and practical. We believe this is essential for creating a composable, open internet. We believe in a collection of applications, each with distinct, interconnected experiences, much like countries within a global community, sharing utilities that enhance mutual growth. \nCentral to our vision is the principle of composability—the ability for builders to build upon each other’s work, creating a culture of collaboration in which the collective output surpasses the sum of its parts. We will empower builders with the freedom to build sustainable models of engagement and ownership. This includes safeguarding the rights to digital assets and creating an environment where platform constraints do not stifle innovation.",
+    cta: {
+      backgroundImageUrl: somniaBanner.src,
+      title: "Somnia Devnet",
+      buttonLink: "https://codex.somnia.network",
+      buttonText: "Learn More",
+    },
+  },
   //zkCandy
   302: {
     headerImgUrl: thirdwebBanner.src,
@@ -446,8 +637,32 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //treasure
+  //treasure-Ruby
   978657: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+  //Treasure Topaz
+  978658: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+  //Treasure Mainnet
+  61166: {
     headerImgUrl: treasureBanner.src,
     about:
       'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
@@ -467,6 +682,30 @@ const chainMetaRecord = {
       backgroundImageUrl: assetChainCTABG.src,
       title: "Start Building",
       buttonLink: "https://docs.assetchain.org",
+      buttonText: "Learn more",
+    },
+  },
+  // Zetachain
+  7000: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
+      buttonText: "Learn more",
+    },
+  },
+  // ZetaChain Testnet
+  7001: {
+    headerImgUrl: zetachainBanner.src,
+    about:
+      "ZetaChain is the first Universal Blockchain with native access to Bitcoin, Ethereum, Solana, and more, offering seamless UX and unified liquidity to the next billions of users. With its Universal EVM, ZetaChain empowers developers to build Universal Apps that operate natively across any blockchain, creating a fluid crypto ecosystem from a single platform.",
+    cta: {
+      backgroundImageUrl: zetachainCTA.src,
+      title: "The First Universal Blockchain",
+      buttonLink: "https://www.zetachain.com/docs/",
       buttonText: "Learn more",
     },
   },

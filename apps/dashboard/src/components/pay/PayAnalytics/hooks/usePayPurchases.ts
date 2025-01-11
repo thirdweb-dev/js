@@ -1,5 +1,5 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useActiveAccount } from "thirdweb/react";
 
 export type PayPurchasesData = {
   count: number;
@@ -52,7 +52,7 @@ type Response = {
   };
 };
 
-type PayPurcaseOptions = {
+type PayPurchaseOptions = {
   clientId: string;
   from: Date;
   to: Date;
@@ -60,19 +60,17 @@ type PayPurcaseOptions = {
   count: number;
 };
 
-export function usePayPurchases(options: PayPurcaseOptions) {
-  const { user } = useLoggedInUser();
-
+export function usePayPurchases(options: PayPurchaseOptions) {
+  const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: ["usePayPurchases", user?.address, options],
+    queryKey: ["usePayPurchases", address, options],
     queryFn: async () => getPayPurchases(options),
-    enabled: !!user?.jwt,
     // keep the previous data while fetching new data
     placeholderData: keepPreviousData,
   });
 }
 
-export async function getPayPurchases(options: PayPurcaseOptions) {
+export async function getPayPurchases(options: PayPurchaseOptions) {
   const searchParams = new URLSearchParams();
   searchParams.append("skip", `${options.start}`);
   searchParams.append("take", `${options.count}`);

@@ -1,0 +1,113 @@
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+	Callout,
+	DocImage,
+	createMetadata,
+	AuthList,
+	ArticleIconCard,
+	Stack,
+	Steps,
+	Step
+} from "@doc";
+import {ExternalLink} from "lucide-react";
+import { TypeScriptIcon } from "@/icons";
+
+export const metadata = createMetadata({
+	title: "Connect users with In-App Wallet",
+	description:
+		"use the prebuilt connect UI components to authenticate users and connect in-app wallets",
+	image: {
+		title: "Connect users with In-App Wallets",
+		icon: "wallets",
+	},
+});
+
+# In-App Wallets
+
+Create in-app wallet for your users based on their email, phone, passkey, social auth or even their external wallets. These wallets are scoped by your clientId and do not require any confirmation to sign transactions. 
+
+## Available auth methods
+
+<AuthList />
+
+## Live Playground
+
+Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/in-app-wallet)
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com/connect/in-app-wallet"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Configure in-app wallets
+
+The simplest way to create an in-app wallet is to use the `inAppWallet()` function. By default, this will create a wallet that supports email/password login, Google, Apple, Facebook login, and passkey.
+
+```tsx
+import { inAppWallet } from "thirdweb/wallets";
+
+const wallet = inAppWallet();
+```
+
+You can also customize the wallet by passing in options.
+
+```tsx
+import { inAppWallet } from "thirdweb/wallets";
+
+const wallet = inAppWallet({
+	auth: {
+        mode, // options are "popup" | "redirect" | "window";
+        options, // ex: ["discord", "farcaster", "apple", "facebook", "google", "passkey"],
+        passkeyDomain, // for passkey, the domain that the passkey is created on
+        redirectUrl, // the URL to redirect to after authentication
+	},
+	metadata, // metadata for the wallet (name, icon, etc.)
+	smartAccount, // smart account options for the wallet (for gasless tx)
+});
+```
+
+[View all in-app wallet options](/references/typescript/v5/InAppWalletCreationOptions).
+
+Once created, you can use it either with the prebuilt UI components, or with your own UI.
+
+## Usage
+
+```tsx
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { inAppWallet } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+const wallet = inAppWallet();
+
+const account = await wallet.connect({
+	client,
+	strategy: "google",
+});
+
+console.log("connected as", account.address);
+
+```
+
+## API Reference
+
+View all the auth and configuration options for in-app wallets in the [API Reference](/references/typescript/v5/inAppWallet).
+
+<Stack>
+
+<ArticleIconCard
+	title="inAppWallet"
+	icon={TypeScriptIcon}
+	href="/references/typescript/v5/inAppWallet"
+	description="Create an in-app wallet from any auth"
+/>
+
+</Stack>

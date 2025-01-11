@@ -1,17 +1,12 @@
 "use client";
 
 import { TabLinks } from "@/components/ui/tabs";
-import {
-  type ApiKeyService,
-  useUserOpUsageAggregate,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { useUserOpUsageAggregate } from "@3rdweb-sdk/react/hooks/useApi";
 import { AccountAbstractionAnalytics } from "./AccountAbstractionAnalytics";
 import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { AccountFactories } from "./AccountFactories";
-import { AccountAbstractionSettingsPage } from "./SponsorshipPolicies";
 
 interface SmartWalletsProps {
-  apiKeyServices: ApiKeyService[];
   trackingCategory: string;
   clientId: string;
   smartWalletsLayoutSlug: string;
@@ -19,7 +14,6 @@ interface SmartWalletsProps {
 }
 
 export const SmartWallets: React.FC<SmartWalletsProps> = ({
-  apiKeyServices,
   trackingCategory,
   clientId,
   smartWalletsLayoutSlug,
@@ -46,12 +40,6 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
             isDisabled: false,
           },
           {
-            name: "Sponsorship Policies",
-            href: `${smartWalletsLayoutSlug}?tab=config`,
-            isActive: tab === "config",
-            isDisabled: false,
-          },
-          {
             name: "Account Factories",
             href: `${smartWalletsLayoutSlug}?tab=factories`,
             isActive: tab === "factories",
@@ -68,13 +56,6 @@ export const SmartWallets: React.FC<SmartWalletsProps> = ({
 
       {tab === "factories" && (
         <AccountFactories trackingCategory={trackingCategory} />
-      )}
-
-      {tab === "config" && (
-        <AccountAbstractionSettingsPage
-          apiKeyServices={apiKeyServices}
-          trackingCategory={trackingCategory}
-        />
       )}
     </div>
   );

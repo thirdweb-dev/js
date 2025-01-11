@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { createApiKeyStub } from "../../../stories/stubs";
+import { accountStub, createApiKeyStub } from "../../../stories/stubs";
 import { mobileViewport } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";
 
@@ -60,6 +60,7 @@ function Variants(props: {
           isUpdating={false}
           trackingCategory="foo"
           updateApiKey={() => {}}
+          twAccount={accountStub()}
         />
       </div>
     </div>

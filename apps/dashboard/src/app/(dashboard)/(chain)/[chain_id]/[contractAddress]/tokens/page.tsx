@@ -4,6 +4,7 @@ import {
   isClaimToSupported,
   isMintToSupported,
 } from "thirdweb/extensions/erc20";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractTokensPage } from "./ContractTokensPage";
@@ -22,8 +23,12 @@ export default async function Page(props: {
     notFound();
   }
 
+  const account = await getRawAccount();
+
   if (info.contract.chain.id === localhost.id) {
-    return <ContractTokensPageClient contract={info.contract} />;
+    return (
+      <ContractTokensPageClient contract={info.contract} twAccount={account} />
+    );
   }
 
   const { supportedERCs, functionSelectors } = await getContractPageMetadata(
@@ -36,6 +41,7 @@ export default async function Page(props: {
       isERC20={supportedERCs.isERC20}
       isMintToSupported={isMintToSupported(functionSelectors)}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
+      twAccount={account}
     />
   );
 }

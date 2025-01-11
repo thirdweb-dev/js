@@ -1,3 +1,4 @@
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import dynamic from "next/dynamic";
@@ -11,6 +12,7 @@ import type { NFTDrawerTab } from "./types";
 type UseNFTDrawerTabsParams = {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 };
 
 const TransferTab = dynamic(() => import("./components/transfer-tab"));
@@ -30,6 +32,7 @@ const UpdateMetadataTab = dynamic(
 export function useNFTDrawerTabs({
   contract,
   tokenId,
+  twAccount,
 }: UseNFTDrawerTabsParams): NFTDrawerTab[] {
   const functionSelectorQuery = useContractFunctionSelectors(contract);
   const functionSelectors = functionSelectorQuery.data || [];
@@ -126,6 +129,7 @@ export function useNFTDrawerTabs({
               contract={contract}
               tokenId={tokenId}
               isColumn
+              twAccount={twAccount}
             />
           ),
         },
@@ -139,7 +143,13 @@ export function useNFTDrawerTabs({
         disabledText: isERC1155
           ? "You don't own any copy of this NFT"
           : "You don't own this NFT",
-        children: <TransferTab contract={contract} tokenId={tokenId} />,
+        children: (
+          <TransferTab
+            contract={contract}
+            tokenId={tokenId}
+            twAccount={twAccount}
+          />
+        ),
       },
     ]);
 
@@ -149,7 +159,13 @@ export function useNFTDrawerTabs({
           title: "Airdrop",
           isDisabled: !isOwner,
           disabledText: "You don't own any copy of this NFT",
-          children: <AirdropTab contract={contract} tokenId={tokenId} />,
+          children: (
+            <AirdropTab
+              contract={contract}
+              tokenId={tokenId}
+              twAccount={twAccount}
+            />
+          ),
         },
       ]);
     }
@@ -159,7 +175,13 @@ export function useNFTDrawerTabs({
           title: "Burn",
           isDisabled: !isOwner,
           disabledText: "You don't own this NFT",
-          children: <BurnTab contract={contract} tokenId={tokenId} />,
+          children: (
+            <BurnTab
+              contract={contract}
+              tokenId={tokenId}
+              twAccount={twAccount}
+            />
+          ),
         },
       ]);
     }
@@ -169,7 +191,13 @@ export function useNFTDrawerTabs({
           title: "Mint",
           isDisabled: false,
           disabledText: "You don't have minter permissions",
-          children: <MintSupplyTab contract={contract} tokenId={tokenId} />,
+          children: (
+            <MintSupplyTab
+              contract={contract}
+              tokenId={tokenId}
+              twAccount={twAccount}
+            />
+          ),
         },
       ]);
     }
@@ -178,7 +206,13 @@ export function useNFTDrawerTabs({
         {
           title: "Claim",
           isDisabled: false,
-          children: <ClaimTabERC1155 contract={contract} tokenId={tokenId} />,
+          children: (
+            <ClaimTabERC1155
+              contract={contract}
+              tokenId={tokenId}
+              twAccount={twAccount}
+            />
+          ),
         },
       ]);
     }
@@ -194,6 +228,7 @@ export function useNFTDrawerTabs({
               contract={contract}
               nft={nft}
               useUpdateMetadata={supportsUpdateMetadata}
+              twAccount={twAccount}
             />
           ),
         },
@@ -211,5 +246,6 @@ export function useNFTDrawerTabs({
     isMinterRole,
     contract,
     functionSelectors,
+    twAccount,
   ]);
 }

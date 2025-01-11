@@ -36,7 +36,7 @@ export type Ecosystem = {
     };
   } | null;
   smartAccountOptions?: {
-    chainIds: number[];
+    defaultChainId: number;
     sponsorGas: boolean;
     accountFactoryAddress: string;
   } | null;

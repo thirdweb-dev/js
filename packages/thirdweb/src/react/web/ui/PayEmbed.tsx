@@ -365,7 +365,13 @@ export function PayEmbed(props: PayEmbedProps) {
               onBack={() => {
                 setScreen("buy");
               }}
-              onTxSent={() => {}}
+              onTxSent={(data) => {
+                props.payOptions?.onPurchaseSuccess?.({
+                  type: "transaction",
+                  chainId: data.chain.id,
+                  transactionHash: data.transactionHash,
+                });
+              }}
             />
           )}
       </>
@@ -496,7 +502,7 @@ export type PayEmbedConnectOptions = {
   recommendedWallets?: Wallet[];
 
   /**
-   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 350+ wallets.
+   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 500+ wallets.
    *
    * You can disable this button by setting `showAllWallets` prop to `false`
    */

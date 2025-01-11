@@ -58,6 +58,7 @@ export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 export { useProfiles } from "../react/web/hooks/wallets/useProfiles.js";
 export { useLinkProfile } from "../react/web/hooks/wallets/useLinkProfile.js";
+export { useUnlinkProfile } from "../react/web/hooks/wallets/useUnlinkProfile.js";
 
 // chain hooks
 export { useChainMetadata } from "../react/core/hooks/others/useChainQuery.js";
@@ -189,6 +190,7 @@ export {
 export {
   NFTMedia,
   type NFTMediaProps,
+  type NFTMediaInfo,
 } from "../react/web/ui/prebuilt/NFT/media.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
@@ -221,6 +223,7 @@ export {
 export {
   AccountBalance,
   type AccountBalanceProps,
+  type AccountBalanceInfo,
 } from "../react/web/ui/prebuilt/Account/balance.js";
 export {
   AccountName,
@@ -267,3 +270,20 @@ export {
   ChainIcon,
   type ChainIconProps,
 } from "../react/web/ui/prebuilt/Chain/icon.js";
+
+// Utils
+export { getLastAuthProvider } from "../react/web/utils/storage.js";
+
+// Wallet
+export {
+  WalletProvider,
+  type WalletProviderProps,
+} from "../react/web/ui/prebuilt/Wallet/provider.js";
+export {
+  WalletIcon,
+  type WalletIconProps,
+} from "../react/web/ui/prebuilt/Wallet/icon.js";
+export {
+  WalletName,
+  type WalletNameProps,
+} from "../react/web/ui/prebuilt/Wallet/name.js";

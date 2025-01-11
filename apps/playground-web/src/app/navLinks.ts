@@ -21,7 +21,7 @@ export const navLinks: SidebarLink[] = [
   },
   {
     name: "Account Abstraction",
-    expanded: true,
+    expanded: false,
     links: [
       {
         name: "Connect",
@@ -39,7 +39,7 @@ export const navLinks: SidebarLink[] = [
   },
   {
     name: "In-App Wallet",
-    expanded: true,
+    expanded: false,
     links: [
       {
         name: "Any Auth",
@@ -57,7 +57,7 @@ export const navLinks: SidebarLink[] = [
   },
   {
     name: "Pay",
-    expanded: true,
+    expanded: false,
     links: [
       {
         name: "Top up",
@@ -74,6 +74,32 @@ export const navLinks: SidebarLink[] = [
     ],
   },
   {
+    name: "Engine",
+    expanded: false,
+    links: [
+      {
+        name: "Airdrop",
+        href: "/engine/airdrop",
+      },
+      {
+        name: "Minting",
+        href: "/engine/minting",
+      },
+      {
+        name: "Webhooks",
+        href: "/engine/webhooks",
+      },
+      // {
+      //   name: "Session Keys",
+      //   href: "/engine/account-abstraction/session-keys",
+      // },
+      // {
+      //   name: "Smart Backend Wallets",
+      //   href: "/engine/account-abstraction/smart-backend-wallets",
+      // },
+    ],
+  },
+  {
     name: "Auth",
     href: "/connect/auth",
   },
@@ -84,5 +110,31 @@ export const navLinks: SidebarLink[] = [
   {
     name: "Blockchain API",
     href: "/connect/blockchain-api",
+  },
+  {
+    name: "Headless UI",
+    expanded: true,
+    links: [
+      {
+        name: "Account",
+        href: "/connect/ui",
+      },
+      {
+        name: "NFT",
+        href: "/connect/ui/nft",
+      },
+      {
+        name: "Token",
+        href: "/connect/ui/token",
+      },
+      {
+        name: "Chain",
+        href: "/connect/ui/chain",
+      },
+      {
+        name: "Wallet",
+        href: "/connect/ui/wallet",
+      },
+    ],
   },
 ];

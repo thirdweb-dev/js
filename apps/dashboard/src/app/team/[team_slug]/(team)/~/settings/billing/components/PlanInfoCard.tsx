@@ -1,3 +1,4 @@
+import type { BillingBillingPortalAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { BillingPortalButton } from "@/components/billing";
@@ -13,6 +14,7 @@ import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getVal
 export function PlanInfoCard(props: {
   subscriptions: TeamSubscription[];
   team: Team;
+  redirectToBillingPortal: BillingBillingPortalAction;
 }) {
   const { subscriptions, team } = props;
   const validPlan = getValidTeamPlan(team);
@@ -53,6 +55,7 @@ export function PlanInfoCard(props: {
             teamSlug={team.slug}
             variant="outline"
             redirectPath={`/team/${team.slug}/~/settings/billing`}
+            redirectToBillingPortal={props.redirectToBillingPortal}
           >
             Manage Billing
           </BillingPortalButton>

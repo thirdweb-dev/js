@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.safepal",
   name: "SafePal",
   homepage: "https://safepal.com/",
-  image_id: "252753e7-b783-4e03-7f77-d39864530900",
+  image_id: "4e7d6f52-f663-4fc1-4b88-eebe7fc72800",
   app: {
     browser:
       "https://chrome.google.com/webstore/detail/safepal-extension-wallet/lgmpcpglpngdoalbgeoldeajfclnhafa",

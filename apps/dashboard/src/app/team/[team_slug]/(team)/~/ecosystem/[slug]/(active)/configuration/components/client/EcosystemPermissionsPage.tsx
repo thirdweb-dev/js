@@ -6,15 +6,19 @@ import { IntegrationPermissionsSection } from "../server/integration-permissions
 
 export function EcosystemPermissionsPage({
   params,
-}: { params: { slug: string } }) {
+  authToken,
+}: { params: { slug: string }; authToken: string }) {
   const { ecosystem } = useEcosystem({ slug: params.slug });
 
   return (
     <div className="flex flex-col gap-8">
-      <IntegrationPermissionsSection ecosystem={ecosystem} />
-      <AuthOptionsSection ecosystem={ecosystem} />
+      <IntegrationPermissionsSection
+        ecosystem={ecosystem}
+        authToken={authToken}
+      />
+      <AuthOptionsSection ecosystem={ecosystem} authToken={authToken} />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (
-        <EcosystemPartnersSection ecosystem={ecosystem} />
+        <EcosystemPartnersSection ecosystem={ecosystem} authToken={authToken} />
       )}
     </div>
   );

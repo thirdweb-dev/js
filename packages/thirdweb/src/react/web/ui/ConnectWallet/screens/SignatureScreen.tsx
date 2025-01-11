@@ -51,33 +51,37 @@ export const SignatureScreen: React.FC<{
   const adminWallet = useAdminWallet();
   const activeAccount = useActiveAccount();
   const siweAuth = useSiweAuth(wallet, activeAccount, props.auth);
-  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [status, setStatus] = useState<Status>(error ? "failed" : "idle");
   const { disconnect } = useDisconnect();
   const locale = connectLocale.signatureScreen;
 
   const signIn = useCallback(async () => {
     try {
+      setError(undefined);
       setStatus("signing");
       await siweAuth.doLogin();
       onDone?.();
     } catch (err) {
       await wait(1000);
+      setError((err as Error).message);
       setStatus("failed");
-      console.error("failed to log in", err);
     }
   }, [onDone, siweAuth]);
 
   if (!wallet) {
-    return <LoadingScreen />;
+    return <LoadingScreen data-testid="loading-screen" />;
   }
 
   if (
-    wallet.id === "inApp" ||
-    wallet.id === "embedded" ||
-    (wallet.id === "smart" && adminWallet?.id === "inApp")
+    isHeadlessSignSupported(wallet.id) ||
+    (wallet.id === "smart" &&
+      adminWallet &&
+      isHeadlessSignSupported(adminWallet.id))
   ) {
     return (
       <HeadlessSignIn
+        error={error}
         signIn={signIn}
         status={status}
         connectLocale={connectLocale}
@@ -126,6 +130,7 @@ export const SignatureScreen: React.FC<{
             <Button
               fullWidth
               variant="accent"
+              data-testid="sign-in-button"
               onClick={signIn}
               style={{
                 alignItems: "center",
@@ -138,6 +143,7 @@ export const SignatureScreen: React.FC<{
             <Button
               fullWidth
               variant="secondary"
+              data-testid="disconnect-button"
               onClick={() => {
                 disconnect(wallet);
               }}
@@ -162,7 +168,7 @@ export const SignatureScreen: React.FC<{
             <Container flex="column" gap="md" animate="fadein" key={status}>
               <Text size="lg" center color="primaryText">
                 {status === "failed"
-                  ? locale.signingScreen.failedToSignIn
+                  ? error || locale.signingScreen.failedToSignIn
                   : locale.signingScreen.inProgress}
               </Text>
 
@@ -222,14 +228,24 @@ export const SignatureScreen: React.FC<{
   );
 };
 
+function isHeadlessSignSupported(walletId: Wallet["id"]) {
+  return (
+    walletId === "inApp" ||
+    walletId === "embedded" ||
+    walletId.startsWith("ecosystem")
+  );
+}
+
 function HeadlessSignIn({
   signIn,
+  error,
   status,
   connectLocale,
   wallet,
 }: {
   signIn: () => void;
   status: Status;
+  error: string | undefined;
   connectLocale: ConnectLocale;
   wallet: Wallet;
 }) {
@@ -262,7 +278,7 @@ function HeadlessSignIn({
           <Container>
             <Spacer y="lg" />
             <Text size="lg" center color="danger">
-              {locale.signingScreen.failedToSignIn}
+              {error || locale.signingScreen.failedToSignIn}
             </Text>
 
             <Spacer y="lg" />
@@ -288,6 +304,7 @@ function HeadlessSignIn({
               onClick={() => {
                 disconnect(wallet);
               }}
+              data-testid="disconnect-button"
               style={{
                 alignItems: "center",
                 padding: spacing.md,

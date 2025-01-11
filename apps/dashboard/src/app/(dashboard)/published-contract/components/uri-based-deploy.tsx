@@ -30,7 +30,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }
 
-  // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chrakra
+  // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chakra
   return (
     <ChakraProviderSetup>
       <CustomContractForm

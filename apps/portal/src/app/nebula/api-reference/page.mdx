@@ -1,0 +1,208 @@
+# Nebula API Reference
+
+Nebula provides a conversational interface to interact with blockchain data and services, and access to thirdweb tools.
+
+## Table of Contents
+
+- [Base URL](#base-url)
+- [Authentication](#authentication)
+- [Sessions](#sessions)
+- [Context Filters](#context-filtering)
+- [Execute Configuration](#execute-configuration)
+- [Response Handling](#response-handling)
+- [API Endpoints](#api-endpoints)
+  - [Chat](#chat)
+- [Error Handling](#error-handling)
+
+## Base URL
+
+All API requests should be made to:
+
+```bash
+https://nebula-api.thirdweb.com
+```
+
+## Authentication
+
+All API endpoints require authentication using the thirdweb secret key. Include this key in your request headers:
+
+```bash
+x-secret-key: YOUR_THIRDWEB_SECRET_KEY
+```
+
+Example curl with authentication:
+```bash
+curl -X POST https://nebula-api.thirdweb.com/chat \
+  -H "Content-Type: application/json" \
+  -H "x-secret-key: YOUR_THIRDWEB_SECRET_KEY" \
+  -d '{
+    "message": "send 0.0001 ETH on sepolia to vitalik.eth",
+    "user_id": "default-user",
+    "stream": false,
+    "execute_config": {
+      "mode": "client",
+      "signer_wallet_address": "0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE"
+    }
+  }'
+```
+
+## Sessions
+
+Sessions maintain conversation threads with the AI and can be:
+
+- Created explicitly via the `/session` endpoint
+- Created automatically when sending a message without a session_id
+- Reused to maintain context across multiple messages
+- Configured with specific execution parameters
+
+Sessions persist your conversation history and custom configurations for blockchain data and thirdweb tools interactions.
+
+## Context Filters
+
+Control what blockchain data informs AI responses through context filtering:
+
+```json
+{
+  "context_filter": {
+    "chain_ids": [1],              // comma delimited list of chain ID's
+    "contract_addresses": ["0x..."], // Comma delimited list of contract addresses
+    "wallet_addresses": ["0x..."] // Comma delimited list of wallet addresses
+  }
+}
+```
+
+Benefits:
+- Filter by blockchain networks using chain IDs
+- Target specific contract addresses
+- Target specific wallet addresses
+- Control context scope for relevant responses
+- Optimize token usage and response relevance
+
+## Execute Configuration
+
+Configure transaction execution behavior using the execute config:
+
+```json
+{
+  "execute_config": {
+    "mode": "client",
+    "signer_wallet_address": "0x..." 
+  }
+}
+```
+
+Parameters:
+- `mode`: Execution mode (currently supports "client")
+- `signer_wallet_address`: Wallet address for transaction signing
+
+When mode is "client", Nebula returns an unsigned transaction for local wallet signing.
+
+## Response Handling
+
+Nebula API supports two types of response modes: streaming and non-streaming. The mode is controlled by the `stream` parameter in your request.
+
+### Non-Streaming Responses
+
+When `stream: false`, the API returns a single JSON response:
+
+```json
+{
+  "result": {
+    "message": "The last 5 blocks on polygon are...",
+    "session_id": "abc",
+    "message_id": "1234"
+  }
+}
+```
+
+### Streaming Responses
+
+When `stream: true`, the API uses Server-Sent Events (SSE) to stream the response. You'll need to handle the following event types:
+
+1. `init`: Initializes the stream and provides session information
+2. `presence`: Provides backend status updates about worker processing
+3. `action`: Contains blockchain transaction or action data
+4. `delta`: Contains chunks of the response message text
+5. `error`: Contains error information if something goes wrong
+
+**Example SSE Stream:**
+```tsx
+event: init
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "init",
+  "source": "user",
+  "data": ""
+}
+
+event: presence
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "presence",
+  "source": "executor",
+  "data": "Performing function execution: ExecuteNativeTransferClientSigning"
+}
+
+event: action
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "sign_transaction",
+  "source": "executor",
+  "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
+}
+
+event: delta
+data: {"v": "To send 0.0001 ETH on the Sepolia network"}
+
+event: delta
+data: {"v": " to the address associated with"}
+```
+
+**JavaScript Example for Handling Streams:**
+```javascript
+const eventSource = new EventSource('/chat', {
+  headers: {
+    'x-secret-key': 'YOUR_THIRDWEB_SECRET_KEY'
+  }
+});
+
+let messageText = '';
+
+eventSource.addEventListener('init', (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Stream initialized:', data);
+});
+
+eventSource.addEventListener('presence', (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Backend status:', data.data);
+});
+
+eventSource.addEventListener('action', (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Received action:', data);
+  if (data.type === 'sign_transaction') {
+    // Handle transaction signing
+    handleTransaction(data);
+  }
+});
+
+eventSource.addEventListener('delta', (event) => {
+  const data = JSON.parse(event.data);
+  messageText += data.v;
+  console.log('Current message:', messageText);
+});
+
+eventSource.addEventListener('error', (event) => {
+  const error = JSON.parse(event.data);
+  console.error('Error:', error);
+  eventSource.close();
+});
+```
+
+
+
+

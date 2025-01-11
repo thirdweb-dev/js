@@ -22,3 +22,27 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 Textarea.displayName = "Textarea";
 
 export { Textarea };
+
+export function AutoResizeTextarea(props: TextareaProps) {
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: value is needed in deps array
+  React.useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [props.value]);
+
+  return (
+    <Textarea
+      ref={textareaRef}
+      {...props}
+      style={{
+        ...props.style,
+        overflowY: "hidden",
+      }}
+    />
+  );
+}

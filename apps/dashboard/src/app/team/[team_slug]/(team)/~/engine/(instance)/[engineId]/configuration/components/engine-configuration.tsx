@@ -9,17 +9,26 @@ import { EngineSystem } from "./system";
 interface EngineConfigurationProps {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }
 
 export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
   instance,
   teamSlug,
+  authToken,
 }) => {
   return (
     <div className="flex flex-col gap-12">
-      <EngineWalletConfig instance={instance} teamSlug={teamSlug} />
-      <EngineCorsConfig instanceUrl={instance.url} />
-      <EngineIpAllowlistConfig instanceUrl={instance.url} />
+      <EngineWalletConfig
+        instance={instance}
+        teamSlug={teamSlug}
+        authToken={authToken}
+      />
+      <EngineCorsConfig instanceUrl={instance.url} authToken={authToken} />
+      <EngineIpAllowlistConfig
+        instanceUrl={instance.url}
+        authToken={authToken}
+      />
       <EngineSystem instance={instance} />
     </div>
   );

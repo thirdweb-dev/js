@@ -1,7 +1,6 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Flex,
   FormControl,
@@ -35,9 +34,11 @@ interface TimelineStep {
 export const TransactionTimeline = ({
   transaction,
   instanceUrl,
+  authToken,
 }: {
   transaction: Transaction;
   instanceUrl: string;
+  authToken: string;
 }) => {
   let timeline: TimelineStep[];
   switch (transaction?.status) {
@@ -52,6 +53,7 @@ export const TransactionTimeline = ({
             <CancelTransactionButton
               transaction={transaction}
               instanceUrl={instanceUrl}
+              authToken={authToken}
             />
           ),
         },
@@ -71,6 +73,7 @@ export const TransactionTimeline = ({
             <CancelTransactionButton
               transaction={transaction}
               instanceUrl={instanceUrl}
+              authToken={authToken}
             />
           ),
         },
@@ -178,12 +181,13 @@ const prettyPrintTimestamp = (
 const CancelTransactionButton = ({
   transaction,
   instanceUrl,
+  authToken,
 }: {
   transaction: Transaction;
   instanceUrl: string;
+  authToken: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const token = useLoggedInUser().user?.jwt ?? null;
   const { onSuccess, onError } = useTxNotifications(
     "Successfully sent a request to cancel the transaction",
     "Failed to cancel transaction",
@@ -196,7 +200,7 @@ const CancelTransactionButton = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
           "x-backend-wallet-address": transaction.fromAddress ?? "",
         },
         body: JSON.stringify({ queueId: transaction.queueId }),

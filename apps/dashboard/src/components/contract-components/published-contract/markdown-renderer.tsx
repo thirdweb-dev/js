@@ -19,8 +19,19 @@ import remarkGfm from "remark-gfm";
 export const MarkdownRenderer: React.FC<{
   markdownText: string;
   className?: string;
-  disableCodeHighlight?: boolean;
-}> = ({ markdownText, className, disableCodeHighlight }) => {
+  code?: {
+    disableCodeHighlight?: boolean;
+    ignoreFormattingErrors?: boolean;
+  };
+  p?: {
+    className?: string;
+  };
+  li?: {
+    className?: string;
+  };
+  skipHtml?: boolean;
+}> = (markdownProps) => {
+  const { markdownText, className, code } = markdownProps;
   const commonHeadingClassName =
     "mb-2 pb-2 leading-5 font-semibold tracking-tight";
 
@@ -28,6 +39,7 @@ export const MarkdownRenderer: React.FC<{
     <div className={className}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        skipHtml={markdownProps.skipHtml}
         components={{
           h1: (props) => (
             <h2
@@ -79,7 +91,7 @@ export const MarkdownRenderer: React.FC<{
 
           a: (props) => (
             <Link
-              href={props.href}
+              href={props.href ?? "#"}
               target="_blank"
               {...cleanedProps(props)}
               className="mt-4 text-link-foreground hover:text-foreground"
@@ -88,9 +100,10 @@ export const MarkdownRenderer: React.FC<{
 
           code: ({ ...props }) => {
             if (props?.className) {
-              if (disableCodeHighlight) {
+              if (code?.disableCodeHighlight) {
                 return (
-                  <div className="mb-4">
+                  <div className="my-4">
+                    {/* @ts-expect-error - TODO: fix this */}
                     <PlainTextCodeBlock
                       {...cleanedProps(props)}
                       code={onlyText(props.children).trim()}
@@ -100,11 +113,13 @@ export const MarkdownRenderer: React.FC<{
               }
               const language = props.className.replace("language-", "");
               return (
-                <div className="mb-4">
+                <div className="my-4">
                   <CodeClient
+                    // @ts-expect-error - TODO: fix this
                     lang={language}
                     {...cleanedProps(props)}
                     code={onlyText(props.children).trim()}
+                    ignoreFormattingErrors={code?.ignoreFormattingErrors}
                   />
                 </div>
               );
@@ -115,7 +130,10 @@ export const MarkdownRenderer: React.FC<{
 
           p: (props) => (
             <p
-              className="mb-4 text-muted-foreground leading-relaxed"
+              className={cn(
+                "mb-4 text-muted-foreground leading-loose",
+                markdownProps.p?.className,
+              )}
               {...cleanedProps(props)}
             />
           ),
@@ -159,12 +177,20 @@ export const MarkdownRenderer: React.FC<{
           ),
           li: ({ children: c, ...props }) => (
             <li
-              className="mb-1.5 text-muted-foreground"
+              className={cn(
+                "mb-2 text-muted-foreground [&>p]:m-0",
+                markdownProps.li?.className,
+              )}
               {...cleanedProps(props)}
             >
               {c}
             </li>
           ),
+          strong(props) {
+            return (
+              <strong className="font-semibold" {...cleanedProps(props)} />
+            );
+          },
         }}
       >
         {markdownText}

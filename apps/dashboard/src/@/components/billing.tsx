@@ -1,16 +1,17 @@
 "use client";
 
-import {
-  type BillingPortalOptions,
-  type RedirectCheckoutOptions,
-  redirectToBillingPortal,
-  redirectToCheckout,
+import type {
+  BillingBillingPortalAction,
+  BillingPortalOptions,
+  RedirectBillingCheckoutAction,
+  RedirectCheckoutOptions,
 } from "../actions/billing";
 import { Button, type ButtonProps } from "./ui/button";
 
 type CheckoutButtonProps = Omit<RedirectCheckoutOptions, "redirectUrl"> &
   ButtonProps & {
     redirectPath: string;
+    redirectToCheckout: RedirectBillingCheckoutAction;
   };
 
 export function CheckoutButton({
@@ -20,6 +21,7 @@ export function CheckoutButton({
   metadata,
   redirectPath,
   children,
+  redirectToCheckout,
   ...restProps
 }: CheckoutButtonProps) {
   return (
@@ -43,12 +45,15 @@ export function CheckoutButton({
 type BillingPortalButtonProps = Omit<BillingPortalOptions, "redirectUrl"> &
   ButtonProps & {
     redirectPath: string;
+    redirectToBillingPortal: BillingBillingPortalAction;
   };
+
 export function BillingPortalButton({
   onClick,
   teamSlug,
   redirectPath,
   children,
+  redirectToBillingPortal,
   ...restProps
 }: BillingPortalButtonProps) {
   return (

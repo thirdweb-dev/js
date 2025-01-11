@@ -6,10 +6,11 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
+import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
-import { ContractPublisher, replaceDeployerAddress } from "../publisher";
+import { ContractPublisher } from "../publisher";
 
 interface ContractCardProps {
   publisher: string;
@@ -62,17 +63,17 @@ function getContractUrl(
   if (isDeploy) {
     pathName += "/deploy";
   }
-  const moudleUrl = new URLSearchParams();
+  const moduleUrl = new URLSearchParams();
 
   for (const m of modules) {
-    moudleUrl.append("module", moduleToBase64(m));
+    moduleUrl.append("module", moduleToBase64(m));
   }
 
   if (titleOverride) {
-    moudleUrl.append("displayName", titleOverride);
+    moduleUrl.append("displayName", titleOverride);
   }
 
-  pathName += moudleUrl.toString() ? `?${moudleUrl.toString()}` : "";
+  pathName += moduleUrl.toString() ? `?${moduleUrl.toString()}` : "";
   return replaceDeployerAddress(pathName);
 }
 

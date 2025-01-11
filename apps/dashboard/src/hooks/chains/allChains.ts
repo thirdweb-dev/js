@@ -4,7 +4,8 @@ import { isProd } from "@/constants/env";
 import { createStore, useStore } from "@/lib/reactive";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import type { ChainMetadata } from "thirdweb/chains";
+import type { Chain, ChainMetadata } from "thirdweb/chains";
+import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import {
   type StoredChain,
   chainOverridesStore,
@@ -12,6 +13,7 @@ import {
 
 type AllChainsStore = {
   allChains: StoredChain[];
+  allChainsV5: Chain[];
   idToChain: Map<number, StoredChain | undefined>;
   nameToChain: Map<string, StoredChain | undefined>;
   slugToChain: Map<string, StoredChain | undefined>;
@@ -20,6 +22,7 @@ type AllChainsStore = {
 function createAllChainsStore() {
   const store = createStore<AllChainsStore>({
     allChains: [],
+    allChainsV5: [],
     idToChain: new Map(),
     nameToChain: new Map(),
     slugToChain: new Map(),
@@ -47,6 +50,7 @@ function createAllChainsStore() {
     // but don't ignore if chainOverrides is empty!
 
     const allChains: StoredChain[] = [];
+    const allChainsV5: Chain[] = [];
     const idToChain: Map<number, StoredChain | undefined> = new Map();
     const nameToChain: Map<string, StoredChain | undefined> = new Map();
     const slugToChain: Map<string, StoredChain | undefined> = new Map();
@@ -71,6 +75,8 @@ function createAllChainsStore() {
         chainOverrides.find((x) => x.chainId === _chain.chainId) || _chain;
 
       allChains.push(chain);
+      // eslint-disable-next-line no-restricted-syntax
+      allChainsV5.push(mapV4ChainToV5Chain(chain));
       idToChain.set(chain.chainId, chain);
       nameToChain.set(chain.name, chain);
       slugToChain.set(chain.slug, chain);
@@ -80,6 +86,8 @@ function createAllChainsStore() {
     for (const c of chainOverrides) {
       if (c.isCustom) {
         allChains.push(c);
+        // eslint-disable-next-line no-restricted-syntax
+        allChainsV5.push(mapV4ChainToV5Chain(c));
         idToChain.set(c.chainId, c);
         nameToChain.set(c.name, c);
         slugToChain.set(c.slug, c);
@@ -88,6 +96,7 @@ function createAllChainsStore() {
 
     store.setValue({
       allChains,
+      allChainsV5,
       idToChain: idToChain,
       nameToChain: nameToChain,
       slugToChain: slugToChain,

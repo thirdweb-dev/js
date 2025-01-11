@@ -2,6 +2,17 @@ import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
+type EnabledTeamScope =
+  | "pay"
+  | "storage"
+  | "rpc"
+  | "bundler"
+  | "insight"
+  | "embeddedWallets"
+  | "relayer"
+  | "chainsaw"
+  | "nebula";
+
 export type Team = {
   id: string;
   name: string;
@@ -15,6 +26,7 @@ export type Team = {
   billingStatus: "validPayment" | (string & {}) | null;
   billingEmail: string | null;
   growthTrialEligible: boolean | null;
+  enabledScopes: EnabledTeamScope[];
 };
 
 export async function getTeamBySlug(slug: string) {
@@ -52,7 +64,7 @@ export async function getTeams() {
   return null;
 }
 
-type TeamNebulWaitList = {
+type TeamNebulaWaitList = {
   onWaitlist: boolean;
   createdAt: null | string;
 };
@@ -74,7 +86,7 @@ export async function getTeamNebulaWaitList(teamSlug: string) {
   );
 
   if (res.ok) {
-    return (await res.json()).result as TeamNebulWaitList;
+    return (await res.json()).result as TeamNebulaWaitList;
   }
 
   return null;

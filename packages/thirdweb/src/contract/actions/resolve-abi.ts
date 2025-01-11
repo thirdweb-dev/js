@@ -41,6 +41,12 @@ export function resolveContractAbi<abi extends Abi>(
     if (contract.abi) {
       return contract.abi as abi;
     }
+
+    // for local chains, we need to resolve the composite abi from bytecode
+    if (contract.chain.id === 31337 || contract.chain.id === 1337) {
+      return await resolveCompositeAbi(contract as ThirdwebContract);
+    }
+
     // try to get it from the api
     try {
       return await resolveAbiFromContractApi(contract, contractApiBaseUrl);

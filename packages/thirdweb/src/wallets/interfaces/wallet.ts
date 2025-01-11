@@ -1,16 +1,16 @@
 import type { Address } from "abitype";
-import type {
-  Hex,
-  SignableMessage,
-  TransactionSerializable,
-  TypedData,
-  TypedDataDefinition,
-} from "viem";
+import type * as ox__TypedData from "ox/TypedData";
+import type { Hex, SignableMessage } from "viem";
 import type { Chain } from "../../chains/types.js";
+import type {
+  AuthorizationRequest,
+  SignedAuthorization,
+} from "../../transaction/actions/eip7702/authorization.js";
 import type {
   EIP712TransactionOptions,
   PreparedTransaction,
 } from "../../transaction/prepare-transaction.js";
+import type { SerializableTransaction } from "../../transaction/serialize-transaction.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -20,7 +20,7 @@ import type {
   WalletId,
 } from "../wallet-types.js";
 
-export type SendTransactionOption = TransactionSerializable & {
+export type SendTransactionOption = SerializableTransaction & {
   chainId: number;
   eip712?: EIP712TransactionOptions;
 };
@@ -191,13 +191,24 @@ export type Account = {
    * ```
    */
   signTypedData: <
-    const typedData extends TypedData | Record<string, unknown>,
+    const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
     primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
   >(
-    _typedData: TypedDataDefinition<typedData, primaryType>,
+    _typedData: ox__TypedData.Definition<typedData, primaryType>,
   ) => Promise<Hex>;
 
   // OPTIONAL
+
+  /**
+   * Sign the given EIP-7702 authorization object.
+   * @example
+   * ```ts
+   * const signedAuthorization = await account.signAuthorization({ address: "0x...", chainId: 1, nonce: 1n });
+   * ```
+   */
+  signAuthorization?: (
+    authorization: AuthorizationRequest,
+  ) => Promise<SignedAuthorization>;
 
   /**
    * Estimate the gas required to execute the given transaction.
@@ -222,7 +233,7 @@ export type Account = {
    * }
    * ```
    */
-  signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
+  signTransaction?: (tx: SerializableTransaction) => Promise<Hex>;
   /**
    * Send the given array of transactions to the blockchain in a single batch
    *

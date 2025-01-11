@@ -9,7 +9,7 @@ export function DeployActions(props: {
   publisher: string;
   contract_id: string;
   version?: string;
-  dispayName: string;
+  displayName: string;
 }) {
   const searchparams = useSearchParams();
 
@@ -30,7 +30,7 @@ export function DeployActions(props: {
         variant="outline"
         onClick={() => {
           shareLink({
-            title: `Deploy ${props.dispayName}`,
+            title: `Deploy ${props.displayName}`,
           });
         }}
       >

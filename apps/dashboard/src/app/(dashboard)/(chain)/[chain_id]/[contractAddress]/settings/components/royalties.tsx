@@ -1,5 +1,6 @@
 "use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
@@ -59,9 +60,11 @@ const CommonRoyaltySchema = z.object({
 export const SettingsRoyalties = ({
   contract,
   detectedState,
+  twAccount,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
+  twAccount: Account | undefined;
 }) => {
   const trackEvent = useTrack();
   const query = useReadContract(getDefaultRoyaltyInfo, {
@@ -183,18 +186,16 @@ export const SettingsRoyalties = ({
         <AdminOnly contract={contract}>
           <TransactionButton
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isPending || !form.formState.isDirty}
+            disabled={query.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={mutation.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={mutation.isPending}
+            className="!rounded-t-none rounded-xl"
+            twAccount={twAccount}
           >
-            Update Royalty Settings
+            {mutation.isPending
+              ? "Updating Royalty Settings"
+              : "Update Royalty Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

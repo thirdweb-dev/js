@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getDeployedCreate2Factory } from "../../contract/deployment/utils/create-2-factory.js";
 import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
 import { getDeployedInfraContractFromMetadata } from "../../contract/deployment/utils/infra.js";
+import { ZKSYNC_WETH } from "../../contract/deployment/zksync/implementations.js";
 import { computePublishedContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
@@ -135,6 +136,7 @@ async function getTransactionsForImplementation(options: {
     (await getAllDefaultConstructorParamsForImplementation({
       chain,
       client,
+      contractId: deployMetadata.name,
     }));
 
   const result = await getDeployedInfraContract({
@@ -223,18 +225,25 @@ async function getTransactionsForMaketplaceV3(options: {
 export async function getAllDefaultConstructorParamsForImplementation(args: {
   chain: Chain;
   client: ThirdwebClient;
+  contractId: string;
 }) {
   const { chain, client } = args;
   const isZkSync = await isZkSyncChain(chain);
   if (isZkSync) {
-    // zksync contracts dont need these implementation constructor params
-    return {};
+    const weth = ZKSYNC_WETH[chain.id];
+
+    return {
+      nativeTokenWrapper: weth,
+    };
   }
+
+  const forwarderContractId =
+    args.contractId === "Pack" ? "ForwarderEOAOnly" : "Forwarder";
   const [forwarder, weth] = await Promise.all([
     computePublishedContractAddress({
       chain,
       client,
-      contractId: "Forwarder",
+      contractId: forwarderContractId,
     }),
     computePublishedContractAddress({
       chain,

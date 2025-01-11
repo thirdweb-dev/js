@@ -1,5 +1,6 @@
 "use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
@@ -45,9 +46,11 @@ const CommonPlatformFeeSchema = z.object({
 export const SettingsPlatformFees = ({
   contract,
   detectedState,
+  twAccount,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
+  twAccount: Account | undefined;
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -175,19 +178,17 @@ export const SettingsPlatformFees = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={platformFeesQuery.isPending || !form.formState.isDirty}
+            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={sendAndConfirmTx.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={sendAndConfirmTx.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Platform Fee Settings
+            {sendAndConfirmTx.isPending
+              ? "Updating Platform Fee Settings"
+              : "Update Platform Fee Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

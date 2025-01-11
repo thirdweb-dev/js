@@ -100,15 +100,22 @@ const columns = [
 export const InAppWalletUsersPageContent = (props: {
   clientId: string;
   trackingCategory: string;
+  authToken: string;
 }) => {
   const [activePage, setActivePage] = useState(1);
-  const walletsQuery = useEmbeddedWallets(props.clientId, activePage);
+  const walletsQuery = useEmbeddedWallets({
+    authToken: props.authToken,
+    clientId: props.clientId,
+    page: activePage,
+  });
   const { users: wallets, totalPages } = walletsQuery?.data || {
     users: [],
     totalPages: 1,
   };
   const { mutateAsync: getAllEmbeddedWallets, isPending } =
-    useAllEmbeddedWallets();
+    useAllEmbeddedWallets({
+      authToken: props.authToken,
+    });
 
   const downloadCSV = useCallback(async () => {
     if (wallets.length === 0 || !getAllEmbeddedWallets) {

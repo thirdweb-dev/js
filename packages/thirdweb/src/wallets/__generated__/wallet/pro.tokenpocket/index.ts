@@ -5,7 +5,7 @@ export const wallet = {
   id: "pro.tokenpocket",
   name: "TokenPocket",
   homepage: "https://tokenpocket.pro/",
-  image_id: "f3119826-4ef5-4d31-4789-d4ae5c18e400",
+  image_id: "d8e930b6-ccde-471e-ecbe-6967b1c0c400",
   app: {
     browser:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",

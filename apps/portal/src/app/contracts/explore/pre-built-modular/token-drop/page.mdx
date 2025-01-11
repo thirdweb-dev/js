@@ -1,4 +1,5 @@
-import { createMetadata, DocImage, Steps, Step, Callout, ContractDeployCard } from "@doc";
+import { createMetadata, DocImage, Steps, Step, Callout} from "@doc";
+import { ContractDeployCard } from "@/components/Document/ContractDeployCard";
 import tokenDropStep1 from './assets/token_drop_step1.png'
 import tokenDropStep2 from './assets/token_drop_step2.png'
 import tokenDropStep3 from './assets/token_drop_step3.png'
@@ -11,6 +12,8 @@ import tokenDropClaimable from '../assets/erc20_claimable.png'
 The Token Drop contract creates digital currencies that are released for a set price and is compliant with the [ERC-20](https://eips.ethereum.org/EIPS/eip-20) standard. This contract defines a common set of rules for tokens including how they can be transferred, how transactions are approved, and how data about token balances is accessed. 
 
 Token Drop includes settings called claim conditions which allow deployers to set a prices for tokens per claim phase and limits on how many tokens to be released. These are enabled through the Claimable module.
+
+<ContractDeployCard contractName="Modular Token Drop" href="https://thirdweb.com/thirdweb.eth/ERC20CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzIwIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzIwIn0%3D&displayName=Modular+Token+Drop" />
 
 ### Token vs Token Drop
 

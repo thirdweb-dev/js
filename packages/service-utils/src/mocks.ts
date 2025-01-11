@@ -1,53 +1,68 @@
-import type { ApiKeyMetadata, CoreServiceConfig } from "./core/api.js";
+import type {
+  CoreServiceConfig,
+  ProjectResponse,
+  TeamAndProjectResponse,
+  TeamResponse,
+} from "./core/api.js";
 
-export const validApiKeyMeta: ApiKeyMetadata = {
+export const validProjectResponse: ProjectResponse = {
   id: "1",
-  key: "your-api-key",
-  creatorWalletAddress: "creator-address",
-  secretHash: "secret-hash",
-  walletAddresses: [],
+  publishableKey: "your-api-key",
+  walletAddresses: ["creator-address"],
   domains: ["example.com", "*.example.com"],
   bundleIds: [],
-  redirectUrls: [],
-  accountId: "test-account-id",
-  accountStatus: "noCustomer",
-  accountPlan: "free",
   services: [
     {
       name: "storage",
-      targetAddresses: ["target1", "target2"],
-      actions: ["action1", "action2"],
+      actions: ["read", "write"],
     },
     {
-      name: "service2",
-      targetAddresses: ["target3"],
-      actions: ["action3"],
+      name: "rpc",
+      actions: [],
     },
     {
       name: "bundler",
-      targetAddresses: ["*"],
-      actions: ["action3"],
+      actions: [],
+      allowedChainIds: [1, 2, 3],
     },
   ],
-  limits: {
-    storage: 100,
-  },
-  rateLimits: {
-    rpc: 25,
-  },
+  teamId: "1",
+  createdAt: new Date("2024-06-01"),
+  updatedAt: new Date("2024-06-01"),
+  name: "test-project",
+  slug: "test-project",
+  image: "https://example.com/image.png",
+};
+
+export const validTeamResponse: TeamResponse = {
+  id: "1",
+  name: "test-team",
+  slug: "test-team",
+  image: "https://example.com/image.png",
+  createdAt: new Date("2024-06-01"),
+  updatedAt: new Date("2024-06-01"),
+  billingPlan: "free",
+  billingEmail: "test@example.com",
+  billingStatus: "noPayment",
+  growthTrialEligible: false,
+  enabledScopes: ["storage", "rpc", "bundler"],
+};
+
+export const validTeamAndProjectResponse: TeamAndProjectResponse = {
+  team: validTeamResponse,
+  project: validProjectResponse,
+  authMethod: "publishableKey",
 };
 
 export const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
   serviceScope: "storage",
   serviceApiKey: "service-api-key",
-  serviceAction: "action1",
-  enforceAuth: true,
+  serviceAction: "read",
 };
 
 export const validBundlerServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
   serviceScope: "bundler",
   serviceApiKey: "service-api-key",
-  enforceAuth: true,
 };

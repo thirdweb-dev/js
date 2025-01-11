@@ -7,8 +7,12 @@ import {
 	OpenSourceCard,
 	Stack,
 	ConnectCard,
-	Callout
+	SDKCard,
+	Callout,
+	ArticleIconCard,
 } from "@doc";
+import { ExternalLink } from "lucide-react";
+import { TypeScriptIcon, ReactIcon, DotNetIcon, UnityIcon, UnrealEngineIcon } from "@/icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -26,36 +30,61 @@ export const metadata = createMetadata({
 
 Connect is the complete toolkit for connecting every user to your application. It features customizable onboarding flows, self-custodial in-app wallets, account abstraction, onramps, and a performant API to interact with the blockchain.
 
-<div
-	className={cn(
-		"my-4 grid gap-4 md:grid-cols-2 lg:grid-cols-2",
-		props.className,
-	)}
->
-	<ConnectCard
-		title="Playground"
-		href="https://playground.thirdweb.com"
-		iconUrl="/icons/connect/intros/demo.svg"
-	/>
-	<ConnectCard
-		title="Quickstart"
-		href="https://portal.thirdweb.com/react/v5/getting-started"
-		iconUrl="/icons/connect/intros/quickstart.svg"
-	/>
-	{/* <ConnectCard
-		title="Why Connect?"
-		href=""
-		iconUrl="/icons/connect/intros/why-connect.svg"
-	/>
-	<ConnectCard
-		title="Video Tutorial"
-		href=""
-		iconUrl="/icons/connect/intros/video-tutorial.svg"
-	/> */}
-</div>
-### With Connect, you can:
+## Live Playground
 
-- **Connect to 350+ different wallet providers** with support for every EVM network
+You can interact with the React SDK in the [Live Playground](https://playground.thirdweb.com/).
+
+<Stack>
+
+<ArticleIconCard
+	title="Try the demo"
+	icon={ExternalLink}
+	href="https://playground.thirdweb.com"
+	description="See the SDK in action on the live playground"
+/>
+
+</Stack>
+
+## Quick starts
+
+Get started with Connect in your preferred language.
+
+<Grid>
+	<SDKCard
+		title="TypeScript"
+		href="/typescript/v5/getting-started"
+		icon={TypeScriptIcon}
+	/>
+	<SDKCard
+		title="React"
+		href="/react/v5/getting-started"
+		icon={ReactIcon}
+	/>
+	<SDKCard
+		title="React Native"
+		href="/react-native/v5/getting-started"
+		icon={ReactIcon}
+	/>
+	<SDKCard
+		title="DotNet"
+		href="/dotnet/getting-started"
+		icon={DotNetIcon}
+	/>
+	<SDKCard
+		title="Unity"
+		href="/unity/v5/getting-started"
+		icon={UnityIcon}
+	/>
+	<SDKCard
+		title="Unreal Engine"
+		href="/unreal-engine/getting-started"
+		icon={UnrealEngineIcon}
+	/>
+</Grid>
+
+## With Connect, you can
+
+- **Connect to 500+ different wallet providers** with support for every EVM network
 - **Log in and authenticate your users** with customizable and secure [email, phone, passkeys and social login](https://portal.thirdweb.com/connect/in-app-wallet/overview) flows.
 - **Sponsor transactions** to seamlessly onboard non-native or new crypto users with [Account Abstraction](https://portal.thirdweb.com/connect/account-abstraction/overview).
 - **Perform wallet actions** like connecting and disconnecting wallets, viewing balance, displaying ENS names, and execute transactions with our [perfomant, reliable and type safe API](https://portal.thirdweb.com/connect/blockchain-api)
@@ -78,63 +107,17 @@ Connect is the complete toolkit for connecting every user to your application. I
 	</div>
 </Callout>
 
-### Supported Chains
+## Supported Chains
 
 Connect is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
 
-### Templates
+## Starter Kits & demos
 
-<ExpandableGrid>
+View all available starter kits, demos and templates on Github.
 
 <GithubTemplateCard
-	title="Next Starter"
-	href="https://github.com/thirdweb-example/next-starter"
-	tag="Starter"
-/>
-<GithubTemplateCard
-	title="Vite Starter"
-	href="https://github.com/thirdweb-example/vite-starter"
-	tag="Starter"
-/>
-<GithubTemplateCard
-	title="Node Starter"
-	href="https://github.com/thirdweb-example/node-starter"
-	tag="Starter"
-/>
-<GithubTemplateCard
-	title="Expo Starter"
-	href="https://github.com/thirdweb-example/expo-starter"
+	title="View all templates"
+	href="https://github.com/thirdweb-example"
 	tag="Starter"
 />
 
-<GithubTemplateCard
-	title="NFT Marketplace"
-	href="https://github.com/thirdweb-example/marketplace-v3"
-	tag="Builds"
-/>
-
-<GithubTemplateCard
-	title="Auth - NextJS"
-	href="https://github.com/thirdweb-example/thirdweb-auth-next"
-	tag="Example"
-/>
-
-<GithubTemplateCard
-	title="Auth - Express"
-	href="https://github.com/thirdweb-example/thirdweb-auth-express"
-	tag="Example"
-/>
-
-<GithubTemplateCard
-	title="Account Abstraction"
-	href="https://github.com/thirdweb-example/account-abstraction"
-	tag="Example"
-/>
-
-<GithubTemplateCard
-	title="Sign in with Farcaster"
-	href="https://github.com/thirdweb-example/thirdweb-siwf"
-	tag="Example"
-/>
-
-</ExpandableGrid>

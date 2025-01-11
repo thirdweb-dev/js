@@ -1,17 +1,17 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster, toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
-import { ThirdwebProvider } from "thirdweb/react";
-import { CustomConnectWallet } from "../../../../../../../@3rdweb-sdk/react/components/connect-wallet";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   ErrorProvider,
   type TransactionError,
 } from "../../../../../../../contexts/error-handler";
+import { accountStub } from "../../../../../../../stories/stubs";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,
@@ -78,42 +78,40 @@ function Component() {
     version: "1.0.0",
   };
 
-  // TODO - remove ChakraProviderSetup after converting the TransactionButton to tailwind+shadcn
   return (
     <ThirdwebProvider>
-      <ChakraProviderSetup>
-        <ErrorProvider>
-          <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-            <div>
-              <CustomConnectWallet loginRequired={false} />
-            </div>
-
-            <div className="flex items-center gap-5">
-              <CheckboxWithLabel
-                value={isOwner}
-                onChange={setIsOwner}
-                id="isOwner"
-                label="Is Owner"
-              />
-            </div>
-
-            <BadgeContainer label="Default">
-              <BatchMetadataModuleUI
-                contractInfo={contractInfo}
-                moduleAddress="0x0000000000000000000000000000000000000000"
-                uploadMetadata={uploadMetadataStub}
-                uninstallButton={{
-                  onClick: async () => removeMutation.mutateAsync(),
-                  isPending: removeMutation.isPending,
-                }}
-                isOwnerAccount={isOwner}
-                contractChainId={1}
-              />
-            </BadgeContainer>
-            <Toaster richColors />
+      <ErrorProvider>
+        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+          <div>
+            <ConnectButton client={getThirdwebClient()} />
           </div>
-        </ErrorProvider>
-      </ChakraProviderSetup>
+
+          <div className="flex items-center gap-5">
+            <CheckboxWithLabel
+              value={isOwner}
+              onChange={setIsOwner}
+              id="isOwner"
+              label="Is Owner"
+            />
+          </div>
+
+          <BadgeContainer label="Default">
+            <BatchMetadataModuleUI
+              twAccount={accountStub()}
+              contractInfo={contractInfo}
+              moduleAddress="0x0000000000000000000000000000000000000000"
+              uploadMetadata={uploadMetadataStub}
+              uninstallButton={{
+                onClick: async () => removeMutation.mutateAsync(),
+                isPending: removeMutation.isPending,
+              }}
+              isOwnerAccount={isOwner}
+              contractChainId={1}
+            />
+          </BadgeContainer>
+          <Toaster richColors />
+        </div>
+      </ErrorProvider>
     </ThirdwebProvider>
   );
 }

@@ -12,15 +12,11 @@ import { Check, Copy, ExternalLinkIcon } from "lucide-react";
 import { useMemo } from "react";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
-import {
-  Blobbie,
-  MediaRenderer,
-  type SocialProfile,
-  useSocialProfiles,
-} from "thirdweb/react";
+import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Img } from "./Img";
 
 export function WalletAddress(props: {
   address: string | undefined;
@@ -182,14 +178,18 @@ function WalletAvatar(props: {
           profile.avatar.startsWith("ipfs")),
     )?.avatar;
   }, [props.profiles]);
+
+  const resolvedAvatarSrc = avatar
+    ? resolveSchemeWithErrorHandler({
+        client: props.thirdwebClient,
+        uri: avatar,
+      })
+    : undefined;
+
   return (
     <div className="size-6 overflow-hidden rounded-full">
-      {avatar ? (
-        <MediaRenderer
-          client={props.thirdwebClient}
-          src={avatar}
-          className="size-6"
-        />
+      {resolvedAvatarSrc ? (
+        <Img src={resolvedAvatarSrc} className="size-6 object-cover" />
       ) : (
         <Blobbie address={props.address} size={24} />
       )}

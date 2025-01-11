@@ -17,14 +17,14 @@ export function DeployedContractsPageHeader() {
           setImportModalOpen(false);
         }}
       />
-      <div className="flex flex-col gap-4 md:pb-4 lg:flex-row lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
         <div>
-          <h1 className="mb-1.5 font-semibold text-3xl tracking-tight lg:text-4xl">
-            Your contracts
+          <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
+            Deployed contracts
           </h1>
           <p className="text-muted-foreground text-sm">
-            The list of contract instances that you have deployed or imported
-            with thirdweb across all networks
+            The list of contracts that you have deployed or imported with
+            thirdweb across all networks
           </p>
         </div>
         <div className="flex gap-2 [&>*]:grow">

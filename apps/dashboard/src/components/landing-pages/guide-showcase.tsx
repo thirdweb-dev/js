@@ -56,17 +56,18 @@ export const LandingGuidesShowcase: React.FC<LandingGuidesShowcaseProps> = ({
           justifyContent={guides.length <= 2 ? "center" : undefined}
         >
           {guides.map(
-            (
-              { title: guideTitle, description: guideDescription, image, link },
-              idx,
-            ) => (
+            ({
+              title: guideTitle,
+              description: guideDescription,
+              image,
+              link,
+            }) => (
               <GuideCard
                 category={category}
                 label="guide"
                 trackingProps={{
                   guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
                 }}
-                index={idx}
                 key={guideTitle}
                 image={image}
                 title={guideTitle}

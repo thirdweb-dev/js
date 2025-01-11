@@ -1,9 +1,10 @@
 "use client";
 
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
   AlertIcon,
-  Box,
   Flex,
   FormControl,
   Input,
@@ -23,7 +24,6 @@ import type { CreateDelayedRevealBatchParams } from "thirdweb/extensions/erc721"
 import type { NFTInput } from "thirdweb/utils";
 import {
   Button,
-  Checkbox,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -102,9 +102,11 @@ function useBatchLazyMintForm() {
   });
 }
 
-export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
-  props,
-) => {
+export const BatchLazyMint: ComponentWithChildren<
+  BatchLazyMintProps & {
+    twAccount: Account | undefined;
+  }
+> = (props) => {
   const [step, setStep] = useState(0);
 
   const form = useBatchLazyMintForm();
@@ -193,7 +195,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
               />
               <div className="border-border border-t">
                 <div className="flex flex-col items-center justify-between p-0 md:flex-row md:p-4">
-                  <Box ref={paginationPortalRef} />
+                  <div ref={paginationPortalRef} />
                   <div className="mt-4 flex w-full flex-row items-center gap-2 md:mt-0 md:w-auto">
                     <Button
                       borderRadius="md"
@@ -248,30 +250,33 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
           />
           {form.watch("revealType") && (
             <>
-              <Checkbox {...form.register("shuffle")} mt={3}>
-                <Flex gap={1} flexDir={{ base: "column", md: "row" }}>
-                  <Text>Shuffle the order of the NFTs before uploading.</Text>
-                  <Text fontStyle="italic">
-                    This is an off-chain operation and is not provable.
-                  </Text>
-                </Flex>
-              </Checkbox>
-              <Box maxW={{ base: "100%", md: "61%" }}>
+              <CheckboxWithLabel>
+                <Checkbox
+                  className="mt-3"
+                  checked={form.watch("shuffle")}
+                  onCheckedChange={(val) => form.setValue("shuffle", !!val)}
+                />
+                <div className="flex flex-col items-center gap-1 md:flex-row">
+                  <p>Shuffle the order of the NFTs before uploading.</p>
+                  <em>This is an off-chain operation and is not provable.</em>
+                </div>
+              </CheckboxWithLabel>
+              <div className="w-full md:w-[61%]">
                 <TransactionButton
                   txChainID={props.chainId}
-                  mt={4}
-                  colorScheme="primary"
+                  className="mt-4 w-full"
                   transactionCount={1}
-                  isDisabled={!nftMetadatas.length}
+                  disabled={!nftMetadatas.length}
                   type="submit"
-                  isLoading={form.formState.isSubmitting}
-                  loadingText={`Uploading ${nftMetadatas.length} NFTs...`}
-                  w="full"
+                  isPending={form.formState.isSubmitting}
+                  twAccount={props.twAccount}
                 >
-                  Upload {nftMetadatas.length} NFTs
+                  {form.formState.isSubmitting
+                    ? `Uploading ${nftMetadatas.length} NFTs`
+                    : `Upload ${nftMetadatas.length} NFTs`}
                 </TransactionButton>
                 {props.children}
-              </Box>
+              </div>
               <Text size="body.sm" mt={2}>
                 <TrackedLink
                   href="https://support.thirdweb.com/dashboard/n5evQ4EfEjEifczEQaZ1hL/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X"
@@ -403,7 +408,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                 }
               >
                 <FormLabel>Image</FormLabel>
-                <Box width={{ base: "auto", md: "350px" }}>
+                <div className="w-auto md:w-[350px]">
                   <FileInput
                     accept={{ "image/*": [] }}
                     value={imageUrl}
@@ -413,7 +418,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                     }
                     className="rounded border border-border transition-all duration-200"
                   />
-                </Box>
+                </div>
                 <FormHelperText>
                   You can optionally upload an image as the placeholder.
                 </FormHelperText>

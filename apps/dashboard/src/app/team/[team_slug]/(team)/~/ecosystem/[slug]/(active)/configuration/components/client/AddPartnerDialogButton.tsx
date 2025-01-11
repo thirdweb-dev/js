@@ -15,6 +15,7 @@ import { AddPartnerForm } from "./add-partner-form.client";
 
 export function AddPartnerDialogButton(props: {
   ecosystem: Ecosystem;
+  authToken: string;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -34,6 +35,7 @@ export function AddPartnerDialogButton(props: {
         <AddPartnerForm
           ecosystem={props.ecosystem}
           onPartnerAdded={() => setOpen(false)}
+          authToken={props.authToken}
         />
       </DialogContent>
     </Dialog>

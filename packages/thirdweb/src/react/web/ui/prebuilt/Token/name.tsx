@@ -3,11 +3,14 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import { getChainMetadata } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getContract } from "../../../../../contract/contract.js";
 import { getContractMetadata } from "../../../../../extensions/common/read/getContractMetadata.js";
 import { name } from "../../../../../extensions/common/read/name.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { useTokenContext } from "./provider.js";
 
 /**
@@ -157,33 +160,9 @@ export function TokenName({
 }: TokenNameProps) {
   const { address, client, chain } = useTokenContext();
   const nameQuery = useQuery({
-    queryKey: ["_internal_token_name_", chain.id, address] as const,
-    queryFn: async () => {
-      if (typeof nameResolver === "string") {
-        return nameResolver;
-      }
-      if (typeof nameResolver === "function") {
-        return nameResolver();
-      }
-      if (address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()) {
-        // Don't wanna use `getChainNativeCurrencyName` because it has some side effect (it catches error and defaults to "ETH")
-        return getChainMetadata(chain).then((data) => data.nativeCurrency.name);
-      }
-      // Try to fetch the name from both the `name()` function and the contract metadata
-      // then prioritize the `name()`
-      const contract = getContract({ address, client, chain });
-      const [_name, contractMetadata] = await Promise.all([
-        name({ contract }),
-        getContractMetadata({ contract }),
-      ]);
-      if (!_name && !contractMetadata.name) {
-        throw new Error(
-          "Failed to resolve name from both name() and contract metadata",
-        );
-      }
-
-      return _name || contractMetadata.name;
-    },
+    queryKey: getQueryKeys({ chainId: chain.id, nameResolver, address }),
+    queryFn: async () =>
+      fetchTokenName({ address, chain, client, nameResolver }),
     ...queryOptions,
   });
 
@@ -195,7 +174,72 @@ export function TokenName({
     return fallbackComponent || null;
   }
 
-  const displayValue = formatFn ? formatFn(nameQuery.data) : nameQuery.data;
+  if (formatFn && typeof formatFn === "function") {
+    return <span {...restProps}>{formatFn(nameQuery.data)}</span>;
+  }
 
-  return <span {...restProps}>{displayValue}</span>;
+  return <span {...restProps}>{nameQuery.data}</span>;
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchTokenName(props: {
+  address: string;
+  client: ThirdwebClient;
+  chain: Chain;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { nameResolver, address, client, chain } = props;
+  if (typeof nameResolver === "string") {
+    return nameResolver;
+  }
+  if (typeof nameResolver === "function") {
+    return nameResolver();
+  }
+  if (address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()) {
+    // Don't wanna use `getChainName` because it has some side effect (it catches error and defaults to "ETH")
+    return getChainMetadata(chain).then((data) => data.nativeCurrency.name);
+  }
+
+  // Try to fetch the name from both the `name` function and the contract metadata
+  // then prioritize its result
+  const contract = getContract({ address, client, chain });
+  const [_name, contractMetadata] = await Promise.all([
+    name({ contract }).catch(() => undefined),
+    getContractMetadata({ contract }).catch(() => undefined),
+  ]);
+  if (typeof _name === "string") {
+    return _name;
+  }
+  if (typeof contractMetadata?.name === "string") {
+    return contractMetadata.name;
+  }
+  throw new Error(
+    "Failed to resolve name from both name() and contract metadata",
+  );
+}
+
+/**
+ * @internal
+ */
+export function getQueryKeys(props: {
+  chainId: number;
+  address: string;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { chainId, address, nameResolver } = props;
+  return [
+    "_internal_token_name_",
+    chainId,
+    address,
+    {
+      resolver:
+        typeof nameResolver === "string"
+          ? nameResolver
+          : typeof nameResolver === "function"
+            ? getFunctionId(nameResolver)
+            : undefined,
+    },
+  ] as const;
 }

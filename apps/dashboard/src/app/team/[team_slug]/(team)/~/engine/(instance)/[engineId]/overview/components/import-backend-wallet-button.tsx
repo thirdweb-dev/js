@@ -43,17 +43,22 @@ interface ImportBackendWalletButtonProps {
   instance: EngineInstance;
   walletConfig: WalletConfigResponse;
   teamSlug: string;
+  authToken: string;
 }
 
 export const ImportBackendWalletButton: React.FC<
   ImportBackendWalletButtonProps
-> = ({ instance, walletConfig, teamSlug }) => {
+> = ({ instance, walletConfig, teamSlug, authToken }) => {
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
   );
   const { mutate: importBackendWallet, isPending } =
-    useEngineImportBackendWallet(instance.url);
+    useEngineImportBackendWallet({
+      instanceUrl: instance.url,
+      authToken,
+    });
+
   const { onSuccess, onError } = useTxNotifications(
     "Wallet imported successfully.",
     "Failed to import wallet.",

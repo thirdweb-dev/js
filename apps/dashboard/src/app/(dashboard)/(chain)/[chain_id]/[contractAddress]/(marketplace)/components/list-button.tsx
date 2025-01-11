@@ -8,7 +8,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { TabButtons } from "@/components/ui/tabs";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
+import { isMoralisSupported } from "lib/wallet/nfts/moralis";
+import { useSimplehashSupport } from "lib/wallet/nfts/simpleHash";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -19,17 +24,30 @@ interface CreateListingButtonProps {
   contract: ThirdwebContract;
   createText?: string;
   type?: "direct-listings" | "english-auctions";
+  twAccount: Account | undefined;
 }
+
+const LISTING_MODES = ["Select NFT", "Manual"] as const;
 
 export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   createText = "Create",
   type,
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
   const [open, setOpen] = useState(false);
+  const [listingMode, setListingMode] =
+    useState<(typeof LISTING_MODES)[number]>("Select NFT");
 
+  const simplehashQuery = useSimplehashSupport(contract.chain.id);
+
+  const isSupportedChain =
+    contract.chain.id &&
+    (simplehashQuery.data ||
+      isAlchemySupported(contract.chain.id) ||
+      isMoralisSupported(contract.chain.id));
   return (
     <ListerOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -40,14 +58,47 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
         </SheetTrigger>
         <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
           <SheetHeader>
-            <SheetTitle className="mb-5 text-left">{createText}</SheetTitle>
+            <SheetTitle className="mb-3 text-left">{createText}</SheetTitle>
           </SheetHeader>
-          <CreateListingsForm
-            contract={contract}
-            type={type}
-            actionText={createText}
-            setOpen={setOpen}
-          />
+          {/*
+          If the chain is not supported by the indexer providers
+          we don't show the tabs, we only show the Manual input form.
+          Otherwise we show both */}
+          {isSupportedChain ? (
+            <>
+              <TabButtons
+                tabs={LISTING_MODES.map((mode) => ({
+                  name: mode,
+                  isActive: mode === listingMode,
+                  onClick: () => setListingMode(mode),
+                  isEnabled: true,
+                }))}
+                tabClassName="text-sm gap-2 !text-sm"
+                tabContainerClassName="gap-0.5"
+              />
+              <div className="mt-5">
+                <CreateListingsForm
+                  twAccount={twAccount}
+                  contract={contract}
+                  type={type}
+                  actionText={createText}
+                  setOpen={setOpen}
+                  mode={listingMode === "Select NFT" ? "automatic" : "manual"}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="mt-5">
+              <CreateListingsForm
+                twAccount={twAccount}
+                contract={contract}
+                type={type}
+                actionText={createText}
+                setOpen={setOpen}
+                mode="manual"
+              />
+            </div>
+          )}
         </SheetContent>
       </Sheet>
     </ListerOnly>

@@ -1,9 +1,7 @@
 import {
-  type AccountMetadata,
-  type ApiKeyMetadata,
   type CoreServiceConfig,
-  fetchAccountFromApi,
-  fetchKeyMetadataFromApi,
+  type TeamAndProjectResponse,
+  fetchTeamAndProject,
 } from "../api.js";
 import { authorizeClient } from "./client.js";
 import { authorizeService } from "./service.js";
@@ -26,149 +24,32 @@ export type AuthorizationInput = {
 
 export type CacheOptions = {
   get: (clientId: string) => Promise<string | null>;
-  put: (
-    clientId: string,
-    data: ApiKeyMetadata | AccountMetadata,
-  ) => Promise<void> | void;
+  put: (clientId: string, data: TeamAndProjectResponse) => Promise<void> | void;
   cacheTtlSeconds: number;
 };
 
-type ApiKeyCacheWithPossibleTTL =
+type TeamAndProjectCacheWithPossibleTTL =
   | {
-      apiKeyMeta: ApiKeyMetadata;
+      teamAndProjectResponse: TeamAndProjectResponse;
       updatedAt: number;
     }
-  | ApiKeyMetadata;
-
-type AccountCacheWithPossibleTTL =
-  | {
-      apiKeyMeta: AccountMetadata;
-      updatedAt: number;
-    }
-  | AccountMetadata;
+  | TeamAndProjectResponse;
 
 export async function authorize(
   authData: AuthorizationInput,
   serviceConfig: CoreServiceConfig,
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
-  const {
-    clientId,
-    targetAddress,
-    secretKeyHash,
-    jwt,
-    hashedJWT,
-    useWalletAuth,
-  } = authData;
-  const { enforceAuth } = serviceConfig;
-
-  // BACKWARDS COMPAT: if auth not enforced and we don't have auth credentials bypass
-  if (!enforceAuth && !clientId && !secretKeyHash) {
-    return {
-      authorized: true,
-      apiKeyMeta: null,
-      accountMeta: null,
-    };
-  }
-  // if we come in with a JWT then we only check the account is valid
-  if (jwt && hashedJWT) {
-    let accountMeta: AccountMetadata | null = null;
-    if (cacheOptions) {
-      try {
-        const cachedAccountInfo = await cacheOptions.get(hashedJWT);
-        if (cachedAccountInfo) {
-          const parsed = JSON.parse(
-            cachedAccountInfo,
-          ) as AccountCacheWithPossibleTTL;
-          if ("updatedAt" in parsed) {
-            // we want to compare the updatedAt time to the current time
-            // if the difference is greater than the cacheTtl we want to ignore the cached data
-            const now = Date.now();
-            const diff = now - parsed.updatedAt;
-            const cacheTtlMs = cacheOptions.cacheTtlSeconds * 1000;
-            // only if the diff is less than the cacheTtl do we want to use the cached key
-            if (diff < cacheTtlMs) {
-              accountMeta = parsed.apiKeyMeta;
-            }
-          } else {
-            accountMeta = parsed;
-          }
-        }
-      } catch {
-        // ignore errors, proceed as if not in cache
-      }
-    }
-    if (!accountMeta) {
-      try {
-        const { data, error } = await fetchAccountFromApi(
-          jwt,
-          serviceConfig,
-          useWalletAuth?.toLowerCase() === "true",
-        );
-        if (error) {
-          return {
-            authorized: false,
-            errorCode: error.code,
-            errorMessage: error.message,
-            status: error.statusCode,
-          };
-        }
-        if (!data) {
-          return {
-            authorized: false,
-            errorCode: "NO_ACCOUNT",
-            errorMessage: "No error but also no account returned.",
-            status: 500,
-          };
-        }
-        accountMeta = data;
-        if (cacheOptions) {
-          await cacheOptions.put(hashedJWT, accountMeta);
-        }
-      } catch (err) {
-        console.warn("failed to fetch account from api", err);
-        return {
-          authorized: false,
-          status: 500,
-          errorMessage: "Failed to get account information.",
-          errorCode: "FAILED_TO_LOAD_ACCOUNT",
-        };
-      }
-    }
-    // if we still don't have an accountMeta at this point we can't authorize
-    if (!accountMeta) {
-      return {
-        authorized: false,
-        status: 401,
-        errorMessage: "Missing account information.",
-        errorCode: "MISSING_ACCOUNT",
-      };
-    }
-    // otherwise we want to return early with the accountMeta
-    return {
-      authorized: true,
-      apiKeyMeta: null,
-      accountMeta,
-    };
-  }
-
-  // if we don't have a client id at this point we can't authorize
-  if (!clientId) {
-    return {
-      authorized: false,
-      status: 401,
-      errorMessage: "Missing clientId or secretKey.",
-      errorCode: "MISSING_KEY",
-    };
-  }
-
-  let apiKeyMeta: ApiKeyMetadata | null = null;
-  // if we have cache options we want to check the cache first
+  let teamAndProjectResponse: TeamAndProjectResponse | null = null;
+  const cacheKey = `key_v2_${authData.clientId ?? authData.secretKeyHash ?? authData.hashedJWT}`;
+  // TODO if we have cache options we want to check the cache first
   if (cacheOptions) {
     try {
-      const cachedKey = await cacheOptions.get(clientId);
+      const cachedKey = await cacheOptions.get(cacheKey);
       if (cachedKey) {
-        const parsed = JSON.parse(cachedKey) as ApiKeyCacheWithPossibleTTL;
+        const parsed = JSON.parse(
+          cachedKey,
+        ) as TeamAndProjectCacheWithPossibleTTL;
         if ("updatedAt" in parsed) {
           // we want to compare the updatedAt time to the current time
           // if the difference is greater than the cacheTtl we want to ignore the cached data
@@ -177,10 +58,10 @@ export async function authorize(
           const cacheTtlMs = cacheOptions.cacheTtlSeconds * 1000;
           // only if the diff is less than the cacheTtl do we want to use the cached key
           if (diff < cacheTtlMs) {
-            apiKeyMeta = parsed.apiKeyMeta;
+            teamAndProjectResponse = parsed.teamAndProjectResponse;
           }
         } else {
-          apiKeyMeta = parsed;
+          teamAndProjectResponse = parsed;
         }
       }
     } catch {
@@ -189,10 +70,10 @@ export async function authorize(
   }
 
   // if we don't have a cached key, fetch from the API
-  if (!apiKeyMeta) {
+  if (!teamAndProjectResponse) {
     try {
-      const { data, error } = await fetchKeyMetadataFromApi(
-        clientId,
+      const { data, error } = await fetchTeamAndProject(
+        authData,
         serviceConfig,
       );
       if (error) {
@@ -212,12 +93,12 @@ export async function authorize(
         };
       }
       // if we have a key for sure then assign it
-      apiKeyMeta = data;
+      teamAndProjectResponse = data;
 
       // cache the retrieved key if we have cache options
       if (cacheOptions) {
         // we await this always because it can be a promise or not
-        await cacheOptions.put(clientId, data);
+        await cacheOptions.put(cacheKey, data);
       }
     } catch (err) {
       console.warn("failed to fetch key metadata from api", err);
@@ -230,7 +111,7 @@ export async function authorize(
       };
     }
   }
-  if (!apiKeyMeta) {
+  if (!teamAndProjectResponse) {
     return {
       authorized: false,
       status: 401,
@@ -239,7 +120,7 @@ export async function authorize(
     };
   }
   // now we can validate the key itself
-  const clientAuth = authorizeClient(authData, apiKeyMeta);
+  const clientAuth = authorizeClient(authData, teamAndProjectResponse);
 
   if (!clientAuth.authorized) {
     return {
@@ -251,9 +132,7 @@ export async function authorize(
   }
 
   // if we've made it this far we need to check service specific authorization
-  const serviceAuth = authorizeService(apiKeyMeta, serviceConfig, {
-    targetAddress,
-  });
+  const serviceAuth = authorizeService(teamAndProjectResponse, serviceConfig);
 
   if (!serviceAuth.authorized) {
     return {
@@ -267,15 +146,8 @@ export async function authorize(
   // if we reach this point we are authorized!
   return {
     authorized: true,
-    apiKeyMeta,
-    accountMeta: {
-      id: apiKeyMeta.accountId,
-      // TODO update this later
-      name: "",
-      limits: apiKeyMeta.limits,
-      rateLimits: apiKeyMeta.rateLimits,
-      usage: apiKeyMeta.usage,
-      creatorWalletAddress: apiKeyMeta.creatorWalletAddress,
-    },
+    team: teamAndProjectResponse.team,
+    project: teamAndProjectResponse.project,
+    authMethod: clientAuth.authMethod,
   };
 }

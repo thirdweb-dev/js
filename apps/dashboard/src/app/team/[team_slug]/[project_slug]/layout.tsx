@@ -1,8 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
-import { TabPathLinks } from "@/components/ui/tabs";
 import { notFound, redirect } from "next/navigation";
+import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
+import { ProjectTabs } from "./tabs";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -10,13 +11,18 @@ export default async function TeamLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const teams = await getTeams();
+  const [teams, account] = await Promise.all([
+    getTeams(),
+    getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
+  ]);
 
   if (!teams) {
     redirect("/login");
   }
 
-  const team = teams.find((t) => t.slug === params.team_slug);
+  const team = teams.find(
+    (t) => t.slug === decodeURIComponent(params.team_slug),
+  );
 
   if (!team) {
     // not a valid team, redirect back to 404
@@ -31,7 +37,7 @@ export default async function TeamLayout(props: {
   );
 
   const project = teamsAndProjects
-    .find((t) => t.team.slug === params.team_slug)
+    .find((t) => t.team.slug === decodeURIComponent(params.team_slug))
     ?.projects.find((p) => p.slug === params.project_slug);
 
   if (!project) {
@@ -49,40 +55,11 @@ export default async function TeamLayout(props: {
           currentProject={project}
           currentTeam={team}
           teamsAndProjects={teamsAndProjects}
+          account={account}
         />
-        <TabPathLinks
-          tabContainerClassName="px-4 lg:px-6"
-          links={[
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}`,
-              exactMatch: true,
-              name: "Overview",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/connect`,
-              name: "Connect",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/contracts`,
-              name: "Contracts",
-            },
-            ...(isOnNebulaWaitList
-              ? [
-                  {
-                    path: `/team/${params.team_slug}/${params.project_slug}/nebula`,
-                    name: "Nebula",
-                  },
-                ]
-              : []),
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/insight`,
-              name: "Insight",
-            },
-            {
-              path: `/team/${params.team_slug}/${params.project_slug}/settings`,
-              name: "Settings",
-            },
-          ]}
+        <ProjectTabs
+          layoutPath={`/team/${params.team_slug}/${params.project_slug}`}
+          isOnNebulaWaitList={!!isOnNebulaWaitList}
         />
       </div>
       <div className="flex grow flex-col">{props.children}</div>

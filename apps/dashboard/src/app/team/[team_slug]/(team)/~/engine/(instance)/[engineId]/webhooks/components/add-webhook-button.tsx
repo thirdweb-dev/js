@@ -25,6 +25,7 @@ import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 const WEBHOOK_EVENT_TYPES = [
@@ -39,9 +40,13 @@ const WEBHOOK_EVENT_TYPES = [
 
 export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createWebhook } = useEngineCreateWebhook(instanceUrl);
+  const { mutate: createWebhook } = useEngineCreateWebhook({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
   const form = useForm<CreateWebhookInput>();
 

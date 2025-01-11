@@ -14,12 +14,5 @@ export default async function Page(props: {
     );
   }
 
-  return (
-    <div className="container flex grow flex-col">
-      <DeployedContractsPage
-        address={accountAddress}
-        className="flex grow flex-col pt-10 pb-10"
-      />
-    </div>
-  );
+  return <DeployedContractsPage address={accountAddress} />;
 }

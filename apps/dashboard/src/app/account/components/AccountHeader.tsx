@@ -5,7 +5,7 @@ import type { Team } from "@/api/team";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateAPIKeyDialog } from "../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
@@ -18,11 +18,13 @@ import {
 
 export function AccountHeader(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
+  account: Account;
 }) {
-  const myAccountQuery = useAccount();
   const router = useDashboardRouter();
-  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
-    useState(false);
+  const [createProjectDialogState, setCreateProjectDialogState] = useState<
+    { team: Team; isOpen: true } | { isOpen: false }
+  >({ isOpen: false });
+
   const client = useThirdwebClient();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
@@ -42,9 +44,13 @@ export function AccountHeader(props: {
   const headerProps: AccountHeaderCompProps = {
     teamsAndProjects: props.teamsAndProjects,
     logout: logout,
-    connectButton: <CustomConnectWallet />,
-    createProject: () => setIsCreateProjectDialogOpen(true),
-    account: myAccountQuery.data,
+    connectButton: <CustomConnectWallet isLoggedIn={true} />,
+    createProject: (team: Team) =>
+      setCreateProjectDialogState({
+        team,
+        isOpen: true,
+      }),
+    account: props.account,
     client,
   };
 
@@ -54,12 +60,20 @@ export function AccountHeader(props: {
       <AccountHeaderMobileUI {...headerProps} className="lg:hidden" />
 
       <LazyCreateAPIKeyDialog
-        open={isCreateProjectDialogOpen}
-        onOpenChange={setIsCreateProjectDialogOpen}
+        open={createProjectDialogState.isOpen}
+        onOpenChange={() =>
+          setCreateProjectDialogState({
+            isOpen: false,
+          })
+        }
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();
         }}
+        enableNebulaServiceByDefault={
+          createProjectDialogState.isOpen &&
+          createProjectDialogState.team.enabledScopes.includes("nebula")
+        }
       />
     </div>
   );

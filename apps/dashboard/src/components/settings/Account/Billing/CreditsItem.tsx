@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account, BillingCredit } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -14,18 +14,19 @@ interface CreditsItemProps {
   credit?: BillingCredit;
   isOpCreditDefault?: boolean;
   onClickApply?: () => void;
+  twAccount: Account;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   isOpCreditDefault,
   onClickApply,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
-  const account = useAccount();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${account?.data?.id || ""}`,
+    `appliedForOpGrant-${twAccount.id}`,
     false,
   );
 
@@ -50,7 +51,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             <ChainIcon
               ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
               "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
-              size={24}
+              className="size-6"
             />
           ) : isTwCredit ? (
             <Image

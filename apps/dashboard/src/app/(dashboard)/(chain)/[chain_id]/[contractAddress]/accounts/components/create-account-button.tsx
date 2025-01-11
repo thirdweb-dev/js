@@ -1,6 +1,8 @@
 "use client";
 
-import { Tooltip } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
@@ -9,14 +11,15 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const sendTxMutation = useSendAndConfirmTransaction();
@@ -49,30 +52,18 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   if (isAccountDeployedQuery.data && accountsForAddressQuery.data?.length) {
     return (
-      <Tooltip
-        label={
-          <Card py={2} px={4} bgColor="backgroundHighlight">
-            <Text>You can only initialize one account per EOA.</Text>
-          </Card>
-        }
-        bg="transparent"
-        boxShadow="none"
-        bgColor="backgroundHighlight"
-        borderRadius="lg"
-        placement="right"
-        shouldWrapChildren
-      >
-        <Button colorScheme="primary" isDisabled>
+      <ToolTipLabel label="You can only initialize one account per EOA.">
+        <Button variant="primary" disabled>
           Account Created
         </Button>
-      </Tooltip>
+      </ToolTipLabel>
     );
   }
 
   return (
     <TransactionButton
+      twAccount={twAccount}
       txChainID={contract.chain.id}
-      colorScheme="primary"
       onClick={() => {
         const tx = ERC4337Ext.createAccount({
           contract,
@@ -81,9 +72,9 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
         });
         sendTxMutation.mutate(tx);
       }}
-      isLoading={sendTxMutation.isPending}
+      isPending={sendTxMutation.isPending}
       transactionCount={1}
-      isDisabled={isAccountDeployedQuery.data}
+      disabled={isAccountDeployedQuery.data}
       {...restButtonProps}
     >
       Create Account

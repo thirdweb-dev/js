@@ -9,9 +9,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,12 +29,14 @@ import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TokenClaimButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const CLAIM_FORM_ID = "token-claim-form";
 
 export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
   contract,
+  twAccount,
   ...restButtonProps
 }) => {
   const [open, setOpen] = useState(false);
@@ -45,6 +49,10 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
   const { data: _decimals, isPending } = useReadContract(ERC20Ext.decimals, {
     contract,
   });
+  const claimTokensNotifications = useTxNotifications(
+    "Tokens claimed successfully",
+    "Failed to claim tokens",
+  );
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -85,13 +93,13 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}
-            isLoading={form.formState.isSubmitting}
+            isPending={form.formState.isSubmitting}
             type="submit"
-            colorScheme="primary"
-            isDisabled={!form.formState.isDirty || isPending}
+            disabled={!form.formState.isDirty || isPending}
             onClick={form.handleSubmit(async (d) => {
               try {
                 if (!d.to) {
@@ -137,38 +145,31 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                   await promise;
                 }
 
-                const promise = sendAndConfirmTransaction.mutateAsync(
-                  transaction,
-                  {
-                    onSuccess: () => {
-                      trackEvent({
-                        category: "token",
-                        action: "claim",
-                        label: "success",
-                      });
-                      form.reset({ amount: "0", to: account?.address });
-                      setOpen(false);
-                    },
-                    onError: (error) => {
-                      trackEvent({
-                        category: "token",
-                        action: "claim",
-                        label: "error",
-                        error,
-                      });
-                      console.error(error);
-                    },
+                await sendAndConfirmTransaction.mutateAsync(transaction, {
+                  onSuccess: () => {
+                    trackEvent({
+                      category: "token",
+                      action: "claim",
+                      label: "success",
+                    });
+                    form.reset({ amount: "0", to: account?.address });
+                    setOpen(false);
                   },
-                );
-
-                toast.promise(promise, {
-                  loading: "Claiming tokens",
-                  success: "Token claimed successfully",
-                  error: "Failed to claim tokens",
+                  onError: (error) => {
+                    trackEvent({
+                      category: "token",
+                      action: "claim",
+                      label: "error",
+                      error,
+                    });
+                    console.error(error);
+                  },
                 });
+
+                claimTokensNotifications.onSuccess();
               } catch (error) {
                 console.error(error);
-                toast.error("Failed to claim tokens");
+                claimTokensNotifications.onError(error);
                 trackEvent({
                   category: "token",
                   action: "claim",

@@ -6,7 +6,7 @@ import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoading
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   type EngineInstance,
   useEngineInstances,
@@ -91,13 +91,10 @@ export function WithEngineInstance(props: {
   engineId: string;
   content: React.FC<{ instance: EngineInstance }>;
   teamSlug: string;
+  twAccount: Account;
+  authToken: string;
 }) {
-  const { data } = useAccount();
   const rootPath = `/team/${props.teamSlug}/~/engine`;
-
-  if (!data) {
-    return <GenericLoadingPage />;
-  }
 
   if (props.engineId === "sandbox") {
     invariant(
@@ -111,7 +108,7 @@ export function WithEngineInstance(props: {
       name: "Demo Engine",
       status: "active",
       lastAccessedAt: new Date().toISOString(),
-      accountId: data?.id,
+      accountId: props.twAccount.id,
     };
 
     return (
@@ -130,6 +127,7 @@ export function WithEngineInstance(props: {
       engineId={props.engineId}
       rootPath={rootPath}
       teamSlug={props.teamSlug}
+      authToken={props.authToken}
     />
   );
 }
@@ -139,6 +137,7 @@ function QueryAndRenderInstanceHeader(props: {
   content: React.FC<{ instance: EngineInstance }>;
   rootPath: string;
   teamSlug: string;
+  authToken: string;
 }) {
   const instancesQuery = useEngineInstances();
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
@@ -161,6 +160,7 @@ function QueryAndRenderInstanceHeader(props: {
       content={props.content}
       rootPath={props.rootPath}
       teamSlug={props.teamSlug}
+      authToken={props.authToken}
     />
   );
 }
@@ -170,9 +170,11 @@ function EnsurePermissionAndRenderInstance(props: {
   instance: EngineInstance;
   rootPath: string;
   teamSlug: string;
+  authToken: string;
 }) {
   const permissionQuery = useHasEnginePermission({
     instanceUrl: props.instance.url,
+    authToken: props.authToken,
   });
 
   if (permissionQuery.isPending) {

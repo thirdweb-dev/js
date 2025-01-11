@@ -42,7 +42,7 @@ import { useSetupScreen } from "./screen.js";
 /**
  * An inline wallet connection component that allows to:
  *
- * - Connect to 350+ external wallets
+ * - Connect to 500+ external wallets
  * - Connect with email, phone, passkey or socials
  * - Convert any wallet to a ERC4337 smart wallet for gasless transactions
  * - Sign in with ethereum (Auth)

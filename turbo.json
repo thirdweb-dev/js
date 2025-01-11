@@ -6,16 +6,6 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
-    "postbuild": {
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "public/robots.txt",
-        "public/sitemap*.xml",
-        "searchIndex.json"
-      ],
-      "inputs": ["$TURBO_DEFAULT$", ".next/**"]
-    },
     "bench": {
       "cache": false,
       "dependsOn": []
@@ -57,7 +47,9 @@
         "API_SERVER_SECRET",
         "TURNSTILE_SECRET_KEY",
         "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
-        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET"
+        "NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET",
+        "NEXT_PUBLIC_NEBULA_URL",
+        "INSIGHT_SERVICE_API_KEY"
       ],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
@@ -70,6 +62,7 @@
       "dependsOn": ["^build", "thirdweb#typedoc"]
     },
     "playground-web#build": {
+      "env": ["ENGINE_ACCESS_TOKEN", "ENGINE_BACKEND_WALLET", "ENGINE_URL"],
       "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },

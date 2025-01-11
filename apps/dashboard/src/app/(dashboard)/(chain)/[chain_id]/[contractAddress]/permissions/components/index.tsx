@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
@@ -26,8 +27,10 @@ type PermissionFormContext = {
 
 export function Permissions({
   contract,
+  twAccount,
 }: {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }) {
   const trackEvent = useTrack();
   const account = useActiveAccount();
@@ -124,15 +127,14 @@ export function Permissions({
             Reset
           </Button>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={!form.formState.isDirty}
+            disabled={!form.formState.isDirty}
             type="submit"
-            isLoading={sendTx.isPending}
-            loadingText="Saving permissions ..."
+            isPending={sendTx.isPending}
           >
-            Update permissions
+            {sendTx.isPending ? "Updating permissions" : "Update permissions"}
           </TransactionButton>
         </ButtonGroup>
       </Flex>

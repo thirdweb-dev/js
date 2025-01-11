@@ -2,6 +2,7 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -53,6 +54,7 @@ type InstallModuleFormProps = {
     data?: string[];
     isPending: boolean;
   };
+  twAccount: TWAccount | undefined;
 };
 
 export type InstallModuleForm = UseFormReturn<FormData>;
@@ -383,13 +385,13 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         {/* Submit */}
         <div className="flex justify-end">
           <TransactionButton
+            twAccount={props.twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={installMutation.isPending}
+            isPending={installMutation.isPending}
             type="submit"
-            colorScheme="primary"
-            alignSelf="flex-end"
-            isDisabled={
+            className="self-end"
+            disabled={
               !formState.isValid ||
               isModuleCompatibleQuery.data === false ||
               isModuleCompatibleQuery.isFetching

@@ -1,5 +1,7 @@
 "use client";
 
+import { redirectToCheckout } from "@/actions/billing";
+import { CheckoutButton } from "@/components/billing";
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Spacer } from "@chakra-ui/react";
@@ -7,7 +9,6 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { CheckoutButton } from "../../../../../../../../@/components/billing";
 
 interface EngineTierCardConfig {
   name: string;
@@ -145,6 +146,7 @@ export const EngineTierCard = ({
             });
           }}
           variant={isPrimaryCta ? "default" : "outline"}
+          redirectToCheckout={redirectToCheckout}
         >
           {ctaText ?? defaultCtaText}
         </CheckoutButton>

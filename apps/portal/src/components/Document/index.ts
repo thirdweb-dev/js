@@ -1,7 +1,7 @@
 export { CustomAccordion } from "../others/CustomAccordion";
 export { Breadcrumb } from "./Breadcrumb";
 export { Callout } from "./Callout";
-export { CodeBlock, InlineCode } from "./Code";
+export { CodeBlock } from "./Code";
 export { Details } from "./Details";
 export { DocLink } from "./DocLink";
 export { Heading } from "./Heading";
@@ -24,6 +24,8 @@ export { ExpandableGrid } from "./ExpandableGrid";
 export { Stack } from "./Stack";
 export { createMetadata } from "./metadata";
 export { ConnectCard } from "./Cards/ConnectCard";
-export { FeatureCard } from "./FeatureCard";
 export { AAChainList } from "./AAChainList";
 export { AuthList } from "./AuthList";
+export { FeatureCard } from "./FeatureCard";
+export { ApiEndpoint } from "./APIEndpointMeta/ApiEndpoint";
+export { InlineCode } from "./InlineCode";

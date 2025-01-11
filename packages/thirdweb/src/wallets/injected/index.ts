@@ -16,7 +16,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
@@ -85,7 +85,8 @@ export async function connectEip1193Wallet({
     chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  if (chain && chain.id !== chainId) {
+  // we check for undefined chain ID since some chain-specific wallets like Abstract will not send a chain ID on connection
+  if (chain && typeof chain.id !== "undefined" && chain.id !== chainId) {
     await switchChain(provider, chain);
     connectedChain = chain;
   }
@@ -348,25 +349,20 @@ async function switchChain(provider: EIP1193Provider, chain: Chain) {
       method: "wallet_switchEthereumChain",
       params: [{ chainId: hexChainId }],
     });
-    // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-  } catch (e: any) {
+  } catch {
     // if chain does not exist, add the chain
-    if (e?.code === 4902 || e?.data?.originalError?.code === 4902) {
-      const apiChain = await getChainMetadata(chain);
-      await provider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: hexChainId,
-            chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency,
-            rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-            blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
-          },
-        ],
-      });
-    } else {
-      throw e;
-    }
+    const apiChain = await getChainMetadata(chain);
+    await provider.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: hexChainId,
+          chainName: apiChain.name,
+          nativeCurrency: apiChain.nativeCurrency,
+          rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
+          blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
+        },
+      ],
+    });
   }
 }

@@ -62,9 +62,12 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     values: {
       name: editingChain?.name || prefillSlug || "",
       rpcUrl:
-        editingChain && editingChain?.status !== "deprecated"
-          ? getDashboardChainRpc(editingChain.chainId, editingChain)
-          : "",
+        (!editingChain || editingChain.status === "deprecated"
+          ? ""
+          : // if chain is custom or modified, show the rpc as is
+            editingChain.isCustom || editingChain.isModified
+            ? editingChain.rpc[0]
+            : getDashboardChainRpc(editingChain.chainId, editingChain)) || "",
       chainId: editingChain?.chainId
         ? `${editingChain?.chainId}`
         : prefillChainId || "",
@@ -366,7 +369,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             label="Icon"
           >
             <div className="flex items-center gap-1">
-              <ChainIcon size={20} ipfsSrc={form.watch("icon")} />
+              <ChainIcon className="size-5" ipfsSrc={form.watch("icon")} />
               <IconUpload
                 onUpload={(uri) => {
                   form.setValue("icon", uri, { shouldDirty: true });

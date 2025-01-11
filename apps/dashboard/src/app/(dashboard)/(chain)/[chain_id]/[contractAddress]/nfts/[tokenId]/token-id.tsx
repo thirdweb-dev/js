@@ -8,6 +8,7 @@ import { CodeClient } from "@/components/ui/code/code.client";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   ButtonGroup,
@@ -27,8 +28,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import {} from "tw-components";
-import { Button, Card, Heading, Text } from "tw-components";
+import { Button, Card } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenString } from "utils/usedapp-external";
 import { NftProperty } from "../components/nft-property";
@@ -54,6 +54,7 @@ interface TokenIdPageProps {
   tokenId: string;
   contract: ThirdwebContract;
   isErc721: boolean;
+  twAccount: Account | undefined;
 }
 
 // TODO: verify the entire nft object with zod schema and display an error message
@@ -62,6 +63,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   contract,
   tokenId,
   isErc721,
+  twAccount,
 }) => {
   const [tab, setTab] = useState("Details");
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -72,6 +74,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const tabs = useNFTDrawerTabs({
     contract,
     tokenId,
+    twAccount,
   });
 
   const client = useThirdwebClient();
@@ -104,10 +107,10 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
 
   if (!nft) {
     return (
-      <Text>
+      <p>
         No NFT found with token ID {tokenId}. Please check the token ID and try
         again.
-      </Text>
+      </p>
     );
   }
 
@@ -182,7 +185,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   label={
                     tb.isDisabled ? (
                       <Card py={2} px={4} bgColor="backgroundHighlight">
-                        <Text size="label.sm">{tb.disabledText}</Text>
+                        <p>{tb.disabledText}</p>
                       </Card>
                     ) : (
                       ""
@@ -214,7 +217,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             <Card as={Flex} flexDir="column" gap={3}>
               <SimpleGrid rowGap={3} columns={12} placeItems="center left">
                 <GridItem colSpan={4}>
-                  <Heading size="label.md">Token ID</Heading>
+                  <p className="font-semibold">Token ID</p>
                 </GridItem>
                 <GridItem colSpan={8}>
                   <CopyTextButton
@@ -228,7 +231,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                 {nft.owner && (
                   <>
                     <GridItem colSpan={4}>
-                      <Heading size="label.md">Owner</Heading>
+                      <p className="font-semibold">Owner</p>
                     </GridItem>
                     <GridItem colSpan={8}>
                       <WalletAddress address={nft.owner} />
@@ -236,23 +239,21 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                   </>
                 )}
                 <GridItem colSpan={4}>
-                  <Heading size="label.md">Token Standard</Heading>
+                  <p className="font-semibold">Token Standard</p>
                 </GridItem>
                 <GridItem colSpan={8}>{nft.type}</GridItem>
                 {nft.type !== "ERC721" && (
                   <>
                     <GridItem colSpan={4}>
-                      <Heading size="label.md">Supply</Heading>
+                      <p className="font-semibold">Supply</p>
                     </GridItem>
                     <GridItem colSpan={8}>
-                      <Text fontFamily="mono" size="body.md">
-                        {nft.supply.toString()}
-                      </Text>
+                      <p>{nft.supply.toLocaleString("en-US")}</p>
                     </GridItem>
                   </>
                 )}
                 <GridItem colSpan={4}>
-                  <Heading size="label.md">Token URI</Heading>
+                  <p className="font-semibold">Token URI</p>
                 </GridItem>
                 <GridItem
                   colSpan={8}
@@ -275,7 +276,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                 {nft.metadata.image && (
                   <>
                     <GridItem colSpan={4}>
-                      <Heading size="label.md">Media URI</Heading>
+                      <p className="font-semibold">Media URI</p>
                     </GridItem>
                     <GridItem
                       colSpan={8}
@@ -301,7 +302,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             </Card>
             {properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Attributes</Heading>
+                <p className="font-semibold">Attributes</p>
                 {Array.isArray(properties) &&
                 String(properties[0]?.value) !== "undefined" ? (
                   <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>

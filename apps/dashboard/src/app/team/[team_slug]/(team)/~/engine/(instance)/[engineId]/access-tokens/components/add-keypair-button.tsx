@@ -56,16 +56,21 @@ const KEYPAIR_ALGORITHM_DETAILS: Record<
 
 interface AddKeypairButtonProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
   instanceUrl,
+  authToken,
 }) => {
   const [publicKey, setPublicKey] = useState<string>("");
   const [algorithm, setAlgorithm] = useState<KeypairAlgorithm>("ES256");
   const [label, setLabel] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutateAsync: importKeypair } = useEngineAddKeypair(instanceUrl);
+  const { mutateAsync: importKeypair } = useEngineAddKeypair({
+    instanceUrl,
+    authToken,
+  });
   const trackEvent = useTrack();
 
   const { onSuccess, onError } = useTxNotifications(

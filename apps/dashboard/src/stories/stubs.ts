@@ -1,7 +1,11 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
-import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
+import type {
+  Account,
+  ApiKey,
+  ApiKeyService,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import type {
   EngineAlert,
   EngineAlertRule,
@@ -39,6 +43,16 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
     growthTrialEligible: true,
+    enabledScopes: [
+      "pay",
+      "storage",
+      "rpc",
+      "bundler",
+      "insight",
+      "embeddedWallets",
+      "relayer",
+      "chainsaw",
+    ],
   };
 
   return team;
@@ -261,4 +275,45 @@ export function teamSubscriptionsStub(
       },
     },
   ];
+}
+
+export function randomLorem(length: number) {
+  const loremWords = [
+    "lorem",
+    "ipsum",
+    "dolor",
+    "sit",
+    "amet",
+    "consectetur",
+    "adipiscing",
+    "elit",
+    "sed",
+    "do",
+    "eiusmod",
+    "tempor",
+    "incididunt",
+    "ut",
+    "labore",
+    "et",
+    "dolore",
+    "magna",
+    "aliqua",
+  ];
+
+  return Array.from({ length }, () => {
+    const randomIndex = Math.floor(Math.random() * loremWords.length);
+    return loremWords[randomIndex];
+  }).join(" ");
+}
+
+export function accountStub(overrides?: Partial<Account>): Account {
+  return {
+    email: "user@example.com",
+    name: "John Doe",
+    id: "foo",
+    isStaff: false,
+    advancedEnabled: false,
+    creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+    ...overrides,
+  };
 }

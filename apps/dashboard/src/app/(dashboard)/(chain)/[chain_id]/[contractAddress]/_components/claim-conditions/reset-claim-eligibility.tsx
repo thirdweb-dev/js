@@ -2,6 +2,7 @@
 
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -16,12 +17,14 @@ interface ResetClaimEligibilityProps {
   isErc20: boolean;
   contract: ThirdwebContract;
   tokenId?: string;
+  twAccount: Account | undefined;
 }
 
 export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   contract,
   tokenId,
   isErc20,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
 
@@ -89,28 +92,34 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   return (
     <AdminOnly contract={contract} fallback={<div className="pb-5" />}>
       <TransactionButton
+        twAccount={twAccount}
         transactionCount={1}
         type="button"
-        isLoading={sendTxMutation.isPending}
+        isPending={sendTxMutation.isPending}
         onClick={handleResetClaimEligibility}
-        loadingText="Resetting..."
         size="sm"
         txChainID={contract.chain.id}
       >
-        Reset Eligibility
-        <ToolTipLabel
-          label={
-            <>
-              This {`contract's`} claim eligibility stores who has already
-              claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
-              carries across claim phases. Resetting claim eligibility will
-              reset this state permanently, and wallets that have already
-              claimed to their limit will be able to claim again.
-            </>
-          }
-        >
-          <CircleHelpIcon className="ml-2 size-4 text-muted-foreground" />
-        </ToolTipLabel>
+        {sendTxMutation.isPending ? (
+          "Resetting Eligibility"
+        ) : (
+          <div className="flex items-center gap-2">
+            Reset Eligibility
+            <ToolTipLabel
+              label={
+                <span className="text-left">
+                  This {`contract's`} claim eligibility stores who has already
+                  claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
+                  carries across claim phases. Resetting claim eligibility will
+                  reset this state permanently, and wallets that have already
+                  claimed to their limit will be able to claim again.
+                </span>
+              }
+            >
+              <CircleHelpIcon className="size-4" />
+            </ToolTipLabel>
+          </div>
+        )}
       </TransactionButton>
     </AdminOnly>
   );

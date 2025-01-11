@@ -1,13 +1,12 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
 import { THIRDWEB_API_HOST } from "constants/urls";
+import { useActiveAccount } from "thirdweb/react";
 import type { Ecosystem } from "../types";
 
 export function useEcosystemList() {
-  const { isLoggedIn, user } = useLoggedInUser();
-
+  const address = useActiveAccount()?.address;
   const ecosystemQuery = useQuery({
-    queryKey: ["ecosystems", user?.address],
+    queryKey: ["ecosystems", address],
     queryFn: async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/ecosystem-wallet/list`);
 
@@ -20,13 +19,12 @@ export function useEcosystemList() {
       const data = (await res.json()) as { result: Ecosystem[] };
       return data.result;
     },
-    enabled: isLoggedIn,
     retry: false,
   });
 
   return {
     ...ecosystemQuery,
-    isPending: isLoggedIn ? ecosystemQuery.isPending : false,
+    isPending: ecosystemQuery.isPending,
     ecosystems: (ecosystemQuery.data ?? []) satisfies Ecosystem[],
   };
 }

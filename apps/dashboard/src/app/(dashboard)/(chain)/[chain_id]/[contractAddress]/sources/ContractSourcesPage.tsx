@@ -72,7 +72,7 @@ interface ConnectorModalProps {
 const VerifyContractModal: React.FC<
   ConnectorModalProps & { resetSignal: number }
 > = ({ isOpen, onClose, contract, resetSignal }) => {
-  const veryifyQuery = useQuery({
+  const verifyQuery = useQuery({
     queryKey: [
       "verify-contract",
       contract.chain.id,
@@ -101,23 +101,23 @@ const VerifyContractModal: React.FC<
         <Divider mb={4} />
         <ModalBody py={4}>
           <Flex flexDir="column">
-            {veryifyQuery.isPending && (
+            {verifyQuery.isPending && (
               <Flex gap={2} align="center">
                 <Spinner color="purple.500" size="sm" />
                 <Heading size="label.md">Verifying...</Heading>
               </Flex>
             )}
-            {veryifyQuery?.error ? (
+            {verifyQuery?.error ? (
               <Flex gap={2} align="center">
                 <CircleXIcon className="size-4 text-red-600" />
                 <Heading size="label.md">
-                  {veryifyQuery?.error.toString()}
+                  {verifyQuery?.error.toString()}
                 </Heading>
               </Flex>
             ) : null}
 
-            {veryifyQuery.data?.results
-              ? veryifyQuery.data?.results.map(
+            {verifyQuery.data?.results
+              ? verifyQuery.data?.results.map(
                   (result: VerificationResult, index: number) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     <Flex key={index} gap={2} align="center" mb={4}>

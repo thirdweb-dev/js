@@ -309,5 +309,3 @@ function isExploreCategory(category: string): category is ExploreCategoryName {
 export const EXPLORE_PAGE_DATA = Object.values(CATEGORIES).filter((v) =>
   "showInExplore" in v ? v.showInExplore !== false : true,
 );
-
-export const ALL_CATEGORIES = Object.values(CATEGORIES).map((v) => v.id);

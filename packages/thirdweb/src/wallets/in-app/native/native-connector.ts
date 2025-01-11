@@ -4,12 +4,14 @@ import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { getUserStatus } from "../core/actions/get-enclave-user-status.js";
 import { authEndpoint } from "../core/authentication/authEndpoint.js";
+import { backendAuthenticate } from "../core/authentication/backend.js";
 import { ClientScopedStorage } from "../core/authentication/client-scoped-storage.js";
 import { guestAuthenticate } from "../core/authentication/guest.js";
 import { customJwt } from "../core/authentication/jwt.js";
 import {
   getLinkedProfilesInternal,
   linkAccount,
+  unlinkAccount,
 } from "../core/authentication/linkAccount.js";
 import {
   loginWithPasskey,
@@ -24,6 +26,7 @@ import type {
   LogoutReturnType,
   MultiStepAuthArgsType,
   MultiStepAuthProviderType,
+  Profile,
   SingleStepAuthArgsType,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
@@ -169,6 +172,13 @@ export class InAppNativeConnector implements InAppConnector {
           storage: nativeLocalStorage,
         });
       }
+      case "backend": {
+        return backendAuthenticate({
+          client: this.client,
+          walletSecret: params.walletSecret,
+          ecosystem: params.ecosystem,
+        });
+      }
       case "wallet": {
         return siweAuthenticate({
           client: this.client,
@@ -177,6 +187,11 @@ export class InAppNativeConnector implements InAppConnector {
           ecosystem: params.ecosystem,
         });
       }
+      case "github":
+      case "twitch":
+      case "steam":
+      case "farcaster":
+      case "telegram":
       case "google":
       case "facebook":
       case "discord":
@@ -329,6 +344,15 @@ export class InAppNativeConnector implements InAppConnector {
       tokenToLink: storedToken.cookieString,
       storage: this.storage,
       ecosystem: args.ecosystem || this.ecosystem,
+    });
+  }
+
+  async unlinkProfile(profile: Profile) {
+    return await unlinkAccount({
+      client: this.client,
+      ecosystem: this.ecosystem,
+      storage: this.storage,
+      profileToUnlink: profile,
     });
   }
 

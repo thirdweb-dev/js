@@ -35,9 +35,9 @@ import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { joinWithComma, toArrFromList } from "utils/string";
 import {
-  type ApiKeyValidationSchema,
   HIDDEN_SERVICES,
-  apiKeyValidationSchema,
+  type ProjectSettingsPageFormSchema,
+  projectSettingsPageFormSchema,
 } from "../../../../../components/settings/ApiKeys/validations";
 
 type EditProjectUIPaths = {
@@ -51,6 +51,7 @@ export function ProjectGeneralSettingsPage(props: {
   apiKey: ApiKey;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
+  showNebulaSettings: boolean;
 }) {
   const updateMutation = useUpdateApiKey();
   const deleteMutation = useRevokeApiKey();
@@ -62,6 +63,7 @@ export function ProjectGeneralSettingsPage(props: {
       deleteMutation={deleteMutation}
       paths={props.paths}
       onKeyUpdated={props.onKeyUpdated}
+      showNebulaSettings={props.showNebulaSettings}
     />
   );
 }
@@ -81,9 +83,10 @@ interface EditApiKeyProps {
   deleteMutation: DeleteMutation;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
+  showNebulaSettings: boolean;
 }
 
-type UpdateAPIForm = UseFormReturn<ApiKeyValidationSchema>;
+type UpdateAPIForm = UseFormReturn<ProjectSettingsPageFormSchema>;
 
 export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
   props,
@@ -91,8 +94,8 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
   const { apiKey, updateMutation, deleteMutation } = props;
   const trackEvent = useTrack();
   const router = useDashboardRouter();
-  const form = useForm<ApiKeyValidationSchema>({
-    resolver: zodResolver(apiKeyValidationSchema),
+  const form = useForm<ProjectSettingsPageFormSchema>({
+    resolver: zodResolver(projectSettingsPageFormSchema),
     defaultValues: {
       name: apiKey.name,
       domains: joinWithComma(apiKey.domains),
@@ -233,6 +236,7 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             updateMutation={updateMutation}
             handleSubmit={handleSubmit}
             paths={props.paths}
+            showNebulaSettings={props.showNebulaSettings}
           />
 
           <DeleteProject
@@ -470,6 +474,7 @@ function EnabledServicesSetting(props: {
   handleSubmit: () => void;
   apiKey: ApiKey;
   paths: EditApiKeyProps["paths"];
+  showNebulaSettings: boolean;
 }) {
   const { form, handleSubmit, updateMutation } = props;
 
@@ -479,7 +484,7 @@ function EnabledServicesSetting(props: {
   });
   const handleAction = (
     srvIdx: number,
-    srv: FieldArrayWithId<ApiKeyValidationSchema, "services", "id">,
+    srv: FieldArrayWithId<ProjectSettingsPageFormSchema, "services", "id">,
     actionName: string,
     checked: boolean,
   ) => {
@@ -512,7 +517,10 @@ function EnabledServicesSetting(props: {
         <div className="flex flex-col">
           {fields.map((srv, idx) => {
             const service = getServiceByName(srv.name as ServiceName);
-            const hidden = HIDDEN_SERVICES.includes(service.name);
+            const hidden =
+              (service.name === "nebula" && !props.showNebulaSettings) ||
+              HIDDEN_SERVICES.includes(service.name);
+
             const serviceName = getServiceByName(service.name as ServiceName);
             const shouldShow = !hidden && serviceName;
 

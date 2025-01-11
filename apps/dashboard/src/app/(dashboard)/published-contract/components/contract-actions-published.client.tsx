@@ -10,7 +10,7 @@ export function PublishedActions(props: {
   publisher: string;
   contract_id: string;
   version?: string;
-  dispayName: string;
+  displayName: string;
 }) {
   const searchparams = useSearchParams();
   const stringifiedSearchParams = searchparams?.toString();
@@ -21,7 +21,7 @@ export function PublishedActions(props: {
         variant="outline"
         onClick={() => {
           shareLink({
-            title: `Deploy ${props.dispayName}`,
+            title: `Deploy ${props.displayName}`,
           });
         }}
       >

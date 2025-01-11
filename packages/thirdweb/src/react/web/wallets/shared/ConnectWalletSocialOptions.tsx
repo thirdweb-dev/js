@@ -448,6 +448,9 @@ export const ConnectWalletSocialOptions = (
             disabled={props.disabled}
             emptyErrorMessage={emptyErrorMessage}
             submitButtonText={locale.submitEmail}
+            defaultSmsCountryCode={
+              wallet.getConfig()?.auth?.defaultSmsCountryCode
+            }
           />
         ) : (
           <WalletTypeRowButton
@@ -474,7 +477,7 @@ export const ConnectWalletSocialOptions = (
       )}
 
       {/* SIWE login */}
-      {siweEnabled && (
+      {siweEnabled && !props.isLinking && (
         <WalletTypeRowButton
           client={props.client}
           icon={OutlineWalletIcon}

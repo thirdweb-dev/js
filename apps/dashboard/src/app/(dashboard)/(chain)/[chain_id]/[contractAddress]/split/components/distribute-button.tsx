@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -13,15 +13,17 @@ import type { Balance } from "../ContractSplitPage";
 interface DistributeButtonProps {
   contract: ThirdwebContract;
   balances: Balance[];
-  balancesisPending: boolean;
+  balancesIsPending: boolean;
   balancesIsError: boolean;
+  twAccount: Account | undefined;
 }
 
 export const DistributeButton: React.FC<DistributeButtonProps> = ({
   contract,
   balances,
-  balancesisPending,
+  balancesIsPending,
   balancesIsError,
+  twAccount,
   ...restButtonProps
 }) => {
   const trackEvent = useTrack();
@@ -35,13 +37,13 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     ) {
       return 1;
     }
-    if (!validBalances || balancesisPending) {
+    if (!validBalances || balancesIsPending) {
       return 0;
     }
     return validBalances?.filter(
       (b) => b.display_balance !== "0.0" && b.display_balance !== "0",
     ).length;
-  }, [validBalances, balancesisPending]);
+  }, [validBalances, balancesIsPending]);
 
   const mutation = useSplitDistributeFunds(contract);
 
@@ -73,18 +75,18 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   };
 
   if (balancesIsError) {
-    // if we fail to get the balances, we can't know how many transactions there are going to be
-    // we still want to show the button, so we'll just show the mismatch button
     return (
-      <MismatchButton
-        isLoading={mutation.isPending}
-        colorScheme="primary"
+      <TransactionButton
+        twAccount={twAccount}
+        isPending={mutation.isPending}
         onClick={distributeFunds}
-        desiredChainId={contract.chain.id}
+        txChainID={contract.chain.id}
+        // if we fail to get the balances, we can't know how many transactions there are going to be
+        transactionCount={undefined}
         {...restButtonProps}
       >
         Distribute Funds
-      </MismatchButton>
+      </TransactionButton>
     );
   }
 
@@ -98,9 +100,9 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   return (
     <TransactionButton
+      twAccount={twAccount}
       transactionCount={numTransactions}
-      isLoading={mutation.isPending}
-      colorScheme="primary"
+      isPending={mutation.isPending}
       onClick={distributeFunds}
       {...restButtonProps}
       txChainID={contract.chain.id}

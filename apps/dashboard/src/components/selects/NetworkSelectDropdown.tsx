@@ -57,21 +57,21 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         onSelect(v === "all-chains" ? undefined : v);
       }}
     >
-      <SelectTrigger className="-translate-x-3 !h-auto inline-flex w-auto border-none bg-transparent py-1 font-medium hover:bg-muted">
+      <SelectTrigger className="-translate-x-3 !h-auto inline-flex w-auto border-none bg-transparent px-1 py-0.5 font-medium hover:bg-muted focus:ring-0 focus:ring-offset-0">
         <SelectValue />
       </SelectTrigger>
 
       <SelectContent align="center" className="rounded-lg shadow-lg">
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
-            <ChainIcon ipfsSrc={undefined} size={24} />
+            <ChainIcon ipfsSrc={undefined} className="size-5" />
             All Networks
           </div>
         </SelectItem>
         {chains.map((chain) => (
           <SelectItem key={chain.chainId} value={String(chain.chainId)}>
             <div className="flex items-center gap-2 py-1">
-              <ChainIcon ipfsSrc={chain.icon?.url} size={24} />
+              <ChainIcon ipfsSrc={chain.icon?.url} className="size-5" />
               {useCleanChainName ? cleanChainName(chain.name) : chain.name}
             </div>
           </SelectItem>

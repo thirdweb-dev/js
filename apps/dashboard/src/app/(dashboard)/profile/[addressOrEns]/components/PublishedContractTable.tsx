@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { replaceDeployerAddress } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
+import { replaceDeployerAddress } from "lib/publisher-utils";
 import { replaceIpfsUrl } from "lib/sdk";
 import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
@@ -87,7 +87,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
         accessor: (row) => row.description,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => (
-          <span className="line-clamp-2 text-muted-foreground">
+          <span className="line-clamp-2 max-w-[350px] whitespace-normal text-muted-foreground">
             {cell.value}
           </span>
         ),

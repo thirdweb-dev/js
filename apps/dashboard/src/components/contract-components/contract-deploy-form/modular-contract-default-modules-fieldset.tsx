@@ -63,7 +63,7 @@ function RenderModule(props: {
       );
     }
 
-    if (showPrimarySaleFiedset(paramNames)) {
+    if (showPrimarySaleFieldset(paramNames)) {
       return (
         <RenderPrimarySaleFieldset module={module} form={form} isTWPublisher />
       );
@@ -120,12 +120,12 @@ function RenderModule(props: {
   );
 }
 
-function RenderPrimarySaleFieldset(prosp: {
+function RenderPrimarySaleFieldset(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
-  const { module, form } = prosp;
+  const { module, form } = props;
 
   const primarySaleRecipientPath =
     `moduleData.${module.name}.primarySaleRecipient` as const;
@@ -144,12 +144,12 @@ function RenderPrimarySaleFieldset(prosp: {
   );
 }
 
-function RenderSequentialTokenIdFieldset(prosp: {
+function RenderSequentialTokenIdFieldset(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
 }) {
-  const { module, form } = prosp;
+  const { module, form } = props;
 
   const startTokenIdPath = `moduleData.${module.name}.startTokenId` as const;
 
@@ -222,7 +222,7 @@ export function showRoyaltyFieldset(paramNames: string[]) {
   );
 }
 
-export function showPrimarySaleFiedset(paramNames: string[]) {
+export function showPrimarySaleFieldset(paramNames: string[]) {
   return paramNames.length === 1 && paramNames.includes("primarySaleRecipient");
 }
 

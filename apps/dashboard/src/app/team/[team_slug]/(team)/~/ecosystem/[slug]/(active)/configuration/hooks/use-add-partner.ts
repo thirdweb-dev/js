@@ -1,4 +1,3 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   type UseMutationOptions,
   useMutation,
@@ -14,22 +13,21 @@ type AddPartnerParams = {
 };
 
 export function useAddPartner(
+  params: {
+    authToken: string;
+  },
   options?: Omit<
     UseMutationOptions<Partner, unknown, AddPartnerParams>,
     "mutationFn"
   >,
 ) {
+  const { authToken } = params;
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   return useMutation({
     // Returns the created partner object
     mutationFn: async (params: AddPartnerParams): Promise<Partner> => {
-      if (!isLoggedIn || !user?.jwt) {
-        throw new Error("Please login to add a partner");
-      }
-
       const res = await fetch(
         `${params.ecosystem.url}/${params.ecosystem.id}/partner`,
         {
@@ -37,7 +35,7 @@ export function useAddPartner(
 
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.jwt}`,
+            Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
             name: params.name,

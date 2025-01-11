@@ -2,10 +2,15 @@
 
 // TODO - convert to RSC
 
-import { useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type Account,
+  useAccountCredits,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { CreditsItem } from "./CreditsItem";
 
-export const CreditsInfoCard = () => {
+export const CreditsInfoCard = (props: {
+  twAccount: Account;
+}) => {
   const { data: credits } = useAccountCredits();
 
   if (!credits) {
@@ -17,9 +22,17 @@ export const CreditsInfoCard = () => {
 
   return (
     <section className="flex flex-col gap-4">
-      <CreditsItem credit={opCredit} isOpCreditDefault={true} />
+      <CreditsItem
+        credit={opCredit}
+        isOpCreditDefault={true}
+        twAccount={props.twAccount}
+      />
       {restCredits?.map((credit) => (
-        <CreditsItem key={credit.couponId} credit={credit} />
+        <CreditsItem
+          key={credit.couponId}
+          credit={credit}
+          twAccount={props.twAccount}
+        />
       ))}
     </section>
   );

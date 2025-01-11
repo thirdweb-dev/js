@@ -74,7 +74,7 @@ function AnyAuth() {
         />
       </div>
       <div className="space-y-2">
-        <h3 className="mb-3 font-medium text-lg">Custom Auth and UI</h3>
+        <h3 className="mb-3 font-medium text-lg">Custom UI</h3>
         <p className="max-w-[600px]">
           Customize the login UI and integrate with your existing user base. No
           limits on customizations and auth methods.
@@ -85,63 +85,35 @@ function AnyAuth() {
               <CustomLoginForm />
             </div>
           }
-          code={`import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+          code={`import { useState } from "react";
 import { useConnect } from "thirdweb/react";
-import { inAppWallet } from "thirdweb/wallets";
+import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
 
-export function CustomLoginForm() {
-  const [email, setEmail] = useState("");
+export function CustomLoginUi() {
   const { connect, isConnecting, error } = useConnect();
 
-  const { mutate: loginWithCustomAuth } = useMutation({
-    mutationFn: async (email: string) => {
-      const wallet = await connect(async () => {
-        const wallet = inAppWallet();
-        await wallet.connect({
-          strategy: "auth_endpoint",
-          client,
-          // your own custom auth payload here
-          payload: JSON.stringify({
-            userId: email,
-            email,
-          }),
-        });
-        return wallet;
-      });
-      return wallet;
-    }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    loginWithCustomAuth(email);
+  const preLogin = async (email: string) => {
+    // send email verification code
+    await preAuthenticate({
+      client,
+      strategy: "email",
+      email,
+    });
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="email">
-          Email Address
-        </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          required
-        />
-        <button
-          type="submit"
-          disabled={isConnecting || !email}
-        >
-          {isConnecting ? "Submitting..." : "Submit"}
-        </button>
-        {error && <p>{error.message}</p>}
-      </div>
-    </form>
-  );
+  const handleLogin = async (email: string, verificationCode: string) => {
+    // verify email with verificationCode and connect
+    connect(async () => {
+      const wallet = inAppWallet();
+      await wallet.connect({
+        client,
+        strategy: "email",
+        email,
+        verificationCode,
+      });
+      return wallet;
+    });
+  };
 }
 `}
           lang="tsx"

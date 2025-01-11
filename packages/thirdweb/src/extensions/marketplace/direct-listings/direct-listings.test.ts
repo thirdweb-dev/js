@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
@@ -7,11 +7,18 @@ import {
   TEST_ACCOUNT_B,
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
-import { getContract } from "../../../contract/contract.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
+import { getApprovalForTransaction } from "../../../extensions/erc20/write/getApprovalForTransaction.js";
 import { setApprovalForAll as setApprovalForAll721 } from "../../../extensions/erc721/__generated__/IERC721A/write/setApprovalForAll.js";
 import { mintTo as mintToErc1155 } from "../../../extensions/erc1155/write/mintTo.js";
+import { deployERC20Contract } from "../../../extensions/prebuilts/deploy-erc20.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import { balanceOf as balanceOfErc721 } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { mintTo as mintToErc721 } from "../../erc721/write/mintTo.js";
 import { balanceOf as balanceOfErc1155 } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
@@ -32,7 +39,11 @@ const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
 
 describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
-  it("should work with ERC721 and ERC1155", async () => {
+  let marketplaceContract: ThirdwebContract;
+  let erc721Contract: ThirdwebContract;
+  let erc1155Contract: ThirdwebContract;
+
+  beforeAll(async () => {
     const marketplaceAddress = await deployMarketplaceContract({
       account: TEST_ACCOUNT_A,
       chain,
@@ -63,17 +74,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
       },
     });
 
-    const marketplaceContract = getContract({
+    marketplaceContract = getContract({
       address: marketplaceAddress,
       chain,
       client,
     });
-    const erc721Contract = getContract({
+    erc721Contract = getContract({
       address: erc721Address,
       chain,
       client,
     });
-    const erc1155Contract = getContract({
+    erc1155Contract = getContract({
       address: erc1155Address,
       chain,
       client,
@@ -119,9 +130,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
         }),
       }),
     ]);
-
     // ---- set up completed ---- //
+  }, 120_000);
 
+  it("should work with ERC721", async () => {
     // listings should be 0 length to start
     const [allListings, totalListingCount] = await Promise.all([
       getAllListings({
@@ -244,14 +256,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(nftBalanceOfAccountAAfterPurchase).toBe(1n);
     // expect the seller to no longer have the nft
     expect(nftBalanceOfAccountBAfterPurchase).toBe(0n);
+  }, 120_000);
 
-    /**
-     * ============ now do the same tests but for ERC1155 =============
-     */
-
+  it("should work with ERC1155", async () => {
     // this should fail because we're listing more than we have
     await expect(
-      sendAndConfirmTransaction({
+      sendTransaction({
         transaction: createListing({
           contract: marketplaceContract,
           assetContractAddress: erc1155Contract.address,
@@ -284,7 +294,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
       logs: receipt1155.logs,
     });
 
-    expect(listingEvents.length).toBe(1);
+    expect(listingEvents1155.length).toBe(1);
 
     // biome-ignore lint/style/noNonNullAssertion: OK in tests
     const listingEvent1155 = listingEvents1155[0]!;
@@ -384,5 +394,55 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(nft1155BalanceOfAccountAAfterPurchase).toBe(1n);
     // expect the seller to have one less 1155 token
     expect(nft1155BalanceOfAccountCAfterPurchase).toBe(99n);
-  });
+
+    /**
+     * buyFromListing transaction (for listing with ERC20 currency) should have proper erc20 value
+     * so that getApprovalForTransaction can work properly
+     */
+    const erc20Address = await deployERC20Contract({
+      chain,
+      client,
+      account: TEST_ACCOUNT_C,
+      type: "TokenERC20",
+      params: {
+        name: "MyToken",
+        contractURI: TEST_CONTRACT_URI,
+      },
+    });
+    await sendAndConfirmTransaction({
+      transaction: createListing({
+        contract: marketplaceContract,
+        assetContractAddress: erc1155Contract.address,
+        tokenId: 0n,
+        pricePerToken: "0.01",
+        quantity: 1n,
+        currencyContractAddress: erc20Address,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+    // get the last listing id
+    const _allListings = await getAllListings({
+      contract: marketplaceContract,
+    });
+    const latestListing = _allListings.at(-1);
+    expect(latestListing).toBeDefined();
+    if (!latestListing) {
+      throw new Error("Cannot get listings");
+    }
+    const buyListingTx = buyFromListing({
+      contract: marketplaceContract,
+      listingId: latestListing.id,
+      quantity: 1n,
+      recipient: TEST_ACCOUNT_C.address,
+    });
+    expect(await resolvePromisedValue(buyListingTx.erc20Value)).toStrictEqual({
+      amountWei: BigInt(1e16),
+      tokenAddress: erc20Address,
+    });
+    const approveTx = await getApprovalForTransaction({
+      transaction: buyListingTx,
+      account: TEST_ACCOUNT_A,
+    });
+    expect(approveTx).not.toBe(null);
+  }, 120_000);
 });

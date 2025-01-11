@@ -42,11 +42,12 @@ interface CreateBackendWalletButtonProps {
   instance: EngineInstance;
   walletConfig: WalletConfigResponse;
   teamSlug: string;
+  authToken: string;
 }
 
 export const CreateBackendWalletButton: React.FC<
   CreateBackendWalletButtonProps
-> = ({ instance, walletConfig, teamSlug }) => {
+> = ({ instance, walletConfig, teamSlug, authToken }) => {
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
@@ -57,7 +58,10 @@ export const CreateBackendWalletButton: React.FC<
   );
 
   const [isOpen, setIsOpen] = useState(false);
-  const createWallet = useEngineCreateBackendWallet(instance.url);
+  const createWallet = useEngineCreateBackendWallet({
+    instanceUrl: instance.url,
+    authToken,
+  });
   const trackEvent = useTrack();
 
   const form = useForm<CreateBackendWalletInput>({

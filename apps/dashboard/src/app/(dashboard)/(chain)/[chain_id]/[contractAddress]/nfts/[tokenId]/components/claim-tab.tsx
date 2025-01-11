@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -14,9 +15,14 @@ import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 interface ClaimTabProps {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 }
 
-const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
+const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
+  contract,
+  tokenId,
+  twAccount,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
@@ -53,8 +59,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
           if (approveTx) {
             const approvalPromise = sendAndConfirmTx.mutateAsync(approveTx);
             toast.promise(approvalPromise, {
-              loading: "Approving ERC20 token for this claim",
-              success: "Approved succesfully",
+              success: "Approved successfully",
               error: "Failed to approve ERC20",
             });
             await approvalPromise;
@@ -122,10 +127,10 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={form.formState.isSubmitting}
+          isPending={form.formState.isSubmitting}
           type="submit"
-          colorScheme="primary"
-          alignSelf="flex-end"
+          className="self-end"
+          twAccount={twAccount}
         >
           Claim
         </TransactionButton>

@@ -11,7 +11,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
@@ -21,6 +20,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 
 const LazyShareFreeWalletsModal = dynamic(
@@ -281,8 +281,8 @@ export function CouponSection(props: {
   teamId: string | undefined;
   isPaymentSetup: boolean;
 }) {
+  const address = useActiveAccount()?.address;
   const [showShareModal, setShowShareModal] = useState(false);
-  const loggedInUser = useLoggedInUser();
   const [optimisticCouponData, setOptimisticCouponData] = useState<
     | {
         type: "added";
@@ -295,7 +295,7 @@ export function CouponSection(props: {
   >();
 
   const activeCoupon = useQuery({
-    queryKey: ["active-coupon", loggedInUser.user?.address, props.teamId],
+    queryKey: ["active-coupon", address, props.teamId],
     queryFn: async () => {
       const res = await fetch(
         `/api/server-proxy/api/v1/active-coupon${

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { lazy } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { Account } from "thirdweb/wallets";
@@ -24,6 +25,7 @@ export type ModuleInstanceProps = Omit<
     version?: string;
     publisher?: string;
   }[];
+  twAccount: TWAccount | undefined;
 };
 
 export function ModuleInstance(props: ModuleInstanceProps) {

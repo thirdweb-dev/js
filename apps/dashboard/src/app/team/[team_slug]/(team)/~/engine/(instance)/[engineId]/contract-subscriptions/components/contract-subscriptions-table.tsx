@@ -33,7 +33,7 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
-import { shortenAddress as shortenAddresThrows } from "thirdweb/utils";
+import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 
 function shortenAddress(address: string) {
@@ -42,7 +42,7 @@ function shortenAddress(address: string) {
   }
 
   try {
-    return shortenAddresThrows(address);
+    return shortenAddressThrows(address);
   } catch {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   }
@@ -54,6 +54,7 @@ interface ContractSubscriptionTableProps {
   isPending: boolean;
   isFetched: boolean;
   autoUpdate: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<EngineContractSubscription>();
@@ -66,6 +67,7 @@ export const ContractSubscriptionTable: React.FC<
   isPending,
   isFetched,
   autoUpdate,
+  authToken,
 }) => {
   const removeDisclosure = useDisclosure();
   const [selectedContractSub, setSelectedContractSub] =
@@ -79,7 +81,7 @@ export const ContractSubscriptionTable: React.FC<
         const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+            <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -205,6 +207,7 @@ export const ContractSubscriptionTable: React.FC<
             instanceUrl={instanceUrl}
             chainId={chainId}
             autoUpdate={autoUpdate}
+            authToken={authToken}
           />
         );
       },
@@ -237,6 +240,7 @@ export const ContractSubscriptionTable: React.FC<
           contractSubscription={selectedContractSub}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -285,16 +289,19 @@ const ChainLastBlock = ({
   instanceUrl,
   chainId,
   autoUpdate,
+  authToken,
 }: {
   instanceUrl: string;
   chainId: number;
   autoUpdate: boolean;
+  authToken: string;
 }) => {
-  const lastBlockQuery = useEngineSubscriptionsLastBlock(
+  const lastBlockQuery = useEngineSubscriptionsLastBlock({
     instanceUrl,
     chainId,
     autoUpdate,
-  );
+    authToken,
+  });
   if (!lastBlockQuery.data) {
     return null;
   }
@@ -325,13 +332,18 @@ const RemoveModal = ({
   contractSubscription,
   disclosure,
   instanceUrl,
+  authToken,
 }: {
   contractSubscription: EngineContractSubscription;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }) => {
   const { mutate: removeContractSubscription } =
-    useEngineRemoveContractSubscription(instanceUrl);
+    useEngineRemoveContractSubscription({
+      instanceUrl,
+      authToken,
+    });
   const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed contract subscription.",
@@ -387,7 +399,7 @@ const RemoveModal = ({
               <FormControl>
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>
-                  <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
+                  <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
                   <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>
               </FormControl>

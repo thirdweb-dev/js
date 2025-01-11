@@ -3,11 +3,14 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import { getChainMetadata } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getContract } from "../../../../../contract/contract.js";
 import { getContractMetadata } from "../../../../../extensions/common/read/getContractMetadata.js";
 import { symbol } from "../../../../../extensions/common/read/symbol.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { useTokenContext } from "./provider.js";
 
 /**
@@ -154,36 +157,9 @@ export function TokenSymbol({
 }: TokenSymbolProps) {
   const { address, client, chain } = useTokenContext();
   const symbolQuery = useQuery({
-    queryKey: ["_internal_token_symbol_", chain.id, address] as const,
-    queryFn: async () => {
-      if (typeof symbolResolver === "string") {
-        return symbolResolver;
-      }
-      if (typeof symbolResolver === "function") {
-        return symbolResolver();
-      }
-      if (address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()) {
-        // Don't wanna use `getChainSymbol` because it has some side effect (it catches error and defaults to "ETH")
-        return getChainMetadata(chain).then(
-          (data) => data.nativeCurrency.symbol,
-        );
-      }
-
-      // Try to fetch the symbol from both the `symbol` function and the contract metadata
-      // then prioritize the `symbol()`
-      const contract = getContract({ address, client, chain });
-      const [_symbol, contractMetadata] = await Promise.all([
-        symbol({ contract }),
-        getContractMetadata({ contract }),
-      ]);
-      if (!_symbol && !contractMetadata.symbol) {
-        throw new Error(
-          "Failed to resolve symbol from both symbol() and contract metadata",
-        );
-      }
-
-      return _symbol || contractMetadata.symbol;
-    },
+    queryKey: getQueryKeys({ chainId: chain.id, address, symbolResolver }),
+    queryFn: async () =>
+      fetchTokenSymbol({ symbolResolver, address, chain, client }),
     ...queryOptions,
   });
 
@@ -195,7 +171,72 @@ export function TokenSymbol({
     return fallbackComponent || null;
   }
 
-  const displayValue = formatFn ? formatFn(symbolQuery.data) : symbolQuery.data;
+  if (formatFn && typeof formatFn === "function") {
+    return <span {...restProps}>{formatFn(symbolQuery.data)}</span>;
+  }
 
-  return <span {...restProps}>{displayValue}</span>;
+  return <span {...restProps}>{symbolQuery.data}</span>;
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchTokenSymbol(props: {
+  address: string;
+  client: ThirdwebClient;
+  chain: Chain;
+  symbolResolver?: string | (() => string) | (() => Promise<string>);
+}): Promise<string> {
+  const { symbolResolver, address, client, chain } = props;
+  if (typeof symbolResolver === "string") {
+    return symbolResolver;
+  }
+  if (typeof symbolResolver === "function") {
+    return symbolResolver();
+  }
+  if (address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()) {
+    // Don't wanna use `getChainSymbol` because it has some side effect (it catches error and defaults to "ETH")
+    return getChainMetadata(chain).then((data) => data.nativeCurrency.symbol);
+  }
+
+  // Try to fetch the symbol from both the `symbol` function and the contract metadata
+  // then prioritize its result
+  const contract = getContract({ address, client, chain });
+  const [_symbol, contractMetadata] = await Promise.all([
+    symbol({ contract }).catch(() => undefined),
+    getContractMetadata({ contract }).catch(() => undefined),
+  ]);
+  if (typeof _symbol === "string") {
+    return _symbol;
+  }
+  if (typeof contractMetadata?.symbol === "string") {
+    return contractMetadata.symbol;
+  }
+  throw new Error(
+    "Failed to resolve symbol from both symbol() and contract metadata",
+  );
+}
+
+/**
+ * @internal
+ */
+export function getQueryKeys(props: {
+  chainId: number;
+  address: string;
+  symbolResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { chainId, address, symbolResolver } = props;
+  return [
+    "_internal_token_symbol_",
+    chainId,
+    address,
+    {
+      resolver:
+        typeof symbolResolver === "string"
+          ? symbolResolver
+          : typeof symbolResolver === "function"
+            ? getFunctionId(symbolResolver)
+            : undefined,
+    },
+  ] as const;
 }

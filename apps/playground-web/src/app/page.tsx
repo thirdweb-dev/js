@@ -27,7 +27,7 @@ function WalletsSection() {
         <ArticleCardIndex
           href="/connect/sign-in"
           title="Sign In"
-          description="Integrate 350+ web3 wallets, in-app wallets, and smart accounts"
+          description="Integrate 500+ web3 wallets, in-app wallets, and smart accounts"
           icon={WalletsConnectIcon}
         />
         <ArticleCardIndex
@@ -58,6 +58,12 @@ function WalletsSection() {
           href="/connect/blockchain-api"
           title="Blockchain API"
           description="Performant, and reliable blockchain API"
+          icon={CodeIcon}
+        />
+        <ArticleCardIndex
+          href="/connect/ui"
+          title="Headless UI"
+          description="Modular & composable set of UIs for your web3 applications"
           icon={CodeIcon}
         />
       </div>

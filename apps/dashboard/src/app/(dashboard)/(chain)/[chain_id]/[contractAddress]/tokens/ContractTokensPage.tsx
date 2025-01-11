@@ -1,6 +1,5 @@
 "use client";
-
-import { Flex } from "@chakra-ui/react";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -15,6 +14,7 @@ interface ContractTokenPageProps {
   isERC20: boolean;
   isMintToSupported: boolean;
   isClaimToSupported: boolean;
+  twAccount: Account | undefined;
 }
 
 export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
@@ -22,10 +22,11 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   isERC20,
   isMintToSupported,
   isClaimToSupported,
+  twAccount,
 }) => {
   if (!isERC20) {
     return (
-      <Card as={Flex} flexDir="column" gap={3}>
+      <Card className="flex flex-col gap-3">
         {/* TODO  extract this out into it's own component and make it better */}
         <Heading size="subtitle.md">No Token extension enabled</Heading>
         <Text>
@@ -46,19 +47,23 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   }
 
   return (
-    <Flex direction="column" gap={6}>
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Heading size="title.sm">Contract Tokens</Heading>
         <div className="flex flex-col gap-3 md:flex-row">
-          {isClaimToSupported && <TokenClaimButton contract={contract} />}
-          <TokenBurnButton contract={contract} />
-          <TokenAirdropButton contract={contract} />
-          <TokenTransferButton contract={contract} />
-          {isMintToSupported && <TokenMintButton contract={contract} />}
+          {isClaimToSupported && (
+            <TokenClaimButton contract={contract} twAccount={twAccount} />
+          )}
+          <TokenBurnButton contract={contract} twAccount={twAccount} />
+          <TokenAirdropButton contract={contract} twAccount={twAccount} />
+          <TokenTransferButton contract={contract} twAccount={twAccount} />
+          {isMintToSupported && (
+            <TokenMintButton contract={contract} account={twAccount} />
+          )}
         </div>
       </div>
 
       <TokenSupply contract={contract} />
-    </Flex>
+    </div>
   );
 };

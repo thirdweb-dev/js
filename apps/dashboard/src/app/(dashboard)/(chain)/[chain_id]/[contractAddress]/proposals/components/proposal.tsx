@@ -1,10 +1,10 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   tokensDelegated,
   votingTokenDecimals,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -35,9 +35,14 @@ const ProposalStateToMetadataMap: Record<
 interface IProposal {
   proposal: VoteExt.ProposalItem;
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
-export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
+export const Proposal: React.FC<IProposal> = ({
+  proposal,
+  contract,
+  twAccount,
+}) => {
   const account = useActiveAccount();
   const hasVotedQuery = useReadContract(VoteExt.hasVoted, {
     contract,
@@ -81,22 +86,19 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
 
   return (
     <Card key={proposal.proposalId.toString()}>
-      <Flex mb="8px">
-        <Flex
-          paddingY="0px"
-          paddingX="16px"
-          borderRadius="25px"
-          bg={
+      <div
+        className="mb-2 rounded-md bg-gray-500 px-4 py-0"
+        style={{
+          background:
             ProposalStateToMetadataMap[
               proposal.stateLabel as keyof typeof VoteExt.ProposalState
-            ] || "gray.500"
-          }
-        >
-          <Text color="white">
-            {`${proposal.stateLabel?.charAt(0).toUpperCase()}${proposal.stateLabel?.slice(1)}`}
-          </Text>
-        </Flex>
-      </Flex>
+            ] || undefined,
+        }}
+      >
+        <Text color="white">
+          {`${proposal.stateLabel?.charAt(0).toUpperCase()}${proposal.stateLabel?.slice(1)}`}
+        </Text>
+      </div>
       <Text>
         <strong>Proposal:</strong> {proposal.description}
       </Text>
@@ -134,44 +136,51 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
       !hasVotedQuery.data &&
       !hasVotedQuery.isPending &&
       tokensDelegatedQuery.data ? (
-        <Flex mt="24px" gap={2}>
+        <div className="mt-6 flex gap-2">
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<CheckIcon />}
             onClick={() => castVote(1)}
-            colorScheme="green"
-            isDisabled={sendTx.isPending && voteType !== 1}
-            isLoading={sendTx.isPending && voteType === 1}
+            disabled={sendTx.isPending && voteType !== 1}
+            isPending={sendTx.isPending && voteType === 1}
           >
-            Approve
+            <div className="flex items-center gap-2">
+              <CheckIcon className="size-4" />
+              Approve
+            </div>
           </TransactionButton>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
-            rightIcon={<XIcon />}
             onClick={() => castVote(0)}
-            colorScheme="red"
-            isDisabled={sendTx.isPending && voteType !== 0}
-            isLoading={sendTx.isPending && voteType === 0}
+            variant="destructive"
+            disabled={sendTx.isPending && voteType !== 0}
+            isPending={sendTx.isPending && voteType === 0}
           >
-            Against
+            <div className="flex items-center gap-2">
+              <XIcon className="size-4" />
+              Against
+            </div>
           </TransactionButton>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
-            colorScheme="blackAlpha"
             size="sm"
             transactionCount={1}
-            rightIcon={<MinusIcon />}
             onClick={() => castVote(2)}
-            isDisabled={sendTx.isPending && voteType !== 2}
-            isLoading={sendTx.isPending && voteType === 2}
+            disabled={sendTx.isPending && voteType !== 2}
+            isPending={sendTx.isPending && voteType === 2}
           >
-            Abstain
+            <div className="flex items-center gap-2">
+              <MinusIcon className="size-4" />
+              Abstain
+            </div>
           </TransactionButton>
-        </Flex>
+        </div>
       ) : (
         canExecuteQuery.data && (
           <Button

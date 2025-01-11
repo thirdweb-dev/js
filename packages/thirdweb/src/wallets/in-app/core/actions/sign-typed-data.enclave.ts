@@ -1,5 +1,4 @@
-import type { TypedData } from "abitype";
-import type { TypedDataDefinition } from "viem";
+import type * as ox__TypedData from "ox/TypedData";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
@@ -7,7 +6,7 @@ import { stringify } from "../../../../utils/json.js";
 import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
 
 export async function signTypedData<
-  const typedData extends TypedData | Record<string, unknown>,
+  const typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 >({
   client,
@@ -15,7 +14,7 @@ export async function signTypedData<
   storage,
 }: {
   client: ThirdwebClient;
-  payload: TypedDataDefinition<typedData, primaryType>;
+  payload: ox__TypedData.Definition<typedData, primaryType>;
   storage: ClientScopedStorage;
 }) {
   const authToken = await storage.getAuthCookie();
@@ -42,7 +41,9 @@ export async function signTypedData<
   );
 
   if (!response.ok) {
-    throw new Error("Failed to sign typed data");
+    throw new Error(
+      `Failed to sign typed data - ${response.status} ${response.statusText}`,
+    );
   }
 
   const signedTypedData = (await response.json()) as {

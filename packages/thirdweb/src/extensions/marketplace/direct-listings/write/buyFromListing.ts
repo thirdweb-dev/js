@@ -34,6 +34,8 @@ export type BuyFromListingParams = {
  *
  * await sendTransaction({ transaction, account });
  * ```
+ *
+ * When using `buyFromListing` with Pay, the `erc20Value` will be automatically set to the listing currency.
  */
 export function buyFromListing(
   options: BaseTransactionOptions<BuyFromListingParams>,
@@ -66,6 +68,12 @@ export function buyFromListing(
             ? listing.pricePerToken * options.quantity
             : 0n,
           extraGas: 50_000n, // add extra gas to account for router call
+          erc20Value: isNativeTokenAddress(listing.currencyContractAddress)
+            ? undefined
+            : {
+                amountWei: listing.pricePerToken * options.quantity,
+                tokenAddress: listing.currencyContractAddress,
+              },
         },
       };
     },

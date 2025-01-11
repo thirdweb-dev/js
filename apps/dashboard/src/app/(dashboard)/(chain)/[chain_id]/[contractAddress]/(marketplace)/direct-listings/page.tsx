@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
 import { ContractDirectListingsPage } from "./ContractDirectListingsPage";
@@ -12,6 +13,7 @@ export default async function Page(props: {
   }>;
 }) {
   const params = await props.params;
+  const account = await getRawAccount();
   const info = await getContractPageParamsInfo(params);
 
   if (!info) {
@@ -19,7 +21,12 @@ export default async function Page(props: {
   }
 
   if (info.chainMetadata.chainId === localhost.id) {
-    return <ContractDirectListingsPageClient contract={info.contract} />;
+    return (
+      <ContractDirectListingsPageClient
+        contract={info.contract}
+        twAccount={account}
+      />
+    );
   }
 
   const { isDirectListingSupported } = await getContractPageMetadata(
@@ -30,5 +37,7 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractDirectListingsPage contract={info.contract} />;
+  return (
+    <ContractDirectListingsPage contract={info.contract} twAccount={account} />
+  );
 }

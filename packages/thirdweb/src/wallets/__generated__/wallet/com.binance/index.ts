@@ -3,14 +3,14 @@
 
 export const wallet = {
   id: "com.binance",
-  name: "Binance Web3 Wallet",
+  name: "Binance Wallet",
   homepage: "https://www.binance.com/en/web3wallet",
-  image_id: "ebac7b39-688c-41e3-7912-a4fefba74600",
+  image_id: "3d7eb880-7654-431f-ed84-a25712b45200",
   app: {
     browser: "https://www.binance.com/en/web3wallet",
     ios: "https://www.binance.com/en/download",
     android: "https://www.binance.com/en/download",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,

@@ -22,7 +22,7 @@ export const metadata = createMetadata({
 
 ## Low level control to authenticate and connect wallets
 
-You have full control with the connection hooks and functions to build your own UI. To use in-app wallets, you first choose a authentication strategy and then connect.
+You have full control with the connection hooks and functions to build your own UI. To use in-app wallets, you first choose an authentication strategy and then connect.
 
 ## Starting from an example
 
@@ -79,7 +79,7 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -135,9 +135,9 @@ const preLogin = async (email: string) => {
 	});
 };
 
-const handleLogin = async (email: string, verificationCode: string) => {
+const handleLogin = (email: string, verificationCode: string) => {
 	// verify email and connect
-	await connect(() => {
+	connect(async () => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
@@ -194,7 +194,7 @@ import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
 const { connect } = useConnect();
 
 const handleLogin = async () => {
-	await connect(() => {
+	await connect(async () => {
 		const wallet = inAppWallet();
 		const hasPasskey = await hasStoredPasskey(client);
 		await wallet.connect({

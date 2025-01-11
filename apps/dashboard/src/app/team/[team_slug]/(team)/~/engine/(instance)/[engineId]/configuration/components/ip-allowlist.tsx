@@ -12,6 +12,7 @@ import { Button, Heading, Text } from "tw-components";
 
 interface EngineIpAllowlistConfigProps {
   instanceUrl: string;
+  authToken: string;
 }
 
 interface IpForm {
@@ -20,11 +21,15 @@ interface IpForm {
 
 export const EngineIpAllowlistConfig: React.FC<
   EngineIpAllowlistConfigProps
-> = ({ instanceUrl }) => {
-  const { data: existingIpAllowlist } =
-    useEngineIpAllowlistConfiguration(instanceUrl);
-  const { mutateAsync: setIpAllowlist } =
-    useEngineSetIpAllowlistConfiguration(instanceUrl);
+> = ({ instanceUrl, authToken }) => {
+  const { data: existingIpAllowlist } = useEngineIpAllowlistConfiguration({
+    instanceUrl,
+    authToken,
+  });
+  const { mutateAsync: setIpAllowlist } = useEngineSetIpAllowlistConfiguration({
+    instanceUrl,
+    authToken,
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "IP Allowlist updated successfully.",

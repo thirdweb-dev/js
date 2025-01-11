@@ -6,7 +6,6 @@ import {
   useEngineQueueMetrics,
   useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex } from "@chakra-ui/react";
 import { ChartAreaIcon, InfoIcon } from "lucide-react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ErrorRate } from "./ErrorRate";
@@ -16,26 +15,32 @@ import { StatusCodes } from "./StatusCodes";
 interface EngineStatusProps {
   instance: EngineInstance;
   teamSlug: string;
+  authToken: string;
 }
 
 export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   instance,
   teamSlug,
+  authToken,
 }) => {
   const systemMetricsQuery = useEngineSystemMetrics(instance.id);
-  const queueMetricsQuery = useEngineQueueMetrics(instance.url, 10_000);
+  const queueMetricsQuery = useEngineQueueMetrics({
+    authToken,
+    instanceUrl: instance.url,
+    pollInterval: 10_000,
+  });
 
   let systemMetricsPanel = <Spinner className="h-4 w-4" />;
   if (!systemMetricsQuery.data || systemMetricsQuery.isError) {
     systemMetricsPanel = (
       <Card p={8}>
         <div className="flex flex-col gap-4">
-          <Flex gap={2} align="center">
+          <div className="flex flex-row items-center gap-2">
             <InfoIcon className="size-4" />
             <Heading size="title.xs">
               System metrics are unavailable for self-hosted Engine.
             </Heading>
-          </Flex>
+          </div>
           <Text>
             Upgrade to a{" "}
             <TrackedLink
@@ -56,10 +61,10 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     systemMetricsPanel = (
       <Card p={16}>
         <div className="flex flex-col gap-4">
-          <Flex gap={2} align="center" pb={-2}>
+          <div className="-mb-2 flex flex-row items-center gap-2">
             <ChartAreaIcon className="size-4" />
             <Heading size="title.md">System Metrics</Heading>
-          </Flex>
+          </div>
 
           <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Healthcheck instance={instance} />
@@ -95,9 +100,9 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     queueMetricsPanel = (
       <Card p={8}>
         <div className="flex flex-col gap-6">
-          <Flex gap={2} align="center">
+          <div className="flex flex-row items-center gap-2">
             <Heading size="title.md">Queue Metrics</Heading>
-          </Flex>
+          </div>
 
           <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
             <div className="flex-col gap-y-4">

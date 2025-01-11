@@ -9,7 +9,10 @@ class Node<T> {
   }
 }
 
-class Queue<T> {
+/**
+ * @internal
+ */
+export class Queue<T> {
   private head: Node<T> | undefined;
   private tail: Node<T> | undefined;
   size: number;

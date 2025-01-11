@@ -44,6 +44,7 @@ interface WebhooksTableProps {
   webhooks: EngineWebhook[];
   isPending: boolean;
   isFetched: boolean;
+  authToken: string;
 }
 
 const columnHelper = createColumnHelper<EngineWebhook>();
@@ -118,6 +119,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   webhooks,
   isPending,
   isFetched,
+  authToken,
 }) => {
   const [selectedWebhook, setSelectedWebhook] = useState<EngineWebhook>();
   const deleteDisclosure = useDisclosure();
@@ -159,6 +161,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
           webhook={selectedWebhook}
           disclosure={deleteDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
       {selectedWebhook && testDisclosure.isOpen && (
@@ -166,6 +169,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
           webhook={selectedWebhook}
           disclosure={testDisclosure}
           instanceUrl={instanceUrl}
+          authToken={authToken}
         />
       )}
     </>
@@ -176,13 +180,18 @@ interface DeleteWebhookModalProps {
   webhook: EngineWebhook;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }
 function DeleteWebhookModal({
   webhook,
   disclosure,
   instanceUrl,
+  authToken,
 }: DeleteWebhookModalProps) {
-  const deleteWebhook = useEngineDeleteWebhook(instanceUrl);
+  const deleteWebhook = useEngineDeleteWebhook({
+    authToken,
+    instanceUrl,
+  });
   const trackEvent = useTrack();
 
   const onDelete = () => {
@@ -259,13 +268,19 @@ interface TestWebhookModalProps {
   webhook: EngineWebhook;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
+  authToken: string;
 }
 function TestWebhookModal({
   webhook,
   disclosure,
   instanceUrl,
+  authToken,
 }: TestWebhookModalProps) {
-  const { mutate: testWebhook, isPending } = useEngineTestWebhook(instanceUrl);
+  const { mutate: testWebhook, isPending } = useEngineTestWebhook({
+    instanceUrl,
+    authToken,
+  });
+
   const [status, setStatus] = useState<number | undefined>();
   const [body, setBody] = useState<string | undefined>();
 

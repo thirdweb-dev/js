@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -18,6 +19,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,12 +42,14 @@ type LazyMintNftFormParams = {
   contract: ThirdwebContract;
   isErc721: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  twAccount: Account | undefined;
 };
 
 export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   contract,
   isErc721,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -131,6 +135,11 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
+  const lazyMintNotifications = useTxNotifications(
+    "NFT lazy minted successfully",
+    "Failed to lazy mint NFT",
+  );
+
   return (
     <>
       <form
@@ -152,7 +161,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               ? lazyMint721({ contract, nfts })
               : lazyMint1155({ contract, nfts });
 
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -171,14 +180,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               },
             });
 
-            toast.promise(promise, {
-              loading: "Lazy minting NFT",
-              error: "Failed to lazy mint NFT",
-              success: "Lazy minted successfully",
-            });
+            lazyMintNotifications.onSuccess();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to lazy mint NFT");
+            lazyMintNotifications.onError(err);
           }
         })}
       >
@@ -289,7 +294,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 <FormLabel>Image URL</FormLabel>
                 <Input max="6" {...register("customImage")} />
                 <FormHelperText>
-                  If you already have your NFT image preuploaded, you can set
+                  If you already have your NFT image pre-uploaded, you can set
                   the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -300,7 +305,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                 <FormLabel>Animation URL</FormLabel>
                 <Input max="6" {...register("customAnimationUrl")} />
                 <FormHelperText>
-                  If you already have your NFT Animation URL preuploaded, you
+                  If you already have your NFT Animation URL pre-uploaded, you
                   can set the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -321,13 +326,13 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           Cancel
         </Button>
         <TransactionButton
+          twAccount={twAccount}
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={LAZY_MINT_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
         >
           Lazy Mint NFT
         </TransactionButton>

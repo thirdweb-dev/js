@@ -171,10 +171,22 @@ function useUnderline<El extends HTMLElement>() {
     }
 
     update();
+    let resizeObserver: ResizeObserver | undefined = undefined;
+
+    if (containerRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        setTimeout(() => {
+          update();
+        }, 100);
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
     // add event listener for resize
     window.addEventListener("resize", update);
     return () => {
       window.removeEventListener("resize", update);
+      resizeObserver?.disconnect();
     };
   }, [activeTabEl]);
 
@@ -187,6 +199,7 @@ export function TabPathLinks(props: {
     path: string;
     exactMatch?: boolean;
     isDisabled?: boolean;
+    isActive?: (pathname: string) => boolean;
   }[];
   className?: string;
   tabContainerClassName?: string;
@@ -200,9 +213,11 @@ export function TabPathLinks(props: {
       links={links.map((l) => ({
         name: l.name,
         href: l.path,
-        isActive: l.exactMatch
-          ? pathname === l.path
-          : pathname.startsWith(l.path),
+        isActive: l.isActive
+          ? l.isActive(pathname)
+          : l.exactMatch
+            ? pathname === l.path
+            : pathname.startsWith(l.path),
         isDisabled: l.isDisabled,
       }))}
     />

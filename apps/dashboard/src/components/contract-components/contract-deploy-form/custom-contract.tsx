@@ -5,7 +5,6 @@ import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Accordion,
   AccordionButton,
@@ -35,6 +34,7 @@ import {
 } from "thirdweb/deploys";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
@@ -48,7 +48,7 @@ import {
 import {
   ModularContractDefaultModulesFieldset,
   getModuleInstallParams,
-  showPrimarySaleFiedset,
+  showPrimarySaleFieldset,
   showRoyaltyFieldset,
 } from "./modular-contract-default-modules-fieldset";
 import { Param } from "./param";
@@ -69,7 +69,7 @@ type CustomContractDeploymentFormData = {
   deployDeterministic: boolean;
   saltForCreate2: string;
   signerAsSalt: boolean;
-  deployParams: Record<string, string>;
+  deployParams: Record<string, string | DynamicValue>;
   moduleData: Record<string, Record<string, string>>;
   contractMetadata?: {
     name: string;
@@ -79,6 +79,18 @@ type CustomContractDeploymentFormData = {
   };
   recipients?: Recipient[];
 };
+
+export interface DynamicValue {
+  dynamicValue: {
+    type: string;
+    refContracts?: {
+      publisherAddress: string;
+      version: string;
+      contractId: string;
+      salt?: string;
+    }[];
+  };
+}
 
 export type CustomContractDeploymentForm =
   UseFormReturn<CustomContractDeploymentFormData>;
@@ -126,7 +138,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  useLoggedInUser();
   const { onError } = useTxNotifications(
     "Successfully deployed contract",
     "Failed to deploy contract",
@@ -158,6 +169,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       : metadata?.factoryDeploymentData?.implementationInitializerFunction ||
           "initialize",
   );
+
+  const implementationConstructorParams = metadata?.implConstructorParams;
 
   const isFactoryDeployment =
     metadata?.isDeployableViaFactory ||
@@ -206,9 +219,16 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             acc[param.name] = activeAccount.address;
           }
 
+          // specify refs if present
+          const dynamicValue =
+            metadata?.constructorParams?.[param.name]?.dynamicValue;
+          if (dynamicValue && acc[param.name] === "") {
+            acc[param.name] = { dynamicValue };
+          }
+
           return acc;
         },
-        {} as Record<string, string>,
+        {} as Record<string, string | DynamicValue>,
       ),
     }),
     [deployParams, metadata?.constructorParams, activeAccount, walletChain?.id],
@@ -245,7 +265,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 }
 
                 // set connected wallet address as default "primarySaleRecipient"
-                else if (showPrimarySaleFiedset(paramNames)) {
+                else if (showPrimarySaleFieldset(paramNames)) {
                   returnVal.primarySaleRecipient = activeAccount.address;
                 }
 
@@ -350,10 +370,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       Object.keys(formDeployParams)
         .map((paramKey) => {
           const deployParam = deployParams.find((p) => p.name === paramKey);
-          const contructorParams = metadata?.constructorParams || {};
-          const extraMetadataParam = contructorParams[paramKey];
+          const constructorParams = metadata?.constructorParams || {};
+          const extraMetadataParam = constructorParams[paramKey];
 
-          if (shouldHide(paramKey) || !extraMetadataParam?.hidden) {
+          if (
+            shouldHide(paramKey) ||
+            extraMetadataParam?.hidden !== true ||
+            extraMetadataParam?.dynamicValue
+          ) {
             return null;
           }
 
@@ -403,7 +427,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         }
       }
 
-      if (metadata.name === "MarketplaceV3") {
+      if (
+        metadata.name === "MarketplaceV3" &&
+        !(await isZkSyncChain(walletChain))
+      ) {
         // special case for marketplace
         return await deployMarketplaceContract({
           account: activeAccount,
@@ -412,13 +439,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           params: {
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
-            defaultAdmin: params.deployParams._defaultAdmin,
+            defaultAdmin: params.deployParams._defaultAdmin as string,
             platformFeeBps: Number(params.deployParams._platformFeeBps),
-            platformFeeRecipient: params.deployParams._platformFeeRecipient,
+            platformFeeRecipient: params.deployParams
+              ._platformFeeRecipient as string,
             trustedForwarders: params.deployParams._trustedForwarders
-              ? JSON.parse(params.deployParams._trustedForwarders)
+              ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
           },
+          version: metadata.version,
         });
       }
 
@@ -442,6 +471,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         client: thirdwebClient,
         deployMetadata: metadata,
         initializeParams,
+        implementationConstructorParams,
         salt,
         modules: modules?.map((m) => ({
           deployMetadata: m,
@@ -652,7 +682,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     ).error?.message,
                   }}
                   royaltyBps={{
-                    value: form.watch("deployParams._royaltyBps"),
+                    value: form.watch("deployParams._royaltyBps") as string,
                     isInvalid: !!form.getFieldState(
                       "deployParams._royaltyBps",
                       form.formState,
@@ -687,9 +717,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         (p) => p.name === paramKey,
                       );
 
-                      const contructorParams =
+                      const constructorParams =
                         metadata?.constructorParams || {};
-                      const extraMetadataParam = contructorParams[paramKey];
+                      const extraMetadataParam = constructorParams[paramKey];
 
                       return (
                         <Param
@@ -713,9 +743,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         (p) => p.name === paramKey,
                       );
 
-                      const contructorParams =
+                      const constructorParams =
                         metadata?.constructorParams || {};
-                      const extraMetadataParam = contructorParams[paramKey];
+                      const extraMetadataParam = constructorParams[paramKey];
 
                       return (
                         <Param
@@ -746,10 +776,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   const deployParam = deployParams.find(
                     (p) => p.name === paramKey,
                   );
-                  const contructorParams = metadata?.constructorParams || {};
-                  const extraMetadataParam = contructorParams[paramKey];
+                  const constructorParams = metadata?.constructorParams || {};
+                  const extraMetadataParam = constructorParams[paramKey];
 
-                  if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
+                  if (
+                    shouldHide(paramKey) ||
+                    extraMetadataParam?.hidden === true ||
+                    extraMetadataParam?.dynamicValue
+                  ) {
                     return null;
                   }
 
@@ -866,8 +900,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         <CircleAlertIcon className="size-5" />
                         <AlertTitle>
                           Deterministic deployment would only result in the same
-                          contract address if you use the same contructor params
-                          on every deployment.
+                          contract address if you use the same constructor
+                          params on every deployment.
                         </AlertTitle>
                       </Alert>
                     )}
@@ -930,7 +964,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 </span>
               </CheckboxWithLabel>
 
-              {/* Depoy */}
+              {/* Deploy */}
               <div className="flex md:justify-end">
                 <Button
                   disabled={!activeAccount || !walletChain}

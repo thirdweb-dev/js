@@ -1,7 +1,7 @@
 // bytecode
 export { detectMethod } from "../utils/bytecode/detectExtension.js";
 export { extractIPFSUri } from "../utils/bytecode/extractIPFS.js";
-export { extractMinimalProxyImplementationAddress } from "../utils/bytecode/extractMnimalProxyImplementationAddress.js";
+export { extractMinimalProxyImplementationAddress } from "../utils/bytecode/extractMinimalProxyImplementationAddress.js";
 export { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 export { ensureBytecodePrefix } from "../utils/bytecode/prefix.js";
 export { resolveImplementation } from "../utils/bytecode/resolveImplementation.js";
@@ -195,6 +195,7 @@ export { parseAbiParams } from "../utils/contract/parse-abi-params.js";
 export { max, min } from "../utils/bigint.js";
 
 export { toFunctionSelector } from "viem";
+export { toEventSelector } from "viem";
 export type {
   Abi,
   AbiFunction,
@@ -204,3 +205,6 @@ export type {
   AbiConstructor,
   AbiFallback,
 } from "abitype";
+
+export { shortenLargeNumber } from "../utils/shortenLargeNumber.js";
+export { formatNumber } from "../utils/formatNumber.js";

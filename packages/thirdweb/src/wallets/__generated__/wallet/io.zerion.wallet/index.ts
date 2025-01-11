@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.zerion.wallet",
   name: "Zerion",
   homepage: "https://zerion.io/",
-  image_id: "73f6f52f-7862-49e7-bb85-ba93ab72cc00",
+  image_id: "77c1d3dd-0213-400a-f9cc-bfd524c47f00",
   app: {
     browser: "https://app.zerion.io",
     ios: "https://apps.apple.com/app/id1456732565",

@@ -143,7 +143,7 @@ body {
   min-height: 100%;
 }
 
-/* Fix colors on autofilled inputs  */
+/* Fix colors on auto-filled inputs  */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

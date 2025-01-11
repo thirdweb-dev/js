@@ -3,7 +3,9 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import { getChainMetadata } from "../../../../../chains/utils.js";
+import { getFunctionId } from "../../../../../utils/function-id.js";
 import { useChainContext } from "./provider.js";
 
 /**
@@ -46,7 +48,7 @@ export interface ChainNameProps
    * name was not fetched succesfully
    * @example
    * ```tsx
-   * <ChainName fallbackComponent={"Failed to load"}
+   * <ChainName fallbackComponent={<span>Failed to load</span>}
    * />
    * ```
    */
@@ -155,19 +157,8 @@ export function ChainName({
 }: ChainNameProps) {
   const { chain } = useChainContext();
   const nameQuery = useQuery({
-    queryKey: ["_internal_chain_name_", chain.id] as const,
-    queryFn: async () => {
-      if (typeof nameResolver === "string") {
-        return nameResolver;
-      }
-      if (typeof nameResolver === "function") {
-        return nameResolver();
-      }
-      if (chain.name) {
-        return chain.name;
-      }
-      return getChainMetadata(chain).then((data) => data.name);
-    },
+    queryKey: getQueryKeys({ chainId: chain.id, nameResolver }),
+    queryFn: async () => fetchChainName({ chain, nameResolver }),
     ...queryOptions,
   });
 
@@ -182,4 +173,41 @@ export function ChainName({
   const displayValue = formatFn ? formatFn(nameQuery.data) : nameQuery.data;
 
   return <span {...restProps}>{displayValue}</span>;
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchChainName(props: {
+  chain: Chain;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  const { nameResolver, chain } = props;
+  if (typeof nameResolver === "string") {
+    return nameResolver;
+  }
+  if (typeof nameResolver === "function") {
+    return nameResolver();
+  }
+  if (chain.name) {
+    return chain.name;
+  }
+  return getChainMetadata(chain).then((data) => data.name);
+}
+
+/**
+ * @internal Exported for tests
+ */
+export function getQueryKeys(props: {
+  chainId: number;
+  nameResolver?: string | (() => string) | (() => Promise<string>);
+}) {
+  if (typeof props.nameResolver === "function") {
+    return [
+      "_internal_chain_name_",
+      props.chainId,
+      { resolver: getFunctionId(props.nameResolver) },
+    ] as const;
+  }
+  return ["_internal_chain_name_", props.chainId] as const;
 }

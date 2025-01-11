@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -17,6 +18,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -52,6 +54,7 @@ type UpdateNftMetadataForm = {
    * else (NFT Collection, Edition) -> use `setTokenURI`
    */
   useUpdateMetadata: boolean;
+  twAccount: Account | undefined;
 };
 
 export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
@@ -59,6 +62,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   nft,
   useUpdateMetadata,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -163,12 +167,16 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const updateMetadataNotifications = useTxNotifications(
+    "NFT metadata updated successfully",
+    "Failed to update NFT metadata",
+  );
 
   return (
     <form
       className="flex flex-col gap-6"
       id={UPDATE_METADATA_FORM_ID}
-      onSubmit={handleSubmit((data) => {
+      onSubmit={handleSubmit(async (data) => {
         if (!address) {
           toast.error("Please connect your wallet to update metadata.");
           return;
@@ -214,7 +222,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                   tokenId: BigInt(nft.id),
                   newMetadata,
                 });
-          const promise = sendAndConfirmTx.mutateAsync(transaction, {
+          await sendAndConfirmTx.mutateAsync(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "nft",
@@ -234,14 +242,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
             },
           });
 
-          toast.promise(promise, {
-            loading: "Updating NFT metadata",
-            error: "Failed to update NFT metadata",
-            success: "NFT metadata updated successfully",
-          });
+          updateMetadataNotifications.onSuccess();
         } catch (err) {
           console.error(err);
-          toast.error("Failed to update NFT metadata");
+          updateMetadataNotifications.onError(err);
         }
       })}
     >
@@ -357,7 +361,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormLabel>Image URL</FormLabel>
               <Input max="6" {...register("customImage")} />
               <FormHelperText>
-                If you already have your NFT image preuploaded, you can set the
+                If you already have your NFT image pre-uploaded, you can set the
                 URL or URI here.
               </FormHelperText>
               <FormErrorMessage>
@@ -368,7 +372,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormLabel>Animation URL</FormLabel>
               <Input max="6" {...register("customAnimationUrl")} />
               <FormHelperText>
-                If you already have your NFT Animation URL preuploaded, you can
+                If you already have your NFT Animation URL pre-uploaded, you can
                 set the URL or URI here.
               </FormHelperText>
               <FormErrorMessage>
@@ -387,13 +391,13 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           Cancel
         </Button>
         <TransactionButton
+          twAccount={twAccount}
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={UPDATE_METADATA_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty && imageUrl === nft?.metadata.image}
+          disabled={!isDirty && imageUrl === nft?.metadata.image}
         >
           Update NFT
         </TransactionButton>

@@ -1,55 +1,29 @@
 import type { NFT } from "thirdweb";
 import {
   arbitrum,
-  arbitrumNova,
-  arbitrumSepolia,
-  astriaEvmDusknet,
   avalanche,
-  avalancheFuji,
   base,
-  baseSepolia,
   blast,
   blastSepolia,
   bsc,
   bscTestnet,
-  celo,
   cronos,
-  degen,
   ethereum,
   fantom,
-  frameTestnet,
   gnosis,
   gnosisChiadoTestnet,
-  godWoken,
-  godWokenTestnetV1,
-  hokumTestnet,
   linea,
-  lineaSepolia,
-  loot,
-  mantaPacific,
-  mantaPacificTestnet,
   moonbeam,
   optimism,
-  optimismSepolia,
   palm,
-  palmTestnet,
   polygon,
   polygonAmoy,
   polygonMumbai,
   polygonZkEvm,
   polygonZkEvmTestnet,
-  rari,
-  rariTestnet,
-  scroll,
-  scrollAlphaTestnet,
-  scrollSepoliaTestnet,
   sepolia,
-  xai,
-  xaiSepolia,
   zkSync,
   zkSyncSepolia,
-  zora,
-  zoraSepolia,
 } from "thirdweb/chains";
 
 // Cannot use BigInt for the values here because it will result in error: "fail to serialize bigint"
@@ -132,65 +106,8 @@ const moralisSupportedChainIdsMap: Record<number, string> = {
   [4202]: "",
 };
 
-// List: https://docs.simplehash.com/reference/supported-chains-testnets
-export const simpleHashSupportedChainIdsMap: Record<number, string> = {
-  [arbitrum.id]: "arbitrum",
-  [arbitrumNova.id]: "arbitrum-nova",
-  [arbitrumSepolia.id]: "arbitrum-sepolia",
-  [astriaEvmDusknet.id]: "astria-devnet",
-  [avalanche.id]: "avalanche",
-  [avalancheFuji.id]: "avalanche-fuji",
-  [base.id]: "base",
-  [baseSepolia.id]: "base-sepolia",
-  [bsc.id]: "bsc",
-  [bscTestnet.id]: "bsc-testnet",
-  [blast.id]: "blast",
-  [blastSepolia.id]: "blast-sepolia",
-  [celo.id]: "celo",
-  [ethereum.id]: "ethereum",
-  [degen.id]: "degen",
-  [fantom.id]: "fantom",
-  [frameTestnet.id]: "frame-testnet",
-  [gnosis.id]: "gnosis",
-  [godWoken.id]: "godwoken",
-  [godWokenTestnetV1.id]: "godwoken-testnet",
-  [hokumTestnet.id]: "hokum-testnet",
-  [linea.id]: "linea",
-  [lineaSepolia.id]: "linea-testnet",
-  [loot.id]: "loot",
-  [mantaPacific.id]: "manta",
-  [mantaPacificTestnet.id]: "manta-testnet",
-  [moonbeam.id]: "moonbeam",
-  [polygonMumbai.id]: "polygon-mumbai",
-  [optimism.id]: "optimism",
-  [optimismSepolia.id]: "optimism-sepolia",
-  [palm.id]: "palm",
-  [palmTestnet.id]: "palm-testnet",
-  [polygon.id]: "polygon",
-  [polygonAmoy.id]: "polygon-amoy",
-  [polygonZkEvm.id]: "polygon-zkevm",
-  [polygonZkEvmTestnet.id]: "polygon-zkevm-testnet",
-  [rari.id]: "rari",
-  [rariTestnet.id]: "rari-testnet",
-  [scroll.id]: "scroll",
-  [scrollAlphaTestnet.id]: "scroll-testnet",
-  [scrollSepoliaTestnet.id]: "scroll-sepolia",
-  [sepolia.id]: "ethereum-sepolia",
-  [xai.id]: "xai",
-  [xaiSepolia.id]: "xai-sepolia",
-  [zkSync.id]: "zksync-era",
-  [zora.id]: "zora",
-  [zoraSepolia.id]: "zora-sepolia",
-  [1329]: "sei",
-  [1328]: "sei-atlantic-2",
-  [360]: "shape",
-  [33139]: "apechain",
-};
-
 export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;
 export type MoralisSupportedChainId = keyof typeof moralisSupportedChainIdsMap;
-export type SimpleHashSupportedChainId =
-  keyof typeof simpleHashSupportedChainIdsMap;
 
 export const alchemySupportedChainIds = Object.keys(
   alchemySupportedChainIdsMap,
@@ -198,10 +115,6 @@ export const alchemySupportedChainIds = Object.keys(
 
 export const moralisSupportedChainIds = Object.keys(
   moralisSupportedChainIdsMap,
-);
-
-export const simpleHashSupportedNetworks = Object.keys(
-  simpleHashSupportedChainIdsMap,
 );
 
 export interface GenerateURLParams {

@@ -141,7 +141,7 @@ describe("session_request", () => {
       personalSignRequest = cloneObject(REQUEST_EVENT_MOCK);
       personalSignRequest.params.request.method = "personal_sign";
       personalSignRequest.params.request.params = [
-        "my message",
+        "0xeeeee",
         TEST_ACCOUNT_A.address,
       ] as WalletConnectSignRequestPrams;
     });
@@ -159,7 +159,7 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x66ea9c2ac4a99a5ac26f5fa3e800171036210e135d486f1d0d02d64eaa7dd56275b4323e153e62c1fad57a6be54420248ed54604f4857ec75ce7761eefad10e41c",
+            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
       });
     });
@@ -221,7 +221,7 @@ describe("session_request", () => {
       ethSignRequest = cloneObject(REQUEST_EVENT_MOCK);
       ethSignRequest.params.request.method = "eth_sign";
       ethSignRequest.params.request.params = [
-        "my message",
+        "0xeeeee",
         TEST_ACCOUNT_A.address,
       ] as WalletConnectSignRequestPrams;
     });
@@ -239,14 +239,14 @@ describe("session_request", () => {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
-            "0x66ea9c2ac4a99a5ac26f5fa3e800171036210e135d486f1d0d02d64eaa7dd56275b4323e153e62c1fad57a6be54420248ed54604f4857ec75ce7761eefad10e41c",
+            "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
       });
     });
 
     it("should reject if active account address differs from requested address", async () => {
       ethSignRequest.params.request.params = [
-        "my message",
+        "0xeeeee",
         TEST_ACCOUNT_B.address,
       ] as WalletConnectSignRequestPrams;
 

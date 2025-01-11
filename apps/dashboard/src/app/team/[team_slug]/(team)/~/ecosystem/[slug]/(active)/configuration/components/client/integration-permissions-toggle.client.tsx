@@ -11,7 +11,8 @@ import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 
 export function IntegrationPermissionsToggle({
   ecosystem,
-}: { ecosystem: Ecosystem }) {
+  authToken,
+}: { ecosystem: Ecosystem; authToken: string }) {
   const [messageToConfirm, setMessageToConfirm] = useState<
     | {
         title: string;
@@ -24,13 +25,18 @@ export function IntegrationPermissionsToggle({
     mutateAsync: updateEcosystem,
     variables,
     isPending,
-  } = useUpdateEcosystem({
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Failed to create ecosystem";
-      toast.error(message);
+  } = useUpdateEcosystem(
+    {
+      authToken,
     },
-  });
+    {
+      onError: (error) => {
+        const message =
+          error instanceof Error ? error.message : "Failed to create ecosystem";
+        toast.error(message);
+      },
+    },
+  );
 
   return (
     <RadioGroup

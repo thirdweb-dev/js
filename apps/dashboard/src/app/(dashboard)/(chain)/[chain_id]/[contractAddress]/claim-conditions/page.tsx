@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { ClaimConditions } from "../_components/claim-conditions/claim-conditions";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -19,8 +20,10 @@ export default async function Page(props: {
   }
   const { contract, chainMetadata } = info;
 
+  const account = await getRawAccount();
+
   if (chainMetadata.chainId === localhost.id) {
-    return <ClaimConditionsClient contract={contract} />;
+    return <ClaimConditionsClient contract={contract} twAccount={account} />;
   }
 
   const {
@@ -34,6 +37,10 @@ export default async function Page(props: {
   }
 
   return (
-    <ClaimConditions contract={contract} isERC20={supportedERCs.isERC20} />
+    <ClaimConditions
+      contract={contract}
+      isERC20={supportedERCs.isERC20}
+      twAccount={account}
+    />
   );
 }

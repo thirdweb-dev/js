@@ -1,0 +1,391 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "thirdweb Insight For Agents & LLMs",
+	description:
+		"thirdweb Insight query documentation formatted for use with LLMs and agents",
+	image: {
+		title: "Insight",
+		icon: "insight",
+	},
+});
+
+# For Agents & LLMs
+
+
+Insight is a powerful tool that can be used to power AI agents and LLMs with blockchain data. To use the API in your AI agent you can use the llms.txt file bellow.
+
+
+- [llms.txt file](/insight/agents-and-llms/llmstxt)
+- For developers who prefer working with OpenAPI specifications, our complete API documentation is available in OpenAPI format [here](https://insight.thirdweb.com/openapi.json).
+
+If you prefer to use the API in an LLM prompt, the schema below can be copied and pasted into the AI assistant of your choice. Feed this to your assistant, then ask your assistant to construct Insight queries on your behalf, asking it for certain onchain information.
+
+````markdown
+# ATTENTION LLMs - API Usage Instructions
+
+## API URL
+
+```typescript
+const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
+```
+
+## Authentication
+
+The API supports three authentication methods:
+
+```typescript
+// 1. Header Authentication
+const headers = {
+	"x-client-id": "{{clientId}}", // thirdweb Client ID
+};
+
+// 2. Query Parameter
+const url = "https://{{chainId}}.insight.thirdweb.com/v1/events?clientId={{clientId}}";
+
+// 3. Bearer Token
+const headers = {
+	Authorization: "Bearer {{jwtToken}}",
+};
+
+// Example using fetch with header auth
+async function getEvents() {
+	const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
+		headers: {
+			"x-client-id": "{{clientId}}",
+		},
+	});
+	return await response.json();
+}
+```
+
+## Core Concepts
+
+### Chain IDs
+
+```typescript
+type ChainId = number; // Chain ID of the network you want to query (e.g., 1 for Ethereum mainnet)
+
+// Example: Using a specific chain
+const chainId = 1; // Ethereum mainnet
+const baseUrl = `https://${chainId}.insight.thirdweb.com`;
+```
+
+### Base Response Structure
+
+```typescript
+interface BaseResponse<T> {
+  data: T[];
+  meta: {
+    chain_id: number;     // Required
+    page: number;         // Required
+    limit: number;        // Required
+    total_items: number;  // Required
+    total_pages: number;  // Required
+    address?: string;     // Optional
+    signature?: string;   // Optional
+  }
+}
+
+// Example response from getting events
+{
+  "data": [
+    {
+      "chain_id": 1,
+      "block_number": "{{blockNumber}}",
+      "transaction_hash": "{{transactionHash}}",
+      "address": "{{contractAddress}}",
+      "data": "{{data}}",
+      "topics": ["{{topic}}"]
+    }
+  ],
+  "meta": {
+    "chain_id": 1,
+    "page": 0,
+    "limit": 20,
+    "total_items": 150,
+    "total_pages": 8
+  }
+}
+```
+
+## API Examples
+
+### Events API
+
+```typescript
+// 1. Get All Events
+async function getAllEvents() {
+	const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
+		headers: { "x-client-id": "{{clientId}}" },
+	});
+	return await response.json();
+}
+
+// 2. Get Contract Events with Filtering
+async function getContractEvents(contractAddress: string) {
+	const params = new URLSearchParams({
+		filter_block_number_gte: blockNumber,
+		sort_by: "block_timestamp",
+		sort_order: "desc",
+		limit: "{{limit}}",
+	});
+
+	const url = `https://{{chainId}}.insight.thirdweb.com/v1/events/{{contractAddress}}?${params}`;
+	const response = await fetch(url, {
+		headers: { "x-client-id": "{{clientId}}" },
+	});
+	return await response.json();
+}
+```
+
+### Token Balance API
+
+```typescript
+// 1. Get ERC20 Balances
+async function getERC20Balances(ownerAddress: string) {
+	const response = await fetch(
+		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc20/${ownerAddress}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
+	);
+	const data = await response.json();
+	// Example response:
+	// {
+	//   "data": [
+	//     {
+	//       "tokenAddress": "0x123...",
+	//       "balance": "1000000000000000000"
+	//     }
+	//   ]
+	// }
+	return data;
+}
+
+// 2. Get NFT Balances
+async function getNFTBalances(ownerAddress: string) {
+	const response = await fetch(
+		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc721/${ownerAddress}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
+	);
+	const data = await response.json();
+	// Example response:
+	// {
+	//   "data": [
+	//     {
+	//       "collectionAddress": "0x456...",
+	//       "tokenId": "1",
+	//       "balance": "1"
+	//     }
+	//   ]
+	// }
+	return data;
+}
+```
+
+### Using Filters
+
+```typescript
+// Example: Get events with complex filtering
+async function getFilteredEvents() {
+	const params = new URLSearchParams({
+		// Block filters
+		filter_block_number_gte: blockNumberStart,
+		filter_block_number_lte: blockNumberEnd,
+
+		// Time filters
+		filter_block_timestamp_gte: "{{timestamp}}",
+
+		// Transaction filters
+		filter_from_address: "{{fromAddress}}",
+		filter_value_gte: "{{value}}", // 1 ETH
+
+		// Pagination
+		page: "{{page}}",
+		limit: "{{limit}}",
+
+		// Sorting
+		sort_by: "{{sortBy}}",
+		sort_order: "{{sortOrder}}",
+	});
+
+	const response = await fetch(
+		`https://{{chainId}}.insight.thirdweb.com/v1/events?${params}`,
+		{ headers: { "x-client-id": "{{clientId}}" } },
+	);
+	return await response.json();
+}
+```
+
+### Error Handling
+
+```typescript
+async function safeApiCall() {
+	try {
+		const response = await fetch("https://{{chainId}}.insight.thirdweb.com/v1/events", {
+			headers: { "x-client-id": "{{clientId}}" },
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			// Example error response:
+			// { "error": "Invalid client ID" }
+			throw new Error(errorData.error);
+		}
+
+		return await response.json();
+	} catch (error) {
+		console.error("API Error:", error.message);
+		throw error;
+	}
+}
+```
+
+## API Reference
+
+### Events API
+
+1. **Get All Events**
+
+```typescript
+GET /v1/events
+
+interface EventsResponse {
+  data: Event[];
+  meta: MetaData;
+}
+```
+
+2. **Get Contract Events**
+
+```typescript
+GET /v1/events/:contractAddress
+```
+
+3. **Get Specific Event Type**
+
+```typescript
+GET /v1/events/:contractAddress/:signature
+```
+
+### Transactions API
+
+1. **Get All Transactions**
+
+```typescript
+GET /v1/transactions
+```
+
+2. **Get Contract Transactions**
+
+```typescript
+GET /v1/transactions/:contractAddress
+```
+
+3. **Get Specific Transaction Type**
+
+```typescript
+GET /v1/transactions/:contractAddress/:signature
+```
+
+### Token Balance API
+
+1. **ERC20 Balances**
+
+```typescript
+GET /v1/tokens/erc20/:ownerAddress
+
+interface ERC20Response {
+  data: {
+    tokenAddress: string;  // Required
+    balance: string;      // Required
+  }[];
+}
+```
+
+2. **ERC721 & ERC1155 Balances**
+
+```typescript
+GET /v1/tokens/erc721/:ownerAddress
+GET /v1/tokens/erc1155/:ownerAddress
+
+interface TokenBalanceResponse {
+  data: {
+    collectionAddress: string;  // Required
+    tokenId: string;           // Required
+    balance: string;           // Required
+  }[];
+}
+```
+
+## Query Parameters
+
+### Common Parameters
+
+```typescript
+interface CommonQueryParams {
+	page?: number;      // Default: 0
+	limit?: number;     // Default: 20, must be > 0
+	sort_by?: "block_number" | "block_timestamp" | "transaction_index";
+	sort_order?: "asc" | "desc";
+	group_by?: string;  // Group results by a specific field
+	aggregate?: string[]; // Apply aggregate functions (count, sum, avg, etc.) to grouped results
+}
+```
+
+### Filter Types
+
+1. **Block Filters**
+
+```typescript
+interface BlockFilters {
+	filter_block_number?: number; // Example: 1000000
+	filter_block_number_gte?: number; // Example: 1000000
+	filter_block_number_gt?: number; // Example: 1000000
+	filter_block_number_lte?: number; // Example: 1000000
+	filter_block_number_lt?: number; // Example: 1000000
+	filter_block_hash?: string; // Example: "0x3a1fba5..."
+}
+```
+
+2. **Time Filters**
+
+```typescript
+interface TimeFilters {
+	filter_block_timestamp?: number; // Example: 1715222400
+	filter_block_timestamp_gte?: number; // Example: 1715222400
+	filter_block_timestamp_gt?: number; // Example: 1715222400
+	filter_block_timestamp_lte?: number; // Example: 1715222400
+	filter_block_timestamp_lt?: number; // Example: 1715222400
+}
+```
+
+3. **Transaction Filters**
+
+```typescript
+interface TransactionFilters {
+	filter_transaction_index?: number;
+	filter_transaction_hash?: string;
+	filter_from_address?: string;
+	filter_value?: string;    // Value in wei (e.g., "1000000000000000000" for 1 ETH)
+	filter_value_gte?: string;
+	filter_value_gt?: string;
+	filter_value_lte?: string;
+	filter_value_lt?: string;
+	filter_gas_price?: number;
+	filter_gas?: number;
+	// Additional gte, gt, lte, lt variants for numeric fields
+}
+```
+
+## Error Handling
+
+All endpoints return standard error responses for 400 and 500 status codes:
+
+```typescript
+// 400 Bad Request
+// 500 Internal Server Error
+interface ErrorResponse {
+	error: string; // Required
+}
+```
+````

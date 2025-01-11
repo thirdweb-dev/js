@@ -9,10 +9,5 @@ export default async function Page() {
     return redirect(`/login?next=${encodeURIComponent("/account/contracts")}`);
   }
 
-  return (
-    <DeployedContractsPage
-      address={accountAddress}
-      className="flex grow flex-col pt-10 pb-10"
-    />
-  );
+  return <DeployedContractsPage address={accountAddress} />;
 }

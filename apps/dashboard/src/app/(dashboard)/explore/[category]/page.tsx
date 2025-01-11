@@ -11,7 +11,7 @@ import {
   ContractCardSkeleton,
 } from "components/explore/contract-card";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { ALL_CATEGORIES, getCategory } from "data/explore";
+import { getCategory } from "data/explore";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -130,10 +130,4 @@ export default async function ExploreCategoryPage(
       </div>
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  return ALL_CATEGORIES.map((category) => ({
-    params: { category },
-  }));
 }

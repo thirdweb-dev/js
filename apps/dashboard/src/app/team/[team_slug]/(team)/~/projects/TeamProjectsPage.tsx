@@ -1,6 +1,9 @@
 "use client";
 
 import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { CopyButton } from "@/components/ui/CopyButton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,13 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import { ChevronDownIcon, SearchIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
-import { CopyButton } from "@/components/ui/CopyButton";
 import {
   Select,
   SelectContent,
@@ -23,16 +19,19 @@ import {
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { ChevronDownIcon, PlusIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
-type SortyById = "name" | "createdAt";
+type SortById = "name" | "createdAt";
 
 export function TeamProjectsPage(props: {
   projects: Project[];
-  team_slug: string;
+  team: Team;
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<SortyById>("createdAt");
+  const [sortBy, setSortBy] = useState<SortById>("createdAt");
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
     useState(false);
   const router = useDashboardRouter();
@@ -59,9 +58,7 @@ export function TeamProjectsPage(props: {
   }
 
   return (
-    <div className="container ">
-      <div className="h-10" />
-
+    <div className="flex grow flex-col">
       {/* Filters + Add New */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <SearchInput value={searchTerm} onValueChange={setSearchTerm} />
@@ -69,7 +66,7 @@ export function TeamProjectsPage(props: {
           <SelectBy value={sortBy} onChange={setSortBy} />
           <AddNewButton
             createProject={() => setIsCreateProjectDialogOpen(true)}
-            teamMembersSettingsPath={`/team/${props.team_slug}/~/settings/members`}
+            teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
           />
         </div>
       </div>
@@ -78,24 +75,32 @@ export function TeamProjectsPage(props: {
 
       {/* Projects */}
       {projectsToShow.length === 0 ? (
-        <div className="flex h-[450px] items-center justify-center rounded-lg border border-border ">
-          No projects found
+        <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+          <div className="flex flex-col items-center">
+            <p className="mb-5 text-center">No projects created</p>
+            <Button
+              className="gap-2"
+              onClick={() => setIsCreateProjectDialogOpen(true)}
+              variant="outline"
+            >
+              <PlusIcon className="size-4" />
+              Create a Project
+            </Button>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {projectsToShow.map((project) => {
             return (
               <ProjectCard
                 key={project.id}
                 project={project}
-                team_slug={props.team_slug}
+                team_slug={props.team.slug}
               />
             );
           })}
         </div>
       )}
-
-      <div className="h-10" />
 
       <LazyCreateAPIKeyDialog
         open={isCreateProjectDialogOpen}
@@ -104,6 +109,9 @@ export function TeamProjectsPage(props: {
           // refresh projects
           router.refresh();
         }}
+        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
+          "nebula",
+        )}
       />
     </div>
   );
@@ -117,31 +125,29 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="relative flex items-center gap-4 rounded-lg border border-border bg-muted/50 p-4 transition-colors hover:bg-muted/70"
+      className="relative flex items-center gap-4 rounded-lg border border-border bg-muted/50 p-5 transition-colors hover:bg-muted/70"
     >
       {/* TODO - set image */}
       <ProjectAvatar className="size-10 rounded-full" src="" />
 
-      <div>
-        <Link
-          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
-          // remove /connect when we have overview page
-          href={`/team/${team_slug}/${project.slug}`}
-        >
-          <h2 className="font-medium text-base">{project.name}</h2>
-        </Link>
-
-        <p className="mb-1 flex items-center gap-0.5 text-muted-foreground text-xs">
-          {truncate(project.publishableKey, 32)}
+      <div className="flex-grow flex-col gap-1">
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
+            // remove /connect when we have overview page
+            href={`/team/${team_slug}/${project.slug}`}
+          >
+            <h2 className="font-medium text-base">{project.name}</h2>
+          </Link>
           <CopyButton
             text={project.publishableKey}
             iconClassName="z-10 size-3"
-            className="!h-auto !w-auto -translate-x-1 p-2 hover:bg-background"
+            className="!h-auto !w-auto -translate-x-1 p-2 hover:bg-secondary"
           />
-        </p>
+        </div>
 
-        <p className="my-1 text-muted-foreground/70 text-xs">
-          Created on {format(new Date(project.createdAt), "MMM dd, yyyy")}
+        <p className="flex items-center text-muted-foreground text-sm">
+          {truncate(project.publishableKey, 32)}
         </p>
       </div>
     </div>
@@ -200,11 +206,11 @@ function AddNewButton(props: {
 }
 
 function SelectBy(props: {
-  value: SortyById;
-  onChange: (value: SortyById) => void;
+  value: SortById;
+  onChange: (value: SortById) => void;
 }) {
-  const values: SortyById[] = ["name", "createdAt"];
-  const valueToLabel: Record<SortyById, string> = {
+  const values: SortById[] = ["name", "createdAt"];
+  const valueToLabel: Record<SortById, string> = {
     name: "Name",
     createdAt: "Creation Date",
   };
@@ -213,7 +219,7 @@ function SelectBy(props: {
     <Select
       value={props.value}
       onValueChange={(v) => {
-        props.onChange(v as SortyById);
+        props.onChange(v as SortById);
       }}
     >
       <SelectTrigger className="min-w-[200px] bg-muted/50 capitalize">

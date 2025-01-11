@@ -24,6 +24,9 @@ export async function getConnectLocale(localeId: LocaleId) {
     case "fr_FR": {
       return (await import("./fr.js")).default;
     }
+    case "pt_BR": {
+      return (await import("./br.js")).default;
+    }
     default: {
       return (await import("./en.js")).default;
     }

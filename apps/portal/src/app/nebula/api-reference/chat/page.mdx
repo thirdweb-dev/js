@@ -1,0 +1,116 @@
+import { EndpointMetadata } from './EndpointMetadata';
+
+<EndpointMetadata />
+
+#### Chat Actions
+
+Chat actions represent blockchain transactions or operations that Nebula has prepared in response to your request. The response includes both a detailed explanation in the `message` field and the actual transaction data in the `actions` array.
+
+**Example Response with Chat Action:**
+```json
+{
+  "message": "The transaction to transfer 0.0001 ETH to the address resolved from the ENS name `vitalik.eth` (which is `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`) is set up successfully. The simulation indicates that the transaction is likely to succeed.\n\nPlease proceed by signing and confirming the transaction.",
+  "actions": [
+    {
+      "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+      "request_id": "c2b51ed6-da79-49ac-b411-206a42059509",
+      "type": "sign_transaction",
+      "source": "executor",
+      "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
+    }
+  ],
+  "session_id": "437a0df7-d512-4ef4-95b5-6168ccbbe097",
+  "request_id": "c2b51ed6-da79-49ac-b411-206a42059509"
+}
+```
+
+**Action Properties:**
+- `session_id`: Unique identifier for the current session
+- `request_id`: Unique identifier for the specific request
+- `type`: The type of action (e.g., "sign_transaction")
+- `source`: Origin of the action (e.g., "executor")
+- `data`: Transaction parameters including:
+  - `chainId`: Network identifier (e.g., 11155111 for Sepolia)
+  - `to`: Recipient's address
+  - `data`: Transaction data (if any)
+  - `value`: Amount to send in wei
+
+When handling actions:
+1. Parse the `message` field for human-readable transaction details
+2. Extract the transaction data from the `actions` array
+3. Present transaction details to the user for review
+4. Use a local wallet to sign the transaction
+5. Broadcast the signed transaction to the network
+
+**Example Implementation with thirdweb SDK:**
+```javascript
+import {
+  createThirdwebClient,
+  prepareTransaction,
+  sendTransaction,
+  privateKeyToAccount
+} from "thirdweb";
+
+// Example function to handle the API response
+async function handleNebulaResponse(response) {
+  // Initialize thirdweb client
+  const client = createThirdwebClient({
+    secretKey: process.env.THIRDWEB_SECRET_KEY
+  });
+
+  // Initialize account
+  const account = privateKeyToAccount({
+    client,
+    privateKey: process.env.EOA_PRIVATE_KEY
+  });
+
+  // Check if we have any actions
+  if (response.actions && response.actions.length > 0) {
+    const action = response.actions[0];
+
+    // Parse the transaction data from the action
+    const txData = JSON.parse(action.data);
+
+    try {
+      // Prepare transaction with client
+      const transaction = prepareTransaction({
+        to: txData.to,
+        data: txData.data,
+        value: BigInt(txData.value),
+        chain: txData.chainId,
+        client
+      });
+
+      // Send transaction with account
+      const result = await sendTransaction({
+        transaction,
+        account
+      });
+
+      return result;
+    } catch (error) {
+      console.error("Error processing transaction:", error);
+      throw error;
+    }
+  }
+}
+
+// Example usage
+const response = await fetch('https://nebula-api.thirdweb.com/chat', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': 'YOUR_THIRDWEB_SECRET_KEY'
+  },
+  body: JSON.stringify({
+    message: "send 0.0001 ETH on sepolia to vitalik.eth",
+    execute_config: {
+      mode: "client",
+      signer_wallet_address: "0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE"
+    }
+  })
+});
+
+const data = await response.json();
+const result = await handleNebulaResponse(data);
+```

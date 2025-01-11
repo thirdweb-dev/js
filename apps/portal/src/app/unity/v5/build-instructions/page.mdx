@@ -13,6 +13,7 @@ export const metadata = createMetadata({
 - **Build Settings:** Use `Smaller (faster) Builds` / `Shorter Build Time`.
 - **Player Settings:** Use IL2CPP over Mono when available.
 - **Stripping Level:** Set `Managed Stripping Level` to `Minimal` (`Player Settings` > `Other Settings` > `Optimization`). (Generally not a hard requirement unless using WalletConnect as a wallet provider option.)
+- **Strip Engine Code:** Make sure this is turned off.
 
 ## WebGL
 
@@ -47,3 +48,8 @@ No action needed for hosted builds.
 
 - **EDM4U:** Comes with the package, resolves dependencies at runtime. Use `Force Resolve` from `Assets` > `External Dependency Manager` > `Android Resolver`.
 - **Redirect Schemes:** Set custom schemes matching your bundle ID in `Plugins/AndroidManifest.xml` or equivalent to ensure OAuth redirects.
+```xml
+<!-- Set your bundle id here -->
+<!-- Replace 'com.thirdweb.unitysdk' with your desired scheme -->
+<data android:scheme="com.thirdweb.unitysdk" />
+```

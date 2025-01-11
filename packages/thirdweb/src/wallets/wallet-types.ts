@@ -9,7 +9,7 @@ import type {
 import type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
-} from "./coinbase/coinbaseWebSDK.js";
+} from "./coinbase/coinbase-web.js";
 import type { COINBASE } from "./constants.js";
 import type {
   EcosystemWalletAutoConnectOptions,
@@ -134,7 +134,7 @@ export type WalletAutoConnectionOption<T extends WalletId> =
  * @example
  * ```ts
  * type X = WalletCreationOptions<'io.metamask'>
- * ````
+ * ```
  */
 export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions

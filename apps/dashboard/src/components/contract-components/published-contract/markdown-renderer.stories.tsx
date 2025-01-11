@@ -25,6 +25,12 @@ export const DisableCodeHighlight: Story = {
   },
 };
 
+export const SkipHTML: Story = {
+  args: {
+    skipHtml: true,
+  },
+};
+
 export const Mobile: Story = {
   args: {},
   parameters: {
@@ -143,17 +149,23 @@ function example() {
 ### Strikethrough
 ~~This is strikethrough text.~~
 
+### HTML Elements
 
+<br />
 `;
 
 function Story(props: {
   disableCodeHighlight?: boolean;
+  skipHtml?: boolean;
 }) {
   return (
     <div className="container max-w-[800px] py-10">
       <MarkdownRenderer
         markdownText={markdownExample}
-        disableCodeHighlight={props.disableCodeHighlight}
+        code={{
+          disableCodeHighlight: props.disableCodeHighlight,
+        }}
+        skipHtml={props.skipHtml}
       />
     </div>
   );

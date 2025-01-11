@@ -59,6 +59,55 @@ export async function linkAccount({
 
 /**
  * @description
+ * Links a new account to the current one using an auth token.
+ * For the public-facing API, use `wallet.linkProfile` instead.
+ *
+ * @internal
+ */
+export async function unlinkAccount({
+  client,
+  ecosystem,
+  profileToUnlink,
+  storage,
+}: {
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  profileToUnlink: Profile;
+  storage: ClientScopedStorage;
+}): Promise<Profile[]> {
+  const clientFetch = getClientFetch(client, ecosystem);
+  const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
+  const currentAccountToken = await storage.getAuthCookie();
+
+  if (!currentAccountToken) {
+    throw new Error("Failed to unlink account, no user logged in");
+  }
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer iaw-auth-token:${currentAccountToken}`,
+    "Content-Type": "application/json",
+  };
+  const linkedDetailsResp = await clientFetch(
+    `${IN_APP_URL}/api/2024-05-05/account/disconnect`,
+    {
+      method: "POST",
+      headers,
+      body: stringify(profileToUnlink),
+    },
+  );
+
+  if (!linkedDetailsResp.ok) {
+    const body = await linkedDetailsResp.json();
+    throw new Error(body.message || "Failed to unlink account.");
+  }
+
+  const { linkedAccounts } = await linkedDetailsResp.json();
+
+  return (linkedAccounts ?? []) satisfies Profile[];
+}
+
+/**
+ * @description
  * Gets the linked accounts for the current user.
  * For the public-facing API, use `wallet.getProfiles` instead.
  *

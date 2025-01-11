@@ -96,7 +96,13 @@ export type {
    * @deprecated use InAppWalletSocialAuth instead
    */
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
+  InAppWalletCreationOptions,
 } from "../wallets/in-app/core/wallet/types.js";
+
+export type {
+  MultiStepAuthArgsType,
+  SingleStepAuthArgsType,
+} from "../wallets/in-app/core/authentication/types.js";
 
 export {
   preAuthenticate,
@@ -106,6 +112,7 @@ export {
   getUserPhoneNumber,
   getProfiles,
   linkProfile,
+  unlinkProfile,
 } from "../wallets/in-app/web/lib/auth/index.js";
 export type { Profile } from "../wallets/in-app/core/authentication/types.js";
 
@@ -117,7 +124,7 @@ export {
 export type {
   CoinbaseWalletCreationOptions,
   CoinbaseSDKWalletConnectionOptions,
-} from "../wallets/coinbase/coinbaseWebSDK.js";
+} from "../wallets/coinbase/coinbase-web.js";
 
 export type {
   WalletEmitter,
@@ -153,3 +160,5 @@ export * as EIP1193 from "../adapters/eip1193/index.js";
 export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type { ConnectionManager } from "../wallets/manager/index.js";
+
+export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

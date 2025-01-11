@@ -22,7 +22,7 @@ export interface InternalTransaction {
 export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
   const abiQuery = useResolveContractAbi(contract);
 
-  // Get all the PreprareEvents from the contract abis
+  // Get all the Prepare Events from the contract abis
   const events: PreparedEvent<AbiEvent>[] = useMemo(() => {
     const eventsItems = (abiQuery.data || []).filter((o) => o.type === "event");
     const eventSignatures = eventsItems.map((event) => formatAbiItem(event));

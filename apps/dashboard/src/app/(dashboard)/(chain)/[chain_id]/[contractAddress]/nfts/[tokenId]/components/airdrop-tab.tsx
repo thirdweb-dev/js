@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -7,9 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Flex } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +21,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, Text } from "tw-components";
 import {
   type AirdropAddressInput,
   AirdropUpload,
@@ -27,14 +29,19 @@ import {
 interface AirdropTabProps {
   contract: ThirdwebContract;
   tokenId: string;
+  twAccount: Account | undefined;
 }
 
 /**
  * This component must only take in ERC1155 contracts
  */
-const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
+const AirdropTab: React.FC<AirdropTabProps> = ({
+  contract,
+  tokenId,
+  twAccount,
+}) => {
   const address = useActiveAccount()?.address;
-  const { handleSubmit, setValue, watch, reset, formState } = useForm<{
+  const { handleSubmit, setValue, watch, reset } = useForm<{
     addresses: AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
@@ -43,6 +50,10 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
   const [open, setOpen] = useState(false);
+  const airdropNotifications = useTxNotifications(
+    "NFTs airdropped successfully",
+    "Failed to airdrop NFTs",
+  );
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -80,7 +91,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
               }),
             );
             const transaction = multicall({ contract, data });
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -102,74 +113,63 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
                 });
               },
             });
-            toast.promise(promise, {
-              loading: "Airdropping NFTs",
-              success: "Airdropped successfully",
-              error: "Failed to airdrop",
-            });
+
+            airdropNotifications.onSuccess();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to airdrop NFTs");
+            airdropNotifications.onError(err);
           }
         })}
       >
         <div className="flex flex-col gap-2">
-          <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
-            <Flex direction={{ base: "column", md: "row" }} gap={4}>
-              <Sheet open={open} onOpenChange={setOpen}>
-                <SheetTrigger asChild>
-                  <Button
-                    colorScheme="primary"
-                    borderRadius="md"
-                    rightIcon={<UploadIcon className="size-5" />}
-                  >
-                    Upload addresses
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
-                  <SheetHeader>
-                    <SheetTitle className="mb-5 text-left">
-                      Airdrop NFTs
-                    </SheetTitle>
-                  </SheetHeader>
-                  <AirdropUpload
-                    onClose={() => setOpen(false)}
-                    setAirdrop={(value) =>
-                      setValue("addresses", value, { shouldDirty: true })
-                    }
-                  />
-                </SheetContent>
-              </Sheet>
+          <div className="mb-3 flex w-full flex-col gap-4 md:flex-row">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button variant="primary" className="gap-2">
+                  Upload addresses <UploadIcon className="size-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+                <SheetHeader>
+                  <SheetTitle className="mb-5 text-left">
+                    Airdrop NFTs
+                  </SheetTitle>
+                </SheetHeader>
+                <AirdropUpload
+                  onClose={() => setOpen(false)}
+                  setAirdrop={(value) =>
+                    setValue("addresses", value, { shouldDirty: true })
+                  }
+                />
+              </SheetContent>
+            </Sheet>
 
-              <Flex
-                gap={2}
-                direction="row"
-                align="center"
-                justify="center"
-                color={addresses.length === 0 ? "orange.500" : "green.500"}
-              >
-                {addresses.length > 0 && (
-                  <Text size="body.sm" color="inherit">
-                    ● <strong>{addresses.length} addresses</strong> ready to be
-                    airdropped
-                  </Text>
-                )}
-              </Flex>
-            </Flex>
+            <div
+              className={cn("flex flex-row items-center justify-center gap-2", {
+                "text-orange-500": addresses.length === 0,
+                "text-green-500": addresses.length > 0,
+              })}
+            >
+              {addresses.length > 0 && (
+                <p>
+                  ● <strong>{addresses.length} addresses</strong> ready to be
+                  airdropped
+                </p>
+              )}
+            </div>
           </div>
-          <Text>
+          <p>
             You can airdrop to a maximum of 250 addresses at a time. If you have
             more, please do it in multiple transactions.
-          </Text>
+          </p>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
             transactionCount={1}
-            isLoading={sendAndConfirmTx.isPending}
+            isPending={sendAndConfirmTx.isPending}
             type="submit"
-            colorScheme="primary"
             disabled={!!address && addresses.length === 0}
-            alignSelf="flex-end"
-            isDisabled={!formState.isDirty}
+            className="self-end"
           >
             Airdrop
           </TransactionButton>

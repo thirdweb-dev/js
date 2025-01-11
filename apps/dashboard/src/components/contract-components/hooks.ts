@@ -6,37 +6,15 @@ import type { Abi } from "abitype";
 import { isEnsName, resolveEns } from "lib/ens";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
-import { type ThirdwebContract, getContract } from "thirdweb";
-import { resolveContractAbi } from "thirdweb/contract";
+import type { ThirdwebContract } from "thirdweb";
+import { getContract, resolveContractAbi } from "thirdweb/contract";
 import { isAddress } from "thirdweb/utils";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
-  fetchPublisherProfile,
 } from "./fetch-contracts-with-versions";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
-
-function publisherProfileQuery(publisherAddress?: string) {
-  return queryOptions({
-    queryKey: ["releaser-profile", publisherAddress],
-    queryFn: () => {
-      if (!publisherAddress) {
-        throw new Error("publisherAddress is not defined");
-      }
-      return fetchPublisherProfile(publisherAddress);
-    },
-    enabled: !!publisherAddress,
-    // 24h
-    gcTime: 60 * 60 * 24 * 1000,
-    // 1h
-    staleTime: 60 * 60 * 1000,
-  });
-}
-
-export function usePublisherProfile(publisherAddress?: string) {
-  return useQuery(publisherProfileQuery(publisherAddress));
-}
 
 export function useAllVersions(
   publisherAddress: string | undefined,
@@ -201,26 +179,24 @@ export function useCustomFactoryAbi(
 ) {
   const chain = useV5DashboardChain(chainId);
   const client = useThirdwebClient();
-  const contract = useMemo(() => {
-    if (!chain) {
-      return undefined;
-    }
-
-    return getContract({
-      client,
-      address: contractAddress,
-      chain,
-    });
-  }, [contractAddress, chain, client]);
 
   return useQuery({
-    queryKey: ["custom-factory-abi", contract],
+    queryKey: ["custom-factory-abi", { contractAddress, chainId }],
     queryFn: () => {
+      const contract = chain
+        ? getContract({
+            client,
+            address: contractAddress,
+            chain,
+          })
+        : undefined;
+
       if (!contract) {
         throw new Error("Contract not found");
       }
+
       return resolveContractAbi<Abi>(contract);
     },
-    enabled: !!contract,
+    enabled: !!contractAddress && !!chainId,
   });
 }

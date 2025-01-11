@@ -18,13 +18,21 @@ import { useForm } from "react-hook-form";
 
 interface KmsGcpConfigProps {
   instance: EngineInstance;
+  authToken: string;
 }
 
-export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({ instance }) => {
-  const { mutate: setGcpKmsConfig, isPending } = useEngineSetWalletConfig(
-    instance.url,
-  );
-  const { data: gcpConfig } = useEngineWalletConfig(instance.url);
+export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({
+  instance,
+  authToken,
+}) => {
+  const { mutate: setGcpKmsConfig, isPending } = useEngineSetWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
+  const { data: gcpConfig } = useEngineWalletConfig({
+    instanceUrl: instance.url,
+    authToken,
+  });
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",

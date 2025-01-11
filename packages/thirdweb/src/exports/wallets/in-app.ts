@@ -9,6 +9,7 @@ export {
   getUserPhoneNumber,
   getProfiles,
   linkProfile,
+  unlinkProfile,
 } from "../../wallets/in-app/web/lib/auth/index.js";
 
 export type { GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
@@ -17,7 +18,13 @@ export type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
   InAppWalletConnectionOptions,
+  InAppWalletAutoConnectOptions,
 } from "../../wallets/in-app/core/wallet/types.js";
+
+export type {
+  MultiStepAuthArgsType,
+  SingleStepAuthArgsType,
+} from "../../wallets/in-app/core/authentication/types.js";
 
 export { hasStoredPasskey } from "../../wallets/in-app/web/lib/auth/passkeys.js";
 

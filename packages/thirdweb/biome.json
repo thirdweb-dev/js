@@ -23,6 +23,9 @@
         "rules": {
           "nursery": {
             "noProcessEnv": "off"
+          },
+          "style": {
+            "noUnusedTemplateLiteral": "off"
           }
         }
       }

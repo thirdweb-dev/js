@@ -24,7 +24,13 @@ export function UpdatePartnerForm({
   ecosystem,
   partner,
   onSuccess,
-}: { ecosystem: Ecosystem; partner: Partner; onSuccess: () => void }) {
+  authToken,
+}: {
+  ecosystem: Ecosystem;
+  partner: Partner;
+  onSuccess: () => void;
+  authToken: string;
+}) {
   const form = useForm<z.input<typeof partnerFormSchema>>({
     resolver: zodResolver(partnerFormSchema),
     defaultValues: {
@@ -34,19 +40,24 @@ export function UpdatePartnerForm({
     },
   });
 
-  const { mutateAsync: updatePartner, isPending } = useUpdatePartner({
-    onSuccess: () => {
-      form.reset();
-      onSuccess();
+  const { mutateAsync: updatePartner, isPending } = useUpdatePartner(
+    {
+      authToken,
     },
-    onError: (error) => {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to add ecosystem partner";
-      toast.error(message);
+    {
+      onSuccess: () => {
+        form.reset();
+        onSuccess();
+      },
+      onError: (error) => {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to add ecosystem partner";
+        toast.error(message);
+      },
     },
-  });
+  );
 
   return (
     <Form {...form}>

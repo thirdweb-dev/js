@@ -1,10 +1,8 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
-import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
@@ -18,6 +16,7 @@ import type { Chain } from "thirdweb";
 import {
   ConnectButton,
   type NetworkSelectorProps,
+  useActiveAccount,
   useConnectModal,
 } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
@@ -29,7 +28,6 @@ import {
   addRecentlyUsedChainId,
   recentlyUsedChainIdsStore,
 } from "../../../../stores/chainStores";
-import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
 export const CustomConnectWallet = (props: {
@@ -37,8 +35,8 @@ export const CustomConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
-  loadingButtonClassName?: string;
   chain?: Chain;
+  isLoggedIn: boolean;
 }) => {
   const thirdwebClient = useThirdwebClient();
   const loginRequired =
@@ -50,12 +48,7 @@ export const CustomConnectWallet = (props: {
   // chains
   const favChainIdsQuery = useFavoriteChainIds();
   const recentChainIds = useStore(recentlyUsedChainIdsStore);
-  const { idToChain, allChains } = useAllChainsData();
-
-  const allChainsWithMetadata = useMemo(
-    () => allChains.map(mapV4ChainToV5Chain),
-    [allChains],
-  );
+  const { idToChain, allChainsV5 } = useAllChainsData();
 
   const recentlyUsedChainsWithMetadata = useMemo(
     () =>
@@ -101,12 +94,12 @@ export const CustomConnectWallet = (props: {
   const chainSections: NetworkSelectorProps["sections"] = useMemo(() => {
     return [
       {
-        label: "Favorites",
-        chains: favoriteChainsWithMetadata,
-      },
-      {
         label: "Recent",
         chains: recentlyUsedChainsWithMetadata,
+      },
+      {
+        label: "Favorites",
+        chains: favoriteChainsWithMetadata,
       },
       {
         label: "Popular",
@@ -120,25 +113,11 @@ export const CustomConnectWallet = (props: {
   ]);
 
   // ensures login status on pages that need it
-  const { isPending, isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn } = props;
   const pathname = usePathname();
+  const account = useActiveAccount();
 
-  if (isPending) {
-    return (
-      <>
-        <div
-          className={cn(
-            "flex h-[48px] w-[144px] items-center justify-center rounded-lg border border-border bg-muted",
-            props.loadingButtonClassName,
-          )}
-        >
-          <Spinner className="size-4" />
-        </div>
-      </>
-    );
-  }
-
-  if (!isLoggedIn && loginRequired) {
+  if ((!isLoggedIn || !account) && loginRequired) {
     return (
       <>
         <Button
@@ -150,7 +129,7 @@ export const CustomConnectWallet = (props: {
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
-            Sign In
+            Connect Wallet
           </Link>
         </Button>
       </>
@@ -163,8 +142,8 @@ export const CustomConnectWallet = (props: {
         theme={getSDKTheme(t)}
         client={thirdwebClient}
         connectModal={{
-          privacyPolicyUrl: "/privacy",
-          termsOfServiceUrl: "/tos",
+          privacyPolicyUrl: "/privacy-policy",
+          termsOfServiceUrl: "/terms",
           showThirdwebBranding: false,
           welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
         }}
@@ -186,7 +165,7 @@ export const CustomConnectWallet = (props: {
         detailsButton={{
           className: props.detailsButtonClassName,
         }}
-        chains={allChainsWithMetadata}
+        chains={allChainsV5}
         detailsModal={{
           networkSelector: {
             sections: chainSections,
@@ -308,8 +287,8 @@ export function useCustomConnectModal() {
           url: "https://thirdweb.com",
         },
         chain: options?.chain,
-        privacyPolicyUrl: "/privacy",
-        termsOfServiceUrl: "/tos",
+        privacyPolicyUrl: "/privacy-policy",
+        termsOfServiceUrl: "/terms",
         showThirdwebBranding: false,
         welcomeScreen: () => (
           <ConnectWalletWelcomeScreen

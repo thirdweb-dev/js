@@ -43,13 +43,16 @@ type AuthOptionsFormData = {
   customAuthEndpoint: string;
   customHeaders: { key: string; value: string }[];
   useSmartAccount: boolean;
-  chainIds: number[];
   sponsorGas: boolean;
+  defaultChainId: number;
   accountFactoryType: "v0.6" | "v0.7" | "custom";
   customAccountFactoryAddress: string;
 };
 
-export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
+export function AuthOptionsForm({
+  ecosystem,
+  authToken,
+}: { ecosystem: Ecosystem; authToken: string }) {
   const form = useForm<AuthOptionsFormData>({
     defaultValues: {
       authOptions: ecosystem.authOptions || [],
@@ -57,8 +60,8 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
       customAuthEndpoint: ecosystem.customAuthOptions?.authEndpoint?.url || "",
       customHeaders: ecosystem.customAuthOptions?.authEndpoint?.headers || [],
       useSmartAccount: !!ecosystem.smartAccountOptions,
-      chainIds: [], // unused - TODO: remove from service
       sponsorGas: ecosystem.smartAccountOptions?.sponsorGas || false,
+      defaultChainId: ecosystem.smartAccountOptions?.defaultChainId,
       accountFactoryType:
         ecosystem.smartAccountOptions?.accountFactoryAddress ===
         DEFAULT_ACCOUNT_FACTORY_V0_7
@@ -85,8 +88,12 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
             )
             .optional(),
           useSmartAccount: z.boolean(),
-          chainIds: z.array(z.number()),
           sponsorGas: z.boolean(),
+          defaultChainId: z.coerce
+            .number({
+              invalid_type_error: "Please enter a valid chain ID",
+            })
+            .optional(),
           accountFactoryType: z.enum(["v0.6", "v0.7", "custom"]),
           customAccountFactoryAddress: z.string().optional(),
         })
@@ -108,6 +115,18 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
         )
         .refine(
           (data) => {
+            if (data.useSmartAccount && (data.defaultChainId ?? 0) <= 0) {
+              return false;
+            }
+            return true;
+          },
+          {
+            message: "Please enter a valid chain ID",
+            path: ["defaultChainId"],
+          },
+        )
+        .refine(
+          (data) => {
             if (data.useCustomAuth && !data.customAuthEndpoint) {
               return false;
             }
@@ -125,16 +144,21 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
     name: "customHeaders",
   });
 
-  const { mutateAsync: updateEcosystem, isPending } = useUpdateEcosystem({
-    onError: (error) => {
-      const message =
-        error instanceof Error ? error.message : "Failed to update ecosystem";
-      toast.error(message);
+  const { mutateAsync: updateEcosystem, isPending } = useUpdateEcosystem(
+    {
+      authToken,
     },
-    onSuccess: () => {
-      toast.success("Ecosystem options updated");
+    {
+      onError: (error) => {
+        const message =
+          error instanceof Error ? error.message : "Failed to update ecosystem";
+        toast.error(message);
+      },
+      onSuccess: () => {
+        toast.success("Ecosystem options updated");
+      },
     },
-  });
+  );
 
   const onSubmit = (data: AuthOptionsFormData) => {
     let customAuthOptions: Ecosystem["customAuthOptions"] | null = null;
@@ -165,12 +189,16 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
           accountFactoryAddress = DEFAULT_ACCOUNT_FACTORY_V0_7;
           break;
         case "custom":
+          if (!data.customAccountFactoryAddress) {
+            toast.error("Please enter a custom account factory address");
+            return;
+          }
           accountFactoryAddress = data.customAccountFactoryAddress;
           break;
       }
 
       smartAccountOptions = {
-        chainIds: [], // unused - TODO remove from service
+        defaultChainId: data.defaultChainId,
         sponsorGas: data.sponsorGas,
         accountFactoryAddress,
       };
@@ -427,6 +455,33 @@ export function AuthOptionsForm({ ecosystem }: { ecosystem: Ecosystem }) {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="defaultChainId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Default Chain ID</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="1" />
+                    </FormControl>
+                    <FormDescription>
+                      This will be the chain ID the smart account will be
+                      initialized to on your{" "}
+                      <a
+                        href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
+                        className="text-link-foreground"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        ecosystem page
+                      </a>
+                      .
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="accountFactoryType"

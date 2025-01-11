@@ -39,3 +39,8 @@ export const BASE_URL = isProd
   : (process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL}`
       : "http://localhost:3000") || "https://thirdweb-dev.com";
+
+export const NEXT_PUBLIC_NEBULA_URL = process.env.NEXT_PUBLIC_NEBULA_URL;
+
+export const INSIGHT_SERVICE_API_KEY =
+  process.env.INSIGHT_SERVICE_API_KEY || "";

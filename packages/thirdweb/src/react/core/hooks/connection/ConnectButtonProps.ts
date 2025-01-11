@@ -3,9 +3,11 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { AssetTabs } from "../../../../react/web/ui/ConnectWallet/screens/ViewAssets.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import type { Hex } from "../../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
@@ -113,6 +115,11 @@ export type PayUIOptions = Prettify<
         | {
             type: "fiat";
             status: BuyWithFiatStatus;
+          }
+        | {
+            type: "transaction";
+            chainId: number;
+            transactionHash: Hex;
           },
     ) => void;
     /**
@@ -215,10 +222,15 @@ export type ConnectButton_detailsModalOptions = {
   /**
    * Show a "Request Testnet funds" link in `ConnectButton` Details Modal when user is connected to a testnet.
    *
-   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`
+   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`.
+   * Keep in mind that the link will only be shown if there are faucet links registered with the chain.
    * @example
    * ```tsx
-   * <ConnectButton showTestnetFaucet={true} />
+   * <ConnectButton
+   *   detailsModal={{
+   *     showTestnetFaucet: true,
+   *   }}
+   * />
    * ```
    */
   showTestnetFaucet?: boolean;
@@ -320,6 +332,30 @@ export type ConnectButton_detailsModalOptions = {
    * Note: If an empty array is passed, the [View Funds] button will be hidden
    */
   assetTabs?: AssetTabs[];
+
+  /**
+   * Show the token balance's value in fiat.
+   * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
+   */
+  showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   * Configure options for managing the connected wallet.
+   */
+  manageWallet?: {
+    /**
+     * Allow linking other profiles to the connected wallet.
+     *
+     * By default it is `true`.
+     */
+    allowLinkingProfiles?: boolean;
+  };
+
+  /**
+   * @param screen The screen's name that was last shown when user closed the modal
+   * @returns
+   */
+  onClose?: (screen: string) => void;
 };
 
 /**
@@ -377,6 +413,12 @@ export type ConnectButton_detailsButtonOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` details button, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Show the token balance's value in fiat.
+   * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
+   */
+  showBalanceInFiat?: SupportedFiatCurrency;
 };
 
 /**
@@ -567,7 +609,7 @@ export type ConnectButtonProps = {
    * ]
    * ```
    *
-   * The `ConnectButton` also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 350+ wallets
+   * The `ConnectButton` also shows a "All wallets" button at the end of wallet list which allows user to connect to any of the 500+ wallets
    */
   wallets?: Wallet[];
 
@@ -920,7 +962,7 @@ export type ConnectButtonProps = {
   recommendedWallets?: Wallet[];
 
   /**
-   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 350+ wallets.
+   * By default, ConnectButton modal shows a "All Wallets" button that shows a list of 500+ wallets.
    *
    * You can disable this button by setting `showAllWallets` prop to `false`
    */

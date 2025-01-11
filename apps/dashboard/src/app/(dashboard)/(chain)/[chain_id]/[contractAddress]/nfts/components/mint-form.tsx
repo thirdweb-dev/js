@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -17,6 +18,7 @@ import { PropertiesFormControl } from "components/contract-pages/forms/propertie
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,12 +42,14 @@ type NFTMintForm = {
   contract: ThirdwebContract;
   isErc721: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  twAccount: Account | undefined;
 };
 
 export const NFTMintForm: React.FC<NFTMintForm> = ({
   contract,
   isErc721,
   setOpen,
+  twAccount,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -130,13 +134,17 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     watch("external_url") instanceof File;
 
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const nftMintNotifications = useTxNotifications(
+    "NFT minted successfully",
+    "Failed to mint NFT",
+  );
 
   return (
     <>
       <form
         className="mt-6 flex flex-col gap-6"
         id={MINT_FORM_ID}
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (data) => {
           if (!address) {
             toast.error("Please connect your wallet to mint.");
             return;
@@ -163,7 +171,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   nft,
                   supply: BigInt(data.supply),
                 });
-            const promise = sendAndConfirmTx.mutateAsync(transaction, {
+            await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
@@ -183,14 +191,10 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               },
             });
 
-            toast.promise(promise, {
-              loading: "Minting NFT",
-              success: "NFT minted successfully",
-              error: "Failed to mint NFT",
-            });
+            nftMintNotifications.onSuccess();
           } catch (err) {
+            nftMintNotifications.onError(err);
             console.error(err);
-            toast.error("Failed to mint NFT");
           }
         })}
       >
@@ -313,7 +317,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 <FormLabel>Image URL</FormLabel>
                 <Input max="6" {...register("customImage")} />
                 <FormHelperText>
-                  If you already have your NFT image preuploaded, you can set
+                  If you already have your NFT image pre-uploaded, you can set
                   the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -324,7 +328,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 <FormLabel>Animation URL</FormLabel>
                 <Input max="6" {...register("customAnimationUrl")} />
                 <FormHelperText>
-                  If you already have your NFT Animation URL preuploaded, you
+                  If you already have your NFT Animation URL pre-uploaded, you
                   can set the URL or URI here.
                 </FormHelperText>
                 <FormErrorMessage>
@@ -347,11 +351,11 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
         <TransactionButton
           txChainID={contract.chain.id}
           transactionCount={1}
-          isLoading={sendAndConfirmTx.isPending}
+          isPending={sendAndConfirmTx.isPending}
           form={MINT_FORM_ID}
           type="submit"
-          colorScheme="primary"
-          isDisabled={!isDirty}
+          disabled={!isDirty}
+          twAccount={twAccount}
         >
           Mint NFT
         </TransactionButton>

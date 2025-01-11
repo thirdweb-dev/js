@@ -13,9 +13,9 @@ import { XIcon } from "lucide-react";
 import { Text, TrackedLink } from "tw-components";
 
 export const SmartWalletsBillingAlert = ({
-  dismissable = false,
+  dismissible = false,
 }: {
-  dismissable?: boolean;
+  dismissible?: boolean;
 }) => {
   const [dismissed, setDismissed] = useLocalStorage(
     "dismissed-smart-wallets-billing-alert",
@@ -23,7 +23,7 @@ export const SmartWalletsBillingAlert = ({
     true,
   );
 
-  if (dismissable && dismissed) {
+  if (dismissible && dismissed) {
     return true;
   }
 
@@ -64,7 +64,7 @@ export const SmartWalletsBillingAlert = ({
         </Flex>
       </div>
 
-      {dismissable && (
+      {dismissible && (
         <IconButton
           size="xs"
           aria-label="Close notice"

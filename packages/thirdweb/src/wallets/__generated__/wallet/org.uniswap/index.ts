@@ -5,7 +5,7 @@ export const wallet = {
   id: "org.uniswap",
   name: "Uniswap Wallet",
   homepage: "https://uniswap.org",
-  image_id: "bff9cf1f-df19-42ce-f62a-87f04df13c00",
+  image_id: "6033c33c-0773-48e3-a12f-e7fbf409e700",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/uniswap-wallet/id6443944476",

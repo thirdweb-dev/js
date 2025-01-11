@@ -1,0 +1,24 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.GetUserAuthDetails | Thirdweb .NET SDK",
+	description: "Gets the user auth details from the corresponding auth provider.",
+});
+
+# EcosystemWallet.GetUserDetails
+
+This method returns information about the connected user auth provider details, for instance Google or Github specific details.
+
+## Usage
+
+```csharp
+var result = ecosystemWallet.GetUserAuthDetails();
+```
+
+<Details summary="Return Value">
+
+### JObject
+
+The user auth provider details as a `JObject`.
+
+</Details>

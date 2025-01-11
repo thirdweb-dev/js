@@ -125,6 +125,10 @@ export function TransactionModeScreen(props: {
     return <LoadingScreen />;
   }
 
+  const insufficientFunds =
+    balanceQuery.data &&
+    balanceQuery.data.value < transactionCostAndData.transactionValueWei;
+
   return (
     <Container p="lg">
       <ModalHeader title={metadata?.name || "Transaction"} />
@@ -144,9 +148,11 @@ export function TransactionModeScreen(props: {
           />
         ) : activeAccount ? (
           <Container flex="column" gap="sm">
-            <Text size="sm" color="danger" style={{ textAlign: "center" }}>
-              Insufficient funds
-            </Text>
+            {insufficientFunds && (
+              <Text size="sm" color="danger" style={{ textAlign: "center" }}>
+                Insufficient funds
+              </Text>
+            )}
             <Container
               flex="row"
               style={{

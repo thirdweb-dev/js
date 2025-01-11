@@ -2,6 +2,7 @@ import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
 import { notFound } from "next/navigation";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
+import { getRawAccount } from "../../../../account/settings/getAccount";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
@@ -33,6 +34,8 @@ export default async function PublishedContractPage(
     notFound();
   }
 
+  const account = await getRawAccount();
+
   return (
     <>
       <DeployContractHeader
@@ -42,7 +45,7 @@ export default async function PublishedContractPage(
       >
         <PublishedActions
           {...params}
-          dispayName={publishedContract.displayName || publishedContract.name}
+          displayName={publishedContract.displayName || publishedContract.name}
         />
       </DeployContractHeader>
       <Separator />
@@ -52,6 +55,7 @@ export default async function PublishedContractPage(
           <PublishedContract
             publishedContract={publishedContract}
             walletOrEns={params.publisher}
+            twAccount={account}
           />
         </div>
       </ChakraProviderSetup>

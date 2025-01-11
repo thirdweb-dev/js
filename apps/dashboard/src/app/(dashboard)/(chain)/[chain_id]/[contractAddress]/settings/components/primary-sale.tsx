@@ -1,5 +1,6 @@
 "use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
@@ -37,9 +38,11 @@ const CommonPrimarySaleSchema = z.object({
 export const SettingsPrimarySale = ({
   contract,
   detectedState,
+  twAccount,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
+  twAccount: Account | undefined;
 }) => {
   const address = useActiveAccount()?.address;
   const trackEvent = useTrack();
@@ -142,19 +145,17 @@ export const SettingsPrimarySale = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
+            twAccount={twAccount}
             txChainID={contract.chain.id}
-            colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isPending || !form.formState.isDirty}
+            disabled={query.isPending || !form.formState.isDirty}
             type="submit"
-            isLoading={mutation.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
+            isPending={mutation.isPending}
+            className="!rounded-t-none rounded-xl"
           >
-            Update Primary Sale Settings
+            {mutation.isPending
+              ? "Updating Primary Sale Settings"
+              : "Update Primary Sale Settings"}
           </TransactionButton>
         </AdminOnly>
       </Flex>

@@ -1,8 +1,8 @@
 import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getTeamBySlug } from "../../../../../../@/api/team";
 import { getAbsoluteUrl } from "../../../../../../lib/vercel-utils";
 import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionPage } from "./AccountAbstractionPage";
@@ -23,7 +23,7 @@ export default async function Page(props: {
   }
 
   if (!project) {
-    notFound();
+    redirect("/team");
   }
 
   const apiKey = await getAPIKeyForProjectId(project.id);

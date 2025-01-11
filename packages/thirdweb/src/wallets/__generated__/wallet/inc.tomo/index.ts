@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "inc.tomo",
-  name: "tomo extension wallet",
+  name: "Tomo Wallet",
   homepage: "https://tomo.inc",
-  image_id: "27e33ac7-b846-446d-a126-b0820904f800",
+  image_id: "95c9f957-b1e4-4619-fa7c-a77569d2fe00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/tomo-inc/id6468010287",
@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: "inc.tomo",
   mobile: {
-    native: null,
+    native: "tomo://",
     universal: null,
   },
   desktop: {

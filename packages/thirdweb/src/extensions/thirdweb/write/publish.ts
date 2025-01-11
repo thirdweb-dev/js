@@ -78,6 +78,7 @@ export function publishContract(
         changelog: options.metadata.changelog,
         compositeAbi: options.metadata.compositeAbi,
         constructorParams: options.metadata.constructorParams,
+        implConstructorParams: options.metadata.implConstructorParams,
         defaultExtensions: options.metadata.defaultExtensions,
         defaultModules: options.metadata.defaultModules,
         deployType: options.metadata.deployType,

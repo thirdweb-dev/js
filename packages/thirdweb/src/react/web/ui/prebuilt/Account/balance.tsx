@@ -1,15 +1,35 @@
 "use client";
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
+import type { Address } from "abitype";
 import type React from "react";
 import type { JSX } from "react";
 import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { convertCryptoToFiat } from "../../../../../exports/pay.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useActiveWalletChain } from "../../../../../react/core/hooks/wallets/useActiveWalletChain.js";
-import {
-  type GetWalletBalanceResult,
-  getWalletBalance,
-} from "../../../../../wallets/utils/getWalletBalance.js";
+import { isAddress } from "../../../../../utils/address.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
+import { shortenLargeNumber } from "../../../../../utils/shortenLargeNumber.js";
+import { getWalletBalance } from "../../../../../wallets/utils/getWalletBalance.js";
 import { useAccountContext } from "./provider.js";
+
+/**
+ * @component
+ * @wallet
+ */
+export type AccountBalanceInfo = {
+  /**
+   * Represents either token balance or fiat balance.
+   */
+  balance: number;
+  /**
+   * Represents either token symbol or fiat symbol
+   */
+  symbol: string;
+};
 
 /**
  * Props for the AccountBalance component
@@ -33,7 +53,7 @@ export interface AccountBalanceProps
    * use this function to transform the balance display value like round up the number
    * Particularly useful to avoid overflowing-UI issues
    */
-  formatFn?: (num: number) => number;
+  formatFn?: (props: AccountBalanceInfo) => string;
   /**
    * This component will be shown while the balance of the account is being fetched
    * If not passed, the component will return `null`.
@@ -67,9 +87,14 @@ export interface AccountBalanceProps
    * Optional `useQuery` params
    */
   queryOptions?: Omit<
-    UseQueryOptions<GetWalletBalanceResult>,
+    UseQueryOptions<AccountBalanceInfo>,
     "queryFn" | "queryKey"
   >;
+
+  /**
+   * Show the token balance in a supported fiat currency (e.g "USD")
+   */
+  showBalanceInFiat?: SupportedFiatCurrency;
 }
 
 /**
@@ -94,18 +119,21 @@ export interface AccountBalanceProps
  *
  *
  * ### Format the balance (round up, shorten etc.)
- * The AccountBalance component accepts a `formatFn` which takes in a number and outputs a number
- * The function is used to modify the display value of the wallet balance
+ * The AccountBalance component accepts a `formatFn` which takes in an object of type `AccountBalanceInfo` and outputs a string
+ * The function is used to modify the display value of the wallet balance (either in crypto or fiat)
  *
  * ```tsx
- * const roundTo1Decimal = (num: number):number => Math.round(num * 10) / 10;
+ * import type { AccountBalanceInfo } from "thirdweb/react";
+ * import { formatNumber } from "thirdweb/utils";
  *
- * <AccountBalance formatFn={roundTo1Decimal} />
+ * const format = (props: AccountInfoBalance):string => `${formatNumber(props.balance, 1)} ${props.symbol.toLowerCase()}`
+ *
+ * <AccountBalance formatFn={format} />
  * ```
  *
  * Result:
  * ```html
- * <span>1.1 ETH</span>
+ * <span>1.1 eth</span> // the balance is rounded up to 1 decimal and the symbol is lowercased
  * ```
  *
  * ### Show a loading sign when the balance is being fetched
@@ -149,10 +177,11 @@ export interface AccountBalanceProps
 export function AccountBalance({
   chain,
   tokenAddress,
-  formatFn,
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  formatFn,
+  showBalanceInFiat,
   ...restProps
 }: AccountBalanceProps) {
   const { address, client } = useAccountContext();
@@ -160,25 +189,21 @@ export function AccountBalance({
   const chainToLoad = chain || walletChain;
   const balanceQuery = useQuery({
     queryKey: [
-      "walletBalance",
+      "internal_account_balance",
       chainToLoad?.id || -1,
-      address || "0x0",
+      address,
       { tokenAddress },
+      showBalanceInFiat,
     ] as const,
-    queryFn: async () => {
-      if (!chainToLoad) {
-        throw new Error("chain is required");
-      }
-      if (!client) {
-        throw new Error("client is required");
-      }
-      return getWalletBalance({
+    queryFn: async (): Promise<AccountBalanceInfo> =>
+      loadAccountBalance({
         chain: chainToLoad,
         client,
         address,
         tokenAddress,
-      });
-    },
+        showBalanceInFiat,
+      }),
+    retry: false,
     ...queryOptions,
   });
 
@@ -190,13 +215,129 @@ export function AccountBalance({
     return fallbackComponent || null;
   }
 
-  const displayValue = formatFn
-    ? formatFn(Number(balanceQuery.data.displayValue))
-    : balanceQuery.data.displayValue;
+  // Prioritize using the formatFn from users
+  if (formatFn) {
+    return <span {...restProps}>{formatFn(balanceQuery.data)}</span>;
+  }
+
+  if (showBalanceInFiat) {
+    return (
+      <span {...restProps}>
+        {formatAccountFiatBalance({ ...balanceQuery.data, decimals: 0 })}
+      </span>
+    );
+  }
 
   return (
     <span {...restProps}>
-      {displayValue} {balanceQuery.data.symbol}
+      {formatAccountTokenBalance({
+        ...balanceQuery.data,
+        decimals: balanceQuery.data.balance < 1 ? 3 : 2,
+      })}
     </span>
   );
+}
+
+/**
+ * @internal Exported for tests
+ */
+export async function loadAccountBalance(props: {
+  chain?: Chain;
+  client: ThirdwebClient;
+  address: Address;
+  tokenAddress?: Address;
+  showBalanceInFiat?: SupportedFiatCurrency;
+}): Promise<AccountBalanceInfo> {
+  const { chain, client, address, tokenAddress, showBalanceInFiat } = props;
+  if (!chain) {
+    throw new Error("chain is required");
+  }
+
+  if (
+    tokenAddress &&
+    tokenAddress?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()
+  ) {
+    throw new Error(`Invalid tokenAddress - cannot be ${NATIVE_TOKEN_ADDRESS}`);
+  }
+
+  if (!isAddress(address)) {
+    throw new Error("Invalid wallet address. Expected an EVM address");
+  }
+
+  if (tokenAddress && !isAddress(tokenAddress)) {
+    throw new Error("Invalid tokenAddress. Expected an EVM contract address");
+  }
+
+  const tokenBalanceData = await getWalletBalance({
+    chain,
+    client,
+    address,
+    tokenAddress,
+  }).catch(() => undefined);
+
+  if (!tokenBalanceData) {
+    throw new Error(
+      `Failed to retrieve ${tokenAddress ? `token: ${tokenAddress}` : "native token"} balance for address: ${address} on chainId:${chain.id}`,
+    );
+  }
+
+  if (showBalanceInFiat) {
+    const fiatData = await convertCryptoToFiat({
+      fromAmount: Number(tokenBalanceData.displayValue),
+      fromTokenAddress: tokenAddress || NATIVE_TOKEN_ADDRESS,
+      to: showBalanceInFiat,
+      chain,
+      client,
+    }).catch(() => undefined);
+
+    if (fiatData === undefined) {
+      throw new Error(
+        `Failed to resolve fiat value for ${tokenAddress ? `token: ${tokenAddress}` : "native token"} on chainId: ${chain.id}`,
+      );
+    }
+    return {
+      balance: fiatData?.result,
+      symbol:
+        new Intl.NumberFormat("en", {
+          style: "currency",
+          currency: showBalanceInFiat,
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })
+          .formatToParts(0)
+          .find((p) => p.type === "currency")?.value ||
+        showBalanceInFiat.toUpperCase(),
+    };
+  }
+
+  return {
+    balance: Number(tokenBalanceData.displayValue),
+    symbol: tokenBalanceData.symbol,
+  };
+}
+
+/**
+ * Format the display balance for both crypto and fiat, in the Details button and Modal
+ * If both crypto balance and fiat balance exist, we have to keep the string very short to avoid UI issues.
+ * @internal
+ * Used internally for the Details button and the Details Modal
+ */
+export function formatAccountTokenBalance(
+  props: AccountBalanceInfo & { decimals: number },
+): string {
+  const formattedTokenBalance = formatNumber(props.balance, props.decimals);
+  return `${formattedTokenBalance} ${props.symbol}`;
+}
+
+/**
+ * Used internally for the Details button and Details Modal
+ * @internal
+ */
+export function formatAccountFiatBalance(
+  props: AccountBalanceInfo & { decimals: number },
+) {
+  const num = formatNumber(props.balance, props.decimals);
+  // Need to keep them short to avoid UI overflow issues
+  const formattedFiatBalance = shortenLargeNumber(num);
+  return `${props.symbol}${formattedFiatBalance}`;
 }

@@ -3,10 +3,10 @@
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { Star } from "lucide-react";
+import { useActiveAccount } from "thirdweb/react";
 
 async function favoriteChains() {
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/favorites`, {
@@ -43,11 +43,11 @@ async function removeChainFromFavorites(chainId: number) {
 }
 
 export function useFavoriteChainIds() {
-  const loggedInUser = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: ["favoriteChains", loggedInUser.user?.address],
+    queryKey: ["favoriteChains", address],
     queryFn: () => favoriteChains(),
-    enabled: !!loggedInUser.user?.address,
+    enabled: !!address,
   });
 }
 
@@ -57,7 +57,7 @@ export function StarButton(props: {
   iconClassName?: string;
   variant?: ButtonProps["variant"];
 }) {
-  const loggedInUser = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const queryClient = useQueryClient();
   const favChainsQuery = useFavoriteChainIds();
 
@@ -89,11 +89,7 @@ export function StarButton(props: {
       onClick={() => {
         mutation.mutate(isPreferred);
       }}
-      disabled={
-        !loggedInUser.user?.address ||
-        mutation.isPending ||
-        favChainsQuery.isPending
-      }
+      disabled={!address || mutation.isPending || favChainsQuery.isPending}
     >
       <ToolTipLabel label={label}>
         <Star

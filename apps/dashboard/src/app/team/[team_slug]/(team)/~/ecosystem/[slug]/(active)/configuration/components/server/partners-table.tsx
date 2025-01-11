@@ -21,8 +21,11 @@ import { usePartners } from "../../../hooks/use-partners";
 import { useDeletePartner } from "../../hooks/use-delete-partner";
 import { UpdatePartnerModal } from "../client/update-partner-modal.client";
 
-export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { partners, isPending } = usePartners({ ecosystem });
+export function PartnersTable({
+  ecosystem,
+  authToken,
+}: { ecosystem: Ecosystem; authToken: string }) {
+  const { partners, isPending } = usePartners({ ecosystem, authToken });
 
   if (isPending) {
     return (
@@ -55,6 +58,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
               key={partner.id}
               partner={partner}
               ecosystem={ecosystem}
+              authToken={authToken}
             />
           ))}
         </TableBody>
@@ -66,15 +70,21 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
 function PartnerRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
+  authToken: string;
 }) {
   const { mutateAsync: deletePartner, isPending: isDeleting } =
-    useDeletePartner({
-      onError: (error) => {
-        const message =
-          error instanceof Error ? error.message : "Failed to delete partner";
-        toast.error(message);
+    useDeletePartner(
+      {
+        authToken: props.authToken,
       },
-    });
+      {
+        onError: (error) => {
+          const message =
+            error instanceof Error ? error.message : "Failed to delete partner";
+          toast.error(message);
+        },
+      },
+    );
 
   return (
     <TableRow
@@ -110,6 +120,7 @@ function PartnerRow(props: {
           <UpdatePartnerModal
             partner={props.partner}
             ecosystem={props.ecosystem}
+            authToken={props.authToken}
           >
             <Button
               type="button"

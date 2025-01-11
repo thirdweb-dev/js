@@ -12,7 +12,7 @@ The `ThirdwebContract.Write` method allows you to execute transactions that alte
 ## Usage
 
 ```csharp
-var transactionReceipt = await ThirdwebContract.Write(wallet, contract, "methodName", weiValue, parameters);
+var transactionReceipt = await contract.Write(wallet, contract, "methodName", weiValue, parameters);
 ```
 
 <Details summary="Parameters">
@@ -68,7 +68,7 @@ BigInteger amount = new BigInteger(1000); // The amount to transfer
 BigInteger weiValue = BigInteger.Zero;
 
 // Executing the transfer
-var receipt = await ThirdwebContract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
 Console.WriteLine($"Transaction receipt: {receipt}");
 ```
 

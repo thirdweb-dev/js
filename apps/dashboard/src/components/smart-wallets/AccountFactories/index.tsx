@@ -4,13 +4,13 @@ import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useMultiChainRegContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { PlusIcon } from "lucide-react";
 import { defineChain, getContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
+import { useActiveAccount } from "thirdweb/react";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   DEFAULT_ACCOUNT_FACTORY_V0_7,
@@ -19,15 +19,14 @@ import { TWTable } from "../../shared/TWTable";
 import { FactoryContracts } from "./factory-contracts";
 
 function useFactories() {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const address = useActiveAccount()?.address;
   const client = useThirdwebClient();
-
-  const contractListQuery = useMultiChainRegContractList(user?.address);
+  const contractListQuery = useMultiChainRegContractList(address);
 
   return useQuery({
     queryKey: [
       "dashboard-registry",
-      user?.address,
+      address,
       "multichain-contract-list",
       "factories",
     ],
@@ -47,7 +46,7 @@ function useFactories() {
 
       return factories.filter((f) => f !== null);
     },
-    enabled: !!user?.address && isLoggedIn && !!contractListQuery.data,
+    enabled: !!address && !!contractListQuery.data,
   });
 }
 

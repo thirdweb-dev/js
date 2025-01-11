@@ -8,7 +8,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input, Select } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,12 +25,14 @@ import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface NFTRevealButtonProps {
   contract: ThirdwebContract;
+  twAccount: Account | undefined;
 }
 
 const REVEAL_FORM_ID = "reveal-form";
 
 export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
   contract,
+  twAccount,
 }) => {
   const batchesQuery = useReadContract(getBatchesToReveal, {
     contract,
@@ -45,7 +49,28 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
 
   const [open, setOpen] = useState(false);
 
-  return batchesQuery.data?.length ? (
+  if (!batchesQuery.data?.length) {
+    return null;
+  }
+
+  /**
+   * When a batch is revealed / decrypted / non-revealable, its batchUri will be "0x"
+   */
+  const allBatchesRevealed = batchesQuery.data.every(
+    (o) => o.batchUri === "0x",
+  );
+
+  if (allBatchesRevealed) {
+    return (
+      <ToolTipLabel label="All batches are revealed">
+        <Button variant="primary" className="gap-2" disabled>
+          <EyeIcon className="size-4" /> Reveal NFTs
+        </Button>
+      </ToolTipLabel>
+    );
+  }
+
+  return (
     <MinterOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
@@ -106,9 +131,11 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
                   <option
                     key={batch.batchId.toString()}
                     value={batch.batchId.toString()}
+                    disabled={batch.batchUri === "0x"}
                   >
                     {batch.placeholderMetadata?.name ||
-                      batch.batchId.toString()}
+                      batch.batchId.toString()}{" "}
+                    {batch.batchUri === "0x" && "(REVEALED)"}
                   </option>
                 ))}
               </Select>
@@ -127,13 +154,13 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
           </form>
           <div className="mt-4 flex justify-end">
             <TransactionButton
+              twAccount={twAccount}
               txChainID={contract.chain.id}
               transactionCount={1}
-              isLoading={sendTxMutation.isPending}
+              isPending={sendTxMutation.isPending}
               form={REVEAL_FORM_ID}
               type="submit"
-              colorScheme="primary"
-              isDisabled={!isDirty}
+              disabled={!isDirty}
             >
               Reveal NFTs
             </TransactionButton>
@@ -141,5 +168,5 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
         </SheetContent>
       </Sheet>
     </MinterOnly>
-  ) : null;
+  );
 };

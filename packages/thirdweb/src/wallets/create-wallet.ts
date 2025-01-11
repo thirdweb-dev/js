@@ -17,7 +17,7 @@ import { webLocalStorage } from "../utils/storage/webStorage.js";
 import { isMobile } from "../utils/web/isMobile.js";
 import { openWindow } from "../utils/web/openWindow.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
-import { getCoinbaseWebProvider } from "./coinbase/coinbaseWebSDK.js";
+import { getCoinbaseWebProvider } from "./coinbase/coinbase-web.js";
 import { COINBASE } from "./constants.js";
 import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
 import { ecosystemWallet } from "./in-app/web/ecosystem.js";
@@ -32,7 +32,7 @@ import { createWalletEmitter } from "./wallet-emitter.js";
 /**
  * Creates a wallet based on the provided ID and arguments.
  *
- * - Supports 350+ wallets
+ * - Supports 500+ wallets
  * - Handles both injected browser wallets and WalletConnect sessions
  *
  * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
@@ -115,6 +115,22 @@ import { createWalletEmitter } from "./wallet-emitter.js";
  * ```
  *
  * [View Coinbase wallet creation options](https://portal.thirdweb.com/references/typescript/v5/CoinbaseWalletCreationOptions)
+ *
+ * ## Connecting with a smart wallet
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const wallet = createWallet("smart", {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * });
+ *
+ * const account = await wallet.connect({
+ *  client,
+ *  personalAccount, // pass the admin account
+ * });
+ * ```
  *
  * @wallet
  */

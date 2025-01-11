@@ -1,4 +1,4 @@
-import { Book, CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 
 const slug = "/react/v5";
@@ -137,22 +137,15 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          name: "Adapters",
-          links: [
-            {
-              // TODO one guide per library
-              name: "Usage with other libraries",
-              icon: <Book />,
-              href: `${slug}/adapters`,
-            },
-          ],
+          // TODO one guide per library
+          name: "Usage with other libraries",
+          href: `${slug}/adapters`,
         },
         {
           name: "Shared Logins",
           links: ["SiteEmbed", "SiteLink"].map((name) => ({
             name,
             href: `${slug}/${name}`,
-            icon: <CodeIcon />,
           })),
         },
       ],

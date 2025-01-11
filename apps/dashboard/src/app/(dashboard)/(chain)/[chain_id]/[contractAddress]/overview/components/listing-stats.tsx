@@ -1,8 +1,8 @@
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { totalAuctions, totalListings } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
+import { StatCard } from "./stat-card";
 
 const TotalListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   contract,
@@ -82,20 +82,3 @@ export const ListingStatsV3: React.FC<ListingStatsV3Props> = ({
     </div>
   );
 };
-
-function StatCard(props: {
-  value: string;
-  isPending: boolean;
-  label: string;
-}) {
-  return (
-    <dl className="block rounded-lg border border-border bg-muted/50 p-4">
-      <dt className="mb-1.5 text-sm md:text-base">{props.label}</dt>
-      <SkeletonContainer
-        loadedData={props.isPending ? undefined : props.value}
-        skeletonData={"0000"}
-        render={(v) => <dd className="truncate font-semibold text-xl">{v}</dd>}
-      />
-    </dl>
-  );
-}

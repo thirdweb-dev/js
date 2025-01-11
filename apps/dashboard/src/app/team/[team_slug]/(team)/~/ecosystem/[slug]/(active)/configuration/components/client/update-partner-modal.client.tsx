@@ -14,12 +14,18 @@ export function UpdatePartnerModal({
   children,
   ecosystem,
   partner,
-}: { children: React.ReactNode; ecosystem: Ecosystem; partner: Partner }) {
+  authToken,
+}: {
+  children: React.ReactNode;
+  ecosystem: Ecosystem;
+  partner: Partner;
+  authToken: string;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
         <DialogHeader className="mb-2">
           <DialogTitle>Update {partner.name}</DialogTitle>
@@ -28,6 +34,7 @@ export function UpdatePartnerModal({
           ecosystem={ecosystem}
           partner={partner}
           onSuccess={() => setOpen(false)}
+          authToken={authToken}
         />
       </DialogContent>
     </Dialog>

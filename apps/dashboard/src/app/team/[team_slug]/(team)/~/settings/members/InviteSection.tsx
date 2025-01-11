@@ -25,7 +25,7 @@ export function InviteSection(props: {
 }) {
   const teamPlan = getValidTeamPlan(props.team);
   let bottomSection: React.ReactNode = null;
-  const inviteEnabled = teamPlan !== "free" && props.userHasEditPermission;
+  const inviteEnabled = false; // teamPlan !== "free" && props.userHasEditPermission;
 
   if (teamPlan === "free") {
     bottomSection = (
@@ -62,7 +62,12 @@ export function InviteSection(props: {
   } else {
     bottomSection = (
       <div className="flex items-center border-border border-t px-4 py-4 lg:justify-end lg:px-6">
-        <Button variant="outline" size="sm" className="gap-2 max-sm:w-full">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2 max-sm:w-full"
+          disabled
+        >
           <UserPlus className="size-3" />
           Invite
         </Button>

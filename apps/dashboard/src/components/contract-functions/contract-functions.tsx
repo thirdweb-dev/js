@@ -1,5 +1,6 @@
 "use client";
 
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   Tab,
@@ -23,6 +24,7 @@ interface ContractFunctionsOverview {
   sources?: SourceFile[];
   abi?: Abi;
   onlyFunctions?: boolean;
+  twAccount: Account | undefined;
 }
 
 export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
@@ -32,12 +34,17 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   sources,
   abi,
   onlyFunctions,
+  twAccount,
 }) => {
   if (onlyFunctions) {
     return (
       <Flex height="100%" flexDir="column" gap={2}>
         {functions && functions.length > 0 && (
-          <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
+          <ContractFunctionsPanel
+            fnsOrEvents={functions}
+            contract={contract}
+            twAccount={twAccount}
+          />
         )}
       </Flex>
     );
@@ -82,6 +89,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               <ContractFunctionsPanel
                 fnsOrEvents={functions}
                 contract={contract}
+                twAccount={twAccount}
               />
             </TabPanel>
           ) : null}
@@ -90,6 +98,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               <ContractFunctionsPanel
                 fnsOrEvents={events}
                 contract={contract}
+                twAccount={twAccount}
               />
             </TabPanel>
           ) : null}

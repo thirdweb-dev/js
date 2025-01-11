@@ -81,7 +81,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       >
         <DeployActions
           {...props}
-          dispayName={publishedContract.displayName || publishedContract.name}
+          displayName={publishedContract.displayName || publishedContract.name}
         />
       </DeployContractHeader>
       <Separator />

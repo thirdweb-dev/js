@@ -6,11 +6,9 @@ import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { createWalletEmitter } from "../wallet-emitter.js";
-import type {
-  CreateWalletArgs,
-  WalletConnectionOption,
-} from "../wallet-types.js";
+import type { WalletConnectionOption } from "../wallet-types.js";
 import { getDefaultAccountFactory } from "./lib/constants.js";
+import type { SmartWalletOptions } from "./types.js";
 
 /**
  * Creates a ERC4337 smart wallet based on a admin account.
@@ -118,7 +116,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  *    accountAddress: "0x...", // override account address
  *    accountSalt: "0x...", // override account salt
  *    entrypointAddress: "0x...", // override entrypoint address
- *    erc20Paymaster: { ... }, // enable erc20 paymaster
+ *    tokenPaymaster: TokenPaymaster.BASE_USDC, // enable erc20 paymaster
  *    bundlerUrl: "https://...", // override bundler url
  *    paymaster: (userOp) => { ... }, // override paymaster
  *    ...
@@ -131,7 +129,7 @@ import { getDefaultAccountFactory } from "./lib/constants.js";
  * @wallet
  */
 export function smartWallet(
-  createOptions: CreateWalletArgs<"smart">[1],
+  createOptions: SmartWalletOptions,
 ): Wallet<"smart"> {
   const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;
@@ -139,7 +137,7 @@ export function smartWallet(
   let chain: Chain | undefined = undefined;
   let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
-  const _smartWallet: Wallet<"smart"> = {
+  return {
     id: "smart",
     subscribe: emitter.subscribe,
     getChain() {
@@ -154,9 +152,10 @@ export function smartWallet(
     getAccount: () => account,
     getAdminAccount: () => adminAccount,
     autoConnect: async (options) => {
-      const { connectSmartWallet } = await import("./index.js");
+      const { connectSmartAccount: connectSmartWallet } = await import(
+        "./index.js"
+      );
       const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
         options,
         createOptions,
       );
@@ -174,9 +173,8 @@ export function smartWallet(
       return account;
     },
     connect: async (options) => {
-      const { connectSmartWallet } = await import("./index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
+      const { connectSmartAccount } = await import("./index.js");
+      const [connectedAccount, connectedChain] = await connectSmartAccount(
         options,
         createOptions,
       );
@@ -196,10 +194,13 @@ export function smartWallet(
       return account;
     },
     disconnect: async () => {
+      if (account) {
+        const { disconnectSmartAccount } = await import("./index.js");
+        await disconnectSmartAccount(account);
+      }
       account = undefined;
+      adminAccount = undefined;
       chain = undefined;
-      const { disconnectSmartWallet } = await import("./index.js");
-      await disconnectSmartWallet(_smartWallet);
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain: Chain) => {
@@ -225,9 +226,8 @@ export function smartWallet(
           );
         }
       }
-      const { connectSmartWallet } = await import("./index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
+      const { connectSmartAccount } = await import("./index.js");
+      const [connectedAccount, connectedChain] = await connectSmartAccount(
         { ...lastConnectOptions, chain: newChain },
         createOptions,
       );
@@ -237,6 +237,4 @@ export function smartWallet(
       emitter.emit("chainChanged", newChain);
     },
   };
-
-  return _smartWallet;
 }

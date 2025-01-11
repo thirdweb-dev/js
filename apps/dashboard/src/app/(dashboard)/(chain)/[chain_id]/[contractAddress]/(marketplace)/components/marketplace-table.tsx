@@ -1,5 +1,6 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   IconButton,
   Select,
@@ -98,6 +99,7 @@ interface MarketplaceTableProps {
       start: number;
     }>
   >;
+  twAccount: Account | undefined;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
@@ -109,6 +111,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   totalCountQuery,
   queryParams,
   setQueryParams,
+  twAccount,
 }) => {
   const [listingsToShow, setListingsToShow_] = useState<"all" | "valid">("all");
 
@@ -213,6 +216,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           data={tokenRow}
           isOpen={!!tokenRow}
           onClose={() => setTokenRow(null)}
+          twAccount={twAccount}
         />
         <Table {...getTableProps()}>
           <Thead>

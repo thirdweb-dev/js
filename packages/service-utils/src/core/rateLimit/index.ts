@@ -1,5 +1,8 @@
-import { type CoreServiceConfig, updateRateLimitedAt } from "../api.js";
-import type { AuthorizationResult } from "../authorize/types.js";
+import {
+  type CoreServiceConfig,
+  type ProjectResponse,
+  updateRateLimitedAt,
+} from "../api.js";
 import type { RateLimitResult } from "./types.js";
 
 const RATE_LIMIT_WINDOW_SECONDS = 10;
@@ -11,7 +14,8 @@ type IRedis = {
 };
 
 export async function rateLimit(args: {
-  authzResult: AuthorizationResult;
+  project?: ProjectResponse;
+  limitPerSecond: number;
   serviceConfig: CoreServiceConfig;
   redis: IRedis;
   /**
@@ -21,10 +25,16 @@ export async function rateLimit(args: {
    */
   sampleRate?: number;
 }): Promise<RateLimitResult> {
-  const { authzResult, serviceConfig, redis, sampleRate = 1.0 } = args;
+  const {
+    project,
+    limitPerSecond,
+    serviceConfig,
+    redis,
+    sampleRate = 1.0,
+  } = args;
 
   const shouldSampleRequest = Math.random() < sampleRate;
-  if (!shouldSampleRequest || !authzResult.authorized) {
+  if (!shouldSampleRequest) {
     return {
       rateLimited: false,
       requestCount: 0,
@@ -32,15 +42,7 @@ export async function rateLimit(args: {
     };
   }
 
-  const { apiKeyMeta, accountMeta } = authzResult;
-  const accountId = apiKeyMeta?.accountId || accountMeta?.id;
-
-  const { serviceScope } = serviceConfig;
-  const limitPerSecond =
-    apiKeyMeta?.rateLimits?.[serviceScope] ??
-    accountMeta?.rateLimits?.[serviceScope];
-
-  if (!limitPerSecond) {
+  if (limitPerSecond === 0) {
     // No rate limit is provided. Assume the request is not rate limited.
     return {
       rateLimited: false,
@@ -49,11 +51,13 @@ export async function rateLimit(args: {
     };
   }
 
+  const serviceScope = serviceConfig.serviceScope;
+
   // Gets the 10-second window for the current timestamp.
   const timestampWindow =
     Math.floor(Date.now() / (1000 * RATE_LIMIT_WINDOW_SECONDS)) *
     RATE_LIMIT_WINDOW_SECONDS;
-  const key = `rate-limit:${serviceScope}:${accountId}:${timestampWindow}`;
+  const key = `rate-limit:${serviceScope}:${project?.id}:${timestampWindow}`;
 
   // Increment and get the current request count in this window.
   const requestCount = await redis.incr(key);
@@ -68,8 +72,8 @@ export async function rateLimit(args: {
 
   if (requestCount > limitPerWindow) {
     // Report rate limit hits.
-    if (apiKeyMeta?.id) {
-      await updateRateLimitedAt(apiKeyMeta.id, serviceConfig);
+    if (project?.id) {
+      await updateRateLimitedAt(project.id, serviceConfig);
     }
 
     // Reject requests when they've exceeded 2x the rate limit.
