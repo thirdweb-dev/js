@@ -67,7 +67,7 @@ function NebulaWaitlistPage(props: {
   team: Team;
 }) {
   return (
-    <div className="flex min-h-screen flex-col overflow-hidden">
+    <div className="flex min-h-dvh flex-col overflow-hidden">
       <header className="border-b">
         <div className="container flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2 font-medium text-xl tracking-tight">

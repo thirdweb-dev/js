@@ -157,6 +157,11 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+.shiki,
+.shiki span {
+  background-color: var(--background) !important;
+}
+
 .dark .shiki,
 .dark .shiki span {
   color: var(--shiki-dark) !important;

@@ -20,7 +20,7 @@ export default async function AccountLayout(props: {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-dvh flex-col bg-background">
       <div className="flex grow flex-col">
         <HeaderAndNav teams={teams} twAccount={account} />
         {props.children}

@@ -7,7 +7,7 @@ export default function DashboardLayout(props: {
 }) {
   return (
     <ErrorProvider>
-      <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex min-h-dvh flex-col bg-background">
         <div className="border-border border-b bg-muted/50">
           <TeamHeader />
         </div>

@@ -42,7 +42,7 @@ function Story(props: {
   type: "mobile" | "desktop";
 }) {
   return (
-    <div className="container min-h-screen py-6 text-foreground">
+    <div className="container min-h-dvh py-6 text-foreground">
       {props.type === "desktop" && (
         <div className="flex flex-col gap-10">
           <BadgeContainer label="account loaded">
