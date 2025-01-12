@@ -15,7 +15,7 @@ export default async function RootTeamLayout(props: {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
       <div className="flex grow flex-col">{props.children}</div>
       <TWAutoConnect />
       <AppFooter />
