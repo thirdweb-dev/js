@@ -1,9 +1,10 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Toaster } from "sonner";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub, randomLorem } from "../../../../stories/stubs";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
-import { Chats } from "./Chats";
+import { type ChatMessage, Chats } from "./Chats";
 
 const meta = {
   title: "Nebula/Chats",
@@ -139,13 +140,14 @@ ${markdownExample}
 
 function Story() {
   return (
-    <div className="container flex max-w-[800px] flex-col gap-14 py-10">
-      <BadgeContainer label="User + Presence">
-        <Chats
-          authToken="xxxxx"
-          isChatStreaming={false}
-          sessionId="xxxxx"
-          twAccount={accountStub()}
+    <ThirdwebProvider>
+      <div className="container flex max-w-[800px] flex-col gap-14 py-10">
+        <div>
+          <ConnectButton client={getThirdwebClient()} />
+        </div>
+
+        <Variant
+          label="user + presence + error"
           messages={[
             {
               text: randomLorem(10),
@@ -154,27 +156,6 @@ function Story() {
             {
               text: randomLorem(20),
               type: "presence",
-            },
-          ]}
-          client={getThirdwebClient()}
-          enableAutoScroll={true}
-          setEnableAutoScroll={() => {}}
-        />
-      </BadgeContainer>
-
-      <BadgeContainer label="User + Error">
-        <Chats
-          client={getThirdwebClient()}
-          authToken="xxxxx"
-          isChatStreaming={false}
-          sessionId="xxxxx"
-          twAccount={accountStub()}
-          enableAutoScroll={true}
-          setEnableAutoScroll={() => {}}
-          messages={[
-            {
-              text: randomLorem(10),
-              type: "user",
             },
             {
               text: randomLorem(20),
@@ -182,63 +163,111 @@ function Story() {
             },
           ]}
         />
-      </BadgeContainer>
 
-      <BadgeContainer label="User + Assistant responses">
-        <Chats
-          enableAutoScroll={true}
-          setEnableAutoScroll={() => {}}
-          client={getThirdwebClient()}
-          authToken="xxxxx"
-          isChatStreaming={false}
-          sessionId="xxxxx"
-          twAccount={accountStub()}
+        <Variant
+          label="send-transaction"
           messages={[
-            {
-              text: randomLorem(10),
-              type: "user",
-            },
             {
               text: randomLorem(40),
               type: "assistant",
-              request_id: "xxxxx",
-            },
-            {
-              text: randomLorem(50),
-              type: "assistant",
               request_id: undefined,
             },
             {
-              text: responseWithCodeMarkdown,
-              type: "assistant",
-              request_id: undefined,
+              type: "send_transaction",
+              data: {
+                chainId: 1,
+                to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+                data: "0x",
+                value: "0x16345785d8a0000",
+              },
             },
           ]}
         />
-      </BadgeContainer>
 
-      <BadgeContainer label="User Markdown">
-        <Chats
-          enableAutoScroll={true}
-          setEnableAutoScroll={() => {}}
-          client={getThirdwebClient()}
-          authToken="xxxxx"
-          isChatStreaming={false}
-          sessionId="xxxxx"
-          twAccount={accountStub()}
+        <Variant
+          label="invalid send-transaction"
           messages={[
             {
-              text: responseWithCodeMarkdown,
-              type: "user",
+              text: randomLorem(40),
+              type: "assistant",
+              request_id: undefined,
             },
             {
-              text: randomLorem(20),
-              type: "presence",
+              type: "send_transaction",
+              data: null,
             },
           ]}
         />
-      </BadgeContainer>
-      <Toaster richColors />
-    </div>
+
+        <BadgeContainer label="Assistant response With request_id, Without request_id">
+          <Chats
+            enableAutoScroll={false}
+            setEnableAutoScroll={() => {}}
+            client={getThirdwebClient()}
+            authToken="xxxxx"
+            isChatStreaming={false}
+            sessionId="xxxxx"
+            twAccount={accountStub()}
+            messages={[
+              {
+                text: randomLorem(40),
+                type: "assistant",
+                request_id: "xxxxx",
+              },
+              {
+                text: randomLorem(50),
+                type: "assistant",
+                request_id: undefined,
+              },
+            ]}
+          />
+        </BadgeContainer>
+
+        <BadgeContainer label="Assistant markdown">
+          <Chats
+            enableAutoScroll={false}
+            setEnableAutoScroll={() => {}}
+            client={getThirdwebClient()}
+            authToken="xxxxx"
+            isChatStreaming={false}
+            sessionId="xxxxx"
+            twAccount={accountStub()}
+            messages={[
+              {
+                text: responseWithCodeMarkdown,
+                type: "assistant",
+                request_id: undefined,
+              },
+              {
+                text: responseWithCodeMarkdown,
+                type: "user",
+              },
+            ]}
+          />
+        </BadgeContainer>
+
+        <Toaster richColors />
+      </div>
+    </ThirdwebProvider>
+  );
+}
+
+function Variant(props: {
+  label: string;
+  messages: ChatMessage[];
+}) {
+  return (
+    <BadgeContainer label={props.label}>
+      <Chats
+        enableAutoScroll={false}
+        setEnableAutoScroll={() => {}}
+        client={getThirdwebClient()}
+        authToken="xxxxx"
+        isChatStreaming={false}
+        sessionId="xxxxx"
+        twAccount={accountStub()}
+        messages={props.messages}
+      />
+    </BadgeContainer>
   );
 }

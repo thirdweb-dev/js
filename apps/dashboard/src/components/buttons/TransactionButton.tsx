@@ -29,7 +29,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   isPending: boolean;
   isGasless?: boolean;
   txChainID: number;
-  variant?: "destructive" | "primary";
+  variant?: "destructive" | "primary" | "default";
   twAccount: Account | undefined;
 };
 
