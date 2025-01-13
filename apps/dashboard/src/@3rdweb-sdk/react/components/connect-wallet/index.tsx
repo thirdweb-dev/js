@@ -94,12 +94,12 @@ export const CustomConnectWallet = (props: {
   const chainSections: NetworkSelectorProps["sections"] = useMemo(() => {
     return [
       {
-        label: "Favorites",
-        chains: favoriteChainsWithMetadata,
-      },
-      {
         label: "Recent",
         chains: recentlyUsedChainsWithMetadata,
+      },
+      {
+        label: "Favorites",
+        chains: favoriteChainsWithMetadata,
       },
       {
         label: "Popular",
