@@ -63,18 +63,18 @@ const GAS_FREE_CHAINS = [
   247253, // Saakuru Testnet
 ];
 
-function useNetworkMismatchAdapter(desiredChainId: number) {
+function useIsNetworkMismatch(txChainId: number) {
   const walletChainId = useActiveWalletChain()?.id;
   if (!walletChainId) {
     // simply not ready yet, assume false
     return false;
   }
   // otherwise, compare the chain ids
-  return walletChainId !== desiredChainId;
+  return walletChainId !== txChainId;
 }
 
 type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
-  desiredChainId: number;
+  txChainId: number;
   twAccount: Account | undefined;
 };
 
@@ -82,7 +82,7 @@ export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { desiredChainId, twAccount, ...buttonProps } = props;
+  const { txChainId, twAccount, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -90,14 +90,15 @@ export const MismatchButton = forwardRef<
   const { theme } = useTheme();
   const client = useThirdwebClient();
   const pathname = usePathname();
+  const txChain = useV5DashboardChain(txChainId);
 
-  const evmBalance = useWalletBalance({
+  const txChainBalance = useWalletBalance({
     address: account?.address,
-    chain: activeWalletChain,
+    chain: txChain,
     client,
   });
 
-  const networksMismatch = useNetworkMismatchAdapter(desiredChainId);
+  const networksMismatch = useIsNetworkMismatch(txChainId);
   const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
   const trackEvent = useTrack();
 
@@ -130,8 +131,15 @@ export const MismatchButton = forwardRef<
     );
   }
 
+  const isBalanceRequired = !GAS_FREE_CHAINS.includes(txChainId);
+
   const notEnoughBalance =
-    (evmBalance.data?.value || 0n) === 0n && !GAS_FREE_CHAINS.includes(chainId);
+    (txChainBalance.data?.value || 0n) === 0n && isBalanceRequired;
+
+  const disabled =
+    buttonProps.disabled ||
+    // if user is about to trigger a transaction on txChain, but txChainBalance is not yet loaded and is required before proceeding
+    (!networksMismatch && txChainBalance.isPending && isBalanceRequired);
 
   return (
     <>
@@ -150,6 +158,7 @@ export const MismatchButton = forwardRef<
         <PopoverTrigger asChild>
           <Button
             {...buttonProps}
+            disabled={disabled}
             type={
               networksMismatch || notEnoughBalance ? "button" : buttonProps.type
             }
@@ -182,7 +191,7 @@ export const MismatchButton = forwardRef<
         </PopoverTrigger>
         <PopoverContent className="min-w-[350px]" side="top" sideOffset={10}>
           <MismatchNotice
-            desiredChainId={desiredChainId}
+            txChainId={txChainId}
             onClose={(hasSwitched) => {
               if (hasSwitched) {
                 setIsMismatchPopoverOpen(false);
@@ -416,8 +425,8 @@ function GetFundsFromFaucet(props: {
 
 const MismatchNotice: React.FC<{
   onClose: (hasSwitched: boolean) => void;
-  desiredChainId: number;
-}> = ({ onClose, desiredChainId }) => {
+  txChainId: number;
+}> = ({ onClose, txChainId }) => {
   const connectedChainId = useActiveWalletChain()?.id;
   const switchNetwork = useSwitchActiveWalletChain();
   const activeWallet = useActiveWallet();
@@ -427,14 +436,15 @@ const MismatchNotice: React.FC<{
   const walletConnectedNetworkInfo = connectedChainId
     ? idToChain.get(connectedChainId)
     : undefined;
-  const chain = desiredChainId ? idToChain.get(desiredChainId) : undefined;
-  const chainV5 = useV5DashboardChain(desiredChainId);
+
+  const txChain = txChainId ? idToChain.get(txChainId) : undefined;
+  const chainV5 = useV5DashboardChain(txChainId);
   const switchNetworkMutation = useMutation({
     mutationFn: switchNetwork,
   });
 
   const onSwitchWallet = useCallback(async () => {
-    if (actuallyCanAttemptSwitch && desiredChainId && chainV5) {
+    if (actuallyCanAttemptSwitch && txChainId && chainV5) {
       try {
         await switchNetworkMutation.mutateAsync(chainV5);
         onClose(true);
@@ -446,7 +456,7 @@ const MismatchNotice: React.FC<{
   }, [
     chainV5,
     actuallyCanAttemptSwitch,
-    desiredChainId,
+    txChainId,
     onClose,
     switchNetworkMutation,
   ]);
@@ -458,15 +468,19 @@ const MismatchNotice: React.FC<{
           Network Mismatch
         </h3>
 
-        <p className="text-muted-foreground">
+        <p className="mb-1 text-muted-foreground">
           Your wallet is connected to the{" "}
-          <span className="font-medium capitalize">
+          <span className="font-semibold capitalize">
             {walletConnectedNetworkInfo?.name ||
               `Chain ID #${connectedChainId}`}
           </span>{" "}
-          network but this action requires you to connect to the{" "}
-          <span className="font-medium capitalize">
-            {chain?.name || `Chain ID #${desiredChainId}`}
+          network
+        </p>
+
+        <p className="text-muted-foreground">
+          This action requires you to connect to the{" "}
+          <span className="font-semibold capitalize">
+            {txChain?.name || `Chain ID #${txChainId}`}
           </span>{" "}
           network.
         </p>
@@ -485,7 +499,7 @@ const MismatchNotice: React.FC<{
           <UnplugIcon className="size-4 shrink-0" />
         )}
         <span className="line-clamp-1 block truncate">
-          Switch {chain ? `to ${chain.name}` : "chain"}
+          Switch {txChain ? `to ${txChain.name}` : "chain"}
         </span>
       </Button>
 
