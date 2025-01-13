@@ -49,7 +49,7 @@ export const transform: Transform = (node, index: number) => {
     const level = Number.parseInt(node.name[1] || "");
 
     return (
-      <Heading level={level} id="#" anchorClassName="mt-10">
+      <Heading level={level} anchorClassName="mt-10" id={undefined}>
         {getChildren()}
       </Heading>
     );

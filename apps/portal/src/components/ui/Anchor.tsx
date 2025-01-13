@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Link as LinkIcon } from "lucide-react";
 
 export function Anchor(props: {
-  id: string;
+  id: string | undefined;
   children: React.ReactNode;
   className?: string;
 }) {

@@ -3,7 +3,7 @@ import { Anchor } from "../ui/Anchor";
 
 export function Heading(props: {
   children: React.ReactNode;
-  id: string;
+  id: string | undefined;
   level: number;
   className?: string;
   anchorClassName?: string;

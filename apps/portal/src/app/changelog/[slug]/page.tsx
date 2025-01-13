@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import ReactHtmlParser from "react-html-parser";
-import { fetchChangeLogs, fetchPost } from "../ghost";
+import { fetchPost } from "../ghost";
 import "./styles.css";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -71,14 +71,4 @@ export default async function Page(props: {
       })}
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const changelogs = await fetchChangeLogs();
-
-  return changelogs.map((changelog) => {
-    return {
-      slug: changelog.slug,
-    };
-  });
 }
