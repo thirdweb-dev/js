@@ -208,3 +208,6 @@ export type {
 
 export { shortenLargeNumber } from "../utils/shortenLargeNumber.js";
 export { formatNumber } from "../utils/formatNumber.js";
+
+// ENS
+export { isValidENSName } from "../utils/ens/isValidENSName.js";

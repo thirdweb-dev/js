@@ -4,6 +4,7 @@ import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
+import { isValidENSName } from "thirdweb/utils";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes
@@ -136,7 +137,7 @@ export async function middleware(request: NextRequest) {
   // DIFFERENT DYNAMIC ROUTING CASES
 
   // /<address>/... case
-  if (paths[0] && isPossibleEVMAddress(paths[0])) {
+  if (paths[0] && isPossibleAddressOrENSName(paths[0])) {
     // special case for "deployer.thirdweb.eth"
     // we want to always redirect this to "thirdweb.eth/..."
     if (paths[0] === "deployer.thirdweb.eth") {
@@ -181,8 +182,8 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-function isPossibleEVMAddress(address: string) {
-  return address?.startsWith("0x") || address?.endsWith(".eth");
+function isPossibleAddressOrENSName(address: string) {
+  return address.startsWith("0x") || isValidENSName(address);
 }
 
 // utils for rewriting and redirecting with relative paths

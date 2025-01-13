@@ -42,13 +42,11 @@ interface ExtendedPublishedContract extends PublishedContractWithVersion {
 
 interface PublishedContractProps {
   publishedContract: ExtendedPublishedContract;
-  walletOrEns: string;
   twAccount: Account | undefined;
 }
 
 export const PublishedContract: React.FC<PublishedContractProps> = ({
   publishedContract,
-  walletOrEns,
   twAccount,
 }) => {
   const address = useActiveAccount()?.address;
@@ -154,7 +152,9 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
       </GridItem>
       <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex flexDir="column" gap={6}>
-          {walletOrEns && <PublisherHeader wallet={walletOrEns} />}
+          {publishedContract.publisher && (
+            <PublisherHeader wallet={publishedContract.publisher} />
+          )}
           <Divider />
           <Flex flexDir="column" gap={4}>
             <Heading as="h4" size="title.sm">

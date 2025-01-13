@@ -1,4 +1,4 @@
-import { isAddress, isBytes, isHex } from "thirdweb/utils";
+import { isAddress, isBytes, isHex, isValidENSName } from "thirdweb/utils";
 
 // int and uint
 function calculateIntMinValues(solidityType: string) {
@@ -147,7 +147,7 @@ export const validateBytes = (value: string, solidityType: string) => {
 
 // address
 export const validateAddress = (value: string) => {
-  if (!isAddress(value) && !value.endsWith(".eth")) {
+  if (!isAddress(value) && !isValidENSName(value)) {
     return {
       type: "pattern",
       message: "Input is not a valid address or ENS name.",

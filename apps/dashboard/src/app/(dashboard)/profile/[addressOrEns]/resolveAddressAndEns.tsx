@@ -1,6 +1,7 @@
 import { getAddress, isAddress } from "thirdweb";
+import { isValidENSName } from "thirdweb/utils";
 import { mapThirdwebPublisher } from "../../../../components/contract-components/fetch-contracts-with-versions";
-import { isEnsName, resolveEns } from "../../../../lib/ens";
+import { resolveEns } from "../../../../lib/ens";
 
 type ResolvedAddressInfo = {
   address: string;
@@ -17,7 +18,7 @@ export async function resolveAddressAndEns(
     };
   }
 
-  if (isEnsName(addressOrEns)) {
+  if (isValidENSName(addressOrEns)) {
     const mappedEns = mapThirdwebPublisher(addressOrEns);
     const res = await resolveEns(mappedEns).catch(() => null);
     if (res?.address) {
