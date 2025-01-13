@@ -48,7 +48,7 @@ export function LoginAndOnboardingPage(props: {
   redirectPath: string;
 }) {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
       <div className="border-b bg-background">
         <header className="container flex w-full flex-row items-center justify-between px-6 py-4">
           <div className="flex shrink-0 items-center gap-3">

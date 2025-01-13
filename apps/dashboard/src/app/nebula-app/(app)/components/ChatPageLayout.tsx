@@ -15,7 +15,7 @@ export function ChatPageLayout(props: {
   return (
     <div
       className={cn(
-        "flex h-screen flex-col overflow-hidden bg-background lg:flex-row",
+        "flex h-dvh flex-col overflow-hidden bg-background lg:flex-row",
         props.className,
       )}
     >

@@ -16,7 +16,7 @@ export function NebulaLoginPage(props: {
     props.account ? "connect" : "welcome",
   );
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
       {/* nav */}
       <header className="border-b">
         <div className="container flex items-center justify-between p-4">

@@ -79,7 +79,7 @@ export function ChatSidebar(props: {
         </ScrollShadow>
       )}
 
-      <div className="mb-2">
+      <div className="mb-3 border-b border-dashed pt-2 pb-3">
         <SidebarIconLink
           href="https://portal.thirdweb.com/changelog"
           icon={TextIcon}

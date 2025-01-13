@@ -43,7 +43,6 @@ export function ChatPageContent(props: {
           try {
             const content = JSON.parse(message.content) as {
               session_id: string;
-              request_id: string;
               data: string;
               type: "sign_transaction" | (string & {});
             };

@@ -12,17 +12,13 @@ import {
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { type ThirdwebClient, prepareTransaction } from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
-import { TransactionButton } from "../../../../components/buttons/TransactionButton";
+import type { ThirdwebClient } from "thirdweb";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
-import { useV5DashboardChain } from "../../../../lib/v5-adapter";
-import { getSDKTheme } from "../../../components/sdk-component-theme";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
+import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
 
 export type NebulaTxData = {
   chainId: number;
@@ -119,7 +115,7 @@ export function Chats(props: {
                   key={index}
                 >
                   {message.type === "user" ? (
-                    <div className="flex justify-end gap-3">
+                    <div className="mt-6 flex justify-end">
                       <div className="max-w-[80%] overflow-auto rounded-xl border bg-muted/50 px-4 py-2">
                         <MarkdownRenderer
                           skipHtml
@@ -180,11 +176,11 @@ export function Chats(props: {
                               li={{ className: "text-foreground" }}
                             />
                           ) : message.type === "error" ? (
-                            <span className="text-destructive-text leading-loose">
+                            <div className="rounded-xl border bg-muted/50 px-4 py-2 text-destructive-text leading-normal">
                               {message.text}
-                            </span>
+                            </div>
                           ) : message.type === "send_transaction" ? (
-                            <ExecuteTransaction
+                            <ExecuteTransactionCardWithFallback
                               txData={message.data}
                               twAccount={props.twAccount}
                               client={props.client}
@@ -197,7 +193,7 @@ export function Chats(props: {
                         </ScrollShadow>
 
                         {message.type === "assistant" &&
-                          !props.isChatStreaming &&
+                          !isMessagePending &&
                           props.sessionId &&
                           message.request_id && (
                             <MessageActions
@@ -222,7 +218,7 @@ export function Chats(props: {
   );
 }
 
-function ExecuteTransaction(props: {
+function ExecuteTransactionCardWithFallback(props: {
   txData: NebulaTxData | null;
   twAccount: TWAccount;
   client: ThirdwebClient;
@@ -237,7 +233,7 @@ function ExecuteTransaction(props: {
   }
 
   return (
-    <SendTransactionButton
+    <ExecuteTransactionCard
       txData={props.txData}
       twAccount={props.twAccount}
       client={props.client}
@@ -335,48 +331,5 @@ function MessageActions(props: {
         )}
       </Button>
     </div>
-  );
-}
-
-function SendTransactionButton(props: {
-  txData: NebulaTxData;
-  twAccount: TWAccount;
-  client: ThirdwebClient;
-}) {
-  const { theme } = useTheme();
-  const { txData } = props;
-  const sendTransaction = useSendTransaction({
-    payModal: {
-      theme: getSDKTheme(theme === "light" ? "light" : "dark"),
-    },
-  });
-  const chain = useV5DashboardChain(txData.chainId);
-
-  return (
-    <TransactionButton
-      isPending={sendTransaction.isPending}
-      transactionCount={1}
-      txChainID={txData.chainId}
-      onClick={() => {
-        const tx = prepareTransaction({
-          chain: chain,
-          client: props.client,
-          data: txData.data,
-          to: txData.to,
-          value: BigInt(txData.value),
-        });
-
-        const promise = sendTransaction.mutateAsync(tx);
-
-        toast.promise(promise, {
-          success: "Transaction sent successfully",
-          error: "Failed to send transaction",
-        });
-      }}
-      className="gap-2"
-      twAccount={props.twAccount}
-    >
-      Execute Transaction
-    </TransactionButton>
   );
 }

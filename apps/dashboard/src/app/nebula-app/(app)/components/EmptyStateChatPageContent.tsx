@@ -20,7 +20,7 @@ export function EmptyStateChatPageContent(props: {
           </div>
         </div>
         <div className="h-5" />
-        <h1 className="text-center font-semibold text-4xl tracking-tight">
+        <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
           How can I help you <br className="max-sm:hidden" />
           with the blockchain today?
         </h1>
