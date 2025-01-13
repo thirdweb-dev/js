@@ -21,6 +21,7 @@ const authOptions: InAppWalletAuth[] = [
   "line",
   "coinbase",
   "steam",
+  "backend",
 ];
 
 export function AuthList() {
