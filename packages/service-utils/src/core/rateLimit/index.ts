@@ -71,9 +71,15 @@ export async function rateLimit(args: {
     limitPerSecond * sampleRate * RATE_LIMIT_WINDOW_SECONDS;
 
   if (requestCount > limitPerWindow) {
-    // Report rate limit hits.
-    if (project?.id) {
-      await updateRateLimitedAt(project.id, serviceConfig);
+    /**
+     * Report rate limit hits.
+     * Only track rate limit when its hit for the first time.
+     * Not waiting for tracking to complete as user doesn't need to wait.
+     */
+    if (requestCount === 1 && project?.id) {
+      updateRateLimitedAt(project.id, serviceConfig).catch(() => {
+        // no-op
+      });
     }
 
     // Reject requests when they've exceeded 2x the rate limit.
