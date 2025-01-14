@@ -82,17 +82,14 @@ export async function rateLimit(args: {
       });
     }
 
-    // Reject requests when they've exceeded 2x the rate limit.
-    if (requestCount > 2 * limitPerWindow) {
-      return {
-        rateLimited: true,
-        requestCount,
-        rateLimit: limitPerWindow,
-        status: 429,
-        errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
-        errorCode: "RATE_LIMIT_EXCEEDED",
-      };
-    }
+    return {
+      rateLimited: true,
+      requestCount,
+      rateLimit: limitPerWindow,
+      status: 429,
+      errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
+      errorCode: "RATE_LIMIT_EXCEEDED",
+    };
   }
 
   return {
