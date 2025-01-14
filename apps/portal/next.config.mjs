@@ -47,6 +47,15 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  productionBrowserSourceMaps: false,
+  experimental: {
+    webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
+    serverSourceMaps: false,
+  },
   pageExtensions: ["mdx", "tsx", "ts"],
   redirects,
   webpack: (config) => {
