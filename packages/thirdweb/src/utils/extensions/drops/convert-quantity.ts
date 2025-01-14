@@ -1,4 +1,4 @@
-import { maxUint256 } from "viem";
+import { maxUint256 } from "ox/Solidity";
 import { toUnits } from "../../units.js";
 
 export function convertQuantity(options: {

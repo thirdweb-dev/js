@@ -1,4 +1,6 @@
-import { type SignableMessage, type Signature, recoverAddress } from "viem";
+import * as ox__Bytes from "ox/Bytes";
+import * as ox__Secp256k1 from "ox/Secp256k1";
+import * as ox__Signature from "ox/Signature";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { type Hex, isHex } from "../utils/encoding/hex.js";
@@ -6,12 +8,19 @@ import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { verifyHash } from "./verify-hash.js";
 
+type Message = Prettify<
+  | string
+  | {
+      raw: Hex | Uint8Array;
+    }
+>;
+
 /**
  * @auth
  */
 export type VerifyEOASignatureParams = {
-  message: string | SignableMessage;
-  signature: string | Uint8Array | Signature;
+  message: string | Message;
+  signature: string | Uint8Array;
   address: string;
 };
 
@@ -39,9 +48,9 @@ export async function verifyEOASignature(options: VerifyEOASignatureParams) {
     return false;
   }
 
-  const recoveredAddress = await recoverAddress({
-    hash: messageHash,
-    signature: options.signature,
+  const recoveredAddress = ox__Secp256k1.recoverAddress({
+    payload: messageHash,
+    signature: ox__Signature.fromHex(options.signature),
   });
 
   if (recoveredAddress.toLowerCase() === options.address.toLowerCase()) {
@@ -103,9 +112,17 @@ export async function verifyContractWalletSignature({
   accountFactory,
 }: VerifyContractWalletSignatureParams) {
   const messageHash = hashMessage(message);
+
+  const parsedSignature = (() => {
+    if (ox__Bytes.validate(signature)) {
+      return ox__Bytes.toHex(signature);
+    }
+    return signature;
+  })();
+
   return verifyHash({
     hash: messageHash,
-    signature,
+    signature: parsedSignature,
     address,
     client,
     chain,
