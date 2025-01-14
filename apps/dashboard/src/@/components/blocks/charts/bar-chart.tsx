@@ -17,7 +17,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { formatDate } from "date-fns";
 import { useMemo } from "react";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "../../../../components/analytics/empty-chart-state";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata
@@ -30,6 +35,7 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   variant?: "stacked" | "grouped";
   // chart className
   chartClassName?: string;
+  isPending: boolean;
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -42,48 +48,54 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
+        <CardTitle className="mb-2">{props.title}</CardTitle>
         {props.description && (
           <CardDescription>{props.description}</CardDescription>
         )}
       </CardHeader>
       <CardContent>
         <ChartContainer config={props.config} className={props.chartClassName}>
-          <BarChart accessibilityLayer data={props.data}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="time"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              tickFormatter={(value) => new Date(value).toLocaleDateString()}
-            />
-            <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            {props.showLegend && (
-              <ChartLegend content={<ChartLegendContent />} />
-            )}
-            {configKeys.map((key, idx) => (
-              <Bar
-                key={key}
-                dataKey={key}
-                // if stacked then they should all be the same stackId
-                // if grouped then they should all be unique stackId (so the key works great)
-                stackId={variant === "stacked" ? "a" : key}
-                fill={`var(--color-${key})`}
-                // if stacked then we need to figure out the radius based on the index in the array
-                // if grouped then we can just use the same radius for all
-                radius={
-                  variant === "stacked"
-                    ? idx === 0
-                      ? [0, 0, 4, 4]
-                      : idx === configKeys.length - 1
-                        ? [4, 4, 0, 0]
-                        : [0, 0, 0, 0]
-                    : [4, 4, 4, 4]
-                }
+          {props.isPending ? (
+            <LoadingChartState />
+          ) : props.data.length === 0 ? (
+            <EmptyChartState />
+          ) : (
+            <BarChart accessibilityLayer data={props.data}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="time"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
               />
-            ))}
-          </BarChart>
+              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+              {props.showLegend && (
+                <ChartLegend content={<ChartLegendContent />} />
+              )}
+              {configKeys.map((key, idx) => (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  // if stacked then they should all be the same stackId
+                  // if grouped then they should all be unique stackId (so the key works great)
+                  stackId={variant === "stacked" ? "a" : key}
+                  fill={`var(--color-${key})`}
+                  // if stacked then we need to figure out the radius based on the index in the array
+                  // if grouped then we can just use the same radius for all
+                  radius={
+                    variant === "stacked"
+                      ? idx === 0
+                        ? [0, 0, 4, 4]
+                        : idx === configKeys.length - 1
+                          ? [4, 4, 0, 0]
+                          : [0, 0, 0, 0]
+                      : [4, 4, 4, 4]
+                  }
+                />
+              ))}
+            </BarChart>
+          )}
         </ChartContainer>
       </CardContent>
     </Card>

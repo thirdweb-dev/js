@@ -1,14 +1,14 @@
 .unorderedList,
 .orderedList {
-  @apply pl-5 leading-relaxed list-none mb-6 text-f-200;
+  @apply pl-5 leading-7 list-none mb-6 text-f-200;
 }
 
 .unorderedList > li {
-  @apply pb-0.5 pl-2 list-disc;
+  @apply my-1.5 pl-2 list-disc;
 }
 
 .orderedList > li {
-  @apply pb-0.5 pl-2 list-decimal;
+  @apply my-1.5 pl-2 list-decimal;
 }
 
 .unorderedList > li::marker {

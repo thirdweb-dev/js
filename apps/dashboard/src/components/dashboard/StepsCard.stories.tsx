@@ -56,7 +56,7 @@ function Component(props: {
 }) {
   const { cardTitle, cardDescription } = props;
   return (
-    <div className="min-h-screen bg-background p-4 text-foreground">
+    <div className="min-h-dvh bg-background p-4 text-foreground">
       <div className="mx-auto flex max-w-[1000px] flex-col gap-12">
         <BadgeContainer label="2 steps, 0 Completed">
           <StepsCard

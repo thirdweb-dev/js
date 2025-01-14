@@ -9,7 +9,6 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
-  CheckboxGroup,
   Collapse,
   Flex,
   FormControl,
@@ -324,21 +323,21 @@ const ModalBodyInputData = ({
             <FormLabel>Processed Data</FormLabel>
 
             <div className="flex flex-col gap-2">
-              <Checkbox
-                {...form.register("processEventLogs")}
-                checked={form.getValues("processEventLogs")}
-                onCheckedChange={(val) => {
-                  const checked = !!val;
-                  form.setValue("processEventLogs", checked);
-                  if (checked) {
-                    processEventLogsDisclosure.onOpen();
-                  } else {
-                    processEventLogsDisclosure.onClose();
-                  }
-                }}
-              >
-                <Text>Event Logs</Text>
-              </Checkbox>
+              <CheckboxWithLabel>
+                <Checkbox
+                  checked={form.watch("processEventLogs")}
+                  onCheckedChange={(val) => {
+                    const checked = !!val;
+                    form.setValue("processEventLogs", checked);
+                    if (checked) {
+                      processEventLogsDisclosure.onOpen();
+                    } else {
+                      processEventLogsDisclosure.onClose();
+                    }
+                  }}
+                />
+                <span>Event Logs</span>
+              </CheckboxWithLabel>
               {/* Shows all/specific events if processing event logs */}
               <Collapse in={processEventLogsDisclosure.isOpen}>
                 <div className="flex flex-col gap-2 px-4">
@@ -382,8 +381,7 @@ const ModalBodyInputData = ({
 
               <CheckboxWithLabel>
                 <Checkbox
-                  {...form.register("processTransactionReceipts")}
-                  checked={form.getValues("processTransactionReceipts")}
+                  checked={form.watch("processTransactionReceipts")}
                   onCheckedChange={(val) => {
                     const checked = !!val;
                     form.setValue("processTransactionReceipts", checked);
@@ -394,7 +392,7 @@ const ModalBodyInputData = ({
                     }
                   }}
                 />
-                <Text>Transaction Receipts</Text>
+                <span>Transaction Receipts</span>
               </CheckboxWithLabel>
               {/* Shows all/specific functions if processing transaction receipts */}
               <Collapse in={processTransactionReceiptsDisclosure.isOpen}>
@@ -546,16 +544,21 @@ const FilterSelector = ({
         </Text>
       ) : (
         <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto">
-          <CheckboxGroup
-            value={filter}
-            onChange={(selected: string[]) => setFilter(selected)}
-          >
-            {filterNames.map((name) => (
-              <Checkbox key={name} value={name}>
-                <Text>{name}</Text>
-              </Checkbox>
-            ))}
-          </CheckboxGroup>
+          {filterNames.map((name) => (
+            <CheckboxWithLabel key={name}>
+              <Checkbox
+                checked={filter.includes(name)}
+                onCheckedChange={(val) => {
+                  if (val) {
+                    setFilter([...filter, name]);
+                  } else {
+                    setFilter(filter.filter((item) => item !== name));
+                  }
+                }}
+              />
+              <span>{name}</span>
+            </CheckboxWithLabel>
+          ))}
         </div>
       )}
     </Card>

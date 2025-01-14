@@ -251,7 +251,11 @@ export const BatchLazyMint: ComponentWithChildren<
           {form.watch("revealType") && (
             <>
               <CheckboxWithLabel>
-                <Checkbox {...form.register("shuffle")} className="mt-3" />
+                <Checkbox
+                  className="mt-3"
+                  checked={form.watch("shuffle")}
+                  onCheckedChange={(val) => form.setValue("shuffle", !!val)}
+                />
                 <div className="flex flex-col items-center gap-1 md:flex-row">
                   <p>Shuffle the order of the NFTs before uploading.</p>
                   <em>This is an off-chain operation and is not provable.</em>

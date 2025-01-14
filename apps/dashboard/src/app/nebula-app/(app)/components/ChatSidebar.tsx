@@ -3,7 +3,11 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { MessagesSquareIcon, SquareDashedBottomCodeIcon } from "lucide-react";
+import {
+  MessagesSquareIcon,
+  SquareDashedBottomCodeIcon,
+  TextIcon,
+} from "lucide-react";
 import Link from "next/link";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -42,26 +46,17 @@ export function ChatSidebar(props: {
         </Button>
       </div>
 
-      <div className="h-4" />
+      <div className="h-3" />
 
-      <div>
-        <SidebarIconLink
-          href="/chat/history"
-          icon={MessagesSquareIcon}
-          label="All Chats"
-        />
-
-        <SidebarIconLink
-          href="https://portal.thirdweb.com/nebula"
-          icon={SquareDashedBottomCodeIcon}
-          label="Documentation"
-          target="_blank"
-        />
-      </div>
+      <SidebarIconLink
+        href="/chat/history"
+        icon={MessagesSquareIcon}
+        label="All Chats"
+      />
 
       {sessionsToShow.length > 0 && (
         <ScrollShadow
-          className="my-4 flex-1 border-t border-dashed pt-2"
+          className="my-3 flex-1 border-t border-dashed pt-2"
           scrollableClassName="max-h-full"
           shadowColor="transparent"
           shadowClassName="z-10"
@@ -83,6 +78,22 @@ export function ChatSidebar(props: {
           </div>
         </ScrollShadow>
       )}
+
+      <div className="mb-3 border-b border-dashed pt-2 pb-3">
+        <SidebarIconLink
+          href="https://portal.thirdweb.com/changelog"
+          icon={TextIcon}
+          label="Changelog"
+          target="_blank"
+        />
+
+        <SidebarIconLink
+          href="https://portal.thirdweb.com/nebula"
+          icon={SquareDashedBottomCodeIcon}
+          label="Documentation"
+          target="_blank"
+        />
+      </div>
 
       <NebulaAccountButton
         account={props.account}

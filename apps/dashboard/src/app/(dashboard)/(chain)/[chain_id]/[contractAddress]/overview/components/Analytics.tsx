@@ -3,9 +3,9 @@
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { Button } from "@/components/ui/button";
 import {
-  useLogsAnalytics,
-  useTransactionAnalytics,
-  useUniqueWalletsAnalytics,
+  useContractEventAnalytics,
+  useContractTransactionAnalytics,
+  useContractUniqueWalletAnalytics,
 } from "data/analytics/hooks";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
@@ -76,31 +76,45 @@ type ChartProps = {
   endDate: Date;
 };
 
+function getDayKey(date: Date) {
+  return date.toISOString().split("T")[0];
+}
+
 function OverviewAnalytics(props: ChartProps) {
-  const wallets = useUniqueWalletsAnalytics(props);
-  const transactions = useTransactionAnalytics(props);
-  const events = useLogsAnalytics(props);
+  const wallets = useContractUniqueWalletAnalytics(props);
+  const transactions = useContractTransactionAnalytics(props);
+  const events = useContractEventAnalytics(props);
+  const isPending =
+    wallets.isPending || transactions.isPending || events.isPending;
 
   const mergedData = useMemo(() => {
+    if (isPending) {
+      return undefined;
+    }
+
     const time = (wallets.data || transactions.data || events.data || []).map(
       (wallet) => wallet.time,
     );
 
     return time.map((time) => {
-      const wallet = wallets.data?.find((wallet) => wallet.time === time);
-      const transaction = transactions.data?.find(
-        (transaction) => transaction.time === time,
+      const wallet = wallets.data?.find(
+        (wallet) => getDayKey(wallet.time) === getDayKey(time),
       );
-      const event = events.data?.find((event) => event.time === time);
+      const transaction = transactions.data?.find(
+        (transaction) => getDayKey(transaction.time) === getDayKey(time),
+      );
+      const event = events.data?.find((event) => {
+        return getDayKey(event.time) === getDayKey(time);
+      });
 
       return {
         time,
-        wallets: wallet?.wallets || 0,
+        wallets: wallet?.count || 0,
         transactions: transaction?.count || 0,
         events: event?.count || 0,
       };
     });
-  }, [wallets.data, transactions.data, events.data]);
+  }, [wallets.data, transactions.data, events.data, isPending]);
 
   return (
     <ThirdwebAreaChart
@@ -110,15 +124,16 @@ function OverviewAnalytics(props: ChartProps) {
           color: "hsl(var(--chart-1))",
         },
         transactions: {
-          label: "Total Transactions",
+          label: "Transactions",
           color: "hsl(var(--chart-2))",
         },
         events: {
-          label: "Total Events",
+          label: "Events",
           color: "hsl(var(--chart-3))",
         },
       }}
-      data={mergedData}
+      data={mergedData || []}
+      isPending={isPending}
       showLegend
       chartClassName="aspect[2] lg:aspect-[4.5]"
     />

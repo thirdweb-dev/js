@@ -1,35 +1,33 @@
-import { isProd } from "@/constants/env";
+import { INSIGHT_SERVICE_API_KEY } from "@/constants/env";
+import { getVercelEnv } from "lib/vercel-utils";
+
+const thirdwebDomain =
+  getVercelEnv() !== "production" ? "thirdweb-dev" : "thirdweb";
 
 export async function isAnalyticsSupportedForChain(
   chainId: number,
 ): Promise<boolean> {
   try {
-    if (!process.env.CHAINSAW_API_KEY) {
-      throw new Error("Missing CHAINSAW_API_KEY env var");
-    }
-
     const res = await fetch(
-      `https://chainsaw.${isProd ? "thirdweb" : "thirdweb-dev"}.com/service/chains/${chainId}`,
+      `https://insight.${thirdwebDomain}.com/service/chains/${chainId}`,
       {
-        method: "GET",
         headers: {
-          "content-type": "application/json",
-          // pass the shared secret
-          "x-service-api-key": process.env.CHAINSAW_API_KEY || "",
+          // service api key required - because this is endpoint is internal
+          "x-service-api-key": INSIGHT_SERVICE_API_KEY,
         },
       },
     );
 
     if (!res.ok) {
-      // assume not supported if we get a non-200 response
       return false;
     }
 
-    const { data } = await res.json();
-    return data;
-  } catch (e) {
-    console.error("Error checking if analytics is supported for chain", e);
-  }
+    const json = (await res.json()) as { data: boolean };
 
+    return json.data;
+  } catch (e) {
+    console.error(`Error checking analytics support for chain ${chainId}`);
+    console.error(e);
+  }
   return false;
 }

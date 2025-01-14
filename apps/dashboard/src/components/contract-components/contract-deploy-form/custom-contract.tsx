@@ -447,6 +447,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
           },
+          version: metadata.version,
         });
       }
 

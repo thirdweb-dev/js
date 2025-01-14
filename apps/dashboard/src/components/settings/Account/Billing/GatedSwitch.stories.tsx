@@ -22,7 +22,7 @@ export const AllVariants: Story = {
 
 function Variants() {
   return (
-    <div className="min-h-screen bg-background p-7 text-foreground">
+    <div className="min-h-dvh bg-background p-7 text-foreground">
       <div className="mx-auto flex max-w-[500px] flex-col gap-8">
         <BadgeContainer label="upgradeRequired">
           <GatedSwitch upgradeRequired />

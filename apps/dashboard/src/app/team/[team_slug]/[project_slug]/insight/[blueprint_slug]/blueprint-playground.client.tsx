@@ -111,7 +111,7 @@ export function BlueprintPlayground(props: {
           abortController.abort();
         }
       }}
-      domain={`https://{chainId}.insight.${thirdwebDomain}.com`}
+      domain={`https://insight.${thirdwebDomain}.com`}
       path={props.path}
       isInsightEnabled={props.isInsightEnabled}
       projectSettingsLink={props.projectSettingsLink}
@@ -122,18 +122,11 @@ export function BlueprintPlayground(props: {
 
 function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
   const parameters = [..._parameters];
-  // if chainId parameter is not already present - add it, because we need it for the domain
-  const chainIdParameter = parameters.find((p) => p.name === "chainId");
-  if (!chainIdParameter) {
-    parameters.unshift({
-      name: "chainId",
-      in: "path",
-      required: true,
-      schema: {
-        type: "integer",
-        description: "Chain ID of the blockchain",
-      },
-    });
+
+  // make chain query param required - its not required in open api spec - because it either has to be set in subdomain or as a query param
+  const chainIdParameter = parameters.find((p) => p.name === "chain");
+  if (chainIdParameter) {
+    chainIdParameter.required = true;
   }
 
   // remove the client id parameter if it is present - we will always replace the parameter with project's client id
@@ -561,14 +554,14 @@ function ParameterSection(props: {
                     key={param.name}
                     className={cn(
                       "grid items-center",
-                      param.name === "chainId"
+                      param.name === "chain"
                         ? "grid-cols-1 lg:grid-cols-2"
                         : "grid-cols-2",
                     )}
                   >
                     <div className="flex h-full flex-row flex-wrap items-center justify-between gap-1 border-r px-3 py-2">
                       <div className="font-medium font-mono text-sm">
-                        {param.name === "chainId" ? "chainId" : param.name}
+                        {param.name}
                       </div>
                       {param.required && (
                         <Badge
@@ -580,7 +573,7 @@ function ParameterSection(props: {
                       )}
                     </div>
                     <div className="relative">
-                      {param.name === "chainId" ? (
+                      {param.name === "chain" ? (
                         <SingleNetworkSelector
                           chainId={
                             field.value ? Number(field.value) : undefined
@@ -814,31 +807,46 @@ function ResponseSection(props: {
   );
 }
 
-function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
-  if (!param.schema) {
+function openAPIV3ParamToZodFormSchema(
+  schema: BlueprintParameter["schema"],
+  isRequired: boolean,
+): z.ZodTypeAny | undefined {
+  if (!schema) {
     return;
   }
 
-  if (!("type" in param.schema)) {
+  if ("anyOf" in schema) {
+    const anyOf = schema.anyOf;
+    if (!anyOf) {
+      return;
+    }
+    const anySchemas = anyOf
+      .map((s) => openAPIV3ParamToZodFormSchema(s, isRequired))
+      .filter((x) => !!x);
+    // @ts-expect-error - Its ok, z.union is expecting tuple type but we have array
+    return z.union(anySchemas);
+  }
+
+  if (!("type" in schema)) {
     return;
   }
 
   // if enum values
-  const enumValues = param.schema.enum;
+  const enumValues = schema.enum;
   if (enumValues) {
     const enumSchema = z.enum(
       // @ts-expect-error - Its correct
       enumValues,
     );
 
-    if (param.required) {
+    if (isRequired) {
       return enumSchema;
     }
 
     return enumSchema.or(z.literal(""));
   }
 
-  switch (param.schema.type) {
+  switch (schema.type) {
     case "integer": {
       const intSchema = z.coerce
         .number({
@@ -847,7 +855,7 @@ function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
         .int({
           message: "Must be an integer",
         });
-      return param.required
+      return isRequired
         ? intSchema.min(1, {
             message: "Required",
           })
@@ -856,7 +864,7 @@ function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
 
     case "number": {
       const numberSchema = z.coerce.number();
-      return param.required
+      return isRequired
         ? numberSchema.min(1, {
             message: "Required",
           })
@@ -865,13 +873,13 @@ function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
 
     case "boolean": {
       const booleanSchema = z.coerce.boolean();
-      return param.required ? booleanSchema : booleanSchema.optional();
+      return isRequired ? booleanSchema : booleanSchema.optional();
     }
 
     // everything else - just accept it as a string;
     default: {
       const stringSchema = z.string();
-      return param.required
+      return isRequired
         ? stringSchema.min(1, {
             message: "Required",
           })
@@ -883,9 +891,16 @@ function openAPIV3ParamToZodFormSchema(param: BlueprintParameter) {
 function createParametersFormSchema(parameters: BlueprintParameter[]) {
   const shape: z.ZodRawShape = {};
   for (const param of parameters) {
-    const paramSchema = openAPIV3ParamToZodFormSchema(param);
+    const paramSchema = openAPIV3ParamToZodFormSchema(
+      param.schema,
+      !!param.required,
+    );
     if (paramSchema) {
       shape[param.name] = paramSchema;
+    } else {
+      shape[param.name] = param.required
+        ? z.string().min(1, { message: "Required" })
+        : z.string();
     }
   }
 

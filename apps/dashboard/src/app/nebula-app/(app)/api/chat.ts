@@ -30,6 +30,7 @@ export async function promptNebula(params: {
     body.context_filter = {
       chain_ids: params.contextFilters.chainIds || [],
       contract_addresses: params.contextFilters.contractAddresses || [],
+      wallet_addresses: params.contextFilters.walletAddresses || [],
     };
   }
 

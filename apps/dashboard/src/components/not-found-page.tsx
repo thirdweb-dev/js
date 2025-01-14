@@ -3,7 +3,7 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 export function NotFoundPage() {
   return (
     <div className="overflow-hidden">
-      <div className="container flex h-full min-h-screen flex-col justify-center">
+      <div className="container flex h-full min-h-dvh flex-col justify-center">
         <div className="flex flex-col items-center">
           <div className="z-10 flex size-[90px] items-center justify-center rounded-3xl border bg-background font-semibold text-2xl text-muted-foreground tracking-tight shadow-lg md:size-[100px] md:text-3xl">
             404

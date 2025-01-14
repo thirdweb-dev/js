@@ -29,7 +29,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   isPending: boolean;
   isGasless?: boolean;
   txChainID: number;
-  variant?: "destructive" | "primary";
+  variant?: "destructive" | "primary" | "default";
   twAccount: Account | undefined;
 };
 
@@ -71,7 +71,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
       <PopoverTrigger asChild>
         <ButtonComponent
           variant={variant || "primary"}
-          desiredChainId={txChainID}
+          txChainId={txChainID}
           twAccount={twAccount}
           {...restButtonProps}
           disabled={disabled}
@@ -189,7 +189,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
       <h4 className="text-foreground">Approve Transaction</h4>
 
       <p className="text-muted-foreground text-sm">
-        You will need to approve this transaction in your connected wallet.
+        Your connected wallet will prompt you to approve this transaction
       </p>
 
       {showHint && (

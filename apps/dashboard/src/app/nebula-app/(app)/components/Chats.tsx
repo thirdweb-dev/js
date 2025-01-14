@@ -1,4 +1,3 @@
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
@@ -15,13 +14,11 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { type ThirdwebClient, prepareTransaction } from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
-import { TransactionButton } from "../../../../components/buttons/TransactionButton";
+import type { ThirdwebClient } from "thirdweb";
 import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
-import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
+import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
 
 export type NebulaTxData = {
   chainId: number;
@@ -97,7 +94,7 @@ export function Chats(props: {
 
   return (
     <div
-      className="flex max-h-full flex-1 flex-col overflow-hidden"
+      className="relative flex max-h-full flex-1 flex-col overflow-hidden"
       ref={chatContainerRef}
     >
       <ScrollShadow
@@ -113,27 +110,34 @@ export function Chats(props: {
                 props.isChatStreaming && index === props.messages.length - 1;
               return (
                 <div
+                  className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
                   key={index}
                 >
-                  <div
-                    className={cn(
-                      "fade-in-0 flex min-w-0 animate-in gap-3 duration-300",
-                    )}
-                  >
-                    <div className="-translate-y-[2px] relative shrink-0 ">
-                      {message.type === "user" ? (
-                        <GradientAvatar
-                          id={props.twAccount?.id || "default"}
-                          // TODO- set account image when available in account object
-                          src={""}
-                          className="size-8 shrink-0 rounded-lg"
-                          client={props.client}
+                  {message.type === "user" ? (
+                    <div className="mt-6 flex justify-end">
+                      <div className="max-w-[80%] overflow-auto rounded-xl border bg-muted/50 px-4 py-2">
+                        <MarkdownRenderer
+                          skipHtml
+                          markdownText={message.text}
+                          code={{
+                            ignoreFormattingErrors: true,
+                            className: "bg-transparent",
+                          }}
+                          className="text-foreground [&>*:last-child]:mb-0"
+                          p={{ className: "text-foreground leading-normal" }}
+                          li={{ className: "text-foreground" }}
+                          inlineCode={{ className: "border-none" }}
                         />
-                      ) : (
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      {/* Left Icon */}
+                      <div className="-translate-y-[2px] relative shrink-0">
                         <div
                           className={cn(
-                            "flex size-8 items-center justify-center rounded-lg",
+                            "flex size-9 items-center justify-center rounded-full",
                             message.type === "assistant" &&
                               "border bg-muted/50",
                             message.type === "error" && "border",
@@ -152,49 +156,57 @@ export function Chats(props: {
                             <AlertCircleIcon className="size-5 text-destructive-text" />
                           )}
                         </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 grow">
-                      {message.type === "assistant" ? (
-                        <MarkdownRenderer
-                          skipHtml
-                          markdownText={message.text}
-                          code={{
-                            disableCodeHighlight: isMessagePending,
-                            ignoreFormattingErrors: true,
-                          }}
-                          className="text-foreground"
-                          p={{ className: "text-foreground" }}
-                          li={{ className: "text-foreground" }}
-                        />
-                      ) : message.type === "error" ? (
-                        <span className="text-destructive-text leading-loose">
-                          {message.text}
-                        </span>
-                      ) : message.type === "send_transaction" ? (
-                        <ExecuteTransaction
-                          txData={message.data}
-                          twAccount={props.twAccount}
-                          client={props.client}
-                        />
-                      ) : (
-                        <span className="leading-loose">{message.text}</span>
-                      )}
+                      </div>
 
-                      {message.type === "assistant" &&
-                        !props.isChatStreaming &&
-                        props.sessionId &&
-                        message.request_id && (
-                          <MessageActions
-                            messageText={message.text}
-                            authToken={props.authToken}
-                            requestId={message.request_id}
-                            sessionId={props.sessionId}
-                            className="mt-4"
-                          />
-                        )}
+                      {/* Right Message */}
+                      <div className="min-w-0 grow">
+                        <ScrollShadow className="rounded-lg">
+                          {message.type === "assistant" ? (
+                            <MarkdownRenderer
+                              skipHtml
+                              markdownText={message.text}
+                              code={{
+                                disableCodeHighlight: isMessagePending,
+                                ignoreFormattingErrors: true,
+                              }}
+                              className="text-foreground [&>*:last-child]:mb-0"
+                              p={{
+                                className: "text-foreground",
+                              }}
+                              li={{ className: "text-foreground" }}
+                            />
+                          ) : message.type === "error" ? (
+                            <div className="rounded-xl border bg-muted/50 px-4 py-2 text-destructive-text leading-normal">
+                              {message.text}
+                            </div>
+                          ) : message.type === "send_transaction" ? (
+                            <ExecuteTransactionCardWithFallback
+                              txData={message.data}
+                              twAccount={props.twAccount}
+                              client={props.client}
+                            />
+                          ) : (
+                            <span className="leading-loose">
+                              {message.text}
+                            </span>
+                          )}
+                        </ScrollShadow>
+
+                        {message.type === "assistant" &&
+                          !isMessagePending &&
+                          props.sessionId &&
+                          message.request_id && (
+                            <MessageActions
+                              messageText={message.text}
+                              authToken={props.authToken}
+                              requestId={message.request_id}
+                              sessionId={props.sessionId}
+                              className="mt-4"
+                            />
+                          )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
@@ -206,7 +218,7 @@ export function Chats(props: {
   );
 }
 
-function ExecuteTransaction(props: {
+function ExecuteTransactionCardWithFallback(props: {
   txData: NebulaTxData | null;
   twAccount: TWAccount;
   client: ThirdwebClient;
@@ -221,7 +233,7 @@ function ExecuteTransaction(props: {
   }
 
   return (
-    <SendTransactionButton
+    <ExecuteTransactionCard
       txData={props.txData}
       twAccount={props.twAccount}
       client={props.client}
@@ -319,43 +331,5 @@ function MessageActions(props: {
         )}
       </Button>
     </div>
-  );
-}
-
-function SendTransactionButton(props: {
-  txData: NebulaTxData;
-  twAccount: TWAccount;
-  client: ThirdwebClient;
-}) {
-  const { txData } = props;
-  const sendTransaction = useSendTransaction();
-  const chain = useV5DashboardChain(txData.chainId);
-
-  return (
-    <TransactionButton
-      isPending={sendTransaction.isPending}
-      transactionCount={1}
-      txChainID={txData.chainId}
-      onClick={() => {
-        const tx = prepareTransaction({
-          chain: chain,
-          client: props.client,
-          data: txData.data,
-          to: txData.to,
-          value: BigInt(txData.value),
-        });
-
-        const promise = sendTransaction.mutateAsync(tx);
-
-        toast.promise(promise, {
-          success: "Transaction sent successfully",
-          error: "Failed to send transaction",
-        });
-      }}
-      className="gap-2"
-      twAccount={props.twAccount}
-    >
-      Execute Transaction
-    </TransactionButton>
   );
 }

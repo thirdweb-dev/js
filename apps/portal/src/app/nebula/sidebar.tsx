@@ -3,7 +3,6 @@ import {
   BrickIcon,
   CodeIcon,
   EditIcon,
-  GetIcon,
   NebulaSideIcon,
   PluginIcon,
   QuestionIcon,
@@ -45,45 +44,60 @@ export const sidebar: SideBar = {
       icon: <CodeIcon />,
       links: [
         {
-          name: "Send Message",
-          href: "/nebula/api-reference/chat",
-          icon: <GetIcon />,
+          name: "GET",
+          expanded: true,
+          links: [
+            {
+              name: "List Sessions",
+              href: "/nebula/api-reference/list-session",
+            },
+            {
+              name: "Get Session",
+              href: "/nebula/api-reference/get-session",
+            },
+          ],
         },
         {
-          name: "Execute Transaction",
-          href: "/nebula/api-reference/execute",
-          icon: <GetIcon />,
+          name: "POST",
+          expanded: true,
+          links: [
+            {
+              name: "Send Message",
+              href: "/nebula/api-reference/chat",
+            },
+            {
+              name: "Execute Action",
+              href: "/nebula/api-reference/execute",
+            },
+            {
+              name: "Create Session",
+              href: "/nebula/api-reference/create-session",
+            },
+            {
+              name: "Clear Session",
+              href: "/nebula/api-reference/clear-session",
+            },
+          ],
         },
         {
-          name: "List Sessions",
-          href: "/nebula/api-reference/list-session",
-          icon: <GetIcon />,
+          name: "PUT",
+          expanded: true,
+          links: [
+            {
+              name: "Update Session",
+              href: "/nebula/api-reference/update-session",
+            },
+          ],
         },
         {
-          name: "Get Session",
-          href: "/nebula/api-reference/get-session",
-          icon: <GetIcon />,
-        },
-        {
-          name: "Create Session",
-          href: "/nebula/api-reference/create-session",
-          icon: <GetIcon />,
-        },
-
-        {
-          name: "Update Session",
-          href: "/nebula/api-reference/update-session",
-          icon: <GetIcon />,
-        },
-        {
-          name: "Clear Session",
-          href: "/nebula/api-reference/clear-session",
-          icon: <GetIcon />,
-        },
-        {
-          name: "Delete Session",
-          href: "/nebula/api-reference/delete-session",
-          icon: <GetIcon />,
+          name: "DELETE",
+          expanded: true,
+          links: [
+            {
+              name: "Delete Session",
+              href: "/nebula/api-reference/delete-session",
+            },
+          ],
         },
       ],
     },

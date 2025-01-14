@@ -28,7 +28,7 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background py-6 text-foreground">
+    <div className="min-h-dvh bg-background py-6 text-foreground">
       <div className="container flex max-w-[1100px] flex-col gap-10 lg:p-10">
         <BadgeContainer label="No Header">
           <SettingsCard

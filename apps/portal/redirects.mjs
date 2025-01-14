@@ -809,6 +809,16 @@ const contractRedirects = {
   "/contracts/design/Pack": "/contracts/design-docs/pack",
   "/contracts/design/SignatureDrop": "/contracts",
   "/interact": "/contracts",
+  // contract references
+  "/contracts/TokenERC20": "/contracts/explore/pre-built-contracts/token",
+  "/contracts/DropERC721": "/contracts/explore/pre-built-contracts/nft-drop",
+  "/contracts/DropERC1155":
+    "/contracts/explore/pre-built-contracts/edition-drop",
+  "/contracts/TokenERC721":
+    "/contracts/explore/pre-built-contracts/nft-collection",
+  "/contracts/TokenERC1155": "/contracts/explore/pre-built-contracts/edition",
+  "/contracts/Multiwrap": "/contracts/design-docs/multiwrap",
+  "/contracts/VoteERC20": "/contracts/build/base-contracts/erc-20/vote",
 };
 
 const infrastructureRedirects = {

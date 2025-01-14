@@ -1,138 +1,117 @@
 "use client";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  SimpleGrid,
-  Skeleton,
-  Stat,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react";
+import { Skeleton, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
   type AnalyticsQueryParams,
   type TotalQueryResult,
-  useEventsAnalytics,
-  useFunctionsAnalytics,
-  useLogsAnalytics,
-  useTotalLogsAnalytics,
-  useTotalTransactionAnalytics,
-  useTotalWalletsAnalytics,
-  useTransactionAnalytics,
-  useUniqueWalletsAnalytics,
+  useContractEventAnalytics,
+  useContractEventBreakdown,
+  useContractFunctionBreakdown,
+  useContractTransactionAnalytics,
+  useContractUniqueWalletAnalytics,
+  useTotalContractEvents,
+  useTotalContractTransactionAnalytics,
+  useTotalContractUniqueWallets,
 } from "data/analytics/hooks";
 import { Suspense, useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { Card, Heading } from "tw-components";
+import { Card } from "tw-components";
+import {
+  DateRangeSelector,
+  type Range,
+  getLastNDaysRange,
+} from "../../../../../../components/analytics/date-range-selector";
 
 interface ContractAnalyticsPageProps {
   contract: ThirdwebContract;
+  writeFnSelectorToNameRecord: Record<string, string>;
+  eventSelectorToNameRecord: Record<string, string>;
 }
 
 export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
   contract,
+  writeFnSelectorToNameRecord,
+  eventSelectorToNameRecord,
 }) => {
-  const [startDate] = useState(
-    (() => {
-      const date = new Date();
-      date.setDate(date.getDate() - 30);
-      return date;
-    })(),
-  );
-  const [endDate] = useState(new Date());
-
-  useIsomorphicLayoutEffect(() => {
-    window?.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  const [range, setRange] = useState<Range>(() => getLastNDaysRange("last-30"));
 
   return (
-    <Flex direction="column" gap={6}>
-      {contract && (
-        <>
-          <Flex gap={10} direction="column">
-            <Flex direction="column" gap={2}>
-              <Alert status="info" borderRadius="md" mb={4}>
-                <AlertIcon />
-                <AlertTitle>Analytics is in beta.</AlertTitle>
-                <AlertDescription>
-                  Some data may be partially inaccurate or incomplete.
-                </AlertDescription>
-              </Alert>
-              <Heading as="h2" size="title.md">
-                Analytics
-              </Heading>
-              <Flex gap={4}>
-                <AnalyticsStat
-                  chainId={contract.chain.id}
-                  contractAddress={contract.address}
-                  // FIXME
-                  // eslint-disable-next-line react-compiler/react-compiler
-                  useTotal={useTotalWalletsAnalytics}
-                  label="Unique Wallets"
-                />
-                <AnalyticsStat
-                  chainId={contract.chain.id}
-                  contractAddress={contract.address}
-                  // FIXME
-                  // eslint-disable-next-line react-compiler/react-compiler
-                  useTotal={useTotalTransactionAnalytics}
-                  label="Total Transactions"
-                />
-                <AnalyticsStat
-                  chainId={contract.chain.id}
-                  contractAddress={contract.address}
-                  // FIXME
-                  // eslint-disable-next-line react-compiler/react-compiler
-                  useTotal={useTotalLogsAnalytics}
-                  label="Total Events"
-                />
-              </Flex>
-            </Flex>
-          </Flex>
-          <SimpleGrid columns={{ base: 1, md: 1 }} gap={4}>
-            <UniqueWalletsChart
-              chainId={contract.chain.id}
-              contractAddress={contract.address}
-              startDate={startDate}
-              endDate={endDate}
-            />
+    <div>
+      <h2 className="mb-3 font-semibold text-xl tracking-tight lg:text-2xl">
+        Analytics
+      </h2>
 
-            <TotalTransactionsChart
-              chainId={contract.chain.id}
-              contractAddress={contract.address}
-              startDate={startDate}
-              endDate={endDate}
-            />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <AnalyticsStat
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          // FIXME
+          // eslint-disable-next-line react-compiler/react-compiler
+          useTotal={useTotalContractUniqueWallets}
+          label="Unique Wallets"
+        />
+        <AnalyticsStat
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          // FIXME
+          // eslint-disable-next-line react-compiler/react-compiler
+          useTotal={useTotalContractTransactionAnalytics}
+          label="Total Transactions"
+        />
+        <AnalyticsStat
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          // FIXME
+          // eslint-disable-next-line react-compiler/react-compiler
+          useTotal={useTotalContractEvents}
+          label="Total Events"
+        />
+      </div>
 
-            <TotalEventsChart
-              chainId={contract.chain.id}
-              contractAddress={contract.address}
-              startDate={startDate}
-              endDate={endDate}
-            />
+      <div className="mt-8 mb-4">
+        <DateRangeSelector range={range} setRange={setRange} />
+      </div>
 
-            <FunctionBreakdownChart
-              chainId={contract.chain.id}
-              contractAddress={contract.address}
-              startDate={startDate}
-              endDate={endDate}
-            />
+      <div className="flex flex-col gap-6">
+        <UniqueWalletsChart
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          startDate={range.from}
+          endDate={range.to}
+        />
 
-            <EventBreakdownChart
-              chainId={contract.chain.id}
-              contractAddress={contract.address}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </SimpleGrid>
-        </>
-      )}
-    </Flex>
+        <TotalTransactionsChart
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          startDate={range.from}
+          endDate={range.to}
+        />
+
+        <TotalEventsChart
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          startDate={range.from}
+          endDate={range.to}
+        />
+
+        <FunctionBreakdownChart
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          startDate={range.from}
+          endDate={range.to}
+          writeFnSelectorToNameRecord={writeFnSelectorToNameRecord}
+        />
+
+        <EventBreakdownChart
+          chainId={contract.chain.id}
+          contractAddress={contract.address}
+          startDate={range.from}
+          endDate={range.to}
+          eventSelectorToNameRecord={eventSelectorToNameRecord}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -143,15 +122,16 @@ type ChartProps = {
   endDate: Date;
 };
 function UniqueWalletsChart(props: ChartProps) {
-  const { data } = useUniqueWalletsAnalytics(props);
+  const analyticsQuery = useContractUniqueWalletAnalytics(props);
 
   return (
     <ThirdwebBarChart
       title="Unique Wallets"
       description="The number of unique wallet addresses that have sent a transaction to this contract."
-      data={data || []}
+      data={analyticsQuery.data || []}
+      isPending={analyticsQuery.isPending}
       config={{
-        wallets: {
+        count: {
           label: "Unique Wallets",
           color: "hsl(var(--chart-1))",
         },
@@ -162,7 +142,7 @@ function UniqueWalletsChart(props: ChartProps) {
 }
 
 function TotalTransactionsChart(props: ChartProps) {
-  const { data } = useTransactionAnalytics({
+  const analyticsQuery = useContractTransactionAnalytics({
     chainId: props.chainId,
     contractAddress: props.contractAddress,
     endDate: props.endDate,
@@ -173,7 +153,8 @@ function TotalTransactionsChart(props: ChartProps) {
     <ThirdwebBarChart
       title="Total Transactions"
       description="The number of transactions that have been sent to this contract."
-      data={data || []}
+      data={analyticsQuery.data || []}
+      isPending={analyticsQuery.isPending}
       config={{
         count: {
           label: "Transactions",
@@ -186,13 +167,14 @@ function TotalTransactionsChart(props: ChartProps) {
 }
 
 function TotalEventsChart(props: ChartProps) {
-  const { data } = useLogsAnalytics(props);
+  const analyticsQuery = useContractEventAnalytics(props);
 
   return (
     <ThirdwebBarChart
       title="Total Events"
       description="The number of on-chain events that have been emitted from this contract."
-      data={data || []}
+      data={analyticsQuery.data || []}
+      isPending={analyticsQuery.isPending}
       config={{
         count: {
           label: "Events",
@@ -204,15 +186,41 @@ function TotalEventsChart(props: ChartProps) {
   );
 }
 
-function FunctionBreakdownChart(props: ChartProps) {
-  const { data } = useFunctionsAnalytics(props);
+function FunctionBreakdownChart(
+  props: ChartProps & {
+    writeFnSelectorToNameRecord: Record<string, string>;
+  },
+) {
+  const analyticsQuery = useContractFunctionBreakdown(props);
+
+  // replace function selector with function name
+  const mappedQueryData = useMemo(() => {
+    return analyticsQuery.data?.map((item) => {
+      const modifiedItem = { time: item.time } as typeof item;
+
+      for (const key in item) {
+        if (key === "time") {
+          continue;
+        }
+
+        const name = props.writeFnSelectorToNameRecord[key];
+        const value = item[key];
+        if (name && value !== undefined) {
+          modifiedItem[name] = value;
+        }
+      }
+
+      return modifiedItem;
+    });
+  }, [analyticsQuery.data, props.writeFnSelectorToNameRecord]);
 
   return (
     <ThirdwebBarChart
       title="Function Breakdown"
       description="The breakdown of calls to each write function from transactions."
-      data={data || []}
-      config={Object.keys(data?.[0] || {}).reduce(
+      data={mappedQueryData || []}
+      isPending={analyticsQuery.isPending}
+      config={Object.keys(mappedQueryData?.[0] || {}).reduce(
         (acc, key) => {
           if (key === "time") {
             return acc;
@@ -231,15 +239,41 @@ function FunctionBreakdownChart(props: ChartProps) {
   );
 }
 
-function EventBreakdownChart(props: ChartProps) {
-  const { data } = useEventsAnalytics(props);
+function EventBreakdownChart(
+  props: ChartProps & {
+    eventSelectorToNameRecord: Record<string, string>;
+  },
+) {
+  const analyticsQuery = useContractEventBreakdown(props);
+
+  // replace event selector with event name
+  const mappedQueryData = useMemo(() => {
+    return analyticsQuery.data?.map((item) => {
+      const modifiedItem = { time: item.time } as typeof item;
+
+      for (const key in item) {
+        if (key === "time") {
+          continue;
+        }
+
+        const name = props.eventSelectorToNameRecord[key];
+        const value = item[key];
+        if (name && value !== undefined) {
+          modifiedItem[name] = value;
+        }
+      }
+
+      return modifiedItem;
+    });
+  }, [analyticsQuery.data, props.eventSelectorToNameRecord]);
 
   return (
     <ThirdwebBarChart
       title="Event Breakdown"
       description="The breakdown of events emitted by this contract."
-      data={data || []}
-      config={Object.keys(data?.[0] || {}).reduce(
+      data={mappedQueryData || []}
+      isPending={analyticsQuery.isPending}
+      config={Object.keys(mappedQueryData?.[0] || {}).reduce(
         (acc, key) => {
           if (key === "time") {
             return acc;

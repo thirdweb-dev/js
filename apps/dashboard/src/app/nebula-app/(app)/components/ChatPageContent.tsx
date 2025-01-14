@@ -43,7 +43,6 @@ export function ChatPageContent(props: {
           try {
             const content = JSON.parse(message.content) as {
               session_id: string;
-              request_id: string;
               data: string;
               type: "sign_transaction" | (string & {});
             };
@@ -398,7 +397,7 @@ export function ChatPageContent(props: {
               isChatStreaming={isChatStreaming}
               authToken={props.authToken}
               sessionId={sessionId}
-              className="min-w-0 pt-10 pb-32"
+              className="min-w-0 pt-6 pb-32"
               twAccount={props.account}
               client={client}
               enableAutoScroll={enableAutoScroll}

@@ -42,7 +42,7 @@ function Variants(props: {
       : TeamHeaderLoggedOutDesktopUI;
 
   return (
-    <div className="container min-h-screen bg-zinc-900 py-10">
+    <div className="container min-h-dvh bg-zinc-900 py-10">
       <div className="bg-background">
         <Comp />
       </div>

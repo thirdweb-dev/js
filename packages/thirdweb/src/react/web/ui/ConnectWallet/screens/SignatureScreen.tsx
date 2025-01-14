@@ -74,9 +74,10 @@ export const SignatureScreen: React.FC<{
   }
 
   if (
-    wallet.id === "inApp" ||
-    wallet.id === "embedded" ||
-    (wallet.id === "smart" && adminWallet?.id === "inApp")
+    isHeadlessSignSupported(wallet.id) ||
+    (wallet.id === "smart" &&
+      adminWallet &&
+      isHeadlessSignSupported(adminWallet.id))
   ) {
     return (
       <HeadlessSignIn
@@ -226,6 +227,14 @@ export const SignatureScreen: React.FC<{
     </Container>
   );
 };
+
+function isHeadlessSignSupported(walletId: Wallet["id"]) {
+  return (
+    walletId === "inApp" ||
+    walletId === "embedded" ||
+    walletId.startsWith("ecosystem")
+  );
+}
 
 function HeadlessSignIn({
   signIn,

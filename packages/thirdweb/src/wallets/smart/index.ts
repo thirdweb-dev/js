@@ -463,45 +463,47 @@ async function _sendUserOp(args: {
   options: SmartAccountOptions;
 }): Promise<WaitForReceiptOptions> {
   const { executeTx, options } = args;
-  const unsignedUserOp = await createUnsignedUserOp({
-    transaction: executeTx,
-    factoryContract: options.factoryContract,
-    accountContract: options.accountContract,
-    adminAddress: options.personalAccount.address,
-    sponsorGas: options.sponsorGas,
-    overrides: options.overrides,
-  });
-  const signedUserOp = await signUserOp({
-    client: options.client,
-    chain: options.chain,
-    adminAccount: options.personalAccount,
-    entrypointAddress: options.overrides?.entrypointAddress,
-    userOp: unsignedUserOp,
-  });
-  const bundlerOptions: BundlerOptions = {
-    chain: options.chain,
-    client: options.client,
-    bundlerUrl: options.overrides?.bundlerUrl,
-    entrypointAddress: options.overrides?.entrypointAddress,
-  };
-  const userOpHash = await bundleUserOp({
-    options: bundlerOptions,
-    userOp: signedUserOp,
-  });
-  // wait for tx receipt rather than return the userOp hash
-  const receipt = await waitForUserOpReceipt({
-    ...bundlerOptions,
-    userOpHash,
-  });
+  try {
+    const unsignedUserOp = await createUnsignedUserOp({
+      transaction: executeTx,
+      factoryContract: options.factoryContract,
+      accountContract: options.accountContract,
+      adminAddress: options.personalAccount.address,
+      sponsorGas: options.sponsorGas,
+      overrides: options.overrides,
+    });
+    const signedUserOp = await signUserOp({
+      client: options.client,
+      chain: options.chain,
+      adminAccount: options.personalAccount,
+      entrypointAddress: options.overrides?.entrypointAddress,
+      userOp: unsignedUserOp,
+    });
+    const bundlerOptions: BundlerOptions = {
+      chain: options.chain,
+      client: options.client,
+      bundlerUrl: options.overrides?.bundlerUrl,
+      entrypointAddress: options.overrides?.entrypointAddress,
+    };
+    const userOpHash = await bundleUserOp({
+      options: bundlerOptions,
+      userOp: signedUserOp,
+    });
+    // wait for tx receipt rather than return the userOp hash
+    const receipt = await waitForUserOpReceipt({
+      ...bundlerOptions,
+      userOpHash,
+    });
 
-  // reset the isDeploying flag after every transaction
-  clearAccountDeploying(options.accountContract);
-
-  return {
-    client: options.client,
-    chain: options.chain,
-    transactionHash: receipt.transactionHash,
-  };
+    return {
+      client: options.client,
+      chain: options.chain,
+      transactionHash: receipt.transactionHash,
+    };
+  } finally {
+    // reset the isDeploying flag after every transaction or error
+    clearAccountDeploying(options.accountContract);
+  }
 }
 
 async function getEntrypointFromFactory(

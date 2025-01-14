@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.83.1
+
+### Patch Changes
+
+- [#5918](https://github.com/thirdweb-dev/js/pull/5918) [`5d71415`](https://github.com/thirdweb-dev/js/commit/5d7141561809525ffc293d8274d422ba0ecb2982) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix PayEmbed purchase success callback and insufficient funds displayed when no metadata is passed in
+
+- [#5915](https://github.com/thirdweb-dev/js/pull/5915) [`bfc4778`](https://github.com/thirdweb-dev/js/commit/bfc477833422995187a92d905dc564219b629974) Thanks [@jnsdls](https://github.com/jnsdls)! - respect custom RPC urls passed directly
+
 ## 5.83.0
 
 ### Minor Changes

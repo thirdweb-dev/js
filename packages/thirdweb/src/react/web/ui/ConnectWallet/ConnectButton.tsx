@@ -111,6 +111,8 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * />;
  * ```
  *
+ * Note that this prop doesn't affect ecosystem wallets. Ecosystem wallets will only be converted to smart accounts if the ecosystem owner has enabled account abstraction.
+ *
  * ### Enabling sign in with ethereum (Auth)
  *
  * ```tsx
