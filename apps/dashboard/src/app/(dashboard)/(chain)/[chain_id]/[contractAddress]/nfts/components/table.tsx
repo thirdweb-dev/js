@@ -95,7 +95,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Header: "Description",
         accessor: (row) => row.metadata.description,
         Cell: (cell: CellProps<NFT, string>) => {
-          if (typeof cell.value !== "string") {
+          if (cell.value && typeof cell.value !== "string") {
             return (
               <UnexpectedValueErrorMessage
                 title="Invalid description"
