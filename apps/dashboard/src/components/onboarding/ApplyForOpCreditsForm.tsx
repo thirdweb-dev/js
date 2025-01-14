@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 import type { Team } from "../../@/api/team";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
+import { applyOpSponsorship } from "./applyOpSponsorship";
 
 interface FormSchema {
   firstname: string;
@@ -98,9 +99,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         });
 
         try {
-          const response = await fetch("/api/apply-op-sponsorship", {
-            method: "POST",
-            body: JSON.stringify({ fields }),
+          const response = await applyOpSponsorship({
+            fields,
           });
 
           if (!response.ok) {
@@ -112,8 +112,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             });
             throw new Error("Form submission failed");
           }
-
-          await response.json();
 
           trackEvent({
             category: "op-sponsorship",

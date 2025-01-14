@@ -1,3 +1,5 @@
+"use client";
+
 import { type Theme, extendTheme } from "@chakra-ui/react";
 import { getColor, mode } from "@chakra-ui/theme-tools";
 import { skeletonTheme } from "./chakra-componens/skeleton";

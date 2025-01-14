@@ -9,7 +9,7 @@ import { getChainMetadata } from "../../../utils";
 import type { JSX } from "react";
 
 type ChainListCardProps = {
-  favoriteButton: JSX.Element;
+  favoriteButton: JSX.Element | undefined;
   chainId: number;
   chainSlug: string;
   chainName: string;

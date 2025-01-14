@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
 import {
   AllFilters,
   ChainOptionsFilter,
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
 export default async function ChainListPage(props: {
   searchParams: Promise<SearchParams>;
 }) {
+  const authToken = await getAuthToken();
   const headersList = await headers();
   const viewportWithHint = Number(
     headersList.get("Sec-Ch-Viewport-Width") || 0,
@@ -70,7 +72,11 @@ export default async function ChainListPage(props: {
       </header>
       <div className="h-10" />
       {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
-      <ChainsData searchParams={searchParams} activeView={activeView} />
+      <ChainsData
+        searchParams={searchParams}
+        activeView={activeView}
+        isLoggedIn={!!authToken}
+      />
     </section>
   );
 }

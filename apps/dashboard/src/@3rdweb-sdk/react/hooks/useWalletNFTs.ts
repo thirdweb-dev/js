@@ -1,5 +1,6 @@
+import { getWalletNFTs } from "@/actions/getWalletNFTs";
 import { useQuery } from "@tanstack/react-query";
-import type { WalletNFTApiReturn } from "pages/api/wallet/nfts/[chainId]";
+import invariant from "tiny-invariant";
 
 export function useWalletNFTs(params: {
   chainId: number;
@@ -8,10 +9,11 @@ export function useWalletNFTs(params: {
   return useQuery({
     queryKey: ["walletNfts", params.chainId, params.walletAddress],
     queryFn: async () => {
-      const response = await fetch(
-        `/api/wallet/nfts/${params.chainId}?owner=${params.walletAddress}`,
-      );
-      return (await response.json()) as WalletNFTApiReturn;
+      invariant(params.walletAddress, "walletAddress is required");
+      return getWalletNFTs({
+        chainId: params.chainId,
+        owner: params.walletAddress,
+      });
     },
     enabled: !!params.walletAddress,
   });

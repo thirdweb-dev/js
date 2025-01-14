@@ -65,12 +65,7 @@ export function TableData({ children }: { children: React.ReactNode }) {
 }
 
 export function TableHeadingRow({ children }: { children: React.ReactNode }) {
-  return (
-    <tr className="sticky top-0 z-10 bg-background">
-      {children}
-      <div className="absolute inset-0 z-10 border-border border-b" />
-    </tr>
-  );
+  return <tr className="sticky top-0 z-10 bg-background">{children}</tr>;
 }
 
 export function TableHeading(props: { children: React.ReactNode }) {

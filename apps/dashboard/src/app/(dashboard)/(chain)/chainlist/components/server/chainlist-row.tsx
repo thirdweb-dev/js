@@ -17,7 +17,7 @@ import { getChainMetadata } from "../../../utils";
 import type { JSX } from "react";
 
 type ChainListRowProps = {
-  favoriteButton: JSX.Element;
+  favoriteButton: JSX.Element | undefined;
   chainId: number;
   chainSlug: string;
   chainName: string;
@@ -40,11 +40,11 @@ export async function ChainListRow({
   const chainMetadata = await getChainMetadata(chainId);
   return (
     <TableRow linkBox className="hover:bg-muted/50">
-      <TableCell>{favoriteButton}</TableCell>
       {/* Name */}
       <TableCell>
         <div className="flex w-[370px] flex-row items-center gap-4">
           <div className="flex items-center gap-2">
+            {favoriteButton && <div className="mr-6"> {favoriteButton} </div>}
             <ChainIcon iconUrl={iconUrl} className="size-6" />
             <Link
               href={`/${chainSlug}`}
