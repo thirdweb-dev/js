@@ -1,122 +1,127 @@
 {
-	"$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
-	"tagDefinitions": [
-		{
-			"tagName": "@example",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@contract",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@wallet",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@extension",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@rpc",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@transaction",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@connectWallet",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@theme",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@locale",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@component",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@walletConfig",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@walletConnection",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@walletUtils",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@buyCrypto",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@storage",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@auth",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@utils",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@chain",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@modules",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@social",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@client",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@nft",
-			"syntaxKind": "block"
-		},
-		{
-			"tagName": "@account",
-			"syntaxKind": "block"
-		}
-	],
-	"supportForTags": {
-		"@contract": true,
-		"@wallet": true,
-		"@extension": true,
-		"@rpc": true,
-		"@transaction": true,
-		"@connectWallet": true,
-		"@theme": true,
-		"@locale": true,
-		"@component": true,
-		"@walletConfig": true,
-		"@walletConnection": true,
-		"@walletUtils": true,
-		"@buyCrypto": true,
-		"@storage": true,
-		"@auth": true,
-		"@utils": true,
-		"@chain": true,
-		"@modules": true,
-		"@social": true,
-		"@client": true,
-		"@nft": true,
-		"@account": true,
-		"@beta": true
-	}
+  "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+  "tagDefinitions": [
+    {
+      "tagName": "@example",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@contract",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@wallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@extension",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@rpc",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@transaction",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@connectWallet",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@theme",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@locale",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@component",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletConfig",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletConnection",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@walletUtils",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@buyCrypto",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@storage",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@auth",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@utils",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@chain",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@modules",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@social",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@client",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@nft",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@account",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@nebula",
+      "syntaxKind": "block"
+    }
+  ],
+  "supportForTags": {
+    "@contract": true,
+    "@wallet": true,
+    "@extension": true,
+    "@rpc": true,
+    "@transaction": true,
+    "@connectWallet": true,
+    "@theme": true,
+    "@locale": true,
+    "@component": true,
+    "@walletConfig": true,
+    "@walletConnection": true,
+    "@walletUtils": true,
+    "@buyCrypto": true,
+    "@storage": true,
+    "@auth": true,
+    "@utils": true,
+    "@chain": true,
+    "@modules": true,
+    "@social": true,
+    "@client": true,
+    "@nft": true,
+    "@account": true,
+    "@beta": true,
+    "@nebula": true
+  }
 }

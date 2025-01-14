@@ -9,6 +9,7 @@ const app = await Application.bootstrapWithPlugins({
     "src/extensions/modules/**/index.ts",
     "src/adapters/eip1193/index.ts",
     "src/wallets/smart/presets/index.ts",
+    "src/ai/index.ts",
   ],
   exclude: [
     "src/exports/*.native.ts",
