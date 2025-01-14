@@ -1,13 +1,8 @@
-import type { Chain } from "../../../chains/types.js";
-import {
-  COINBASE,
-  METAMASK,
-  RAINBOW,
-  ZERION,
-} from "../../../wallets/constants.js";
-import { createWallet } from "../../../wallets/create-wallet.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { AppMetadata } from "../../../wallets/types.js";
+import type { Chain } from "../chains/types.js";
+import { COINBASE, METAMASK, RAINBOW, ZERION } from "./constants.js";
+import { createWallet } from "./create-wallet.js";
+import type { Wallet } from "./interfaces/wallet.js";
+import type { AppMetadata } from "./types.js";
 
 /**
  * @internal

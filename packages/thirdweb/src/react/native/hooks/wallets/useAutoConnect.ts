@@ -1,6 +1,6 @@
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
+import type { AutoConnectProps } from "../../../../wallets/connection/types.js";
 import { createWallet } from "../../../../wallets/native/create-wallet.js";
-import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
 import { useAutoConnectCore } from "../../../core/hooks/wallets/useAutoConnect.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 
