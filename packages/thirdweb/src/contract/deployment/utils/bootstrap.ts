@@ -167,6 +167,7 @@ export async function deployCloneFactory(options: ClientAndChainAndAccount) {
     ...options,
     contractId: "TWCloneFactory",
     constructorParams: { _trustedForwarder: forwarder.address },
+    publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936", // TODO: use default publisher
   });
 }
 
@@ -218,7 +219,10 @@ export async function getOrDeployInfraContract(
   const contractMetadata = await fetchPublishedContractMetadata({
     client: options.client,
     contractId: options.contractId,
-    publisher: options.publisher,
+    publisher:
+      options.contractId === "TWCloneFactory"
+        ? "0x6453a486d52e0EB6E79Ec4491038E2522a926936" // TODO: use default publisher
+        : options.publisher,
     version: options.version,
   });
   return getOrDeployInfraContractFromMetadata({
