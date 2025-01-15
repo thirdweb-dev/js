@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.6.0
+
+### Minor Changes
+
+- [#5950](https://github.com/thirdweb-dev/js/pull/5950) [`c290997`](https://github.com/thirdweb-dev/js/commit/c290997b11b547618fd6e46281ecf82ce4c5a550) Thanks [@nischitpra](https://github.com/nischitpra)! - track usage call once per ratelimit window
+
 ## 0.5.1
 
 ### Patch Changes
