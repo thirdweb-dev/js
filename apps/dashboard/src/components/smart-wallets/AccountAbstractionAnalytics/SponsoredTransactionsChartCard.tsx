@@ -52,18 +52,18 @@ export function SponsoredTransactionsChartCard(props: {
       if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: format(new Date(stat.date), "MMM dd"),
-          [chain?.name || chainId || "Unknown"]:
-            Math.round(stat.sponsoredUsd * 100) / 100,
+          [chain?.name || chainId || "Unknown"]: stat.successful,
         } as ChartData);
       } else {
         chartData[chain?.name || chainId || "Unknown"] =
           (chartData[chain?.name || chainId || "Unknown"] || 0) +
-          Math.round(stat.sponsoredUsd * 100) / 100;
+          stat.successful;
       }
 
       chainIdToVolumeMap.set(
         chain?.name || chainId || "Unknown",
-        stat.sponsoredUsd + (chainIdToVolumeMap.get(chainId || "Unknown") || 0),
+        stat.successful +
+          (chainIdToVolumeMap.get(chain?.name || chainId || "Unknown") || 0),
       );
     }
 
