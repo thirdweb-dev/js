@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import NextImage from "next/image";
+import NextImage, { type StaticImageData } from "next/image";
 import {
   Heading,
   Text,
@@ -9,7 +9,7 @@ import {
 
 interface GuideCardProps
   extends Pick<TrackedLinkProps, "category" | "label" | "trackingProps"> {
-  image: string;
+  image: string | StaticImageData;
   title: string;
   description?: string;
   link: string;

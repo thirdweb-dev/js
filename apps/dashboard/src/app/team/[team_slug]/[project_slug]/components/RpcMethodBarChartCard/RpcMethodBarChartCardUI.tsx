@@ -6,14 +6,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatTickerNumber } from "lib/format-utils";
+import { formatDate } from "date-fns";
 import { useMemo } from "react";
 import {
   Bar,
   CartesianGrid,
   BarChart as RechartsBarChart,
   XAxis,
-  YAxis,
 } from "recharts";
 import type { RpcMethodStats } from "types/analytics";
 import { EmptyStateCard } from "../../../../components/Analytics/EmptyStateCard";
@@ -21,66 +20,88 @@ import { EmptyStateCard } from "../../../../components/Analytics/EmptyStateCard"
 export function RpcMethodBarChartCardUI({
   rawData,
 }: { rawData: RpcMethodStats[] }) {
-  const uniqueMethods = useMemo(
-    () => Array.from(new Set(rawData.map((d) => d.evmMethod))),
-    [rawData],
-  );
-  const uniqueDates = useMemo(
-    () => Array.from(new Set(rawData.map((d) => d.date))),
-    [rawData],
-  );
+  const maxMethodsToDisplay = 10;
 
-  const data = useMemo(() => {
-    return uniqueDates.map((date) => {
-      const dateData: { [key: string]: string | number } = { date };
-      for (const method of uniqueMethods) {
-        const methodData = rawData.find(
-          (d) => d.date === date && d.evmMethod === method,
-        );
-        dateData[method] = methodData?.count ?? 0;
+  const { data, methodsToDisplay, chartConfig, isAllEmpty } = useMemo(() => {
+    const dateToValueMap: Map<string, Record<string, number>> = new Map();
+    const methodNameToCountMap: Map<string, number> = new Map();
+
+    for (const dataItem of rawData) {
+      const { date, evmMethod, count } = dataItem;
+      let dateRecord = dateToValueMap.get(date);
+
+      if (!dateRecord) {
+        dateRecord = {};
+        dateToValueMap.set(date, dateRecord);
       }
 
-      // If we have too many methods to display well, add "other" and group the lowest keys for each time period
-      if (uniqueMethods.length > 5) {
-        // If we haven't added "other" as a key yet, add it
-        if (!uniqueMethods.includes("Other")) {
-          uniqueMethods.push("Other");
-        }
+      dateRecord[evmMethod] = (dateRecord[evmMethod] || 0) + count;
+      methodNameToCountMap.set(
+        evmMethod,
+        (methodNameToCountMap.get(evmMethod) || 0) + count,
+      );
+    }
 
-        // Sort the methods by their count for the time period
-        const sortedMethods = uniqueMethods
-          .filter((m) => m !== "Other")
-          .sort(
-            (a, b) =>
-              ((dateData[b] as number) ?? 0) - ((dateData[a] as number) ?? 0),
-          );
+    // sort methods by count (highest count first) - remove the ones with 0 count
+    const sortedMethodsByCount = Array.from(methodNameToCountMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .filter((x) => x[1] > 0);
 
-        dateData.Other = 0;
-        for (const method of sortedMethods.slice(5, sortedMethods.length)) {
-          dateData.Other += (dateData[method] as number) ?? 0;
-          delete dateData[method];
+    const methodsToDisplayArray = sortedMethodsByCount
+      .slice(0, maxMethodsToDisplay)
+      .map(([method]) => method);
+    const methodsToDisplay = new Set(methodsToDisplayArray);
+
+    // loop over each entry in dateToValueMap
+    // replace the method that is not in methodsToDisplay with "Other"
+    // add total key that is the sum of all methods
+    for (const dateRecord of dateToValueMap.values()) {
+      // calculate total
+      let totalCountOfDay = 0;
+      for (const count of Object.values(dateRecord)) {
+        totalCountOfDay += count;
+      }
+
+      for (const method of Object.keys(dateRecord)) {
+        if (!methodsToDisplay.has(method)) {
+          dateRecord.Other =
+            (dateRecord.Other || 0) + (dateRecord[method] || 0);
+          delete dateRecord[method];
         }
       }
-      return dateData;
-    });
-  }, [uniqueDates, uniqueMethods, rawData]);
 
-  const config: ChartConfig = useMemo(() => {
-    const config: ChartConfig = {};
-    for (const method of uniqueMethods) {
-      config[method] = {
+      dateRecord.total = totalCountOfDay;
+    }
+
+    const returnValue: Array<Record<string, string | number>> = [];
+    for (const [date, value] of dateToValueMap.entries()) {
+      returnValue.push({ date, ...value });
+    }
+
+    const chartConfig: ChartConfig = {};
+    for (const method of methodsToDisplayArray) {
+      chartConfig[method] = {
         label: method,
       };
     }
-    return config;
-  }, [uniqueMethods]);
 
-  if (
-    data.length === 0 ||
-    data.every((date) =>
-      Object.keys(date).every((k) => k === "date" || date[k] === 0),
-    )
-  ) {
+    // if we need to display "Other" methods
+    if (sortedMethodsByCount.length > maxMethodsToDisplay) {
+      chartConfig.Other = {
+        label: "Other",
+      };
+      methodsToDisplayArray.push("Other");
+    }
+
+    return {
+      data: returnValue,
+      methodsToDisplay: methodsToDisplayArray,
+      chartConfig,
+      isAllEmpty: returnValue.every((d) => d.total === 0),
+    };
+  }, [rawData]);
+
+  if (data.length === 0 || isAllEmpty) {
     return <EmptyStateCard metric="RPC" link="https://portal.thirdweb.com/" />;
   }
 
@@ -93,7 +114,7 @@ export function RpcMethodBarChartCardUI({
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <ChartContainer
-          config={config}
+          config={chartConfig}
           className="aspect-auto h-[250px] w-full pt-6"
         >
           <RechartsBarChart
@@ -105,6 +126,7 @@ export function RpcMethodBarChartCardUI({
             }}
           >
             <CartesianGrid vertical={false} />
+
             <XAxis
               dataKey="date"
               tickLine={false}
@@ -119,36 +141,38 @@ export function RpcMethodBarChartCardUI({
                 });
               }}
             />
-            <YAxis
-              width={48}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value: number) => formatTickerNumber(value)}
-            />
+
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    });
+                  labelFormatter={(d) => formatDate(new Date(d), "MMM d")}
+                  valueFormatter={(_value, _item) => {
+                    const value = typeof _value === "number" ? _value : 0;
+                    const payload = _item as {
+                      payload: {
+                        total: number;
+                      };
+                    };
+                    const total =
+                      payload.payload.total === 0 ? 1 : payload.payload.total;
+                    return (
+                      <span className="inline-flex gap-1.5">
+                        {`${((value / total) * 100).toFixed(2)}`}
+                        <span className="text-muted-foreground">%</span>
+                      </span>
+                    );
                   }}
-                  valueFormatter={(v: unknown) =>
-                    formatTickerNumber(v as number)
-                  }
                 />
               }
             />
-            {uniqueMethods.map((method, idx) => (
+            {methodsToDisplay.map((method, idx) => (
               <Bar
                 key={method}
                 stackId="a"
                 dataKey={method}
                 radius={[
-                  idx === uniqueMethods.length - 1 ? 4 : 0,
-                  idx === uniqueMethods.length - 1 ? 4 : 0,
+                  idx === methodsToDisplay.length - 1 ? 4 : 0,
+                  idx === methodsToDisplay.length - 1 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                 ]}

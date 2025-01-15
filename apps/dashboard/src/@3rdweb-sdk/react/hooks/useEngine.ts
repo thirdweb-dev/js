@@ -1,8 +1,8 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ResultItem } from "app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
@@ -53,15 +53,23 @@ export function useEngineInstances() {
   return useQuery({
     queryKey: engineKeys.instances(address || ""),
     queryFn: async (): Promise<EngineInstance[]> => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
+      type Result = {
+        data?: {
+          instances: EngineInstance[];
+        };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/engine",
         method: "GET",
       });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      const instances = (json.data?.instances as EngineInstance[]) || [];
+      const json = res.data;
+      const instances = json.data?.instances || [];
 
       return instances.map((instance) => {
         // Sanitize: Add trailing slash if not present.
@@ -210,16 +218,19 @@ export function useEngineGetDeploymentPublicConfiguration(
   return useQuery<DeploymentPublicConfigurationResponse>({
     queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
-        { method: "GET" },
-      );
+      const res = await apiServerProxy<{
+        data: DeploymentPublicConfigurationResponse;
+      }>({
+        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
+        method: "GET",
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      return json.data as DeploymentPublicConfigurationResponse;
+      const json = res.data;
+      return json.data;
     },
   });
 }
@@ -233,22 +244,19 @@ interface UpdateDeploymentInput {
 export function useEngineUpdateDeployment() {
   return useMutation({
     mutationFn: async (input: UpdateDeploymentInput) => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            serverVersion: input.serverVersion,
-          }),
+      const res = await apiServerProxy({
+        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      // we never use the response body
-      res.body?.cancel();
+        body: JSON.stringify({
+          serverVersion: input.serverVersion,
+        }),
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
     },
   });
@@ -262,13 +270,13 @@ export function useEngineRemoveFromDashboard() {
     mutationFn: async (instanceId: string) => {
       invariant(instanceId, "instance is required");
 
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
+      const res = await apiServerProxy({
+        pathname: `/v1/engine/${instanceId}`,
         method: "DELETE",
       });
-      // we never use the response body
-      res.body?.cancel();
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
     },
 
@@ -296,20 +304,17 @@ export function useEngineDeleteCloudHosted() {
       reason,
       feedback,
     }: DeleteCloudHostedInput) => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ reason, feedback }),
+      const res = await apiServerProxy({
+        pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      // we never use the response body
-      res.body?.cancel();
+        body: JSON.stringify({ reason, feedback }),
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
     },
 
@@ -333,21 +338,19 @@ export function useEngineEditInstance() {
 
   return useMutation({
     mutationFn: async ({ instanceId, name, url }: EditEngineInstanceInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
+      const res = await apiServerProxy({
+        pathname: `/v1/engine/${instanceId}`,
         method: "PUT",
-
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ name, url }),
       });
-      // we never use the response body
-      res.body?.cancel();
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
     },
-
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: engineKeys.instances(address || ""),
@@ -1675,14 +1678,16 @@ export function useEngineSystemMetrics(engineId: string) {
   return useQuery({
     queryKey: engineKeys.systemMetrics(engineId),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,
-      );
+      const res = await apiServerProxy({
+        method: "GET",
+        pathname: `/v1/engine/${engineId}/metrics`,
+      });
+
       if (!res.ok) {
         setEnabled(false);
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
-      const json = (await res.json()) as EngineResourceMetrics;
+      const json = res.data as EngineResourceMetrics;
       return json;
     },
 
@@ -1708,16 +1713,19 @@ export function useEngineAlertRules(engineId: string) {
   return useQuery({
     queryKey: engineKeys.alertRules(engineId),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/alert-rules`,
-        { method: "GET" },
-      );
+      const res = await apiServerProxy<{
+        data: EngineAlertRule[];
+      }>({
+        pathname: `/v1/engine/${engineId}/alert-rules`,
+        method: "GET",
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      return json.data as EngineAlertRule[];
+      const json = res.data;
+      return json.data;
     },
   });
 }
@@ -1734,16 +1742,23 @@ export function useEngineAlerts(engineId: string, limit: number, offset = 0) {
   return useQuery({
     queryKey: engineKeys.alerts(engineId),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/alerts?limit=${limit}&offset=${offset}`,
-        { method: "GET" },
-      );
+      const res = await apiServerProxy<{
+        data: EngineAlert[];
+      }>({
+        pathname: `/v1/engine/${engineId}/alerts`,
+        searchParams: {
+          limit: `${limit}`,
+          offset: `${offset}`,
+        },
+        method: "GET",
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      return json.data as EngineAlert[];
+      const json = res.data;
+      return json.data;
     },
   });
 }
@@ -1778,16 +1793,19 @@ export function useEngineNotificationChannels(engineId: string) {
   return useQuery({
     queryKey: engineKeys.notificationChannels(engineId),
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
-        { method: "GET" },
-      );
+      const res = await apiServerProxy<{
+        data: EngineNotificationChannel[];
+      }>({
+        pathname: `/v1/engine/${engineId}/notification-channels`,
+        method: "GET",
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      return json.data as EngineNotificationChannel[];
+      const json = res.data;
+      return json.data;
     },
   });
 }
@@ -1803,22 +1821,23 @@ export function useEngineCreateNotificationChannel(engineId: string) {
 
   return useMutation({
     mutationFn: async (input: CreateNotificationChannelInput) => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(input),
+      const res = await apiServerProxy<{
+        data: EngineNotificationChannel;
+      }>({
+        pathname: `/v1/engine/${engineId}/notification-channels`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(input),
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
 
-      const json = await res.json();
-      return json.data as EngineNotificationChannel;
+      const json = res.data;
+      return json.data;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -1833,16 +1852,14 @@ export function useEngineDeleteNotificationChannel(engineId: string) {
 
   return useMutation({
     mutationFn: async (notificationChannelId: string) => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const res = await apiServerProxy({
+        pathname: `/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
+        method: "DELETE",
+      });
+
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+        throw new Error(res.error);
       }
-      res.body?.cancel();
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({

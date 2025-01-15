@@ -1,3 +1,4 @@
+import { payServerProxy } from "@/actions/proxies";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -71,29 +72,26 @@ export function usePayPurchases(options: PayPurchaseOptions) {
 }
 
 export async function getPayPurchases(options: PayPurchaseOptions) {
-  const searchParams = new URLSearchParams();
-  searchParams.append("skip", `${options.start}`);
-  searchParams.append("take", `${options.count}`);
-
-  searchParams.append("clientId", options.clientId);
-  searchParams.append("fromDate", `${options.from.getTime()}`);
-  searchParams.append("toDate", `${options.to.getTime()}`);
-
-  const res = await fetch(
-    `/api/server-proxy/pay/stats/purchases/v1?${searchParams.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const res = await payServerProxy({
+    pathname: "/stats/purchases/v1",
+    searchParams: {
+      skip: `${options.start}`,
+      take: `${options.count}`,
+      clientId: options.clientId,
+      fromDate: `${options.from.getTime()}`,
+      toDate: `${options.to.getTime()}`,
     },
-  );
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch pay volume");
   }
 
-  const resJSON = (await res.json()) as Response;
+  const resJSON = res.data as Response;
 
   return resJSON.result.data;
 }

@@ -2,6 +2,7 @@
 
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
+import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -16,7 +17,6 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import { usePreloadWalletProviders } from "../../utils/usePreloadWalletProviders.js";
-import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { Modal } from "../components/Modal.js";
 import { Spinner } from "../components/Spinner.js";

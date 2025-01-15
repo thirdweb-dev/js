@@ -114,7 +114,7 @@ async function ProjectAnalytics(props: {
     inAppWalletUsage,
     userOpUsageTimeSeries,
     userOpUsage,
-  ] = await Promise.all([
+  ] = await Promise.allSettled([
     // Aggregated wallet connections
     getWalletConnections({
       clientId: project.publishableKey,
@@ -153,7 +153,8 @@ async function ProjectAnalytics(props: {
 
   return (
     <div className="flex grow flex-col gap-6">
-      {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
+      {walletUserStatsTimeSeries.status === "fulfilled" &&
+      walletUserStatsTimeSeries.value.some((w) => w.totalUsers !== 0) ? (
         <div className="">
           <UsersChartCard
             chartKey={
@@ -163,7 +164,7 @@ async function ProjectAnalytics(props: {
                 | "newUsers"
                 | "returningUsers") ?? "activeUsers"
             }
-            userStats={walletUserStatsTimeSeries}
+            userStats={walletUserStatsTimeSeries.value}
             searchParams={searchParams}
           />
         </div>
@@ -180,16 +181,18 @@ async function ProjectAnalytics(props: {
         clientId={project.publishableKey}
       />
       <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
-        {walletConnections.length > 0 ? (
-          <WalletDistributionCard data={walletConnections} />
+        {walletConnections.status === "fulfilled" &&
+        walletConnections.value.length > 0 ? (
+          <WalletDistributionCard data={walletConnections.value} />
         ) : (
           <EmptyStateCard
             metric="Connect"
             link="https://portal.thirdweb.com/connect/quickstart"
           />
         )}
-        {inAppWalletUsage.length > 0 ? (
-          <AuthMethodDistributionCard data={inAppWalletUsage} />
+        {inAppWalletUsage.status === "fulfilled" &&
+        inAppWalletUsage.value.length > 0 ? (
+          <AuthMethodDistributionCard data={inAppWalletUsage.value} />
         ) : (
           <EmptyStateCard
             metric="In-App Wallets"
@@ -197,12 +200,14 @@ async function ProjectAnalytics(props: {
           />
         )}
       </div>
-      {userOpUsage.length > 0 ? (
+      {userOpUsageTimeSeries.status === "fulfilled" &&
+      userOpUsage.status === "fulfilled" &&
+      userOpUsage.value.length > 0 ? (
         <div className="">
           <TotalSponsoredCard
             searchParams={searchParams}
-            data={userOpUsageTimeSeries}
-            aggregatedData={userOpUsage}
+            data={userOpUsageTimeSeries.value}
+            aggregatedData={userOpUsage.value}
           />
         </div>
       ) : (

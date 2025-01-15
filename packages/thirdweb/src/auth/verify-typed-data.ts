@@ -1,5 +1,5 @@
-import type { Signature, TypedData, TypedDataDefinition } from "viem";
-import { hashTypedData } from "viem";
+import type * as ox__Signature from "ox/Signature";
+import * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Hex } from "../utils/encoding/hex.js";
@@ -7,12 +7,14 @@ import type { HashTypedDataParams } from "../utils/hashing/hashTypedData.js";
 import { type VerifyHashParams, verifyHash } from "./verify-hash.js";
 
 export type VerifyTypedDataParams<
-  typedData extends TypedData | Record<string, unknown> = TypedData,
+  typedData extends
+    | ox__TypedData.TypedData
+    | Record<string, unknown> = ox__TypedData.TypedData,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
 > = Omit<VerifyHashParams, "hash"> &
-  TypedDataDefinition<typedData, primaryType> & {
+  ox__TypedData.Definition<typedData, primaryType> & {
     address: string;
-    signature: string | Uint8Array | Signature;
+    signature: string | Uint8Array | ox__Signature.Signature;
     client: ThirdwebClient;
     chain: Chain;
     accountFactory?: {
@@ -80,7 +82,7 @@ export type VerifyTypedDataParams<
  * @auth
  */
 export async function verifyTypedData<
-  typedData extends TypedData | Record<string, unknown>,
+  typedData extends ox__TypedData.TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain",
 >({
   address,
@@ -93,7 +95,7 @@ export async function verifyTypedData<
   primaryType,
   types,
 }: VerifyTypedDataParams<typedData, primaryType>): Promise<boolean> {
-  const messageHash = hashTypedData({
+  const messageHash = ox__TypedData.getSignPayload({
     message,
     domain,
     primaryType,
