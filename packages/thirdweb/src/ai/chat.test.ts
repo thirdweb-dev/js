@@ -4,7 +4,8 @@ import { TEST_ACCOUNT_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import * as Nebula from "./index.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("chat", () => {
+// reenable manually for nebula testing
+describe.runIf(process.env.TW_SECRET_KEY).skip("chat", () => {
   it("should respond with a message", async () => {
     const response = await Nebula.chat({
       client: TEST_CLIENT,
