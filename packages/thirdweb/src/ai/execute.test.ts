@@ -5,7 +5,8 @@ import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import { getContract } from "../contract/contract.js";
 import * as Nebula from "./index.js";
 
-describe("execute", () => {
+// reenable manually for nebula testing
+describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
   it("should execute a tx", async () => {
     await expect(
       Nebula.execute({
