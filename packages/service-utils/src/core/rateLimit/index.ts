@@ -76,7 +76,7 @@ export async function rateLimit(args: {
      * Only track rate limit when its hit for the first time.
      * Not waiting for tracking to complete as user doesn't need to wait.
      */
-    if (requestCount <= limitPerWindow + 1 && project?.id) {
+    if (requestCount === limitPerWindow + 1 && project?.id) {
       updateRateLimitedAt(project.id, serviceConfig).catch(() => {
         // no-op
       });
