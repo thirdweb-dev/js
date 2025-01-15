@@ -20,12 +20,14 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button, FormLabel } from "tw-components";
 import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {
   instanceUrl: string;
   authToken: string;
+  supportedWebhookConfig: boolean;
 }
 
 const WEBHOOK_EVENT_TYPES = [
@@ -41,6 +43,7 @@ const WEBHOOK_EVENT_TYPES = [
 export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
   instanceUrl,
   authToken,
+  supportedWebhookConfig = false,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createWebhook } = useEngineCreateWebhook({
@@ -74,7 +77,22 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
           className="!bg-background rounded-lg border border-border"
           as="form"
           onSubmit={form.handleSubmit((data) => {
-            createWebhook(data, {
+            let finalData: CreateWebhookInput = data;
+
+            if (supportedWebhookConfig) {
+              const { config, ..._data } = data;
+              finalData = _data;
+              if (config) {
+                try {
+                  finalData.config = JSON.parse(config);
+                } catch (_) {
+                  toast.error("Config must be a valid json string");
+                  return;
+                }
+              }
+            }
+
+            createWebhook(finalData, {
               onSuccess: () => {
                 onSuccess();
                 onClose();
@@ -128,6 +146,16 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
                   {...form.register("url", { required: true })}
                 />
               </FormControl>
+              {supportedWebhookConfig && (
+                <FormControl>
+                  <FormLabel>Config</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder={`{"address": "0x1234...5678", "chainId": 1, "threshold": 200.5}`}
+                    {...form.register("config")}
+                  />
+                </FormControl>
+              )}
             </Flex>
           </ModalBody>
 
