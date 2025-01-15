@@ -62,7 +62,8 @@ export function SponsoredTransactionsChartCard(props: {
 
       chainIdToVolumeMap.set(
         chain?.name || chainId || "Unknown",
-        stat.successful + (chainIdToVolumeMap.get(chainId || "Unknown") || 0),
+        stat.successful +
+          (chainIdToVolumeMap.get(chain?.name || chainId || "Unknown") || 0),
       );
     }
 
