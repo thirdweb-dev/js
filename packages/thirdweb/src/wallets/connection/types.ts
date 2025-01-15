@@ -1,8 +1,8 @@
-import type { Chain } from "../../../../chains/types.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
-import type { AppMetadata } from "../../../../wallets/types.js";
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import type { Wallet } from "../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../wallets/smart/types.js";
+import type { AppMetadata } from "../../wallets/types.js";
 
 export type AutoConnectProps = {
   /**

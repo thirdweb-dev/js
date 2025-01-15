@@ -1,15 +1,11 @@
+"use server";
+
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { defineDashboardChain } from "lib/defineDashboardChain";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 
-export type BalanceQueryRequest = {
-  chainId: number;
-  address: string;
-};
-
-export type BalanceQueryResponse = Array<{
+type BalanceQueryResponse = Array<{
   balance: string;
   decimals: number;
   name?: string;
@@ -18,21 +14,30 @@ export type BalanceQueryResponse = Array<{
   display_balance: string;
 }>;
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(400).json({ error: "invalid method" });
-  }
+export async function getTokenBalancesFromMoralis(params: {
+  contractAddress: string;
+  chainId: number;
+}): Promise<
+  | { data: BalanceQueryResponse; error: undefined }
+  | {
+      data: undefined;
+      error: string;
+    }
+> {
+  const { contractAddress, chainId } = params;
 
-  const { chainId, address } = req.body;
-  if (!isAddress(address)) {
-    return res.status(400).json({ error: "invalid address" });
+  if (!isAddress(contractAddress)) {
+    return {
+      data: undefined,
+      error: "invalid address",
+    };
   }
 
   const getNativeBalance = async (): Promise<BalanceQueryResponse> => {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineDashboardChain(chainId, undefined);
     const balance = await getWalletBalance({
-      address,
+      address: contractAddress,
       chain,
       client: getThirdwebClient(),
     });
@@ -50,7 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const getTokenBalances = async (): Promise<BalanceQueryResponse> => {
     const _chain = encodeURIComponent(`0x${chainId?.toString(16)}`);
-    const _address = encodeURIComponent(address);
+    const _address = encodeURIComponent(contractAddress);
     const tokenBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/erc20?chain=${_chain}`;
 
     const resp = await fetch(tokenBalanceEndpoint, {
@@ -59,6 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         "x-api-key": process.env.MORALIS_API_KEY || "",
       },
     });
+
     if (!resp.ok) {
       resp.body?.cancel();
       return [];
@@ -76,7 +82,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     getTokenBalances(),
   ]);
 
-  return res.status(200).json([...nativeBalance, ...tokenBalances]);
-};
-
-export default handler;
+  return {
+    error: undefined,
+    data: [...nativeBalance, ...tokenBalances],
+  };
+}

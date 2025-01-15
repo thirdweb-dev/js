@@ -1,5 +1,6 @@
-import type { Abi } from "abitype";
-import { decodeAbiParameters } from "viem";
+import type * as ox__Abi from "ox/Abi";
+import * as ox__AbiConstructor from "ox/AbiConstructor";
+import * as ox__AbiParameters from "ox/AbiParameters";
 import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import type { ThirdwebContract } from "../contract.js";
@@ -10,18 +11,8 @@ type FetchConstructorParamsOptions = {
   contract: ThirdwebContract;
   explorerApiUrl: string;
   explorerApiKey: string;
-  abi: Abi;
+  abi: ox__Abi.Abi;
 };
-
-// TODO: move to abi helpers (?)
-function extractConstructorParamsFromAbi(abi: Abi) {
-  for (const input of abi) {
-    if (input.type === "constructor") {
-      return input.inputs || [];
-    }
-  }
-  return [];
-}
 
 const RequestStatus = {
   OK: "1",
@@ -37,7 +28,8 @@ const RequestStatus = {
 export async function fetchConstructorParams(
   options: FetchConstructorParamsOptions,
 ): Promise<string> {
-  const constructorParamTypes = extractConstructorParamsFromAbi(options.abi);
+  const abiConstructor = ox__AbiConstructor.fromAbi(options.abi);
+  const constructorParamTypes = ox__AbiParameters.from(abiConstructor.inputs);
   if (constructorParamTypes.length === 0) {
     return "";
   }
@@ -114,7 +106,8 @@ export async function fetchConstructorParams(
   try {
     // sanity check that the constructor params are valid
     // TODO: should we sanity check after each attempt?
-    decodeAbiParameters(constructorParamTypes, `0x${constructorArgs}`);
+
+    ox__AbiParameters.decode(constructorParamTypes, `0x${constructorArgs}`);
   } catch {
     throw new Error(
       "Verifying this contract requires it to be published. Run `npx thirdweb publish` to publish this contract, then try again.",

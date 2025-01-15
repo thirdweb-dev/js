@@ -25,6 +25,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { mapV4ChainToV5Chain } from "../../../../../contexts/map-chains";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
@@ -62,6 +63,7 @@ export default async function ChainPageLayout(props: {
   const params = await props.params;
   const { children } = props;
   const chain = await getChain(params.chain_id);
+  const authToken = await getAuthToken();
 
   if (params.chain_id !== chain.slug) {
     redirect(chain.slug);
@@ -173,11 +175,13 @@ export default async function ChainPageLayout(props: {
               </h1>
 
               {/* Favorite */}
-              <StarButton
-                chainId={chain.chainId}
-                iconClassName="size-5"
-                className="p-1"
-              />
+              {authToken && (
+                <StarButton
+                  chainId={chain.chainId}
+                  iconClassName="size-5"
+                  className="p-1"
+                />
+              )}
 
               {/* Gas Sponsored badge - Desktop */}
               {chainMetadata?.gasSponsored && (

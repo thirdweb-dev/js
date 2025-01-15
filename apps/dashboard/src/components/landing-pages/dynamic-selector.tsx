@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { type ReactElement, useState } from "react";
