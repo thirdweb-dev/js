@@ -55,7 +55,7 @@ export async function DeployableContractTable(
             return (
               <TableRow
                 linkBox
-                className="cursor-pointer hover:bg-muted/50"
+                className="cursor-pointer hover:bg-card"
                 // biome-ignore lint/suspicious/noArrayIndexKey: static list
                 key={i}
               >

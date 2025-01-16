@@ -14,6 +14,7 @@ import {
 import { ChevronDownIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import {
   AllFilters,
   ChainOptionsFilter,
@@ -56,6 +57,7 @@ export default async function ChainListLayout(props: {
   params: Promise<{ chain_type: "mainnets" | "testnets" }>;
   searchParams: Promise<SearchParams>;
 }) {
+  const authToken = await getAuthToken();
   const headersList = await headers();
   const viewportWithHint = Number(
     headersList.get("Sec-Ch-Viewport-Width") || 0,
@@ -144,7 +146,11 @@ export default async function ChainListLayout(props: {
         </header>
         <div className="h-10" />
         {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
-        <ChainsData searchParams={searchParams} activeView={activeView} />
+        <ChainsData
+          searchParams={searchParams}
+          activeView={activeView}
+          isLoggedIn={!!authToken}
+        />
       </section>
     </>
   );

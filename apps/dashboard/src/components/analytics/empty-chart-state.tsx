@@ -37,7 +37,7 @@ export function EmptyChartState({ children }: { children?: React.ReactNode }) {
 
 export function LoadingChartState() {
   return (
-    <div className="pointer-events-none flex h-full w-full items-center justify-center rounded-lg bg-muted/50">
+    <div className="pointer-events-none flex h-full w-full items-center justify-center rounded-lg bg-card">
       <Spinner className="size-10" />
     </div>
   );

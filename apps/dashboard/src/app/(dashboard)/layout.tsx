@@ -8,7 +8,7 @@ export default function DashboardLayout(props: {
   return (
     <ErrorProvider>
       <div className="flex min-h-dvh flex-col bg-background">
-        <div className="border-border border-b bg-muted/50">
+        <div className="border-border border-b bg-card">
           <TeamHeader />
         </div>
         <div className="flex grow flex-col">{props.children}</div>

@@ -359,7 +359,7 @@ const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
       {...rowProps}
       role="group"
       linkBox
-      className="cursor-pointer hover:bg-muted/50"
+      className="cursor-pointer hover:bg-accent/50"
     >
       {row.cells.map((cell, cellIndex) => {
         return (

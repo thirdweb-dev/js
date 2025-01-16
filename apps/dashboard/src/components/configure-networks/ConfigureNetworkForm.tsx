@@ -268,7 +268,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               id="name"
               autoComplete="off"
               placeholder="My Network"
-              className="bg-muted/50 disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
+              className="bg-card disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
               type="text"
               onChange={(e) => {
                 const value = e.target.value;
@@ -310,7 +310,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               disabled={!isFullyEditable}
               placeholder="ETH"
               autoComplete="off"
-              className="bg-muted/50 font-mono disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
+              className="bg-card font-mono disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
               type="text"
               {...form.register("currencySymbol", { required: true })}
             />
@@ -393,7 +393,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       </div>
 
       {/* Buttons  */}
-      <div className="flex flex-col justify-end gap-4 border-border border-t bg-muted/50 p-6 md:flex-row">
+      <div className="flex flex-col justify-end gap-4 border-border border-t bg-card p-6 md:flex-row">
         <Button type="submit" disabled={disableSubmit}>
           {editingChain ? "Update Network" : "Add Network"}
         </Button>

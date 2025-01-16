@@ -47,7 +47,7 @@ export function MobileSidebar(props: {
   const defaultTrigger = (
     <Button
       className={cn(
-        "w-full justify-between gap-2 bg-muted/50 text-left lg:hidden",
+        "w-full justify-between gap-2 bg-card text-left lg:hidden",
         props.triggerClassName,
       )}
       variant="outline"

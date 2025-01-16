@@ -1,7 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { ArrowUpRightIcon } from "lucide-react";
-import { Button } from "../../../../@/components/ui/button";
+import { examplePrompts } from "../data/examplePrompts";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ChatBar } from "./ChatBar";
 
@@ -35,44 +36,15 @@ export function EmptyStateChatPageContent(props: {
           />
           <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">
-            <ExamplePrompt
-              label="USDC contract address on ethereum"
-              onClick={() => {
-                props.sendMessage(
-                  "What is the contract address of USDC on ethereum?",
-                );
-              }}
-            />
-
-            <ExamplePrompt
-              label="last 5 blocks on polygon"
-              onClick={() => {
-                props.sendMessage("What are last 5 blocks on polygon?");
-              }}
-            />
-
-            <ExamplePrompt
-              label="What is thirdweb SDK?"
-              onClick={() => {
-                props.sendMessage("What is thirdweb SDK?");
-              }}
-            />
-            <ExamplePrompt
-              label="How to add connect wallet button"
-              onClick={() => {
-                props.sendMessage(
-                  "How to add connect wallet button on React app?",
-                );
-              }}
-            />
-            <ExamplePrompt
-              label="Show transaction details"
-              onClick={() => {
-                props.sendMessage(
-                  "Show transaction details of 0xff9624116c352c8b090203fbbb563baf32d2b1944f9ac281ff2de6b7d948030e on ethereum",
-                );
-              }}
-            />
+            {examplePrompts.map((prompt) => {
+              return (
+                <ExamplePrompt
+                  key={prompt.title}
+                  label={prompt.title}
+                  onClick={() => props.sendMessage(prompt.message)}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
@@ -87,7 +59,7 @@ function ExamplePrompt(props: {
   return (
     <Button
       variant="outline"
-      className="h-auto gap-1.5 rounded-full bg-muted/50 px-3 py-1 text-muted-foreground text-xs"
+      className="h-auto gap-1.5 rounded-full bg-card px-3 py-1 text-muted-foreground text-xs"
       onClick={props.onClick}
     >
       {props.label} <ArrowUpRightIcon className="size-3" />

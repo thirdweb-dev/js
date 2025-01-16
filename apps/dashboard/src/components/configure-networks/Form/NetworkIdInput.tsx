@@ -36,7 +36,7 @@ export const NetworkIDInput: React.FC<{
         autoComplete="off"
         placeholder="ethereum"
         id="slug"
-        className="bg-muted/50 font-mono disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
+        className="bg-card font-mono disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
         onKeyDown={(e) => {
           // only allow alphanumeric characters and dashes
           if (!/^[a-z0-9-]*$/i.test(e.key)) {

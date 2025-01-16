@@ -7,7 +7,7 @@ export function EcosystemPartnersSection({
   authToken,
 }: { ecosystem: Ecosystem; authToken: string }) {
   return (
-    <div className="rounded-lg border border-border bg-muted/50 px-4 py-6 lg:px-6">
+    <div className="rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
       <div className="flex flex-col items-start justify-between max-sm:mb-5 lg:flex-row">
         <div>
           <h3 className="font-semibold text-xl tracking-tight">

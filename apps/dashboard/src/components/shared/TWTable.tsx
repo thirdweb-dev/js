@@ -56,6 +56,8 @@ type TWTableProps<TRowData> = {
   title: string;
   bodyRowClassName?: string;
   bodyRowLinkBox?: boolean;
+  tableContainerClassName?: string;
+  tableScrollableClassName?: string;
 };
 
 export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
@@ -124,7 +126,10 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   });
 
   return (
-    <TableContainer>
+    <TableContainer
+      className={tableProps.tableContainerClassName}
+      scrollableContainerClassName={tableProps.tableScrollableClassName}
+    >
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

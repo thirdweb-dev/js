@@ -104,7 +104,7 @@ export function ChatHistoryPageUI(props: {
       {allSessions.length > 0 && filteredSessions.length === 0 && (
         <div className="flex grow flex-col justify-center rounded-lg">
           <div className="flex flex-col items-center">
-            <div className="rounded-xl border bg-muted/50 p-2">
+            <div className="rounded-xl border bg-card p-2">
               <MessageCircleIcon className="size-5 text-muted-foreground" />
             </div>
             <div className="h-4" />
@@ -121,7 +121,7 @@ export function ChatHistoryPageUI(props: {
       {allSessions.length === 0 && (
         <div className="flex grow flex-col justify-center">
           <div className="flex flex-col items-center">
-            <div className="rounded-xl border bg-muted/50 p-2">
+            <div className="rounded-xl border bg-card p-2">
               <MessageCircleIcon className="size-5 text-muted-foreground" />
             </div>
             <div className="h-4" />
@@ -176,7 +176,7 @@ function SessionCard(props: {
   });
 
   return (
-    <div className="relative overflow-hidden rounded-lg border bg-muted/50 p-4">
+    <div className="relative overflow-hidden rounded-lg border bg-card p-4">
       <h3 className="line-clamp-3 break-all">
         <Link
           className="before:absolute before:inset-0"

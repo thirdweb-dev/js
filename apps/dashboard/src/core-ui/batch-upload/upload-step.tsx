@@ -24,7 +24,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
         <div
           className={cn(
             "flex h-full cursor-pointer rounded-md border border-border hover:border-blue-500",
-            hasFailed ? "bg-red-200" : "bg-card",
+            hasFailed ? "bg-red-200" : "bg-background",
           )}
           {...getRootProps()}
         >

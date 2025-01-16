@@ -125,7 +125,7 @@ export function LoginAndOnboardingPageContent(props: {
 
 function LoadingCard() {
   return (
-    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-background shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
+    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
       <Spinner className="size-10" />
     </div>
   );

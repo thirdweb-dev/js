@@ -79,7 +79,7 @@ export const EngineInstancesList = (props: {
 
         <div className="h-10" />
 
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-muted/50 p-6">
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-6">
           <p className="font-semibold text-lg tracking-tight">
             Already have an Engine Instance?
           </p>
@@ -130,7 +130,7 @@ export const EngineInstancesList = (props: {
 
 function LearnMoreCard() {
   return (
-    <div className="relative rounded-lg border border-border p-4 hover:bg-muted/50">
+    <div className="relative rounded-lg border border-border p-4 hover:border-active-border">
       <h3 className="mb-1 font-semibold tracking-tight">
         <Link
           href="https://portal.thirdweb.com/engine"
@@ -186,6 +186,7 @@ function ImportEngineLink(props: {
     <Button
       asChild
       variant="outline"
+      className="gap-2 bg-card"
       onClick={() => {
         trackEvent({
           category: "engine",
@@ -193,7 +194,7 @@ function ImportEngineLink(props: {
         });
       }}
     >
-      <Link href={`${props.engineLinkPrefix}/import`} className="gap-2">
+      <Link href={`${props.engineLinkPrefix}/import`}>
         <CloudDownloadIcon className="size-4" />
         {props.label}
       </Link>

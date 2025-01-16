@@ -2,6 +2,7 @@
 import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { getDefaultWallets } from "../../../../../wallets/defaultWallets.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import {
@@ -21,7 +22,6 @@ import { useConnectionManager } from "../../../../core/providers/connection-mana
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
-import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";

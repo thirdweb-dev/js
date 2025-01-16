@@ -1,7 +1,9 @@
 "use client";
 
+import { payServerProxy } from "@/actions/proxies";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -65,16 +67,23 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
-      const res = await fetch(
-        `/api/server-proxy/pay/webhooks/get-all?clientId=${props.clientId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const res = await payServerProxy({
+        method: "GET",
+        pathname: "/webhooks/get-all",
+        searchParams: {
+          clientId: props.clientId,
         },
-      );
-      const json = await res.json();
-      return json.result as Array<Webhook>;
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error();
+      }
+
+      const json = res.data as { result: Array<Webhook> };
+      return json.result;
     },
   });
 
@@ -97,61 +106,68 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
   }
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Label</TableHead>
-            <TableHead>Url</TableHead>
-            <TableHead>Secret</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead className="text-right">
-              <CreateWebhookButton clientId={props.clientId}>
-                <Button size="sm" variant="primary" className="gap-1">
-                  <PlusIcon className="size-4" />
-                  <span>Create New Webhook</span>
-                </Button>
-              </CreateWebhookButton>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {webhooksQuery.data.map((webhook) => (
-            <TableRow key={webhook.id}>
-              <TableCell className="font-medium">{webhook.label}</TableCell>
-              <TableCell>{webhook.url}</TableCell>
-              <TableCell>
-                <CopyTextButton
-                  textToShow={shortenString(webhook.secret)}
-                  textToCopy={webhook.secret}
-                  tooltip="Use this secret to validate the authenticity of incoming webhook requests."
-                  copyIconPosition="right"
-                />
-              </TableCell>
-              <TableCell>
-                {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
-              </TableCell>
-              <TableCell className="text-right">
-                <DeleteWebhookButton
-                  clientId={props.clientId}
-                  webhookId={webhook.id}
-                >
-                  <Button variant="ghost" size="icon">
-                    <TrashIcon className="size-5" strokeWidth={1} />
-                  </Button>
-                </DeleteWebhookButton>
-              </TableCell>
+    <div>
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
+        <CreateWebhookButton clientId={props.clientId}>
+          <Button size="sm" variant="default" className="gap-1">
+            <PlusIcon className="size-4" />
+            <span>Create Webhook</span>
+          </Button>
+        </CreateWebhookButton>
+      </div>
+
+      <div className="h-4" />
+
+      <TableContainer>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Label</TableHead>
+              <TableHead>Url</TableHead>
+              <TableHead>Secret</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead>Delete</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHeader>
+          <TableBody>
+            {webhooksQuery.data.map((webhook) => (
+              <TableRow key={webhook.id}>
+                <TableCell className="font-medium">{webhook.label}</TableCell>
+                <TableCell>{webhook.url}</TableCell>
+                <TableCell>
+                  <CopyTextButton
+                    textToShow={shortenString(webhook.secret)}
+                    textToCopy={webhook.secret}
+                    tooltip="Use this secret to validate the authenticity of incoming webhook requests."
+                    copyIconPosition="right"
+                  />
+                </TableCell>
+                <TableCell>
+                  {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DeleteWebhookButton
+                    clientId={props.clientId}
+                    webhookId={webhook.id}
+                  >
+                    <Button variant="ghost" size="icon">
+                      <TrashIcon className="size-5" strokeWidth={1} />
+                    </Button>
+                  </DeleteWebhookButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 
 const formSchema = z.object({
   url: z.string().url("Please enter a valid URL."),
-  label: z.string().min(1, "Please enter a label."),
+  label: z.string().min(3, "Label must be at least 3 characters long"),
 });
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
@@ -166,15 +182,21 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await fetch("/api/server-proxy/pay/webhooks/create", {
+      const res = await payServerProxy({
         method: "POST",
+        pathname: "/webhooks/create",
+        body: JSON.stringify({ ...values, clientId: props.clientId }),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...values, clientId: props.clientId }),
       });
-      const json = await res.json();
-      return json.result as string;
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data as { result: string };
+      return json.result;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -189,26 +211,21 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) =>
-              toast.promise(
-                createMutation.mutateAsync(values, {
-                  onError: (err) =>
-                    toast.error("Failed to create webhook", {
-                      description: (err as Error).message,
-                    }),
-                  onSuccess: () => {
-                    setOpen(false);
-                    form.reset();
-                    form.clearErrors();
-                    form.setValue("url", "");
-                    form.setValue("label", "");
-                  },
-                }),
-                {
-                  loading: "Creating webhook...",
-                  success: "Webhook created",
-                  error: "Failed to create webhook",
+              createMutation.mutateAsync(values, {
+                onError: (err) => {
+                  toast.error("Failed to create webhook", {
+                    description: err instanceof Error ? err.message : undefined,
+                  });
                 },
-              ),
+                onSuccess: () => {
+                  setOpen(false);
+                  toast.success("Webhook created successfully");
+                  form.reset();
+                  form.clearErrors();
+                  form.setValue("url", "");
+                  form.setValue("label", "");
+                },
+              }),
             )}
             className="flex flex-col gap-4"
           >
@@ -266,8 +283,13 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
             </FormItem>
 
             <DialogFooter>
-              <Button type="submit" disabled={createMutation.isPending}>
-                Create
+              <Button
+                type="submit"
+                disabled={createMutation.isPending}
+                className="gap-2"
+              >
+                Create Webhook
+                {createMutation.isPending && <Spinner className="size-4" />}
               </Button>
             </DialogFooter>
           </form>
@@ -284,15 +306,21 @@ function DeleteWebhookButton(
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch("/api/server-proxy/pay/webhooks/revoke", {
+      const res = await payServerProxy({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id, clientId: props.clientId }),
+        pathname: "/webhooks/revoke",
       });
-      const json = await res.json();
-      return json.result as string;
+
+      if (!res.ok) {
+        throw new Error("Failed to delete webhook");
+      }
+
+      const json = res.data as { result: string };
+      return json.result;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -314,24 +342,28 @@ function DeleteWebhookButton(
 
         <DialogFooter>
           <Button
+            className="gap-2"
             variant="destructive"
             onClick={() => {
-              toast.promise(
-                deleteMutation.mutateAsync(props.webhookId, {
-                  onSuccess: () => {
-                    setOpen(false);
-                  },
-                }),
-                {
-                  loading: "Deleting webhook...",
-                  success: "Webhook deleted",
-                  error: "Failed to delete webhook",
+              deleteMutation.mutateAsync(props.webhookId, {
+                onError(err) {
+                  toast.error("Failed to delete webhook", {
+                    description: err instanceof Error ? err.message : undefined,
+                  });
                 },
-              );
+                onSuccess: () => {
+                  toast.success("Webhook deleted successfully");
+                  setOpen(false);
+                  return queryClient.invalidateQueries({
+                    queryKey: ["webhooks", props.clientId],
+                  });
+                },
+              });
             }}
             disabled={deleteMutation.isPending}
           >
-            Yes, Delete Webhook
+            Delete Webhook
+            {deleteMutation.isPending && <Spinner className="size-4" />}
           </Button>
         </DialogFooter>
       </DialogContent>

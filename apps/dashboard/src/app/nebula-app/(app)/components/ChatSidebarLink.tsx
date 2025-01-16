@@ -46,7 +46,7 @@ export function ChatSidebarLink(props: {
   });
   return (
     <div
-      className="group relative rounded-lg hover:bg-muted"
+      className="group relative rounded-lg hover:bg-accent"
       key={props.sessionId}
     >
       <Button
