@@ -32,7 +32,7 @@ export const RpcInput: React.FC<{
         autoComplete="off"
         placeholder="https://"
         type="url"
-        className="bg-muted/50"
+        className="bg-card"
         {...reg}
       />
 

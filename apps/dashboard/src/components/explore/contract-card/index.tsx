@@ -106,7 +106,7 @@ export async function ContractCard({
   return (
     <article
       className={
-        "relative flex min-h-[220px] flex-col rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted/70"
+        "relative flex min-h-[220px] flex-col rounded-lg border border-border bg-card p-4 hover:border-active-border"
       }
     >
       <TrackedLinkTW

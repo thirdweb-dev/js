@@ -129,7 +129,7 @@ function TeamSlugFormControl(props: {
       noPermissionText={undefined} // TODO
     >
       <div className="relative flex rounded-lg border border-border md:w-[450px]">
-        <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-muted/50 px-3 font-mono text-muted-foreground/80 text-sm">
+        <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-card px-3 font-mono text-muted-foreground/80 text-sm">
           thirdweb.com/team/
         </div>
         <Input
@@ -229,7 +229,7 @@ function TeamIdCard(props: {
         textToCopy={props.team.id}
         textToShow={props.team.id}
         variant="outline"
-        className="w-full justify-between truncate bg-card px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
+        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
         tooltip="Copy Team ID"
         copyIconPosition="right"
       />

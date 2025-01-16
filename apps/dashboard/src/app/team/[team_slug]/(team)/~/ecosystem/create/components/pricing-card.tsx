@@ -7,7 +7,7 @@ export function EcosystemWalletPricingCard(props: { className?: string }) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-xl border border-border bg-card shadow",
+        "overflow-hidden rounded-xl border border-border bg-background shadow",
         props.className,
       )}
     >

@@ -144,8 +144,8 @@ function RenderData(props: {
   const chartColor = props.query.isEmpty
     ? "hsl(var(--muted-foreground))"
     : successType === "success"
-      ? "hsl(var(--success-text))"
-      : "hsl(var(--destructive-text))";
+      ? "hsl(var(--chart-1))"
+      : "hsl(var(--chart-3))";
 
   return (
     <div className="flex flex-1 flex-col">

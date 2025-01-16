@@ -98,7 +98,7 @@ function BlueprintCard(props: {
   description: string | undefined;
 }) {
   return (
-    <div className="relative flex items-center gap-3 rounded-lg border border-border bg-muted/50 px-4 py-5 hover:bg-muted/70">
+    <div className="relative flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-5 transition-colors hover:border-active-border">
       <div className="shrink-0 rounded-xl border p-1">
         <div className="rounded-lg border bg-muted p-1">
           <BoxIcon className="size-5 text-muted-foreground" />

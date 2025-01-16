@@ -446,7 +446,7 @@ function WalletDisconnectedDialog(props: {
           </DialogHeader>
         </div>
 
-        <div className="flex justify-end gap-3 border-t bg-muted/50 p-6">
+        <div className="flex justify-end gap-3 border-t bg-card p-6">
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>

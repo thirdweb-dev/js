@@ -69,7 +69,7 @@ export const EngineTierCard = ({
 
   return (
     <div
-      className="flex flex-col gap-6 rounded-xl border border-border bg-muted/50 p-6"
+      className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6"
       style={{
         backgroundImage: isPrimaryCta
           ? "linear-gradient(to top, hsl(var(--muted)) 40%, transparent)"

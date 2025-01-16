@@ -204,7 +204,7 @@ export type ModuleCardUIProps = {
 
 export function ModuleCardUI(props: ModuleCardUIProps) {
   return (
-    <section className="rounded-lg border border-border bg-muted/50">
+    <section className="rounded-lg border border-border bg-card">
       {/* Header */}
       <div className="relative p-4 lg:p-6">
         {/* Title */}

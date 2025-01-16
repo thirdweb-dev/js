@@ -526,7 +526,7 @@ function AuthEndpointFields(props: {
 
             <Button
               variant="outline"
-              className="w-full gap-2 bg-card"
+              className="w-full gap-2 bg-background"
               onClick={() => {
                 customHeaderFields.append({
                   key: "",
@@ -601,7 +601,7 @@ function Fieldset(props: {
 }) {
   return (
     <DynamicHeight>
-      <fieldset className="rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+      <fieldset className="rounded-lg border border-border bg-card p-4 md:p-6">
         {/* put inside div to remove defualt styles on legend  */}
         <div className="mb-4 font-semibold text-xl tracking-tight">
           <legend> {props.legend}</legend>

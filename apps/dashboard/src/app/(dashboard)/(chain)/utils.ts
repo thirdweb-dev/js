@@ -38,17 +38,19 @@ import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import somniaBanner from "./temp-assets/somniaBanner.png";
 
-import plumeBannerv2 from "./temp-assets/plumev2Banner.png";
-import plumeCTAv2 from "./temp-assets/plumev2CTA.png";
-
+import flowBanner from "./temp-assets/flowBanner.png";
+import flowCTA from "./temp-assets/flowCTA.png";
 import mantleBanner from "./temp-assets/mantle.png";
 import metalBanner from "./temp-assets/metalBanner.png";
-import metalCTA from "./temp-assets/metalCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
 
 import plumeCTA from "./temp-assets/plumeCTA.png";
+import rivalzBanner from "./temp-assets/rivalzBanner.png";
+import rivalzCTA from "./temp-assets/rivalzCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
+import saakuruBanner from "./temp-assets/saakuruBanner.png";
+import saakuruCTA from "./temp-assets/saakuruCTA.png";
 import shidoBanner from "./temp-assets/shidoBanner.png";
 import shidoCta from "./temp-assets/shidoCta.png";
 import soneiumBanner from "./temp-assets/soneiumBanner.png";
@@ -59,15 +61,15 @@ import treasureBanner from "./temp-assets/treasureBanner.png";
 import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
+import victionBanner from "./temp-assets/victionBanner.png";
+import victionCTA from "./temp-assets/victionCTA.png";
+import worldChainBanner from "./temp-assets/worldChainBanner.jpg";
+import worldChainCTA from "./temp-assets/worldChainCTA.jpg";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import zetachainBanner from "./temp-assets/zetachainBanner.png";
 import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
-
-import fhenixBanner from "./temp-assets/fhenixBanner.png";
-import fhenixCTA from "./temp-assets/fhenixCTA.png";
-
 // END TEMPORARY
 
 import { API_SERVER_URL } from "@/constants/env";
@@ -168,6 +170,11 @@ const chainMetaRecord = {
     gasSponsored: true,
 
     cta: OP_CTA,
+  },
+  //celo Mainnet
+  42220: {
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   // optimism
   10: {
@@ -419,15 +426,29 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
-  //fhenix Nitrogen
-  8008148: {
-    headerImgUrl: fhenixBanner.src,
+  //EVM on Flow testnet
+  545: {
+    headerImgUrl: flowBanner.src,
     about:
-      "Discover Fhenix—the first-ever FHE-based blockchain. Fhenix is an L2 built on Ethereum that brings powerful Fully Homomorphic Encryption (FHE) into the EVM space. This technology enables confidential computation on-chain, allowing users to explore a new generation of use cases.",
+      "Flow is a secure, high-performance, decentralized L1 EVM equivalent chain, with innovative next-generation features not available on other EVM compatible chains, the lowest fees anywhere, and a vibrant ecosystem of major consumer brands",
     cta: {
-      backgroundImageUrl: fhenixCTA.src,
-      title: "Onchain confidentiality powered by the first FHE L2 Rollup",
-      buttonLink: "https://thirdweb.com/fhenix-nitrogen",
+      backgroundImageUrl: flowCTA.src,
+      title:
+        "Explore Flow's innovative features not available on any other EVM compatible chain",
+      buttonLink: "https://developers.flow.com/evm/how-it-works",
+      buttonText: "Learn More",
+    },
+  },
+  //EVM on Flow Mainnet
+  747: {
+    headerImgUrl: flowBanner.src,
+    about:
+      "Flow is a secure, high-performance, decentralized L1 EVM equivalent chain, with innovative next-generation features not available on other EVM compatible chains, the lowest fees anywhere, and a vibrant ecosystem of major consumer brands",
+    cta: {
+      backgroundImageUrl: flowCTA.src,
+      title:
+        "Learn about innovative features not available on any other EVM compatible chains!",
+      buttonLink: "https://developers.flow.com/evm/how-it-works",
       buttonText: "Learn More",
     },
   },
@@ -467,7 +488,7 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
-  //Gemuchain
+  //Gemuchain -- Deprecated
   1903648807: {
     headerImgUrl: thirdwebBanner.src,
     about:
@@ -547,12 +568,19 @@ const chainMetaRecord = {
     headerImgUrl: metalBanner.src,
     about:
       "Metal L2 is a banking-focused Layer 2 blockchain built on the Optimism Superchain, designed to enable direct on-chain fiat deposits through its connection to The Digital Banking Network—an open-source blockchain banking protocol developed by Metallicus",
-    cta: {
-      backgroundImageUrl: metalCTA.src,
-      title: "Connect to The Banking Layer, Metal L2",
-      buttonLink: "https://metall2.com/",
-      buttonText: "Connect Here",
-    },
+    // cta: {
+    //   backgroundImageUrl: metalCTA.src,
+    //   title: "Connect to The Banking Layer, Metal L2",
+    //   buttonLink: "https://metall2.com/",
+    //   buttonText: "Connect Here",
+    // },
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //Ozean Testnet
+  7849306: {
+    cta: OP_CTA,
+    gasSponsored: true,
   },
   //0G-Newton-Testnet
   16600: {
@@ -566,11 +594,11 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //Plume
-  161221135: {
+  //Plume Testnet
+  98864: {
     headerImgUrl: plumeBanner.src,
     about:
-      "Plume is the first modular L2 blockchain dedicated for all real-world assets (RWAs) that integrates asset tokenization and compliance providers directly into the chain. Our mission is to simplify the convoluted processes of RWA project deployment and offer investors a blockchain ecosystem to cross-pollinate and invest in various RWAs. In addition, Plume enables RWA composability through its thriving DeFi applications and provides access to high-quality buyers to increase liquidity for all tokenized RWAs.",
+      "Plume Network is the first full-stack L1 RWA Chain and ecosystem purpose-built for RWAfi, enabling the rapid adoption and demand-driven integration of real world assets. With 180+ projects building on the network, Plume offers a composable, EVM-compatible environment for onboarding and managing diverse real world assets. Coupled with an end-to-end tokenization engine and a network of financial infrastructure partners, Plume simplifies asset onboarding and enables seamless DeFi integration for RWAs so anyone can tokenize real world assets, distribute them globally, and make them useful for native crypto users.",
     cta: {
       backgroundImageUrl: plumeCTA.src,
       title: "Participate on the Testnet Now!",
@@ -578,27 +606,64 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  98864: {
-    headerImgUrl: plumeBannerv2.src,
+  //Plume Mainnet
+  98865: {
+    headerImgUrl: plumeBanner.src,
     about:
-      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+      "Plume Network is the first full-stack L1 RWA Chain and ecosystem purpose-built for RWAfi, enabling the rapid adoption and demand-driven integration of real world assets. With 180+ projects building on the network, Plume offers a composable, EVM-compatible environment for onboarding and managing diverse real world assets. Coupled with an end-to-end tokenization engine and a network of financial infrastructure partners, Plume simplifies asset onboarding and enables seamless DeFi integration for RWAs so anyone can tokenize real world assets, distribute them globally, and make them useful for native crypto users.",
     cta: {
-      backgroundImageUrl: plumeCTAv2.src,
+      backgroundImageUrl: plumeCTA.src,
       title: "Bringing the Real World Onchain",
-      buttonLink: "https://plumenetwork.xyz/",
+      buttonLink: "https://miles.plumenetwork.xyz/",
       buttonText: "Learn more",
     },
   },
-  //Plume
-  98865: {
-    headerImgUrl: plumeBannerv2.src,
+  //Rivalz Mainnet
+  753: {
+    headerImgUrl: rivalzBanner.src,
     about:
-      "Plume is the first full stack L1 blockchain purpose-built for RWAfi. Our products and chain make it easy for anyone to interact with RWAs just like they would with any other crypto native asset. Earn, trade, speculate on anything from financial instruments, collectibles, alternative assets, and more.",
+      "Rivalz merges real-world economies with AI, redefining how agents interact with global resources. Through its modular infrastructure, Rivalz enables AI agents to tap into the global workforce, digital services, and DePIN—from computers to smart homes—seamlessly connecting AI with reality.",
     cta: {
-      backgroundImageUrl: plumeCTAv2.src,
-      title: "Bringing the Real World Onchain",
-      buttonLink: "https://plumenetwork.xyz/",
-      buttonText: "Learn more",
+      backgroundImageUrl: rivalzCTA.src,
+      title: "Empower the Age of AI Agents with Rivalz",
+      buttonLink: "https://rivalz.ai/download",
+      buttonText: "Learn More",
+    },
+  },
+  //Rivalz Testnet
+  6966: {
+    headerImgUrl: rivalzBanner.src,
+    about:
+      "Rivalz merges real-world economies with AI, redefining how agents interact with global resources. Through its modular infrastructure, Rivalz enables AI agents to tap into the global workforce, digital services, and DePIN—from computers to smart homes—seamlessly connecting AI with reality.",
+    cta: {
+      backgroundImageUrl: rivalzCTA.src,
+      title: "Empower the Age of AI Agents with Rivalz",
+      buttonLink: "https://rivalz.ai/download",
+      buttonText: "Learn More",
+    },
+  },
+  //Saakuru Mainnet
+  7225878: {
+    headerImgUrl: saakuruBanner.src,
+    about:
+      "Saakuru Labs is a Web3 GameFi innovation and growth hub, dedicated to empowering game studios through tailored collaborations that cater to their unique needs and stages of game development. By providing a structured process to evaluate and support studios, Saakuru Labs aims to expand the Saakuru gaming ecosystem while ensuring the success of its partners.",
+    cta: {
+      backgroundImageUrl: saakuruCTA.src,
+      title: "Empowering Next-Gen Blockchain Gaming",
+      buttonLink: "https://saakuru.com/",
+      buttonText: "Learn More",
+    },
+  },
+  //Saakuru Testnet
+  247253: {
+    headerImgUrl: saakuruBanner.src,
+    about:
+      "Saakuru Labs is a Web3 GameFi innovation and growth hub, dedicated to empowering game studios through tailored collaborations that cater to their unique needs and stages of game development. By providing a structured process to evaluate and support studios, Saakuru Labs aims to expand the Saakuru gaming ecosystem while ensuring the success of its partners.",
+    cta: {
+      backgroundImageUrl: saakuruCTA.src,
+      title: "Empowering Next-Gen Blockchain Gaming",
+      buttonLink: "https://saakuru.com/",
+      buttonText: "Learn More",
     },
   },
   //Somnia Devnet
@@ -610,6 +675,63 @@ const chainMetaRecord = {
       backgroundImageUrl: somniaBanner.src,
       title: "Somnia Devnet",
       buttonLink: "https://codex.somnia.network",
+      buttonText: "Learn More",
+    },
+  },
+  //Unichain Sepolis Testnet
+  1301: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //viction Mainnet
+  88: {
+    headerImgUrl: victionBanner.src,
+    about:
+      "Viction is a global layer-1 EVM blockchain that empowers builders at every level, provides both the foundation and enhancements necessary for projects to achieve stability and soar to their higher selves. \n We provide seamless interoperability, scalability, flexible development, zero gas fees, enhanced security, and speed to enable builders with tech capabilities. Beyond technical advantages, Viction offers holistic guidance through consultation, resources, funding, and strong network connections to foster project growth.",
+    cta: {
+      backgroundImageUrl: victionCTA.src,
+      title:
+        "Build, own, win, and be part of Viction World Wide Chain where everyone scales beyond limits.",
+      buttonLink: "https://thirdweb.com/viction/popular",
+      buttonText: "Learn More",
+    },
+  },
+  //viction Testnet
+  89: {
+    headerImgUrl: victionBanner.src,
+    about:
+      "Viction is a global layer-1 EVM blockchain that empowers builders at every level, provides both the foundation and enhancements necessary for projects to achieve stability and soar to their higher selves. \n We provide seamless interoperability, scalability, flexible development, zero gas fees, enhanced security, and speed to enable builders with tech capabilities. Beyond technical advantages, Viction offers holistic guidance through consultation, resources, funding, and strong network connections to foster project growth.",
+    cta: {
+      backgroundImageUrl: victionCTA.src,
+      title:
+        "Build, own, win, and be part of Viction World Wide Chain where everyone scales beyond limits.",
+      buttonLink: "https://thirdweb.com/viction/popular",
+      buttonText: "Learn More",
+    },
+  },
+  // World Chain Mainnet
+  480: {
+    headerImgUrl: worldChainBanner.src,
+    about:
+      "World Chain is the blockchain for real humans, offering priority blockspace and gas-free transactions for World ID-verified users.",
+    // cta: {
+    //   backgroundImageUrl: worldChainCTA.src,
+    //   title: "Build for real humans with World Chain",
+    //   buttonLink: "https://world.org/world-chain",
+    //   buttonText: "Learn More",
+    // },
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  //World Chain Testnet
+  4801: {
+    headerImgUrl: worldChainBanner.src,
+    about:
+      "World Chain is the blockchain for real humans, offering priority blockspace and gas-free transactions for World ID-verified users.",
+    cta: {
+      backgroundImageUrl: worldChainCTA.src,
+      title: "Build for real humans with World Chain",
+      buttonLink: "https://world.org/world-chain",
       buttonText: "Learn More",
     },
   },
@@ -721,8 +843,15 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //Soneium
+  //Soneium Testnet
   1946: {
+    headerImgUrl: soneiumBanner.src,
+    about:
+      "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
+    cta: OP_CTA,
+  },
+  //Soneium Mainnet
+  1868: {
     headerImgUrl: soneiumBanner.src,
     about:
       "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",

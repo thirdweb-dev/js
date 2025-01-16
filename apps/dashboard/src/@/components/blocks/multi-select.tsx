@@ -202,7 +202,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                       event.stopPropagation();
                       handleClear();
                     }}
-                    className="rounded p-1 hover:bg-muted"
+                    className="rounded p-1 hover:bg-accent"
                   >
                     <XIcon className="h-4 cursor-pointer text-muted-foreground" />
                   </div>

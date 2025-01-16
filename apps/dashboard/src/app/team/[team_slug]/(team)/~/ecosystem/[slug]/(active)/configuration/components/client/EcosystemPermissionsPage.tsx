@@ -8,7 +8,7 @@ export function EcosystemPermissionsPage({
   params,
   authToken,
 }: { params: { slug: string }; authToken: string }) {
-  const { ecosystem } = useEcosystem({ slug: params.slug });
+  const { data: ecosystem } = useEcosystem({ slug: params.slug });
 
   return (
     <div className="flex flex-col gap-8">

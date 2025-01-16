@@ -14,7 +14,7 @@ export function ChatBar(props: {
   const [message, setMessage] = useState("");
 
   return (
-    <div className="rounded-2xl border border-border bg-muted/50 p-2">
+    <div className="rounded-2xl border border-border bg-card p-2">
       <div className="max-h-[70vh] overflow-y-auto">
         <AutoResizeTextarea
           placeholder={"Ask Nebula"}

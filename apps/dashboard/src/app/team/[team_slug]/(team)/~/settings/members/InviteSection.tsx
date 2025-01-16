@@ -80,7 +80,7 @@ export function InviteSection(props: {
       <h2 className="mb-3 font-semibold text-2xl tracking-tight">Invite</h2>
 
       {/* Card */}
-      <div className="rounded-lg border border-border bg-muted/50">
+      <div className="rounded-lg border border-border bg-card">
         {/* Invite via Link */}
         <div
           className={cn(
@@ -96,7 +96,7 @@ export function InviteSection(props: {
             <Button
               size="sm"
               variant="outline"
-              className="gap-2 max-sm:bg-muted/50"
+              className="gap-2 max-sm:bg-card"
               disabled={!inviteEnabled}
             >
               <LinkIcon className="size-3" />

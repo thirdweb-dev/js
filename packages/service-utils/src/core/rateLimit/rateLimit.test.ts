@@ -10,7 +10,7 @@ const mockRedis = {
 
 // Mocking the updateRateLimitedAt function
 vi.mock("../../../src/core/api", () => ({
-  updateRateLimitedAt: vi.fn(),
+  updateRateLimitedAt: vi.fn().mockResolvedValue({}),
 }));
 
 describe("rateLimit", () => {
@@ -59,27 +59,8 @@ describe("rateLimit", () => {
     expect(mockRedis.expire).not.toHaveBeenCalled();
   });
 
-  it("should report rate limit if exceeded but not block", async () => {
-    mockRedis.incr.mockResolvedValue(51); // Current count is 51 requests in 10 seconds.
-
-    const result = await rateLimit({
-      project: validProjectResponse,
-      limitPerSecond: 5,
-      serviceConfig: validServiceConfig,
-      redis: mockRedis,
-    });
-
-    expect(result).toEqual({
-      rateLimited: false,
-      requestCount: 51,
-      rateLimit: 50,
-    });
-    expect(updateRateLimitedAt).toHaveBeenCalled();
-    expect(mockRedis.expire).not.toHaveBeenCalled();
-  });
-
   it("should rate limit if exceeded hard limit", async () => {
-    mockRedis.incr.mockResolvedValue(101);
+    mockRedis.incr.mockResolvedValue(51);
 
     const result = await rateLimit({
       project: validProjectResponse,
@@ -90,7 +71,7 @@ describe("rateLimit", () => {
 
     expect(result).toEqual({
       rateLimited: true,
-      requestCount: 101,
+      requestCount: 51,
       rateLimit: 50,
       status: 429,
       errorMessage: `You've exceeded your storage rate limit at 5 reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
@@ -131,9 +112,13 @@ describe("rateLimit", () => {
     });
 
     expect(result).toEqual({
-      rateLimited: false,
+      rateLimited: true,
       requestCount: 10,
       rateLimit: 5,
+      status: 429,
+      errorMessage:
+        "You've exceeded your storage rate limit at 5 reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.",
+      errorCode: "RATE_LIMIT_EXCEEDED",
     });
   });
 

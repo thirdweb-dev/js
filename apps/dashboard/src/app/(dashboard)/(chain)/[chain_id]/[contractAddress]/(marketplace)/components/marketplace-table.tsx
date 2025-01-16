@@ -247,7 +247,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                 <Tr
                   {...row.getRowProps()}
                   role="group"
-                  className="hover:bg-muted/50"
+                  className="hover:bg-card"
                   style={{ cursor: "pointer" }}
                   onClick={() => setTokenRow(row.original)}
                   borderBottomWidth={1}

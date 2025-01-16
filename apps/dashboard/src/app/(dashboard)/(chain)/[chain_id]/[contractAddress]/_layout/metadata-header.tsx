@@ -83,7 +83,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             {chain && (
               <Link
                 href={`/${chain.slug}`}
-                className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-muted/50 px-2.5 py-1.5 hover:bg-muted"
+                className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
               >
                 <ChainIcon ipfsSrc={chain.icon?.url} className="size-4" />
                 {cleanedChainName && (
@@ -109,7 +109,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           <CopyAddressButton
             address={address}
             copyIconPosition="left"
-            className="bg-muted/50 text-xs"
+            className="bg-card text-xs"
             variant="outline"
           />
 
@@ -138,7 +138,7 @@ function BadgeLink(props: {
     <Button
       variant="outline"
       asChild
-      className="!h-auto gap-2 rounded-lg bg-muted/50 px-3 py-1.5 text-xs capitalize"
+      className="!h-auto gap-2 rounded-lg bg-card px-3 py-1.5 text-xs capitalize"
     >
       <Link href={props.href} target="_blank">
         {props.name}

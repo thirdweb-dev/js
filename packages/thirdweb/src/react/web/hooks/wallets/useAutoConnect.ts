@@ -1,9 +1,9 @@
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import type { AutoConnectProps } from "../../../../wallets/connection/types.js";
 import { createWallet } from "../../../../wallets/create-wallet.js";
+import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
-import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
 import { useAutoConnectCore } from "../../../core/hooks/wallets/useAutoConnect.js";
-import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 
 /**
  * Autoconnect the last previously connected wallet.

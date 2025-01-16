@@ -29,7 +29,7 @@ export function PayAnalytics(props: { clientId: string }) {
       <div className="mb-4 flex">
         <DateRangeSelector range={range} setRange={setRange} />
       </div>
-      <div className="flex flex-col gap-10 lg:gap-4">
+      <div className="flex flex-col gap-10 lg:gap-6">
         <GridWithSeparator>
           <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
             <TotalVolumePieChart
@@ -46,7 +46,7 @@ export function PayAnalytics(props: { clientId: string }) {
           />
         </GridWithSeparator>
 
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 ">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <CardContainer>
             <Payouts
               clientId={clientId}
@@ -90,7 +90,7 @@ export function PayAnalytics(props: { clientId: string }) {
 
 function GridWithSeparator(props: { children: React.ReactNode }) {
   return (
-    <div className="relative grid grid-cols-1 gap-6 rounded-xl border border-border p-4 lg:gap-12 xl:grid-cols-2 xl:p-6">
+    <div className="relative grid grid-cols-1 gap-6 rounded-xl border border-border bg-card p-4 lg:gap-12 xl:grid-cols-2 xl:p-6">
       {props.children}
       {/* Desktop - horizontal middle */}
       <div className="absolute top-6 bottom-6 left-[50%] hidden w-[1px] bg-border xl:block" />
@@ -100,7 +100,7 @@ function GridWithSeparator(props: { children: React.ReactNode }) {
 
 function CardContainer(props: { children: React.ReactNode }) {
   return (
-    <div className="flex rounded-xl border border-border p-4 xl:p-6">
+    <div className="flex rounded-xl border border-border bg-card p-4 xl:p-6">
       {props.children}
     </div>
   );

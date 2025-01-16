@@ -1,6 +1,7 @@
 import { Suspense, useRef, useState } from "react";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { linkProfile } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -13,7 +14,6 @@ import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
-import { getDefaultWallets } from "../defaultWallets.js";
 import { ErrorState } from "../shared/ErrorState.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { LoadingState } from "../shared/LoadingState.js";

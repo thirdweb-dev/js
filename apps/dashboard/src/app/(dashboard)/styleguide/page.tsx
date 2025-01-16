@@ -31,8 +31,7 @@ function Colors() {
       </h2>
       <div className="flex flex-col flex-wrap gap-4 md:flex-row">
         <BgColorPreview className="bg-background" />
-        <BgColorPreview className="bg-muted/30" />
-        <BgColorPreview className="bg-muted/50" />
+        <BgColorPreview className="bg-card" />
         <BgColorPreview className="bg-muted" />
         <BgColorPreview className="bg-accent" />
       </div>

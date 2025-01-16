@@ -1,10 +1,11 @@
 import * as ox__Bytes from "ox/Bytes";
-import { describe, expect, it, test } from "vitest";
+import { beforeAll, describe, expect, it, test } from "vitest";
 import { FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../test/src/test-wallets.js";
 import { ethereum, mainnet } from "../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import {
   verifyContractWalletSignature,
@@ -64,7 +65,7 @@ describe("verifyEOASignature", () => {
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "verifyContractWalletSignature",
-  async () => {
+  () => {
     it("should verify a valid signature", async () => {
       expect(
         await verifySignature({
@@ -107,15 +108,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "verifyContractWalletSignature",
-  async () => {
+  () => {
     const message = "Hakuna matata";
     const wallet = smartWallet({
       chain: ethereum,
       gasless: true,
     });
-    const smartAccount = await wallet.connect({
-      client: TEST_CLIENT,
-      personalAccount: TEST_ACCOUNT_A,
+    let smartAccount: Account;
+
+    beforeAll(async () => {
+      smartAccount = await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount: TEST_ACCOUNT_A,
+      });
     });
 
     test("should verify a smart account signature", async () => {

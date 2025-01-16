@@ -615,7 +615,7 @@ function APIKeyDetails({
   const { createdAt, updatedAt, lastAccessedAt } = apiKey;
 
   return (
-    <div className="flex flex-col gap-6 rounded-lg border border-border bg-muted/50 px-4 py-6 lg:px-6">
+    <div className="flex flex-col gap-6 rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
       <div>
         <h3>Client ID</h3>
         <p className="mb-2 text-muted-foreground text-sm">
@@ -624,7 +624,7 @@ function APIKeyDetails({
 
         <CopyTextButton
           textToCopy={apiKey.key}
-          className="!h-auto w-full max-w-[350px] justify-between truncate bg-card px-3 py-3 font-mono"
+          className="!h-auto w-full max-w-[350px] justify-between truncate bg-background px-3 py-3 font-mono"
           textToShow={apiKey.key}
           copyIconPosition="right"
           tooltip="Copy Client ID"
@@ -641,7 +641,7 @@ function APIKeyDetails({
             the time of creation for the full secret key.
           </p>
 
-          <div className="max-w-[350px] rounded-lg border border-border bg-card px-4 py-3 font-mono text-sm">
+          <div className="max-w-[350px] rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
             {apiKey.secretMasked}
           </div>
         </div>

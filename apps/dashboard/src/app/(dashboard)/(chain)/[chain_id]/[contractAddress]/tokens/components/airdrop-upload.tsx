@@ -157,7 +157,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             <div
               className={cn(
                 "flex h-full cursor-pointer items-center justify-center rounded-md border border-border hover:border-primary",
-                noCsv ? "bg-red-200" : "bg-card",
+                noCsv ? "bg-red-200" : "bg-background",
               )}
               {...getRootProps()}
             >

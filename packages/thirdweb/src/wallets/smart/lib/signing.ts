@@ -288,7 +288,7 @@ async function checkFor712Factory({
  * });
  * ```
  *
- * @wallets
+ * @wallet
  */
 export async function deploySmartAccount(args: {
   smartAccount: Account;

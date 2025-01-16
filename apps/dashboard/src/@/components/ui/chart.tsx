@@ -113,7 +113,10 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed";
       nameKey?: string;
       labelKey?: string;
-      valueFormatter?: (v: unknown) => string | undefined;
+      valueFormatter?: (
+        v: unknown,
+        payLoad: unknown,
+      ) => React.ReactNode | undefined;
     }
 >(
   (
@@ -233,7 +236,7 @@ const ChartTooltipContent = React.forwardRef<
                     )}
                     <div
                       className={cn(
-                        "flex flex-1 justify-between gap-2 leading-none",
+                        "flex flex-1 justify-between gap-5 leading-none",
                         nestLabel ? "items-end" : "items-center",
                       )}
                     >
@@ -243,10 +246,10 @@ const ChartTooltipContent = React.forwardRef<
                           {itemConfig?.label || item.name}
                         </span>
                       </div>
-                      {item.value && (
+                      {item.value !== undefined && (
                         <span className="font-medium font-mono text-foreground tabular-nums">
                           {valueFormatter
-                            ? valueFormatter(item.value) || item.value
+                            ? valueFormatter(item.value, item) || item.value
                             : item.value}
                         </span>
                       )}

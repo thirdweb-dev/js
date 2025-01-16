@@ -86,6 +86,7 @@ export function RangeSelector({
         }}
       />
       <IntervalSelector
+        className="bg-card"
         intervalType={localInterval}
         setIntervalType={(newInterval) => {
           setInterval(newInterval);

@@ -1,6 +1,6 @@
+import { analyticsServerProxy, apiServerProxy } from "@/actions/proxies";
 import type { Team } from "@/api/team";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { THIRDWEB_ANALYTICS_API_HOST, THIRDWEB_API_HOST } from "constants/urls";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveAccount } from "thirdweb/react";
 import type { UserOpStats } from "types/analytics";
@@ -216,19 +216,30 @@ export function useAccountCredits() {
   return useQuery({
     queryKey: accountKeys.credits(address || ""),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/credits`, {
+      type Result = {
+        data: BillingCredit[];
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/account/credits",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
       }
 
-      const credits = (json.data as BillingCredit[]).filter(
+      const credits = json.data.filter(
         (credit) =>
           credit.remainingValueUsdCents > 0 &&
           (!credit.expiresAt || credit.expiresAt > new Date().toISOString()) &&
@@ -241,6 +252,8 @@ export function useAccountCredits() {
   });
 }
 
+type UserOpUsageQueryResult = (UserOpStats & { chainId?: string })[];
+
 async function getUserOpUsage(args: {
   clientId: string;
   from?: Date;
@@ -249,31 +262,34 @@ async function getUserOpUsage(args: {
 }) {
   const { clientId, from, to, period } = args;
 
-  const searchParams = new URLSearchParams();
-  searchParams.append("clientId", clientId);
+  const searchParams: Record<string, string> = {
+    clientId,
+  };
+
   if (from) {
-    searchParams.append("from", from.toISOString());
+    searchParams.from = from.toISOString();
   }
   if (to) {
-    searchParams.append("to", to.toISOString());
+    searchParams.to = to.toISOString();
   }
   if (period) {
-    searchParams.append("period", period);
+    searchParams.period = period;
   }
-  const res = await fetch(
-    `${THIRDWEB_ANALYTICS_API_HOST}/v1/user-ops?${searchParams.toString()}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  const json = await res.json();
 
-  if (res.status !== 200) {
-    throw new Error(json.message);
+  const res = await analyticsServerProxy<{ data: UserOpUsageQueryResult }>({
+    pathname: "/v1/user-ops",
+    method: "GET",
+    searchParams: searchParams,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(res.error);
   }
+
+  const json = res.data;
 
   return json.data;
 }
@@ -297,13 +313,12 @@ export function useUserOpUsageAggregate(args: {
       "all",
     ),
     queryFn: async () => {
-      const userOpStats: (UserOpStats & { chainId?: string })[] =
-        await getUserOpUsage({
-          clientId,
-          from,
-          to,
-          period: "all",
-        });
+      const userOpStats = await getUserOpUsage({
+        clientId,
+        from,
+        to,
+        period: "all",
+      });
 
       // Aggregate stats across wallet types
       return userOpStats.reduce(
@@ -369,7 +384,13 @@ export function useUpdateAccount() {
 
   return useMutation({
     mutationFn: async (input: UpdateAccountInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account`, {
+      type Result = {
+        data: object;
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/account",
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -377,7 +398,11 @@ export function useUpdateAccount() {
         body: JSON.stringify(input),
       });
 
-      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -400,15 +425,25 @@ export function useUpdateNotifications() {
 
   return useMutation({
     mutationFn: async (input: UpdateAccountNotificationsInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/notifications`, {
-        method: "PUT",
+      type Result = {
+        data: object;
+        error?: { message: string };
+      };
 
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/account/notifications",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ preferences: input }),
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -430,21 +465,31 @@ export function useConfirmEmail() {
 
   return useMutation({
     mutationFn: async (input: ConfirmEmailInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/confirmEmail`, {
-        method: "PUT",
+      type Result = {
+        error?: { message: string };
+        data: { team: Team; account: Account };
+      };
 
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/account/confirmEmail",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
       }
 
-      return json.data as { team: Team; account: Account };
+      return json.data;
     },
     onSuccess: async () => {
       // invalidate related cache, since could be relinking account
@@ -469,18 +514,25 @@ export function useResendEmailConfirmation() {
 
   return useMutation({
     mutationFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/account/resendEmailConfirmation`,
-        {
-          method: "POST",
+      type Result = {
+        error?: { message: string };
+        data: object;
+      };
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({}),
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/account/resendEmailConfirmation",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      const json = await res.json();
+        body: JSON.stringify({}),
+      });
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -503,18 +555,29 @@ export function useApiKeys(props: {
   return useQuery({
     queryKey: apiKeys.keys(address || ""),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
+      type Result = {
+        data: ApiKey[];
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/keys",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
       }
-      return json.data as ApiKey[];
+      return json.data;
     },
     enabled: !!address && props.isLoggedIn,
   });
@@ -526,22 +589,32 @@ export function useCreateApiKey() {
 
   return useMutation({
     mutationFn: async (input: CreateKeyInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
+      type Result = {
+        data: ApiKey;
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/keys",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
       }
 
-      return json.data as ApiKey;
+      return json.data;
     },
-
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: apiKeys.keys(address || ""),
@@ -556,16 +629,25 @@ export function useUpdateApiKey() {
 
   return useMutation({
     mutationFn: async (input: UpdateKeyInput) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${input.id}`, {
-        method: "PUT",
+      type Result = {
+        data: ApiKey;
+        error?: { message: string };
+      };
 
+      const res = await apiServerProxy<Result>({
+        pathname: `/v1/keys/${input.id}`,
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
       });
 
-      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -587,14 +669,25 @@ export function useRevokeApiKey() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${id}/revoke`, {
+      type Result = {
+        data: ApiKey;
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: `/v1/keys/${id}/revoke`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({}),
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -614,21 +707,35 @@ export const usePolicies = (serviceId?: string) => {
   return useQuery({
     queryKey: ["policies", serviceId],
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/policies?serviceId=${serviceId}`,
-        {
-          method: "GET",
+      if (!serviceId) {
+        throw new Error();
+      }
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+      type Result = {
+        data: ApiKeyServicePolicy;
+        error?: { message: string };
+      };
+
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/policies",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      const json = await res.json();
+        searchParams: {
+          serviceId,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
       if (json.error) {
         throw new Error(json.error.message);
       }
-      return json.data as ApiKeyServicePolicy;
+      return json.data;
     },
     enabled: !!serviceId,
   });
@@ -641,9 +748,14 @@ export const useUpdatePolicies = () => {
       serviceId: string;
       data: ApiKeyServicePolicy;
     }) => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/policies`, {
-        method: "POST",
+      type Result = {
+        data: ApiKeyServicePolicy;
+        error?: { message: string };
+      };
 
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/policies",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -652,11 +764,16 @@ export const useUpdatePolicies = () => {
           data: input.data,
         }),
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
       if (json.error) {
         throw new Error(json.error.message);
       }
-      return json.data as ApiKeyServicePolicy;
+      return json.data;
     },
     onSuccess: (_, variables) => {
       return queryClient.invalidateQueries({
@@ -673,19 +790,25 @@ export function useRevokeAuthorizedWallet() {
   return useMutation({
     mutationFn: async (variables: { authorizedWalletId: string }) => {
       const { authorizedWalletId } = variables;
+      type Result = {
+        data: object;
+        error?: { message: string };
+      };
 
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/authorized-wallets/${authorizedWalletId}/revoke`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({}),
+      const res = await apiServerProxy<Result>({
+        pathname: `/v1/authorized-wallets/${authorizedWalletId}/revoke`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
-      const json = await res.json();
+        body: JSON.stringify({}),
+      });
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
@@ -706,20 +829,30 @@ export function useAuthorizedWallets() {
   return useQuery({
     queryKey: authorizedWallets.authorizedWallets(address || ""),
     queryFn: async () => {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/authorized-wallets`, {
-        method: "GET",
+      type Result = {
+        data: AuthorizedWallet[];
+        error?: { message: string };
+      };
 
+      const res = await apiServerProxy<Result>({
+        pathname: "/v1/authorized-wallets",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const json = res.data;
 
       if (json.error) {
         throw new Error(json.error.message);
       }
 
-      return json.data as AuthorizedWallet[];
+      return json.data;
     },
     enabled: !!address,
     gcTime: 0,
