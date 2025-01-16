@@ -57,8 +57,10 @@ const sidebarGroupOrder: TagKey[] = [
   "@walletConnection",
   "@walletUtils",
   "@chain",
+  "@account",
   "@contract",
   "@transaction",
+  "@nebula",
   "@social",
   "@auth",
   "@nft",
@@ -81,8 +83,6 @@ const sidebarGroupOrder: TagKey[] = [
   "@theme",
   "@utils",
   "@others",
-  "@account",
-  "@nebula",
 ];
 
 function findTag(
