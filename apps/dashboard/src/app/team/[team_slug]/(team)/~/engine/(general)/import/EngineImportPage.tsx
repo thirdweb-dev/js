@@ -64,9 +64,13 @@ export const EngineImportPage = (props: {
       await importMutation.mutateAsync(data);
       toast.success("Engine imported successfully");
       router.push(`/team/${props.teamSlug}/~/engine`);
-    } catch {
+    } catch (e) {
+      const message = e instanceof Error ? e.message : undefined;
       toast.error(
         "Error importing Engine. Please check if the details are correct.",
+        {
+          description: message,
+        },
       );
     }
   };

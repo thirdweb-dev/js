@@ -1,29 +1,13 @@
-import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../../login/loginRedirect";
+import { engineInstancePageHandler } from "../../../_utils/getEngineInstancePageMeta";
 import type { EngineInstancePageProps } from "../types";
-import { EngineExplorerPage } from "./explorer-page.client";
+import { EngineExplorer } from "./components/engine-explorer";
 
 export default async function Page(props: EngineInstancePageProps) {
   const params = await props.params;
+  const { instance, authToken } = await engineInstancePageHandler({
+    engineId: params.engineId,
+    teamSlug: params.team_slug,
+  });
 
-  const pagePath = `/team/${params.team_slug}/~/engine/${params.engineId}/explorer`;
-
-  const [authToken, account] = await Promise.all([
-    getAuthToken(),
-    getValidAccount(pagePath),
-  ]);
-
-  if (!authToken) {
-    loginRedirect(pagePath);
-  }
-
-  return (
-    <EngineExplorerPage
-      engineId={params.engineId}
-      team_slug={params.team_slug}
-      twAccount={account}
-      authToken={authToken}
-    />
-  );
+  return <EngineExplorer instanceUrl={instance.url} authToken={authToken} />;
 }

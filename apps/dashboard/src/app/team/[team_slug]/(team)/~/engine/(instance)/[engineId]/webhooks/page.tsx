@@ -1,28 +1,13 @@
-import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../../login/loginRedirect";
+import { engineInstancePageHandler } from "../../../_utils/getEngineInstancePageMeta";
 import type { EngineInstancePageProps } from "../types";
-import { EngineWebhooksPage } from "./webhooks-page.client";
+import { EngineWebhooks } from "./components/engine-webhooks";
 
 export default async function Page(props: EngineInstancePageProps) {
   const params = await props.params;
-  const pagePath = `/team/${params.team_slug}/~/engine/${params.engineId}/webhooks`;
+  const { instance, authToken } = await engineInstancePageHandler({
+    engineId: params.engineId,
+    teamSlug: params.team_slug,
+  });
 
-  const [account, authToken] = await Promise.all([
-    getValidAccount(pagePath),
-    getAuthToken(),
-  ]);
-
-  if (!authToken) {
-    loginRedirect(pagePath);
-  }
-
-  return (
-    <EngineWebhooksPage
-      team_slug={params.team_slug}
-      engineId={params.engineId}
-      twAccount={account}
-      authToken={authToken}
-    />
-  );
+  return <EngineWebhooks instanceUrl={instance.url} authToken={authToken} />;
 }

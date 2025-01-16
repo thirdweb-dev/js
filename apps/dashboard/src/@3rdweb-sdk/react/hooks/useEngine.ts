@@ -47,45 +47,6 @@ const getEngineRequestHeaders = (token: string | null): HeadersInit => {
   };
 };
 
-// TODO - add authToken in queryKey instead
-export function useEngineInstances() {
-  const address = useActiveAccount()?.address;
-  return useQuery({
-    queryKey: engineKeys.instances(address || ""),
-    queryFn: async (): Promise<EngineInstance[]> => {
-      type Result = {
-        data?: {
-          instances: EngineInstance[];
-        };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/engine",
-        method: "GET",
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-      const instances = json.data?.instances || [];
-
-      return instances.map((instance) => {
-        // Sanitize: Add trailing slash if not present.
-        const url = instance.url.endsWith("/")
-          ? instance.url
-          : `${instance.url}/`;
-        return {
-          ...instance,
-          url,
-        };
-      });
-    },
-    enabled: !!address,
-  });
-}
-
 // GET Requests
 export type BackendWallet = {
   address: string;
