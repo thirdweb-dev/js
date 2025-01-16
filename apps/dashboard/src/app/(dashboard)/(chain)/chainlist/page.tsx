@@ -52,7 +52,7 @@ export default async function ChainListPage(props: {
             </h1>
             <AddYourChainButton className="lg:hidden" />
           </div>
-          <div className="flex flex-row items-end gap-4 lg:flex-col">
+          <div className="flex flex-row items-end gap-4 lg:flex-col ">
             <div className="flex w-full flex-row gap-4">
               <SearchInput />
               <ChainListView activeView={activeView} />

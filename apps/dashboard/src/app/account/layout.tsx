@@ -43,7 +43,7 @@ async function HeaderAndNav(props: {
   );
 
   return (
-    <div className="bg-muted/50">
+    <div className="bg-card">
       <AccountHeader
         teamsAndProjects={teamsAndProjects}
         account={props.twAccount}

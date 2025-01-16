@@ -116,7 +116,7 @@ export function Chats(props: {
                 >
                   {message.type === "user" ? (
                     <div className="mt-6 flex justify-end">
-                      <div className="max-w-[80%] overflow-auto rounded-xl border bg-muted/50 px-4 py-2">
+                      <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
                         <MarkdownRenderer
                           skipHtml
                           markdownText={message.text}
@@ -138,10 +138,9 @@ export function Chats(props: {
                         <div
                           className={cn(
                             "flex size-9 items-center justify-center rounded-full",
-                            message.type === "assistant" &&
-                              "border bg-muted/50",
+                            message.type === "assistant" && "border bg-card",
                             message.type === "error" && "border",
-                            message.type === "presence" && "border bg-muted/50",
+                            message.type === "presence" && "border bg-card",
                           )}
                         >
                           {message.type === "presence" && (
@@ -176,7 +175,7 @@ export function Chats(props: {
                               li={{ className: "text-foreground" }}
                             />
                           ) : message.type === "error" ? (
-                            <div className="rounded-xl border bg-muted/50 px-4 py-2 text-destructive-text leading-normal">
+                            <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
                               {message.text}
                             </div>
                           ) : message.type === "send_transaction" ? (

@@ -61,7 +61,7 @@ export function DateRangeSelector(props: {
         </div>
       }
       labelOverride={range.label}
-      className="w-auto"
+      className="w-auto bg-card"
     />
   );
 }

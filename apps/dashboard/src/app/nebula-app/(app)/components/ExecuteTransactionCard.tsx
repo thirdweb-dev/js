@@ -83,7 +83,7 @@ export function ExecuteTransactionCardLayout(props: {
 
   return (
     <div>
-      <div className="rounded-xl border bg-muted/50">
+      <div className="rounded-xl border bg-card">
         <div className="flex flex-col gap-4 p-4 pb-6">
           <h3 className="font-semibold text-foreground text-lg tracking-tight">
             Transaction
@@ -145,7 +145,7 @@ export function ExecuteTransactionCardLayout(props: {
 
       {/* Tx Status */}
       {props.status.type !== "idle" && (
-        <div className="mt-5 rounded-lg border bg-muted/50">
+        <div className="mt-5 rounded-lg border bg-card">
           <div className="flex flex-col gap-1.5 p-4">
             {props.status.type === "sending" && (
               <div className="flex items-center gap-2 text-link-foreground">

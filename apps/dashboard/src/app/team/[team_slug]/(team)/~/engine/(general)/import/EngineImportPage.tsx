@@ -86,7 +86,7 @@ export const EngineImportPage = (props: {
       <div className="h-3" />
 
       <TrackedLinkTW
-        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/50 p-3 text-sm hover:bg-accent"
+        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
         href="https://portal.thirdweb.com/infrastructure/engine/get-started"
         target="_blank"
         category="engine"

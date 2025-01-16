@@ -82,7 +82,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
           return (
             <div
               key={`implementation_${param.name}`}
-              className="rounded-lg border border-border bg-muted/50 p-6"
+              className="rounded-lg border border-border bg-card p-6"
             >
               {/* Title + Type */}
               <div className="flex items-center gap-3">

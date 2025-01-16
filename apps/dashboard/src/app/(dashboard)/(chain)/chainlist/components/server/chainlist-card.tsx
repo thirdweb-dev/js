@@ -33,7 +33,7 @@ export async function ChainListCard({
 
   return (
     <div className="relative h-full">
-      <Card className="h-full w-full bg-muted/50 hover:bg-muted">
+      <Card className="h-full w-full transition-colors hover:border-active-border">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />

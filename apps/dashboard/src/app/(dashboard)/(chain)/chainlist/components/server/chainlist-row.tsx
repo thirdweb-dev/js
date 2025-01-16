@@ -39,7 +39,7 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <TableRow linkBox className="hover:bg-muted/50">
+    <TableRow linkBox className="hover:bg-accent/50">
       {/* Name */}
       <TableCell>
         <div className="flex w-[370px] flex-row items-center gap-4">

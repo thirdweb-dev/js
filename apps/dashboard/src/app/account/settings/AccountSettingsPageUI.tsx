@@ -229,7 +229,7 @@ function AccountEmailFormControl(props: {
       errorText={undefined}
       noPermissionText={undefined}
     >
-      <div className="flex items-center justify-between gap-4 rounded-lg border bg-card p-4">
+      <div className="flex items-center justify-between gap-4 rounded-lg border bg-background p-4">
         {/* Start */}
         <div className="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:gap-3">
           <p className="text-sm"> {props.email}</p>
@@ -365,7 +365,7 @@ function SendEmailOTP(props: {
           />
         </div>
 
-        <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
+        <DialogFooter className="gap-4 border-t bg-card p-6 lg:gap-1">
           <DialogClose asChild>
             <Button variant="outline"> Cancel </Button>
           </DialogClose>
@@ -443,7 +443,7 @@ function EnterEmailOTP(props: {
         )}
       </div>
 
-      <DialogFooter className="gap-4 border-t bg-muted/50 p-6 lg:gap-1">
+      <DialogFooter className="gap-4 border-t bg-card p-6 lg:gap-1">
         <DialogClose asChild>
           <Button variant="outline"> Cancel </Button>
         </DialogClose>

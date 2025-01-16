@@ -6,12 +6,12 @@
   :root,
   [data-theme="light"] {
     /* bg - neutral  */
-    --background: 0 0% 100%;
+    --background: 0 0% 98%;
     --popover: 0 0% 100%;
     --card: 0 0% 100%;
-    --secondary: 0 0% 92%;
-    --muted: 0 0% 95%;
-    --accent: 0 0% 95%;
+    --secondary: 0 0% 90%;
+    --muted: 0 0% 93%;
+    --accent: 0 0% 93%;
     --inverted: 0 0% 4%;
 
     /* bg - colorful */
@@ -34,9 +34,10 @@
     --destructive-text: 357.15deg 100% 68.72%;
 
     /* Borders */
-    --border: 0 0% 80%;
-    --input: 0 0% 80%;
-    --ring: 0 0% 85%;
+    --border: 0 0% 85%;
+    --active-border: 0 0% 70%;
+    --input: 0 0% 85%;
+    --ring: 0 0% 80%;
 
     /* Others */
     --radius: 0.5rem;
@@ -46,7 +47,7 @@
   [data-theme="dark"] {
     /* bg - neutral  */
     --background: 0 0% 0%;
-    --card: 0 0% 0%;
+    --card: 0 0% 3.92%;
     --popover: 0 0% 0%;
     --secondary: 0 0% 11%;
     --muted: 0 0% 11%;
@@ -74,6 +75,7 @@
 
     /* Borders */
     --border: 0 0% 15%;
+    --active-border: 0 0% 22%;
     --ring: 0 0% 30%;
     --input: 0 0% 15%;
   }
@@ -159,13 +161,12 @@ input:-webkit-autofill:active {
 
 .shiki,
 .shiki span {
-  background-color: var(--background) !important;
+  background-color: transparent !important;
 }
 
 .dark .shiki,
 .dark .shiki span {
   color: var(--shiki-dark) !important;
-  background-color: var(--background) !important;
   /* Optional, if you also want font styles */
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;

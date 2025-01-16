@@ -125,7 +125,7 @@ function RenderData(props: {
 }) {
   return (
     <div>
-      <ScrollShadow>
+      <ScrollShadow className="overflow-hidden rounded-lg border">
         <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
           <thead>
             <TableHeadingRow>
@@ -155,19 +155,21 @@ function RenderData(props: {
               ))}
           </tbody>
         </table>
+
+        {props.query.isEmpty ? (
+          <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
+            No data available
+          </div>
+        ) : (
+          <div className="mt-8">
+            <PaginationButtons
+              activePage={props.activePage}
+              totalPages={props.query.data?.pages || 5}
+              onPageClick={props.setPage}
+            />
+          </div>
+        )}
       </ScrollShadow>
-      <div className="h-8" />
-      {props.query.isEmpty ? (
-        <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
-          No data available
-        </div>
-      ) : (
-        <PaginationButtons
-          activePage={props.activePage}
-          totalPages={props.query.data?.pages || 5}
-          onPageClick={props.setPage}
-        />
-      )}
     </div>
   );
 }

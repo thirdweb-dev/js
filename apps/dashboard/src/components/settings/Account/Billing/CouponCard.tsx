@@ -200,7 +200,7 @@ export function ApplyCouponCardUI(props: {
               : "A valid payment method must be added to apply a coupon."
           }
           saveButton={{
-            variant: "default",
+            variant: "outline",
             disabled: !props.isPaymentSetup,
             isPending: applyCoupon.isPending,
             label: "Apply Coupon",
@@ -243,7 +243,7 @@ export function CouponDetailsCardUI(props: {
   const { activeCoupon, deleteCoupon } = props;
   return (
     <DangerSettingCard
-      className="border-border bg-muted/50"
+      className="border-border"
       footerClassName="!bg-transparent !border-border"
       title="Coupon Applied"
       description="To apply another coupon, you must remove this coupon"
@@ -388,7 +388,7 @@ export function CouponSection(props: {
 
 function LoadingCouponSection() {
   return (
-    <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-muted/50">
+    <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-card">
       <Spinner className="size-6" />
     </div>
   );

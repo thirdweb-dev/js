@@ -25,7 +25,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "border-border border-b bg-muted/50 [&_tr]:border-b",
+      "border-border border-b bg-background [&_tr]:border-b",
       className,
     )}
     {...props}
@@ -53,7 +53,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-border border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+      "border-border border-t bg-card font-medium [&>tr]:last:border-b-0",
       className,
     )}
     {...props}
@@ -128,7 +128,7 @@ TableCaption.displayName = "TableCaption";
 function TableContainer(props: { children: React.ReactNode }) {
   return (
     <ScrollShadow
-      className="relative whitespace-nowrap rounded-lg border border-border"
+      className="relative whitespace-nowrap rounded-lg border border-border bg-card"
       shadowColor="hsl(var(--muted))"
     >
       {props.children}

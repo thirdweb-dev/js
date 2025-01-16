@@ -19,12 +19,12 @@ export default async function Page(props: {
   return (
     <div className="container flex grow flex-col gap-12 py-8 lg:flex-row">
       <div className="flex grow flex-col">
-        <h1 className="mb-4 font-semibold text-xl tracking-tight">Projects</h1>
+        <h1 className="mb-4 font-semibold text-2xl tracking-tight">Projects</h1>
         <TeamProjectsPage projects={projects} team={team} />
       </div>
       <div className="shrink-0 lg:w-[320px]">
-        <h2 className="mb-4 font-semibold text-xl tracking-tight">
-          Latest changes
+        <h2 className="mb-4 font-semibold text-2xl tracking-tight">
+          Changelog
         </h2>
         <Changelog />
       </div>

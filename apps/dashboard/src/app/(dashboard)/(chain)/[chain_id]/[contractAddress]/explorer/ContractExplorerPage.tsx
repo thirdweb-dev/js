@@ -35,7 +35,7 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
 
   const functions = getContractFunctionsFromAbi(abi);
   return (
-    <div className="flex h-[70vh] flex-col">
+    <div className="flex h-[70vh] flex-col ">
       {functions && functions.length > 0 ? (
         <ContractFunctionsOverview
           onlyFunctions
@@ -44,7 +44,7 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
           twAccount={twAccount}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center gap-2 text-center">
+        <div className="flex flex-col items-center justify-center gap-2 bg-card text-center">
           <h2 className="font-semibold text-2xl tracking-tight">
             No callable functions discovered in ABI.
           </h2>

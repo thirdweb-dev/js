@@ -59,7 +59,7 @@ function ExamplePrompt(props: {
   return (
     <Button
       variant="outline"
-      className="h-auto gap-1.5 rounded-full bg-muted/50 px-3 py-1 text-muted-foreground text-xs"
+      className="h-auto gap-1.5 rounded-full bg-card px-3 py-1 text-muted-foreground text-xs"
       onClick={props.onClick}
     >
       {props.label} <ArrowUpRightIcon className="size-3" />

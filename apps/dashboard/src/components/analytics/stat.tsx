@@ -5,7 +5,7 @@ export const Stat: React.FC<{
   formatter?: (value: number) => string;
 }> = ({ label, value, formatter, icon: Icon }) => {
   return (
-    <dl className="flex items-center justify-between gap-4 rounded-lg border border-border p-4 lg:p-6">
+    <dl className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 lg:p-6">
       <div>
         <dd className="font-semibold text-3xl tracking-tight lg:text-5xl">
           {value !== undefined && formatter

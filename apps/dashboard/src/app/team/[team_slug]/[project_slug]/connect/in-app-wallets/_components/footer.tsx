@@ -18,7 +18,7 @@ function ViewDocs(props: {
 }) {
   const TRACKING_CATEGORY = props.trackingCategory;
   return (
-    <div className="rounded-lg border border-border p-4 lg:p-6">
+    <div className="rounded-lg border border-border bg-card p-4 lg:p-6">
       <div className="flex items-center gap-2">
         <h3 className="font-semibold">View Docs</h3>
         <ArrowRightIcon className="size-4" />
@@ -130,7 +130,7 @@ function Templates(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="rounded-lg border border-border p-4 lg:p-6">
+    <div className="rounded-lg border border-border bg-card p-4 lg:p-6">
       <div className="flex items-center gap-2">
         <h3 className="font-semibold">Relevant Templates</h3>
         <ArrowRightIcon className="size-4" />

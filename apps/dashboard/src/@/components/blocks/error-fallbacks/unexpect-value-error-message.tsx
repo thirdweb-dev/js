@@ -23,7 +23,7 @@ export function UnexpectedValueErrorMessage(props: {
       {stringifiedValue && (
         <div className="mt-3">
           <p className="mb-0.5 text-muted-foreground text-sm">Value Received</p>
-          <ScrollShadow className="rounded-lg bg-muted/50">
+          <ScrollShadow className="rounded-lg bg-card">
             <code className="block whitespace-pre p-4 font-mono text-xs">
               {stringifiedValue}
             </code>

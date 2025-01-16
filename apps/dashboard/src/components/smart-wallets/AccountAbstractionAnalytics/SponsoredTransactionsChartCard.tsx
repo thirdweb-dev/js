@@ -111,7 +111,7 @@ export function SponsoredTransactionsChartCard(props: {
     chartData.every((data) => data.transactions === 0);
 
   return (
-    <div className="relative w-full rounded-lg border border-border p-4 md:p-6">
+    <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Sponsored Transactions
       </h3>

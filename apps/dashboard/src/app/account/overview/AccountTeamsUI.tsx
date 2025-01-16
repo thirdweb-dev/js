@@ -63,7 +63,7 @@ export function AccountTeamsUI(props: {
 
       <div className="h-4" />
 
-      <ul className="rounded-lg border bg-muted/50">
+      <ul className="rounded-lg border bg-card">
         {/* Teams List */}
         {teamsToShow.map((v) => {
           return (

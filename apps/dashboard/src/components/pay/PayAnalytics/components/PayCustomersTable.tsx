@@ -141,7 +141,11 @@ export function PayCustomersTable(props: {
 
 function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
   return (
-    <ScrollShadow scrollableClassName="h-[250px]" disableTopShadow={true}>
+    <ScrollShadow
+      className="overflow-hidden rounded-lg border"
+      scrollableClassName="h-[280px]"
+      disableTopShadow={true}
+    >
       <table className="w-full">
         <thead>
           <TableHeadingRow>

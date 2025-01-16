@@ -7,7 +7,7 @@ import heroIcon2 from "../../../../public/assets/product-pages/publish/hero-icon
 
 export const PublishUpsellCard: React.FC = () => {
   return (
-    <div className="flex gap-10 rounded-xl border border-border bg-muted/50 p-8 shadow-lg md:p-10">
+    <div className="flex gap-10 rounded-xl border border-border bg-card p-8 shadow-lg md:p-10">
       <div className="flex flex-col gap-6">
         <h2 className="font-bold text-3xl tracking-tighter">
           Accelerate your protocol's growth

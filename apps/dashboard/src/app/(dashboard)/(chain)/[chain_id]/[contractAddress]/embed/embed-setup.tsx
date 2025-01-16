@@ -13,6 +13,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -211,6 +212,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   twAccount,
 }) => {
   const trackEvent = useTrack();
+  const { theme } = useTheme();
 
   const apiKeys = useApiKeys({
     isLoggedIn: !!twAccount,
@@ -268,7 +270,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       listingId: "0",
       directListingId: "0",
       englishAuctionId: "0",
-      theme: "dark",
+      theme: theme === "light" ? "light" : "dark",
       primaryColor: "purple",
       secondaryColor: "orange",
     },
@@ -325,7 +327,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       />
 
       <Flex gap={8} direction={{ base: "column", md: "row" }}>
-        <Card className="flex w-full flex-col gap-5 md:w-1/2">
+        <Card className="flex w-full flex-col gap-5 bg-card md:w-1/2">
           <Heading size="title.sm">Configuration</Heading>
 
           {ercOrMarketplace === "marketplace" ? (
@@ -536,7 +538,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           ) : null}
         </Card>
 
-        <Card className="flex w-full flex-col gap-2 md:w-1/2">
+        <Card className="flex w-full flex-col gap-2 bg-card md:w-1/2">
           <Heading size="title.sm">Embed Code</Heading>
           <CodeClient code={embedCode} lang="html" />
           <Button

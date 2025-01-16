@@ -248,8 +248,8 @@ export function AuthOptionsForm({
                       <FormLabel>
                         <div
                           className={cn(
-                            "flex cursor-pointer flex-row items-center justify-center gap-3 rounded-lg border border-border p-3 hover:bg-muted",
-                            isChecked && "bg-muted hover:bg-muted/50",
+                            "flex cursor-pointer flex-row items-center justify-center gap-3 rounded-lg border border-border p-3 hover:bg-accent",
+                            isChecked && "bg-muted hover:bg-card",
                           )}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}

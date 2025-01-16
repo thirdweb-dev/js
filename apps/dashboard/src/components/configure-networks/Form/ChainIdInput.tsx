@@ -22,7 +22,7 @@ export const ChainIdInput: React.FC<{
         disabled={disabled}
         id="chain-id"
         autoComplete="off"
-        className="bg-muted/50 font-mono disabled:bg-muted/50 disabled:text-muted-foreground disabled:opacity-100"
+        className="bg-card font-mono disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
         onKeyDown={(e) => {
           // prevent typing e, +, -
           if (e.key === "e" || e.key === "+" || e.key === "-") {
