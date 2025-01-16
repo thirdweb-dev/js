@@ -1,3 +1,4 @@
+import { payServerProxy } from "@/actions/proxies";
 import { useQuery } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -64,29 +65,27 @@ export function usePayVolume(options: {
   return useQuery({
     queryKey: ["usePayVolume", address, options],
     queryFn: async () => {
-      const searchParams = new URLSearchParams();
-      searchParams.append("intervalType", options.intervalType);
-      searchParams.append("clientId", options.clientId);
-      searchParams.append("fromDate", `${options.from.getTime()}`);
-      searchParams.append("toDate", `${options.to.getTime()}`);
-
-      const res = await fetch(
-        `/api/server-proxy/pay/stats/aggregate/volume/v1?${searchParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const res = await payServerProxy({
+        pathname: "/stats/aggregate/volume/v1",
+        searchParams: {
+          intervalType: options.intervalType,
+          clientId: options.clientId,
+          fromDate: `${options.from.getTime()}`,
+          toDate: `${options.to.getTime()}`,
         },
-      );
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      });
 
       if (!res.ok) {
         throw new Error("Failed to fetch pay volume");
       }
 
-      const resJSON = (await res.json()) as Response;
+      const json = res.data as Response;
 
-      return resJSON.result.data;
+      return json.result.data;
     },
     retry: false,
   });

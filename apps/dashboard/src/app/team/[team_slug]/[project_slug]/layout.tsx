@@ -50,7 +50,7 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="bg-muted/50">
+      <div className="bg-card">
         <TeamHeaderLoggedIn
           currentProject={project}
           currentTeam={team}

@@ -67,7 +67,7 @@ export function RenderSidebarLinks(props: { links: SidebarLink[] }) {
             // biome-ignore lint/suspicious/noArrayIndexKey: items won't be reordered
             key={i}
             href={link.href}
-            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-muted"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent"
             activeClassName="text-foreground"
             exactMatch={link.exactMatch}
           >

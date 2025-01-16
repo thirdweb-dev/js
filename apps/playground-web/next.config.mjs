@@ -37,6 +37,15 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  productionBrowserSourceMaps: false,
+  experimental: {
+    webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
+    serverSourceMaps: false,
+  },
   async headers() {
     return [
       {

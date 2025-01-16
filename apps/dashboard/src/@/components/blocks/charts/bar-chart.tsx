@@ -23,6 +23,7 @@ import {
   EmptyChartState,
   LoadingChartState,
 } from "../../../../components/analytics/empty-chart-state";
+import { cn } from "../../../lib/utils";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata
@@ -36,6 +37,9 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // chart className
   chartClassName?: string;
   isPending: boolean;
+  toolTipLabelFormatter?: (label: string, payload: unknown) => React.ReactNode;
+  hideLabel?: boolean;
+  titleClassName?: string;
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -45,10 +49,13 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
   // if there are more than 4 keys then we should stack them by default
   const variant =
     props.variant || configKeys.length > 4 ? "stacked" : "grouped";
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="mb-2">{props.title}</CardTitle>
+        <CardTitle className={cn("mb-2", props.titleClassName)}>
+          {props.title}
+        </CardTitle>
         {props.description && (
           <CardDescription>{props.description}</CardDescription>
         )}
@@ -69,7 +76,16 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                 tickMargin={10}
                 tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
               />
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    hideLabel={
+                      props.hideLabel !== undefined ? props.hideLabel : true
+                    }
+                    labelFormatter={props.toolTipLabelFormatter}
+                  />
+                }
+              />
               {props.showLegend && (
                 <ChartLegend content={<ChartLegendContent />} />
               )}

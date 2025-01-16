@@ -6,6 +6,7 @@ import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { isAddress } from "../../../../utils/address.js";
+import { isValidENSName } from "../../../../utils/ens/isValidENSName.js";
 import { toWei } from "../../../../utils/units.js";
 import { useActiveWallet } from "./useActiveWallet.js";
 
@@ -53,7 +54,7 @@ export function useSendToken(client: ThirdwebClient) {
       // input validation
       if (
         !receiverAddress ||
-        (!receiverAddress.endsWith(".eth") && !isAddress(receiverAddress))
+        (!isValidENSName(receiverAddress) && !isAddress(receiverAddress))
       ) {
         throw new Error("Invalid receiver address");
       }

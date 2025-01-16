@@ -5,7 +5,7 @@ import { useEns } from "components/contract-components/hooks";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
-import { isAddress } from "thirdweb/utils";
+import { isAddress, isValidENSName } from "thirdweb/utils";
 import { FormHelperText } from "tw-components";
 import type { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";
@@ -77,14 +77,19 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
 
   const resolvingEns = useMemo(
     () =>
-      localInput?.endsWith(".eth") &&
+      localInput &&
+      isValidENSName(localInput) &&
       !ensQuery.isError &&
       !ensQuery.data?.address,
     [ensQuery.data?.address, ensQuery.isError, localInput],
   );
 
   const resolvedAddress = useMemo(
-    () => localInput?.endsWith(".eth") && !hasError && ensQuery.data?.address,
+    () =>
+      localInput &&
+      isValidENSName(localInput) &&
+      !hasError &&
+      ensQuery.data?.address,
     [ensQuery.data?.address, hasError, localInput],
   );
 

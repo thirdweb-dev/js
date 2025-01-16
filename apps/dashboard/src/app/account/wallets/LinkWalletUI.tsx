@@ -45,7 +45,7 @@ export function LinkWalletUI(props: {
 
       <div className="h-4" />
 
-      <ul className="rounded-lg border bg-muted/50">
+      <ul className="rounded-lg border bg-card">
         {walletsToShow.map((v) => {
           return (
             <li key={v} className="border-border border-b p-4 last:border-b-0">

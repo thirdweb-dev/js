@@ -83,11 +83,16 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
             >
               <AccountName
                 fallbackComponent={
-                  <AccountAddress
-                    formatFn={(addr) =>
-                      shortenIfAddress(replaceDeployerAddress(addr))
-                    }
-                  />
+                  // When social profile API support other TLDs as well - we can remove this condition
+                  ensQuery.data?.ensName ? (
+                    <span> {ensQuery.data?.ensName} </span>
+                  ) : (
+                    <AccountAddress
+                      formatFn={(addr) =>
+                        shortenIfAddress(replaceDeployerAddress(addr))
+                      }
+                    />
+                  )
                 }
                 loadingComponent={<Skeleton className="h-8 w-40" />}
                 formatFn={(name) => replaceDeployerAddress(name)}

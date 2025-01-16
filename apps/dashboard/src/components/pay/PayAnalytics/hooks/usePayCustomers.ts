@@ -1,3 +1,4 @@
+import { payServerProxy } from "@/actions/proxies";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -31,31 +32,25 @@ export function usePayCustomers(options: {
           ? "/stats/new-customers/v1"
           : "/stats/customers/v1";
 
-      const searchParams = new URLSearchParams();
-
       const start = options.pageSize * pageParam;
-      searchParams.append("skip", `${start}`);
-      searchParams.append("take", `${options.pageSize}`);
 
-      searchParams.append("clientId", options.clientId);
-      searchParams.append("fromDate", `${options.from.getTime()}`);
-      searchParams.append("toDate", `${options.to.getTime()}`);
-
-      const res = await fetch(
-        `/api/server-proxy/pay/${endpoint}?${searchParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const res = await payServerProxy({
+        method: "GET",
+        pathname: endpoint,
+        searchParams: {
+          skip: `${start}`,
+          take: `${options.pageSize}`,
+          clientId: options.clientId,
+          fromDate: `${options.from.getTime()}`,
+          toDate: `${options.to.getTime()}`,
         },
-      );
+      });
 
       if (!res.ok) {
         throw new Error("Failed to fetch pay volume");
       }
 
-      const resJSON = (await res.json()) as Response;
+      const resJSON = res.data as Response;
       const pageData = resJSON.result.data;
 
       const itemsRequested = options.pageSize * (pageParam + 1);

@@ -1,6 +1,10 @@
+"use client";
+
+import { emailSignup } from "@/actions/emailSignup";
 import { Box, Container, Flex, FormControl, Input } from "@chakra-ui/react";
 import { MailCheckIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button, Text } from "tw-components";
 
 export const NewsletterSection = () => {
@@ -17,12 +21,17 @@ export const NewsletterSection = () => {
     setIsSubmitting(true);
 
     try {
-      await fetch("/api/email-signup", {
-        method: "POST",
-        body: JSON.stringify({ email }),
+      const res = await emailSignup({
+        email,
       });
+
+      if (res.status.toString().startsWith("2")) {
+        toast.success("Successfully signed up for our newsletter!");
+      }
+
       setEmail("");
     } catch (err) {
+      toast.error("Failed to sign up for our newsletter");
       console.error(err);
     }
 

@@ -100,7 +100,7 @@ export function CreateTicket() {
     <form
       ref={formRef}
       action={formAction}
-      className="rounded-lg border bg-muted/50"
+      className="rounded-lg border bg-card"
     >
       <div className="px-4 py-6 lg:px-6">
         <h2 className="font-semibold text-2xl tracking-tight">Get Support</h2>

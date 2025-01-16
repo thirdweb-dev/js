@@ -6,9 +6,9 @@ import { getBytecode, getContract } from "thirdweb/contract";
 import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
 import { getInstalledModules } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
-import { extractIPFSUri } from "thirdweb/utils";
+import { extractIPFSUri, isValidENSName } from "thirdweb/utils";
 import { fetchPublishedContractsFromDeploy } from "../../../../../../../components/contract-components/fetchPublishedContractsFromDeploy";
-import { isEnsName, resolveEns } from "../../../../../../../lib/ens";
+import { resolveEns } from "../../../../../../../lib/ens";
 
 type ModuleMetadataPickedKeys = {
   publisher: string;
@@ -52,7 +52,7 @@ export async function getPublishedByCardProps(params: {
 
   // get publisher address/ens
   let publisherAddressOrEns = publishedContractToShow.publisher;
-  if (!isEnsName(publishedContractToShow.publisher)) {
+  if (!isValidENSName(publishedContractToShow.publisher)) {
     try {
       const res = await resolveEns(publishedContractToShow.publisher);
       if (res.ensName) {

@@ -33,7 +33,7 @@ export function PlanInfoCard(props: {
     : 0;
 
   return (
-    <div className="rounded-lg border border-border bg-muted/50">
+    <div className="rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div>
           <div className="flex items-center gap-2">

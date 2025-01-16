@@ -1,4 +1,5 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import "server-only";
@@ -19,22 +20,18 @@ export async function fetchApiServer(
   }
 
   // create a new URL object for the analytics server
-  const API_SERVER_URL = new URL(
-    process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
-  );
-  API_SERVER_URL.pathname = pathname;
+  const url = new URL(API_SERVER_URL);
+
+  url.pathname = pathname;
   for (const param of searchParams?.split("&") || []) {
     const [key, value] = param.split("=");
     if (!key || !value) {
       throw new Error("Invalid input, no key or value provided");
     }
-    API_SERVER_URL.searchParams.append(
-      decodeURIComponent(key),
-      decodeURIComponent(value),
-    );
+    url.searchParams.append(decodeURIComponent(key), decodeURIComponent(value));
   }
 
-  return fetch(API_SERVER_URL, {
+  return fetch(url, {
     ...init,
     headers: {
       "content-type": "application/json",

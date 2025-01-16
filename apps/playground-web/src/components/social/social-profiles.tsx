@@ -8,6 +8,7 @@ import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { type SocialProfile, getSocialProfiles } from "thirdweb/social";
 import { resolveScheme } from "thirdweb/storage";
+import { isValidENSName } from "thirdweb/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -19,7 +20,7 @@ export function SocialProfiles() {
   const { mutate: searchProfiles, isPending } = useMutation({
     mutationFn: async (address: string) => {
       const resolvedAddress = await (async () => {
-        if (address.endsWith(".eth")) {
+        if (isValidENSName(address)) {
           return resolveAddress({
             client: THIRDWEB_CLIENT,
             name: address,

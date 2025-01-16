@@ -10,7 +10,7 @@ export function EmptyStateCard({
   return (
     <Card className="container h-[300px] p-2 md:h-[400px]">
       <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border text-center">
-        <div className="flex size-8 items-center justify-center rounded-md border bg-muted/50 text-muted-foreground">
+        <div className="flex size-8 items-center justify-center rounded-md border bg-card text-muted-foreground">
           <PlugIcon className="size-4" />
         </div>
         <div className="font-semibold text-lg">No data available</div>

@@ -17,58 +17,56 @@ import walletsIcon from "../../../../../public/assets/tw-icons/wallets.svg";
 
 export function EmptyState() {
   return (
-    <section className="flex w-full items-start justify-center md:min-h-[500px]">
-      <div className="group container flex flex-col items-center justify-center gap-8 rounded-lg border bg-card p-6 py-24">
-        <div className="flex max-w-[500px] flex-col items-center justify-center gap-6">
-          <AnimatedIcons />
-          <div className="flex flex-col gap-0.5 text-center">
-            <h3 className="font-semibold text-2xl text-foreground">
-              Get Started with the Connect SDK
-            </h3>
-            <p className="text-base text-muted-foreground">
-              Add the Connect SDK to your app to start collecting analytics.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <SDKBadge
-              icon={TypeScriptIcon}
-              label="TypeScript"
-              href="https://portal.thirdweb.com/typescript/v5"
-            />
-            <SDKBadge
-              icon={ReactIcon}
-              label="React"
-              href="https://portal.thirdweb.com/react/v5"
-            />
-            <SDKBadge
-              icon={ReactIcon}
-              label="React Native"
-              href="https://portal.thirdweb.com/react-native/v5"
-            />
-            <SDKBadge
-              icon={UnityIcon}
-              label="Unity"
-              href="https://portal.thirdweb.com/unity/v5"
-            />
-            <SDKBadge
-              icon={UnrealIcon}
-              label="Unreal"
-              href="https://portal.thirdweb.com/unreal-engine"
-            />
-            <SDKBadge
-              icon={DotNetIcon}
-              label=".NET"
-              href="https://portal.thirdweb.com/dotnet"
-            />
-          </div>
+    <section className="group container flex h-full w-full grow flex-col items-center justify-center gap-8 rounded-lg border bg-card p-6 py-24 md:min-h-[500px]">
+      <div className="flex max-w-[500px] flex-col items-center justify-center gap-6">
+        <AnimatedIcons />
+        <div className="flex flex-col gap-0.5 text-center">
+          <h3 className="font-semibold text-2xl text-foreground">
+            Get Started with the Connect SDK
+          </h3>
+          <p className="text-base text-muted-foreground">
+            Add the Connect SDK to your app to start collecting analytics.
+          </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="primary" asChild className="min-w-36">
-            <Link href="https://portal.thirdweb.com/connect" target="_blank">
-              View Docs <ArrowRightIcon className="ml-2 h-4 w-auto" />
-            </Link>
-          </Button>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <SDKBadge
+            icon={TypeScriptIcon}
+            label="TypeScript"
+            href="https://portal.thirdweb.com/typescript/v5"
+          />
+          <SDKBadge
+            icon={ReactIcon}
+            label="React"
+            href="https://portal.thirdweb.com/react/v5"
+          />
+          <SDKBadge
+            icon={ReactIcon}
+            label="React Native"
+            href="https://portal.thirdweb.com/react-native/v5"
+          />
+          <SDKBadge
+            icon={UnityIcon}
+            label="Unity"
+            href="https://portal.thirdweb.com/unity/v5"
+          />
+          <SDKBadge
+            icon={UnrealIcon}
+            label="Unreal"
+            href="https://portal.thirdweb.com/unreal-engine"
+          />
+          <SDKBadge
+            icon={DotNetIcon}
+            label=".NET"
+            href="https://portal.thirdweb.com/dotnet"
+          />
         </div>
+      </div>
+      <div className="flex gap-2">
+        <Button variant="primary" asChild className="min-w-36">
+          <Link href="https://portal.thirdweb.com/connect" target="_blank">
+            View Docs <ArrowRightIcon className="ml-2 h-4 w-auto" />
+          </Link>
+        </Button>
       </div>
     </section>
   );
@@ -111,7 +109,7 @@ function Icon({
   return (
     <div
       className={cn(
-        "flex size-10 items-center justify-center rounded-xl border bg-card transition-all duration-200 ease-in-out",
+        "flex size-10 items-center justify-center rounded-xl border bg-background transition-all duration-200 ease-in-out",
         className,
       )}
     >

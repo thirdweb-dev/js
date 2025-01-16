@@ -1,10 +1,17 @@
-import { describe, expect, it, test } from "vitest";
+import * as ox__Bytes from "ox/Bytes";
+import { beforeAll, describe, expect, it, test } from "vitest";
 import { FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../test/src/test-wallets.js";
-import { mainnet } from "../chains/chain-definitions/ethereum.js";
+import { ethereum, mainnet } from "../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
-import { verifyEOASignature, verifySignature } from "./verify-signature.js";
+import type { Account } from "../wallets/interfaces/wallet.js";
+import { smartWallet } from "../wallets/smart/smart-wallet.js";
+import {
+  verifyContractWalletSignature,
+  verifyEOASignature,
+  verifySignature,
+} from "./verify-signature.js";
 
 describe("verifyEOASignature", () => {
   test("should return true for a valid signature", async () => {
@@ -58,7 +65,7 @@ describe("verifyEOASignature", () => {
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "verifyContractWalletSignature",
-  async () => {
+  () => {
     it("should verify a valid signature", async () => {
       expect(
         await verifySignature({
@@ -95,6 +102,50 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           chain: mainnet, // The CBSW factory was deployed more recently than our fork, it's only an eth_call so live mainnet is okay
         }),
       ).toBe(true);
+    });
+  },
+);
+
+describe.runIf(process.env.TW_SECRET_KEY)(
+  "verifyContractWalletSignature",
+  () => {
+    const message = "Hakuna matata";
+    const wallet = smartWallet({
+      chain: ethereum,
+      gasless: true,
+    });
+    let smartAccount: Account;
+
+    beforeAll(async () => {
+      smartAccount = await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount: TEST_ACCOUNT_A,
+      });
+    });
+
+    test("should verify a smart account signature", async () => {
+      const rawSignature = await smartAccount.signMessage({ message });
+      const result = await verifyContractWalletSignature({
+        signature: rawSignature,
+        message,
+        address: smartAccount.address,
+        chain: ethereum,
+        client: TEST_CLIENT,
+      });
+      expect(result).toBe(true);
+    });
+
+    test("should verify a smart account signature as bytes", async () => {
+      const rawSignature = await smartAccount.signMessage({ message });
+      const bytesSignature = ox__Bytes.fromHex(rawSignature);
+      const result = await verifyContractWalletSignature({
+        signature: bytesSignature,
+        message,
+        address: smartAccount.address,
+        chain: ethereum,
+        client: TEST_CLIENT,
+      });
+      expect(result).toBe(true);
     });
   },
 );

@@ -112,7 +112,7 @@ export function ManageMembersSection(props: {
       <div className="h-4" />
 
       {/* Card */}
-      <div className="rounded-lg border border-border bg-muted/50">
+      <div className="rounded-lg border border-border bg-card">
         {/* Top section */}
         {topSection}
 
@@ -205,7 +205,7 @@ function FiltersSection(props: {
         <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 transform text-muted-foreground" />
         <Input
           placeholder="Search Team members"
-          className="bg-muted/50 pl-9"
+          className="bg-card pl-9"
           disabled={props.disabled}
         />
       </div>
@@ -246,7 +246,7 @@ function SortMembersBy(props: {
       }}
     >
       <SelectTrigger
-        className="bg-muted/50 capitalize disabled:bg-muted lg:w-[150px]"
+        className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
         disabled={props.disabled}
       >
         <SelectValue />
@@ -278,7 +278,7 @@ function RoleSelector(props: {
       }}
     >
       <SelectTrigger
-        className="bg-muted/50 capitalize disabled:bg-muted lg:w-[150px]"
+        className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
         disabled={props.disabled}
       >
         <SelectValue />

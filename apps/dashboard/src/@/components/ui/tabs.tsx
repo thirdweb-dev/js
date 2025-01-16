@@ -51,7 +51,7 @@ export function TabLinks(props: {
                   href={tab.href}
                   aria-disabled={tab.isDisabled}
                   className={cn(
-                    "relative h-auto rounded-lg px-3 font-normal text-muted-foreground text-sm hover:bg-muted lg:text-sm",
+                    "relative h-auto rounded-lg px-3 font-normal text-muted-foreground text-sm hover:bg-accent lg:text-sm",
                     !tab.isActive && !tab.isDisabled && "hover:text-foreground",
                     tab.isDisabled && "pointer-events-none",
                     tab.isActive && "!text-foreground",

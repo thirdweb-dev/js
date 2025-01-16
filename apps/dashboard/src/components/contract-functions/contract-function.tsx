@@ -417,6 +417,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         overflow="auto"
         colSpan={{ base: 12, md: 4 }}
         overflowY="auto"
+        className="bg-card"
       >
         <List height="100%" overflowX="hidden">
           {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
@@ -451,7 +452,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                   <Input
                     value={_keywordSearch}
                     placeholder="Search"
-                    className="h-auto rounded-none border-x-0 py-3 pl-9 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="h-auto rounded-none border-x-0 bg-card py-3 pl-9 focus-visible:ring-0 focus-visible:ring-offset-0"
                     onChange={(e) => setKeywordSearch(e.target.value)}
                   />
                 </div>
@@ -491,6 +492,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         height="100%"
         overflow="auto"
         colSpan={{ base: 12, md: 8 }}
+        className="bg-card"
       >
         {selectedFunction && (
           <ContractFunction

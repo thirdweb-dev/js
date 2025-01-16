@@ -194,6 +194,10 @@ export const sidebar: SideBar = {
           ],
         },
         {
+          name: "Web3 Onboard",
+          href: `${walletSlug}/web3-onboard`,
+        },
+        {
           name: "Migrate to thirdweb",
           href: `${walletSlug}/migrate-to-thirdweb`,
         },
@@ -295,6 +299,10 @@ export const sidebar: SideBar = {
             {
               name: "Supported Chains",
               href: `${paySlug}/supported-chains`,
+            },
+            {
+              name: "Onramp Providers",
+              href: `${paySlug}/onramp-providers`,
             },
 
             {

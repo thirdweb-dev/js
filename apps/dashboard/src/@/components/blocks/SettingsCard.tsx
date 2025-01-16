@@ -30,7 +30,7 @@ export function SettingsCard(
   }>,
 ) {
   return (
-    <div className="relative rounded-lg border border-border bg-muted/50">
+    <div className="relative rounded-lg border border-border bg-card">
       <div
         className={cn(
           "relative border-border border-b px-4 py-6 lg:px-6",

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button as ChakraButton,
   type ButtonProps as ChakraButtonProps,

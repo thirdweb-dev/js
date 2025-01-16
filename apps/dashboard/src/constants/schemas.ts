@@ -1,5 +1,6 @@
 import { resolveEns } from "lib/ens";
 import { isAddress } from "thirdweb";
+import { isValidENSName } from "thirdweb/utils";
 import z from "zod";
 
 /**
@@ -15,19 +16,11 @@ export const BasisPointsSchema = z
   .min(0, "Cannot be below 0%");
 
 // @internal
-type EnsName = `${string}.eth` | `${string}.cb.id`;
+type EnsName = string;
 
-// Only pass through to provider call if value ends with .eth or .cb.id
-const EnsSchema: z.ZodType<
-  `0x${string}`,
-  z.ZodTypeDef,
-  `${string}.eth` | `${string}.cb.id`
-> = z
-  .custom<EnsName>(
-    (ens) =>
-      typeof ens === "string" &&
-      (ens.endsWith(".eth") || ens.endsWith(".cb.id")),
-  )
+// Only pass through to provider call if value is a valid ENS name
+const EnsSchema: z.ZodType<`0x${string}`, z.ZodTypeDef, string> = z
+  .custom<EnsName>((ens) => typeof ens === "string" && isValidENSName(ens))
   .transform(async (ens) => (await resolveEns(ens)).address)
   .refine(
     (address): address is `0x${string}` => !!address && isAddress(address),

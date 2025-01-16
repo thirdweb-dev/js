@@ -1,12 +1,13 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { GuideCard } from "components/product-pages/common/GuideCard";
 import { MoveRightIcon } from "lucide-react";
+import type { StaticImageData } from "next/image";
 import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
 
 type BlogPost = {
   title: string;
   description?: string;
-  image: string;
+  image: string | StaticImageData;
   link: string;
 };
 

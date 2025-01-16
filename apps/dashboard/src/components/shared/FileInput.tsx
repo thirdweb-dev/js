@@ -120,7 +120,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
               maxWidth: previewMaxWidth,
             }}
             className={cn(
-              "cursor-not-allowed bg-muted/50 opacity-50",
+              "cursor-not-allowed bg-card opacity-50",
               "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
               className,
             )}
@@ -139,7 +139,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
             className={cn(
               "relative cursor-pointer overflow-hidden",
               "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
-              fileUrl ? "bg-transparent" : "bg-muted/50",
+              fileUrl ? "bg-transparent" : "bg-card",
               className,
             )}
           >

@@ -125,7 +125,7 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="relative flex items-center gap-4 rounded-lg border border-border bg-muted/50 p-5 transition-colors hover:bg-muted/70"
+      className="relative flex items-center gap-4 rounded-lg border border-border bg-card p-5 transition-colors hover:border-active-border"
     >
       {/* TODO - set image */}
       <ProjectAvatar className="size-10 rounded-full" src="" />
@@ -168,7 +168,7 @@ function SearchInput(props: {
         placeholder="Search Projects by name or Client ID"
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="bg-muted/50 pl-9"
+        className="bg-card pl-9"
       />
       <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
@@ -222,7 +222,7 @@ function SelectBy(props: {
         props.onChange(v as SortById);
       }}
     >
-      <SelectTrigger className="min-w-[200px] bg-muted/50 capitalize">
+      <SelectTrigger className="min-w-[200px] bg-card capitalize">
         Sort by {valueToLabel[props.value]}
       </SelectTrigger>
       <SelectContent>

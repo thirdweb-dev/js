@@ -167,7 +167,7 @@ export { stringify } from "../utils/json.js";
 // ------------------------------------------------
 // values
 // ------------------------------------------------
-export { maxUint256 } from "viem";
+export { maxUint256 } from "ox/Solidity";
 
 // ------------------------------------------------
 // jwt
@@ -208,3 +208,6 @@ export type {
 
 export { shortenLargeNumber } from "../utils/shortenLargeNumber.js";
 export { formatNumber } from "../utils/formatNumber.js";
+
+// ENS
+export { isValidENSName } from "../utils/ens/isValidENSName.js";

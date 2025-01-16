@@ -1,6 +1,7 @@
 import { useCallback, useContext, useMemo, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -8,7 +9,6 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
-import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import type { LocaleId } from "../types.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
