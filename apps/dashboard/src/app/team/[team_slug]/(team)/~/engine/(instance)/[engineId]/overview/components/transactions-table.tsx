@@ -1,7 +1,9 @@
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
+import type { ChartConfig } from "@/components/ui/chart";
 import {
   Sheet,
   SheetContent,
@@ -20,10 +22,10 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
-import { format } from "date-fns/format";
+import { format, formatDate } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { InfoIcon, MoveLeftIcon, MoveRightIcon } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { toTokens } from "thirdweb";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 import { TWTable } from "../../../../../../../../../../components/shared/TWTable";
@@ -256,14 +258,79 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     ? transactions.indexOf(selectedTransaction)
     : 0;
 
+  const { analyticsData, chartConfig } = useMemo(() => {
+    const dayToTxCountMap: Map<number, Record<string, number>> = new Map();
+    const uniqueStatuses = new Set<string>();
+
+    for (const tx of transactions) {
+      if (!tx.queuedAt || !tx.status) {
+        continue;
+      }
+      const normalizedDate = new Date(tx.queuedAt);
+      normalizedDate.setHours(0, 0, 0, 0); // normalize time
+      const time = normalizedDate.getTime();
+      const entry = dayToTxCountMap.get(time) ?? {};
+      entry[tx.status] = (entry[tx.status] ?? 0) + 1;
+      uniqueStatuses.add(tx.status);
+      dayToTxCountMap.set(time, entry);
+    }
+
+    const analyticsData = Array.from(dayToTxCountMap.entries())
+      .map(([day, record]) => ({
+        time: new Date(day).getTime(),
+        ...record,
+      }))
+      .sort((a, b) => a.time - b.time);
+
+    const chartConfig: ChartConfig = {};
+    Array.from(uniqueStatuses).forEach((status, i) => {
+      chartConfig[status] = {
+        label: status.charAt(0).toUpperCase() + status.slice(1), // first letter uppercase
+        color:
+          status === "errored"
+            ? "hsl(var(--destructive-text))"
+            : status === "mined"
+              ? "hsl(var(--success-text))"
+              : `hsl(var(--chart-${(i % 15) + 3}))`,
+      };
+    });
+
+    return {
+      analyticsData,
+      chartConfig,
+    };
+  }, [transactions]);
+
   return (
     <>
+      <ThirdwebBarChart
+        title="Daily Transactions"
+        description="Transactions sent from your backend wallets per day"
+        config={chartConfig}
+        data={analyticsData}
+        isPending={isPending}
+        chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+        titleClassName="text-xl mb-0"
+        hideLabel={false}
+        toolTipLabelFormatter={(_v, item) => {
+          if (Array.isArray(item)) {
+            const time = item[0].payload.time as number;
+            return formatDate(new Date(time), "MMM d, yyyy");
+          }
+          return undefined;
+        }}
+      />
+
+      <div className="h-8" />
+
       <TWTable
         title="transactions"
         data={transactions}
         columns={columns}
         isPending={isPending}
         isFetched={isFetched}
+        bodyRowClassName="hover:bg-accent/50"
+        tableScrollableClassName="max-h-[1000px]"
         onRowClick={(row) => {
           setSelectedTransaction(row);
           transactionDisclosure.onOpen();

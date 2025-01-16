@@ -29,7 +29,7 @@ export function DeployedContractsPageHeader() {
         </div>
         <div className="flex gap-2 [&>*]:grow">
           <Button
-            className="gap-2"
+            className="gap-2 bg-card"
             variant="outline"
             onClick={() => setImportModalOpen(true)}
           >

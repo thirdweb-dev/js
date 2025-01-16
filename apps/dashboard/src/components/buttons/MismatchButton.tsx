@@ -1,5 +1,6 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,6 @@ import {
 } from "thirdweb/react";
 import { privateKeyToAccount } from "thirdweb/wallets";
 import { getFaucetClaimAmount } from "../../app/api/testnet-faucet/claim/claim-amount";
-import { THIRDWEB_API_HOST } from "../../constants/urls";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
@@ -297,18 +297,24 @@ function NoFundsDialogContent(props: {
   const chainWithServiceInfoQuery = useQuery({
     queryKey: ["chain-with-services", props.chain.id],
     queryFn: async () => {
-      const [chain, chainServices] = await Promise.all([
-        fetch(`${THIRDWEB_API_HOST}/v1/chains/${props.chain.id}`).then((res) =>
-          res.json(),
-        ) as Promise<{ data: ChainMetadata }>,
-        fetch(`${THIRDWEB_API_HOST}/v1/chains/${props.chain.id}/services`).then(
-          (res) => res.json(),
-        ) as Promise<{ data: ChainServices }>,
+      const [chainRes, chainServicesRes] = await Promise.all([
+        apiServerProxy<{ data: ChainMetadata }>({
+          pathname: `/v1/chains/${props.chain.id}`,
+          method: "GET",
+        }),
+        apiServerProxy<{ data: ChainServices }>({
+          pathname: `/v1/chains/${props.chain.id}/services`,
+          method: "GET",
+        }),
       ]);
 
+      if (!chainRes.ok || !chainServicesRes.ok) {
+        throw new Error("Failed to fetch chain with services");
+      }
+
       return {
-        ...chain.data,
-        services: chainServices.data.services,
+        ...chainRes.data.data,
+        services: chainServicesRes.data.data.services,
       } satisfies ChainMetadataWithServices;
     },
     enabled: !!props.chain.id,

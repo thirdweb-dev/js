@@ -71,22 +71,25 @@ export async function rateLimit(args: {
     limitPerSecond * sampleRate * RATE_LIMIT_WINDOW_SECONDS;
 
   if (requestCount > limitPerWindow) {
-    // Report rate limit hits.
-    if (project?.id) {
-      await updateRateLimitedAt(project.id, serviceConfig);
+    /**
+     * Report rate limit hits.
+     * Only track rate limit when its hit for the first time.
+     * Not waiting for tracking to complete as user doesn't need to wait.
+     */
+    if (requestCount === limitPerWindow + 1 && project?.id) {
+      updateRateLimitedAt(project.id, serviceConfig).catch(() => {
+        // no-op
+      });
     }
 
-    // Reject requests when they've exceeded 2x the rate limit.
-    if (requestCount > 2 * limitPerWindow) {
-      return {
-        rateLimited: true,
-        requestCount,
-        rateLimit: limitPerWindow,
-        status: 429,
-        errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
-        errorCode: "RATE_LIMIT_EXCEEDED",
-      };
-    }
+    return {
+      rateLimited: true,
+      requestCount,
+      rateLimit: limitPerWindow,
+      status: 429,
+      errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
+      errorCode: "RATE_LIMIT_EXCEEDED",
+    };
   }
 
   return {

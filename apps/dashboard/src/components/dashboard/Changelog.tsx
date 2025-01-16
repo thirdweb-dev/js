@@ -22,11 +22,11 @@ export async function Changelog() {
               target="_blank"
               href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
               role="group"
-              className="!text-muted-foreground hover:!text-foreground hover:!no-underline line-clamp-2 text-sm"
+              className="line-clamp-2 text-foreground text-sm hover:underline"
             >
               {item.title}
             </Link>
-            <div className="mt-1 text-muted-foreground text-xs opacity-70">
+            <div className="mt-1 text-muted-foreground text-xs">
               {formatDistance(new Date(item.published_at), Date.now(), {
                 addSuffix: true,
               })}

@@ -57,8 +57,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   return (
     <div
       className={cn(
-        "z-[999] flex w-full flex-col gap-6 rounded-xl border border-border bg-muted/50 p-4 md:p-6",
+        "z-10 flex w-full flex-col gap-6 rounded-xl border border-border bg-card p-4 md:p-6",
         current && "border-blue-500",
+        highlighted && "border-active-border",
       )}
       style={
         highlighted

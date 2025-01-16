@@ -30,7 +30,7 @@ export function DangerSettingCard(props: {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-lg border border-red-500/70",
+        "overflow-hidden rounded-lg border border-red-500/70 bg-card",
         props.className,
       )}
     >

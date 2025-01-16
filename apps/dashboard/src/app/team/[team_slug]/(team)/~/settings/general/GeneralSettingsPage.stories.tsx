@@ -57,7 +57,7 @@ function Story() {
 
 function ComponentVariants() {
   return (
-    <div className="border-border border-t p-6 pt-20">
+    <div className="border-border border-t pt-20">
       <div className="mx-auto max-w-[1100px]">
         <h2 className="mb-5 text-3xl"> Component variations </h2>
         <div className="flex flex-col gap-6">

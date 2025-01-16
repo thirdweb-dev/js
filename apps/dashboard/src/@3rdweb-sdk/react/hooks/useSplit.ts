@@ -1,47 +1,36 @@
+import { getTokenBalancesFromMoralis } from "@/actions/getBalancesFromMoralis";
 import {
   queryOptions,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type {
-  BalanceQueryRequest,
-  BalanceQueryResponse,
-} from "pages/api/moralis/balances";
 import { toast } from "sonner";
 import { type ThirdwebContract, sendAndConfirmTransaction } from "thirdweb";
 import { distribute, distributeByToken } from "thirdweb/extensions/split";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 
-async function getSplitBalances(contract: ThirdwebContract) {
-  const query = await fetch("/api/moralis/balances", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      chainId: contract.chain.id,
-      address: contract.address,
-    } as BalanceQueryRequest),
-  });
-
-  if (query.status >= 400) {
-    throw new Error(await query.json().then((r) => r.error));
-  }
-  return query.json() as Promise<BalanceQueryResponse>;
-}
-
-function getQuery(contract: ThirdwebContract) {
+function getTokenBalancesQuery(contract: ThirdwebContract) {
   return queryOptions({
     queryKey: ["split-balances", contract.chain.id, contract.address],
-    queryFn: () => getSplitBalances(contract),
+    queryFn: async () => {
+      const res = await getTokenBalancesFromMoralis({
+        chainId: contract.chain.id,
+        contractAddress: contract.address,
+      });
+
+      if (!res.data) {
+        throw new Error(res.error);
+      }
+      return res.data;
+    },
     retry: false,
   });
 }
 
 export function useSplitBalances(contract: ThirdwebContract) {
-  return useQuery(getQuery(contract));
+  return useQuery(getTokenBalancesQuery(contract));
 }
 
 export function useSplitDistributeFunds(contract: ThirdwebContract) {
@@ -53,8 +42,8 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
       invariant(account, "No active account");
       const balances =
         // get the cached data if it exists, otherwise fetch it
-        queryClient.getQueryData(getQuery(contract).queryKey) ||
-        (await queryClient.fetchQuery(getQuery(contract)));
+        queryClient.getQueryData(getTokenBalancesQuery(contract).queryKey) ||
+        (await queryClient.fetchQuery(getTokenBalancesQuery(contract)));
 
       const distributions = balances
         .filter((token) => token.display_balance !== "0.0")
@@ -80,7 +69,7 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
       return await Promise.all(distributions);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(getQuery(contract));
+      queryClient.invalidateQueries(getTokenBalancesQuery(contract));
     },
   });
 }

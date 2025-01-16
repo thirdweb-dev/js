@@ -191,7 +191,7 @@ function ContractTableRow(props: {
     <>
       <TableRow
         linkBox
-        className="cursor-pointer hover:bg-muted/50"
+        className="cursor-pointer hover:bg-card"
         {...rowProps}
         key={key}
       >

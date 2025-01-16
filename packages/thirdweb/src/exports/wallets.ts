@@ -161,4 +161,6 @@ export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type { ConnectionManager } from "../wallets/manager/index.js";
 
+export type { AutoConnectProps } from "../wallets/connection/types.js";
+export { autoConnect } from "../wallets/connection/autoConnect.js";
 export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

@@ -1,5 +1,119 @@
 # thirdweb
 
+## 5.84.0
+
+### Minor Changes
+
+- [#5889](https://github.com/thirdweb-dev/js/pull/5889) [`7a3dff0`](https://github.com/thirdweb-dev/js/commit/7a3dff01cd4ef1b20b783312f4cb755dd2fddcbd) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Exposes autoConnect as a standalone function for use outside of react.
+
+  ```tsx
+  import { autoConnect } from "thirdweb/wallets";
+
+  const autoConnected = await autoConnect({
+    client,
+    onConnect: (wallet) => {
+      console.log("wallet", wallet); /// wallet that is have been auto connected.
+    },
+  });
+  console.log("isAutoConnected", isAutoConnected); // true or false
+  ```
+
+- [#5947](https://github.com/thirdweb-dev/js/pull/5947) [`d1c03b0`](https://github.com/thirdweb-dev/js/commit/d1c03b0cbc524d39d827f1e0d48f3532a837efb0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Introducing `engineAccount()` for backend usage
+
+  You can now use `engineAccount()` on the backend to create an account that can send transactions via your engine instance.
+
+  This lets you use the full catalog of thirdweb SDK functions and extensions on the backend, with the performance, reliability, and monitoring of your engine instance.
+
+  ```ts
+  // get your engine url, auth token, and wallet address from your engine instance on the dashboard
+  const engine = engineAccount({
+    engineUrl: process.env.ENGINE_URL,
+    authToken: process.env.ENGINE_AUTH_TOKEN,
+    walletAddress: process.env.ENGINE_WALLET_ADDRESS,
+  });
+
+  // Now you can use engineAcc to send transactions, deploy contracts, etc.
+  // For example, you can prepare extension functions:
+  const tx = await claimTo({
+    contract: getContract({ client, chain, address: "0x..." }),
+    to: "0x...",
+    tokenId: 0n,
+    quantity: 1n,
+  });
+
+  // And then send the transaction via engine
+  // this will automatically wait for the transaction to be mined and return the transaction hash
+  const result = await sendTransaction({
+    account: engine, // forward the transaction to your engine instance
+    transaction: tx,
+  });
+
+  console.log(result.transactionHash);
+  ```
+
+- [#5948](https://github.com/thirdweb-dev/js/pull/5948) [`b10f306`](https://github.com/thirdweb-dev/js/commit/b10f306fba2140cf7a702d4fc5c55c316986a6b6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Introducing Nebula API
+
+  You can now chat with Nebula and ask it to execute transactions with your wallet.
+
+  Ask questions about real time blockchain data.
+
+  ```ts
+  import { Nebula } from "thirdweb/ai";
+
+  const response = await Nebula.chat({
+    client: TEST_CLIENT,
+    prompt:
+      "What's the symbol of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+    context: {
+      chains: [sepolia],
+    },
+  });
+
+  console.log("chat response:", response.message);
+  ```
+
+  Ask it to execute transactions with your wallet.
+
+  ```ts
+  import { Nebula } from "thirdweb/ai";
+
+  const wallet = createWallet("io.metamask");
+  const account = await wallet.connect({ client });
+
+  const result = await Nebula.execute({
+    client,
+    prompt: "send 0.0001 ETH to vitalik.eth",
+    account,
+    context: {
+      chains: [sepolia],
+    },
+  });
+
+  console.log("executed transaction:", result.transactionHash);
+  ```
+
+### Patch Changes
+
+- [#5926](https://github.com/thirdweb-dev/js/pull/5926) [`4b5661b`](https://github.com/thirdweb-dev/js/commit/4b5661b9817d1e0d67a8574d7c5931d3e892a006) Thanks [@MananTank](https://github.com/MananTank)! - Export `toEventSelector` utility function from "thirdweb/utils"
+
+- [#5923](https://github.com/thirdweb-dev/js/pull/5923) [`42a313f`](https://github.com/thirdweb-dev/js/commit/42a313f3b2d89696d5374e5a705e9f144bf46ebe) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix deploy version for published contracts
+
+- [#5924](https://github.com/thirdweb-dev/js/pull/5924) [`7fb5ce1`](https://github.com/thirdweb-dev/js/commit/7fb5ce1cc3af8bc9d99fef52018d3e1c7b558eaa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Ensure resetting deploy flag on bundler errors
+
+- [#5937](https://github.com/thirdweb-dev/js/pull/5937) [`0e2b3df`](https://github.com/thirdweb-dev/js/commit/0e2b3df42aee57f30b7e8c32dbf034f5deb37303) Thanks [@MananTank](https://github.com/MananTank)! - Add `isValidENSName` utility function for checking if a string is a valid ENS name. It does not check if the name is actually registered, it only checks if the string is in a valid format.
+
+  ```ts
+  import { isValidENSName } from "thirdweb/utils";
+
+  isValidENSName("thirdweb.eth"); // true
+  isValidENSName("foo.bar.com"); // true
+  isValidENSName("foo"); // false
+  ```
+
+- [#5790](https://github.com/thirdweb-dev/js/pull/5790) [`e331e43`](https://github.com/thirdweb-dev/js/commit/e331e433ac90920fc3bd710d8aa00bc9ec03fa22) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Migrated underlying functionality to Ox
+
+- [#5914](https://github.com/thirdweb-dev/js/pull/5914) [`c5c6f9d`](https://github.com/thirdweb-dev/js/commit/c5c6f9d7415a438ddb0823764884d9c77b687163) Thanks [@MananTank](https://github.com/MananTank)! - Do not prompt user for signing message for SIWE auth in Connect UI for Ecosystem wallets
+
 ## 5.83.1
 
 ### Patch Changes

@@ -238,7 +238,7 @@ export function BlueprintPlaygroundUI(props: {
               </Alert>
             )}
 
-            <div className="flex grow flex-col overflow-hidden rounded-xl border bg-muted/50">
+            <div className="flex grow flex-col overflow-hidden rounded-xl border bg-card">
               <PlaygroundHeader
                 domain={props.domain}
                 parameters={parameters}
@@ -324,11 +324,11 @@ function PlaygroundHeader(props: {
   return (
     <div className="border-b px-4 py-4 lg:flex lg:justify-center lg:py-3">
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 overflow-hidden rounded-xl border bg-muted p-2 lg:justify-center">
+        <div className="flex items-center gap-2 overflow-hidden rounded-xl border bg-muted/50 p-2 lg:justify-center">
           {/* copy url */}
           <Button
             variant="ghost"
-            className="h-auto w-auto p-1 hover:bg-muted-foreground/10"
+            className="hover:accent h-auto w-auto p-1"
             onClick={() => {
               setHasCopied(true);
               const url = createBlueprintUrl({
@@ -776,7 +776,7 @@ function ResponseSection(props: {
           <div>
             <div className="flex justify-center">
               <div className="rounded-xl border p-1">
-                <div className="rounded-lg border bg-muted/50 p-1.5">
+                <div className="rounded-lg border bg-card p-1.5">
                   <PlayIcon className="size-5 text-muted-foreground" />
                 </div>
               </div>

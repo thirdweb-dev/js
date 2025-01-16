@@ -24,7 +24,7 @@ export function MobileNav(props: {
   const newChatPage = useNewChatPageLink();
 
   return (
-    <nav className="flex justify-between border-b bg-muted/50 px-4 py-4 lg:hidden">
+    <nav className="flex justify-between border-b bg-card px-4 py-4 lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button

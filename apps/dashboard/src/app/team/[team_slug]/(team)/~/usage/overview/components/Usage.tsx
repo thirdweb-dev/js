@@ -200,7 +200,7 @@ function TotalSponsoredCard(props: ChartCardProps) {
         <TotalSponsoredChartCardUI
           data={[]}
           aggregatedData={[]}
-          className="bg-muted/50"
+          className="bg-card"
           onlyMainnet
           description={description}
           title={title}
@@ -243,7 +243,7 @@ async function AsyncTotalSponsoredChartCard(
     <TotalSponsoredChartCardUI
       data={userOpUsageTimeSeries}
       aggregatedData={userOpUsage}
-      className="bg-muted/50"
+      className="bg-card"
       onlyMainnet
       description={props.description}
       title={props.title}

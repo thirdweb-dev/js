@@ -1,5 +1,6 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -63,8 +64,9 @@ function ApplyCouponCard(props: {
       scrollIntoView={!!couponCode}
       isPaymentSetup={props.isPaymentSetup}
       submit={async (promoCode: string) => {
-        const res = await fetch("/api/server-proxy/api/v1/coupons/redeem", {
+        const res = await apiServerProxy<{ data: ActiveCouponResponse }>({
           method: "POST",
+          pathname: "/v1/coupons/redeem",
           headers: {
             "Content-Type": "application/json",
           },
@@ -75,10 +77,10 @@ function ApplyCouponCard(props: {
         });
 
         if (res.ok) {
-          const json = await res.json();
+          const json = res.data;
           return {
             status: 200,
-            data: json.data as ActiveCouponResponse,
+            data: json.data,
           };
         }
 
@@ -111,7 +113,7 @@ export function ApplyCouponCardUI(props: {
   const form = useForm<z.infer<typeof couponFormSchema>>({
     resolver: zodResolver(couponFormSchema),
     defaultValues: {
-      promoCode: props.prefillPromoCode,
+      promoCode: props.prefillPromoCode || "",
     },
   });
 
@@ -198,7 +200,7 @@ export function ApplyCouponCardUI(props: {
               : "A valid payment method must be added to apply a coupon."
           }
           saveButton={{
-            variant: "default",
+            variant: "outline",
             disabled: !props.isPaymentSetup,
             isPending: applyCoupon.isPending,
             label: "Apply Coupon",
@@ -241,7 +243,7 @@ export function CouponDetailsCardUI(props: {
   const { activeCoupon, deleteCoupon } = props;
   return (
     <DangerSettingCard
-      className="border-border bg-muted/50"
+      className="border-border"
       footerClassName="!bg-transparent !border-border"
       title="Coupon Applied"
       description="To apply another coupon, you must remove this coupon"
@@ -297,29 +299,28 @@ export function CouponSection(props: {
   const activeCoupon = useQuery({
     queryKey: ["active-coupon", address, props.teamId],
     queryFn: async () => {
-      const res = await fetch(
-        `/api/server-proxy/api/v1/active-coupon${
-          props.teamId ? `?teamId=${props.teamId}` : ""
-        }`,
-      );
+      const res = await apiServerProxy<{ data: ActiveCouponResponse }>({
+        method: "GET",
+        pathname: "/v1/active-coupon",
+        searchParams: props.teamId ? { teamId: props.teamId } : undefined,
+      });
+
       if (!res.ok) {
         return null;
       }
-      const json = await res.json();
-      return json.data as ActiveCouponResponse;
+      const json = res.data;
+      return json.data;
     },
   });
 
   const deleteActiveCoupon = useMutation({
     mutationFn: async () => {
-      const res = await fetch(
-        `/api/server-proxy/api/v1/active-coupon${
-          props.teamId ? `?teamId=${props.teamId}` : ""
-        }`,
-        {
-          method: "DELETE",
-        },
-      );
+      const res = await apiServerProxy({
+        method: "DELETE",
+        pathname: "/v1/active-coupon",
+        searchParams: props.teamId ? { teamId: props.teamId } : undefined,
+      });
+
       if (!res.ok) {
         throw new Error("Failed to delete coupon");
       }
@@ -387,7 +388,7 @@ export function CouponSection(props: {
 
 function LoadingCouponSection() {
   return (
-    <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-muted/50">
+    <div className="flex h-[300px] items-center justify-center rounded-lg border border-border bg-card">
       <Spinner className="size-6" />
     </div>
   );

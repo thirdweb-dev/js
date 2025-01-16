@@ -1,7 +1,6 @@
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { hasRole } from "thirdweb/extensions/permissions";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import type { RequiredParam } from "utils/types";
 
 export function useIsAdmin(contract: ThirdwebContract, failOpen = true) {
   const address = useActiveAccount()?.address;
@@ -19,7 +18,7 @@ export function useIsAdmin(contract: ThirdwebContract, failOpen = true) {
 
 export function useIsAdminOrSelf(
   contract: ThirdwebContract,
-  self: RequiredParam<string>,
+  self: string | null | undefined,
 ) {
   const address = useActiveAccount()?.address;
   const isAdmin = useIsAdmin(contract);

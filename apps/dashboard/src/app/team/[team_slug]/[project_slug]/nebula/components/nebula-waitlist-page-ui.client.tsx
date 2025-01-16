@@ -51,7 +51,7 @@ function CenteredCard(props: {
 }) {
   return (
     <div className="flex grow flex-col items-center justify-center max-sm:px-4">
-      <div className="relative flex min-h-[480px] w-full flex-col rounded-xl border bg-muted/50 p-2 lg:w-[480px]">
+      <div className="relative flex min-h-[480px] w-full flex-col rounded-xl border bg-card p-2 lg:w-[480px]">
         {/* fancy borders */}
         <div className="">
           {/* top */}
@@ -80,7 +80,7 @@ function CenteredCard(props: {
           <div className="flex flex-col items-center">
             {/* Icon */}
             <div className="rounded-xl border p-1">
-              <div className="rounded-lg border bg-muted/50 p-2">
+              <div className="rounded-lg border bg-card p-2">
                 <NebulaIcon className="size-5 text-muted-foreground" />
               </div>
             </div>
