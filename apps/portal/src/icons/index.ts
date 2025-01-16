@@ -42,6 +42,7 @@ export { QuestionIcon } from "./sidebar/QuestionIcon";
 export { NebulaSideIcon } from "./sidebar/NebulaSideIcon";
 export { PluginIcon } from "./sidebar/PluginIcon";
 export { TroubleshootIcon } from "./sidebar/TroubleshootIcon";
+export { RocketIcon } from "./sidebar/RocketIcon";
 
 //api icons
 export { GetIcon } from "./API/GetIcon";
