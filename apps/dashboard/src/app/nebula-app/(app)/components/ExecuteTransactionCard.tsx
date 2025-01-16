@@ -20,6 +20,7 @@ import {
 } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { getSDKTheme } from "../../../components/sdk-component-theme";
 import type { NebulaTxData } from "./Chats";
@@ -78,6 +79,7 @@ export function ExecuteTransactionCardLayout(props: {
   const chain = useV5DashboardChain(txData.chainId);
   const isTransactionSent =
     props.status.type === "confirming" || props.status.type === "confirmed";
+  const trackEvent = useTrack();
 
   const explorer = chain.blockExplorers?.[0]?.url;
 
@@ -99,6 +101,13 @@ export function ExecuteTransactionCardLayout(props: {
             txChainID={txData.chainId}
             variant="default"
             onClick={async () => {
+              trackEvent({
+                category: "nebula",
+                action: "execute_transaction",
+                label: "attempt",
+                chainId: txData.chainId,
+              });
+
               const tx = prepareTransaction({
                 chain: chain,
                 client: props.client,
@@ -115,6 +124,13 @@ export function ExecuteTransactionCardLayout(props: {
                 const submittedReceipt = await sendTransaction.mutateAsync(tx);
                 txHash = submittedReceipt.transactionHash;
 
+                trackEvent({
+                  category: "nebula",
+                  action: "execute_transaction",
+                  label: "sent",
+                  chainId: txData.chainId,
+                });
+
                 // wait for receipt
                 props.setStatus({
                   type: "confirming",
@@ -126,6 +142,13 @@ export function ExecuteTransactionCardLayout(props: {
                 props.setStatus({
                   type: "confirmed",
                   txHash: confirmReceipt.transactionHash,
+                });
+
+                trackEvent({
+                  category: "nebula",
+                  action: "execute_transaction",
+                  label: "confirmed",
+                  chainId: txData.chainId,
                 });
               } catch {
                 props.setStatus({
