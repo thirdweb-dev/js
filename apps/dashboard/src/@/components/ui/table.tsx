@@ -25,7 +25,8 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "border-border border-b bg-background [&_tr]:border-b",
+      "border-border border-b bg-background",
+      "sticky top-0 z-20 border-none before:absolute before:inset-0 before:border-border before:border-b",
       className,
     )}
     {...props}
@@ -125,10 +126,20 @@ const TableCaption = React.forwardRef<
 ));
 TableCaption.displayName = "TableCaption";
 
-function TableContainer(props: { children: React.ReactNode }) {
+function TableContainer(props: {
+  children: React.ReactNode;
+  className?: string;
+  scrollableContainerClassName?: string;
+}) {
   return (
     <ScrollShadow
-      className="relative whitespace-nowrap rounded-lg border border-border bg-card"
+      shadowClassName="z-30"
+      disableTopShadow
+      className={cn(
+        "relative whitespace-nowrap rounded-lg border border-border bg-card",
+        props.className,
+      )}
+      scrollableClassName={props.scrollableContainerClassName}
       shadowColor="hsl(var(--muted))"
     >
       {props.children}
