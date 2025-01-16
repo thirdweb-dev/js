@@ -27,6 +27,7 @@ import type { AutoConnectProps } from "./types.js";
  * @param props - The auto-connect configuration properties
  * @param props.wallets - Array of wallet instances to consider for auto-connection
  * @returns {boolean} a promise resolving to true or false depending on whether the auto connect function connected to a wallet or not
+ * @walletConnection
  */
 export const autoConnect = async (
   props: AutoConnectProps & {
