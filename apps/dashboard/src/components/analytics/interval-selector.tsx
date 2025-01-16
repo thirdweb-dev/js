@@ -5,10 +5,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "../../@/lib/utils";
 
 export function IntervalSelector(props: {
   intervalType: "day" | "week";
   setIntervalType: (intervalType: "day" | "week") => void;
+  className?: string;
 }) {
   return (
     <Select
@@ -17,7 +19,7 @@ export function IntervalSelector(props: {
         props.setIntervalType(value);
       }}
     >
-      <SelectTrigger className="w-auto hover:bg-muted md:w-[120px]">
+      <SelectTrigger className={cn("w-auto md:w-[120px]", props.className)}>
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent position="popper">

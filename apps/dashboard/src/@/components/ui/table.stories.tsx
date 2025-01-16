@@ -114,7 +114,9 @@ function TableDemo(props: {
             <TableRow
               key={invoice.invoice}
               linkBox={props.linkBox}
-              className={cn(props.linkBox && "cursor-pointer hover:bg-muted")}
+              className={cn(
+                props.linkBox && "cursor-pointer hover:bg-accent/50",
+              )}
             >
               <TableCell className="font-medium">
                 <Link

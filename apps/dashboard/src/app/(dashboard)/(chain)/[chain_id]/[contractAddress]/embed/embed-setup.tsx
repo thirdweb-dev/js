@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import {
@@ -11,8 +12,8 @@ import { Flex, FormControl, Input, Select } from "@chakra-ui/react";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useClipboard } from "hooks/useClipboard";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { AlertCircleIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -211,6 +212,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   twAccount,
 }) => {
   const trackEvent = useTrack();
+  const { theme } = useTheme();
 
   const apiKeys = useApiKeys({
     isLoggedIn: !!twAccount,
@@ -268,7 +270,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       listingId: "0",
       directListingId: "0",
       englishAuctionId: "0",
-      theme: "dark",
+      theme: theme === "light" ? "light" : "dark",
       primaryColor: "purple",
       secondaryColor: "orange",
     },
@@ -298,13 +300,12 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     [iframeSrc],
   );
 
-  const { hasCopied, onCopy } = useClipboard(embedCode, 3000);
   const [showCreateAPIKeyModal, setShowCreateAPIKeyModal] = useState(false);
   const activeAccount = useActiveAccount();
   const pathname = usePathname();
 
   return (
-    <Flex gap={8} direction="column">
+    <div>
       <LazyCreateAPIKeyDialog
         prefill={{
           name: "Embed API Key",
@@ -324,204 +325,220 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
         enableNebulaServiceByDefault={false}
       />
 
-      <Flex gap={8} direction={{ base: "column", md: "row" }}>
-        <Card className="flex w-full flex-col gap-5 md:w-1/2">
-          <Heading size="title.sm">Configuration</Heading>
+      <Alert variant="warning">
+        <AlertCircleIcon className="size-5" />
+        <AlertTitle>Deprecated</AlertTitle>
+        <AlertDescription className="leading-relaxed">
+          <span>
+            thirdweb NFT Embeds are deprecated and not actively maintained
+          </span>{" "}
+          <br />
+          <span>
+            Use the{" "}
+            <Link
+              href="https://github.com/thirdweb-example/nft-minting-template"
+              target="_blank"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {" "}
+              NFT Minting Template
+            </Link>{" "}
+            or build a custom NFT minting app using{" "}
+            <Link
+              href="https://portal.thirdweb.com/react/v5"
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              thirdweb React SDK components
+            </Link>{" "}
+            instead
+          </span>
+        </AlertDescription>
+      </Alert>
 
-          {ercOrMarketplace === "marketplace" ? (
+      <div className="h-8" />
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div>
+          <h2 className="mb-3 font-semibold text-xl tracking-tight">
+            Configuration
+          </h2>
+
+          <Card className="flex w-full flex-col gap-5 bg-card">
+            {ercOrMarketplace === "marketplace" ? (
+              <FormControl>
+                <FormLabel>Listing ID</FormLabel>
+                <Input type="number" {...register("listingId")} />
+                <FormHelperText>
+                  The listing ID the embed should display
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+
+            {ercOrMarketplace === "marketplace-v3" ? (
+              <FormControl>
+                <FormLabel>Listing type</FormLabel>
+                <Select {...register("listingType")}>
+                  <option value="direct-listing">Direct Listing</option>
+                  <option value="english-auction">English Auction</option>
+                </Select>
+                <FormHelperText>
+                  The type of listing the embed should display
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+
+            {ercOrMarketplace === "marketplace-v3" &&
+            watch("listingType") === "direct-listing" ? (
+              <FormControl>
+                <FormLabel>Direct Listing ID</FormLabel>
+                <Input type="number" {...register("directListingId")} />
+                <FormHelperText>
+                  The direct listing ID the embed should display
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+
+            {ercOrMarketplace === "marketplace-v3" &&
+            watch("listingType") === "english-auction" ? (
+              <FormControl>
+                <FormLabel>English Auction ID</FormLabel>
+                <Input type="number" {...register("englishAuctionId")} />
+                <FormHelperText>
+                  The english auction ID the embed should display
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+
+            {ercOrMarketplace === "erc1155" ? (
+              <FormControl>
+                <FormLabel>Token ID</FormLabel>
+                <Input type="number" {...register("tokenId")} />
+                <FormHelperText>
+                  The token ID the embed should display
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+
             <FormControl>
-              <FormLabel>Listing ID</FormLabel>
-              <Input type="number" {...register("listingId")} />
-              <FormHelperText>
-                The listing ID the embed should display
-              </FormHelperText>
-            </FormControl>
-          ) : null}
+              <FormLabel>Client ID</FormLabel>
+              {!activeAccount ? (
+                <Button asChild className="w-full">
+                  <Link
+                    href={`/login${
+                      pathname ? `?next=${encodeURIComponent(pathname)}` : ""
+                    }`}
+                  >
+                    Sign in to create a client ID
+                  </Link>
+                </Button>
+              ) : validApiKey ? (
+                <Input
+                  readOnly
+                  disabled
+                  value={`${validApiKey?.name} - ${validApiKey?.key}`}
+                />
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    trackEvent({
+                      category: "api-keys",
+                      action: "create",
+                      label: "attempt",
+                      fromEmbed: true,
+                    });
 
-          {ercOrMarketplace === "marketplace-v3" ? (
-            <FormControl>
-              <FormLabel>Listing type</FormLabel>
-              <Select {...register("listingType")}>
-                <option value="direct-listing">Direct Listing</option>
-                <option value="english-auction">English Auction</option>
-              </Select>
-              <FormHelperText>
-                The type of listing the embed should display
-              </FormHelperText>
-            </FormControl>
-          ) : null}
-
-          {ercOrMarketplace === "marketplace-v3" &&
-          watch("listingType") === "direct-listing" ? (
-            <FormControl>
-              <FormLabel>Direct Listing ID</FormLabel>
-              <Input type="number" {...register("directListingId")} />
-              <FormHelperText>
-                The direct listing ID the embed should display
-              </FormHelperText>
-            </FormControl>
-          ) : null}
-
-          {ercOrMarketplace === "marketplace-v3" &&
-          watch("listingType") === "english-auction" ? (
-            <FormControl>
-              <FormLabel>English Auction ID</FormLabel>
-              <Input type="number" {...register("englishAuctionId")} />
-              <FormHelperText>
-                The english auction ID the embed should display
-              </FormHelperText>
-            </FormControl>
-          ) : null}
-
-          {ercOrMarketplace === "erc1155" ? (
-            <FormControl>
-              <FormLabel>Token ID</FormLabel>
-              <Input type="number" {...register("tokenId")} />
-              <FormHelperText>
-                The token ID the embed should display
-              </FormHelperText>
-            </FormControl>
-          ) : null}
-
-          <FormControl>
-            <FormLabel>Client ID</FormLabel>
-            {!activeAccount ? (
-              <Button asChild className="w-full">
-                <Link
-                  href={`/login${
-                    pathname ? `?next=${encodeURIComponent(pathname)}` : ""
-                  }`}
+                    setShowCreateAPIKeyModal(true);
+                  }}
+                  disabled={createKeyMutation.isPending}
                 >
-                  Sign in to create a client ID
-                </Link>
-              </Button>
-            ) : validApiKey ? (
-              <Input
-                readOnly
-                disabled
-                value={`${validApiKey?.name} - ${validApiKey?.key}`}
-              />
-            ) : (
-              <Button
-                className="w-full"
-                onClick={() => {
-                  trackEvent({
-                    category: "api-keys",
-                    action: "create",
-                    label: "attempt",
-                    fromEmbed: true,
-                  });
-
-                  setShowCreateAPIKeyModal(true);
-                }}
-                disabled={createKeyMutation.isPending}
-              >
-                Create Client ID
-              </Button>
-            )}
-
-            <FormHelperText>
-              You need a client ID to use embeds.{" "}
-              <Link
-                href="https://portal.thirdweb.com/account/api-keys"
-                className="text-link-foreground hover:text-foreground"
-                target="_blank"
-              >
-                Learn more
-              </Link>
-              .
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>RPC Url</FormLabel>
-            <Input type="url" {...register("rpcUrl")} />
-            <FormHelperText>
-              RPC the embed should use to connect to the blockchain.
-            </FormHelperText>
-          </FormControl>
-
-          {ercOrMarketplace === "marketplace" ||
-          ercOrMarketplace === "marketplace-v3" ? null : (
-            <FormControl gap={4}>
-              <Heading size="title.sm" my={4}>
-                Gasless
-              </Heading>
-              <Select {...register("gasless")} mb={4}>
-                <option value="false">Disabled</option>
-                <option value="openZeppelin">OpenZeppelin Relayer</option>
-                <option value="biconomy">Biconomy Relayer</option>
-              </Select>
-              {watch("gasless") === "openZeppelin" && (
-                <FormControl>
-                  <FormLabel>OpenZeppelin Relayer URL</FormLabel>
-                  <Input type="url" {...register("relayUrl")} />
-                </FormControl>
+                  Create Client ID
+                </Button>
               )}
-              {watch("gasless") === "biconomy" && (
-                <Flex gap={4} flexDir="column">
-                  <FormControl>
-                    <FormLabel>Biconomy API key</FormLabel>
-                    <Input type="url" {...register("biconomyApiKey")} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Biconomy API ID</FormLabel>
-                    <Input type="url" {...register("biconomyApiId")} />
-                  </FormControl>
-                </Flex>
-              )}
+
               <FormHelperText>
-                A relayer can be used to make the transaction gasless for the
-                end user.{" "}
+                You need a client ID to use embeds.{" "}
                 <Link
-                  target="_blank"
+                  href="https://portal.thirdweb.com/account/api-keys"
                   className="text-link-foreground hover:text-foreground"
-                  href="https://blog.thirdweb.com/guides/setup-gasless-transactions"
+                  target="_blank"
                 >
                   Learn more
                 </Link>
+                .
               </FormHelperText>
             </FormControl>
-          )}
 
-          <FormControl>
-            <Heading size="title.sm" my={4}>
-              Customization
-            </Heading>
-            <FormLabel>Theme</FormLabel>
-            <Select {...register("theme")}>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">User system</option>
-            </Select>
-            <FormHelperText>
-              Selecting system will make it so the embed would change depending
-              on the user system&apos;s preferences.
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Primary Color</FormLabel>
-            <Select {...register("primaryColor")}>
-              {ercOrMarketplace === "erc721" && (
-                <option value="default">Default</option>
-              )}
-              {colorOptions.map((color) => (
-                <option key={color} value={color}>
-                  {color[0]?.toUpperCase() + color.substring(1)}
-                </option>
-              ))}
-            </Select>
-            <FormHelperText>
-              Used for the main actions button backgrounds.
-            </FormHelperText>
-          </FormControl>
-
-          {ercOrMarketplace === "marketplace" ||
-          ercOrMarketplace === "marketplace-v3" ? (
             <FormControl>
-              <FormLabel>Secondary Color</FormLabel>
-              <Select {...register("secondaryColor")}>
+              <FormLabel>RPC Url</FormLabel>
+              <Input type="url" {...register("rpcUrl")} />
+              <FormHelperText>
+                RPC the embed should use to connect to the blockchain.
+              </FormHelperText>
+            </FormControl>
+
+            {ercOrMarketplace === "marketplace" ||
+            ercOrMarketplace === "marketplace-v3" ? null : (
+              <FormControl gap={4}>
+                <Heading size="title.sm" mb={2}>
+                  Gasless
+                </Heading>
+                <Select {...register("gasless")} mb={4}>
+                  <option value="false">Disabled</option>
+                  <option value="openZeppelin">OpenZeppelin Relayer</option>
+                  <option value="biconomy">Biconomy Relayer</option>
+                </Select>
+                {watch("gasless") === "openZeppelin" && (
+                  <FormControl>
+                    <FormLabel>OpenZeppelin Relayer URL</FormLabel>
+                    <Input type="url" {...register("relayUrl")} />
+                  </FormControl>
+                )}
+                {watch("gasless") === "biconomy" && (
+                  <Flex gap={4} flexDir="column">
+                    <FormControl>
+                      <FormLabel>Biconomy API key</FormLabel>
+                      <Input type="url" {...register("biconomyApiKey")} />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Biconomy API ID</FormLabel>
+                      <Input type="url" {...register("biconomyApiId")} />
+                    </FormControl>
+                  </Flex>
+                )}
+                <FormHelperText>
+                  A relayer can be used to make the transaction gasless for the
+                  end user.{" "}
+                  <Link
+                    target="_blank"
+                    className="text-link-foreground hover:text-foreground"
+                    href="https://blog.thirdweb.com/guides/setup-gasless-transactions"
+                  >
+                    Learn more
+                  </Link>
+                </FormHelperText>
+              </FormControl>
+            )}
+
+            <FormControl>
+              <FormLabel>Theme</FormLabel>
+              <Select {...register("theme")}>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">User system</option>
+              </Select>
+              <FormHelperText>
+                Selecting system will make it so the embed would change
+                depending on the user system&apos;s preferences.
+              </FormHelperText>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Primary Color</FormLabel>
+              <Select {...register("primaryColor")}>
+                {ercOrMarketplace === "erc721" && (
+                  <option value="default">Default</option>
+                )}
                 {colorOptions.map((color) => (
                   <option key={color} value={color}>
                     {color[0]?.toUpperCase() + color.substring(1)}
@@ -529,21 +546,38 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 ))}
               </Select>
               <FormHelperText>
-                Use for secondary actions (like when the user is connected to
-                the wrong network)
+                Used for the main actions button backgrounds.
               </FormHelperText>
             </FormControl>
-          ) : null}
-        </Card>
 
-        <Card className="flex w-full flex-col gap-2 md:w-1/2">
-          <Heading size="title.sm">Embed Code</Heading>
-          <CodeClient code={embedCode} lang="html" />
-          <Button
-            className="w-auto gap-2"
-            variant="outline"
-            onClick={() => {
-              onCopy();
+            {ercOrMarketplace === "marketplace" ||
+            ercOrMarketplace === "marketplace-v3" ? (
+              <FormControl>
+                <FormLabel>Secondary Color</FormLabel>
+                <Select {...register("secondaryColor")}>
+                  {colorOptions.map((color) => (
+                    <option key={color} value={color}>
+                      {color[0]?.toUpperCase() + color.substring(1)}
+                    </option>
+                  ))}
+                </Select>
+                <FormHelperText>
+                  Use for secondary actions (like when the user is connected to
+                  the wrong network)
+                </FormHelperText>
+              </FormControl>
+            ) : null}
+          </Card>
+        </div>
+
+        <div>
+          <h2 className="mb-3 font-semibold text-xl tracking-tight">
+            Embed Code
+          </h2>
+          <CodeClient
+            code={embedCode}
+            lang="html"
+            onCopy={() => {
               trackEvent({
                 category: "embed",
                 action: "click",
@@ -552,19 +586,15 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 chainId,
               });
             }}
-          >
-            {hasCopied ? (
-              <CheckIcon className="size-4" />
-            ) : (
-              <CopyIcon className="size-4" />
-            )}
-            {hasCopied ? "Copied!" : "Copy to clipboard"}
-          </Button>
-        </Card>
-      </Flex>
+          />
+        </div>
+      </div>
 
-      <div className="flex flex-col items-center gap-2">
-        <Heading size="title.sm">Preview</Heading>
+      <div className="h-8" />
+
+      <h2 className="mb-3 font-semibold text-xl tracking-tight">Preview</h2>
+
+      <div className="overflow-hidden rounded-lg border border-border">
         {!validApiKey ? (
           <Text>You need to create a client ID to use embeds</Text>
         ) : iframeSrc ? (
@@ -577,6 +607,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           />
         ) : null}
       </div>
-    </Flex>
+    </div>
   );
 };

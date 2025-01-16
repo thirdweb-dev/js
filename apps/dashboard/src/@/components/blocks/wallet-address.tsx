@@ -121,7 +121,11 @@ export function WalletAddress(props: {
                 >
                   {walletAvatarLink && (
                     <Avatar>
-                      <AvatarImage src={walletAvatarLink} alt={profile.name} />
+                      <AvatarImage
+                        src={walletAvatarLink}
+                        alt={profile.name}
+                        className="object-cover"
+                      />
                       {profile.name && (
                         <AvatarFallback>
                           {profile.name.slice(0, 2)}

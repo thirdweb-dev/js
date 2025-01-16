@@ -11,7 +11,7 @@ export function getUrlToken(): {
   authProvider?: AuthOption;
   authCookie?: string;
 } {
-  if (!window?.location) {
+  if (typeof window === "undefined") {
     // Not in web
     return {};
   }

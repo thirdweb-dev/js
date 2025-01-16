@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.83.1",
+  "version": "5.84.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -123,6 +123,11 @@
       "import": "./dist/esm/exports/social.js",
       "default": "./dist/cjs/exports/social.js"
     },
+    "./ai": {
+      "types": "./dist/types/exports/ai.d.ts",
+      "import": "./dist/esm/exports/ai.js",
+      "default": "./dist/cjs/exports/ai.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -180,6 +185,9 @@
       ],
       "social": [
         "./dist/types/exports/social.d.ts"
+      ],
+      "ai": [
+        "./dist/types/exports/ai.d.ts"
       ]
     }
   },

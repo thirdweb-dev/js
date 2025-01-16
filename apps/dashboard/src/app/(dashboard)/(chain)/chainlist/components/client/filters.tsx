@@ -182,7 +182,9 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={value === "all" ? undefined : "border-primary pr-11"}
+            className={
+              value === "all" ? "bg-card" : "border-active-border bg-card pr-11"
+            }
           >
             {value === "mainnets"
               ? "Mainnets Only"
@@ -196,7 +198,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
+            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10 bg-card"
             onClick={() => {
               const url = makeUrl("all");
               router.replace(url);
@@ -275,7 +277,9 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={hasFilters ? "border-primary pr-11" : undefined}
+            className={
+              hasFilters ? "border-active-border bg-card pr-11" : "bg-card"
+            }
           >
             Chain Options
             {!hasFilters && <ChevronDownIcon className="ml-2 size-4" />}
@@ -285,7 +289,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
+            className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10 bg-card"
             onClick={() => {
               mutableSearchParams.delete("includeDeprecated");
               mutableSearchParams.delete("page");
@@ -399,7 +403,9 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={hasActiveFilter ? "border-primary pr-11" : undefined}
+            className={
+              hasActiveFilter ? "border-active-border bg-card pr-11" : "bg-card"
+            }
           >
             {buttonTitle}
             {!hasActiveFilter && <ChevronDownIcon className="ml-2 size-4" />}

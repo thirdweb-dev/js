@@ -300,6 +300,10 @@ export const sidebar: SideBar = {
               name: "Supported Chains",
               href: `${paySlug}/supported-chains`,
             },
+            {
+              name: "Onramp Providers",
+              href: `${paySlug}/onramp-providers`,
+            },
 
             {
               name: "Fee Sharing",

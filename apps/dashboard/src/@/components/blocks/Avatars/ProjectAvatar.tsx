@@ -12,7 +12,7 @@ export function ProjectAvatar(props: {
       className={cn("rounded-lg border border-border", props.className)}
       alt={""}
       fallback={
-        <div className="flex items-center justify-center bg-muted/50">
+        <div className="flex items-center justify-center bg-card">
           <BoxIcon className="size-[50%] text-muted-foreground" />
         </div>
       }

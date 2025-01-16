@@ -148,10 +148,7 @@ export default function SupportPage() {
         <h2 className="font-bold text-3xl">Knowledge base</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {HELP_PRODUCTS.map((product) => (
-            <Card
-              className="relative col-span-1 bg-muted/50"
-              key={product.title}
-            >
+            <Card className="relative col-span-1 bg-card" key={product.title}>
               <CardHeader className="flex flex-row items-center justify-between gap-2">
                 <div className="flex flex-row items-center gap-2">
                   {product.icon && (

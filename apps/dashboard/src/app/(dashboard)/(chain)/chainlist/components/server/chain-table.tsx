@@ -140,6 +140,7 @@ async function getChainsToRender(params: SearchParams) {
 export async function ChainsData(props: {
   searchParams: SearchParams;
   activeView: "table" | "grid";
+  isLoggedIn: boolean;
 }) {
   const { chainsToRender, totalCount, filteredCount } = await getChainsToRender(
     props.searchParams,
@@ -167,8 +168,6 @@ export async function ChainsData(props: {
             <Table>
               <TableHeader>
                 <TableRow>
-                  {/* empty space for the icon */}
-                  <TableHead />
                   <TableHead>Name</TableHead>
                   <TableHead>Chain ID</TableHead>
                   <TableHead>Native Token</TableHead>
@@ -188,12 +187,14 @@ export async function ChainsData(props: {
                       .map((c) => c.service)}
                     isDeprecated={chain.status === "deprecated"}
                     favoriteButton={
-                      <div className="relative h-6 w-6">
-                        <StarButton
-                          chainId={chain.chainId}
-                          className="absolute top-0 left-0 z-10 h-full w-full"
-                        />
-                      </div>
+                      props.isLoggedIn ? (
+                        <div className="relative h-6 w-6">
+                          <StarButton
+                            chainId={chain.chainId}
+                            className="absolute top-0 left-0 z-10 h-full w-full"
+                          />
+                        </div>
+                      ) : undefined
                     }
                     iconUrl={chain.icon?.url}
                   />
@@ -216,12 +217,14 @@ export async function ChainsData(props: {
                     .map((c) => c.service)}
                   isDeprecated={chain.status === "deprecated"}
                   favoriteButton={
-                    <div className="relative h-6 w-6">
-                      <StarButton
-                        chainId={chain.chainId}
-                        className="absolute top-0 left-0 z-10 h-full w-full"
-                      />
-                    </div>
+                    props.isLoggedIn ? (
+                      <div className="relative h-6 w-6">
+                        <StarButton
+                          chainId={chain.chainId}
+                          className="absolute top-0 left-0 z-10 h-full w-full"
+                        />
+                      </div>
+                    ) : undefined
                   }
                   iconUrl={chain.icon?.url}
                 />

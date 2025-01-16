@@ -149,8 +149,7 @@ function TransactionsSection(props: {
             Transactions
           </h2>
           <p className="text-muted-foreground">
-            View transactions sent from your backend wallets in the past 24
-            hours.
+            View transactions sent from your backend wallets
           </p>
         </div>
 

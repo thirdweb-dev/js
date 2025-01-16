@@ -19,7 +19,7 @@ export async function FaucetSection(props: {
   return (
     <section>
       <SectionTitle title="Faucet" />
-      <div className="flex justify-center rounded-lg border border-border bg-muted/50 px-4 py-10">
+      <div className="flex justify-center rounded-lg border border-border bg-card px-4 py-10">
         <div className="flex w-full max-w-[520px] flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon

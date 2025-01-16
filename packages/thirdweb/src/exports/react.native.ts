@@ -86,7 +86,7 @@ export {
 
 // Components
 export { AutoConnect } from "../react/native/ui/AutoConnect/AutoConnect.js";
-export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
+export type { AutoConnectProps } from "../wallets/connection/types.js";
 
 export { TransactionButton } from "../react/native/ui/transaction/TransactionButton.js";
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";

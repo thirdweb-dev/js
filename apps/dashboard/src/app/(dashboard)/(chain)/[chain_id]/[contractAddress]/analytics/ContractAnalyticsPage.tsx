@@ -136,7 +136,7 @@ function UniqueWalletsChart(props: ChartProps) {
           color: "hsl(var(--chart-1))",
         },
       }}
-      chartClassName="aspect[2] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
     />
   );
 }
@@ -161,7 +161,7 @@ function TotalTransactionsChart(props: ChartProps) {
           color: "hsl(var(--chart-1))",
         },
       }}
-      chartClassName="aspect[2] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
     />
   );
 }
@@ -181,7 +181,7 @@ function TotalEventsChart(props: ChartProps) {
           color: "hsl(var(--chart-1))",
         },
       }}
-      chartClassName="aspect[2] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
     />
   );
 }
@@ -233,7 +233,7 @@ function FunctionBreakdownChart(
         },
         {} as Record<string, { label: string; color: string }>,
       )}
-      chartClassName="aspect[2] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       showLegend
     />
   );
@@ -286,7 +286,7 @@ function EventBreakdownChart(
         },
         {} as Record<string, { label: string; color: string }>,
       )}
-      chartClassName="aspect[2] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       showLegend
     />
   );
