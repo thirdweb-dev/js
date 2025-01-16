@@ -1,0 +1,174 @@
+import { Step, Steps, DocImage, Callout } from "@doc";
+import NewProject from "../assets/new-project.png";
+import KeysSetup from "../assets/keys.png";
+
+# Get Started
+
+Learn how to get set up and started with the Nebula API to successfully prepare and enable a connected user to sign a transfer .
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- A thirdweb account 
+- A blockchain wallet for executing transactions
+- Node.js and npm or yarn installed on your system
+
+## Obtain Client ID & Secret Key
+
+<Steps>
+
+<Step title="Create project">
+
+Navigate to the [projects dashboard](https://thirdweb.com/) and create a new project.
+
+<DocImage src={NewProject} alt="Create a new project"/>
+  
+</Step>
+
+<Step title="Obtain keys">
+
+Setup your project and obtain your client ID and secret key. Please note your secret key somewhere safe as it is not recoverable.
+
+<Callout variant="warning" title="Client Id vs Secret Key">
+Client Id is used for client side usage and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+
+Secret key is used for server side or script usage and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+</Callout>
+
+<DocImage  src={KeysSetup} alt="Obtain keys"/>
+
+</Step>
+
+</Steps>
+
+## Setup API (TypeScript SDK)
+
+<Steps>
+
+<Step title="Install SDK">
+
+Install the TypeScript SDK
+
+```bash
+npm install thirdweb
+```
+</Step>
+
+<Step title="Environment Variables">
+
+Setup environmental variables. 
+
+<Callout variant="warning" title="Storing Secret Keys">
+  Ensure you keep your secret key and private key safe and do not expose it in your codebase. We recommend using a 
+  secret key manager such as [AWS Secret Manager](https://aws.amazon.com/secrets-manager/) or [Google Secret Manager](https://cloud.google.com/secret-manager).
+</Callout>
+
+```jsx
+THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
+EOA_PRIVATE_KEY=your_wallet_private_key
+```
+</Step>
+
+<Step title="Import Libraries">
+
+Import required libraries from thirdweb.
+
+```jsx
+import {
+    createThirdwebClient,
+  prepareTransaction,
+  sendTransaction,
+  privateKeyToAccount,
+} from "thirdweb";
+```
+</Step>
+
+<Step title="Create Function to Handle Response">
+This function processes the API's response and executes blockchain transactions.
+
+```jsx
+async function handleNebulaResponse(response) {
+  const client = createThirdwebClient({
+    secretKey: process.env.THIRDWEB_SECRET_KEY,
+  });
+
+  const account = privateKeyToAccount({
+    client,
+    privateKey: process.env.EOA_PRIVATE_KEY,
+  });
+
+  if (response.actions && response.actions.length > 0) {
+    const action = response.actions[0];
+    const txData = JSON.parse(action.data);
+
+    try {
+      const transaction = prepareTransaction({
+        to: txData.to,
+        data: txData.data,
+        value: BigInt(txData.value),
+        chain: txData.chainId,
+        client,
+      });
+
+      const result = await sendTransaction({
+        transaction,
+        account,
+      });
+
+      console.log("Transaction Successful:", result);
+      return result;
+    } catch (error) {
+      console.error("Error executing transaction:", error);
+      throw error;
+    }
+  }
+}
+```
+</Step>
+
+<Step title="Call Nebula API">
+
+Send a request to the Nebula API to interpret your natural language command and retrieve the transaction details.
+
+```jsx
+const response = await fetch("https://nebula-api.thirdweb.com/chat", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-secret-key": process.env.THIRDWEB_SECRET_KEY,
+  },
+  body: JSON.stringify({
+    message: "send 0.001 ETH on Sepolia to vitalik.eth",
+    execute_config: {
+      mode: "client",
+      signer_wallet_address: "0xYourWalletAddress",
+    },
+  }),
+});
+
+const data = await response.json();
+await handleNebulaResponse(data);
+```
+</Step>
+
+<Step title="Example Response">
+
+The response from the API will contain the transaction details.
+
+```jsx
+Transaction Successful: {
+  transactionHash: "0x123abc...",
+  blockNumber: 1234567,
+  ...
+}
+```
+</Step>
+
+Congratulations! You have successfully set up the Nebula API and executed a transaction using the thirdweb SDK.
+</Steps>
+
+### Additional Resources
+
+- [Nebula API Documentation](https://portal.thirdweb.com/nebula/api-reference)
+- [thirdweb SDK Documentation](https://portal.thirdweb.com/typescript/v5)

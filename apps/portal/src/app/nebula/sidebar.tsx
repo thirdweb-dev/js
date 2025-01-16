@@ -1,11 +1,11 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
-  BrickIcon,
   CodeIcon,
   EditIcon,
   NebulaSideIcon,
   PluginIcon,
   QuestionIcon,
+  RocketIcon,
   TroubleshootIcon,
 } from "@/icons";
 
@@ -18,25 +18,14 @@ export const sidebar: SideBar = {
       icon: <NebulaSideIcon />,
     },
     {
-      name: "Use Cases",
-      href: "/nebula/use-cases",
-      icon: <BrickIcon />,
-    },
-    {
       name: "Prompt Guide",
       href: "/nebula/prompt-guide",
       icon: <EditIcon />,
     },
     {
-      name: "Plugins",
-      href: "/nebula/plugins",
-      icon: <PluginIcon />,
-      links: [
-        {
-          name: "Eliza",
-          href: "/nebula/plugins/eliza",
-        },
-      ],
+      name: "Get Started",
+      href: "/nebula/get-started",
+      icon: <RocketIcon />,
     },
     {
       name: "API Reference",
@@ -98,6 +87,17 @@ export const sidebar: SideBar = {
               href: "/nebula/api-reference/delete-session",
             },
           ],
+        },
+      ],
+    },
+    {
+      name: "Plugins",
+      href: "/nebula/plugins",
+      icon: <PluginIcon />,
+      links: [
+        {
+          name: "Eliza",
+          href: "/nebula/plugins/eliza",
         },
       ],
     },

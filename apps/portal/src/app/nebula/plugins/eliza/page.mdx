@@ -1,11 +1,96 @@
-import { Callout } from '@doc'
+import { Callout, OpenSourceCard, Step, Steps, DocImage } from '@doc'
+import NewProject from "../../assets/new-project.png";
+import KeysSetup from "../../assets/keys.png";
 
 # Eliza
 
-<Callout variant='info' title='Coming Soon'>
+Eliza is a simple, fast, and lightweight AI agent framework to build flexible, scalable, and secure conversational agents.
 
-We are actively developing plugins to develop with other frameworks and languages.
+With the thirdweb plugin, you can easily integrate Nebula into an AI agent built with Eliza to provide increasingly accurate read, write, and reasoning capabilities to blockchain-related prompts:
 
-If you have a specific request, please [contact us](https://thirdweb.com/contact).
+<OpenSourceCard
+title="Nebula Plugin"
+href="https://github.com/elizaOS/eliza/tree/main/packages/plugin-thirdweb"/>
 
- </Callout>
+
+## Prerequisites
+
+- Create a thirdweb account
+- Node.js 23+ and pnpm 9+ installed
+
+## Obtain Client ID & Secret Key
+
+<Steps>
+
+<Step title="Create project">
+
+Navigate to the [projects dashboard](https://thirdweb.com/) and create a new project.
+
+<DocImage src={NewProject} alt="Create a new project"/>
+  
+</Step>
+
+<Step title="Obtain keys">
+
+Setup your project and obtain your client ID and secret key. Please note your secret key somewhere safe as it is not recoverable.
+
+<Callout variant="warning" title="Client Id vs Secret Key">
+Client Id is used for client side usage and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+
+Secret key is used for server side or script usage and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+</Callout>
+
+<DocImage  src={KeysSetup} alt="Obtain keys"/>
+
+</Step>
+
+</Steps>
+
+## Setup Eliza Starter
+
+If you have not created a project with Eliza, it is recommended to start with the Eliza Starter repository:
+
+<Steps>
+<Step title="Clone Starter">
+<Callout variant='info' title='Version'>
+The Nebula plugin is only available on version 0.1.8 of Eliza and above and is available by default.
+</Callout>
+
+Clone the starter repository
+
+```bash
+git clone https://github.com/elizaos/eliza-starter.git
+```
+</Step>
+
+<Step title="Environment Variables">
+Create a .env file and add your secret key and any other environmental variables:
+
+```bash
+THIRDWEB_SECRET_KEY=your_secret_key
+```
+
+<Callout variant="warning" title="Client Id vs Secret Key">
+Client Id is used for client side usage and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+
+Secret key is used for server side or script usage and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+</Callout>
+</Step>
+
+<Step title="Install Dependencies">
+```bash
+pnpm i
+```
+</Step>
+
+<Step title="Start Eliza">
+```bash
+pnpm start
+```
+</Step>
+
+</Steps>
+
+### Additional Resources
+
+- [Eliza Documentation](https://elizaos.github.io/eliza/)
