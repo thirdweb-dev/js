@@ -95,6 +95,7 @@ export function NFTDescription({
     queryKey: [
       "_internal_nft_description_",
       contract.chain.id,
+      contract.address,
       tokenId.toString(),
       {
         resolver:

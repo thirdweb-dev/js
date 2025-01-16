@@ -95,6 +95,7 @@ export function NFTName({
 
   const nameQuery = useQuery({
     queryKey: getQueryKey({
+      contractAddress: contract.address,
       chainId: contract.chain.id,
       tokenId,
       nameResolver,
@@ -118,14 +119,16 @@ export function NFTName({
  * @internal
  */
 export function getQueryKey(props: {
+  contractAddress: string;
   chainId: number;
   tokenId: bigint;
   nameResolver?: string | (() => string) | (() => Promise<string>);
 }) {
-  const { chainId, tokenId, nameResolver } = props;
+  const { chainId, tokenId, nameResolver, contractAddress } = props;
   return [
     "_internal_nft_name_",
     chainId,
+    contractAddress,
     tokenId.toString(),
     {
       resolver:

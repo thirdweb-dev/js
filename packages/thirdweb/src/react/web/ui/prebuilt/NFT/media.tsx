@@ -133,6 +133,7 @@ export function NFTMedia({
   const { contract, tokenId } = useNFTContext();
   const mediaQuery = useQuery({
     queryKey: getQueryKey({
+      contractAddress: contract.address,
       chainId: contract.chain.id,
       tokenId,
       mediaResolver,
@@ -164,6 +165,7 @@ export function NFTMedia({
  * @internal
  */
 export function getQueryKey(props: {
+  contractAddress: string;
   chainId: number;
   tokenId: bigint;
   mediaResolver?:
@@ -171,10 +173,11 @@ export function getQueryKey(props: {
     | (() => NFTMediaInfo)
     | (() => Promise<NFTMediaInfo>);
 }) {
-  const { chainId, tokenId, mediaResolver } = props;
+  const { chainId, tokenId, mediaResolver, contractAddress } = props;
   return [
     "_internal_nft_media_",
     chainId,
+    contractAddress,
     tokenId.toString(),
     {
       resolver:
