@@ -1,4 +1,5 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
@@ -146,6 +147,13 @@ export function useSendTransactionCore(args: {
       }
 
       if (!showPayModal) {
+        trackPayEvent({
+          client: tx.client,
+          walletAddress: account.address,
+          walletType: wallet?.id,
+          dstChainId: tx.chain.id,
+          event: "pay_transaction_modal_disabled",
+        });
         return sendTransaction({
           transaction: tx,
           account,
@@ -174,7 +182,17 @@ export function useSendTransactionCore(args: {
               await Promise.all([
                 resolvePromisedValue(tx.value),
                 resolvePromisedValue(tx.erc20Value),
-                fetchBuySupportedDestinations(tx.client).catch(() => null),
+                fetchBuySupportedDestinations(tx.client).catch((err) => {
+                  trackPayEvent({
+                    client: tx.client,
+                    walletAddress: account.address,
+                    walletType: wallet?.id,
+                    dstChainId: tx.chain.id,
+                    event: "pay_transaction_modal_pay_api_error",
+                    error: err?.message,
+                  });
+                  return null;
+                }),
               ]);
 
             if (!supportedDestinations) {
@@ -198,6 +216,14 @@ export function useSendTransactionCore(args: {
                     ),
                 ))
             ) {
+              trackPayEvent({
+                client: tx.client,
+                walletAddress: account.address,
+                walletType: wallet?.id,
+                dstChainId: tx.chain.id,
+                event: "pay_transaction_modal_chain_token_not_supported",
+                error: `chain ${tx.chain.id} ${_erc20Value ? `/ token ${_erc20Value?.tokenAddress}` : ""} not supported`,
+              });
               // chain/token not supported, just send the tx
               sendTx();
               return;
@@ -241,6 +267,13 @@ export function useSendTransactionCore(args: {
                 resolveTx: resolve,
               });
             } else {
+              trackPayEvent({
+                client: tx.client,
+                walletAddress: account.address,
+                walletType: wallet?.id,
+                dstChainId: tx.chain.id,
+                event: "pay_transaction_modal_has_enough_funds",
+              });
               sendTx();
             }
           } catch (e) {
