@@ -11,9 +11,9 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
     await expect(
       Nebula.execute({
         client: TEST_CLIENT,
-        prompt: `send 0.0001 ETH to ${TEST_ACCOUNT_B.address}`,
+        message: `send 0.0001 ETH to ${TEST_ACCOUNT_B.address}`,
         account: TEST_ACCOUNT_A,
-        context: {
+        contextFilter: {
           chains: [sepolia],
           walletAddresses: [TEST_ACCOUNT_A.address],
         },
@@ -22,7 +22,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
   });
 
   // TODO make this work reliably
-  it.skip("should execute a contract call", async () => {
+  it("should execute a contract call", async () => {
     const nftContract = getContract({
       client: TEST_CLIENT,
       chain: sepolia,
@@ -31,11 +31,15 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
 
     const response = await Nebula.execute({
       client: TEST_CLIENT,
-      prompt: `approve 1 token of token id 0 to ${TEST_ACCOUNT_B.address} using the approve function`,
+      messages: [
+        {
+          role: "user",
+          content: `approve 1 token of token id 0 to ${TEST_ACCOUNT_B.address} using the approve function`,
+        },
+      ],
       account: TEST_ACCOUNT_A,
-      context: {
+      contextFilter: {
         chains: [nftContract.chain],
-        walletAddresses: [TEST_ACCOUNT_A.address],
         contractAddresses: [nftContract.address],
       },
     });
