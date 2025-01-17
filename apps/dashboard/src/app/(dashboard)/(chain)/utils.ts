@@ -692,7 +692,7 @@ const chainMetaRecord = {
       backgroundImageUrl: victionCTA.src,
       title:
         "Build, own, win, and be part of Viction World Wide Chain where everyone scales beyond limits.",
-      buttonLink: "https://thirdweb.com/viction/popular",
+      buttonLink: "https://thirdweb.com/viction",
       buttonText: "Learn More",
     },
   },
@@ -705,7 +705,7 @@ const chainMetaRecord = {
       backgroundImageUrl: victionCTA.src,
       title:
         "Build, own, win, and be part of Viction World Wide Chain where everyone scales beyond limits.",
-      buttonLink: "https://thirdweb.com/viction/popular",
+      buttonLink: "https://thirdweb.com/viction",
       buttonText: "Learn More",
     },
   },
