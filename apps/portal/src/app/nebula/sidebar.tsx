@@ -12,8 +12,6 @@ import {
   Wrench,
 } from "lucide-react";
 
-<PencilRuler />;
-
 export const sidebar: SideBar = {
   name: "Nebula",
   links: [
