@@ -3,7 +3,9 @@
   "next": true,
   "ignore": [
     "src/@/components/ui/**",
-    "src/components/notices/AnnouncementBanner.tsx"
+    "src/components/notices/AnnouncementBanner.tsx",
+    "src/components/cmd-k-search/index.tsx",
+    "src/lib/search.ts"
   ],
   "project": ["src/**"],
   "ignoreBinaries": ["only-allow", "biome"],
