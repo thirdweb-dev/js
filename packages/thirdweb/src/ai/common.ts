@@ -15,15 +15,24 @@ const NEBULA_API_URL = "https://nebula-api.thirdweb.com";
 
 export type Input = {
   client: ThirdwebClient;
-  prompt: string | string[];
   account?: Account;
-  context?: {
+  contextFilter?: {
     chains?: Chain[];
     walletAddresses?: string[];
     contractAddresses?: string[];
   };
   sessionId?: string;
-};
+} & (
+  | {
+      messages: {
+        role: "user" | "assistant";
+        content: string;
+      }[];
+    }
+  | {
+      message: string;
+    }
+);
 
 export type Output = {
   message: string;
@@ -52,7 +61,13 @@ export async function nebulaFetch(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      message: input.prompt, // TODO: support array of messages
+      ...("messages" in input
+        ? {
+            messages: input.messages,
+          }
+        : {
+            message: input.message,
+          }),
       session_id: input.sessionId,
       ...(input.account
         ? {
@@ -62,13 +77,15 @@ export async function nebulaFetch(
             },
           }
         : {}),
-      ...(input.context
+      ...(input.contextFilter
         ? {
             context_filter: {
               chain_ids:
-                input.context.chains?.map((c) => c.id.toString()) || [],
-              signer_wallet_address: input.context.walletAddresses || [],
-              contract_addresses: input.context.contractAddresses || [],
+                input.contextFilter.chains?.map((c) => c.id.toString()) || [],
+              wallet_addresses:
+                input.contextFilter.walletAddresses ||
+                (input.account ? [input.account.address] : []),
+              contract_addresses: input.contextFilter.contractAddresses || [],
             },
           }
         : {}),
