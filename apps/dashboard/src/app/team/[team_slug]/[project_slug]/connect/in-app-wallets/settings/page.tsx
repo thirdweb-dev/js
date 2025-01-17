@@ -1,13 +1,14 @@
 import { getProject } from "@/api/projects";
 import { notFound, redirect } from "next/navigation";
-import { InAppWalletSettingsPage } from "../../../../../../components/embedded-wallets/Configure";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
+import { InAppWalletSettingsPage } from "../../../../../../../components/embedded-wallets/Configure";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
+import { getAPIKeyForProjectId } from "../../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const { team_slug, project_slug } = await props.params;
+
   const [account, project] = await Promise.all([
     getValidAccount(),
     getProject(team_slug, project_slug),

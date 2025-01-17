@@ -1,9 +1,9 @@
 import { getProject } from "@/api/projects";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { notFound } from "next/navigation";
-import { AccountAbstractionSettingsPage } from "../../../../../../components/smart-wallets/SponsorshipPolicies";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
+import { AccountAbstractionSettingsPage } from "../../../../../../../components/smart-wallets/SponsorshipPolicies";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
+import { getAPIKeyForProjectId } from "../../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

@@ -20,7 +20,7 @@ export default async function Layout(props: {
   const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/connect/pay`;
 
   return (
-    <div className="flex w-full flex-col gap-8">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col items-start justify-between gap-6 lg:flex-row">
         <div className="max-w-[700px]">
           <h1 className="mb-3 font-bold text-3xl tracking-tight md:text-4xl">
@@ -52,6 +52,10 @@ export default async function Layout(props: {
           {
             name: "Webhooks",
             path: `${payLayoutPath}/webhooks`,
+          },
+          {
+            name: "Settings",
+            path: `${payLayoutPath}/settings`,
           },
         ]}
       />

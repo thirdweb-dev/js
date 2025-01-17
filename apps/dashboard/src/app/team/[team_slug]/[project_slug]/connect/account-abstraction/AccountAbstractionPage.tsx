@@ -1,29 +1,29 @@
 "use client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TabPathLinks } from "@/components/ui/tabs";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type ApiKeyService,
   accountStatus,
+  useUserOpUsageAggregate,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
-import { SmartWallets } from "components/smart-wallets";
 import { CircleAlertIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
+import { AccountAbstractionSummary } from "../../../../../../components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
-// TODO - the factories shown on this page is not project specific, need to revamp this page
-
-export function AccountAbstractionPage(props: {
+export function AccountAbstractionLayout(props: {
   projectSlug: string;
   teamSlug: string;
   projectKey: string;
   apiKeyServices: ApiKeyService[];
   billingStatus: "validPayment" | (string & {}) | null;
-  tab?: string;
+  children: React.ReactNode;
 }) {
   const { apiKeyServices } = props;
 
@@ -38,6 +38,12 @@ export function AccountAbstractionPage(props: {
   }, [apiKeyServices, props.billingStatus]);
 
   const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
+
+  const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`;
+
+  const aggregateUserOpUsageQuery = useUserOpUsageAggregate({
+    clientId: props.projectKey,
+  });
 
   return (
     <div>
@@ -77,12 +83,34 @@ export function AccountAbstractionPage(props: {
           )
         )}
 
-        <SmartWallets
-          smartWalletsLayoutSlug={`/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`}
-          trackingCategory={TRACKING_CATEGORY}
-          clientId={props.projectKey}
-          tab={props.tab}
-        />
+        <div>
+          <AccountAbstractionSummary
+            aggregateUserOpUsageQuery={aggregateUserOpUsageQuery.data}
+          />
+
+          <div className="h-12" />
+          <TabPathLinks
+            links={[
+              {
+                name: "Analytics",
+                path: `${smartWalletsLayoutSlug}`,
+                exactMatch: true,
+              },
+              {
+                name: "Account Factories",
+                path: `${smartWalletsLayoutSlug}/factories`,
+              },
+              {
+                name: "Sponsorship Rules",
+                path: `${smartWalletsLayoutSlug}/settings`,
+              },
+            ]}
+          />
+
+          <div className="h-6" />
+
+          {props.children}
+        </div>
       </div>
       <div className="h-14" />
       <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
