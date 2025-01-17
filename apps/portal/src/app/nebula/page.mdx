@@ -1,7 +1,7 @@
-import { PencilRulerIcon, HandCoinsIcon, BlocksIcon, WorkflowIcon, ShieldCheckIcon, CirclePlusIcon } from "lucide-react";
-import { DocImage, createMetadata, FeatureCard } from "@doc";
+import { Wallet, File, MessageCircle, Braces, Bot, Blocks } from "lucide-react";
+import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack } from "@doc";
 import NebulaDiagram from "./assets/nebula-diagram.png";
-
+import SupportedChains from "./assets/supported-chains.png";
 
 # What is Nebula?
 
@@ -19,39 +19,53 @@ Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.co
 	<FeatureCard
 		title="Proprietary Blockchain Model"
 		description="Trained on over 2,500+ EVM networks and 1M+ contracts"
-		iconUrl={<PencilRulerIcon />}
+		iconUrl={<File />}
 	/>
 
     <FeatureCard
     	title="Execute Transactions"
     	description="Deploy contracts, send transactions, and more with natural language"
-		iconUrl={<CirclePlusIcon/>}
+		iconUrl={<MessageCircle/>}
     />
 
 	<FeatureCard
     	title="Wallet Integration"
     	description="Connect with over 500+ EOAs, in-app wallets, and smart wallets with session keys"
-		iconUrl={<ShieldCheckIcon/>}
+		iconUrl={<Wallet/>}
     />
 
 	<FeatureCard
     	title="Easy-to-use API"
     	description="Integrate into existing applications with ease using Nebula's API"
-    	iconUrl={<WorkflowIcon/>}
+    	iconUrl={<Braces />}
     />
 
 	<FeatureCard
     	title="Create Autonomous Agents"
     	description="Wallet execution agents for automated transactions on any EVM chain"
-    	iconUrl={<HandCoinsIcon/>}
+    	iconUrl={<Bot/>}
     />
 
 	<FeatureCard
     	title="Framework Integration"
     	description="Integrate with popular AI orchestration frameworks"
-		iconUrl={<BlocksIcon/>}
+		iconUrl={<Blocks/>}
     />
 </div>
 
 ## Supported Chains
 Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
+
+<DocImage src={SupportedChains} />
+
+## Templates
+
+<Stack>
+
+<GithubTemplateCard title="Bouncer Eliza Agent" href="https://github.com/thirdweb-example/bouncer-eliza-agent" />
+
+</Stack>
+
+
+
+
