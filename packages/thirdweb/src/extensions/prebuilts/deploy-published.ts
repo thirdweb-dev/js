@@ -50,7 +50,7 @@ export type DeployPublishedContractOptions = {
  * ```ts
  * import { deployPublishedContract } from "thirdweb/deploys";
  *
- * const address = await deployedPublishedContract({
+ * const address = await deployPublishedContract({
  *   client,
  *   chain,
  *   account,
@@ -68,7 +68,7 @@ export type DeployPublishedContractOptions = {
  * ```ts
  * import { deployPublishedContract } from "thirdweb/deploys";
  *
- * const address = await deployedPublishedContract({
+ * const address = await deployPublishedContract({
  *   client,
  *   chain,
  *   account,
