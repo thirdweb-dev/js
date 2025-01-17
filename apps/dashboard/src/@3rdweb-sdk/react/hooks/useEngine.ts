@@ -73,7 +73,7 @@ export function useEngineBackendWallets(params: {
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: [engineKeys.backendWallets(instanceUrl), authToken],
+    queryKey: [...engineKeys.backendWallets(instanceUrl), authToken],
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}backend-wallet/get-all?limit=50`, {
         method: "GET",

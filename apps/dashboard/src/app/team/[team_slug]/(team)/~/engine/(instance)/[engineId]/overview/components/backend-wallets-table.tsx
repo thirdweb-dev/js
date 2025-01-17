@@ -1,4 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -670,7 +671,9 @@ function DeleteModal({
             variant="destructive"
             onClick={onClick}
             disabled={isLocalWallet && !ackDeletion}
+            className="gap-2"
           >
+            {deleteBackendWallet.isPending && <Spinner className="size-4" />}
             Delete
           </Button>
         </ModalFooter>
