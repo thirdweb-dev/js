@@ -182,6 +182,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         isPending={isPending}
         isFetched={isFetched}
         tableScrollableClassName="max-h-[1000px]"
+        tableContainerClassName="border-x-0 rounded-t-none border-b-0"
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,

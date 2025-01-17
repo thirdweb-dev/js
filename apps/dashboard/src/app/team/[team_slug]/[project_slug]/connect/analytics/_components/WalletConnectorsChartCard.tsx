@@ -247,8 +247,8 @@ export function WalletConnectorsChartCard(props: {
                   fill={chartConfig[walletType]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

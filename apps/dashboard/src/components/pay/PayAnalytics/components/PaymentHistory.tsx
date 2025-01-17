@@ -160,15 +160,15 @@ function RenderData(props: {
           <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
             No data available
           </div>
-        ) : (
-          <div className="mt-8">
+        ) : props.query.data ? (
+          <div className="my-8">
             <PaginationButtons
               activePage={props.activePage}
               totalPages={props.query.data?.pages || 5}
               onPageClick={props.setPage}
             />
           </div>
-        )}
+        ) : null}
       </ScrollShadow>
     </div>
   );

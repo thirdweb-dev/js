@@ -23,7 +23,7 @@ export function FailedToLoad() {
 
 export function NoDataOverlay() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/30 text-muted-foreground text-sm backdrop-blur-sm">
+    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-card/50 text-muted-foreground text-sm backdrop-blur-sm">
       No data available
     </div>
   );
@@ -87,7 +87,7 @@ export function IntervalSelector(props: {
         props.setIntervalType(value);
       }}
     >
-      <SelectTrigger className="w-auto bg-transparent">
+      <SelectTrigger className="w-auto bg-card">
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent position="popper">

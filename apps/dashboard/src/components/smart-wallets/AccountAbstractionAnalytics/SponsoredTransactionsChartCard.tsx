@@ -193,8 +193,8 @@ export function SponsoredTransactionsChartCard(props: {
                   fill={chartConfig[chainId]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

@@ -186,6 +186,8 @@ function RenderData(props: {
                 fill={barColor}
                 radius={8}
                 barSize={20}
+                strokeWidth={1}
+                className="stroke-background"
               />
 
               {props.query.data && (
