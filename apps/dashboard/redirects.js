@@ -21,7 +21,7 @@ const legacyDashboardToTeamRedirects = [
   },
   {
     source: "/dashboard/settings/api-keys",
-    destination: "/team/~/~/projects",
+    destination: "/team",
     permanent: false,
   },
   {
@@ -160,12 +160,12 @@ async function redirects() {
     },
     {
       source: "/create-api-key",
-      destination: "/team/~/~/projects",
+      destination: "/team",
       permanent: false,
     },
     {
       source: "/dashboard/settings",
-      destination: "/team/~/~/projects",
+      destination: "/team",
       permanent: false,
     },
     {
