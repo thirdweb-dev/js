@@ -1,5 +1,87 @@
 # thirdweb
 
+## 5.85.0
+
+### Minor Changes
+
+- [#5972](https://github.com/thirdweb-dev/js/pull/5972) [`0b62397`](https://github.com/thirdweb-dev/js/commit/0b6239735ea01b68533784d629a7bd5ab8752b94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support multiple messages for Nebula API, updated input props.
+
+  Some prop names have been updated:
+
+  `prompt -> messsage`
+  `context -> contextFilter`
+
+  ```ts
+  Nebula.chat({
+    client,
+    // prompt is now message
+    message:
+      "What's the total supply of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+    // contextFilter is now contextFilter
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+  The Nebula.chat and Nebula.execute functions now support multiple input messages, and the input properties have been updated to match the http API.
+
+  ```ts
+  Nebula.chat({
+    client,
+    // multi message format
+    messages: [
+      {
+        role: "user",
+        content:
+          "Tell me the name of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+      },
+      {
+        role: "assistant",
+        content: "The name of the contract is My NFT Collection",
+      },
+      {
+        role: "user",
+        content: "What's the symbol of this contract?",
+      },
+    ],
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+  Same changes apply to Nebula.execute.
+
+  ```ts
+  Nebula.execute({
+    client,
+    account,
+    messages: [
+      { role: "user", content: "What's the address of vitalik.eth" },
+      {
+        role: "assistant",
+        content:
+          "The address of vitalik.eth is 0xd8dA6BF26964aF8E437eEa5e3616511D7G3a3298",
+      },
+      { role: "user", content: "Send them 0.0001 ETH" },
+    ],
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5966](https://github.com/thirdweb-dev/js/pull/5966) [`4ffcf30`](https://github.com/thirdweb-dev/js/commit/4ffcf305abdced715a76638a3af47d0f91e24e01) Thanks [@MananTank](https://github.com/MananTank)! - Fix NFT components not displaying correct metadata if multiple contracts with same token id is rendered because of incorrect caching
+
+- [#5973](https://github.com/thirdweb-dev/js/pull/5973) [`dbb64ea`](https://github.com/thirdweb-dev/js/commit/dbb64ea190b248c5e4e04c98b0e6bc178fd729a0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations
+
+- [#5982](https://github.com/thirdweb-dev/js/pull/5982) [`b6d65cf`](https://github.com/thirdweb-dev/js/commit/b6d65cf1c42a6c6707489e2d3ab3510f137c1b35) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added `mode` as a predefined chain
+
+- [#5967](https://github.com/thirdweb-dev/js/pull/5967) [`9cbcbe7`](https://github.com/thirdweb-dev/js/commit/9cbcbe776032556717b3d0b30e774323f75c63ee) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added overrides for Lumia Testnet to use pre-EIP1559 gas values
+
 ## 5.84.0
 
 ### Minor Changes
