@@ -54,7 +54,7 @@
     "@vercel/functions": "^1.5.2",
     "@vercel/og": "^0.6.4",
     "abitype": "1.0.7",
-    "chakra-react-select": "^4.7.6",
+    "chakra-react-select": "^6.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "color": "^4.2.3",
