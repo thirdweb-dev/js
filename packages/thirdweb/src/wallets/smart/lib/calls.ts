@@ -1,4 +1,5 @@
 import type { Chain } from "../../../chains/types.js";
+import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
   type ThirdwebContract,
@@ -29,7 +30,7 @@ import { DEFAULT_ACCOUNT_FACTORY_V0_6 } from "./constants.js";
  */
 export async function predictSmartAccountAddress(args: {
   client: ThirdwebClient;
-  chain: Chain;
+  chain?: Chain;
   adminAddress: string;
   factoryAddress?: string;
   accountSalt?: string;
@@ -39,7 +40,7 @@ export async function predictSmartAccountAddress(args: {
     accountSalt: args.accountSalt,
     factoryContract: getContract({
       address: args.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY_V0_6,
-      chain: args.chain,
+      chain: args.chain ?? getCachedChain(1),
       client: args.client,
     }),
   });

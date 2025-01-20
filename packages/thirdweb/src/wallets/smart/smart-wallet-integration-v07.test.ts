@@ -77,11 +77,44 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
     });
 
-    it("can connect", async () => {
+    it("can deploy with default chain", async () => {
+      const wallet = smartWallet({
+        gasless: true,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+      });
+      const smartAccount = await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      expect(smartAccount.address).toHaveLength(42);
+
+      const signature = await smartAccount.signMessage({
+        message: "hello world",
+      });
+      const isValid = await verifySignature({
+        message: "hello world",
+        signature,
+        address: smartWalletAddress,
+        chain: wallet.getChain(),
+        client,
+      });
+      expect(isValid).toEqual(true);
+    });
+
+    it("can predict account address", async () => {
       expect(smartWalletAddress).toHaveLength(42);
       const predictedAddress = await predictSmartAccountAddress({
         client,
         chain,
+        adminAddress: personalAccount.address,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+      });
+      expect(predictedAddress).toEqual(smartWalletAddress);
+    });
+
+    it("can predict account address with default chain", async () => {
+      const predictedAddress = await predictSmartAccountAddress({
+        client,
         adminAddress: personalAccount.address,
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
       });
