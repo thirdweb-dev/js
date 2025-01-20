@@ -129,6 +129,12 @@ import type { SmartWalletOptions } from "./types.js";
 export function smartWallet(
   createOptions: SmartWalletOptions,
 ): Wallet<"smart"> {
+  if (
+    typeof createOptions.factoryAddress === "undefined" &&
+    typeof createOptions.chain !== "undefined"
+  ) {
+    throw new Error("You must provide a chain if factory address is specified");
+  }
   const emitter = createWalletEmitter<"smart">();
   let account: Account | undefined = undefined;
   let adminAccount: Account | undefined = undefined;
