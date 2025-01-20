@@ -1,7 +1,13 @@
+import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
 import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { ethereum } from "thirdweb/chains";
+import {
+  arbitrumSepolia,
+  baseSepolia,
+  optimismSepolia,
+  sepolia,
+} from "thirdweb/chains";
 import {
   ConnectButton,
   type ConnectButtonProps,
@@ -108,12 +114,13 @@ export function RightSection(props: {
         showThirdwebBranding: connectOptions.ShowThirdwebBranding,
         requireApproval: connectOptions.requireApproval,
       }}
+      chains={[sepolia, baseSepolia, optimismSepolia, arbitrumSepolia]}
       wallets={wallets}
       auth={connectOptions.enableAuth ? playgroundAuth : undefined}
       accountAbstraction={
         connectOptions.enableAccountAbstraction
           ? {
-              chain: ethereum,
+              chain: sepolia,
               sponsorGas: true,
             }
           : undefined
@@ -171,10 +178,16 @@ export function RightSection(props: {
                 }}
                 locale={connectOptions.localeId}
                 auth={connectOptions.enableAuth ? playgroundAuth : undefined}
+                chains={[
+                  sepolia,
+                  baseSepolia,
+                  optimismSepolia,
+                  arbitrumSepolia,
+                ]}
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
                     ? {
-                        chain: ethereum,
+                        chain: sepolia,
                         sponsorGas: true,
                       }
                     : undefined
@@ -206,7 +219,14 @@ export function RightSection(props: {
  * @internal
  */
 export function getWallets(connectOptions: ConnectPlaygroundOptions) {
-  const wallets = [...connectOptions.walletIds.map((id) => createWallet(id))];
+  const wallets = [
+    ...connectOptions.walletIds.map((id) => {
+      if (id === "xyz.abs") {
+        return abstractWallet();
+      }
+      return createWallet(id);
+    }),
+  ];
 
   if (
     connectOptions.inAppWallet.enabled &&

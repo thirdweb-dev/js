@@ -13,6 +13,8 @@
     "fix": "eslint ./src --fix"
   },
   "dependencies": {
+    "@abstract-foundation/agw-client": "^1.0.1",
+    "@abstract-foundation/agw-react": "^1.0.1",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-checkbox": "^1.1.3",
     "@radix-ui/react-dialog": "1.1.4",
