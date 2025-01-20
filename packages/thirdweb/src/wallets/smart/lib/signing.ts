@@ -57,7 +57,7 @@ export async function smartAccountSignMessage({
       domain: {
         name: "Account",
         version: "1",
-        chainId: options.chain.id,
+        chainId: options.chain?.id ?? 1,
         verifyingContract: accountContract.address,
       },
       primaryType: "AccountMessage",
@@ -155,7 +155,7 @@ export async function smartAccountSignTypedData<
       domain: {
         name: "Account",
         version: "1",
-        chainId: options.chain.id,
+        chainId: options.chain?.id ?? 1,
         verifyingContract: accountContract.address,
       },
       primaryType: "AccountMessage",

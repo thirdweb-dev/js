@@ -129,7 +129,9 @@ function SmartWalletConnecting(props: {
     };
   }, [personalWallet]);
 
-  const wrongNetwork = personalWalletChainId !== smartWalletChain.id;
+  const wrongNetwork =
+    typeof smartWalletChain !== "undefined" &&
+    personalWalletChainId !== smartWalletChain.id;
 
   const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
     useState<"connecting" | "connect-error" | "idle">("idle");

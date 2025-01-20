@@ -948,8 +948,6 @@ export type ConnectButtonProps = {
    * ```tsx
    * <ConnectButton
    *   accountAbstraction={{
-   *    factoryAddress: "0x123...",
-   *    chain: sepolia,
    *    gasless: true;
    *   }}
    * />

@@ -53,6 +53,7 @@ import type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
   TokenPaymasterConfig,
+  UserOpOptions,
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
@@ -92,7 +93,8 @@ export async function connectSmartAccount(
   }
 
   const options = creationOptions;
-  const chain = connectChain ?? options.chain;
+  // Fallback to mainnet if no chain is provided (we only need this for pre-deploy signatures since transactions and deployments must define their own chain)
+  const chain = connectChain ?? options.chain ?? getCachedChain(1);
 
   // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
   if (options.factoryAddress && !options.overrides?.entrypointAddress) {
@@ -265,16 +267,29 @@ async function createSmartAccount(
       });
     },
     async sendBatchTransaction(transactions: SendTransactionOption[]) {
+      // The latter half of this OR is purely to satisfy TS
+      if (transactions.length === 0 || typeof transactions[0] === "undefined") {
+        throw new Error("You must provide at least one transaction in a batch");
+      }
+
+      const chain = getCachedChain(transactions[0].chainId);
+      if (transactions.some((tx) => tx.chainId !== chain.id)) {
+        throw new Error(
+          "All transactions in a batch must have the same chain ID",
+        );
+      }
+
       const executeTx = prepareBatchExecute({
         accountContract,
         transactions,
         executeBatchOverride: options.overrides?.executeBatch,
       });
+
       return _sendUserOp({
         executeTx,
         options: {
           ...options,
-          chain: getCachedChain(transactions[0]?.chainId ?? options.chain.id),
+          chain,
           accountContract,
         },
       });
@@ -365,6 +380,7 @@ async function approveERC20(args: {
     executeTx,
     options: {
       ...options,
+      chain: getCachedChain(transaction.chainId),
       overrides: {
         ...options.overrides,
         tokenPaymaster: undefined,
@@ -460,7 +476,7 @@ function createZkSyncAccount(args: {
 
 async function _sendUserOp(args: {
   executeTx: PreparedTransaction;
-  options: SmartAccountOptions;
+  options: UserOpOptions;
 }): Promise<WaitForReceiptOptions> {
   const { executeTx, options } = args;
   try {

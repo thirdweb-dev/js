@@ -697,7 +697,7 @@ export async function createAndSignUserOp(options: {
   transactions: PreparedTransaction[];
   adminAccount: Account;
   client: ThirdwebClient;
-  smartWalletOptions: SmartWalletOptions;
+  smartWalletOptions: SmartWalletOptions & { chain: Chain };
   waitForDeployment?: boolean;
 }) {
   const config = options.smartWalletOptions;

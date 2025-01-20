@@ -43,7 +43,6 @@ import type { SmartWalletOptions } from "./types.js";
  * import { sendTransaction } from "thirdweb";
  *
  * const wallet = smartWallet({
- *  chain: sepolia,
  *  sponsorGas: true, // enable sponsored transactions
  * });
  *
@@ -77,7 +76,7 @@ import type { SmartWalletOptions } from "./types.js";
  * import { sepolia } from "thirdweb/chains";
  *
  * const wallet = smartWallet({
- *  chain: sepolia,
+ *  chain: sepolia, // specify a chain if your factory only exists on one chain
  *  sponsorGas: true, // enable sponsored transactions
  *  factoryAddress: "0x...", // custom factory address
  * });
@@ -94,7 +93,6 @@ import type { SmartWalletOptions } from "./types.js";
  * import { sepolia } from "thirdweb/chains";
  *
  * const wallet = smartWallet({
- *  chain: sepolia,
  *  sponsorGas: true, // enable sponsored transactions
  *  factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7, // 0.7 factory address
  * });

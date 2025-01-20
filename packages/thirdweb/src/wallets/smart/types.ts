@@ -19,7 +19,7 @@ export type TokenPaymasterConfig = {
 
 export type SmartWalletOptions = Prettify<
   {
-    chain: Chain; // TODO consider making default chain optional
+    chain?: Chain;
     factoryAddress?: string;
     overrides?: {
       bundlerUrl?: string;
@@ -81,7 +81,7 @@ export type SmartWalletOptions = Prettify<
 // internal type
 export type SmartAccountOptions = Prettify<
   Omit<SmartWalletOptions, "chain" | "gasless" | "sponsorGas"> & {
-    chain: Chain;
+    chain?: Chain;
     sponsorGas: boolean;
     personalAccount: Account;
     factoryContract: ThirdwebContract;
@@ -89,6 +89,18 @@ export type SmartAccountOptions = Prettify<
     client: ThirdwebClient;
   }
 >;
+
+export type UserOpOptions = Omit<
+  SmartWalletOptions,
+  "chain" | "gasless" | "sponsorGas"
+> & {
+  chain: Chain;
+  sponsorGas: boolean;
+  personalAccount: Account;
+  factoryContract: ThirdwebContract;
+  accountContract: ThirdwebContract;
+  client: ThirdwebClient;
+};
 
 export type BundlerOptions = {
   bundlerUrl?: string;
