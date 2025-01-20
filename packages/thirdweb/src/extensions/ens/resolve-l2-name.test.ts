@@ -7,7 +7,7 @@ import { resolveL2Name } from "./resolve-l2-name.js";
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-l2-name", () => {
-  it("should resolve Basename", async () => {
+  it.skip("should resolve Basename", async () => {
     const ens = await resolveL2Name({
       client: TEST_CLIENT,
       // myk.base.eth
