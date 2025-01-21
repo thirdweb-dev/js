@@ -4,38 +4,38 @@ import { Callout } from "@doc";
 
 ## About Engine
 
-### Which contracts work with Engine?
+### ¿Qué contratos son compatibles con Engine?
 
-Engine supports reads and writes to any contract verified on the blockchain explorer, including any contract deployed via thirdweb.
-_Note: Some endpoints allow providing the contract ABI to support any unverified contract._
+Engine es compatible con lecturas y escrituras en cualquier contrato verificado en el explorador de la blockchain, incluidos los contratos desplegados a través de thirdweb.  
+_Nota: Algunos puntos finales permiten proporcionar el ABI del contrato para soportar contratos no verificados._
 
-Engine also supports deploys for thirdweb [prebuilt contracts](https://thirdweb.com/explore) including NFTs, tokens, marketplaces, and smart accounts.
+Engine también es compatible con el despliegue de los [contratos predefinidos de thirdweb](https://thirdweb.com/explore), incluidos NFTs, tokens, mercados y cuentas inteligentes.
 
-If you have a question about a particular contract type, [contact us](https://thirdweb.com/support).
+Si tienes alguna pregunta sobre un tipo de contrato en particular, [contáctanos](https://thirdweb.com/support).
 
-### How are Engine and the thirdweb Contract SDK different?
+### ¿Cómo se diferencian Engine y el SDK de contratos de thirdweb?
 
-Engine is a server that manages your backend wallets and how they interact with contracts. This difference unlocks capabilities that thirdweb and other web3 SDKs, including:
+Engine es un servidor que gestiona tus billeteras backend y cómo interactúan con los contratos. Esta diferencia desbloquea capacidades que thirdweb y otros SDKs de web3, incluyendo:
 
-- Management of KMS backend wallets
-- Fine-grained access control with access tokens
-- Transaction parallelization to handle higher throughput per wallet
-- Observability and retries on stuck transactions
-- Webhooks on completed transactions to sync onchain and off-chain activity
+- Gestión de billeteras backend KMS
+- Control de acceso detallado con tokens de acceso
+- Paralelización de transacciones para manejar un mayor rendimiento por billetera
+- Observabilidad y reintentos en transacciones atascadas
+- Webhooks en transacciones completadas para sincronizar la actividad onchain y off-chain
 
-Additionally, Engine is built on top of the thirdweb SDK and has the same capabilities.
+Además, Engine está construido sobre el SDK de thirdweb y tiene las mismas capacidades.
 
-## Using Engine
+## Usando Engine
 
-### How do I wait for a transaction to be mined?
+### ¿Cómo puedo esperar a que una transacción sea minada?
 
-Write calls to contracts do not block until they are mined. Instead they enqueue an async job and immediately return a reference to the job called `queueId`.
+Las llamadas de escritura a contratos no bloquean hasta que se minan. En su lugar, encolan un trabajo asíncrono y devuelven inmediatamente una referencia al trabajo llamada `queueId`.
 
-Here are three ways to determine when the job is mined:
+Aquí hay tres formas de determinar cuándo el trabajo es minado:
 
-- Use [webhooks](/engine/features/webhooks) to notify your backend when a transaction event occurs.
-- Poll the `/transaction/status/<queue_id>` endpoint.
-- Use websockets:
+- Usa [webhooks](/engine/features/webhooks) para notificar a tu backend cuando ocurra un evento de transacción.
+- Haz polling del punto final `/transaction/status/<queue_id>`.
+- Usa websockets:
 
   ```js
   const socket = new WebSocket(
@@ -47,12 +47,13 @@ Here are three ways to determine when the job is mined:
   };
   ```
 
-### How do I send native currency with my transaction?
+### ¿Cómo envío moneda nativa con mi transacción?
 
-To send native tokens (e.g. ETH on Ethereum), set `txOverrides.value`.
-This may be required when calling a `payable` contract method.
+Para enviar tokens nativos (por ejemplo, ETH en Ethereum), establece `txOverrides.value`.
+Esto puede ser necesario cuando se llama a un método `payable` de contrato.
 
-Here's an example of sending 0.2 ETH:
+Aquí tienes un ejemplo de cómo enviar 0.2 ETH:
+
 
 ```json
 {
@@ -64,12 +65,13 @@ Here's an example of sending 0.2 ETH:
 }
 ```
 
-### How do I override gas settings?
+### ¿Cómo anulo la configuración de gas?
 
-To override the gas settings, set relevant `txOverrides` gas fields.
-Each field is optional and will be estimated by Engine if omitted.
+Para anular la configuración de gas, establece los campos relevantes de `txOverrides`.
+Cada campo es opcional y será estimado por Engine si se omite.
 
-Here's an example of setting a gas limit of 210,000 gas units, 1 gwei max fee, and 1 gwei max priority fee:
+Aquí tienes un ejemplo de cómo establecer un límite de gas de 210,000 unidades de gas, una tarifa máxima de 1 gwei y una tarifa máxima de prioridad de 1 gwei:
+
 
 ```json
 {
@@ -82,21 +84,22 @@ Here's an example of setting a gas limit of 210,000 gas units, 1 gwei max fee, a
   }
 }
 ```
+<Callout variant='warning' title="Es buena idea establecer un tiempo de espera cuando configures un maxFeePerGas.">
 
-<Callout variant='warning' title="It is highly recommended to set a timeout when setting a maxFeePerGas.">
-
-Otherwise if gas prices don't fall, transactions may be in your queue indefinitely.
+De lo contrario, si los precios del gas no bajan, las transacciones pueden quedarse en tu cola indefinidamente.
 
 </Callout>
 
-### How do I set a timeout on transactions?
 
-To specify a transaction timeout, set `txOverrides.timeoutSeconds`.
-Engine flags transactions as `errored` if they are not sent before the timeout. An `errored` webhook will be sent.
+### ¿Cómo puedo establecer un tiempo de espera en las transacciones?
 
-Note: A transaction sent before the timeout may be mined after the timeout.
+Para especificar un tiempo de espera en una transacción, configura `txOverrides.timeoutSeconds`.
+Engine marcará las transacciones como `errored` si no se envían antes de que se alcance el tiempo de espera. Se enviará un webhook con el estado `errored`.
 
-Here's an example of a 2-hour timeout:
+Nota: Una transacción enviada antes del tiempo de espera puede ser minada después de que haya transcurrido el tiempo.
+
+Aquí tienes un ejemplo de un tiempo de espera de 2 horas:
+
 ```json
 {
   // ...other arguments in the write transaction

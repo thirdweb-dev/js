@@ -12,87 +12,85 @@ export const metadata = createMetadata({
 	description: "Ecosystem Wallet - Own your own web3 identity stack",
 });
 
-# Get Started
+# Comenzar
 
-Learn how to spin up your first ecosystem wallet, brand your wallet, and integrate your first ecosystem partner.
+Aprende a crear tu primera billetera de ecosistema, personalizar tu billetera e integrar tu primer socio de ecosistema.
 
 <Steps>
-<Step title='Get your Client ID'>
-On the thirdweb dashboard, navigate to settings to create an API Key to obtain a Client ID.
+<Step title='Obtén tu Client ID'>
+En el panel de thirdweb, navega a configuración para crear una API Key y obtener un Client ID.
 </Step>
-<Step title='Deploy Your Instance'>
+<Step title='Despliega Tu Instancia'>
 
-Visit the [Ecosystem Wallets dashboard](https://thirdweb.com/team/~/~/ecosystem/create) and enter the name of your ecosystem and choose your logo.
+Visita el [panel de Ecosystem Wallets](https://thirdweb.com/team/~/~/ecosystem/create) e ingresa el nombre de tu ecosistema y elige tu logo.
 
 <Callout variant="info">
-	Your ecosystem name is immutable and will appear wherever your wallet is
-	available, so choose carefully.
+	El nombre de tu ecosistema es inmutable y aparecerá dondequiera que tu billetera esté disponible, así que elígelo con cuidado.
 </Callout>
 
-When your ecosystem wallet is deployed, you'll receive an **Ecosystem ID** derived from your ecosystem name. You will use this ID to specify your wallet during integration (see Step 4 below).
+Cuando se despliegue tu billetera de ecosistema, recibirás un **Ecosystem ID** derivado del nombre de tu ecosistema. Utilizarás este ID para especificar tu billetera durante la integración (ver Paso 4 a continuación).
 
 <DocImage src={CreateEcosystemWallet} />
 </Step>
 
-<Step title='Set Ecosystem Permissions'>
+<Step title='Configura Permisos del Ecosistema'>
 
-There are two permission options depending on whether you’d like an open or exclusive ecosystem wallet.
+Hay dos opciones de permisos dependiendo de si deseas una billetera de ecosistema abierta o exclusiva.
 
 <DocImage src={EcosystemWalletPermissions} />
 
-#### Option 1: Anyone Permissions
+#### Opción 1: Permisos para Cualquiera
 
-If you want to allow anyone to integrate your ecosystem wallet, no other changes are required. You can protect your ecosystem against malicious actors by adding unwanted domains to your blocklist.
+Si deseas permitir que cualquiera integre tu billetera de ecosistema, no se requieren más cambios. Puedes proteger tu ecosistema contra actores maliciosos añadiendo dominios no deseados a tu lista de bloqueo.
 
-#### Option 2: Allowlist Permissions
+#### Opción 2: Permisos de Lista de Permitidos
 
-If you’re looking to create an ecosystem wallet for select partners, you can head to the Ecosystem Wallet dashboard, navigate to Permissions, and select “Allowlist”. All apps and games, added to your ecosystem, including your own app, will receive a unique Partner ID.
+Si deseas crear una billetera de ecosistema para socios selectos, puedes dirigirte al panel de Ecosystem Wallet, navegar a Permisos y seleccionar "Lista de Permitidos". Todas las aplicaciones y juegos agregados a tu ecosistema, incluida tu propia aplicación, recibirán un Partner ID único.
 
-**Add Applications to Your Allowlist**
+**Agregar Aplicaciones a tu Lista de Permitidos**
 
-For each application on your allowlist, you'll need to specify a name, a list of allowed domains, wallet signing settings, and an optional bundle ID (for mobile applications). The list of domains will determine where a partner will be able to display your ecosystem as a login option. Once a partner is added, a **Partner ID** will be generated.
+Para cada aplicación en tu lista de permitidos, deberás especificar un nombre, una lista de dominios permitidos, configuraciones de firma de billetera y un ID de paquete opcional (para aplicaciones móviles). La lista de dominios determinará dónde un socio podrá mostrar tu ecosistema como una opción de inicio de sesión. Una vez que se agregue un socio, se generará un **Partner ID**.
 
-<Callout title="Adding Your Own App as a Partner" variant="info">
-	You'll need to add your own domains and bundle IDs to your allowlist in order
-	to login through your ecosystem wallet in your app.
+<Callout title="Agregar tu propia aplicación como socio" variant="info">
+	Deberás agregar tus propios dominios e IDs de paquetes a tu lista de permitidos para poder iniciar sesión a través de tu billetera de ecosistema en tu aplicación.
 </Callout>
 
 <DocImage src={AddAPartner} />
 </Step>
 
-<Step title='Integrating Your Ecosystem Wallet'>
+<Step title='Integrar tu Billetera de Ecosistema'>
 
-Once you've set up your ecosystem wallet, you can specify it using your **Ecosystem ID**.
+Una vez que hayas configurado tu billetera de ecosistema, puedes especificarla utilizando tu **Ecosystem ID**.
 
 ```ts
 import { ecosystemWallet } from "thirdweb/wallets";
 
-// Create a wallet for a non-gated "Anyone" ecosystem
+// Crear una billetera para un ecosistema "Cualquiera" sin restricciones
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
 ```
 
-If you set your ecosystem wallet to Allowlist, you'll also need to specify your **Partner ID**.
+Si configuraste tu billetera de ecosistema para Lista de Permitidos, también deberás especificar tu **Partner ID**.
 
 ```ts
 import { ecosystemWallet } from "thirdweb/wallets";
 
-// Create a wallet for "Allowlist" ecosystems restricted to partners
+// Crear una billetera para ecosistemas "Lista de Permitidos" restringidos a socios
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
 	partnerId: "...",
 });
 ```
 
-Once you've instantiated your ecosystem wallet, you can add it to your Sign In flow.
+Una vez que hayas instanciado tu billetera de ecosistema, puedes agregarla a tu flujo de inicio de sesión.
 
 ```tsx
 <ConnectButton
 	client={THIRDWEB_CLIENT}
-	wallets={[wallet]} // Pass a non-gated or restricted wallet to the ConnectButton
+	wallets={[wallet]} // Pasa una billetera no restringida o restringida al ConnectButton
 	{...props}
 />
 ```
 
-You and your partners can integrate your ecosystem wallet either as a full login system or as a single login option. You can read more in our [integrating partners guide](/connect/ecosystems/integrating-partners).
+Tú y tus socios pueden integrar tu billetera de ecosistema como un sistema de inicio de sesión completo o como una sola opción de inicio de sesión. Puedes leer más en nuestra [guía de integración de socios](/connect/ecosystems/integrating-partners).
 
 </Step>
 

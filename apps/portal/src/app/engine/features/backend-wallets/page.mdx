@@ -7,201 +7,204 @@ export const metadata = createMetadata({
 		"Engine performs blockchain actions using backend wallets that you own and manage.",
 });
 
-# Backend Wallets
+# Billeteras Backend
 
-Engine performs blockchain actions using backend wallets that you own and manage.
+Engine realiza acciones en blockchain utilizando billeteras backend que tú posees y gestionas.
 
-There are multiple options for securing backend wallets.
+Existen múltiples opciones para proteger las billeteras backend.
 
-## Smart Backend Wallets
+## Billeteras Backend Inteligentes
 
-Smart backend wallets are the recommended way to perform blockchain operations with Engine. Each smart backend wallet consists of an EOA (managed internally by Engine) and a smart account (using thirdweb's default account implementation).
+Las billeteras backend inteligentes son la forma recomendada de realizar operaciones en blockchain con Engine. Cada billetera backend inteligente consiste en una EOA (gestionada internamente por Engine) y una cuenta inteligente (utilizando la implementación predeterminada de cuentas de thirdweb).
 
-### Benefits
+### Beneficios
 
-Smart backend wallets inherit smart account benefits and offer several advantages over traditional EOAs:
+Las billeteras backend inteligentes heredan los beneficios de las cuentas inteligentes y ofrecen varias ventajas sobre las EOA tradicionales:
 
-- **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up gas.
-- **Better Nonce Management**: Smart accounts use multi-dimensional nonces, which are more efficient than EOAs.
-- **Simple Integration**: Works with all existing Engine endpoints without any code changes.
+- **Gestión de Gas**: El paymaster integrado elimina la necesidad de mantener tokens de gas. Esto significa que nunca necesitas tener cripto o recargar gas.
+- **Mejor Gestión de Nonces**: Las cuentas inteligentes utilizan nonces multidimensionales, que son más eficientes que las EOA.
+- **Integración Sencilla**: Funciona con todos los endpoints existentes de Engine sin necesidad de realizar cambios en el código.
 
-### How it works
+### Cómo funciona
 
-The smart account is automatically deployed the first time you send a transaction on a chain. You don't need to think about deploying or managing the smart account - Engine handles everything behind the scenes. All transactions are sent as UserOperations to the EntryPoint contract on chain.
+La cuenta inteligente se despliega automáticamente la primera vez que envías una transacción en una cadena. No necesitas preocuparte por desplegar o gestionar la cuenta inteligente: Engine se encarga de todo en segundo plano. Todas las transacciones se envían como UserOperations al contrato EntryPoint en la cadena.
 
-<Details summary="How are Smart Backend Wallets different from existing engine AA features?">
-	Unlike the [previous account abstraction implementation in
-	Engine](account-abstraction) where you had to manage both the account address
-	(`x-account-address`) and the backend wallet address
-	(`x-backend-wallet-address`) separately, smart backend wallets simplify this.
-	The backend wallet address is now the smart account address itself.
+<Details summary="¿En qué se diferencian las billeteras backend inteligentes de las características AA existentes de Engine?">
+	A diferencia de la [implementación previa de abstracción de cuentas en
+	Engine](account-abstraction), donde tenías que gestionar tanto la dirección de
+	la cuenta (`x-account-address`) como la dirección de la billetera backend
+	(`x-backend-wallet-address`) por separado, las billeteras backend inteligentes
+	simplifican este proceso. Ahora, la dirección de la billetera backend es la
+	misma dirección de la cuenta inteligente.
 </Details>
 
-<Details summary="When not to use Smart Backend Wallets?">
-	At this time, Smart Backend Wallets do not allow for importing a smart
-	account. In use cases where you need to import a smart account (such as with
-	session keys), you should use [Engine AA features that utilise the
-	`x-account-address` header](account-abstraction).
+<Details summary="¿Cuándo no usar las billeteras backend inteligentes?">
+	En este momento, las billeteras backend inteligentes no permiten importar una
+	cuenta inteligente. En casos de uso donde necesites importar una cuenta
+	inteligente (como con claves de sesión), deberías usar las [características AA
+	de Engine que utilizan el encabezado `x-account-address`](account-abstraction).
 </Details>
 
-### Configuration Types
+### Tipos de Configuración
 
-- `smart:local` - Smart account backed by a local key
-- `smart:aws-kms` - Smart account backed by AWS KMS
-- `smart:gcp-kms` - Smart account backed by Google Cloud KMS
+- `smart:local` - Cuenta inteligente respaldada por una clave local.
+- `smart:aws-kms` - Cuenta inteligente respaldada por AWS KMS.
+- `smart:gcp-kms` - Cuenta inteligente respaldada por Google Cloud KMS.
 
-For AWS and Google Cloud KMS options, follow the setup instructions in the respective sections below.
+Para las opciones de AWS y Google Cloud KMS, sigue las instrucciones de configuración en las secciones correspondientes a continuación.
 
-### Pricing
+### Precios
 
-Smart backend wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
-Smart accounts need to be deployed on each chain. This costs gas and is billed to your account like any other transaction.
+Las billeteras backend inteligentes no tienen costos adicionales para usarlas con tu instancia de Engine. Las transacciones enviadas desde billeteras backend inteligentes siguen el [mismo modelo de facturación que las transacciones regulares de abstracción de cuentas con thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
+Las cuentas inteligentes deben desplegarse en cada cadena. Esto genera costos de gas y se factura a tu cuenta como cualquier otra transacción.
 
-## Local wallet
+## Billetera Local
 
-A [local wallet](/references/wallets/v2/LocalWallet) is a wallet created or imported from a private key. Ensure your private key is backed up before transacting with a local wallet in a production environment.
+Una [billetera local](/references/wallets/v2/LocalWallet) es una billetera creada o importada desde una clave privada. Asegúrate de respaldar tu clave privada antes de realizar transacciones con una billetera local en un entorno de producción.
 
-> Local wallets private keys are stored encrypted in Engine's database. For security reasons, private keys cannot be exported.
+> Las claves privadas de las billeteras locales se almacenan cifradas en la base de datos de Engine. Por razones de seguridad, las claves privadas no pueden ser exportadas.
 
-## AWS KMS wallet
+## Billetera AWS KMS
 
-An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely stored in your AWS account. Engine can create and transact with the wallet, but not delete it.
+Una [billetera AWS KMS](/references/wallets/v2/AwsKmsWallet) es una billetera almacenada de forma segura en tu cuenta de AWS. Engine puede crear y transaccionar con la billetera, pero no eliminarla.
 
-#### Setup
+#### Configuración
 
-1. [Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console) with programmatic access.
-1. [Grant the following KMS permissions](https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html) to this user.
+1. [Crea un usuario IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console) con acceso programático.
+1. [Otorga los siguientes permisos KMS](https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html) a este usuario:
    - `kms:CreateKey`
    - `kms:GetPublicKey`
    - `kms:Sign`
    - `kms:CreateAlias`
    - `kms:Verify`
-1. On the user page, navigate to **Security credentials > Access keys**.
-1. Select **Create access key** to get an **Access Key** and **Secret Key**.
-1. In the dashboard, navigate to **Configuration > Backend Wallets**.
-1. Select **AWS KMS** and provide the following:
-   - Access Key (example: `AKIA...`)
-   - Secret Key (example: `UW7A...`)
-   - Region (example: `us-west-1`)
+1. En la página del usuario, navega a **Credenciales de seguridad > Claves de acceso**.
+1. Selecciona **Crear clave de acceso** para obtener una **Clave de acceso** y una **Clave secreta**.
+1. En el dashboard, navega a **Configuración > Billeteras Backend**.
+1. Selecciona **AWS KMS** y proporciona lo siguiente:
+   - Clave de acceso (ejemplo: `AKIA...`)
+   - Clave secreta (ejemplo: `UW7A...`)
+   - Región (ejemplo: `us-west-1`)
 
-#### Import an existing wallet
+#### Importar una billetera existente
 
-1. Ensure your [KMS key is created](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) with the following settings:
-   - Key type: `Asymmetric`
-   - Key spec: `ECC_SECG_P256K1`
-   - Key usage: `Sign and verify`
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
-1. Select **Import** and provide the following:
-   - AWS KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
-   - AWS KMS ARN (example: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`)
+1. Asegúrate de que tu [clave KMS esté creada](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) con los siguientes ajustes:
+   - Tipo de clave: `Asimétrica`.
+   - Especificación de clave: `ECC_SECG_P256K1`.
+   - Uso de la clave: `Firmar y verificar`.
+1. En el dashboard, navega a **Vista General > Billeteras Backend**.
+1. Selecciona **Importar** y proporciona lo siguiente:
+   - ID de la clave AWS KMS (ejemplo: `0489da75-9830-4a5a-97e3-e4a6df7775b3`).
+   - ARN de la clave AWS KMS (ejemplo: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`).
 
-## Google Cloud KMS wallet
+## Billetera Google Cloud KMS
 
-#### Setup
+#### Configuración
 
-1. [Enable Google KMS API](https://cloud.google.com/kms/docs/create-encryption-keys#before-you-begin) for your GCP account.
-1. [Create a Service Account](https://cloud.google.com/iam/docs/service-accounts-create).
-1. Navigate to the [IAM](https://console.cloud.google.com/iam-admin/iam) page. Find the service account and select **Edit Principal** to add the following roles:
-   - Cloud KMS Admin
-   - Cloud KMS CryptoKey Signer/Verifier
-1. Navigate to the [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page. Select the above service account.
-1. Navigate to the **Keys** tab. Select **Add Key > Create new key**.
-1. Select **JSON** to download the JSON file. This file contains the key's private key in plaintext.
-1. In the dashboard, navigate to **Configuration > Backend Wallets**.
-1. Select **Google KMS** and provide the following:
+1. [Habilita la API de Google KMS](https://cloud.google.com/kms/docs/create-encryption-keys#before-you-begin) para tu cuenta de GCP.
+1. [Crea una Cuenta de Servicio](https://cloud.google.com/iam/docs/service-accounts-create).
+1. Navega a la página de [IAM](https://console.cloud.google.com/iam-admin/iam). Encuentra la cuenta de servicio y selecciona **Editar Principal** para agregar los siguientes roles:
+   - Administrador de Cloud KMS (Cloud KMS Admin)
+   - Firmante/Verificador de CryptoKey de Cloud KMS (Cloud KMS CryptoKey Signer/Verifier)
+1. Navega a la página de [Cuentas de Servicio](https://console.cloud.google.com/iam-admin/serviceaccounts). Selecciona la cuenta de servicio creada anteriormente.
+1. Ve a la pestaña **Keys**. Selecciona **Add Key > Create new key**.
+1. Selecciona **JSON** para descargar el archivo JSON. Este archivo contiene la clave privada en texto plano.
+1. En el dashboard, navega a **Configuración > Billeteras Backend**.
+1. Selecciona **Google KMS** y proporciona lo siguiente:
 
-   <Details id="gcpApplicationProjectId" summary="gcpApplicationProjectId">
+<Details id="gcpApplicationProjectId" summary="gcpApplicationProjectId">
 
-   This is the Project ID of the GCP project where the key was created.
+Este es el ID del proyecto GCP donde se creó la clave.
 
-   **Where to find**:
+**Dónde encontrarlo**:
 
-   - Navigate to the Google Cloud Console.
-   - Click on the project dropdown at the top of the page.
-   - The Project ID is displayed under your project's name.
+- Navega a la consola de Google Cloud.
+- Haz clic en el menú desplegable de proyectos en la parte superior de la página.
+- El ID del proyecto se muestra debajo del nombre de tu proyecto.
 
-   </Details>
+</Details>
 
-   <Details id="gcpKmsLocationId" summary="gcpKmsLocationId">
+<Details id="gcpKmsLocationId" summary="gcpKmsLocationId">
 
-   This is the location where the keyring was created (e.g., us-central1, europe-west1).
+Este es el lugar donde se creó el keyring (por ejemplo, us-central1, europe-west1).
 
-   **Where to find**:
+**Dónde encontrarlo**:
 
-   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
-   - Click on the keyring that contains your key.
-   - The location is displayed in the Location field.
+- En la consola de Google Cloud, ve a **Security > Cryptographic Keys**.
+- Haz clic en el keyring que contiene tu clave.
+- La ubicación se muestra en el campo de Ubicación (Location).
 
-   </Details>
+</Details>
 
-   <Details id="gcpKmsKeyRingId" summary="gcpKmsKeyRingId">
+<Details id="gcpKmsKeyRingId" summary="gcpKmsKeyRingId">
 
-   This is the ID of the keyring where your key is stored.
+Este es el ID del keyring donde se almacena tu clave.
 
-   **Where to find**:
+**Dónde encontrarlo**:
 
-   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
-   - Select the keyring that contains your key.
-   - The KeyRing ID is displayed in the list or the URL.
+- En la consola de Google Cloud, ve a **Security > Cryptographic Keys**.
+- Selecciona el keyring que contiene tu clave.
+- El ID del KeyRing se muestra en la lista o en la URL.
 
-   </Details>
+</Details>
 
-   <Details id="gcpApplicationCredentialEmail" summary="gcpApplicationCredentialEmail">
+<Details id="gcpApplicationCredentialEmail" summary="gcpApplicationCredentialEmail">
 
-   This is the email associated with the service account used for accessing the KMS key.
+Este es el correo electrónico asociado a la cuenta de servicio utilizada para acceder a la clave KMS.
 
-   **Where to find**:
+**Dónde encontrarlo**:
 
-   - In the Google Cloud Console, go to **IAM & Admin > Service Accounts**.
-   - Find the service account you are using. its email will be in the format: `name@project.iam.gserviceaccount.com`
+- En la consola de Google Cloud, ve a **IAM & Admin > Service Accounts**.
+- Encuentra la cuenta de servicio que estás utilizando. Su correo electrónico tendrá el formato: `name@project.iam.gserviceaccount.com`.
 
-   </Details>
+</Details>
 
-   <Details id="gcpApplicationCredentialPrivateKey" summary="gcpApplicationCredentialPrivateKey">
+<Details id="gcpApplicationCredentialPrivateKey" summary="gcpApplicationCredentialPrivateKey">
 
-   This is the private key of the service account that is used for authenticating API requests.
+Esta es la clave privada de la cuenta de servicio utilizada para autenticar solicitudes a la API.
 
-   **Where to find**:
+**Dónde encontrarlo**:
 
-   - Open the JSON file downloaded above.
-   - Copy the value of the `private_key` field.
+- Abre el archivo JSON descargado anteriormente.
+- Copia el valor del campo `private_key`.
 
-   </Details>
+</Details>
 
-#### Import an existing wallet
 
-1. Ensure your [keyring is created](https://cloud.google.com/kms/docs/create-key-ring) with the following settings:
-   - Purpose: `Asymmetric sign`
-   - Algorithm: `Elliptic Curve P-256 - SHA256 Digest`
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
-1. Select **Import** and provide the following:
-   - GCP KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
-   - GCP KMS Version ID (example: `1`)
+#### Importar una billetera existente
 
-## Create a wallet
+1. Asegúrate de que tu [keyring esté creado](https://cloud.google.com/kms/docs/create-key-ring) con los siguientes ajustes:
+   - Propósito: `Asymmetric sign`.
+   - Algoritmo: `Elliptic Curve P-256 - SHA256 Digest`.
+1. En el dashboard, navega a **Vista General > Billeteras Backend**.
+1. Selecciona **Importar** y proporciona lo siguiente:
+   - ID de la clave GCP KMS (ejemplo: `0489da75-9830-4a5a-97e3-e4a6df7775b3`).
+   - ID de la versión GCP KMS (ejemplo: `1`).
 
-For AWS or Google Cloud KMS wallets, you must provide your credentials.
+## Crear una billetera
 
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
-1. Select **Create**.
-1. (Optional) Provide a label to organize your wallets.
+Para las billeteras AWS o Google Cloud KMS, debes proporcionar tus credenciales.
 
-## Import a wallet
+1. En el dashboard, navega a **Vista General > Billeteras Backend**.
+1. Selecciona **Crear**.
+1. (Opcional) Proporciona una etiqueta para organizar tus billeteras.
 
-For AWS or Google Cloud KMS wallets, you must provide your credentials.
 
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
-1. Select **Import**.
-1. Provide the requested fields.
-   - See above for instructions for specific wallet types.
+## Importar una billetera
 
-## List wallets
+Para las billeteras AWS o Google Cloud KMS, debes proporcionar tus credenciales.
 
-In the dashboard, navigate to **Overview > Backend Wallets** to view your wallets created by or imported to Engine.
+1. En el dashboard, navega a **Vista General > Billeteras Backend**.
+1. Selecciona **Importar**.
+1. Proporciona los campos solicitados.
+   - Consulta las instrucciones anteriores para tipos específicos de billeteras.
 
-## Best practices
+## Listar billeteras
 
-- It is recommend to use AWS or Google Cloud KMS wallets for production use. Private keys are never exposed and the wallet is backed up securely by the cloud provider.
-- Use labels and multiple backend wallets to organize and track usage.
-  - Example: Use one wallet to pay out creators on your platform and another to airdrop NFTs to users.
-- If your wallets require topping up gas or ERC20 tokens regularly, consider a separate "funds storage" backend wallet that transfers funds to other wallets via the dashboard UI or API.
+En el dashboard, navega a **Vista General > Billeteras Backend** para ver las billeteras creadas o importadas en Engine.
+
+## Mejores prácticas
+
+- Se recomienda usar billeteras AWS o Google Cloud KMS para entornos de producción. Las claves privadas nunca se exponen y la billetera está respaldada de forma segura por el proveedor en la nube.
+- Utiliza etiquetas y múltiples billeteras backend para organizar y rastrear su uso.
+  - Ejemplo: Usa una billetera para pagar a creadores en tu plataforma y otra para realizar airdrops de NFTs a usuarios.
+- Si tus billeteras requieren recargas regulares de gas o tokens ERC20, considera usar una billetera backend separada de "almacenamiento de fondos" que transfiera fondos a otras billeteras mediante la interfaz del dashboard o la API.

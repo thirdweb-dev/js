@@ -6,13 +6,13 @@ export const metadata = createMetadata({
 		"Call or deploy contracts from your backend wallet to any EVM blockchain with one API call.",
 });
 
-# Contracts
+# Contratos
 
-Call or deploy contracts from your backend wallet to any EVM blockchain with one API call.
+Llama o despliega contratos desde tu billetera backend a cualquier blockchain EVM con una sola llamada a la API.
 
-## Write to a contract
+## Escribir en un contrato
 
-> This request requires gas funds in the backend wallet.
+> Esta solicitud requiere fondos de gas en la billetera backend.
 
 ```ts
 const resp = await fetch(
@@ -40,13 +40,13 @@ const { result } = await resp.json();
 console.log("Queue ID:", result.queueId);
 ```
 
-<Details id="handling-overloaded-functions" summary="Handling overloaded functions">
+<Details id="handling-overloaded-functions" summary="Manejo de funciones sobrecargadas">
 
-If there are multiple signatures for `functionName` on the contract, provide the full signature with args.
+Si hay múltiples firmas para `functionName` en el contrato, proporciona la firma completa con los argumentos.
 
-**Example**
+**Ejemplo**
 
-Your contract has two functions named `mintTo`:
+Tu contrato tiene dos funciones llamadas `mintTo`:
 
 ```solidity
 function mintTo(address to) public
@@ -56,7 +56,7 @@ function mintTo(address to) public
 function mintTo(address to, uint256 quantity) public
 ```
 
-This is the request body to call the second function:
+Este es el cuerpo de la solicitud para llamar a la segunda función:
 
 ```json
 {
@@ -69,9 +69,9 @@ This is the request body to call the second function:
 
 [See API reference](https://thirdweb-engine.apidocumentation.com/reference#tag/contract/POST/contract/{chain}/{contractAddress}/write)
 
-### Call a payable method
+### Llamar a un método pagadero
 
-To send native tokens to a payable method (e.g. ETH on Ethereum), set `txOverrides.value` in the request body to `POST /contract/<chain>/<contract_address>/write`.
+Para enviar tokens nativos a un método pagadero (por ejemplo, ETH en Ethereum), configura `txOverrides.value` en el cuerpo de la solicitud a `POST /contract/<chain>/<contract_address>/write`.
 
 ```json
 {
@@ -83,7 +83,7 @@ To send native tokens to a payable method (e.g. ETH on Ethereum), set `txOverrid
 }
 ```
 
-## Read from a contract
+## Leer desde un contrato
 
 ```ts
 const resp = await fetch(
@@ -99,9 +99,9 @@ const { result } = await resp.json();
 console.log("ERC-20 balance:", result);
 ```
 
-## Deploy a contract
+## Desplegar un contrato
 
-> This request requires gas funds in the backend wallet.
+> Esta solicitud requiere fondos de gas en la billetera backend.
 
 ```ts
 const resp = await fetch("<engine_url>/deploy/<chain>/prebuilts/nft-drop", {

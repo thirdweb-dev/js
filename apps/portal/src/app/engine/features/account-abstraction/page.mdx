@@ -6,26 +6,26 @@ export const metadata = createMetadata({
 		"Use Engine to deploy, manage, and transact with smart accounts on behalf of your users",
 });
 
-# Account Abstraction
+# Abstracción de cuentas
 
-<Callout variant="info" title="Looking to use account abstraction for your backend operations?">
-Consider using [Smart Backend Wallets](/engine/features/backend-wallets#smart-backend-wallets) instead. They combine EOA and smart account management into a single wallet, with automatic deployment and simplified integration:
+<Callout variant="info" title="¿Buscas usar la abstracción de cuentas para tus operaciones de backend?">
+Considera usar [Smart Backend Wallets](/engine/features/backend-wallets#smart-backend-wallets) en su lugar. Combinan la gestión de EOA y de cuentas inteligentes en una sola billetera, con despliegue automático e integración simplificada:
 
-- No need to deploy or manage account factories
-- No separate account and backend wallet addresses to track
-- Works with all existing Engine endpoints without modification
-- Built-in transaction batching and recovery
-- Automatic gas management with paymaster
+- No necesitas desplegar ni gestionar fábricas de cuentas
+- No hay direcciones separadas de cuentas y billeteras backend para hacer seguimiento
+- Funciona con todos los endpoints existentes de Engine sin modificaciones
+- Agrupación y recuperación de transacciones integradas
+- Gestión automática de gas con paymaster
 
-Smart backend wallets are recommended when you need account abstraction for your own backend operations. Use the approach described below when you need to manage smart accounts for your users.
+Se recomienda usar billeteras backend inteligentes cuando necesites abstracción de cuentas para tus operaciones de backend. Utiliza el enfoque descrito a continuación cuando necesites gestionar cuentas inteligentes para tus usuarios.
 
 </Callout>
 
-Use Engine to deploy, manage, and transact with smart accounts on behalf of your users.
+Usa Engine para desplegar, gestionar y realizar transacciones con cuentas inteligentes en nombre de tus usuarios.
 
-## Deploy an account factory
+## Desplegar una fábrica de cuentas
 
-To deploy smart accounts (referred to as "accounts" from here on), deploy an `AccountFactory` contract. This contract handles deploying individual `Account` contracts for your users.
+Para desplegar cuentas inteligentes (denominadas "cuentas" de aquí en adelante), despliega un contrato `AccountFactory`. Este contrato se encarga de desplegar contratos individuales `Account` para tus usuarios.
 
 **Endpoint:** `POST /deploy/<chain>/deployer.thirdweb.eth/AccountFactory`
 
@@ -40,9 +40,9 @@ To deploy smart accounts (referred to as "accounts" from here on), deploy an `Ac
 }
 ```
 
-## Deploy user accounts
+## Desplegar cuentas de usuario
 
-Once the factory is set up, deploy accounts for your users.
+Una vez que la fábrica esté configurada, despliega cuentas para tus usuarios.
 
 **Endpoint:** `POST /contract/<chain>/<account_factory_address>/account-factory/create-account`
 
@@ -54,22 +54,22 @@ Once the factory is set up, deploy accounts for your users.
 }
 ```
 
-This adds the `adminAddress` as the primary admin that can act on behalf of the newly deployed account.
+Esto añade la `adminAddress` como el administrador principal que puede actuar en nombre de la cuenta recién desplegada.
 
-To control the account with a backend wallet, specify the backend wallet in the `adminAddress` field.
+Para controlar la cuenta con una billetera backend, especifica la billetera backend en el campo `adminAddress`.
 
-## Grant permissions and sessions
+## Conceder permisos y sesiones
 
-Grant & revoke admins on an account with the `/contract/<chain>/<account_address>/account/admins` endpoints.
+Concede y revoca administradores en una cuenta con los puntos finales `/contract/<chain>/<account_address>/account/admins`.
 
-Grant & revoke sessions on an account which allow specific wallets to interact with specified contracts for a given period of time with the `/contract/<chain>/<account_address>/account/sessions` endpoints.
+Concede y revoca sesiones en una cuenta que permiten que billeteras específicas interactúen con contratos especificados durante un período de tiempo con los puntos finales `/contract/<chain>/<account_address>/account/sessions`.
 
-## Transact with an account
+## Realizar transacciones con una cuenta
 
-Make write calls with a smart account by calling a write endpoint and specify the `x-backend-wallet-address` and `x-account-address` headers.
+Realiza llamadas de escritura con una cuenta inteligente llamando a un punto final de escritura y especificando los encabezados `x-backend-wallet-address` y `x-account-address`.
 
-The `x-backend-wallet-address` should be set to the engine backend wallet that is an admin over the account.
+El `x-backend-wallet-address` debe configurarse con la billetera backend de Engine que es un administrador de la cuenta.
 
-The `x-account-address` should be set to the deployed account address itself.
+El `x-account-address` debe configurarse con la dirección de la cuenta desplegada.
 
-Write calls made using these headers will initiate a `UserOperation` sent from the specified account.
+Las llamadas de escritura realizadas utilizando estos encabezados iniciarán una `UserOperation` enviada desde la cuenta especificada.

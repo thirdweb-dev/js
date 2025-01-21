@@ -12,79 +12,80 @@ import {
 
 export const metadata = createMetadata({
 	image: {
-		title: "External Wallets",
+		title: "Billeteras Externas",
 		icon: "wallets",
 	},
-	title: "External Wallets | thirdweb",
+	title: "Billeteras Externas | thirdweb",
 	description:
-		"Learn how to connect and authenticate with external wallets using thirdweb.",
+		"Aprende cómo conectar y autenticar con billeteras externas usando thirdweb.",
 });
 
 
-# External wallets
+# Billeteras Externas
 
-thirdweb natively supports 500+ first-party wallets and all wallets that implement EIP-6963 (Multi-injected Provider Discovery). For the full list, please consult [this list](/typescript/v5/supported-wallets).
+thirdweb es compatible de forma nativa con más de 500 billeteras y con todas las billeteras que implementan EIP-6963 (Descubrimiento de Proveedores Multi-inyectados). Para la lista completa, consulta [esta lista](/typescript/v5/supported-wallets).
 
-You can use an external wallet in many ways. We've outlined these different use cases below:
+Puedes usar una billetera externa de muchas maneras. Hemos delineado estos diferentes casos de uso a continuación:
 
-| USAGE | BEST FOR  |
+
+| USO | IDEAL PARA  |
 |----------|---------- |
-| Connect to site | Applications simply needing web3 wallet connectivity |
-| Authenticate into your site | Applications requiring authentication with existing web3 users |
-| Authenticate into a thirdweb wallet (either in-app or ecosystem) | Applications looking to provide a seamless web3 application with minimal disruptions and prompts |
+| Conectar al sitio | Aplicaciones que solo necesitan conectividad de billetera web3 |
+| Autenticarse en tu sitio | Aplicaciones que requieren autenticación con usuarios web3 existentes |
+| Autenticarse en una billetera thirdweb (ya sea en la aplicación o del ecosistema) | Aplicaciones que buscan proporcionar una experiencia web3 fluida con mínimas interrupciones y solicitudes |
 
-The good news is that thirdweb cover each and every one of this use case!
+¡La buena noticia es que thirdweb cubre cada uno de estos casos de uso!
 
-Read on to find out how it's done:
+Sigue leyendo para descubrir cómo se hace:
 
-## Connecting External Wallets
+## Conectando Billeteras Externas
 
-External wallets are perfect for applications that want to integrate with existing web3 users. These users typically already have wallets like MetaMask, Coinbase Wallet, or Rainbow installed and are familiar with web3 concepts.
+Las billeteras externas son perfectas para aplicaciones que quieren integrarse con usuarios web3 existentes. Estos usuarios generalmente ya tienen billeteras como MetaMask, Coinbase Wallet o Rainbow instaladas y están familiarizados con los conceptos de web3.
 
-<Callout variant="warning" title='Limitations'>
-  Your backend will not know about the user's wallet. 
-  This is fine if the user's wallet is used to sign transactions and interact with the blockchain directly.
+<Callout variant="warning" title='Limitaciones'>
+  Tu backend no sabrá nada sobre la billetera del usuario. 
+  Esto está bien si la billetera del usuario se usa para firmar transacciones e interactuar directamente con la blockchain.
 
-  If you need your backend to be aware of the user's wallet, see [SIWE](#authenticating-with-external-wallets).
+  Si necesitas que tu backend conozca la billetera del usuario, consulta [SIWE](#authenticating-with-external-wallets).
 </Callout>
 
-### Implementation
+### Implementación
 
-We have code snippets and guide for various wallet connecting options below:
+Tenemos fragmentos de código y guías para diversas opciones de conexión de billeteras a continuación:
 
 <ArticleIconCard
 	icon={WalletsConnectIcon}
-	title="Connecting to an external wallet"
-	description="How to get started connecting your application to an external wallet."
+	title="Conectando a una billetera externa"
+	description="Cómo empezar a conectar tu aplicación con una billetera externa."
 	href="/typescript/v5/supported-wallets"
 />
 
-## Authenticating with External Wallets
+## Autenticación con Billeteras Externas
 
-Authentication with external wallets using Sign-In with Ethereum (SIWE) enables your backend to securely verify user wallet ownership. This is essential for applications requiring user-specific data or authenticated actions.
+La autenticación con billeteras externas usando Sign-In with Ethereum (SIWE) permite que tu backend verifique de manera segura la propiedad de la billetera del usuario. Esto es esencial para aplicaciones que requieren datos específicos del usuario o acciones autenticadas.
 
-<Callout variant="info" title='Key Difference'>
-  Unlike simple wallet connections, SIWE authentication creates a session between your backend and the user's wallet, enabling secure, authenticated API calls.
+<Callout variant="info" title='Diferencia clave'>
+  A diferencia de las conexiones simples de billetera, la autenticación SIWE crea una sesión entre tu backend y la billetera del usuario, permitiendo llamadas API seguras y autenticadas.
 
-  However, users will still require to sign prompts when interacting with the blockchain via their wallets. If you want an invisible web3 experience, consider using [thirdweb wallets](#authenticating-with-external-wallets-into-thirdweb-wallets).
+  Sin embargo, los usuarios aún necesitarán firmar solicitudes cuando interactúen con la blockchain a través de sus billeteras. Si quieres una experiencia web3 invisible, considera usar [billeteras thirdweb](#authenticating-with-external-wallets-into-thirdweb-wallets).
 </Callout>
 
-### Implementation
+### Implementación
 
 <ArticleIconCard
 	icon={WalletsAuthIcon}
-	title="Sign In With Ethereum"
-	description="A whole dedicated guides covering everything you need to know about SIWE."
+	title="Iniciar sesión con Ethereum"
+	description="Una guía dedicada que cubre todo lo que necesitas saber sobre SIWE."
 	href="/connect/auth"
 />
 
-## Authenticating with External Wallets into thirdweb Wallets
+## Autenticación con Billeteras Externas en Billeteras thirdweb
 
-thirdweb wallets provide a seamless web3 experience with minimal prompts and disruptions. This will provide you, the developer with full control of how the user interacts with your application.
+Las billeteras thirdweb proporcionan una experiencia web3 fluida con mínimas solicitudes e interrupciones. Esto te dará, como desarrollador, control total sobre cómo el usuario interactúa con tu aplicación.
 
-Note, however, that the wallet interacting with your application will be a thirdweb wallet, not the user's external wallet. While we provide methods to export keys and see how the external wallet and thirdweb wallet are linked, if your app requires the user's external wallet, you should use [SIWE](#authenticating-with-external-wallets) instead.
+Sin embargo, ten en cuenta que la billetera que interactúa con tu aplicación será una billetera thirdweb, no la billetera externa del usuario. Si bien proporcionamos métodos para exportar claves y ver cómo se vinculan la billetera externa y la billetera thirdweb, si tu aplicación requiere la billetera externa del usuario, deberías usar [SIWE](#authenticating-with-external-wallets) en su lugar.
 
-#### Authenticate to an In App Wallet with SIWE
+#### Autenticación en una Billetera In-App con SIWE
 
 <Grid>
     <ArticleIconCard
@@ -97,7 +98,7 @@ Note, however, that the wallet interacting with your application will be a third
         icon={ReactIcon}
         href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
     />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    {/* TODO: Agregar guía específica para React Native sobre billeteras del ecosistema */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -115,7 +116,7 @@ Note, however, that the wallet interacting with your application will be a third
     />
 </Grid>
 
-#### Authenticate to an Ecosystem Wallet with SIWE
+#### Autenticación en una Billetera del Ecosistema con SIWE
 
 <Grid>
     <ArticleIconCard
@@ -128,7 +129,7 @@ Note, however, that the wallet interacting with your application will be a third
         icon={ReactIcon}
         href="/react/v5/ecosystem-wallet/get-started#configuring-auth-strategies"
     />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    {/* TODO: Agregar guía específica para React Native sobre billeteras del ecosistema */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}

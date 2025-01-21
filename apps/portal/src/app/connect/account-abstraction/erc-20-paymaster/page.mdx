@@ -2,16 +2,16 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 # ERC-20 Paymaster
 
-In traditional Ethereum transactions, users pay gas fees in the native cryptocurrency of the network, such as ETH. This requirement can create friction, especially for applications where users interact with smart contracts without holding native tokens. ERC-20 Paymaster enables users pay gas fees using ERC-20 tokens. [Learn more about ERC-20 Paymasters.](https://blog.thirdweb.com/account-abstraction-paymaster-pay-evm-gas-fees-with-usdt-usdc-or-any-other-erc-20-token/)
+En las transacciones tradicionales de Ethereum, los usuarios pagan las tarifas de gas en la criptomoneda nativa de la red, como ETH. Este requisito puede generar fricción, especialmente para aplicaciones donde los usuarios interactúan con contratos inteligentes sin tener tokens nativos. ERC-20 Paymaster permite a los usuarios pagar las tarifas de gas utilizando tokens ERC-20. [Aprende más sobre ERC-20 Paymasters.](https://blog.thirdweb.com/account-abstraction-paymaster-pay-evm-gas-fees-with-usdt-usdc-or-any-other-erc-20-token/)
 
-### Get Started
+### Comenzar
+
+Configura el Paymaster. En tu código SDK, especifica el token ERC-20 que deseas utilizar para las tarifas de gas.
+
+Actualmente puedes usar Lisk LSK, Base USDC o Celo CUSD.
 
 
-Configure the Paymaster In your SDK code, specify the ERC-20 token you wish to use for gas fees. 
-
-Currently you may use Lisk LSK, Base USDC or Celo CUSD.
-
-<Tabs>
+<Tabs defaultValue="typescript">
 
 <TabsList>
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>

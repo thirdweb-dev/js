@@ -1,41 +1,39 @@
 import { Callout } from "@doc";
 
-# Self-Host Instructions
+# Instrucciones para Hospedar por Tu Cuenta
 
-Self-host Engine on your own infrastructure for free and manage your self-hosted Engine from the [thirdweb
-dashboard](https://thirdweb.com/team/~/~/engine).
+Hospeda Engine en tu propia infraestructura de forma gratuita y administra tu instancia autohospedada desde el [dashboard de thirdweb](https://thirdweb.com/team/~/~/engine).
 
 <Callout
-	title="Want to avoid setup and maintenance?"
+	title="¿Quieres evitar configuración y mantenimiento?"
 	variant="info"
 >
 
-[Get Engine hosted by thirdweb.](https://thirdweb.com/team/~/~/engine/create)
+[Obtén Engine alojado por thirdweb.](https://thirdweb.com/team/~/~/engine/create)
 
 </Callout>
 
-### Requirements
+### Requisitos
 
 - [Docker](https://docs.docker.com/get-docker/)
-- A thirdweb secret key from your Team > Project > Settings page.
-- PostgresDB (version 14+)
-- Redis (version 7.2.4+)
+- Una clave secreta de thirdweb desde la página Team > Project > Settings.
+- PostgresDB (versión 14+)
+- Redis (versión 7.2.4+)
 
-### Running Engine locally
+### Ejecutar Engine localmente
 
-Start Postgres:
+Inicia Postgres:
 
 ```bash
 docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 ```
 
-Start Redis:
+Inicia Redis:
 
 ```bash
 docker run -p 6379:6379 -d redis:7.2.4
 ```
-
-Start Engine server:
+Inicia el servidor de Engine:
 
 ```bash
 docker run \
@@ -51,123 +49,123 @@ docker run \
   thirdweb/engine:latest
 ```
 
-#### Environment variables
+#### Variables de entorno
 
-| Variable (<span style={{ color: "red" }}>\*</span> = Required) | Description                                                                                                                 |
+| Variable (<span style={{ color: "red" }}>\*</span> = Requerido) | Descripción                                                                                                                 |
 | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `ENCRYPTION_PASSWORD`<span style={{color:'red'}}>\*</span>     | Provide a string to encrypt sensitive data stored in DB. Do _not_ change this value or encrypted data will be inaccessible. |
-| `THIRDWEB_API_SECRET_KEY`<span style={{color:'red'}}>\*</span> | A thirdweb secret key created at the time of project (API Key) creation                     |
-| `ADMIN_WALLET_ADDRESS`<span style={{color:'red'}}>\*</span>    | The wallet address that will configure Engine from the thirdweb dashboard. You will be able to add other admins later.      |
-| `POSTGRES_CONNECTION_URL`<span style={{color:'red'}}>\*</span> | Postgres connection string: `postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]`                     |
-| `REDIS_URL`<span style={{color:'red'}}>\*</span>               | Redis connection string: `redis://[user:password@]host:port[/db-number]`                                                    |
-| `ENABLE_HTTPS`                                                 | Self-sign a certificate to serve API requests on HTTPS. Set to `true` if running Engine locally only. (Default: `false`)    |
-| `LOG_LEVEL`                                                    | Determines the logging severity level. Adjust for finer control over logged information. (Default: `debug`)                 |
-| `PRUNE_TRANSACTIONS`                                           | When `false`, Engine prevents the pruning/deletion of processed transaction data. (Default: `true`)                         |
-| `ENABLE_KEYPAIR_AUTH`                                          | Enables [Keypair Authentication](/engine/features/keypair-authentication).                                                  |
-| `TRUST_PROXY`                                                  | When `true`, trust the `X-Forwarded-For` header to allow Engine to use the correct client IP address for the IP allowlist.  |
+| `ENCRYPTION_PASSWORD`<span style={{color:'red'}}>\*</span>     | Proporciona un string para cifrar datos sensibles almacenados en la base de datos. No cambies este valor o los datos cifrados serán inaccesibles. |
+| `THIRDWEB_API_SECRET_KEY`<span style={{color:'red'}}>\*</span> | Una clave secreta de thirdweb creada al momento de la creación del proyecto (API Key).                                       |
+| `ADMIN_WALLET_ADDRESS`<span style={{color:'red'}}>\*</span>    | La dirección de la billetera que configurará Engine desde el dashboard de thirdweb. Podrás añadir otros administradores más adelante. |
+| `POSTGRES_CONNECTION_URL`<span style={{color:'red'}}>\*</span> | Cadena de conexión de Postgres: `postgresql://[user[:password]@][host][:port][/dbname][?param1=value1&...]`                  |
+| `REDIS_URL`<span style={{color:'red'}}>\*</span>               | Cadena de conexión de Redis: `redis://[user:password@]host:port[/db-number]`                                                 |
+| `ENABLE_HTTPS`                                                 | Firma automáticamente un certificado para servir solicitudes de API en HTTPS. Configúralo en `true` si ejecutas Engine localmente. (Por defecto: `false`) |
+| `LOG_LEVEL`                                                    | Determina el nivel de severidad de los logs. Ajusta para mayor control sobre la información registrada. (Por defecto: `debug`)|
+| `PRUNE_TRANSACTIONS`                                           | Cuando está en `false`, Engine evita la eliminación de datos de transacciones procesadas. (Por defecto: `true`)              |
+| `ENABLE_KEYPAIR_AUTH`                                          | Habilita la [Autenticación por Par de Claves](/engine/features/keypair-authentication).                                       |
+| `TRUST_PROXY`                                                  | Cuando está en `true`, confía en el encabezado `X-Forwarded-For` para permitir que Engine use la IP correcta del cliente en la lista de permitidos. |
 
-<span style={{ color: "red" }}>*</span> Required
+<span style={{ color: "red" }}>*</span> Requerido
 
-Your server is running when this log line appears:
+Tu servidor estará en funcionamiento cuando aparezca esta línea de registro:
 
 ```bash
 Listening on https://localhost:3005. Manage your Engine from https://thirdweb.com/team/~/~/engine.
 ```
 
-#### Manage Engine from the dashboard
+#### Administrar Engine desde el dashboard
 
-To manage your Engine instance from the dashboard:
+Para administrar tu instancia de Engine desde el dashboard:
 
-1. Navigate to `https://localhost:3005/json`
+1. Navega a `https://localhost:3005/json`
 
-   - The "Your connection is not private" page will appear.
-   - Select **Show advanced** and select **Proceed to localhost (unsafe)** to render the JSON file.
-   - _This one-time step allows your browser to connect to your local Engine instance._
+   - Aparecerá la página "Tu conexión no es privada".
+   - Selecciona **Opciones avanzadas** y luego **Proceder a localhost (no seguro)** para renderizar el archivo JSON.
+   - _Este paso único permite que tu navegador se conecte a tu instancia local de Engine._
 
-1. Navigate to the [Engine dashboard page](https://thirdweb.com/team/~/~/engine).
-1. Sign in with the `<admin_wallet_address>` wallet.
-1. Select **Import**
-1. Add your publicly accessible Engine URL.
-   - If Engine is running locally, provide the URL `https://localhost:3005`.
+1. Navega a la [página del dashboard de Engine](https://thirdweb.com/team/~/~/engine).
+1. Inicia sesión con la billetera `<admin_wallet_address>`.
+1. Selecciona **Importar**.
+1. Agrega la URL de tu instancia de Engine accesible públicamente.
+   - Si Engine se está ejecutando localmente, proporciona la URL `https://localhost:3005`.
 
-### Running Engine in production
+### Ejecutar Engine en producción
 
-See the [Production Checklist](/engine/production-checklist#cloud-hosting) for best practices using Engine in a production environment.
+Consulta la [Lista de Verificación para Producción](/engine/production-checklist#cloud-hosting) para seguir las mejores prácticas al usar Engine en un entorno de producción.
 
-- Pin Engine Docker to a version to control when changes are introduced.
-  - `latest` may include major version changes which can introduce breaking changes.
-- Host Engine DB on any [Postgres-compatible database](https://www.postgresql.org/support/professional_hosting/).
-  - Remember to update `POSTGRES_CONNECTION_URL`.
-  - Examples: [AWS RDS](https://aws.amazon.com/rds/postgresql/), [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres), [Heroku](https://www.heroku.com/postgres), [Supabase](https://supabase.com/docs/guides/database/overview)
-  - Minimum specs: 2 vCPU, 2 GB memory (AWS equivalent: t4g.small)
-  - Minimum version: 14
-  - Add the `?connection_limit=10` param to your `POSTGRES_CONNECTION_URL` to increase the connection limit.
-- Host Engine server on any cloud provider.
-  - Minimum specs: 1 vCPU, 2 GB memory (AWS equivalent: t2.small)
-  - Auto-scale the instance count to increase inbound throughput and queuing capacity.
-- Remove the `ENABLE_HTTPS` env var.
+- Fija la versión de Engine Docker para controlar cuándo se introducen cambios.
+  - `latest` puede incluir cambios de versión mayor que pueden introducir cambios incompatibles.
+- Hospeda la base de datos de Engine en cualquier [base de datos compatible con Postgres](https://www.postgresql.org/support/professional_hosting/).
+  - Recuerda actualizar `POSTGRES_CONNECTION_URL`.
+  - Ejemplos: [AWS RDS](https://aws.amazon.com/rds/postgresql/), [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres), [Heroku](https://www.heroku.com/postgres), [Supabase](https://supabase.com/docs/guides/database/overview)
+  - Especificaciones mínimas: 2 vCPU, 2 GB de memoria (equivalente a AWS t4g.small).
+  - Versión mínima: 14.
+  - Agrega el parámetro `?connection_limit=10` a tu `POSTGRES_CONNECTION_URL` para aumentar el límite de conexiones.
+- Hospeda el servidor Engine en cualquier proveedor de nube.
+  - Especificaciones mínimas: 1 vCPU, 2 GB de memoria (equivalente a AWS t2.small).
+  - Autoescala la cantidad de instancias para aumentar la capacidad de cola y el flujo entrante.
+- Elimina la variable de entorno `ENABLE_HTTPS`.
 
-### FAQ
+### Preguntas Frecuentes
 
-#### Why is my Docker image unable to reach my Postgres database?
+#### ¿Por qué mi imagen Docker no puede conectarse a mi base de datos Postgres?
 
-Here are common troubleshooting tips:
+Aquí tienes algunos consejos comunes para solucionar problemas:
 
-- Ensure the Postgres DB is running in Docker. `POSTGRES_CONNECTION_URL` should be set to `localhost` (if in the same container) or `host.docker.internal` (if in a different container).
-- Ensure the Postgres DB connection URL and credentials are correct.
-- Ensure the database name exists on the Postgres DB.
+- Asegúrate de que la base de datos Postgres esté ejecutándose en Docker. `POSTGRES_CONNECTION_URL` debe configurarse como `localhost` (si está en el mismo contenedor) o `host.docker.internal` (si está en un contenedor diferente).
+- Verifica que la URL de conexión y las credenciales de la base de datos Postgres sean correctas.
+- Asegúrate de que el nombre de la base de datos exista en Postgres.
 
-See [Production Checklist](/engine/production-checklist#cloud-hosting) for best practices using Engine in a production environment.
+Consulta la [Lista de Verificación para Producción](/engine/production-checklist#cloud-hosting) para las mejores prácticas al usar Engine en un entorno de producción.
 
-#### Self-hosting recommendations
+#### Recomendaciones para autohospedaje
 
-- Do _not_ set the environment variable `ENABLE_HTTPS=true`.
-- Host Engine Docker on a cloud provider.
-  - Minimum specs: 1 vCPU, 2 GB memory (AWS equivalent: t2.small)
-  - Auto-scale the instance count to increase inbound throughput and queuing capacity.
-- Host Postgres DB on a cloud provider.
-  - Examples: [AWS RDS](https://aws.amazon.com/rds/postgresql/), [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres), [Heroku](https://www.heroku.com/postgres), [Supabase](https://supabase.com/docs/guides/database/overview)
-  - Minimum specs: 2 vCPU, 2 GB memory (AWS equivalent: t4g.small)
-  - Set the `connection_limit` parameter within your `POSTGRES_CONNECTION_URL` environment variable to `10`.
+- No configures la variable de entorno `ENABLE_HTTPS=true`.
+- Hospeda Engine Docker en un proveedor de nube.
+  - Especificaciones mínimas: 1 vCPU, 2 GB de memoria (equivalente a AWS t2.small).
+  - Autoescala la cantidad de instancias para aumentar la capacidad de flujo entrante y cola.
+- Hospeda la base de datos Postgres en un proveedor de nube.
+  - Ejemplos: [AWS RDS](https://aws.amazon.com/rds/postgresql/), [Google Cloud SQL](https://cloud.google.com/sql/docs/postgres), [Heroku](https://www.heroku.com/postgres), [Supabase](https://supabase.com/docs/guides/database/overview)
+  - Especificaciones mínimas: 2 vCPU, 2 GB de memoria (equivalente a AWS t4g.small).
+  - Configura el parámetro `connection_limit` dentro de tu variable de entorno `POSTGRES_CONNECTION_URL` a `10`.
 
-#### How do I filter logs in Engine?
+#### ¿Cómo filtrar los logs en Engine?
 
-Configure log verbosity via the `LOG_LEVEL` environment variable.
-The severity levels ordered from highest to lowest are:
+Configura la verbosidad de los logs mediante la variable de entorno `LOG_LEVEL`.
+Los niveles de severidad, de mayor a menor, son:
 
-- `fatal` : Terminates the program due to critical errors.
-- `error` : Highlights serious issues needing immediate action.
-- `warn` : Suggests caution due to potential issues.
-- `info` : Shares routine operational insights.
-- `debug` : Provides detailed debugging information.
-- `trace` : Offers in-depth tracing details.
+- `fatal`: Termina el programa debido a errores críticos.
+- `error`: Destaca problemas graves que necesitan acción inmediata.
+- `warn`: Sugiere precaución debido a posibles problemas.
+- `info`: Comparte información operativa rutinaria.
+- `debug`: Proporciona información detallada para depuración.
+- `trace`: Ofrece detalles exhaustivos de rastreo.
 
-Engine by default captures logs at `debug` severity and higher. Setting `LOG_LEVEL` to `error` limits logging to only `error` and `fatal` severities.
+Por defecto, Engine captura logs de severidad `debug` y superiores. Configurar `LOG_LEVEL` como `error` limita los logs a severidades `error` y `fatal`.
 
 ```bash
 LOG_LEVEL="error"
 ```
 
-#### How to prevent `SIGSEGV` errors with the Engine docker image?
+#### ¿Cómo prevenir errores `SIGSEGV` con la imagen Docker de Engine?
 
-Ensure the Engine docker image's stability by allocating a minimum of `0.5 vCPU & 1 GB memory` to the container, mitigating `SIGSEGV` (Segmentation Fault) errors due to inadequate resources or memory access issues.
+Garantiza la estabilidad de la imagen Docker de Engine asignando un mínimo de `0.5 vCPU y 1 GB de memoria` al contenedor, mitigando errores `SIGSEGV` (Fallo de Segmentación) debido a recursos insuficientes o problemas de acceso a la memoria.
 
-#### How to mitigate Prisma errors related connections and/or prisma transactions?
+#### ¿Cómo mitigar errores de Prisma relacionados con conexiones o transacciones?
 
-Engine recommends a minimum DB connections limit of `8` PER HOST. Please set the `connection_limit` parameter within your `POSTGRES_CONNECTION_URL` environment variable, to allow a connection limit between (8, # conns supported by your DB / # hosts). In practice, 10-20 is a suitable connection limit.
+Engine recomienda un límite mínimo de conexiones a la base de datos de `8` POR HOST. Configura el parámetro `connection_limit` dentro de tu variable de entorno `POSTGRES_CONNECTION_URL` para permitir un límite de conexión entre (8, número de conexiones soportadas por tu base de datos / número de hosts). En la práctica, un límite de conexión entre 10-20 es adecuado.
 
-DB Error:
+Error de base de datos:
 
 ```bash
 Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 3)
 ```
 
-Example configuration:
+Configuración de ejemplo:
 
 ```bash
 POSTGRES_CONNECTION_URL=postgres://postgres:postgres@localhost:5432/postgres?connection_limit=10
 ```
 
-#### What is `x-forwarded-for` and how does it affect Engine?
+#### ¿Qué es `x-forwarded-for` y cómo afecta a Engine?
 
-If you have engine running on a server behind a reverse proxy, you can set the `TRUST_PROXY` environment variable to `true` to trust the `X-Forwarded-For` header. Reverse proxies like Nginx or Apache will add this header to the request with the original client IP address, and setting this variable will allow Engine to use the correct IP address for the IP Allowlist. For more details on IP Allowlisting, refer to the [Security Features](/engine/features/security) page.
+Si tienes Engine ejecutándose en un servidor detrás de un proxy inverso, puedes configurar la variable de entorno `TRUST_PROXY` como `true` para confiar en el encabezado `X-Forwarded-For`. Proxies inversos como Nginx o Apache añaden este encabezado a la solicitud con la dirección IP original del cliente. Configurar esta variable permitirá que Engine use la dirección IP correcta para la lista de permitidos (IP Allowlist). Para más detalles sobre la lista de permitidos por IP, consulta la página de [Características de Seguridad](/engine/features/security).

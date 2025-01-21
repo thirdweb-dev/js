@@ -9,15 +9,15 @@ export const metadata = createMetadata({
 		"thirdweb Pay - Customizing embeddable onramps and crypto purchase flows",
 });
 
-# PayEmbed Customization
+# Personalización de PayEmbed
 
-Learn how to customize the `PayEmbed`. You can find a selection of popular customizations below. For the full list of props, you can [view the full reference](/references/typescript/v5/PayEmbedProps).
+Aprende a personalizar el `PayEmbed`. Puedes encontrar una selección de personalizaciones populares a continuación. Para la lista completa de props, puedes [ver la referencia completa](/references/typescript/v5/PayEmbedProps).
 
 ---
 
-## Customize Supported Tokens
+## Personalizar Tokens Compatibles
 
-You can enable users to select your token on a given chain by passing an array of `SupportedTokens`. Note that this array overrides all default tokens listed for that chain.
+Puedes permitir que los usuarios seleccionen tu token en una cadena específica pasando un array de `SupportedTokens`. Ten en cuenta que este array reemplaza todos los tokens predeterminados listados para esa cadena.
 
 ```tsx
 <PayEmbed
@@ -39,11 +39,11 @@ You can enable users to select your token on a given chain by passing an array o
 
 ---
 
-## Prefill Destination Token
+## Prellenar Token de Destino
 
-In the case you want your users to purchase your token by default in your application, you can choose to pre-fill the Pay purchase flow with `prefillBuy` .
+Si deseas que tus usuarios compren tu token de forma predeterminada en tu aplicación, puedes optar por prellenar el flujo de compra de Pay con `prefillBuy`.
 
-For example, if you wanted users to only purchase Ethereum on Base network, you could do as follows:
+Por ejemplo, si quisieras que los usuarios solo compren Ethereum en la red Base, podrías hacerlo de la siguiente manera:
 
 ```tsx
 import { base } from "thirdweb/chains";
@@ -69,7 +69,7 @@ import { base } from "thirdweb/chains";
 />;
 ```
 
-If you'd like to prefill a purchase with a native token, you can set the chain without passing a token:
+Si deseas prellenar una compra con un token nativo, puedes establecer la cadena sin pasar un token:
 
 ```tsx
 <PayEmbed
@@ -84,9 +84,9 @@ If you'd like to prefill a purchase with a native token, you can set the chain w
 
 ---
 
-## Preferred Provider
+## Proveedor Preferido
 
-You can specify which onramp provider to present to your users. By default, we choose a recommended provider based on the location of the user, KYC status, and currency. Please make sure your set provider is [available in your country](../onramp-providers).
+Puedes especificar qué proveedor de onramp presentar a tus usuarios. Por defecto, elegimos un proveedor recomendado según la ubicación del usuario, el estado de KYC y la moneda. Asegúrate de que el proveedor configurado esté [disponible en tu país](../onramp-providers).
 
 ```tsx
 <PayEmbed
@@ -99,11 +99,11 @@ You can specify which onramp provider to present to your users. By default, we c
 
 ---
 
-## Disable Payment Methods
+## Deshabilitar Métodos de Pago
 
-In some cases, you may only want to show users fiat or crypto payment options for your onchain goods or services. You can do this by setting either `buyWithCrypto` or `buyWithFiat` to `false`.
+En algunos casos, es posible que solo quieras mostrar a los usuarios opciones de pago en fiat o criptomonedas para tus bienes o servicios en la cadena. Puedes hacer esto configurando `buyWithCrypto` o `buyWithFiat` en `false`.
 
-#### Disable Buy With Crypto
+#### Deshabilitar Comprar con Criptomonedas
 
 ```tsx
 <PayEmbed
@@ -114,7 +114,7 @@ In some cases, you may only want to show users fiat or crypto payment options fo
 />
 ```
 
-#### Disable Buy With Fiat
+#### Deshabilitar Comprar con Fiat
 
 ```tsx
 <PayEmbed
@@ -127,15 +127,15 @@ In some cases, you may only want to show users fiat or crypto payment options fo
 
 ---
 
-## Theme
+## Apariencia
 
-You can set the theme for the Pay component, which is set to `"dark"` by default. theme can be set to either `"dark"` , `"light"` or a custom theme object.
+Puedes configurar la apariencia para el componente Pay, que está configurada como `"dark"` por defecto. La apariencia puede establecerse como `"dark"`, `"light"` o un objeto personalizado.
 
-We have [`lightTheme`](/references/typescript/v5/lightTheme) or [`darkTheme`](/references/typescript/v5/darkTheme) providers that you can override to kickstart customization.
+Contamos con los proveedores [`lightTheme`](/references/typescript/v5/lightTheme) y [`darkTheme`](/references/typescript/v5/darkTheme) que puedes sobrescribir para iniciar la personalización.
 
-You can refer to our [`Theme`](/references/typescript/v5/Theme) page for a full view of customizable options if you’d prefer to create a custom theme from scratch.
+Puedes consultar nuestra página de [`Apariencia`](/references/typescript/v5/Theme) para obtener una vista completa de las opciones personalizables si prefieres crear una apariencia personalizada desde cero.
 
-#### Provided Themes
+#### Apariencias Proporcionadas
 
 ```tsx
 <PayEmbed theme='light' />
@@ -143,7 +143,7 @@ You can refer to our [`Theme`](/references/typescript/v5/Theme) page for a full 
 <PayEmbed theme='dark' />
 ```
 
-#### Custom Theme
+#### Apariencia Personalizada
 
 ```tsx
 import { darkTheme } from 'thirdweb/react';

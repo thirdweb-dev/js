@@ -10,30 +10,30 @@ export const metadata = createMetadata({
 	description: "This guide uses thirdweb Engine to sell NFTs with credit card",
 });
 
-# NFT Checkout
+# Pago de NFT
 
-This guide uses thirdweb Engine to sell NFTs with credit card:
+Esta guía utiliza thirdweb Engine para vender NFTs con tarjeta de crédito:
 
-1. A buyer pays with credit card.
-1. Upon payment, your backend calls Engine.
-1. Engine mints an NFT to the buyer's wallet.
+1. Un comprador paga con tarjeta de crédito.
+2. Al recibir el pago, tu backend llama a Engine.
+3. Engine acuña un NFT en la billetera del comprador.
 
-The buyer receives the NFT without requiring wallet signatures or gas funds.
+El comprador recibe el NFT sin necesidad de firmas de billetera o fondos para gas.
 
 <DocImage src={OverviewImage} alt="NFT checkout overview" />
 
-## Prerequisites
+## Requisitos previos
 
-- A thirdweb client ID and secret key from your Team > Project > Settings page.
-- An Engine instance
-- A [backend wallet](/engine/features/backend-wallets) with currency to pay for gas
-- An [access token](/engine/features/authentication) for your Engine instance
-- A deployed NFT contract that can be claimed by the backend wallet
-- A [Stripe account](https://dashboard.stripe.com/register) on test mode (no real payments will be made)
+- Un ID de cliente de thirdweb y una clave secreta desde tu página Equipo > Proyecto > Configuración.
+- Una instancia de Engine.
+- Una [billetera backend](/engine/features/backend-wallets) con fondos para pagar el gas.
+- Un [token de acceso](/engine/features/authentication) para tu instancia de Engine.
+- Un contrato NFT desplegado que pueda ser reclamado por la billetera backend.
+- Una [cuenta de Stripe](https://dashboard.stripe.com/register) en modo de prueba (no se realizarán pagos reales).
 
-## Frontend: Add Connect Wallet and credit card form
+## Frontend: Agregar el botón de Conectar Billetera y el formulario de tarjeta de crédito
 
-Use [`<ConnectWallet>`](/react/latest/components/ConnectWallet) to prompt the buyer for their wallet address. The buyer provides their credit card details and selects **Pay now** to send payment details directly to Stripe.
+Usa [`<ConnectWallet>`](/react/latest/components/ConnectWallet) para solicitar al comprador su dirección de billetera. El comprador proporciona los detalles de su tarjeta de crédito y selecciona **Pagar ahora** para enviar los detalles del pago directamente a Stripe.
 
 ```tsx
 function Home() {
@@ -104,9 +104,9 @@ const CreditCardForm = () => {
 };
 ```
 
-## Backend: Get a Stripe client secret
+## Backend: Obtén un cliente secreto de Stripe
 
-`POST /api/stripe-intent` returns a client secret which is needed to display the credit card form.
+`POST /api/stripe-intent` devuelve un cliente secreto que es necesario para mostrar el formulario de tarjeta de crédito.
 
 ```tsx
 // src/app/api/stripe-intent/route.ts
@@ -131,9 +131,9 @@ export async function POST(req: Request) {
 }
 ```
 
-## Backend: Configure the Stripe webhook
+## Backend: Configura el webhook de Stripe
 
-`POST /api/stripe-webhook` calls Engine to mint an NFT when a buyer is successfully charged.
+`POST /api/stripe-webhook` llama a Engine para acuñar un NFT cuando se haya cobrado con éxito al comprador.
 
 ```tsx
 // src/app/api/stripe-webhook/route.ts
@@ -189,21 +189,21 @@ export async function POST(req: NextRequest) {
 }
 ```
 
-## Configure Stripe webhooks
+## Configura los webhooks de Stripe
 
-Navigate to the [Stripe webhooks dashboard (test mode)](https://dashboard.stripe.com/test/webhooks) and add the `/api/stripe-webhook` endpoint and send the `charge.succeeded` event.
+Navega al [tablero de webhooks de Stripe (modo de prueba)](https://dashboard.stripe.com/test/webhooks) y agrega el endpoint `/api/stripe-webhook` enviando el evento `charge.succeeded`.
 
-## Try it out!
+## ¡Pruébalo!
 
-Here’s what the user flow looks like.
+Así es como se ve el flujo de usuario.
 
-The buyer is prompted to provide their credit card.
+Se le pide al comprador que proporcione los detalles de su tarjeta de crédito.
 
 <DocImage src={NftCheckout1} alt="Initial page load" className="w-[550px]" />
 
-They provide their card details.
+Ellos proporcionan los detalles de su tarjeta.
 
-> _Tip: Stripe testmode accepts `4242 4242 4242 4242` as a valid credit card._
+> _Consejo: El modo de prueba de Stripe acepta `4242 4242 4242 4242` como una tarjeta de crédito válida._
 
 <DocImage
 	src={NftCheckout2}
@@ -211,20 +211,20 @@ They provide their card details.
 	className="w-[550px]"
 />
 
-They are informed when their payment is submitted.
+Ellos son informados cuando su pago es procesado.
 
-<DocImage src={NftCheckout3} alt="Successful payment" className="w-[550px]" />
+<DocImage src={NftCheckout3} alt="Pago exitoso" className="w-[550px]" />
 
-## Full code example
+## Ejemplo completo de código
 
-The code above is simplified for readability. [View the full source code &rarr;](https://github.com/thirdweb-example/engine-nft-checkout)
+El código anterior está simplificado para mejorar su legibilidad. [Ver el código fuente completo &rarr;](https://github.com/thirdweb-example/engine-nft-checkout)
 
-## FAQ
+## Preguntas frecuentes
 
-### Can I accept different payment methods?
+### ¿Puedo aceptar diferentes métodos de pago?
 
-Yes! You provide the payment provider and can accept different currencies (EUR, JPY), digital wallets (Apple Pay, Google Pay), bank payments (ACH, SEPA), local payment methods (UPI, iDEAL), and more.
+¡Sí! Tú proporcionas el proveedor de pago y puedes aceptar diferentes monedas (EUR, JPY), billeteras digitales (Apple Pay, Google Pay), pagos bancarios (ACH, SEPA), métodos de pago locales (UPI, iDEAL) y más.
 
-### How is thirdweb NFT Checkout different?
+### ¿En qué se diferencia thirdweb NFT Checkout?
 
-[thirdweb Checkout](https://thirdweb.com/checkout) is a full solution that detects fraud, provides chargeback liability, accepts multiple payment methods including cryptocurrency, includes a prebuilt checkout UX, and more.
+[thirdweb Checkout](https://thirdweb.com/checkout) es una solución completa que detecta fraudes, ofrece responsabilidad por contracargos, acepta múltiples métodos de pago incluyendo criptomonedas, incluye una experiencia de usuario preconstruida para el checkout, y más.

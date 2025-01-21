@@ -1,42 +1,42 @@
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Gasless Transactions | thirdweb Engine",
+	title: "Transacciones sin Gas | thirdweb Engine",
 	description:
-		"Attract a broader audience by removing the need to have gas to use your application. Engine offers multiple options for developers looking to sponsor gas for their users' transactions.",
+		"Atrae una audiencia más amplia eliminando la necesidad de tener gas para usar tu aplicación. Engine ofrece múltiples opciones para desarrolladores que desean patrocinar el gas de las transacciones de sus usuarios.",
 });
 
-# Gasless Transactions
+# Transacciones sin Gas
 
-Attract a broader audience by removing the need to have gas to use your application. Engine offers multiple options for developers looking to sponsor gas for their users' transactions.
+Atrae una audiencia más amplia eliminando la necesidad de tener gas para usar tu aplicación. Engine ofrece múltiples opciones para desarrolladores que desean patrocinar el gas de las transacciones de sus usuarios.
 
-## Use cases
+## Casos de uso
 
-- Build an NFT checkout where the buyer is sent an NFT upon fiat payment.
-- Enable users to transfer an NFT to a friend or list an NFT on a marketplace.
-- Minimize friction by seamlessly managing transactions for players in a web3 game.
+- Construye un sistema de pago de NFT donde el comprador reciba un NFT tras un pago en fiat.
+- Permite que los usuarios transfieran un NFT a un amigo o lo pongan en venta en un mercado.
+- Minimiza la fricción gestionando sin problemas las transacciones para los jugadores en un juego web3.
 
-## Approaches
+## Enfoques
 
-Here are several ways to offer gasless transactions to your users.
+Aquí tienes varias maneras de ofrecer transacciones sin gas a tus usuarios.
 
-### Send transactions with backend wallets
+### Enviar transacciones con billeteras backend
 
-If a contract method can be called on behalf of a user, the simplest approach is to send the transaction from a backend wallet.
+Si un método de contrato puede ser llamado en nombre de un usuario, el enfoque más simple es enviar la transacción desde una billetera backend.
 
-Examples:
+Ejemplos:
 
-- An NFT contract that can be claimed _by_ a wallet and _sent to_ another wallet.
-- An oracle where state can be updated by any wallet.
+- Un contrato NFT que puede ser reclamado _por_ una billetera y _enviado a_ otra billetera.
+- Un oráculo donde el estado puede ser actualizado por cualquier billetera.
 
-### Send meta-transactions with relayers
+### Enviar meta-transacciones con relayers
 
-If your contract supports meta-transactions, use Engine as a relayer to send meta-transactions that are signed by your users' wallets.
+Si tu contrato admite meta-transacciones, usa Engine como un relayer para enviar meta-transacciones firmadas por las billeteras de tus usuarios.
 
-[Learn more about relayers in Engine.](/engine/features/relayers)
+[Aprende más sobre relayers en Engine.](/engine/features/relayers)
 
-### Send transactions with smart accounts
+### Enviar transacciones con cuentas inteligentes
 
-If your users have smart accounts, use Engine backend wallets to transact on behalf of smart accounts.
+Si tus usuarios tienen cuentas inteligentes, usa billeteras backend de Engine para realizar transacciones en nombre de las cuentas inteligentes.
 
-[Learn more about smart accounts in Engine.](/engine/features/smart-wallets)
+[Aprende más sobre cuentas inteligentes en Engine.](/engine/features/smart-wallets)

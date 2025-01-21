@@ -6,28 +6,28 @@ export const metadata = createMetadata({
 	description: "Cancel transactions in Engine to remove it from the queue.",
 });
 
-# Cancelling Transactions
+# Cancelando Transacciones
 
-Engine submits transactions to the blockchain within 5-10 seconds of receiving a request. During gas or traffic spikes, transactions may take longer to be mined.
+Engine envía transacciones a la blockchain dentro de los 5-10 segundos posteriores a recibir una solicitud. Durante picos de tráfico o gas, las transacciones pueden tardar más en ser minadas.
 
-In some cases, your application may want to cancel the transaction, such as:
+En algunos casos, tu aplicación puede querer cancelar la transacción, como por ejemplo:
 
-- The transaction was sent in error.
-- An NFT collection's supply has run out.
-- The transaction's exchange rate has changed and should be re-attempted with a new exchange rate.
+- La transacción fue enviada por error.
+- Se agotó el suministro de una colección de NFT.
+- La tasa de cambio de la transacción ha cambiado y debe ser reintentada con una nueva tasa de cambio.
 
-When Engine receives a cancellation request:
+Cuando Engine recibe una solicitud de cancelación:
 
-- If the transaction is completed (mined, errored, or canceled), this endpoint returns an error.
-- If the transaction is already submitted to RPC, this endpoint sends a no-op transaction with aggressive gas options to "replace" the original transaction.
-- If the transaction is not yet submitted, this endpoint will remove it from the queue.
+- Si la transacción se ha completado (minada, con error o cancelada), este endpoint devuelve un error.
+- Si la transacción ya ha sido enviada a RPC, este endpoint envía una transacción no operativa con opciones de gas agresivas para "reemplazar" la transacción original.
+- Si la transacción aún no ha sido enviada, este endpoint la eliminará de la cola.
 
-**When canceled, the transaction will not be re-attempted.** Your backend may safely re-attempt this transaction.
+**Cuando se cancela, la transacción no se volverá a intentar.** Tu backend puede reintentar esta transacción de forma segura.
 
-## Cancel a transaction from the API
+## Cancelar una transacción desde la API
 
 ```typescript
-// queueId was returned from a previous write request.
+// queueId fue devuelto desde una solicitud de escritura anterior.
 
 const resp = await fetch("<engine_url>/transaction/cancel", {
 	method: "POST",
@@ -42,14 +42,15 @@ if (resp.status === 200) {
 }
 ```
 
-Reference: [`Cancel Transaction`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel)
+Referencia: [`Cancelar transacción`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel)
 
-## Cancel a transaction from the dashboard
+## Cancelar una transacción desde el panel de control
 
-Select the **Cancel** icon next to a queued transaction in the Tranasctions table.
+Selecciona el ícono de **Cancelar** junto a una transacción en cola en la tabla de Transacciones.
 
 <DocImage src={cancelTxImage} />
 
-## Cancel all queued transactions
+## Cancelar todas las transacciones en cola
 
-Coming soon.
+Próximamente.
+

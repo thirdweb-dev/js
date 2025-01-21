@@ -2,25 +2,25 @@ import { Details, Callout, DocImage } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Security | thirdweb Engine",
+	title: "Seguridad | thirdweb Engine",
 	description:
-		"thirdweb Engine provides you with security features to configure and restrict access.",
+		"thirdweb Engine te proporciona funciones de seguridad para configurar y restringir el acceso.",
 });
 
-# Security
+# Seguridad
 
-Engine provides you with security features to configure and restrict access to sensitive operations.
+Engine te proporciona funciones de seguridad para configurar y restringir el acceso a operaciones sensibles.
 
-## IP Allowlist
+## Lista blanca de IP
 
-You can restrict access to your Engine instance by configuring an IP allowlist. This can be configured in the **Configuration** section of the your Engine.
-If an IP allowlist is not configured, Engine will allow all incoming requests.
+Puedes restringir el acceso a tu instancia de Engine configurando una lista blanca de IP. Esto se puede configurar en la sección **Configuración** de tu Engine.
+Si no se configura una lista blanca de IP, Engine permitirá todas las solicitudes entrantes.
 
-<Callout variant="info" title="Note">
-	This does not affect calls from the Engine dashboard to your Engine instance.
+<Callout variant="info" title="Nota">
+	Esto no afecta las llamadas desde el panel de control de Engine a tu instancia de Engine.
 </Callout>
 
-## Domain Allowlist (CORS)
+## Lista blanca de dominios (CORS)
 
-You can restrict access to your Engine instance by configuring a domain allowlist. This can be configured in the **Configuration** section of the Engine settings.
-Multiple domains can be added to the allowlist, and Engine will only accept requests from these domains. A wildcard domain can also be added to allow requests from any domain.
+Puedes restringir el acceso a tu instancia de Engine configurando una lista blanca de dominios. Esto se puede configurar en la sección **Configuración** de los ajustes de Engine.
+Se pueden agregar múltiples dominios a la lista blanca, y Engine solo aceptará solicitudes de estos dominios. También se puede agregar un dominio comodín para permitir solicitudes desde cualquier dominio.

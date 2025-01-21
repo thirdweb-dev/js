@@ -1,18 +1,18 @@
-# Production Checklist
+# Lista de Verificación para Producción
 
-Follow best practices when using Engine in a production environment.
+Sigue las mejores prácticas al usar Engine en un entorno de producción.
 
-### Security
+### Seguridad
 
-- The Engine API is intended to be called from your backend only. Ensure your access tokens are not accessible from your frontend.
-  - Exception: Relayer endpoints do not require access tokens. [Learn more about relayers.](infrastructure/engine/guides/relayer)
-- Securely store access tokens and the thirdweb secret key. Rotate these credentials if they are compromised.
-- Use labels to keep track of your wallets, admins, and access tokens.
-- Use access token with expirations to grant time-bound access.
-- Regularly review the admins list to remove inactive and former team members.
+- La API de Engine está diseñada para ser llamada únicamente desde tu backend. Asegúrate de que tus tokens de acceso no sean accesibles desde el frontend.
+  - Excepción: Los endpoints de relayer no requieren tokens de acceso. [Aprende más sobre relayers.](infrastructure/engine/guides/relayer)
+- Almacena de forma segura los tokens de acceso y la clave secreta de thirdweb. Rota estas credenciales si se ven comprometidas.
+- Usa etiquetas para llevar un control de tus billeteras, administradores y tokens de acceso.
+- Utiliza tokens de acceso con expiraciones para otorgar acceso limitado en el tiempo.
+- Revisa regularmente la lista de administradores para eliminar miembros inactivos o antiguos del equipo.
 
-### Backend wallets
+### Billeteras backend
 
-- Recommended: Use a wallet backed by AWS KMS or Google KMS. Wallet access is always recoverable and private keys are never exposed.
-- If using a local wallet: **back up the private key**. Engine cannot recover private keys if the encrypted stored data is lost or corrupted.
-- Ensure your backend wallets have sufficient funds. Use [wallet webhooks](/engine/features/webhooks) to alert when your gas balance is low.
+- Recomendación: Usa una billetera respaldada por AWS KMS o Google KMS. El acceso a la billetera siempre es recuperable y las claves privadas nunca se exponen.
+- Si usas una billetera local: **haz un respaldo de la clave privada**. Engine no puede recuperar claves privadas si los datos cifrados almacenados se pierden o corrompen.
+- Asegúrate de que tus billeteras backend tengan fondos suficientes. Usa [webhooks de billetera](/engine/features/webhooks) para recibir alertas cuando tu saldo de gas sea bajo.

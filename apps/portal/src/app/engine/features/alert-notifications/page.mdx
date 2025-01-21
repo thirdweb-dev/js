@@ -3,41 +3,41 @@ import RecentAlertsImage from "../../assets/recent-alerts.png";
 import { createMetadata, DocImage, OpenSourceCard } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Alert Notifications | thirdweb Engine",
-	description: "Get notified of issues or events on your cloud-hosted Engine.",
+	title: "Notificaciones de Alertas | thirdweb Engine",
+	description: "Recibe notificaciones sobre problemas o eventos en tu Engine alojado en la nube.",
 });
 
-# Alert Notifications
+# Notificaciones de Alertas
 
-All cloud-hosted Engine instances (running `v2.0.10` or later) can now configure alert notifications to be notified when an issue is detected on your Engine instance.
+Todas las instancias de Engine alojadas en la nube (que ejecutan `v2.0.10` o versiones posteriores) ahora pueden configurar notificaciones de alerta para ser notificados cuando se detecte un problema en tu instancia de Engine.
 
-## Add an alert
+## Agregar una alerta
 
-1. Go to [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your engine.
-1. Navigate to the new *Alerts* tab.
-1. Select *Create Alert*.
-    - If the button is disabled, see below.
-1. Select the type of alert and how to be notified. Currently the following are supported:
-    - Alert types: Elevated 5xx rate, stuck nonce
-    - Notification types: Webhook, Slack, Email
-1. Select *Add Alert*.
+1. Ve al [panel de control de Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu Engine.
+1. Navega a la nueva pestaña *Alertas*.
+1. Selecciona *Crear Alerta*.
+    - Si el botón está deshabilitado, consulta abajo.
+1. Selecciona el tipo de alerta y cómo quieres ser notificado. Actualmente se admiten los siguientes tipos:
+    - Tipos de alerta: Tasa elevada de errores 5xx, nonce atascado.
+    - Tipos de notificación: Webhook, Slack, Correo electrónico.
+1. Selecciona *Agregar Alerta*.
 
 <DocImage
 	src={AddAlertImage}
-	alt="Add alert"
+	alt="Agregar alerta"
 	className="max-w-[500px] mx-auto"
 />
 
-#### Why is my Create Alert button is disabled?
+#### ¿Por qué está deshabilitado el botón Crear Alerta?
 
-At this time only the original admin (the account which deployed the cloud-hosted Engine) can view and manage alerts. This is usually the first admin address listed on the Admins tab. We plan to expand alert management to all admins in the near future.
+Actualmente, solo el administrador original (la cuenta que desplegó el Engine alojado en la nube) puede ver y gestionar las alertas. Normalmente, esta es la primera dirección de administrador que aparece en la pestaña de Administradores. Planeamos expandir la gestión de alertas a todos los administradores en un futuro cercano.
 
-## View alert history
+## Ver historial de alertas
 
-You can also view recently fired/resolved alerts on the *Alerts* tab.
+También puedes ver las alertas recientes activadas/resueltas en la pestaña *Alertas*.
 
 <DocImage
 	src={RecentAlertsImage}
-	alt="Recent alerts"
+	alt="Alertas recientes"
 	className="max-w-[700px] mx-auto"
 />

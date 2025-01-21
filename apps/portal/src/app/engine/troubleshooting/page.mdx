@@ -2,122 +2,122 @@ import OutOfGasImage from "../assets/engine-out-of-gas.png";
 import { Callout, createMetadata, DocImage } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Troubleshooting | thirdweb Engine",
-	description: "Helpful resources for debugging your thirdweb Engine",
+	title: "Solución de problemas | thirdweb Engine",
+	description: "Recursos útiles para depurar problemas que puedas encontrar al usar thirdweb Engine.",
 });
 
-# Troubleshooting
+# Solución de problemas
 
-Here are helpful resources for debugging issues you may encounter while using thirdweb Engine.
+Aquí tienes recursos útiles para depurar los problemas que puedas encontrar al usar thirdweb Engine.
 
-## Sending transactions
+## Enviar transacciones
 
-### Received "UNPREDICTABLE_GAS_LIMIT" error
+### Recibido el error "UNPREDICTABLE_GAS_LIMIT"
 
-**What it means**
+**Lo que significa**
 
-The RPC reported that this transaction failed simulation and is expected to fail onchain, and it is being rejected before it is sent. No gas is consumed. This error indicates the contract logic will throw an error (or "revert the execution").
+El RPC informó que esta transacción falló en la simulación y se espera que falle en la cadena, por lo que está siendo rechazada antes de ser enviada. No se consume gas. Este error indica que la lógica del contrato lanzará un error (o "revertirá la ejecución").
 
-Common reasons: minting from a token contract that has no claim condition, has not started the minting period, is out of supply, has the incorrect amount paid to it, the calling backend wallet does not have permissions to call the contract.
+Razones comunes: minting desde un contrato de tokens que no tiene condiciones de reclamo, no ha comenzado el período de minting, se agotó el suministro, se pagó la cantidad incorrecta, la billetera backend que realiza la llamada no tiene permisos para llamar al contrato.
 
-**How to resolve**
+**Cómo resolverlo**
 
-Try to simulate the transaction by passing the `?simulateTx=true` query parameter or using the thirdweb [Transaction Simulator](https://thirdweb.com/tools/transaction-simulator) to reveal the error message. 
+Intenta simular la transacción pasando el parámetro `?simulateTx=true` en la URL o usa el [Simulador de transacciones de thirdweb](https://thirdweb.com/tools/transaction-simulator) para revelar el mensaje de error.
 
-### The transaction failed onchain
+### La transacción falló en la cadena
 
-*Also known as: execution reverted*
+*También conocido como: ejecución revertida*
 
-**What it means**
+**Lo que significa**
 
-The transaction passed simulation but the execution was reverted onchain. This can occur if a change in state occurred, such as an NFT contract running out of supply before a transaction was mined.
+La transacción pasó la simulación, pero la ejecución fue revertida en la cadena. Esto puede ocurrir si hubo un cambio en el estado, como que un contrato NFT se quedó sin suministro antes de que la transacción fuera minada.
 
-Another common reason is the transaction ran out of gas. You can verify this by checking the "More Details" section in your blockchain explorer and confirming if the gas usage reached the gas limit:
+Otra razón común es que la transacción se quedó sin gas. Puedes verificar esto revisando la sección "Más detalles" en tu explorador de bloques y confirmando si el uso de gas alcanzó el límite de gas:
 
 <DocImage
 	src={OutOfGasImage}
-	alt="Out of gas"
+	alt="Sin gas"
 	className="max-w-[500px] mx-auto"
 />
 
-**How to resolve**
+**Cómo resolverlo**
 
-If the transaction failed due to onchain logic, try to simulate the transaction (see above) to identify the reason.
+Si la transacción falló debido a la lógica en la cadena, intenta simular la transacción (ver arriba) para identificar la razón.
 
-If the gas limit was reached, you may try [manually overriding the gas settings](https://portal.thirdweb.com/engine/features/contracts#override-gas-settings). Engine automatically estimates the gas limit through simulation, and it is not recommended to override the gas limit unless the estimation is incorrect.
+Si se alcanzó el límite de gas, puedes intentar [sobrescribir manualmente la configuración de gas](https://portal.thirdweb.com/engine/features/contracts#override-gas-settings). Engine estima automáticamente el límite de gas a través de simulación, y no se recomienda sobrescribir el límite de gas a menos que la estimación sea incorrecta.
 
-### Received "replacement transaction underpriced" error
+### Recibido el error "replacement transaction underpriced"
 
-*Also known as: REPLACEMENT_UNDERPRICED, already known*
+*También conocido como: REPLACEMENT_UNDERPRICED, ya conocido*
 
-**What it means**
+**Lo que significa**
 
-Engine has already submitted this or another transaction with the same nonce. That transaction is in mempool and waiting to be mined by the chain.
+Engine ya ha enviado esta u otra transacción con el mismo nonce. Esa transacción está en el mempool y esperando ser minada por la cadena.
 
-Engine automatically manages nonces so this error typically should not occur.
+Engine maneja automáticamente los nonces, por lo que este error no debería ocurrir generalmente.
 
-**How to resolve**
+**Cómo resolverlo**
 
-It's possible the transactions are not being accepted by the mempool. To remediate this issue, you can retry a transaction, cancel it, or reset all backend wallet nonces.
+Es posible que las transacciones no estén siendo aceptadas por el mempool. Para resolver este problema, puedes volver a intentar la transacción, cancelarla o restablecer todos los nonces de la billetera backend.
 
-To retry a transaction, use [`POST /transaction/sync-retry`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/sync-retry) and provide the `queueId`. You may also provide a higher gas value to increase the likelihood of the transaction being mined.
+Para reintentar una transacción, usa [`POST /transaction/sync-retry`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/sync-retry) y proporciona el `queueId`. También puedes proporcionar un valor de gas más alto para aumentar la probabilidad de que la transacción sea minada.
 
-To cancel a transaction, use [`POST /transaction/cancel`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel) and provide the `queueId`.
+Para cancelar una transacción, usa [`POST /transaction/cancel`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel) y proporciona el `queueId`.
 
 
 <Callout
-    title="Resetting the nonce may fail previous transactions"
+    title="Restablecer el nonce puede fallar transacciones anteriores"
 	variant="warning"
 >
-    Transactions that were sent but not yet mined may fail because new transactions will use the same nonce values as previously sent transactions.
+    Las transacciones que fueron enviadas pero aún no minadas pueden fallar porque las nuevas transacciones utilizarán los mismos valores de nonce que las transacciones enviadas previamente.
 </Callout>
 
-To reset the nonce for all backend wallets, use [`POST /backend-wallet/reset-nonce`](https://thirdweb-engine.apidocumentation.com/reference#tag/backend-wallet/POST/backend-wallet/reset-nonces) to force-sync the Engine nonces with the onchain values.
+Para restablecer el nonce de todas las billeteras backend, usa [`POST /backend-wallet/reset-nonce`](https://thirdweb-engine.apidocumentation.com/reference#tag/backend-wallet/POST/backend-wallet/reset-nonces) para forzar la sincronización de los nonces de Engine con los valores de la cadena.
 
-### Received "Insufficient funds for gas * price + value" error
+### Recibido el error "Insufficient funds for gas * price + value"
 
-*Also known as: Insufficient funds for intrinsic transaction cost*
+*También conocido como: Fondos insuficientes para el costo intrínseco de la transacción*
 
-**What it means**
+**Lo que significa**
 
-Your backend wallet has insufficient funds to complete the transaction.
+Tu billetera backend tiene fondos insuficientes para completar la transacción.
 
-Note that on EVM blockchains, a transaction must place a *gas fee bid* on a transaction that is higher than the amount that will actually get consumed. This means your wallet must have a minimum amount of gas in order to send transactions.
+Ten en cuenta que en las cadenas EVM, una transacción debe colocar una *oferta de comisión de gas* en una transacción que sea mayor que la cantidad que realmente se consumirá. Esto significa que tu billetera debe tener una cantidad mínima de gas para enviar transacciones.
 
-You can estimate how much gas is needed. Adjust the values to your use case and chain.
-- `gas` ("gas limit"): The unit of gas that a transaction needs to complete. Assume an NFT mint that takes **120,000 gas**.
-- `maxFeePerGas`: The maximum amount of native token to bid, per gas. Assume **50 gwei**.
-- Amount of gas needed = **6,000,000,000,000,000 wei**. Assume the native currency is ETH which has 18 decimals, this equals 0.006 ETH.
+Puedes estimar cuántos fondos de gas se necesitan. Ajusta los valores a tu caso de uso y cadena.
+- `gas` ("límite de gas"): La unidad de gas que una transacción necesita para completarse. Supón que un mint de NFT toma **120,000 gas**.
+- `maxFeePerGas`: La cantidad máxima de token nativo para ofrecer, por gas. Supón **50 gwei**.
+- La cantidad de gas necesaria = **6,000,000,000,000,000 wei**. Supón que la moneda nativa es ETH, que tiene 18 decimales, lo que equivale a 0.006 ETH.
 
-Even though the transaction is expected to consume less gas, the transaction will fail unless the wallet holds at least this much native gas currency.
+Aunque se espera que la transacción consuma menos gas, la transacción fallará a menos que la billetera tenga al menos esta cantidad de moneda nativa de gas.
 
-**How to resolve**
+**Cómo resolverlo**
 
-Add more funds to your backend wallet. Or wait until the gas fees on the chain are lower and try again.
+Agrega más fondos a tu billetera backend. O espera hasta que las comisiones de gas en la cadena sean más bajas y vuelve a intentarlo.
 
-## Sending UserOps
+## Enviar UserOps
 
-UserOps are **User Op**erations sent by a backend wallet on behalf of smart accounts, used in the Account Abstraction pattern.
+UserOps son **User Op**erations enviadas por una billetera backend en nombre de cuentas inteligentes, utilizadas en el patrón de Account Abstraction.
 
-### Received "Invalid UserOperation signature or paymaster signature" error
+### Recibido el error "Invalid UserOperation signature or paymaster signature"
 
-*Also known as: code -32507*
+*También conocido como: código -32507*
 
-**What it means**
+**Lo que significa**
 
-The backend wallet you are sending the transaction with does not have sufficient permissions to send a userOp for this account address.
+La billetera backend con la que estás enviando la transacción no tiene permisos suficientes para enviar un userOp para esta dirección de cuenta.
 
-**How to resolve**
+**Cómo resolverlo**
 
-Confirm if the backend wallet is a valid admin for this account.
-If you are using Session Keys, confirm they are not close to or already expired.
+Confirma si la billetera backend es un administrador válido para esta cuenta.
+Si estás usando Claves de Sesión, confirma que no estén cerca de su vencimiento o ya hayan expirado.
 
-### Received "AA21 didn’t pay prefund" error
+### Recibido el error "AA21 didn’t pay prefund"
 
-**What it means**
+**Lo que significa**
 
-Your thirdweb API key used by Engine is not properly configured to use Account Abstraction, or you have a [sponsorship rule](https://portal.thirdweb.com/connect/account-abstraction/sponsorship-rules) that has been exceeded. 
+Tu clave API de thirdweb utilizada por Engine no está configurada correctamente para usar Account Abstraction, o has excedido una [regla de patrocinio](https://portal.thirdweb.com/connect/account-abstraction/sponsorship-rules).
 
-**How to resolve**
+**Cómo resolverlo**
 
-Confirm if the API key is tied to an account with valid payment. Also confirm if there are any sponsorship rule for the Engine API key.
+Confirma si la clave API está vinculada a una cuenta con pago válido. También confirma si existen reglas de patrocinio para la clave API de Engine.

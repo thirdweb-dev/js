@@ -1,6 +1,7 @@
 "use client";
 
 import { DocSearch } from "@/components/others/DocSearch";
+import { LanguageSelector } from "@/components/others/LanguageSelector";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -119,6 +120,13 @@ const supportLinks = [
   },
 ];
 
+const languagesLinks = [
+  {
+    name: "Spanish",
+    href: "/es/connect",
+  },
+];
+
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
@@ -200,6 +208,14 @@ export function Header() {
           </ul>
 
           <div className="flex flex-col justify-start gap-5 xl:flex-row xl:items-center xl:gap-3">
+            <div className="hidden xl:flex">
+              <LanguageSelector />
+              <DropdownLinks
+                links={languagesLinks}
+                onLinkClick={() => setShowBurgerMenu(false)}
+                category=""
+              />
+            </div>
             <div className="hidden xl:flex">
               <ThemeSwitcher />
             </div>

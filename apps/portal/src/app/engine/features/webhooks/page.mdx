@@ -9,20 +9,20 @@ export const metadata = createMetadata({
 
 # Webhooks
 
-Configure webhooks in Engine to notify your backend server of transaction or backend wallet events.
+Configura webhooks en Engine para notificar a tu servidor backend sobre eventos de transacciones o de billeteras backend.
 
-## Supported events
+## Eventos compatibles
 
-### Transactions
+### Transacciones
 
-Handle when a blockchain transaction is sent and mined onchain.
+Gestiona cuándo una transacción en blockchain es enviada y minada en la cadena.
 
-| Event                 | Description                                                                                                                                                                  |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sent_transaction`    | A transaction is submitted to RPC. A transaction hash is provided, but it may not be mined onchain yet.                                                                      |
-| `mined_transaction`   | A transaction is mined on the blockchain. **Note: The transaction may have reverted onchain. Check the `onchainStatus` field to confirm if the transaction was successful.** |
-| `errored_transaction` | A transaction is unable to be submitted. There may be an error in the transaction params, backend wallet, or server.                                                         |
-| `all_transaction`     | All the above events.                                                                                                                                                        |
+| Evento                | Descripción                                                                                                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sent_transaction`    | Se envía una transacción al RPC. Se proporciona un hash de la transacción, pero es posible que aún no esté minada en la cadena.                                              |
+| `mined_transaction`   | Una transacción es minada en la blockchain. **Nota: Es posible que la transacción haya revertido en la cadena. Verifica el campo `onchainStatus` para confirmar si fue exitosa.** |
+| `errored_transaction` | No se puede enviar una transacción. Puede haber un error en los parámetros de la transacción, la billetera backend o el servidor.                                            |
+| `all_transaction`     | Todos los eventos anteriores.                                                                                                                                               |
 
 <DocImage
 	src={webhooksImage}
@@ -30,46 +30,47 @@ Handle when a blockchain transaction is sent and mined onchain.
 	className="max-w-[500px] mx-auto"
 />
 
-The transaction payload contains a `status` field which is one of: `sent`, `mined`, `errored`
+El payload de la transacción contiene un campo `status` que puede tener uno de los siguientes valores: `sent`, `mined`, `errored`.
 
-Depending on the transaction, your backend will receive one of these webhook sequences:
-| Transaction statuses | Description |
+Dependiendo de la transacción, tu backend recibirá una de estas secuencias de webhook:
+
+| Estados de la transacción | Descripción |
 |-|-|
-| `sent` + `mined` | The transaction was sent and mined onchain. |
-| `errored` | The transaction errored before being sent. Common reasons: The transaction failed simulation, the backend wallet is out of funds, the network is down, or another internal error, transaction with a gas ceiling timed out. The errorMessage field will contain further details. |
-| `sent` + `errored` | The transaction was sent but was not mined onchain after some duration. Common reasons: The transaction was dropped from RPC mempool, another transaction was mined with the same nonce, or the nonce was too far ahead of the onchain nonce. |
-| `cancelled` | The transaction was in queue (not sent yet) and cancelled. |
-| `sent` + `cancelled` | The transaction was sent and waiting to be mined, but cancelled. |
+| `sent` + `mined` | La transacción fue enviada y minada en la cadena. |
+| `errored` | La transacción falló antes de ser enviada. Razones comunes: La transacción falló la simulación, la billetera backend no tiene fondos suficientes, la red está caída u ocurrió otro error interno. También puede ocurrir si una transacción con un límite de gas agotó el tiempo de espera. El campo `errorMessage` proporcionará más detalles. |
+| `sent` + `errored` | La transacción fue enviada pero no fue minada en la cadena después de un tiempo determinado. Razones comunes: La transacción fue eliminada del mempool del RPC, otra transacción con el mismo nonce fue minada, o el nonce estaba demasiado adelantado con respecto al nonce en la cadena. |
+| `cancelled` | La transacción estaba en la cola (aún no enviada) y fue cancelada. |
+| `sent` + `cancelled` | La transacción fue enviada y estaba esperando ser minada, pero fue cancelada. |
 
-**Note:** Webhooks may come out of order. Treat later statuses as higher priority than earlier ones. For example if your backend receives a `sent` webhook after a `mined` webhook, treat this transaction as `mined`.
+**Nota:** Los webhooks pueden llegar en un orden distinto al esperado. Trata los estados posteriores como de mayor prioridad que los anteriores. Por ejemplo, si tu backend recibe un webhook `sent` después de un webhook `mined`, considera esta transacción como `mined`.
 
-### Wallets
+### Billeteras
 
-| Event                    | Description                                                                                                                                  |
+| Evento                    | Descripción                                                                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `backend_wallet_balance` | A backend wallet's balance is below `minWalletBalance`. To read or update this value, call `GET/POST /configuration/backend-wallet-balance`. |
+| `backend_wallet_balance` | El saldo de una billetera backend está por debajo de `minWalletBalance`. Para leer o actualizar este valor, llama a `GET/POST /configuration/backend-wallet-balance`. |
 
-## Setup
+## Configuración
 
-### Create a webhook
+### Crear un webhook
 
-1. Visit the [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your Engine.
-1. Select the **Configuration** tab.
-1. Select **Create Webhook**.
+1. Visita el [dashboard de Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu Engine.
+1. Selecciona la pestaña **Configuration**.
+1. Selecciona **Create Webhook**.
 
-Webhook URLs must start with `https://`.
+Las URLs de los webhooks deben comenzar con `https://`.
 
-## Payload format
+## Formato del payload
 
-Method: `POST`
+Método: `POST`
 
-Headers:
+Encabezados:
 
 - `Content-Type: application/json`
-- `X-Engine-Signature: <payload signature>`
-- `X-Engine-Timestamp: <Unix timestamp in seconds>`
+- `X-Engine-Signature: <firma del payload>`
+- `X-Engine-Timestamp: <marca de tiempo Unix en segundos>`
 
-<Details id="sample-sent-transaction-payload" summary="Example sent transaction">
+<Details id="sample-sent-transaction-payload" summary="Ejemplo de transacción enviada">
 
 ```json
 {
@@ -124,9 +125,9 @@ Headers:
 
 </Details>
 
-<Details id="sample-mined-transaction-payload" summary="Example mined transaction">
+<Details id="sample-mined-transaction-payload" summary="Ejemplo de transacción confirmada">
 
-Tip: Check the `onchainStatus` field. "success" means the transaction is mined onchain with no errors. "reverted" means the transaction or userOp was reverted.
+Tip: Verifique el campo `onchainStatus`. "success" significa que la transacción se minó en la cadena sin errores. "reverted" significa que la transacción o el UserOp fue revertido.
 
 ```json
 {
@@ -181,17 +182,17 @@ Tip: Check the `onchainStatus` field. "success" means the transaction is mined o
 
 </Details>
 
-## Webhook verification (recommended)
+## Verificación del Webhook (recomendado)
 
-Since any outside origin can call your webhook endpoint, it is recommended to verify the webhook signature to ensure a request comes from your Engine instance.
+Dado que cualquier origen externo puede llamar a su punto final del webhook, se recomienda verificar la firma del webhook para asegurarse de que la solicitud provenga de su instancia de Engine.
 
-### Check the signature
+### Verificar la firma
 
-The payload body is signed with the webhook secret and provided in the `X-Engine-Signature` request header.
+El cuerpo del payload está firmado con el secreto del webhook y se proporciona en el encabezado de solicitud `X-Engine-Signature`.
 
-Get the **webhook secret** for your webhook endpoint from the dashboard.
+Obtenga el **secreto del webhook** para su punto final desde el panel de control.
 
-This code example checks if the signature is valid:
+Este ejemplo de código verifica si la firma es válida:
 
 ```ts
 const generateSignature = (
@@ -217,11 +218,11 @@ const isValidSignature = (
 };
 ```
 
-### Check the timestamp
+### Verificar la marca de tiempo
 
-The event timestamp is provided in the `X-Engine-Timestamp` request header.
+La marca de tiempo del evento se proporciona en el encabezado de solicitud `X-Engine-Timestamp`.
 
-This code example checks if the event exceeds a given expiration duration:
+Este ejemplo de código verifica si el evento excede la duración de expiración dada:
 
 ```ts
 export const isExpired = (
@@ -233,9 +234,9 @@ export const isExpired = (
 };
 ```
 
-### Example webhook endpoint
+### Ejemplo de endpoint de webhook
 
-This NodeJS code example listens for event notifications on the `/webhook` endpoint:
+Este ejemplo de código en NodeJS escucha las notificaciones de eventos en el endpoint `/webhook`:
 
 ```ts
 import express from "express";

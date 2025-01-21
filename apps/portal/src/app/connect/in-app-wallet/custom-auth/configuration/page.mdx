@@ -12,39 +12,39 @@ import EWCustomAuthdb2 from "../images/customauthdb2.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Configure Authentication for In-App Wallet",
+		title: "Configurar Autenticación para Billetera In-App",
 		icon: "wallets",
 	},
-	title: "Configure Authentication In-App Wallet | thirdweb",
+	title: "Configurar Autenticación Billetera In-App | thirdweb",
 	description:
-		"Configure Authentication with OIDC standard, OR a generic option that lets you bring your own auth server",
+		"Configura la autenticación con el estándar OIDC o una opción genérica que te permite usar tu propio servidor de autenticación",
 });
 
-# Configuration
+# Configuración
 
-We offer two options to setup in-app wallets with custom auth, one that is based on the [OIDC (Open ID Connect)](https://openid.net/developers/how-connect-works/) standard, and a generic option that lets you bring your own auth server. You can also use both options together if needed.
+Ofrecemos dos opciones para configurar billeteras In-App con autenticación personalizada, una basada en el estándar [OIDC (Open ID Connect)](https://openid.net/developers/how-connect-works/) y una opción genérica que te permite usar tu propio servidor de autenticación. También puedes usar ambas opciones juntas si es necesario.
 
-## OIDC compatible auth
+## Autenticación compatible con OIDC
 
-The OIDC auth set-up is a good option if you use an external auth provider like `Auth0`, `firebase`, `cognito` etc. that publishes the JWK for checking the authenticity of the token.
+La configuración de autenticación OIDC es una buena opción si usas un proveedor de autenticación externo como `Auth0`, `firebase`, `cognito`, etc., que publica la JWK para comprobar la autenticidad del token.
 
-An OIDC auth system has a public-private keypair, where the private key is used to sign auth tokens.
+Un sistema de autenticación OIDC tiene un par de claves pública-privada, donde la clave privada se usa para firmar los tokens de autenticación.
 
-- The public key is uploaded to a public URL in JWKS format. The standard location is `https://{domain}.com/.well-known/jwks.json`
-- When a user logs in, a JWT token called the idToken is generated and signed by the private key. The OIDC spec provides an interface for fields that are used in this token.
-- This JWT is then passed to the in-app wallet to generate a wallet for the user.
-- We will verify the JWT against the public key to verify that the JWT was signed correctly. Upon successful verification, we will proceed to generate a wallet based on the `sub` (user identifier) value of the idToken.
+- La clave pública se carga en una URL pública en formato JWKS. La ubicación estándar es `https://{domain}.com/.well-known/jwks.json`
+- Cuando un usuario inicia sesión, se genera un token JWT llamado idToken y se firma con la clave privada. La especificación OIDC proporciona una interfaz para los campos que se utilizan en este token.
+- Este JWT luego se pasa a la billetera In-App para generar una billetera para el usuario.
+- Verificaremos el JWT contra la clave pública para comprobar que el JWT fue firmado correctamente. Tras una verificación exitosa, procederemos a generar una billetera basada en el valor `sub` (identificador del usuario) del idToken.
 
-To setup an OIDC compatible auth, enable the first option in the configuration tab of the in-app wallet dashboard
+Para configurar una autenticación compatible con OIDC, habilita la primera opción en la pestaña de configuración del panel de la billetera In-App
 
 <DocImage src={EWCustomAuthdb} />
 
-You will be asked to enter the following values
+Se te pedirá que ingreses los siguientes valores
 
-- The URL of the JWKS file (public key): This is used to verify the token was signed by you.
-- The `aud` value of the idToken: This is used to verify that thirdweb is the intended user of the token
+- La URL del archivo JWKS (clave pública): Esto se usa para verificar que el token fue firmado por ti.
+- El valor `aud` del idToken: Esto se usa para verificar que thirdweb es el usuario previsto del token
 
-### Authenticating a user via OIDC-compatible auth
+### Verificar a un usuario mediante autenticación compatible con OIDC
 
 <Tabs defaultValue="react">
 <TabsList>
@@ -94,42 +94,42 @@ const account = await wallet.connect({
 </TabsContent>
 </Tabs>
 
-## Generic auth
+## Autenticación genérica
 
-Generic auth is a lower-level option that can be used when you have your own auth server that you use to authenticate users.
+La autenticación genérica es una opción de nivel inferior que se puede usar cuando tienes tu propio servidor de autenticación para autenticar a los usuarios.
 
-Generic auth is good for supporting other auth methods that we don't support today, like Discord, Twitter, Github etc., or something completely custom.
+La autenticación genérica es buena para admitir otros métodos de autenticación que no soportamos hoy, como Discord, Twitter, Github, etc., o algo completamente personalizado.
 
-High-level flow and requirement for generic auth via endpoint:
+Flujo de alto nivel y requisitos para la autenticación genérica a través de un endpoint:
 
-- When a user logs in, you are able to generate a public identifier that allows you to identify the user.
-- You can pass this identifier to the in-app wallet to generate a wallet for the user.
-- When verifying the user, we will hit an endpoint that you provide to verify the user's identity.
-- We will then generate a wallet for the user if the provided payload is valid.
+- Cuando un usuario inicia sesión, puedes generar un identificador público que te permita identificar al usuario.
+- Puedes pasar este identificador a la billetera In-App para generar una billetera para el usuario.
+- Al verificar al usuario, llamaremos a un endpoint que proporcionas para verificar la identidad del usuario.
+- Luego generaremos una billetera para el usuario si el payload proporcionado es válido.
 
 <DocImage src={EWCustomAuth} />
 
-To use generic auth, enable the second option in the configuration tab of the in-app wallet dashboard
+Para usar autenticación genérica, habilita la segunda opción en la pestaña de configuración del panel de la billetera In-App
 
 <DocImage src={EWCustomAuthdb2} />
 
-You will be asked to enter an endpoint that we can hit to verify the user's identity. This endpoint should accept a POST request with a JSON body containing the following fields:
+Se te pedirá que ingreses un endpoint al que podamos acceder para verificar la identidad del usuario. Este endpoint debe aceptar una solicitud POST con un cuerpo JSON que contenga los siguientes campos:
 
-- `payload`: This will correspond to the public identifier that was generated for your user. Note that this is passed in from the client side via the SDK. See below for an example of how this is used.
+- `payload`: Esto corresponderá al identificador público que se generó para tu usuario. Ten en cuenta que esto se pasa desde el lado del cliente a través del SDK. Consulta el ejemplo a continuación para ver cómo se usa.
 
-The endpoint should return a JSON body containing the following fields:
+El endpoint debe devolver un cuerpo JSON que contenga los siguientes campos:
 
-- `userId`: A uid for the user. This will be used to identify the user in the wallet if no email is present.
-- `email` (optional): If provided, the user will be able to access the same account outside of the platform for things like private key export // using with wallet connect etc.
-  - Note: If two different `userId` values are provided with the same email, both `userId` values will be able to access the same wallet.
-  - Conversely, if the same `userId` is provided with two different emails across different login sessions, the `userId` will have two wallets associated with it. Each wallet will be tied to one of the emails.
-- `exp` (optional): An expiration date for the user's wallet session. By default, a session is 7 days long.
+- `userId`: Un uid para el usuario. Esto se usará para identificar al usuario en la billetera si no hay un correo electrónico presente.
+- `email` (opcional): Si se proporciona, el usuario podrá acceder a la misma cuenta fuera de la plataforma para cosas como exportar la clave privada // usar con wallet connect, etc.
+  - Nota: Si se proporcionan dos valores `userId` diferentes con el mismo correo electrónico, ambos valores `userId` podrán acceder a la misma billetera.
+  - Por el contrario, si se proporciona el mismo `userId` con dos correos electrónicos diferentes en diferentes sesiones de inicio de sesión, el `userId` tendrá dos billeteras asociadas con él. Cada billetera estará vinculada a uno de los correos electrónicos.
+- `exp` (opcional): Una fecha de expiración para la sesión de la billetera del usuario. Por defecto, una sesión dura 7 días.
 
-You can also pass a list of headers. These headers will be sent with every request to your verification endpoint. You can use these to authenticate the request.
+También puedes pasar una lista de encabezados. Estos encabezados se enviarán con cada solicitud a tu endpoint de verificación. Puedes usarlos para autenticar la solicitud.
 
-### Authenticating a user via generic auth
+### Verificar a un usuario mediante autenticación genérica
 
-Once you've logged in with your own auth, you can pass the user's JWT to the in-app wallet to authenticate and connect.
+Una vez que hayas iniciado sesión con tu propia autenticación, puedes pasar el JWT del usuario a la billetera In-App para autenticar y conectar.
 
 <Tabs defaultValue="react">
 <TabsList>
@@ -146,12 +146,12 @@ import { useConnect } from "thirdweb/react";
 const { connect } = useConnect();
 
 const handlePostLogin = async (jwt: string) => {
-	await connect(async () => {
+	await connect(() => {
 		const wallet = inAppWallet();
 		await wallet.connect({
 			client,
 			strategy: "auth_endpoint",
-			// This is the payload that is sent to the auth endpoint
+			// Este es el payload que se envía al endpoint de autenticación
 			payload,
 		});
 		return wallet;
@@ -173,7 +173,7 @@ const wallet = inAppWallet();
 const account = await wallet.connect({
 	client,
 	strategy: "auth_endpoint",
-	// This is the payload that is sent to the auth endpoint
+	// Este es el payload que se envía al endpoint de autenticación
 	payload,
 });
 

@@ -9,24 +9,24 @@ export const metadata = createMetadata({
 	description: "Engine supports custom chains and chain overrides.",
 });
 
-# Custom Chains
+# Cadenas personalizadas
 
-Engine supports all [public EVM chains](https://thirdweb.com/chainlist) and your own custom chains.
+Engine es compatible con todas las [cadenas EVM públicas](https://thirdweb.com/chainlist) y con tus propias cadenas personalizadas.
 
-You can define chain overrides allowing Engine to look up a chain ID's RPC URL, currency, and other metadata.
+Puedes definir sobrescrituras de cadena que permitan a Engine buscar la URL RPC, la moneda y otros metadatos de un ID de cadena.
 
-## Use Cases
+## Casos de uso
 
-- Allow Engine to interact with your private or custom EVM chain.
-- Bring your own RPC URL for an existing EVM chain.
+- Permite que Engine interactúe con tu cadena privada o personalizada de EVM.
+- Usa tu propia URL RPC para una cadena EVM existente.
 
-## Add a custom chain
+## Agregar una cadena personalizada
 
-When adding a chain override, Engine will use the provided chain metadata for the given chain ID.
+Al agregar una sobrecarga de cadena, Engine usará los metadatos de cadena proporcionados para el ID de cadena dado.
 
-<Callout variant='info' title="How to override a chain RPC URL">
+<Callout variant='info' title="Cómo sobrecargar la URL del RPC de una cadena">
 
-To override a chain's RPC URL, provide the same chain ID as an existing chain and a new RPC URL.
+Para sobrecargar la URL del RPC de una cadena, proporciona el mismo ID de cadena que una cadena existente y una nueva URL de RPC.
 
 </Callout>
 
@@ -63,14 +63,14 @@ To override a chain's RPC URL, provide the same chain ID as an existing chain an
 
 Reference: [`POST /configuration/chains`](https://engine-api.thirdweb.com/reference#tag/configuration/POST/configuration/chains)
 
-## View custom chains
+## Ver cadenas personalizadas
 
-Call Engine to [get a chain's metadata](https://engine-api.thirdweb.com/reference#tag/chain/GET/chain/get) or [view all chain overrides](https://engine-api.thirdweb.com/reference#tag/configuration/GET/configuration/chains).
+Llama a Engine para [obtener los metadatos de una cadena](https://engine-api.thirdweb.com/reference#tag/chain/GET/chain/get) o [ver todas las sobrecargas de cadenas](https://engine-api.thirdweb.com/reference#tag/configuration/GET/configuration/chains).
 
-## Limitations
+## Limitaciones
 
-- **When calling the Engine API for a custom chain, provide the chain ID and not the chain slug.** Chain slugs are only supported for public chains.
-- Since Engine may be unable to resolve the ABI for your contract automatically, provide the ABI manually to call contract methods. We recommend providing the full function signature:
+- **Cuando llames a la API de Engine para una cadena personalizada, proporciona el ID de la cadena y no el slug de la cadena.** Los slugs de las cadenas solo son compatibles con cadenas públicas.
+- Dado que Engine puede no ser capaz de resolver el ABI de tu contrato automáticamente, proporciona el ABI manualmente para llamar a los métodos del contrato. Recomendamos proporcionar la firma completa de la función:
 
 				```json
 				POST /contract/:chainId/:address/write
@@ -80,11 +80,11 @@ Call Engine to [get a chain's metadata](https://engine-api.thirdweb.com/referenc
 				}
 				```
 
-	- Due to this reason, extension endpoints like `erc721/transfer` may not be supported for custom chains.
+- Debido a esta razón, los puntos finales de extensiones como `erc721/transfer` pueden no ser compatibles con cadenas personalizadas.
 
-## Add custom chains to the thirdweb dashboard
+## Agregar cadenas personalizadas al panel de control de thirdweb
 
-While you may interact with your custom chain from the Engine dashboard, the UI may not support your custom chain yet. To add it to the dashboard, follow these steps:
+Aunque puedes interactuar con tu cadena personalizada desde el panel de Engine, es posible que la interfaz de usuario aún no sea compatible con tu cadena personalizada. Para agregarla al panel de control, sigue estos pasos:
 
 <DocImage
 	src={addCustomChain1}

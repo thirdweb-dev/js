@@ -12,82 +12,76 @@ import {
 import EWCreateKey from "../images/ew-create-key.png";
 import EWCustomAuthConfig from "../images/ew-custom-auth-config.png";
 import EWCustomAuthFlow from "../images/ew-custom-auth-flow.png";
+import EWJWKCreatorTool from "../images/jwk-creator-tool.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Custom Auth Server for In-App Wallet",
+		title: "Servidor de Autenticación Personalizada para Billetera In-App",
 		icon: "wallets",
 	},
-	title: "Custom Auth Server | InAppWallet",
+	title: "Servidor de Autenticación Personalizada | Billetera InApp",
 	description:
-		"Learn how to integrate your auth backend with our in-app wallets solution so you can onboard your users into web3 seamlessly.",
+		"Aprende cómo integrar tu backend de autenticación con nuestra solución de billeteras In-App para que puedas incorporar a tus usuarios a web3 sin problemas.",
 });
 
-# Custom Auth Server
+# Servidor de Autenticación Personalizada
 
-Learn how to integrate your auth backend with our in-app wallets solution so you can onboard your users into web3 seamlessly.
+Aprende cómo integrar tu backend de autenticación con nuestra solución de billeteras In-App para que puedas incorporar a tus usuarios a web3 sin problemas.
 
-This guide will show you how to create your own Auth Server that is compatible with the `auth_endpoint` strategy. By doing so, you can have full control over user authentication and data security. This allows you to ensure that your application meets specific compliance requirements while also providing a customized sign-in experience.
+Esta guía te mostrará cómo crear tu propio servidor de autenticación que sea compatible con la estrategia `auth_endpoint`. Al hacerlo, tendrás control total sobre la autenticación de usuarios y la seguridad de los datos. Esto te permitirá asegurarte de que tu aplicación cumpla con los requisitos específicos de cumplimiento y también proporcionar una experiencia de inicio de sesión personalizada.
 
-<Callout variant="warning" title="Security">
-	This guide is simplified for demonstration purposes and is not ready for
-	production use. When modifying it for production, secure your endpoints and
-	avoid hard-coding secrets or sensitive information. We recommend using
-	environment variables and secret managers.
+<Callout variant="warning" title="Seguridad">
+	Esta guía está simplificada para propósitos de demostración y no está lista para ser usada en producción. Al modificarla para producción, asegúrate de proteger tus endpoints y evitar codificar secretos o información sensible. Recomendamos usar variables de entorno y gestores de secretos.
 </Callout>
 
-## 5 minute quickstart
+## Guía rápida de 5 minutos
 
 <Steps>
 
-<Step title="Step 1">
-	Navigate to Your Team > Project > Connect > In-App Wallets Page from the (dashboard)[https://thirdweb.com/team]
+<Step>
+	Navega a Tu Equipo > Proyecto > Conectar > Página de Billeteras In-App desde el (dashboard)[https://thirdweb.com/team]
 </Step>
 
-<Step title="Step 2">
-	Create a thirdweb API key if you don't have one or select an existing key to
-	use for this project. [Learn more about API
-	keys.](/api-keys)
+<Step>
+	Crea una clave API de thirdweb si no tienes una o selecciona una clave existente para usarla en este proyecto. [Aprende más sobre claves API.](/api-keys)
 
 <DocImage src={EWCreateKey} />
 
 </Step>
 
-<Step title="Step 3">
-	Allowlist domain or bundle IDs in Access Restrictions.
+<Step>
+	Lista blanca el dominio o los IDs del paquete en las restricciones de acceso.
 </Step>
 
-<Step title="Step 4">
-	Navigate to the Configuration view and enable **Custom Auth Endpoint**
+<Step>
+	Navega a la vista de Configuración y habilita **Endpoint de Autenticación Personalizada**
 
     <DocImage src={EWCustomAuthConfig} />
 
 </Step>
 
-<Step title="Step 5">
-	Set the Auth Endpoint URL to
+<Step>
+	Establece la URL del Endpoint de Autenticación en
 	`https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/auth/test-custom-auth-endpoint`
-	for testing purposes. You will replace this later with your own auth server
-	endpoint to verify the `payload`.
+	para propósitos de prueba. Luego reemplazarás esto con tu propio endpoint del servidor de autenticación para verificar el `payload`.
 </Step>
 
-<Step title="Step 6">Save the configuration.</Step>
+<Step>Guarda la configuración.</Step>
 
-<Step title="Step 7">Copy the client ID.</Step>
+<Step>Copia el ID del cliente.</Step>
 
-<Step title="Step 8">
-	In your preferred thirdweb client SDK, pass the payload you retrieved from
-	logging in to the server.
+<Step>
+	En tu SDK de cliente preferido de thirdweb, pasa el payload que obtuviste al iniciar sesión en el servidor.
 </Step>
 
 </Steps>
 
-You can now auth into the wallet and use it to sign transactions like so (see [use your own auth for more](/in-app-wallet/custom-auth)):
+Ahora puedes autenticarte en la billetera y usarla para firmar transacciones como se muestra a continuación (consulta [usa tu propia autenticación para más](/in-app-wallet/custom-auth)):
 
 <Tabs defaultValue="react">
 <TabsList>
 	<TabsTrigger value="react">React & React Native</TabsTrigger>
-	<TabsTrigger value="typescript">Other Frameworks</TabsTrigger>
+	<TabsTrigger value="typescript">Otros Frameworks</TabsTrigger>
 </TabsList>
 
 <TabsContent value="react">
@@ -126,39 +120,39 @@ const account = await wallet.connect({
 	payload: JSON.stringify({ userId: "ANY_RANDOM_ID_HERE" }),
 });
 
-// use the account to send transactions
+// usa la cuenta para enviar transacciones
 ```
 
 </TabsContent>
 </Tabs>
 
-A persistent, cross-platform wallet is now created for your user!
+Ahora se ha creado una billetera persistente y multiplataforma para tu usuario.
 
-Of course, you would use your own auth server instead of the one we provided. The rest of this guide will show you how to create your own auth server.
+Por supuesto, usarías tu propio servidor de autenticación en lugar del que proporcionamos. El resto de esta guía te mostrará cómo crear tu propio servidor de autenticación.
 
-### Setup
+### Configuración
 
-The following steps will show you how to create a simple auth server that can be used with the embedded wallet.
+Los siguientes pasos te mostrarán cómo crear un servidor de autenticación simple que se pueda usar con la billetera embebida.
 
-At a high level, the auth server will:
+A grandes rasgos, el servidor de autenticación hará lo siguiente:
 
-1. Handle login for the user into your application.
-2. Have a way to get a public identifier for the user.
-3. Have an endpoint to verify the public identifier and return some basic information about the user
+1. Manejar el inicio de sesión del usuario en tu aplicación.
+2. Tener una forma de obtener un identificador público para el usuario.
+3. Tener un endpoint para verificar el identificador público y devolver información básica sobre el usuario.
 
-Steps 1 and 2 are up to you to implement. You can use any auth strategy you want.
+Los pasos 1 y 2 dependen de ti para implementarlos. Puedes usar cualquier estrategia de autenticación que desees.
 
-The endpoint in step 3 is what you register as your auth endpoint on the thirdweb dashboard.
+El endpoint en el paso 3 es lo que registras como tu endpoint de autenticación en el dashboard de thirdweb.
 
-Here's a high-level diagram:
+Aquí tienes un diagrama a alto nivel:
 
 <DocImage src={EWCustomAuthFlow} />
 
 <Steps>
 
-<Step title="Step 1">
+<Step>
 
-Create a new directory for your project and navigate to it in your CLI
+Crea un nuevo directorio para tu proyecto y navega a él en tu CLI
 
 ```bash
 mkdir custom-auth-server
@@ -167,15 +161,15 @@ cd custom-auth-server
 
 </Step>
 
-<Step title="Step 2">
+<Step>
 
-Initialize a new Node.js application
+Inicializa una nueva aplicación de Node.js
 
 ```bash
 npm init -y
 ```
 
-OR
+O
 
 ```bash
 yarn init -y
@@ -185,9 +179,9 @@ yarn init -y
 
 </Steps>
 
-### **Create the Server:**
+### **Crear el Servidor:**
 
-In the `custom-auth-server` directory, create a file at the root named `server.js` and paste the following:
+En el directorio `custom-auth-server`, crea un archivo en la raíz llamado `server.js` y pega lo siguiente:
 
 ```jsx
 const express = require("express");
@@ -200,56 +194,56 @@ const users = [{ id: 1, email: "user@example.com", password: "password123" }];
 
 app.use(express.json());
 
-// This is what your app calls to log in a user and get a public identifier for the user (otherwise known as the payload)
+// Esto es lo que tu aplicación llama para iniciar sesión de un usuario y obtener un identificador público para el usuario (tambien conocido como el payload)
 app.post("/login", (req, res) => {
 	const { email, password } = req.body;
 	const user = users.find((u) => u.email === email && u.password === password);
-	if (!user) return res.status(401).send({ message: "Invalid credentials" });
+	if (!user) return res.status(401).send({ message: "Credenciales inválidas" });
 
 	res.send({ payload: user.id });
 });
 
-// This is a sample endpoint that you would register on the thirdweb dashboard for us to verify the payload
+// Este es un endpoint de ejemplo que registrarías en el dashboard de thirdweb para que verifiquemos el payload
 app.post("/thirdweb-will-call-this", (req, res) => {
 	const { payload } = req.body;
-	if (!payload) return res.status(401).send({ message: "Invalid credentials" });
+	if (!payload) return res.status(401).send({ message: "Credenciales inválidas" });
 
-	// You would write your own logic here to verify the payload here
+	// Aquí escribirías tu propia lógica para verificar el payload
 	const user = users.find((u) => u.id === payload);
-	if (!user) return res.status(401).send({ message: "Invalid credentials" });
+	if (!user) return res.status(401).send({ message: "Credenciales inválidas" });
 
-	// Once the user is successfully verified, you can return the following field
+	// Una vez que el usuario es verificado con éxito, puedes devolver el siguiente campo
 	return res.send({
 		userId: user.id,
-		// The last two fields here are optional
+		// Los dos últimos campos aquí son opcionales
 		email: user.email,
 		exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
 	});
 });
 
 app.listen(PORT, () => {
-	console.log(`Server started on port ${PORT}`);
+	console.log(`Servidor iniciado en el puerto ${PORT}`);
 });
 ```
 
-### **Test Locally**
+### **Probar Localmente**
 
-1. Start the server:
+1. Inicia el servidor:
 
    ```bash
    node server.js
    ```
 
-2. Test login:
+2. Prueba el inicio de sesión:
 
    ```bash
    curl -X POST http://localhost:3000/login -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password123"}'
    ```
 
-### **Deploy**
+### **Desplegar**
 
-To deploy the server, you can use services such as [Zeet](https://zeet.co/) or [Docker](https://www.docker.com/).
+Para desplegar el servidor, puedes usar servicios como [Zeet](https://zeet.co/) o [Docker](https://www.docker.com/).
 
-### **Integrate In-App Wallets**
+### **Integrar Billeteras In-App**
 
-Refer top the [quickstart above](#5-minute-quickstart) to integrate the embedded wallet into your application.
+Consulta la [guía rápida arriba](#guía-rápida-de-5-minutos) para integrar la billetera embebida en tu aplicación.

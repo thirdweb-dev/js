@@ -31,11 +31,11 @@ function Hero() {
       <div className="flex flex-col justify-center">
         <div>
           <h1 className="mb-5 font-bold text-4xl tracking-tight md:text-5xl">
-            thirdweb Documentation
+            Documentación de thirdweb
           </h1>
           <p className="mb-8 max-w-md font-medium text-f-300 text-lg leading-relaxed md:text-xl">
-            Frontend, backend, and onchain tools to build complete web3 apps —
-            on every EVM chain.
+            Herramientas para frontend, backend y onchain para crear apps web3
+            en cualquier red EVM.
           </p>
         </div>
       </div>

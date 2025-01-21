@@ -10,23 +10,23 @@ import {
 
 export const metadata = createMetadata({
 	image: {
-		title: "Guest Mode",
+		title: "Modo Invitado",
 		icon: "wallets",
 	},
-	title: "Guest Mode",
+	title: "Modo Invitado",
 	description:
-		"Learn how to get users started in thirdweb wallets without requiring sign-in.",
+		"Aprende cómo permitir que los usuarios empiecen a usar billeteras thirdweb sin necesidad de iniciar sesión.",
 });
 
-# Guest Mode
+# Modo Invitado
 
-Sometimes users want to get started using your app without signing in. You can now give users an in-memory "guest account" that can then be converted into a standard account by linking another auth method. An example is if you want to wait til a user tries to make a transaction before forcing them to onboard. A guest mode account is not persisted durably and only exists in memory until linked to an Auth method.
+A veces, los usuarios quieren comenzar a usar tu aplicación sin iniciar sesión. Ahora puedes ofrecerles una "cuenta de invitado" temporal que luego se puede convertir en una cuenta estándar al vincular otro método de autenticación. Un ejemplo sería si prefieres esperar hasta que el usuario intente hacer una transacción antes de obligarlo a registrarse. Una cuenta de modo invitado no se guarda de manera permanente y solo existe hasta que se vincula a un método de autenticación.
 
-## Logging in with Guest Mode
+## Iniciar sesión con Modo Invitado
 
-In general, logging in with guest mode is the same as configuring any other login method in the platform of your choice. See the [login methods overview](/connect/wallet/sign-in-methods/configure) for more information on configuring your login options.
+En general, iniciar sesión con modo invitado es lo mismo que configurar cualquier otro método de inicio de sesión en la plataforma de tu elección. Consulta la [visión general de métodos de inicio de sesión](/connect/wallet/sign-in-methods/configure) para más información sobre cómo configurar tus opciones de inicio de sesión.
 
-### In App Wallet
+### Billetera In-App
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
     <ArticleIconCard
         title="TypeScript"
@@ -38,7 +38,7 @@ In general, logging in with guest mode is the same as configuring any other logi
         icon={ReactIcon}
         href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
     />
-    {/* TODO: Link to react native getting started for in app wallet */}
+    {/* TODO: Enlace a la guía para React Native sobre billetera In-App */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -54,10 +54,9 @@ In general, logging in with guest mode is the same as configuring any other logi
         icon={UnityIcon}
         href="/unity/v5/wallets/in-app-wallet#login-with-guest---onboard-easily-link-other-accounts-later"
     />
-   
 </div>
 
-### Ecosystem Wallet
+### Billetera del Ecosistema
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
     <ArticleIconCard
         title="TypeScript"
@@ -69,7 +68,7 @@ In general, logging in with guest mode is the same as configuring any other logi
         icon={ReactIcon}
         href="/react/v5/ecosystem-wallet/get-started#configuring-auth-strategies"
     />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    {/* TODO: Agregar guía específica para React Native sobre billeteras del ecosistema */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -87,13 +86,13 @@ In general, logging in with guest mode is the same as configuring any other logi
     />
 </div>
 
-## Making the Guest Wallet Permanent
+## Hacer la Billetera de Invitado Permanente
 
-When your user is ready, link any other auth method so they can access their account in the future.
+Cuando tu usuario esté listo, vincula cualquier otro método de autenticación para que pueda acceder a su cuenta en el futuro.
 
-### In App Wallet
+### Billetera In-App
 
-Below are the guides for linking a new identity for in-app wallet on the various platforms:
+A continuación, se muestran las guías para vincular una nueva identidad para billeteras in-app en las diversas plataformas:
 
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
     <ArticleIconCard
@@ -106,7 +105,7 @@ Below are the guides for linking a new identity for in-app wallet on the various
         icon={ReactIcon}
         href="/react/v5/useLinkProfile"
     />
-    {/* TODO: Link to react native getting started for in app wallet */}
+    {/* TODO: Enlace a la guía para React Native sobre billetera In-App */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -124,9 +123,9 @@ Below are the guides for linking a new identity for in-app wallet on the various
     />
 </div>
 
-### Ecosystem Wallet
+### Billetera del Ecosistema
 
-Below are the guides for linking a new identity for ecosystem wallet on the various platforms:
+A continuación, se muestran las guías para vincular una nueva identidad para billeteras del ecosistema en las diversas plataformas:
 
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
     <ArticleIconCard
@@ -139,7 +138,7 @@ Below are the guides for linking a new identity for ecosystem wallet on the vari
         icon={ReactIcon}
         href="/react/v5/useLinkProfile"
     />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    {/* TODO: Agregar guía específica para React Native sobre billeteras del ecosistema */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -157,10 +156,10 @@ Below are the guides for linking a new identity for ecosystem wallet on the vari
     />
 </div>
 
-## Wrapping Up
+## Conclusión
 
-Your user can now access this same wallet with their Google account. 
+Tu usuario ahora puede acceder a esta misma billetera con su cuenta de Google.
 
-While it is not linked to any other identity, the lifetime of the guest wallet for any given user will last until they clear their browser storage.
+Aunque no esté vinculada a ninguna otra identidad, la vida útil de la billetera de invitado para cualquier usuario durará hasta que borren el almacenamiento de su navegador.
 
-You can try out Guest Mode [on our playground.](https://playground.thirdweb.com/connect/sign-in/button)
+Puedes probar el Modo Invitado [en nuestro playground.](https://playground.thirdweb.com/connect/sign-in/button)

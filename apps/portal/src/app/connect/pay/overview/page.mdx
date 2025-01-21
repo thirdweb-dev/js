@@ -8,79 +8,79 @@ export const metadata = createMetadata({
 	},
 	title: "thirdweb Pay - thirdweb",
 	description:
-		"thirdweb Pay - Fast, flexible credit card and crypto point of sale",
+		"thirdweb Pay - Punto de venta rápido y flexible con tarjetas de crédito y criptomonedas",
 });
 
-# Overview
+# Resumen
 
-Pay allows your users to purchase cryptocurrencies and execute transactions with their credit card or debit card, or with any token via cross-chain routing.
+Pay permite a tus usuarios comprar criptomonedas y ejecutar transacciones con tarjeta de crédito o débito, o con cualquier token mediante enrutamiento entre cadenas.
 
 <DocImage src={PayOverviewImage} />
 
-## Features
+## Funciones
 
 <div
 	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
 >
 	<FeatureCard
-		title="Earn money"
-		description="Receive 70% of fees on each crypto-to-crypto transaction"
+		title="Generar ingresos"
+		description="Recibe el 70% de las tarifas en cada transacción de cripto a cripto"
 		iconUrl="/icons/feature-cards/earn-money.svg"
 	/>
 
     <FeatureCard
-    	title="Onboard users"
-    	description="Fiat on-ramps to enable purchases with traditional payment methods"
+    	title="Incorporar usuarios"
+    	description="Onramps fiat para habilitar compras con métodos de pago tradicionales"
     		iconUrl="/icons/feature-cards/onboard-users.svg"
     />
     	    <FeatureCard
-    	title="Enable in-app purchases"
-    	description="Purchase crypto without leaving the application"
+    	title="Habilitar compras en la aplicación"
+    	description="Compra criptomonedas sin salir de la aplicación"
     		iconUrl="/icons/feature-cards/in-app-purchase.svg"
     />
     		<FeatureCard
-    	title="Chain Coverage"
-    	description="Support purchases on over 20+ widely used EVM chains"
+    	title="Cobertura de cadenas"
+    	description="Soporte para compras en más de 20 cadenas EVM ampliamente utilizadas"
     	iconUrl="/icons/feature-cards/chain-coverage.svg"
     />
     	<FeatureCard
-    	title="Liquidity Aggregation"
-    	description="Ensure every transaction is possible"
+    	title="Agregación de liquidez"
+    	description="Asegura que cada transacción sea posible"
     	iconUrl="/icons/feature-cards/liquidity-aggregation.svg"
     />
 
     <FeatureCard
-    	title="Global Coverage"
-    	description="Support for over 130+ countries"
+    	title="Cobertura global"
+    	description="Soporte para más de 130 países"
     		iconUrl="/icons/feature-cards/global-coverage.svg"
     />
         <FeatureCard
-    	title="Integration Options"
-    	description="Use pre-built modals or customize the transaction experience"
+    	title="Opciones de integración"
+    	description="Usa modales preconstruidos o personaliza la experiencia de transacción"
     		iconUrl="/icons/feature-cards/integration-options.svg"
     />
         <FeatureCard
-    	title="Secure"
-    	description="Strict one-time approvals mean user funds are not at risk of smart contract allowance exploits"
+    	title="Seguridad"
+    	description="Las aprobaciones estrictas de un solo uso significan que los fondos de los usuarios no están en riesgo de exploits en contratos inteligentes"
     		iconUrl="/icons/feature-cards/security.svg"
     />
 
 </div>
 
-### Use Cases
+### Casos de Uso
 
-- **Onramp funds directly into any transaction,** perfect for any of the following use cases:
-  - **Games** selling in-game assets onchain.
-  - **DEXes** looking to help users deposit funds.
-  - **Staking apps** onboarding new users to their pools.
-  - **Social apps** looking to add tipping or other paid functionality to their application.
-  - **Non-profits** accepting donations in crypto.
+- **Onrampear fondos directamente en cualquier transacción**, ideal para los siguientes casos de uso:
+  - **Juegos** que venden activos dentro del juego en la cadena.
+  - **DEXes** que ayudan a los usuarios a depositar fondos.
+  - **Aplicaciones de staking** que incorporan nuevos usuarios a sus pools.
+  - **Aplicaciones sociales** que agregan propinas u otras funcionalidades pagadas a sus aplicaciones.
+  - **Organizaciones sin fines de lucro** que aceptan donaciones en criptomonedas.
 
-## Integration Options
+## Opciones de Integración
 
-| OPTION                                                                                              | BEST FOR                                                                                                                                  |
+| OPCIÓN                                                                                              | IDEAL PARA                                                                                                                               |
 | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [ConnectButton](/connect/pay/get-started#option-1-connectbutton)                                    | Developers who want out-of-the-box support complete with wallet and social login.                                                         |
-| [PayEmbed](/connect/pay/get-started#option-2-embed-pay)                                             | Developers who want onramp and crypto purchase experiences directly in their application.                                                 |
-| [Transaction Flow (sendTransaction)](/connect/pay/get-started#option-3-send-a-transaction-with-pay) | Developers who want users to onramp or purchase crypto directly into a transaction. Great for minting and NFT purchase flows.             |
-| [Custom Pay Experience](/connect/pay/build-a-custom-experience)                                     | Developers who want full customization over every step of the onramp process, from displaying quotes to polling for transaction statuses. |
+| [ConnectButton](/connect/pay/get-started#option-1-connectbutton)                                    | Desarrolladores que quieren soporte listo para usar, completo con billetera e inicio de sesión social.                                    |
+| [PayEmbed](/connect/pay/get-started#option-2-embed-pay)                                             | Desarrolladores que quieren experiencias de onramp y compra de cripto directamente en sus aplicaciones.                                   |
+| [Transaction Flow (sendTransaction)](/connect/pay/get-started#option-3-send-a-transaction-with-pay) | Desarrolladores que quieren que los usuarios onrampeen o compren cripto directamente en una transacción. Ideal para flujos de minting y compra de NFT. |
+| [Custom Pay Experience](/connect/pay/build-a-custom-experience)                                     | Desarrolladores que quieren personalización total sobre cada paso del proceso de onramp, desde mostrar cotizaciones hasta hacer seguimiento de estados de transacción. |

@@ -10,27 +10,28 @@ export const metadata = createMetadata({
 		"The thirdweb SDK handles all the heavy lifting of bundling operations and covering gas fees with a turn-key infrastructure. The thirdweb paymaster and bundler services are stand-alone and can be used with any smart account contract without using the thirdweb SDKs",
 });
 
-# Bundler & Paymaster Infrastructure
+# Infraestructura de Bundler y Paymaster
 
-The thirdweb SDK handles all the heavy lifting of bundling operations and covering gas fees with a turn-key infrastructure.
-The thirdweb paymaster and bundler services are **stand alone** and can be used with any smart account contract without using the thirdweb SDKs.
+El SDK de thirdweb maneja toda la carga pesada de las operaciones de bundling y de cubrir las tarifas de gas con una infraestructura lista para usar.
+Los servicios de paymaster y bundler de thirdweb son **independientes** y pueden ser utilizados con cualquier contrato de cuenta inteligente sin usar los SDKs de thirdweb.
 
-On testnets, the only requirement is to obtain a free client id to get started.
-Once you're ready to deploy on mainnets, you will require an active [billing account](https://thirdweb.com/team/~/~/settings/billing).
-You can configure your client ID to restrict interactions only with your own contracts or with any contract.
+En las testnets, el único requisito es obtener un ID de cliente gratuito para comenzar.
+Una vez que estés listo para desplegar en mainnets, necesitarás una [cuenta de facturación activa](https://thirdweb.com/team/~/~/settings/billing).
+Puedes configurar tu ID de cliente para restringir las interacciones solo con tus propios contratos o con cualquier contrato.
 
-### Supported chains
+### Cadenas compatibles
 
-With a thirdweb API key, you get access to bundler and paymaster infrastructure on the following chains:
+Con una clave API de thirdweb, tienes acceso a la infraestructura de bundler y paymaster en las siguientes cadenas:
 
 <AAChainList />
 
-To support a chain not listed, [contact us](https://thirdweb.com/contact-us).
+Para agregar una cadena que no está en la lista, [contáctanos](https://thirdweb.com/contact-us).
 
-## Using a Custom Bundler
+## Usando un Bundler Personalizado
 
-Smart accounts are free to use with your own account abstraction infrastructure. To use your own paymaster & bundler,
-pass the `bundlerUrl` the `SmartWalletOptions` overrides:
+Las cuentas inteligentes son libres de usar con tu propia infraestructura de abstracción de cuentas. Para usar tu propio paymaster y bundler,
+pasa el `bundlerUrl` en las sobreescrituras de `SmartWalletOptions`:
+
 
 ```ts
 const config: SmartWalletOptions = {
@@ -42,9 +43,9 @@ const config: SmartWalletOptions = {
 };
 ```
 
-## Using a Custom Paymaster
+## Usando un Paymaster Personalizado
 
-You can also provide an entirely custom paymaster logic by providing a `paymaster` function to the `SmartWalletOptions` overrides.
+También puedes proporcionar una lógica de paymaster completamente personalizada al proporcionar una función `paymaster` en las sobreescrituras de `SmartWalletOptions`.
 
 ```ts
 const config: SmartWalletOptions = {
@@ -59,13 +60,13 @@ const config: SmartWalletOptions = {
 };
 ```
 
-## Pricing & Billing
+## Precios y Facturación
 
-To use thirdweb's account abstraction infrastructure, you need to set up a billing account on the thirdweb dashboard Settings page.
+Para usar la infraestructura de abstracción de cuentas de thirdweb, necesitas configurar una cuenta de facturación en la página de Configuración del panel de thirdweb.
 
-**Pricing**:
+**Precios**:
 
-- **Bundler**: Transaction bundle calls (non-sponsored calls) are free to use.
-- **Paymaster**: 10% premium on top of network fee based on your usage.
+- **Bundler**: Las llamadas de transacción en bundles (llamadas no patrocinadas) son gratuitas.
+- **Paymaster**: Prima del 10% sobre la tarifa de red basada en tu uso.
 
-Find more information on the different billing tiers by visiting [thirdweb's pricing page](https://thirdweb.com/pricing).
+Encuentra más información sobre los diferentes niveles de facturación visitando [la página de precios de thirdweb](https://thirdweb.com/pricing).

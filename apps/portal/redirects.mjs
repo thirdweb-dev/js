@@ -974,6 +974,16 @@ const otherRedirects = {
     "/connect/wallet/sign-in-methods/configure",
 };
 
+const spanishEngineRedirects = {
+  "/es/engine": "/engine",
+  "/es/engine/get-started": "/engine/get-started",
+  "/es/engine/production-checklist": "/engine/production-checklist",
+  "/es/engine/self-host": "/engine/self-host",
+
+  // connect
+  "/es/connect": "/connect",
+};
+
 const v5RestructuredRedirects = {
   "/typescript/v5/react": "/react/v5",
   "/typescript/v5/react/:path*": "/react/v5/:path*",
@@ -986,6 +996,8 @@ const v5RestructuredRedirects = {
  */
 export const redirects = async () => {
   return [
+    // es
+    ...createRedirects(spanishEngineRedirects),
     // old portal redirects
     ...createRedirects(reactRedirects),
     ...createRedirects(solidityRedirects),

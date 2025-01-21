@@ -5,77 +5,73 @@ import customJsonFirebase from "../images/custom-json-firebase.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Integrate Firebase Auth for In-App Wallet",
+		title: "Integrar Firebase Auth para Billetera In-App",
 		icon: "wallets",
 	},
-	title: "Integrate Firebase Auth | InAppWallet",
+	title: "Integrar Firebase Auth | Billetera InApp",
 	description:
-		"Learn how to obtain a JSON Web Token (JWT) from Firebase using Firebase's email provider and integrate it with In-App Wallet.",
+		"Aprende cómo obtener un JSON Web Token (JWT) de Firebase usando el proveedor de email de Firebase e integrarlo con la Billetera In-App.",
 });
 
-# Integrate Firebase Auth
+# Integrar Firebase Auth
 
-Learn how to obtain a JSON Web Token (JWT) from Firebase using Firebase's email provider and integrate it with In-App Wallet.
+Aprende cómo obtener un JSON Web Token (JWT) de Firebase usando el proveedor de email de Firebase e integrarlo con la Billetera In-App.
 
 <Callout title="Info" variant="info">
 
-This article covers the steps of integrating Firebase Auth for a React Native app. Firebase steps and the In-App Wallet code may be replicated for React.
+Este artículo cubre los pasos para integrar Firebase Auth en una aplicación React Native. Los pasos de Firebase y el código para la Billetera In-App pueden replicarse en React.
 
 </Callout>
 
-## Prerequisites
+## Requisitos Previos
 
-- Firebase project
-- React App
+- Proyecto de Firebase
+- Aplicación React
 
 <Steps>
 
-<Step title="Create a React Native App">
-Create a react native app with the tool of your choice and install the required packages:
+<Step title="Crear una Aplicación React Native">
+Crea una aplicación React Native con la herramienta de tu elección e instala los paquetes necesarios:
 
 ```shell
 npm i thirdweb
 ```
 
-2. Note that we assume this is a simple app with a single screen `App.tsx`.
+2. Ten en cuenta que asumimos que esta es una aplicación simple con una sola pantalla `App.tsx`.
 
 </Step>
 
-<Step title="Set up your Firebase project">
-	1. Set up a React Native Firebase project by following the [prerequisites in
-	the React Native Firebase
-	documentation](https://rnfirebase.io/#1-install-via-npm). 2. Navigate to the
-	[Firebase Console](https://console.firebase.google.com/) and create a new
-	project. 3. Navigate to Authentication > Sign-in method, to enable the
-	[Email/Password
-	provider](https://rnfirebase.io/auth/usage#emailpassword-sign-in)
+<Step title="Configura tu proyecto de Firebase">
+	1. Configura un proyecto React Native Firebase siguiendo los [requisitos previos en la documentación de React Native Firebase](https://rnfirebase.io/#1-install-via-npm).
+	2. Navega a la [Consola de Firebase](https://console.firebase.google.com/) y crea un nuevo proyecto.
+	3. Navega a Autenticación > Método de inicio de sesión, para habilitar el [proveedor de Email/Contraseña](https://rnfirebase.io/auth/usage#emailpassword-sign-in).
 </Step>
 
-<Step title="Set up the custom JSON Web Keys link through dashboard">
+<Step title="Configura la URL de las claves JSON Web a través del dashboard">
 
-1. Navigate to your Team > Project > Connect > In-App Wallets in [thirdweb dashboard](https://thirdweb.com/team)
-2. To use in-app wallets, choose an existing Project or create a new one.
+1. Navega a Tu Equipo > Proyecto > Conectar > Billeteras In-App en el [dashboard de thirdweb](https://thirdweb.com/team)
+2. Para usar billeteras In-App, elige un proyecto existente o crea uno nuevo.
 
    <DocImage src={ewCreateKey} />
 
-3. In the configuration view, enable **Custom JSON Web Token.**
+3. En la vista de configuración, habilita **JSON Web Token Personalizado.**
 
    <DocImage src={configurationView} />
 
-4. Set the [JWKS URI from here](https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com)
+4. Establece la [URI de JWKS desde aquí](https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com).
 
-5. Set the AUD Value as the Firebase `projectId`. (Example, `custom-auth-53169`)
+5. Establece el valor de AUD como el `projectId` de Firebase. (Ejemplo, `custom-auth-53169`)
 
    <DocImage src={customJsonFirebase} />
 
-6. Select **Save changes**.
+6. Selecciona **Guardar cambios**.
 
 </Step>
 
-<Step title="Add the Firebase auth dependencies">
-Firebase auth depends on the `firebase/app` and `firebase/auth` packages.
+<Step title="Añadir las dependencias de autenticación de Firebase">
+Firebase auth depende de los paquetes `firebase/app` y `firebase/auth`.
 
-To add the packages, run the following command in the project:
+Para agregar los paquetes, ejecuta el siguiente comando en el proyecto:
 
 ```bash
 yarn add @react-native-firebase/app @react-native-firebase/auth
@@ -83,10 +79,10 @@ yarn add @react-native-firebase/app @react-native-firebase/auth
 
 </Step>
 
-<Step title="Implement Email Authentication">
-Add the code snippet below to handle email authentication with Firebase. Note that you need to add UI to allow users to input the email and password fields in your `App.tsx` file:
+<Step title="Implementar Autenticación por Email">
+Añade el siguiente fragmento de código para manejar la autenticación por email con Firebase. Ten en cuenta que necesitas añadir una interfaz de usuario para permitir a los usuarios ingresar el email y la contraseña en tu archivo `App.tsx`:
 
-To handle email authentication with Firebase
+Para manejar la autenticación por email con Firebase
 
 ```jsx
 import auth from "@react-native-firebase/auth";
@@ -100,18 +96,18 @@ async function signInWithEmail(email, password) {
 }
 
 return (
-	<Button title="Sign In" onPress={() => signInWithEmail(email, password)} />
+	<Button title="Iniciar sesión" onPress={() => signInWithEmail(email, password)} />
 );
 ```
 
-Note: You may add a UI to allow users to input email and password fields.
+Nota: Puedes añadir una interfaz de usuario para que los usuarios ingresen los campos de email y contraseña.
 
 </Step>
 
-<Step title="Obtain the JWT">
-Once the user is authenticated, you can listen to `AuthStateChanged` [events to get the signed in user](https://rnfirebase.io/auth/usage#listening-to-authentication-state). You can then get the JWT from the User object:
+<Step title="Obtener el JWT">
+Una vez que el usuario está autenticado, puedes escuchar los [eventos de cambio de estado de autenticación (AuthStateChanged)](https://rnfirebase.io/auth/usage#listening-to-authentication-state) para obtener el usuario que inició sesión. Luego puedes obtener el JWT del objeto de usuario:
 
-To receive the signed in user, listen to the `AuthStateChanged` event. You can add this code in your App.tsx file as well:
+Para recibir el usuario que inició sesión, escucha el evento `AuthStateChanged`. Puedes agregar este código en tu archivo App.tsx también:
 
 ```jsx
 const [user, setUser] = useState();
@@ -121,7 +117,7 @@ function onAuthStateChanged(user) {
 }
 
 useEffect(() => {
-	// Listens to AuthStateChanged events
+	// Escucha eventos de cambio de estado de autenticación
 	const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 	return subscriber;
 }, [onAuthStateChanged]);
@@ -130,15 +126,15 @@ async function getFirebaseJWT() {
 	if (user) {
 		return await user.getIdToken();
 	} else {
-		throw new Error("User is not authenticated");
+		throw new Error("El usuario no está autenticado");
 	}
 }
 ```
 
 </Step>
 
-<Step title="Pass the JWT to InAppWallet">
-Pass the JWT to the In-App Wallet config in your `App.tsx` file:
+<Step title="Pasar el JWT a InAppWallet">
+Pasa el JWT a la configuración de la Billetera In-App en tu archivo `App.tsx`:
 
 ```jsx
 import { inAppWallet } from "thirdweb/wallets";
@@ -159,12 +155,12 @@ const connectInApp = async (jwt: string) => {
 };
 ```
 
-After the connectInApp function returns, the ThirdwebProvider will have connected a wallet thereby granting access to all hooks and functionalities.
+Después de que la función `connectInApp` devuelva, el `ThirdwebProvider` habrá conectado una billetera, otorgando acceso a todos los hooks y funcionalidades.
 
 </Step>
 
-<Step title="Access the connected account">
-To access the connected account, use the `useActiveAccount()` hook:
+<Step title="Acceder a la cuenta conectada">
+Para acceder a la cuenta conectada, usa el hook `useActiveAccount()`:
 
 ```jsx
 import { useActiveAccount } from "thirdweb/react";

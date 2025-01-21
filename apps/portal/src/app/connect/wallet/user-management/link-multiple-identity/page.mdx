@@ -1,4 +1,4 @@
-import { createMetadata, ArticleIconCard, Callout  } from "@doc";
+import { createMetadata, ArticleIconCard, Callout } from "@doc";
 import {
     ReactIcon,
     TypeScriptIcon,
@@ -6,32 +6,31 @@ import {
     DotNetIcon,
     ExternalLinkIcon,
     UnrealEngineIcon
-} from "@/icons"
+} from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Linking Multiple Identities",
+		title: "Vinculación de Múltiples Identidades",
 		icon: "wallets",
 	},
-	title: "Linking Multiple Identities",
+	title: "Vinculación de Múltiples Identidades",
 	description:
-		"Learn how to associate multiple social profiles with a single wallet address.",
+		"Aprende cómo asociar múltiples perfiles sociales con una única dirección de billetera.",
 });
 
-# Linking Multiple Identities
+# Vinculación de Múltiples Identidades
 
-thirdweb Wallets allow users to tie the same wallet address to multiple social identities. Developers can programmatically link additional identities at any point in their user journey.
+Las billeteras de thirdweb permiten a los usuarios vincular la misma dirección de billetera con múltiples identidades sociales. Los desarrolladores pueden programar la vinculación de identidades adicionales en cualquier punto del recorrido del usuario.
 
-## Link a new identity
+## Vincular una nueva identidad
 
-When linking two identities, both identities will now be linked to the same wallet.
+Al vincular dos identidades, ambas estarán asociadas a la misma billetera.
 
-<Callout variant='info' title='Linking a pre-existing identity'>
-	If the account that is  is already linked to this or another wallet, this will 	throw an error.
+<Callout variant='info' title='Vinculación de una identidad preexistente'>
+	Si la cuenta ya está vinculada a esta u otra billetera, se generará un error.
 </Callout>
 
-
-### In App Wallet
+### Billetera In-App
 
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
     <ArticleIconCard
@@ -61,7 +60,7 @@ When linking two identities, both identities will now be linked to the same wall
     />
 </div>
 
-### Ecosystem Wallet
+### Billetera del Ecosistema
 
 <div className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
      <ArticleIconCard
@@ -91,9 +90,8 @@ When linking two identities, both identities will now be linked to the same wall
     />
 </div>
 
+## Recuperar Perfiles Vinculados
 
-## Retrieve Linked Profiles
+Una vez vinculadas, puedes recuperar los perfiles de usuario a través de cualquiera de las identidades.
 
-Once linked, you can retrieve the user profiles via either identity.
-
-For more information, see [Getting User Profiles](/connect/wallet/user-management/get-user-profiles).
+Para más información, consulta [Obtener Perfiles de Usuario](/connect/wallet/user-management/get-user-profiles).

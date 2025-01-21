@@ -10,13 +10,13 @@ export const metadata = createMetadata({
 	description: "thirdweb Pay - Test Mode",
 });
 
-# Enable Test Mode
+# Activar Modo de Prueba
 
-Developers can turn on Test Mode to test both fiat-to-crypto transactions and crypto-to-crypto transactions on supported testnet chains. It is possible to test both at the same time or separately.
+Los desarrolladores pueden activar el Modo de Prueba para probar transacciones fiat-a-cripto y cripto-a-cripto en las cadenas de prueba compatibles. Es posible realizar pruebas de ambos casos al mismo tiempo o de forma separada.
 
-## Buy With Fiat
+## Comprar con Fiat
 
-By setting `testMode` to `true` for Buy With Fiat, you can enable test experiences for our underlying providers (Stripe, Kado, and Transak).
+Al configurar `testMode` como `true` para la opción "Comprar con Fiat", puedes habilitar experiencias de prueba con nuestros proveedores subyacentes (Stripe, Kado y Transak).
 
 <Tabs defaultValue="connectbutton">
 
@@ -74,7 +74,7 @@ const { mutate: sendTransaction } = useSendTransaction({
 
 </Tabs>
 
-You can use the following information when using any provider in test mode:
+Puedes utilizar la siguiente información al usar cualquier proveedor en modo de prueba:
 
 | Provider | Card Type    | Name        | Number              | Expiration Date | CVV          | Other Info                                                       |
 | -------- | ------------ | ----------- | ------------------- | --------------- | ------------ | ---------------------------------------------------------------- |
@@ -84,15 +84,15 @@ You can use the following information when using any provider in test mode:
 | Stripe   | Visa (Debit) | Any Name    | 4000 0566 5566 5556 | Any Future Date | Any 3 Digits | SSN: 000000000, Address line 1: address_full_match, OTP : 000000 |
 | Transak  | Visa         | Any Name    | 4111 1111 1111 1111 | 10/33           | 123          | Payment Authorization 3Ds screen password: **Checkout1!**        |
 
-For Stripe testing, you can view more test cards [here](https://docs.stripe.com/testing).
+Para las pruebas con Stripe, puedes ver más tarjetas de prueba [aquí](https://docs.stripe.com/testing).
 
-For Transak testing, you can view detailed information [here](https://docs.transak.com/docs/test-credentials#card-payments).
+Para las pruebas con Transak, puedes consultar información detallada [aquí](https://docs.transak.com/docs/test-credentials#card-payments).
 
-For Kado testing, you can view detailed information [here](https://docs.kado.money/integrations/integrate-kado/sandbox).
+Para las pruebas con Kado, puedes consultar información detallada [aquí](https://docs.kado.money/integrations/integrate-kado/sandbox).
 
-## Buy With Crypto
+## Comprar con Criptomonedas
 
-Buy With Crypto test mode will show only Testnets and native test currencies. If you have a custom that you would like supported in test mode, [please reach out to us](https://thirdweb.com/contact-us). You can see a list of supported testnets on the [thirdweb Chainlist page](https://thirdweb.com/chainlist?service=pay&type=testnet).
+El modo de prueba para "Comprar con Criptomonedas" mostrará solo redes de prueba y monedas de prueba nativas. Si tienes un token personalizado que te gustaría que se admita en modo de prueba, [contáctanos](https://thirdweb.com/contact-us). Puedes ver una lista de las redes de prueba compatibles en la [página de Chainlist de thirdweb](https://thirdweb.com/chainlist?service=pay&type=testnet).
 
 <Tabs defaultValue="connectbutton">
 

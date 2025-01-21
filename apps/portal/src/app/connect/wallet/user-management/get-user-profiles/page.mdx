@@ -18,13 +18,14 @@ export const metadata = createMetadata({
 		"Learn how to retrieve the user profiles linked to a wallet.",
 });
 
-# Getting User Profiles
+# Obtención de Perfiles de Usuario
 
-Once authenticated, you can retrieve the user profiles linked to a wallet. This allows you to access additional information about the user, such as their email address or phone number.
+Una vez autenticado, puedes recuperar los perfiles de usuario vinculados a una billetera. Esto te permite acceder a información adicional sobre el usuario, como su dirección de correo electrónico o número de teléfono.
 
-## List of Strategies
+## Lista de Estrategias
 
-Regardless of platform, the response will have a json object in the following shape as some level: 
+Independientemente de la plataforma, la respuesta tendrá un objeto JSON con la siguiente estructura en algún nivel:
+
 
 ```json
 {
@@ -35,7 +36,7 @@ Regardless of platform, the response will have a json object in the following sh
 }
 ```
 
-Note that the `email` field above will differ based on the profile type. We list the expected field below in our list of strategies.
+Ten en cuenta que el campo `email` mencionado anteriormente variará según el tipo de perfil. A continuación, enumeramos el campo esperado en nuestra lista de estrategias.
 
 
 | Strategy      | Type              | `details` Field |
@@ -59,8 +60,7 @@ Note that the `email` field above will differ based on the profile type. We list
 
 ## Frontend
 
-For frontend, we provide methods to get information around the currently logged in user. 
-
+Para el frontend, ofrecemos métodos para obtener información sobre el usuario que ha iniciado sesión actualmente.
 
 ### In App Wallet
 
@@ -126,51 +126,51 @@ For frontend, we provide methods to get information around the currently logged 
 ## Backend 
 
 
-From the backend, you are able to get the details of any user within your in app or ecosystem wallet. 
+Desde el backend, puedes obtener los detalles de cualquier usuario dentro de tu billetera in-app o de ecosistema.
 
-To get the user details, you can make a `GET` request to the following endpoint:
+Para obtener los detalles del usuario, puedes hacer una solicitud `GET` al siguiente endpoint:
 
 ```
 https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details
 ```
 
-### Query Parameters
+### Parámetros de Consulta
 
-You can specify the query parameter `queryBy` to query by different user identifiers:
+Puedes especificar el parámetro de consulta `queryBy` para buscar por diferentes identificadores de usuario:
 
-- `queryBy`: The parameter to query by. Can be one of `walletAddress`, `email`, `phone`, `externalWalletAddress`, or `id`.
+- `queryBy`: El parámetro para buscar. Puede ser uno de los siguientes: `walletAddress`, `email`, `phone`, `externalWalletAddress` o `id`.
 
-You can then specify the value to query by, matching the queryBy parameter:
+Luego, puedes especificar el valor por el cual buscar, coincidiendo con el parámetro `queryBy`:
 
-- `walletAddress`: The user's wallet address that thirdweb has generated for them
-- `email`: The user's email address
-- `phone`: The user's phone number
-- `externalWalletAddress`: The user's wallet address that used to login via SIWE
-- `id`: The user's ID (for custom auth)
+- `walletAddress`: La dirección de billetera que thirdweb ha generado para el usuario.
+- `email`: La dirección de correo electrónico del usuario.
+- `phone`: El número de teléfono del usuario.
+- `externalWalletAddress`: La dirección de billetera externa que el usuario utilizó para iniciar sesión mediante SIWE.
+- `id`: El ID del usuario (para autenticación personalizada).
 
-### Authentication
+### Autenticación
 
-You need to include your ThirdWeb Client Secret in the Authorization header. 
+Debes incluir tu Client Secret de thirdweb en el encabezado de autorización.
 
-If you are an ecosystem owner, you have to include the `x-ecosystem-id` header and optionally the `x-ecosystem-partner-id` header if the ecosystem is set to partners only.
+Si eres el propietario de un ecosistema, debes incluir el encabezado `x-ecosystem-id` y, opcionalmente, el encabezado `x-ecosystem-partner-id` si el ecosistema está configurado solo para socios.
 
-### Example curl Command
+### Ejemplo de Comando curl
 
-Here's an example curl command to fetch user details by email:
+Aquí tienes un ejemplo de comando curl para obtener detalles del usuario por correo electrónico:
 
 ```bash
 curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=email&email=user@example.com' \
   -H 'x-secret-key: YOUR_THIRD_WEB_CLIENT_SECRET'
 ```
 
-Here's an example curl command to fetch user details by address:
+Aquí tienes un ejemplo de comando curl para obtener los detalles del usuario por dirección:
 
 ```bash
 curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
   -H 'x-secret-key: YOUR_THIRD_WEB_CLIENT_SECRET'
 ```
 
-Here's an example curl command to fetch the user details for an ecosystem owner:
+Aquí tienes un ejemplo de comando curl para obtener los detalles del usuario como propietario de un ecosistema:
 
 ```bash
 curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
@@ -179,13 +179,13 @@ curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/u
   -H 'x-ecosystem-partner-id: YOUR_PARTNER_ID'
 ```
 
-In both examples, replace `YOUR_THIRD_WEB_CLIENT_SECRET` with your actual ThirdWeb Client Secret.
+En ambos ejemplos, reemplaza `YOUR_THIRD_WEB_CLIENT_SECRET` con tu Client Secret real de thirdweb.
 
-Replace `YOUR_ECOSYSTEM_ID` and `YOUR_PARTNER_ID` with your actual ecosystem ID and partner ID respectively. The partner ID can be one you set up for yourself as the ecosystem owner.
+Reemplaza `YOUR_ECOSYSTEM_ID` y `YOUR_PARTNER_ID` con tu ID de ecosistema y ID de socio respectivamente. El ID de socio puede ser uno que configures para ti mismo como propietario del ecosistema.
 
-### Response Format
+### Formato de Respuesta
 
-The API returns a JSON array with the following structure for each user:
+La API devuelve un array JSON con la siguiente estructura para cada usuario:
 
 ```json
 [
@@ -214,21 +214,22 @@ The API returns a JSON array with the following structure for each user:
 ]
 ```
 
-Note: The `details` object in `linkedAccounts` will contain different fields based on the account type. See the [list of Strategies](#list-of-strategies) above for more information.
+Nota: El objeto `details` en `linkedAccounts` contendrá diferentes campos según el tipo de cuenta. Consulta la [lista de Estrategias](#list-of-strategies) arriba para obtener más información.
 
-Remember to handle the response appropriately in your chosen programming language, including error cases and parsing the JSON response.
+Recuerda manejar la respuesta de manera adecuada en el lenguaje de programación que elijas, incluyendo los casos de error y el análisis de la respuesta JSON.
 
-### Convenience Methods
+### Métodos Convenientes
 
-If you are using the thirdweb SDK, you can use the `getUser` method to retrieve user details.
+Si estás utilizando el SDK de thirdweb, puedes usar el método `getUser` para obtener los detalles del usuario.
 
  <ArticleIconCard
 	title="getUser"
 	icon={TypeScriptIcon}
-	description="Get user details from your backend for thirdweb wallets in TypeScript"
+	description="Obtén los detalles del usuario desde tu backend para billeteras thirdweb en TypeScript"
 	href="/references/typescript/v5/getUser"
 />
 
-## Linking Additional Identities
 
-If you want to link additional identities to a wallet, see [Linking Multiple Identities](/connect/wallet/user-management/link-multiple-identity).
+## Vinculación de Identidades Adicionales
+
+Si deseas vincular identidades adicionales a una billetera, consulta [Vinculación de Múltiples Identidades](/connect/wallet/user-management/link-multiple-identity).

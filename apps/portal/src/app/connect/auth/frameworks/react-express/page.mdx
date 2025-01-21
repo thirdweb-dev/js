@@ -24,7 +24,7 @@ export const metadata = createMetadata({
 
 # React + Express
 
-If you want to interact with a working version of the Auth + React integration that we'll be building in this guide, you can check the following GitHub repository, or clone it with the command below:
+Si deseas interactuar con una versión funcional de la integración Auth + React que estaremos construyendo en esta guía, puedes consultar el siguiente repositorio de GitHub o clonarlo con el comando a continuación:
 
 ```
 npx thirdweb create app --template thirdweb-auth-express
@@ -36,7 +36,7 @@ npx thirdweb create app --template thirdweb-auth-express
 	description="React + Express Auth example repository."
 />
 
-## Installation & Setup
+## Instalación y Configuración
 
 <InstallTabs
 	npm="npm i thirdweb"
@@ -45,7 +45,7 @@ npx thirdweb create app --template thirdweb-auth-express
 	bun="bun i thirdweb"
 />
 
-Create a directory to hold your client and server:
+Crea un directorio para alojar tu cliente y servidor:
 
 ```shell
 $ mkdir my-app
@@ -54,16 +54,17 @@ $ cd my-app
 
 ## Client-side Setup
 
-### Setup Your App
+### Configura Tu Aplicación
 
-Create a new React app with Vite:
+Crea una nueva aplicación React con Vite:
+
 
 ```shell
 $ npm create vite@latest client -- --template react-ts
 $ cd client
 ```
 
-Setup your _React app_ `.env` file with the following:
+Configura el archivo `.env` de tu _aplicación React_ con lo siguiente:
 
 ```bash
 # Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
@@ -72,7 +73,7 @@ THIRDWEB_CLIENT_ID=
 AUTH_API=
 ```
 
-Wrap the root of your application with a thirdweb provider:
+Envuelve la raíz de tu aplicación con un proveedor de thirdweb:
 
 ```tsx
 // main.tsx
@@ -83,9 +84,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 );
 ```
 
-### Creating a Client
+### Creación de un Cliente
 
-Create and export a thirdweb client somewhere in your application to be used in your components. This client gives you access to thirdweb's RPCs to read and right from the blockchain.
+Crea y exporta un cliente de thirdweb en algún lugar de tu aplicación para que sea utilizado en tus componentes. Este cliente te da acceso a las RPCs de thirdweb para leer y escribir en la blockchain.
 
 ```tsx
 // lib/client.ts
@@ -97,12 +98,13 @@ export const client = createThirdwebClient({ clientId });
 ```
 
 <Callout variant="info">
-	Don't have a secret key? Get one [here](https://thirdweb.com/create-api-key).
+	¿No tienes una clave secreta? Consigue una [aquí](https://thirdweb.com/create-api-key).
 </Callout>
 
-### Adding the Connect Button
 
-Create your `<ConnectButton />` component. **This is where your users will sign in.**
+### Añadiendo el Botón de Conexión
+
+Crea tu componente `<ConnectButton />`. **Aquí es donde tus usuarios iniciarán sesión.**
 
 ```tsx
 // components/ConnectButtonAuth.tsx
@@ -166,9 +168,9 @@ export default function ConnectButtonAuth() {
 }
 ```
 
-### Adding Account Abstraction
+### Añadiendo Abstracción de Cuentas
 
-To provide your users with a smart wallet so your app can sponsor gas and batch transactions, add the following to your `<ConnectButton />`:
+Para proporcionar a tus usuarios una billetera inteligente y permitir que tu aplicación patrocine el gas y agrupe transacciones, agrega lo siguiente a tu `<ConnectButton />`:
 
 ```tsx
 <ConnectButton
@@ -183,49 +185,50 @@ To provide your users with a smart wallet so your app can sponsor gas and batch 
 
 ## Server-side Setup
 
-### Setup Your Express API
+### Configura Tu API de Express
 
-Create a new directory for your backend server:
+Crea un nuevo directorio para tu servidor backend:
 
 ```shell
 $ mkdir server
 $ cd server
 ```
 
-Initialize a new node project:
+Inicializa un nuevo proyecto de Node:
 
 ```shell
 $ npm init
 ```
 
-Accept the defaults for now. Once your project is initialized, install the dependencies:
+Acepta los valores predeterminados por ahora. Una vez que tu proyecto esté inicializado, instala las dependencias:
 
 ```shell
 $ npm install express cors cookie-parser thirdweb
 ```
 
-Create a `.env` file with the following:
+Crea un archivo `.env` con lo siguiente:
 
 ```bash
-# Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
+# Obtén tu ID de cliente desde el panel de thirdweb: https://thirdweb.com/create-api-key
 THIRDWEB_SECRET_KEY=
-# The domain of your frontend -- include the port when running local but nothing else (remember to update this in production)
+# El dominio de tu frontend -- incluye el puerto cuando trabajes localmente, pero nada más (recuerda actualizar esto en producción)
 CLIENT_DOMAIN=localhost:5173
-# An wallet private key to generate the JWT with
+# Una clave privada de billetera para generar el JWT
 AUTH_PRIVATE_KEY=
-NODE_ENV=development # Set this to production when you deploy!
+NODE_ENV=development # ¡Cámbialo a production cuando lo despliegues!
 ```
 
 <Callout variant="info">
-	To keep things simple, we've put all server-side routes in the same file. For
-	a production-grade application you'll likely break them out depending on what
-	works for your use case. Either way, the core logic is the same as you see
-	here.
+	Para simplificar las cosas, hemos colocado todas las rutas del lado del servidor en el mismo archivo. 
+	Para una aplicación de nivel de producción, probablemente las dividirás dependiendo de lo que funcione mejor para tu caso de uso. 
+	De cualquier manera, la lógica central es la misma que ves aquí.
 </Callout>
 
-### Create a Server-Side Client
 
-Create a server-side client using your secret key:
+### Crea un Cliente del Lado del Servidor
+
+Crea un cliente del lado del servidor utilizando tu clave secreta:
+
 
 ```ts
 // thirdwebClient.js
@@ -236,9 +239,9 @@ const secretKey = process.env.THIRDWEB_SECRET_KEY!;
 export const thirdwebClient = createThirdwebClient({ secretKey });
 ```
 
-### Setup your Express Server
+### Configura tu Servidor de Express
 
-We'll assume you've already setup a basic Express API, but there are a few things you'll need to make sure you've done for authentication to work properly between your frontend and backend.
+Asumiremos que ya configuraste una API básica de Express, pero hay algunas cosas que debes asegurarte de haber hecho para que la autenticación funcione correctamente entre tu frontend y backend.
 
 ```js
 import cors from "cors";
@@ -266,7 +269,7 @@ app.listen(3000, () => {
 });
 ```
 
-Create your thirdweb auth instance
+Crea tu instancia de autenticación de thirdweb
 
 ```js
 const thirdwebAuth = createAuth({
@@ -279,7 +282,7 @@ const thirdwebAuth = createAuth({
 });
 ```
 
-Setup a `GET` route at `/login` to fetch the login payload:
+Configura una ruta `GET` en `/login` para obtener el payload de inicio de sesión:
 
 ```js
 app.get("/login", async (req, res) => {
@@ -299,9 +302,10 @@ app.get("/login", async (req, res) => {
 });
 ```
 
-Here, we get the user's address and chain ID to generate the payload with using thirdweb Auth. This payload will be returned to the client for the user to sign with their wallet. It will then be sent back to the server for verification.
+Aquí obtenemos la dirección del usuario y el ID de la cadena para generar el payload utilizando thirdweb Auth. Este payload será devuelto al cliente para que el usuario lo firme con su billetera. Luego, será enviado de vuelta al servidor para su verificación.
 
-Create a `POST` route also at `/login` for the frontend to submit the signed payload:
+Crea una ruta `POST` también en `/login` para que el frontend envíe el payload firmado:
+
 
 ```js
 app.post("/login", async (req, res) => {
@@ -321,9 +325,10 @@ app.post("/login", async (req, res) => {
 });
 ```
 
-We receive the signed payload, verify it via thirdweb Auth, then create a JWT if the signed payload is valid. This JWT is assigned to this domain and allows the client to identify itself to the server as authenticated for future requests (until the token expires).
+Recibimos el payload firmado, lo verificamos a través de thirdweb Auth y luego creamos un JWT si el payload firmado es válido. Este JWT se asigna a este dominio y permite que el cliente se identifique como autenticado ante el servidor para futuras solicitudes (hasta que el token expire).
 
-Now, we create a route to check if the user is currently logged in:
+Ahora, creamos una ruta para verificar si el usuario está actualmente autenticado:
+
 
 ```js
 app.get("/isLoggedIn", async (req, res) => {
@@ -343,9 +348,9 @@ app.get("/isLoggedIn", async (req, res) => {
 });
 ```
 
-If the user doesn't have a token, they're definitely not logged in, so we immediately return false. If they do, we verify it to make sure its both accurate and not yet expired. If both are true, we return true.
+Si el usuario no tiene un token, definitivamente no ha iniciado sesión, por lo que inmediatamente devolvemos `false`. Si tiene un token, lo verificamos para asegurarnos de que sea tanto válido como no esté expirado. Si ambos son verdaderos, devolvemos `true`.
 
-Finally, we need a route to log the user out by clearing their token:
+Finalmente, necesitamos una ruta para cerrar la sesión del usuario eliminando su token:
 
 ```js
 app.post("/logout", (req, res) => {
@@ -354,7 +359,7 @@ app.post("/logout", (req, res) => {
 });
 ```
 
-For any routes you add to your server, you can authenticate the user just like we did in `/isLoggedIn`:
+Para cualquier ruta que agregues a tu servidor, puedes autenticar al usuario tal como lo hicimos en `/isLoggedIn`:
 
 ```js
 app.get("/secure", async (req, res) => {
@@ -374,10 +379,11 @@ app.get("/secure", async (req, res) => {
 });
 ```
 
-Remember your `app.listen` (when you start the server) must come **after** your routes.
+Recuerda que tu `app.listen` (cuando inicias el servidor) debe estar **después** de tus rutas.
 
-That's it! You have a React + Express app fully configured with SIWE. When running your app, be sure to start both the client and the server.
+¡Eso es todo! Ahora tienes una aplicación React + Express completamente configurada con SIWE. Al ejecutar tu aplicación, asegúrate de iniciar tanto el cliente como el servidor.
 
-## Support
+## Soporte
 
-For help or feedback, please [visit our support site](https://thirdweb.com/support)
+Para ayuda o comentarios, por favor [visita nuestro sitio de soporte](https://thirdweb.com/support)
+

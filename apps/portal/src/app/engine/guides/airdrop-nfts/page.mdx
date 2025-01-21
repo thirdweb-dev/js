@@ -14,24 +14,24 @@ export const metadata = createMetadata({
 
 # Airdrop NFTs
 
-Engine makes it effortless for any developer to airdrop NFTs at scale. You sponsor the gas so your users only need a wallet address!
+Engine facilita que cualquier desarrollador realice airdrops de NFTs a gran escala. Tú patrocinas el gas para que tus usuarios solo necesiten una dirección de billetera.
 
 <DocImage
 	src={OverviewImage}
-	alt="Airdrop overview"
+	alt="Vista general del airdrop"
 	className="max-w-[600px] mx-auto"
 />
 
-## Prerequisites
+## Requisitos previos
 
-- An Engine instance
-- A [backend wallet](/engine/features/backend-wallets) with currency to pay for gas
-- A deployed NFT contract that can be claimed by the backend wallet
-- A client ID and secret key from your Team > Project > Settings page.
+- Una instancia de Engine
+- Una [billetera backend](/engine/features/backend-wallets) con fondos para pagar el gas
+- Un contrato NFT desplegado que pueda ser reclamado por la billetera backend
+- Un ID de cliente y clave secreta desde la página de Configuración de tu Equipo > Proyecto > Configuración.
 
-## Frontend: Add Connect Wallet and Claim buttons
+## Frontend: Agregar botones de Conectar Billetera y Reclamar
 
-Use [`<ConnectWallet>`](/react/latest/components/ConnectWallet) to prompt the user for their wallet. The **Claim** button calls `POST /api/claim`.
+Usa [`<ConnectWallet>`](/react/latest/components/ConnectWallet) para pedir al usuario que conecte su billetera. El botón **Reclamar** llama a `POST /api/claim`.
 
 ```tsx
 function ClaimPage() {
@@ -65,9 +65,9 @@ function Example() {
 
 _Replace `<thirdweb_client_id>`_.
 
-## Backend: Call Engine to mint an NFT
+## Backend: Llamar a Engine para acuñar un NFT
 
-`POST /api/claim` calls Engine to mint an NFT to the user's wallet.
+`POST /api/claim` llama a Engine para acuñar un NFT en la billetera del usuario.
 
 ```tsx
 export async function POST(request: Request) {
@@ -101,30 +101,30 @@ export async function POST(request: Request) {
 }
 ```
 
-## Try it out!
+## ¡Pruébalo!
 
-Here’s what the user flow looks like.
+Así es como se ve el flujo del usuario.
 
-The app prompts the user to connect their wallet.
+La aplicación solicita al usuario que conecte su billetera.
 
-<DocImage src={DemoImage1} alt="Initial page load" />
+<DocImage src={DemoImage1} alt="Carga inicial de la página" />
 
 <DocImage
 	src={DemoImage2}
-	alt="The app prompts the user to connect their wallet"
+	alt="La aplicación solicita al usuario que conecte su billetera"
 />
 
-A user presses claim.
+Un usuario presiona reclamar.
 
-<DocImage src={DemoImage3} alt="A user presses claim" />
+<DocImage src={DemoImage3} alt="Un usuario presiona reclamar" />
 
-They'll receive the NFT in their wallet shortly!
+¡Recibirán el NFT en su billetera en breve!
 
 <DocImage
 	src={DemoImage4}
-	alt="They'll receive the NFT in their wallet shortly"
+	alt="¡Recibirán el NFT en su billetera en breve!"
 />
 
-## Full code example
+## Ejemplo completo de código
 
-The code above is simplified for readability. [View the full source code &rarr;](https://github.com/thirdweb-example/engine-minting-api)
+El código anterior está simplificado para mejorar su legibilidad. [Ver el código fuente completo &rarr;](https://github.com/thirdweb-example/engine-minting-api)

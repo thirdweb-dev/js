@@ -17,19 +17,20 @@ export const metadata = createMetadata({
 		"A few things to note before deploying thirdweb Auth applications to production.",
 });
 
-# Deploying Your App to Production
+# Implementar tu Aplicación en Producción
 
-Before you deploy your app to real users, you'll want to make sure your application is secure and ready to onboard users to your app. This involves separating some operations to the server and others to the client.
+Antes de implementar tu aplicación para usuarios reales, debes asegurarte de que sea segura y esté lista para incorporar usuarios. Esto implica separar algunas operaciones para que se ejecuten en el servidor y otras en el cliente.
 
-The examples in [Getting Started](/connect/auth) do everything on the client. The following examples demonstrate what should be on the server instead to ensure your application is secure.
+Los ejemplos en [Primeros Pasos](/connect/auth) realizan todas las operaciones en el cliente. Los siguientes ejemplos demuestran qué debería ejecutarse en el servidor para garantizar la seguridad de tu aplicación.
 
 <Callout variant="info">
-	Some of the code here is left for you to implement. This provides you with
-	flexibility and control over your application's authentication. However, if
-	you'd like specific examples, check out our
-	[templates](/connect/auth#templates) or [framework
-	guides](/connect/auth#frameworks).
+	Parte del código aquí está diseñado para que lo implementes tú mismo. Esto te
+	proporciona flexibilidad y control sobre la autenticación de tu aplicación.
+	Si prefieres ejemplos específicos, revisa nuestras
+	[plantillas](/connect/auth#templates) o nuestras [guías de
+	frameworks](/connect/auth#frameworks).
 </Callout>
+
 
 <Tabs defaultValue="client">
 
@@ -40,7 +41,7 @@ The examples in [Getting Started](/connect/auth) do everything on the client. Th
 
 <TabsContent value="client">
 
-At the root of your application:
+En la raíz de tu aplicación:
 
 ```tsx
 import { ThirdwebProvider } from "thirdweb/react";
@@ -50,7 +51,7 @@ export default function App() {
 }
 ```
 
-In your `components` directory:
+En tu directorio `components`:
 
 ```tsx
 import { ConnectButton } from "thirdweb/react";
@@ -64,16 +65,16 @@ export default function Connect() {
 		auth={{
 			getLoginPayload: async (params) => {
 				const address = params.address;
-				// fetch the login payload here using address
+				// Obtén el payload de inicio de sesión aquí usando la dirección
 			},
 			doLogin: async (params) => {
-				// send the signed login payload (params) to the server
+				// Envía el payload de inicio de sesión firmado (params) al servidor
 			},
 			isLoggedIn: async () => {
-				// fetch the user's login status from the server
+				// Obtén el estado de inicio de sesión del usuario desde el servidor
 			},
 			doLogout: async () => {
-				// send a logout request to the server
+				// Envía una solicitud de cierre de sesión al servidor
 			},
 		}}
 	/>;
@@ -89,7 +90,7 @@ import { createThirdwebClient } from "thirdweb";
 import { createAuth } from "thirdweb/auth";
 
 const client = createThirdwebClient({
-	clientId: "1234567890", // get yours at https://thirdweb.com/create-api-key
+	clientId: "1234567890", // Consíguelo en https://thirdweb.com/create-api-key
 });
 
 const thirdwebAuth = createAuth({
@@ -97,27 +98,27 @@ const thirdwebAuth = createAuth({
 	client,
 });
 
-// 1. generate a login payload
+// 1. Genera un payload de inicio de sesión
 const loginPayload = await auth.generatePayload({ address: "0x123..." });
 
-// 2. sign the login payload
+// 2. Firma el payload de inicio de sesión
 const signature = await auth.signPayload({
 	payload: loginPayload,
 	account: userAccount,
 });
 
-// 3. verify the login payload and signature that the client sends back later
+// 3. Verifica el payload de inicio de sesión y la firma que el cliente envía más tarde
 const verifiedPayload = await auth.verifyPayload({
 	payload: loginPayload,
 	signature,
 });
 
-// 4. generate a JWT for the client
+// 4. Genera un JWT para el cliente
 const jwt = await auth.generateJWT({ payload: verifiedPayload });
 
-// 5. set the JWT as a cookie or store it another way
+// 5. Configura el JWT como una cookie o almacénalo de otra manera
 
-// 6. authenticate the client based on the JWT on subsequent calls
+// 6. Autentica al cliente basado en el JWT en llamadas posteriores
 const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
 ```
 

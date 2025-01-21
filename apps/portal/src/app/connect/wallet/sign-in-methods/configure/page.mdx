@@ -13,23 +13,23 @@ import {
 import EcosystemSocialConfig from '../assets/social-config.png'
 import { getSocialIcon } from "thirdweb/wallets/in-app";
 
-# Sign-In Methods
+# Métodos de Inicio de Sesión
 
-thirdweb supports a bunch of various traditional authentication methods. 
+thirdweb admite una variedad de métodos de autenticación tradicionales.
 
-From social logins via the [OAuth 2.0 Protocol](https://oauth.net/2/), to email and SMS, to passkeys.
+Desde inicios de sesión de redes sociales mediante el [protocolo OAuth 2.0](https://oauth.net/2/), hasta correo electrónico y SMS, y claves de acceso.
 
-For all login methods, thirdweb generates a non-custodial [wallet](/connect/wallet/security) behind the scenes. Thirdweb wallets enable your users to interact with your application, as well as store tokens and assets they receive while interacting with your application.
+Para todos los métodos de inicio de sesión, thirdweb genera una [billetera](/connect/wallet/security) no custodiada en segundo plano. Las billeteras de thirdweb permiten que tus usuarios interactúen con tu aplicación, así como almacenar tokens y activos que reciban mientras interactúan con tu aplicación.
 
-## Supported Methods
+## Métodos Compatibles
 
 <AuthList/>
 
-## Enable Sign-In options
+## Habilitar Opciones de Inicio de Sesión
 
-### In-App Wallets
+### Billeteras In-App
 
-To enable a given sign-in method for the thirdweb wallet, refer to the following guides:
+Para habilitar un método de inicio de sesión específico para la billetera thirdweb, consulta las siguientes guías:
 
 <Grid>
     <ArticleIconCard
@@ -42,7 +42,7 @@ To enable a given sign-in method for the thirdweb wallet, refer to the following
         icon={ReactIcon}
         href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
     />
-    {/* TODO: Link to react native getting started for in app wallet */}
+    {/* TODO: Enlace a la guía para React Native sobre billeteras In-App */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -65,15 +65,13 @@ To enable a given sign-in method for the thirdweb wallet, refer to the following
     />
 </Grid>
 
-### Ecosystem Wallets
+### Billeteras del Ecosistema
 
-
-In order to configure sign-in options for all apps within your ecosystem, first configure the allowed sign-in methods on [your dashboard](https://thirdweb.com/team/~/~/ecosystem). 
-
+Para configurar las opciones de inicio de sesión para todas las aplicaciones dentro de tu ecosistema, primero configura los métodos de inicio de sesión permitidos en [tu panel de control](https://thirdweb.com/team/~/~/ecosystem).
 
 <DocImage src={EcosystemSocialConfig}/>
 
-Once configured, refer to the following guides to use the various login options within your ecosystem:
+Una vez configurado, consulta las siguientes guías para usar las diversas opciones de inicio de sesión dentro de tu ecosistema:
 
 <Grid>
     <ArticleIconCard
@@ -86,7 +84,7 @@ Once configured, refer to the following guides to use the various login options 
         icon={ReactIcon}
         href="/react/v5/ecosystem-wallet/get-started#configuring-auth-strategies"
     />
-    {/* TODO: Add react native specific getting started for ecosystem wallets */}
+    {/* TODO: Agregar guía específica para React Native sobre billeteras del ecosistema */}
     <ArticleIconCard
         title="React Native"
         icon={ReactIcon}
@@ -104,37 +102,35 @@ Once configured, refer to the following guides to use the various login options 
     />
 </Grid>
 
-<Callout variant="warning" title="Using disabled auth strategies">
-	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
+<Callout variant="warning" title="Usando estrategias de autenticación deshabilitadas">
+    Ten en cuenta que, aunque hoy puedes pasar cualquier estrategia de autenticación, te recomendamos que solo pases las estrategias habilitadas en tu panel de control. Podríamos hacer cumplir esto en el futuro.
 </Callout>
 
+## Otras Opciones de Inicio de Sesión
 
-## Other Sign-In options
-
-Most authentication option are that straight forward. However, some options require additional setup or nuances. See below for more information on these options:
+La mayoría de las opciones de autenticación son bastante sencillas. Sin embargo, algunas opciones requieren configuración adicional o detalles específicos. Consulta a continuación más información sobre estas opciones:
 
 <Stack>
     <ArticleIconCard
         href="/connect/wallet/sign-in-methods/guest"
         icon={UserIcon}
-        title="Guest Mode"
-        description="Learn more about guest mode"
+        title="Modo Invitado"
+        description="Aprende más sobre el modo invitado"
     />
     <ArticleIconCard
         href="/connect/wallet/sign-in-methods/external-wallets#authenticating-with-external-wallets-into-thirdweb-wallets"
         icon={WalletsConnectIcon}
-        title="External Wallet"
-        description="Learn more about external wallet authentication"
+        title="Billetera Externa"
+        description="Aprende más sobre la autenticación con billeteras externas"
     />
     <ArticleIconCard
         href="/connect/in-app-wallet/custom-auth/configuration"
         icon={EcosystemWalletsIcon}
-        title="Custom Authentication"
-        description="Learn more about custom authentication with your own auth system"
+        title="Autenticación Personalizada"
+        description="Aprende más sobre la autenticación personalizada con tu propio sistema de autenticación"
     />
 </Stack>
 
-## Interacting with your App
+## Interactuar con tu Aplicación
 
-Once a user signed in and their wallet is generated, you can use the **[Wallet Connection functions](/typescript/v5/wallets)** to get information about the connected wallet like getting the address, account, and more.
-
+Una vez que un usuario inicie sesión y se genere su billetera, puedes usar las **[Funciones de Conexión de Billetera](/typescript/v5/wallets)** para obtener información sobre la billetera conectada, como obtener la dirección, la cuenta y más.

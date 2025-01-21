@@ -2,38 +2,38 @@ import { Callout } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Access Tokens | thirdweb Engine",
-	description: "Manage API access to your Engine instance.",
+	title: "Tokens de Acceso | thirdweb Engine",
+	description: "Gestiona el acceso API a tu instancia de Engine.",
 });
 
-# Access Tokens
+# Tokens de Acceso
 
-Manage API access to your Engine instance. Access tokens are valid until deleted.
+Gestiona el acceso API a tu instancia de Engine. Los tokens de acceso son válidos hasta que se eliminen.
 
-### Create an access token
+### Crear un token de acceso
 
-Grant API access to your Engine instance with long-lived access tokens.
+Concede acceso API a tu instancia de Engine con tokens de acceso de larga duración.
 
-1. Navigate to the [thirdweb engine dashboard](https://thirdweb.com/team/~/~/engine) and select your engine
-1. Select **Access Tokens**.
-1. Select **Create Access Token**.
+1. Navega al [panel de control de thirdweb Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu instancia de Engine.
+1. Selecciona **Tokens de Acceso**.
+1. Haz clic en **Crear Token de Acceso**.
 
-Provide the header `Authorization: Bearer <access_token>` when calling the Engine API.
+Proporciona el encabezado `Authorization: Bearer <access_token>` al llamar a la API de Engine.
 
-<Callout title="An access token is only shown once!" variant="warning">
+<Callout title="¡Un token de acceso solo se muestra una vez!" variant="warning">
 
-Securely store access tokens and remove them if they are compromised.
+Almacena los tokens de acceso de manera segura y elimínalos si se ven comprometidos.
 
 </Callout>
 
-### Delete an access token
+### Eliminar un token de acceso
 
-1. Navigate to the [thirdweb engine dashboard](https://thirdweb.com/team/~/~/engine) and select your engine
-1. Select **Access Tokens**.
-1. Next to an access token, select **... > Delete**.
+1. Navega al [panel de control de thirdweb Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu instancia de Engine.
+1. Selecciona **Tokens de Acceso**.
+1. Junto a un token de acceso, selecciona **... > Eliminar**.
 
-## FAQ
+## Preguntas Frecuentes
 
-#### How do I generate short-lived access tokens?
+#### ¿Cómo genero tokens de acceso de corta duración?
 
-Consider using [Keypair Authentication](/engine/features/keypair-authentication) (advanced feature).
+Considera usar [Autenticación con Keypair](/engine/features/keypair-authentication) (función avanzada).

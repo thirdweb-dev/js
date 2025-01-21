@@ -10,56 +10,56 @@ export const metadata = createMetadata({
 
 # Relayers
 
-Use Engine as a relayer to sponsor gas for transactions on behalf of your users. Users sign a transaction with their own wallet (no gas required), and pay [gas fees](/glossary/gas) with an Engine backend wallet.
+Usa Engine como un intermediario para patrocinar el gas de las transacciones en nombre de tus usuarios. Los usuarios firman una transacción con su propia billetera (sin necesidad de gas) y pagan las [comisiones de gas](/glossary/gas) con una billetera backend de Engine.
 
-Removing the need for your users to get gas greatly improves the user experience and reach of your dApp.
+Eliminar la necesidad de que tus usuarios adquieran gas mejora significativamente la experiencia del usuario y el alcance de tu dApp.
 
-## Use cases
+## Casos de uso
 
-Enable users to claim, transfer, list, or burn NFTs with no gas. [Learn more about gasless transactions.](/glossary/gasless-transactions)
+Permite a los usuarios reclamar, transferir, listar o quemar NFTs sin gas. [Aprende más sobre las transacciones sin gas.](/glossary/gasless-transactions)
 
-## Requirements
+## Requisitos
 
-- Your Engine instance has a [backend wallet](/engine/features/backend-wallets) with funds.
-- The target contract must support one of:
-  - [EIP-2771 meta transactions](https://eips.ethereum.org/EIPS/eip-2771) \*
-  - [EIP-2612 permit approval](https://eips.ethereum.org/EIPS/eip-2612)
-  - [Polygon meta transactions](https://docs.polygon.technology/pos/concepts/transactions/meta-transactions/)
+- Tu instancia de Engine tiene una [billetera backend](/engine/features/backend-wallets) con fondos.
+- El contrato objetivo debe ser compatible con uno de:
+  - [Transacciones meta EIP-2771](https://eips.ethereum.org/EIPS/eip-2771) \*
+  - [Aprobación de permisos EIP-2612](https://eips.ethereum.org/EIPS/eip-2612)
+  - [Transacciones meta Polygon](https://docs.polygon.technology/pos/concepts/transactions/meta-transactions/)
 
-\*The target contract must trust a forwarder that implements the `verify` and `execute` methods, like thirdweb's default forwarder (0xd04f98c88ce1054c90022ee34d566b9237a1203c).
+\* El contrato objetivo debe confiar en un intermediario que implemente los métodos `verify` y `execute`, como el intermediario predeterminado de thirdweb (0xd04f98c88ce1054c90022ee34d566b9237a1203c).
 
-## Allow calls to Engine from your domain (CORS)
+## Permitir llamadas a Engine desde tu dominio (CORS)
 
-1. Native to [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your Engine instance.
-1. Navigate to the **Configuration** section.
-1. Under **Allowlisted Domains**, enter your application domain(s).
-   - Include local or development environments for testing.
+1. Navega al [panel de control de Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu instancia de Engine.
+1. Dirígete a la sección de **Configuración**.
+1. Bajo **Dominios permitidos**, ingresa el(los) dominio(s) de tu aplicación.
+   - Incluye los entornos locales o de desarrollo para realizar pruebas.
 
-<Callout variant='warning' title="The relay endpoint is unauthenticated.">
+<Callout variant='warning' title="El punto de enlace del relayer no está autenticado.">
 
-Set **Allowed Contracts** and **Allowed Forwarders** to restrict transactions your relayer allows.
+Configura **Contratos Permitidos** y **Reenvíos Permitidos** para restringir las transacciones que tu relayer permite.
 
 </Callout>
 
-## Create a relayer
+## Crear un relayer
 
-1. Navigate to [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your Engine instance.
-1. Navigate to the **Explorer** section.
-1. Select **Add relayer**.
-1. Provide the following details:
-   - **Chain**: The chain where contracts will be called.
-   - **Backend Wallet**: The backend wallet that will submit meta-transactions to the forwarder. Ensure this wallet has sufficient gas funds.
-   - **Label**: A descriptive name for this relayer.
-   - **Allowed Contracts**: (Optional) A list of contract addresses this relayer is allowed to submit transactions to.
-   - **Allowed Forwarders**: (Optional) A list of forwarder addresses this relayer is allowed to submit transactions to.
+1. Navega al [panel de control de Engine](https://thirdweb.com/team/~/~/engine) y selecciona tu instancia de Engine.
+1. Dirígete a la sección de **Explorador**.
+1. Selecciona **Agregar relayer**.
+1. Proporciona los siguientes detalles:
+   - **Cadena**: La cadena donde se llamarán los contratos.
+   - **Billetera Backend**: La billetera backend que enviará las meta-transacciones al reenviador. Asegúrate de que esta billetera tenga fondos suficientes para gas.
+   - **Etiqueta**: Un nombre descriptivo para este relayer.
+   - **Contratos Permitidos**: (Opcional) Una lista de direcciones de contrato a las que este relayer tiene permitido enviar transacciones.
+   - **Reenvíos Permitidos**: (Opcional) Una lista de direcciones de reenvío a las que este relayer tiene permitido enviar transacciones.
 
-The relayer will be assigned a URL in this format: `https://<engine_url>/relayer/<relayer_id>`
+El relayer tendrá asignada una URL en este formato: `https://<engine_url>/relayer/<relayer_id>`
 
-## Submit a meta transaction from your app frontend
+## Enviar una meta-transacción desde el frontend de tu aplicación
 
-Use the [Connect SDK](/react) to prompt the user to sign transactions and send it this relayer.
+Usa el [Connect SDK](/react) para solicitar al usuario que firme transacciones y enviarlas a este relayer.
 
-First wrap your app with `<ThirdwebProvider>`:
+Primero, envuelve tu aplicación con `<ThirdwebProvider>`:
 
 ```tsx
 import { ThirdwebProvider } from "thirdweb/react";
@@ -69,7 +69,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 </ThirdwebProvider>;
 ```
 
-Next prompt the user to connect a wallet. See [ConnectButton](https://portal.thirdweb.com/connect/sign-in/ConnectButton) for customization options.
+Luego, solicita al usuario que conecte una billetera. Consulta [ConnectButton](https://portal.thirdweb.com/connect/sign-in/ConnectButton) para opciones de personalización.
 
 ```tsx
 import { ConnectButton } from "thirdweb/react";
@@ -77,13 +77,13 @@ import { ConnectButton } from "thirdweb/react";
 <ConnectButton client={client} />;
 ```
 
-This example will call the `claim` method on an [NFT Drop contract](https://portal.thirdweb.com/contracts/explore/pre-built-contracts/nft-drop):
+Este ejemplo llamará al método `claim` en un [contrato de NFT Drop](https://portal.thirdweb.com/contracts/explore/pre-built-contracts/nft-drop):
 
 ```solidity
 function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, AllowlistProof calldata _allowlistProof, bytes memory _data)
 ```
 
-Render a `<TransactionButton>` to prepare a transaction to be relayed via Engine.
+Renderiza un `<TransactionButton>` para preparar una transacción que será retransmitida a través de Engine.
 
 ```tsx
 import { TransactionButton } from "thirdweb/react";
@@ -137,15 +137,15 @@ import { TransactionButton } from "thirdweb/react";
 </TransactionButton>;
 ```
 
-## Submit a meta transaction from your app backend (Advanced)
+## Enviar una transacción meta desde el backend de tu aplicación (Avanzado)
 
-Alternatively submit transactions to your relayer from your backend. This approach allows you to apply server-side validation or business logic before submitting the transaction to be relayed.
+Alternativamente, envía transacciones a tu relayer desde tu backend. Este enfoque te permite aplicar validaciones del lado del servidor o lógica de negocios antes de enviar la transacción para ser retransmitida.
 
-1.  Prompt the user to sign a transaction.
-    - This step does not require gas.
-    - The signature must match the format that the forwarder expects.
-1.  Call your backend with this signature.
-1.  Call Engine from your backend: `POST https://<engine_url>/relayer/{relayer_id}`
+1. Solicita al usuario que firme una transacción.
+    - Este paso no requiere gas.
+    - La firma debe coincidir con el formato que espera el forwarder.
+2. Llama a tu backend con esta firma.
+3. Llama a Engine desde tu backend: `POST https://<engine_url>/relayer/{relayer_id}`
 
     <Details id="relayer-body-payload" summary="Body payload">
 

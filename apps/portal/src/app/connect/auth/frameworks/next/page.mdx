@@ -24,7 +24,7 @@ export const metadata = createMetadata({
 
 # Next.js
 
-If you want to interact with a working version of the Auth + Next integration that we'll be building in this guide, you can check the following GitHub repository, or clone it with the command below:
+Si deseas interactuar con una versión funcional de la integración Auth + Next que estaremos construyendo en esta guía, puedes consultar el siguiente repositorio de GitHub o clonarlo con el siguiente comando:
 
 ```
 npx thirdweb create app --template thirdweb-auth-next
@@ -36,7 +36,7 @@ npx thirdweb create app --template thirdweb-auth-next
 	description="Auth Next example repository."
 />
 
-## Installation & Setup
+## Instalación y Configuración
 
 <InstallTabs
 	npm="npm i thirdweb"
@@ -45,23 +45,23 @@ npx thirdweb create app --template thirdweb-auth-next
 	bun="bun i thirdweb"
 />
 
-Setup your `.env` file with the following:
+Configura tu archivo `.env` con lo siguiente:
 
 ```bash
-# the DOMAIN is the domain of the application
+# el DOMINIO es el dominio de la aplicación
 NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN=
-# Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
+# Obtén tu ID de cliente desde el panel de thirdweb: https://thirdweb.com/create-api-key
 NEXT_PUBLIC_THIRDWEB_CLIENT_ID=
-# Get your secret key from the thirdweb dashboard: https://thirdweb.com/create-api-key
+# Obtén tu clave secreta desde el panel de thirdweb: https://thirdweb.com/create-api-key
 THIRDWEB_SECRET_KEY=
-# A private key that will be used to sign the JWT for the `jwt-cookie` authentication method
-# this does *not* need to hold any funds, can be any valid private key to sign with
+# Una clave privada que se usará para firmar el JWT para el método de autenticación `jwt-cookie`
+# esto no necesita tener fondos, puede ser cualquier clave privada válida para firmar
 AUTH_PRIVATE_KEY=
 ```
 
-## Client-side Setup
+## Configuración del Lado del Cliente
 
-Create a `lib` directory inside `src` and create a `client.ts` file inside it:
+Crea un directorio `lib` dentro de `src` y crea un archivo `client.ts` dentro de él:
 
 ```tsx
 // lib/client.ts
@@ -75,7 +75,7 @@ export const client = createThirdwebClient(
 );
 ```
 
-Add the `ThirdwebProvider` in your root layout:
+Agrega el `ThirdwebProvider` en tu layout raíz:
 
 ```tsx
 // app/layout.tsx
@@ -88,7 +88,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 export default Layout;
 ```
 
-There are two ways to setup Auth on the client-side of a Next.js application, the Connect Button or your own custom component. For both cases, we'll use a JWT in a cookie to store the user's session and authenticate across the app. The connect button will handle a lot of the underlying complexity for you, but if you would like to bring your own components the functions it uses are exposed for your custom use case.
+Hay dos formas de configurar Auth en el lado del cliente de una aplicación Next.js: el Botón de Conexión o tu propio componente personalizado. En ambos casos, usaremos un JWT en una cookie para almacenar la sesión del usuario y autenticarlo en toda la aplicación. El botón de conexión manejará gran parte de la complejidad subyacente por ti, pero si deseas utilizar tus propios componentes, las funciones que usa están expuestas para tu caso de uso personalizado.
 
 <Tabs defaultValue="connect">
 
@@ -98,7 +98,7 @@ There are two ways to setup Auth on the client-side of a Next.js application, th
 </TabsList>
 
 <TabsContent value="connect">
-Wherever you'd like your connect/login button, place the `ConnectButton` component.
+Donde quieras colocar tu botón de conexión, coloca el componente `ConnectButton`.
 
 ```tsx
 // app/page.tsx
@@ -133,7 +133,7 @@ const Page = () => {
 export default Page;
 ```
 
-Use this component anywhere in your application. To try it out, we'll put it in the root `page.tsx`:
+Usa este componente en cualquier lugar de tu aplicación. Para probarlo, lo colocaremos en el archivo raíz `page.tsx`:
 
 ```tsx
 // app/page.tsx
@@ -217,11 +217,12 @@ export default Home;
 
 </Tabs>
 
-## Server-side Setup
+## Configuración del Lado del Servidor
 
-We'll use server functions to keep your login secure and concise.
+Usaremos funciones del servidor para mantener tu inicio de sesión seguro y conciso.
 
-Create an `actions` directory with a `login.ts` file with the following:
+Crea un directorio `actions` con un archivo `login.ts` con lo siguiente:
+
 
 ```tsx
 "use server";
@@ -269,7 +270,7 @@ export async function logout() {
 }
 ```
 
-You can include custom context in the JWT token with the `context` parameter:
+Puedes incluir contexto personalizado en el token JWT con el parámetro `context`:
 
 ```ts
 const jwt = await thirdwebAuth.generateJWT({
@@ -280,7 +281,7 @@ const jwt = await thirdwebAuth.generateJWT({
 });
 ```
 
-Now anywhere in your project, you can check a user's authentication status:
+Ahora, en cualquier lugar de tu proyecto, puedes verificar el estado de autenticación de un usuario:
 
 ```tsx
 import { redirect } from "next/navigation";
@@ -303,8 +304,9 @@ const AuthenticatedPage = async () => {
 export default AuthenticatedPage;
 ```
 
-That's it! You now have a working SIWE Next.js app.
+¡Eso es todo! Ahora tienes una aplicación Next.js SIWE funcionando.
 
-## Support
+## Soporte
 
-For help or feedback, please [visit our support site](https://thirdweb.com/support)
+Para ayuda o comentarios, por favor [visita nuestro sitio de soporte](https://thirdweb.com/support)
+
