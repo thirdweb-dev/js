@@ -190,10 +190,7 @@ export function createWallet<const ID extends WalletId>(
       const emitter = createWalletEmitter<ID>();
       let account: Account | undefined = undefined;
       let chain: Chain | undefined = undefined;
-
-      const unsubscribeChain = emitter.subscribe("chainChanged", (newChain) => {
-        chain = newChain;
-      });
+      let unsubscribeChain: (() => void) | undefined = undefined;
 
       function reset() {
         account = undefined;
@@ -204,7 +201,7 @@ export function createWallet<const ID extends WalletId>(
 
       const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
         reset();
-        unsubscribeChain();
+        unsubscribeChain?.();
         unsubscribeDisconnect();
       });
 
@@ -263,6 +260,9 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            unsubscribeChain = emitter.subscribe("chainChanged", (newChain) => {
+              chain = newChain;
+            });
             trackConnect({
               client: options.client,
               walletType: id,
@@ -377,6 +377,9 @@ export function createWallet<const ID extends WalletId>(
             chain = connectedChain;
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
+            unsubscribeChain = emitter.subscribe("chainChanged", (newChain) => {
+              chain = newChain;
+            });
             trackConnect({
               client: options.client,
               walletType: id,
