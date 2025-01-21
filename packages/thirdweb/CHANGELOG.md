@@ -1,5 +1,31 @@
 # thirdweb
 
+## 5.86.0
+
+### Minor Changes
+
+- [#5989](https://github.com/thirdweb-dev/js/pull/5989) [`8b5cb47`](https://github.com/thirdweb-dev/js/commit/8b5cb47339af2d5794d642f484429b19b4d313be) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Adds deployMarketplaceContract
+
+  ```ts
+  import { deployMarketplaceContract } from "thirdweb/deploys";
+
+  const address = await deployMarketplaceContract({
+    client,
+    chain,
+    account,
+    params: {
+      name: "MarketplaceV3",
+      description: "MarketplaceV3 deployed using thirdweb SDK",
+      platformFeeRecipient: "0x21d514c90ee4E4e4Cd16Ce9185BF01F0F1eE4A04",
+      platformFeeBps: 1000,
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#6004](https://github.com/thirdweb-dev/js/pull/6004) [`bb6c71e`](https://github.com/thirdweb-dev/js/commit/bb6c71e9681606376d3894b94afb4f68c438ae23) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to eip1193 provider chain when switching chain is not supported
+
 ## 5.85.0
 
 ### Minor Changes
