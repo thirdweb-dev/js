@@ -89,7 +89,15 @@ function EngineInstanceLayoutContent(props: {
       );
     }
 
-    if (permission.status === 401 || permission.status === 500) {
+    if (permission.status === 500) {
+      return (
+        <EngineErrorPage rootPath={rootPath}>
+          <p> Engine Instance Could Not Be Reached </p>
+        </EngineErrorPage>
+      );
+    }
+
+    if (permission.status === 401) {
       return (
         <EngineErrorPage rootPath={rootPath}>
           <div>
