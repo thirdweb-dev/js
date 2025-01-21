@@ -7,10 +7,10 @@ import Link from "next/link";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
-import { getEngineAccessPermission } from "../../_utils/getEngineAccessPermission";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";
 import { EngineSidebarLayout } from "./_components/EnginePageLayout";
+import { EnsureEnginePermission } from "./_components/EnsureEnginePermission";
 import { EngineVersionBadge } from "./_components/version";
 
 export default async function Layout(props: {
@@ -49,75 +49,25 @@ export default async function Layout(props: {
     );
   }
 
-  const permission = await getEngineAccessPermission({
-    authToken,
-    instanceUrl: instance.url,
-  });
-
   return (
     <EngineSidebarLayout engineId={params.engineId} teamSlug={params.team_slug}>
-      <EngineInstanceLayoutContent
+      <EnsureEnginePermission
+        teamSlug={params.team_slug}
+        accountId={account.id}
+        authToken={authToken}
+        engineId={params.engineId}
         instance={instance}
-        permission={permission}
-        rootPath={engineRootLayoutPath}
-        team_slug={params.team_slug}
       >
-        {props.children}
-      </EngineInstanceLayoutContent>
+        <div>
+          <EngineInstanceHeader
+            instance={instance}
+            rootPath={engineRootLayoutPath}
+            teamSlug={params.team_slug}
+          />
+          {props.children}
+        </div>
+      </EnsureEnginePermission>
     </EngineSidebarLayout>
-  );
-}
-
-function EngineInstanceLayoutContent(props: {
-  permission: {
-    ok: boolean;
-    status: number;
-  };
-  instance: EngineInstance;
-  rootPath: string;
-  children: React.ReactNode;
-  team_slug: string;
-}) {
-  const { instance, permission, rootPath, team_slug } = props;
-
-  if (!permission.ok) {
-    if (permission.status === 404) {
-      return (
-        <EngineErrorPage rootPath={rootPath}>
-          <p> Engine Instance Not Found </p>
-        </EngineErrorPage>
-      );
-    }
-
-    if (permission.status === 500) {
-      return (
-        <EngineErrorPage rootPath={rootPath}>
-          <p> Engine Instance Could Not Be Reached </p>
-        </EngineErrorPage>
-      );
-    }
-
-    if (permission.status === 401) {
-      return (
-        <EngineErrorPage rootPath={rootPath}>
-          <div>
-            <p>You are not an admin for this Engine instance. </p>
-            <p> Contact the owner to add your wallet as an admin</p>
-          </div>
-        </EngineErrorPage>
-      );
-    }
-  }
-
-  return (
-    <div>
-      <EngineInstanceHeader
-        instance={instance}
-        rootPath={rootPath}
-        teamSlug={team_slug}
-      />
-      {props.children}
-    </div>
   );
 }
 

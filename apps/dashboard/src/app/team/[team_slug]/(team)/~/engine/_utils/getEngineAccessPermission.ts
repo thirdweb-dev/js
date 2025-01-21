@@ -1,9 +1,17 @@
+"use client";
+
+// can not fetch engine permission on server - instance url can be localhost url
+
 export async function getEngineAccessPermission(params: {
   authToken: string;
   instanceUrl: string;
 }) {
   try {
-    const res = await fetch(`${params.instanceUrl}auth/permissions/get-all`, {
+    const instanceUrl = params.instanceUrl.endsWith("/")
+      ? params.instanceUrl
+      : `${params.instanceUrl}/`;
+
+    const res = await fetch(`${instanceUrl}auth/permissions/get-all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -19,6 +27,7 @@ export async function getEngineAccessPermission(params: {
     return {
       ok: false,
       status: 500,
+      fetchFailed: true,
     };
   }
 }
