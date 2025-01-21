@@ -3,7 +3,7 @@ import fs from "node:fs";
 const changesetsConfig = JSON.parse(
   fs.readFileSync("./.changeset/config.json", "utf8"),
 );
-// add useCalculatedVersion: true to the config
+// enable useCalculatedVersion in the snapshot configuration
 const nightlyChangesetsConfig = {
   ...changesetsConfig,
   snapshot: { ...changesetsConfig.snapshot, useCalculatedVersion: true },
