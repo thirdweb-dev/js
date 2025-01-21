@@ -158,7 +158,7 @@ export default async function Page(props: {
 
         <div className="grid grid-cols-2 items-start">
           <div className="flex items-center gap-x-2">Raw Input:</div>
-          <div className="break-words rounded-lg bg-muted/50 p-4 text-sm">
+          <div className="break-words rounded-lg bg-card p-4 text-sm">
             {transaction.input}
           </div>
         </div>

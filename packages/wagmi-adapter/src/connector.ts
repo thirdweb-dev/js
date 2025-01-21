@@ -1,6 +1,7 @@
 import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
 import { type ThirdwebClient, defineChain, getAddress } from "thirdweb";
+import { autoConnect } from "thirdweb/wallets";
 import {
   EIP1193,
   type InAppWalletConnectionOptions,
@@ -136,9 +137,10 @@ export function inAppWalletConnector(
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       const chain = defineChain(params?.chainId || lastChainId || 1);
       if (!wallet.getAccount()) {
-        await wallet.autoConnect({
+        await autoConnect({
           client,
           chain,
+          wallets: [wallet],
         });
       }
       return EIP1193.toProvider({

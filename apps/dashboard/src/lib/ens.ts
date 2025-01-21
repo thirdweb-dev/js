@@ -1,14 +1,11 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { isAddress } from "thirdweb";
 import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
+import { isValidENSName } from "thirdweb/utils";
 
 interface ENSResolveResult {
   ensName: string | null;
   address: string | null;
-}
-
-export function isEnsName(name: string): boolean {
-  return name?.endsWith(".eth");
 }
 
 export async function resolveEns(
@@ -24,7 +21,7 @@ export async function resolveEns(
     };
   }
 
-  if (!isEnsName(ensNameOrAddress)) {
+  if (!isValidENSName(ensNameOrAddress)) {
     throw new Error("Invalid ENS name");
   }
 

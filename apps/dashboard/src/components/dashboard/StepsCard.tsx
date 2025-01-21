@@ -34,9 +34,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
   }
 
   return (
-    <div
-      className={cn("rounded-lg border border-border bg-muted/30 p-4 lg:p-6")}
-    >
+    <div className={cn("rounded-lg border border-border bg-card p-4 lg:p-6")}>
       {/* Title + Desc */}
       <h2 className="mb-3 text-left font-semibold text-xl tracking-tight lg:text-2xl">
         {title}
@@ -110,7 +108,7 @@ function StepNumberBadge(props: {
   isCompleted: boolean;
 }) {
   return (
-    <div className="flex size-7 shrink-0 items-center justify-center self-start rounded-full border border-border bg-muted/50">
+    <div className="flex size-7 shrink-0 items-center justify-center self-start rounded-full border border-border bg-card">
       {props.isCompleted ? (
         <CheckIcon className="size-4 text-green-500" />
       ) : (

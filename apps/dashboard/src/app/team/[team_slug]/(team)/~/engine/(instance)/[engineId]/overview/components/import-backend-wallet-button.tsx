@@ -33,7 +33,7 @@ import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
 } from "lib/engine";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, CloudDownloadIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -136,7 +136,13 @@ export const ImportBackendWalletButton: React.FC<
 
   return (
     <>
-      <Button onClick={() => setIsModalOpen(true)} variant="outline">
+      <Button
+        onClick={() => setIsModalOpen(true)}
+        variant="outline"
+        className="gap-2"
+        size="sm"
+      >
+        <CloudDownloadIcon className="size-4" />
         Import
       </Button>
 
@@ -322,7 +328,7 @@ export const ImportBackendWalletButton: React.FC<
                 </div>
               </div>
 
-              <DialogFooter className="mt-4 gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2 ">
+              <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2 ">
                 <Button variant="outline" onClick={() => setIsModalOpen(false)}>
                   Cancel
                 </Button>

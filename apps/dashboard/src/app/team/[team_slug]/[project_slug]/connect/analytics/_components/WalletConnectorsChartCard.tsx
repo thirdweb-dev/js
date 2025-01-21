@@ -125,7 +125,7 @@ export function WalletConnectorsChartCard(props: {
   const disableActions = props.isPending || chartData.length === 0;
 
   return (
-    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+    <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Connected Wallets
       </h3>
@@ -247,8 +247,8 @@ export function WalletConnectorsChartCard(props: {
                   fill={chartConfig[walletType]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

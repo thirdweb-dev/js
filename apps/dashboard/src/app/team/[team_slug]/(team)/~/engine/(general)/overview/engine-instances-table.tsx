@@ -13,13 +13,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type DeleteCloudHostedInput,
   type EditEngineInstanceInput,
   type EngineInstance,
   useEngineDeleteCloudHosted,
   useEngineEditInstance,
-  type useEngineInstances,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { FormControl, Radio, RadioGroup } from "@chakra-ui/react";
@@ -43,22 +43,17 @@ import { FormLabel } from "tw-components";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
-  isPending: boolean;
-  isFetched: boolean;
-  refetch: ReturnType<typeof useEngineInstances>["refetch"];
   engineLinkPrefix: string;
 }
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   instances,
-  isPending,
-  isFetched,
-  refetch,
   engineLinkPrefix,
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const trackEvent = useTrack();
+  const router = useDashboardRouter();
 
   const [instanceToUpdate, setInstanceToUpdate] = useState<
     EngineInstance | undefined
@@ -137,8 +132,8 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
         title="Your Engines"
         data={instances}
         columns={columns}
-        isFetched={isFetched}
-        isPending={isPending}
+        isFetched={true}
+        isPending={false}
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,
@@ -168,7 +163,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
             isDestructive: true,
           },
         ]}
-        bodyRowClassName="hover:bg-muted/50"
+        bodyRowClassName="hover:bg-accent/50"
         bodyRowLinkBox
       />
 
@@ -177,7 +172,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
           instance={instanceToUpdate}
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
-          refetch={refetch}
+          refetch={() => router.refresh()}
         />
       )}
 
@@ -186,7 +181,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
           instance={instanceToUpdate}
           onOpenChange={setIsRemoveModalOpen}
           open={isRemoveModalOpen}
-          refetch={refetch}
+          refetch={() => router.refresh()}
         />
       )}
     </>
@@ -203,7 +198,7 @@ const EditModal = (props: {
   const { onOpenChange, instance, open, refetch } = props;
 
   const form = useForm<EditEngineInstanceInput>({
-    defaultValues: {
+    values: {
       instanceId: instance.id,
       name: instance.name,
       url: instance.url,

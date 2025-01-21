@@ -1,13 +1,16 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
+import { NebulaSideIcon, TypeScriptIcon } from "@/icons";
+
 import {
-  BrickIcon,
-  CodeIcon,
-  EditIcon,
-  NebulaSideIcon,
-  PluginIcon,
-  QuestionIcon,
-  TroubleshootIcon,
-} from "@/icons";
+  Blocks,
+  Braces,
+  Code,
+  ExternalLink,
+  MessageCircleQuestion,
+  PencilRuler,
+  Rocket,
+  Wrench,
+} from "lucide-react";
 
 export const sidebar: SideBar = {
   name: "Nebula",
@@ -18,30 +21,24 @@ export const sidebar: SideBar = {
       icon: <NebulaSideIcon />,
     },
     {
-      name: "Use Cases",
-      href: "/nebula/use-cases",
-      icon: <BrickIcon />,
-    },
-    {
       name: "Prompt Guide",
       href: "/nebula/prompt-guide",
-      icon: <EditIcon />,
+      icon: <PencilRuler />,
     },
     {
-      name: "Plugins",
-      href: "/nebula/plugins",
-      icon: <PluginIcon />,
-      links: [
-        {
-          name: "Eliza",
-          href: "/nebula/plugins/eliza",
-        },
-      ],
+      name: "Playground",
+      href: "https://nebula.thirdweb.com",
+      icon: <ExternalLink />,
+    },
+    {
+      name: "Get Started",
+      href: "/nebula/get-started",
+      icon: <Rocket />,
     },
     {
       name: "API Reference",
       href: "/nebula/api-reference",
-      icon: <CodeIcon />,
+      icon: <Braces />,
       links: [
         {
           name: "GET",
@@ -102,14 +99,36 @@ export const sidebar: SideBar = {
       ],
     },
     {
+      name: "SDK Reference",
+      icon: <Code />,
+      links: [
+        {
+          name: "Typescript",
+          href: "/references/typescript/v5/chat",
+          icon: <TypeScriptIcon />,
+        },
+      ],
+    },
+    {
+      name: "Plugins",
+      href: "/nebula/plugins",
+      icon: <Blocks />,
+      links: [
+        {
+          name: "Eliza",
+          href: "/nebula/plugins/eliza",
+        },
+      ],
+    },
+    {
       name: "Troubleshoot",
       href: "/nebula/troubleshoot",
-      icon: <TroubleshootIcon />,
+      icon: <Wrench />,
     },
     {
       name: "FAQs",
       href: "/nebula/faqs",
-      icon: <QuestionIcon />,
+      icon: <MessageCircleQuestion />,
     },
   ],
 };

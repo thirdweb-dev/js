@@ -1,9 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { fetchTopContracts } from "lib/search";
-import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
+import { CircleAlertIcon } from "lucide-react";
 import { getRawAccount } from "../../../../account/settings/getAccount";
-import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain, getChainMetadata } from "../../utils";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
@@ -21,14 +17,7 @@ export default async function Page(props: {
   const chainMetadata = await getChainMetadata(chain.chainId);
   const isDeprecated = chain.status === "deprecated";
 
-  const [account, topContracts] = await Promise.all([
-    getRawAccount(),
-    fetchTopContracts({
-      chainId: chain.chainId,
-      perPage: 3,
-      timeRange: "month",
-    }),
-  ]);
+  const account = await getRawAccount();
 
   return (
     <div className="flex flex-col gap-10">
@@ -63,31 +52,6 @@ export default async function Page(props: {
       {/* Explorers */}
       {chain.explorers && chain.explorers.length > 0 && (
         <ExplorersSection explorers={chain.explorers} />
-      )}
-
-      {topContracts.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold text-xl tracking-tight">
-              Popular Contracts
-            </h2>
-            <Button asChild variant="outline">
-              <Link
-                href={`/${chain.slug}/popular`}
-                className="flex items-center gap-2"
-              >
-                See All
-                <ArrowRightIcon className="size-4" />
-              </Link>
-            </Button>
-          </div>
-          <TrendingContractSection
-            topContracts={topContracts}
-            chainId={chain.chainId}
-            showPagination={false}
-            searchParams={undefined}
-          />
-        </section>
       )}
 
       {chain.services.filter((s) => s.enabled).length > 0 && (

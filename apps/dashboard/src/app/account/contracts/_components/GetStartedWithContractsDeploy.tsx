@@ -77,7 +77,7 @@ const DeployOptions = () => {
   const activeTabContent = content[activeTab];
 
   return (
-    <>
+    <div className="mt-3">
       <ImportModal
         isOpen={showImportModal}
         onClose={() => {
@@ -93,11 +93,12 @@ const DeployOptions = () => {
           isEnabled: true,
           onClick: () => setActiveTab(key as TabId),
         }))}
-        tabClassName="font-medium !text-sm"
+        tabClassName="font-medium"
+        tabContainerClassName="gap-1"
       />
 
       <button
-        className="mt-3 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-border bg-muted/50 p-4 hover:bg-muted"
+        className="mt-3 flex w-full cursor-pointer items-center gap-2 rounded-lg border border-border bg-card p-4 hover:border-active-border"
         type="button"
         onClick={() => {
           activeTabContent.onClick?.();
@@ -124,6 +125,6 @@ const DeployOptions = () => {
           </p>
         </div>
       </button>
-    </>
+    </div>
   );
 };

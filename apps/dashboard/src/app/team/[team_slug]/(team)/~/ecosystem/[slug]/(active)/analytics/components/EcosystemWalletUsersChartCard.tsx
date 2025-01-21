@@ -114,7 +114,7 @@ export function EcosystemWalletUsersChartCard(props: {
     );
 
   return (
-    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+    <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Unique Users
       </h3>
@@ -228,8 +228,8 @@ export function EcosystemWalletUsersChartCard(props: {
                   fill={chartConfig[authMethod]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

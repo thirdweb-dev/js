@@ -123,7 +123,7 @@ function RenderData(props: {
 }) {
   const barColor = props.query.isEmpty
     ? "hsl(var(--accent))"
-    : "hsl(var(--link-foreground))";
+    : "hsl(var(--chart-1))";
   return (
     <div>
       <div className="mb-5 flex items-center gap-3">
@@ -186,6 +186,8 @@ function RenderData(props: {
                 fill={barColor}
                 radius={8}
                 barSize={20}
+                strokeWidth={1}
+                className="stroke-background"
               />
 
               {props.query.data && (

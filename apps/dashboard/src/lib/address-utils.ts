@@ -1,12 +1,12 @@
 import { isAddress } from "thirdweb";
-import { isEnsName } from "./ens";
+import { isValidENSName } from "thirdweb/utils";
 
 // if a string is a valid address or ens name
 export function isPossibleEVMAddress(address?: string, ignoreEns?: boolean) {
   if (!address) {
     return false;
   }
-  if (isEnsName(address) && !ignoreEns) {
+  if (isValidENSName(address) && !ignoreEns) {
     return true;
   }
   return isAddress(address);

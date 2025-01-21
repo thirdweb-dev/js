@@ -60,7 +60,7 @@ export function OnboardingChoosePlan(props: {
       <Button
         variant="outline"
         onClick={props.skipPlan}
-        className="relative h-auto w-full items-center gap-2 rounded-xl bg-muted/50 py-2.5"
+        className="relative h-auto w-full items-center gap-2 rounded-xl bg-card py-2.5"
       >
         <span className="flex flex-col gap-0.5">
           <span className="text-base text-foreground">Skip for now</span>

@@ -99,12 +99,12 @@ function RenderData(props: { query: ProcessedQuery }) {
         {
           name: "Crypto",
           amount: queryData.cryptoTotalUSD,
-          color: "#6366f1",
+          color: "hsl(var(--chart-1))",
         },
         {
           name: "Fiat",
           amount: queryData.fiatTotalUSD,
-          color: "#d946ef",
+          color: "hsl(var(--chart-2))",
         },
       ]
     : skeletonData;

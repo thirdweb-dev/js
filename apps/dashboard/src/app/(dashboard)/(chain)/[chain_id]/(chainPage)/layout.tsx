@@ -1,5 +1,3 @@
-import { MobileSidebar } from "@/components/blocks/MobileSidebar";
-import { Sidebar } from "@/components/blocks/Sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,16 +13,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  ArrowLeftIcon,
-  ChevronDownIcon,
-  MenuIcon,
-  TicketCheckIcon,
-} from "lucide-react";
+import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { mapV4ChainToV5Chain } from "../../../../../contexts/map-chains";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
@@ -62,24 +56,13 @@ export default async function ChainPageLayout(props: {
   const params = await props.params;
   const { children } = props;
   const chain = await getChain(params.chain_id);
+  const authToken = await getAuthToken();
 
   if (params.chain_id !== chain.slug) {
     redirect(chain.slug);
   }
 
   const chainMetadata = await getChainMetadata(chain.chainId);
-
-  const sidebarLinks = [
-    {
-      href: `/${chain.slug}`,
-      label: "Overview",
-      exactMatch: true,
-    },
-    {
-      href: `/${chain.slug}/popular`,
-      label: "Popular Contracts",
-    },
-  ];
 
   return (
     <>
@@ -123,9 +106,7 @@ export default async function ChainPageLayout(props: {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="container flex h-full flex-row">
-        <Sidebar links={sidebarLinks} />
-
+      <div className="container flex h-full max-w-[1180px] flex-row">
         <div className="flex w-full flex-col pb-10">
           {/* Icon + Background */}
           <ChainHeader
@@ -133,28 +114,6 @@ export default async function ChainPageLayout(props: {
             logoUrl={chain.icon?.url}
             chain={chain}
           />
-
-          <div className="flex justify-end lg:hidden">
-            <MobileSidebar
-              links={sidebarLinks}
-              trigger={
-                <Button size="icon" variant="outline">
-                  <MenuIcon strokeWidth={1} />
-                </Button>
-              }
-              footer={
-                <div className="mt-5 border-t pt-6 pb-2">
-                  <Link
-                    href="/chainlist"
-                    className="flex items-center justify-start gap-2 px-2 text-muted-foreground text-sm hover:text-foreground"
-                  >
-                    <ArrowLeftIcon className="size-4" />
-                    View all chains
-                  </Link>
-                </div>
-              }
-            />
-          </div>
 
           <div className="h-4 md:h-8" />
 
@@ -173,11 +132,13 @@ export default async function ChainPageLayout(props: {
               </h1>
 
               {/* Favorite */}
-              <StarButton
-                chainId={chain.chainId}
-                iconClassName="size-5"
-                className="p-1"
-              />
+              {authToken && (
+                <StarButton
+                  chainId={chain.chainId}
+                  iconClassName="size-5"
+                  className="p-1"
+                />
+              )}
 
               {/* Gas Sponsored badge - Desktop */}
               {chainMetadata?.gasSponsored && (

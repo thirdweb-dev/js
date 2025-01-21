@@ -7,7 +7,7 @@ export function ClaimChainSection() {
   return (
     <section>
       <SectionTitle title="Claim Chain" />
-      <div className="rounded-lg border bg-muted/50 p-4">
+      <div className="rounded-lg border bg-card p-4">
         <p className="mb-1"> This chain page is unclaimed </p>
         <p className="mb-5 text-muted-foreground text-sm">
           Are you the owner of this ecosystem? Claim this page to add additional

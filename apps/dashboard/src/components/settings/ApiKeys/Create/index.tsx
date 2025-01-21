@@ -250,7 +250,7 @@ function CreateAPIKeyForm(props: {
                   <FormLabel>Project Name</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-muted/50"
+                      className="bg-card"
                       placeholder="My Project"
                       {...field}
                     />
@@ -281,7 +281,7 @@ function CreateAPIKeyForm(props: {
                     <FormLabel>Allowed Domains</FormLabel>
                     <FormControl>
                       <Textarea
-                        className="bg-muted/50"
+                        className="bg-card"
                         placeholder="thirdweb.com, *.example.com, localhost:3000"
                         {...field}
                       />
@@ -329,7 +329,7 @@ function CreateAPIKeyForm(props: {
           </div>
         </div>
 
-        <DialogFooter className="flex gap-4 border-border border-t bg-muted/50 p-6 md:gap-2">
+        <DialogFooter className="flex gap-4 border-border border-t bg-card p-6 md:gap-2">
           <DialogClose asChild>
             <Button variant="outline" className="min-w-28 gap-2">
               Cancel
@@ -374,7 +374,7 @@ function DomainsAlert(props: {
         </DialogHeader>
       </div>
 
-      <DialogFooter className="!justify-between flex gap-4 border-border border-t bg-muted/50 p-6">
+      <DialogFooter className="!justify-between flex gap-4 border-border border-t bg-card p-6">
         <Button
           variant="outline"
           onClick={props.onGoBack}
@@ -423,7 +423,7 @@ function APIKeyDetails(props: {
 
           <CopyTextButton
             textToCopy={apiKey.key}
-            className="!h-auto w-full justify-between truncate bg-muted/50 px-3 py-3 font-mono"
+            className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
             textToShow={apiKey.key}
             copyIconPosition="right"
             tooltip="Copy Client ID"
@@ -440,7 +440,7 @@ function APIKeyDetails(props: {
 
           <CopyTextButton
             textToCopy={apiKey.secret || ""}
-            className="!h-auto w-full justify-between truncate bg-muted/50 px-3 py-3 font-mono"
+            className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
             textToShow={apiKey.secret || ""}
             copyIconPosition="right"
             tooltip="Copy Secret Key"
@@ -469,7 +469,7 @@ function APIKeyDetails(props: {
         </Alert>
       </div>
 
-      <DialogFooter className="flex border-border border-t bg-muted/50 p-6">
+      <DialogFooter className="flex border-border border-t bg-card p-6">
         <Button
           type="button"
           onClick={props.onComplete}

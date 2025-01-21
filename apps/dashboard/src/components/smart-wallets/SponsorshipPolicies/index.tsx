@@ -38,6 +38,7 @@ import {
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import { GenericLoadingPage } from "../../../@/components/blocks/skeletons/GenericLoadingPage";
 
 type AccountAbstractionSettingsPageProps = {
   apiKeyServices: ApiKeyService[];
@@ -101,10 +102,12 @@ export function AccountAbstractionSettingsPage(
   const bundlerServiceId = apiKeyServices?.find(
     (s) => s.name === "bundler",
   )?.id;
-  const { data: policy } = usePolicies(bundlerServiceId);
+  const policiesQuery = usePolicies(bundlerServiceId);
   const { mutate: updatePolicy, isPending: updatingPolicy } =
     useUpdatePolicies();
   const trackEvent = useTrack();
+
+  const policy = policiesQuery.data;
 
   const transformedQueryData = useMemo(
     () => ({
@@ -159,6 +162,10 @@ export function AccountAbstractionSettingsPage(
     "Failed to update sponsorship rules",
   );
 
+  if (policiesQuery.isPending) {
+    return <GenericLoadingPage />;
+  }
+
   return (
     <Flex flexDir="column" gap={8}>
       <Flex
@@ -169,7 +176,7 @@ export function AccountAbstractionSettingsPage(
       >
         <Flex flexDir="column" gap={2}>
           <Text>
-            Configure the rules and rules for your sponsored transactions.{" "}
+            Configure the rules for your sponsored transactions.{" "}
             <TrackedLink
               category={trackingCategory}
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"

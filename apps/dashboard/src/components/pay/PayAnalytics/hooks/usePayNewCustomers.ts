@@ -1,3 +1,4 @@
+import { payServerProxy } from "@/actions/proxies";
 import { useQuery } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -33,27 +34,25 @@ export function usePayNewCustomers(options: {
   return useQuery({
     queryKey: ["usePayNewCustomers", address, options],
     queryFn: async () => {
-      const searchParams = new URLSearchParams();
-      searchParams.append("intervalType", options.intervalType);
-      searchParams.append("clientId", options.clientId);
-      searchParams.append("fromDate", `${options.from.getTime()}`);
-      searchParams.append("toDate", `${options.to.getTime()}`);
-
-      const res = await fetch(
-        `/api/server-proxy/pay/stats/aggregate/customers/v1?${searchParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const res = await payServerProxy({
+        pathname: "/stats/aggregate/customers/v1",
+        searchParams: {
+          intervalType: options.intervalType,
+          clientId: options.clientId,
+          fromDate: `${options.from.getTime()}`,
+          toDate: `${options.to.getTime()}`,
         },
-      );
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         throw new Error("Failed to fetch new customers");
       }
 
-      const resJSON = (await res.json()) as Response;
+      const resJSON = res.data as Response;
 
       return resJSON.result.data;
     },

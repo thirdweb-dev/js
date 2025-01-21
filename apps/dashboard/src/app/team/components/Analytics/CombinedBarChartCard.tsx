@@ -67,7 +67,7 @@ export function CombinedBarChartCard<
                   scroll={false}
                   key={chart}
                   data-active={activeChart === chart}
-                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-muted/50"
+                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-card"
                 >
                   <Stat
                     label={chartConfig[key].label}

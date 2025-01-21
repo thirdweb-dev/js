@@ -7,6 +7,8 @@ import {
 import { getFunctionId } from "../../../../../utils/function-id.js";
 import { fetchNftMedia, getQueryKey } from "./media.js";
 
+const testContractAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+
 describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   it("fetchNftMedia should work with ERC721", async () => {
     const desc = await fetchNftMedia({
@@ -77,9 +79,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   });
 
   it("getQueryKey should work without mediaResolver", () => {
-    expect(getQueryKey({ chainId: 1, tokenId: 1n })).toStrictEqual([
+    expect(
+      getQueryKey({
+        chainId: 1,
+        tokenId: 1n,
+        contractAddress: testContractAddress,
+      }),
+    ).toStrictEqual([
       "_internal_nft_media_",
       1,
+      testContractAddress,
       "1",
       {
         resolver: undefined,
@@ -90,6 +99,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   it("getQueryKey should work with mediaResolver being an object", () => {
     expect(
       getQueryKey({
+        contractAddress: testContractAddress,
         chainId: 1,
         tokenId: 1n,
         mediaResolver: {
@@ -100,6 +110,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
     ).toStrictEqual([
       "_internal_nft_media_",
       1,
+      testContractAddress,
       "1",
       {
         resolver: {
@@ -119,12 +130,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
     expect(
       getQueryKey({
         chainId: 1,
+        contractAddress: testContractAddress,
         tokenId: 1n,
         mediaResolver: fn,
       }),
     ).toStrictEqual([
       "_internal_nft_media_",
       1,
+      testContractAddress,
       "1",
       {
         resolver: fnId,

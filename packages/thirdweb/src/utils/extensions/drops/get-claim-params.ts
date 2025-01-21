@@ -32,7 +32,6 @@ export type GetClaimParamsOptions = {
  * Get the claim parameters for a given drop
  * @param options - The options for getting the claim parameters
  * @returns The claim parameters
- * @extension ERC1155
  * @example
  * ```ts
  * import { getClaimParams } from "thirdweb/utils";
@@ -45,7 +44,7 @@ export type GetClaimParamsOptions = {
  *  tokenId: 0n,
  * });
  * ```
- * @extension COMMON
+ * @utils
  */
 export async function getClaimParams(options: GetClaimParamsOptions) {
   const cc: ClaimCondition = await (async () => {

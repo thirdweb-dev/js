@@ -130,7 +130,7 @@ function RenderData(props: {
 
   const chartColor = props.query.isEmpty
     ? "hsl(var(--muted-foreground))"
-    : "hsl(var(--link-foreground))";
+    : "hsl(var(--chart-1))";
 
   return (
     <div>

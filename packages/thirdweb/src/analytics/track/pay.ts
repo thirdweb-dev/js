@@ -17,6 +17,7 @@ export async function trackPayEvent(args: {
   toAmount?: string;
   chainId?: number;
   dstChainId?: number;
+  error?: string;
 }) {
   return track({
     client: args.client,
@@ -32,6 +33,7 @@ export async function trackPayEvent(args: {
       amountWei: args.fromAmount,
       dstTokenAddress: args.toToken,
       dstChainId: args.chainId,
+      errorCode: args.error,
     },
   });
 }

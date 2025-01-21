@@ -34,7 +34,7 @@ function FooterCard(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
+    <div className="rounded-lg border border-border bg-card p-4 lg:p-6">
       <h3 className="mb-5 font-semibold text-lg tracking-tight lg:text-xl">
         {props.title}
       </h3>

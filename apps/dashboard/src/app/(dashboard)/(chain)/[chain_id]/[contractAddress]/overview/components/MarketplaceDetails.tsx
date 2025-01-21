@@ -265,7 +265,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 max-sm:[&>*:nth-child(n+3)]:hidden">
       {listings.map((listing, index) => (
         <div
-          className="relative rounded-lg border border-border bg-muted/50 hover:border-foreground hover:bg-muted"
+          className="relative rounded-lg border border-border bg-card transition-colors hover:border-active-border"
           key={`${listing.creatorAddress}-${index}`}
         >
           <div className="relative aspect-square w-full overflow-hidden rounded-lg">

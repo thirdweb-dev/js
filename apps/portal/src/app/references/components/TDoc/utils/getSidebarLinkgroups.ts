@@ -42,6 +42,7 @@ const tagsToGroup = {
   "@modules": "Modules",
   "@client": "Client",
   "@account": "Account",
+  "@nebula": "Nebula",
 } as const;
 
 type TagKey = keyof typeof tagsToGroup;
@@ -56,8 +57,10 @@ const sidebarGroupOrder: TagKey[] = [
   "@walletConnection",
   "@walletUtils",
   "@chain",
+  "@account",
   "@contract",
   "@transaction",
+  "@nebula",
   "@social",
   "@auth",
   "@nft",
@@ -80,7 +83,6 @@ const sidebarGroupOrder: TagKey[] = [
   "@theme",
   "@utils",
   "@others",
-  "@account",
 ];
 
 function findTag(

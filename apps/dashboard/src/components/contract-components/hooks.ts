@@ -3,12 +3,12 @@
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
-import { isEnsName, resolveEns } from "lib/ens";
+import { resolveEns } from "lib/ens";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getContract, resolveContractAbi } from "thirdweb/contract";
-import { isAddress } from "thirdweb/utils";
+import { isAddress, isValidENSName } from "thirdweb/utils";
 import {
   type PublishedContractWithVersion,
   fetchPublishedContractVersions,
@@ -130,7 +130,7 @@ function ensQuery(addressOrEnsName?: string) {
         return placeholderData;
       }
       // if it is neither an address or an ens name then return the placeholder data only
-      if (!isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
+      if (!isAddress(addressOrEnsName) && !isValidENSName(addressOrEnsName)) {
         throw new Error("Invalid address or ENS name.");
       }
 
@@ -143,7 +143,7 @@ function ensQuery(addressOrEnsName?: string) {
         }),
       );
 
-      if (isEnsName(addressOrEnsName) && !address) {
+      if (isValidENSName(addressOrEnsName) && !address) {
         throw new Error("Failed to resolve ENS name.");
       }
 
@@ -154,7 +154,7 @@ function ensQuery(addressOrEnsName?: string) {
     },
     enabled:
       !!addressOrEnsName &&
-      (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
+      (isAddress(addressOrEnsName) || isValidENSName(addressOrEnsName)),
     // 24h
     gcTime: 60 * 60 * 24 * 1000,
     // 1h

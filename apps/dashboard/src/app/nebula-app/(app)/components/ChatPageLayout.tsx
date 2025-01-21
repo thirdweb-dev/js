@@ -19,7 +19,7 @@ export function ChatPageLayout(props: {
         props.className,
       )}
     >
-      <aside className="hidden w-[280px] shrink-0 border-border border-r bg-muted/50 lg:block">
+      <aside className="hidden w-[280px] shrink-0 border-border border-r bg-card lg:block">
         <ChatSidebar
           sessions={props.sessions}
           authToken={props.authToken}

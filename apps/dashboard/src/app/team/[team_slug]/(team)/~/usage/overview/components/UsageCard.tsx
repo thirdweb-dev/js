@@ -23,7 +23,7 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   totalUsage,
 }) => {
   return (
-    <div className="relative flex min-h-[190px] flex-col rounded-lg border border-border bg-muted/50 p-4 lg:p-6">
+    <div className="relative flex min-h-[190px] flex-col rounded-lg border border-border bg-card p-4 lg:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight">{name}</h3>
       <p className="text-muted-foreground"> {description}</p>
 

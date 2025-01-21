@@ -52,13 +52,12 @@ export function TotalSponsoredChartCard(props: {
       if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: format(new Date(stat.date), "MMM dd"),
-          [chain?.name || chainId || "Unknown"]:
-            Math.round(stat.sponsoredUsd * 100) / 100,
+          [chain?.name || chainId || "Unknown"]: stat.sponsoredUsd,
         } as ChartData);
       } else {
         chartData[chain?.name || chainId || "Unknown"] =
           (chartData[chain?.name || chainId || "Unknown"] || 0) +
-          Math.round(stat.sponsoredUsd * 100) / 100;
+          stat.sponsoredUsd;
       }
 
       chainIdToVolumeMap.set(
@@ -111,7 +110,7 @@ export function TotalSponsoredChartCard(props: {
     chartData.every((data) => data.sponsoredUsd === 0);
 
   return (
-    <div className="relative w-full rounded-lg border border-border bg-muted/50 p-4 md:p-6">
+    <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
       <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
         Gas Sponsored
       </h3>
@@ -229,8 +228,8 @@ export function TotalSponsoredChartCard(props: {
                   fill={chartConfig[chainId]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

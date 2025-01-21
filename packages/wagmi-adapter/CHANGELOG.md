@@ -1,5 +1,15 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.0
+
+### Minor Changes
+
+- [#6005](https://github.com/thirdweb-dev/js/pull/6005) [`dc05f2e`](https://github.com/thirdweb-dev/js/commit/dc05f2ea3c346ca96d3613c1a94a2b5ce57fe95d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Accept url token parameters on autoconnection
+
+## 0.1.9
+
+## 0.1.8
+
 ## 0.1.7
 
 ## 0.1.6

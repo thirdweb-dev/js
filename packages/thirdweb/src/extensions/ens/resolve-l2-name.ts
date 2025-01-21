@@ -1,5 +1,10 @@
 import type { Address } from "abitype";
-import { type Hex, encodePacked, keccak256, namehash } from "viem";
+import * as ox__AbiParameters from "ox/AbiParameters";
+import * as ox__Bytes from "ox/Bytes";
+import * as ox__Ens from "ox/Ens";
+import * as ox__Hash from "ox/Hash";
+import * as ox__Hex from "ox/Hex";
+import { keccak256 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
@@ -23,15 +28,26 @@ export type ResolveL2NameOptions = {
  */
 const convertReverseNodeToBytes = (address: Address, chainId: number) => {
   const addressFormatted = address.toLocaleLowerCase() as Address;
-  const addressNode = keccak256(addressFormatted.substring(2) as Hex);
+  // We temporarily need to use the raw hashing function from noble due to a bug in ox
+  const addressNode = ox__Hex.fromBytes(
+    ox__Hash.keccak256(
+      ox__Bytes.fromString(addressFormatted.slice(2) as string),
+    ),
+  );
   const cointype = (0x80000000 | chainId) >>> 0;
 
   const chainCoinType = cointype.toString(16).toLocaleUpperCase();
-  const reverseNode = namehash(`${chainCoinType.toLocaleUpperCase()}.reverse`);
-
-  const addressReverseNode = keccak256(
-    encodePacked(["bytes32", "bytes32"], [reverseNode, addressNode]),
+  const reverseNode = ox__Ens.namehash(
+    `${chainCoinType.toLocaleUpperCase()}.reverse`,
   );
+
+  const addressReverseNode = ox__Hash.keccak256(
+    ox__AbiParameters.encodePacked(
+      ["bytes32", "bytes32"],
+      [reverseNode, addressNode],
+    ),
+  );
+  keccak256;
   return addressReverseNode;
 };
 

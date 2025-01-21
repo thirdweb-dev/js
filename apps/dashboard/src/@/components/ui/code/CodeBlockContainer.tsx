@@ -21,7 +21,7 @@ export function CodeBlockContainer(props: {
   return (
     <div
       className={cn(
-        "group relative max-w-full overflow-hidden rounded-lg border border-border bg-background",
+        "group relative max-w-full overflow-hidden rounded-lg border border-border bg-card",
         props.className,
       )}
     >

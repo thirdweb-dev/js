@@ -20,6 +20,7 @@ import {
 } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { getSDKTheme } from "../../../components/sdk-component-theme";
 import type { NebulaTxData } from "./Chats";
@@ -78,12 +79,13 @@ export function ExecuteTransactionCardLayout(props: {
   const chain = useV5DashboardChain(txData.chainId);
   const isTransactionSent =
     props.status.type === "confirming" || props.status.type === "confirmed";
+  const trackEvent = useTrack();
 
   const explorer = chain.blockExplorers?.[0]?.url;
 
   return (
     <div>
-      <div className="rounded-xl border bg-muted/50">
+      <div className="rounded-xl border bg-card">
         <div className="flex flex-col gap-4 p-4 pb-6">
           <h3 className="font-semibold text-foreground text-lg tracking-tight">
             Transaction
@@ -99,6 +101,13 @@ export function ExecuteTransactionCardLayout(props: {
             txChainID={txData.chainId}
             variant="default"
             onClick={async () => {
+              trackEvent({
+                category: "nebula",
+                action: "execute_transaction",
+                label: "attempt",
+                chainId: txData.chainId,
+              });
+
               const tx = prepareTransaction({
                 chain: chain,
                 client: props.client,
@@ -115,6 +124,13 @@ export function ExecuteTransactionCardLayout(props: {
                 const submittedReceipt = await sendTransaction.mutateAsync(tx);
                 txHash = submittedReceipt.transactionHash;
 
+                trackEvent({
+                  category: "nebula",
+                  action: "execute_transaction",
+                  label: "sent",
+                  chainId: txData.chainId,
+                });
+
                 // wait for receipt
                 props.setStatus({
                   type: "confirming",
@@ -126,6 +142,13 @@ export function ExecuteTransactionCardLayout(props: {
                 props.setStatus({
                   type: "confirmed",
                   txHash: confirmReceipt.transactionHash,
+                });
+
+                trackEvent({
+                  category: "nebula",
+                  action: "execute_transaction",
+                  label: "confirmed",
+                  chainId: txData.chainId,
                 });
               } catch {
                 props.setStatus({
@@ -145,7 +168,7 @@ export function ExecuteTransactionCardLayout(props: {
 
       {/* Tx Status */}
       {props.status.type !== "idle" && (
-        <div className="mt-5 rounded-lg border bg-muted/50">
+        <div className="mt-5 rounded-lg border bg-card">
           <div className="flex flex-col gap-1.5 p-4">
             {props.status.type === "sending" && (
               <div className="flex items-center gap-2 text-link-foreground">

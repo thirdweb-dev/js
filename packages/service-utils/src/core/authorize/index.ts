@@ -6,6 +6,7 @@ import {
 import { authorizeClient } from "./client.js";
 import { authorizeService } from "./service.js";
 import type { AuthorizationResult } from "./types.js";
+import { hashKey } from "./utils.js";
 
 export type AuthorizationInput = {
   secretKey: string | null;
@@ -41,7 +42,9 @@ export async function authorize(
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
   let teamAndProjectResponse: TeamAndProjectResponse | null = null;
-  const cacheKey = `key_v2_${authData.clientId ?? authData.secretKeyHash ?? authData.hashedJWT}`;
+  const cacheKey = hashKey(
+    `key_v2_:${authData.secretKeyHash}:${authData.hashedJWT}:${authData.clientId}`,
+  );
   // TODO if we have cache options we want to check the cache first
   if (cacheOptions) {
     try {

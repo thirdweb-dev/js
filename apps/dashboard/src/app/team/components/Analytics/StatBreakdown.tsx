@@ -38,10 +38,10 @@ export function StatBreakdown({
               );
               for (const bar of bars) {
                 if (bar.getAttribute("data-index") === `${cardId}-${index}`) {
-                  bar.classList.add("bg-muted/50");
+                  bar.classList.add("bg-card");
                   bar.classList.remove("opacity-40");
                 } else {
-                  bar.classList.remove("bg-muted/50");
+                  bar.classList.remove("bg-card");
                   bar.classList.add("opacity-40");
                 }
               }
@@ -51,7 +51,7 @@ export function StatBreakdown({
                 `[data-index^="${cardId}"]`,
               );
               for (const bar of bars) {
-                bar.classList.remove("bg-muted/50");
+                bar.classList.remove("bg-card");
                 bar.classList.remove("opacity-40");
               }
             }}
@@ -64,7 +64,7 @@ export function StatBreakdown({
             <TableRow
               key={item.label}
               data-index={`${cardId}-${index}`}
-              className="px-2 text-sm hover:bg-muted/50"
+              className="px-2 text-sm hover:bg-card"
               onMouseEnter={() => {
                 const bars = document.querySelectorAll(
                   `[data-index^="${cardId}"]`,

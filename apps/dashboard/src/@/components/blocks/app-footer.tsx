@@ -19,7 +19,7 @@ export function AppFooter(props: AppFooterProps) {
   return (
     <footer
       className={cn(
-        "w-full border-border border-t bg-muted/50 py-6 md:py-8",
+        "w-full border-border border-t bg-card py-6 md:py-8",
         props.className,
       )}
     >
@@ -28,7 +28,9 @@ export function AppFooter(props: AppFooterProps) {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-row items-center gap-3">
             <ThirdwebMiniLogo className="h-7" />
-            <p className="text-muted-foreground text-sm">© 2024 thirdweb</p>
+            <p className="text-muted-foreground text-sm">
+              © {new Date().getFullYear()} thirdweb
+            </p>
           </div>
           <div className="flex flex-row gap-3">
             <Button size="icon" variant="ghost" asChild className="size-9">

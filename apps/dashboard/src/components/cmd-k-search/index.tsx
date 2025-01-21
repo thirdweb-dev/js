@@ -321,7 +321,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
   return (
     <div
       className={cn(
-        "relative flex items-center gap-4 rounded-lg p-3 hover:bg-muted",
+        "relative flex items-center gap-4 rounded-lg p-3 hover:bg-accent",
         isActive && "bg-muted",
       )}
     >

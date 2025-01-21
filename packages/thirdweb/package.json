@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.83.1",
+  "version": "5.86.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -123,6 +123,11 @@
       "import": "./dist/esm/exports/social.js",
       "default": "./dist/cjs/exports/social.js"
     },
+    "./ai": {
+      "types": "./dist/types/exports/ai.d.ts",
+      "import": "./dist/esm/exports/ai.js",
+      "default": "./dist/cjs/exports/ai.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -180,6 +185,9 @@
       ],
       "social": [
         "./dist/types/exports/social.d.ts"
+      ],
+      "ai": [
+        "./dist/types/exports/ai.d.ts"
       ]
     }
   },
@@ -336,7 +344,7 @@
     "@storybook/addon-interactions": "8.4.7",
     "@storybook/addon-links": "8.4.7",
     "@storybook/addon-onboarding": "8.4.7",
-    "@storybook/react": "8.4.7",
+    "@storybook/react": "8.5.0",
     "@storybook/react-vite": "8.4.7",
     "@storybook/test": "8.4.7",
     "@testing-library/jest-dom": "^6.6.3",
@@ -359,7 +367,7 @@
     "prettier": "3.3.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.76.5",
+    "react-native": "0.76.6",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.0.0",
     "react-native-quick-crypto": "0.7.8",

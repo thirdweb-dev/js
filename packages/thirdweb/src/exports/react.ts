@@ -121,7 +121,7 @@ export {
 } from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
 export { AutoConnect } from "../react/web/ui/AutoConnect/AutoConnect.js";
-export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
+export type { AutoConnectProps } from "../wallets/connection/types.js";
 
 // auth
 export type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";

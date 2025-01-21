@@ -1,11 +1,13 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { FormControl } from "@chakra-ui/react";
-import { THIRDWEB_API_HOST } from "constants/urls";
+import { useMutation } from "@tanstack/react-query";
 import {
   CircleAlertIcon,
   CloudDownloadIcon,
@@ -34,12 +36,13 @@ export const EngineImportPage = (props: {
     },
   });
 
-  const onSubmit = async (data: ImportEngineInput) => {
-    try {
+  const importMutation = useMutation({
+    mutationFn: async (data: ImportEngineInput) => {
       // Instance URLs should end with a /.
       const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
 
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
+      const res = await apiServerProxy({
+        pathname: "/v1/engine",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,15 +52,25 @@ export const EngineImportPage = (props: {
           url,
         }),
       });
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
-      }
 
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+    },
+  });
+
+  const onSubmit = async (data: ImportEngineInput) => {
+    try {
+      await importMutation.mutateAsync(data);
       toast.success("Engine imported successfully");
       router.push(`/team/${props.teamSlug}/~/engine`);
-    } catch {
+    } catch (e) {
+      const message = e instanceof Error ? e.message : undefined;
       toast.error(
         "Error importing Engine. Please check if the details are correct.",
+        {
+          description: message,
+        },
       );
     }
   };
@@ -77,7 +90,7 @@ export const EngineImportPage = (props: {
       <div className="h-3" />
 
       <TrackedLinkTW
-        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/50 p-3 text-sm hover:bg-accent"
+        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
         href="https://portal.thirdweb.com/infrastructure/engine/get-started"
         target="_blank"
         category="engine"
@@ -128,7 +141,11 @@ export const EngineImportPage = (props: {
           variant="primary"
           className="w-full gap-2 text-base"
         >
-          <CloudDownloadIcon className="size-4" />
+          {importMutation.isPending ? (
+            <Spinner className="size-4" />
+          ) : (
+            <CloudDownloadIcon className="size-4" />
+          )}
           Import
         </Button>
       </form>

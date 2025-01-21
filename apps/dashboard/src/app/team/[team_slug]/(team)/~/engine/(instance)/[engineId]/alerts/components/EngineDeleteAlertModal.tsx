@@ -28,7 +28,7 @@ export function EngineDeleteAlertModal(props: {
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="gap-4 border-border border-t bg-muted/50 p-6 lg:gap-2">
+        <DialogFooter className="gap-4 border-border border-t bg-card p-6 lg:gap-2">
           <Button
             variant="outline"
             onClick={() => {

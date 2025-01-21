@@ -23,7 +23,7 @@ export function FailedToLoad() {
 
 export function NoDataOverlay() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/30 text-muted-foreground text-sm backdrop-blur-sm">
+    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-card/50 text-muted-foreground text-sm backdrop-blur-sm">
       No data available
     </div>
   );
@@ -65,17 +65,12 @@ export function TableData({ children }: { children: React.ReactNode }) {
 }
 
 export function TableHeadingRow({ children }: { children: React.ReactNode }) {
-  return (
-    <tr className="sticky top-0 z-10 bg-background">
-      {children}
-      <div className="absolute inset-0 z-10 border-border border-b" />
-    </tr>
-  );
+  return <tr className="sticky top-0 z-10 bg-background">{children}</tr>;
 }
 
 export function TableHeading(props: { children: React.ReactNode }) {
   return (
-    <th className="min-w-[150px] border-border border-b bg-muted/50 px-3 py-3 text-left font-medium text-muted-foreground text-sm">
+    <th className="min-w-[150px] border-border border-b bg-background px-3 py-3 text-left font-medium text-muted-foreground text-sm">
       {props.children}
     </th>
   );
@@ -92,7 +87,7 @@ export function IntervalSelector(props: {
         props.setIntervalType(value);
       }}
     >
-      <SelectTrigger className="w-auto bg-transparent">
+      <SelectTrigger className="w-auto bg-card">
         <SelectValue placeholder="Select" />
       </SelectTrigger>
       <SelectContent position="popper">

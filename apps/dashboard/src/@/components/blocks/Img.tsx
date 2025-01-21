@@ -25,7 +25,7 @@ export function Img(props: imgElementProps) {
         : _status;
   const { className, fallback, skeleton, ...restProps } = props;
   const defaultSkeleton = <div className="animate-pulse bg-accent" />;
-  const defaultFallback = <div className="bg-muted" />;
+  const defaultFallback = <div className="bg-accent" />;
   const imgRef = useRef<HTMLImageElement>(null);
 
   useIsomorphicLayoutEffect(() => {

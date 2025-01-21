@@ -60,6 +60,8 @@ export function TableOfContentsSideBar(props: {
       return;
     }
 
+    setHideNav(false);
+
     // when heading's intersection changes, update corresponding link's data-active attribute to true/false
     const observer = new IntersectionObserver(
       (entries) => {
@@ -175,7 +177,7 @@ function TOCLink(props: {
   return (
     <Link
       className={cn(
-        "block overflow-hidden text-ellipsis font-medium text-f-300 transition-colors hover:text-f-100 data-[active='true']:text-accent-500",
+        "block overflow-hidden text-ellipsis font-medium text-f-300 transition-colors hover:text-f-100 data-[active='true']:text-f-100",
         props.linkClassName,
       )}
       href={props.href}

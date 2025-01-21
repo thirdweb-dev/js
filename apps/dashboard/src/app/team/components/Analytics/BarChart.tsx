@@ -98,6 +98,8 @@ export function BarChart({
             dataKey={activeKey}
             radius={4}
             fill={chartConfig[activeKey]?.color ?? "hsl(var(--chart-1))"}
+            strokeWidth={1}
+            className="stroke-background"
           />
         </RechartsBarChart>
       )}
