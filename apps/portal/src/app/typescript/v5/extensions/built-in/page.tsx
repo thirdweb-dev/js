@@ -1,6 +1,9 @@
 import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
-import Link from "next/link";
-import { Heading, Paragraph } from "../../../../../components/Document";
+import {
+  DocLink,
+  Heading,
+  Paragraph,
+} from "../../../../../components/Document";
 import { fetchTypeScriptDoc } from "../../../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import { getCustomTag } from "../../../../references/components/TDoc/utils/getSidebarLinkgroups";
 
@@ -58,12 +61,11 @@ export default async function ExtensionPage() {
               <Tr key={item}>
                 <Td>{overrides[item]?.name ?? item}</Td>
                 <Td>
-                  <Link
+                  <DocLink
                     href={`/references/typescript/v5/functions#${item.toLowerCase()}`}
-                    className="flex flex-nowrap items-center gap-4 whitespace-nowrap font-medium text-accent-500 transition-colors hover:text-f-100"
                   >
                     thirdweb/extensions/{item.toLowerCase()}
-                  </Link>
+                  </DocLink>
                 </Td>
                 <Td>{overrides[item]?.description ?? `${item} extensions`}</Td>
               </Tr>
@@ -71,21 +73,17 @@ export default async function ExtensionPage() {
           })}
         </TBody>
       </Table>
-      More extensions are being added regularly. Anyone can
-      <Link
-        className="font-medium text-accent-500 transition-colors hover:text-f-100"
-        href="/typescript/v5/extensions/create"
-      >
-        create an extension
-      </Link>
-      and contribute it back to the repository. You can also
-      <Link
-        className="font-medium text-accent-500 transition-colors hover:text-f-100"
-        href="/typescript/v5/extensions/generate"
-      >
-        generate extensions
-      </Link>
-      for any deployed contract.
+      <Paragraph>
+        More extensions are being added regularly. Anyone can{" "}
+        <DocLink href="/typescript/v5/extensions/create">
+          create an extension
+        </DocLink>{" "}
+        and contribute it back to the repository. You can also{" "}
+        <DocLink href="/typescript/v5/extensions/generate">
+          generate extensions
+        </DocLink>{" "}
+        for any deployed contract.
+      </Paragraph>
     </>
   );
 }

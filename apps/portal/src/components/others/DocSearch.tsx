@@ -155,7 +155,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
         {searchQuery.isFetching ? (
           <Spinner className="size-5" />
         ) : (
-          <SearchIcon className="size-5 shrink-0 text-f-300" />
+          <SearchIcon className="size-5 shrink-0 text-muted-foreground" />
         )}
 
         <Input
@@ -169,7 +169,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
           }}
           placeholder="Search documentation"
           className={cn(
-            "flex-1 border-none bg-transparent p-4 px-0 text-base caret-accent-500 placeholder:text-base placeholder:text-f-300",
+            "h-auto flex-1 border-none bg-transparent p-4 px-0 text-base placeholder:text-base placeholder:text-muted-foreground",
             "focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent",
           )}
         />
@@ -187,8 +187,8 @@ function SearchModalContent(props: { closeModal: () => void }) {
                   className={cn(
                     "rounded-lg border px-3 py-1 text-sm ",
                     selectedTags[tag]
-                      ? "!bg-b-600 !text-f-100 border-f-300"
-                      : "!bg-b-800 !text-f-300",
+                      ? "!bg-muted !text-foreground border-foreground"
+                      : "!bg-card !text-muted-foreground",
                   )}
                   onClick={() => {
                     // do not allow removing the last remaining tag
@@ -392,7 +392,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
               className="flex w-56 justify-between px-3"
             >
               Search Docs
-              <div className="flex items-center gap-1 rounded-sm border bg-b-900 px-2 py-1 text-f-300 text-xs">
+              <div className="flex items-center gap-1 rounded-sm border bg-background px-2 py-1 text-muted-foreground text-xs">
                 <CommandIcon className="size-3" />K
               </div>
             </Button>
@@ -402,12 +402,12 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         {!forDesktop && (
           <DialogTrigger asChild>
             <Button variant="ghost" className="px-3">
-              <SearchIcon className="size-6 text-f-100" />
+              <SearchIcon className="size-6 text-foreground" />
             </Button>
           </DialogTrigger>
         )}
 
-        <DialogContent className="bg-b-900 sm:max-w-[550px]">
+        <DialogContent className="bg-background sm:max-w-[550px]">
           <SearchModalContent
             closeModal={() => {
               setOpen(false);
@@ -505,21 +505,23 @@ function SearchResultItem(props: {
 }) {
   return (
     <Link
-      className="flex gap-3 rounded-sm bg-b-700 px-4 py-3 text-f-300 transition-colors hover:bg-b-600 hover:text-f-100"
+      className="flex gap-3 rounded-sm bg-muted/50 px-4 py-3 text-muted-foreground transition-colors hover:bg-accent"
       href={props.href}
       onClick={props.onClick}
     >
       <div className="flex w-full flex-col gap-1">
         {props.title && (
-          <div className="flex flex-wrap items-center justify-between gap-2 break-all text-base text-f-100">
+          <div className="flex flex-wrap items-center justify-between gap-2 break-all text-base text-foreground">
             <div
               className={cn(
                 "flex items-center gap-2",
-                props.type === "page" ? "text-f-100" : "text-f-200",
+                props.type === "page"
+                  ? "text-foreground"
+                  : "text-muted-foreground",
               )}
             >
               {props.type === "page" && (
-                <FileTextIcon className="size-5 text-f-300" />
+                <FileTextIcon className="size-5 text-muted-foreground" />
               )}
 
               {props.title}
@@ -532,7 +534,7 @@ function SearchResultItem(props: {
                     <span
                       key={tag}
                       className={cn(
-                        "shrink-0 rounded-lg border bg-b-700 px-1.5 py-1 text-f-300 text-xs",
+                        "shrink-0 rounded-lg border bg-muted px-1.5 py-1 text-muted-foreground text-xs",
                       )}
                     >
                       {tag}
@@ -560,7 +562,7 @@ function SearchResultItem(props: {
 // 				return (
 // 					<span
 // 						key={t.text}
-// 						className={t.highlight ? "bg-b-700 text-f-100" : "text-f-300"}
+// 						className={t.highlight ? "bg-muted text-foreground" : "text-muted-foreground"}
 // 					>
 // 						{t.text}
 // 					</span>

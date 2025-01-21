@@ -333,7 +333,7 @@ function GroupOfLinks(props: { linkGroup: LinkGroup; level: number }) {
       summary={props.linkGroup.name}
       accordionItemClassName="m-0"
       accordionTriggerClassName="rounded-lg"
-      headingClassName="py-2 text-xl"
+      headingClassName="py-0.5 text-lg"
     >
       <RenderLinkGroup linkGroup={props.linkGroup} level={props.level + 1} />
     </Details>

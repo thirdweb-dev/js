@@ -1,7 +1,7 @@
 export function UnrealEngineIcon(props: { className?: string }) {
   return (
     <svg
-      fill="#ffffff"
+      fill="currentColor"
       width="24px"
       height="25px"
       viewBox="0 0 32 32"

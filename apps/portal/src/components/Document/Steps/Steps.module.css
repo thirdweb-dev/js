@@ -1,7 +1,6 @@
 .steps [data-step]::before {
   content: counter(step);
-  @apply bg-b-600 rounded-[50%] text-f-100 text-base w-8 h-8 inline-flex items-center justify-center absolute left-0 font-semibold hover:text-f-100;
-  box-shadow: 0 0 1px 3px var(--b-900);
+  @apply bg-inverted rounded-[50%] text-inverted-foreground text-base w-8 h-8 inline-flex items-center justify-center absolute left-0 font-semibold;
 }
 
 .steps [data-step] {

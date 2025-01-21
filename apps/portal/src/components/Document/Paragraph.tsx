@@ -7,7 +7,7 @@ export function Paragraph(props: {
   return (
     <p
       className={cn(
-        "mb-3 text-base text-f-200 leading-relaxed",
+        "mb-3 text-base text-foreground leading-7",
         props.className,
       )}
     >

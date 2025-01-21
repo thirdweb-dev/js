@@ -49,7 +49,7 @@ remappings = ['@thirdweb-dev=lib/modular-contracts/']
 
 ```
 
-> **Note**  
+> **Note**
 > The `Core` contract is the base contract that needs to be inherited for this contract to be recognized as a core contract.
 
 </Step>
@@ -114,8 +114,8 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
 <Step title="Add a Callback Function">
    Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module to achieve this, we'll introduce the interface `BeforeIncrementCallback`
 
-> **Note**  
-> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.  
+> **Note**
+> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.
 > In this example, the `beforeIncrement` callback is executed before the main increment functionality.
 
 ```solidity

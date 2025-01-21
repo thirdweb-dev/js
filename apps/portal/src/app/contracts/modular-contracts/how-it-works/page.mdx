@@ -10,7 +10,7 @@ export const metadata = createMetadata({
 	},
 });
 
-### How Do Modular Contracts Work
+# How Do Modular Contracts Work
 
 Modular contracts are composed of two core components:
 
@@ -79,7 +79,7 @@ function supportsInterface(bytes4 interfaceId)
 	override(ERC721AUpgradeable, IERC721AUpgradeable, Core)
 	returns (bool)
 {
-	return interfaceId == 0x80ac58cd // ERC165 Interface ID for ERC721 
+	return interfaceId == 0x80ac58cd // ERC165 Interface ID for ERC721
 		|| super.supportsInterface(interfaceId);
 }
 ```
@@ -92,7 +92,7 @@ The `MintableModule` provides the `beforeMint` callback and requires the ERC-721
 function getModuleConfig() external pure override returns (ModuleConfig memory config) {
 	config.callbackFunctions = new CallbackFunction ;
 	config.callbackFunctions[0] = CallbackFunction(this.beforeMint.selector);
-	
+
 	config.requiredInterfaces = new bytes4 ;
 	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
 }
@@ -106,7 +106,7 @@ The `TransferableModule` provides the `beforeTransfer` callback and also require
 function getModuleConfig() external pure override returns (ModuleConfig memory config) {
 	config.callbackFunctions = new CallbackFunction ;
 	config.callbackFunctions[0] = CallbackFunction(this.beforeTransfer.selector);
-	
+
 	config.requiredInterfaces = new bytes4 ;
 	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
 }

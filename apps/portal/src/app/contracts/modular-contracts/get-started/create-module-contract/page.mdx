@@ -10,7 +10,7 @@ export const metadata = createMetadata({
 	},
 });
 
-## Create Module Contract
+# Create Module Contract
 
 **Prerequisite:** Read “Create Core Contract” before creating a Module.
 
@@ -56,7 +56,7 @@ contract CounterModule is Module {
 }
 ```
 
-> **Note**  
+> **Note**
 > The `Module` contract is the base contract that needs to be inherited for this contract to be recognized as a Module Contract, and we need to implement the `getModuleConfig` function to prevent the contract to be marked as abstract.
 
 </Step>
@@ -101,7 +101,7 @@ library CounterStorage {
 
 ```
 
-> **Note**  
+> **Note**
 > The library `CounterStorage` uses the ERC-7201: Namespace storage layout to store the data. Learn more about [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201).
 
 </Step>
@@ -214,7 +214,7 @@ library CounterStorage {
 
 ```
 
-> **Note**  
+> **Note**
 > Fallback functions are extra functionalities that a core contract can use via the Solidity `fallback` function.
 
 </Step>
@@ -281,7 +281,7 @@ library CounterStorage {
 
 ```
 
-> **Note**  
+> **Note**
 > Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract. In this snippet, the `beforeIncrement` callback is used before the main increment functionality.
 
 </Step>

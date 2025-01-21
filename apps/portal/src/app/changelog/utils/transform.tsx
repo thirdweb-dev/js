@@ -60,7 +60,7 @@ export const transform: Transform = (node, index: number) => {
       if (!node.attribs) {
         node.attribs = {};
       }
-      node.attribs.class = "text-center text-sm text-f-300";
+      node.attribs.class = "text-center text-sm text-muted-foreground";
       return;
     }
     return <Paragraph>{getChildren()}</Paragraph>;

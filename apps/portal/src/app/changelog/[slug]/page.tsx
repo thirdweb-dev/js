@@ -28,7 +28,7 @@ export default async function Page(props: {
       <Button asChild>
         <Link
           href="/changelog"
-          className="-translate-x-1/4 !p-2 !text-f-300 hover:!text-accent-500 mb-4 bg-transparent"
+          className="-translate-x-1/4 !p-2 !text-muted-foreground hover:!text-foreground mb-4 bg-transparent"
         >
           <ArrowLeft className="size-6" />
         </Link>
@@ -42,7 +42,7 @@ export default async function Page(props: {
 
       <h1
         className={cn(
-          "mb-8 break-words font-bold text-4xl text-f-100 tracking-tight md:text-5xl",
+          "mb-8 break-words font-bold text-4xl text-foreground tracking-tight md:text-5xl",
         )}
       >
         {data.title}

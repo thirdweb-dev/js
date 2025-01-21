@@ -58,7 +58,9 @@ export function DocSidebar(props: ReferenceSideBarProps) {
     <div className="flex h-full flex-col">
       {/* Side bar Name */}
       {props.header || (
-        <p className="py-5 font-semibold text-f-100 text-lg">{props.name}</p>
+        <p className="py-5 font-semibold text-foreground text-lg">
+          {props.name}
+        </p>
       )}
       <ul className="styled-scrollbar transform-gpu overflow-y-scroll pr-3 pb-10">
         {props.links.map((link, i) => (
@@ -109,8 +111,8 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
         href={link.href}
         onClick={props.onLinkClick}
         className={clsx(
-          "overflow-hidden text-ellipsis py-1 font-medium text-base transition-colors duration-300 hover:text-f-100",
-          isActive ? "font-medium text-accent-500" : "text-f-300",
+          "overflow-hidden text-ellipsis py-1.5 font-medium text-base transition-colors duration-300 hover:text-foreground",
+          isActive ? "font-medium text-foreground" : "text-muted-foreground",
           "flex flex-row items-center gap-2",
         )}
       >
@@ -127,8 +129,8 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
       href={link.href}
       onClick={props.onLinkClick}
       className={clsx(
-        "block overflow-hidden text-ellipsis py-1 font-medium text-base transition-colors duration-300 hover:text-f-100",
-        isActive ? "font-medium text-accent-500" : "text-f-300",
+        "block overflow-hidden text-ellipsis py-1.5 font-medium text-base transition-colors duration-300 hover:text-foreground",
+        isActive ? "font-medium text-foreground" : "text-muted-foreground",
       )}
     >
       {link.name}
@@ -151,8 +153,8 @@ function DocSidebarNonCollapsible(props: {
         {href ? (
           <Link
             className={cn(
-              "block font-semibold text-base text-f-100 hover:text-accent-500",
-              isCategoryActive && "!text-accent-500",
+              "block font-semibold text-base text-foreground hover:text-foreground",
+              isCategoryActive && "!text-foreground",
             )}
             href={href}
           >
@@ -199,11 +201,11 @@ function DocSidebarCategory(props: {
   const triggerElContent = (
     <div
       className={cn(
-        isCategoryActive && "!font-semibold !text-accent-500",
-        "text-f-300 hover:text-f-100",
+        isCategoryActive && "!font-semibold !text-foreground",
+        "text-muted-foreground hover:text-foreground",
       )}
     >
-      <div className="flex gap-2 py-1 font-medium" ref={triggerRef}>
+      <div className="flex gap-2 py-1.5 font-medium" ref={triggerRef}>
         {icon && <SidebarIcon icon={icon} />}
         {name}
       </div>
@@ -246,11 +248,11 @@ export function DocSidebarMobile(props: ReferenceSideBarProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className="w-full justify-between border bg-b-800 py-4 text-left font-medium text-f-100 xl:hidden">
+        <Button className="w-full justify-between border bg-card py-3 text-left font-medium text-foreground xl:hidden">
           {props.name}
           <ChevronDown
             className={clsx(
-              "size-5 text-f-300 transition-transform",
+              "size-4 text-muted-foreground transition-transform",
               open && "rotate-180",
             )}
           />
@@ -258,7 +260,7 @@ export function DocSidebarMobile(props: ReferenceSideBarProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent asChild sideOffset={10} align="center" side="bottom">
-        <div className="max-h-[70vh] w-[calc(100vw-32px)] overflow-y-auto rounded-lg border bg-b-800 px-4">
+        <div className="max-h-[70vh] w-[calc(100vw-32px)] overflow-y-auto rounded-lg border bg-card px-4">
           <DocSidebar
             {...props}
             onLinkClick={() => {

@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-modalOverlay bg-overlay backdrop-blur-md data-[state=closed]:animate-out data-[state=open]:animate-in",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-modalOverlay bg-black/80 backdrop-blur-md data-[state=closed]:animate-out data-[state=open]:animate-in",
       className,
     )}
     {...props}
@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed top-[40px] left-[50%] z-modal w-[calc(100vw-40px)] max-w-lg rounded-lg border bg-b-800 shadow-lg md:top-[250px] md:bottom-auto",
+        "fixed top-[40px] left-[50%] z-modal w-[calc(100vw-40px)] max-w-lg rounded-lg border bg-card shadow-lg md:top-[250px] md:bottom-auto",
         "translate-x-[-50%] md:translate-y-[-20%]",
         "data-[state=closed]:animate-out data-[state=open]:animate-in",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 md:data-[state=closed]:slide-out-to-top-[28%] data-[state=open]:slide-in-from-left-1/2 md:data-[state=open]:slide-in-from-top-[28%] md:w-full",
@@ -47,7 +47,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute top-4 right-4 rounded-sm text-f-300 ring-offset-b-700 transition-opacity hover:text-f-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-b-800 data-[state=open]:text-f-200">
+      <DialogPrimitive.Close className="absolute top-4 right-4 rounded-sm text-muted-foreground ring-offset-accent transition-opacity hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-card data-[state=open]:text-foreground">
         <X className="size-5" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>

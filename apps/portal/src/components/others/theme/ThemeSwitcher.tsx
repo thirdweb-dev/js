@@ -36,9 +36,9 @@ export function ThemeSwitcher(props: { className?: string }) {
       className={cn("p-2", props.className)}
     >
       {theme === "light" ? (
-        <SunIcon className="size-6" />
+        <SunIcon className="size-6 lg:size-5" />
       ) : (
-        <MoonIcon className="size-6" />
+        <MoonIcon className="size-6 lg:size-5" />
       )}
     </Button>
   );

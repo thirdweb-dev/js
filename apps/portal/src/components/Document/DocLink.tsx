@@ -11,7 +11,7 @@ export function DocLink(props: {
     <Link
       href={props.href}
       className={cn(
-        "font-medium text-accent-500 transition-colors hover:text-f-100",
+        "underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] transition-colors hover:decoration-foreground hover:decoration-solid",
         props.className,
       )}
       target={

@@ -8,10 +8,12 @@ export function SDKCard(props: {
   return (
     <Link
       href={props.href}
-      className="flex items-center gap-4 rounded-lg border bg-b-800 p-4 transition-colors hover:border-accent-500 hover:bg-accent-900"
+      className="flex items-center gap-2 rounded-lg border bg-card p-4 transition-colors hover:border-active-border"
     >
-      {props.icon && <props.icon className="size-8 shrink-0" />}
-      <h3 className="font-semibold text-f-100 text-lg">{props.title}</h3>
+      {props.icon && <props.icon className="size-6 shrink-0 text-foreground" />}
+      <h3 className="font-semibold text-base text-foreground tracking-tight">
+        {props.title}
+      </h3>
     </Link>
   );
 }

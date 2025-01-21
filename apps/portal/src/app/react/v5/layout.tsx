@@ -10,7 +10,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
       editPageButton={true}
       sidebarHeader={
         <div className="flex-col items-center gap-1">
-          <p className="py-5 font-semibold text-f-100 text-lg">Connect</p>
+          <p className="py-5 font-semibold text-foreground text-lg">Connect</p>
           <PlatformSelector selected="React" />
         </div>
       }

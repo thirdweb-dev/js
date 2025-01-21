@@ -11,7 +11,7 @@ export function Subscribe() {
 
   if (isSubmitted) {
     return (
-      <p className="fade-in-0 flex animate-in gap-2 font-semibold text-accent-500 text-base duration-500 md:h-24 md:items-center">
+      <p className="fade-in-0 flex animate-in gap-2 font-semibold text-base text-foreground duration-500 md:h-24 md:items-center">
         <BadgeCheckIcon />
         Thank you for subscribing!
       </p>
@@ -35,12 +35,12 @@ export function Subscribe() {
       }}
       className="group"
     >
-      <p className="mb-3 font-semibold text-base text-f-100">
+      <p className="mb-3 font-semibold text-base text-foreground">
         Subscribe for the latest dev updates
       </p>
       <div className="flex">
         <Input
-          className="h-12 border border-b-600 bg-b-900 font-semibold duration-200 placeholder:font-semibold focus-visible:outline-none focus-visible:ring-offset-0 group-focus-within:border-f-100 md:w-[230px]"
+          className="h-12 border bg-background font-semibold duration-200 placeholder:font-semibold focus-visible:outline-none focus-visible:ring-offset-0 group-focus-within:border-foreground md:w-[230px]"
           placeholder="Email"
           type="email"
           value={email}
@@ -55,7 +55,7 @@ export function Subscribe() {
 
         <Button
           type="submit"
-          className="h-12 bg-b-600 font-semibold text-f-100 duration-200 group-focus-within:bg-f-100 group-focus-within:text-b-900"
+          className="h-12 bg-muted font-semibold text-foreground duration-200 group-focus-within:bg-foreground group-focus-within:text-background"
           style={{
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,

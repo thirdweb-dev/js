@@ -15,12 +15,12 @@ export function Breadcrumb(props: { crumbs: Crumb[] }) {
             <li key={crumb.name} className="flex items-center gap-1">
               <Link
                 href={crumb.href}
-                className="font-medium text-f-300 transition-colors hover:text-f-100"
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {crumb.name}
               </Link>
               {i !== props.crumbs.length - 1 && (
-                <span className="text-f-300 opacity-50">
+                <span className="text-muted-foreground opacity-50">
                   <ChevronRight size={16} />
                 </span>
               )}

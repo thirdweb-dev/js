@@ -20,7 +20,7 @@ export function ExpandableGrid(props: { children: React.ReactNode }) {
         <Button
           variant="ghost"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="p-0 hover:bg-transparent hover:text-accent-500"
+          className="gap-2 p-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
         >
           <ChevronDownIcon
             className={cn(

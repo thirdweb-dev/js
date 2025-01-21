@@ -1,5 +1,11 @@
-import { ArticleIconCard, Callout, DocImage, createMetadata, FeatureCard } from "@doc";
-import { WalletsConnectIcon } from "@/icons"
+import {
+	ArticleCard,
+	Callout,
+	DocImage,
+	createMetadata,
+	FeatureCard,
+} from "@doc";
+import { WalletsConnectIcon } from "@/icons";
 import customModal from "./assets/custom-modals.png";
 import EcosystemWalletOverview from "./assets/ecosystem-wallet.png";
 
@@ -33,33 +39,31 @@ A flexible sign-up flow that accommodates different preferences is critical when
 		description="500+ wallet providers supported"
 		iconUrl="/icons/feature-cards/wallet.svg"
 	/>
-    <FeatureCard
-    	title="Fiat On-Ramp"
-    	description="Enable purchase options directly in modal"
-        iconUrl="/icons/feature-cards/fiat-ramp.svg"
-    />
-
-    <FeatureCard
-    	title="Seamless onboarding"
-    	description="Email, phone, social, and passkey options"
-        iconUrl="/icons/feature-cards/fingerprint.svg"
-    />
-    <FeatureCard
+	<FeatureCard
+		title="Fiat On-Ramp"
+		description="Enable purchase options directly in modal"
+			iconUrl="/icons/feature-cards/fiat-ramp.svg"
+	/>
+	<FeatureCard
+		title="Seamless onboarding"
+		description="Email, phone, social, and passkey options"
+			iconUrl="/icons/feature-cards/fingerprint.svg"
+	/>
+	<FeatureCard
 		title="Customizable"
 		description="Match your applications branding"
 		iconUrl="/icons/feature-cards/customize.svg"
 	/>
 	<FeatureCard
 		title="Gasless"
-	description="Enable free transactions with smart accounts"
+		description="Enable free transactions with smart accounts"
 		iconUrl="/icons/feature-cards/gasless.svg"
 	/>
-
-    <FeatureCard
-    	title="Localization"
-    	description="Support for multiple languages"
-        iconUrl="/icons/feature-cards/localization.svg"
-    />
+	<FeatureCard
+		title="Localization"
+		description="Support for multiple languages"
+			iconUrl="/icons/feature-cards/localization.svg"
+	/>
 	<FeatureCard
 		title="Cross-Chain Support"
 		description="Enable end users to view assets, balances, and activities for apps and games across any EVM-compatible chain"
@@ -74,11 +78,11 @@ A flexible sign-up flow that accommodates different preferences is critical when
 
 ### Solutions
 
-| SOLUTION | BEST FOR | PRICING |
-|----------|----------|----------|
-| External Wallets | Applications needing traditional EOA wallet integration | Free |
-| In-App Wallet | Mainstream applications requiring seamless onboarding | [Free up to 1,000 MAW, then $0.02/MAW](https://thirdweb.com/pricing) |
-| Ecosystem Wallet | Organizations building branded wallet networks | [$250/mo](https://thirdweb.com/pricing) |
+| SOLUTION         | BEST FOR                                                | PRICING                                                              |
+| ---------------- | ------------------------------------------------------- | -------------------------------------------------------------------- |
+| External Wallets | Applications needing traditional EOA wallet integration | Free                                                                 |
+| In-App Wallet    | Mainstream applications requiring seamless onboarding   | [Free up to 1,000 MAW, then $0.02/MAW](https://thirdweb.com/pricing) |
+| Ecosystem Wallet | Organizations building branded wallet networks          | [$250/mo](https://thirdweb.com/pricing)                              |
 
 ### Use Cases
 
@@ -87,8 +91,7 @@ A flexible sign-up flow that accommodates different preferences is critical when
 - **DeFi & NFT** - Traditional wallet connection and fiat on-ramps
 - **Chain Ecosystems** - Unified accounts across chain applications
 
-<ArticleIconCard
-	icon={WalletsConnectIcon}
+<ArticleCard
 	title="Getting started"
 	description="See our get started guide for quickly getting up and running with thirdweb wallets on the various supported platform."
 	href="/connect/wallet/get-started"

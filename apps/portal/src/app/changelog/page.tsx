@@ -65,11 +65,11 @@ async function PageContent() {
                 </div>
               </div>
 
-              <div className="-left-12 -translate-x-1/2 absolute top-12 hidden size-7 items-center justify-center rounded-[50%] bg-f-100 md:size-10 xl:flex">
-                <PlusIcon className="size-6 text-b-900" />
+              <div className="-left-12 -translate-x-1/2 absolute top-12 hidden size-7 items-center justify-center rounded-[50%] bg-foreground md:size-10 xl:flex">
+                <PlusIcon className="size-6 text-background" />
               </div>
 
-              <div className="overflow-hidden">
+              <div>
                 <Heading
                   level={2}
                   className="changelog-title"
@@ -78,7 +78,7 @@ async function PageContent() {
                 >
                   <Link
                     href={`/changelog/${post.slug}`}
-                    className="!text-f-100 font-bold text-3xl tracking-tighter hover:underline md:text-4xl xl:text-5xl"
+                    className="!text-foreground font-bold text-3xl tracking-tighter hover:underline md:text-4xl xl:text-5xl"
                   >
                     {post.title}
                   </Link>

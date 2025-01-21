@@ -54,7 +54,7 @@ export default function RootLayout({
       >
         <SetStoredTheme />
         <NextTopLoader
-          color="var(--accent-500)"
+          color="hsl(var(--link-foreground))"
           height={2}
           shadow={false}
           showSpinner={false}

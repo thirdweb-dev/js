@@ -177,7 +177,7 @@ function TOCLink(props: {
   return (
     <Link
       className={cn(
-        "block overflow-hidden text-ellipsis font-medium text-f-300 transition-colors hover:text-f-100 data-[active='true']:text-f-100",
+        "block overflow-hidden text-ellipsis font-medium text-muted-foreground transition-colors hover:text-foreground data-[active='true']:text-foreground",
         props.linkClassName,
       )}
       href={props.href}

@@ -89,16 +89,18 @@ async function RenderFunctionSignature(props: {
             `${props.name}-signature-${props.signatureId}`,
             false,
           )}
-          className="text-f-100"
+          className="text-foreground"
           noIndex
         >
           Signature
-          <span className="font-normal text-f-300">#{props.signatureId}</span>
+          <span className="font-normal text-muted-foreground">
+            #{props.signatureId}
+          </span>
         </Heading>
       )}
 
       {signature.inheritedFrom && (
-        <div className="mb-5 text-f-300" data-noindex>
+        <div className="mb-5 text-muted-foreground" data-noindex>
           Inherited from <InlineCode code={signature.inheritedFrom.name} />
         </div>
       )}
