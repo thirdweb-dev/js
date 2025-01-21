@@ -1,5 +1,4 @@
 "use client";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
@@ -7,11 +6,6 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../core/design-system/index.js";
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -19,8 +13,7 @@ import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSma
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Container, ModalHeader } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
+import { Container } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import type { LocaleId } from "../../types.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -109,32 +102,11 @@ function SmartWalletConnecting(props: {
     queryKey: ["getSmartWalletLocale", props.localeId],
     queryFn: () => getSmartWalletLocale(props.localeId),
   });
-  const { chain: smartWalletChain } = props.accountAbstraction;
-
   const { personalWallet } = props;
   const { done } = props;
 
-  const [personalWalletChainId, setPersonalWalletChainId] = useState<
-    number | undefined
-  >(personalWallet.getChain()?.id);
-
-  useEffect(() => {
-    const unsubChainChanged = personalWallet.subscribe(
-      "chainChanged",
-      (chain) => setPersonalWalletChainId(chain.id),
-    );
-
-    return () => {
-      unsubChainChanged();
-    };
-  }, [personalWallet]);
-
-  const wrongNetwork = personalWalletChainId !== smartWalletChain.id;
-
   const [smartWalletConnectionStatus, setSmartWalletConnectionStatus] =
     useState<"connecting" | "connect-error" | "idle">("idle");
-  const [personalWalletChainSwitchStatus, setPersonalWalletChainSwitchStatus] =
-    useState<"switching" | "switch-error" | "idle">("idle");
   const connectionManager = useConnectionManager();
 
   const handleConnect = useCallback(async () => {
@@ -168,115 +140,14 @@ function SmartWalletConnecting(props: {
 
   const connectStarted = useRef(false);
   useEffect(() => {
-    if (!wrongNetwork && !connectStarted.current) {
+    if (!connectStarted.current) {
       handleConnect();
       connectStarted.current = true;
     }
-  }, [handleConnect, wrongNetwork]);
+  }, [handleConnect]);
 
   if (!localeQuery.data) {
     return <LoadingScreen />;
-  }
-
-  if (wrongNetwork) {
-    return (
-      <Container fullHeight animate="fadein" flex="column">
-        <Container p="lg">
-          <ModalHeader
-            title={props.personalWalletInfo.name}
-            onBack={props.onBack}
-          />
-        </Container>
-
-        {props.size === "compact" && <Spacer y="lg" />}
-
-        <Container expand flex="column" center="both" p="lg">
-          <Container p={props.size === "wide" ? "lg" : undefined}>
-            <Container flex="row" center="x" color="danger">
-              <ExclamationTriangleIcon
-                width={iconSize.lg}
-                height={iconSize.lg}
-              />
-            </Container>
-
-            <Spacer y="md" />
-
-            <Text size="lg" color="primaryText" center weight={500}>
-              {localeQuery.data.wrongNetworkScreen.title}
-            </Text>
-
-            <Spacer y="lg" />
-
-            <Text multiline center>
-              {localeQuery.data.wrongNetworkScreen.subtitle}
-            </Text>
-
-            <Spacer y="xl" />
-
-            <Container flex="column" gap="md">
-              <Button
-                type="button"
-                fullWidth
-                variant="accent"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: spacing.sm,
-                }}
-                onClick={async () => {
-                  if (!personalWallet.switchChain) {
-                    setPersonalWalletChainSwitchStatus("switch-error");
-                    throw new Error("No switchChain method");
-                  }
-
-                  try {
-                    setPersonalWalletChainSwitchStatus("switching");
-                    await personalWallet.switchChain(smartWalletChain);
-                    const newChain = personalWallet.getChain();
-                    if (newChain) {
-                      setPersonalWalletChainId(newChain.id);
-                    }
-                    setPersonalWalletChainSwitchStatus("idle");
-                  } catch (e) {
-                    console.error(e);
-                    setPersonalWalletChainSwitchStatus("switch-error");
-                  }
-                }}
-              >
-                {personalWalletChainSwitchStatus === "switching"
-                  ? "Switching"
-                  : "Switch Network"}
-                {personalWalletChainSwitchStatus === "switching" && (
-                  <Spinner size="sm" color="accentButtonText" />
-                )}
-              </Button>
-
-              <Container
-                flex="row"
-                gap="sm"
-                center="both"
-                color="danger"
-                style={{
-                  textAlign: "center",
-                  fontSize: fontSize.sm,
-                  opacity:
-                    personalWalletChainSwitchStatus === "switch-error" ? 1 : 0,
-                  transition: "opacity 200ms ease",
-                }}
-              >
-                <ExclamationTriangleIcon
-                  width={iconSize.sm}
-                  height={iconSize.sm}
-                />
-                <span>
-                  {localeQuery.data.wrongNetworkScreen.failedToSwitch}
-                </span>
-              </Container>
-            </Container>
-          </Container>
-        </Container>
-      </Container>
-    );
   }
 
   if (smartWalletConnectionStatus === "connect-error") {
