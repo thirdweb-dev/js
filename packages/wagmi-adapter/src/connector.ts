@@ -2,7 +2,6 @@ import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
 import { type ThirdwebClient, defineChain, getAddress } from "thirdweb";
 import {
-  type Account,
   EIP1193,
   type InAppWalletConnectionOptions,
   type InAppWalletCreationOptions,
@@ -96,16 +95,13 @@ export function inAppWalletConnector(
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       if (params?.isReconnecting) {
         const { autoConnect } = await import("thirdweb/wallets");
-        let account: Account | undefined;
         await autoConnect({
           client,
           chain: defineChain(lastChainId || 1),
           wallets: [wallet],
-          onConnect: (wallet) => {
-            account = wallet.getAccount();
-          },
         });
 
+        const account = wallet.getAccount();
         if (!account) {
           throw new Error("Wallet failed to reconnect");
         }
