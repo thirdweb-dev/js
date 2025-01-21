@@ -12,8 +12,8 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Create Session",
-        description: "Creates a new session.",
+        title: "Crear Sesión",
+        description: "Crea una nueva sesión.",
         path: "/session",
         origin: "https://nebula-api.thirdweb.com",
         method: "POST",

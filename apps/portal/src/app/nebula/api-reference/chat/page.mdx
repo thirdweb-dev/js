@@ -2,11 +2,11 @@ import { EndpointMetadata } from './EndpointMetadata';
 
 <EndpointMetadata />
 
-#### Chat Actions
+#### Acciones de Chat
 
-Chat actions represent blockchain transactions or operations that Nebula has prepared in response to your request. The response includes both a detailed explanation in the `message` field and the actual transaction data in the `actions` array.
+Las acciones de chat representan transacciones o operaciones en blockchain que Nebula ha preparado en respuesta a tu solicitud. La respuesta incluye tanto una explicación detallada en el campo `message` como los datos de la transacción en el array `actions`.
 
-**Example Response with Chat Action:**
+**Respuesta de Ejemplo con Acción de Chat:**
 ```json
 {
   "message": "The transaction to transfer 0.0001 ETH to the address resolved from the ENS name `vitalik.eth` (which is `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`) is set up successfully. The simulation indicates that the transaction is likely to succeed.\n\nPlease proceed by signing and confirming the transaction.",
@@ -24,25 +24,26 @@ Chat actions represent blockchain transactions or operations that Nebula has pre
 }
 ```
 
-**Action Properties:**
-- `session_id`: Unique identifier for the current session
-- `request_id`: Unique identifier for the specific request
-- `type`: The type of action (e.g., "sign_transaction")
-- `source`: Origin of the action (e.g., "executor")
-- `data`: Transaction parameters including:
-  - `chainId`: Network identifier (e.g., 11155111 for Sepolia)
-  - `to`: Recipient's address
-  - `data`: Transaction data (if any)
-  - `value`: Amount to send in wei
+**Propiedades de la Acción:**
+- `session_id`: Identificador único de la sesión actual
+- `request_id`: Identificador único para la solicitud específica
+- `type`: Tipo de acción (por ejemplo, "sign_transaction")
+- `source`: Origen de la acción (por ejemplo, "executor")
+- `data`: Parámetros de la transacción, incluyendo:
+  - `chainId`: Identificador de la red (por ejemplo, 11155111 para Sepolia)
+  - `to`: Dirección del destinatario
+  - `data`: Datos de la transacción (si los hay)
+  - `value`: Monto a enviar en wei
 
-When handling actions:
-1. Parse the `message` field for human-readable transaction details
-2. Extract the transaction data from the `actions` array
-3. Present transaction details to the user for review
-4. Use a local wallet to sign the transaction
-5. Broadcast the signed transaction to the network
+Al manejar acciones:
+1. Analiza el campo `message` para obtener detalles legibles de la transacción.
+2. Extrae los datos de la transacción del array `actions`.
+3. Presenta los detalles de la transacción al usuario para su revisión.
+4. Utiliza una cartera local para firmar la transacción.
+5. Transmite la transacción firmada a la red.
 
-**Example Implementation with thirdweb SDK:**
+**Implementación de Ejemplo con el SDK de thirdweb:**
+
 ```javascript
 import {
   createThirdwebClient,

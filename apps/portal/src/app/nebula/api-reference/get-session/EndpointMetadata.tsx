@@ -11,8 +11,8 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Get Session",
-        description: "Get details of a session by ID",
+        title: "Obtener Sesión",
+        description: "Obtener detalles de una sesión por ID",
         path: "/session/{session_id}",
         origin: "https://nebula-api.thirdweb.com",
         method: "GET",

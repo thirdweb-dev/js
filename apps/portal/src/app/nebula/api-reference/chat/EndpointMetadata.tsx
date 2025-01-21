@@ -28,8 +28,8 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Send Message",
-        description: "Process a chat message and return the response",
+        title: "Enviar Mensaje",
+        description: "Procesar un mensaje de chat y devolver la respuesta",
         origin: "https://nebula-api.thirdweb.com",
         path: "/chat",
         method: "POST",
