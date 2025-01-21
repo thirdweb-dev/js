@@ -1,8 +1,8 @@
 import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
 import { type ThirdwebClient, defineChain, getAddress } from "thirdweb";
-import { autoConnect } from "thirdweb/wallets";
 import {
+  type Account,
   EIP1193,
   type InAppWalletConnectionOptions,
   type InAppWalletCreationOptions,
@@ -55,7 +55,7 @@ type StorageItem = { "tw.lastChainId": number };
  *    inAppWalletConnector({
  *      client,
  *      // optional: turn on smart accounts
- *      smartAccounts: {
+ *      smartAccount: {
  *         sponsorGas: true,
  *         chain: thirdwebChain(sepolia)
  *      }
@@ -95,10 +95,21 @@ export function inAppWalletConnector(
     connect: async (params) => {
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       if (params?.isReconnecting) {
-        const account = await wallet.autoConnect({
+        const { autoConnect } = await import("thirdweb/wallets");
+        let account: Account | undefined;
+        await autoConnect({
           client,
           chain: defineChain(lastChainId || 1),
+          wallets: [wallet],
+          onConnect: (wallet) => {
+            account = wallet.getAccount();
+          },
         });
+
+        if (!account) {
+          throw new Error("Wallet failed to reconnect");
+        }
+
         return {
           accounts: [getAddress(account.address)],
           chainId: lastChainId || 1,
@@ -137,6 +148,7 @@ export function inAppWalletConnector(
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       const chain = defineChain(params?.chainId || lastChainId || 1);
       if (!wallet.getAccount()) {
+        const { autoConnect } = await import("thirdweb/wallets");
         await autoConnect({
           client,
           chain,
