@@ -193,7 +193,11 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 Files <em>must</em> contain one .csv file with an address and
                 quantity column, if the quantity column is not provided, that
                 record will be flagged as invalid.
-                <Link download color="primary.500" href="/airdrop.csv">
+                <Link
+                  download
+                  color="primary.500"
+                  href="/assets/examples/airdrop.csv"
+                >
                   Download an example CSV
                 </Link>
               </li>
