@@ -53,7 +53,10 @@ export function SiteLink({
   } = useQuery({
     queryKey: ["site-link", walletId, href, client.clientId, ecosystem],
     enabled:
-      activeWallet && (isEcosystemWallet(activeWallet) || walletId === "inApp"),
+      activeWallet &&
+      (isEcosystemWallet(activeWallet) ||
+        walletId === "inApp" ||
+        walletId === "smart"),
     queryFn: async () => {
       const storage = new ClientScopedStorage({
         storage: webLocalStorage,
@@ -70,7 +73,7 @@ export function SiteLink({
 
   const url = new URL(href);
   if (walletId) {
-    url.searchParams.set("walletId", walletId);
+    url.searchParams.set("walletId", walletId === "smart" ? "inApp" : walletId);
   }
   if (authProvider) {
     url.searchParams.set("authProvider", authProvider);
