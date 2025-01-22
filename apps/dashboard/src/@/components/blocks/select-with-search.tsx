@@ -31,6 +31,8 @@ interface SelectWithSearchProps
   ) => boolean;
   renderOption?: (option: { value: string; label: string }) => React.ReactNode;
   popoverContentClassName?: string;
+  side?: "left" | "right" | "top" | "bottom";
+  align?: "center" | "start" | "end";
 }
 
 export const SelectWithSearch = React.forwardRef<
@@ -107,7 +109,7 @@ export const SelectWithSearch = React.forwardRef<
     }, [searchValue]);
 
     return (
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen} modal>
         <PopoverTrigger asChild>
           <Button
             ref={ref}
@@ -118,23 +120,24 @@ export const SelectWithSearch = React.forwardRef<
               className,
             )}
           >
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-center justify-between gap-2">
               <span
                 className={cn(
-                  "text-muted-foreground text-sm",
+                  "truncate text-muted-foreground text-sm",
                   selectedOption && "text-foreground",
                 )}
               >
                 {selectedOption?.label || placeholder}
               </span>
-              <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
+              <ChevronDown className="size-4 cursor-pointer text-muted-foreground" />
             </div>
           </Button>
         </PopoverTrigger>
 
         <PopoverContent
           className={cn("z-[10001] p-0", popoverContentClassName)}
-          align="center"
+          align={props.align || "center"}
+          side={props.side}
           sideOffset={10}
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
           style={{
