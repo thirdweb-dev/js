@@ -5,7 +5,7 @@ import type { UsageV2Event } from "src/core/usageV2.js";
  * This method may throw. To call this non-blocking:
  *
  * ```ts
- * sendUsageV2Events("production", events).catch(console.error)
+ * void sendUsageV2Events("production", events).catch(console.error)
  * ```
  *
  * @param environment - The environment the service is running in.
