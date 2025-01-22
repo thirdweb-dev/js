@@ -47,7 +47,7 @@ export async function Changelog() {
 
 async function getChangelog() {
   const res = await fetch(
-    "https://thirdweb.ghost.io/ghost/api/content/posts/?key=49c62b5137df1c17ab6b9e46e3&fields=title,url,published_at&filter=tag:changelog&visibility:public&limit=10",
+    "https://thirdweb.ghost.io/ghost/api/content/posts/?key=49c62b5137df1c17ab6b9e46e3&fields=title,url,published_at&filter=tag:changelog&visibility:public&limit=7",
   );
   const json = await res.json();
   return json.posts as ChangelogItem[];

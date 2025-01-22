@@ -3,7 +3,7 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
-import { CopyButton } from "@/components/ui/CopyButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -19,43 +24,58 @@ import {
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { ChevronDownIcon, PlusIcon, SearchIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  EllipsisVerticalIcon,
+  PlusIcon,
+  SearchIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-type SortById = "name" | "createdAt";
+type SortById = "name" | "createdAt" | "totalConnections";
+
+type ProjectWithTotalConnections = Project & { totalConnections: number };
 
 export function TeamProjectsPage(props: {
-  projects: Project[];
+  projects: ProjectWithTotalConnections[];
   team: Team;
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<SortById>("createdAt");
+  const [sortBy, setSortBy] = useState<SortById>("totalConnections");
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
     useState(false);
   const router = useDashboardRouter();
 
-  let projectsToShow = !searchTerm
-    ? projects
-    : projects.filter(
-        (project) =>
-          project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.publishableKey
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()),
-      );
+  const projectsToShow = useMemo(() => {
+    let _projectsToShow = !searchTerm
+      ? projects
+      : projects.filter(
+          (project) =>
+            project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            project.publishableKey
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()),
+        );
 
-  if (sortBy === "name") {
-    projectsToShow = projectsToShow.sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-  } else if (sortBy === "createdAt") {
-    projectsToShow = projectsToShow.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-  }
+    if (sortBy === "name") {
+      _projectsToShow = _projectsToShow.sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+    } else if (sortBy === "createdAt") {
+      _projectsToShow = _projectsToShow.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+    } else if (sortBy === "totalConnections") {
+      _projectsToShow = _projectsToShow.sort(
+        (a, b) => b.totalConnections - a.totalConnections,
+      );
+    }
+
+    return _projectsToShow;
+  }, [searchTerm, sortBy, projects]);
 
   return (
     <div className="flex grow flex-col">
@@ -75,19 +95,29 @@ export function TeamProjectsPage(props: {
 
       {/* Projects */}
       {projectsToShow.length === 0 ? (
-        <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
-          <div className="flex flex-col items-center">
-            <p className="mb-5 text-center">No projects created</p>
-            <Button
-              className="gap-2"
-              onClick={() => setIsCreateProjectDialogOpen(true)}
-              variant="outline"
-            >
-              <PlusIcon className="size-4" />
-              Create a Project
-            </Button>
-          </div>
-        </div>
+        <>
+          {searchTerm !== "" ? (
+            <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+              <div className="flex flex-col items-center">
+                <p className="mb-5 text-center">No projects found</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+              <div className="flex flex-col items-center">
+                <p className="mb-5 text-center">No projects created</p>
+                <Button
+                  className="gap-2"
+                  onClick={() => setIsCreateProjectDialogOpen(true)}
+                  variant="outline"
+                >
+                  <PlusIcon className="size-4" />
+                  Create a Project
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {projectsToShow.map((project) => {
@@ -118,7 +148,7 @@ export function TeamProjectsPage(props: {
 }
 
 function ProjectCard(props: {
-  project: Project;
+  project: ProjectWithTotalConnections;
   team_slug: string;
 }) {
   const { project, team_slug } = props;
@@ -130,32 +160,49 @@ function ProjectCard(props: {
       {/* TODO - set image */}
       <ProjectAvatar className="size-10 rounded-full" src="" />
 
-      <div className="flex-grow flex-col gap-1">
-        <div className="flex items-center justify-between gap-2">
-          <Link
-            className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
-            // remove /connect when we have overview page
-            href={`/team/${team_slug}/${project.slug}`}
-          >
-            <h2 className="font-medium text-base">{project.name}</h2>
-          </Link>
-          <CopyButton
-            text={project.publishableKey}
-            iconClassName="z-10 size-3"
-            className="!h-auto !w-auto -translate-x-1 p-2 hover:bg-secondary"
-          />
-        </div>
+      <div className="flex-grow flex-col gap-1.5">
+        <Link
+          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
+          // remove /connect when we have overview page
+          href={`/team/${team_slug}/${project.slug}`}
+        >
+          <h2 className="font-medium text-base">{project.name}</h2>
+        </Link>
 
-        <p className="flex items-center text-muted-foreground text-sm">
-          {truncate(project.publishableKey, 32)}
+        <p className="flex items-center gap-1 text-muted-foreground text-sm">
+          <span>{project.totalConnections}</span>
+          Total Users
         </p>
       </div>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button className="z-10 h-auto w-auto p-2" variant="ghost">
+            <EllipsisVerticalIcon className="size-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[180px] p-1">
+          <CopyTextButton
+            textToCopy={project.publishableKey}
+            textToShow="Copy Client ID"
+            copyIconPosition="right"
+            tooltip={undefined}
+            variant="ghost"
+            className="flex h-10 w-full justify-between gap-3 rounded-md px-4 py-2"
+          />
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-3"
+            asChild
+          >
+            <Link href={`/team/${team_slug}/${project.slug}/settings`}>
+              Settings
+            </Link>
+          </Button>
+        </PopoverContent>
+      </Popover>
     </div>
   );
-}
-
-function truncate(str: string, stringLimit: number) {
-  return str.length > stringLimit ? `${str.slice(0, stringLimit)}...` : str;
 }
 
 function SearchInput(props: {
@@ -209,10 +256,11 @@ function SelectBy(props: {
   value: SortById;
   onChange: (value: SortById) => void;
 }) {
-  const values: SortById[] = ["name", "createdAt"];
+  const values: SortById[] = ["name", "createdAt", "totalConnections"];
   const valueToLabel: Record<SortById, string> = {
     name: "Name",
     createdAt: "Creation Date",
+    totalConnections: "Total Users",
   };
 
   return (
@@ -223,7 +271,12 @@ function SelectBy(props: {
       }}
     >
       <SelectTrigger className="min-w-[200px] bg-card capitalize">
-        Sort by {valueToLabel[props.value]}
+        <div className="flex items-center gap-1.5">
+          <span className="!hidden lg:!inline text-muted-foreground">
+            Sort by
+          </span>
+          {valueToLabel[props.value]}
+        </div>
       </SelectTrigger>
       <SelectContent>
         {values.map((value) => (
