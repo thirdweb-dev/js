@@ -5,18 +5,25 @@ import type { UsageV2Event } from "src/core/usageV2.js";
  * This method may throw. To call this non-blocking:
  *
  * ```ts
- * void sendUsageV2Events("production", events).catch(console.error)
+ * void sendUsageV2Events(events, {
+ *   environment: "production",
+ *   serviceKey: "..."
+ * }).catch(console.error)
  * ```
  *
- * @param environment - The environment the service is running in.
  * @param events - The events to send.
+ * @param options.environment - The environment the service is running in.
+ * @param options.serviceKey - The service key required for authentication.
  */
 export async function sendUsageV2Events(
-  environment: "development" | "production",
   events: UsageV2Event[],
+  options: {
+    environment: "development" | "production";
+    serviceKey: string;
+  },
 ): Promise<void> {
   const baseUrl =
-    environment === "production"
+    options.environment === "production"
       ? "https://u.thirdweb.com"
       : "https://u.thirdweb-dev.com";
 
@@ -24,6 +31,7 @@ export async function sendUsageV2Events(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "x-service-api-key": options.serviceKey,
     },
     body: JSON.stringify({ events }),
   });
