@@ -12,7 +12,7 @@ packages/eslint-config-thirdweb/ @thirdweb-dev/core-platform @edwardysun
 packages/tw-tsconfig/ @thirdweb-dev/core-platform @edwardysun
 
 # apps
-apps/ @thirdweb-dev/developer-tools @thirdweb-dev/core-platform @jakubkrehel
+apps/ @thirdweb-dev/developer-tools @thirdweb-dev/core-platform
 
 # .github folder + .changeset + turbo config is owned by jonas for now
 scripts/ @jnsdls @joaquim-verges
