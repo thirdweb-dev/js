@@ -1,5 +1,11 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.1
+
+### Patch Changes
+
+- [#6015](https://github.com/thirdweb-dev/js/pull/6015) [`8bbee03`](https://github.com/thirdweb-dev/js/commit/8bbee03c77abe95d2c4a48b46fefa9086de3b749) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with smart wallets used on SiteLink and SiteEmbed
+
 ## 0.2.0
 
 ### Minor Changes

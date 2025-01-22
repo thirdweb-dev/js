@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.86.1
+
+### Patch Changes
+
+- [#6011](https://github.com/thirdweb-dev/js/pull/6011) [`b38604c`](https://github.com/thirdweb-dev/js/commit/b38604cce81832303dcf51ab058f6621045e9aff) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with chain switching breaking after disconnect
+
+- [#6015](https://github.com/thirdweb-dev/js/pull/6015) [`8bbee03`](https://github.com/thirdweb-dev/js/commit/8bbee03c77abe95d2c4a48b46fefa9086de3b749) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with smart wallets used on SiteLink and SiteEmbed
+
+- [#6020](https://github.com/thirdweb-dev/js/pull/6020) [`ab9a148`](https://github.com/thirdweb-dev/js/commit/ab9a148b754da04527d4e49359565b14d5c4f3ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better transaction tracking for smart wallets
+
 ## 5.86.0
 
 ### Minor Changes
