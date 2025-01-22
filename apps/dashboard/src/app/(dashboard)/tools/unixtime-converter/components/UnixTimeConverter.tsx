@@ -1,118 +1,151 @@
 "use client";
 
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import {} from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
-import { ShareButton } from "../../components/share";
+import {
+  formatDistanceToNow,
+  formatISO9075,
+  formatRFC3339,
+  formatRFC7231,
+  fromUnixTime,
+} from "date-fns";
+import { useMemo, useState } from "react";
 
-export const UnixTimeConverter = () => {
-  const getCurrentUnixMilliseconds = () => Math.floor(new Date().getTime());
-  const [unix, setUnix] = useState<number>(getCurrentUnixMilliseconds());
+export function UnixTimeConverter() {
+  const [unixTime, setUnixTime] = useState(() => {
+    return Math.floor(Date.now() / 1000);
+  });
 
-  // `unix` may be in milliseconds or seconds.
-  // Treat any value < 100000000000 as seconds, otherwise milliseconds.
-  const isSeconds = unix < 100000000000;
-  const date = new Date(isSeconds ? unix * 1000 : unix);
-  const dateLocal = date.toLocaleString(undefined, {
-    timeZoneName: "short",
-  });
-  const dateUTC = date.toLocaleString(undefined, {
-    timeZoneName: "short",
-    timeZone: "UTC",
-  });
+  const { date, error } = useMemo(() => {
+    if (Number.isNaN(unixTime) || !Number.isInteger(unixTime)) {
+      return {
+        error: "Invalid Unix Timestamp",
+        date: null,
+      };
+    }
+
+    const date = fromUnixTime(unixTime);
+
+    if (!isValidDate(date)) {
+      return {
+        date: null,
+        error: "Invalid Unix Timestamp",
+      };
+    }
+
+    return {
+      date,
+      error: null,
+    };
+  }, [unixTime]);
 
   return (
-    <div className="space-y-24">
-      <div className="space-y-4">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="unix-input" className="min-w-64 text-xl">
-            Unix Time
-          </Label>
-          <Input
-            id="unix-input"
-            type="number"
-            value={unix}
-            onChange={(e) => {
-              if (!Number.isNaN(e.target.valueAsNumber)) {
-                setUnix(e.target.valueAsNumber);
-              }
-            }}
-            placeholder="Enter a Unix time in milliseconds or seconds"
-            className="p-6 text-xl"
-          />
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label className="min-w-64 text-xl">Time (local)</Label>
-          <div>
-            <CopyTextButton
-              textToCopy={dateLocal}
-              textToShow={dateLocal}
-              tooltip="Copy"
-              copyIconPosition="right"
-              className="font-mono text-xl"
-            />
-          </div>
-          <p className="text-sm italic">
-            &larr; {formatDistanceToNow(date, { addSuffix: true })}
-          </p>
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label className="min-w-64 text-xl">Time (UTC)</Label>
-          <div>
-            <CopyTextButton
-              textToCopy={dateUTC}
-              textToShow={dateUTC}
-              tooltip="Copy"
-              copyIconPosition="right"
-              className="font-mono text-xl"
-            />
-          </div>
-        </div>
-        <div className="mt-4 flex justify-end">
-          <ShareButton
-            cta="Share on X"
-            href="https://twitter.com/intent/tweet?text=Easy-to-use%20Unix%20time%20converter%20by%20thirdweb%20%F0%9F%98%8D&url=https%3A%2F%2Fthirdweb.com%2Ftools%2Funixtime-converter"
-          />
-        </div>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Card>
+        <CardHeader className="mb-6 border-b">
+          <CardTitle className="font-bold text-2xl">
+            Unix Time Converter
+          </CardTitle>
+        </CardHeader>
 
-      <div className="space-y-4">
-        <h1 className="font-bold text-2xl">
-          Convert Unix time in milliseconds or seconds
-        </h1>
+        <CardContent>
+          <div className="mb-4">
+            <Label htmlFor="unixTime">Enter Unix Timestamp</Label>
+            <Input
+              id="unixTime"
+              type="number"
+              value={unixTime}
+              onChange={(e) => {
+                setUnixTime(Number(e.target.value));
+              }}
+              placeholder="e.g., 1609459200"
+              className="mt-1"
+            />
+            {error && (
+              <p className="mt-2 text-destructive-text text-sm">{error}</p>
+            )}
+          </div>
 
-        <p>
-          Timestamps are often represented in Unix time for several key reasons:
-        </p>
-        <h2 className="font-bold text-md">Simplicity</h2>
-        <p>
-          Counts seconds since January 1, 1970, making it easy to understand and
-          manipulate.
-        </p>
-        <h2 className="font-bold text-md">Consistency</h2>
-        <p>
-          Provides a uniform time representation across systems, unaffected by
-          time zones or calendar changes.
-        </p>
-        <h2 className="font-bold text-md">Standardization</h2>
-        <p>
-          Widely supported in computing, ensuring compatibility across
-          platforms.
-        </p>
-        <h2 className="font-bold text-md">Calculation</h2>
-        <p>
-          Allows straightforward arithmetic operations for time differences.
-        </p>
-        <h2 className="font-bold text-md">Efficiency</h2>
-        <p>
-          Stores time as a single integer, conserving memory and computational
-          resources.
-        </p>
-        <h2 className="font-bold text-md">Interoperability</h2>
-        <p>Facilitates seamless data exchange between systems and languages.</p>
-      </div>
+          <div className="flex flex-col gap-4">
+            <div>
+              <Label>Relative Time</Label>
+              <p className="font-mono text-muted-foreground">
+                {date
+                  ? formatDistanceToNow(date, {
+                      addSuffix: true,
+                    })
+                  : "---"}
+              </p>
+            </div>
+            <div>
+              <Label>Local Time</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatLocal(date) : "---"}
+              </p>
+            </div>
+            <div>
+              <Label>UTC Time</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatUTC(date) : "---"}
+              </p>
+            </div>
+
+            <div>
+              <Label>ISO 8601</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatISO8601(date) : "---"}
+              </p>
+            </div>
+
+            <div>
+              <Label>ISO 9075</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatISO9075(date) : "---"}
+              </p>
+            </div>
+            <div>
+              <Label>RFC 7231</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatRFC7231(date) : "---"}
+              </p>
+            </div>
+            <div>
+              <Label>RFC 3339</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatRFC3339(date) : "---"}
+              </p>
+            </div>
+            <div>
+              <Label>SQL Timestamp</Label>
+              <p className="font-mono text-muted-foreground">
+                {date ? formatSQL(date) : "---"}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
-};
+}
+
+function formatLocal(date: Date): string {
+  return date.toLocaleString();
+}
+
+function formatUTC(date: Date): string {
+  return date.toUTCString();
+}
+
+function isValidDate(date: Date): boolean {
+  return !Number.isNaN(date.getTime());
+}
+
+function formatISO8601(date: Date): string {
+  return date.toISOString();
+}
+
+function formatSQL(date: Date): string {
+  return date.toISOString().slice(0, 19).replace("T", " ");
+}
