@@ -9,12 +9,14 @@ import {
 } from "components/analytics/date-range-selector";
 import type {
   InAppWalletStats,
+  TransactionStats,
   UserOpStats,
   WalletStats,
   WalletUserStats,
 } from "types/analytics";
 
 import {
+  getClientTransactions,
   getInAppWalletUsage,
   getUserOpUsage,
   getWalletConnections,
@@ -23,12 +25,17 @@ import {
 } from "@/api/analytics";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Suspense } from "react";
+import { getContract } from "thirdweb";
 import {
   type ChainMetadata,
   defineChain,
   getChainMetadata,
 } from "thirdweb/chains";
+import { shortenAddress } from "thirdweb/utils";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
+import { TransactionsChartCardUI } from "../(team)/_components/TransactionsCard";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
+import { fetchDashboardContractMetadata } from "../../../../@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { EmptyState } from "../../components/Analytics/EmptyState";
@@ -114,6 +121,8 @@ async function ProjectAnalytics(props: {
     inAppWalletUsage,
     userOpUsageTimeSeries,
     userOpUsage,
+    clientTransactionsTimeSeries,
+    clientTransactions,
   ] = await Promise.allSettled([
     // Aggregated wallet connections
     getWalletConnections({
@@ -149,6 +158,19 @@ async function ProjectAnalytics(props: {
       to: range.to,
       period: "all",
     }),
+    // Client transactions
+    getClientTransactions({
+      clientId: project.publishableKey,
+      from: range.from,
+      to: range.to,
+      period: interval,
+    }),
+    getClientTransactions({
+      clientId: project.publishableKey,
+      from: range.from,
+      to: range.to,
+      period: "all",
+    }),
   ]);
 
   return (
@@ -174,12 +196,6 @@ async function ProjectAnalytics(props: {
           link="https://portal.thirdweb.com/connect/quickstart"
         />
       )}
-      <RpcMethodBarChartCard
-        from={range.from}
-        to={range.to}
-        period={interval}
-        clientId={project.publishableKey}
-      />
       <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
         {walletConnections.status === "fulfilled" &&
         walletConnections.value.length > 0 ? (
@@ -200,6 +216,22 @@ async function ProjectAnalytics(props: {
           />
         )}
       </div>
+      {clientTransactionsTimeSeries.status === "fulfilled" &&
+        clientTransactions.status === "fulfilled" &&
+        clientTransactions.value.length > 0 && (
+          <>
+            <TransactionsChartCardUI
+              searchParams={searchParams}
+              data={clientTransactionsTimeSeries.value}
+              aggregatedData={clientTransactions.value}
+              className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+            />
+            <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+              <ChainDistributionCard data={clientTransactions.value} />
+              <ContractDistributionCard data={clientTransactions.value} />
+            </div>
+          </>
+        )}
       {userOpUsageTimeSeries.status === "fulfilled" &&
       userOpUsage.status === "fulfilled" &&
       userOpUsage.value.length > 0 ? (
@@ -216,6 +248,12 @@ async function ProjectAnalytics(props: {
           link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
         />
       )}
+      <RpcMethodBarChartCard
+        from={range.from}
+        to={range.to}
+        period={interval}
+        clientId={project.publishableKey}
+      />
     </div>
   );
 }
@@ -344,6 +382,100 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
   );
 }
 
+async function ChainDistributionCard({ data }: { data: TransactionStats[] }) {
+  const formattedData = await Promise.all(
+    data.map(async (w) => {
+      // eslint-disable-next-line no-restricted-syntax
+      const chain = await getChainMetadata(defineChain(Number(w.chainId)));
+      return {
+        chainId: w.chainId,
+        count: w.count,
+        chainName: chain?.slug,
+      };
+    }),
+  );
+  const reducedData = Object.entries(
+    formattedData.reduce(
+      (acc, curr) => {
+        acc[curr.chainName] = (acc[curr.chainName] || 0) + curr.count;
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+  ).map(([key, value]) => ({
+    label: key,
+    value,
+  }));
+
+  const aggregateFn = () => reducedData.length;
+
+  return (
+    <PieChartCard title="Chains" data={reducedData} aggregateFn={aggregateFn} />
+  );
+}
+
+async function ContractDistributionCard({
+  data,
+}: { data: TransactionStats[] }) {
+  const formattedData = (
+    await Promise.all(
+      data.map(async (w) => {
+        // eslint-disable-next-line no-restricted-syntax
+        const chain = defineChain(Number(w.chainId));
+        const chainMeta = await getChainMetadata(chain);
+        if (!w.contractAddress) {
+          return null;
+        }
+        const contractData = await fetchDashboardContractMetadata(
+          getContract({
+            chain,
+            address: w.contractAddress,
+            client: getThirdwebClient(),
+          }),
+        ).catch(() => undefined);
+        return {
+          chainId: w.chainId,
+          count: w.count,
+          chainName: chainMeta?.slug || w.chainId.toString(),
+          contractAddress: w.contractAddress,
+          contractLabel:
+            contractData?.name || shortenAddress(w.contractAddress),
+        };
+      }),
+    )
+  ).filter((d) => d !== null);
+
+  const reducedData = Object.entries(
+    formattedData.reduce(
+      (acc, curr) => {
+        acc[`${curr.chainName}:${curr.contractAddress}:${curr.contractLabel}`] =
+          (acc[
+            `${curr.chainName}:${curr.contractAddress}:${curr.contractLabel}`
+          ] || 0) + curr.count;
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+  ).map(([key, value]) => {
+    const [chainName, contractAddress, contractLabel] = key.split(":");
+    return {
+      label: `${contractLabel} (${chainName})`,
+      link: `/${chainName}/${contractAddress}`,
+      value,
+    };
+  });
+
+  const aggregateFn = () => reducedData.length;
+
+  return (
+    <PieChartCard
+      title="Contracts"
+      data={reducedData}
+      aggregateFn={aggregateFn}
+    />
+  );
+}
+
 async function TotalSponsoredCard({
   data,
   aggregatedData,
@@ -417,7 +549,7 @@ async function TotalSponsoredCard({
   return (
     <CombinedBarChartCard
       isCurrency
-      title="Total Sponsored"
+      title="Gas Sponsored"
       chartConfig={chartConfig}
       className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}
