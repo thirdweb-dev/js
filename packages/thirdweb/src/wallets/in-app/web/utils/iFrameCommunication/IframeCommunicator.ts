@@ -35,7 +35,7 @@ const isIframeLoaded = new Map<string, boolean>();
  */
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
 export class IframeCommunicator<T extends { [key: string]: any }> {
-  private iframe: HTMLIFrameElement;
+  private iframe?: HTMLIFrameElement;
   private POLLING_INTERVAL_SECONDS = 1.4;
   private iframeBaseUrl;
   protected localStorage: ClientScopedStorage;
@@ -49,7 +49,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     link,
     baseUrl,
     iframeId,
-    container = document.body,
+    container,
     onIframeInitialize,
     localStorage,
     clientId,
@@ -60,6 +60,10 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     this.ecosystem = ecosystem;
     this.iframeBaseUrl = baseUrl;
 
+    if (typeof document === "undefined") {
+      return;
+    }
+    container = container ?? document.body;
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
@@ -164,6 +168,11 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     params: T[keyof T];
     showIframe?: boolean;
   }) {
+    if (!this.iframe) {
+      throw new Error(
+        "Iframe not found. You are likely calling this from the backend where the DOM is not available.",
+      );
+    }
     while (!isIframeLoaded.get(this.iframe.src)) {
       await sleep(this.POLLING_INTERVAL_SECONDS * 1000);
     }
@@ -182,7 +191,9 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
         if (showIframe) {
           // magic number to let modal fade out before hiding it
           await sleep(0.1 * 1000);
-          this.iframe.style.display = "none";
+          if (this.iframe) {
+            this.iframe.style.display = "none";
+          }
         }
         if (!data.success) {
           rej(new Error(data.error));
@@ -213,6 +224,8 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
    * @internal
    */
   destroy() {
-    isIframeLoaded.delete(this.iframe.src);
+    if (this.iframe) {
+      isIframeLoaded.delete(this.iframe.src);
+    }
   }
 }
