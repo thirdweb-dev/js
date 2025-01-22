@@ -93,6 +93,15 @@ html {
   }
 }
 
+/* If no data-theme is added in body, its in dark theme  */
+body:not([data-theme="light"]) .light-only {
+  display: none;
+}
+
+[data-theme="light"] .dark-only {
+  display: none;
+}
+
 code span {
   color: var(--code-dark-color);
 }

@@ -1,7 +1,8 @@
 import { Heading } from "@/components/Document";
 import Image from "next/image";
 import Link from "next/link";
-import DocsHero from "./_images/docs-hero.png";
+import DocsHeroDark from "./_images/docs-hero-dark.png";
+import DocsHeroLight from "./_images/docs-hero-light.png";
 
 export default function Page() {
   return (
@@ -34,7 +35,8 @@ function Hero() {
 
       {/* right */}
       <div className="hidden justify-center lg:flex">
-        <Image src={DocsHero} alt="" className="w-full" />
+        <Image src={DocsHeroDark} alt="" className="dark-only w-full" />
+        <Image src={DocsHeroLight} alt="" className="light-only w-full" />
       </div>
     </section>
   );
