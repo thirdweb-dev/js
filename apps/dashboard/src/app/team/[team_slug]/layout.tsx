@@ -2,6 +2,7 @@ import { getTeamBySlug } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { redirect } from "next/navigation";
 import { TWAutoConnect } from "../../components/autoconnect";
+import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 
 export default async function RootTeamLayout(props: {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export default async function RootTeamLayout(props: {
       <div className="flex grow flex-col">{props.children}</div>
       <TWAutoConnect />
       <AppFooter />
+      <SaveLastVisitedTeamPage />
     </div>
   );
 }
