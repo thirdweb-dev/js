@@ -78,8 +78,9 @@ export async function getUserOpUsage(
   });
 
   if (res?.status !== 200) {
+    const reason = await res?.text();
     console.error(
-      `Failed to fetch user ops usage: ${res?.status} - ${res.statusText}`,
+      `Failed to fetch user ops usage: ${res?.status} - ${res.statusText} - ${reason}`,
     );
     return [];
   }
@@ -101,8 +102,9 @@ export async function getClientTransactions(
   );
 
   if (res?.status !== 200) {
+    const reason = await res?.text();
     console.error(
-      `Failed to fetch client transactions stats: ${res?.status} - ${res.statusText}`,
+      `Failed to fetch client transactions stats: ${res?.status} - ${res.statusText} - ${reason}`,
     );
     return [];
   }
