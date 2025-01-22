@@ -4,6 +4,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { PieChart } from "./PieChart";
 import { Stat } from "./Stat";
 
@@ -11,6 +12,7 @@ type ChartData = {
   value: number;
   label: string;
   fill?: string;
+  link?: string;
 };
 export function PieChartCard({
   title,
@@ -22,10 +24,10 @@ export function PieChartCard({
   aggregateFn?: (data: ChartData[]) => number;
 }) {
   const processedData = (() => {
-    if (data.length <= 9) return data;
-
     // Sort by value descending
     const sorted = [...data].sort((a, b) => b.value - a.value);
+
+    if (sorted.length <= 9) return sorted;
 
     // Take top 9
     const top10 = sorted.slice(0, 9).map((item) => ({
@@ -62,13 +64,27 @@ export function PieChartCard({
       <CardFooter className="no-scrollbar flex max-w-full justify-center p-6 pt-0 max-md:overflow-x-auto">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2.5">
           {processedData.map(
-            ({ label, fill }: { label: string; fill?: string }) => (
+            ({
+              label,
+              fill,
+              link,
+            }: { label: string; fill?: string; link?: string }) => (
               <div key={fill} className="flex items-center gap-2">
                 <div
                   className="size-2 rounded-full"
                   style={{ background: fill }}
                 />
-                <span className="text-muted-foreground text-xs">{label}</span>
+                {link ? (
+                  <Link
+                    href={link}
+                    target="_blank"
+                    className="text-muted-foreground text-xs hover:text-link-foreground"
+                  >
+                    {label}
+                  </Link>
+                ) : (
+                  <span className="text-muted-foreground text-xs">{label}</span>
+                )}
               </div>
             ),
           )}

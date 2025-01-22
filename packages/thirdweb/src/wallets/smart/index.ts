@@ -17,6 +17,7 @@ import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { type SignableMessage, maxUint96 } from "../../utils/types.js";
 import type {
@@ -523,6 +524,15 @@ async function _sendUserOp(args: {
     const receipt = await waitForUserOpReceipt({
       ...bundlerOptions,
       userOpHash,
+    });
+
+    trackTransaction({
+      client: options.client,
+      chainId: options.chain.id,
+      transactionHash: receipt.transactionHash,
+      walletAddress: options.accountContract.address,
+      walletType: "smart",
+      contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
     });
 
     return {

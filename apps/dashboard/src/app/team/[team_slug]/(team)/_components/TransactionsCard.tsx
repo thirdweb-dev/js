@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
-import type { UserOpStats } from "types/analytics";
+import type { TransactionStats } from "types/analytics";
 import { EmptyAccountAbstractionChartContent } from "../../../../../components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 
-export async function TotalSponsoredChartCardUI({
+export async function TransactionsChartCardUI({
   data,
   aggregatedData,
   searchParams,
@@ -15,8 +15,8 @@ export async function TotalSponsoredChartCardUI({
   title,
   description,
 }: {
-  data: UserOpStats[];
-  aggregatedData: UserOpStats[];
+  data: TransactionStats[];
+  aggregatedData: TransactionStats[];
   searchParams?: { [key: string]: string | string[] | undefined };
   className?: string;
   onlyMainnet?: boolean;
@@ -38,9 +38,9 @@ export async function TotalSponsoredChartCardUI({
 
     const existing = dateMap.get(item.date) || { mainnet: 0, testnet: 0 };
     if (chain?.testnet) {
-      existing.testnet += item.sponsoredUsd;
+      existing.testnet += item.count;
     } else {
-      existing.mainnet += item.sponsoredUsd;
+      existing.mainnet += item.count;
     }
     dateMap.set(item.date, existing);
   }
@@ -60,13 +60,13 @@ export async function TotalSponsoredChartCardUI({
       .filter(
         (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
       )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+      .reduce((acc, curr) => acc + curr.count, 0),
     testnet: aggregatedData
       .filter(
         (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
       )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+      .reduce((acc, curr) => acc + curr.count, 0),
+    total: aggregatedData.reduce((acc, curr) => acc + curr.count, 0),
   };
 
   const chartConfig = {
@@ -89,11 +89,10 @@ export async function TotalSponsoredChartCardUI({
     return (
       <div className={cn("rounded-lg border p-4 lg:p-6", className)}>
         <h3 className="mb-1 font-semibold text-xl tracking-tight">
-          {title || "Total Sponsored"}
+          {title || "Transactions"}
         </h3>
         <p className="text-muted-foreground"> {description}</p>
         <BarChart
-          isCurrency
           chartConfig={chartConfig}
           data={filteredData}
           activeKey="mainnet"
@@ -105,14 +104,14 @@ export async function TotalSponsoredChartCardUI({
 
   return (
     <CombinedBarChartCard
-      isCurrency
-      title={title || "Gas Sponsored"}
+      title={title || "Transactions"}
       chartConfig={chartConfig}
       data={timeSeriesData}
       activeChart={
-        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
+        (searchParams?.client_transactions as keyof typeof chartConfig) ??
+        "mainnet"
       }
-      queryKey="totalSponsored"
+      queryKey="client_transactions"
       existingQueryParams={searchParams}
       aggregateFn={(_data, key) => processedAggregatedData[key]}
       className={className}
