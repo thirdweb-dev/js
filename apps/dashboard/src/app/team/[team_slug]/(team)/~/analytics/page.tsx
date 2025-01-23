@@ -35,7 +35,7 @@ import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard"
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
 
 // revalidate every 5 minutes
-export const revalidate = 300;
+export const maxDuration = 300;
 
 type SearchParams = {
   usersChart?: string;

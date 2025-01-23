@@ -23,11 +23,13 @@ export async function TransactionsChartCardUI({
   title?: string;
   description?: string;
 }) {
+  const uniqueChainIds = [
+    ...new Set(data.map((item) => item.chainId).filter(Boolean)),
+  ];
   const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
+    uniqueChainIds.map((chainId) =>
+      // eslint-disable-next-line no-restricted-syntax
+      getChainMetadata(defineChain(Number(chainId))).catch(() => undefined),
     ),
   ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
 

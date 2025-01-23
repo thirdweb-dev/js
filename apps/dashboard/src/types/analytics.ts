@@ -32,8 +32,6 @@ export interface TransactionStats {
   date: string;
   chainId: number;
   contractAddress?: string;
-  walletType?: string;
-  walletAddress?: string;
   count: number;
 }
 
