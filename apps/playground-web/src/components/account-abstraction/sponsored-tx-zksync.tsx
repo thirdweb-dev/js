@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { getContract } from "thirdweb";
 import { zkSyncSepolia } from "thirdweb/chains";
@@ -15,6 +14,12 @@ import { shortenHex } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { WALLETS } from "../../lib/constants";
 
+// const chain = abstractTestnet;
+// const editionDropContract = getContract({
+//   client: THIRDWEB_CLIENT,
+//   address: "0x8A24a7Df38fA5fCCcFD1259e90Fb6996fDdfcADa",
+//   chain,
+// });
 const chain = zkSyncSepolia;
 const editionDropContract = getContract({
   client: THIRDWEB_CLIENT,
@@ -83,6 +88,7 @@ export function SponsoredTxZksyncPreview() {
                   metadata: nft?.metadata,
                 }}
                 onError={(error) => {
+                  console.error("error", error);
                   alert(`Error: ${error.message}`);
                 }}
                 onClick={() => {
