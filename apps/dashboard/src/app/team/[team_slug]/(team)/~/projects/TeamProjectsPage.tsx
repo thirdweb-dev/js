@@ -94,9 +94,21 @@ export function TeamProjectsPage(props: {
     <div className="flex grow flex-col">
       {/* Filters + Add New */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
-        <SearchInput value={searchTerm} onValueChange={setSearchTerm} />
+        <SearchInput
+          value={searchTerm}
+          onValueChange={(v) => {
+            setSearchTerm(v);
+            setPage(1);
+          }}
+        />
         <div className="flex gap-4">
-          <SelectBy value={sortBy} onChange={setSortBy} />
+          <SelectBy
+            value={sortBy}
+            onChange={(v) => {
+              setSortBy(v);
+              setPage(1);
+            }}
+          />
           <AddNewButton
             createProject={() => setIsCreateProjectDialogOpen(true)}
             teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}

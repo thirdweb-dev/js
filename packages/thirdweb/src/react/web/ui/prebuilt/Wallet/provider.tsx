@@ -21,7 +21,6 @@ export const WalletProviderContext = /* @__PURE__ */ createContext<
 >(undefined);
 
 /**
-/**
  * A React context provider component that supplies Wallet-related data to its child components.
  *
  * This component serves as a wrapper around the `WalletProviderContext.Provider` and passes
