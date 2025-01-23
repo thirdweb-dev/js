@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IframeCommunicator } from "./IframeCommunicator.js";
 
 describe("IframeCommunicator", () => {
+  // biome-ignore lint/suspicious/noExplicitAny: mock
   let mockLocalStorage: any;
   let mockContainer: HTMLElement;
   let mockIframe: HTMLIFrameElement;
