@@ -1,4 +1,4 @@
-import type { UsageV2Event } from "src/core/usageV2.js";
+import type { UsageV2Event } from "../core/usageV2.js";
 
 /**
  * Send events to Kafka.

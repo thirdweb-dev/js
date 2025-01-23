@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import { Kafka, type Producer } from "kafkajs";
-import type { UsageV2Event } from "src/core/usageV2.js";
+import type { UsageV2Event } from "../core/usageV2.js";
 
 const TOPIC_USAGE_V2 = "usage_v2.raw_events";
 
@@ -80,12 +80,23 @@ export class UsageV2Producer {
       throw new Error("Producer not initialized. Call `init()` first.");
     }
 
-    const parsedEvents = events.map(({ id, created_at, data, ...rest }) => {
+    const parsedEvents = events.map((event) => {
       return {
-        id: id ?? randomUUID(),
-        created_at: created_at ?? new Date(),
-        data: JSON.stringify(data),
-        ...rest,
+        id: event.id ?? randomUUID(),
+        created_at: event.created_at ?? new Date(),
+        source: event.source,
+        action: event.action,
+        // Remove the "team_" prefix, if any.
+        team_id: event.team_id.startsWith("team_")
+          ? event.team_id.slice(5)
+          : event.team_id,
+        client_id: event.client_id,
+        sdk_name: event.sdk_name,
+        sdk_platform: event.sdk_platform,
+        sdk_version: event.sdk_version,
+        sdk_os: event.sdk_os,
+        product_name: event.product_name,
+        data: JSON.stringify(event.data),
       };
     });
 
