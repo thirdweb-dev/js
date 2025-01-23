@@ -10,10 +10,12 @@
     "build": "next build",
     "postbuild": "pnpm run extract-search-data && pnpm next-sitemap",
     "start": "next start",
-    "lint": "biome check ./src && eslint ./src",
+    "lint": "biome check ./src && knip && eslint ./src",
     "fix": "biome check ./src --fix && eslint ./src --fix",
     "create-index": "pnpm tsx scripts/createEmptySearchIndex.ts",
-    "extract-search-data": "pnpm tsx scripts/extractSearchData.ts"
+    "extract-search-data": "pnpm tsx scripts/extractSearchData.ts",
+    "typecheck": "tsc --noEmit",
+    "knip": "knip"
   },
   "dependencies": {
     "@dirtycajunrice/klee": "^1.0.6",
@@ -30,7 +32,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "4.1.0",
-    "escape-string-regexp": "^5.0.0",
     "flexsearch": "^0.7.43",
     "github-slugger": "^2.0.0",
     "lucide-react": "0.468.0",
@@ -43,7 +44,6 @@
     "react-dom": "19.0.0",
     "react-html-parser": "2.0.2",
     "remark-gfm": "3.0.1",
-    "semver": "^7.6.0",
     "server-only": "^0.0.1",
     "shiki": "1.27.0",
     "tailwind-merge": "^2.6.0",
@@ -53,6 +53,7 @@
     "typedoc-better-json": "0.9.4"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "15.1.3",
     "@types/flexsearch": "^0.7.6",
     "@types/mdx": "^2.0.13",
     "@types/node": "22.10.2",
@@ -65,10 +66,10 @@
     "autoprefixer": "^10.4.19",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
-    "eslint-config-next": "15.1.4",
     "eslint-plugin-mdx": "^3.1.5",
     "eslint-plugin-svg-jsx": "^1.2.4",
     "eslint-plugin-tailwindcss": "^3.17.5",
+    "knip": "5.41.0",
     "next-sitemap": "^4.2.3",
     "postcss": "8.4.49",
     "tailwindcss": "3.4.17",

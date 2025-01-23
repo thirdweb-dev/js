@@ -27,5 +27,9 @@
   },
   "[css]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "eslint.workingDirectories": [
+    { "pattern": "./packages/*/" },
+    { "pattern": "./apps/*/" }
+  ]
 }

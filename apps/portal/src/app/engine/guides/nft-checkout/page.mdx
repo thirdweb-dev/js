@@ -33,12 +33,12 @@ The buyer receives the NFT without requiring wallet signatures or gas funds.
 
 ## Frontend: Add Connect Wallet and credit card form
 
-Use [`<ConnectWallet>`](/react/latest/components/ConnectWallet) to prompt the buyer for their wallet address. The buyer provides their credit card details and selects **Pay now** to send payment details directly to Stripe.
+Use [`<ConnectButton>`](/references/typescript/v5/ConnectButton) to prompt the buyer for their wallet address. The buyer provides their credit card details and selects **Pay now** to send payment details directly to Stripe.
 
 ```tsx
 function Home() {
 	return (
-		<ThirdwebProvider activeChain="<chain_id>" clientId="<thirdweb_client_id>">
+		<ThirdwebProvider>
 			<PurchasePage />
 		</ThirdwebProvider>
 	);

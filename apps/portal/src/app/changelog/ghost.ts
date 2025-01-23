@@ -1,7 +1,7 @@
 import type { PostsOrPages } from "@tryghost/content-api";
 import "./[slug]/styles.css";
 
-export const GHOST_THIRDWEB_BLOG_KEY = "49c62b5137df1c17ab6b9e46e3";
+const GHOST_THIRDWEB_BLOG_KEY = "49c62b5137df1c17ab6b9e46e3";
 
 export async function fetchChangeLogs() {
   const queryParamsString = Object.entries({

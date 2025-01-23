@@ -66,7 +66,7 @@ export const nebulaAPI422Response = `\
   ]
 }`;
 
-export const nebulaExecuteConfigType = `\
+const nebulaExecuteConfigType = `\
 {
   mode: "engine";
   engine_url: string;
@@ -82,7 +82,7 @@ export const nebulaExecuteConfigType = `\
   signer_wallet_address: string;
 }`;
 
-export const nebulaContextFilterType = `\
+const nebulaContextFilterType = `\
 {
   chainIds: string[] | null;
   contractAddresses: string[] | null;

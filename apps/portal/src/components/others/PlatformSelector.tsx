@@ -11,7 +11,7 @@ import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import { connectLinks } from "../../app/Header";
 
-export type Platform = (typeof connectLinks)[number]["name"];
+type Platform = (typeof connectLinks)[number]["name"];
 
 export function PlatformSelector(props: {
   selected: Platform;

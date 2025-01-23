@@ -22,7 +22,7 @@ export type APIParameter =
       type?: string;
     };
 
-export type ApiEndpointMeta = {
+type ApiEndpointMeta = {
   title: string;
   description: React.ReactNode;
   path: string;
@@ -202,7 +202,7 @@ function ParameterItem({ param }: { param: APIParameter }) {
         <Paragraph>{param.description}</Paragraph>
         {param.type && (
           <div className="rounded-lg border">
-            <h4 className="border-b px-3 py-3 text-sm"> Type </h4>
+            <h4 className="border-b p-3 text-sm"> Type </h4>
             <CodeBlock
               code={param.type}
               lang="typescript"

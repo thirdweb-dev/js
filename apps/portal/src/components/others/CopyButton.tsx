@@ -19,7 +19,7 @@ export function CopyButton(props: { text: string }) {
     <Button
       variant="outline"
       onClick={copyToClipboard}
-      className="h-auto w-auto bg-background p-2"
+      className="size-auto bg-background p-2"
     >
       <Icon className="size-3 text-muted-foreground" />
     </Button>
