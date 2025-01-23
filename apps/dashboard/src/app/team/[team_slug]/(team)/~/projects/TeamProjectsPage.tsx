@@ -3,6 +3,7 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,22 +34,24 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type SortById = "name" | "createdAt" | "totalConnections";
+type SortById = "name" | "createdAt" | "monthlyActiveUsers";
 
-type ProjectWithTotalConnections = Project & { totalConnections: number };
+export type ProjectWithAnalytics = Project & {
+  monthlyActiveUsers: number;
+};
 
 export function TeamProjectsPage(props: {
-  projects: ProjectWithTotalConnections[];
+  projects: ProjectWithAnalytics[];
   team: Team;
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<SortById>("totalConnections");
+  const [sortBy, setSortBy] = useState<SortById>("monthlyActiveUsers");
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] =
     useState(false);
   const router = useDashboardRouter();
 
-  const projectsToShow = useMemo(() => {
+  const sortedProjects = useMemo(() => {
     let _projectsToShow = !searchTerm
       ? projects
       : projects.filter(
@@ -68,14 +71,24 @@ export function TeamProjectsPage(props: {
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
-    } else if (sortBy === "totalConnections") {
+    } else if (sortBy === "monthlyActiveUsers") {
       _projectsToShow = _projectsToShow.sort(
-        (a, b) => b.totalConnections - a.totalConnections,
+        (a, b) => b.monthlyActiveUsers - a.monthlyActiveUsers,
       );
     }
 
     return _projectsToShow;
   }, [searchTerm, sortBy, projects]);
+
+  const pageSize = 8;
+  const [page, setPage] = useState(1);
+  const paginatedProjects = sortedProjects.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
+
+  const showPagination = sortedProjects.length > pageSize;
+  const totalPages = Math.ceil(sortedProjects.length / pageSize);
 
   return (
     <div className="flex grow flex-col">
@@ -94,7 +107,7 @@ export function TeamProjectsPage(props: {
       <div className="h-6" />
 
       {/* Projects */}
-      {projectsToShow.length === 0 ? (
+      {paginatedProjects.length === 0 ? (
         <>
           {searchTerm !== "" ? (
             <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
@@ -120,7 +133,7 @@ export function TeamProjectsPage(props: {
         </>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {projectsToShow.map((project) => {
+          {paginatedProjects.map((project) => {
             return (
               <ProjectCard
                 key={project.id}
@@ -129,6 +142,16 @@ export function TeamProjectsPage(props: {
               />
             );
           })}
+        </div>
+      )}
+
+      {showPagination && (
+        <div className="py-6">
+          <PaginationButtons
+            activePage={page}
+            onPageClick={setPage}
+            totalPages={totalPages}
+          />
         </div>
       )}
 
@@ -148,7 +171,7 @@ export function TeamProjectsPage(props: {
 }
 
 function ProjectCard(props: {
-  project: ProjectWithTotalConnections;
+  project: ProjectWithAnalytics;
   team_slug: string;
 }) {
   const { project, team_slug } = props;
@@ -160,7 +183,7 @@ function ProjectCard(props: {
       {/* TODO - set image */}
       <ProjectAvatar className="size-10 rounded-full" src="" />
 
-      <div className="flex-grow flex-col gap-1.5">
+      <div className="flex flex-grow flex-col gap-1">
         <Link
           className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
           // remove /connect when we have overview page
@@ -170,8 +193,8 @@ function ProjectCard(props: {
         </Link>
 
         <p className="flex items-center gap-1 text-muted-foreground text-sm">
-          <span>{project.totalConnections}</span>
-          Total Users
+          <span>{project.monthlyActiveUsers}</span>
+          Monthly Active Users
         </p>
       </div>
 
@@ -256,11 +279,11 @@ function SelectBy(props: {
   value: SortById;
   onChange: (value: SortById) => void;
 }) {
-  const values: SortById[] = ["name", "createdAt", "totalConnections"];
+  const values: SortById[] = ["name", "createdAt", "monthlyActiveUsers"];
   const valueToLabel: Record<SortById, string> = {
     name: "Name",
     createdAt: "Creation Date",
-    totalConnections: "Total Users",
+    monthlyActiveUsers: "Monthly Active Users",
   };
 
   return (
