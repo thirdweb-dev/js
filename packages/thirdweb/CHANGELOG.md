@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.86.2
+
+### Patch Changes
+
+- [#6046](https://github.com/thirdweb-dev/js/pull/6046) [`5ad442c`](https://github.com/thirdweb-dev/js/commit/5ad442cf0cb28b0799ff9a93fa728348ce9e628a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simplify in-app wallet login flow
+
+- [#6040](https://github.com/thirdweb-dev/js/pull/6040) [`a67d342`](https://github.com/thirdweb-dev/js/commit/a67d342779e35971fc67e8fd103e47f632928b5a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always use 712 signature verification if the smart account is already deployed
+
+- [#6042](https://github.com/thirdweb-dev/js/pull/6042) [`60edce4`](https://github.com/thirdweb-dev/js/commit/60edce49c0b8120fdd285017eb1721747eef1721) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix prompting for generic WC connection on mobile
+
+- [#6025](https://github.com/thirdweb-dev/js/pull/6025) [`21cc45a`](https://github.com/thirdweb-dev/js/commit/21cc45adc2bb82bf942bf62767947e5e337fa5f0) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - fix (in app wallets): error when calling connect for backend strategy due to `document` reference
+
 ## 5.86.1
 
 ### Patch Changes

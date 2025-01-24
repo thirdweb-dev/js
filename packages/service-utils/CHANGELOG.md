@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.7.0
+
+### Minor Changes
+
+- [#6021](https://github.com/thirdweb-dev/js/pull/6021) [`5756c74`](https://github.com/thirdweb-dev/js/commit/5756c74a71c4dfd1b17b5141fd7deb779a36a703) Thanks [@arcoraven](https://github.com/arcoraven)! - feat: Add usageV2 support
+
+### Patch Changes
+
+- [#6023](https://github.com/thirdweb-dev/js/pull/6023) [`de039ef`](https://github.com/thirdweb-dev/js/commit/de039ef46282216de9a9c15e7ff8e94ea93f0ac5) Thanks [@arcoraven](https://github.com/arcoraven)! - Use a cache key that doesn't involve hashing
+
 ## 0.6.0
 
 ### Minor Changes
