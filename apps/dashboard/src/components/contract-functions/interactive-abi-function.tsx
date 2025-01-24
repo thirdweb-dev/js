@@ -14,7 +14,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import type { AbiFunction, AbiParameter } from "abitype";
+import { type AbiFunction, type AbiParameter, formatAbiItem } from "abitype";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
@@ -28,13 +28,12 @@ import {
   type ThirdwebContract,
   prepareContractCall,
   readContract,
-  resolveMethod,
   simulateTransaction,
   toSerializableTransaction,
   toWei,
 } from "thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { parseAbiParams, stringify } from "thirdweb/utils";
+import { parseAbiParams, stringify, toFunctionSelector } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -135,7 +134,12 @@ interface InteractiveAbiFunctionProps {
   twAccount: Account | undefined;
 }
 
-function useAsyncRead(contract: ThirdwebContract, functionName: string) {
+function useAsyncRead(contract: ThirdwebContract, abiFunction: AbiFunction) {
+  const formattedAbi = formatAbiItem({
+    ...abiFunction,
+    type: "function",
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  } as any);
   return useMutation({
     mutationFn: async ({
       args,
@@ -144,7 +148,8 @@ function useAsyncRead(contract: ThirdwebContract, functionName: string) {
       const params = parseAbiParams(types, args);
       return readContract({
         contract,
-        method: resolveMethod(functionName),
+        // biome-ignore lint/suspicious/noExplicitAny: dynamic typing
+        method: formattedAbi as any,
         params,
       });
     },
@@ -156,21 +161,32 @@ function useSimulateTransaction() {
   return useMutation({
     mutationFn: async ({
       contract,
-      functionName,
+      abiFunction,
       params,
       value,
     }: {
       contract: ThirdwebContract;
-      functionName: string;
+      abiFunction: AbiFunction;
       params: unknown[];
       value?: bigint;
     }) => {
       if (!from) {
         return toast.error("No account connected");
       }
+      const formattedAbi = formatAbiItem({
+        ...abiFunction,
+        type: "function",
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+      } as any);
+      console.log(
+        "formattedAbi",
+        formattedAbi,
+        toFunctionSelector(abiFunction),
+      );
       const transaction = prepareContractCall({
         contract,
-        method: resolveMethod(functionName),
+        // biome-ignore lint/suspicious/noExplicitAny: dynamic typing
+        method: formattedAbi as any,
         params,
         value,
       });
@@ -179,10 +195,16 @@ function useSimulateTransaction() {
           simulateTransaction({
             from,
             transaction,
+          }).catch((e) => {
+            console.error("Error simulating transaction", e);
+            throw e;
           }),
           toSerializableTransaction({
             from,
             transaction,
+          }).catch((e) => {
+            console.error("Error serializing transaction", e);
+            throw e;
           }),
         ]);
         return `--- ✅ Simulation succeeded ---
@@ -257,7 +279,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     data: readData,
     isPending: readLoading,
     error: readError,
-  } = useAsyncRead(contract, abiFunction.name);
+  } = useAsyncRead(contract, abiFunction);
 
   const txSimulation = useSimulateTransaction();
 
@@ -311,12 +333,18 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     if (!abiFunction.name) {
       return toast.error("Cannot detect function name");
     }
+    const formattedAbi = formatAbiItem({
+      ...abiFunction,
+      type: "function",
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    } as any);
     const types = abiFunction.inputs.map((o) => o.type);
     const formatted = formatContractCall(d.params);
     const params = parseAbiParams(types, formatted);
     const transaction = prepareContractCall({
       contract,
-      method: resolveMethod(abiFunction.name),
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic typing
+      method: formattedAbi as any,
       params,
       value: d.value ? toWei(d.value) : undefined,
     });
@@ -334,7 +362,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     txSimulation.mutate({
       contract,
       params,
-      functionName: abiFunction.name,
+      abiFunction,
       value: d.value ? toWei(d.value) : undefined,
     });
   });
