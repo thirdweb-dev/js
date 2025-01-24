@@ -90,7 +90,7 @@ export class UsageV2Producer {
         team_id: event.team_id.startsWith("team_")
           ? event.team_id.slice(5)
           : event.team_id,
-        client_id: event.client_id,
+        project_id: event.project_id,
         sdk_name: event.sdk_name,
         sdk_platform: event.sdk_platform,
         sdk_version: event.sdk_version,
