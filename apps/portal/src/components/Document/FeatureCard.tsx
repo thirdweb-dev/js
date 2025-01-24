@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export type FeatureCardItem = {
+type FeatureCardItem = {
   title: string;
   description: string;
   iconUrl: string | React.ReactNode;

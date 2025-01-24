@@ -35,7 +35,7 @@ export type LinkGroup = {
   icon?: StaticImport | React.ReactElement;
 };
 
-export function isStaticImport(value: unknown): value is StaticImport {
+function isStaticImport(value: unknown): value is StaticImport {
   const isObj = typeof value === "object" && value !== null;
   if (!isObj) {
     return false;

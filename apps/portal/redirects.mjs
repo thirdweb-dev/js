@@ -1,6 +1,11 @@
 // @ts-check
 
-import { unrealEngineRedirects } from "./src/app/unreal-engine/redirects.mjs";
+const unrealEngineRedirects = {
+  "/unreal/:path*": "/unreal-engine/:path*",
+  "/unreal-engine/cpp/wallet-handle": "/unreal-engine/cpp/wallet-handles",
+  "/unreal-engine/blueprints/private-key-wallet":
+    "unreal-engine/blueprints/in-app-wallet",
+};
 
 const reactRedirects = {
   "/react": "/react/v4",
@@ -981,6 +986,20 @@ const v5RestructuredRedirects = {
   "/typescript/v5/react-native/:path*": "/react-native/v5/:path*",
 };
 
+const v4ToV5Redirects = {
+  "/typescript/v4": "/typescript/v5",
+  "/typescript/v4/:path*": "/typescript/v5",
+  "/react/v4": "/react/v5",
+  "/react/v4/:path*": "/react/v5",
+  "/react-native/v0": "/react-native/v5",
+  "/react-native/v0/:path*": "/react-native/v5",
+  "/wallet-sdk/:path*": "/connect",
+  "/storage-sdk/v2": "/typescript/v5/storage",
+  "/storage-sdk/v2/:path*": "/typescript/v5/storage",
+  "/unity/v4": "/unity/v5",
+  "/unity/v4/:path*": "/unity/v5",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -999,18 +1018,7 @@ export const redirects = async () => {
     ...createRedirects(otherRedirects),
     ...createRedirects(v5RestructuredRedirects),
     ...createRedirects(unrealEngineRedirects),
-    // references docs
-    latestReference("react", "v4"),
-    latestReference("react-native", "v0"),
-    latestReference("typescript", "v5"),
-    latestReference("wallets", "v2"),
-    latestReference("storage", "v2"),
-    // sdk docs
-    latestSDK("react", "v4"),
-    latestSDK("react-native", "v0"),
-    latestSDK("typescript", "v5"),
-    latestSDK("wallet-sdk", "v2"),
-    latestSDK("storage-sdk", "v2"),
+    ...createRedirects(v4ToV5Redirects),
   ];
 };
 
@@ -1025,32 +1033,4 @@ function createRedirects(linkMap, permanent = true) {
     redirects.push({ source: key, destination: linkMap[key], permanent });
   }
   return redirects;
-}
-
-/**
- *
- * @param {string} pkg
- * @param {string} latestVersion
- * @returns
- */
-function latestReference(pkg, latestVersion) {
-  return {
-    source: `/references/${pkg}/latest/:path*`,
-    destination: `/references/${pkg}/${latestVersion}/:path*`,
-    permanent: false,
-  };
-}
-
-/**
- *
- * @param {string} pkg
- * @param {string} latestVersion
- * @returns
- */
-function latestSDK(pkg, latestVersion) {
-  return {
-    source: `/${pkg}/latest/:path*`,
-    destination: `/${pkg}/${latestVersion}/:path*`,
-    permanent: false,
-  };
 }

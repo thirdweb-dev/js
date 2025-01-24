@@ -72,6 +72,7 @@ async function PageContent() {
               <div>
                 <Heading
                   level={2}
+                  // eslint-disable-next-line tailwindcss/no-custom-classname
                   className="changelog-title"
                   id={slugger.slug(post.title || "")}
                   anchorClassName="[&>a]:hidden m-0 border-b pb-5 mb-5"

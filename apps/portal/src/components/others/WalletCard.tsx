@@ -3,7 +3,7 @@ import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link from "next/link";
 
-export type WalletInfo = { href: string; label: string; icon: StaticImport };
+type WalletInfo = { href: string; label: string; icon: StaticImport };
 
 export function WalletCard(props: WalletInfo) {
   return (

@@ -19,5 +19,3 @@ export const ignoreHeadings = new Set(
     "example",
   ].map((t) => t.toLowerCase()),
 );
-
-export const minimumParagraphlength = 20;

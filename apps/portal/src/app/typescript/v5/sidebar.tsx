@@ -4,7 +4,7 @@ import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/f
 import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
 
 const slug = "/typescript/v5";
-const docs = await fetchTypeScriptDoc("v5");
+const docs = await fetchTypeScriptDoc();
 
 export const sidebar: SideBar = {
   name: "Connect Typescript SDK",

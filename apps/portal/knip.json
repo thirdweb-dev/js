@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "next": true,
+  "project": ["src/**"],
+  "ignoreBinaries": ["only-allow", "biome"],
+  "ignore": ["src/components/ui/**"],
+  "ignoreDependencies": [
+    "@thirdweb-dev/chains",
+    "@thirdweb-dev/wallets",
+    "thirdweb",
+    "@types/mdx"
+  ],
+  "entry": [
+    "next.config.{js,ts,cjs,mjs}",
+    "{instrumentation,middleware}.{js,ts}",
+    "app/global-error.{js,jsx,ts,tsx}",
+    "app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
+    "app/**/route.{js,jsx,ts,tsx}",
+    "app/{manifest,sitemap,robots}.{js,ts}",
+    "app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
+    "app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
+    "pages/**/*.{js,jsx,ts,tsx}",
+    "src/{instrumentation,middleware}.{js,ts}",
+    "src/app/global-error.{js,jsx,ts,tsx}",
+    "src/app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
+    "src/app/**/route.{js,jsx,ts,tsx}",
+    "src/app/{manifest,sitemap,robots}.{js,ts}",
+    "src/app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
+    "src/app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
+    "src/pages/**/*.{js,jsx,ts,tsx}",
+    "scripts/*.ts"
+  ]
+}
