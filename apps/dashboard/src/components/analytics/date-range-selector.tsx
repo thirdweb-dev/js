@@ -6,13 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format, subDays } from "date-fns";
+import { differenceInCalendarDays, format, subDays } from "date-fns";
 
 export function DateRangeSelector(props: {
   range: Range;
   setRange: (range: Range) => void;
 }) {
   const { range, setRange } = props;
+  const daysDiff = differenceInCalendarDays(range.to, range.from);
+  const rangeType =
+    durationPresets.find((preset) => preset.days === daysDiff)?.id ||
+    range.type;
 
   return (
     <DatePickerWithRange
@@ -35,7 +39,7 @@ export function DateRangeSelector(props: {
       header={
         <div className="mb-2 border-border border-b p-4">
           <Select
-            value={range.type}
+            value={rangeType}
             onValueChange={(id: DurationId) => {
               setRange(getLastNDaysRange(id));
             }}
@@ -50,7 +54,7 @@ export function DateRangeSelector(props: {
                 </SelectItem>
               ))}
 
-              {range.type === "custom" && (
+              {rangeType === "custom" && (
                 <SelectItem value="custom">
                   {format(range.from, "LLL dd, y")} -{" "}
                   {format(range.to, "LLL dd, y")}
