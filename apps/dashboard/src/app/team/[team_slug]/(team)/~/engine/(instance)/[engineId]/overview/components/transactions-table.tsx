@@ -1,45 +1,60 @@
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { ChartConfig } from "@/components/ui/chart";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import {
-  Collapse,
-  Divider,
-  Flex,
-  FormControl,
-  Tooltip,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { createColumnHelper } from "@tanstack/react-table";
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import {
+  type Transaction,
+  useEngineTransactions,
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format, formatDate } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { InfoIcon, MoveLeftIcon, MoveRightIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  InfoIcon,
+  MoveLeftIcon,
+  MoveRightIcon,
+} from "lucide-react";
+import Link from "next/link";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { toTokens } from "thirdweb";
-import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
-import { TWTable } from "../../../../../../../../../../components/shared/TWTable";
+import { FormLabel, LinkButton, Text } from "tw-components";
 import { TransactionTimeline } from "./transaction-timeline";
 
-interface TransactionsTableProps {
-  transactions: Transaction[];
-  isPending: boolean;
-  isFetched: boolean;
-  instanceUrl: string;
-  authToken: string;
-}
-
-type EngineStatus =
+export type EngineStatus =
   | "errored"
   | "mined"
   | "cancelled"
@@ -48,36 +63,16 @@ type EngineStatus =
   | "processed"
   | "queued"
   | "user-op-sent";
+
 const statusDetails: Record<
   EngineStatus,
   {
     name: string;
     type: "success" | "destructive" | "warning";
-    showTooltipIcon?: boolean;
   }
 > = {
-  processed: {
-    name: "Processed",
-    type: "warning",
-  },
-  queued: {
-    name: "Queued",
-    type: "warning",
-  },
-  sent: {
-    name: "Sent",
-    type: "warning",
-  },
-  "user-op-sent": {
-    name: "User Op Sent",
-    type: "warning",
-  },
   mined: {
     name: "Mined",
-    type: "success",
-  },
-  retried: {
-    name: "Retried",
     type: "success",
   },
   errored: {
@@ -88,177 +83,412 @@ const statusDetails: Record<
     name: "Cancelled",
     type: "destructive",
   },
+  queued: {
+    name: "Queued",
+    type: "warning",
+  },
+  processed: {
+    name: "Processed",
+    type: "warning",
+  },
+  sent: {
+    name: "Sent",
+    type: "warning",
+  },
+  "user-op-sent": {
+    name: "User Op Sent",
+    type: "warning",
+  },
+  retried: {
+    name: "Retried",
+    type: "success",
+  },
 };
 
-const columnHelper = createColumnHelper<Transaction>();
-
-export const TransactionsTable: React.FC<TransactionsTableProps> = ({
-  transactions,
-  isPending,
-  isFetched,
-  instanceUrl,
-  authToken,
-}) => {
-  const { idToChain } = useAllChainsData();
+// TODO - add Status selector dropdown here
+export function TransactionsTable(props: {
+  instanceUrl: string;
+  authToken: string;
+}) {
   const transactionDisclosure = useDisclosure();
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const [autoUpdate, setAutoUpdate] = useState(true);
+  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState<EngineStatus | undefined>(undefined);
 
-  const columns = [
-    columnHelper.accessor("queueId", {
-      header: "Queue ID",
-      cell: (cell) => {
-        return (
-          <CopyAddressButton
-            address={cell.getValue() ?? ""}
-            copyIconPosition="left"
-            variant="ghost"
-            className="text-muted-foreground"
-          />
-        );
-      },
-    }),
-    columnHelper.accessor("chainId", {
-      header: "Chain",
-      cell: (cell) => {
-        const chainId = cell.getValue();
-        if (!chainId) {
-          return;
-        }
+  const pageSize = 10;
+  const transactionsQuery = useEngineTransactions({
+    instanceUrl: props.instanceUrl,
+    autoUpdate,
+    authToken: props.authToken,
+    queryParams: {
+      limit: pageSize,
+      page: page,
+      status,
+    },
+  });
 
-        const chain = idToChain.get(Number.parseInt(chainId));
-        if (chain) {
-          return (
-            <Flex align="center" gap={2} className="py-2">
-              <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
-              <Text maxW={150} isTruncated>
-                {chain?.name ?? "N/A"}
-              </Text>
-            </Flex>
-          );
-        }
-      },
-    }),
-    columnHelper.accessor("status", {
-      header: "Status",
-      cell: (cell) => {
-        const transaction = cell.row.original;
-        const { errorMessage, minedAt } = transaction;
-        const status = (transaction.status as EngineStatus) ?? null;
-        if (!status) {
-          return null;
-        }
-
-        const tooltip =
-          status === "errored"
-            ? errorMessage
-            : (status === "mined" || status === "retried") && minedAt
-              ? `Completed ${format(new Date(minedAt), "PP pp")}`
-              : undefined;
-
-        return (
-          <Flex align="center" gap={1}>
-            <Tooltip
-              borderRadius="md"
-              bg="transparent"
-              boxShadow="none"
-              maxW={{ md: "450px" }}
-              label={
-                tooltip ? (
-                  <Card bgColor="backgroundHighlight">
-                    <Text>{tooltip}</Text>
-                  </Card>
-                ) : undefined
-              }
-            >
-              <div>
-                <Badge variant={statusDetails[status].type}>
-                  <Flex gap={1} align="center">
-                    {statusDetails[status].name}
-                    {statusDetails[status].showTooltipIcon && (
-                      <InfoIcon className="size-4" />
-                    )}
-                  </Flex>
-                </Badge>
-              </div>
-            </Tooltip>
-          </Flex>
-        );
-      },
-    }),
-    columnHelper.accessor("fromAddress", {
-      header: "From",
-      cell: (cell) => {
-        return <WalletAddress address={cell.getValue() ?? ""} />;
-      },
-    }),
-    columnHelper.accessor("transactionHash", {
-      header: "Tx Hash",
-      cell: (cell) => {
-        const { chainId, transactionHash } = cell.row.original;
-        if (!chainId || !transactionHash) {
-          return;
-        }
-
-        const chain = idToChain.get(Number.parseInt(chainId));
-        if (chain) {
-          const explorer = chain.explorers?.[0];
-          if (!explorer) {
-            return (
-              <CopyAddressButton
-                address={transactionHash}
-                copyIconPosition="left"
-                variant="ghost"
-              />
-            );
-          }
-
-          return (
-            <CopyTextButton
-              textToCopy={transactionHash}
-              copyIconPosition="left"
-              textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
-              variant="ghost"
-              tooltip="Copy transaction hash"
-              className="font-mono text-muted-foreground text-sm"
-            />
-          );
-        }
-      },
-    }),
-    columnHelper.accessor("queuedAt", {
-      header: "Queued",
-      cell: (cell) => {
-        const value = cell.getValue();
-        if (!value) {
-          return;
-        }
-
-        const date = new Date(value);
-        return (
-          <Tooltip
-            borderRadius="md"
-            bg="transparent"
-            boxShadow="none"
-            label={
-              <Card bgColor="backgroundHighlight">
-                <Text>{format(date, "PP pp z")}</Text>
-              </Card>
-            }
-            shouldWrapChildren
-          >
-            <Text>{formatDistanceToNowStrict(date, { addSuffix: true })}</Text>
-          </Tooltip>
-        );
-      },
-    }),
-  ];
+  const transactions = transactionsQuery.data?.transactions ?? [];
 
   const idx = selectedTransaction
     ? transactions.indexOf(selectedTransaction)
     : 0;
 
+  const totalCount = transactionsQuery.data?.totalCount ?? 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
+  const showPagination = totalCount > pageSize;
+
+  const showSkeleton =
+    (transactionsQuery.isPlaceholderData && transactionsQuery.isFetching) ||
+    (transactionsQuery.isLoading && !transactionsQuery.isPlaceholderData);
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="flex flex-col gap-4 rounded-lg rounded-b-none px-6 py-6 lg:flex-row lg:justify-between">
+        <div>
+          <h2 className="font-semibold text-xl tracking-tight">
+            Transaction History
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Transactions sent from your backend wallets
+          </p>
+        </div>
+
+        <div className="flex items-center justify-end gap-5 border-border border-t pt-4 lg:border-none lg:pt-0">
+          <div className="flex shrink-0 items-center gap-2">
+            <Label htmlFor="auto-update">Auto Update</Label>
+            <Switch
+              checked={autoUpdate}
+              onCheckedChange={(v) => setAutoUpdate(!!v)}
+              id="auto-update"
+            />
+          </div>
+          <StatusSelector
+            status={status}
+            setStatus={(v) => {
+              setStatus(v);
+              // reset page
+              setPage(1);
+            }}
+          />
+        </div>
+      </div>
+
+      <TableContainer className="rounded-none border-x-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Queue ID</TableHead>
+              <TableHead>Chain</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>From</TableHead>
+              <TableHead>Tx Hash</TableHead>
+              <TableHead>Queued</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {showSkeleton ? (
+              <>
+                {new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  <SkeletonRow key={i} />
+                ))}
+              </>
+            ) : (
+              <>
+                {transactions.map((tx) => (
+                  <TableRow
+                    onClick={() => {
+                      setSelectedTransaction(tx);
+                      transactionDisclosure.onOpen();
+                    }}
+                    key={`${tx.queueId}${tx.chainId}${tx.blockNumber}`}
+                    className="cursor-pointer hover:bg-accent/50"
+                  >
+                    {/* Queue ID */}
+                    <TableCell className="font-medium">
+                      <CopyAddressButton
+                        address={tx.queueId ? tx.queueId : ""}
+                        copyIconPosition="left"
+                        variant="ghost"
+                        className="text-muted-foreground"
+                      />
+                    </TableCell>
+
+                    {/* Chain Id */}
+                    <TableCell>
+                      <TxChainCell chainId={tx.chainId || undefined} />
+                    </TableCell>
+
+                    {/* Status */}
+                    <TableCell>
+                      <TxStatusCell transaction={tx} />
+                    </TableCell>
+
+                    {/* From Address */}
+                    <TableCell>
+                      {tx.fromAddress ? (
+                        <WalletAddress address={tx.fromAddress} />
+                      ) : (
+                        "N/A"
+                      )}
+                    </TableCell>
+
+                    {/* Tx Hash */}
+                    <TableCell>
+                      <TxHashCell transaction={tx} />
+                    </TableCell>
+
+                    {/* Queued At */}
+                    <TableCell>
+                      <TxQueuedAtCell transaction={tx} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            )}
+          </TableBody>
+        </Table>
+
+        {!showSkeleton && transactions.length === 0 && (
+          <div className="flex min-h-[200px] items-center justify-center">
+            No transactions found
+          </div>
+        )}
+      </TableContainer>
+
+      {showPagination && (
+        <div className="py-6">
+          <PaginationButtons
+            activePage={page}
+            onPageClick={setPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
+
+      {transactionDisclosure.isOpen && selectedTransaction && (
+        <TransactionDetailsDrawer
+          transaction={selectedTransaction}
+          instanceUrl={props.instanceUrl}
+          authToken={props.authToken}
+          onClickPrevious={
+            idx > 0
+              ? () => setSelectedTransaction(transactions[idx - 1] || null)
+              : undefined
+          }
+          onClickNext={
+            idx < transactions.length - 1
+              ? () => setSelectedTransaction(transactions[idx + 1] || null)
+              : undefined
+          }
+          setSelectedTransaction={setSelectedTransaction}
+        />
+      )}
+    </div>
+  );
+}
+
+function StatusSelector(props: {
+  status: EngineStatus | undefined;
+  setStatus: (value: EngineStatus | undefined) => void;
+}) {
+  const statuses = Object.keys(statusDetails) as EngineStatus[];
+
+  return (
+    <Select
+      value={props.status || "all"}
+      onValueChange={(v) => {
+        if (v === "all") {
+          props.setStatus(undefined);
+        } else {
+          props.setStatus(v as EngineStatus);
+        }
+      }}
+    >
+      <SelectTrigger className="min-w-[160px]">
+        <SelectValue placeholder="All" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem value="all">All Transactions</SelectItem>
+          {statuses.map((item) => {
+            return (
+              <SelectItem key={item} value={item}>
+                {statusDetails[item].name}
+              </SelectItem>
+            );
+          })}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}
+
+function SkeletonRow() {
+  return (
+    <TableRow className="h-[73px]">
+      <TableCell>
+        <Skeleton className="h-6 w-[152px]" />
+      </TableCell>
+
+      <TableCell>
+        <Skeleton className="h-6 w-[155px]" />
+      </TableCell>
+
+      <TableCell>
+        <Skeleton className="h-6 w-[58px] rounded-full" />
+      </TableCell>
+
+      <TableCell>
+        <Skeleton className="h-6 w-[145px]" />
+      </TableCell>
+
+      <TableCell>
+        <Skeleton className="h-6 w-[160px]" />
+      </TableCell>
+
+      <TableCell>
+        <Skeleton className="h-6 w-[108px]" />
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function TxChainCell(props: { chainId: string | undefined }) {
+  const { chainId } = props;
+  const { idToChain } = useAllChainsData();
+
+  if (!chainId) {
+    return "N/A";
+  }
+
+  const chain = idToChain.get(Number.parseInt(chainId));
+
+  if (!chain) {
+    return `Chain ID: ${chainId}`;
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <ChainIcon className="size-5" ipfsSrc={chain.icon?.url} />
+      <div className="max-w-[150px] truncate">
+        {chain.name ?? `Chain ID: ${chainId}`}
+      </div>
+    </div>
+  );
+}
+
+function TxStatusCell(props: {
+  transaction: Transaction;
+}) {
+  const { transaction } = props;
+  const { errorMessage, minedAt } = transaction;
+  const status = (transaction.status as EngineStatus) ?? null;
+  if (!status) {
+    return null;
+  }
+
+  const tooltip =
+    status === "errored"
+      ? errorMessage
+      : (status === "mined" || status === "retried") && minedAt
+        ? `Completed ${format(new Date(minedAt), "PP pp")}`
+        : undefined;
+
+  return (
+    <ToolTipLabel hoverable label={tooltip}>
+      <Badge variant={statusDetails[status].type} className="gap-2">
+        {statusDetails[status].name}
+        {errorMessage && <InfoIcon className="size-3" />}
+      </Badge>
+    </ToolTipLabel>
+  );
+}
+
+function TxHashCell(props: { transaction: Transaction }) {
+  const { idToChain } = useAllChainsData();
+  const { chainId, transactionHash } = props.transaction;
+  if (!transactionHash) {
+    return "N/A";
+  }
+
+  const chain = chainId ? idToChain.get(Number.parseInt(chainId)) : undefined;
+  const explorer = chain?.explorers?.[0];
+
+  const shortHash = `${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`;
+  if (!explorer) {
+    return (
+      <CopyTextButton
+        textToCopy={transactionHash}
+        copyIconPosition="left"
+        textToShow={shortHash}
+        variant="ghost"
+        tooltip="Copy transaction hash"
+        className="font-mono text-muted-foreground text-sm"
+      />
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      asChild
+      className="-translate-x-2 gap-2 font-mono"
+      size="sm"
+    >
+      <Link
+        href={`${explorer.url}/tx/${transactionHash}`}
+        target="_blank"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {shortHash}{" "}
+        <ExternalLinkIcon className="size-4 text-muted-foreground" />
+      </Link>
+    </Button>
+  );
+}
+
+function TxQueuedAtCell(props: { transaction: Transaction }) {
+  const value = props.transaction.queuedAt;
+  if (!value) {
+    return;
+  }
+
+  const date = new Date(value);
+  return (
+    <ToolTipLabel label={format(date, "PP pp z")}>
+      <p>{formatDistanceToNowStrict(date, { addSuffix: true })}</p>
+    </ToolTipLabel>
+  );
+}
+
+export function TransactionCharts(props: {
+  authToken: string;
+  instanceUrl: string;
+}) {
+  const transactionsQuery = useEngineTransactions({
+    instanceUrl: props.instanceUrl,
+    autoUpdate: false,
+    authToken: props.authToken,
+    queryParams: {
+      limit: 10000,
+      page: 1,
+    },
+  });
+
+  const transactions = transactionsQuery.data?.transactions ?? [];
+
   const { analyticsData, chartConfig } = useMemo(() => {
+    if (!transactions.length) {
+      return {
+        analyticsData: [],
+        chartConfig: {},
+      };
+    }
     const dayToTxCountMap: Map<number, Record<string, number>> = new Map();
     const uniqueStatuses = new Set<string>();
 
@@ -302,62 +532,27 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   }, [transactions]);
 
   return (
-    <>
-      <ThirdwebBarChart
-        title="Daily Transactions"
-        description="Transactions sent from your backend wallets per day"
-        config={chartConfig}
-        data={analyticsData}
-        isPending={isPending}
-        chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-        titleClassName="text-xl mb-0"
-        hideLabel={false}
-        toolTipLabelFormatter={(_v, item) => {
-          if (Array.isArray(item)) {
-            const time = item[0].payload.time as number;
-            return formatDate(new Date(time), "MMM d, yyyy");
-          }
-          return undefined;
-        }}
-      />
-
-      <div className="h-8" />
-
-      <TWTable
-        title="transactions"
-        data={transactions}
-        columns={columns}
-        isPending={isPending}
-        isFetched={isFetched}
-        bodyRowClassName="hover:bg-accent/50"
-        tableScrollableClassName="max-h-[1000px]"
-        onRowClick={(row) => {
-          setSelectedTransaction(row);
-          transactionDisclosure.onOpen();
-        }}
-      />
-
-      {transactionDisclosure.isOpen && selectedTransaction && (
-        <TransactionDetailsDrawer
-          transaction={selectedTransaction}
-          instanceUrl={instanceUrl}
-          authToken={authToken}
-          onClickPrevious={
-            idx > 0
-              ? () => setSelectedTransaction(transactions[idx - 1] || null)
-              : undefined
-          }
-          onClickNext={
-            idx < transactions.length - 1
-              ? () => setSelectedTransaction(transactions[idx + 1] || null)
-              : undefined
-          }
-          setSelectedTransaction={setSelectedTransaction}
-        />
-      )}
-    </>
+    <ThirdwebBarChart
+      title="Transactions Breakdown"
+      description="Transactions sent from your backend wallets per day"
+      config={chartConfig}
+      data={analyticsData}
+      isPending={transactionsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      titleClassName="text-xl mb-0"
+      hideLabel={false}
+      variant="stacked"
+      showLegend
+      toolTipLabelFormatter={(_v, item) => {
+        if (Array.isArray(item)) {
+          const time = item[0].payload.time as number;
+          return formatDate(new Date(time), "MMM d, yyyy");
+        }
+        return undefined;
+      }}
+    />
   );
-};
+}
 
 const TransactionDetailsDrawer = ({
   transaction,
@@ -418,27 +613,27 @@ const TransactionDetailsDrawer = ({
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4">
-          <FormControl>
+          <div>
             <FormLabel>Queue ID</FormLabel>
             <Text>{transaction.queueId}</Text>
-          </FormControl>
+          </div>
 
-          <FormControl>
+          <div>
             <FormLabel>Chain</FormLabel>
-            <Flex align="center" gap={2}>
-              <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
-              <Text>{chain?.name}</Text>
-            </Flex>
-          </FormControl>
+            <div className="flex items-center gap-2">
+              <ChainIcon className="size-5" ipfsSrc={chain?.icon?.url} />
+              <span>{chain?.name}</span>
+            </div>
+          </div>
 
           {functionCalled && (
-            <FormControl>
+            <div>
               <FormLabel>Function</FormLabel>
               <Text>{functionCalled}</Text>
-            </FormControl>
+            </div>
           )}
 
-          <FormControl>
+          <div>
             <FormLabel>
               {transaction.accountAddress ? "Signer Address" : "From Address"}
             </FormLabel>
@@ -454,10 +649,10 @@ const TransactionDetailsDrawer = ({
             >
               <Text fontFamily="mono">{transaction.fromAddress}</Text>
             </LinkButton>
-          </FormControl>
+          </div>
 
           {transaction.accountAddress && (
-            <FormControl>
+            <div>
               <FormLabel>Account Address</FormLabel>
               <LinkButton
                 variant="ghost"
@@ -471,10 +666,10 @@ const TransactionDetailsDrawer = ({
               >
                 <Text fontFamily="mono">{transaction.accountAddress}</Text>
               </LinkButton>
-            </FormControl>
+            </div>
           )}
 
-          <FormControl>
+          <div>
             {/* The "to" address is usually a contract except for native token transfers. */}
             <FormLabel>
               {functionCalled === "transfer"
@@ -493,23 +688,18 @@ const TransactionDetailsDrawer = ({
             >
               <Text fontFamily="mono">{transaction.toAddress}</Text>
             </LinkButton>
-          </FormControl>
+          </div>
 
           {transaction.errorMessage && (
-            <FormControl>
+            <div>
               <FormLabel>Error</FormLabel>
               <Text noOfLines={errorMessageDisclosure.isOpen ? undefined : 3}>
                 {transaction.errorMessage}
               </Text>
-              <Button
-                onClick={errorMessageDisclosure.onToggle}
-                variant="link"
-                size="xs"
-                colorScheme="gray"
-              >
+              <Button onClick={errorMessageDisclosure.onToggle} variant="link">
                 {errorMessageDisclosure.isOpen ? "Show less" : "Show more"}
               </Button>
-            </FormControl>
+            </div>
           )}
 
           <Divider />
@@ -524,15 +714,14 @@ const TransactionDetailsDrawer = ({
 
           {/* On-chain details */}
 
-          <FormControl>
+          <div>
             <div className="flex flex-row">
               <FormLabel>Value</FormLabel>
-              <Tooltip
+              <ToolTipLabel
                 label={`The amount of ${symbol} sent to the "To" .`}
-                shouldWrapChildren
               >
                 <InfoIcon className="size-4" />
-              </Tooltip>
+              </ToolTipLabel>
             </div>
             <Text>
               {transaction.value
@@ -540,11 +729,11 @@ const TransactionDetailsDrawer = ({
                 : 0}{" "}
               {symbol}
             </Text>
-          </FormControl>
+          </div>
 
           {transaction.transactionHash && (
             <>
-              <FormControl>
+              <div>
                 <FormLabel>Transaction Hash</FormLabel>
                 <LinkButton
                   variant="ghost"
@@ -561,66 +750,57 @@ const TransactionDetailsDrawer = ({
                     {transaction.transactionHash}
                   </Text>
                 </LinkButton>
-              </FormControl>
+              </div>
 
-              <FormControl>
+              <div>
                 <FormLabel>Transaction Fee</FormLabel>
                 <Text>{txFeeDisplay}</Text>
-              </FormControl>
+              </div>
 
               <Collapse in={advancedTxDetailsDisclosure.isOpen}>
                 <div className="flex flex-col gap-4">
                   {transaction.nonce && (
-                    <FormControl>
+                    <div>
                       <div className="flex flex-row">
                         <FormLabel>Nonce</FormLabel>
-                        <Tooltip
-                          label="The nonce value this transaction was submitted to mempool."
-                          shouldWrapChildren
-                        >
+                        <ToolTipLabel label="The nonce value this transaction was submitted to mempool.">
                           <InfoIcon className="size-4" />
-                        </Tooltip>
+                        </ToolTipLabel>
                       </div>
                       <Text>{transaction.nonce ?? "N/A"}</Text>
-                    </FormControl>
+                    </div>
                   )}
 
                   {transaction.gasLimit && (
-                    <FormControl>
+                    <div>
                       <div className="flex flex-row">
                         <FormLabel>Gas Units</FormLabel>
-                        <Tooltip
-                          label="The gas units spent for this transaction."
-                          shouldWrapChildren
-                        >
+                        <ToolTipLabel label="The gas units spent for this transaction.">
                           <InfoIcon className="size-4" />
-                        </Tooltip>
+                        </ToolTipLabel>
                       </div>
                       <Text>
                         {Number(transaction.gasLimit).toLocaleString()}
                       </Text>
-                    </FormControl>
+                    </div>
                   )}
 
                   {transaction.gasPrice && (
-                    <FormControl>
+                    <div>
                       <div className="flex flex-row">
                         <FormLabel>Gas Price</FormLabel>
-                        <Tooltip
-                          label="The price in wei spent for each gas unit."
-                          shouldWrapChildren
-                        >
+                        <ToolTipLabel label="The price in wei spent for each gas unit.">
                           <InfoIcon className="size-4" />
-                        </Tooltip>
+                        </ToolTipLabel>
                       </div>
                       <Text>
                         {Number(transaction.gasPrice).toLocaleString()}
                       </Text>
-                    </FormControl>
+                    </div>
                   )}
 
                   {transaction.blockNumber && (
-                    <FormControl>
+                    <div>
                       <FormLabel>Block</FormLabel>
                       <LinkButton
                         variant="ghost"
@@ -635,7 +815,7 @@ const TransactionDetailsDrawer = ({
                       >
                         <Text>{transaction.blockNumber}</Text>
                       </LinkButton>
-                    </FormControl>
+                    </div>
                   )}
                 </div>
               </Collapse>
@@ -643,9 +823,8 @@ const TransactionDetailsDrawer = ({
               <Button
                 onClick={advancedTxDetailsDisclosure.onToggle}
                 variant="link"
-                size="xs"
-                colorScheme="gray"
-                w="fit-content"
+                size="sm"
+                className="w-fit"
               >
                 {advancedTxDetailsDisclosure.isOpen
                   ? "Hide transaction details"
@@ -656,20 +835,22 @@ const TransactionDetailsDrawer = ({
         </div>
         <div className="mt-4 flex flex-row justify-end gap-3 border-border border-t pt-4">
           <Button
-            isDisabled={!onClickPrevious}
+            disabled={!onClickPrevious}
             onClick={onClickPrevious}
             variant="outline"
-            leftIcon={<MoveLeftIcon className="size-4" />}
+            className="gap-2"
           >
+            <MoveLeftIcon className="size-4" />
             Previous
           </Button>
           <Button
-            isDisabled={!onClickNext}
+            disabled={!onClickNext}
             onClick={onClickNext}
             variant="outline"
-            rightIcon={<MoveRightIcon className="size-4" />}
+            className="gap-2"
           >
             Next
+            <MoveRightIcon className="size-4" />
           </Button>
         </div>
       </SheetContent>

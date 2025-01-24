@@ -7,85 +7,82 @@ import collectionTransferable from '../assets/erc721_transferable.png'
 import collectionBatchMetadata from '../assets/erc721_batchmetadata.png'
 import collectionMintable from '../assets/erc721_mintable.png'
 
-# Deploy a modular NFT Collection contract
+# Desplegar un contrato modular de Colección de NFT
 
-The NFT Collection contract creates a unique collection of NFTs based on the ERC-721A standard. NFTs are minted to the creator’s wallet as they are added to the collection. NFTs are still transferable, able to be sold on a marketplace, and perform any other actions as defined by ERC-721A. 
+El contrato de Colección de NFT crea una colección única de NFTs basada en el estándar ERC-721A. Los NFTs se acuñan en la cartera del creador a medida que se agregan a la colección. Los NFTs siguen siendo transferibles, pueden venderse en un marketplace y realizar cualquier otra acción definida por ERC-721A.
 
-For advanced use-cases requiring , NFT Collection includes signature-based minting capabilities. 
+Para casos de uso avanzados, el contrato de Colección de NFT incluye capacidades de acuñación basadas en firmas.
 
-<ContractDeployCard contractName="Modular NFT Collection" href="https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection" />
+<ContractDeployCard contractName="Colección Modular de NFT" href="https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YXRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection" />
 
 ### NFT Collection vs NFT Drop
 
-NFT Collection contract does not have lazy minting capabilities or claim conditions. If you’d prefer to define specific settings such as claim limits, start and end times to claim, and more, please refer to the [NFT Drop contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop). 
+El contrato de Colección de NFT no tiene capacidades de acuñación perezosa ni condiciones de reclamación. Si prefieres definir configuraciones específicas como límites de reclamación, horarios de inicio y fin para reclamar, y más, consulta el contrato de [NFT Drop](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YXRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YXRhdGFFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop).
 
-### Use Cases & Examples
+### Casos de uso y ejemplos
 
-- Create a 1-of-many collection of photography, artwork, or other media to be collected or sold on a marketplace
-- Create a 1-of-1 NFT which provide special utility or can be used to gate access to an application
-- Create a community-made collection of NFTs using signature-minting
+- Crear una colección 1-de-muchas de fotografías, obras de arte u otros medios para ser coleccionados o vendidos en un marketplace
+- Crear un NFT 1-de-1 que proporcione utilidad especial o pueda ser usado para restringir el acceso a una aplicación
+- Crear una colección de NFTs hecha por la comunidad usando acuñación basada en firmas
 
-### Default Installed Modules
+### Módulos instalados por defecto
 
 - Mintable
 - BatchMetadata
-- Transferable
+- Transferible
 
 <Steps>
 
+<Step title="Localizar el contrato">
 
-<Step title="Locate Contract">
+Dirígete a Explorar, localiza el [contrato modular de Colección de NFT](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YXRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection), y selecciona el botón Desplegar ahora.
 
-Navigate to Explore, locate the [Modular NFT Collection contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection), and select the Deploy Now button.
-
-<DocImage src={collectionStep1} alt="Screenshot NFT Collection contract" />
-
-</Step>
-
-<Step title="Configure Contract Metadata">
-Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
-
-Contract Metadata serves as your unique identifier.
-
-<DocImage src={collectionStep2} alt="Screenshot of NFT Collectionconfigure metadata" />
-
+<DocImage src={collectionStep1} alt="Captura de pantalla del contrato de Colección de NFT" />
 
 </Step>
 
-<Step title="Select Chain">
-Select the preferred chain you want to deploy on and select Deploy Now.
+<Step title="Configurar los metadatos del contrato">
+Rellena los metadatos del contrato, incluyendo Nombre, Símbolo, Descripción e Imagen.
 
-<DocImage src={collectionStep3} alt="Screenshot of Token select chain screen" />
+Los metadatos del contrato sirven como tu identificador único.
 
-<Callout variant="info" title="Any EVM Compatible">
-	The NFT Collection contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+<DocImage src={collectionStep2} alt="Captura de pantalla de la configuración de los metadatos de la Colección de NFT" />
+
+</Step>
+
+<Step title="Seleccionar la cadena">
+Selecciona la cadena preferida en la que deseas desplegar y selecciona Desplegar ahora.
+
+<DocImage src={collectionStep3} alt="Captura de pantalla de la selección de la cadena para el contrato de Colección de NFT" />
+
+<Callout variant="info" title="Cualquier red compatible con EVM">
+	El contrato de Colección de NFT es desplegable en cualquier red compatible con EVM. [Ver todas las redes disponibles.](https://thirdweb.com/chainlist)
 </Callout>
-If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+Si has iniciado sesión con una cartera EOA, se te pedirá que firmes la transacción. Después de eso, tu contrato será desplegado y podrás comenzar a configurar los módulos.
 </Step>
 
 </Steps>
 
-### Modular Contract
+### Contrato Modular
 
-This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+Este contrato se crea usando el marco de contratos modulares. Los módulos de este contrato son actualizables. [Aprende más sobre Contratos Modulares.](/contracts/modular-contracts/overview)
 
-### Configure Modules
+### Configurar Módulos
 
-To configure the modules, navigate to the Modules view:
+Para configurar los módulos, dirígete a la vista de Módulos:
 
-- Configure the MintableERC721 module to facilitate minting of ERC721 tokens with sales settings
+- Configura el módulo MintableERC721 para facilitar la acuñación de tokens ERC721 con configuraciones de ventas.
 
-<DocImage src={collectionMintable} alt="Screenshot of ERC721 Mintable module"/>
+<DocImage src={collectionMintable} alt="Captura de pantalla del módulo ERC721 Mintable"/>
 
-- Configure BatchMetadataERC721 to upload the NFT metadata 
+- Configura BatchMetadataERC721 para cargar los metadatos de los NFTs.
 
-<DocImage src={collectionBatchMetadata} alt="Screenshot of ERC721 BatchMetadata module"/>
+<DocImage src={collectionBatchMetadata} alt="Captura de pantalla del módulo ERC721 BatchMetadata"/>
 
-- Configure the Transferable721 Module to restrict transfers, if desired.
+- Configura el módulo Transferable721 para restringir las transferencias, si lo deseas.
 
-<DocImage src={collectionTransferable} alt="Screenshot of ERC721 Transferable module"/>
+<DocImage src={collectionTransferable} alt="Captura de pantalla del módulo ERC721 Transferable"/>
 
-<Callout variant='info' title="Install Modules">
-	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+<Callout variant='info' title="Instalar Módulos">
+	Para instalar módulos adicionales en este contrato, dirígete a la vista de Módulos después de desplegar tu contrato.
 </Callout>
-

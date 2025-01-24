@@ -34,6 +34,7 @@ import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChar
 import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
 import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
+import { TransactionsCharts } from "./components/Transactions";
 
 interface PageParams {
   team_slug: string;
@@ -48,6 +49,8 @@ interface PageProps {
   params: Promise<PageParams>;
   searchParams: Promise<PageSearchParams>;
 }
+
+export const maxDuration = 300;
 
 export default async function ProjectOverviewPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([
@@ -174,12 +177,6 @@ async function ProjectAnalytics(props: {
           link="https://portal.thirdweb.com/connect/quickstart"
         />
       )}
-      <RpcMethodBarChartCard
-        from={range.from}
-        to={range.to}
-        period={interval}
-        clientId={project.publishableKey}
-      />
       <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
         {walletConnections.status === "fulfilled" &&
         walletConnections.value.length > 0 ? (
@@ -200,6 +197,13 @@ async function ProjectAnalytics(props: {
           />
         )}
       </div>
+      <TransactionsCharts
+        searchParams={searchParams}
+        from={range.from}
+        to={range.to}
+        period={interval}
+        clientId={project.publishableKey}
+      />
       {userOpUsageTimeSeries.status === "fulfilled" &&
       userOpUsage.status === "fulfilled" &&
       userOpUsage.value.length > 0 ? (
@@ -216,6 +220,12 @@ async function ProjectAnalytics(props: {
           link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
         />
       )}
+      <RpcMethodBarChartCard
+        from={range.from}
+        to={range.to}
+        period={interval}
+        clientId={project.publishableKey}
+      />
     </div>
   );
 }
@@ -417,7 +427,7 @@ async function TotalSponsoredCard({
   return (
     <CombinedBarChartCard
       isCurrency
-      title="Total Sponsored"
+      title="Gas Sponsored"
       chartConfig={chartConfig}
       className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}

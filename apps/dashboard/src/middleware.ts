@@ -5,6 +5,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { isValidENSName } from "thirdweb/utils";
+import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/team/components/last-visited-page/consts";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes
@@ -17,8 +18,9 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - assets/
+     * - sitemap.xml, sitemap-0.xml, robots.txt, favicon.ico, some favicon images
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|assets).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|assets|robots.txt|\\.xml|\\.png).*)",
   ],
 };
 
@@ -53,7 +55,6 @@ export async function middleware(request: NextRequest) {
     : null;
 
   // utm collection
-  // NOTE: this is not working for pages with rewrites in next.config.js - (framer pages)
   // if user is already signed in - don't bother capturing utm params
   if (!authCookie) {
     const searchParamsEntries = request.nextUrl.searchParams.entries();
@@ -95,13 +96,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // remove '/' in front and then split by '/'
-
   // if it's the homepage and we have an auth cookie, redirect to the dashboard
   if (paths.length === 1 && paths[0] === "" && authCookie) {
+    const lastVisitedTeamPagePath = request.cookies.get(
+      LAST_VISITED_TEAM_PAGE_PATH,
+    )?.value;
+
     return redirect(
       request,
-      "/team",
+      lastVisitedTeamPagePath || "/team",
       cookiesToSet
         ? {
             cookiesToSet,

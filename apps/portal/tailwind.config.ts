@@ -44,41 +44,59 @@ module.exports = {
     },
     extend: {
       colors: {
+        border: "hsl(var(--border))",
+        "active-border": "hsl(var(--active-border))",
         current: "currentColor",
-        border: "var(--border)",
-        input: "var(--b-700)",
-        ring: "var(--b-700)",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
         transparent: "transparent",
-        overlay: "var(--overlay)",
-        // backgrounds
-        b: {
-          900: "var(--b-900)",
-          800: "var(--b-800)",
-          700: "var(--b-700)",
-          600: "var(--b-600)",
+        overlay: "hsl(var(--overlay))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
-        // foregrounds
-        f: {
-          100: "var(--f-100)",
-          200: "var(--f-200)",
-          300: "var(--f-300)",
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
-        "code-bg": "var(--code-bg)",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          // destructive-foreground should only be used on destructive bg
+          foreground: "hsl(var(--destructive-foreground))",
+          // destructive-text can be used on neutral bg - it's red-ish
+          text: "hsl(var(--destructive-text))",
+        },
+        success: {
+          // success-text can be used on neutral bg, it's green-ish
+          text: "hsl(var(--success-text))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
         accent: {
-          500: "var(--accent-500)",
-          700: "var(--accent-700)",
-          800: "var(--accent-800)",
-          900: "var(--accent-900)",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        danger: {
-          500: "var(--danger-500)",
-          800: "var(--danger-800)",
-          900: "var(--danger-900)",
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        inverted: {
+          DEFAULT: "hsl(var(--inverted))",
+          foreground: "hsl(var(--inverted-foreground))",
         },
         warning: {
-          500: "var(--warning-500)",
-          900: "var(--warning-900)",
-          800: "var(--warning-800)",
+          text: "hsl(var(--warning-text))",
+        },
+        link: {
+          foreground: "hsl(var(--link-foreground))",
         },
       },
       spacing: {

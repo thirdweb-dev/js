@@ -12,7 +12,13 @@ import {
 	ArticleIconCard,
 } from "@doc";
 import { ExternalLink } from "lucide-react";
-import { TypeScriptIcon, ReactIcon, DotNetIcon, UnityIcon, UnrealEngineIcon } from "@/icons";
+import {
+	TypeScriptIcon,
+	ReactIcon,
+	DotNetIcon,
+	UnityIcon,
+	UnrealEngineIcon,
+} from "@/icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -55,26 +61,14 @@ Comienza a usar Connect en el lenguaje de programación que prefieras.
 		href="/typescript/v5/getting-started"
 		icon={TypeScriptIcon}
 	/>
-	<SDKCard
-		title="React"
-		href="/react/v5/getting-started"
-		icon={ReactIcon}
-	/>
+	<SDKCard title="React" href="/react/v5/getting-started" icon={ReactIcon} />
 	<SDKCard
 		title="React Native"
 		href="/react-native/v5/getting-started"
 		icon={ReactIcon}
 	/>
-	<SDKCard
-		title="DotNet"
-		href="/dotnet/getting-started"
-		icon={DotNetIcon}
-	/>
-	<SDKCard
-		title="Unity"
-		href="/unity/v5/getting-started"
-		icon={UnityIcon}
-	/>
+	<SDKCard title="DotNet" href="/dotnet/getting-started" icon={DotNetIcon} />
+	<SDKCard title="Unity" href="/unity/v5/getting-started" icon={UnityIcon} />
 	<SDKCard
 		title="Unreal Engine"
 		href="/unreal-engine/getting-started"
@@ -96,15 +90,12 @@ Comienza a usar Connect en el lenguaje de programación que prefieras.
 	<p>
 		Necesitarás un ID de cliente para acceder a las APIs gratuitas de blockchain de Connect, almacenamiento, y más.
 	</p>
-	<Link
-			href="https://thirdweb.com/create-api-key"
-			target="_blank"
-		>
-		<Button> 
-			Generate
-		</Button>
-		</Link>
-	</div>
+
+	<Button asChild variant='outline'>
+		<Link href="https://thirdweb.com/create-api-key" target="_blank"> Generate </Link>
+	</Button>
+
+  </div>
 </Callout>
 
 ### Cadenas compatibles
@@ -120,4 +111,3 @@ Explora todos los kits de inicio, demos y plantillas disponibles en Github.
 	href="https://github.com/thirdweb-example"
 	tag="Starter"
 />
-

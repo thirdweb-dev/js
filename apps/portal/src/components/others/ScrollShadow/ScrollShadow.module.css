@@ -1,20 +1,16 @@
 .scrollShadowY {
   position: absolute;
   left: 0;
-  z-index: 10;
   width: 100%;
-  height: 36px;
-  --shadow: var(--b-700);
+  height: 32px;
   pointer-events: none;
 }
 
 .scrollShadowX {
   position: absolute;
   top: 0;
-  z-index: 10;
-  width: 36px;
+  width: 32px;
   height: 100%;
-  --shadow: var(--b-700);
   pointer-events: none;
 }
 

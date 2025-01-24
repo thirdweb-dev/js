@@ -222,6 +222,8 @@ export function DailyConnectionsChartCard(props: {
               dataKey={chartToShow}
               fill={`var(--color-${chartToShow})`}
               radius={8}
+              strokeWidth={1}
+              className="stroke-background"
             >
               {barChartData.length < 50 && (
                 <LabelList

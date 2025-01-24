@@ -4,62 +4,62 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Account contract",
+		title: "Contrato de Cuenta",
 		icon: "contract",
 	},
-	title: "Account | thirdweb contracts",
+	title: "Cuenta | contratos de thirdweb",
 	description:
-		"The Account smart contract is a non-upgradable, simple smart account that comes with all the basic benefits of account abstraction",
+		"El contrato de Cuenta es un contrato inteligente no actualizable, simple, que viene con todos los beneficios básicos de la abstracción de cuentas",
 });
 
-# Account
+# Cuenta
 
 ```solidity
 import "@thirdweb-dev/contracts/smart-wallet/non-upgradeable/Account.sol";
 ```
 
-This contract inherits from the [`BaseAccount`](/contracts/build/extensions/erc-4337/SmartWallet) contract
+Este contrato hereda del contrato [`BaseAccount`](/contracts/build/extensions/erc-4337/SmartWallet)
 
-The Account smart contract is a **non-upgradable**, simple smart account that comes with all the basic benefits of account abstraction,
-alongside the default features:
+El contrato de Cuenta es una cuenta inteligente **no actualizable**, simple, que viene con todos los beneficios básicos de la abstracción de cuentas,
+junto con las características predeterminadas:
 
-- Have multiple owners
-- Execute transactions (single and batched).
-- Send and receive native tokens.
-- Send and receive ERC-721 and ERC-1155 NFTs.
-- Multicall-able.
-- Store contract metadata.
+- Tener múltiples propietarios
+- Ejecutar transacciones (individuales y por lotes).
+- Enviar y recibir tokens nativos.
+- Enviar y recibir NFTs ERC-721 y ERC-1155.
+- Capacidad para múltiples llamadas.
+- Almacenar metadatos del contrato.
 
-Developers should use this wallet if they do not anticipate making any future upgrades to their users’ wallets.
+Los desarrolladores deben usar esta billetera si no anticipan hacer futuras actualizaciones a las billeteras de sus usuarios.
 
-App developers can issue `Account` smart accounts programmatically by deploying an [`AccountFactory`](/contracts/build/base-contracts/erc-4337/account-factory) smart contract.
+Los desarrolladores de aplicaciones pueden emitir cuentas inteligentes `Account` programáticamente mediante el despliegue de un contrato inteligente [`AccountFactory`](/contracts/build/base-contracts/erc-4337/account-factory).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/non-upgradeable/Account.sol" />
 
 <br />
 
-<Callout title="Issue accounts programatically" variant="info" >
+<Callout title="Emitir cuentas programáticamente" variant="info" >
 
-If you intend to issue accounts programmatically using a custom factory contract, you must do the following:
+Si tienes la intención de emitir cuentas programáticamente utilizando un contrato de fábrica personalizado, debes hacer lo siguiente:
 
-- Create a new factory contract by extending the [BaseAccountFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory) extension.
+- Crear un nuevo contrato de fábrica extendiendo la extensión [BaseAccountFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory).
 
-- Override the `_initializeAccount` function on the factory to create a new wallet. ([reference](https://github.com/thirdweb-dev/contracts/blob/main/contracts/smart-wallet/non-upgradeable/AccountFactory.sol#L36))
+- Sobrescribir la función `_initializeAccount` en la fábrica para crear una nueva billetera. ([referencia](https://github.com/thirdweb-dev/contracts/blob/main/contracts/smart-wallet/non-upgradeable/AccountFactory.sol#L36))
 
 </Callout>
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características disponibles por estas extensiones en el SDK y el panel:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [SmartWallet](/contracts/build/extensions/erc-4337/SmartWallet)
 - [Multicall](/contracts/build/extensions/general/Multicall)
 
-## Usage
+## Uso
 
-Import the contract and inherit from it. This is an example contract demonstrating one way that you could override the functionality to create a token bound account.
+Importa el contrato y haz que herede de él. Este es un contrato de ejemplo que demuestra una forma en que podrías sobrescribir la funcionalidad para crear una cuenta vinculada a un token.
 
 ```solidity
 import "@thirdweb-dev/contracts/smart-wallet/non-upgradable/Account.sol";
@@ -103,13 +103,13 @@ contract TokenBoundAccount is Account {
 }
 ```
 
-## Functions to Override
+## Funciones para sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="initialize" summary="initialize">
 
-Initializes the smart contract wallet.
+Inicializa la billetera de contrato inteligente.
 
 ```solidity
 function initialize(address _defaultAdmin, bytes calldata _data) public virtual initializer {
@@ -119,17 +119,17 @@ function initialize(address _defaultAdmin, bytes calldata _data) public virtual 
 
 #### \_defaultAdmin
 
-The account admin. Must be of type `address`.
+La cuenta admin. Debe ser de tipo `address`.
 
 #### \_data
 
-The abi encoded data to initialize the contract with. Must be of type `bytes`.
+Los datos codificados en ABI para inicializar el contrato. Deben ser de tipo `bytes`.
 
 </Details>
 
 <Details id="getImplementationForFunction" summary="getImplementationForFunction">
 
-Returns the extension implementation address, stored in router, for the given function.
+Devuelve la dirección de implementación de la extensión, almacenada en el enrutador, para la función dada.
 
 ```solidity
 function getImplementationForFunction(bytes4 _functionSelector) public view virtual override returns (address) {
@@ -140,13 +140,13 @@ function getImplementationForFunction(bytes4 _functionSelector) public view virt
 
 #### \_functionSelector
 
-The function selector to get the extension implementation address. Must be of type `bytes4`.
+El selector de función para obtener la dirección de implementación de la extensión. Debe ser de tipo `bytes4`.
 
 </Details>
 
 <Details id="isValidSigner" summary="isValidSigner">
 
-Returns whether a signer is authorized to perform transactions using the wallet.
+Devuelve si un firmante está autorizado para realizar transacciones usando la billetera.
 
 ```solidity
 function isValidSigner(address _signer) public view virtual returns (bool) {
@@ -156,13 +156,13 @@ function isValidSigner(address _signer) public view virtual returns (bool) {
 
 #### \_signer
 
-The signer to check authorization for. Must be of type `address`.
+El firmante para verificar la autorización. Debe ser de tipo `address`.
 
 </Details>
 
 <Details id="entryPoint" summary="entryPoint">
 
-Returns the entry point contract address.
+Devuelve la dirección del contrato de punto de entrada.
 
 ```solidity
 function entryPoint() public view virtual override returns (IEntryPoint) {
@@ -174,7 +174,7 @@ function entryPoint() public view virtual override returns (IEntryPoint) {
 
 <Details id="_canSetExtension" summary="_canSetExtension">
 
-Returns whether an extension can be set in the given execution context.
+Devuelve si una extensión puede ser configurada en el contexto de ejecución dado.
 
 ```solidity
 function _canSetExtension() internal view virtual override returns (bool) {
@@ -185,7 +185,7 @@ function _canSetExtension() internal view virtual override returns (bool) {
 </Details>
 
 <Details id="_validatesSignature" summary="_validatesSignature">
-Validates the signature of a user operation.
+Valida la firma de una operación de usuario.
 
 ```solidity
 function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)

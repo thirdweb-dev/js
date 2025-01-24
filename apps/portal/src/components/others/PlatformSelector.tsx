@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
 import { ChevronDownIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { connectLinks } from "../../app/Header";
 
@@ -22,24 +21,15 @@ export function PlatformSelector(props: {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="inline-flex cursor-pointer gap-2 font-semibold text-base text-f-100 hover:text-accent-500">
-          {/* <div className="flex gap-2 items-center"> */}
-          <Image
-            src={platform.icon}
-            alt=""
-            className="size-6"
-            width={20}
-            height={20}
-          />
+        <div className="inline-flex cursor-pointer gap-2 font-semibold text-base text-foreground">
+          <platform.icon className="size-5" />
           {platform.name}
-          {/* </div> */}
-
-          <ChevronDownIcon className="w-4 text-f-300 opacity-70" />
+          <ChevronDownIcon className="w-4 text-muted-foreground opacity-70" />
         </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="flex flex-col gap-1 bg-b-800 p-3"
+        className="flex flex-col gap-1 bg-card p-3"
         style={{
           minWidth: "150px",
         }}
@@ -47,25 +37,24 @@ export function PlatformSelector(props: {
         {connectLinks.map((platform) => {
           return (
             <DropdownMenuItem asChild key={platform.name}>
-              <Link
-                href={platform.href}
+              <div
                 className={clsx(
-                  "flex cursor-pointer font-medium text-f-200 text-lg",
-                  "hover:bg-b-600 hover:text-f-100",
-                  props.selected === platform.name && "bg-b-600 text-f-100",
+                  "relative flex cursor-pointer font-medium text-foreground text-lg",
+                  "hover:bg-accent",
+                  props.selected === platform.name &&
+                    "bg-muted text-foreground",
                 )}
               >
-                <div className="flex gap-3">
-                  <Image
-                    src={platform.icon}
-                    alt=""
-                    className="size-5"
-                    width={20}
-                    height={20}
-                  />
-                  {platform.name}
+                <div className="flex gap-2">
+                  <platform.icon className="size-5 text-foreground" />
+                  <Link
+                    href={platform.href}
+                    className="before:absolute before:inset-0"
+                  >
+                    {platform.name}
+                  </Link>
                 </div>
-              </Link>
+              </div>
             </DropdownMenuItem>
           );
         })}

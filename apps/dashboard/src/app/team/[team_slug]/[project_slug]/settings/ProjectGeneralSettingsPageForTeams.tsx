@@ -12,7 +12,7 @@ export function ProjectGeneralSettingsPageForTeams(props: {
 }) {
   const router = useDashboardRouter();
   const { team, project_slug, apiKey } = props;
-  const projectSettingsLayout = `/team/${team.slug}/${project_slug}/settings`;
+  const projectLayout = `/team/${team.slug}/${project_slug}`;
 
   // TODO - add a Project Image form field on this page
 
@@ -20,9 +20,9 @@ export function ProjectGeneralSettingsPageForTeams(props: {
     <ProjectGeneralSettingsPage
       apiKey={apiKey}
       paths={{
-        aaConfig: `${projectSettingsLayout}/account-abstraction`,
-        inAppConfig: `${projectSettingsLayout}/in-app-wallets`,
-        payConfig: `${projectSettingsLayout}/pay`,
+        aaConfig: `${projectLayout}/connect/account-abstraction/settings`,
+        inAppConfig: `${projectLayout}/connect/in-app-wallets/settings`,
+        payConfig: `${projectLayout}/connect/pay/settings`,
         afterDeleteRedirectTo: `/team/${team.slug}`,
       }}
       onKeyUpdated={() => {

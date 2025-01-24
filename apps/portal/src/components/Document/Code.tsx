@@ -68,7 +68,7 @@ export async function CodeBlock(props: {
     <div className={cn("group/code relative mb-5", props.containerClassName)}>
       <code
         className={cn(
-          "relative block rounded-lg border bg-code-bg font-mono text-sm leading-relaxed",
+          "relative block rounded-lg border bg-card font-mono text-sm leading-relaxed",
           props.className,
         )}
         lang={lang}
@@ -148,7 +148,7 @@ async function RenderCode(props: {
                       style={style}
                     >
                       {/* Token */}
-                      <span className="relative z-codeToken transition-colors duration-200 group-hover/codelink:text-b-900">
+                      <span className="relative z-codeToken transition-colors duration-200 group-hover/codelink:text-background">
                         {token.content}
                       </span>
                       {/* Line */}

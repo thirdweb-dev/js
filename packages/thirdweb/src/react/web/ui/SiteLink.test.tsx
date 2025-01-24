@@ -45,4 +45,21 @@ describe("SiteLink", () => {
     expect(anchor).toBeTruthy();
     await waitFor(() => expect(anchor?.href).toContain("walletId="));
   });
+
+  it("uses inApp wallet when wallet is a smart wallet", async () => {
+    const testUrl = "https://example.com/";
+    const { container } = render(
+      <SiteLink href={testUrl} client={TEST_CLIENT}>
+        Test Link
+      </SiteLink>,
+      {
+        setConnectedWallet: true,
+        walletId: "smart",
+      },
+    );
+
+    const anchor = container.querySelector("a");
+    expect(anchor).toBeTruthy();
+    await waitFor(() => expect(anchor?.href).toContain("walletId=inApp"));
+  });
 });

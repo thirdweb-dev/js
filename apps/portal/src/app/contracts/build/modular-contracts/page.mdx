@@ -14,15 +14,16 @@ export const metadata = createMetadata({
 	},
 });
 
-# Modular Contracts
+# Contratos Modulares
 
-**Modular Contracts** are contracts for which you can add, remove, or upgrade the exact parts you want.
+**Contratos Modulares** son contratos en los que puedes agregar, quitar o actualizar las partes exactas que desees.
 
-## Getting started
+## Empezando
 
-To get started, install the `modular-contracts` package in your existing Solidity project:
+Para comenzar, instala el paquete `modular-contracts` en tu proyecto Solidity existente:
 
 <Tabs defaultValue="forge">
+
 
 <TabsList>
 	<TabsTrigger value="forge">Forge</TabsTrigger>
@@ -40,36 +41,33 @@ npm i @thirdweb-dev/contracts
 </TabsContent>
 </Tabs>
 
-A modular contract is made up of [1] a **Core** and [2] **Extension** contracts. Learn more about these, below.
+Un contrato modular se compone de [1] un contrato **Core** y [2] contratos **Extension**. Aprende más sobre estos a continuación.
 
-Follow this [end-to-end guide](https://blog.thirdweb.com/p/d45e40f7-e8f3-4bcd-be6b-f800beff963f/)
-to learn how to write, deploy and use your own custom modular contract.
+Sigue esta [guía completa](https://blog.thirdweb.com/p/d45e40f7-e8f3-4bcd-be6b-f800beff963f/) para aprender a escribir, desplegar y usar tu propio contrato modular personalizado.
 
-## Background
+## Contexto
 
-A modular contract is made up of two kinds of contracts:
+Un contrato modular se compone de dos tipos de contratos:
 
-1. **Core** contract: the foundational API that can be customized by installing Extensions.
-2. **Extension** contract: implements a set of functionality that is enabled on a Core when it is installed.
+1. Contrato **Core**: la API base que puede personalizarse instalando extensiones.
+2. Contrato **Extension**: implementa un conjunto de funcionalidades que se habilitan en un Core cuando se instala.
 
 <Callout variant="info">
-	As an analogy, think of the robot, below. The torso is the *Core* to which you
-	attach/detach *Extensions*. 
+	Como analogía, piensa en el robot que se muestra a continuación. El torso es el *Core* al que se le pueden agregar o quitar *Extensions*. 
     
-    The torso has a particular shape and exposes sockets at fixed places -- all of which determine how extensions will be attached to it. Similarly,
-    a Core smart contract has a fixed API that determines what Extensions are compatible for installation.
+    El torso tiene una forma particular y expone enchufes en lugares fijos, los cuales determinan cómo se conectarán las extensiones. De manera similar, un contrato Core tiene una API fija que determina qué extensiones son compatibles para su instalación.
 
-    The *Extensions* themselves e.g. a leg, arm, head, etc. give the robot (i.e. the modular contract as a whole) its various capabilities.
+    Las *Extensions* mismas, por ejemplo, una pierna, brazo, cabeza, etc., le dan al robot (es decir, al contrato modular en su totalidad) sus diversas capacidades.
 
     <DocImage src={modularContractsAnalogyImage} className="w-[500px]" />
-
 </Callout>
 
-Installing an Extension in a Core customizes the Core’s behaviour in two ways:
+Instalar una extensión en un Core personaliza el comportamiento del Core de dos maneras:
 
-1. New functions become callable on the Core contract (via its [fallback function](https://docs.soliditylang.org/en/v0.8.26/contracts.html#fallback-function)).
-2. Core contract’s fixed functions make callback function calls into the Extension.
+1. Nuevas funciones se pueden llamar en el contrato Core (a través de su [función fallback](https://docs.soliditylang.org/en/v0.8.26/contracts.html#fallback-function)).
+2. Las funciones fijas del contrato Core hacen llamadas a las funciones de devolución de llamada dentro de la Extension.
 
 <DocImage src={modularContractsFlowImage} />
 
-You can read about the full technical design details of Modular Contracts in its [design document](/contracts/design-docs/modular-contracts).
+Puedes leer sobre los detalles completos del diseño técnico de los Contratos Modulares en su [documento de diseño](/contracts/design-docs/modular-contracts).
+

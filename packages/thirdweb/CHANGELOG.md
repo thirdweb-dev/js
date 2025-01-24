@@ -1,5 +1,123 @@
 # thirdweb
 
+## 5.86.1
+
+### Patch Changes
+
+- [#6011](https://github.com/thirdweb-dev/js/pull/6011) [`b38604c`](https://github.com/thirdweb-dev/js/commit/b38604cce81832303dcf51ab058f6621045e9aff) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with chain switching breaking after disconnect
+
+- [#6015](https://github.com/thirdweb-dev/js/pull/6015) [`8bbee03`](https://github.com/thirdweb-dev/js/commit/8bbee03c77abe95d2c4a48b46fefa9086de3b749) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes issue with smart wallets used on SiteLink and SiteEmbed
+
+- [#6020](https://github.com/thirdweb-dev/js/pull/6020) [`ab9a148`](https://github.com/thirdweb-dev/js/commit/ab9a148b754da04527d4e49359565b14d5c4f3ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better transaction tracking for smart wallets
+
+## 5.86.0
+
+### Minor Changes
+
+- [#5989](https://github.com/thirdweb-dev/js/pull/5989) [`8b5cb47`](https://github.com/thirdweb-dev/js/commit/8b5cb47339af2d5794d642f484429b19b4d313be) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Feature: Adds deployMarketplaceContract
+
+  ```ts
+  import { deployMarketplaceContract } from "thirdweb/deploys";
+
+  const address = await deployMarketplaceContract({
+    client,
+    chain,
+    account,
+    params: {
+      name: "MarketplaceV3",
+      description: "MarketplaceV3 deployed using thirdweb SDK",
+      platformFeeRecipient: "0x21d514c90ee4E4e4Cd16Ce9185BF01F0F1eE4A04",
+      platformFeeBps: 1000,
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#6004](https://github.com/thirdweb-dev/js/pull/6004) [`bb6c71e`](https://github.com/thirdweb-dev/js/commit/bb6c71e9681606376d3894b94afb4f68c438ae23) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to eip1193 provider chain when switching chain is not supported
+
+## 5.85.0
+
+### Minor Changes
+
+- [#5972](https://github.com/thirdweb-dev/js/pull/5972) [`0b62397`](https://github.com/thirdweb-dev/js/commit/0b6239735ea01b68533784d629a7bd5ab8752b94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support multiple messages for Nebula API, updated input props.
+
+  Some prop names have been updated:
+
+  `prompt -> messsage`
+  `context -> contextFilter`
+
+  ```ts
+  Nebula.chat({
+    client,
+    // prompt is now message
+    message:
+      "What's the total supply of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+    // contextFilter is now contextFilter
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+  The Nebula.chat and Nebula.execute functions now support multiple input messages, and the input properties have been updated to match the http API.
+
+  ```ts
+  Nebula.chat({
+    client,
+    // multi message format
+    messages: [
+      {
+        role: "user",
+        content:
+          "Tell me the name of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+      },
+      {
+        role: "assistant",
+        content: "The name of the contract is My NFT Collection",
+      },
+      {
+        role: "user",
+        content: "What's the symbol of this contract?",
+      },
+    ],
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+  Same changes apply to Nebula.execute.
+
+  ```ts
+  Nebula.execute({
+    client,
+    account,
+    messages: [
+      { role: "user", content: "What's the address of vitalik.eth" },
+      {
+        role: "assistant",
+        content:
+          "The address of vitalik.eth is 0xd8dA6BF26964aF8E437eEa5e3616511D7G3a3298",
+      },
+      { role: "user", content: "Send them 0.0001 ETH" },
+    ],
+    contextFilter: {
+      chains: [sepolia],
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#5966](https://github.com/thirdweb-dev/js/pull/5966) [`4ffcf30`](https://github.com/thirdweb-dev/js/commit/4ffcf305abdced715a76638a3af47d0f91e24e01) Thanks [@MananTank](https://github.com/MananTank)! - Fix NFT components not displaying correct metadata if multiple contracts with same token id is rendered because of incorrect caching
+
+- [#5973](https://github.com/thirdweb-dev/js/pull/5973) [`dbb64ea`](https://github.com/thirdweb-dev/js/commit/dbb64ea190b248c5e4e04c98b0e6bc178fd729a0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations
+
+- [#5982](https://github.com/thirdweb-dev/js/pull/5982) [`b6d65cf`](https://github.com/thirdweb-dev/js/commit/b6d65cf1c42a6c6707489e2d3ab3510f137c1b35) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added `mode` as a predefined chain
+
+- [#5967](https://github.com/thirdweb-dev/js/pull/5967) [`9cbcbe7`](https://github.com/thirdweb-dev/js/commit/9cbcbe776032556717b3d0b30e774323f75c63ee) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added overrides for Lumia Testnet to use pre-EIP1559 gas values
+
 ## 5.84.0
 
 ### Minor Changes

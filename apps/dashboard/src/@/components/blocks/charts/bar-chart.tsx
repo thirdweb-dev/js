@@ -108,6 +108,8 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                           : [0, 0, 0, 0]
                       : [4, 4, 4, 4]
                   }
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               ))}
             </BarChart>

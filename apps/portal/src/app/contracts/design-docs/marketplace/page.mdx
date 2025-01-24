@@ -2,114 +2,114 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Marketplace V3 design document",
+		title: "Documento de diseño del Marketplace V3",
 		icon: "contract",
 	},
-	title: "Marketplace V3 design document | thirdweb",
+	title: "Documento de diseño del Marketplace V3 | thirdweb",
 	description:
-		"This is a live document that explains what the thirdweb Marketplace V3 smart contract is, how it works and can be used, and why it is written the way it is",
+		"Este es un documento en vivo que explica qué es el contrato inteligente Marketplace V3 de thirdweb, cómo funciona, cómo se puede usar y por qué está escrito de la forma en que está",
 });
 
-# Marketplace V3 design document.
+# Documento de diseño de Marketplace V3.
 
-This is a live document that explains what the [thirdweb](https://thirdweb.com/) `Marketplace V3` smart contract is, how it works and can be used, and why it is written the way it is.
+Este es un documento en vivo que explica qué es el contrato inteligente `Marketplace V3` de [thirdweb](https://thirdweb.com/), cómo funciona, cómo se puede usar y por qué está escrito de la forma en que está.
 
-The document is written for technical and non-technical readers. To ask further questions about `Marketplace V3`, please [visit our support site](https://thirdweb.com/contact-us) or create a [github issue](https://github.com/thirdweb-dev/contracts/issues).
+El documento está escrito para lectores técnicos y no técnicos. Para hacer más preguntas sobre `Marketplace V3`, por favor [visita nuestro sitio de soporte](https://thirdweb.com/contact-us) o crea un [problema en GitHub](https://github.com/thirdweb-dev/contracts/issues).
 
-## Background
+## Contexto
 
-The [thirdweb](https://thirdweb.com/) `Marketplace V3` is a marketplace where people can sell NFTs — [ERC 721](https://eips.ethereum.org/EIPS/eip-721) or [ERC 1155](https://eips.ethereum.org/EIPS/eip-1155) tokens — at a fixed price ( what we'll refer to as a "Direct listing"), or auction them (what we'll refer to as an "Auction listing"). It also allows users to make "Offers" on unlisted NFTs.
+El contrato `Marketplace V3` de [thirdweb](https://thirdweb.com/) es un mercado donde las personas pueden vender NFTs — [ERC 721](https://eips.ethereum.org/EIPS/eip-721) o [ERC 1155](https://eips.ethereum.org/EIPS/eip-1155) — a un precio fijo (lo que llamaremos "Listado directo") o subastarlos (lo que llamaremos "Listado de subasta"). También permite a los usuarios hacer "Ofertas" en NFTs no listados.
 
-`Marketplace V3` offers improvements over previous version in terms of design and features, which are discussed in this document. You can refer to previous (v2) `Marketplace` design document [here](https://github.com/thirdweb-dev/contracts/blob/main/contracts/old-marketplace/marketplace.md).
+`Marketplace V3` ofrece mejoras sobre la versión anterior en términos de diseño y características, las cuales se discuten en este documento. Puedes consultar el documento de diseño de la versión anterior (v2) de `Marketplace` [aquí](https://github.com/thirdweb-dev/contracts/blob/main/contracts/old-marketplace/marketplace.md).
 
-## Context behind this update
+## Contexto detrás de esta actualización
 
-We have given `Marketplace` an update that was long overdue. The marketplace product is still made up of three core ways of exchanging NFTs for money:
+Le hemos dado a `Marketplace` una actualización que hacía falta. El producto del mercado sigue estando compuesto por tres formas principales de intercambiar NFTs por dinero:
 
-1. Selling NFTs via a ‘direct listing'.
-2. Auctioning off NFTs.
-3. Making offers for NFTs not on sale at all, or at favorable prices.
+1. Vender NFTs a través de un ‘listado directo’.
+2. Subastar NFTs.
+3. Hacer ofertas por NFTs que no están a la venta en absoluto o a precios favorables.
 
-The core improvement of the `Marketplace V3` smart contract is better developer experience of working with the contract.
+La mejora principal del contrato inteligente `Marketplace V3` es una mejor experiencia de desarrollo al trabajar con el contrato.
 
-Previous version had some limitations, arising due to (1) the smart contract size limit of `~24.576 kb` on Ethereum mainnet (and other thirdweb supported chains), and (2) the way the smart contract code is organized (single, large smart contract that inherits other contracts). The previous `Marketplace` smart contract has functions that have multiple jobs, behave in many different ways under different circumstances, and a lack of convenient view functions to read data easily.
+La versión anterior tenía algunas limitaciones, derivadas de (1) el límite de tamaño del contrato inteligente de `~24.576 kb` en Ethereum mainnet (y otras cadenas compatibles con thirdweb), y (2) la forma en que se organiza el código del contrato inteligente (un solo contrato grande que hereda otros contratos). El contrato inteligente de `Marketplace` anterior tenía funciones que realizaban múltiples tareas, se comportaban de diferentes maneras según las circunstancias y carecían de funciones de visualización convenientes para leer datos fácilmente.
 
-Moreover, over time, we received feature requests for `Marketplace`, some of which have been incorporated in `Marketplace V3`, for e.g.:
+Además, con el tiempo, recibimos solicitudes de características para `Marketplace`, algunas de las cuales se han incorporado en `Marketplace V3`, por ejemplo:
 
-- Ability to accept multiple currencies for direct listings
-- Ability to explicitly cancel listings
-- Explicit getter functions for fetching high level states e.g. “has an auction ended”, “who is the winning bidder”, etc.
-- Simplify start time and expiration time for listings
+- Capacidad de aceptar múltiples monedas para listados directos
+- Capacidad de cancelar listados explícitamente
+- Funciones getter explícitas para obtener estados de alto nivel, como "¿ha terminado la subasta?", "¿quién es el postor ganador?", etc.
+- Simplificar el tiempo de inicio y el tiempo de expiración de los listados
 
-For all these reasons and feature additions, the `Marketplace` contract is getting an update, and being rolled out as `Marketplace V3`. In this update:
+Por todas estas razones y adiciones de características, el contrato `Marketplace` está recibiendo una actualización y se está lanzando como `Marketplace V3`. En esta actualización:
 
-- the contract has been broken down into independent extensions (later offered in Solidity SDK).
-- the contract provides explicit functions for each important action (something that is missing from the contract, today).
-- the contract provides convenient view functions for all relevant state of the contract, without expecting users to rely on events to read critical information.
+- El contrato se ha desglosado en extensiones independientes (que luego se ofrecen en el SDK de Solidity).
+- El contrato proporciona funciones explícitas para cada acción importante (algo que faltaba en el contrato actual).
+- El contrato proporciona funciones de visualización convenientes para todo el estado relevante del contrato, sin esperar que los usuarios dependan de eventos para leer información crítica.
 
-Finally, to accomplish all these things without the constraint of the smart contract size limit, the `Marketplace V3` contract is written in the following new code pattern, which we call `Plugin Pattern`. It was influenced by [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535). You can read more about Plugin Pattern [here](https://blog.thirdweb.com/).
+Finalmente, para lograr todo esto sin la restricción del límite de tamaño del contrato inteligente, el contrato `Marketplace V3` está escrito en el siguiente nuevo patrón de código, al que llamamos `Plugin Pattern`. Fue influenciado por [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535). Puedes leer más sobre Plugin Pattern [aquí](https://blog.thirdweb.com/).
 
-## Extensions that make up `Marketplace V3`
+## Extensiones que componen `Marketplace V3`
 
-The `Marketplace V3` smart contract is now written as the sum of three main extension smart contracts:
+El contrato inteligente `Marketplace V3` ahora está escrito como la suma de tres contratos inteligentes de extensión principales:
 
-1. `DirectListings`: List NFTs for sale at a fixed price. Buy NFTs from listings.
-2. `EnglishAuctions`: Put NFTs up for auction. Bid for NFTs up on auction. The highest bid within an auction's duration wins.
-3. `Offers`: Make offers of ERC20 or native token currency for NFTs. Accept a favorable offer if you own the NFTs wanted.
+1. `DirectListings`: Lista NFTs para la venta a un precio fijo. Compra NFTs de los listados.
+2. `EnglishAuctions`: Coloca NFTs en subasta. Realiza ofertas por NFTs en subasta. La oferta más alta dentro de la duración de la subasta gana.
+3. `Offers`: Realiza ofertas de ERC20 o moneda nativa para NFTs. Acepta una oferta favorable si posees los NFTs deseados.
 
-Each of these extension smart contracts is independent, and does not care about the state of the other extension contracts.
+Cada uno de estos contratos inteligentes de extensión es independiente y no se preocupa por el estado de los otros contratos de extensión.
 
-### What the Marketplace will look like to users
+### Cómo será el Marketplace para los usuarios
 
-There are two groups of users — (1) thirdweb's customers who'll set up the marketplace, and (2) the end users of thirdweb customers' marketplaces.
+Existen dos grupos de usuarios: (1) los clientes de thirdweb que configuran el mercado y (2) los usuarios finales de los mercados de los clientes de thirdweb.
 
-To thirdweb customers, the marketplace can be set up like any of the other thirdweb contract (e.g. 'NFT Collection') through the thirdweb dashboard, the thirdweb SDK, or by directly consuming the open sourced marketplace smart contract.
+Para los clientes de thirdweb, el mercado puede configurarse como cualquiera de los otros contratos de thirdweb (por ejemplo, 'Colección NFT') a través del panel de control de thirdweb, el SDK de thirdweb o consumiendo directamente el contrato inteligente del mercado de código abierto.
 
-To the end users of thirdweb customers, the experience of using the marketplace will feel familiar to popular marketplace platforms like OpenSea, Zora, etc. The biggest difference in user experience will be that performing any action on the marketplace requires gas fees.
+Para los usuarios finales de los clientes de thirdweb, la experiencia de usar el mercado será similar a la de plataformas de mercado populares como OpenSea, Zora, etc. La principal diferencia en la experiencia del usuario será que realizar cualquier acción en el mercado requiere tarifas de gas.
 
-- Thirdweb's customers
-  - Deploy the marketplace contract like any other thirdweb contract.
-  - Can set a % 'platform fee'. This % is collected on every sale — when a buyer buys tokens from a direct listing, and when a seller collects the highest bid on auction closing. This platform fee is distributed to the platform fee recipient (set by a contract admin).
-  - Can list NFTs for sale at a fixed price.
-  - Can edit an existing listing's parameters, e.g. the currency accepted. An auction's parameters cannot be edited once it has started.
-  - Can make offers to NFTs listed/unlisted for a fixed price.
-  - Can auction NFTs.
-  - Can make bids to auctions.
-  - Must pay gas fees to perform any actions, including the actions just listed.
+- Clientes de thirdweb
+  - Despliegan el contrato del mercado como cualquier otro contrato de thirdweb.
+  - Pueden establecer un porcentaje de 'tarifa de plataforma'. Este porcentaje se cobra en cada venta: cuando un comprador compra tokens de un listado directo y cuando un vendedor recoge la oferta más alta en el cierre de la subasta. Esta tarifa de plataforma se distribuye al destinatario de la tarifa de la plataforma (establecido por un administrador del contrato).
+  - Pueden listar NFTs para la venta a un precio fijo.
+  - Pueden editar los parámetros de un listado existente, por ejemplo, la moneda aceptada. Los parámetros de una subasta no se pueden editar una vez que ha comenzado.
+  - Pueden hacer ofertas por NFTs listados/no listados para un precio fijo.
+  - Pueden subastar NFTs.
+  - Pueden hacer ofertas en subastas.
+  - Deben pagar tarifas de gas para realizar cualquier acción, incluidas las acciones mencionadas.
 
-### EIPs implemented / supported
+### EIPs implementados / soportados
 
-To be able to escrow NFTs in the case of auctions, Marketplace implements the receiver interfaces for [ERC1155](https://eips.ethereum.org/EIPS/eip-1155) and [ERC721](https://eips.ethereum.org/EIPS/eip-721) tokens.
+Para poder escrolear NFTs en el caso de las subastas, Marketplace implementa las interfaces receptoras para [ERC1155](https://eips.ethereum.org/EIPS/eip-1155) y [ERC721](https://eips.ethereum.org/EIPS/eip-721).
 
-To enable meta-transactions (gasless), Marketplace implements [ERC2771](https://eips.ethereum.org/EIPS/eip-2771).
+Para habilitar las metatransacciones (sin gas), Marketplace implementa [ERC2771](https://eips.ethereum.org/EIPS/eip-2771).
 
-Marketplace also honors [ERC2981](https://eips.ethereum.org/EIPS/eip-2981) for the distribution of royalties on direct and auction listings.
+Marketplace también honra [ERC2981](https://eips.ethereum.org/EIPS/eip-2981) para la distribución de regalías en los listados directos y en las subastas.
 
-### Events emitted
+### Eventos emitidos
 
-All events emitted by the contract, as well as when they're emitted, can be found in the interface of the contract, [here](https://github.com/thirdweb-dev/contracts/blob/main/contracts/marketplace/IMarketplace.sol). In general, events are emitted whenever there is a state change in the contract.
+Todos los eventos emitidos por el contrato, así como cuándo se emiten, se pueden encontrar en la interfaz del contrato, [aquí](https://github.com/thirdweb-dev/contracts/blob/main/contracts/marketplace/IMarketplace.sol). En general, los eventos se emiten siempre que hay un cambio de estado en el contrato.
 
-### Currency transfers
+### Transferencias de moneda
 
-The contract supports both ERC20 currencies and a chain's native token (e.g. ether for Ethereum mainnet). This means that any action that involves transferring currency (e.g. buying a token from a direct listing) can be performed with either an ERC20 token or the chain's native token.
+El contrato admite tanto monedas ERC20 como la moneda nativa de la cadena (por ejemplo, ether para Ethereum mainnet). Esto significa que cualquier acción que implique transferir moneda (por ejemplo, comprar un token de un listado directo) se puede realizar con un token ERC20 o con la moneda nativa de la cadena.
 
-💡 **Note**: The exception is offers — these can only be made with ERC20 tokens, since Marketplace needs to transfer the offer amount from the buyer to the seller, in case the latter accepts the offer. This cannot be done with native tokens without escrowing the requisite amount of currency.
+💡 **Nota**: La excepción son las ofertas: estas solo se pueden hacer con tokens ERC20, ya que Marketplace necesita transferir el monto de la oferta del comprador al vendedor, en caso de que el último acepte la oferta. Esto no se puede hacer con monedas nativas sin escrolear la cantidad de moneda requerida.
 
-The contract wraps all native tokens deposited into it as the canonical ERC20 wrapped version of the native token (e.g. WETH for ether). The contract unwraps the wrapped native token when transferring native tokens to a given address.
+El contrato envuelve todos los tokens nativos depositados en él como la versión ERC20 canónica del token nativo (por ejemplo, WETH para ether). El contrato desenrolla el token nativo envuelto al transferir tokens nativos a una dirección determinada.
 
-If the contract fails to transfer out native tokens, it wraps them back to wrapped native tokens, and transfers the wrapped native tokens to the concerned address. The contract may fail to transfer out native tokens to an address, if the address represents a smart contract that cannot accept native tokens transferred to it directly.
+Si el contrato no puede transferir tokens nativos, los envuelve de nuevo a tokens nativos envueltos y los transfiere a la dirección correspondiente. El contrato puede fallar al transferir tokens nativos a una dirección, si la dirección representa un contrato inteligente que no puede aceptar tokens nativos transferidos directamente.
 
-## API Reference for Extensions
+## Referencia de la API para Extensiones
 
-### Direct listings
+### Listados directos
 
-The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-721 or ERC-1155) for a fixed price.
+El contrato inteligente de extensión `DirectListings` te permite comprar y vender NFTs (ERC-721 o ERC-1155) a un precio fijo.
 
 ### `createListing`
 
-**What:** List NFTs (ERC721 or ERC1155) for sale at a fixed price.
+**Qué hace:** Lista NFTs (ERC721 o ERC1155) para la venta a un precio fijo.
 
-- Interface
+- Interfaz
 
   ```solidity
   struct ListingParameters {
@@ -127,31 +127,31 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | ------------- | --------------------------------------------------------------------------------------------------- |
-  | assetContract | The address of the smart contract of the NFTs being listed. |
-  | tokenId | The tokenId of the NFTs being listed. |
-  | quantity | The quantity of NFTs being listed. This must be non-zero, and is expected to be 1 for ERC-721 NFTs. |
-  | currency | The currency in which the price must be paid when buying the listed NFTs. The address considered for native tokens of the chain is 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE |
-  | pricePerToken | The price to pay per unit of NFTs listed. |
-  | startTimestamp | The UNIX timestamp at and after which NFTs can be bought from the listing. |
-  | expirationTimestamp | The UNIX timestamp at and after which NFTs cannot be bought from the listing. |
-  | reserved | Whether the listing is reserved to be bought from a specific set of buyers. |
-- Criteria that must be satisfied
-  - The listing creator must own the NFTs being listed.
-  - The listing creator must have already approved Marketplace to transfer the NFTs being listed (since the creator is not required to escrow NFTs in the Marketplace).
-  - The listing creator must list a non-zero quantity of tokens. If listing ERC-721 tokens, the listing creator must list only quantity `1`.
-  - The listing start time must not be less than 1+ hour before the block timestamp of the transaction. The listing end time must be after the listing start time.
-  - Only ERC-721 or ERC-1155 tokens must be listed.
-  - The listing creator must have `LISTER_ROLE` if role restrictions are active.
-  - The asset being listed must have `ASSET_ROLE` if role restrictions are active.
+  | assetContract | La dirección del contrato inteligente de los NFTs que se están listando. |
+  | tokenId | El tokenId de los NFTs que se están listando. |
+  | cantidad | La cantidad de NFTs que se están listando. Esto debe ser mayor que cero, y se espera que sea 1 para los NFTs ERC-721. |
+  | currency | La moneda en la que se debe pagar al comprar los NFTs listados. La dirección considerada para los tokens nativos de la cadena es 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE |
+  | pricePerToken | El precio que se debe pagar por unidad de NFT listado. |
+  | startTimestamp | El timestamp UNIX en el que los NFTs pueden ser comprados desde el listado. |
+  | expirationTimestamp | El timestamp UNIX después del cual los NFTs no pueden ser comprados desde el listado. |
+  | reserved | Indica si el listado está reservado para ser comprado por un conjunto específico de compradores. |
+- Criterios que deben cumplirse
+  - El creador del listado debe ser propietario de los NFTs que está listando.
+  - El creador del listado debe haber aprobado previamente a Marketplace para transferir los NFTs que está listando (ya que no se requiere que el creador deposite los NFTs en Marketplace).
+  - El creador del listado debe listar una cantidad no nula de tokens. Si se listan tokens ERC-721, el creador solo puede listar la cantidad `1`.
+  - El tiempo de inicio del listado no debe ser menor a 1 hora después del timestamp del bloque de la transacción. El tiempo de finalización del listado debe ser posterior al tiempo de inicio.
+  - Solo se deben listar tokens ERC-721 o ERC-1155.
+  - El creador del listado debe tener el rol `LISTER_ROLE` si las restricciones de roles están activas.
+  - El activo que se lista debe tener el rol `ASSET_ROLE` si las restricciones de roles están activas.
 
 ### `updateListing`
 
-**What:** Update information (e.g. price) for one of your listings on the marketplace.
+**Qué hace:** Actualiza la información (por ejemplo, el precio) de uno de tus listados en el marketplace.
 
-- Interface
+- Interfaz
 
   ```solidity
   struct ListingParameters {
@@ -168,51 +168,51 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
   function updateListing(uint256 listingId, ListingParameters memory params) external
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | ------------- | --------------------------------------------------------------------------------------------------- |
-  | listingId | The unique ID of the listing being updated. |
-  | assetContract | The address of the smart contract of the NFTs being listed. |
-  | tokenId | The tokenId of the NFTs being listed. |
-  | quantity | The quantity of NFTs being listed. This must be non-zero, and is expected to be 1 for ERC-721 NFTs. |
-  | currency | The currency in which the price must be paid when buying the listed NFTs. The address considered for native tokens of the chain is 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE |
-  | pricePerToken | The price to pay per unit of NFTs listed. |
-  | startTimestamp | The UNIX timestamp at and after which NFTs can be bought from the listing. |
-  | expirationTimestamp | The UNIX timestamp at and after which NFTs cannot be bought from the listing. |
-  | reserved | Whether the listing is reserved to be bought from a specific set of buyers. |
-- Criteria that must be satisfied
-  - The caller of the function _must_ be the creator of the listing being updated.
-  - The listing creator must own the NFTs being listed.
-  - The listing creator must have already approved Marketplace to transfer the NFTs being listed (since the creator is not required to escrow NFTs in the Marketplace).
-  - The listing creator must list a non-zero quantity of tokens. If listing ERC-721 tokens, the listing creator must list only quantity `1`.
-  - Only ERC-721 or ERC-1155 tokens must be listed.
-  - The listing start time must be greater than or equal to the incumbent start timestamp. The listing end time must be after the listing start time.
-  - The asset being listed must have `ASSET_ROLE` if role restrictions are active.
+  | listingId | El ID único del listado que se está actualizando. |
+  | assetContract | La dirección del contrato inteligente de los NFTs que se están listando. |
+  | tokenId | El tokenId de los NFTs que se están listando. |
+  | cantidad | La cantidad de NFTs que se están listando. Esto debe ser mayor que cero, y se espera que sea 1 para los NFTs ERC-721. |
+  | currency | La moneda en la que se debe pagar al comprar los NFTs listados. La dirección considerada para los tokens nativos de la cadena es 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE |
+  | pricePerToken | El precio que se debe pagar por unidad de NFT listado. |
+  | startTimestamp | El timestamp UNIX en el que los NFTs pueden ser comprados desde el listado. |
+  | expirationTimestamp | El timestamp UNIX después del cual los NFTs no pueden ser comprados desde el listado. |
+  | reserved | Indica si el listado está reservado para ser comprado por un conjunto específico de compradores. |
+- Criterios que deben cumplirse
+  - El llamador de la función _debe_ ser el creador del listado que se está actualizando.
+  - El creador del listado debe ser propietario de los NFTs que está listando.
+  - El creador del listado debe haber aprobado previamente a Marketplace para transferir los NFTs que está listando (ya que no se requiere que el creador deposite los NFTs en Marketplace).
+  - El creador del listado debe listar una cantidad no nula de tokens. Si se listan tokens ERC-721, el creador solo puede listar la cantidad `1`.
+  - Solo se deben listar tokens ERC-721 o ERC-1155.
+  - El tiempo de inicio del listado debe ser mayor o igual al timestamp de inicio actual. El tiempo de finalización del listado debe ser posterior al tiempo de inicio.
+  - El activo que se lista debe tener el rol `ASSET_ROLE` si las restricciones de roles están activas.
 
 ### `cancelListing`
 
-**What:** Cancel (i.e. delete) one of your listings on the marketplace.
+**Qué hace:** Cancela (es decir, elimina) uno de tus listados en el marketplace.
 
-- Interface
+- Interfaz
 
   ```solidity
   function cancelListing(uint256 listingId) external;
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | --------- | --------------------------------------------------- |
-  | listingId | The unique ID of the listing to cancel i.e. delete. |
-- Criteria that must be satisfied
-  - The caller of the function _must_ be the creator of the listing being cancelled.
-  - The listing must exist.
+  | listingId | El ID único del listado a cancelar, es decir, eliminar. |
+- Criterios que deben cumplirse
+  - El llamador de la función _debe_ ser el creador del listado que se está cancelando.
+  - El listado debe existir.
 
 ### `approveBuyerForListing`
 
-**What:** Approve a buyer to buy from a reserved listing.
+**Qué hace:** Aprueba a un comprador para que pueda comprar de un listado reservado.
 
-- Interface
+- Interfaz
 
   ```solidity
   function approveBuyerForListing(
@@ -223,21 +223,21 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | --------- | ------------------------------------------------------------ |
-  | listingId | The unique ID of the listing. |
-  | buyer | The address of the buyer to approve to buy from the listing. |
-  | toApprove | Whether to approve the buyer to buy from the listing. |
-- Criteria that must be satisfied
-  - The caller of the function _must_ be the creator of the listing in question.
-  - The listing must be reserved.
+  | listingId | El ID único del listado. |
+  | buyer | La dirección del comprador a aprobar para comprar del listado. |
+  | toApprove | Si se aprueba o no al comprador para comprar del listado. |
+- Criterios que deben cumplirse
+  - El llamador de la función _debe_ ser el creador del listado en cuestión.
+  - El listado debe estar reservado.
 
 ### `approveCurrencyForListing`
 
-**What:** Approve a currency as a form of payment for the listing.
+**Qué hace:** Aprueba una moneda como forma de pago para el listado.
 
-- Interface
+- Interfaz
 
   ```solidity
   function approveCurrencyForListing(
@@ -248,21 +248,21 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | ----------------------- | ---------------------------------------------------------------------------- |
-  | listingId | The unique ID of the listing. |
-  | currency | The address of the currency to approve as a form of payment for the listing. |
-  | pricePerTokenInCurrency | The price per token for the currency to approve. A value of 0 here disapprove a currency. |
-- Criteria that must be satisfied
-  - The caller of the function _must_ be the creator of the listing in question.
-  - The currency being approved must not be the main currency accepted by the listing.
+  | listingId | El ID único del listado. |
+  | currency | La dirección de la moneda para aprobar como forma de pago para el listado. |
+  | pricePerTokenInCurrency | El precio por token para la moneda aprobada. Un valor de 0 desaprueba una moneda. |
+- Criterios que deben cumplirse
+  - El llamador de la función _debe_ ser el creador del listado en cuestión.
+  - La moneda aprobada no debe ser la moneda principal aceptada por el listado.
 
 ### `buyFromListing`
 
-**What:** Buy NFTs from a listing.
+**Qué hace:** Comprar NFTs de un listado.
 
-- Interface
+- Interfaz
 
   ```solidity
   function buyFromListing(
@@ -275,28 +275,28 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | ------------------ | ---------------------------------------------------------- |
-  | listingId | The unique ID of the listing to buy NFTs from. |
-  | buyFor | The recipient of the NFTs being bought. |
-  | quantity | The quantity of NFTs to buy from the listing. |
-  | currency | The currency to use to pay for NFTs. |
-  | expectedTotalPrice | The expected total price to pay for the NFTs being bought. |
-- Criteria that must be satisfied
-  - The buyer must own the total price amount to pay for the NFTs being bought.
-  - The buyer must approve the Marketplace to transfer the total price amount to pay for the NFTs being bought.
-  - If paying in native tokens, the buyer must send exactly the expected total price amount of native tokens along with the transaction.
-  - The buyer's expected total price must match the actual total price for the NFTs being bought.
-  - The buyer must buy a non-zero quantity of NFTs.
-  - The buyer must not attempt to buy more NFTs than are listed at the time.
-  - The buyer must pay in a currency approved by the listing creator.
+  | listingId | El ID único del listado desde el que comprar los NFTs. |
+  | buyFor | El destinatario de los NFTs comprados. |
+  | quantity | La cantidad de NFTs a comprar del listado. |
+  | currency | La moneda a utilizar para pagar los NFTs. |
+  | expectedTotalPrice | El precio total esperado a pagar por los NFTs comprados. |
+- Criterios que deben cumplirse
+  - El comprador debe poseer la cantidad total necesaria para pagar los NFTs que está comprando.
+  - El comprador debe aprobar el Marketplace para transferir la cantidad total necesaria para pagar los NFTs.
+  - Si se paga en tokens nativos, el comprador debe enviar exactamente la cantidad total esperada de tokens nativos junto con la transacción.
+  - El precio total esperado del comprador debe coincidir con el precio total real de los NFTs comprados.
+  - El comprador debe comprar una cantidad no nula de NFTs.
+  - El comprador no debe intentar comprar más NFTs de los que están listados en ese momento.
+  - El comprador debe pagar en una moneda aprobada por el creador del listado.
 
 ### `totalListings`
 
-**What:** Returns the total number of listings created so far.
+**Qué hace:** Devuelve el número total de listados creados hasta el momento.
 
-- Interface
+- Interfaz
 
   ```solidity
   function totalListings() external view returns (uint256);
@@ -305,9 +305,9 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
 ### `getAllListings`
 
-**What:** Returns all listings between the start and end Id (both inclusive) provided.
+**Qué hace:** Devuelve todos los listados entre el ID de inicio y el ID final (ambos inclusive) proporcionados.
 
-- Interface
+- Interfaz
 
   ```solidity
   enum TokenType {
@@ -349,9 +349,10 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
 ### `getAllValidListings`
 
-**What:** Returns all valid listings between the start and end Id (both inclusive) provided. A valid listing is where the listing is active, as well as the creator still owns and has approved Marketplace to transfer the listed NFTs.
+**Qué hace:** Devuelve todos los listados válidos entre el ID de inicio y el ID final (ambos inclusive) proporcionados. Un listado válido es aquel donde el listado está activo, así como el creador aún posee y ha aprobado al Marketplace para transferir los NFTs listados.
 
-- Interface
+- Interfaz
+
 
   ```solidity
   function getAllValidListings(uint256 startId, uint256 endId) external view returns (Listing[] memory listings);
@@ -366,40 +367,40 @@ The `DirectListings` extension smart contract lets you buy and sell NFTs (ERC-72
 
 ### `getListing`
 
-**What:** Returns a listing at the provided listing ID.
+**Qué hace:** Devuelve un listado en el ID de listado proporcionado.
 
-- Interface
+- Interfaz
 
   ```solidity
   function getListing(uint256 listingId) external view returns (Listing memory listing);
 
   ```
 
-- Parameters
-  | Parameter | Description |
+- Parámetros
+  | Parámetro | Descripción |
   | --------- | ------------------------------- |
-  | listingId | The ID of the listing to fetch. |
+  | listingId | El ID del listado a obtener. |
 
-## English auctions
+## Subastas inglesas
 
-The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ERC-1155) in an english auction.
+El contrato inteligente de extensión `EnglishAuctions` te permite vender NFTs (ERC-721 o ERC-1155) en una subasta inglesa.
 
 ### `createAuction`
 
-**What:** Put up NFTs (ERC721 or ERC1155) for an english auction.
+**Qué hace:** Pon NFTs (ERC721 o ERC1155) en una subasta inglesa.
 
-- **What is an English auction?**
-  - `Alice` deposits her NFTs in the Marketplace contract and specifies: **[1]** a minimum bid amount, and **[2]** a duration for the auction.
-  - `Bob` is the first person to make a bid.
-    - _Before_ the auction duration ends, `Bob` makes a bid in the auction (≥ minimum bid).
-    - `Bob`'s bid is now deposited and locked in the Marketplace.
-  - `Tom` also wants the auctioned NFTs. `Tom`'s bid _must_ be greater than `Bob`'s bid.
-    - _Before_ the auction duration ends, `Tom` makes a bid in the auction (≥ `Bob`'s bid).
-    - `Tom`'s bid is now deposited and locked in the Marketplace. `Bob`'s is _automatically_ refunded his bid.
-  - _After_ the auction duration ends:
-    - `Alice` collects the highest bid that has been deposited in Marketplace.
-    - The “highest bidder” e.g. `Tom` collects the auctioned NFTs.
-- Interface
+- **¿Qué es una subasta inglesa?**
+  - `Alice` deposita sus NFTs en el contrato de Marketplace y especifica: **[1]** una cantidad mínima de oferta y **[2]** una duración para la subasta.
+  - `Bob` es la primera persona en hacer una oferta.
+    - _Antes_ de que termine la duración de la subasta, `Bob` hace una oferta en la subasta (≥ oferta mínima).
+    - La oferta de `Bob` ahora se deposita y se bloquea en el Marketplace.
+  - `Tom` también quiere los NFTs subastados. La oferta de `Tom` _debe_ ser mayor que la oferta de `Bob`.
+    - _Antes_ de que termine la duración de la subasta, `Tom` hace una oferta en la subasta (≥ oferta de `Bob`).
+    - La oferta de `Tom` ahora se deposita y se bloquea en el Marketplace. La oferta de `Bob` se _reembolsa automáticamente_.
+  - _Después_ de que termine la duración de la subasta:
+    - `Alice` recoge la oferta más alta que ha sido depositada en el Marketplace.
+    - El “ofertante más alto” (por ejemplo, `Tom`) recoge los NFTs subastados.
+- Interfaz
 
   ```solidity
   struct AuctionParameters {
@@ -419,129 +420,131 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
   ```
 
-- Parameters
-  | Parameter | Description |
-  | ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-  | assetContract | The address of the smart contract of the NFTs being auctioned. |
-  | tokenId | The tokenId of the NFTs being auctioned. |
-  | quantity | The quantity of NFTs being auctioned. This must be non-zero, and is expected to be 1 for ERC-721 NFTs. |
-  | currency | The currency in which the bid must be made when bidding for the auctioned NFTs. |
-  | minimumBidAmount | The minimum bid amount for the auction. |
-  | buyoutBidAmount | The total bid amount for which the bidder can directly purchase the auctioned items and close the auction as a result. |
-  | timeBufferInSeconds | This is a buffer e.g. x seconds. If a new winning bid is made less than x seconds before expirationTimestamp, the expirationTimestamp is increased by x seconds. |
-  | bidBufferBps | This is a buffer in basis points e.g. x%. To be considered as a new winning bid, a bid must be at least x% greater than the current winning bid. |
-  | startTimestamp | The timestamp at and after which bids can be made to the auction |
-  | expirationTimestamp | The timestamp at and after which bids cannot be made to the auction. |
-- Criteria that must be satisfied
-  - The auction creator must own and approve Marketplace to transfer the auctioned tokens to itself.
-  - The auction creator must auction a non-zero quantity of tokens. If the auctioned token is ERC721, the quantity must be `1`.
-  - The auction creator must specify a non-zero time and bid buffers.
-  - The minimum bid amount must be less than the buyout bid amount.
-  - The auction start time must not be less than 1+ hour before the block timestamp of the transaction. The auction end time must be after the auction start time.
-  - The auctioned token must be ERC-721 or ERC-1155.
-  - The auction creator must have `LISTER_ROLE` if role restrictions are active.
-  - The asset being auctioned must have `ASSET_ROLE` if role restrictions are active.
+- Parámetros
+  | Parámetro              | Descripción                                                                                                                   |
+  | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+  | assetContract          | La dirección del contrato inteligente de los NFTs que están siendo subastados.                                                 |
+  | tokenId                | El tokenId de los NFTs que están siendo subastados.                                                                            |
+  | quantity               | La cantidad de NFTs que están siendo subastados. Esto debe ser mayor a cero, y se espera que sea 1 para NFTs ERC-721.         |
+  | currency               | La moneda en la que se debe hacer la oferta para los NFTs subastados.                                                          |
+  | minimumBidAmount       | La cantidad mínima de oferta para la subasta.                                                                                  |
+  | buyoutBidAmount        | La cantidad total de la oferta con la que el postor puede comprar directamente los artículos subastados y cerrar la subasta.   |
+  | timeBufferInSeconds    | Este es un buffer, por ejemplo, x segundos. Si se realiza una nueva oferta ganadora menos de x segundos antes del timestamp de expiración, el timestamp de expiración se incrementa por x segundos. |
+  | bidBufferBps           | Este es un buffer en puntos base, por ejemplo, x%. Para que se considere una nueva oferta ganadora, la oferta debe ser al menos un x% mayor que la oferta ganadora actual. |
+  | startTimestamp         | El timestamp en el cual se pueden hacer ofertas para la subasta.                                                               |
+  | expirationTimestamp    | El timestamp después del cual no se pueden hacer más ofertas para la subasta.                                                  |
+- Criterios que deben cumplirse
+  - El creador de la subasta debe ser propietario y haber aprobado al Marketplace para transferir los tokens subastados a sí mismo.
+  - El creador de la subasta debe subastar una cantidad no nula de tokens. Si el token subastado es ERC721, la cantidad debe ser `1`.
+  - El creador de la subasta debe especificar un buffer de tiempo y de oferta no nulo.
+  - La cantidad mínima de oferta debe ser menor que la cantidad de compra inmediata.
+  - El tiempo de inicio de la subasta no debe ser inferior a 1 hora más del timestamp de bloque de la transacción. El tiempo de finalización de la subasta debe ser después del tiempo de inicio de la subasta.
+  - El token subastado debe ser ERC-721 o ERC-1155.
+  - El creador de la subasta debe tener el `LISTER_ROLE` si las restricciones de roles están activas.
+  - El activo que se subasta debe tener el `ASSET_ROLE` si las restricciones de roles están activas.
 
 ### `cancelAuction`
 
-**What:** Cancel an auction.
+**Qué hace:** Cancelar una subasta.
 
-- Interface
+- Interfaz
 
   ```solidity
   function cancelAuction(uint256 auctionId) external;
 
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | --------------------------------------- |
-  | auctionId | The unique ID of the auction to cancel. |
-- Criteria that must be satisfied
-  - The caller of the function must be the auction creator.
-  - There must be no bids placed in the ongoing auction. (Default true for all auctions that haven't started)
+- Parámetros
+  | Parámetro  | Descripción                                                               |
+  | ---------- | ------------------------------------------------------------------------- |
+  | auctionId  | El ID único de la subasta a cancelar.                                      |
+- Criterios que deben cumplirse
+  - El que llama a la función debe ser el creador de la subasta.
+  - No debe haber ofertas realizadas en la subasta en curso. (Por defecto, esto es verdadero para todas las subastas que no han comenzado).
 
 ### `collectAuctionPayout`
 
-**What:** Once the auction ends, collect the highest bid made for your auctioned NFTs.
+**Qué hace:** Una vez que la subasta termina, recolecta la oferta más alta realizada para los NFTs subastados.
 
-- Interface
+- Interfaz
 
   ```solidity
   function collectAuctionPayout(uint256 auctionId) external;
 
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | ------------------------------------------------------- |
-  | auctionId | The unique ID of the auction to collect the payout for. |
-- Criteria that must be satisfied
-  - The auction must be expired.
-  - The auction must have received at least one valid bid.
+- Parámetros
+  | Parámetro | Descripción                                                         |
+  | --------- | ------------------------------------------------------------------- |
+  | auctionId | El ID único de la subasta para la cual recolectar el pago.         |
+- Criterios que deben cumplirse
+  - La subasta debe haber expirado.
+  - La subasta debe haber recibido al menos una oferta válida.
 
 ### `collectAuctionTokens`
 
-**What:** Once the auction ends, collect the auctioned NFTs for which you were the highest bidder.
+**Qué hace:** Una vez que la subasta termina, recoge los NFTs subastados para los cuales fuiste el postor más alto.
 
-- Interface
+- Interfaz
 
   ```solidity
   function collectAuctionTokens(uint256 auctionId) external;
 
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | ------------------------------------------------------- |
-  | auctionId | The unique ID of the auction to collect the payout for. |
-- Criteria that must be satisfied
-  - The auction must be expired.
-  - The caller must be the winning bidder.
+- Parámetros
+  | Parámetro | Descripción                                                         |
+  | --------- | ------------------------------------------------------------------- |
+  | auctionId | El ID único de la subasta para la cual hacer una oferta.          |
+- Criterios que deben cumplirse
+  - La subasta debe estar activa.
+  - El monto de la oferta debe ser mayor que la oferta actual.
+  - El comprador debe tener suficiente saldo en la moneda seleccionada.
+  - El comprador debe aprobar el Marketplace para transferir el monto de la oferta.
 
 ### `bidInAuction`
 
-**What:** Make a bid in an auction.
+**Qué hace:** Realizar una oferta en una subasta.
 
-- Interface
+- Interfaz
 
   ```solidity
   function bidInAuction(uint256 auctionId, uint256 bidAmount) external payable;
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | --------------------------------------- |
-  | auctionId | The unique ID of the auction to bid in. |
-  | bidAmount | The total bid amount. |
-- Criteria that must be satisfied
-  - Auction must not be expired.
-  - The caller must own and approve Marketplace to transfer the requisite bid amount to itself.
-  - The bid amount must be a winning bid amount. (For convenience, this can be verified by calling `isNewWinningBid`)
+- Parámetros
+  | Parámetro | Descripción                                                        |
+  | --------- | ------------------------------------------------------------------ |
+  | auctionId | El ID único de la subasta en la que se desea hacer la oferta.     |
+  | bidAmount | El monto total de la oferta.                                      |
+- Criterios que deben cumplirse
+  - La subasta no debe haber expirado.
+  - El llamante debe ser el propietario y debe aprobar el Marketplace para transferir el monto necesario de la oferta.
+  - El monto de la oferta debe ser mayor que la oferta actual ganadora. (Para conveniencia, esto puede verificarse llamando a `isNewWinningBid`)
 
 ### `isNewWinningBid`
 
-**What:** Check whether a given bid amount would make for a new winning bid.
+**Qué hace:** Verifica si el monto de la oferta proporcionada sería una nueva oferta ganadora.
 
-- Interface
+- Interfaz
 
   ```solidity
   function isNewWinningBid(uint256 auctionId, uint256 bidAmount) external view returns (bool);
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | --------------------------------------- |
-  | auctionId | The unique ID of the auction to bid in. |
-  | bidAmount | The total bid amount. |
-- Criteria that must be satisfied
-  - The auction must not have been cancelled or expired.
+- Parámetros
+  | Parámetro | Descripción                                                    |
+  | --------- | -------------------------------------------------------------- |
+  | auctionId | El ID único de la subasta en la que se desea hacer la oferta. |
+  | bidAmount | El monto total de la oferta.                                  |
+- Criterios que deben cumplirse
+  - La subasta no debe haber sido cancelada ni haber expirado.
 
 ### `totalAuctions`
 
-**What:** Returns the total number of auctions created so far.
+**Qué hace:** Devuelve el número total de subastas creadas hasta el momento.
 
-- Interface
+- Interfaz
 
   ```solidity
   function totalAuctions() external view returns (uint256);
@@ -549,9 +552,9 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 ### `getAuction`
 
-**What:** Fetch the auction info at a particular auction ID.
+**Qué hace:** Recupera la información de la subasta en un ID de subasta particular.
 
-- Interface
+- Interfaz
 
   ```solidity
   struct Auction {
@@ -582,9 +585,9 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 ### `getAllAuctions`
 
-**What:** Returns all auctions between the start and end Id (both inclusive) provided.
+**Qué hace:** Devuelve todas las subastas entre el ID de inicio y el ID de finalización proporcionados (ambos inclusive).
 
-- Interface
+- Interfaz
 
   ```solidity
   function getAllAuctions(uint256 startId, uint256 endId) external view returns (Auction[] memory auctions);
@@ -592,15 +595,15 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 - Parameters
   | Parameter | Description |
-  | --------- | -------------------------- |
-  | startId | Inclusive start auction Id |
-  | endId | Inclusive end auction Id |
+  | --------- | ---------------------------- |
+  | startId | ID de inicio de la subasta inclusivo |
+  | endId | ID de finalización de la subasta inclusivo |
 
 ### `getAllValidAuctions`
 
-**What:** Returns all valid auctions between the start and end Id (both inclusive) provided. A valid auction is where the auction is active, as well as the creator still owns and has approved Marketplace to transfer the auctioned NFTs.
+**Qué hace:** Devuelve todas las subastas válidas entre el ID de inicio y el ID de finalización proporcionados (ambos inclusive). Una subasta válida es aquella en la que la subasta está activa, así como el creador aún posee y ha aprobado al Marketplace para transferir los NFTs subastados.
 
-- Interface
+- Interfaz
 
   ```solidity
   function getAllValidAuctions(uint256 startId, uint256 endId) external view returns (Auction[] memory auctions);
@@ -609,14 +612,14 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | --------- | -------------------------- |
-  | startId | Inclusive start auction Id |
-  | endId | Inclusive end auction Id |
+  | startId | ID de inicio de la subasta inclusivo |
+  | endId | ID de finalización de la subasta inclusivo |
 
 ### `getWinningBid`
 
-**What:** Get the winning bid of an auction.
+**Qué hace:** Obtiene la oferta ganadora de una subasta.
 
-- Interface
+- Interfaz
 
   ```solidity
   function getWinningBid(uint256 auctionId)
@@ -633,13 +636,13 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | --------- | ---------------------------- |
-  | auctionId | The unique ID of an auction. |
+  | auctionId | El ID único de una subasta. |
 
 ### `isAuctionExpired`
 
-**What:** Returns whether an auction is expired or not.
+**Qué hace:** Devuelve si una subasta ha expirado o no.
 
-- Interface
+- Interfaz
 
   ```solidity
   function isAuctionExpired(uint256 auctionId) external view returns (bool);
@@ -649,15 +652,15 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | --------- | ---------------------------- |
-  | auctionId | The unique ID of an auction. |
+  | auctionId | El ID único de una subasta. |
 
-## Offers
+## Ofertas
 
 ### `makeOffer`
 
-**What:** Make an offer for any ERC721 or ERC1155 NFTs (unless `ASSET_ROLE` restrictions apply)
+**Qué hace:** Hace una oferta por cualquier NFT ERC721 o ERC1155 (a menos que apliquen restricciones `ASSET_ROLE`).
 
-- Interface
+- Interfaz
 
   ```solidity
   struct OfferParams {
@@ -676,22 +679,22 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | ------------------- | ----------------------------------------- |
-  | assetContract | The contract address of the NFTs wanted. |
-  | tokenId | The tokenId of the NFTs wanted. |
-  | quantity | The quantity of NFTs wanted. |
-  | currency | The currency offered for the NFT wanted. |
-  | totalPrice | The price offered for the NFTs wanted. |
-  | expirationTimestamp | The timestamp at which the offer expires. |
-- Criteria that must be satisfied
-  - The offeror must own and approve Marketplace to transfer the requisite amount currency offered for the NFTs wanted.
-  - The offeror must make an offer for non-zero quantity of NFTs. If offering for ERC721 tokens, the quantity wanted must be `1`.
-  - Expiration timestamp must be greater than block timestamp, or within 1 hour of block timestamp.
+  | assetContract | La dirección del contrato de los NFTs deseados. |
+  | tokenId | El tokenId de los NFTs deseados. |
+  | quantity | La cantidad de NFTs deseados. |
+  | currency | La moneda ofrecida por el NFT deseado. |
+  | totalPrice | El precio ofrecido por los NFTs deseados. |
+  | expirationTimestamp | La marca de tiempo en la que la oferta expira. |
+- Criterios que deben cumplirse
+  - El oferente debe poseer y aprobar Marketplace para transferir la cantidad requerida de la moneda ofrecida para los NFTs deseados.
+  - El oferente debe hacer una oferta por una cantidad no nula de NFTs. Si se ofrece por tokens ERC721, la cantidad deseada debe ser `1`.
+  - La marca de tiempo de expiración debe ser mayor que la marca de tiempo del bloque, o dentro de 1 hora desde la marca de tiempo del bloque.
 
 ### `cancelOffer`
 
-**What:** Cancel an existing offer.
+**Qué hace:** Cancela una oferta existente.
 
-- Interface
+- Interfaz
 
   ```solidity
   function cancelOffer(uint256 offerId) external;
@@ -701,15 +704,15 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | --------- | -------------------------- |
-  | offerId | The unique ID of the offer |
-- Criteria that must be satisfied
-  - The caller of the function must be the offeror.
+  | offerId | El ID único de la oferta |
+- Criterios que deben cumplirse
+  - El que llama a la función debe ser el oferente.
 
 ### `acceptOffer`
 
-**What:** Accept an offer made for your NFTs.
+**Qué hace:** Aceptar una oferta realizada por tus NFTs.
 
-- Interface
+- Interfaz
 
   ```solidity
   function acceptOffer(uint256 offerId) external;
@@ -719,16 +722,16 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 - Parameters
   | Parameter | Description |
   | --------- | --------------------------- |
-  | offerId | The unique ID of the offer. |
-- Criteria that must be satisfied
-  - The caller of the function must own and approve Marketplace to transfer the tokens for which the offer is made.
-  - The offeror must still own and have approved Marketplace to transfer the requisite amount currency offered for the NFTs wanted.
+  | offerId | El ID único de la oferta. |
+- Criterios que deben cumplirse
+  - El que llama a la función debe ser el propietario y haber aprobado el Marketplace para transferir los tokens para los cuales se ha hecho la oferta.
+  - El oferente debe seguir siendo el propietario y haber aprobado el Marketplace para transferir la cantidad de moneda ofrecida para los NFTs deseados.
 
 ### `totalOffers`
 
-**What:** Returns the total number of offers created so far.
+**Qué hace:** Devuelve el número total de ofertas creadas hasta el momento.
 
-- Interface
+- Interfaz
 
   ```solidity
   function totalOffers() external view returns (uint256);
@@ -737,9 +740,9 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 ### `getOffer`
 
-**What:** Returns the offer at a particular offer Id.
+**Qué hace:** Devuelve la oferta en un ID de oferta específico.
 
-- Interface
+- Interfaz
 
   ```solidity
   struct Offer {
@@ -766,9 +769,9 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 ### `getAllOffers`
 
-**What:** Returns all offers between the start and end Id (both inclusive) provided.
+**Qué hace:** Devuelve todas las ofertas entre el inicio y el final del ID (ambos inclusivos) proporcionados.
 
-- Interface
+- Interfaz
 
   ```solidity
   function getAllOffers(uint256 startId, uint256 endId) external view returns (Offer[] memory offers);
@@ -783,17 +786,17 @@ The `EnglishAuctions` extension smart contract lets you sell NFTs (ERC-721 or ER
 
 ### `getAllValidOffers`
 
-**What:** Returns all valid offers between the start and end Id (both inclusive) provided. A valid offer is where the offer is active, as well as the offeror still owns and has approved Marketplace to transfer the currency tokens.
+**Qué hace:** Devuelve todas las ofertas válidas entre el inicio y el final del ID (ambos inclusivos) proporcionados. Una oferta válida es aquella en la que la oferta está activa, así como el oferente aún posee y ha aprobado a Marketplace para transferir los tokens de la moneda.
 
-- Interface
+- Interfaz
 
   ```solidity
   function getAllValidOffer(uint256 startId, uint256 endId) external view returns (Offer[] memory offers);
 
   ```
 
-- Parameters
-  | Parameter | Description |
-  | --------- | -------------------------- |
-  | startId | Inclusive start offer Id |
-  | endId | Inclusive end offer Id |
+- Parámetros
+  | Parámetro  | Descripción                                       |
+  | ---------- | ------------------------------------------------- |
+  | startId    | ID de inicio de la oferta (inclusive)             |
+  | endId      | ID final de la oferta (inclusive)                 |

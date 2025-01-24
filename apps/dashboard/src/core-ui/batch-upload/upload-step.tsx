@@ -63,7 +63,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <a
               download
               className="text-link-foreground hover:text-foreground"
-              href="/example.csv"
+              href="/assets/examples/example.csv"
             >
               Download example.csv
             </a>
@@ -71,7 +71,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <a
               download
               className="text-link-foreground hover:text-foreground"
-              href="/example.json"
+              href="/assets/examples/example.json"
             >
               Download example.json
             </a>
@@ -113,7 +113,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <a
               download
               className="text-link-foreground hover:text-foreground"
-              href="/example-with-ipfs.csv"
+              href="/assets/examples/example-with-ipfs.csv"
             >
               Download example.csv
             </a>
@@ -125,7 +125,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <a
               download
               className="text-link-foreground hover:text-foreground"
-              href="/example-with-maps.csv"
+              href="/assets/examples/example-with-maps.csv"
             >
               Download example.csv
             </a>

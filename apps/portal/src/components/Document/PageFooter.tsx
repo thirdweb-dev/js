@@ -59,7 +59,7 @@ function FooterLinkItem(props: {
   icon: LucideIcon;
 }) {
   return (
-    <li className="flex items-center gap-2 text-f-300">
+    <li className="flex items-center gap-2 text-muted-foreground">
       <div className="flex items-center gap-2 font-medium">
         <props.icon className="size-5" />
         <span>{props.prefix}</span>

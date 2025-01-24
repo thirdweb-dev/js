@@ -5,76 +5,74 @@ import nftDropStep1 from './assets/nft_drop_step1.png'
 import nftDropStep2 from './assets/nft_drop_step2.png'
 import nftDropStep3 from './assets/nft_drop_step3.png'
 
-# Deploy a modular NFT Drop contract
+# Desplegar un contrato modular de NFT Drop
 
-The NFT Drop contract creates a unique collection of NFTs based on the [ERC-721A](https://www.erc721a.org/) standard. NFT Drop allows you to define claim conditions or settings which define how a user can claim an NFT.
+El contrato de NFT Drop crea una colección única de NFTs basada en el estándar [ERC-721A](https://www.erc721a.org/). NFT Drop te permite definir condiciones de reclamación o configuraciones que definen cómo un usuario puede reclamar un NFT.
 
 <ContractDeployCard contractName="Modular NFT Drop" href="https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop" />
 
 ### NFT Drop vs NFT Collection
 
-NFT Drop has the Claimable module enabling claim conditions. If you’d prefer to not define specific settings such as claim limits, start and end times to claim, and more, please refer to the [NFT Collection contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection). 
+NFT Drop tiene el módulo Claimable que habilita las condiciones de reclamación. Si prefieres no definir configuraciones específicas como límites de reclamación, horarios de inicio y fin para reclamar, y más, consulta el contrato de [NFT Collection](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YXRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection).
 
-### Use Cases & Examples
+### Casos de uso y ejemplos
 
-- Create an NFT profile pic collection with each NFT having a different combination of traits
-- Release NFTs in phases with exclusivity, discounted, or public phases
-- Create restricted-access NFT Drops for allowlisted wallets to claim
+- Crear una colección de fotos, arte u otros medios donde cada NFT tenga una combinación diferente de características
+- Liberar NFTs en fases con exclusividad, descuentos o fases públicas
+- Crear NFT Drops con acceso restringido para que las carteras permitidas reclamen
 
-### Default Installed Modules
+### Módulos instalados por defecto
 
-- Claimable
+- Reclamable
 - BatchMetadata
 - Royalty
 
-### Deploy a modular NFT Drop contract
+### Desplegar un contrato modular de NFT Drop
 
-Learn how to deploy a modular NFT Drop contract through the dashboard. 
+Aprende cómo desplegar un contrato modular de NFT Drop a través del panel.
 
 <Steps>
 
+<Step title="Localizar el contrato">
 
-<Step title="Locate Contract">
+Dirígete a Explorar, localiza el [contrato modular de NFT Drop](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop), y selecciona el botón Desplegar ahora.
 
-Navigate to Explore, locate the [Modular NFT Drop contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+NFT+Drop), and select the Deploy Now button.
-
-<DocImage src={nftDropStep1} alt="Screenshot NFT Drop contract" />
-
-</Step>
-
-<Step title="Configure Contract Metadata">
-Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
-
-Contract Metadata serves as your unique identifier.
-
-<DocImage src={nftDropStep2} alt="Screenshot of NFT Drop configure metadata" />
-
+<DocImage src={nftDropStep1} alt="Captura de pantalla del contrato de NFT Drop" />
 
 </Step>
 
-<Step title="Select Chain">
-Select the preferred chain you want to deploy on and select Deploy Now.
+<Step title="Configurar los metadatos del contrato">
+Rellena los metadatos del contrato, incluyendo Nombre, Símbolo, Descripción e Imagen.
 
-<DocImage src={nftDropStep3} alt="Screenshot of NFT Drop select chain screen" />
+Los metadatos del contrato sirven como tu identificador único.
 
-<Callout variant="info" title="Any EVM Compatible">
-	The NFT Drop contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+<DocImage src={nftDropStep2} alt="Captura de pantalla de la configuración de los metadatos de NFT Drop" />
+
+</Step>
+
+<Step title="Seleccionar la cadena">
+Selecciona la cadena preferida en la que deseas desplegar y selecciona Desplegar ahora.
+
+<DocImage src={nftDropStep3} alt="Captura de pantalla de la selección de la cadena para el contrato de NFT Drop" />
+
+<Callout variant="info" title="Cualquier red compatible con EVM">
+	El contrato de NFT Drop es desplegable en cualquier red compatible con EVM. [Ver todas las redes disponibles.](https://thirdweb.com/chainlist)
 </Callout>
-If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+Si has iniciado sesión con una cartera EOA, se te pedirá que firmes la transacción. Después de eso, tu contrato será desplegado y podrás comenzar a configurar los módulos.
 </Step>
 
 </Steps>
 
-### Modular Contract
+### Contrato Modular
 
-This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+Este contrato se crea usando el marco de contratos modulares. Los módulos de este contrato son actualizables. [Aprende más sobre Contratos Modulares.](/contracts/modular-contracts/overview)
 
-### Configure Modules
+### Configurar Módulos
 
-To configure the modules, navigate to the Modules view:
+Para configurar los módulos, dirígete a la vista de Módulos:
 
-(Coming soon)
+(Próximamente)
 
-<Callout variant='info' title="Install Modules">
-	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+<Callout variant='info' title="Instalar Módulos">
+	Para instalar módulos adicionales en este contrato, dirígete a la vista de Módulos después de desplegar tu contrato.
 </Callout>

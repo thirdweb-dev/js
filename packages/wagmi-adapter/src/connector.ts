@@ -54,7 +54,7 @@ type StorageItem = { "tw.lastChainId": number };
  *    inAppWalletConnector({
  *      client,
  *      // optional: turn on smart accounts
- *      smartAccounts: {
+ *      smartAccount: {
  *         sponsorGas: true,
  *         chain: thirdwebChain(sepolia)
  *      }
@@ -94,10 +94,18 @@ export function inAppWalletConnector(
     connect: async (params) => {
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       if (params?.isReconnecting) {
-        const account = await wallet.autoConnect({
+        const { autoConnect } = await import("thirdweb/wallets");
+        await autoConnect({
           client,
           chain: defineChain(lastChainId || 1),
+          wallets: [wallet],
         });
+
+        const account = wallet.getAccount();
+        if (!account) {
+          throw new Error("Wallet failed to reconnect");
+        }
+
         return {
           accounts: [getAddress(account.address)],
           chainId: lastChainId || 1,
@@ -136,9 +144,11 @@ export function inAppWalletConnector(
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       const chain = defineChain(params?.chainId || lastChainId || 1);
       if (!wallet.getAccount()) {
-        await wallet.autoConnect({
+        const { autoConnect } = await import("thirdweb/wallets");
+        await autoConnect({
           client,
           chain,
+          wallets: [wallet],
         });
       }
       return EIP1193.toProvider({

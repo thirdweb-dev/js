@@ -71,6 +71,14 @@ export function AccountButton(props: {
             variant="ghost"
             className="justify-start px-3 text-muted-foreground text-sm hover:text-foreground"
           >
+            <Link href="/team/~/~/settings/billing">Manage Billing</Link>
+          </Button>
+
+          <Button
+            asChild
+            variant="ghost"
+            className="justify-start px-3 text-muted-foreground text-sm hover:text-foreground"
+          >
             <Link href="/account">My Account</Link>
           </Button>
 

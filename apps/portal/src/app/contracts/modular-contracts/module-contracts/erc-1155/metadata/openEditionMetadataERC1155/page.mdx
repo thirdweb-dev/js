@@ -3,7 +3,7 @@ import { createMetadata, GithubButtonLink } from "@doc";
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
     description: 
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "Modular Contract proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
         title: "thirdweb Modular Contracts",
         icon: "solidity",
@@ -12,33 +12,32 @@ export const metadata = createMetadata({
 
 # OpenEditionMetadataERC1155
 
-## Description
+## Descripción
 
-The `OpenEditionMetadataERC1155` contract is a module that provides metadata management for Open Edition ERC-1155 tokens. This module builds upon the functionalities of the `OpenEditionMetadataERC721` contract, adapting them for the ERC-1155 standard.
+El contrato `OpenEditionMetadataERC1155` es un módulo que proporciona gestión de metadatos para tokens ERC-1155 de Edición Abierta. Este módulo amplía las funcionalidades del contrato `OpenEditionMetadataERC721`, adaptándolas al estándar ERC-1155.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/metadata/OpenEditionMetadataERC1155.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function          | Description                                                  |
+| Función          | Descripción                                                  |
 |-------------------|--------------------------------------------------------------|
-| `onTokenURI`      | Callback function that returns the token URI for ERC-1155 tokens. |
+| `onTokenURI`      | Función de callback que devuelve la URI del token para los tokens ERC-1155. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function            | Description                                                                               |
+| Función            | Descripción                                                                               |
 |---------------------|-------------------------------------------------------------------------------------------|
-| `setSharedMetadata` | Sets the shared metadata for the ERC-1155 token collection. Requires minter role.           |
+| `setSharedMetadata` | Establece los metadatos compartidos para la colección de tokens ERC-1155. Requiere el rol de minter. |
 
-## Required Interfaces
+## Interfaces Requeridas
 
-| Interface  | ID          |
-|------------|-------------|
+| Interfaz  | ID          |
+|-----------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Interfaces No Compatibles
 
-| Interface  | ID          |
-|------------|-------------|
+| Interfaz  | ID          |
+|-----------|-------------|
 | `ERC4906`  | `0x49064906`|
-

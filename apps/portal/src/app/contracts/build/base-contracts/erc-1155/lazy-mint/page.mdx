@@ -3,11 +3,11 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ERC1155LazyMint | thirdweb contracts",
+	title: "ERC1155LazyMint | contratos de thirdweb",
 	description:
-		"ERC1155LazyMint allows you to Lazy Mint NFTs on your contract. It exposes a verifyClaim function that you can override to add your claim-restriction logic",
+		"ERC1155LazyMint te permite realizar Lazy Mint de NFTs en tu contrato. Expone una función verifyClaim que puedes sobrescribir para agregar tu propia lógica de restricción de reclamaciones",
 	image: {
-		title: "ERC1155LazyMint contract",
+		title: "Contrato ERC1155LazyMint",
 		icon: "contract",
 	},
 });
@@ -18,18 +18,18 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC1155LazyMint.sol";
 ```
 
-`ERC1155LazyMint` allows you to [Lazy Mint](/glossary/lazy-minting) NFTs on your contract.
-It exposes a `verifyClaim` function that you can override to add your claim-restriction logic.
+`ERC1155LazyMint` te permite hacer [Lazy Mint](/glossary/lazy-minting) de NFTs en tu contrato.
+Expone una función `verifyClaim` que puedes sobrescribir para agregar tu lógica de restricción de reclamaciones.
 
-Lazy minting allows you to define the metadata of NFTs without minting it to an address.
-As a contract admin, this lets you prepare the metadata for NFTs that will be minted by other wallets,
-without paying the gas cost for actually minting the NFTs.
+El lazy minting te permite definir los metadatos de los NFTs sin mintarlos a una dirección.
+Como administrador del contrato, esto te permite preparar los metadatos de los NFTs que serán mintados por otras carteras,
+sin pagar el costo de gas por mintar realmente los NFTs.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155LazyMint.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y haz que tu contrato herede de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -52,11 +52,11 @@ contract MyNFT is ERC1155LazyMint {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características disponibles en estas extensiones en el SDK y en el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155LazyMintableV2](/contracts/build/extensions/general/LazyMint)
@@ -67,9 +67,9 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="uri" summary="uri">
 

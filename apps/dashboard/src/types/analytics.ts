@@ -28,6 +28,13 @@ export interface UserOpStats {
   chainId?: string;
 }
 
+export interface TransactionStats {
+  date: string;
+  chainId: number;
+  contractAddress?: string;
+  count: number;
+}
+
 export interface RpcMethodStats {
   date: string;
   evmMethod: string;

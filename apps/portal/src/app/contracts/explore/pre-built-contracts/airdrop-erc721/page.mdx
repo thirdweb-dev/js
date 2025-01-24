@@ -11,14 +11,15 @@ export const metadata = createMetadata({
 
 # Airdrop ERC-721
 
-Airdrop ERC721 NFTs to a list of recipients.
+Airdrop de NFTs ERC721 a una lista de destinatarios.
 
-The `AirdropERC721` contract is suitable to use when you want to transfer ERC721 NFTs to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop; they just receive it in a transfer.
-When airdropping NFTs with this contract, you specify:
+El contrato `AirdropERC721` es adecuado para usar cuando deseas transferir NFTs ERC721 a una lista de direcciones de destinatarios, donde no se espera que los destinatarios reclamen individualmente su airdrop; simplemente lo reciben en una transferencia.
+Al hacer un airdrop de NFTs con este contrato, debes especificar:
 
-- The address of the NFT collection from which NFTs are being transferred.
-- The owner address of the NFTs from where the NFTs will be transferred to a list of the recipients.
-- An array of objects containing recipient-address and token-ids, for e.g.
+- La dirección de la colección de NFTs desde la cual se están transfiriendo los NFTs.
+- La dirección del propietario de los NFTs desde donde los NFTs serán transferidos a la lista de destinatarios.
+- Un array de objetos que contiene la dirección del destinatario y los token-ids, por ejemplo:
+
 
 ```typescript
 [
@@ -33,9 +34,8 @@ When airdropping NFTs with this contract, you specify:
 ];
 ```
 
-note: token-owner must approve their tokens to this airdrop contract, by calling approval related function on the ERC721 contract.
+nota: el propietario de los tokens debe aprobar sus tokens a este contrato de airdrop, llamando a la función relacionada con la aprobación en el contrato ERC721.
 
-**Estimated gas costs for airdropping tokens:**
-Cost of airdropping `1` ERC721 token: ~`76,521` gas. Cost of airdropping each additional ERC721 token: ~`44,610` gas.
+**Costos estimados de gas para hacer un airdrop de tokens:**
+Costo de hacer un airdrop de `1` token ERC721: ~`76,521` gas. Costo de hacer un airdrop de cada token ERC721 adicional: ~`44,610` gas.
 
-## Extensions

@@ -14,75 +14,92 @@ html {
 }
 
 @layer base {
-  :root,
-  [data-theme="dark"] {
-    /* 100 - lightest, 900 - darkest */
-
-    /* neutral background colors */
-    --b-900: hsl(240deg 6.67% 4%);
-    --b-800: hsl(240deg 5% 6%);
-    --b-700: hsl(240deg 5% 9%);
-    --b-600: hsl(240deg 5% 12%);
-    --code-bg: var(--b-800);
-
-    --overlay: hsl(240deg 5% 5% / 0.5);
-    --border: hsla(0, 0%, 14%, 1);
-
-    /* neutral foreground colors */
-    --f-100: rgba(241, 245, 249);
-    --f-200: hsl(214.29deg 31.82% 85%);
-    --f-300: rgb(156, 163, 175);
-
-    /* others */
-    --accent-500: hsl(217deg 91% 60%);
-    --accent-600: hsl(221deg 83% 53%);
-    --accent-900: hsl(221 53% 8%);
-    --accent-800: hsl(221 53% 12%);
-    --accent-700: hsl(221 53% 20%);
-
-    --danger-500: hsl(0deg 84% 60%);
-    --danger-900: hsl(0deg 41.67% 14.12%);
-    --danger-800: hsl(0 36% 20% / 1);
-
-    --warning-500: hsl(30.66deg 97.16% 40%);
-    --warning-600: #f9a03f;
-    --warning-800: hsl(30.73deg 50.62% 15%);
-    --warning-900: hsl(30.73deg 50.62% 10%);
-
+  :root {
     --radius: 0.5rem;
     --sticky-top-height: 70px;
   }
 
-  [data-theme="light"] {
-    /* neutral background colors */
-    --b-900: #f9fafb;
-    --b-800: hsl(216deg 12.2% 96%);
-    --b-700: hsl(222deg, 14%, 94%);
-    --b-600: hsl(222deg, 14%, 90%);
+  :root,
+  [data-theme="dark"] {
+    /* bg - neutral  */
+    --background: 0 0% 0%;
+    --card: 0 0% 3.92%;
+    --popover: 0 0% 0%;
+    --secondary: 0 0% 11%;
+    --muted: 0 0% 11%;
+    --accent: 0 0% 11%;
+    --inverted: 0 0% 100%;
 
-    --overlay: hsl(222deg 5% 30% / 0.5);
-    --border: hsl(216deg 12.2% 82%);
-    --code-bg: white;
+    /* bg - colorful */
+    --primary: 221 83% 54%;
+    --destructive: 360 72% 51%;
 
-    /* neutral foreground colors */
-    --f-100: hsla(222, 14%, 14%, 1);
-    --f-200: hsl(215.29deg 25% 26.67%);
-    --f-300: hsl(215.38deg 16.32% 46.86%);
+    /* Text */
+    --foreground: 0 0% 98%;
+    --card-foreground: 0 0% 98%;
+    --popover-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 98%;
+    --muted-foreground: 0 0% 63%;
+    --accent-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
+    --link-foreground: 215.88 100% 65%;
+    --warning-text: 38 92% 50%;
+    --destructive-text: 360 72% 55%;
+    --success-text: 142 75% 50%;
+    --inverted-foreground: 0 0% 0%;
 
-    /* others */
-    --accent-500: #2563eb;
-    --accent-700: #bfdbfe;
-    --accent-800: #dbeafe;
-    --accent-900: #eff6ff;
-
-    --danger-500: #ef4444;
-    --danger-800: #fee2e2;
-    --danger-900: #fef2f2;
-
-    --warning-500: #f97316;
-    --warning-800: #ffedd5;
-    --warning-900: #fff7ed;
+    /* Borders */
+    --border: 0 0% 15%;
+    --active-border: 0 0% 22%;
+    --ring: 0 0% 30%;
+    --input: 0 0% 15%;
   }
+
+  [data-theme="light"] {
+    /* bg - neutral  */
+    --background: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --card: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --muted: 0 0% 93%;
+    --accent: 0 0% 93%;
+    --inverted: 0 0 0%;
+
+    /* bg - colorful */
+    --primary: 221 83% 54%;
+    --destructive: 360 72% 51%;
+
+    /* Text */
+    --foreground: 0 0% 4%;
+    --card-foreground: 0 0% 4%;
+    --popover-foreground: 240 10% 4%;
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 4%;
+    --muted-foreground: 0 0% 40%;
+    --accent-foreground: 0 0% 9%;
+    --destructive-foreground: 0 0% 100%;
+    --inverted-foreground: 0 0% 100%;
+    --link-foreground: 221.21deg 83.19% 53.33%;
+    --success-text: 142.09 70.56% 35.29%;
+    --warning-text: 38 92% 40%;
+    --destructive-text: 357.15deg 100% 68.72%;
+
+    /* Borders */
+    --border: 0 0% 85%;
+    --active-border: 0 0% 70%;
+    --input: 0 0% 85%;
+    --ring: 0 0% 80%;
+  }
+}
+
+/* If no data-theme is added in body, its in dark theme  */
+body:not([data-theme="light"]) .light-only {
+  display: none;
+}
+
+[data-theme="light"] .dark-only {
+  display: none;
 }
 
 code span {
@@ -98,7 +115,7 @@ body[data-theme="light"] code span {
     @apply border-border;
   }
   body {
-    @apply bg-b-900 text-f-100;
+    @apply bg-background text-foreground;
   }
 }
 
@@ -121,7 +138,7 @@ body[data-theme="light"] code span {
 }
 
 .styled-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--f-200);
+  background: hsl(var(--foreground));
 }
 
 .styled-scrollbar::-webkit-scrollbar-track {
@@ -133,8 +150,8 @@ button {
 }
 
 ::selection {
-  background: var(--f-100);
-  color: var(--b-900);
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
 }
 
 .hide-scrollbar {

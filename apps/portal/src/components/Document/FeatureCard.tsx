@@ -9,17 +9,25 @@ export type FeatureCardItem = {
 export function FeatureCard(props: FeatureCardItem) {
   const { title, description, iconUrl } = props;
   return (
-    <div className="flex flex-row gap-4 rounded-lg px-4 py-3">
+    <div className="flex flex-row gap-4 rounded-lg py-3">
       <div>
         {typeof iconUrl === "string" ? (
-          <Image src={iconUrl} alt="" width={40} height={40} />
+          <Image
+            src={iconUrl}
+            alt=""
+            width={24}
+            height={24}
+            className="mt-0.5"
+          />
         ) : (
           iconUrl
         )}
       </div>
       <div>
-        <div className="font-semibold text-lg">{title}</div>
-        <div className="max-w-[300px] text-sm">{description}</div>
+        <h4 className="mb-1 font-semibold text-lg">{title}</h4>
+        <p className="max-w-[300px] text-muted-foreground text-sm">
+          {description}
+        </p>
       </div>
     </div>
   );

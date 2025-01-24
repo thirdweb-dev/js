@@ -30,5 +30,5 @@ export async function engineInstancePageHandler(params: {
     notFound();
   }
 
-  return { instance, authToken };
+  return { instance, authToken, account };
 }

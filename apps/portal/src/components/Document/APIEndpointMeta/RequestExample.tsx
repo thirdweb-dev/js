@@ -24,7 +24,9 @@ export function RequestExample(props: {
     <div>
       <div className="flex items-center justify-between border-b px-4 py-2">
         <div className="flex min-w-0 items-center gap-3">
-          <Badge variant="default">{props.method}</Badge>
+          <Badge className="bg-inverted text-inverted-foreground">
+            {props.method}
+          </Badge>
           <span className="truncate font-mono text-sm">
             {props.endpointUrl}
           </span>
@@ -40,7 +42,7 @@ export function RequestExample(props: {
           <SelectTrigger className="w-[130px]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-b-900">
+          <SelectContent className="bg-background">
             {props.codeExamples.map((example) => (
               <SelectItem key={example.label} value={example.label}>
                 {example.label}

@@ -35,14 +35,7 @@ export { NebulaIcon } from "./products/nebula/NebulaIcon";
 export { GamingIcon } from "./solutions/GamingIcon";
 
 //sidebar
-export { EditIcon } from "./sidebar/EditIcon";
-export { CodeIcon } from "./sidebar/CodeIcon";
-export { BrickIcon } from "./sidebar/BrickIcon";
-export { QuestionIcon } from "./sidebar/QuestionIcon";
 export { NebulaSideIcon } from "./sidebar/NebulaSideIcon";
-export { PluginIcon } from "./sidebar/PluginIcon";
-export { TroubleshootIcon } from "./sidebar/TroubleshootIcon";
-export { RocketIcon } from "./sidebar/RocketIcon";
 
 //api icons
 export { GetIcon } from "./API/GetIcon";

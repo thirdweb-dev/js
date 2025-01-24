@@ -1,4 +1,5 @@
 import type * as ox__TypedData from "ox/TypedData";
+import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -16,6 +17,7 @@ import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { type SignableMessage, maxUint96 } from "../../utils/types.js";
 import type {
@@ -251,7 +253,8 @@ async function createSmartAccount(
         transaction,
         executeOverride: options.overrides?.execute,
       });
-      return _sendUserOp({
+
+      const result = await _sendUserOp({
         executeTx,
         options: {
           ...options,
@@ -263,6 +266,15 @@ async function createSmartAccount(
           },
         },
       });
+      trackTransaction({
+        client: options.client,
+        chainId: options.chain.id,
+        transactionHash: result.transactionHash,
+        walletAddress: options.accountContract.address,
+        walletType: "smart",
+        contractAddress: transaction.to ?? undefined,
+      });
+      return result;
     },
     async sendBatchTransaction(transactions: SendTransactionOption[]) {
       const executeTx = prepareBatchExecute({
@@ -270,7 +282,7 @@ async function createSmartAccount(
         transactions,
         executeBatchOverride: options.overrides?.executeBatch,
       });
-      return _sendUserOp({
+      const result = await _sendUserOp({
         executeTx,
         options: {
           ...options,
@@ -278,6 +290,15 @@ async function createSmartAccount(
           accountContract,
         },
       });
+      trackTransaction({
+        client: options.client,
+        chainId: options.chain.id,
+        transactionHash: result.transactionHash,
+        walletAddress: options.accountContract.address,
+        walletType: "smart",
+        contractAddress: transactions[0]?.to ?? undefined,
+      });
+      return result;
     },
     async signMessage({ message }: { message: SignableMessage }) {
       if (options.overrides?.signMessage) {
@@ -433,6 +454,16 @@ function createZkSyncAccount(args: {
         transaction: serializableTransaction,
         signedTransaction,
       });
+
+      trackTransaction({
+        client: connectionOptions.client,
+        chainId: chain.id,
+        transactionHash: txHash.transactionHash,
+        walletAddress: account.address,
+        walletType: "smart",
+        contractAddress: transaction.to ?? undefined,
+      });
+
       return {
         transactionHash: txHash.transactionHash,
         client: connectionOptions.client,
@@ -493,6 +524,15 @@ async function _sendUserOp(args: {
     const receipt = await waitForUserOpReceipt({
       ...bundlerOptions,
       userOpHash,
+    });
+
+    trackTransaction({
+      client: options.client,
+      chainId: options.chain.id,
+      transactionHash: receipt.transactionHash,
+      walletAddress: options.accountContract.address,
+      walletType: "smart",
+      contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
     });
 
     return {

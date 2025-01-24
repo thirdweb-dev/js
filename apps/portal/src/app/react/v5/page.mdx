@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 
 # React SDK
 
-On top of the core typescript API, `thirdweb/react` exports various Components and Hooks to easily connect wallets & interact with smart contracts
+Además de la API principal de TypeScript, `thirdweb/react` exporta varios componentes y hooks para conectar carteras e interactuar fácilmente con contratos inteligentes.
 
-## Installation
+## Instalación
 
 <InstallTabs
 	npm="npm i thirdweb"
@@ -29,43 +29,39 @@ On top of the core typescript API, `thirdweb/react` exports various Components a
 	bun="bun i thirdweb"
 />
 
-## Quickstart
+## Inicio rápido
 
-Follow this [guide](/react/v5/getting-started) to get started with the React SDK.
+Sigue esta [guía](/react/v5/getting-started) para comenzar con el SDK de React.
 <Stack>
 <ArticleIconCard
-	title="Getting started"
+	title="Introducción"
 	icon={ZapIcon}
 	href="/react/v5/getting-started"
-	description="Get started with the React SDK"
+	description="Comienza con el SDK de React"
 />
 </Stack>
 
-<Callout variant="info" title="Have you generated a client ID?">
+
+<Callout variant="info" title="¿Has generado un ID de cliente?">
 	<div className="flex flex-col gap-4 items-start">
 	<p>
-		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+		Necesitarás un ID de cliente para acceder a las APIs blockchain gratuitas del SDK, almacenamiento y más.
 	</p>
-	<Link
-			href="https://thirdweb.com/create-api-key"
-			target="_blank"
-		>
-		<Button> 
-			Generate
-		</Button>
-		</Link>
+	<Button variant='outline' asChild>
+		<Link href="https://thirdweb.com/create-api-key" target="_blank"> Generar </Link>
+	</Button>
 	</div>
 </Callout>
 
-## Starter kits
+## Kits de inicio
 
-You can quickly create a new project with the thirdweb CLI
+Puedes crear rápidamente un nuevo proyecto con la CLI de thirdweb
 
 ```bash
 npx thirdweb create app
 ```
 
-or clone the the Next.js or Vite starter repo:
+o clonar el repositorio de inicio de Next.js o Vite:
 
 <Stack>
 <GithubTemplateCard
@@ -81,33 +77,34 @@ or clone the the Next.js or Vite starter repo:
 />
 </Stack>
 
-## Live Playground
+## Playground en vivo
 
-You can interact with the React SDK in the [Live Playground](https://playground.thirdweb.com/).
+Puedes interactuar con el SDK de React en el [Playground en vivo](https://playground.thirdweb.com/).
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 
 </Stack>
 
-## API Reference
+## Referencia de la API
 
-Browse the full API reference for detailed information on each function, hook and component.
+Consulta la referencia completa de la API para obtener información detallada sobre cada función, hook y componente.
 
 <Stack>
 
 <ArticleIconCard
-	title="API Reference"
+	title="Referencia de la API"
 	icon={CodeIcon}
 	href="/references/typescript/v5"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 
 </Stack>
+
 

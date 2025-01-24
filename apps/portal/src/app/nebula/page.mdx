@@ -1,11 +1,11 @@
-import { PencilRulerIcon, HandCoinsIcon, BlocksIcon, WorkflowIcon, ShieldCheckIcon, CirclePlusIcon } from "lucide-react";
-import { DocImage, createMetadata, FeatureCard } from "@doc";
+import { Wallet, File, MessageCircle, Braces, Bot, Blocks } from "lucide-react";
+import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack } from "@doc";
 import NebulaDiagram from "./assets/nebula-diagram.png";
-
+import SupportedChains from "./assets/supported-chains.png";
 
 # ¿Qué es Nebula?
 
-Modelo de lenguaje natural con razonamiento mejorado en blockchain, capacidades autónomas de transacción y acceso en tiempo real a la blockchain.
+Un modelo de lenguaje natural con razonamiento mejorado sobre blockchain, capacidades de transacciones autónomas y acceso en tiempo real a la blockchain.
 
 Nebula está actualmente disponible en Alpha. [Únete a la lista de espera.](https://thirdweb.com/nebula)
 
@@ -17,41 +17,51 @@ Nebula está actualmente disponible en Alpha. [Únete a la lista de espera.](htt
 	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
 >
 	<FeatureCard
-		title="Modelo de Blockchain Propietario"
+		title="Modelo Blockchain Propietario"
 		description="Entrenado en más de 2,500+ redes EVM y 1M+ contratos"
-		iconUrl={<PencilRulerIcon />}
+		iconUrl={<File />}
 	/>
 
     <FeatureCard
-    	title="Ejecuta Transacciones"
-    	description="Implementa contratos, envía transacciones y más con lenguaje natural"
-		iconUrl={<CirclePlusIcon/>}
+    	title="Ejecutar Transacciones"
+    	description="Despliega contratos, envía transacciones y más con lenguaje natural"
+		iconUrl={<MessageCircle/>}
     />
 
 	<FeatureCard
-    	title="Integración con Carteras"
-    	description="Conéctate con más de 500+ EOAs, carteras integradas y carteras inteligentes con claves de sesión"
-		iconUrl={<ShieldCheckIcon/>}
+    	title="Integración de Wallet"
+    	description="Conéctate con más de 500+ EOAs, wallets en la app y wallets inteligentes con claves de sesión"
+		iconUrl={<Wallet/>}
     />
 
 	<FeatureCard
     	title="API Fácil de Usar"
-    	description="Integra aplicaciones existentes con facilidad utilizando la API de Nebula"
-    	iconUrl={<WorkflowIcon/>}
+    	description="Integra con aplicaciones existentes fácilmente usando la API de Nebula"
+    	iconUrl={<Braces />}
     />
 
 	<FeatureCard
-    	title="Crea Agentes Autónomos"
-    	description="Agentes de ejecución de carteras para transacciones automatizadas en cualquier cadena EVM"
-    	iconUrl={<HandCoinsIcon/>}
+    	title="Crear Agentes Autónomos"
+    	description="Agentes de ejecución de wallet para transacciones automatizadas en cualquier cadena EVM"
+    	iconUrl={<Bot/>}
     />
 
 	<FeatureCard
-    	title="Integración de Frameworks"
-    	description="Integra con los frameworks de orquestación de IA más populares"
-		iconUrl={<BlocksIcon/>}
+    	title="Integración con Frameworks"
+    	description="Integración con frameworks populares de orquestación de IA"
+		iconUrl={<Blocks/>}
     />
 </div>
 
-## Cadenas Compatibles
+## Cadenas Soportadas
 Nebula es compatible con todas las cadenas compatibles con EVM. Para ver la lista completa, visita [thirdweb chainlist](https://thirdweb.com/chainlist).
+
+<DocImage src={SupportedChains} />
+
+## Plantillas
+
+<Stack>
+
+<GithubTemplateCard title="Bouncer Eliza Agent" href="https://github.com/thirdweb-example/bouncer-eliza-agent" />
+
+</Stack>

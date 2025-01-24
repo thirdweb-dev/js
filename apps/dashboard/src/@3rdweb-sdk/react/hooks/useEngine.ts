@@ -1,12 +1,18 @@
 "use client";
 
 import { apiServerProxy } from "@/actions/proxies";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { ResultItem } from "app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
+import type { EngineStatus } from "../../../app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
 
 export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
@@ -67,7 +73,7 @@ export function useEngineBackendWallets(params: {
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: [engineKeys.backendWallets(instanceUrl), authToken],
+    queryKey: [...engineKeys.backendWallets(instanceUrl), authToken],
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}backend-wallet/get-all?limit=50`, {
         method: "GET",
@@ -383,13 +389,29 @@ export function useEngineTransactions(params: {
   instanceUrl: string;
   autoUpdate: boolean;
   authToken: string;
+  queryParams?: {
+    limit?: number;
+    page?: number;
+    status?: EngineStatus;
+  };
 }) {
   const { instanceUrl, autoUpdate, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.transactions(instanceUrl),
+    queryKey: engineKeys.transactions(instanceUrl, params),
     queryFn: async () => {
-      const res = await fetch(`${instanceUrl}transaction/get-all`, {
+      const url = new URL(`${instanceUrl}transaction/get-all`);
+      if (params.queryParams) {
+        for (const key in params.queryParams) {
+          const value =
+            params.queryParams[key as keyof typeof params.queryParams];
+          if (value !== undefined) {
+            url.searchParams.append(key, value.toString());
+          }
+        }
+      }
+
+      const res = await fetch(url, {
         method: "GET",
         headers: getEngineRequestHeaders(authToken),
       });
@@ -398,8 +420,8 @@ export function useEngineTransactions(params: {
 
       return (json.result as TransactionResponse) || {};
     },
-    enabled: !!instanceUrl,
     refetchInterval: autoUpdate ? 4_000 : false,
+    placeholderData: keepPreviousData,
   });
 }
 

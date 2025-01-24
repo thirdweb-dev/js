@@ -1,4 +1,5 @@
 import {
+  getClientTransactions,
   getInAppWalletUsage,
   getUserOpUsage,
   getWalletConnections,
@@ -31,9 +32,10 @@ import { getValidAccount } from "app/account/settings/getAccount";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Suspense } from "react";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
+import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
 
 // revalidate every 5 minutes
-export const revalidate = 300;
+export const maxDuration = 300;
 
 type SearchParams = {
   usersChart?: string;
@@ -100,6 +102,8 @@ async function OverviewPageContent(props: {
     inAppWalletUsage,
     userOpUsageTimeSeries,
     userOpUsage,
+    clientTransactionsTimeSeries,
+    clientTransactions,
   ] = await Promise.all([
     // Aggregated wallet connections
     getWalletConnections({
@@ -130,6 +134,19 @@ async function OverviewPageContent(props: {
       period: interval,
     }),
     getUserOpUsage({
+      accountId: account.id,
+      from: range.from,
+      to: range.to,
+      period: "all",
+    }),
+    // Client transactions
+    getClientTransactions({
+      accountId: account.id,
+      from: range.from,
+      to: range.to,
+      period: interval,
+    }),
+    getClientTransactions({
       accountId: account.id,
       from: range.from,
       to: range.to,
@@ -180,6 +197,14 @@ async function OverviewPageContent(props: {
           />
         )}
       </div>
+      {clientTransactions.length > 0 && (
+        <TransactionsChartCardUI
+          searchParams={searchParams}
+          data={clientTransactionsTimeSeries}
+          aggregatedData={clientTransactions}
+          className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+        />
+      )}
       {userOpUsage.length > 0 ? (
         <TotalSponsoredChartCardUI
           searchParams={searchParams}
@@ -189,7 +214,7 @@ async function OverviewPageContent(props: {
         />
       ) : (
         <EmptyStateCard
-          metric="Sponsored Transactions"
+          metric="Gas Sponsored"
           link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
         />
       )}

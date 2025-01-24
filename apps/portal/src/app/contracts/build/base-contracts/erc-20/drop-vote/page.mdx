@@ -4,20 +4,21 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20DropVote contract",
+		title: "Contrato ERC20DropVote",
 		icon: "contract",
 	},
-	title: "ERC20DropVote | thirdweb contracts",
+	title: "ERC20DropVote | contratos thirdweb",
 	description:
-		"The ERC20Drop base contract adds the Drop Single Phase extension to the ERC20 base contract to allow you to distribute your tokens under the criteria of claim conditions",
+		"El contrato base ERC20Drop agrega la extensión Drop Single Phase al contrato base ERC20 para permitirte distribuir tus tokens bajo los criterios de condiciones de reclamo",
 });
 
 # ERC20DropVote
 
-The `ERC20Drop` base contract adds the [Drop Single Phase](/contracts/build/extensions/general/DropSinglePhase) extension to the [ERC20 base](/contracts/build/base-contracts/erc-20/base) contract
-to allow you to distribute your tokens under the criteria of claim conditions. It also
-implements the [ERC20Votes](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Votes.sol) contract,
-which provides voting and delegation functionality, along with delegation by signature.
+El contrato base `ERC20Drop` agrega la extensión [Drop Single Phase](/contracts/build/extensions/general/DropSinglePhase) al contrato [ERC20 base](/contracts/build/base-contracts/erc-20/base)
+para permitirte distribuir tus tokens bajo los criterios de condiciones de reclamo. También
+implementa el contrato [ERC20Votes](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Votes.sol),
+que proporciona funcionalidades de votación y delegación, junto con delegación por firma.
+
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC20DropVote.sol";
@@ -25,9 +26,9 @@ import "@thirdweb-dev/contracts/base/ERC20DropVote.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20DropVote.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e inhíerelo.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -52,9 +53,9 @@ contract MyToken is ERC20DropVote {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las funciones habilitadas por estas extensiones en el SDK y el panel de control:
 
 - [ERC20](/contracts/build/extensions/erc-20/ERC20)
 - [ERC20ClaimConditionsV2](/contracts/build/extensions/erc-20/ERC20claimconditions)
@@ -63,18 +64,18 @@ Once deployed, you can use the features made available by these extensions on th
 - [Ownable](/contracts/build/extensions/general/Ownable)
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 
-### Functions to Override
+### Funciones para Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="burn" summary="burn">
 
 ```solidity
 /**
- *  @notice          Lets an owner a given amount of their tokens.
- *  @dev             Caller should own the `_amount` of tokens.
+ *  @notice          Permite que un propietario queme una cantidad determinada de sus tokens.
+ *  @dev             El llamador debe poseer la cantidad `_amount` de tokens.
  *
- *  @param _amount   The number of tokens to burn.
+ *  @param _amount   La cantidad de tokens a quemar.
  */
 function burn(uint256 _amount) external virtual {
     require(balanceOf(msg.sender) >= _amount, "not enough balance");
@@ -87,7 +88,7 @@ function burn(uint256 _amount) external virtual {
 <Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
 
 ```solidity
-/// @dev Collects and distributes the primary sale value of tokens being claimed.
+/// @dev Recoge y distribuye el valor de la venta primaria de los tokens que se están reclamando.
 function _collectPriceOnClaim(
     address _primarySaleRecipient,
     uint256 _quantityToClaim,
@@ -115,7 +116,7 @@ function _collectPriceOnClaim(
 <Details id="_transferTokensOnClaim" summary="_transferTokensOnClaim">
 
 ```solidity
-/// @dev Transfers the tokens being claimed.
+/// @dev Transfiere los tokens que se están reclamando.
 function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
     internal
     virtual

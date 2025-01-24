@@ -2,22 +2,22 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Edition Drop contract",
+		title: "Contrato Edition Drop",
 		icon: "contract",
 	},
-	title: "Edition Drop contract | thirdweb",
-	description: `The Edition Drop contract is best used when you want to release many NFTs with the same metadata that you want users to be able to claim`,
+	title: "Contrato Edition Drop | thirdweb",
+	description: `El contrato Edition Drop es ideal cuando deseas liberar muchos NFTs con los mismos metadatos que los usuarios puedan reclamar.`,
 });
 
 # Edition Drop
 
-The **Edition Drop** contract is best used when you want to release many NFTs with the same metadata that you want users to be able to claim. This contract follows the [ERC1155 extension](https://eips.ethereum.org/EIPS/eip-1155), also known as "Semi-Fungible Tokens".
+El contrato **Edition Drop** es ideal cuando deseas liberar muchos NFTs con los mismos metadatos que los usuarios puedan reclamar. Este contrato sigue la extensión [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155), también conocida como "Tokens Semi-Fungibles".
 
-The Edition Drop contract allows you to define the conditions for when and how your users can claim an NFT, which has been previously [lazy minted](/glossary/lazy-minting) by the contract admin (usually the deployer), including allowlists, release dates, and the maximum number of NFTs which can be claimed.
+El contrato Edition Drop te permite definir las condiciones de cuándo y cómo tus usuarios pueden reclamar un NFT, que ha sido previamente [acuñado de forma perezosa](/glossary/lazy-minting) por el administrador del contrato (usualmente el desplegador), incluyendo listas permitidas, fechas de lanzamiento y el número máximo de NFTs que pueden ser reclamados.
 
-## Extensions
+## Extensiones
 
-This contract includes the following extensions:
+Este contrato incluye las siguientes extensiones:
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155Supply](/contracts/build/extensions/erc-1155/ERC1155Supply)
@@ -32,71 +32,71 @@ This contract includes the following extensions:
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Edition Drop contract to:
+Podrías usar el contrato Edition Drop para:
 
-- Create NFT Memberships such as our [Early Access Cards](https://opensea.io/collection/thirdweb-community) that you want your users to claim
-- Release an item in your game for a limited-time
-- Create 100 NFTs based on one art piece, and allow users to claim one per wallet
+- Crear membresías NFT como nuestras [Tarjetas de Acceso Anticipado](https://opensea.io/collection/thirdweb-community) que quieres que tus usuarios reclamen
+- Liberar un artículo en tu juego por un tiempo limitado
+- Crear 100 NFTs basados en una obra de arte, y permitir que los usuarios reclamen uno por billetera
 
-## Resources
+## Recursos
 
 - [Frontend demo project](https://github.com/thirdweb-example/edition-drop)
-- [Technical Design Doc](/contracts/design-docs/drop)
-- [Full reference](/contracts/DropERC1155)
+- [Documento de Diseño Técnico](/contracts/design-docs/drop)
+- [Referencia completa](/contracts/DropERC1155)
 
-## Creating & Configuring the Edition Drop
+## Crear y configurar Edition Drop
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende cómo crear y configurar tu contrato inteligente utilizando el [panel](https://thirdweb.com/team).
 
-### Creating an Edition Drop Contract
+### Crear un contrato Edition Drop
 
-Deploy the edition drop contract to any EVM network using the button below.
+Despliega el contrato Edition Drop en cualquier red EVM utilizando el botón a continuación.
 
-### Lazy Minting NFTs
+### Acuñar NFTs de forma perezosa
 
-Lazy minting is the process of uploading your metadata for your NFT(s) without minting them _yet_.
+Acuñar de forma perezosa es el proceso de cargar los metadatos de tus NFT(s) sin acuñarlos _todavía_.
 
-This is useful when you want _other_ wallets to mint NFTs from your drop into their own wallets.
+Esto es útil cuando deseas que _otras_ billeteras acuñen NFTs de tu drop en sus propias billeteras.
 
-To lazy-mint NFT(s), click **Create** to lazy-mint a single NFT, or **Batch Upload** to lazy-mint multiple NFTs at once.
+Para acuñar de forma perezosa un NFT(s), haz clic en **Crear** para acuñar de forma perezosa un solo NFT, o **Subida en Lote** para acuñar de forma perezosa múltiples NFTs a la vez.
 
-To get started, you can use one of our example files for [CSV](https://thirdweb.com/example.csv) or [JSON](https://nightly.thirdweb.com/example.json) metadata.
+Para comenzar, puedes usar uno de nuestros archivos de ejemplo para [CSV](https://thirdweb.com/assets/examples/example.csv) o [JSON](https://thirdweb.com/assets/examples/example.json) de metadatos.
 
-### Setting Claim Phases
+### Configurar Fases de Reclamación
 
-On the Edition Drop contract, you set claim phases for each NFT, by clicking the **Claim Phases** button
+En el contrato Edition Drop, configuras las fases de reclamación para cada NFT, haciendo clic en el botón **Claim Phases**.
 
-A claim phase is a set of conditions that define when and how your users can claim an NFT from your drop.
+Una fase de reclamación es un conjunto de condiciones que definen cuándo y cómo tus usuarios pueden reclamar un NFT de tu drop.
 
-**The Edition Drop contract supports multiple sequential claim phases**.
+**El contrato Edition Drop admite múltiples fases de reclamación secuenciales**.
 
-Within a claim phase, you can define:
+Dentro de una fase de reclamación, puedes definir:
 
-- When the claim phase will start
-- How many NFTs do you want to drop
-- How much do you want to charge per NFT
-- What currency do you want to use
-- Which wallet addresses are allowed to mint (allowlist)
-- How many NFTs can be claimed per transaction
-- How many seconds do wallets have to wait between claims
+- Cuándo comenzará la fase de reclamación
+- Cuántos NFTs deseas liberar
+- Cuánto deseas cobrar por NFT
+- Qué moneda deseas utilizar
+- Qué direcciones de billetera pueden acuñar (lista permitida)
+- Cuántos NFTs se pueden reclamar por transacción
+- Cuántos segundos deben esperar las billeteras entre reclamaciones
 
-To add a claim phase to a token, click **Add Initial Claim Phase**:
+Para agregar una fase de reclamación a un token, haz clic en **Agregar Fase de Reclamación Inicial**:
 
-### Airdrop NFTs
+### Airdrop de NFTs
 
-Click **Airdrop** on the token you want to use, and upload a `.csv` file containing a list of addresses you want to airdrop NFTs to.
+Haz clic en **Airdrop** en el token que deseas usar, y sube un archivo `.csv` que contenga una lista de direcciones a las que deseas hacer el airdrop de NFTs.
 
-In the `.csv` file, you must specify an `address` column and a `quantity` column, representing the address you want to send the NFTs and how many you wish to send.
-You can download our example [CSV File](https://thirdweb.com/airdrop.csv) to get started.
+En el archivo `.csv`, debes especificar una columna `address` y una columna `quantity`, representando la dirección a la que deseas enviar los NFTs y cuántos deseas enviar.
+Puedes descargar nuestro ejemplo de [Archivo CSV](https://thirdweb.com/assets/examples/airdrop.csv) para comenzar.
 
-### Contract Metadata
+### Metadatos del Contrato
 
-To configure the image, name, and description of the contract, click the **Settings** tab:
+Para configurar la imagen, nombre y descripción del contrato, haz clic en la pestaña **Configuración**:
 
-### Royalty & Platform Fees
+### Regalías y Tarifas de Plataforma
 
-From the **Settings** tab, you also configure the royalty fee,
-primary sales recipient,
-and platform fee.
+Desde la pestaña **Configuración**, también puedes configurar la tarifa de regalías,
+el destinatario de las ventas primarias,
+y la tarifa de plataforma.

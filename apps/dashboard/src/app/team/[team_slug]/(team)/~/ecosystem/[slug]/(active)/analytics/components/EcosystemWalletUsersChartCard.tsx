@@ -228,8 +228,8 @@ export function EcosystemWalletUsersChartCard(props: {
                   fill={chartConfig[authMethod]?.color}
                   radius={4}
                   stackId="a"
-                  strokeWidth={1.5}
-                  className="stroke-muted"
+                  strokeWidth={1}
+                  className="stroke-background"
                 />
               );
             })}

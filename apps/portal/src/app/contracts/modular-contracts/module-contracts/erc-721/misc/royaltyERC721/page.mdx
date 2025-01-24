@@ -3,7 +3,7 @@ import { createMetadata, GithubButtonLink } from "@doc";
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
     description:
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "Modular Contract proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
         title: "thirdweb Modular Contracts",
         icon: "solidity",
@@ -12,39 +12,39 @@ export const metadata = createMetadata({
 
 # RoyaltyERC721
 
-## Description
+## Descripción
 
-The `RoyaltyERC721` contract is a module that integrates royalty management and validation functionalities for ERC-721 token transfers. This module ensures that royalties are appropriately handled during token transfers, and allows for the validation of these transfers through a customizable transfer validator.
+El contrato `RoyaltyERC721` es un módulo que integra funcionalidades de gestión y validación de regalías para transferencias de tokens ERC-721. Este módulo asegura que las regalías se manejen adecuadamente durante las transferencias de tokens, y permite la validación de estas transferencias mediante un validador de transferencias personalizable.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/royalty/RoyaltyERC721.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                | Description                                                                       |
-|-------------------------|-----------------------------------------------------------------------------------|
-| `beforeTransferERC721`  | Callback function for the `ERC721.transferFrom` and `ERC721.safeTransferFrom` functions. Validates the transfer via the `transferValidator`. |
+| Función                | Descripción                                                                       |
+|------------------------|-----------------------------------------------------------------------------------|
+| `beforeTransferERC721`  | Función de callback para las funciones `ERC721.transferFrom` y `ERC721.safeTransferFrom`. Valida la transferencia mediante el `transferValidator`. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                         | Description                                                                                               |
+| Función                         | Descripción                                                                                               |
 |----------------------------------|-----------------------------------------------------------------------------------------------------------|
-| `royaltyInfo`                    | Returns the royalty recipient and amount for a given sale.                                                 |
-| `getDefaultRoyaltyInfo`          | Returns the default royalty info (recipient and BPS) for the token contract.                               |
-| `getRoyaltyInfoForToken`         | Returns the royalty info (recipient and BPS) for a specific token.                                         |
-| `getTransferValidator`           | Returns the transfer validator contract address for this token contract.                                   |
-| `getTransferValidationFunction`  | Returns the function selector and view status for the transfer validator's validation function.            |
-| `hasRole`                        | Checks if the given account has the specified role.                                                        |
-| `setDefaultRoyaltyInfo`          | Sets the default royalty info (recipient and BPS). Requires manager role.                                  |
-| `setRoyaltyInfoForToken`         | Sets the royalty info (recipient and BPS) for a specific token. Requires manager role.                     |
-| `setTransferValidator`           | Sets the transfer validator contract address. Requires manager role.                                       |
+| `royaltyInfo`                    | Devuelve el destinatario de la regalía y el monto para una venta específica.                               |
+| `getDefaultRoyaltyInfo`          | Devuelve la información predeterminada de la regalía (destinatario y BPS) para el contrato de tokens.      |
+| `getRoyaltyInfoForToken`         | Devuelve la información de la regalía (destinatario y BPS) para un token específico.                       |
+| `getTransferValidator`           | Devuelve la dirección del contrato del validador de transferencias para este contrato de tokens.           |
+| `getTransferValidationFunction`  | Devuelve el selector de la función y el estado de vista para la función de validación del validador de transferencias. |
+| `hasRole`                        | Verifica si la cuenta dada tiene el rol especificado.                                                    |
+| `setDefaultRoyaltyInfo`          | Establece la información predeterminada de la regalía (destinatario y BPS). Requiere el rol de administrador.|
+| `setRoyaltyInfoForToken`         | Establece la información de la regalía (destinatario y BPS) para un token específico. Requiere el rol de administrador.|
+| `setTransferValidator`           | Establece la dirección del contrato del validador de transferencias. Requiere el rol de administrador.       |
 
-## Required Interfaces
+## Interfaces Requeridas
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Supported Interfaces
+## Interfaces Compatibles
 
 | Interface              | ID          |
 |------------------------|-------------|
@@ -52,6 +52,6 @@ The `RoyaltyERC721` contract is a module that integrates royalty management and 
 | `ICreatorToken`        | `0xad0d7f6c`|
 | `ICreatorTokenLegacy`  | `0xa07d229a`|
 
-## Installation Callback
+## Callback de Instalación
 
-This module uses an installation callback to set up initial parameters such as the default royalty information and the transfer validator contract.
+Este módulo utiliza un callback de instalación para configurar los parámetros iniciales, como la información predeterminada de regalías y el contrato del validador de transferencias.

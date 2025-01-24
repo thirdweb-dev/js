@@ -12,33 +12,32 @@ export const metadata = createMetadata({
 
 # OpenEditionMetadataERC721
 
-## Description
+## Descripción
 
-The `OpenEditionMetadataERC721` contract is a module that provides metadata management for Open Edition ERC-721 tokens. It includes functionalities for setting and retrieving shared metadata for tokens, making metadata management simple and efficient.
+El contrato `OpenEditionMetadataERC721` es un módulo que proporciona gestión de metadatos para tokens ERC-721 de edición abierta. Incluye funcionalidades para configurar y recuperar metadatos compartidos para los tokens, haciendo la gestión de metadatos simple y eficiente.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/metadata/OpenEditionMetadataERC721.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function          | Description                                                  |
+| Función           | Descripción                                                  |
 |-------------------|--------------------------------------------------------------|
-| `onTokenURI`      | Callback function that returns the token URI for ERC-721 tokens. |
+| `onTokenURI`      | Función de callback que retorna la URI del token para los tokens ERC-721. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function            | Description                                                                               |
-|---------------------|-------------------------------------------------------------------------------------------|
-| `setSharedMetadata` | Sets the shared metadata for the ERC-721 token collection. Requires minter role.           |
+| Función                | Descripción                                                                               |
+|------------------------|-------------------------------------------------------------------------------------------|
+| `setSharedMetadata`     | Establece los metadatos compartidos para la colección de tokens ERC-721. Requiere el rol de minter. |
 
-## Required Interfaces
+## Interfaces Requeridas
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Supported Interfaces
+## Interfaces Compatibles
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC4906`  | `0x49064906`|
-

@@ -10,14 +10,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
-import { ChevronDownIcon, Menu } from "lucide-react";
-import Image from "next/image";
+import { ChevronDownIcon, Menu, TableOfContentsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { GithubIcon } from "../components/Document/GithubButtonLink";
 import { CustomAccordion } from "../components/others/CustomAccordion";
 import { ThemeSwitcher } from "../components/others/theme/ThemeSwitcher";
+import {
+  DotNetIcon,
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  UnrealEngineIcon,
+} from "../icons";
 import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
@@ -66,42 +72,45 @@ const toolLinks = [
   },
 ];
 
-export const connectLinks = [
+export const connectLinks: Array<{
+  name: string;
+  href: string;
+  icon: React.FC<{ className?: string }>;
+}> = [
   {
     name: "Overview",
     href: "/connect",
-    icon: "/icons/navbar/nav-icon-dashboard.svg",
+    icon: TableOfContentsIcon,
   },
   {
     name: "TypeScript",
     href: "/typescript/v5",
-    icon: "/icons/navbar/nav-icon-typescript.svg",
+    icon: TypeScriptIcon,
   },
   {
     name: "React",
     href: "/react/v5",
-    icon: "/icons/navbar/nav-icon-react.svg",
+    icon: ReactIcon,
   },
   {
     name: "React Native",
     href: "/react-native/v5",
-    icon: "/icons/navbar/nav-icon-react.svg",
-    // icon: "/icons/navbar/nav-icon-react-native.svg",
+    icon: ReactIcon,
   },
   {
     name: ".NET",
     href: "/dotnet",
-    icon: "/icons/navbar/nav-icon-dotnet.svg",
+    icon: DotNetIcon,
   },
   {
     name: "Unity",
     href: "/unity",
-    icon: "/icons/navbar/nav-icon-unity.svg",
+    icon: UnityIcon,
   },
   {
     name: "Unreal Engine",
     href: "/unreal-engine",
-    icon: "/icons/navbar/nav-icon-unreal-engine.svg",
+    icon: UnrealEngineIcon,
   },
 ] as const;
 
@@ -131,7 +140,7 @@ export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
   return (
-    <header className="flex w-full items-center border-b bg-b-900">
+    <header className="flex w-full items-center border-b bg-background">
       <div className="container flex items-center justify-between gap-6 p-4 xl:justify-start">
         <Link
           className="flex items-center gap-2"
@@ -140,7 +149,7 @@ export function Header() {
           title="thirdweb Docs"
         >
           <ThirdwebIcon className="size-8" />
-          <span className="font-bold text-[23px] text-f-100 leading-none tracking-tight">
+          <span className="font-bold text-[23px] text-foreground leading-none tracking-tight">
             Docs
           </span>
         </Link>
@@ -153,7 +162,7 @@ export function Header() {
           <Link
             href="https://github.com/thirdweb-dev"
             target="_blank"
-            className="text-f-100"
+            className="text-foreground"
           >
             <GithubIcon className="mx-3 size-6" />
           </Link>
@@ -172,7 +181,7 @@ export function Header() {
           className={clsx(
             "grow gap-5",
             !showBurgerMenu ? "hidden xl:flex" : "flex",
-            "fade-in-20 slide-in-from-top-3 fixed inset-0 top-sticky-top-height animate-in flex-col overflow-auto bg-b-800 p-6",
+            "fade-in-20 slide-in-from-top-3 fixed inset-0 top-sticky-top-height animate-in flex-col overflow-auto bg-card p-6",
             "xl:static xl:animate-none xl:flex-row xl:justify-between xl:bg-transparent xl:p-0",
           )}
         >
@@ -243,7 +252,7 @@ export function Header() {
             <Link
               href="https://github.com/thirdweb-dev"
               target="_blank"
-              className="hidden text-f-300 transition-colors hover:text-f-100 xl:block"
+              className="hidden text-muted-foreground transition-colors hover:text-foreground xl:block"
             >
               <GithubIcon className="mx-2 size-6" />
             </Link>
@@ -257,7 +266,11 @@ export function Header() {
 function DropdownLinks(props: {
   onLinkClick?: () => void;
   category: string;
-  links: readonly { name: string; href: string; icon?: string }[];
+  links: readonly {
+    name: string;
+    href: string;
+    icon?: React.FC<{ className?: string }>;
+  }[];
 }) {
   return (
     <>
@@ -267,15 +280,15 @@ function DropdownLinks(props: {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="inline-flex items-center gap-1 p-0 font-medium text-f-300 text-sm hover:bg-transparent hover:text-f-100"
+              className="inline-flex items-center gap-1 p-0 font-medium text-muted-foreground text-sm hover:bg-transparent hover:text-foreground"
             >
               {props.category}
-              <ChevronDownIcon className="size-4 text-f-300 opacity-70" />
+              <ChevronDownIcon className="size-4 text-muted-foreground opacity-70" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="flex flex-col gap-1 bg-b-800 p-3"
+            className="flex flex-col gap-1 bg-card p-3"
             style={{
               minWidth: "150px",
             }}
@@ -283,26 +296,24 @@ function DropdownLinks(props: {
             {props.links.map((info) => {
               return (
                 <DropdownMenuItem asChild key={info.name}>
-                  <Link
-                    href={info.href}
-                    target={info.href.startsWith("http") ? "_blank" : ""}
-                    prefetch={false}
+                  <div
                     className={clsx(
-                      "flex cursor-pointer font-medium text-f-200",
-                      "hover:bg-b-600 hover:text-f-100",
+                      "relative flex cursor-pointer gap-2 font-medium text-foreground",
+                      "hover:bg-accent",
                     )}
                   >
                     {info.icon && (
-                      <Image
-                        src={info.icon}
-                        width="20"
-                        height="20"
-                        alt=""
-                        className="mr-2"
-                      />
+                      <info.icon className="size-5 text-foreground" />
                     )}
-                    {info.name}
-                  </Link>
+                    <Link
+                      prefetch={false}
+                      target={info.href.startsWith("http") ? "_blank" : ""}
+                      href={info.href}
+                      className="before:absolute before:inset-0"
+                    >
+                      {info.name}
+                    </Link>
+                  </div>
                 </DropdownMenuItem>
               );
             })}
@@ -316,7 +327,7 @@ function DropdownLinks(props: {
           chevronPosition="right"
           containerClassName="border-none"
           trigger={props.category}
-          triggerContainerClassName="py-0 text-base font-medium text-f-300"
+          triggerContainerClassName="py-0 text-base font-medium text-muted-foreground"
         >
           <div className="pt-2">
             <div className="flex flex-col gap-4 border-l-2 pt-3 pl-4">
@@ -343,7 +354,7 @@ function NavLink(props: {
   href: string;
   name: string;
   onClick?: () => void;
-  icon?: string;
+  icon?: React.FC<{ className?: string }>;
 }) {
   const pathname = usePathname();
   return (
@@ -352,20 +363,14 @@ function NavLink(props: {
       onClick={props.onClick}
       target={props.href.startsWith("http") ? "_blank" : ""}
       className={clsx(
-        "font-medium text-base transition-colors hover:text-f-100 xl:text-sm",
-        pathname === props.href ? "text-f-100" : "text-f-300 ",
-        props.icon ? "flex flex-row gap-2" : "",
+        "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
+        pathname === props.href ? "text-foreground" : "text-muted-foreground ",
+        props.icon ? "flex flex-row gap-3" : "",
       )}
     >
       {props.icon ? (
         <>
-          <Image
-            src={props.icon}
-            width="40"
-            height="40"
-            className="size-7"
-            alt=""
-          />
+          <props.icon className="size-6 text-muted-foreground" />
           <span className="my-auto">{props.name}</span>
         </>
       ) : (

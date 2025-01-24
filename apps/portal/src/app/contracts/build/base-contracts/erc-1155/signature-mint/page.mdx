@@ -5,9 +5,9 @@ import { createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "ERC1155SignatureMint | thirdweb contracts",
 	description:
-		"The ERC1155SignatureMint smart contract adds Signature-Based Minting extensions to the ERC1155Base contract",
+		"El contrato inteligente ERC1155SignatureMint agrega extensiones de Minter Basado en Firma al contrato ERC1155Base",
 	image: {
-		title: "ERC1155SignatureMint contract",
+		title: "Contrato ERC1155SignatureMint",
 		icon: "contract",
 	},
 });
@@ -18,19 +18,19 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC1155SignatureMint.sol";
 ```
 
-The `ERC1155SignatureMint` smart contract adds [Signature-Based Minting](/contracts/build/extensions/erc-1155/ERC1155SignatureMint)
-extensions to the [ERC1155Base](/contracts/build/base-contracts/erc-1155/base) contract.
+El contrato inteligente `ERC1155SignatureMint` agrega extensiones de [Minter Basado en Firma](/contracts/build/extensions/erc-1155/ERC1155SignatureMint)
+al contrato [ERC1155Base](/contracts/build/base-contracts/erc-1155/base).
 
-Signature minting uses the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) standard,
-and enables a contract admin to authorize an external party's request to mint tokens on the admin's contract.
-At a high level, this means you can authorize some external party to mint tokens
-on your contract, and specify what will be minted.
+El minting basado en firma usa el estándar [EIP-712](https://eips.ethereum.org/EIPS/eip-712),
+y permite que un administrador de contrato autorice la solicitud de un tercero para mintear tokens en el contrato del administrador.
+A nivel general, esto significa que puedes autorizar a una parte externa para mintear tokens
+en tu contrato y especificar qué será minteado.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155SignatureMint.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y haz que tu contrato herede de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -61,11 +61,11 @@ contract MyNFT is ERC1155SignatureMint {
 
 <br />
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las funciones disponibles de estas extensiones en el SDK y el dashboard:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155Mintable](/contracts/build/extensions/erc-1155/ERC1155Mintable)
@@ -80,9 +80,9 @@ Click on each feature to learn more about what functions are available.
 
 <br />
 
-## Functions to Override
+## Funciones para Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas con el fin de añadir lógica personalizada:
 
 <Details id="mintWithSignature" summary="mintWithSignature">
 

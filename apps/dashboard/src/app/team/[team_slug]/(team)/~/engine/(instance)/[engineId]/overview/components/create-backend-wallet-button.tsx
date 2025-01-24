@@ -31,7 +31,7 @@ import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
 } from "lib/engine";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -120,7 +120,10 @@ export const CreateBackendWalletButton: React.FC<
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Create</Button>
+      <Button onClick={() => setIsOpen(true)} className="gap-2" size="sm">
+        <PlusIcon className="size-4" />
+        Create
+      </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           className="z-[10001] p-0"

@@ -11,7 +11,7 @@ import {
   type ThirdwebContract,
   getContract,
 } from "../../../contract/contract.js";
-import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { toHex } from "../../../utils/encoding/hex.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { deployERC1155Contract } from "../../prebuilts/deploy-erc1155.js";
@@ -76,7 +76,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
       payload,
       signature,
     });
-    const { transactionHash } = await sendTransaction({
+    const { transactionHash } = await sendAndConfirmTransaction({
       transaction,
       account: TEST_ACCOUNT_A,
     });
@@ -107,7 +107,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
       payload,
       signature,
     });
-    const { transactionHash } = await sendTransaction({
+    const { transactionHash } = await sendAndConfirmTransaction({
       transaction,
       account: TEST_ACCOUNT_A,
     });
@@ -153,7 +153,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
       payload,
       signature,
     });
-    const { transactionHash } = await sendTransaction({
+    const { transactionHash } = await sendAndConfirmTransaction({
       transaction,
       account: TEST_ACCOUNT_A,
     });

@@ -2,71 +2,71 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Publish CLI Reference",
+		title: "Referencia CLI de thirdweb Publish",
 		icon: "contract",
 	},
-	title: "CLI Reference | thirdweb Publish",
+	title: "Referencia CLI | thirdweb Publish",
 	description:
-		"Use the CLI to publish your contracts directly to Any EVM compatible chain using the dashboard",
+		"Usa la CLI para publicar tus contratos directamente en cualquier cadena compatible con EVM utilizando el panel de control",
 });
 
-# Publish CLI Reference
+# Referencia CLI de Publicación
 
-Use the CLI to publish your contracts directly to Any EVM compatible chain using the dashboard:
+Usa la CLI para publicar tus contratos directamente en cualquier cadena compatible con EVM utilizando el panel de control:
 
 ```bash
 npx thirdweb publish
 ```
 
-This command will:
+Este comando hará lo siguiente:
 
-- Compile your smart contract.
-- Upload the contract source code (ABI) to IPFS.
-- Open the publish flow in the dashboard.
+- Compilará tu contrato inteligente.
+- Subirá el código fuente del contrato (ABI) a IPFS.
+- Abrirá el flujo de publicación en el panel de control.
 
-### Options
+### Opciones
 
 ```bash
 -p--path <string>
 ```
 
-- Path to project
+- Ruta al proyecto
 
 ```bash
 -f--file <string>
 ```
 
-- Filter for contract files that contain this file name
+- Filtrar archivos de contrato que contengan este nombre de archivo
 
 ```bash
 -cn--contract-name <string>
 ```
 
-- Filter for contracts that contain this contract name
+- Filtrar contratos que contengan este nombre de contrato
 
 ```bash
 -c--clean
 ```
 
-- Clear the cache before building
+- Limpiar la caché antes de construir
 
 ```bash
 --dry-run
 ```
 
-- Dry run (skip actually publishing)
+- Simulación (omitir la publicación real)
 
 ```bash
 -d--debug
 ```
 
-- Show debug logs
+- Mostrar registros de depuración
 
 ```bash
 --ci
 ```
 
-- Continuous Integration mode
+- Modo de Integración Continua
 
 ```bash
 -k--key <string>

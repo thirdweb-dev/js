@@ -12,34 +12,34 @@ export const metadata = createMetadata({
 
 # ClaimableERC721
 
-## Description
+## Descripción
 
-The `ClaimableERC721` contract is a module that provides claim-based minting functionality for ERC-721 tokens. It includes features for setting claim conditions, validating claims via Merkle proofs, and handling signature-based claim requests. This contract ensures secure and controlled minting processes with the possibility of integrating primary sales.
+El contrato `ClaimableERC721` es un módulo que proporciona funcionalidad de minting basada en reclamación para tokens ERC-721. Incluye características para establecer condiciones de reclamación, validar reclamaciones mediante pruebas Merkle, y gestionar solicitudes de reclamación basadas en firmas. Este contrato asegura procesos de minting seguros y controlados con la posibilidad de integrar ventas primarias.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/minting/ClaimableERC721.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                         | Description                                                                                                    |
+| Función                         | Descripción                                                                                                    |
 |----------------------------------|----------------------------------------------------------------------------------------------------------------|
-| `beforeMintERC721`               | Callback function that checks the claim conditions before minting ERC-721 tokens.                              |
-| `beforeMintWithSignatureERC721`  | Callback function that verifies a claim request with a signature and processes the mint accordingly.            |
+| `beforeMintERC721`               | Función de callback que verifica las condiciones de reclamación antes de hacer el minting de tokens ERC-721.    |
+| `beforeMintWithSignatureERC721`  | Función de callback que verifica una solicitud de reclamación con una firma y procesa el minting según corresponda. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                              | Description                                                                                  |
+| Función                              | Descripción                                                                                  |
 |---------------------------------------|----------------------------------------------------------------------------------------------|
-| `getSaleConfig`                       | Returns the sale configuration for a token, including the primary sale recipient.            |
-| `setSaleConfig`                       | Sets the sale configuration for a token, including the primary sale recipient. Requires manager role. |
-| `getClaimCondition`                   | Returns the claim condition for a specific token ID.                                         |
-| `setClaimCondition`                   | Sets the claim condition for a specific token ID. Requires minter role.                      |
+| `getSaleConfig`                       | Retorna la configuración de venta para un token, incluyendo el destinatario de la venta primaria.|
+| `setSaleConfig`                       | Establece la configuración de venta para un token, incluyendo el destinatario de la venta primaria. Requiere el rol de administrador. |
+| `getClaimCondition`                   | Retorna la condición de reclamación para un ID de token específico.                          |
+| `setClaimCondition`                   | Establece la condición de reclamación para un ID de token específico. Requiere el rol de minter. |
 
-## Required Interfaces
+## Interfaces Requeridas
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Installation Callback
+## Callback de Instalación
 
-This module uses an installation callback to set up the initial parameters such as the primary sale recipient.
+Este módulo utiliza un callback de instalación para configurar los parámetros iniciales, como el destinatario de la venta primaria.

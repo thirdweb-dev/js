@@ -9,13 +9,12 @@ export const metadata = createMetadata({
 	},
 	title: "ERC20Drop | thirdweb contracts",
 	description:
-		"The ERC20Drop base contract adds the Drop Single Phase extension contract to the ERC20 base contract to allow you to distribute your tokens under the criteria of claim conditions.",
+		"El contrato base ERC20Drop agrega el contrato de extensión Drop Single Phase al contrato base ERC20 para permitirte distribuir tus tokens bajo los criterios de las condiciones de reclamación.",
 });
 
 # ERC20Drop
 
-The `ERC20Drop` base contract adds the [Drop Single Phase](/contracts/build/extensions/general/DropSinglePhase) extension contract to the [ERC20 base](/contracts/build/base-contracts/erc-20/base) contract
-to allow you to distribute your tokens under the criteria of claim conditions.
+El contrato base `ERC20Drop` agrega el contrato de extensión [Drop Single Phase](/contracts/build/extensions/general/DropSinglePhase) al contrato base [ERC20](/contracts/build/base-contracts/erc-20/base) para permitirte distribuir tus tokens bajo los criterios de las condiciones de reclamación.
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC20Drop.sol";
@@ -23,9 +22,9 @@ import "@thirdweb-dev/contracts/base/ERC20Drop.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20Drop.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e inhírelo.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -50,9 +49,9 @@ contract MyToken is ERC20Drop {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las características que estas extensiones ponen a disposición en el SDK y el panel de control:
 
 - [ERC20](/contracts/build/extensions/erc-20/ERC20)
 - [ERC20ClaimConditionsV2](/contracts/build/extensions/erc-20/ERC20claimconditions)
@@ -61,17 +60,17 @@ Once deployed, you can use the features made available by these extensions on th
 - [Ownable](/contracts/build/extensions/general/Ownable)
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 
-### Functions to Override
+### Funciones para Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas con el fin de añadir lógica personalizada:
 
 <Details id="burn" summary="burn">
 ```solidity
 /**
-*  @notice          Lets an owner a given amount of their tokens.
-*  @dev             Caller should own the `_amount` of tokens.
+*  @notice          Permite a un propietario quemar una cantidad determinada de sus tokens.
+*  @dev             El llamador debe poseer la cantidad de tokens indicada.
 *
-*  @param _amount   The number of tokens to burn.
+*  @param _amount   La cantidad de tokens a quemar.
 */
 function burn(uint256 _amount) external virtual {
     require(balanceOf(msg.sender) >= _amount, "not enough balance");
@@ -83,7 +82,7 @@ function burn(uint256 _amount) external virtual {
 <Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
 
 ```solidity
-/// @dev Collects and distributes the primary sale value of tokens being claimed.
+/// @dev Recoge y distribuye el valor de la venta principal de los tokens que se están reclamando.
 function _collectPriceOnClaim(
     address _primarySaleRecipient,
     uint256 _quantityToClaim,
@@ -111,7 +110,7 @@ function _collectPriceOnClaim(
 <Details title="_transferTokensOnClaim" summary="_transferTokensOnClaim">
 
 ```solidity
-/// @dev Transfers the tokens being claimed.
+/// @dev Transfiere los tokens que se están reclamando.
 function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
     internal
     virtual

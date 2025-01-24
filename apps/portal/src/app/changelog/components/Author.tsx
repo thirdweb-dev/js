@@ -10,7 +10,9 @@ export function Author(props: { name: string; profileImage?: string | null }) {
           alt=""
         />
       )}
-      <span className="font-medium text-f-200 text-sm">{props.name}</span>
+      <span className="font-medium text-muted-foreground text-sm">
+        {props.name}
+      </span>
     </div>
   );
 }

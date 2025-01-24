@@ -3,11 +3,11 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ERC1155Base | thirdweb contracts",
+	title: "ERC1155Base | contratos de thirdweb",
 	description:
-		"The ERC1155Base smart contract implements the ERC1155 NFT standard. It allows for minting NFTs to yourself (or to someone else) and selling those NFTs on a marketplace.",
+		"El contrato inteligente ERC1155Base implementa el estándar ERC1155 de NFTs. Permite acuñar NFTs para ti mismo (o para otra persona) y vender esos NFTs en un mercado.",
 	image: {
-		title: "ERC1155Base contract",
+		title: "Contrato ERC1155Base",
 		icon: "contract",
 	},
 });
@@ -18,14 +18,14 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC1155Base.sol";
 ```
 
-The `ERC1155Base` smart contract implements the [ERC1155](https://eips.ethereum.org/EIPS/eip-1155) NFT standard.
-It allows for minting NFTs to yourself (or to someone else) and selling those NFTs on a marketplace.
+El contrato inteligente `ERC1155Base` implementa el estándar [ERC1155](https://eips.ethereum.org/EIPS/eip-1155) de NFTs. 
+Permite acuñar NFTs para ti mismo (o para otra persona) y vender esos NFTs en un mercado.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155Base.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e inhíerelo.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -52,11 +52,11 @@ contract MyNFT is ERC1155Base {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características habilitadas por estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada función para conocer más sobre las funciones disponibles.
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155Mintable](/contracts/build/extensions/erc-1155/ERC1155Mintable)
@@ -67,9 +67,9 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para sobrecargar
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrecargadas con lógica personalizada:
 
 <Details id="uri" summary="uri">
 

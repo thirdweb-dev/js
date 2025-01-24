@@ -1,18 +1,18 @@
 import { Stack, InstallTabs, Callout, Steps, Step, GithubTemplateCard } from "@doc";
 
-# Getting Started
+# Comenzando
 
-You can get started by creating a new project or adding thirdweb to an existing project.
+Puedes comenzar creando un nuevo proyecto o agregando thirdweb a un proyecto existente.
 
-## New Projects
+## Nuevos Proyectos
 
-You can quickly create a new project with the thirdweb CLI
+Puedes crear rápidamente un nuevo proyecto con la CLI de thirdweb
 
 ```bash
 npx thirdweb create app
 ```
 
-or clone the the Next.js or Vite starter repo:
+o clonar el repositorio de inicio de Next.js o Vite:
 
 <Stack>
 <GithubTemplateCard
@@ -28,9 +28,9 @@ or clone the the Next.js or Vite starter repo:
 />
 </Stack>
 
-## Existing Projects
+## Proyectos existentes
 
-Install the thirdweb packages in your project
+Instala los paquetes de thirdweb en tu proyecto
 
 <InstallTabs
 	npm="npm i thirdweb"
@@ -39,12 +39,12 @@ Install the thirdweb packages in your project
     but="bun i thirdweb"
 />
 
-## Build your app
+## Construye tu aplicación
 
 <Steps>
-<Step title="Setup the ThirdwebProvider">
+<Step title="Configura el ThirdwebProvider">
 
-At the root of your application, wrap your app with a `ThirdwebProvider` component. This keeps state around like the active wallet and chain.
+En la raíz de tu aplicación, envuelve tu aplicación con un componente `ThirdwebProvider`. Esto mantiene el estado, como la cartera activa y la cadena.
 
 ```tsx
 // src/main.tsx
@@ -61,13 +61,13 @@ function Main() {
 
 </Step>
 
-<Step title="Create the thirdweb client">
+<Step title="Crea el cliente de thirdweb">
 
-Head to the [thirdweb dashboard](https://thirdweb.com/team), create your account (or sign in), and click **Projects** to see all your projects.
+Dirígete al [panel de control de thirdweb](https://thirdweb.com/team), crea tu cuenta (o inicia sesión) y haz clic en **Proyectos** para ver todos tus proyectos.
 
-Create a Project with `localhost` included in the allowed domains. Securely store your secret key and copy your client id for use in the next step.
+Crea un proyecto con `localhost` incluido en los dominios permitidos. Almacena de forma segura tu clave secreta y copia tu ID de cliente para usarlo en el siguiente paso.
 
-Create a `.env` file and add your client ID there. Then create a `client.ts` file with the following content:
+Crea un archivo `.env` y agrega tu ID de cliente allí. Luego crea un archivo `client.ts` con el siguiente contenido:
 
 ```tsx
 // src/client.ts
@@ -78,18 +78,18 @@ export const client = createThirdwebClient({
 });
 ```
 
-You only need to define the client once. Exporting the client vartiable will allow you to use anywhere in your app.
+Solo necesitas definir el cliente una vez. Exportar la variable client te permitirá usarla en cualquier parte de tu aplicación.
 
 </Step>
 
-<Step title="Connect a wallet">
+<Step title="Conectar una cartera">
 
-There are two ways to connect users to your app:
+Hay dos formas de conectar usuarios a tu aplicación:
 
-- The prebuilt `ConnectButton` or `ConnectEmbed` components.
-- Your own custom button.
+- Los componentes preconstruidos `ConnectButton` o `ConnectEmbed`.
+- Tu propio botón personalizado.
 
-In this guide, we'll use the prebuilt `ConnectButton` component.
+En esta guía, usaremos el componente preconstruido `ConnectButton`.
 
 ```tsx
 // src/app.tsx
@@ -105,15 +105,15 @@ function App() {
 }
 ```
 
-The `ConnectButton` and `ConnectEmbed` components come with built-in support for 500+ of wallets, 2000+ chains, fiat on-ramping, crypto swapping, transaction tracking, and more.
+Los componentes `ConnectButton` y `ConnectEmbed` vienen con soporte integrado para más de 500 carteras, 2000 cadenas, integración de fiat, intercambio de cripto, seguimiento de transacciones y más.
 
-You can also build your own custom button using the [`useConnect`](/react/v5/connecting-wallets/hooks) hook.
+También puedes crear tu propio botón personalizado usando el hook [`useConnect`](/react/v5/connecting-wallets/hooks).
 
 </Step>
 
-<Step title="Get the connected wallet information">
+<Step title="Obtener la información de la cartera conectada">
 
-Once the user has connected their wallet, you can get the wallet address, balance, and other details.
+Una vez que el usuario haya conectado su cartera, puedes obtener la dirección de la cartera, el saldo y otros detalles.
 
 ```tsx
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
@@ -135,9 +135,9 @@ export default function App() {
 
 </Step>
 
-<Step title="Read blockchain data">
+<Step title="Leer datos de la blockchain">
 
-You can read contract state with the [`useReadContract`](/react/v5/useReadContract) hook. This works with any contract call. Simply specify the solidity function signature to get a type safe API for your contract.
+Puedes leer el estado del contrato con el hook [`useReadContract`](/react/v5/useReadContract). Esto funciona con cualquier llamada a contrato. Simplemente especifica la firma de la función Solidity para obtener una API segura para tu contrato.
 
 ```tsx
 import { client }  from "./client";
@@ -160,7 +160,7 @@ export default function App() {
 }
 ```
 
-Using [Extensions](/react/v5/extensions) you can do powerful queries like getting all the owned NFTs of a specific address, and generate performant typesafe functions for your contract.
+Usando [Extensiones](/react/v5/extensions) puedes realizar consultas poderosas como obtener todos los NFTs propiedad de una dirección específica, y generar funciones seguras y de alto rendimiento para tu contrato.
 
 ```tsx
 import { client }  from "./client";
@@ -185,9 +185,9 @@ export default function App() {
 
 </Step>
 
-<Step title="Execute transactions">
+<Step title="Ejecutar transacciones">
 
-You can execute transactions with the [`useSendTransaction`](/react/v5/useSendTransaction) hook. Prepare a transaction with the [`prepareContractCall`](/references/typescript/v5/prepareContractCall) function and pass it to the `sendTransaction` function.
+Puedes ejecutar transacciones con el hook [`useSendTransaction`](/react/v5/useSendTransaction). Prepara una transacción con la función [`prepareContractCall`](/references/typescript/v5/prepareContractCall) y pásala a la función `sendTransaction`.
 
 ```tsx
 import { client }  from "./client";
@@ -215,7 +215,7 @@ export default function App() {
 }
 ```
 
-Using [Extensions](/react/v5/extensions/use) you can do more complex transactions like a claim, batch mint, and more. These will handle all the preprocessing needed before calling the contract.
+Usando [Extensiones](/react/v5/extensions/use) puedes realizar transacciones más complejas como un reclamo, acuñación por lotes y más. Estas manejarán todo el procesamiento previo necesario antes de llamar al contrato.
 
 ```tsx
 import { client }  from "./client";
@@ -252,6 +252,6 @@ export default function App() {
 </Step>
 </Steps>
 
-## Learn more
+## Aprende más
 
-You know have all the basics to build your own app with thirdweb. You can also check out the [full thirdweb SDK reference](/references/typescript/v5) to learn more about the different hooks and functions available.
+Ahora tienes todos los conceptos básicos para construir tu propia aplicación con thirdweb. También puedes consultar la [referencia completa del SDK de thirdweb](/references/typescript/v5) para aprender más sobre los diferentes hooks y funciones disponibles.

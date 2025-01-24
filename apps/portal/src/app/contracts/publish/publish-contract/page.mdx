@@ -7,76 +7,76 @@ export const metadata = createMetadata({
 	},
 	title: "CLI | thirdweb Publish",
 	description:
-		"Use the CLI to publish your contracts directly to Any EVM compatible chain using the dashboard",
+		"Usa la CLI para publicar tus contratos directamente en cualquier cadena compatible con EVM usando el panel de control",
 });
 
-# Publish
+# Publicar
 
-Use the [CLI](/cli) to publish your contracts directly to **Any EVM compatible chain** using the [dashboard](https://thirdweb.com/team):
+Usa la [CLI](/cli) para publicar tus contratos directamente en **cualquier cadena compatible con EVM** usando el [panel de control](https://thirdweb.com/team):
 
 ```bash
 npx thirdweb publish
 ```
 
-This command will:
+Este comando hará lo siguiente:
 
-- Compile your smart contract.
-- Upload the contract source code (ABI) to IPFS.
-- Open the publish flow in the dashboard.
+- Compilará tu contrato inteligente.
+- Subirá el código fuente del contrato (ABI) a IPFS.
+- Abrirá el flujo de publicación en el panel de control.
 
-## How to Publish Your Contract
+## Cómo publicar tu contrato
 
-In your browser, follow the steps below to publish your contract:
+En tu navegador, sigue los pasos a continuación para publicar tu contrato:
 
-### Configure Contract Metadata
+### Configura los metadatos del contrato
 
-From the dashboard, provide the metadata for your smart contract including:
+Desde el panel de control, proporciona los metadatos de tu contrato inteligente, incluyendo:
 
-- **Name**
-- **Image**
-- **Description**
-- **README** - Markdown is supported. What your contract does, common use cases & examples are great things to include here.
+- **Nombre**
+- **Imagen**
+- **Descripción**
+- **README** - Se admite Markdown. Lo que hace tu contrato, casos de uso comunes y ejemplos son cosas excelentes para incluir aquí.
 
-### Add A Version & Audit Report (Optional)
+### Agrega una versión e informe de auditoría (opcional)
 
-Use [semantic versioning](https://semver.org/) to incrementally publish new versions of your smart contract;
-ideal for when you want to make changes to your smart contract but don't want to break existing integrations.
+Usa [versionado semántico](https://semver.org/) para publicar de manera incremental nuevas versiones de tu contrato inteligente;
+ideal cuando deseas hacer cambios en tu contrato sin romper integraciones existentes.
 
-Each version of your smart contract is stored onchain and can be deployed by anyone. You
-can optionally include release notes, to describe the changes you've made between versions.
+Cada versión de tu contrato inteligente se almacena en la cadena y puede ser desplegada por cualquiera. 
+Puedes incluir notas de la versión, para describir los cambios realizados entre versiones.
 
-You can also link each version to an audit report. You can paste a link to it, or drag and drop a PDF. We will generate an IPFS link for you.
+También puedes vincular cada versión a un informe de auditoría. Puedes pegar un enlace a este, o arrastrar y soltar un PDF. Nosotros generaremos un enlace IPFS para ti.
 
-### Choose how users will deploy your published contract
+### Elige cómo los usuarios desplegarán tu contrato publicado
 
-Select the contract type for your published contract
+Selecciona el tipo de contrato para tu contrato publicado:
 
-- Direct Deploy: Choose this option if your contract does not follow the upgradeable contract pattern.
-  - This option can be used for **any contract**
-  - there are no requirements for using this option to publish your contract.
-  - Users will deploy the **full contract**: storage and implementation logic.
-- [Deploy via Factory](/contracts/publish/publish-options): Choose this option if you would like users to deploy proxies of your contract using the thirdweb default factory contract or using your own pre-deployed custom factory.
-  - [Default Factory](/contracts/publish/publish-options#default-factory) - Use this option to use the thirdweb default factory if your contract follows the upgradeable contract pattern.
-  - [Custom Factory](/contracts/publish/publish-options#custom-factory) - Use this option to use your own pre-deployed custom factory to create proxies for your users.
+- **Despliegue directo**: Elige esta opción si tu contrato no sigue el patrón de contrato actualizable.
+  - Esta opción se puede usar para **cualquier contrato**.
+  - No hay requisitos para usar esta opción para publicar tu contrato.
+  - Los usuarios desplegarán el **contrato completo**: almacenamiento y lógica de implementación.
+- [Desplegar a través de Factory](/contracts/publish/publish-options): Elige esta opción si deseas que los usuarios desplieguen proxies de tu contrato usando el contrato factory predeterminado de thirdweb o usando tu propia factory personalizada ya desplegada.
+  - [Factory predeterminado](/contracts/publish/publish-options#default-factory) - Usa esta opción si tu contrato sigue el patrón de contrato actualizable.
+  - [Factory personalizada](/contracts/publish/publish-options#custom-factory) - Usa esta opción para usar tu propia factory personalizada predesplegada para crear proxies para tus usuarios.
 
-Once selected, click "Next" to move on to the flow corresponding to the contract type selected.
+Una vez seleccionada, haz clic en "Siguiente" para continuar con el flujo correspondiente al tipo de contrato seleccionado.
 
-### Choose which network(s) to publish your contract to
+### Elige en qué(s) red(es) publicar tu contrato
 
-Select the network(s) you would like to publish your contract. You can select multiple networks or any EVM.
+Selecciona la(s) red(es) en las que te gustaría publicar tu contrato. Puedes seleccionar múltiples redes o cualquier EVM.
 
-If you chose to publish via direct deploy, you will be asked to select the network(s) you would like users to be able to deploy your contract to and then click the "Next" button.
-If you chose to publish via factory, you will be asked to select the network(s) you would like users to be able to deploy your contract to when setting your "Factory deploy settings".
+Si elegiste publicar mediante despliegue directo, se te pedirá que selecciones las redes en las que deseas que los usuarios puedan desplegar tu contrato y luego haz clic en el botón "Siguiente".
+Si elegiste publicar mediante factory, se te pedirá que selecciones las redes en las que deseas que los usuarios puedan desplegar tu contrato al configurar los "Ajustes de despliegue de Factory".
 
-### Customize Contract Parameters
+### Personaliza los parámetros del contrato
 
-Help users trying to deploy your smart contract by changing what your contract parameters look like. These are fields that users need to enter before deploying your contract with each field corresponding to the associated variable in the constructor of your contract.
+Ayuda a los usuarios que intentan desplegar tu contrato inteligente cambiando la apariencia de los parámetros de tu contrato. Estos son los campos que los usuarios deben completar antes de desplegar tu contrato, y cada campo corresponde a la variable asociada en el constructor de tu contrato.
 
-- **Display name**: Use this to have a more readable version of the parameter name. Otherwise, the parameter name from the contract will be shown as is.
-- **Default value**: This will be pre-filled in the deploy form. Use this to guide users on what value to enter. If the parameter is of the address datatype, you can pre-fill the users connected wallet address by setting the default value as your connected wallet
-- **Description**: Use this to clear up any confusion and explain what value this parameter is expecting
-- **Advanced**: Tick this option if you want to hide this parameter from the deploy form. This is useful for parameters that are not required to be changed by the user. This option is only available for parameters that have a default value.
+- **Nombre para mostrar**: Usa esto para tener una versión más legible del nombre del parámetro. De lo contrario, se mostrará el nombre del parámetro tal como está en el contrato.
+- **Valor predeterminado**: Esto se pre-rellenará en el formulario de despliegue. Usa esto para guiar a los usuarios sobre qué valor ingresar. Si el parámetro es de tipo dirección, puedes pre-rellenar la dirección del wallet conectado estableciendo el valor predeterminado como tu wallet conectado.
+- **Descripción**: Usa esto para aclarar cualquier confusión y explicar qué valor se espera para este parámetro.
+- **Avanzado**: Marca esta opción si deseas ocultar este parámetro del formulario de despliegue. Esto es útil para parámetros que no se necesitan cambiar por el usuario. Esta opción solo está disponible para parámetros que tienen un valor predeterminado.
 
-### Publish Contract
+### Publicar contrato
 
-Finally, click the "Publish Contract" button to publish your smart contract to the onchain registry.
+Finalmente, haz clic en el botón "Publicar contrato" para publicar tu contrato inteligente en el registro en cadena.

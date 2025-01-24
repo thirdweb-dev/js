@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 	},
 	title: "ERC721SignatureMint | thirdweb contracts",
 	description:
-		"The ERC721SignatureMint smart contract uses the ERC721Base base contract along with the SignatureMintERC721 contract extension",
+		"El contrato inteligente ERC721SignatureMint utiliza el contrato base ERC721Base junto con la extensión de contrato SignatureMintERC721",
 });
 
 # ERC721SignatureMint
@@ -18,20 +18,22 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
 ```
 
-The `ERC721SignatureMint` smart contract uses the
-[ERC721Base](/contracts/build/base-contracts/erc-721/base)
-base contract along with the [SignatureMintERC721](/contracts/build/extensions/erc-721/ERC721SignatureMint) contract extension.
+# ERC721SignatureMint
 
-[Signature minting](/glossary/signature-based-minting) uses the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) standard,
-enables a contract admin to authorize an external party's request to mint tokens on the admin's contract.
-At a high level, this means you can authorize another wallet to mint tokens
-on your contract, and specify what exactly will be minted by that external party.
+El contrato inteligente `ERC721SignatureMint` utiliza el
+[contrato base ERC721Base](/contracts/build/base-contracts/erc-721/base)
+junto con la extensión de contrato [SignatureMintERC721](/contracts/build/extensions/erc-721/ERC721SignatureMint).
+
+[Signature minting](/glossary/signature-based-minting) utiliza el estándar [EIP-712](https://eips.ethereum.org/EIPS/eip-712),
+lo que permite que un administrador de contrato autorice la solicitud de una parte externa para acuñar tokens en el contrato del administrador.
+A un alto nivel, esto significa que puedes autorizar a otra billetera a acuñar tokens
+en tu contrato, y especificar qué exactamente será acuñado por esa parte externa.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721SignatureMint.sol" />
 
-## Usage
+## Uso
 
-Import the contract extension and make your contract inherit it.
+Importa la extensión del contrato y haz que tu contrato la herede.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -60,11 +62,11 @@ contract MyNFT is ERC721SignatureMint {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las funciones disponibles de estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
@@ -77,18 +79,18 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="mintWithSignature" summary="mintWithSignature">
 
 ```solidity
 /**
-*  @notice           Mints tokens according to the provided mint request.
+*  @notice           Minta tokens según la solicitud de mint proporcionada.
 *
-*  @param _req       The payload / mint request.
-*  @param _signature The signature produced by an account signing the mint request.
+*  @param _req       La carga útil / solicitud de mint.
+*  @param _signature La firma producida por una cuenta que firma la solicitud de mint.
 */
 function mintWithSignature(MintRequest calldata _req, bytes calldata _signature)
     external
@@ -127,7 +129,7 @@ function mintWithSignature(MintRequest calldata _req, bytes calldata _signature)
 <Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
 
 ```solidity
-/// @dev Collects and distributes the primary sale value of NFTs being claimed.
+/// @dev Recoge y distribuye el valor de la venta primaria de los NFTs que están siendo reclamados.
 function _collectPriceOnClaim(
     address _primarySaleRecipient,
     uint256 _quantityToClaim,

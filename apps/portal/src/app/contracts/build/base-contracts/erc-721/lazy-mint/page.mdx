@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 	},
 	title: "ERC721LazyMint | thirdweb contracts",
 	description:
-		"ERC721LazyMint allows you to lazy-mint ERC-721 tokens, which allows any wallet to claim a lazy-minted NFT",
+		"ERC721LazyMint permite realizar un minting diferido de tokens ERC-721, lo que permite que cualquier billetera reclame un NFT con minting diferido",
 });
 
 # ERC721LazyMint
@@ -18,18 +18,18 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC721LazyMint.sol";
 ```
 
-`ERC721LazyMint` allows you to lazy-mint ERC-721 tokens, which allows any wallet to claim a lazy-minted NFT.
-It exposes a `verifyClaim` function that you can override to add your claim-restriction logic.
+`ERC721LazyMint` te permite realizar un minting diferido de tokens ERC-721, lo que permite que cualquier billetera reclame un NFT con minting diferido.  
+Expone una función `verifyClaim` que puedes sobrescribir para agregar tu propia lógica de restricción de reclamaciones.
 
-Lazy minting allows you to define the metadata of NFTs without minting it to an address.
-As a contract admin, this lets you prepare the metadata for NFTs that will be minted by other wallets,
-without paying the gas cost for actually minting the NFTs.
+El minting diferido te permite definir los metadatos de los NFTs sin tener que hacer el minting en una dirección.  
+Como administrador del contrato, esto te permite preparar los metadatos de los NFTs que serán mintados por otras billeteras,  
+sin tener que pagar el costo de gas por el minting real de los NFTs.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721LazyMint.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y hereda de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -52,11 +52,11 @@ contract MyNFT is ERC721LazyMint {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez que se haya desplegado, puedes usar las características habilitadas por estas extensiones en el SDK y en el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
@@ -66,17 +66,17 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones a Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="tokenURI" summary="tokenURI">
 ```solidity
 /**
-*  @notice         Returns the metadata URI for an NFT.
-*  @dev            See `BatchMintMetadata` for handling of metadata in this contract.
+*  @notice         Devuelve la URI de metadatos para un NFT.
+*  @dev            Consulta `BatchMintMetadata` para el manejo de los metadatos en este contrato.
 *
-*  @param _tokenId The tokenId of an NFT.
+*  @param _tokenId El tokenId de un NFT.
 */
 function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
     string memory batchUri = _getBaseURI(_tokenId);
@@ -89,19 +89,19 @@ function tokenURI(uint256 _tokenId) public view virtual override returns (string
 
 ```solidity
 /**
-*  @notice          Lets an address claim multiple lazy minted NFTs at once to a recipient.
-*                   This function prevents any reentrant calls, and is not allowed to be overridden.
+*  @notice          Permite a una dirección reclamar múltiples NFTs mintados de manera perezosa de una vez a un receptor.
+*                   Esta función previene cualquier llamada reentrante, y no se puede sobrescribir.
 *
-*                   Contract creators should override `verifyClaim` and `transferTokensOnClaim`
-*                   functions to create custom logic for verification and claiming,
-*                   for e.g. price collection, allowlist, max quantity, etc.
+*                   Los creadores de contratos deben sobrescribir las funciones `verifyClaim` y `transferTokensOnClaim`
+*                   para crear una lógica personalizada para la verificación y la reclamación,
+*                   por ejemplo, recolección de precios, listas permitidas, cantidad máxima, etc.
 *
-*  @dev             The logic in `verifyClaim` determines whether the caller is authorized to mint NFTs.
-*                   The logic in `transferTokensOnClaim` does actual minting of tokens,
-*                   can also be used to apply other state changes.
+*  @dev             La lógica en `verifyClaim` determina si la llamada es autorizada para mintar NFTs.
+*                   La lógica en `transferTokensOnClaim` realiza el minting de los tokens,
+*                   también puede ser utilizada para aplicar otros cambios de estado.
 *
-*  @param _receiver  The recipient of the NFT to mint.
-*  @param _quantity  The number of NFTs to mint.
+*  @param _receiver  El destinatario del NFT a mintar.
+*  @param _quantity  La cantidad de NFTs a mintar.
 */
 function claim(address _receiver, uint256 _quantity) public payable nonReentrant {
     require(_currentIndex + _quantity <= nextTokenIdToLazyMint, "Not enough lazy minted tokens.");
@@ -118,14 +118,14 @@ function claim(address _receiver, uint256 _quantity) public payable nonReentrant
 
 ```solidity
 /**
-     *  @notice          Override this function to add logic for claim verification, based on conditions
-     *                   such as allowlist, price, max quantity etc.
+     *  @notice          Sobrescribe esta función para agregar la lógica de verificación de la reclamación,
+     *                   basada en condiciones como lista permitida, precio, cantidad máxima, etc.
      *
-     *  @dev             Checks a request to claim NFTs against a custom condition.
+     *  @dev             Verifica una solicitud para reclamar NFTs contra una condición personalizada.
      *
-     *  @param _claimer   Caller of the claim function.
-     *  @param _quantity  The number of NFTs being claimed.
-     */
+     *  @param _claimer   Llamante de la función de reclamación.
+     *  @param _quantity  La cantidad de NFTs que se están reclamando.
+ */
     function verifyClaim(address _claimer, uint256 _quantity) public view virtual {}
 ```
 
@@ -135,10 +135,10 @@ function claim(address _receiver, uint256 _quantity) public payable nonReentrant
 
 ```solidity
 /**
-*  @notice         Lets an owner or approved operator burn the NFT of the given tokenId.
-*  @dev            ERC721A's `_burn(uint256,bool)` internally checks for token approvals.
+*  @notice         Permite que un propietario o un operador aprobado queme el NFT del tokenId dado.
+*  @dev            El método `_burn(uint256,bool)` de ERC721A verifica internamente las aprobaciones de los tokens.
 *
-*  @param _tokenId The tokenId of the NFT to burn.
+*  @param _tokenId El tokenId del NFT que se va a quemar.
 */
 function burn(uint256 _tokenId) external virtual {
     _burn(_tokenId, true);
@@ -151,12 +151,12 @@ function burn(uint256 _tokenId) external virtual {
 
 ```solidity
 /**
-*  @notice          Mints tokens to receiver on claim.
-*                   Any state changes related to `claim` must be applied
-*                   here by overriding this function.
+*  @notice          Minta tokens al receptor al reclamar.
+*                   Cualquier cambio de estado relacionado con `claim` debe aplicarse
+*                   aquí sobrecargando esta función.
 *
-*  @dev             Override this function to add logic for state updation.
-*                   When overriding, apply any state changes before `_safeMint`.
+*  @dev             Sobrecarga esta función para agregar lógica de actualización de estado.
+*                   Al sobrecargar, aplica cualquier cambio de estado antes de `_safeMint`.
 */
 function _transferTokensOnClaim(address _receiver, uint256 _quantity)
     internal

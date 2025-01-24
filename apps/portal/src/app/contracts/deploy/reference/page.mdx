@@ -2,104 +2,104 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb CLI references",
+		title: "Referencias de CLI de thirdweb",
 		icon: "thirdweb",
 	},
-	title: "thirdweb CLI references",
+	title: "Referencias de CLI de thirdweb",
 	description:
-		"Use the CLI to deploy your contracts directly to any EVM compatible blockchain by running:",
+		"Usa el CLI para desplegar tus contratos directamente a cualquier blockchain compatible con EVM ejecutando:",
 });
 
-# CLI Reference
+# Referencia de CLI
 
-Use the CLI to deploy your contracts directly to any EVM compatible blockchain by running:
+Usa el CLI para desplegar tus contratos directamente a cualquier blockchain compatible con EVM ejecutando:
 
 ```bash
 npx thirdweb [options]
 ```
 
-### Options
+### Opciones
 
 ```bash
 -p--path <string>
 ```
 
-- Path to project
+- Ruta al proyecto
 
 ```bash
 -c--clean
 ```
 
-- Clear the cache before building
+- Limpiar la caché antes de construir
 
 ```bash
 --dry-run
 ```
 
-- Dry run (skip actually publishing)
+- Ejecución de prueba (omitir la publicación real)
 
 ```bash
 -d--debug
 ```
 
-- Show debug logs
+- Mostrar los logs de depuración
 
 ```bash
 --ci
 ```
 
-- Continuous Integration mode
+- Modo de Integración Continua
 
 ```bash
 --dist-path <string>
 ```
 
-- Path to the dist folder where the HTML based App is
+- Ruta a la carpeta dist donde está la aplicación basada en HTML
 
 ```bash
 -n--name <string>
 ```
 
-- Name of the pre-built or published contract (such as nft-drop)
+- Nombre del contrato preconstruido o publicado (como nft-drop)
 
 ```bash
 -f--file <string>
 ```
 
-- Filter for contract files that contain this file name
+- Filtrar archivos de contrato que contengan este nombre de archivo
 
 ```bash
 -cn--contract-name <string>
 ```
 
-- Filter for contracts that contain this contract name
+- Filtrar contratos que contengan este nombre de contrato
 
 ```bash
 -cv--contract-version <string>
 ```
 
-- Version of the published contract
+- Versión del contrato publicado
 
 ```bash
 --app
 ```
 
-- Deploy a web app to decentralized storage
+- Desplegar una aplicación web en almacenamiento descentralizado
 
 ```bash
 --contract
 ```
 
-- Deploy a smart contract to blockchains
+- Desplegar un contrato inteligente en blockchains
 
 ```bash
 --dynamic
 ```
 
-- Deploy a dynamic smart contract made up of extensions to blockchains
+- Desplegar un contrato inteligente dinámico compuesto por extensiones en blockchains
 
 ```bash
 -k--key <string>
 ```
 
-- Optional parameter to use passed in secret key, most useful for continuous integration use cases.
+- Parámetro opcional para usar la clave secreta proporcionada, útil para casos de uso de integración continua.

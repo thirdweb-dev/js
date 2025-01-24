@@ -5,7 +5,7 @@ import styles from "./Steps.module.css";
 export function Steps(props: { children: React.ReactNode }) {
   return (
     <div className={cn("pl-4", styles.steps, "relative my-5")}>
-      <ul className="border-l-2 py-4 pl-8 [&_li:first-child_[data-step]_div:first-child]:mt-0">
+      <ul className="border-l py-4 pl-8 [&_li:first-child_[data-step]_div:first-child]:mt-0">
         {props.children}
       </ul>
     </div>

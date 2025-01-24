@@ -47,7 +47,14 @@ export function PieChart({
             />
           }
         />
-        <Pie data={data} dataKey="value" nameKey="label" innerRadius={60} />
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="label"
+          innerRadius={60}
+          strokeWidth={1}
+          stroke="hsl(var(--background))"
+        />
       </RechartsPieChart>
     </ChartContainer>
   );

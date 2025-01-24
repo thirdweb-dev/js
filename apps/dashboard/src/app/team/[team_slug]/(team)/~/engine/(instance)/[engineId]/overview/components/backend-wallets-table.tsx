@@ -1,4 +1,5 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,10 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { EngineBackendWalletOptions } from "lib/engine";
-import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
+import {
+  useActiveChainAsDashboardChain,
+  useV5DashboardChain,
+} from "lib/v5-adapter";
 import {
   DownloadIcon,
   PencilIcon,
@@ -58,6 +62,7 @@ interface BackendWalletsTableProps {
   isPending: boolean;
   isFetched: boolean;
   authToken: string;
+  chainId: number;
 }
 
 interface BackendWalletDashboard extends BackendWallet {
@@ -71,19 +76,21 @@ interface BackendWalletBalanceCellProps {
   instanceUrl: string;
   address: string;
   authToken: string;
+  chainId: number;
 }
 
 const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   instanceUrl,
   address,
   authToken,
+  chainId,
 }) => {
   const { data: backendWalletBalance } = useEngineBackendWalletBalance({
     instanceUrl: instanceUrl,
     address,
     authToken,
   });
-  const chain = useActiveChainAsDashboardChain();
+  const chain = useV5DashboardChain(chainId);
   if (!chain || !backendWalletBalance) {
     return;
   }
@@ -99,7 +106,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
     </Text>
   );
 
-  const explorer = chain?.explorers?.[0];
+  const explorer = chain.blockExplorers?.[0];
   if (!explorer) {
     return balanceComponent;
   }
@@ -122,6 +129,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   isPending,
   isFetched,
   authToken,
+  chainId,
 }) => {
   const editDisclosure = useDisclosure();
   const receiveDisclosure = useDisclosure();
@@ -162,13 +170,14 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
               instanceUrl={instanceUrl}
               address={address}
               authToken={authToken}
+              chainId={chainId}
             />
           );
         },
         id: "balance",
       }),
     ];
-  }, [instanceUrl, authToken]);
+  }, [instanceUrl, authToken, chainId]);
 
   const [selectedBackendWallet, setSelectedBackendWallet] =
     useState<BackendWallet>();
@@ -182,6 +191,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         isPending={isPending}
         isFetched={isFetched}
         tableScrollableClassName="max-h-[1000px]"
+        tableContainerClassName="border-x-0 rounded-t-none border-b-0"
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,
@@ -669,7 +679,9 @@ function DeleteModal({
             variant="destructive"
             onClick={onClick}
             disabled={isLocalWallet && !ackDeletion}
+            className="gap-2"
           >
+            {deleteBackendWallet.isPending && <Spinner className="size-4" />}
             Delete
           </Button>
         </ModalFooter>

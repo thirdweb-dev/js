@@ -1,90 +1,88 @@
-import { createMetadata, DocImage, Steps, Step, Callout } from "@doc";
+import { createMetadata, DocImage, Steps, Step, Callout} from "@doc";
 import { ContractDeployCard } from "@/components/Document/ContractDeployCard";
 import editionDropStep1 from './assets/edition_drop_step1.png'
 import editionDropStep2 from './assets/edition_drop_step2.png'
 import editionDropStep3 from './assets/edition_drop_step3.png'
 import editionDropStep4 from './assets/edition_drop_step4.png'
 
-# Deploy a modular Edition Drop contract
+# Desplegar un contrato modular de Edition Drop
 
-The Edition Drop contract also known as “semi-fungible” or “multi” tokens create multiple NFTs from the same asset based on the [ERC-1155 standard](https://eips.ethereum.org/EIPS/eip-1155). 
+El contrato de Edition Drop, también conocido como tokens “semi-fungibles” o “multi”, crea múltiples NFTs a partir del mismo activo basado en el estándar [ERC-1155](https://eips.ethereum.org/EIPS/eip-1155).
 
-Edition Drop includes settings called claim conditions which allow deployers to set a prices for tokens per claim phase and limits on how many tokens to be released. 
+Edition Drop incluye configuraciones llamadas condiciones de reclamación, que permiten a los desplegadores establecer precios para los tokens por fase de reclamación y límites sobre cuántos tokens se liberarán.
 
-<ContractDeployCard contractName="Modular Edition Drop" href="https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzExNTUifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlNlcXVlbnRpYWxUb2tlbklkRVJDMTE1NSJ9&displayName=Modular+Edition+Drop" />
-
+<ContractDeployCard contractName="Edición Modular Drop" href="https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzExNTUifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlNlcXVlbnRpYWxUb2tlbklkRVJDMTE1NSJ9&displayName=Modular+Edition+Drop" />
 
 ### Edition Drop vs Edition
 
-The Edition Drop contract allows users to claim tokens based on specific settings set using Claim Conditions. If you do not need to set limits or special settings on how to claim, refer to the Edition contract.
+El contrato de Edition Drop permite a los usuarios reclamar tokens según configuraciones específicas establecidas mediante las Condiciones de Reclamación. Si no necesitas establecer límites o configuraciones especiales sobre cómo reclamar, consulta el contrato de Edition.
 
-### Use Cases & Examples
+### Casos de uso y ejemplos
 
-- Create NFT Memberships such as Early Access Cards for users to claim
-- Release a limited in-game item
-- Create badges, certificates, or passes for real world assets and events
+- Crear Membresías NFT como tarjetas de acceso anticipado para que los usuarios las reclamen
+- Liberar un artículo limitado en un juego
+- Crear medallas, certificados o pases para activos y eventos del mundo real
 
-### Default Installed Modules
+### Módulos instalados por defecto
 
-- Claimable
+- Reclamable
 - BatchMetadata
-- Royalty
+- Regalías
 - SequentialTokenId
 
-### Deploy modular Edition Drop contract
+### Desplegar un contrato modular de Edition Drop
 
-Learn how to deploy a modular Edition Drop contract through the dashboard. 
+Aprende cómo desplegar un contrato modular de Edition Drop a través del panel.
 
 <Steps>
 
-<Step title="Locate Contract">
+<Step title="Localizar el contrato">
 
-Navigate to Explore, locate the [Modular Edition Drop contract](https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDMTE1NSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkMxMTU1In0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzExNTUifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlNlcXVlbnRpYWxUb2tlbklkRVJDMTE1NSJ9&displayName=Modular+Edition), and select the Deploy Now button.
+Dirígete a Explorar, localiza el [contrato modular de Edition Drop](https://thirdweb.com/thirdweb.eth/ERC1155CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik1pbnRhYmxlRVJDNzIxIn0%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkJhdGNoTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlRyYW5zZmVyYWJsZUVSQzcyMSJ9&displayName=Modular+NFT+Collection), y selecciona el botón Desplegar ahora.
 
-<DocImage src={editionDropStep1} alt="Screenshot Edition Drop contract" />
-
-</Step>
-
-<Step title="Configure Contract Metadata">
-Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
-
-Contract Metadata serves as your unique identifier.
-
-<DocImage src={editionDropStep2} alt="Screenshot of Edition Drop configure metadata" />
+<DocImage src={editionDropStep1} alt="Captura de pantalla del contrato de Edition Drop" />
 
 </Step>
 
+<Step title="Configurar los metadatos del contrato">
+Rellena los metadatos del contrato, incluyendo Nombre, Símbolo, Descripción e Imagen.
 
-<Step title="Configure Sequential Token Id">
-Input a number you want your tokens to start at for the sequential token id. If you don’t have a preference to change it, you may input 0. 
+Los metadatos del contrato sirven como tu identificador único.
 
-<DocImage src={editionDropStep3} alt="Screenshot of Edition Drop configure sequential token id" />
+<DocImage src={editionDropStep2} alt="Captura de pantalla de la configuración de los metadatos de Edition Drop" />
 
 </Step>
 
-<Step title="Select Chain">
-Select the preferred chain you want to deploy on and select Deploy Now.
+<Step title="Configurar el Id. de Token Secuencial">
+Ingresa un número con el que quieras que tus tokens comiencen para el Id. de token secuencial. Si no tienes preferencia por cambiarlo, puedes ingresar 0.
 
-<DocImage src={editionDropStep4} alt="Screenshot of Edition Drop select chain" />
+<DocImage src={editionDropStep3} alt="Captura de pantalla de la configuración del Id. de token secuencial de Edition Drop" />
 
-<Callout variant="info" title="Any EVM Compatible">
-	The Edition Drop contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+</Step>
+
+<Step title="Seleccionar la cadena">
+Selecciona la cadena preferida en la que deseas desplegar y selecciona Desplegar ahora.
+
+<DocImage src={editionDropStep4} alt="Captura de pantalla de la selección de la cadena para el contrato de Edition Drop" />
+
+<Callout variant="info" title="Cualquier red compatible con EVM">
+	El contrato de Edition Drop es desplegable en cualquier red compatible con EVM. [Ver todas las redes disponibles.](https://thirdweb.com/chainlist) 
 </Callout>
-If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+Si has iniciado sesión con una cartera EOA, se te pedirá que firmes la transacción. Después de eso, tu contrato será desplegado y podrás comenzar a configurar los módulos.
 </Step>
 
 </Steps>
 
-### Modular Contract
+### Contrato Modular
 
-This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+Este contrato se crea usando el marco de contratos modulares. Los módulos de este contrato son actualizables. [Aprende más sobre Contratos Modulares.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
 
-### Configure Modules
+### Configurar Módulos
 
-To configure the modules, navigate to the Modules view:
+Para configurar los módulos, dirígete a la vista de Módulos:
 
-(Coming soon)
+(Próximamente)
 
-<Callout variant='info' title="Install Modules">
-	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+<Callout variant='info' title="Instalar Módulos">
+	Para instalar módulos adicionales en este contrato, dirígete a la vista de Módulos después de desplegar tu contrato. 
 </Callout>

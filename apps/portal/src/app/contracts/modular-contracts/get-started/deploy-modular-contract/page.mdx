@@ -16,43 +16,44 @@ import moduleInstalled from "./assets/module-installed.png";
 import contractDashboardModules from "./assets/contract-dashboard-modules.png";
 
 export const metadata = createMetadata({
-	title: "thirdweb Modular Contracts",
+	title: "Contratos Modulares de thirdweb",
 	description:
-		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+		"El Contrato Modular proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
 	image: {
-		title: "thirdweb Modular Contracts",
+		title: "Contratos Modulares de thirdweb",
 		icon: "solidity",
 	},
 });
 
-### How to Deploy a Modular Contract
+# Desplegar un Contrato Modular
 
-This guide will show you how to publish a Modular Contract that increments a counter. If you're interested in learning how modular contracts work, refer to [How it works](https://portal.thirdweb.com/contracts/modular-contracts/how-it-works).
-If you haven't read through [Create a Core Contract](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-core-contact) and [Create a Module Contract](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-module-contract), please do so before proceeding
-as this guide will build on top of those previous guides.
+Esta guía te mostrará cómo publicar un Contrato Modular que incrementa un contador. Si estás interesado en aprender cómo funcionan los contratos modulares, consulta [Cómo funciona](https://portal.thirdweb.com/contracts/modular-contracts/how-it-works).
+Si no has leído [Crear un Contrato Base](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-core-contact) y [Crear un Contrato de Módulo](https://portal.thirdweb.com/contracts/modular-contracts/get-started/create-module-contract), por favor hazlo antes de continuar
+ya que esta guía se basará en esas guías anteriores.
 
 <Steps>
 
-<Step title="Grab an API Key from the thirdweb Dashboard">
-Go to the [thirdweb Dashboard](https://thirdweb.com/team), Create a new Project to obtain API Key
+<Step title="Obtén una clave API desde el Dashboard de thirdweb">
+Ve al [Dashboard de thirdweb](https://thirdweb.com/team), Crea un nuevo Proyecto para obtener la clave API.
 
 <DocImage src={ createApiKey } />
 
-A dialog should pop up asking for the name of the key. Use `modular-contract-test-key`.
+Un cuadro de diálogo debería aparecer pidiendo el nombre de la clave. Usa `modular-contract-test-key`.
 
 <DocImage src={ apiKeyName } />
 
-Click "Proceed".
+Haz clic en "Proceed".
 
 <DocImage src={ proceed } />
 
-Then, click on the copy icon and store the API key in a secure place.
+Luego, haz clic en el ícono de copiar y guarda la clave API en un lugar seguro.
 
 <DocImage src={ copyApiKey } />
 </Step>
 
-<Step title="Publish the Module Contract">
-In your terminal, run the following command:
+<Step title="Publicar el Contrato de Módulo">
+En tu terminal, ejecuta el siguiente comando:
+
 
 ```bash
 npx thirdweb publish -k "THIRDWEB_API_KEY"
@@ -61,56 +62,58 @@ Replace `THIRDWEB_API_KEY` with your API key. Then, select `CounterModule`.
 
 <DocImage src={ selectCounterModule } />
 
-It should open up your browser. Scroll to the bottom and click "Next".
+Esto abrirá tu navegador. Desplázate hasta la parte inferior y haz clic en "Next".
 
 <DocImage src={ scrollAndNext } />
 
-Then, choose the Sepolia network and click "Publish Contract".
+Luego, elige la red Sepolia y haz clic en "Publish Contract".
 
 <DocImage src={ publishContract } />
 
-Now, we can move on to deploying the core contract.
+Ahora, podemos pasar al despliegue del contrato principal.
 </Step>
 
-<Step title="Deploy the Core Contract">
-In your terminal, run the following command:
+<Step title="Desplegar el Contrato Principal">
+En tu terminal, ejecuta el siguiente comando:
+
 
 ```bash
 npx thirdweb deploy -k "THIRDWEB_API_KEY"
 ```
-Replace `THIRDWEB_API_KEY` with your API key. Choose `CounterCore`.
+Reemplaza `THIRDWEB_API_KEY` con tu clave API. Luego, selecciona `CounterCore`.
 
 <DocImage src={ selectCounterCore } />
 
-It should open up your browser. Input the `owner` of the contract and click "Deploy Now".
+Esto abrirá tu navegador. Ingresa el `owner` del contrato y haz clic en "Deploy Now".
 
 <DocImage src={ inputOwner } />
 
-Then, choose the Sepolia chain and click "Deploy Now".
+Luego, elige la red Sepolia y haz clic en "Deploy Now".
 
 <DocImage src={ sepoliaDeployNow } />
 
-It should now be deploying.
+Ahora debería estar desplegando.
 
 <DocImage src={ deploying } />
 
-Once the core contract has been deployed, click "View Contract".
+Una vez que el contrato principal se haya desplegado, haz clic en "View Contract".
+
 </Step>
 
-<Step title="Install the Module">
-On the contract dashboard, click on "Modules" in the left-hand sidebar.
+<Step title="Instalar el Módulo">
+En el panel de contratos, haz clic en "Módulos" en la barra lateral izquierda.
 
 <DocImage src={ contractDashboardModules } />
 
-You will be redirected to the "Edit Modules" page, where you can install the `CoreModule`. Under the "Publisher" input, paste in the address of the publisher you used.
+Serás redirigido a la página "Editar Módulos", donde puedes instalar el `CoreModule`. En el campo "Publisher", pega la dirección del editor que utilizaste.
 
-Then, the "Module Name" input will unlock. Click on that and select `counterModule`. Once it finishes checking eligibility, select "Module Version" as 1.0.0 and choose whichever step you wish to use.
+Luego, se desbloqueará el campo "Module Name". Haz clic en él y selecciona `counterModule`. Una vez que termine de verificar la elegibilidad, selecciona "Module Version" como 1.0.0 y elige el paso que desees usar.
 
-Finally, click "Install".
+Finalmente, haz clic en "Instalar".
 
 <DocImage src={ installModule } />
 
-Now the module has been successfully installed.
+Ahora, el módulo ha sido instalado exitosamente.
 
 <DocImage src={ moduleInstalled } />
 </Step>
@@ -119,4 +122,6 @@ Now the module has been successfully installed.
 
 ---
 
-And there you have it! You have now deployed your very own Modular Contract!
+¡Y ahí lo tienes! ¡Ahora has desplegado tu propio Contrato Modular!
+
+

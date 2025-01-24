@@ -39,6 +39,7 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   2442, // Polygon zkEVM Cardona Testnet
   1942999413, // Humanity Testnet
   1952959480, // Lumia Testnet
+  994873017, // Lumia Mainnet
 ];
 
 /**

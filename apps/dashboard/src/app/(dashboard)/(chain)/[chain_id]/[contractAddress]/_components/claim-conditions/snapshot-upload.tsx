@@ -197,7 +197,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     <a
                       className="text-link-foreground hover:text-foreground"
                       download
-                      href="/snapshot-with-maxclaimable.csv"
+                      href="/assets/examples/snapshot-with-maxclaimable.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
                       snapshot
@@ -212,7 +212,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     <a
                       download
                       className="text-link-foreground hover:text-foreground"
-                      href="/snapshot-with-overrides.csv"
+                      href="/assets/examples/snapshot-with-overrides.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
                       snapshot
@@ -228,7 +228,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     <a
                       download
                       className="text-link-foreground hover:text-foreground"
-                      href="/snapshot.csv"
+                      href="/assets/examples/snapshot.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
                       snapshot
@@ -243,7 +243,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     <a
                       download
                       className="text-link-foreground hover:text-foreground"
-                      href="/snapshot-with-maxclaimable.csv"
+                      href="/assets/examples/snapshot-with-maxclaimable.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
                       snapshot
@@ -262,7 +262,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     <a
                       download
                       className="text-link-foreground hover:text-foreground"
-                      href="/snapshot-with-overrides.csv"
+                      href="/assets/examples/snapshot-with-overrides.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
                       snapshot

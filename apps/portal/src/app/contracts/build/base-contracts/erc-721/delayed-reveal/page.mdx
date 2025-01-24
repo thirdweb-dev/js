@@ -9,13 +9,13 @@ export const metadata = createMetadata({
 	},
 	title: "ERC721DelayedReveal | thirdweb contracts",
 	description:
-		"ERC721DelayedReveal adds the Delayed Reveal feature to the ERC721LazyMint base contract.",
+		"ERC721DelayedReveal añade la funcionalidad de Revelado Retrasado al contrato base ERC721LazyMint.",
 });
 
 # ERC721DelayedReveal
 
-`ERC721DelayedReveal` adds the [Delayed Reveal](/contracts/build/extensions/general/DelayedReveal) feature to
-the [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint) base contract.
+`ERC721DelayedReveal` añade la característica de [Revelado Retrasado](/contracts/build/extensions/general/DelayedReveal) al
+contrato base [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint).
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC721DelayedReveal.sol";
@@ -23,9 +23,9 @@ import "@thirdweb-dev/contracts/base/ERC721DelayedReveal.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721DelayedReveal.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y herédalo de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -48,11 +48,11 @@ contract MyNFT is ERC721DelayedReveal {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez implementado, puedes usar las funciones disponibles de estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada función para aprender más sobre qué funciones están disponibles.
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
@@ -63,18 +63,18 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones se han implementado en este contrato y están disponibles para ser sobrescritas con lógica personalizada:
 
 <Details id="tokenURI" summary="tokenURI">
 
 ```solidity
 /**
- *  @notice         Returns the metadata URI for an NFT.
- *  @dev            See `BatchMintMetadata` for handling of metadata in this contract.
+ *  @notice         Devuelve la URI de metadatos para un NFT.
+ *  @dev            Consulta `BatchMintMetadata` para el manejo de metadatos en este contrato.
  *
- *  @param _tokenId The tokenId of an NFT.
+ *  @param _tokenId El tokenId de un NFT.
  */
 function tokenURI(uint256 _tokenId) public view override returns (string memory) {
     (uint256 batchId, ) = _getBatchId(_tokenId);
@@ -95,13 +95,13 @@ function tokenURI(uint256 _tokenId) public view override returns (string memory)
 
 ```solidity
 /**
- *  @notice                  Lets an authorized address lazy mint a given amount of NFTs.
+ *  @notice                  Permite a una dirección autorizada acuñar perezosamente una cantidad dada de NFTs.
  *
- *  @param _amount           The number of NFTs to lazy mint.
- *  @param _baseURIForTokens The placeholder base URI for the 'n' number of NFTs being lazy minted, where the
- *                           metadata for each of those NFTs is `${baseURIForTokens}/${tokenId}`.
- *  @param _data             The encrypted base URI + provenance hash for the batch of NFTs being lazy minted.
- *  @return batchId          A unique integer identifier for the batch of NFTs lazy minted together.
+ *  @param _amount           La cantidad de NFTs a acuñar perezosamente.
+ *  @param _baseURIForTokens La URI base de marcador de posición para los 'n' NFTs que se están acuñando perezosamente, donde los
+ *                           metadatos de cada uno de esos NFTs son `${baseURIForTokens}/${tokenId}`.
+ *  @param _data             La URI base cifrada + el hash de la procedencia para el lote de NFTs que se están acuñando perezosamente.
+ *  @return batchId          Un identificador único entero para el lote de NFTs acuñados perezosamente juntos.
  */
 function lazyMint(
     uint256 _amount,
@@ -125,10 +125,10 @@ function lazyMint(
 
 ```solidity
 /**
- *  @notice       Lets an authorized address reveal a batch of delayed reveal NFTs.
+ *  @notice       Permite a una dirección autorizada revelar un lote de NFTs de revelación retrasada.
  *
- *  @param _index The ID for the batch of delayed-reveal NFTs to reveal.
- *  @param _key   The key with which the base URI for the relevant batch of NFTs was encrypted.
+ *  @param _index El ID para el lote de NFTs de revelación retrasada a revelar.
+ *  @param _key   La clave con la que se cifró la URI base para el lote relevante de NFTs.
  */
 function reveal(uint256 _index, bytes calldata _key) external virtual override returns (string memory revealedURI) {
     require(_canReveal(), "Not authorized");

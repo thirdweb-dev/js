@@ -1,12 +1,16 @@
-import { DocLink } from "../../../../components/Document/DocLink";
+import Link from "next/link";
 
 export function SourceLinkTypeDoc(props: { href: string }) {
   return (
     <div className="mb-6" data-noindex>
-      <DocLink href={props.href} className="text-sm">
-        <span className="text-f-300 text-sm"> Defined in </span>
+      <Link
+        href={props.href}
+        className="text-muted-foreground text-sm hover:text-foreground"
+        target="_blank"
+      >
+        <span className="text-muted-foreground"> Defined in </span>
         {props.href.split("/packages/")[1]}
-      </DocLink>
+      </Link>
     </div>
   );
 }

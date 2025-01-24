@@ -10,29 +10,29 @@ export const metadata = createMetadata({
 	},
 });
 
-# Create Core Contract
+# Crear un Contrato Base
 
-### Installation
+### Instalación
 
-Install Forge from Foundry and add the modular contract framework:
+Instala Forge desde Foundry y agrega el marco de contratos modulares:
 
 ```bash
 forge init
 forge install thirdweb-dev/modular-contracts --no-commit
 ```
 
-Add the Thirdweb modular contracts to `foundry.toml` under `remappings`:
+Agrega los contratos modulares de Thirdweb a `foundry.toml` bajo `remappings`:
 
 ```toml
 remappings = ['@thirdweb-dev=lib/modular-contracts/']
 ```
 
-### Setup Core Contract
+### Configurar el Contrato Principal
 
 <Steps>
 
-<Step title="Create a Core Contract">
-   Create a new file in the `src` folder called `CounterCore.sol`, and inherit the `Core` contract.
+<Step title="Crear un Contrato Principal">
+   Crea un nuevo archivo en la carpeta `src` llamado `CounterCore.sol`, e hereda el contrato `Core`.
 
 ```solidity
  // SPDX-License-Identifier: MIT
@@ -49,13 +49,13 @@ remappings = ['@thirdweb-dev=lib/modular-contracts/']
 
 ```
 
-> **Note**  
-> The `Core` contract is the base contract that needs to be inherited for this contract to be recognized as a core contract.
+> **Nota**
+> El contrato `Core` es el contrato base que debe ser heredado para que este contrato sea reconocido como un contrato principal.
 
 </Step>
 
-<Step title="Set Get Supported Callback Function">
-Implement the `getSupportedCallbackFunctions` function. The Core contract is abstract because this function is not implemented. To avoid compilation errors, declare the function with an empty body for now.
+<Step title="Configurar la Función getSupportedCallbackFunctions">
+Implementa la función `getSupportedCallbackFunctions`. El contrato `Core` es abstracto porque esta función no está implementada. Para evitar errores de compilación, declara la función con un cuerpo vacío por ahora.
 
     ```solidity
         // SPDX-License-Identifier: MIT
@@ -79,8 +79,9 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
 
 </Step>
 
-<Step title="Set Up Increment Function">
-   Define a function to increment a counter.
+<Step title="Configurar la función de incremento">
+   Define una función para incrementar un contador.
+
 
 ```solidity
  // SPDX-License-Identifier: MIT
@@ -111,12 +112,12 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
 
 </Step>
 
-<Step title="Add a Callback Function">
-   Introduce the `_beforeIncrement` function to use the `beforeIncrement` callback from a module to achieve this, we'll introduce the interface `BeforeIncrementCallback`
+<Step title="Agregar una función de devolución de llamada">
+   Introduce la función `_beforeIncrement` para utilizar el callback `beforeIncrement` de un módulo. Para lograr esto, introduciremos la interfaz `BeforeIncrementCallback`.
 
-> **Note**  
-> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract.  
-> In this example, the `beforeIncrement` callback is executed before the main increment functionality.
+> **Nota**
+> Las funciones de devolución de llamada son funcionalidades similares a los hooks que se pueden usar antes o después de la funcionalidad principal de un contrato base.
+> En este ejemplo, el callback `beforeIncrement` se ejecuta antes de la funcionalidad principal de incremento.
 
 ```solidity
  // SPDX-License-Identifier: MIT
@@ -166,8 +167,8 @@ Implement the `getSupportedCallbackFunctions` function. The Core contract is abs
 
 </Step>
 
-<Step title="Implement Supported Functions">
-   Implement the `getSupportedCallbackFunctions` and `supportsInterface` functions to expose which callback functions and interfaces this core contract supports.
+<Step title="Implementar funciones compatibles">
+   Implementa las funciones `getSupportedCallbackFunctions` y `supportsInterface` para exponer qué funciones de devolución de llamada e interfaces soporta este contrato base.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -231,4 +232,4 @@ contract CounterCore is Core {
 
 ---
 
-This guide will help you create a core contract that can increment a counter with optional callback functions for additional modular functionality.
+Esta guía te ayudará a crear un contrato base que pueda incrementar un contador con funciones de devolución de llamada opcionales para añadir funcionalidades modulares adicionales.

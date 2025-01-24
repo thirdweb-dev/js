@@ -177,6 +177,8 @@ export function RpcMethodBarChartCardUI({
                   idx === 0 ? 4 : 0,
                 ]}
                 fill={`hsl(var(--chart-${idx + 1}))`}
+                strokeWidth={1}
+                className="stroke-background"
               />
             ))}
           </RechartsBarChart>

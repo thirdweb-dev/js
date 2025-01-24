@@ -19,6 +19,7 @@ export function Feedback() {
         <div className="flex gap-3">
           <Button
             variant="outline"
+            className="gap-2 bg-card"
             onClick={() => {
               setIsSubmitted(true);
               posthog.capture(feedbackEvent, {
@@ -27,13 +28,14 @@ export function Feedback() {
             }}
           >
             Yes
-            <ThumbsUpIcon className="size-4 text-f-300" />
+            <ThumbsUpIcon className="size-4 text-muted-foreground" />
           </Button>
 
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
+                className="gap-2 bg-card"
                 onClick={() => {
                   posthog.capture(feedbackEvent, {
                     response: "no",
@@ -41,20 +43,20 @@ export function Feedback() {
                 }}
               >
                 No
-                <ThumbsDownIcon className="size-4 text-f-300" />
+                <ThumbsDownIcon className="size-4 text-muted-foreground" />
               </Button>
             </DialogTrigger>
 
             <DialogContent className="p-5">
-              <h3 className="mb-3 font-semibold text-f-100 text-lg">
+              <h3 className="mb-3 font-semibold text-foreground text-lg">
                 Apologies for any confusion.
               </h3>
-              <p className="mb-5 font-medium text-f-300">
+              <p className="mb-5 font-medium text-muted-foreground">
                 Please provide details about the issue you encountered to help
                 us improve our documentation.
               </p>
               <textarea
-                className="mb-2 h-32 w-full rounded-sm border bg-b-800 p-2 font-medium text-f-100 outline-none placeholder:font-semibold"
+                className="mb-2 h-32 w-full rounded-sm border bg-card p-2 font-medium text-foreground outline-none placeholder:font-semibold"
                 value={feedback}
                 placeholder="Your feedback..."
                 onChange={(e) => {
@@ -81,9 +83,9 @@ export function Feedback() {
   }
   return (
     <div className="fade-in-0 animate-in duration-500">
-      <div className="flex items-center gap-2 text-accent-500 md:h-16">
+      <div className="flex items-center gap-2 text-foreground md:h-16">
         <BadgeCheckIcon />
-        <p className="font-semibold text-accent-500">
+        <p className="font-semibold text-foreground">
           Thank you for your feedback!
         </p>
       </div>

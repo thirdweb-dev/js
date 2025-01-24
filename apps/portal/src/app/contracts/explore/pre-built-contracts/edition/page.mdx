@@ -2,59 +2,59 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Edition contract",
+		title: "Contrato de Edición",
 		icon: "contract",
 	},
-	title: "Edition contract | thirdweb",
-	description: `The Edition contract is best used when you want to release many NFTs based on the same asset, but you don't want to "drop" or "release" them for your community to claim`,
+	title: "Contrato de Edición | thirdweb",
+	description: `El contrato de Edición es ideal cuando deseas liberar muchos NFTs basados en el mismo activo, pero no quieres "lanzarlos" o "liberarlos" para que tu comunidad los reclame`,
 });
 
-# Edition
+# Edición
 
-The **Edition** contract is best used when you want to release many NFTs based on the same asset, but you **don't** want to "drop" or "release" them for your community to claim.
+El contrato de **Edición** es ideal cuando deseas liberar muchos NFTs basados en el mismo activo, pero no **quieres** "lanzarlos" o "liberarlos" para que tu comunidad los reclame.
 
-Unlike the [Edition Drop](/pre-built-contracts/edition-drop) contract, the Edition contract does not **lazy mint** your NFTs. Instead, NFTs are minted immediately when they are added to the collection.
+A diferencia del contrato [Edition Drop](/pre-built-contracts/edition-drop), el contrato de Edición no **acuña de forma perezosa** tus NFTs. En su lugar, los NFTs son acuñados inmediatamente cuando se agregan a la colección.
 
-This means you can still transfer the NFTs or sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace) and perform any other actions you would expect to do with an NFT.
+Esto significa que aún puedes transferir los NFTs o venderlos en un [Marketplace](/contracts/explore/pre-built-contracts/marketplace) y realizar cualquier otra acción que esperarías hacer con un NFT.
 
-For advanced use-cases, the Edition also has [signature-based minting](/glossary/signature-based-minting) capabilities.
+Para casos de uso avanzados, la Edición también tiene capacidades de [acuñación basada en firmas](/glossary/signature-based-minting).
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Edition contract to:
+Podrías usar el contrato de Edición para:
 
-- Create an NFT Collection where each NFT has 100 copies
-- Airdrop an NFT to a list of addresses that all use the same asset and metadata
-- Create 10 "copies" of your artwork and sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace)
+- Crear una Colección NFT donde cada NFT tenga 100 copias
+- Hacer un airdrop de un NFT a una lista de direcciones que usen el mismo activo y metadatos
+- Crear 10 "copias" de tu obra de arte y venderlas en un [Marketplace](/contracts/explore/pre-built-contracts/marketplace)
 
-## Creating & Configuring the Edition
+## Crear y configurar la Edición
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende cómo crear y configurar tu contrato inteligente utilizando el [panel](https://thirdweb.com/team).
 
-### Creating an Edition Contract
+### Crear un contrato de Edición
 
-Deploy the edition contract to any EVM network using the button below.
+Despliega el contrato de edición en cualquier red EVM utilizando el botón a continuación.
 
-### Minting NFTs
+### Acuñar NFTs
 
-Click **Mint** to create a single NFT.
+Haz clic en **Acuñar** para crear un solo NFT.
 
-You can add additional supply to an existing NFT by clicking on that NFT and clicking **Mint**:
+Puedes agregar suministro adicional a un NFT existente haciendo clic en ese NFT y luego haciendo clic en **Acuñar**:
 
-### Airdrop NFTs
+### Hacer airdrop de NFTs
 
-Click on the token you want to use, navigate to the **Airdrop** tab,
-and upload a `.csv` file containing a list of addresses you want to airdrop NFTs to.
+Haz clic en el token que deseas usar, navega a la pestaña **Airdrop**,
+y sube un archivo `.csv` que contenga una lista de direcciones a las que deseas hacer el airdrop de NFTs.
 
-In the `.csv` file, you must specify an `address` column and a `quantity` column, representing the address you want to send the NFTs and how many you wish to send.
-You can download our example [CSV File](https://thirdweb.com/airdrop.csv) to get started.
+En el archivo `.csv`, debes especificar una columna de `address` y una columna de `quantity`, representando la dirección a la que deseas enviar los NFTs y cuántos deseas enviar.
+Puedes descargar nuestro ejemplo de [Archivo CSV](https://thirdweb.com/assets/examples/airdrop.csv) para comenzar.
 
-### Contract Metadata
+### Metadatos del Contrato
 
-To configure the image, name, and description of the contract, click the **Settings** tab:
+Para configurar la imagen, nombre y descripción del contrato, haz clic en la pestaña **Configuración**:
 
-### Royalty & Platform Fees
+### Regalías y Tarifas de Plataforma
 
-From the **Settings** tab, you also configure the royalty fee,
-primary sales recipient,
-and platform fee.
+Desde la pestaña **Configuración**, también puedes configurar la tarifa de regalías,
+el destinatario de las ventas primarias,
+y la tarifa de plataforma.

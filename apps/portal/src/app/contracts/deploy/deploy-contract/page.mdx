@@ -5,63 +5,63 @@ import deployContract from "./assets/deploy-contract.png";
 import { DocImage, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Deploy Contract | thirdweb deploy",
-	description: "deploy a contract using Deploy using thirdweb deploy CLI",
+	title: "Desplegar contrato | thirdweb deploy",
+	description: "Despliega un contrato usando el CLI de thirdweb deploy",
 	image: {
-		title: "Deploy Contract",
+		title: "Desplegar contrato",
 		icon: "contract",
 	},
 });
 
 import { Steps, Step } from "@doc";
 
-# Deploy Contract
+# Desplegar Contrato
 
-To deploy a contract using Deploy:
+Para desplegar un contrato usando Deploy:
 
 <Steps>
 
-<Step title="Run CLI">
+<Step title="Ejecutar CLI">
 
-Navigate to the root of the smart contract repository using the CLI. Then, run the command `npx thirdweb deploy`.
+Navega a la raíz del repositorio del contrato inteligente usando el CLI. Luego, ejecuta el comando `npx thirdweb deploy`.
 
-<DocImage src={deployCLI} alt="Screenshot of CLI deployment output text" />
-
-</Step>
-
-<Step title="Authorize device">
-
-To deploy from a desired wallet in the browser, connect and authorize the device.
-
-<DocImage src={linkDevice} alt="Screenshot to link Device" />
+<DocImage src={deployCLI} alt="Captura de pantalla de la salida del comando en el CLI" />
 
 </Step>
 
-<Step title="Fill parameter">
+<Step title="Autorizar dispositivo">
 
-Once completed, a user interface will open in the browser that allows filling out the parameters of the contract.
+Para desplegar desde una billetera deseada en el navegador, conecta y autoriza el dispositivo.
+
+<DocImage src={linkDevice} alt="Captura de pantalla para vincular el dispositivo" />
+
+</Step>
+
+<Step title="Rellenar parámetros">
+
+Una vez completado, se abrirá una interfaz de usuario en el navegador que permite rellenar los parámetros del contrato.
 
 <DocImage
 	src={detectedExtensions}
-	alt="Screenshot to detected extensions when deploying contracts"
+	alt="Captura de pantalla de las extensiones detectadas al desplegar contratos"
 />
 
 </Step>
 
-<Step title="Select Options">
+<Step title="Seleccionar opciones">
 
-Fill in the necessary fields, then find the Network / Chain drop-down menu to select a network for deployment. Choose the `Add to dashboard` option if managing this contract from the dashboard and select Deploy Now. This will require signing a transaction in the connected wallet.
+Rellena los campos necesarios, luego busca el menú desplegable de Red / Cadena para seleccionar una red para el despliegue. Elige la opción `Agregar al dashboard` si deseas gestionar este contrato desde el dashboard y selecciona Desplegar ahora. Esto requerirá firmar una transacción en la billetera conectada.
 
 <DocImage
 	src={deployContract}
-	alt="Screenshot of contract deployment confirmation"
+	alt="Captura de pantalla de la confirmación del despliegue del contrato"
 />
 
 </Step>
 
-<Step title="Manage contract">
+<Step title="Gestionar contrato">
 
-Once deployed, you can manage your contract through the dashboard.
+Una vez desplegado, puedes gestionar tu contrato a través del dashboard.
 
 </Step>
 

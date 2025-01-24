@@ -15,7 +15,6 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
-import { CmdKSearchModal } from "../../components/cmd-k-search";
 import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 
 export function MobileBurgerMenuButton(
@@ -32,7 +31,7 @@ export function MobileBurgerMenuButton(
 ) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
-  const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
+  // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
 
   useLayoutEffect(() => {
     if (isMenuOpen) {
@@ -48,10 +47,10 @@ export function MobileBurgerMenuButton(
 
   return (
     <>
-      <CmdKSearchModal
+      {/* <CmdKSearchModal
         open={isCMDSearchModalOpen}
         setOpen={setIsCMDSearchModalOpen}
-      />
+      /> */}
       <Button
         variant="outline"
         className="!h-auto p-1"
@@ -117,7 +116,8 @@ export function MobileBurgerMenuButton(
           )}
 
           <div className="flex flex-col gap-5">
-            <Button
+            {/* This will be enabled later */}
+            {/* <Button
               variant="link"
               className="!p-0 !h-auto hover:!no-underline justify-between gap-2 text-left text-base text-muted-foreground hover:text-foreground"
               onClick={() => {
@@ -126,7 +126,7 @@ export function MobileBurgerMenuButton(
               }}
             >
               Search Contracts
-            </Button>
+            </Button> */}
 
             <Link
               href="/chainlist"
@@ -148,13 +148,6 @@ export function MobileBurgerMenuButton(
               className="text-muted-foreground hover:text-foreground "
             >
               Explore Contracts
-            </Link>
-
-            <Link
-              href="/trending"
-              className="text-muted-foreground hover:text-foreground "
-            >
-              Trending Contracts
             </Link>
 
             <Link

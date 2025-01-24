@@ -7,7 +7,7 @@ export type WalletInfo = { href: string; label: string; icon: StaticImport };
 
 export function WalletCard(props: WalletInfo) {
   return (
-    <div className="group/wallet-card relative rounded-[26px] border bg-b-800 px-5 py-2 transition-colors hover:border-accent-500 hover:bg-accent-900">
+    <div className="group/wallet-card relative rounded-[26px] border bg-card px-5 py-2 transition-colors hover:border-active-border">
       <div className="mt-[-30px] flex flex-col justify-center gap-1">
         <Link
           href={props.href}
@@ -17,12 +17,12 @@ export function WalletCard(props: WalletInfo) {
         <Image
           src={props.icon}
           alt=""
-          className="size-20 rounded-[16px] border bg-b-900 p-2 transition-transform duration-300 group-hover/wallet-card:scale-110 group-hover/wallet-card:border-accent-500 group-hover/wallet-card:bg-accent-900"
+          className="size-20 rounded-[16px] border bg-background p-2 transition-transform duration-300 group-hover/wallet-card:scale-110 group-hover/wallet-card:border-foreground"
         />
         <Heading
           id={props.label}
           level={3}
-          className="font-medium text-base text-f-100 group-hover/wallet-card:text-f-100 md:text-base"
+          className="font-medium text-base text-foreground group-hover/wallet-card:text-foreground md:text-base"
         >
           {props.label}
         </Heading>

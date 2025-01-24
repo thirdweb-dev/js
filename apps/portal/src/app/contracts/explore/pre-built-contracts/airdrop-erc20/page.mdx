@@ -12,14 +12,15 @@ export const metadata = createMetadata({
 
 # Airdrop ERC-20
 
-Airdrop ERC-20 tokens or the chain's native token (e.g. ether for Ethereum mainnet) to a list of recipients.
+Airdrop de tokens ERC-20 o el token nativo de la cadena (por ejemplo, ether para la red principal de Ethereum) a una lista de destinatarios.
 
-The `AirdropERC20` contract is suitable to use when you want to transfer ERC20 tokens or native tokens to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop; they just receive it in a transfer.
-When airdropping tokens with this contract, you specify:
+El contrato `AirdropERC20` es adecuado para cuando deseas transferir tokens ERC20 o tokens nativos a una lista de direcciones de destinatarios, donde no se espera que los destinatarios reclamen individualmente su airdrop; simplemente lo reciben en una transferencia.
+Al hacer un airdrop de tokens con este contrato, debes especificar:
 
-- The address of the ERC20 token being transferred. (For native tokens, the address used is `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`)
-- The address from which the token will be transferred to a list of the recipients.
-- An array of objects containing recipient-address and token-amounts, for e.g.
+- La dirección del token ERC20 que se está transfiriendo. (Para tokens nativos, la dirección utilizada es `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`)
+- La dirección desde la que el token será transferido a la lista de destinatarios.
+- Un array de objetos que contiene la dirección del destinatario y las cantidades de tokens, por ejemplo:
+
 
 ```typescript
 [
@@ -34,17 +35,18 @@ When airdropping tokens with this contract, you specify:
 ];
 ```
 
-note: token-owner must approve their tokens to this airdrop contract, by calling approval related function on the ERC20 token contract.
+nota: el propietario de los tokens debe aprobar sus tokens a este contrato de airdrop, llamando a la función relacionada con la aprobación en el contrato del token ERC20.
 
-**Estimated gas costs for airdropping tokens:**
-Cost of airdropping `1` ERC20 token: ~`66,600` gas. Cost of airdropping each additional ERC20 token: ~`32,526` gas.
+**Costos estimados de gas para hacer un airdrop de tokens:**
+Costo de hacer un airdrop de `1` token ERC20: ~`66,600` gas. Costo de hacer un airdrop de cada token ERC20 adicional: ~`32,526` gas.
 
-## Extensions
+## Extensiones
 
-- [Permissions](/contracts/build/extensions/general/Permissions)
-- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
-- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
-- [Gasless](/contracts/build/extensions)
+- [Permisos](/contracts/build/extensions/general/Permissions)
+- [PermisosEnumerables](/contracts/build/extensions/general/PermissionsEnumerable)
+- [MetadatosDelContrato](/contracts/build/extensions/general/ContractMetadata)
+- [SinGas](/contracts/build/extensions)
 - [AirdropERC20](/contracts/build/extensions)
 
 ## Airdrop
+

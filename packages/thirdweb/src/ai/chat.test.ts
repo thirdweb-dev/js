@@ -9,8 +9,13 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("chat", () => {
   it("should respond with a message", async () => {
     const response = await Nebula.chat({
       client: TEST_CLIENT,
-      prompt: `What's the symbol of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8`,
-      context: {
+      messages: [
+        {
+          role: "user",
+          content: `What's the symbol of this contract: 0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8`,
+        },
+      ],
+      contextFilter: {
         chains: [sepolia],
       },
     });
@@ -20,9 +25,14 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("chat", () => {
   it("should respond with a transaction", async () => {
     const response = await Nebula.chat({
       client: TEST_CLIENT,
-      prompt: `send 0.0001 ETH on sepolia to ${TEST_ACCOUNT_B.address}`,
+      messages: [
+        {
+          role: "user",
+          content: `send 0.0001 ETH on sepolia to ${TEST_ACCOUNT_B.address}`,
+        },
+      ],
       account: TEST_ACCOUNT_A,
-      context: {
+      contextFilter: {
         chains: [sepolia],
         walletAddresses: [TEST_ACCOUNT_A.address],
       },

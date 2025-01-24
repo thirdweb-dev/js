@@ -3,74 +3,74 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Publish options",
+		title: "Opciones de Publicación",
 		icon: "contract",
 	},
-	title: "Publish Options | thirdweb Publish",
+	title: "Opciones de Publicación | thirdweb Publish",
 	description:
-		"The deployment options you choose will determine how users deploy your contract",
+		"Las opciones de despliegue que elijas determinarán cómo los usuarios desplegarán tu contrato",
 });
 
-# Publish Options
+# Opciones de Publicación
 
-The deployment options you choose will determine how _users_ deploy your contract.
+Las opciones de despliegue que elijas determinarán cómo los _usuarios_ desplegarán tu contrato.
 
-## 1. Direct deploy
+## 1. Despliegue Directo
 
-Publishing with the direct deploy option allows users to deploy a copy of your contract, including the logic and storage.
-Choose this option if your contract does not follow the upgradeable contract pattern.
+Publicar con la opción de despliegue directo permite a los usuarios desplegar una copia de tu contrato, incluyendo la lógica y el almacenamiento.
+Elige esta opción si tu contrato no sigue el patrón de contrato actualizable.
 
-### Requirements
+### Requisitos
 
-There are no requirements. Any contract can be published with this deployment option.
+No hay requisitos. Cualquier contrato puede ser publicado con esta opción de despliegue.
 
-## 2. Deploy via Factory
+## 2. Desplegar a través de Factory
 
-Choose this option if you would like users to deploy proxies of your implementation contract using the thirdweb default factory contract or using your own pre-deployed custom factory.
+Elige esta opción si deseas que los usuarios desplieguen proxies de tu contrato de implementación usando la factory predeterminada de thirdweb o usando tu propia factory personalizada pre-desplegada.
 
-<Callout title="Deploy via Factory" variant="info">
-	To use the "Deploy via Factory" option, you should be publishing your
-	implementation contract rather than a factory.
+<Callout title="Desplegar a través de Factory" variant="info">
+	Para usar la opción "Desplegar a través de Factory", debes estar publicando tu
+	contrato de implementación en lugar de una factory.
 </Callout>
 
-### 2(a). Default Factory
+### 2(a). Factory Predeterminado
 
-Publishing your contract using the [thirdweb default factory](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) allows users to deploy a proxy contract.
+Publicar tu contrato usando la [factory predeterminada de thirdweb](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) permite a los usuarios desplegar un contrato proxy.
 
-- Allows users to deploy to **any EVM compatible network**.
-- Users will deploy an [EIP-1167](https://eips.ethereum.org/EIPS/eip-1167) minimal proxy contract, containing the state, which will refer to your implementation contract for the logic. This makes the deployment cheaper for your users.
-- The [thirdweb default factory](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) is open-source, permissionless, and does not alter contract ownership - contract deployers have 100% ownership.
+- Permite a los usuarios desplegar en **cualquier red compatible con EVM**.
+- Los usuarios desplegarán un contrato proxy mínimo [EIP-1167](https://eips.ethereum.org/EIPS/eip-1167), que contiene el estado, y hará referencia a tu contrato de implementación para la lógica. Esto hace que el despliegue sea más barato para tus usuarios.
+- La [factory predeterminada de thirdweb](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) es de código abierto, sin permisos, y no altera la propiedad del contrato; los desplegadores del contrato tienen el 100% de la propiedad.
 
-#### Requirements
+#### Requisitos
 
-- Your contract needs to implement the [upgradeable pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable), meaning it has an "initialize" function to set the storage, instead of a constructor.
+- Tu contrato debe implementar el [patrón actualizable](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable), lo que significa que debe tener una función "initialize" para configurar el almacenamiento, en lugar de un constructor.
 
-#### Usage
+#### Uso
 
-1. Choose your "initialize" function - in most cases, this will be `initialize` but can be any function on your contract.
-2. Select which networks you would like to publish to. This way, you can limit which networks your users can deploy to.
-3. Click "Next" and fill in the ["Contract Parameters"](/contracts/publish/publish-contract#customize-contract-parameters) form.
+1. Elige tu función "initialize" - en la mayoría de los casos, será `initialize`, pero puede ser cualquier función en tu contrato.
+2. Selecciona las redes a las que te gustaría publicar. De esta manera, puedes limitar las redes a las que los usuarios pueden desplegar.
+3. Haz clic en "Siguiente" y completa el formulario de ["Parámetros del Contrato"](/contracts/publish/publish-contract#customize-contract-parameters).
 
-### 2(b). Custom Factory
+### 2(b). Factory Personalizada
 
-Publishing your contract using a custom factory allows users to deploy a proxy contract using your own pre-deployed custom factory.
-This allows you to add custom logic to the function which is invoked when a user deploys a contract.
+Publicar tu contrato usando una factory personalizada permite a los usuarios desplegar un contrato proxy utilizando tu propia factory personalizada pre-desplegada.
+Esto te permite agregar lógica personalizada a la función que se invoca cuando un usuario despliega un contrato.
 
-#### Requirements
+#### Requisitos
 
-- Be publishing your implementation contract rather than a factory.
-- Have a custom factory contract pre-deployed to all networks you are publishing to.
+- Estar publicando tu contrato de implementación en lugar de una factory.
+- Tener un contrato factory personalizado pre-desplegado en todas las redes a las que estás publicando.
 
-#### Usage
+#### Uso
 
-1. Enter the address(s) of your custom factory contract on each network you would like users to be able to deploy to.
-2. Choose your "factory function" - this will be the function that will be called when deploying a user's contract.
-3. Click "Next" and fill in the ["Contract Parameters"](/contracts/publish/publish-contract#customize-contract-parameters) form.
+1. Ingresa la(s) dirección(es) de tu contrato factory personalizado en cada red a la que te gustaría que los usuarios puedan desplegar.
+2. Elige tu "función de factory" - esta será la función que se llamará cuando un usuario despliegue su contrato.
+3. Haz clic en "Siguiente" y completa el formulario de ["Parámetros del Contrato"](/contracts/publish/publish-contract#customize-contract-parameters).
 
-## Not sure which option to choose?
+## ¿No sabes qué opción elegir?
 
-| Deployment option                                                                | Description                                                                                                          | Main use case                                                                                                                           | Requirements                                                                                                          | Can my contract be deployed to any EVM?                       | Can your contract be featured on Explore? |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
-| [Direct Deploy](/contracts/publish/publish-options#direct-deploy)                | Users can deploy a copy of your contract, including the logic and storage.                                           | Smart contract developers using publish to share their smart contract and are not expecting their contract to get lots of deploys       | No requirements.                                                                                                      | Yes.                                                          | No.                                       |
-| [Deploy via Default Factory](/contracts/publish/publish-options#default-factory) | Users can deploy proxies of your implementation contract, containing the storage, using the thirdweb default factory | Protocols that want their contract to be deployable to all networks and want to gas-optimize the deploys                                | Must be written in the [upgradeable pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable). | Yes.                                                          | Yes.                                      |
-| [Deploy via Custom Factory](/contracts/publish/publish-options#custom-factory)   | Use your own pre-deployed factory contract to deploy proxies for your users.                                         | Protocols that want to use a custom factory to create proxies for their users & the ability to add custom logic to the create function. | Must have pre-deployed a custom factory on each chain you would like users to be able to deploy to.                   | Deployable to all networks the custom factory is deployed to. | Yes.                                      |
+| Opción de despliegue                                                                | Descripción                                                                                                            | Caso de uso principal                                                                                                                           | Requisitos                                                                                                          | ¿Se puede desplegar mi contrato en cualquier EVM?                       | ¿Puede mi contrato ser destacado en Explore? |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------- |
+| [Despliegue directo](/contracts/publish/publish-options#direct-deploy)                | Los usuarios pueden desplegar una copia de tu contrato, incluyendo la lógica y el almacenamiento.                       | Desarrolladores de contratos inteligentes que usan la publicación para compartir su contrato y no esperan que su contrato reciba muchos despliegues | No hay requisitos.                                                                                                      | Sí.                                                          | No.                                       |
+| [Desplegar a través de Factory predeterminado](/contracts/publish/publish-options#default-factory) | Los usuarios pueden desplegar proxies de tu contrato de implementación, que contiene el almacenamiento, usando la factory predeterminada de thirdweb | Protocolos que desean que su contrato sea desplegable en todas las redes y quieren optimizar el costo de gas en los despliegues                   | Debe estar escrito en el [patrón actualizable](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable). | Sí.                                                          | Sí.                                      |
+| [Desplegar a través de Factory personalizada](/contracts/publish/publish-options#custom-factory) | Usa tu propio contrato factory pre-desplegado para desplegar proxies para tus usuarios.                                 | Protocolos que desean usar una factory personalizada para crear proxies para sus usuarios y la capacidad de agregar lógica personalizada a la función de creación. | Debe haber pre-desplegado una factory personalizada en cada cadena a la que deseas que los usuarios puedan desplegar.                   | Desplegable en todas las redes en las que se haya desplegado la factory personalizada. | Sí.                                      |

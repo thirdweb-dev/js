@@ -9,7 +9,7 @@ export function EditPage(props: { path: string }) {
     <Link
       href={prefix + props.path}
       target="_blank"
-      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-f-300"
+      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
     >
       <div className="p-2.5">
         <GithubIcon className="size-5" />

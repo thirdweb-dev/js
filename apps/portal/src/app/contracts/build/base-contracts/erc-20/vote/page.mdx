@@ -4,20 +4,20 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20Vote contract",
+		title: "Contrato ERC20Vote",
 		icon: "contract",
 	},
-	title: "ERC20Vote | thirdweb contracts",
+	title: "ERC20Vote | contratos thirdweb",
 	description:
-		"The ERC20Vote smart contract implements the ERC20 standard. It also supports EIP-2612; allowing approvals to be made via signatures, and the ERC20Votes contract",
+		"El contrato inteligente ERC20Vote implementa el estándar ERC20. También es compatible con EIP-2612, lo que permite que las aprobaciones se realicen mediante firmas, y con el contrato ERC20Votes.",
 });
 
 # ERC20Vote
 
-The `ERC20Vote` smart contract implements the [ERC20](https://eips.ethereum.org/EIPS/eip-20) standard.
-It also supports [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612); allowing approvals to be made via signatures, and the
-[ERC20Votes](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Votes.sol) contract;
-which provides voting and delegation functionality, along with delegation by signature.
+El contrato inteligente `ERC20Vote` implementa el estándar [ERC20](https://eips.ethereum.org/EIPS/eip-20).
+También es compatible con [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612), lo que permite que las aprobaciones se realicen mediante firmas, y con el
+contrato [ERC20Votes](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Votes.sol);
+que proporciona funcionalidad de votación y delegación, junto con delegación por firma.
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
@@ -25,9 +25,9 @@ import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20Vote.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e inhíerelo.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -50,11 +50,11 @@ contract MyToken is ERC20Vote {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las características disponibles de estas extensiones en el SDK y el panel:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para conocer qué funciones están disponibles.
 
 - [ERC20](/contracts/build/extensions/erc-20/ERC20)
 - [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
@@ -63,19 +63,19 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas con lógica personalizada:
 
 <Details id="mintTo" summary="mintTo">
 
 ```solidity
 /**
- *  @notice          Lets an authorized address mint tokens to a recipient.
- *  @dev             The logic in the `_canMint` function determines whether the caller is authorized to mint tokens.
+ *  @notice          Permite que una dirección autorizada acuñe tokens a un destinatario.
+ *  @dev             La lógica en la función `_canMint` determina si la persona que llama está autorizada para acuñar tokens.
  *
- *  @param _to       The recipient of the tokens to mint.
- *  @param _amount   Quantity of tokens to mint.
+ *  @param _to       El destinatario de los tokens a acuñar.
+ *  @param _amount   Cantidad de tokens a acuñar.
  */
 function mintTo(address _to, uint256 _amount) public virtual {
     require(_canMint(), "Not authorized to mint.");
@@ -92,10 +92,10 @@ function mintTo(address _to, uint256 _amount) public virtual {
 
 ```solidity
 /**
- *  @notice          Lets an owner a given amount of their tokens.
- *  @dev             Caller should own the `_amount` of tokens.
+ *  @notice          Permite que un propietario queme una cantidad determinada de sus tokens.
+ *  @dev             La persona que llama debe poseer la cantidad `_amount` de tokens.
  *
- *  @param _amount   The number of tokens to burn.
+ *  @param _amount   La cantidad de tokens a quemar.
  */
 function burn(uint256 _amount) external virtual {
     require(balanceOf(_msgSender()) >= _amount, "not enough balance");

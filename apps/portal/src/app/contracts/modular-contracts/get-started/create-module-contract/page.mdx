@@ -10,23 +10,22 @@ export const metadata = createMetadata({
 	},
 });
 
-## Create Module Contract
+# Crear Contrato de Módulo
+**Requisito previo:** Lee “Crear Contrato Principal” antes de crear un Módulo.
 
-**Prerequisite:** Read “Create Core Contract” before creating a Module.
-
-### Installation
+### Instalación
 
 <Steps>
 
-<Step title="Install Forge from Foundry">
-   For assistance, refer to the [Foundry installation guide](https://book.getfoundry.sh/getting-started/installation).
+<Step title="Instalar Forge desde Foundry">
+   Para obtener ayuda, consulta la [guía de instalación de Foundry](https://book.getfoundry.sh/getting-started/installation).
 
 ```bash
 forge init
 forge install thirdweb-dev/modular-contracts --no-commit
 ```
 
-Add the Thirdweb modular contracts to `foundry.toml` under `remappings`:
+Añadir los contratos modulares de Thirdweb a `foundry.toml` bajo `remappings`:
 
 ```toml
 remappings = ['@thirdweb-dev=lib/modular-contracts/']
@@ -34,10 +33,10 @@ remappings = ['@thirdweb-dev=lib/modular-contracts/']
 
 </Step>
 
-### Create Module
+### Crear Módulo
 
-<Step title="Create a New Module File">
-   Create a new file called `CounterModule.sol` in the `src` folder and start with the following code:
+<Step title="Crear un Nuevo Archivo de Módulo">
+   Crea un nuevo archivo llamado `CounterModule.sol` en la carpeta `src` y comienza con el siguiente código:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -56,13 +55,13 @@ contract CounterModule is Module {
 }
 ```
 
-> **Note**  
-> The `Module` contract is the base contract that needs to be inherited for this contract to be recognized as a Module Contract, and we need to implement the `getModuleConfig` function to prevent the contract to be marked as abstract.
+> **Note:**
+> El contrato `Module` es el contrato base que debe ser heredado para que este contrato sea reconocido como un Contrato de Módulo, y necesitamos implementar la función `getModuleConfig` para evitar que el contrato sea marcado como abstracto.
 
 </Step>
 
-<Step title="Create a Storage Library">
-   Create a library called `CounterStorage` responsible for holding the state of the Module Contract:
+<Step title="Crear una Librería de Almacenamiento">
+   Crea una librería llamada `CounterStorage` responsable de mantener el estado del Contrato de Módulo:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -101,13 +100,13 @@ library CounterStorage {
 
 ```
 
-> **Note**  
-> The library `CounterStorage` uses the ERC-7201: Namespace storage layout to store the data. Learn more about [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201).
+> **Nota:**
+> La librería `CounterStorage` utiliza el diseño de almacenamiento de espacio de nombres ERC-7201 para almacenar los datos. Aprende más sobre [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201).
 
 </Step>
 
-<Step title="Set Up Storage Access Function">
-   Set up the function `_counterStorage` to access the storage from the `CounterStorage` library:
+<Step title="Configurar Función de Acceso a Almacenamiento">
+   Configura la función `_counterStorage` para acceder al almacenamiento desde la librería `CounterStorage`:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -157,8 +156,8 @@ library CounterStorage {
 
 </Step>
 
-<Step title="Set Up Fallback Functions">
-   Set up fallback functions that act as the setters and getters for `step`:
+<Step title="Configurar Funciones de Fallback">
+   Configura funciones de fallback que actúan como los setters y getters para `step`:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -214,13 +213,13 @@ library CounterStorage {
 
 ```
 
-> **Note**  
-> Fallback functions are extra functionalities that a core contract can use via the Solidity `fallback` function.
+> **Note:**
+> Las funciones de fallback son funcionalidades adicionales que un contrato central puede usar a través de la función `fallback` de Solidity.
 
 </Step>
 
-<Step title="Set Up Callback Function">
-   Set up a callback function `beforeIncrement` that increases the given count by `step`:
+<Step title="Configurar la Función de Callback">
+   Configura una función de callback `beforeIncrement` que aumente el contador dado por `step`:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -281,13 +280,13 @@ library CounterStorage {
 
 ```
 
-> **Note**  
-> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract. In this snippet, the `beforeIncrement` callback is used before the main increment functionality.
+> **Note:**
+> Las funciones de callback son funcionalidades tipo hook que se pueden usar antes o después de la funcionalidad principal de un contrato central. En este fragmento, el callback `beforeIncrement` se utiliza antes de la funcionalidad principal de incremento.
 
 </Step>
 
-<Step title="Set Up Module Config">
-   Lastly, set up the `getModuleConfig` functionallity as this is the one which is responsible for communicating to the core contract:
+<Step title="Configurar el Módulo">
+   Finalmente, configura la funcionalidad `getModuleConfig`, ya que esta es la encargada de comunicarse con el contrato central:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -382,4 +381,4 @@ library CounterStorage {
 
 ---
 
-In the next tutorial, learn how to deploy this modular contract and attach it to the Core contract.
+En el siguiente tutorial, aprende cómo desplegar este contrato modular y adjuntarlo al contrato principal.

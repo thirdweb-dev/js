@@ -10,54 +10,55 @@ export const metadata = createMetadata({
 	},
 });
 
-### How Do Modular Contracts Work
+# ¿Cómo Funcionan los Contratos Modulares?
 
-Modular contracts are composed of two core components:
+Los contratos modulares están compuestos por dos componentes principales:
 
-1. **Core Contracts**
-2. **Module Contracts**
+1. **Contratos Base**
+2. **Contratos de Módulos**
 
-Core contracts serve as the foundation upon which module contracts are installed. Module contracts are smart contracts that provide additional functionality and can be installed or uninstalled from a core contract. You can think of core and module contracts as building blocks, like Lego pieces.
+Los contratos base sirven como la base sobre la que se instalan los contratos de módulos. Los contratos de módulos son contratos inteligentes que proporcionan funcionalidad adicional y se pueden instalar o desinstalar de un contrato base. Puedes pensar en los contratos base y de módulos como piezas de construcción, como piezas de Lego.
 
-#### How Do Module Contracts Supply Additional Functionality?
+#### ¿Cómo Proveen los Contratos de Módulos Funcionalidad Adicional?
 
-Once installed, module contracts provide additional functionality by creating `fallback` and `callback` functions that the core contract can interact with through delegate calls.
+Una vez instalados, los contratos de módulos proporcionan funcionalidad adicional mediante la creación de funciones `fallback` y `callback` con las que el contrato base puede interactuar a través de llamadas delegadas.
 
-- **Fallback functions** are independent functions that can be called through the core contract.
-- **Callback functions** are dependent functions that must be called within the context of a core contract function. These functions enhance the core contract's functionality by executing additional logic either before or after the main core contract logic.
+- **Funciones Fallback**: Son funciones independientes que pueden ser llamadas a través del contrato base.
+- **Funciones Callback**: Son funciones dependientes que deben ser llamadas dentro del contexto de una función del contrato base. Estas funciones mejoran la funcionalidad del contrato base ejecutando lógica adicional antes o después de la lógica principal del contrato base.
 
-#### How Are Module Contracts Installed onto Core Contracts?
+#### ¿Cómo se Instalan los Contratos de Módulos en los Contratos Base?
 
-Like Lego pieces, modular contracts must "fit" together properly. If the pieces don't align—meaning the contracts aren't compatible—they cannot be installed together.
+Al igual que las piezas de Lego, los contratos modulares deben "encajar" correctamente. Si las piezas no se alinean—es decir, los contratos no son compatibles—no se pueden instalar juntos.
 
-This raises the question:
+Esto plantea la pregunta:
 
-#### What Makes a Module Contract Compatible with a Core Contract?
+#### ¿Qué Hace Que un Contrato de Módulo Sea Compatible con un Contrato Base?
 
-Two factors determine compatibility: **interfaces** and **callback functions**.
+Dos factores determinan la compatibilidad: **interfaces** y **funciones de callback**.
 
-- If a module contract has a callback function that the core contract doesn’t support (or is already in use), it can’t be installed.
-- Similarly, if a module contract requires a certain interface to be supported by the core contract and it doesn’t have it, then it can’t be installed.
+- Si un contrato de módulo tiene una función de callback que el contrato base no soporta (o que ya está en uso), no se puede instalar.
+- De manera similar, si un contrato de módulo requiere que el contrato base soporte una determinada interfaz y no la tiene, no se puede instalar.
 
-#### How Core and Module Contracts Communicate
+#### Cómo se Comunican los Contratos Base y de Módulos
 
-Core contracts expose their supported callback functions and interfaces through two methods:
+Los contratos base exponen sus funciones de callback y interfaces soportadas a través de dos métodos:
 
-- `getSupportedCallbackFunctions` - to expose the core contract’s supported callback functions.
-- `supportsInterface` - to expose the core contract’s supported interfaces.
+- `getSupportedCallbackFunctions` - para exponer las funciones de callback soportadas por el contrato base.
+- `supportsInterface` - para exponer las interfaces soportadas por el contrato base.
 
-Module contracts also expose their supplied callback and fallback functions, along with the required interfaces, via the `getModuleConfig` function.
+Los contratos de módulos también exponen sus funciones de callback y fallback suministradas, junto con las interfaces requeridas, a través de la función `getModuleConfig`.
 
-#### Example: Core and Module Contract Interaction
+#### Ejemplo: Interacción entre Contratos Base y de Módulos
 
-Let’s walk through an example with three contracts:
+Vamos a ver un ejemplo con tres contratos:
+
 - `ERC721Core`
 - `MintableModule`
 - `TransferableModule`
 
-##### `ERC721Core` Example
+##### Ejemplo de `ERC721Core`
 
-The `ERC721Core` contract supports the `beforeMint` callback and the ERC-721 interface (`0x80ac58cd`).
+El contrato `ERC721Core` soporta el callback `beforeMint` y la interfaz ERC-721 (`0x80ac58cd`).
 
 ```solidity
 function getSupportedCallbackFunctions()
@@ -79,47 +80,47 @@ function supportsInterface(bytes4 interfaceId)
 	override(ERC721AUpgradeable, IERC721AUpgradeable, Core)
 	returns (bool)
 {
-	return interfaceId == 0x80ac58cd // ERC165 Interface ID for ERC721 
+	return interfaceId == 0x80ac58cd // ERC165 Interface ID for ERC721
 		|| super.supportsInterface(interfaceId);
 }
 ```
 
-##### `MintableModule` Example
+##### Ejemplo de `MintableModule`
 
-The `MintableModule` provides the `beforeMint` callback and requires the ERC-721 interface.
+El `MintableModule` proporciona el callback `beforeMint` y requiere la interfaz ERC-721.
 
 ```solidity
 function getModuleConfig() external pure override returns (ModuleConfig memory config) {
 	config.callbackFunctions = new CallbackFunction ;
 	config.callbackFunctions[0] = CallbackFunction(this.beforeMint.selector);
-	
+
 	config.requiredInterfaces = new bytes4 ;
 	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
 }
 ```
 
-##### `TransferableModule` Example
+##### Ejemplo de `TransferableModule`
 
-The `TransferableModule` provides the `beforeTransfer` callback and also requires the ERC-721 interface.
+El `TransferableModule` proporciona el callback `beforeTransfer` y también requiere la interfaz ERC-721.
 
 ```solidity
 function getModuleConfig() external pure override returns (ModuleConfig memory config) {
 	config.callbackFunctions = new CallbackFunction ;
 	config.callbackFunctions[0] = CallbackFunction(this.beforeTransfer.selector);
-	
+
 	config.requiredInterfaces = new bytes4 ;
 	config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
 }
 ```
 
-##### Compatibility in Action
+##### Compatibilidad en Acción
 
-The `ERC721Core` contract supports the ERC-721 interface (`0x80ac58cd`), which is required by both the `MintableModule` and the `TransferableModule`.
+El contrato `ERC721Core` es compatible con la interfaz ERC-721 (`0x80ac58cd`), que es requerida tanto por el `MintableModule` como por el `TransferableModule`.
 
-However, since `ERC721Core` only supports the `beforeMint` callback, only the `MintableModule` can be installed. The `TransferableModule`, which provides the `beforeTransfer` callback, cannot be installed because `ERC721Core` does not support it.
+Sin embargo, dado que `ERC721Core` solo soporta el callback `beforeMint`, solo el `MintableModule` puede ser instalado. El `TransferableModule`, que proporciona el callback `beforeTransfer`, no puede ser instalado porque `ERC721Core` no lo soporta.
 
 ---
 
-#### Conclusion
+#### Conclusión
 
-Modular contracts work by allowing core contracts to interact with module contracts through delegate calls to `fallback` and `callback` functions. Compatibility between core and module contracts is determined by their supported interfaces and callback functions. This modular architecture provides flexibility, allowing functionality to be added or removed as needed, like assembling or disassembling Lego pieces.
+Los contratos modulares funcionan permitiendo que los contratos base interactúen con los contratos módulo a través de llamadas delegadas a las funciones `fallback` y `callback`. La compatibilidad entre los contratos base y los módulos se determina por las interfaces y funciones de callback que soportan. Esta arquitectura modular proporciona flexibilidad, permitiendo que se agregue o elimine funcionalidad según sea necesario, como ensamblar o desensamblar piezas de Lego.

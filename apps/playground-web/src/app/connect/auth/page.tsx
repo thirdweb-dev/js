@@ -1,5 +1,6 @@
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
+import { SmartAccountAuthPreview } from "@/components/auth/smart-account-auth";
 import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
@@ -38,6 +39,12 @@ export default function Page() {
 
         <section className="space-y-8">
           <GatedContent />
+        </section>
+
+        <div className="h-14" />
+
+        <section className="space-y-8">
+          <SmartAccountAuth />
         </section>
       </main>
     </ThirdwebProvider>
@@ -143,6 +150,61 @@ export async function GatedContentPreview() {
     </div>
   );
 }`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function SmartAccountAuth() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+          Smart Account Auth
+        </h2>
+        <p className="max-w-[600px]">
+          Use smart accounts with Sign in with Ethereum (SIWE)
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<SmartAccountAuthPreview />}
+        code={`"use client";
+
+import {
+  generatePayload,
+  isLoggedIn,
+  login,
+  logout,
+} from "@/app/connect/auth/server/actions/auth";
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import { ConnectButton } from "thirdweb/react";
+import { defineChain } from "thirdweb";
+
+export function AuthButton() {
+  return (
+    <ConnectButton
+      client={THIRDWEB_CLIENT}
+      accountAbstraction={{
+        chain: defineChain(17000),
+        sponsorGas: true
+      }}
+      auth={{
+        // The following methods run on the server (not client)!
+        isLoggedIn: async () => {
+          const authResult = await isLoggedIn();
+          if (!authResult) return false;
+          return true;
+        },
+        doLogin: async (params) => await login(params),
+        getLoginPayload: async ({ address }) => generatePayload({ address }),
+        doLogout: async () => await logout(),
+      }}
+    />
+  );
+}
+`}
         lang="tsx"
       />
     </>

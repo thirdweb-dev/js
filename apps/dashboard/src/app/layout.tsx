@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "thirdweb",
     images: [
       {
-        url: "https://thirdweb.com/thirdweb.png",
+        url: "https://thirdweb.com/assets/og-image/thirdweb.png",
         width: 1200,
         height: 630,
         alt: "thirdweb",

@@ -26,10 +26,6 @@ const monoFont = Fira_Code({
 export const metadata = createMetadata({
   title: "thirdweb docs",
   description: "thirdweb developer portal",
-  image: {
-    title: "Build apps and games on any EVM chain",
-    icon: "thirdweb",
-  },
 });
 
 export default function RootLayout({
@@ -54,7 +50,7 @@ export default function RootLayout({
       >
         <SetStoredTheme />
         <NextTopLoader
-          color="var(--accent-500)"
+          color="hsl(var(--link-foreground))"
           height={2}
           shadow={false}
           showSpinner={false}

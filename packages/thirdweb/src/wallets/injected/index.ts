@@ -79,16 +79,25 @@ export async function connectEip1193Wallet({
   // get the chainId the provider is on
   const chainId = await provider
     .request({ method: "eth_chainId" })
-    .then(normalizeChainId);
+    .then(normalizeChainId)
+    .catch((e) => {
+      throw new Error("Error reading chainId from provider", e);
+    });
 
   let connectedChain =
     chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
-  // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
-  // we check for undefined chain ID since some chain-specific wallets like Abstract will not send a chain ID on connection
-  if (chain && typeof chain.id !== "undefined" && chain.id !== chainId) {
-    await switchChain(provider, chain);
-    connectedChain = chain;
+  try {
+    // if we want a specific chainId and it is not the same as the provider chainId, trigger switchChain
+    // we check for undefined chain ID since some chain-specific wallets like Abstract will not send a chain ID on connection
+    if (chain && typeof chain.id !== "undefined" && chain.id !== chainId) {
+      await switchChain(provider, chain);
+      connectedChain = chain;
+    }
+  } catch {
+    console.warn(
+      `Error switching to chain ${chain?.id} - defaulting to wallet chain (${chainId})`,
+    );
   }
 
   return onConnect({

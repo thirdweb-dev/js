@@ -7,19 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CmdKSearchModal } from "components/cmd-k-search";
-import { ChevronDownIcon, CommandIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 export function ResourcesDropdownButton() {
-  const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
+  // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
   return (
     <>
-      <CmdKSearchModal
+      {/* <CmdKSearchModal
         open={isCMDSearchModalOpen}
         setOpen={setIsCMDSearchModalOpen}
-      />
+      /> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -53,13 +51,8 @@ export function ResourcesDropdownButton() {
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem>
-            <Link href="/trending" className="w-full p-1">
-              Trending Contracts
-            </Link>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem>
+          {/* This will be enabled later */}
+          {/* <DropdownMenuItem className="hidden">
             <Button
               variant="ghost"
               className="!p-1 !h-auto w-full justify-between gap-2 text-left text-sm"
@@ -70,7 +63,7 @@ export function ResourcesDropdownButton() {
                 <CommandIcon className="size-3" />K
               </span>
             </Button>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
