@@ -106,7 +106,7 @@ export async function TotalSponsoredChartCardUI({
   return (
     <CombinedBarChartCard
       isCurrency
-      title={title || "Total Sponsored"}
+      title={title || "Gas Sponsored"}
       chartConfig={chartConfig}
       data={timeSeriesData}
       activeChart={

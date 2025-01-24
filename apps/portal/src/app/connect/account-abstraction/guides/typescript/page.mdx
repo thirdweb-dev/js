@@ -14,7 +14,7 @@ export const metadata = createMetadata({
 
 # Using Account abstraction in Typescript
 
-By using the [wallet SDK](/references/wallets/latest) alongside the [TypeScript SDK](/typescript/latest), you can use smart accounts in your applications easily.
+By using the [TypeScript SDK](/typescript/v5), you can use smart accounts in your applications easily.
 
 ## Example Use Cases
 
@@ -80,15 +80,18 @@ console.log("Personal account address:", personalAccount.address);
 </Step>
 <Step title="Creating the Smart account">
 
-Now, let's create a smart account using the SmartWallet class from the `@thirdweb-dev/wallets` package.
-To do this, we need to pass a `SmartWalletConfig` object to the constructor. This object contains the following properties:
+Now, let's create a smart account using `smartWallet` from `thirdweb/wallets` package.
+To do this, we need to pass an object of type [SmartWalletOptions](/references/typescript/v5/SmartWalletOptions) to the function.
+
+Some of the important properties in this object are:
 
 - `chain`: the chain that the smart account will be deployed on.
 - `sponsorGas`: whether the smart account should have sponsored transactions or not.
 
-Once we have created the config and instantiated the `SmartWallet` class, we can connect the personal wallet to the smart account using the `connect` method.
-
+Once we have created the smart wallet interface, we can connect the personal wallet to the smart account using the `connect` method.
 ```typescript
+import { smartWallet } from "thirdweb/wallets";
+
 // Configure the smart wallet
 const wallet = smartWallet({
 	chain: sepolia,

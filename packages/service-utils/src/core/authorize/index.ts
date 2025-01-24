@@ -6,7 +6,6 @@ import {
 import { authorizeClient } from "./client.js";
 import { authorizeService } from "./service.js";
 import type { AuthorizationResult } from "./types.js";
-import { hashKey } from "./utils.js";
 
 export type AuthorizationInput = {
   secretKey: string | null;
@@ -42,16 +41,23 @@ export async function authorize(
   cacheOptions?: CacheOptions,
 ): Promise<AuthorizationResult> {
   let teamAndProjectResponse: TeamAndProjectResponse | null = null;
-  const cacheKey = hashKey(
-    `key_v2_:${authData.secretKeyHash}:${authData.hashedJWT}:${authData.clientId}`,
-  );
+
+  // Use a separate cache key per auth method.
+  const cacheKey = authData.secretKeyHash
+    ? `key-v2:secret-key:${authData.secretKeyHash}`
+    : authData.hashedJWT
+      ? `key-v2:dashboard-jwt:${authData.hashedJWT}`
+      : authData.clientId
+        ? `key-v2:client-id:${authData.clientId}`
+        : null;
+
   // TODO if we have cache options we want to check the cache first
-  if (cacheOptions) {
+  if (cacheOptions && cacheKey) {
     try {
-      const cachedKey = await cacheOptions.get(cacheKey);
-      if (cachedKey) {
+      const cachedValue = await cacheOptions.get(cacheKey);
+      if (cachedValue) {
         const parsed = JSON.parse(
-          cachedKey,
+          cachedValue,
         ) as TeamAndProjectCacheWithPossibleTTL;
         if ("updatedAt" in parsed) {
           // we want to compare the updatedAt time to the current time
@@ -99,7 +105,7 @@ export async function authorize(
       teamAndProjectResponse = data;
 
       // cache the retrieved key if we have cache options
-      if (cacheOptions) {
+      if (cacheOptions && cacheKey) {
         // we await this always because it can be a promise or not
         await cacheOptions.put(cacheKey, data);
       }

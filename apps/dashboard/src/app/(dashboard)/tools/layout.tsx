@@ -1,5 +1,5 @@
+import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import type { Metadata } from "next";
-import { ToolsTabs } from "./components/tabs";
 
 export const metadata: Metadata = {
   title: "thirdweb Blockchain Tools",
@@ -11,13 +11,31 @@ export default function ToolLayout({
   children,
 }: { children: React.ReactNode }) {
   return (
-    <section className="flex h-full flex-col gap-8">
-      <main className="container flex-1 pb-20">
-        <div className="h-14" />
-        <ToolsTabs />
-        <div className="h-8" />
-        <div>{children}</div>
-      </main>
-    </section>
+    <SidebarLayout
+      sidebarLinks={[
+        {
+          label: "Transaction Simulator",
+          href: "/tools/transaction-simulator",
+        },
+        {
+          label: "Wei Converter",
+          href: "/tools/wei-converter",
+        },
+        {
+          label: "Hex Converter",
+          href: "/tools/hex-converter",
+        },
+        {
+          label: "Unix Time Converter",
+          href: "/tools/unixtime-converter",
+        },
+        {
+          label: "Keccak-256 Converter",
+          href: "/tools/keccak256-converter",
+        },
+      ]}
+    >
+      {children}
+    </SidebarLayout>
   );
 }

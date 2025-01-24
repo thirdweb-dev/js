@@ -53,7 +53,10 @@ export function SiteEmbed({
   } = useQuery({
     queryKey: ["site-embed", walletId, src, client.clientId, ecosystem],
     enabled:
-      activeWallet && (isEcosystemWallet(activeWallet) || walletId === "inApp"),
+      activeWallet &&
+      (isEcosystemWallet(activeWallet) ||
+        walletId === "inApp" ||
+        walletId === "smart"),
     queryFn: async () => {
       const storage = new ClientScopedStorage({
         storage: webLocalStorage,
@@ -70,7 +73,7 @@ export function SiteEmbed({
 
   const url = new URL(src);
   if (walletId) {
-    url.searchParams.set("walletId", walletId);
+    url.searchParams.set("walletId", walletId === "smart" ? "inApp" : walletId);
   }
   if (authProvider) {
     url.searchParams.set("authProvider", authProvider);

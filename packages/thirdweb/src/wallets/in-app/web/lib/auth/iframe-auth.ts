@@ -107,7 +107,10 @@ export class Auth {
     authToken: AuthStoredTokenWithCookieReturnType,
     recoveryCode?: string,
   ): Promise<AuthLoginReturnType> {
-    await this.preLogin();
+    // We don't call logout for backend auth because that is handled on the backend where the iframe isn't available to call. Moreover, logout clears the local storage which isn't applicable for backend auth.
+    if (authToken.storedToken.authProvider !== "Backend") {
+      await this.preLogin();
+    }
 
     const user = await getUserStatus({
       authToken: authToken.storedToken.cookieString,

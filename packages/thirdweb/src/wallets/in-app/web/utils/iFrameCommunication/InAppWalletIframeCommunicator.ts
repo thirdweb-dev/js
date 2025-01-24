@@ -32,7 +32,7 @@ export class InAppWalletIframeCommunicator<
         baseUrl,
       }).href,
       baseUrl,
-      container: document.body,
+      container: typeof document === "undefined" ? undefined : document.body,
       localStorage: new ClientScopedStorage({
         storage: webLocalStorage,
         clientId,

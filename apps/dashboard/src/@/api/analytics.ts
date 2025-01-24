@@ -3,6 +3,7 @@ import type {
   AnalyticsQueryParams,
   InAppWalletStats,
   RpcMethodStats,
+  TransactionStats,
   UserOpStats,
   WalletStats,
   WalletUserStats,
@@ -77,12 +78,39 @@ export async function getUserOpUsage(
   });
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch user ops usage");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch user ops usage: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return [];
   }
 
   const json = await res.json();
   return json.data as UserOpStats[];
+}
+
+export async function getClientTransactions(
+  params: AnalyticsQueryParams,
+): Promise<TransactionStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v1/transactions/client?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch client transactions stats: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as TransactionStats[];
 }
 
 export async function getRpcMethodUsage(

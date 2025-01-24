@@ -1,4 +1,6 @@
 "use client";
+
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +26,6 @@ import {
   useAllContractList,
 } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -82,17 +83,22 @@ const importFormSchema = z.object({
       message: "Invalid contract address",
     },
   ),
+  chainId: z.coerce.number(),
 });
 
 function ImportForm() {
   const router = useDashboardRouter();
-  const chainId = useActiveWalletChain()?.id;
-  const chainSlug = useChainSlug(chainId || 1);
+  const activeChainId = useActiveWalletChain()?.id;
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(importFormSchema),
+    values: {
+      contractAddress: "",
+      chainId: activeChainId || 1,
+    },
   });
+  const chainSlug = useChainSlug(form.watch("chainId"));
   const addToDashboard = useAddContractMutation();
   const address = useActiveAccount()?.address;
   const registry = useAllContractList(address);
@@ -107,9 +113,7 @@ function ImportForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (data) => {
-          if (!chainId) {
-            throw new Error("No chain ID");
-          }
+          const { chainId } = data;
           let contractAddress: string;
 
           try {
@@ -199,7 +203,11 @@ function ImportForm() {
         <div className="h-3" />
         <div>
           <Label className="mb-3 inline-block">Network</Label>
-          <NetworkSelectorButton />
+          <SingleNetworkSelector
+            chainId={form.watch("chainId")}
+            onChange={(v) => form.setValue("chainId", v)}
+            side="top"
+          />
         </div>
 
         <div className="h-8" />

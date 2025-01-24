@@ -268,7 +268,7 @@ async function checkFor712Factory({
 }
 
 /**
- * Deployes a smart account via a dummy transaction.
+ * Deployes a smart account via a dummy transaction. If the account is already deployed, this will do nothing.
  *
  * @param args - Arguments for the deployment.
  * @param args.smartAccount - The smart account to deploy.

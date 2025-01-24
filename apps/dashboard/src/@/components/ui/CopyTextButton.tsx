@@ -9,7 +9,7 @@ import { ToolTipLabel } from "./tooltip";
 export function CopyTextButton(props: {
   textToShow: string;
   textToCopy: string;
-  tooltip: string;
+  tooltip: string | undefined;
   className?: string;
   iconClassName?: string;
   variant?:

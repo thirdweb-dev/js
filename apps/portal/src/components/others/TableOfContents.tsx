@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
  * Automatically query all the heading anchors inside the <main> and creates a table of contents
  */
 
-export type TableOfContentNode = {
+type TableOfContentNode = {
   name: string;
   href: string;
   level: number;
@@ -137,7 +137,7 @@ export function TableOfContentsSideBar(props: {
   );
 }
 
-export function TableOfContents(props: {
+function TableOfContents(props: {
   nodes: TableOfContentNode[];
   linkClassName?: string;
 }) {

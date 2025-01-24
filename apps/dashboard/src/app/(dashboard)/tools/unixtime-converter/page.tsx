@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClientOnly } from "../../../../components/ClientOnly/ClientOnly";
 import { UnixTimeConverter } from "./components/UnixTimeConverter";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <UnixTimeConverter />;
+  return (
+    <ClientOnly ssr={null}>
+      <UnixTimeConverter />
+    </ClientOnly>
+  );
 }

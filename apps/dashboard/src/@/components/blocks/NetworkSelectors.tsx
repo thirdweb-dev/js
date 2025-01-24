@@ -90,6 +90,9 @@ export function SingleNetworkSelector(props: {
   popoverContentClassName?: string;
   // if specified - only these chains will be shown
   chainIds?: number[];
+  side?: "left" | "right" | "top" | "bottom";
+  disableChainId?: boolean;
+  align?: "center" | "start" | "end";
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -142,14 +145,17 @@ export function SingleNetworkSelector(props: {
             />
             {chain.name}
           </span>
-          <Badge variant="outline" className="gap-2 max-sm:hidden">
-            <span className="text-muted-foreground">Chain ID</span>
-            {chain.chainId}
-          </Badge>
+
+          {!props.disableChainId && (
+            <Badge variant="outline" className="gap-2 max-sm:hidden">
+              <span className="text-muted-foreground">Chain ID</span>
+              {chain.chainId}
+            </Badge>
+          )}
         </div>
       );
     },
-    [idToChain],
+    [idToChain, props.disableChainId],
   );
 
   const isLoadingChains = allChains.length === 0;
@@ -168,6 +174,8 @@ export function SingleNetworkSelector(props: {
       className={props.className}
       popoverContentClassName={props.popoverContentClassName}
       disabled={isLoadingChains}
+      side={props.side}
+      align={props.align}
     />
   );
 }

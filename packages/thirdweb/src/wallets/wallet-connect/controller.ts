@@ -93,12 +93,14 @@ export async function connectWC(
   let { onDisplayUri } = wcOptions || {};
 
   // use default sessionHandler unless onDisplayUri is explicitly provided
-  if (!onDisplayUri && sessionHandler && walletId !== "walletConnect") {
+  if (!onDisplayUri && sessionHandler) {
     const walletInfo = await getWalletInfo(walletId);
     const deeplinkHandler = (uri: string) => {
       const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
       if (!appUrl) {
-        throw new Error("No app url found for wallet connect to redirect to.");
+        // generic wc uri
+        sessionHandler(uri);
+        return;
       }
       const fullUrl = formatWalletConnectUrl(appUrl, uri).redirect;
       sessionHandler(fullUrl);

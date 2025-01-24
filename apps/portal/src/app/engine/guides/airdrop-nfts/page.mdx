@@ -31,25 +31,27 @@ Engine makes it effortless for any developer to airdrop NFTs at scale. You spons
 
 ## Frontend: Add Connect Wallet and Claim buttons
 
-Use [`<ConnectWallet>`](/react/latest/components/ConnectWallet) to prompt the user for their wallet. The **Claim** button calls `POST /api/claim`.
+Use [`ConnectButton`](/references/typescript/v5/ConnectButton) component to prompt the user for their wallet. The **Claim** button calls `POST /api/claim`.
 
 ```tsx
+import { useActiveAccount } from "thirdweb/react";
 function ClaimPage() {
-	const userWalletAddress = useAddress();
+	const account = useActiveAccount();
+	const address = account?.address;
 
 	const onClick = async () => {
 		await fetch("/api/claim", {
 			method: "POST",
-			body: JSON.stringify({ userWalletAddress }),
+			body: JSON.stringify({ address }),
 		});
-		alert(`🎉 A reward has been sent to your wallet: ${userWalletAddress}`);
+		alert(`🎉 A reward has been sent to your wallet: ${address}`);
 	};
 
 	return (
 		<main>
 			<h2>Thank you for being a superfan! ❤️</h2>
 			<ConnectWallet />
-			{userWalletAddress && <button onClick={onClick}>Claim my reward</button>}
+			{address && <button onClick={onClick}>Claim my reward</button>}
 		</main>
 	);
 }

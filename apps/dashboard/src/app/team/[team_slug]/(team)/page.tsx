@@ -1,8 +1,13 @@
-import { getProjects } from "@/api/projects";
+import { getWalletConnections } from "@/api/analytics";
+import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { Changelog } from "components/dashboard/Changelog";
+import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
-import { TeamProjectsPage } from "./~/projects/TeamProjectsPage";
+import {
+  type ProjectWithAnalytics,
+  TeamProjectsPage,
+} from "./~/projects/TeamProjectsPage";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
@@ -15,12 +20,13 @@ export default async function Page(props: {
   }
 
   const projects = await getProjects(params.team_slug);
+  const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
 
   return (
     <div className="container flex grow flex-col gap-12 py-8 lg:flex-row">
       <div className="flex grow flex-col">
         <h1 className="mb-4 font-semibold text-2xl tracking-tight">Projects</h1>
-        <TeamProjectsPage projects={projects} team={team} />
+        <TeamProjectsPage projects={projectsWithTotalWallets} team={team} />
       </div>
       <div className="shrink-0 lg:w-[320px]">
         <h2 className="mb-4 font-semibold text-2xl tracking-tight">
@@ -29,5 +35,40 @@ export default async function Page(props: {
         <Changelog />
       </div>
     </div>
+  );
+}
+
+async function getProjectsWithAnalytics(
+  projects: Project[],
+): Promise<Array<ProjectWithAnalytics>> {
+  return Promise.all(
+    projects.map(async (p) => {
+      try {
+        const today = new Date();
+        const thirtyDaysAgo = subDays(today, 30);
+
+        const data = await getWalletConnections({
+          clientId: p.publishableKey,
+          period: "all",
+          from: thirtyDaysAgo,
+          to: today,
+        });
+
+        let uniqueWalletsConnected = 0;
+        for (const d of data) {
+          uniqueWalletsConnected += d.uniqueWalletsConnected;
+        }
+
+        return {
+          ...p,
+          monthlyActiveUsers: uniqueWalletsConnected,
+        };
+      } catch {
+        return {
+          ...p,
+          monthlyActiveUsers: 0,
+        };
+      }
+    }),
   );
 }

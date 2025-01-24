@@ -24,6 +24,13 @@ export async function fetchAnalytics(
       decodeURIComponent(value),
     );
   }
+  // client id DEBUG OVERRIDE
+  // ANALYTICS_SERVICE_URL.searchParams.delete("clientId");
+  // ANALYTICS_SERVICE_URL.searchParams.delete("accountId");
+  // ANALYTICS_SERVICE_URL.searchParams.append(
+  //   "clientId",
+  //   "...",
+  // );
 
   return fetch(ANALYTICS_SERVICE_URL, {
     ...init,

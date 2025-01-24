@@ -1,11 +1,13 @@
 "use client";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import Link from "next/link";
+import { useState } from "react";
+import { useActiveWalletChain } from "thirdweb/react";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
@@ -43,6 +45,10 @@ function BackendWalletsSection(props: {
   authToken: string;
 }) {
   const { instance, teamSlug, authToken } = props;
+  const activeWalletChain = useActiveWalletChain();
+  const [_chainId, setChainId] = useState<number>();
+  const chainId = _chainId || activeWalletChain?.id || 1;
+
   const backendWallets = useEngineBackendWallets({
     instanceUrl: instance.url,
     authToken,
@@ -105,9 +111,14 @@ function BackendWalletsSection(props: {
           <div className="flex justify-end">
             <div className="flex items-center gap-2">
               <span className="text-sm">Show balance for</span>
-              {/* TODO - Replace with simple network selector - there's no need for user to switch chain  */}
               <div className="flex flex-row">
-                <NetworkSelectorButton />
+                <SingleNetworkSelector
+                  chainId={chainId}
+                  onChange={setChainId}
+                  className="min-w-40 max-w-52 lg:max-w-60"
+                  popoverContentClassName="!w-[80vw] md:!w-[500px]"
+                  align="end"
+                />
               </div>
             </div>
           </div>
@@ -120,6 +131,7 @@ function BackendWalletsSection(props: {
         isPending={backendWallets.isPending}
         isFetched={backendWallets.isFetched}
         authToken={authToken}
+        chainId={chainId}
       />
     </section>
   );
