@@ -12,6 +12,7 @@ import type { CoreAuthInput } from "../core/types.js";
 
 export * from "./usage.js";
 export * from "./usageV2.js";
+export * from "../core/usageV2.js";
 export * from "../core/services.js";
 export * from "../core/rateLimit/index.js";
 
