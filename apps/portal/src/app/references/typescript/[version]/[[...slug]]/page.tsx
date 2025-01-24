@@ -6,7 +6,7 @@ const config = getTDocPage({
   getDoc: fetchTypeScriptDoc,
   packageSlug: "typescript",
   async getVersions() {
-    return ["v4", "v5"];
+    return ["v5"];
   },
   metadataIcon: "typescript",
 });

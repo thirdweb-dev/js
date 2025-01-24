@@ -3,7 +3,7 @@ import path from "node:path";
 import FlexSearch from "flexsearch";
 import type { PageData, PageTitleIndex, SectionIndex } from "../types";
 
-export type Indexes = {
+type Indexes = {
   sectionIndex: SectionIndex;
   websiteData: PageData[];
   pageTitleIndex: PageTitleIndex;

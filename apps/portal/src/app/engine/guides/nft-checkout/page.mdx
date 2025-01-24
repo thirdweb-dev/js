@@ -33,12 +33,12 @@ El comprador recibe el NFT sin necesidad de firmas de billetera o fondos para ga
 
 ## Frontend: Agregar el botón de Conectar Billetera y el formulario de tarjeta de crédito
 
-Usa [`<ConnectWallet>`](/react/latest/components/ConnectWallet) para solicitar al comprador su dirección de billetera. El comprador proporciona los detalles de su tarjeta de crédito y selecciona **Pagar ahora** para enviar los detalles del pago directamente a Stripe.
+Usa [`<ConnectButton>`](/references/typescript/v5/ConnectButton) para solicitar al comprador su dirección de billetera. El comprador ingresa los detalles de su tarjeta de crédito y selecciona **Pagar ahora** para enviar los detalles de pago directamente a Stripe.
 
 ```tsx
 function Home() {
 	return (
-		<ThirdwebProvider activeChain="<chain_id>" clientId="<thirdweb_client_id>">
+		<ThirdwebProvider>
 			<PurchasePage />
 		</ThirdwebProvider>
 	);

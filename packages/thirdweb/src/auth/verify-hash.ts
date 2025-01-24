@@ -10,6 +10,7 @@ import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSig
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { isZkSyncChain } from "../utils/any-evm/zksync/isZkSyncChain.js";
+import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
 import { type Hex, hexToBool, isHex } from "../utils/encoding/hex.js";
 import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
@@ -75,6 +76,33 @@ export async function verifyHash({
     );
   })();
 
+  const isDeployed = await isContractDeployed(
+    getContract({
+      address,
+      client,
+      chain,
+    }),
+  );
+
+  if (isDeployed) {
+    const validEip1271 = await verifyEip1271Signature({
+      hash,
+      signature: signatureHex,
+      contract: getContract({
+        chain,
+        address,
+        client,
+      }),
+    }).catch((err) => {
+      console.error("Error verifying EIP-1271 signature", err);
+      return false;
+    });
+    if (validEip1271) {
+      return true;
+    }
+  }
+
+  // contract not deployed, use erc6492 validator to verify signature
   const wrappedSignature: Hex = await (async () => {
     // If no factory is provided, we have to assume its already deployed or is an EOA
     // TODO: Figure out how to automatically tell if our default factory was used
@@ -95,6 +123,7 @@ export async function verifyHash({
     to?: string;
     data: Hex;
   };
+
   const zkSyncChain = await isZkSyncChain(chain);
   const abi = ox__Abi.from(ox__WrappedSignature.universalSignatureValidatorAbi);
   if (zkSyncChain) {

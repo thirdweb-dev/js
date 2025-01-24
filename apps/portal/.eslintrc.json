@@ -5,12 +5,20 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@next/next/recommended",
-    "plugin:storybook/recommended"
+    "plugin:mdx/recommended",
+    "plugin:tailwindcss/recommended"
   ],
   "rules": {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "off",
-    "svg-jsx/camel-case-dash": "error"
-  }
+    "svg-jsx/camel-case-dash": "error",
+    "tailwindcss/classnames-order": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.js", "*.tsx", "*.jsx"],
+      "extends": ["biome"]
+    }
+  ]
 }

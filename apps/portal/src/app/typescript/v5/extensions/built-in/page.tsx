@@ -8,7 +8,7 @@ import { fetchTypeScriptDoc } from "../../../../references/components/TDoc/fetch
 import { getCustomTag } from "../../../../references/components/TDoc/utils/getSidebarLinkgroups";
 
 export default async function ExtensionPage() {
-  const docs = await fetchTypeScriptDoc("v5");
+  const docs = await fetchTypeScriptDoc();
   const extensions = [
     ...new Set(
       docs.functions

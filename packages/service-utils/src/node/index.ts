@@ -12,9 +12,13 @@ import type {
 } from "../core/authorize/index.js";
 import type { AuthorizationResult } from "../core/authorize/types.js";
 import type { CoreAuthInput } from "../core/types.js";
+
+export * from "./usageV2.js";
 export * from "../core/usage.js";
+export * from "../core/usageV2.js";
 export * from "../core/rateLimit/index.js";
 export * from "../core/services.js";
+
 type NodeServiceConfig = CoreServiceConfig;
 
 export type AuthInput = CoreAuthInput & {

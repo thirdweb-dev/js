@@ -12,7 +12,7 @@ export type SideBar = {
   links: SidebarLink[];
 };
 
-export type DocLayoutProps = {
+type DocLayoutProps = {
   sideBar: SideBar;
   children?: React.ReactNode;
   editPageButton?: true;

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -46,6 +46,7 @@
   "sideEffects": false,
   "dependencies": {
     "aws4fetch": "1.0.20",
+    "kafkajs": "2.2.4",
     "zod": "3.24.1"
   },
   "devDependencies": {

@@ -96,7 +96,7 @@ export async function VariableTDoc(props: {
   );
 }
 
-export function getVariableSignatureCode(doc: VariableDoc): TypeInfo {
+function getVariableSignatureCode(doc: VariableDoc): TypeInfo {
   return {
     code: doc.type?.code || "",
     tokens: doc.type?.tokens,

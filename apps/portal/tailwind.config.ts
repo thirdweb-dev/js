@@ -37,6 +37,7 @@ module.exports = {
       md: "calc(var(--radius) - 2px)",
       sm: "calc(var(--radius) - 4px)",
       full: "9999px",
+      none: "0",
     },
     fontFamily: {
       sans: ["var(--font-sans)", "sans-serif"],

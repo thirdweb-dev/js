@@ -19,7 +19,6 @@ import {
   Search as SearchIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Spinner } from "../ui/Spinner/Spinner";
 import { Input } from "../ui/input";
 import { DynamicHeight } from "./DynamicHeight";
@@ -68,17 +67,6 @@ type Tag =
 function SearchModalContent(props: { closeModal: () => void }) {
   const [input, setInput] = useState("");
   const debouncedInput = useDebounce(input, 500);
-  const pathname = usePathname();
-
-  const [showOldSDK, setShowOldSDK] = useState(false);
-
-  useEffect(() => {
-    if (isOldSDK(pathname)) {
-      setShowOldSDK(true);
-    } else {
-      setShowOldSDK(false);
-    }
-  }, [pathname]);
 
   const [selectedTags, setSelectedTags] = useState<{
     [T in Tag]?: boolean;
@@ -91,23 +79,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
     queryKey: ["search-index", debouncedInput],
     queryFn: async () => {
       const res = await fetch(`/api/search?q=${encodeURI(debouncedInput)}`);
-      const { results: _results } = (await res.json()) as SearchResult;
-
-      const results = _results.filter((x) => {
-        const isOld = isOldSDK(x.pageHref);
-
-        // filter out old SDKs if should not be shown
-        if (isOld && !showOldSDK) {
-          return false;
-        }
-
-        // filter out new SDKs if should not be shown
-        if (!isOld && showOldSDK) {
-          return false;
-        }
-
-        return true;
-      });
+      const { results } = (await res.json()) as SearchResult;
 
       const tagsSet: Set<Tag> = new Set([]);
 
@@ -416,18 +388,6 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         </DialogContent>
       </Dialog>
     </QueryClientProvider>
-  );
-}
-
-function isOldSDK(href: string) {
-  return (
-    href.includes("/react-native/v0") ||
-    href.includes("/typescript/v4") ||
-    href.includes("/react/v4") ||
-    href.includes("/wallet-sdk/v2") ||
-    href.includes("/wallets/v2") ||
-    href.includes("/storage-sdk/v2") ||
-    href.includes("/storage/v2")
   );
 }
 

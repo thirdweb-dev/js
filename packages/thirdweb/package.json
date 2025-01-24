@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.86.1",
+  "version": "5.86.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -379,7 +379,7 @@
     "typedoc": "0.27.5",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.7.2",
-    "vite": "6.0.10",
+    "vite": "6.0.11",
     "vitest": "2.1.8"
   }
 }

@@ -63,17 +63,3 @@ export function getSlugToDocMap(doc: TransformedDoc) {
 
   return slugToDocMap;
 }
-
-export function getLinkMap(doc: TransformedDoc, path: string) {
-  const linkMap: Map<string, string> = new Map();
-  for (const key in doc) {
-    const value = doc[key as keyof TransformedDoc];
-    if (Array.isArray(value)) {
-      for (const v of value) {
-        linkMap.set(v.name, `${path}/${v.name}`);
-      }
-    }
-  }
-
-  return linkMap;
-}

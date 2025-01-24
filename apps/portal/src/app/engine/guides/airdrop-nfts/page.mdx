@@ -31,25 +31,27 @@ Engine facilita que cualquier desarrollador realice airdrops de NFTs a gran esca
 
 ## Frontend: Agregar botones de Conectar Billetera y Reclamar
 
-Usa [`<ConnectWallet>`](/react/latest/components/ConnectWallet) para pedir al usuario que conecte su billetera. El botón **Reclamar** llama a `POST /api/claim`.
+Usa el componente [`ConnectButton`](/references/typescript/v5/ConnectButton) para solicitar la billetera del usuario. El botón **Claim** para llamar `POST /api/claim`.
 
 ```tsx
+import { useActiveAccount } from "thirdweb/react";
 function ClaimPage() {
-	const userWalletAddress = useAddress();
+	const account = useActiveAccount();
+	const address = account?.address;
 
 	const onClick = async () => {
 		await fetch("/api/claim", {
 			method: "POST",
-			body: JSON.stringify({ userWalletAddress }),
+			body: JSON.stringify({ address }),
 		});
-		alert(`🎉 A reward has been sent to your wallet: ${userWalletAddress}`);
+		alert(`🎉 A reward has been sent to your wallet: ${address}`);
 	};
 
 	return (
 		<main>
 			<h2>Thank you for being a superfan! ❤️</h2>
 			<ConnectWallet />
-			{userWalletAddress && <button onClick={onClick}>Claim my reward</button>}
+			{address && <button onClick={onClick}>Claim my reward</button>}
 		</main>
 	);
 }
