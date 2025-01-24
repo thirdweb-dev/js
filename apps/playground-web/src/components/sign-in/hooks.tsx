@@ -1,5 +1,4 @@
 "use client";
-
 import {
   useActiveAccount,
   useActiveWallet,
@@ -39,7 +38,9 @@ export function HooksPreview() {
         </>
       ) : (
         <Button variant="default" onClick={connect}>
-          Connect with Metamask
+          {connectMutation.isConnecting
+            ? "Connecting..."
+            : "Connect with Metamask"}
         </Button>
       )}
     </div>
