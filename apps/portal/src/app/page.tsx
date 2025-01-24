@@ -49,7 +49,7 @@ function FrontendSection() {
       <ArticleCardIndex
         href="/connect"
         title="Connect"
-        description="Wallets, auth, and onchain interactions"
+        description="Billeteras, autenticación e interacciones en la cadena"
       />
     </section>
   );
@@ -61,7 +61,7 @@ function ContractsSection() {
       <SectionTitle id="onchain" title="Onchain" />
       <ArticleCardIndex
         title="Contracts"
-        description="Solidity contracts and deployment tools"
+        description="Contratos Solidity y herramientas de despliegue"
         href="/contracts"
       />
     </section>
@@ -76,17 +76,17 @@ function BackendSection() {
         <ArticleCardIndex
           href="/engine"
           title="Engine"
-          description="Reliable transactions and monitoring"
+          description="Transacciones confiables y monitoreo"
         />
         <ArticleCardIndex
           href="/insight"
           title="Insight"
-          description="Blockchain data queries and transformations"
+          description="Consultas y transformaciones de datos en blockchain"
         />
         <ArticleCardIndex
           href="/nebula"
           title="Nebula"
-          description="API interface for LLMs"
+          description="Interfaz API para LLMs"
         />
       </div>
     </section>
