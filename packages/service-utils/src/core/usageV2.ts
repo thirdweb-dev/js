@@ -21,9 +21,9 @@ export interface UsageV2Event {
    */
   team_id: string;
   /**
-   * The client ID, if available.
+   * The project ID, if available.
    */
-  client_id?: string;
+  project_id?: string;
   /**
    * The SDK name, if available.
    */
