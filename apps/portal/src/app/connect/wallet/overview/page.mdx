@@ -11,93 +11,90 @@ import EcosystemWalletOverview from "./assets/ecosystem-wallet.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Wallets",
+		title: "Billeteras thirdweb",
 		icon: "wallets",
 	},
-	title: "thirdweb Wallets | thirdweb",
+	title: "Billeteras thirdweb | thirdweb",
 	description:
-		"thirdweb wallets provide a comprehensive toolkit for connecting users to applications and games. Ofrecemos una manera de permitir a los usuarios iniciar sesión como desee. Ya sea conectando una billetera externa, creando una experiencia de inicio de sesión sin fricciones para nuevos usuarios o permitiéndote poseer tu identidad en la pila de Web3, tenemos una solución para ti.",
+		"Las billeteras thirdweb proporcionan un conjunto de herramientas completo para conectar a los usuarios con aplicaciones y juegos. Ofrecemos una manera de permitir que los usuarios inicien sesión de la manera que desees. Ya sea conectando una billetera externa, creando experiencias de inicio de sesión sin problemas para nuevos usuarios, o habilitando la posibilidad de que poseas tu pila de identidad web3, tenemos una solución para ti.",
 });
 
-# Visión general
+# Descripción general
 
-Un flujo de registro flexible que se adapte a diferentes preferencias es fundamental al incorporar usuarios. thirdweb ofrece múltiples soluciones de billetera para satisfacer diversas necesidades de integración:
+Un flujo de registro flexible que se acomode a diferentes preferencias es crítico al incorporar usuarios. thirdweb ofrece múltiples soluciones de billetera para satisfacer diversas necesidades de integración:
 
-1. **Billeteras externas** - Conexión tradicional con más de 350 proveedores
-2. **Billetera In-App** - Incorporación sin fricciones con opciones de correo electrónico, redes sociales y claves de acceso
-3. **Billetera de Ecosistema** - Servicio de billetera personalizada con marca propia para autenticación entre aplicaciones
+1. **Billeteras Externas** - Conexión tradicional de billetera con más de 500 proveedores
+2. **Billetera In-App** - Incorporación sin problemas con opciones de correo electrónico, redes sociales y passkey
+3. **Billetera Ecosistema** - Servicio de billetera de marca para autenticación en aplicaciones cruzadas
 
 <DocImage src={EcosystemWalletOverview} />
 
-### Funcionalidades
+### Características
 
 <div
 	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
 >
-<FeatureCard
-	title="Soporte de Billeteras"
-	description="Más de 350 proveedores de billeteras compatibles"
-	iconUrl="/icons/feature-cards/wallet.svg"
-/>
-<FeatureCard
-	title="Rampa de Entrada Fiat"
-	description="Habilita opciones de compra directamente en el modal"
-	iconUrl="/icons/feature-cards/fiat-ramp.svg"
-/>
-<FeatureCard
-	title="Incorporación sin Fricciones"
-	description="Opciones de correo electrónico, teléfono, redes sociales y claves de acceso"
-	iconUrl="/icons/feature-cards/fingerprint.svg"
-/>
-<FeatureCard
-	title="Personalizable"
-	description="Alinea la marca de tu aplicación"
-	iconUrl="/icons/feature-cards/customize.svg"
-/>
-<FeatureCard
-	title="Sin Gas"
-	description="Habilita transacciones gratuitas con cuentas inteligentes"
-	iconUrl="/icons/feature-cards/gasless.svg"
-/>
-<FeatureCard
-	title="Localización"
-	description="Soporte para múltiples idiomas"
-	iconUrl="/icons/feature-cards/localization.svg"
-/>
-<FeatureCard
-	title="Soporte Cross-Chain"
-	description="Permite a los usuarios finales ver activos, saldos y actividades para aplicaciones y juegos a través de cualquier cadena compatible con EVM"
-	iconUrl="/icons/feature-cards/compatibility.svg"
-/>
-<FeatureCard
-	title="Atribución de Usuarios y Análisis"
-	description="Desbloquea análisis para desarrolladores y la actividad de usuarios finales en tu ecosistema"
-	iconUrl="/icons/feature-cards/compatibility.svg"
-/>
-
-
+	<FeatureCard
+		title="Soporte de Billeteras"
+		description="Soporte para más de 500 proveedores de billeteras"
+		iconUrl="/icons/feature-cards/wallet.svg"
+	/>
+	<FeatureCard
+		title="Fiat On-Ramp"
+		description="Habilita opciones de compra directamente en el modal"
+			iconUrl="/icons/feature-cards/fiat-ramp.svg"
+	/>
+	<FeatureCard
+		title="Incorporación sin problemas"
+		description="Opciones de correo electrónico, teléfono, redes sociales y passkey"
+			iconUrl="/icons/feature-cards/fingerprint.svg"
+	/>
+	<FeatureCard
+		title="Personalizable"
+		description="Adapta la marca de tu aplicación"
+		iconUrl="/icons/feature-cards/customize.svg"
+	/>
+	<FeatureCard
+		title="Sin Gas"
+		description="Habilita transacciones gratuitas con cuentas inteligentes"
+		iconUrl="/icons/feature-cards/gasless.svg"
+	/>
+	<FeatureCard
+		title="Localización"
+		description="Soporte para múltiples idiomas"
+			iconUrl="/icons/feature-cards/localization.svg"
+	/>
+	<FeatureCard
+		title="Soporte Cross-Chain"
+		description="Permite que los usuarios vean activos, saldos y actividades de aplicaciones y juegos en cualquier cadena compatible con EVM"
+		iconUrl="/icons/feature-cards/compatibility.svg"
+	/>
+	<FeatureCard
+		title="Atribución de Usuarios & Analíticas"
+		description="Desbloquea analíticas para desarrolladores y actividad de usuarios en todo tu ecosistema"
+		iconUrl="/icons/feature-cards/compatibility.svg"
+	/>
 </div>
 
 ### Soluciones
 
-| SOLUCIÓN                | MEJOR PARA                                                                                | PRECIOS                                                              |
-| ----------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Billetera externa       | Aplicaciones que necesitan integración tradicional de cartera EOA                         | Gratis                                                               |
-| Billetera In-App        | Aplicaciones convencionales que requieren una incorporación sin fricciones                | [Free up to 1,000 MAW, then $0.02/MAW](https://thirdweb.com/pricing) |
-| Billetera de Ecosistema | Organizaciones que están construyendo redes de billeteras personalizadas con marca propia | [$250/mo](https://thirdweb.com/pricing)                              |
+| SOLUCIÓN         | MEJOR PARA                                             | PRECIO                                                                |
+| ---------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| Billeteras Externas | Aplicaciones que necesitan integración de billeteras EOA tradicionales | Gratis                                                                |
+| Billetera In-App    | Aplicaciones masivas que requieren incorporación sin problemas   | [Gratis hasta 1,000 MAW, luego $0.02/MAW](https://thirdweb.com/pricing) |
+| Billetera Ecosistema | Organizaciones que construyen redes de billeteras de marca         | [$250/mes](https://thirdweb.com/pricing)                               |
 
 ### Casos de Uso
 
-- **Gaming y Entretenimiento** - Cuentas multijuego y transacciones sin gas
-- **Empresas y Programas de Lealtad** - Autenticación personalizada y atribución de usuarios
-- **DeFi & NFT** - Conexión con billeteras tradicionales y rampas de entrada de fiat
-- **Chain Ecosystems** - Cuentas unificadas a través de aplicaciones en cadena
+- **Juegos y Entretenimiento** - Cuentas cruzadas en juegos y transacciones sin gas
+- **Empresas y Lealtad** - Autenticación personalizada y atribución de usuarios
+- **DeFi y NFT** - Conexión de billeteras tradicionales y rampas de entrada fiat
+- **Ecosistemas de Cadenas** - Cuentas unificadas entre aplicaciones de cadenas
 
-<ArticleIconCard
-	icon={WalletsConnectIcon}
-	title="Primeros pasos"
-	description="Consulta nuestra guía de inicio para comenzar rápidamente con las billeteras de thirdweb en las distintas plataformas compatibles."
-	href="/wallet/get-started"
+<ArticleCard
+	title="Comenzando"
+	description="Consulta nuestra guía para comenzar rápidamente con las billeteras thirdweb en las distintas plataformas soportadas."
+	href="/connect/wallet/get-started"
 />
 
 <DocImage src={customModal} />
