@@ -324,13 +324,6 @@ export class Auth {
    * @internal
    */
   async logout(): Promise<LogoutReturnType> {
-    if (this.AuthQuerier) {
-      await this.AuthQuerier.call<LogoutReturnType>({
-        procedureName: "logout",
-        params: undefined,
-      });
-    }
-
     const isRemoveAuthCookie = await this.localStorage.removeAuthCookie();
     const isRemoveUserId = await this.localStorage.removeWalletUserId();
 
