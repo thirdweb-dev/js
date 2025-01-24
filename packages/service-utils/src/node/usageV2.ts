@@ -96,6 +96,7 @@ export class UsageV2Producer {
         sdk_version: event.sdk_version,
         sdk_os: event.sdk_os,
         product_name: event.product_name,
+        product_version: event.product_version,
         data: JSON.stringify(event.data),
       };
     });
