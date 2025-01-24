@@ -23,6 +23,10 @@ export type EcosystemWalletCreationOptions = {
    * The partnerId of the ecosystem wallet to connect to
    */
   partnerId?: string;
+  /**
+   * Optional flag to skip fetching and usage of ecosystem's info default account abstraction settings
+   */
+  skipEcosystemInfo?: boolean;
 };
 
 export type EcosystemWalletConnectionOptions = InAppWalletConnectionOptions;

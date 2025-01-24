@@ -87,5 +87,9 @@ export type InAppWalletCreationOptions =
        * Whether to hide the private key export button in the Connect Modal
        */
       hidePrivateKeyExport?: boolean;
+      /**
+       * Optional flag to skip fetching and usage of ecosystem's info default account abstraction settings
+       */
+      skipEcosystemInfo?: boolean;
     }
   | undefined;

@@ -78,7 +78,7 @@ export function createInAppWallet(args: {
         ecosystem,
       );
 
-      if (ecosystem) {
+      if (ecosystem && !createOptions?.skipEcosystemInfo) {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
@@ -132,7 +132,7 @@ export function createInAppWallet(args: {
         ecosystem,
       );
 
-      if (ecosystem) {
+      if (ecosystem && !createOptions?.skipEcosystemInfo) {
         const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
         const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
         if (smartAccountOptions) {
@@ -206,7 +206,7 @@ export function createInAppWallet(args: {
           ecosystem,
         );
 
-        if (ecosystem) {
+        if (ecosystem && !createOptions?.skipEcosystemInfo) {
           const ecosystemOptions = await getEcosystemInfo(ecosystem.id);
           const smartAccountOptions = ecosystemOptions?.smartAccountOptions;
           if (smartAccountOptions) {
