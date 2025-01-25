@@ -1,39 +1,39 @@
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "thirdweb Insight For Agents & LLMs",
-	description:
-		"thirdweb Insight query documentation formatted for use with LLMs and agents",
-	image: {
-		title: "Insight",
-		icon: "insight",
-	},
+  title: "thirdweb Insight Para Agentes y LLMs",
+  description:
+    "Documentación de consulta de thirdweb Insight formateada para su uso con LLMs y agentes",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
 });
 
 # Thirdweb Insight
-Insight is a powerful tool that lets you retrieve blockchain data from any EVM chain, enrich it with metadata, and transform it using custom logic. Whether you're building a gaming inventory system, tracking DeFi metrics, or analyzing NFT collections, Insight makes it easy to get the data you need with simple API calls.
 
-## Things to Keep in Mind
+Insight es una herramienta poderosa que te permite recuperar datos de blockchain de cualquier cadena EVM, enriquecerlos con metadatos y transformarlos usando lógica personalizada. Ya sea que estés construyendo un sistema de inventario para juegos, rastreando métricas DeFi o analizando colecciones de NFTs, Insight facilita obtener los datos que necesitas con simples llamadas a la API.
 
-- **Rate Limiting**: The API has rate limits based on your authentication tier. Monitor your usage and implement appropriate retry logic.
+## Aspectos a Tener en Cuenta
 
-- **Pagination**: When retrieving large datasets, use pagination parameters (`page` and `limit`) to avoid timeouts and manage response sizes effectively.
+- **Límites de Tasa**: La API tiene límites de tasa basados en tu nivel de autenticación. Monitorea tu uso e implementa lógica de reintento adecuada.
 
-- **Chain Selection**: Always verify you're querying the correct chain ID. Using an incorrect chain ID will return a 404 error.
+- **Paginación**: Al recuperar grandes conjuntos de datos, utiliza parámetros de paginación (`page` y `limit`) para evitar tiempos de espera y gestionar eficientemente el tamaño de las respuestas.
 
-- **Data Freshness**: There may be a slight delay between on-chain events and their availability in the API due to block confirmation times.
+- **Selección de Cadena**: Verifica siempre que estás consultando el Chain ID correcto. Usar un Chain ID incorrecto devolverá un error 404.
 
-- **Error Handling**: Implement proper error handling for both HTTP errors (400/500) and network issues. Consider implementing retries for transient failures.
+- **Actualización de Datos**: Puede haber un ligero retraso entre los eventos on-chain y su disponibilidad en la API debido a los tiempos de confirmación de bloques.
 
-- **Query Optimization**: 
-  - Use specific filters to reduce response size and improve performance
-  - Avoid overly broad date ranges when possible
-  - Consider using aggregations for large datasets
+- **Manejo de Errores**: Implementa un manejo adecuado de errores tanto para errores HTTP (400/500) como para problemas de red. Considera implementar reintentos para fallas transitorias.
 
-- **Authentication**: Keep your authentication credentials secure and don't expose them in client-side code.
+- **Optimización de Consultas**:
+  - Utiliza filtros específicos para reducir el tamaño de la respuesta y mejorar el rendimiento.
+  - Evita rangos de fechas demasiado amplios cuando sea posible.
+  - Considera usar agregaciones para conjuntos de datos grandes.
 
-- **Response Processing**: Some numeric values are returned as strings to maintain precision. Convert them appropriately in your application.
+- **Autenticación**: Mantén tus credenciales de autenticación seguras y no las expongas en código del lado del cliente.
 
+- **Procesamiento de Respuestas**: Algunos valores numéricos se devuelven como cadenas para mantener la precisión. Conviértelos adecuadamente en tu aplicación.
 
 ## API URL
 
@@ -41,17 +41,17 @@ Insight is a powerful tool that lets you retrieve blockchain data from any EVM c
 const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
 ```
 
-## Authentication
+## Autenticación
 
-The API supports three authentication methods:
+La API admite tres métodos de autenticación:
 
 ```typescript
-// 1. Header Authentication
+// 1. Autenticación por Header
 const headers = {
 	"x-client-id": "{{clientId}}", // thirdweb Client ID
 };
 
-// 2. Query Parameter
+// 2. Parámetro de Consulta
 const url = `https://{{chainId}}.insight.thirdweb.com/v1/events?clientId={{clientId}}`;
 
 // 3. Bearer Token
@@ -59,7 +59,7 @@ const headers = {
 	Authorization: "Bearer {{jwtToken}}",
 };
 
-// Example using fetch with header auth
+// Ejemplo utilizando fetch con autenticación por header
 async function getEvents() {
 	const response = await fetch(`https://{{chainId}}.insight.thirdweb.com/v1/events`, {
 		headers: {
@@ -70,23 +70,23 @@ async function getEvents() {
 }
 ```
 
-## Core Concepts
+## Conceptos Básicos
 
 ### Chain IDs
 
-The API supports chain IDs in the following format:
+La API admite Chain IDs en el siguiente formato:
 
 ```typescript
 interface ChainConfig {
-	chainId: number;  // Chain ID of the network you want to query
+	chainId: number;  // Chain ID de la red que deseas consultar
 }
 
-// Example: Using a specific chain
-const chainId = "{{chainId}}"; // Replace with your desired chain ID
+// Ejemplo: Usando una cadena específica
+const chainId = "{{chainId}}"; // Reemplaza con el Chain ID que desees
 const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
 ```
 
-### Base Response Structure
+### Estructura Básica de Respuesta
 
 ```typescript
 interface BaseResponse<T> {
@@ -102,7 +102,7 @@ interface BaseResponse<T> {
   }
 }
 
-// Example response from getting events
+// Ejemplo de respuesta al obtener eventos
 {
   "data": [
     {
@@ -124,12 +124,12 @@ interface BaseResponse<T> {
 }
 ```
 
-## API Examples
+## Ejemplos de API
 
-### Events API
+### API de Eventos
 
 ```typescript
-// 1. Get All Events
+// 1. Obtener Todos los Eventos
 async function getAllEvents(): Promise<BaseResponse<Event>> {
 	const response = await fetch(`https://{{chainId}}.insight.thirdweb.com/v1/events`, {
 		headers: { "x-client-id": "{{clientId}}" },
@@ -137,7 +137,7 @@ async function getAllEvents(): Promise<BaseResponse<Event>> {
 	return await response.json();
 }
 
-// 2. Get Contract Events with Filtering
+// 2. Obtener Eventos de Contrato con Filtros
 async function getContractEvents(contractAddress: string): Promise<BaseResponse<Event>> {
 	const params = new URLSearchParams({
 		filter_block_number_gte: "{{blockNumber}}",
@@ -154,10 +154,10 @@ async function getContractEvents(contractAddress: string): Promise<BaseResponse<
 }
 ```
 
-### Token Balance API
+### API de Saldo de Tokens
 
 ```typescript
-// 1. Get ERC20 Balances
+// 1. Obtener Balances de ERC20
 async function getERC20Balances(ownerAddress: string): Promise<ERC20Response> {
 	const response = await fetch(
 		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc20/${ownerAddress}`,
@@ -176,7 +176,7 @@ async function getERC20Balances(ownerAddress: string): Promise<ERC20Response> {
 	return data;
 }
 
-// 2. Get NFT Balances
+// 2. Obtener Balances de NFTs
 async function getNFTBalances(ownerAddress: string) {
 	const response = await fetch(
 		`https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc721/${ownerAddress}`,
@@ -197,10 +197,10 @@ async function getNFTBalances(ownerAddress: string) {
 }
 ```
 
-### Using Filters
+### Usando Filtros
 
 ```typescript
-// Example: Get events with complex filtering
+// Ejemplo: Obtener eventos con filtros complejos
 async function getFilteredEvents() {
 	const params = new URLSearchParams({
 		// Block filters
@@ -231,7 +231,7 @@ async function getFilteredEvents() {
 }
 ```
 
-### Error Handling
+### Manejo de Errores
 
 ```typescript
 async function safeApiCall() {
@@ -255,49 +255,49 @@ async function safeApiCall() {
 }
 ```
 
-## API Reference
+## Referencia de API
 
-### Events API
+### API de Eventos
 
-1. **Get All Events**
+1. **Obtener Todos los Eventos**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/events
 ```
 
-2. **Get Contract Events**
+2. **Obtener Eventos de Contrato**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/events/:contractAddress
 ```
 
-3. **Get Specific Event Type**
+3. **Obtener Tipo de Evento Específico**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/events/:contractAddress/:signature
 ```
 
-### Transactions API
+### API de Transacciones
 
-1. **Get All Transactions**
+1. **Obtener Todas las Transacciones**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/transactions
 ```
 
-2. **Get Contract Transactions**
+2. **Obtener Transacciones de Contrato**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/transactions/:contractAddress
 ```
 
-3. **Get Specific Transaction Type**
+3. **Obtener Tipo de Transacción Específico**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/transactions/:contractAddress/:signature
 ```
 
-### Token Balance API
+### API de Saldo de Tokens
 
 1. **ERC20 Balances**
 
@@ -314,7 +314,7 @@ interface ERC20Balance {
 }
 ```
 
-2. **ERC721 & ERC1155 Balances**
+2. **Balances de ERC721 y ERC1155**
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/tokens/erc721/:ownerAddress
@@ -331,9 +331,9 @@ interface NFTBalance {
 }
 ```
 
-## Query Parameters
+## Parámetros de Consulta
 
-### Common Parameters
+### Parámetros Comunes
 
 ```typescript
 interface CommonQueryParams {
@@ -346,9 +346,9 @@ interface CommonQueryParams {
 }
 ```
 
-### Filter Types
+### Tipos de Filtros
 
-1. **Block Filters**
+1. **Filtros de Bloques**
 
 ```typescript
 interface BlockFilters {
@@ -361,7 +361,7 @@ interface BlockFilters {
 }
 ```
 
-2. **Time Filters**
+2. **Filtros de Tiempo**
 
 ```typescript
 interface TimeFilters {
@@ -373,7 +373,7 @@ interface TimeFilters {
 }
 ```
 
-3. **Transaction Filters**
+3. **Filtros de Transacción**
 
 ```typescript
 interface TransactionFilters {
@@ -387,9 +387,9 @@ interface TransactionFilters {
 }
 ```
 
-## Error Handling
+## Manejo de Errores
 
-All endpoints return standard error responses for 400 and 500 status codes:
+Todos los endpoints devuelven respuestas de error estándar para los códigos de estado 400 y 500:
 
 ```typescript
 // 400 Bad Request
