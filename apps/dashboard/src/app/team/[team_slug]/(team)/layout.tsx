@@ -87,6 +87,10 @@ export default async function TeamLayout(props: {
               path: `/team/${params.team_slug}/~/settings`,
               name: "Settings",
             },
+            {
+              path: `/team/${params.team_slug}/~/test`,
+              name: "Test",
+            },
           ]}
         />
       </div>
