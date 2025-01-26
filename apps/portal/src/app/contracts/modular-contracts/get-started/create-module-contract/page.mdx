@@ -1,385 +1,169 @@
-import { createMetadata, Steps, Step } from "@doc";
-
-export const metadata = createMetadata({
-	title: "thirdweb Modular Contracts",
-	description:
-		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
-	image: {
-		title: "thirdweb Modular Contracts",
-		icon: "solidity",
-	},
-});
-
-# Create Module Contract
-
-**Prerequisite:** Read “Create Core Contract” before creating a Module.
-
-### Installation
-
-<Steps>
-
-<Step title="Install Forge from Foundry">
-   For assistance, refer to the [Foundry installation guide](https://book.getfoundry.sh/getting-started/installation).
-
-```bash
-forge init
-forge install thirdweb-dev/modular-contracts --no-commit
-```
-
-Add the Thirdweb modular contracts to `foundry.toml` under `remappings`:
-
-```toml
-remappings = ['@thirdweb-dev=lib/modular-contracts/']
-```
-
-</Step>
-
-### Create Module
-
-<Step title="Create a New Module File">
-   Create a new file called `CounterModule.sol` in the `src` folder and start with the following code:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import {Module} from "@thirdweb-dev/src/Module.sol";
-
-contract CounterModule is Module {
-    function getModuleConfig()
-        public
-        pure
-        override
-        returns (ModuleConfig memory config)
-    {}
-}
-```
-
-> **Note**
-> The `Module` contract is the base contract that needs to be inherited for this contract to be recognized as a Module Contract, and we need to implement the `getModuleConfig` function to prevent the contract to be marked as abstract.
-
-</Step>
-
-<Step title="Create a Storage Library">
-   Create a library called `CounterStorage` responsible for holding the state of the Module Contract:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.20;
-
-import {Module} from "@thirdweb-dev/src/Module.sol";
-
-contract CounterModule is Module {
-    function getModuleConfig()
-        public
-        pure
-        override
-        returns (ModuleConfig memory config)
-    {}
-}
-
- // 👇👇👇👇👇👇👇👇👇
-library CounterStorage {
-    /// @custom:storage-location erc7201:token.minting.counter
-    bytes32 public constant COUNTER_STORAGE_POSITION =
-        keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
-            ~bytes32(uint256(0xff));
-
-    struct Data {
-        uint256 step;
-    }
-
-    function data() internal pure returns (Data storage data_) {
-        bytes32 position = COUNTER_STORAGE_POSITION;
-        assembly {
-            data_.slot := position
-        }
-    }
-}
-
-```
-
-> **Note**
-> The library `CounterStorage` uses the ERC-7201: Namespace storage layout to store the data. Learn more about [ERC-7201](https://eips.ethereum.org/EIPS/eip-7201).
-
-</Step>
-
-<Step title="Set Up Storage Access Function">
-   Set up the function `_counterStorage` to access the storage from the `CounterStorage` library:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.20;
-
-import {Module} from "@thirdweb-dev/src/Module.sol";
-
-contract CounterModule is Module {
-    function getModuleConfig()
-        public
-        pure
-        override
-        returns (ModuleConfig memory config)
-    {}
-
-     // 👇👇👇👇👇👇👇👇👇
-
-    function _counterStorage()
-        internal
-        pure
-        returns (CounterStorage.Data storage)
-    {
-        return CounterStorage.data();
-    }
-}
-
-library CounterStorage {
-    /// @custom:storage-location erc7201:token.minting.counter
-    bytes32 public constant COUNTER_STORAGE_POSITION =
-        keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
-            ~bytes32(uint256(0xff));
-
-    struct Data {
-        uint256 step;
-    }
-
-    fun2ction data() internal pure returns (Data storage data_) {
-        bytes32 position = COUNTER_STORAGE_POSITION;
-        assembly {
-            data_.slot := position
-        }
-    }
-}
-
-```
-
-</Step>
-
-<Step title="Set Up Fallback Functions">
-   Set up fallback functions that act as the setters and getters for `step`:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.20;
-
-import {Module} from "@thirdweb-dev/src/Module.sol";
-
-contract CounterModule is Module {
-    function getModuleConfig()
-        public
-        pure
-        override
-        returns (ModuleConfig memory config)
-    {}
-
-    function _counterStorage()
-        internal
-        pure
-        returns (CounterStorage.Data storage)
-    {
-        return CounterStorage.data();
-    }
-
-    // 👇👇👇👇👇👇👇👇👇
-    // Fallback Functions
-    function getStep() external view returns (uint256) {
-        return _counterStorage().step;
-    }
-
-    function setStep(uint256 _step) external {
-        _counterStorage().step = _step;
-    }
-}
-
-library CounterStorage {
-    /// @custom:storage-location erc7201:token.minting.counter
-    bytes32 public constant COUNTER_STORAGE_POSITION =
-        keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
-            ~bytes32(uint256(0xff));
-
-    struct Data {
-        uint256 step;
-    }
-
-    function data() internal pure returns (Data storage data_) {
-        bytes32 position = COUNTER_STORAGE_POSITION;
-        assembly {
-            data_.slot := position
-        }
-    }
-}
-
-```
-
-> **Note**
-> Fallback functions are extra functionalities that a core contract can use via the Solidity `fallback` function.
-
-</Step>
-
-<Step title="Set Up Callback Function">
-   Set up a callback function `beforeIncrement` that increases the given count by `step`:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.20;
-
-import {Module} from "@thirdweb-dev/src/Module.sol";
-
-contract CounterModule is Module {
-    function getModuleConfig()
-        public
-        pure
-        override
-        returns (ModuleConfig memory config)
-    {}
-
-    function _counterStorage()
-        internal
-        pure
-        returns (CounterStorage.Data storage)
-    {
-        return CounterStorage.data();
-    }
-
-    // Fallback Functions
-    function getStep() external view returns (uint256) {
-        return _counterStorage().step;
-    }
-
-    function setStep(uint256 _step) external {
-        _counterStorage().step = _step;
-    }
-
-
-    // 👇👇👇👇👇👇👇👇👇
-    function beforeIncrement(uint256 count) external view returns (uint256) {
-        return count + _counterStorage().step;
-    }
-}
-
-library CounterStorage {
-    /// @custom:storage-location erc7201:token.minting.counter
-    bytes32 public constant COUNTER_STORAGE_POSITION =
-        keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
-            ~bytes32(uint256(0xff));
-
-    struct Data {
-        uint256 step;
-    }
-
-    function data() internal pure returns (Data storage data_) {
-        bytes32 position = COUNTER_STORAGE_POSITION;
-        assembly {
-            data_.slot := position
-        }
-    }
-}
-
-```
-
-> **Note**
-> Callback functions are hook-like functionalities that can be used before or after the main functionality of a core contract. In this snippet, the `beforeIncrement` callback is used before the main increment functionality.
-
-</Step>
-
-<Step title="Set Up Module Config">
-   Lastly, set up the `getModuleConfig` functionallity as this is the one which is responsible for communicating to the core contract:
-
-```solidity
-//SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.20;
-
-import {Module} from "@thirdweb-dev/src/Module.sol";
-// 👇👇👇👇👇👇👇👇👇
 import {Role} from "@thirdweb-dev/src/Role.sol";
 
-contract CounterModule is Module {
-    // 👇👇👇👇👇👇👇👇👇
+contract BOPTokenModule is Module {
+    library TokenStorage {
+        bytes32 public constant TOKEN_STORAGE_POSITION = 
+            keccak256(abi.encode("bop.token.storage"));
+
+        struct Data {
+            uint256 totalSupply;
+            uint256 transactionFee; // in basis points (1% = 100)
+            uint256 charityPercentage; // in basis points
+            uint256 burnPercentage; // in basis points
+            uint256 maxTransactionAmount; // Anti-whale limit
+            address charityWallet;
+            mapping(address => uint256) balances;
+            mapping(address => mapping(address => uint256)) allowances;
+            mapping(address => bool) isExcludedFromFees; // Exclude addresses from fees
+        }
+
+        function data() internal pure returns (Data storage data_) {
+            bytes32 position = TOKEN_STORAGE_POSITION;
+            assembly {
+                data_.slot := position
+            }
+        }
+    }
+
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+    event Approval(address indexed owner, address indexed spender, uint256 amount);
+
     function getModuleConfig()
         public
         pure
         override
         returns (ModuleConfig memory config)
     {
-        // Callback Function array of one element
-        config.callbackFunctions = new CallbackFunction[](1);
-        // Fallback Function array of two elements
-        config.fallbackFunctions = new FallbackFunction[](2);
+        config.callbackFunctions = new CallbackFunction      config.fallbackFunctions = new FallbackFunction ;
 
-        //adding the functions to the arrays
-        config.callbackFunctions[0] = CallbackFunction(
-            this.beforeIncrement.selector
+   config.callbackFunctions[0] = CallbackFunction(
+            this.beforeTransfer.selector
         );
 
         config.fallbackFunctions[0] = FallbackFunction({
-            selector: this.getStep.selector,
+            selector: this.getTransactionFee.selector,
             permissionBits: 0
         });
 
         config.fallbackFunctions[1] = FallbackFunction({
-            selector: this.setStep.selector,
+            selector: this.getCharityPercentage.selector,
+            permissionBits: 0
+        });
+
+        config.fallbackFunctions[2] = FallbackFunction({
+            selector: this.getBurnPercentage.selector,
+            permissionBits: 0
+        });
+
+        config.fallbackFunctions[3] = FallbackFunction({
+            selector: this.getMaxTransactionAmount.selector,
             permissionBits: Role._MANAGER_ROLE
         });
 
-        // Required interfaces for the Module
-        config.requiredInterfaces = new bytes4[](1);
-        config.requiredInterfaces[0] = 0x00000001;
+        config.fallbackFunctions[4] = FallbackFunction({
+            selector: this.setCharityWallet.selector,
+            permissionBits: Role._MANAGER_ROLE
+        });
 
-        // register the intallation callback
+        config.requiredInterfaces = new bytes4 ;
+     nfig.requiredInterfaces[0] = 0x00000001;
+
         config.registerInstallationCallback = true;
     }
 
-    function _counterStorage()
-        internal
-        pure
-        returns (CounterStorage.Data storage)
+    function _storage() internal pure returns (TokenStorage.Data storage) {
+        return TokenStorage.data();
+    }
+
+    // Governance Functions
+    function setCharityWallet(address _wallet) external {
+        require(_wallet != address(0), "Invalid address");
+        _storage().charityWallet = _wallet;
+    }
+
+    function setTransactionFee(uint256 _fee) external {
+        require(_fee <= 1000, "Fee too high"); // Max 10%
+        _storage().transactionFee = _fee;
+    }
+
+    function setCharityPercentage(uint256 _percentage) external {
+        require(_percentage <= 5000, "Charity too high"); // Max 50%
+        _storage().charityPercentage = _percentage;
+    }
+
+    function setBurnPercentage(uint256 _percentage) external {
+        require(_percentage <= 1000, "Burn too high"); // Max 10%
+        _storage().burnPercentage = _percentage;
+    }
+
+    function setMaxTransactionAmount(uint256 _amount) external {
+        _storage().maxTransactionAmount = _amount;
+    }
+
+    // Token Functions
+    function transfer(address to, uint256 amount) external returns (bool) {
+        _transfer(msg.sender, to, amount);
+        return true;
+    }
+
+    function approve(address spender, uint256 amount) external returns (bool) {
+        _storage().allowances[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) external returns (bool) {
+        require(
+            _storage().allowances[from][msg.sender] >= amount,
+            "Allowance exceeded"
+        );
+        _storage().allowances[from][msg.sender] -= amount;
+        _transfer(from, to, amount);
+        return true;
+    }
+
+    function _transfer(address from, address to, uint256 amount) internal {
+        TokenStorage.Data storage s = _storage();
+
+        require(
+            amount <= s.maxTransactionAmount || s.isExcludedFromFees[from],
+            "Transaction exceeds max limit"
+        );
+        require(s.balances[from] >= amount, "Insufficient balance");
+
+        uint256 fee = (amount * s.transactionFee) / 10000;
+        uint256 charity = (fee * s.charityPercentage) / 10000;
+        uint256 burn = (fee * s.burnPercentage) / 10000;
+        uint256 transferAmount = amount - fee;
+
+        s.balances[from] -= amount;
+        s.balances[to] += transferAmount;
+        s.balances[s.charityWallet] += charity;
+
+        // Burn the tokens
+        s.totalSupply -= burn;
+
+        emit Transfer(from, to, transferAmount);
+        emit Transfer(from, s.charityWallet, charity);
+    }
+
+    function balanceOf(address account) external view returns (uint256) {
+        return _storage().balances[account];
+    }
+
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256)
     {
-        return CounterStorage.data();
-    }
-
-    // Fallback Functions
-    function getStep() external view returns (uint256) {
-        return _counterStorage().step;
-    }
-
-    function setStep(uint256 _step) external {
-        _counterStorage().step = _step;
-    }
-
-    function beforeIncrement(uint256 count) external view returns (uint256) {
-        return count + _counterStorage().step;
+        return _storage().allowances[owner][spender];
     }
 }
-
-library CounterStorage {
-    /// @custom:storage-location erc7201:token.minting.counter
-    bytes32 public constant COUNTER_STORAGE_POSITION =
-        keccak256(abi.encode(uint256(keccak256("counter")) - 1)) &
-            ~bytes32(uint256(0xff));
-
-    struct Data {
-        uint256 step;
-    }
-
-    function data() internal pure returns (Data storage data_) {
-        bytes32 position = COUNTER_STORAGE_POSITION;
-        assembly {
-            data_.slot := position
-        }
-    }
-}
-
-```
-
-</Step>
-
-</Steps>
-
----
-
-In the next tutorial, learn how to deploy this modular contract and attach it to the Core contract.
