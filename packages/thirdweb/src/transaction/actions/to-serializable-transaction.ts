@@ -91,7 +91,10 @@ export async function toSerializableTransaction(
           ? await import("../../rpc/actions/eth_getTransactionCount.js").then(
               ({ eth_getTransactionCount }) =>
                 eth_getTransactionCount(rpcRequest, {
-                  address: typeof from === "string" ? from : from?.address,
+                  address:
+                    typeof from === "string"
+                      ? getAddress(from)
+                      : getAddress(from.address),
                   blockTag: "pending",
                 }),
             )

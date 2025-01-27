@@ -20,6 +20,7 @@ import {
   eth_getLogs,
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
+import { getAddress } from "../../utils/address.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { type PreparedEvent, prepareEvent } from "../prepare-event.js";
 import { isAbiEvent } from "../utils.js";
@@ -168,11 +169,11 @@ export async function getContractEvents<
       ? // if we have events passed in then we use those
         events.map((e) => ({
           ...restParams,
-          address: contract?.address,
+          address: getAddress(contract.address),
           topics: e.topics,
         }))
       : // otherwise we want "all" events (aka not pass any topics at all)
-        [{ ...restParams, address: contract?.address }];
+        [{ ...restParams, address: getAddress(contract.address) }];
 
   const logs = await Promise.all(
     logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),

@@ -4,13 +4,13 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { CircleSlash } from "lucide-react";
-import type { ContractOptions } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb/contract";
 import type { Account } from "thirdweb/wallets";
 import { ModuleCard } from "./module-card";
 import { useAllModuleContractInfo } from "./moduleContractInfo";
 
 export const InstalledModulesTable = (props: {
-  contract: ContractOptions;
+  contract: ThirdwebContract;
   installedModules: {
     data?: string[];
     isPending: boolean;

@@ -1,5 +1,6 @@
 import { encodePacked } from "viem/utils";
 import type { ThirdwebContract } from "../../../../contract/contract.js";
+import { getAddress } from "../../../../utils/address.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
 
 /**
@@ -15,7 +16,7 @@ export const hashDelayedRevealPassword = async (
   return keccak256(
     encodePacked(
       ["string", "uint256", "uint256", "address"],
-      [password, chainId, batchTokenIndex, contractAddress],
+      [password, chainId, batchTokenIndex, getAddress(contractAddress)],
     ),
   );
 };

@@ -234,7 +234,7 @@ function createAccount({
 
       return await provider.request({
         method: "personal_sign",
-        params: [messageToSign, account.address],
+        params: [messageToSign, getAddress(account.address)],
       });
     },
     async signTypedData(typedData) {
@@ -264,7 +264,7 @@ function createAccount({
 
       return await provider.request({
         method: "eth_signTypedData_v4",
-        params: [account.address, stringifiedData],
+        params: [getAddress(account.address), stringifiedData],
       });
     },
     async watchAsset(asset) {

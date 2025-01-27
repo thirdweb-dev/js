@@ -72,6 +72,7 @@ export { frameTestnet } from "../chains/chain-definitions/frame-testnet.js";
 export { hokumTestnet } from "../chains/chain-definitions/hokum-testnet.js";
 export { godWokenTestnetV1 } from "../chains/chain-definitions/god-woken-testnet-v1.js";
 export { abstractTestnet } from "../chains/chain-definitions/abstract-testnet.js";
+export { abstract } from "../chains/chain-definitions/abstract.js";
 export { assetChainTestnet } from "../chains/chain-definitions/assetchain-testnet.js";
 export { celoAlfajoresTestnet } from "../chains/chain-definitions/celo-alfajores-testnet.js";
 export { fraxtalTestnet } from "../chains/chain-definitions/fraxtal-testnet.js";

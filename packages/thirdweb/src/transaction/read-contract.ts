@@ -24,6 +24,7 @@ import {
   type PreparedMethod,
   prepareMethod,
 } from "../utils/abi/prepare-method.js";
+import { getAddress } from "../utils/address.js";
 import type { Hex } from "../utils/encoding/hex.js";
 
 export type ReadContractResult<outputs extends readonly AbiParameter[]> = // if the outputs are 0 length, return never, invalid case
@@ -214,7 +215,7 @@ export async function readContract<
   const result = await eth_call(rpcRequest, {
     data: encodedData,
     to: contract.address,
-    from: options.from,
+    from: options.from ? getAddress(options.from) : undefined,
   });
   // use the prepared method to decode the result
   const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);

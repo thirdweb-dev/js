@@ -9,6 +9,7 @@ import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
+import type { Address } from "../utils/address.js";
 import { isZkSyncChain } from "../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
@@ -27,7 +28,8 @@ export type VerifyHashParams = {
   };
 };
 
-const ZKSYNC_VALIDATOR_ADDRESS = "0xfB688330379976DA81eB64Fe4BF50d7401763B9C";
+const ZKSYNC_VALIDATOR_ADDRESS: Address =
+  "0xfB688330379976DA81eB64Fe4BF50d7401763B9C";
 
 /**
  * @description Verify that an address created the provided signature for a given hash using [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). This function is interoperable with all wallet types, including EOAs.
@@ -120,7 +122,7 @@ export async function verifyHash({
   })();
 
   let verificationData: {
-    to?: string;
+    to?: Address;
     data: Hex;
   };
 
