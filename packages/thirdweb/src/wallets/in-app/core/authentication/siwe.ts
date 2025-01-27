@@ -18,11 +18,11 @@ export async function siweAuthenticate(args: {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
-  const { wallet, chain } = args;
+  const { wallet, chain, client, ecosystem } = args;
   // only connect if the wallet doesn't already have an account
   const account =
-    wallet.getAccount() || (await wallet.connect({ client: args.client }));
-  const clientFetch = getClientFetch(args.client, args.ecosystem);
+    wallet.getAccount() || (await wallet.connect({ client, chain }));
+  const clientFetch = getClientFetch(client, ecosystem);
 
   const payload = await (async () => {
     const path = getLoginUrl({
