@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.86.4
+
+### Patch Changes
+
+- [#6068](https://github.com/thirdweb-dev/js/pull/6068) [`6c277ae`](https://github.com/thirdweb-dev/js/commit/6c277ae6764dbf1a9218fbd5d278ffb5e3dbde1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect passed in chain when connecting to inapp wallet with wallet strategy
+
 ## 5.86.3
 
 ### Patch Changes
