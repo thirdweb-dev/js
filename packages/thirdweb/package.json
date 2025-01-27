@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.86.4",
+  "version": "5.86.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"

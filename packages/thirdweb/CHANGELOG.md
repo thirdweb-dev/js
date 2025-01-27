@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.86.5
+
+### Patch Changes
+
+- [#6072](https://github.com/thirdweb-dev/js/pull/6072) [`2cebb42`](https://github.com/thirdweb-dev/js/commit/2cebb420e6a381cf41a48e17762f6c655ebe7d8c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix showing link profiles for ecosystem smart wallets
+
 ## 5.86.4
 
 ### Patch Changes
