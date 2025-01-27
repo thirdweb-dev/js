@@ -57,20 +57,18 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   }, [validTeamPlan]);
 
   const growthCardCta: CtaLink | undefined = useMemo(() => {
-    const trialTitle = "Claim your 1-month free";
-
     switch (validTeamPlan) {
       // free > growth
       case "free": {
         return {
-          label: team.growthTrialEligible ? trialTitle : "Get started",
+          label: "Get started",
         };
       }
 
       // starter > growth
       case "starter": {
         return {
-          label: team.growthTrialEligible ? trialTitle : "Upgrade",
+          label: "Upgrade",
         };
       }
 
@@ -87,7 +85,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         };
       }
     }
-  }, [team, validTeamPlan]);
+  }, [validTeamPlan]);
 
   const proCta: CtaLink | undefined = useMemo(() => {
     // pro > pro
@@ -138,20 +136,16 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
                 title: growthCardCta.label,
                 tracking: {
                   category: "account",
-                  label: team.growthTrialEligible
-                    ? "claimGrowthTrial"
-                    : "growthPlan",
+                  label: "growthPlan",
                 },
                 variant: "default",
-                hint: team.growthTrialEligible
-                  ? "Your free trial will end after 30 days."
-                  : undefined,
+                hint: undefined,
               }
             : undefined
         }
-        canTrialGrowth={team.growthTrialEligible || false}
+        canTrialGrowth={false}
         // upsell growth plan if user is on free plan
-        highlighted={validTeamPlan === "free"}
+        highlighted={validTeamPlan === "free" || validTeamPlan === "starter"}
         teamSlug={team.slug}
         redirectToCheckout={redirectToCheckout}
       />
