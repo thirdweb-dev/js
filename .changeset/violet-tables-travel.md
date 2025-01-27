@@ -1,5 +1,0 @@
----
-"thirdweb": patch
----
-
-Updated dependencies

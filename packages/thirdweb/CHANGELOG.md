@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.86.3
+
+### Patch Changes
+
+- [#6057](https://github.com/thirdweb-dev/js/pull/6057) [`b6f189c`](https://github.com/thirdweb-dev/js/commit/b6f189c22023154ca3d1db92721b5e2e50b83e94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated dependencies
+
 ## 5.86.2
 
 ### Patch Changes
