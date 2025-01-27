@@ -8,7 +8,7 @@ import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
-import type { ThirdwebContract } from "../../contract.js";
+import { type ThirdwebContract, getContract } from "../../contract.js";
 import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
 
 /**
@@ -28,11 +28,13 @@ export async function zkDeployProxy(
   if (!implementationAddress) {
     throw new Error("initializeTransaction must have a 'to' field set");
   }
-  const deployed = await isContractDeployed({
-    address: implementationAddress,
-    chain: options.chain,
-    client: options.client,
-  });
+  const deployed = await isContractDeployed(
+    getContract({
+      address: implementationAddress,
+      chain: options.chain,
+      client: options.client,
+    }),
+  );
   if (!deployed) {
     throw new Error(
       `Implementation contract at ${implementationAddress} is not deployed`,

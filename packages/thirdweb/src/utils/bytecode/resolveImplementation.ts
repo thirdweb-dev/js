@@ -1,5 +1,5 @@
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
-import type { ThirdwebContract } from "../../contract/contract.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { eth_getStorageAt } from "../../rpc/actions/eth_getStorageAt.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { readContract } from "../../transaction/read-contract.js";
@@ -37,10 +37,12 @@ export async function resolveImplementation(
   if (minimalProxyImplementationAddress) {
     return {
       address: minimalProxyImplementationAddress,
-      bytecode: await getBytecode({
-        ...contract,
-        address: minimalProxyImplementationAddress,
-      }),
+      bytecode: await getBytecode(
+        getContract({
+          ...contract,
+          address: minimalProxyImplementationAddress,
+        }),
+      ),
     };
   }
 
@@ -50,7 +52,10 @@ export async function resolveImplementation(
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
     // biome-ignore lint/style/noParameterAssign: we purposefully mutate the contract object here
-    contract = { ...contract, address: beacon };
+    contract = getContract({
+      ...contract,
+      address: beacon,
+    });
 
     implementationAddress = await getImplementationFromContractCall(contract);
   } else {

@@ -21,7 +21,7 @@ export type ContractOptions<
  */
 export type ThirdwebContract<
   abi extends Abi = [],
-  address extends string = string,
+  address extends string = `0x${string}`,
 > = Readonly<ContractOptions<abi, address>>;
 
 /**

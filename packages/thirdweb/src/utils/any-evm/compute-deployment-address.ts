@@ -1,4 +1,5 @@
 import { type Hex, encodePacked } from "viem";
+import { getAddress } from "../address.js";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { keccak256 } from "../hashing/keccak256.js";
 import { getSaltHash } from "./get-salt-hash.js";
@@ -46,7 +47,7 @@ export function computeDeploymentAddress(
     ["bytes1", "address", "bytes32", "bytes32"],
     [
       "0xff",
-      options.create2FactoryAddress,
+      getAddress(options.create2FactoryAddress),
       saltHash,
       keccak256(encodePacked(["bytes"], [initBytecode])),
     ],

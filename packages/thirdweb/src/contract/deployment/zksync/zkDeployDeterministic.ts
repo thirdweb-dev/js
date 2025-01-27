@@ -50,11 +50,13 @@ export async function zkDeployContractDeterministic(
     create2FactoryAddress,
     salt: options.salt,
   });
-  const deployed = await isContractDeployed({
-    address: predictedAddress,
-    chain: options.chain,
-    client: options.client,
-  });
+  const deployed = await isContractDeployed(
+    getContract({
+      address: predictedAddress,
+      chain: options.chain,
+      client: options.client,
+    }),
+  );
   if (!deployed) {
     // check if bytecodehash is known
     const knownCodesStorageContract = getContract({

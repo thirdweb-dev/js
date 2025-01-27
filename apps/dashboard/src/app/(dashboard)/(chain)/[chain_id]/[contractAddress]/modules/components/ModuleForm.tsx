@@ -15,8 +15,9 @@ import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   type Chain,
-  type ContractOptions,
   type ThirdwebClient,
+  type ThirdwebContract,
+  getContract,
   sendTransaction,
   waitForReceipt,
 } from "thirdweb";
@@ -47,7 +48,7 @@ type FormData = {
 };
 
 type InstallModuleFormProps = {
-  contract: ContractOptions;
+  contract: ThirdwebContract;
   refetchModules: () => void;
   account: Account;
   installedModules: {
@@ -180,11 +181,13 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
       return Promise.all(
         moduleAddress.map(async (address) => {
-          const result = await resolveImplementation({
-            client,
-            address,
-            chain: contract.chain,
-          });
+          const result = await resolveImplementation(
+            getContract({
+              client,
+              address,
+              chain: contract.chain,
+            }),
+          );
 
           if (!result) {
             throw new Error("Failed to fetch bytecode for module");

@@ -1,7 +1,7 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
 import { download } from "../../storage/download.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import type { ThirdwebContract } from "../contract.js";
+import { type ThirdwebContract, getContract } from "../contract.js";
 
 const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
@@ -419,10 +419,10 @@ async function getAbisForPlugins(
 ): Promise<Abi[]> {
   return Promise.all(
     options.plugins.map((pluginAddress) => {
-      const newContract = {
+      const newContract = getContract({
         ...options.contract,
         address: pluginAddress,
-      };
+      });
       // if we have a method passed in that tells us how to resove the sub-api, use that
       if (options.resolveSubAbi) {
         return options.resolveSubAbi(newContract);

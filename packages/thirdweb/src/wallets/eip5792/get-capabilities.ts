@@ -1,3 +1,4 @@
+import { getAddress } from "../../utils/address.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
@@ -80,7 +81,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
   try {
     return await provider.request({
       method: "wallet_getCapabilities",
-      params: [account.address],
+      params: [getAddress(account.address)],
     });
   } catch (error: unknown) {
     if (/unsupport|not support|not available/i.test((error as Error).message)) {

@@ -1,4 +1,5 @@
 import type { BlockTag, EIP1193RequestFn, EIP1474Methods, Hex } from "viem";
+import { getAddress } from "../../utils/address.js";
 
 type GetStorageAtParams = {
   address: string;
@@ -28,6 +29,10 @@ export async function eth_getStorageAt(
 ): Promise<Hex> {
   return await request({
     method: "eth_getStorageAt",
-    params: [params.address, params.position, params.blockTag ?? "latest"],
+    params: [
+      getAddress(params.address),
+      params.position,
+      params.blockTag ?? "latest",
+    ],
   });
 }

@@ -2,6 +2,7 @@ import type { Address } from "abitype";
 import { encodeAbiParameters } from "viem";
 import { ZERO_ADDRESS } from "../../../../constants/addresses.js";
 import { getContract } from "../../../../contract/contract.js";
+import { getAddress } from "../../../../utils/address.js";
 import { isHex } from "../../../../utils/encoding/helpers/is-hex.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
 import { stringify } from "../../../../utils/json.js";
@@ -95,9 +96,9 @@ export async function prepareBiconomyTransaction({
       { type: "bytes32" },
     ],
     [
-      request.from,
-      request.to,
-      request.token,
+      getAddress(request.from),
+      getAddress(request.to),
+      getAddress(request.token),
       request.txGas,
       request.tokenGasPrice,
       request.batchId,

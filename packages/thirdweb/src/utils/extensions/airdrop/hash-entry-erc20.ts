@@ -1,4 +1,5 @@
 import { encodePacked } from "viem";
+import { getAddress } from "../../address.js";
 import { keccak256 } from "../../hashing/keccak256.js";
 import { toUnits } from "../../units.js";
 import type { SnapshotEntryERC20 } from "./types.js";
@@ -13,7 +14,7 @@ export async function hashEntryERC20(options: {
     encodePacked(
       ["address", "uint256"],
       [
-        options.entry.recipient,
+        getAddress(options.entry.recipient),
         convertQuantity({
           quantity: options.entry.amount.toString(),
           tokenDecimals: decimals,

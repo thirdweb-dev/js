@@ -25,7 +25,7 @@ import { CircleAlertIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
+import { ZERO_ADDRESS, getContract } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   deployContractfromDeployMetadata,
@@ -567,11 +567,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               const contractAddr = await deployMutation.mutateAsync(formData);
 
               // send verification request - no need to await
-              verifyContract({
-                address: contractAddr,
-                chain: walletChain,
-                client: thirdwebClient,
-              });
+              verifyContract(
+                getContract({
+                  address: contractAddr,
+                  chain: walletChain,
+                  client: thirdwebClient,
+                }),
+              );
 
               trackEvent({
                 category: "custom-contract",

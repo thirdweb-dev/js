@@ -4,6 +4,7 @@ import {
   toTokens,
   toUnits,
 } from "thirdweb";
+import { getContract } from "thirdweb/contract";
 import type { OverrideEntry } from "thirdweb/dist/types/utils/extensions/drops/types";
 import type { Prettify } from "thirdweb/dist/types/utils/type-utils";
 import { getContractMetadata } from "thirdweb/extensions/common";
@@ -71,7 +72,10 @@ export async function getClaimPhasesInLegacyFormat(
     conditions.map(async (condition) => {
       const [currencyMetadata, metadata, contractMetadata] = await Promise.all([
         await ERC20Ext.getCurrencyMetadata({
-          contract: { ...options.contract, address: condition.currency },
+          contract: getContract({
+            ...options.contract,
+            address: condition.currency,
+          }),
         }).then((m) => ({
           ...m,
           displayValue: toTokens(condition.pricePerToken, m.decimals),
