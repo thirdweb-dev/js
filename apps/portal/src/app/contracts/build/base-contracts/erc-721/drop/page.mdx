@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 	},
 	title: "ERC721Drop | thirdweb contracts",
 	description:
-		"The ERC721Drop base contract allows you to create an NFT Drop that other wallets can claim.",
+		"El contrato base ERC721Drop te permite crear un NFT Drop que otras billeteras pueden reclamar.",
 });
 
 # ERC721Drop
@@ -18,17 +18,19 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC721Drop.sol";
 ```
 
-The `ERC721Drop` base contract allows you to create an NFT Drop that other wallets can claim.
+# ERC721Drop
 
-It implements the [ERC721A standard](/contracts/build/extensions/erc-721/ERC721) with the [Lazy Mint](/contracts/build/extensions/general/LazyMint),
-[Delayed Reveal](/contracts/build/extensions/general/DelayedReveal) and [Drop](/contracts/build/extensions/general/DropSinglePhase) extensions;
-allowing you to batch lazy-mint NFTs and allow other wallets to claim them under the criteria of claim conditions, with an optional delayed reveal.
+El contrato base `ERC721Drop` te permite crear un NFT Drop que otras billeteras pueden reclamar.
+
+Implementa el estándar [ERC721A](/contracts/build/extensions/erc-721/ERC721) con las extensiones de [Lazy Mint](/contracts/build/extensions/general/LazyMint),
+[Delayed Reveal](/contracts/build/extensions/general/DelayedReveal) y [Drop](/contracts/build/extensions/general/DropSinglePhase);
+permitiéndote realizar un mint de NFTs de forma perezosa por lotes y permitir que otras billeteras los reclamen bajo los criterios de las condiciones de reclamo, con una revelación opcionalmente retrasada.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721Drop.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e implementa la herencia de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -57,11 +59,11 @@ contract MyNFT is ERC721Drop {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las funciones disponibles de estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre las funciones disponibles.
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
@@ -73,18 +75,18 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones a Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="tokenURI" summary="tokenURI">
 
 ```solidity
 /**
-*  @notice         Returns the metadata URI for an NFT.
-*  @dev            See `BatchMintMetadata` for handling of metadata in this contract.
+*  @notice         Devuelve la URI de metadatos para un NFT.
+*  @dev            Consulta `BatchMintMetadata` para el manejo de los metadatos en este contrato.
 *
-*  @param _tokenId The tokenId of an NFT.
+*  @param _tokenId El tokenId de un NFT.
 */
 function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
     (uint256 batchId, ) = _getBatchId(_tokenId);
@@ -105,13 +107,13 @@ function tokenURI(uint256 _tokenId) public view virtual override returns (string
 
 ```solidity
 /**
-*  @notice                  Lets an authorized address lazy mint a given amount of NFTs.
+*  @notice                  Permite que una dirección autorizada cree en minting perezoso una cantidad determinada de NFTs.
 *
-*  @param _amount           The number of NFTs to lazy mint.
-*  @param _baseURIForTokens The placeholder base URI for the 'n' number of NFTs being lazy minted, where the
-*                           metadata for each of those NFTs is `${baseURIForTokens}/${tokenId}`.
-*  @param _data             The encrypted base URI + provenance hash for the batch of NFTs being lazy minted.
-*  @return batchId          A unique integer identifier for the batch of NFTs lazy minted together.
+*  @param _amount           La cantidad de NFTs a crear mediante minting perezoso.
+*  @param _baseURIForTokens La URI base de marcador de posición para los 'n' NFTs que se están mintiendo perezosamente, donde los
+*                           metadatos de cada uno de esos NFTs son `${baseURIForTokens}/${tokenId}`.
+*  @param _data             La URI base cifrada + el hash de la procedencia para el lote de NFTs siendo creados mediante minting perezoso.
+*  @return batchId          Un identificador único entero para el lote de NFTs creados juntos.
 */
 function lazyMint(
     uint256 _amount,
@@ -135,10 +137,10 @@ function lazyMint(
 
 ```solidity
 /**
-*  @notice       Lets an authorized address reveal a batch of delayed reveal NFTs.
+*  @notice       Permite que una dirección autorizada revele un lote de NFTs con revelación retrasada.
 *
-*  @param _index The ID for the batch of delayed-reveal NFTs to reveal.
-*  @param _key   The key with which the base URI for the relevant batch of NFTs was encrypted.
+*  @param _index El ID del lote de NFTs con revelación retrasada para revelar.
+*  @param _key   La clave con la que la URI base para el lote relevante de NFTs fue cifrada.
 */
 function reveal(uint256 _index, bytes calldata _key) public virtual override returns (string memory revealedURI) {
     require(_canReveal(), "Not authorized");
@@ -159,10 +161,10 @@ function reveal(uint256 _index, bytes calldata _key) public virtual override ret
 
 ```solidity
 /**
-*  @notice         Lets an owner or approved operator burn the NFT of the given tokenId.
-*  @dev            ERC721A's `_burn(uint256,bool)` internally checks for token approvals.
+*  @notice         Permite que un propietario o un operador aprobado queme el NFT del tokenId dado.
+*  @dev            La función `_burn(uint256,bool)` de ERC721A verifica internamente las aprobaciones de tokens.
 *
-*  @param _tokenId The tokenId of the NFT to burn.
+*  @param _tokenId El tokenId del NFT a quemar.
 */
 function burn(uint256 _tokenId) external virtual {
     _burn(_tokenId, true);
@@ -173,7 +175,7 @@ function burn(uint256 _tokenId) external virtual {
 
 <Details id="beforeClaim" summary="beforeClaim">
 ```solidity
-/// @dev Runs before every `claim` function call.
+/// @dev Se ejecuta antes de cada llamada a la función `claim`.
 function _beforeClaim(
     address,
     uint256 _quantity,
@@ -192,7 +194,7 @@ function _beforeClaim(
 <Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
 
 ```solidity
-/// @dev Collects and distributes the primary sale value of NFTs being claimed.
+/// @dev Recoge y distribuye el valor de la venta principal de los NFTs que están siendo reclamados.
 function _collectPriceOnClaim(
     address _primarySaleRecipient,
     uint256 _quantityToClaim,
@@ -221,7 +223,7 @@ function _collectPriceOnClaim(
 <Details id="_transferTokensOnClaim" summary="_transferTokensOnClaim">
 
 ```solidity
-/// @dev Transfers the NFTs being claimed.
+/// @dev Transfiere los NFTs que están siendo reclamados.
 function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
     internal
     virtual

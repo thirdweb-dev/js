@@ -24,11 +24,11 @@ function Hero() {
       <div className="flex flex-col justify-center">
         <div>
           <h1 className="mb-3 font-bold text-4xl tracking-tighter lg:text-6xl">
-            thirdweb Documentation
+            Documentación de thirdweb
           </h1>
           <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
-            Frontend, Backend, and Onchain tools to build complete web3 apps —
-            on every EVM chain.
+            Herramientas para frontend, backend y onchain para crear apps web3
+            en cualquier red EVM.
           </p>
         </div>
       </div>
@@ -49,7 +49,7 @@ function FrontendSection() {
       <ArticleCardIndex
         href="/connect"
         title="Connect"
-        description="Wallets, auth, and onchain interactions"
+        description="Billeteras, autenticación e interacciones en la cadena"
       />
     </section>
   );
@@ -61,7 +61,7 @@ function ContractsSection() {
       <SectionTitle id="onchain" title="Onchain" />
       <ArticleCardIndex
         title="Contracts"
-        description="Solidity contracts and deployment tools"
+        description="Contratos Solidity y herramientas de despliegue"
         href="/contracts"
       />
     </section>
@@ -76,17 +76,17 @@ function BackendSection() {
         <ArticleCardIndex
           href="/engine"
           title="Engine"
-          description="Reliable transactions and monitoring"
+          description="Transacciones confiables y monitoreo"
         />
         <ArticleCardIndex
           href="/insight"
           title="Insight"
-          description="Blockchain data queries and transformations"
+          description="Consultas y transformaciones de datos en blockchain"
         />
         <ArticleCardIndex
           href="/nebula"
           title="Nebula"
-          description="API interface for LLMs"
+          description="Interfaz API para LLMs"
         />
       </div>
     </section>

@@ -1,33 +1,33 @@
 import { createMetadata } from "@doc";
 
-# FAQs
+# Preguntas Frecuentes
 
 export const metadata = createMetadata({
 	image: {
-		title: "FAQs about Account abstraction",
+		title: "Preguntas Frecuentes sobre la Abstracción de Cuentas",
 		icon: "wallets",
 	},
-	title: "FAQs | thirdweb",
+	title: "Preguntas Frecuentes | thirdweb",
 	description:
-		"Find answers to frequently asked questions about account abstraction and smart accounts.",
+		"Encuentra respuestas a preguntas frecuentes sobre la abstracción de cuentas y las cuentas inteligentes.",
 });
 
-### Can users have the same smart account contract address on all EVM chains?
+### ¿Pueden los usuarios tener la misma dirección de contrato de cuenta inteligente en todas las cadenas EVM?
 
-Yes, by using our Account factory contracts, it is possible to enable predictable addresses per user across all EVM chains. To do this, ensure that your **account factory** has the same address on every chain. You can accomplish this from the dashboard by enabling "Deterministic address" when deploying the account factory.
+Sí, al utilizar nuestros contratos de fábrica de cuentas, es posible habilitar direcciones predecibles por usuario en todas las cadenas EVM. Para hacer esto, asegúrate de que tu **fábrica de cuentas** tenga la misma dirección en cada cadena. Puedes lograr esto desde el panel de control habilitando "Dirección determinista" al desplegar la fábrica de cuentas.
 
-### Can I sign transactions with my smart account?
+### ¿Puedo firmar transacciones con mi cuenta inteligente?
 
-Smart contract wallets cannot sign transactions themselves, only the 'owners' of the smart account can. The way to achieve this is to follow [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271) which requires to ask the smart contract wallet if the recovered address is indeed an owner.
+Las billeteras de contratos inteligentes no pueden firmar transacciones por sí mismas, solo los 'propietarios' de la cuenta inteligente pueden hacerlo. La forma de lograr esto es siguiendo [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271) que requiere preguntar a la billetera de contrato inteligente si la dirección recuperada es efectivamente un propietario.
 
-### Can I use In-App Wallets with account abstraction?
+### ¿Puedo usar Billeteras In-App con la abstracción de cuentas?
 
-Yes! In-App Wallets with account abstraction is a powerful combination that allows users to sign in using their email, social media accounts, or custom JWT method (In-App Wallet), and provides a completely gasless user experience.
+¡Sí! Las Billeteras In-App con abstracción de cuentas son una combinación poderosa que permite a los usuarios iniciar sesión usando su correo electrónico, cuentas de redes sociales o un método JWT personalizado (Billetera In-App), y proporciona una experiencia de usuario completamente sin gas.
 
-### Are smart accounts custodial or non-custodial?
+### ¿Las cuentas inteligentes son custodiales o no custodiales?
 
-Smart accounts are non-custodial. It uses smart contracts to operate and manage assets via an admin wallet that signs on behalf of the smart account
+Las cuentas inteligentes son no custodiales. Utiliza contratos inteligentes para operar y gestionar activos a través de una billetera de administrador que firma en nombre de la cuenta inteligente.
 
-### Is setting a trusted forwarder necessary for account abstraction?
+### ¿Es necesario configurar un forwarder confiable para la abstracción de cuentas?
 
-No, There is no need to use a trusted forwarder when implementing account abstraction for your contract.
+No, no es necesario usar un forwarder confiable al implementar la abstracción de cuentas para tu contrato.

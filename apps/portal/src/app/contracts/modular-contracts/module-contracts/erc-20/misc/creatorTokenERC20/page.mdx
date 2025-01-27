@@ -12,26 +12,26 @@ export const metadata = createMetadata({
 
 # CreatorTokenERC20
 
-## Description
+## Descripción
 
-The `CreatorTokenERC20` contract is a module that builds upon the ERC-20 standard to offer additional functionality tailored for token creators. This module includes features such as transfer validation to ensure only approved transfers are processed, adding a layer of control and security for token transfers.
+El contrato `CreatorTokenERC20` es un módulo que se basa en el estándar ERC-20 para ofrecer funcionalidad adicional orientada a los creadores de tokens. Este módulo incluye características como la validación de transferencias para asegurar que solo las transferencias aprobadas sean procesadas, añadiendo una capa de control y seguridad a las transferencias de tokens.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/transferable/CreatorTokenERC20.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                | Description                                                                       |
-|-------------------------|-----------------------------------------------------------------------------------|
-| `beforeTransferERC20`   | Callback function for the `ERC20.transferFrom` and `ERC20.safeTransferFrom` functions. Executes actions before token transfers, including validation of the transfer by `transferValidator`. |
+| Función               | Descripción                                                                                       |
+|-----------------------|---------------------------------------------------------------------------------------------------|
+| `beforeTransferERC20` | Función de callback para las funciones `ERC20.transferFrom` y `ERC20.safeTransferFrom`. Ejecuta acciones antes de las transferencias de tokens, incluyendo la validación de la transferencia por parte del `transferValidator`. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                         | Description                                                                                  |
-|----------------------------------|----------------------------------------------------------------------------------------------|
-| `getTransferValidator`           | Returns the transfer validator contract address for this token contract.                     |
-| `getTransferValidationFunction`  | Returns the function selector and view status for the transfer validator's validation function.|
-| `setTransferValidator`           | Sets the address of the `transferValidator`. Requires admin role.                            |
+| Función                          | Descripción                                                                                           |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------|
+| `getTransferValidator`            | Retorna la dirección del contrato `transferValidator` para este contrato de tokens.                   |
+| `getTransferValidationFunction`   | Retorna el selector de la función y el estado de vista para la función de validación del `transferValidator`. |
+| `setTransferValidator`            | Establece la dirección del `transferValidator`. Requiere el rol de administrador.                     |
 
-## Required Interfaces
+## Interfaces Requeridas
 
-(No required interfaces for this contract)
+(No se requieren interfaces para este contrato)

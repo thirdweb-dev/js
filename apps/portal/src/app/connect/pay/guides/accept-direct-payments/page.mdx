@@ -11,52 +11,52 @@ export const metadata = createMetadata({
 		"Combine Pay and Engine to create a smooth point of sale experience on any chain",
 });
 
-# Accept Direct Payments with Pay & Engine
+# Aceptar Pagos Directos con Pay & Engine
 
-Learn how to accept fiat and crypto from your customers with Pay and trigger Engine actions, like minting NFTs or transferring tokens to user wallets.
+Aprende cómo aceptar pagos en fiat y criptomonedas de tus clientes utilizando Pay y cómo activar acciones de Engine, como acuñar NFTs o transferir tokens a las billeteras de los usuarios.
 
-### Requirements
+### Requisitos
 
-- [A thirdweb Client ID](https://portal.thirdweb.com/typescript/v5/client)
-- [An Engine Instance](https://thirdweb.com/team/~/~/engine)
+- [Un ID de Cliente de thirdweb](https://portal.thirdweb.com/typescript/v5/client)
+- [Una instancia de Engine](https://thirdweb.com/team/~/~/engine)
 
-### Purchase Flow Overview
+### Descripción General del Flujo de Compra
 
-Before jumping in, it's important to understand the full system, from initial purchase to the eventual transfer of assets. This is a four step process (with an optional fifth):
+Antes de comenzar, es importante entender el sistema completo, desde la compra inicial hasta la transferencia final de activos. Este proceso consta de cuatro pasos (con un quinto opcional):
 
 <DocImage src={DirectPaymentsFlow} />
 
-1. **User Initiates Purchase:** User sends specified funds (ETH, MATIC, USD, etc.) to your wallet via thirdweb Pay.
-   - Your wallet can be any business wallet you choose or your Engine backend wallet.
-   - Use the `purchaseData` field to pass any item data needed in the webhook.
-     E.g., `{ nftId: 1 }`.
-2. **Pay Processes Purchase:** thirdweb Pay processes the transaction and sends a [Purchase Complete webhook](/connect/pay/webhooks#purchase-complete) to your dapp’s server when the transaction is complete.
-3. **Your Server Calls Engine:** Your server processes the webhook and sends a contract call to the thirdweb Engine backend wallet to perform the item purchase.
-4. **Engine Executes the Transaction:** Engine backend wallet executes the transaction needed to deliver the token(s) to the user’s address.
-5. **(Optional) User Is Notified :** Your server confirms the completed Engine transaction and notifies the user.
+1. **El usuario inicia la compra:** El usuario envía los fondos especificados (ETH, MATIC, USD, etc.) a tu billetera a través de thirdweb Pay.
+   - Tu billetera puede ser cualquier billetera comercial que elijas o la billetera backend de Engine.
+   - Usa el campo `purchaseData` para pasar cualquier dato del artículo necesario en el webhook.
+     Por ejemplo: `{ nftId: 1 }`.
+2. **Pay procesa la compra:** thirdweb Pay procesa la transacción y envía un [webhook de Compra Completa](/connect/pay/webhooks#purchase-complete) al servidor de tu dapp cuando la transacción se completa.
+3. **Tu servidor llama a Engine:** Tu servidor procesa el webhook y envía una llamada al contrato al backend de thirdweb Engine para realizar la compra del artículo.
+4. **Engine ejecuta la transacción:** La billetera backend de Engine ejecuta la transacción necesaria para entregar el(los) token(s) a la dirección del usuario.
+5. **(Opcional) El usuario es notificado:** Tu servidor confirma la transacción completada en Engine y notifica al usuario.
 
-Now, let's get started.
+Ahora, comencemos.
 
 <Steps>
-	<Step title="Set Up thirdweb Engine">
+	<Step title="Configurar thirdweb Engine">
 
-    	1. If you haven't already, log in and [deploy an Engine
-    	instance](https://thirdweb.com/team/~/~/engine)
+1. Si aún no lo has hecho, inicia sesión y [despliega una instancia de Engine](https://thirdweb.com/team/~/~/engine).
 
-    	2. Create or import a backend wallet for Engine in [your Engine dashboard](https://thirdweb.com/team/~/~/engine).
+2. Crea o importa una billetera backend para Engine en [tu panel de Engine](https://thirdweb.com/team/~/~/engine).
 
-    	3. Send the required funds to the backend wallet
-    		* For example, if purchasing with Arb Nova USDC, then your backend wallet should hold this ERC20 token.
-    		* If your backend wallet holds an ERC20 token, ensure to add a native token balance as well to cover gas costs. For example, for a transaction on Arbitrum Nova, your backend wallet should hold both Arb Nova USDC (for payment) and Arb Nova ETH (for gas).
-    		* Your backend wallet should hold enough liquidity to handle any anticipated purchasing volume.
+3. Envía los fondos necesarios a la billetera backend:
+   - Por ejemplo, si la compra se realiza con Arb Nova USDC, tu billetera backend debe contener este token ERC20.
+   - Si tu billetera backend tiene un token ERC20, asegúrate de agregar un saldo de tokens nativos para cubrir los costos de gas. Por ejemplo, para una transacción en Arbitrum Nova, tu billetera backend debe contener tanto Arb Nova USDC (para el pago) como Arb Nova ETH (para el gas).
+   - Tu billetera backend debe contener suficiente liquidez para manejar cualquier volumen de compra anticipado.
 
-    	4. Make a plan to monitor and keep the float wallet topped up to avoid any issues with the service.
-    </Step>
-    <Step title="Integrate thirdweb Pay (Client)">
-    	1. [Integrate thirdweb Pay](https://portal.thirdweb.com/connect/pay/build-a-custom-experience) on the client side to enable fiat and crypto payments.
+4. Haz un plan para monitorear y mantener la billetera flotante con fondos suficientes para evitar problemas con el servicio.
+</Step>
 
+   <Step title="Integrar thirdweb Pay (Cliente)">
 
-    	2. Specify the required parameters for your Pay transaction.
+1. [Integra thirdweb Pay](https://portal.thirdweb.com/connect/pay/build-a-custom-experience) en el lado del cliente para habilitar pagos con fiat y criptomonedas.
+
+2. Especifica los parámetros requeridos para tu transacción con Pay.
 
     		```ts
     		const quote = await getBuyWithFiatQuote({
@@ -73,32 +73,33 @@ Now, let's get started.
     			});
     		```
 
-    		|Parameter|Type|Description|
-    		|----|--|--|
-    		|fromCurrencySymbol|`string`|The fiat currency symbol you'd like to accept (currently limited to USD and EUR) |
-    		|toChainId|`string`|[Chain ID](https://thirdweb.com/chainlist) for the destination token.|
-    		|toTokenAddress|`string`|Address of the destination token.|
-    		|toAmount|`string`|The price of the asset denominated in your desination token.|
-    		|fromAddress|`string`|The user's wallet address.|
-    		|toAddress|`string`|The wallet you'd like funds to be sent to. This can be your business wallet or an Engine backend wallet. |
-    		|purchaseData|`Object`|Any details you need to pass in order to track your transaction. If this is a secondary sale, you may want to include details like `{ nftId: 1, orderId: 1 }` |
+| Parámetro           | Tipo      | Descripción                                                                                                                                                 |
+|---------------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| fromCurrencySymbol  | `string`  | El símbolo de la moneda fiat que deseas aceptar (actualmente limitado a USD y EUR).                                                                          |
+| toChainId           | `string`  | [ID de la cadena](https://thirdweb.com/chainlist) para el token de destino.                                                                                  |
+| toTokenAddress      | `string`  | Dirección del token de destino.                                                                                                                             |
+| toAmount            | `string`  | El precio del activo denominado en tu token de destino.                                                                                                     |
+| fromAddress         | `string`  | La dirección de la billetera del usuario.                                                                                                                   |
+| toAddress           | `string`  | La billetera a la que deseas que se envíen los fondos. Esto puede ser tu billetera de negocios o una billetera de backend de Engine.                         |
+| purchaseData        | `Object`  | Cualquier detalle que necesites pasar para rastrear tu transacción. Si es una reventa, podrías incluir detalles como `{ nftId: 1, orderId: 1 }`.              |
 
 </Step>
-  <Step title="Integrate thirdweb Pay (Server)">
-		1. Log in & create a “Purchase Complete” webhook in your Team > Connect > Pay > Webhooks page.
-		2. The [Pay webhook POST response](/connect/pay/webhooks#purchase-complete) will include the BuyWithCryptoStatus or BuyWithFiatStatus in the body.
-			* This will also include the purchaseData you previously passed (metadata identifying the customer information, etc.).
-			* A request will be sent on every status change.
-		3. Listen for [completed purchase statuses](https://portal.thirdweb.com/connect/pay/build-a-custom-experience#Poll%20for%20Transaction%20Status). Note that if this is a two-step BuyWithFiat transaction (onramp, then swap), you should also listen for `CRYPTO_SWAP_COMPLETED`
-		4. When a purchase is completed, determine the purchaser, order and validate the amounts.
-			- The fromAddress in the status will show purchasing address
-			- The purchaseData will contain more information you previously for the purchase details
-			- Validate the information. For example, 100 USDC was sent to your wallet.
-		5. Send a contract call to Engine for the float wallet to purchase the item
-			- For example, send a transaction to the float wallet for `mintTo(fromAddress)`
-			- For secondary purchases, like a marketplace direct listing, you can use the appropriate Engine endpoint, passing the ultimate recipient of the NFT as the buyer
-		6. Confirm the purchase was successful.
-  </Step>
+<Step title="Integrar thirdweb Pay (Servidor)">
+	1. Inicia sesión y crea un webhook de "Compra completada" en tu página Equipo > Conectar > Pay > Webhooks.
+	2. La [respuesta POST del webhook de Pay](/connect/pay/webhooks#purchase-complete) incluirá el `BuyWithCryptoStatus` o `BuyWithFiatStatus` en el cuerpo.
+		* Esto también incluirá el `purchaseData` que enviaste previamente (metadatos que identifican la información del cliente, etc.).
+		* Se enviará una solicitud cada vez que el estado cambie.
+	3. Escucha los [estados de compra completados](https://portal.thirdweb.com/connect/pay/build-a-custom-experience#Poll%20for%20Transaction%20Status). Nota que si se trata de una transacción de dos pasos con `BuyWithFiat` (onramp, luego swap), también deberías escuchar el estado `CRYPTO_SWAP_COMPLETED`.
+	4. Cuando se complete una compra, identifica al comprador, el pedido y valida los montos.
+		- El `fromAddress` en el estado mostrará la dirección que realizó la compra.
+		- El `purchaseData` contendrá más información previamente pasada sobre los detalles de la compra.
+		- Valida la información. Por ejemplo, verifica que se enviaron 100 USDC a tu billetera.
+	5. Envía una llamada de contrato a Engine para que la billetera float realice la compra del artículo.
+		- Por ejemplo, envía una transacción a la billetera float para `mintTo(fromAddress)`.
+		- Para compras secundarias, como una lista directa en un marketplace, puedes usar el endpoint apropiado de Engine, pasando al comprador como el destinatario final del NFT.
+	6. Confirma que la compra se realizó con éxito.
+</Step>
+
 </Steps>
 
-Once you've completed all of these steps, you'll be ready to offer a great purchase UX for your users.
+Una vez que hayas completado todos estos pasos, estarás listo para ofrecer una experiencia de compra excepcional a tus usuarios.

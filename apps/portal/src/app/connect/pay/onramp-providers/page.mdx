@@ -2,24 +2,24 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Pay - Onramp Providers",
+		title: "thirdweb Pay - Proveedores de Onramp",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Pay - Onramp Providers | thirdweb",
+	title: "thirdweb Pay - Proveedores de Onramp | thirdweb",
 	description:
-		"Integrate onramp providers for any onchain transaction and set preferred providers",
+		"Integra proveedores de onramp para cualquier transacción onchain y configura proveedores preferidos",
 });
 
-# Onramp Providers
+# Proveedores de Onramp
 
-thirdweb Pay integrates with Stripe, Kado and Transak to power our onramp. By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
+thirdweb Pay se integra con Stripe, Kado y Transak para potenciar nuestro onramp. Por defecto, elegimos un proveedor recomendado según la ubicación del usuario, el estado KYC y la moneda.
 
-| Provider | Supported Countries                                                                                     |
-| -------- | ------------------------------------------------------------------------------------------------------- |
-| Transak  | https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5 |
-| Kado     | https://www.kado.money/supported-countries                                                              |
-| Stripe   | https://docs.stripe.com/crypto/onramp                                                                   |
+| Proveedor | Países Soportados                                                                                     |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| Transak   | https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5 |
+| Kado      | https://www.kado.money/supported-countries                                                            |
+| Stripe    | https://docs.stripe.com/crypto/onramp                                                                 |
 
-## Choosing a Preferred Provider
+## Elegir un Proveedor Preferido
 
-It is possible to specify a preferred onramp provider by setting the `preferredProvider` parameter in the ConnectButton, PayEmbed, or Headless Integration. Go to [customizations](../pay/customization/connectbutton#preferredProvider) for more detail, or checkout the [API Reference for preferredProvider](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithFiatQuoteParams).
+Es posible especificar un proveedor de onramp preferido configurando el parámetro `preferredProvider` en el ConnectButton, PayEmbed o Integración Headless. Visita [customizaciones](../pay/customization/connectbutton#preferredProvider) para más detalles, o consulta la [Referencia de API para preferredProvider](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithFiatQuoteParams).

@@ -29,130 +29,129 @@ export const metadata = createMetadata({
 
 # NFT Drop
 
-NFT Drop enables users to release a collection of unique NFTs using the ERC721A standard. NFT Drop uses a “drop” mechanism intended for large collections to distribute NFTs.
+NFT Drop permite a los usuarios liberar una colección de NFTs únicos utilizando el estándar ERC721A. NFT Drop utiliza un mecanismo de “drop” diseñado para colecciones grandes para distribuir NFTs.
 
 <Callout title="NFT Drop vs NFT Collection" variant="info">
-	NFT Drop differs from [NFT
-	Collection](/contracts/explore/pre-built-contracts/nft-collection) in that it
-	allows users to lazy-mint the NFT directly to their wallet. This eliminates
-	the need to mint the NFT to the creator's wallet and then transfer the asset
-	to another user’s wallet.
+	NFT Drop se diferencia de [NFT
+	Collection](/contracts/explore/pre-built-contracts/nft-collection) en que
+	permite a los usuarios acuñar los NFTs de forma perezosa directamente en su billetera. Esto elimina
+	la necesidad de acuñar el NFT en la billetera del creador y luego transferir el activo
+	a la billetera de otro usuario.
 </Callout>
 
-The NFT Drop contract can be deployed via the [dashboard](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-dashboard), [CLI](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-cli), or [SDKs](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-sdk).
+El contrato NFT Drop se puede desplegar a través del [panel](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-dashboard), [CLI](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-cli), o [SDKs](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-sdk).
 
-<Callout title="Drop Design" variant="info">
-	Learn more about why Drop contracts were built, how they were designed, and
-	their limitations by reading the [Drop Design
-	Document](/contracts/design-docs/drop)
+<Callout title="Diseño del Drop" variant="info">
+	Aprende más sobre por qué se construyeron los contratos Drop, cómo fueron diseñados y
+	sus limitaciones leyendo el [Documento de Diseño del Drop](/contracts/design-docs/drop)
 </Callout>
 
-## Use Cases
+## Casos de uso
 
-- Create restricted-access NFTs which can only be claimed by a specified allowlist of wallets
-- Create large collections of unique NFT profile pics with each NFT corresponding to unique metadata or traits
-- Create NFTs of artwork intended for distribution
+- Crear NFTs de acceso restringido que solo puedan ser reclamados por una lista de billeteras especificadas
+- Crear grandes colecciones de imágenes de perfil NFT únicas, donde cada NFT corresponda a metadatos o características únicas
+- Crear NFTs de obras de arte destinados para distribución
 
-## Deploy NFT Drop (Dashboard)
+## Desplegar NFT Drop (Panel)
 
-Learn how to deploy and manage an NFT Drop contract using dashboard.
+Aprende cómo desplegar y administrar un contrato NFT Drop utilizando el panel.
 
-### Deploy and configure contract
+### Desplegar y configurar el contrato
 
 <Steps>
 
-<Step title="Select Contract">
-	Navigate to Contracts > Explore > [NFT
+<Step title="Seleccionar Contrato">
+	Navega a Contratos > Explorar > [NFT
 	Drop](https://thirdweb.com/thirdweb.eth/DropERC721)
 </Step>
 
-<Step title="Deploy">
+<Step title="Desplegar">
 
-Select `Deploy now`
+Selecciona `Desplegar ahora`
 
-<DocImage src={deployNowImage} alt="Deploy a contract view from Explore" />
-
-</Step>
-
-<Step title="Set Metadata">
-
-A modal will appear to set Contract Metadata or settings to organize and distinguish between contracts. Set the following metadata:
-
-- **Name** - name of the contract.
-- **Symbol (optional)** - shortened name or symbol to denote a specific group of tokens. Similar to a stock ticker.
-- **Description (optional)** - description of contract to
-- **Image (optional)** - image or icon of contract
-
-<DocImage src={contractMetadataImage} alt="Contract metadata settings" />
+<DocImage src={deployNowImage} alt="Vista de desplegar un contrato desde Explorar" />
 
 </Step>
 
-<Step title="Fund distribution">
+<Step title="Configurar Metadatos">
 
-Set fund distribution recipients for Primary Sales and Secondary Sales by passing in the corresponding wallet addresses you want to receive the funds.
+Aparecerá un modal para configurar los Metadatos del Contrato o ajustes para organizar y distinguir entre contratos. Configura los siguientes metadatos:
 
-- **Primary Sales** - The initial recipient will receive any funds from sales made upon initially minting the NFT.
+- **Nombre** - nombre del contrato.
+- **Símbolo (opcional)** - nombre corto o símbolo para denotar un grupo específico de tokens. Similar a un ticker de acciones.
+- **Descripción (opcional)** - descripción del contrato.
+- **Imagen (opcional)** - imagen o ícono del contrato
 
-- **Royalties / Secondary Sales** - The recipient that will receive funds from any secondary sales or re-sales of the NFT.
+<DocImage src={contractMetadataImage} alt="Ajustes de metadatos del contrato" />
 
-  <DocImage src={fundsImage} alt="Fund distribution settings" />
+</Step>
 
-- **(Optional) Platform fees** - Recipient that will receive additional fees for all primary sales that happen on this contract. (This is useful if you are deploying this contract for a 3rd party and want to take fees for your service).
+<Step title="Distribución de fondos">
+
+Configura los destinatarios de los fondos para Ventas Primarias y Ventas Secundarias pasando las direcciones de billeteras correspondientes que deseas que reciban los fondos.
+
+- **Ventas Primarias** - El destinatario inicial recibirá los fondos de las ventas realizadas al acuñar inicialmente el NFT.
+
+- **Regalías / Ventas Secundarias** - El destinatario que recibirá los fondos de cualquier venta secundaria o reventa del NFT.
+
+  <DocImage src={fundsImage} alt="Ajustes de distribución de fondos" />
+
+- **(Opcional) Tarifas de Plataforma** - El destinatario que recibirá tarifas adicionales por todas las ventas primarias que ocurran en este contrato. (Esto es útil si estás desplegando este contrato para un tercero y deseas cobrar tarifas por tu servicio).
 
   <DocImage
   	src={advancedConfigurationImage}
-  	alt="Screenshot of advanced configuration"
+  	alt="Captura de pantalla de configuración avanzada"
   />
 
 </Step>
 
-<Step title="Choose network">
+<Step title="Elegir red">
 
-Choose a Network / Chain to Deploy to. [View list of available Networks.](https://thirdweb.com/chainlist)
+Elige una red / cadena para desplegar. [Ver lista de redes disponibles.](https://thirdweb.com/chainlist)
 
-<DocImage src={chooseNetworkImage} alt="Choose network screen" />
+<DocImage src={chooseNetworkImage} alt="Pantalla para elegir red" />
 
 </Step>
 
-<Step title="Sign transaction">
-	Select `Deploy` and sign the transaction prompted in the connected wallet to
-	finish deploying the contract.
+<Step title="Firmar transacción">
+	Selecciona `Desplegar` y firma la transacción solicitada en la billetera conectada para
+	finalizar el despliegue del contrato.
 </Step>
 
 </Steps>
 
-### Upload NFTs
+### Subir NFTs
 
-**Single Upload**
+**Subida Única**
 
-- Single upload is a preferred option for users uploading few NFTs at a time.
+- La subida única es una opción preferida para usuarios que suben pocos NFTs a la vez.
 
-**Batch Upload**
+**Subida en Lote**
 
-- Batch upload is a method that allows you to upload large amounts of NFTs in one click.
+- La subida en lote es un método que permite subir grandes cantidades de NFTs con un solo clic.
 
 <DocImage
 	src={uploadTypesImage}
-	alt="NFT settings page highlighting NFT Upload types"
+	alt="Página de ajustes de NFT resaltando tipos de subida de NFT"
 />
 
-### Enable Delayed Reveal
+### Habilitar Revelación Diferida
 
-Optionally, users may choose to hide their NFT image and metadata from users before minting.
+Opcionalmente, los usuarios pueden elegir ocultar su imagen y metadatos del NFT antes de acuñarlos.
 
-<DocImage src={delayedRevealImage} alt="Screenshot of delayed reveal page" />
+<DocImage src={delayedRevealImage} alt="Captura de pantalla de la página de revelación diferida" />
 
-## Deploy NFT Drop (CLI)
+## Desplegar NFT Drop (CLI)
 
-1. In the CLI run the following Deploy command:
+1. En el CLI ejecuta el siguiente comando de despliegue:
 
    ```bash
    npx thirdweb deploy -n --name nft-drop
    ```
 
-2. Follow the prompts to fill out your contract by following the Deploy NFT Drop (Dashboard) section.
+2. Sigue las indicaciones para completar tu contrato siguiendo la sección Desplegar NFT Drop (Panel).
 
-## Deploy NFT Drop (SDK)
+## Desplegar NFT Drop (SDK)
 
 <Tabs defaultValue="typescript">
 
@@ -196,6 +195,6 @@ const sdk = useSDK(
 
 </Tabs>
 
-## Interact with your contract
+## Interactuar con tu contrato
 
-For easy-to-use code snippets for your contract, view the Code Snippets on your contract's dashboard or visit the [SDK documentation](/contracts).
+Para obtener fragmentos de código fáciles de usar para tu contrato, consulta los Fragmentos de Código en el panel de tu contrato o visita la [documentación de SDK](/contracts).

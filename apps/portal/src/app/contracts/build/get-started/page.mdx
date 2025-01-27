@@ -2,21 +2,21 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: { title: "Get Started with thirdweb Solidity SDK", icon: "solidity" },
-	title: "Get Started with thirdweb Solidity SDK",
+	image: { title: "Comenzando con thirdweb Solidity SDK", icon: "solidity" },
+	title: "Comenzando con thirdweb Solidity SDK",
 	description:
-		"To get started with the Solidity SDK, run the following command to create a new project:",
+		"Para comenzar con el Solidity SDK, ejecuta el siguiente comando para crear un nuevo proyecto:",
 });
 
-# Getting Started
+# Primeros Pasos
 
-To get started with the Solidity SDK, run the following command to create a new project:
+Para comenzar con el Solidity SDK, ejecuta el siguiente comando para crear un nuevo proyecto:
 
 ```bash
 npx thirdweb create contract
 ```
 
-Or, install the `contracts` package into your existing Solidity project:
+O, instala el paquete `contracts` en tu proyecto Solidity existente:
 
 <Tabs defaultValue="forge">
 
@@ -37,20 +37,20 @@ npm i @thirdweb-dev/contracts
 </TabsContent>
 </Tabs>
 
-## Using the Solidity SDK
+## Usando el Solidity SDK
 
-The Solidity SDK can be used to build new smart contracts _end-to-end_, or to add functionality to your own, existing smart contract using [extensions](/contracts/build/extensions).
+El Solidity SDK se puede usar para crear nuevos contratos inteligentes _de principio a fin_, o para agregar funcionalidad a tu propio contrato inteligente existente utilizando [extensiones](/contracts/build/extensions).
 
-All functions in the [base contracts](/contracts/build/base-contracts) and [extensions](/contracts/build/extensions) can be modified by [overriding them](/contracts/build/get-started#inheritance-and-overriding-functions).
+Todas las funciones en los [contratos base](/contracts/build/base-contracts) y [extensiones](/contracts/build/extensions) pueden ser modificadas [sobrescribiéndolas](/contracts/build/get-started#herencia-y-sobrescritura-de-funciones).
 
-### Using Base Contracts
+### Usando Contratos Base
 
-The Solidity SDK includes [base contracts](/contracts/build/base-contracts) that are fully complete smart contracts that can be customized by overriding functions OR by adding extensions.
+El Solidity SDK incluye [contratos base](/contracts/build/base-contracts) que son contratos inteligentes completamente terminados que se pueden personalizar sobrescribiendo funciones O agregando extensiones.
 
-**1.** To start, import and inherit the base contract. You can find the list of all available base contracts [here](/contracts/build/base-contracts).
+**1.** Para comenzar, importa y hereda el contrato base. Puedes encontrar la lista de todos los contratos base disponibles [aquí](/contracts/build/base-contracts).
 
-**2.** Base contracts expect certain constructor arguments to function as intended. Implement a constructor for your smart contract and pass the
-appropriate values to a constructor for the base contract.
+**2.** Los contratos base esperan ciertos argumentos en el constructor para funcionar como se espera. Implementa un constructor para tu contrato inteligente y pasa los valores apropiados al constructor del contrato base.
+
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -69,15 +69,15 @@ contract MyNFT is ERC721Base {
 }
 ```
 
-**3.** Now you're all set up! 🎉 Your smart contract now has all the [extensions](/contracts/build/extensions) provided by the [base contract](/contracts/build/base-contracts) it inherits and is ready to be [deployed](/contracts/deploy/overview) to any EVM blockchain of your choice.
+**3.** ¡Ahora estás listo! 🎉 ¡Tu contrato inteligente ahora tiene todas las [extensiones](/contracts/build/extensions) proporcionadas por el [contrato base](/contracts/build/base-contracts) que hereda y está listo para ser [desplegado](/contracts/deploy/overview) en cualquier blockchain EVM de tu elección!
 
-### Using Extensions
+### Usando Extensiones
 
-Extensions are to be used via inheritance - your project's smart contract will inherit from them.
+Las extensiones se deben usar mediante herencia: el contrato inteligente de tu proyecto heredará de ellas.
 
-Additional [extensions](/contracts/build/extensions) can be added to existing smart contracts or to the [base contracts](/contracts/build/base-contracts) to add extra functionality and unlocking features in the SDKs and Dashboard.
+Se pueden agregar [extensiones](/contracts/build/extensions) adicionales a contratos inteligentes existentes o a los [contratos base](/contracts/build/base-contracts) para agregar funcionalidad adicional y desbloquear características en los SDK y el Panel de Control.
 
-**1.** To start, import and inherit the extension. You can find the list of all available extensions [here](/contracts/build/extensions).
+**1.** Para comenzar, importa y hereda la extensión. Puedes encontrar la lista de todas las extensiones disponibles [aquí](/contracts/build/extensions).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -97,14 +97,14 @@ contract MyNFT is ERC721Base, Permissions {
 }
 ```
 
-**Note:**
+**Notas:**
 
-- Some Extensions are **Abstract** and so require certain functions to be implemented\*.
-- Some Extensions are **Interfaces** and so require **all** the functions to be implemented\*.
+- Algunas extensiones son **abstractas** y por lo tanto requieren que se implementen ciertas funciones*.
+- Algunas extensiones son **interfaces** y por lo tanto requieren que se implementen **todas** las funciones*.
 
-\*implement = write the logic for the function with a matching function signature (matching name, parameters, visibility and return type)
+\*implementar = escribir la lógica para la función con una firma de función coincidente (nombre, parámetros, visibilidad y tipo de retorno coincidentes)
 
-**2.** Use the functions provided by the Extension to change the behavior of your smart contract.
+**2.** Usa las funciones proporcionadas por la extensión para cambiar el comportamiento de tu contrato inteligente.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -127,15 +127,15 @@ contract MyNFT is ERC721Base, Permissions {
     /**
      *  `_canMint` is a function available in `ERC721Base`.
      *
-     *  It is called every time a wallet tries to mint NFTs on this
-     *  contract, and lets you define the condition in which an
-     *  attempt to mint NFTs should be permitted, or rejected.
+     * Se llama cada vez que una billetera intenta acuñar NFTs en este
+     * contrato, y te permite definir la condición en la que un
+     * intento de acuñar NFTs debe ser permitido o rechazado.
      *
-     *  By default, `ERC721Base` only lets the contract's owner mint
-     *  NFTs. Here, we override that functionality.
+     * Por defecto, `ERC721Base` solo permite que el propietario del contrato acuñe
+     * NFTs. Aquí, sobrecargamos esa funcionalidad.
      *
-     *  We use the `Permissions` extension to specify that anyone holding
-     *  "MINTER_ROLE" should be able to mint NFTs.
+     * Usamos la extensión `Permissions` para especificar que cualquier persona que tenga
+     * el "MINTER_ROLE" debería poder acuñar NFTs.
      */
     function _canMint() internal view override returns (bool) {
         return hasRole(MINTER_ROLE, msg.sender);
@@ -143,20 +143,21 @@ contract MyNFT is ERC721Base, Permissions {
 }
 ```
 
-### Inheritance and Overriding Functions
+### Herencia y Sobrescritura de Funciones
 
-Inheritance allows you to extend your smart contract's properties to include the parent contract's attributes and properties.
-The inherited functions from this parent contract can be modified in the child contract via a process known as overriding.
+La herencia permite que tu contrato inteligente extienda las propiedades de tu contrato, incluyendo los atributos y propiedades del contrato padre.
+Las funciones heredadas de este contrato padre pueden ser modificadas en el contrato hijo mediante un proceso conocido como sobrescritura.
 
-Parent contract: Contract that the inheriting contract is inheriting from.
+Contrato padre: El contrato del que el contrato hijo hereda.
 
-Child contract: The inheriting contract.
+Contrato hijo: El contrato que hereda.
 
-To override a function, to add your own custom logic, simply use the keyword `override` when declaring the function, making sure that the function signature matches.
-To add the original logic from the parent contract, use the keyword `super`.
+Para sobrescribir una función y agregar tu propia lógica personalizada, simplemente usa la palabra clave `override` al declarar la función, asegurándote de que la firma de la función coincida.
+Para agregar la lógica original del contrato padre, usa la palabra clave `super`.
 
-For example, the [`ERC721Base`](/contracts/build/base-contracts/erc-721/base) contract has an implementation of the function `mintTo`, I could instead override this function to add custom logic
-and restrict this function in the `myNFT` contract to only allow 1 NFT per wallet:
+Por ejemplo, el contrato [`ERC721Base`](/contracts/build/base-contracts/erc-721/base) tiene una implementación de la función `mintTo`. Podría sobrescribir esta función para agregar lógica personalizada
+y restringir esta función en el contrato `myNFT` para permitir solo 1 NFT por billetera:
+
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -179,8 +180,4 @@ contract MyNFT is ERC721Base, Permissions {
         super.mintTo(_to, _tokenURI);
     }
 }
-```
-
-```
-
 ```

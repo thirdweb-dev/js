@@ -2,34 +2,34 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Airdrop ERC-20 (Claimable) Contract",
+		title: "Contrato Airdrop ERC-20 (Reclamable)",
 		icon: "contract",
 	},
-	title: "Airdrop ERC-20 (Claimable) Contract | thirdweb",
+	title: "Contrato Airdrop ERC-20 (Reclamable) | thirdweb",
 	description:
-		"The AirdropERC20Claimable contract is suitable to use when you want to airdrop ERC20 tokens to a list of recipient addresses, where these recipients are expected to individually claim their own airdrop",
+		"El contrato AirdropERC20Claimable es adecuado para usar cuando deseas hacer un airdrop de tokens ERC20 a una lista de direcciones de destinatarios, donde se espera que estos destinatarios reclamen individualmente su propio airdrop",
 });
 
-# Airdrop ERC-20 (Claimable)
+# Airdrop ERC-20 (Reclamable)
 
-The `AirdropERC20Claimable` contract is suitable to use when you want to airdrop ERC20 tokens to a list of recipient addresses, where these recipients are expected to individually claim their own airdrop.
+El contrato `AirdropERC20Claimable` es adecuado para usar cuando deseas hacer un airdrop de tokens ERC20 a una lista de direcciones de destinatarios, donde se espera que estos destinatarios reclamen individualmente su propio airdrop.
 
-When deploying this contract, you specify:
+Al desplegar este contrato, debes especificar:
 
-- The address of the ERC20 token being airdropped.
-- The total token amount to airdrop.
-- The address of the owner of tokens from whom tokens will be transferred out in the airdrop.
-- The UNIX timestamp after which the airdrop period will expire.
-- A maximum claimable amount per wallet (claiming the airdrop).
-- An optional merkle root allowlist for recipients permitted to claim the airdrop.
+- La dirección del token ERC20 que se está haciendo airdrop.
+- La cantidad total de tokens a distribuir.
+- La dirección del propietario de los tokens desde donde se transferirán los tokens en el airdrop.
+- La marca de tiempo UNIX después de la cual el período de airdrop expirará.
+- Una cantidad máxima reclamable por billetera (para reclamar el airdrop).
+- Un merkle root de lista permitida opcional para los destinatarios que tienen permiso para reclamar el airdrop.
 
-On claiming an airdrop, a recipient specifies:
+Al reclamar un airdrop, un destinatario especifica:
 
-- The address to transfer the claimed airdrop to.
-- The total quantity to claim.
-- The proof of inclusion in the merkle root allowlist, if it exists.
+- La dirección a la que se transferirá el airdrop reclamado.
+- La cantidad total a reclamar.
+- La prueba de inclusión en el merkle root de la lista permitida, si existe.
 
-## Extensions
+## Extensiones
 
-- [Ownable](/contracts/build/extensions/general/Ownable)
-- [Gasless](/contracts/build/extensions)
+- [Propietario](/contracts/build/extensions/general/Ownable)
+- [SinGas](/contracts/build/extensions)

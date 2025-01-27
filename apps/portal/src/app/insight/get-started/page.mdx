@@ -1,30 +1,30 @@
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Getting started with Insight | thirdweb Infrastructure",
+	title: "Comenzando con Insight | Infraestructura thirdweb",
 	description:
-		"Learn how to use thirdweb Insight to query blockchain events",
+		"Aprende cómo usar thirdweb Insight para consultar eventos de blockchain",
   image: {
     title: "Insight",
     icon: "insight",
   },
 });
 
-# Get Started
+# Empezar
 
-In this guide we will learn how to use the events blueprint in insight.
+En esta guía aprenderemos cómo usar el blueprint de eventos en Insight.
 
-## Pre-requisites
+## Requisitos previos
 
-- [Create a project](https://thirdweb.com/team) and navigate to the project settings to get a client ID
-- Use insight API with the base URL below.
-- To authenticate use your client ID in the `x-client-id` header or `clientId` query parameter
+- [Crea un proyecto](https://thirdweb.com/team) y navega a la configuración del proyecto para obtener un ID de cliente
+- Usa la API de Insight con la URL base a continuación.
+- Para autenticarte, usa tu ID de cliente en el encabezado `x-client-id` o en el parámetro de consulta `clientId`
 
 ```
 https://<chain-id>.insight.thirdweb.com
 ```
 
-## Basic Usage
+## Uso básico
 ```typescript
 const getUsdtTransfers = async () => {
  try {
@@ -41,7 +41,7 @@ const getUsdtTransfers = async () => {
 };
 ```
 
-Once you execute the query above you will receive a result similar to this:
+Una vez que ejecutes la consulta anterior, recibirás un resultado similar a este:
 
 ```json
 {

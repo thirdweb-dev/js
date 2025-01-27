@@ -1,46 +1,44 @@
-
 import { createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
     description:
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "Modular Contract proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
         title: "thirdweb Modular Contracts",
         icon: "solidity",
     },
 });
 
-# Transferable ERC-721
+# ERC-721 Transferible
 
-## Description
+## Descripción
 
-The `TransferableERC721` contract is a module that provides transfer control functionality for ERC-721 tokens. This contract allows enabling or disabling token transfers globally or for specific addresses, adding an extra layer of control over how tokens can be moved.
+El contrato `TransferableERC721` es un módulo que proporciona funcionalidad de control de transferencias para tokens ERC-721. Este contrato permite habilitar o deshabilitar las transferencias de tokens globalmente o para direcciones específicas, añadiendo una capa adicional de control sobre cómo se pueden mover los tokens.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/transferable/TransferableERC721.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function             | Description                                                                |
-|----------------------|----------------------------------------------------------------------------|
-| `beforeTransferERC721`| Callback function for `ERC721.transferFrom`/`safeTransferFrom`. Ensures that transfers are enabled before allowing them. |
+| Función             | Descripción                                                                |
+|---------------------|----------------------------------------------------------------------------|
+| `beforeTransferERC721`| Función de callback para `ERC721.transferFrom`/`safeTransferFrom`. Asegura que las transferencias estén habilitadas antes de permitirlas. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                | Description                                                                             |
-|-------------------------|-----------------------------------------------------------------------------------------|
-| `isTransferEnabled`     | Returns whether transfers are enabled globally for the token.                            |
-| `isTransferEnabledFor`  | Returns whether transfers are enabled for a specific address.                            |
-| `setTransferable`       | Sets the transferability status for the token globally. Requires manager role.          |
-| `setTransferableFor`    | Sets the transferability status for a specific address. Requires manager role.          |
+| Función                | Descripción                                                                             |
+|------------------------|-----------------------------------------------------------------------------------------|
+| `isTransferEnabled`     | Devuelve si las transferencias están habilitadas globalmente para el token.             |
+| `isTransferEnabledFor`  | Devuelve si las transferencias están habilitadas para una dirección específica.          |
+| `setTransferable`       | Establece el estado de transferibilidad para el token globalmente. Requiere el rol de administrador. |
+| `setTransferableFor`    | Establece el estado de transferibilidad para una dirección específica. Requiere el rol de administrador. |
 
-## Required Interfaces
+## Interfaces Requeridas
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Supported Interfaces
+## Interfaces No Compatibles
 
-(No supported interfaces for this contract)
-
+(No hay interfaces compatibles para este contrato)

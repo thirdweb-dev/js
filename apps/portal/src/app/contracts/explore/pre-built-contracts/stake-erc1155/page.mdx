@@ -2,30 +2,30 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Stake ERC1155 contract",
+		title: "Contrato Stake ERC1155",
 		icon: "contract",
 	},
-	title: "Stake ERC1155 contract | thirdweb",
-	description: `This contract allows users to stake their ERC-1155 NFTs and get ERC-20 tokens as staking rewards`,
+	title: "Contrato Stake ERC1155 | thirdweb",
+	description: `Este contrato permite a los usuarios hacer staking de sus NFTs ERC-1155 y obtener tokens ERC-20 como recompensas por el staking`,
 });
 
 # Stake ERC1155
 
-This contract allows users to stake their ERC-1155 NFTs and get ERC-20 tokens as staking rewards. Contract admin should set the NFT and Reward-token addresses during deployment. These can't be changed later.
+Este contrato permite a los usuarios hacer staking de sus NFTs ERC-1155 y obtener tokens ERC-20 como recompensas por el staking. El administrador del contrato debe establecer las direcciones de NFT y de token de recompensa durante el despliegue. Estas no se pueden cambiar más tarde.
 
-Staked NFTs are stored inside the contract and rewards are calculated for the amount of time these NFTs were staked. Admin should maintain adequate balance of reward tokens in the staking-contract. These rewards are then transferred to stakers upon claiming.
+Los NFTs apostados se almacenan dentro del contrato y las recompensas se calculan según el tiempo que estos NFTs estuvieron apostados. El administrador debe mantener un saldo adecuado de tokens de recompensa en el contrato de staking. Estas recompensas se transfieren a los stakers al momento de reclamar.
 
-Reward calculation at the time of claiming rewards:
+Cálculo de recompensas al momento de reclamar:
 
 `rewardsPerTokenStaked = (stakingDuration * rewardsPerUnitTime) / timeUnit`
 
-Note:
+Nota:
 
-- Users need to approve their NFTs to the staking contract address before they can stake them
-- Contract admin should maintain adequate balance of Reward Tokens in the staking contract -- use the deposit function for depositing reward tokens
-- Default time-unit and rewards will apply for all token-Ids unless specific values are set for a token
+- Los usuarios deben aprobar sus NFTs a la dirección del contrato de staking antes de poder apostarlos
+- El administrador del contrato debe mantener un saldo adecuado de Tokens de Recompensa en el contrato de staking -- usa la función de depósito para depositar los tokens de recompensa
+- El tiempo predeterminado y las recompensas se aplicarán para todos los token-Ids, a menos que se establezcan valores específicos para un token
 
-## Extensions
+## Extensiones
 
 - [Permissions](/contracts/build/extensions/general/Permissions)
 - [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)

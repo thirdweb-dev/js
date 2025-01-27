@@ -1,93 +1,83 @@
 import { createMetadata } from "@doc";
 
-# What is a Smart Account?
+# ¿Qué es una Cuenta Inteligente?
 
 export const metadata = createMetadata({
 	image: {
-		title: "How Smart Accounts Works",
+		title: "Cómo funcionan las Cuentas Inteligentes",
 		icon: "wallets",
 	},
-	title: "What is a Smart Account? | thirdweb",
+	title: "¿Qué es una Cuenta Inteligente? | thirdweb",
 	description:
-		"Smart Account is a wallet that is controlled by a smart contract following the ERC-4337 specification",
+		"Una Cuenta Inteligente es una billetera controlada por un contrato inteligente que sigue la especificación ERC-4337",
 });
 
-A Smart account is a smart contract wallet that follows the [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337).
+Una Cuenta Inteligente es una billetera de contrato inteligente que sigue la [especificación ERC-4337](https://eips.ethereum.org/EIPS/eip-4337).
 
-Ethereum has 2 types of accounts to transfer and receive tokens: EOAs (Externally Owned Accounts) and Contract Accounts. A smart account is a wallet managed by a contract account
-instead of an EOA. A smart account is a wallet type requiring **no private keys or seed phrases**.
-Smart accounts rely on code instead of private keys to secure and recover wallet information.
+Ethereum tiene 2 tipos de cuentas para transferir y recibir tokens: EOAs (Cuentas Externamente Controladas) y Cuentas de Contrato. Una Cuenta Inteligente es una billetera administrada por una cuenta de contrato en lugar de una EOA. Una Cuenta Inteligente es un tipo de billetera que **no requiere claves privadas ni frases semilla**. Las cuentas inteligentes dependen del código en lugar de claves privadas para asegurar y recuperar la información de la billetera.
 
-**A smart account is a type of Web3 wallet powered by smart contracts.**
+**Una Cuenta Inteligente es un tipo de billetera Web3 impulsada por contratos inteligentes.**
 
-This smart account is unlocked by a 'key' - a personal account. This key can be anything from a [MetaMask](/references/wallets/v2/MetaMaskWallet) wallet or even a [In-App Wallet](/connect/in-app-wallet/overview) and is used as a way to 'sign in' to the wallet.
+Esta cuenta inteligente se desbloquea con una 'clave' - una cuenta personal. Esta clave puede ser cualquier cosa, desde una billetera [MetaMask](/references/wallets/v2/MetaMaskWallet) o incluso una [Billetera Integrada](/connect/in-app-wallet/overview), y se utiliza como una forma de 'iniciar sesión' en la billetera.
 
-## Benefits of Smart Accounts
+## Beneficios de las Cuentas Inteligentes
 
-1. Optimized transaction efficiency & batch transactions
-   - Combine multiple transactions into a single atomic transaction
-2. Improved Security Features
-3. Social & Multi-Sig Recovery
-   - Recover a wallet without seed phrases/passwords
-   - Nominate a trusted person to recover your wallet in the case of an emergency
-4. Programmability
-   - Smart accounts can be programmed to do anything a smart contract can do
-   - Smart accounts can be upgraded to add new features
+1. Eficiencia de transacciones optimizada y transacciones en lotes
+   - Combina varias transacciones en una sola transacción atómica
+2. Mejora de Características de Seguridad
+3. Recuperación Social y Multi-Sig
+   - Recupera una billetera sin frases semilla/contraseñas
+   - Nombra una persona de confianza para recuperar tu billetera en caso de emergencia
+4. Programabilidad
+   - Las cuentas inteligentes se pueden programar para hacer cualquier cosa que pueda hacer un contrato inteligente
+   - Las cuentas inteligentes se pueden actualizar para agregar nuevas funcionalidades
 
-## Account Factories
+## Fábricas de Cuentas
 
-In order to issue smart accounts for users, an account factory contract must be used.
-This factory contract is responsible for deploying individual user contracts when required.
-The SDK provides a global factory ready to use, but you can also deploy your own factory.
+Para emitir cuentas inteligentes a los usuarios, se debe utilizar un contrato de fábrica de cuentas. Este contrato de fábrica es responsable de implementar contratos individuales para los usuarios cuando sea necesario. El SDK proporciona una fábrica global lista para usar, pero también puedes implementar tu propia fábrica.
 
-## Terminology
+## Terminología
 
-### Personal Wallet/Key
+### Billetera/Clave Personal
 
-This is the default admin on an account or the "key" to an account. It can be any wallet and is used to initialize the account.
-Only one wallet can only be the "key" to one account per factory contract.
+Esta es el administrador predeterminado en una cuenta o la "clave" de una cuenta. Puede ser cualquier billetera y se usa para inicializar la cuenta. Solo una billetera puede ser la "clave" de una cuenta por cada contrato de fábrica.
 
-This wallet is the primary way to access and interact with the account.
+Esta billetera es la principal forma de acceder e interactuar con la cuenta.
 
-### Account
+### Cuenta
 
-The account is the ERC-4337 compatible smart contract which holds all of the assets.
+La cuenta es el contrato inteligente compatible con ERC-4337 que contiene todos los activos.
 
-### UserOperations
+### Operaciones de Usuario (UserOperations)
 
-This is the data structure for the "pseudo-transaction" that the user wants to perform. The transaction is pseudo as Smart Accounts cannot initiate transactions on EVM chains as they are not supported natively. It contains the following fields:
+Esta es la estructura de datos para la "pseudo-transacción" que el usuario desea realizar. La transacción es pseudo porque las Cuentas Inteligentes no pueden iniciar transacciones en cadenas EVM ya que no son compatibles de forma nativa. Contiene los siguientes campos:
 
-- `sender`: The account making the operation.
-- `nonce`: Anti-replay parameter; also used as the salt for first-time account creation.
-- `initCode`: The initialization code needed to create the account (needed if and only if the account is not yet onchain).
-- `callData`: The data to pass to the `sender` during the operation.
-- `callGasLimit`: The amount of gas to allocate for the operation.
-- `verificationGasLimit`: The amount of gas to allocate for the verification step.
-- `preVerificationGas`: The amount of gas to pay to compensate the bundler for pre-verification execution and calldata.
-- `maxFeePerGas`: Maximum fee per gas (similar to [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) `max_fee_per_gas`).
-- `maxPriorityFeePerGas`: Maximum priority fee per gas (similar to [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)).
-- `paymasterAndData`: Address of the paymaster sponsoring the transaction, followed by extra data to send to the paymaster (empty for self-sponsored transaction).
-- `signature`: Data passed into the account along with the nonce during the verification step. Should depend on the `chainid` and `EntryPoint` address to prevent replay attacks.
+- `sender`: La cuenta que realiza la operación.
+- `nonce`: Parámetro anti-repetición; también se usa como la sal para la creación de cuentas por primera vez.
+- `initCode`: El código de inicialización necesario para crear la cuenta (necesario si y solo si la cuenta aún no está en la cadena).
+- `callData`: Los datos que se pasan al `sender` durante la operación.
+- `callGasLimit`: La cantidad de gas a asignar para la operación.
+- `verificationGasLimit`: La cantidad de gas a asignar para la etapa de verificación.
+- `preVerificationGas`: La cantidad de gas a pagar para compensar al agregador por la ejecución de pre-verificación y los datos de llamada.
+- `maxFeePerGas`: Tarifa máxima por gas (similar a [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) `max_fee_per_gas`).
+- `maxPriorityFeePerGas`: Tarifa máxima por prioridad por gas (similar a [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)).
+- `paymasterAndData`: Dirección del patrocinador de la transacción, seguida de los datos adicionales a enviar al patrocinador (vacío para transacciones auto-patrocinadas).
+- `signature`: Datos pasados a la cuenta junto con el nonce durante la etapa de verificación. Debe depender del `chainid` y la dirección del `EntryPoint` para evitar ataques de repetición.
 
-### EntryPoint
+### Punto de Entrada (EntryPoint)
 
-The EntryPoint is a singleton contract (a contract that has a predictable address that is the same on every chain).
-It has two methods that are used as entry points to execute bundles of UserOperations: `handleOps` and `handleAggregatedOps`.
+El Punto de Entrada es un contrato singleton (un contrato que tiene una dirección predecible que es la misma en cada cadena). Tiene dos métodos que se utilizan como puntos de entrada para ejecutar lotes de Operaciones de Usuario: `handleOps` y `handleAggregatedOps`.
 
-### Bundler (relayer)
+### Agrupador (Bundler)
 
-A bundler is a node that monitors the alternative mempool of `UserOperations` and bundles multiple `UserOps` together to forward to the EntryPoint contract as a single transaction.
-These `UserOps` can be sent from different accounts and are bundled and sent to the `EntryPoint` contract via a `handleOps` call.
+Un agrupador es un nodo que monitorea el mempool alternativo de `UserOperations` y agrupa varias `UserOps` para enviarlas al contrato EntryPoint como una única transacción. Estas `UserOps` pueden ser enviadas desde diferentes cuentas y son agrupadas y enviadas al contrato `EntryPoint` a través de una llamada a `handleOps`.
 
-The bundler is controlled by its own EOA which initially pays for the gas fees upfront and is then repaid by either the sender or a paymaster if the transaction is sponsored.
+El agrupador está controlado por su propia EOA que inicialmente paga las tarifas de gas por adelantado y luego es reembolsado por el remitente o un patrocinador si la transacción es patrocinada.
 
-The entry point contract then uses the `validateOp` and `executeOp` functions on the smart account contract to verify and execute the `UserOps` on behalf of the users.
+El contrato de punto de entrada luego usa las funciones `validateOp` y `executeOp` en el contrato de cuenta inteligente para verificar y ejecutar las `UserOps` en nombre de los usuarios.
 
-It allows you to send transactions with smart accounts.
+Esto permite enviar transacciones con cuentas inteligentes.
 
-### Paymaster
+### Patrocinador (Paymaster)
 
-A paymaster is a smart contract that relays transactions. It provides a service that enables a third party to pay
-the transaction fee on behalf of the user by funding the Paymaster contract in advance. The paymaster acts as a gas reserve which then
-can be used during the call execution via the `EntryPoint` contract. The thirdweb [Account abstraction](/connect/account-abstraction) paymaster is initially paid for by thirdweb. By using an API key,
-the usage is tracked and billed. You can easily define [sponsorship rules](/connect/account-abstraction/sponsorship-rules) that determine whether a transaction will be sponsored.
+Un patrocinador es un contrato inteligente que retransmite transacciones. Proporciona un servicio que permite a un tercero pagar la tarifa de la transacción en nombre del usuario financiando el contrato del Patrocinador por adelantado. El patrocinador actúa como una reserva de gas que luego puede ser utilizada durante la ejecución de la llamada a través del contrato `EntryPoint`. El patrocinador de [abstracción de cuentas](/connect/account-abstraction) de thirdweb inicialmente es pagado por thirdweb. Utilizando una clave API, se rastrea y factura el uso. Puedes definir fácilmente [reglas de patrocinio](/connect/account-abstraction/sponsorship-rules) que determinen si una transacción será patrocinada.

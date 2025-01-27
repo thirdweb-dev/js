@@ -5,89 +5,84 @@ import openEditionStep2 from './assets/oe_step2.png'
 import openEditionStep3 from './assets/oe_step3.png'
 import openEditionStep4 from './assets/oe_step4.png'
 
+# Desplegar un contrato modular de Open Edition
 
+El contrato de Open Edition crea NFTs con metadatos compartidos y con IDs de token únicos añadidos al nombre de los NFTs. A diferencia de los contratos estándar de NFT, Open Edition tiene una oferta ilimitada y los usuarios pueden acuñarlos continuamente, aumentando la accesibilidad a una audiencia más amplia. El contrato de Open Edition se basa en el contrato ERC-721A.
 
+<ContractDeployCard contractName="Open Edition Modular" href="https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik9wZW5FZGl0aW9uTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+Open+Edition" />
 
-# Deploy a modular Open Edition contract
+### Configuraciones de Reclamación
 
-The Open Edition contract creates NFTs with shared metadata with unique token IDs appended to the NFTs name. Contrary to standard NFT contracts, Open Edition has an unlimited supply and users may continuously mint them increasing accessibility to a broader audience. The Open Edition contract is based on the ERC-721A contract. 
+Este contrato no requiere límites para la oferta total de NFTs. Se pueden aplicar configuraciones relacionadas con las fases de reclamación, como el precio por NFT, listas de permitidos, horarios de inicio y fin para las fases, y NFTs por billetera.
 
-<ContractDeployCard contractName="Modular Open Edition" href="https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik9wZW5FZGl0aW9uTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+Open+Edition" />
+### Casos de uso y ejemplos
 
-### Claim Settings
+- Drops con tiempo limitado para permitir compras ilimitadas de NFTs dentro de un cierto período de tiempo
+- NFTs de arte generativo con cada NFT mostrando una obra única diferente a la anterior
+- Drops específicos para eventos para coleccionar como conmemoraciones, promociones especiales y más
 
-This contract does not require limits to the total supply of NFTs. Any settings related to claim phases may still be applied such as price per NFT, allowlists, start and end times to the phases, and NFTs per wallet. 
+### Módulos instalados por defecto
 
-### Use Cases & Examples
-
-- Timed Drops to allow unlimited purchases of NFTs within a certain window of time
-- Generative art NFTs with each NFT portraying unique artwork different from previous
-- Event specific drops to collect as commemorations, special promotions, and more
-
-### Default Installed Modules
-
-- Claimable
+- Reclamable
 - OpenEditionMetadata
-- Royalty
+- Regalías
 
-### Deploy modular Open Edition contract
+### Desplegar un contrato modular de Open Edition
 
-Learn how to deploy a modular Open Edition contract through the dashboard. 
+Aprende cómo desplegar un contrato modular de Open Edition a través del panel.
 
 <Steps>
 
+<Step title="Localizar el contrato">
 
-<Step title="Locate Contract">
+Dirígete a Explorar, localiza el [contrato modular de Open Edition](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik9wZW5FZGl0aW9uTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+Open+Edition), y selecciona el botón Desplegar ahora.
 
-Navigate to Explore, locate the [Modular Open Edition contract](https://thirdweb.com/thirdweb.eth/ERC721CoreInitializable?module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IkNsYWltYWJsZUVSQzcyMSJ9&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6Ik9wZW5FZGl0aW9uTWV0YWRhdGFFUkM3MjEifQ%3D%3D&module=eyJwdWJsaXNoZXIiOiJkZXBsb3llci50aGlyZHdlYi5ldGgiLCJtb2R1bGVJZCI6IlJveWFsdHlFUkM3MjEifQ%3D%3D&displayName=Modular+Open+Edition), and select the Deploy Now button.
-
-<DocImage src={openEditionStep1} alt="Screenshot of Open Edition Deployment screen" />
-
-</Step>
-
-<Step title="Configure Contract Metadata">
-Fill in the Contract Metadata including Name, Symbol, Description, and Image. 
-
-Contract Metadata serves as your unique identifier.
-
-<DocImage src={openEditionStep2} alt="Screenshot of Open Edition configure metadata" />
+<DocImage src={openEditionStep1} alt="Captura de pantalla de la pantalla de despliegue de Open Edition" />
 
 </Step>
 
+<Step title="Configurar los metadatos del contrato">
+Rellena los metadatos del contrato, incluyendo Nombre, Símbolo, Descripción e Imagen.
 
-<Step title="Configure Royalties">
+Los metadatos del contrato sirven como tu identificador único.
 
-Determine a percentage of the revenue from royalties and pass to the percentage field, if desired. 
-    
-The Transfer Validator Address is an address that must enforce royalties in compliance with ERC-721C. [Learn more about the ERC-721C standard.](https://blog.thirdweb.com/guides/deploy-erc721a-nft-collection-royalties-thirdweb-guide-2/)
-
-<DocImage src={openEditionStep3} alt="Screenshot of Open Edition configure royalties" />
+<DocImage src={openEditionStep2} alt="Captura de pantalla de la configuración de los metadatos de Open Edition" />
 
 </Step>
 
-<Step title="Select Chain">
-Select the preferred chain you want to deploy on and select Deploy Now.
+<Step title="Configurar las Regalías">
 
-<DocImage src={openEditionStep4} alt="Screenshot of Token Drop select chain screen" />
+Determina un porcentaje de los ingresos por regalías y pásalo al campo de porcentaje, si lo deseas.
 
-<Callout variant="info" title="Any EVM Compatible">
-	The Open Edition contract is deployable on any EVM compatible network. [View all available networks.](https://thirdweb.com/chainlist) 
+La Dirección del Validador de Transferencias es una dirección que debe hacer cumplir las regalías en cumplimiento con el ERC-721C. [Aprende más sobre el estándar ERC-721C.](https://blog.thirdweb.com/guides/deploy-erc721a-nft-collection-royalties-thirdweb-guide-2/)
+
+<DocImage src={openEditionStep3} alt="Captura de pantalla de la configuración de regalías de Open Edition" />
+
+</Step>
+
+<Step title="Seleccionar la cadena">
+Selecciona la cadena preferida en la que deseas desplegar y selecciona Desplegar ahora.
+
+<DocImage src={openEditionStep4} alt="Captura de pantalla de la selección de la cadena para el contrato de Open Edition" />
+
+<Callout variant="info" title="Cualquier red compatible con EVM">
+	El contrato de Open Edition es desplegable en cualquier red compatible con EVM. [Ver todas las redes disponibles.](https://thirdweb.com/chainlist) 
 </Callout>
-If you are signed in with an EOA wallet, you will be prompted to sign the transaction. After that your contract is deployed and you can begin configuring the modules. 
+Si has iniciado sesión con una cartera EOA, se te pedirá que firmes la transacción. Después de eso, tu contrato será desplegado y podrás comenzar a configurar los módulos.
 </Step>
 
 </Steps>
 
-### Modular Contract
+### Contrato Modular
 
-This contract is created using the modular contract framework. Modules on this contract are upgradeable. [Learn more about Modular Contracts.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
+Este contrato se crea usando el marco de contratos modulares. Los módulos de este contrato son actualizables. [Aprende más sobre Contratos Modulares.](https://portal.thirdweb.com/contracts/modular-contracts/overview)
 
-### Configure Modules
+### Configurar Módulos
 
-To configure the modules, navigate to the Modules view:
+Para configurar los módulos, dirígete a la vista de Módulos:
 
-(Coming soon)
+(Próximamente)
 
-<Callout variant='info' title="Install Modules">
-	To install additional modules on this contract, navigate to the Modules view after deploying your contract. 
+<Callout variant='info' title="Instalar Módulos">
+	Para instalar módulos adicionales en este contrato, dirígete a la vista de Módulos después de desplegar tu contrato. 
 </Callout>

@@ -2,42 +2,42 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Account Factory Contract",
+		title: "Contrato Account Factory",
 		icon: "contract",
 	},
-	title: "Account Factory Contract | thirdweb",
+	title: "Contrato Account Factory | thirdweb",
 	description:
-		"Account Factory contract is used to deploy immutable ERC-4337 smart accounts with role based permission control",
+		"El contrato Account Factory se usa para desplegar cuentas inteligentes inmutables ERC-4337 con control de permisos basado en roles.",
 });
 
 # Account Factory
 
-The **Account Factory** contract is used to deploy immutable [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) smart accounts with role based permission control.
-The `Account` contract is a simple smart account contract that comes with all the basic benefits of account abstraction, along with the mentioned default features. App developers can issue `Account` smart accounts programmatically by deploying an `AccountFactory` smart contract.
-The `Account` smart contract is non-upgradeable. Developers should use this wallet if they do not anticipate making any future upgrades to their users' wallets.
+El contrato **Account Factory** se usa para desplegar cuentas inteligentes inmutables [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) con control de permisos basado en roles.
+El contrato `Account` es un contrato de cuenta inteligente simple que viene con todos los beneficios básicos de la abstracción de cuentas, junto con las características predeterminadas mencionadas. Los desarrolladores de aplicaciones pueden emitir cuentas inteligentes `Account` programáticamente desplegando un contrato inteligente `AccountFactory`.
+El contrato inteligente `Account` no es actualizable. Los desarrolladores deben usar esta billetera si no anticipan realizar futuras actualizaciones en las billeteras de sus usuarios.
 
-thirdweb’s smart accounts have the following features by default:
+Las cuentas inteligentes de thirdweb tienen las siguientes características por defecto:
 
-- Have multiple signers with different permissions
-- Execute transactions (single and batched).
-- Send and receive native tokens.
-- Send and receive ERC-721 and ERC-1155 NFTs.
-- Multicall-able.
-- Store contract metadata.
+- Tener múltiples firmantes con permisos diferentes
+- Ejecutar transacciones (simples y por lotes).
+- Enviar y recibir tokens nativos.
+- Enviar y recibir NFTs ERC-721 y ERC-1155.
+- Multillamadas.
+- Almacenar metadatos del contrato.
 
-## Extensions
+## Extensiones
 
-This contract includes the following extensions:
+Este contrato incluye las siguientes extensiones:
 
 - [Permissions](/contracts/build/extensions/general/Permissions)
 - [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [AccountFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory)
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-Use the `AccountFactory` contract alongside the [Connect SDK](/connect/account-abstraction) to easily use account abstraction in your projects:
+Usa el contrato `AccountFactory` junto con el [SDK de Connect](/connect/account-abstraction) para usar fácilmente la abstracción de cuentas en tus proyectos:
 
-- [React Guide](/connect/account-abstraction/guides/react)
-- [Typescript Guide](/connect/account-abstraction/guides/typescript)
-- [Unity Guide](/unity/wallets/providers/account-abstraction)
+- [Guía de React](/connect/account-abstraction/guides/react)
+- [Guía de Typescript](/connect/account-abstraction/guides/typescript)
+- [Guía de Unity](/unity/wallets/providers/account-abstraction)

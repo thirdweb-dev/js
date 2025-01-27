@@ -12,30 +12,30 @@ export const metadata = createMetadata({
 
 # SequentialTokenIdERC1155
 
-## Description
+## Descripción
 
-The `SequentialTokenIdERC1155` contract is a module that provides sequential token ID generation for ERC-1155 tokens. This module ensures that each new token minted receives a unique, incrementing ID, preventing ID collisions and simplifying the token minting process.
+El contrato `SequentialTokenIdERC1155` es un módulo que proporciona generación secuencial de IDs para tokens ERC-1155. Este módulo asegura que cada nuevo token acuñado reciba un ID único y en incremento, evitando colisiones de IDs y simplificando el proceso de acuñación de tokens.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/tokenId/SequentialTokenIdERC1155.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                | Description                                                                       |
+| Función                | Descripción                                                                       |
 |-------------------------|-----------------------------------------------------------------------------------|
-| `updateTokenIdERC1155`  | Callback function to update the token ID for ERC-1155 tokens. Generates a sequential token ID if the provided ID is max value and returns the next token ID. |
+| `updateTokenIdERC1155`  | Función de callback para actualizar el ID del token para los tokens ERC-1155. Genera un ID secuencial si el ID proporcionado es el valor máximo y devuelve el siguiente ID. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                | Description                                                                |
+| Función                | Descripción                                                                |
 |-------------------------|----------------------------------------------------------------------------|
-| `getNextTokenId`        | Returns the next token ID to be used for minting.                           |
+| `getNextTokenId`        | Devuelve el siguiente ID de token a ser usado para acuñar.                |
 
-## Required Interfaces
+## Interfaces Requeridas
 
-| Interface  | ID          |
-|------------|-------------|
+| Interfaz  | ID          |
+|-----------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Interfaces No Compatibles
 
-(No supported interfaces for this contract)
+(No hay interfaces no compatibles para este contrato)

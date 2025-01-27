@@ -2,33 +2,33 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Stake ERC-20 Contract",
+		title: "Contrato de Staking ERC-20",
 		icon: "contract",
 	},
-	title: "Stake ERC-20 Contract | thirdweb",
+	title: "Contrato de Staking ERC-20 | thirdweb",
 	description:
-		"This contract allows users to stake their ERC-20 tokens and get ERC-20 tokens as staking rewards (different from the staked tokens)",
+		"Este contrato permite a los usuarios hacer staking de sus tokens ERC-20 y recibir tokens ERC-20 como recompensas por el staking (diferentes de los tokens apostados)",
 });
 
 # Stake ERC-20
 
-This contract allows users to stake their ERC-20 tokens and get ERC-20 tokens as staking rewards (different from the staked tokens). Contract admin should set the Staking and Reward token addresses during deployment. These can't be changed later.
+Este contrato permite a los usuarios hacer staking de sus tokens ERC-20 y recibir tokens ERC-20 como recompensas por el staking (diferentes de los tokens apostados). El administrador del contrato debe establecer las direcciones de los tokens de Staking y Recompensa durante el despliegue. Estas no se pueden cambiar posteriormente.
 
-Staked tokens are stored inside the contract and rewards are calculated for the amount of time these tokens were staked. Admin should maintain adequate balance of reward tokens in the staking-contract. These rewards are then transferred to stakers upon claiming.
+Los tokens apostados se almacenan dentro del contrato y las recompensas se calculan según la cantidad de tiempo que estos tokens hayan estado apostados. El administrador debe mantener un saldo adecuado de tokens de recompensa en el contrato de staking. Estas recompensas se transfieren a los stakers cuando las reclaman.
 
-Reward calculation at the time of claiming rewards:
+Cálculo de recompensas al momento de reclamar:
 
 `rewardsPerTokenStaked = ((stakingDuration * rewardRatioNumerator) / rewardRatioDenominator) / timeUnit`
-For e.g., if reward ratio is 1/20, this implies that there will be 1 Reward token given out for every 20 tokens staked. The numerator and denominator of the reward ratio should be set separately (1 and 20 in this case respectively).
+Por ejemplo, si la relación de recompensa es 1/20, esto implica que se otorgará 1 token de recompensa por cada 20 tokens apostados. El numerador y el denominador de la relación de recompensa deben establecerse por separado (1 y 20 en este caso respectivamente).
 
-Note:
+Nota:
 
-- Users need to approve their tokens to the staking contract address before they can stake them
-- Contract admin should maintain adequate balance of Reward Tokens in the staking contract -- use the deposit function for depositing reward tokens
+- Los usuarios deben aprobar sus tokens a la dirección del contrato de staking antes de poder apostarlos
+- El administrador del contrato debe mantener un saldo adecuado de tokens de recompensa en el contrato de staking -- usa la función de depósito para depositar tokens de recompensa
 
-## Extensions
+## Extensiones
 
-- [Permissions](/contracts/build/extensions/general/Permissions)
-- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
-- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
-- [Gasless](/contracts/build/extensions)
+- [Permisos](/contracts/build/extensions/general/Permissions)
+- [PermisosEnumerables](/contracts/build/extensions/general/PermissionsEnumerable)
+- [MetadatosDelContrato](/contracts/build/extensions/general/ContractMetadata)
+- [SinGas](/contracts/build/extensions)

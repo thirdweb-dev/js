@@ -13,92 +13,91 @@ export const metadata = createMetadata({
 		"Learn how thirdweb protects your user's private keys across applications using nitro Enclaves",
 });
 
-# thirdweb Wallet Security
+# Seguridad de la Billetera thirdweb
 
-If you are looking for the previous security documentation around the shamir secret sharing model, please refer to the [In-App Wallet Security](/connect/wallet/security/legacy) page.
+Si está buscando la documentación de seguridad anterior sobre el modelo de intercambio secreto shamir, consulte la página [In-App Wallet Security](/connect/wallet/security/legacy).
 
-## Wallet Creation
+## Creación del billetera (Wallet)
 
-When a user signs into an application using their email or social logins for the first time, a wallet is generated within a secure enclave on the server after verifying the user's legitimacy. The enclave provides a trusted execution environment, ensuring the wallet creation process is isolated and protected from external interference.
+Cuando un usuario inicia sesión en una aplicación utilizando su correo electrónico o redes sociales por primera vez, se genera una billetera dentro de un enclave seguro en el servidor después de verificar la legitimidad del usuario. El enclave proporciona un entorno de ejecución confiable, asegurándose de que el proceso de creación de la billetera esté aislado y protegido de interferencias externas.
 
-- The wallet and its corresponding private key are generated entirely within the enclave, never leaving its secure confines.
-- User authentication data is verified within the enclave, ensuring that only legitimate, authenticated users can initiate wallet creation.
+- La billetera y su correspondiente clave privada se generan enteramente dentro del enclave, nunca dejando sus confines seguros.
+- Los datos de autenticación de usuario se verifican dentro del enclave, asegurando que solo los usuarios legítimos y autenticados pueden iniciar la creación de la billetera.
 
 <DocImage src={EnclaveWalletCreation} className="max-w-96" />
 
+## Medidas de seguridad
 
-## Security Measures
+- Las propiedades criptográficas del enclave aseguran que ni siquiera los operadores del servidor puedan acceder a los contenidos ni a las operaciones dentro del enclave.
+- El enclave proporciona un hash verificable de la imagen del código que se ejecuta en el dispositivo, permitiendo que cualquiera verifique el contenido del código.
+- La clave privada de la billetera nunca existe en una forma sin encriptar fuera del enclave.
+- Todas las operaciones sensibles, como la firma de transacciones, se producen dentro del enclave, garantizando la seguridad de la billetera.
 
-- The enclave's cryptographic properties ensure that even the server operators cannot access the contents or operations within the enclave.
-- The enclave provides a verifiable hash of the image of the code that is being run on the device, allowing anyone to verify the contents of the code.
-- The wallet's private key never exists in an unencrypted form outside of the enclave.
-- All sensitive operations, such as transaction signing, occur within the enclave, ensuring the wallet's security.
+## Uso de la billetera
 
-## Wallet Usage
+### Uso General
 
-### General Usage
+- Cuando los usuarios interactúan con su billetera a través del enclave, todas las comunicaciones se encripta y sólo el usuario legítimo puede acceder a su cartera.
+- Todo el tráfico se encripta con TLS y HSTS. Los servicios se ejecutan en VPCs privadas sobre AWS y sólo se pueden acceder desde un único punto de entrada a través de nuestro DNS Cloudflare.
+- Las aplicaciones pueden [link multiple authentication methods](/connect/in-app-wallet/guides/link-multiple-profiles) a la misma billetera. Cualquiera de estos métodos puede ser utilizado para autenticarse en la billetera de usuarios.
 
-- When users interact with their wallet via the the enclave, all communications are encrypted and only the legitimate user can access their wallet.
-- All traffic is encrypted with TLS and HSTS. Services are run in private VPCs on AWS and accessible only from a single entry point via our Cloudflare DNS.
-- Applications can [link multiple authentication methods](/connect/in-app-wallet/guides/link-multiple-profiles) to the same wallet. Any of these methods can be used to authenticate into the users wallet.
+### Uso Ecosistema
 
-### Ecosystem Usage
+Las billeteras de ecosistema están controladas por el propietario del ecosistema. Los propietarios del ecosistema pueden especificar políticas de uso para sus socios y desarrolladores que restringen lo que pueden hacer con la billetera. A diferencia del modelo de compartición secreta shamir, el modelo de billetera enclave asegura que la clave privada nunca se reconstruya en el cliente. Esto asegura que nadie pueda extraer la clave privada del cliente, incluyendo a otros desarrolladores del ecosistema. Además, significa también que los socios y desarrolladores deben presentar la solicitud al enclave que podría verificar la solicitud y bloquear las solicitudes que están fuera de alcance o rechazadas por el propietario del ecosistema.  
 
-Ecosystem wallets are controlled by the ecosystem owner. Ecosystem owners are able to specify usage policies for their partners and developers which restricts what they can do with the wallet. Unlike the shamir secret sharing model, the enclave wallet model ensures that the private key is never reconstructed on the client. This ensures no-one can extract the private key from the client, including other developers in the ecosystem. Moreover, it also means that partners and developers must submit the request to the enclave which would be able to verify the request and block requests that are out of scope or denied by the ecosystem owner.  
- 
-## Scopes
+## Ámbitos
 
+### Billetera In-App
 
-### In App Wallets
+Las billeteras In-App están limitadas a aplicaciones por ID de Cliente. Si los usuarios utilizan el mismo correo electrónico para iniciar sesión en una aplicación diferente usando Wallets In-App, la aplicación gestionará una cartera totalmente diferente.
 
-In-App Wallets are scoped to applications per Client ID. If users use the same email to sign in to a different application using In-App Wallets, the application will manage an entirely different wallet.
+#### Beneficios de las billeteras limitadas a una sola aplicación
 
-#### Benefits of single application scoped wallets
-
-- Each application has limited access only to wallets created through their application. It cannot manage wallets from other applications.
-- Users may only view tokens sent or purchased from your application.
-- To improve user experience, saved payment methods and KYC verification are only provided to thirdweb; applications cannot view this information.
+- Cada aplicación tiene acceso limitado únicamente a las billeteras creadas a través de su propia aplicación. No puede administrar carteras de otras aplicaciones.
+- Los usuarios sólo pueden ver tokens enviados o comprados desde tu aplicación.
+- Para mejorar la experiencia del usuario, los métodos de pago guardados y la verificación KYC solo se proporcionan a thirdweb; las aplicaciones no pueden ver esta información.
 
 <DocImage src={AppScoped} />
 
-### Ecosystem Wallets
+### Billetera de Ecosistema
 
-Ecosystem Wallets are scoped to the ecosystem. If users use the same email to sign in to a different application using the same ecosystem, they will get the same wallet.
+Las billeteras de ecosistema están cubiertas por el ecosistema. Si los usuarios utilizan el mismo correo electrónico para iniciar sesión en una aplicación diferente usando el mismo ecosistema, obtendrán la misma billetera.
 
-#### Benefits of ecosystem scoped wallets
+#### Beneficios de billeteras de ecosistema
 
-- Applications can now share assets across various applications. This is useful if you're a brand powering multiple application and want your partners to take advantage of network effects.
-- Application owner has full control over what happens within each application. This is useful if you're a brand that wants to ensure that all applications in your ecosystem are following the same rules.
+- Las aplicaciones ahora pueden compartir los activos en varias aplicaciones. Esto es útil si eres una marca con múltiples aplicaciones y quieres que tus socios se aprovechen de los efectos de la red.
+- El propietario de la aplicación tiene control total sobre lo que sucede dentro de cada aplicación. Esto es útil si usted es una marca que quiere asegurar que todas las aplicaciones en su ecosistema sigan las mismas reglas.
 
 <DocImage src={EcosystemScoped} />
 
+## Recuperación
 
-## Recoverability
+- Los usuarios pueden exportar su clave privada en cualquier momento.
 
-- Users can export their private key at any time. 
-- Users may recover their wallet from any device by authenticating or signing into an application to receive access to their wallet.
-- Thirdweb wallets support four categories of authentication: socials, custom authentication, external wallets, and email / phone authentication. If a user ever loses access to their authentication method:
+- Los usuarios pueden recuperar su billetera desde cualquier dispositivo autenticando o entrando en una aplicación para recibir acceso a su billetera.
 
-  1.  **For socials and email / phone authentication,** users can utilize the recovery flow of their providers to regain access to their account.
-  2.  **In the case of custom authentication,** the developer managing their authentication flow will be able to re-instate the users account upon successful verification.
-  3.  Application providers **do not have direct access** to user accounts or private keys, as these remain secured within the enclave. The enclave's design ensures that only verified user requests can trigger wallet operations.
+- Las billeteras de thirdweb admiten cuatro categorías de autenticación: redes sociales, autenticación personalizada, billeteras externas y autenticación por correo electrónico / teléfono. Si un usuario pierde el acceso a su método de autenticación:
 
-- Users are able to link their authentication methods which will provide them multiple ways to access their account if they ever lose access to any one of their authentication method.
+  1. **Para redes sociales y autenticación por correo electrónico / teléfono,** los usuarios pueden utilizar el flujo de recuperación de sus proveedores para recuperar el acceso a su cuenta.
+  2. **En el caso de la autenticación personalizada,** el desarrollador que maneja su flujo de autenticación podrá restablecer la cuenta del usuario tras una verificación exitosa.
+  3. Los proveedores de aplicaciones **no tienen acceso directo** a las cuentas de usuario ni a las claves privadas, ya que estas permanecen aseguradas dentro del enclave. El diseño del enclave asegura que solo las solicitudes de usuario verificadas puedan activar operaciones de billetera.
 
-## Security & privacy
+- Los usuarios pueden vincular sus métodos de autenticación, lo que les proporcionará múltiples formas de acceder a su cuenta si alguna vez pierden el acceso a cualquiera de sus métodos de autenticación.
 
-### TLS Encryption
+## Seguridad y privacidad
 
-To increase security and privacy, private keys or wallet "seed phrases" are never stored or sent over a network. TLS encryption is used in transit for internal and external communications with thirdweb's back-end and databases. TLS encryption is also required for third-party vendors.
+### Cifrado TLS
+
+Para aumentar la seguridad y la privacidad, las claves privadas o las "frases semilla" de la billetera nunca se almacenan ni se envían a través de una red. Se utiliza cifrado TLS en tránsito para las comunicaciones internas y externas con el backend de thirdweb y las bases de datos. El cifrado TLS también es requerido para los proveedores externos.
 
 ### AES-256
 
-Data backups and storage are encrypted with AES-256.
+Las copias de seguridad y el almacenamiento de datos están cifrados con AES-256.
 
-### GDPR & CCPA
+### GDPR y CCPA
 
-thirdweb complies to GDPR and CCPA compliance frameworks and deletes customer data per request within the required timeframe of each standard (30 days for GDPR and 45 for CCPA).
+thirdweb cumple con los marcos de cumplimiento de GDPR y CCPA y elimina los datos de los clientes bajo solicitud dentro del plazo requerido por cada norma (30 días para GDPR y 45 días para CCPA).
 
-### Audit and Bounty Program
+### Programa de Auditoría y Recompensas
 
-Halborn has audited our enclave wallet security architecture which we'll be releasing shortly, and there is an ongoing bounty program to ensure vulnerabilities are caught. [View the Letter of Attestation.](/pdfs/thirdweb_code_security_audit.pdf)
+Halborn ha auditado nuestra arquitectura de seguridad de billetera enclave, la cual lanzaremos próximamente, y hay un programa de recompensas en curso para asegurar que se detecten vulnerabilidades. [Ver la carta de atestación.](/pdfs/thirdweb_code_security_audit.pdf)

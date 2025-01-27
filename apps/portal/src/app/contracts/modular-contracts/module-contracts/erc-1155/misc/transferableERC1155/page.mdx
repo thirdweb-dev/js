@@ -3,7 +3,7 @@ import { createMetadata, GithubButtonLink } from "@doc";
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
     description:
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "Modular Contract proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
         title: "thirdweb Modular Contracts",
         icon: "solidity",
@@ -12,35 +12,34 @@ export const metadata = createMetadata({
 
 # Transferable ERC-1155
 
-## Description
+## Descripción
 
-The `TransferableERC1155` contract is a module that provides transfer control functionality for ERC-1155 tokens. This contract allows enabling or disabling token transfers globally or for specific addresses, adding an extra layer of control over how tokens can be moved.
+El contrato `TransferableERC1155` es un módulo que proporciona funcionalidad de control de transferencias para tokens ERC-1155. Este contrato permite habilitar o deshabilitar las transferencias de tokens a nivel global o para direcciones específicas, añadiendo una capa extra de control sobre cómo se pueden mover los tokens.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/transferable/TransferableERC1155.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                   | Description                                                                                        |
+| Función                   | Descripción                                                                                        |
 |----------------------------|----------------------------------------------------------------------------------------------------|
-| `beforeTransferERC1155`    | Callback function for `ERC1155.safeTransferFrom`. Ensures that transfers are enabled before allowing them.    |
-| `beforeBatchTransferERC1155`| Callback function for `ERC1155.safeBatchTransferFrom`. Ensures that batch transfers are enabled before allowing them. |
+| `beforeTransferERC1155`    | Función de callback para `ERC1155.safeTransferFrom`. Asegura que las transferencias estén habilitadas antes de permitirlas. |
+| `beforeBatchTransferERC1155`| Función de callback para `ERC1155.safeBatchTransferFrom`. Asegura que las transferencias en lote estén habilitadas antes de permitirlas. |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                | Description                                                                             |
+| Función                | Descripción                                                                             |
 |-------------------------|-----------------------------------------------------------------------------------------|
-| `isTransferEnabled`     | Returns whether transfers are enabled globally for the token.                            |
-| `isTransferEnabledFor`  | Returns whether transfers are enabled for a specific address.                            |
-| `setTransferable`       | Sets the transferability status for the token globally. Requires manager role.          |
-| `setTransferableFor`    | Sets the transferability status for a specific address. Requires manager role.          |
+| `isTransferEnabled`     | Devuelve si las transferencias están habilitadas globalmente para el token.            |
+| `isTransferEnabledFor`  | Devuelve si las transferencias están habilitadas para una dirección específica.        |
+| `setTransferable`       | Establece el estado de transferibilidad para el token a nivel global. Requiere rol de administrador. |
+| `setTransferableFor`    | Establece el estado de transferibilidad para una dirección específica. Requiere rol de administrador. |
 
-## Required Interfaces
+## Interfaces Requeridas
 
-| Interface  | ID          |
-|------------|-------------|
+| Interfaz  | ID          |
+|-----------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Interfaces No Compatibles
 
-(No supported interfaces for this contract)
-
+(No hay interfaces no compatibles para este contrato)

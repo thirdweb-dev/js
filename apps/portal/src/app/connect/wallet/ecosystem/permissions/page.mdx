@@ -8,31 +8,30 @@ export const metadata = createMetadata({
 		title: "thirdweb Ecosystem Wallet",
 		icon: "wallets",
 	},
-	title: "Managing Ecosystem Permissions - Ecosystem Wallet | thirdweb",
-	description: "Ecosystem Wallet - Own your own web3 identity stack",
+	title: "Gestionar Permisos del Ecosistema - Ecosystem Wallet | thirdweb",
+	description: "Ecosystem Wallet - Posee tu propia pila de identidad web3",
 });
 
-# Managing Ecosystem Permissions
+# Gestionar Permisos del Ecosistema
 
-There are two permission options depending on whether you’d like an open or exclusive ecosystem wallet. You can manage these permissions from the Permissions page in your Ecosystem Wallet Dashboard.
+Hay dos opciones de permisos dependiendo de si deseas una billetera de ecosistema abierta o exclusiva. Puedes gestionar estos permisos desde la página de Permisos en tu Panel de Ecosystem Wallet.
 
 <DocImage src={EcosystemWalletPermissions} />
 
-### Anyone
+### Cualquiera
 
-If you want to allow anyone to integrate your ecosystem wallet, no other changes are required. You can protect your ecosystem against malicious actors by adding unwanted domains to your blocklist.
+Si deseas permitir que cualquier persona integre tu billetera de ecosistema, no se requieren más cambios. Puedes proteger tu ecosistema contra actores maliciosos agregando dominios no deseados a tu lista de bloqueo.
 
-### Allowlist
+### Lista de Permitidos
 
-If you’re looking to create an ecosystem wallet for select partners, you can head to the Ecosystem Wallet dashboard, navigate to Permissions, and select “Allowlist”.
+Si deseas crear una billetera de ecosistema para socios selectos, puedes dirigirte al panel de Ecosystem Wallet, navegar a Permisos y seleccionar "Lista de Permitidos".
 
-**Add Applications to Your Allowlist**
+**Agregar Aplicaciones a tu Lista de Permitidos**
 
-For each application on your allowlist, you'll need to specify a name, a list of allowed domains, and an optional bundle ID (for mobile applications). The list of domains will determine where a partner will be able to display your ecosystem as a login option. Once a partner is added, a **Partner ID** will be generated.
+Para cada aplicación en tu lista de permitidos, deberás especificar un nombre, una lista de dominios permitidos y un ID de paquete opcional (para aplicaciones móviles). La lista de dominios determinará dónde un socio podrá mostrar tu ecosistema como una opción de inicio de sesión. Una vez que se agregue un socio, se generará un **Partner ID**.
 
-<Callout title="Adding Your Own App as a Partner" variant="info">
-	You'll need to add your own domains and bundle IDs to your allowlist in order
-	to login through your ecosystem wallet in your app.
+<Callout title="Agregar tu propia aplicación como socio" variant="info">
+	Necesitarás agregar tus propios dominios e IDs de paquete a tu lista de permitidos para poder iniciar sesión a través de tu billetera de ecosistema en tu aplicación.
 </Callout>
 
 <DocImage src={AddAPartner} />

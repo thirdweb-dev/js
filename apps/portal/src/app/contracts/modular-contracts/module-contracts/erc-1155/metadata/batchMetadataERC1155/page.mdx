@@ -3,7 +3,7 @@ import { createMetadata, GithubButtonLink } from "@doc";
 export const metadata = createMetadata({
     title: "thirdweb Modular Contracts",
     description: 
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "Modular Contract proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
         title: "thirdweb Modular Contracts",
         icon: "solidity",
@@ -12,39 +12,38 @@ export const metadata = createMetadata({
 
 # BatchMetadataERC1155
 
-## Description
+## Descripción
 
-The `BatchMetadataERC1155` contract is a module that provides batch metadata management for ERC-1155 tokens. This module builds upon the functionalities of the `BatchMetadataERC721` contract, adapting them for the ERC-1155 standard. It includes functionalities for updating and managing metadata in batches efficiently.
+El contrato `BatchMetadataERC1155` es un módulo que proporciona gestión de metadatos por lotes para tokens ERC-1155. Este módulo se basa en las funcionalidades del contrato `BatchMetadataERC721`, adaptándolas al estándar ERC-1155. Incluye funcionalidades para actualizar y gestionar metadatos de manera eficiente en lotes.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/metadata/BatchMetadataERC1155.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                   | Description                                                                                |
+| Función                   | Descripción                                                                                |
 |----------------------------|--------------------------------------------------------------------------------------------|
-| `onTokenURI`               | Callback function that returns the token URI for ERC-1155 tokens.                           |
-| `updateMetadataERC1155`    | Callback function that updates metadata for a batch of ERC-1155 tokens.                     |
+| `onTokenURI`               | Función de callback que devuelve la URI del token para los tokens ERC-1155.               |
+| `updateMetadataERC1155`    | Función de callback que actualiza los metadatos de un lote de tokens ERC-1155.              |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                     | Description                                                                               |
+| Función                     | Descripción                                                                               |
 |------------------------------|-------------------------------------------------------------------------------------------|
-| `uploadMetadata`             | Allows uploading of metadata. Requires minter role.                                       |
-| `setBaseURI`                 | Sets the base URI for the token metadata. Requires manager role.                          |
-| `getAllMetadataBatches`      | Retrieves all metadata batches uploaded so far.                                           |
-| `nextTokenIdToMint`          | Returns the next token ID to be minted.                                                   |
-| `getBatchId`                 | Returns the batch ID for a specific token ID.                                              |
-| `getBatchRange`              | Returns the range of token IDs for a specific metadata batch.                             |
+| `uploadMetadata`             | Permite cargar metadatos. Requiere el rol de minter.                                      |
+| `setBaseURI`                 | Establece la URI base para los metadatos del token. Requiere el rol de administrador.     |
+| `getAllMetadataBatches`      | Recupera todos los lotes de metadatos cargados hasta el momento.                          |
+| `nextTokenIdToMint`          | Devuelve el siguiente ID de token a ser minteado.                                         |
+| `getBatchId`                 | Devuelve el ID de lote para un token ID específico.                                        |
+| `getBatchRange`              | Devuelve el rango de IDs de token para un lote de metadatos específico.                   |
 
-## Required Interfaces
+## Interfaces Requeridas
 
-| Interface  | ID          |
-|------------|-------------|
+| Interfaz  | ID          |
+|-----------|-------------|
 | `ERC-1155` | `0xd9b67a26`|
 
-## Supported Interfaces
+## Interfaces No Compatibles
 
-| Interface  | ID          |
-|------------|-------------|
-| `ERC4906`  | `0x49064906`|
-
+| Interfaz  | ID          |
+|-----------|-------------|
+| `ERC4906` | `0x49064906`|

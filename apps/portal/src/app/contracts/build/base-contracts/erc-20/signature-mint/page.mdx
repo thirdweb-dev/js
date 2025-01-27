@@ -3,22 +3,21 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC20SignatureMint contract",
-		icon: "contract",
-	},
-	title: "ERC20SignatureMint | thirdweb contracts",
-	description:
-		"The ERC20SignatureMint smart contract adds the signature-based minting extension functionality to the ERC20Base contract",
+    image: {
+        title: "Contrato ERC20SignatureMint",
+        icon: "contract",
+    },
+    title: "ERC20SignatureMint | contratos thirdweb",
+    description:
+        "El contrato ERC20SignatureMint agrega la funcionalidad de la extensión de acuñación basada en firma al contrato ERC20Base",
 });
 
 # ERC20SignatureMint
 
-The `ERC20SignatureMint` smart contract adds the [signature-based minting extension](/contracts/build/extensions/erc-20/ERC20signaturemint)
-functionality to the [ERC20Base](/contracts/build/base-contracts/erc-20/base) contract. [Signature minting](/glossary/signature-based-minting) uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712),
-which enables the contract admin to authorize an external party's request to mint tokens on the admin's contract.
-At a high level, this means you can authorize others to mint tokens
-on your contract, and specify what exactly will be minted by that external party.
+El contrato inteligente `ERC20SignatureMint` agrega la [extensión de acuñación basada en firma](/contracts/build/extensions/erc-20/ERC20signaturemint) 
+al contrato [ERC20Base](/contracts/build/base-contracts/erc-20/base). La [acuñación por firma](/glossary/signature-based-minting) usa [EIP-712](https://eips.ethereum.org/EIPS/eip-712), 
+lo que permite que el administrador del contrato autorice la solicitud de una parte externa para acuñar tokens en el contrato del administrador. 
+A un nivel alto, esto significa que puedes autorizar a otros a acuñar tokens en tu contrato y especificar exactamente qué se acuñará por esa parte externa.
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC20SignatureMint.sol";
@@ -26,9 +25,9 @@ import "@thirdweb-dev/contracts/base/ERC20SignatureMint.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20SignatureMint.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y herédalo de él.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -53,9 +52,9 @@ contract MyToken is ERC20SignatureMint {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las características disponibles por estas extensiones en el SDK y en el panel:
 
 - [ERC20](/contracts/build/extensions/erc-20/ERC20)
 - [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
@@ -66,18 +65,18 @@ Once deployed, you can use the features made available by these extensions on th
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones para sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas con lógica personalizada:
 
 <Details id="mintWithSignature" summary="mintWithSignature">
 
 ```solidity
 /**
- *  @notice           Mints tokens according to the provided mint request.
+ *  @notice           Minta tokens de acuerdo con la solicitud de menta proporcionada.
  *
- *  @param _req       The payload / mint request.
- *  @param _signature The signature produced by an account signing the mint request.
+ *  @param _req       El payload / solicitud de menta.
+ *  @param _signature La firma producida por una cuenta que firma la solicitud de menta.
  */
 function mintWithSignature(MintRequest calldata _req, bytes calldata _signature)
     external
@@ -107,7 +106,7 @@ function mintWithSignature(MintRequest calldata _req, bytes calldata _signature)
 <Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
 
 ```solidity
-/// @dev Collects and distributes the primary sale value of tokens being claimed.
+// @dev Recoge y distribuye el valor de la venta principal de los tokens que están siendo reclamados.
 function _collectPriceOnClaim(
     address _primarySaleRecipient,
     uint256 _quantityToClaim,

@@ -4,19 +4,19 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Base contract",
+		title: "Contrato ERC721Base",
 		icon: "contract",
 	},
-	title: "ERC721Base | thirdweb contracts",
+	title: "ERC721Base | contratos thirdweb",
 	description:
-		"The ERC721Base smart contract implements the ERC721 NFT standard, along with the ERC721A optimization to the standard",
+		"El contrato inteligente ERC721Base implementa el estándar ERC721 NFT, junto con la optimización ERC721A al estándar",
 });
 
 # ERC721Base
 
-The `ERC721Base` smart contract implements the [ERC721](https://eips.ethereum.org/EIPS/eip-721) NFT standard,
-along with the [ERC721A](https://www.erc721a.org/) optimization to the standard.
-It allows you to mint NFTs to yourself (or to someone else) and selling those NFTs on a marketplace.
+El contrato inteligente `ERC721Base` implementa el estándar [ERC721](https://eips.ethereum.org/EIPS/eip-721) NFT,
+junto con la optimización [ERC721A](https://www.erc721a.org/) al estándar.
+Permite acuñar NFTs para ti (o para otros) y vender esos NFTs en un mercado.
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
@@ -24,9 +24,9 @@ import "@thirdweb-dev/contracts/base/ERC721Base.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721Base.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y hereda de él.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -55,11 +55,11 @@ contract MyNFT is ERC721Base {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características habilitadas por estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Mintable](/contracts/build/extensions/erc-721/ERC721Mintable)
@@ -70,18 +70,18 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones a sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="tokenURI" summary="tokenURI">
 
 ```solidity
     /**
-     *  @notice         Returns the metadata URI for an NFT.
-     *  @dev            See `BatchMintMetadata` for handling of metadata in this contract.
+     *  @notice         Devuelve la URI de metadatos para un NFT.
+     *  @dev            Consulta `BatchMintMetadata` para el manejo de metadatos en este contrato.
      *
-     *  @param _tokenId The tokenId of an NFT.
+     *  @param _tokenId El tokenId de un NFT.
      */
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
         string memory fullUriForToken = fullURI[_tokenId];
@@ -100,12 +100,12 @@ The following functions have been implemented on this contract & are available t
 <Details id="mintTo" summary="mintTo">
 
 ```solidity
-    /**
-     *  @notice          Lets an authorized address mint an NFT to a recipient.
-     *  @dev             The logic in the `_canMint` function determines whether the caller is authorized to mint NFTs.
+   /**
+     *  @notice          Permite que una dirección autorizada acuñe un NFT para un destinatario.
+     *  @dev             La lógica en la función `_canMint` determina si la llamada está autorizada para acuñar NFTs.
      *
-     *  @param _to       The recipient of the NFT to mint.
-     *  @param _tokenURI The full metadata URI for the NFT minted.
+     *  @param _to       El destinatario del NFT a acuñar.
+     *  @param _tokenURI La URI completa de metadatos para el NFT acuñado.
      */
     function mintTo(address _to, string memory _tokenURI) public virtual {
         require(_canMint(), "Not authorized to mint.");
@@ -119,14 +119,14 @@ The following functions have been implemented on this contract & are available t
 <Details id="batchMintTo" summary="batchMintTo">
 
 ```solidity
-    /**
-     *  @notice          Lets an authorized address mint multiple NFTs at once to a recipient.
-     *  @dev             The logic in the `_canMint` function determines whether the caller is authorized to mint NFTs.
+   /**
+     *  @notice          Permite que una dirección autorizada acuñe múltiples NFTs de una vez para un destinatario.
+     *  @dev             La lógica en la función `_canMint` determina si la llamada está autorizada para acuñar NFTs.
      *
-     *  @param _to       The recipient of the NFT to mint.
-     *  @param _quantity The number of NFTs to mint.
-     *  @param _baseURI  The baseURI for the `n` number of NFTs minted. The metadata for each NFT is `baseURI/tokenId`
-     *  @param _data     Additional data to pass along during the minting of the NFT.
+     *  @param _to       El destinatario del NFT a acuñar.
+     *  @param _quantity La cantidad de NFTs a acuñar.
+     *  @param _baseURI  La baseURI para los `n` NFTs acuñados. Los metadatos para cada NFT son `baseURI/tokenId`
+     *  @param _data     Datos adicionales para pasar durante la acuñación del NFT.
      */
     function batchMintTo(
         address _to,
@@ -145,11 +145,11 @@ The following functions have been implemented on this contract & are available t
 <Details id="burn" summary="burn">
 
 ```solidity
-    /**
-     *  @notice         Lets an owner or approved operator burn the NFT of the given tokenId.
-     *  @dev            ERC721A's `_burn(uint256,bool)` internally checks for token approvals.
+   /**
+     *  @notice         Permite que un propietario o un operador autorizado queme el NFT del tokenId dado.
+     *  @dev            El `_burn(uint256,bool)` de ERC721A verifica internamente las aprobaciones del token.
      *
-     *  @param _tokenId The tokenId of the NFT to burn.
+     *  @param _tokenId El tokenId del NFT a quemar.
      */
     function burn(uint256 _tokenId) external virtual {
         _burn(_tokenId, true);
@@ -159,7 +159,7 @@ The following functions have been implemented on this contract & are available t
                         Public getters
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice The tokenId assigned to the next new NFT to be minted.
+    /// @notice El tokenId asignado al siguiente nuevo NFT que se va a acuñar.
     function nextTokenIdToMint() public view virtual returns (uint256) {
         return _currentIndex;
     }
