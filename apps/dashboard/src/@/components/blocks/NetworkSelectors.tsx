@@ -168,6 +168,7 @@ export function SingleNetworkSelector(props: {
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
+      closeOnSelect={true}
       placeholder={isLoadingChains ? "Loading Chains..." : "Select Chain"}
       overrideSearchFn={searchFn}
       renderOption={renderOption}
