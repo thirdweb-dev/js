@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.86.6
+
+### Patch Changes
+
+- [#6074](https://github.com/thirdweb-dev/js/pull/6074) [`94e2d5b`](https://github.com/thirdweb-dev/js/commit/94e2d5b8ddd90c0eaa985d02b08b9afa9f8e6676) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix account linking for ecosystem smart wallets
+
 ## 5.86.5
 
 ### Patch Changes
