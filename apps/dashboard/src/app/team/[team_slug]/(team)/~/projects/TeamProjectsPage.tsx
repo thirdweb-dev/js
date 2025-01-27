@@ -170,6 +170,7 @@ export function TeamProjectsPage(props: {
       <LazyCreateAPIKeyDialog
         open={isCreateProjectDialogOpen}
         onOpenChange={setIsCreateProjectDialogOpen}
+        teamSlug={props.team.slug}
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();

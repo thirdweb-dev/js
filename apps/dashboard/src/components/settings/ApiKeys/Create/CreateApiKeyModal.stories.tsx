@@ -53,6 +53,7 @@ function Story(props: {
         createKeyMutation={mutation}
         prefill={props.prefill}
         enableNebulaServiceByDefault={false}
+        teamSlug="foo"
       />
 
       <Button
