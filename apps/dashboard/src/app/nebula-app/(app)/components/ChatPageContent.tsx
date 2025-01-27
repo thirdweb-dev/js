@@ -20,7 +20,7 @@ import type { ExecuteConfig, SessionInfo } from "../api/types";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
 import { ChatBar } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
-import ContextFiltersButton from "./ContextFilters";
+import ContextFiltersButton, { ContextFiltersForm } from "./ContextFilters";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 export function ChatPageContent(props: {
@@ -362,69 +362,92 @@ export function ChatPageContent(props: {
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
 
+  const handleUpdateContextFilters = async (
+    values: ContextFilters | undefined,
+  ) => {
+    // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context filters
+    if (sessionId) {
+      await updateSession({
+        authToken: props.authToken,
+        config,
+        sessionId,
+        contextFilters: values,
+      });
+    }
+  };
+
   return (
     <div className="flex grow flex-col overflow-hidden">
       <WalletDisconnectedDialog
         open={showConnectModal}
         onOpenChange={setShowConnectModal}
       />
-      <header className="flex justify-start border-b bg-background p-4">
+      <header className="flex justify-between border-b bg-background p-4 xl:hidden">
         <ContextFiltersButton
           contextFilters={contextFilters}
           setContextFilters={setContextFilters}
-          updateContextFilters={async (values) => {
-            // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context filters
-            if (sessionId) {
-              await updateSession({
-                authToken: props.authToken,
-                config,
-                sessionId,
-                contextFilters: values,
-              });
-            }
-          }}
+          updateContextFilters={handleUpdateContextFilters}
         />
       </header>
-      <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
-        {showEmptyState ? (
-          <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
-            <EmptyStateChatPageContent sendMessage={handleSendMessage} />
-          </div>
-        ) : (
-          <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
-            <Chats
-              messages={messages}
-              isChatStreaming={isChatStreaming}
-              authToken={props.authToken}
-              sessionId={sessionId}
-              className="min-w-0 pt-6 pb-32"
-              twAccount={props.account}
-              client={client}
-              enableAutoScroll={enableAutoScroll}
-              setEnableAutoScroll={setEnableAutoScroll}
-            />
 
-            <div className="container max-w-[800px]">
-              <ChatBar
-                sendMessage={handleSendMessage}
-                isChatStreaming={isChatStreaming}
-                abortChatStream={() => {
-                  chatAbortController?.abort();
-                  setChatAbortController(undefined);
-                  setIsChatStreaming(false);
-                  // if last message is presence, remove it
-                  if (messages[messages.length - 1]?.type === "presence") {
-                    setMessages((prev) => prev.slice(0, -1));
-                  }
-                }}
-              />
+      <div className="flex grow overflow-hidden">
+        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
+          {showEmptyState ? (
+            <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
+              <EmptyStateChatPageContent sendMessage={handleSendMessage} />
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
+              <Chats
+                messages={messages}
+                isChatStreaming={isChatStreaming}
+                authToken={props.authToken}
+                sessionId={sessionId}
+                className="min-w-0 pt-6 pb-32"
+                twAccount={props.account}
+                client={client}
+                enableAutoScroll={enableAutoScroll}
+                setEnableAutoScroll={setEnableAutoScroll}
+              />
 
-        <p className="mt-4 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-          Nebula may make mistakes. Please use with discretion
-        </p>
+              <div className="container max-w-[800px]">
+                <ChatBar
+                  sendMessage={handleSendMessage}
+                  isChatStreaming={isChatStreaming}
+                  abortChatStream={() => {
+                    chatAbortController?.abort();
+                    setChatAbortController(undefined);
+                    setIsChatStreaming(false);
+                    // if last message is presence, remove it
+                    if (messages[messages.length - 1]?.type === "presence") {
+                      setMessages((prev) => prev.slice(0, -1));
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          <p className="mt-4 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
+            Nebula may make mistakes. Please use with discretion
+          </p>
+        </div>
+        <aside className="hidden w-[360px] flex-col border-l bg-card pt-4 xl:flex">
+          <div className="px-4">
+            <h3 className="font-semibold text-lg tracking-tight">Context</h3>
+            <p className="mb-5 text-muted-foreground text-sm">
+              Provide context to Nebula for your prompts
+            </p>
+          </div>
+          <ContextFiltersForm
+            contextFilters={contextFilters}
+            setContextFilters={setContextFilters}
+            modal={undefined}
+            updateContextFilters={handleUpdateContextFilters}
+            formBodyClassName="px-4"
+            formActionContainerClassName="px-4 border-t-0 pt-0 bg-transparent"
+          />
+        </aside>
       </div>
     </div>
   );

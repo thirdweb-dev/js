@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  FileCode2Icon,
+  MessageSquareShareIcon,
   MessagesSquareIcon,
   SquareDashedBottomCodeIcon,
   TextIcon,
@@ -29,8 +31,11 @@ export function ChatSidebar(props: {
   return (
     <div className="flex h-full flex-col p-2">
       <div className="flex items-center justify-start gap-3 p-2 lg:justify-between">
-        <Link href="/">
-          <NebulaIcon className="size-8 text-foreground" />
+        <Link href="/" className="flex items-center gap-2">
+          <NebulaIcon className="size-8 text-foreground" aria-label="Nebula" />
+          <span className="font-semibold text-lg tracking-tight">
+            Playground
+          </span>
         </Link>
 
         <Badge variant="secondary" className="gap-1 py-1">
@@ -47,6 +52,13 @@ export function ChatSidebar(props: {
       </div>
 
       <div className="h-3" />
+
+      <SidebarIconLink
+        href="https://portal.thirdweb.com/nebula/api-reference"
+        icon={FileCode2Icon}
+        label="API Reference"
+        target="_blank"
+      />
 
       <SidebarIconLink
         href="/chat/history"
@@ -79,7 +91,14 @@ export function ChatSidebar(props: {
         </ScrollShadow>
       )}
 
-      <div className="mb-3 border-b border-dashed pt-2 pb-3">
+      <div className="mb-3 border-y border-dashed py-3">
+        <SidebarIconLink
+          href="https://docs.google.com/forms/d/e/1FAIpQLSeM3fJRyywihRZUF1fiTNKEpJ_AzAcohRwXPpLr_3zxQ6W-tg/viewform?usp=sharing"
+          icon={MessageSquareShareIcon}
+          label="Take our quick survey!"
+          target="_blank"
+        />
+
         <SidebarIconLink
           href="https://portal.thirdweb.com/changelog"
           icon={TextIcon}
@@ -116,6 +135,7 @@ function SidebarIconLink(props: {
         href={props.href}
         target={props.target}
         className="!justify-start !px-3 w-full gap-2.5 rounded-lg text-left"
+        prefetch={false}
       >
         <props.icon className="size-4" />
         {props.label}

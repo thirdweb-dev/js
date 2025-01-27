@@ -10,7 +10,7 @@ export function EmptyStateChatPageContent(props: {
   sendMessage: (message: string) => void;
 }) {
   return (
-    <div className="py-16">
+    <div className="py-10 lg:py-16">
       <div className="relative py-10">
         <FancyBorders />
         <div className="flex justify-center">

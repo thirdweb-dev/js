@@ -181,6 +181,7 @@ function SessionCard(props: {
         <Link
           className="before:absolute before:inset-0"
           href={`/chat/${props.session.id}`}
+          prefetch={false}
         >
           {props.session.title || "Untitled"}
         </Link>
