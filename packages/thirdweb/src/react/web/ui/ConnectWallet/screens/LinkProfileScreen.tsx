@@ -7,6 +7,7 @@ import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
+import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
@@ -28,20 +29,23 @@ export function LinkProfileScreen(props: {
   client: ThirdwebClient;
   walletConnect: { projectId?: string } | undefined;
 }) {
-  const activeWallet = useAdminWallet();
+  const adminWallet = useAdminWallet();
+  const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
   const queryClient = useQueryClient();
 
-  if (!activeWallet) {
+  const wallet = adminWallet || activeWallet;
+
+  if (!wallet) {
     return <LoadingScreen />;
   }
 
-  if (activeWallet.id === "inApp") {
+  if (wallet.id === "inApp") {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
           walletConnect={props.walletConnect}
-          wallet={activeWallet as Wallet<"inApp">}
+          wallet={wallet as Wallet<"inApp">}
           done={() => {
             setTimeout(() => {
               queryClient.invalidateQueries({ queryKey: ["profiles"] });
@@ -63,11 +67,11 @@ export function LinkProfileScreen(props: {
     );
   }
 
-  if (isEcosystemWallet(activeWallet)) {
+  if (isEcosystemWallet(wallet)) {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <EcosystemWalletConnectUI
-          wallet={activeWallet as Wallet<EcosystemWalletId>}
+          wallet={wallet as Wallet<EcosystemWalletId>}
           done={() => {
             setTimeout(() => {
               queryClient.invalidateQueries({ queryKey: ["profiles"] });
