@@ -11,7 +11,7 @@ const getEcosystem = () => {
     return "ecosystem.catlovers";
   }
   // prod ecosystem
-  return "ecosystem.new-age";
+  return "ecosystem.thirdweb-engs";
 };
 
 export function EcosystemConnectEmbed(
