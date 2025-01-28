@@ -45,6 +45,7 @@ export type TeamResponse = {
   slug: string;
   image: string | null;
   billingPlan: "free" | "starter" | "growth" | "pro";
+  billingPlanVersion: number;
   createdAt: Date;
   updatedAt: Date | null;
   billingEmail: string | null;
