@@ -486,7 +486,7 @@ function APIKeyDetails(props: {
           <AlertDescription>
             <div className="mb-5">
               Secret keys cannot be recovered. If you lose your secret key, you
-              will need to create a project
+              will need to rotate the secret key or create a new Project.
             </div>
             <CheckboxWithLabel className="text-foreground">
               <Checkbox
