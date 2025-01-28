@@ -27,9 +27,10 @@ export function OnboardingChoosePlan(props: {
           billingPlan="starter"
           teamSlug={props.teamSlug}
           cta={{
-            title: "Get started for free",
+            title: "Get Started for free",
             tracking: {
               category: "account",
+              label: "starterPlan",
             },
           }}
           redirectPath={props.redirectPath}
@@ -40,15 +41,14 @@ export function OnboardingChoosePlan(props: {
           billingPlan="growth"
           teamSlug={props.teamSlug}
           cta={{
-            title: "Claim your 1-month free",
-            hint: "Your free trial will end after 30 days.",
+            title: "Get Started with Growth",
             tracking: {
               category: "account",
               label: "growthPlan",
             },
             variant: "default",
           }}
-          canTrialGrowth={props.canTrialGrowth}
+          canTrialGrowth={false}
           highlighted
           redirectPath={props.redirectPath}
           redirectToCheckout={props.redirectToCheckout}
