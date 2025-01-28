@@ -14,8 +14,8 @@ import { base } from "../../../../chains/chain-definitions/base.js";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import { useActiveAccount } from "../../../../react/core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../react/core/hooks/wallets/useActiveWalletChain.js";
+import { AccountProvider } from "../../../core/account/provider.js";
 import { ThirdwebProvider } from "../../providers/thirdweb-provider.js";
-import { AccountProvider } from "../prebuilt/Account/provider.js";
 import {
   ConnectedToSmartWallet,
   ConnectedWalletDetails,

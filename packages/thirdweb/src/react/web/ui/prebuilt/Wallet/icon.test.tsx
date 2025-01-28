@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { render, waitFor } from "~test/react-render.js";
-import { SocialIcon, WalletIcon, fetchWalletImage } from "./icon.js";
-import { WalletProvider } from "./provider.js";
+import { fetchWalletImage } from "../../../../core/utils/walletIcon.js";
+import { WalletProvider } from "../../../../core/wallet/provider.js";
+import { SocialIcon, WalletIcon } from "./icon.js";
 
 describe("WalletIcon", () => {
   it("should fetch wallet image", async () => {

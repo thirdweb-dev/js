@@ -1,4 +1,8 @@
+import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
 import type { AuthOption } from "../../../wallets/types.js";
+import type { WalletId } from "../../../wallets/wallet-types.js";
+import { useWalletContext } from "../wallet/provider.js";
 
 // TODO make the social icons usable in RN too
 const googleIconUri =
@@ -105,4 +109,28 @@ export function getSocialIcon(provider: AuthOption | ({} & string)): string {
     default:
       return genericWalletIcon;
   }
+}
+
+/**
+ * @internal
+ */
+export function useWalletIcon(props: {
+  queryOptions?: Omit<UseQueryOptions<string>, "queryFn" | "queryKey">;
+}) {
+  const { id } = useWalletContext();
+  const imageQuery = useQuery({
+    queryKey: ["walletIcon", id],
+    queryFn: async () => fetchWalletImage({ id }),
+    ...props.queryOptions,
+  });
+  return imageQuery;
+}
+
+/**
+ * @internal Exported for tests only
+ */
+export async function fetchWalletImage(props: {
+  id: WalletId;
+}) {
+  return getWalletInfo(props.id, true);
 }

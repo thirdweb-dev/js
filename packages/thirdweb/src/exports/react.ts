@@ -223,8 +223,8 @@ export {
 export {
   AccountBalance,
   type AccountBalanceProps,
-  type AccountBalanceInfo,
 } from "../react/web/ui/prebuilt/Account/balance.js";
+export type { AccountBalanceInfo } from "../react/core/utils/account.js";
 export {
   AccountName,
   type AccountNameProps,
@@ -233,7 +233,7 @@ export { AccountBlobbie } from "../react/web/ui/prebuilt/Account/blobbie.js";
 export {
   AccountProvider,
   type AccountProviderProps,
-} from "../react/web/ui/prebuilt/Account/provider.js";
+} from "../react/core/account/provider.js";
 export {
   AccountAvatar,
   type AccountAvatarProps,
@@ -278,9 +278,11 @@ export { getLastAuthProvider } from "../react/web/utils/storage.js";
 export {
   WalletProvider,
   type WalletProviderProps,
-} from "../react/web/ui/prebuilt/Wallet/provider.js";
+} from "../react/core/wallet/provider.js";
 export {
   WalletIcon,
+  SocialIcon,
+  type SocialIconProps,
   type WalletIconProps,
 } from "../react/web/ui/prebuilt/Wallet/icon.js";
 export {

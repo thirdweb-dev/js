@@ -114,3 +114,50 @@ export type {
   FarcasterProfile,
   LensProfile,
 } from "../social/types.js";
+
+/**
+ * Account
+ */
+export {
+  Blobbie,
+  AccountBlobbie,
+  type BlobbieProps,
+} from "../react/native/ui/prebuilt/Account/blobbie.js";
+export {
+  AccountProvider,
+  type AccountProviderProps,
+} from "../react/core/account/provider.js";
+export {
+  AccountBalance,
+  type AccountBalanceProps,
+} from "../react/native/ui/prebuilt/Account/balance.js";
+export {
+  AccountAddress,
+  type AccountAddressProps,
+} from "../react/native/ui/prebuilt/Account/address.js";
+export {
+  AccountName,
+  type AccountNameProps,
+} from "../react/native/ui/prebuilt/Account/name.js";
+export {
+  AccountAvatar,
+  type AccountAvatarProps,
+} from "../react/native/ui/prebuilt/Account/avatar.js";
+
+/**
+ * Wallet
+ */
+export {
+  WalletProvider,
+  type WalletProviderProps,
+} from "../react/core/wallet/provider.js";
+export {
+  WalletIcon,
+  SocialIcon,
+  type WalletIconProps,
+  type SocialIconProps,
+} from "../react/native/ui/prebuilt/Wallet/icon.js";
+export {
+  WalletName,
+  type WalletNameProps,
+} from "../react/native/ui/prebuilt/Wallet/name.js";
