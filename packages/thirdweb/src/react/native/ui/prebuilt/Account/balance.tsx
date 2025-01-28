@@ -1,8 +1,7 @@
 "use client";
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
-import type React from "react";
-import type { JSX } from "react";
+import { Text, type TextProps } from "react-native";
 import type { Chain } from "../../../../../chains/types.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useActiveWalletChain } from "../../../../../react/core/hooks/wallets/useActiveWalletChain.js";
@@ -20,8 +19,7 @@ import { formatAccountTokenBalance } from "../../../../core/utils/account.js";
  * @component
  * @wallet
  */
-export interface AccountBalanceProps
-  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+export interface AccountBalanceProps extends Omit<TextProps, "children"> {
   /**
    * The network to fetch balance on
    * If not passed, the component will use the current chain that the wallet is connected to (`useActiveWalletChain()`)
@@ -51,7 +49,7 @@ export interface AccountBalanceProps
    * />
    * ```
    */
-  loadingComponent?: JSX.Element;
+  loadingComponent?: React.ComponentType;
   /**
    * This component will be shown if the balance fails to be retreived
    * If not passed, the component will return `null`.
@@ -66,7 +64,7 @@ export interface AccountBalanceProps
    * />
    * ```
    */
-  fallbackComponent?: JSX.Element;
+  fallbackComponent?: React.ComponentType;
   /**
    * Optional `useQuery` params
    */
@@ -195,29 +193,29 @@ export function AccountBalance({
     return loadingComponent || null;
   }
 
-  if (!balanceQuery.data) {
+  if (balanceQuery.data === undefined) {
     return fallbackComponent || null;
   }
 
   // Prioritize using the formatFn from users
   if (formatFn) {
-    return <span {...restProps}>{formatFn(balanceQuery.data)}</span>;
+    return <Text {...restProps}>{formatFn(balanceQuery.data)}</Text>;
   }
 
   if (showBalanceInFiat) {
     return (
-      <span {...restProps}>
-        {formatAccountFiatBalance({ ...balanceQuery.data, decimals: 0 })}
-      </span>
+      <Text {...restProps}>
+        {formatAccountFiatBalance({ ...balanceQuery.data, decimals: 2 })}
+      </Text>
     );
   }
 
   return (
-    <span {...restProps}>
+    <Text {...restProps}>
       {formatAccountTokenBalance({
         ...balanceQuery.data,
         decimals: balanceQuery.data.balance < 1 ? 3 : 2,
       })}
-    </span>
+    </Text>
   );
 }

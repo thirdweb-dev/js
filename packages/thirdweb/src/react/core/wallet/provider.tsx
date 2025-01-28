@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { createContext, useContext } from "react";
-import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import type { WalletId } from "../../../wallets/wallet-types.js";
 
 /**
  * Props for the WalletProvider component
