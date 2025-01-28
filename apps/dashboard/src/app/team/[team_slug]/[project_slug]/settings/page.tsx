@@ -31,6 +31,7 @@ export default async function Page(props: {
     <ProjectGeneralSettingsPageForTeams
       apiKey={apiKey}
       project_slug={project_slug}
+      projectId={project.id}
       team={team}
     />
   );
