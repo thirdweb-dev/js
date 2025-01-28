@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.86.7
+
+### Patch Changes
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - export `randomPrivateKey` from `thirdweb/wallets`
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
 ## 5.86.6
 
 ### Patch Changes
