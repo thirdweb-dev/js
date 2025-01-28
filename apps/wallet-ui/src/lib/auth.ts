@@ -1,15 +1,13 @@
 "use server";
 import "server-only";
 import { redirect } from "@/lib/redirect";
-import { secp256k1 } from "@noble/curves/secp256k1";
 import { cookies } from "next/headers";
-import { toHex } from "thirdweb";
 import {
   type GenerateLoginPayloadParams,
   type VerifyLoginPayloadParams,
   createAuth,
 } from "thirdweb/auth";
-import { privateKeyToAccount } from "thirdweb/wallets";
+import { privateKeyToAccount, randomPrivateKey } from "thirdweb/wallets";
 import { client } from "./client";
 
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
@@ -20,7 +18,7 @@ const thirdwebAuth = createAuth({
   // Fun little hack to make vercel happy at build time
   adminAccount: privateKeyToAccount({
     client,
-    privateKey: privateKey || toHex(secp256k1.utils.randomPrivateKey()),
+    privateKey: privateKey || randomPrivateKey(),
   }),
 });
 
