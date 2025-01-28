@@ -26,12 +26,8 @@
   },
   "typesVersions": {
     "*": {
-      "node": [
-        "./dist/types/node/index.d.ts"
-      ],
-      "cf-worker": [
-        "./dist/types/cf-worker/index.d.ts"
-      ]
+      "node": ["./dist/types/node/index.d.ts"],
+      "cf-worker": ["./dist/types/cf-worker/index.d.ts"]
     }
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/pay",
@@ -40,9 +36,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "sideEffects": false,
   "dependencies": {
     "aws4fetch": "1.0.20",
@@ -50,10 +44,10 @@
     "zod": "3.24.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20241216.0",
-    "@types/node": "22.10.2",
-    "typescript": "5.7.2",
-    "vitest": "2.1.8"
+    "@cloudflare/workers-types": "4.20250124.3",
+    "@types/node": "22.10.10",
+    "typescript": "5.7.3",
+    "vitest": "3.0.4"
   },
   "scripts": {
     "format": "biome format ./src --write",

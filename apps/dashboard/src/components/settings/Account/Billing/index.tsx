@@ -1,10 +1,8 @@
 import { redirectToBillingPortal, redirectToCheckout } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
-import {} from "@/components/ui/alert";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import {} from "@chakra-ui/react";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";

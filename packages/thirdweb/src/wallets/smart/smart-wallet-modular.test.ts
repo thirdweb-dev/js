@@ -1,4 +1,3 @@
-import {} from "viem";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
