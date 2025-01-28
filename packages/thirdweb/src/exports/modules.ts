@@ -178,3 +178,4 @@ export {
   uninstallModuleByProxy,
   type UninstallModuleByProxyOptions,
 } from "../extensions/modules/common/uninstallModuleByProxy.js";
+export { moduleInstalledEvent } from "../extensions/modules/__generated__/IModularCore/events/ModuleInstalled.js";
