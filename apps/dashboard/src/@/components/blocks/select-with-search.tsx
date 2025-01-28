@@ -33,6 +33,7 @@ interface SelectWithSearchProps
   popoverContentClassName?: string;
   side?: "left" | "right" | "top" | "bottom";
   align?: "center" | "start" | "end";
+  closeOnSelect?: boolean;
 }
 
 export const SelectWithSearch = React.forwardRef<
@@ -50,6 +51,7 @@ export const SelectWithSearch = React.forwardRef<
       overrideSearchFn,
       popoverContentClassName,
       searchPlaceholder,
+      closeOnSelect,
       ...props
     },
     ref,
@@ -177,7 +179,12 @@ export const SelectWithSearch = React.forwardRef<
                       key={option.value}
                       role="option"
                       aria-selected={isSelected}
-                      onClick={() => onValueChange(option.value)}
+                      onClick={() => {
+                        onValueChange(option.value);
+                        if (closeOnSelect) {
+                          setIsPopoverOpen(false);
+                        }
+                      }}
                       variant="ghost"
                       className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2 text-left"
                       ref={

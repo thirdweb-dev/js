@@ -49,7 +49,7 @@ export type TeamResponse = {
   updatedAt: Date | null;
   billingEmail: string | null;
   billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
-  growthTrialEligible: boolean | null;
+  growthTrialEligible: false;
   enabledScopes: ServiceName[];
 };
 

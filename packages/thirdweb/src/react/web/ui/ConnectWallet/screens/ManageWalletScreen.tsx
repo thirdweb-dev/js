@@ -28,7 +28,8 @@ export function ManageWalletScreen(props: {
   client: ThirdwebClient;
   manageWallet?: ConnectButton_detailsModalOptions["manageWallet"];
 }) {
-  const activeWallet = useAdminWallet();
+  const adminWallet = useAdminWallet();
+  const activeWallet = useActiveWallet();
 
   return (
     <Container
@@ -92,9 +93,9 @@ export function ManageWalletScreen(props: {
           </MenuButton>
 
           {/* Private Key Export (if enabled) */}
-          {activeWallet &&
-            isInAppWallet(activeWallet) &&
-            !activeWallet.getConfig()?.hidePrivateKeyExport && (
+          {adminWallet &&
+            isInAppWallet(adminWallet) &&
+            !adminWallet.getConfig()?.hidePrivateKeyExport && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("private-key");

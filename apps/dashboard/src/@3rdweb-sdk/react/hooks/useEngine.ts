@@ -10,7 +10,7 @@ import {
 import type { ResultItem } from "app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
-import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import type { EngineStatus } from "../../../app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
@@ -469,12 +469,12 @@ export function useEngineBackendWalletBalance(params: {
   instanceUrl: string;
   address: string;
   authToken: string;
+  chainId: number;
 }) {
-  const { instanceUrl, address, authToken } = params;
-  const chainId = useActiveWalletChain()?.id;
+  const { instanceUrl, address, authToken, chainId } = params;
 
   return useQuery({
-    queryKey: engineKeys.backendWalletBalance(address, chainId || 1),
+    queryKey: engineKeys.backendWalletBalance(address, chainId),
     queryFn: async () => {
       invariant(chainId, "chainId is required");
 

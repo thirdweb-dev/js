@@ -154,7 +154,7 @@ export class EnclaveWallet implements IWebWallet {
                   "../../../../rpc/actions/eth_getTransactionCount.js"
                 ).then(({ eth_getTransactionCount }) =>
                   eth_getTransactionCount(rpcRequest, {
-                    address: this.address,
+                    address: getAddress(this.address),
                     blockTag: "pending",
                   }),
                 ),

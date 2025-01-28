@@ -19,6 +19,7 @@ import { getRpcClient } from "../rpc/rpc.js";
 import { estimateGas } from "../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
+import { getAddress } from "../utils/address.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
 /**
@@ -201,7 +202,7 @@ export async function toViemContract<const TAbi extends Abi>(options: {
   thirdwebContract: ThirdwebContract<TAbi>;
 }): Promise<GetContractReturnType<TAbi>> {
   return {
-    address: options.thirdwebContract.address,
+    address: getAddress(options.thirdwebContract.address),
     abi: await resolveContractAbi(options.thirdwebContract),
   };
 }
@@ -310,7 +311,7 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
 
   return createWalletClient({
     transport,
-    account: account.address,
+    account: getAddress(account.address),
     chain: viemChain,
     key: "thirdweb-wallet",
   });

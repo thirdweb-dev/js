@@ -323,6 +323,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           apiKeys.refetch();
         }}
         enableNebulaServiceByDefault={false}
+        teamSlug={undefined}
       />
 
       <Alert variant="warning">

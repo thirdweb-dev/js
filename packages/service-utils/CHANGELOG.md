@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.7.1
+
+### Patch Changes
+
+- [#6047](https://github.com/thirdweb-dev/js/pull/6047) [`7a8e4e5`](https://github.com/thirdweb-dev/js/commit/7a8e4e5f861070858b4716ac95ba5bc60c284924) Thanks [@arcoraven](https://github.com/arcoraven)! - Export usageV2 util functions
+
+- [#6050](https://github.com/thirdweb-dev/js/pull/6050) [`fb4d0a2`](https://github.com/thirdweb-dev/js/commit/fb4d0a26f162a098878a1a63a61fef6033bcd5e9) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] replace client_id with project_id in usage_v2
+
 ## 0.7.0
 
 ### Minor Changes

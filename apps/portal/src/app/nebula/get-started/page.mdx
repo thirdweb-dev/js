@@ -60,14 +60,14 @@ npm install thirdweb
 
 Configura las variables de entorno.
 
-<Callout variant="warning" title="Almacenamiento de Claves Secretas">
-  Asegúrate de mantener tu clave secreta y clave privada seguras, y no las expongas en tu base de código. Recomendamos usar un gestor de claves secretas como [AWS Secret Manager](https://aws.amazon.com/secrets-manager/) o [Google Secret Manager](https://cloud.google.com/secret-manager).
+<Callout variant="warning" title="Almacenando Claves Secretas">
+  Asegúrate de mantener tu clave secreta a salvo y no exponerla en tu base de código. Recomendamos usar un 
+  administrador de claves secretas como [AWS Secret Manager](https://aws.amazon.com/secrets-manager/) o [Google Secret Manager](https://cloud.google.com/secret-manager).
 </Callout>
 
 
 ```jsx
 THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
-EOA_PRIVATE_KEY=your_wallet_private_key
 ```
 </Step>
 
@@ -89,15 +89,15 @@ import {
 Esta función procesa la respuesta de la API y ejecuta transacciones en la blockchain.
 
 ```jsx
+import { generateAccount } from "thirdweb/wallets";
+
 async function handleNebulaResponse(response) {
   const client = createThirdwebClient({
     secretKey: process.env.THIRDWEB_SECRET_KEY,
   });
 
-  const account = privateKeyToAccount({
-    client,
-    privateKey: process.env.EOA_PRIVATE_KEY,
-  });
+  // You can use any wallet- see https://portal.thirdweb.com/typescript/v5/supported-wallets
+  const account = await generateAccount({ client });
 
   if (response.actions && response.actions.length > 0) {
     const action = response.actions[0];

@@ -11,7 +11,6 @@ export function useAdminWallet() {
   const activeWallet = useActiveWallet();
   const connectedWallets = useConnectedWallets();
   const adminAccount = activeWallet?.getAdminAccount?.();
-
   if (!adminAccount) {
     // If the active wallet doesn't have an admin account, return the active wallet
     return activeWallet;

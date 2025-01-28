@@ -1,3 +1,4 @@
+import { getContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import * as PredictAddress from "../__generated__/IAccountFactory/read/getAddress.js";
@@ -15,10 +16,10 @@ export {
  * ```ts
  * import { isAccountDeployed } from 'thirdweb/extensions/erc4337';
  *
- * const transaction = addAdmin({
+ * const isDeployed = await isAccountDeployed({
  * contract,
  * account,
- * adminAddress: '0x...'
+ * adminSigner: '0x...'
  * });
  *
  * await isAccountDeployed({ contract, adminSigner });
@@ -29,8 +30,10 @@ export async function isAccountDeployed(
   options: BaseTransactionOptions<PredictAddress.GetAddressParams>,
 ): Promise<boolean> {
   const predictedAddress = await PredictAddress.getAddress(options);
-  return isContractDeployed({
-    ...options.contract,
-    address: predictedAddress,
-  });
+  return isContractDeployed(
+    getContract({
+      ...options.contract,
+      address: predictedAddress,
+    }),
+  );
 }

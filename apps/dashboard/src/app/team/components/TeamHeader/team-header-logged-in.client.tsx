@@ -65,6 +65,11 @@ export function TeamHeaderLoggedIn(props: {
 
       <LazyCreateAPIKeyDialog
         open={createProjectDialogState.isOpen}
+        teamSlug={
+          createProjectDialogState.isOpen
+            ? createProjectDialogState.team.slug
+            : undefined
+        }
         onOpenChange={() =>
           setCreateProjectDialogState({
             isOpen: false,

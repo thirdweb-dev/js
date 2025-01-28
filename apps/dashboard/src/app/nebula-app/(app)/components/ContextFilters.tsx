@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,15 +16,14 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
@@ -39,9 +39,6 @@ export default function ContextFiltersButton(props: {
   updateContextFilters: (filters: ContextFilters | undefined) => Promise<void>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const updateMutation = useMutation({
-    mutationFn: props.updateContextFilters,
-  });
 
   const chainIds = props.contextFilters?.chainIds;
   const contractAddresses = props.contextFilters?.contractAddresses;
@@ -85,21 +82,22 @@ export default function ContextFiltersButton(props: {
           </div>
         </Button>
       </DialogTrigger>
-      <DialogContent className="p-0">
-        <ContextFilterDialogContent
-          contextFilters={props.contextFilters}
-          isPending={updateMutation.isPending}
-          updateFilters={async (data) => {
-            const promise = updateMutation.mutateAsync(data);
-            toast.promise(promise, {
-              success: "Context filters updated",
-              error: "Failed to update context filters",
-            });
+      <DialogContent className="overflow-hidden p-0">
+        <DialogHeader className="px-6 pt-6 pb-1">
+          <DialogTitle className="font-semibold text-xl">
+            Context Filters
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground">
+            Provide context to Nebula for your prompts
+          </DialogDescription>
+        </DialogHeader>
 
-            promise.then(() => {
-              props.setContextFilters(data);
-              setIsOpen(false);
-            });
+        <ContextFiltersForm
+          contextFilters={props.contextFilters}
+          updateContextFilters={props.updateContextFilters}
+          setContextFilters={props.setContextFilters}
+          modal={{
+            close: () => setIsOpen(false),
           }}
         />
       </DialogContent>
@@ -138,11 +136,22 @@ const formSchema = z.object({
   walletAddresses: commaSeparateListOfAddresses,
 });
 
-function ContextFilterDialogContent(props: {
+export function ContextFiltersForm(props: {
   contextFilters: ContextFilters | undefined;
-  updateFilters: (filters: ContextFilters | undefined) => void;
-  isPending: boolean;
+  updateContextFilters: (filters: ContextFilters | undefined) => Promise<void>;
+  setContextFilters: (filters: ContextFilters | undefined) => void;
+  formBodyClassName?: string;
+  formActionContainerClassName?: string;
+  modal:
+    | {
+        close: () => void;
+      }
+    | undefined;
 }) {
+  const updateMutation = useMutation({
+    mutationFn: props.updateContextFilters,
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
@@ -172,26 +181,37 @@ function ContextFilterDialogContent(props: {
       .split(",")
       .filter((v) => v.trim());
 
-    props.updateFilters({
+    const data = {
       chainIds: chainIdsArray,
       contractAddresses: contractAddressesArray,
       walletAddresses: walletAddressesArray,
+    };
+
+    const promise = updateMutation.mutateAsync(data);
+
+    toast.promise(promise, {
+      success: "Context filters updated",
+      error: "Failed to update context filters",
+    });
+
+    promise.then(() => {
+      props.setContextFilters(data);
+      props.modal?.close?.();
     });
   }
 
   return (
     <Form {...form}>
-      <DialogHeader className="px-6 pt-6 pb-1">
-        <DialogTitle className="font-semibold text-xl">
-          Context Filters
-        </DialogTitle>
-        <DialogDescription className="text-muted-foreground">
-          Provide context information to Nebula for your prompts
-        </DialogDescription>
-      </DialogHeader>
-
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-5 px-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("flex w-full grow flex-col")}
+      >
+        <div
+          className={cn(
+            "flex flex-col gap-5 px-6 pb-6",
+            props.formBodyClassName,
+          )}
+        >
           <FormField
             control={form.control}
             name="chainIds"
@@ -200,6 +220,8 @@ function ContextFilterDialogContent(props: {
                 <FormLabel>Chain IDs</FormLabel>
                 <FormControl>
                   <MultiNetworkSelector
+                    disableChainId
+                    className="bg-background"
                     selectedChainIds={form
                       .watch()
                       .chainIds.split(",")
@@ -226,12 +248,9 @@ function ContextFilterDialogContent(props: {
                   <AutoResizeTextarea
                     {...field}
                     placeholder="0x123..., 0x456..."
-                    className="min-h-[32px] resize-none"
+                    className="!leading-relaxed min-h-[52px] resize-none md:text-xs"
                   />
                 </FormControl>
-                <FormDescription>
-                  Comma separated list of contract addresses
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -247,25 +266,36 @@ function ContextFilterDialogContent(props: {
                   <AutoResizeTextarea
                     {...field}
                     placeholder="0x123..., 0x456..."
-                    className="min-h-[32px] resize-none"
+                    className="!leading-relaxed min-h-[52px] resize-none md:text-xs"
                   />
                 </FormControl>
-                <FormDescription>
-                  Comma separated list of wallet addresses
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
 
-        <div className="mt-10 flex justify-end gap-3 border-t bg-card p-6">
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button className="min-w-28 gap-2" type="submit">
-            {props.isPending && <Spinner className="size-4" />}
-            Update
+        <div
+          className={cn(
+            "flex justify-end gap-3 border-t bg-card p-6",
+            props.formActionContainerClassName,
+          )}
+        >
+          {props.modal && (
+            <DialogClose asChild>
+              <Button variant="outline" size="sm">
+                Cancel
+              </Button>
+            </DialogClose>
+          )}
+          <Button
+            className="min-w-24 gap-2"
+            type="submit"
+            size="sm"
+            disabled={updateMutation.isPending}
+          >
+            {updateMutation.isPending && <Spinner className="size-4" />}
+            Update Context
           </Button>
         </div>
       </form>

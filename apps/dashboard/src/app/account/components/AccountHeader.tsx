@@ -70,6 +70,11 @@ export function AccountHeader(props: {
           // refresh projects
           router.refresh();
         }}
+        teamSlug={
+          createProjectDialogState.isOpen
+            ? createProjectDialogState.team.slug
+            : undefined
+        }
         enableNebulaServiceByDefault={
           createProjectDialogState.isOpen &&
           createProjectDialogState.team.enabledScopes.includes("nebula")

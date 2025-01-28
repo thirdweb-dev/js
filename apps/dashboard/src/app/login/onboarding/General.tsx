@@ -14,12 +14,14 @@ type OnboardingGeneralProps = {
   account: Account;
   onSave: (email: string) => void;
   onDuplicate: (email: string) => void;
+  onLogout: () => void;
 };
 
 export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   account,
   onSave,
   onDuplicate,
+  onLogout,
 }) => {
   const [existing, setExisting] = useState(false);
   const activeWallet = useActiveWallet();
@@ -27,6 +29,7 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
 
   async function handleLogout() {
     await doLogout();
+    onLogout();
     if (activeWallet) {
       disconnect(activeWallet);
     }

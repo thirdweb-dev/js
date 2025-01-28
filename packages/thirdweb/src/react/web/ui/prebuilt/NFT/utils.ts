@@ -1,4 +1,3 @@
-import {} from "@tanstack/react-query";
 import { getNFT as getNFT721 } from "../../../../../extensions/erc721/read/getNFT.js";
 import { getNFT as getNFT1155 } from "../../../../../extensions/erc1155/read/getNFT.js";
 import type { NFT } from "../../../../../utils/nft/parseNft.js";

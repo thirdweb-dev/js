@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { FormItem } from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
@@ -34,11 +35,9 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { EngineBackendWalletOptions } from "lib/engine";
-import {
-  useActiveChainAsDashboardChain,
-  useV5DashboardChain,
-} from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import {
   DownloadIcon,
   PencilIcon,
@@ -52,7 +51,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import invariant from "tiny-invariant";
 import { FormHelperText, FormLabel, LinkButton, Text } from "tw-components";
 import { prettyPrintCurrency } from "./utils";
 
@@ -89,21 +87,21 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
     instanceUrl: instanceUrl,
     address,
     authToken,
+    chainId,
   });
   const chain = useV5DashboardChain(chainId);
-  if (!chain || !backendWalletBalance) {
-    return;
+
+  if (!backendWalletBalance) {
+    return <Skeleton className="h-5 w-32 rounded-lg" />;
   }
 
   const balanceDisplay = prettyPrintCurrency({
     amount: backendWalletBalance.displayValue,
-    symbol: backendWalletBalance.symbol,
+    symbol: backendWalletBalance.symbol || chain.nativeCurrency?.symbol,
   });
 
   const balanceComponent = (
-    <Text fontWeight={backendWalletBalance.value === "0" ? "light" : "bold"}>
-      {balanceDisplay}
-    </Text>
+    <div className="text-muted-foreground">{balanceDisplay}</div>
   );
 
   const explorer = chain.blockExplorers?.[0];
@@ -250,6 +248,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           disclosure={sendDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          chainId={chainId}
         />
       )}
       {selectedBackendWallet && deleteDisclosure.isOpen && (
@@ -425,24 +424,28 @@ const SendFundsModal = ({
   disclosure,
   instanceUrl,
   authToken,
+  chainId,
 }: {
   fromWallet: BackendWallet;
   backendWallets: BackendWallet[];
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  chainId: number;
 }) => {
-  const chain = useActiveChainAsDashboardChain();
   const form = useForm<SendFundsInput>();
   const sendTokens = useEngineSendTokens({
     instanceUrl,
     authToken,
   });
+  const { idToChain } = useAllChainsData();
   const { data: backendWalletBalance } = useEngineBackendWalletBalance({
     instanceUrl,
     address: fromWallet.address,
     authToken,
+    chainId: chainId,
   });
+  const chain = idToChain.get(chainId);
   const toWalletDisclosure = useDisclosure();
 
   if (!backendWalletBalance) {
@@ -450,11 +453,9 @@ const SendFundsModal = ({
   }
 
   const onSubmit = async (data: SendFundsInput) => {
-    invariant(chain, "chain is required");
-
     const promise = sendTokens.mutateAsync(
       {
-        chainId: chain.chainId,
+        chainId: chainId,
         fromAddress: fromWallet.address,
         toAddress: data.toAddress,
         amount: data.amount,

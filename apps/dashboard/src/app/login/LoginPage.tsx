@@ -9,7 +9,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { ConnectEmbed, useActiveWalletConnectionStatus } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
@@ -154,27 +154,6 @@ function PageContent(props: {
     router.replace(props.redirectPath);
   }
 
-  if (connectionStatus === "connecting") {
-    return <LoadingCard />;
-  }
-
-  if (connectionStatus !== "connected" || screen.id === "login") {
-    return <CustomConnectEmbed onLogin={onLogin} />;
-  }
-
-  if (screen.id === "onboarding") {
-    return (
-      <Suspense fallback={<LoadingCard />}>
-        <LazyOnboardingUI
-          account={screen.account}
-          onComplete={onComplete}
-          redirectPath={props.redirectPath}
-          redirectToCheckout={redirectToCheckout}
-        />
-      </Suspense>
-    );
-  }
-
   async function onLogin() {
     const account = await getRawAccountAction();
 
@@ -191,6 +170,38 @@ function PageContent(props: {
     } else {
       onComplete();
     }
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    // if suddenly disconnected
+    if (connectionStatus !== "connected" && screen.id !== "login") {
+      setScreen({ id: "login" });
+    }
+  }, [connectionStatus, screen.id]);
+
+  if (connectionStatus === "connecting") {
+    return <LoadingCard />;
+  }
+
+  if (connectionStatus !== "connected" || screen.id === "login") {
+    return <CustomConnectEmbed onLogin={onLogin} />;
+  }
+
+  if (screen.id === "onboarding") {
+    return (
+      <Suspense fallback={<LoadingCard />}>
+        <LazyOnboardingUI
+          account={screen.account}
+          onComplete={onComplete}
+          redirectPath={props.redirectPath}
+          redirectToCheckout={redirectToCheckout}
+          onLogout={() => {
+            setScreen({ id: "login" });
+          }}
+        />
+      </Suspense>
+    );
   }
 
   return <LoadingCard />;

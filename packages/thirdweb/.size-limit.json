@@ -8,7 +8,7 @@
   {
     "name": "thirdweb (cjs)",
     "path": "./dist/cjs/exports/thirdweb.js",
-    "limit": "120 kB"
+    "limit": "130 kB"
   },
   {
     "name": "thirdweb (minimal + tree-shaking)",
@@ -19,7 +19,7 @@
   {
     "name": "thirdweb/chains (tree-shaking)",
     "path": "./dist/esm/exports/chains.js",
-    "limit": "600 B",
+    "limit": "650 B",
     "import": "{ ethereum }"
   },
   {

@@ -1,6 +1,5 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import {} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";

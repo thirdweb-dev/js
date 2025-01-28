@@ -1,3 +1,5 @@
+import { apiServerProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -23,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type ApiKey,
   type CreateKeyInput,
@@ -30,10 +33,10 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import type { UseMutationResult } from "@tanstack/react-query";
+import { type UseMutationResult, useQuery } from "@tanstack/react-query";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,6 +57,7 @@ export type CreateAPIKeyDialogProps = {
   onCreateAndComplete?: () => void;
   prefill?: CreateAPIKeyPrefillOptions;
   enableNebulaServiceByDefault: boolean;
+  teamSlug: string | undefined;
 };
 
 const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
@@ -78,6 +82,7 @@ export const CreateAPIKeyDialogUI = (props: {
   >;
   prefill?: CreateAPIKeyPrefillOptions;
   enableNebulaServiceByDefault: boolean;
+  teamSlug: string | undefined;
 }) => {
   const [screen, setScreen] = useState<
     { id: "create" } | { id: "api-details"; key: ApiKey }
@@ -97,7 +102,7 @@ export const CreateAPIKeyDialogUI = (props: {
       }}
     >
       <DialogContent
-        className="z-[10001] p-0"
+        className="z-[10001] overflow-hidden p-0"
         dialogOverlayClassName="z-[10000]"
         dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
       >
@@ -116,6 +121,7 @@ export const CreateAPIKeyDialogUI = (props: {
           {screen.id === "api-details" && (
             <APIKeyDetails
               apiKey={screen.key}
+              teamSlug={props.teamSlug}
               onComplete={() => {
                 onOpenChange(false);
                 setScreen({ id: "create" });
@@ -402,9 +408,35 @@ function DomainsAlert(props: {
 function APIKeyDetails(props: {
   apiKey: ApiKey;
   onComplete: () => void;
+  teamSlug: string | undefined;
 }) {
   const { apiKey } = props;
   const [secretStored, setSecretStored] = useState(false);
+  const router = useDashboardRouter();
+
+  // get the project.slug for the apiKey to render "View Project" button
+  const projectQuery = useQuery({
+    queryKey: ["project", props.teamSlug, apiKey.id],
+    queryFn: async () => {
+      const res = await apiServerProxy<{
+        result: Project[];
+      }>({
+        method: "GET",
+        pathname: `/v1/teams/${props.teamSlug}/projects`,
+      });
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      const projects = res.data.result;
+      const project = projects.find((p) => p.publishableKey === apiKey.key);
+      return project || null;
+    },
+    enabled: !!props.teamSlug,
+  });
+
+  const projectSlug = projectQuery.data?.slug;
 
   return (
     <div>
@@ -474,10 +506,31 @@ function APIKeyDetails(props: {
           type="button"
           onClick={props.onComplete}
           disabled={!secretStored}
+          variant="outline"
           className="min-w-28 gap-2"
         >
-          Complete
+          {props.teamSlug ? "Close" : "Complete"}
         </Button>
+
+        {props.teamSlug && (
+          <Button
+            onClick={() => {
+              if (!projectSlug) {
+                return;
+              }
+              router.push(`/team/${props.teamSlug}/${projectSlug}`);
+            }}
+            disabled={!secretStored || !projectSlug}
+            className="min-w-28 gap-2"
+          >
+            View Project
+            {projectQuery.isPending ? (
+              <Spinner className="size-4" />
+            ) : (
+              <ExternalLinkIcon className="size-4" />
+            )}
+          </Button>
+        )}
       </DialogFooter>
     </div>
   );

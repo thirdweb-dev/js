@@ -1,7 +1,6 @@
 "use client";
 import { hexToNumber } from "@noble/curves/abstract/utils";
 import { useId, useMemo } from "react";
-import type { Address } from "viem";
 
 const COLOR_OPTIONS = [
   ["#fca5a5", "#b91c1c"],
@@ -26,7 +25,7 @@ const COLOR_OPTIONS = [
  * @component
  */
 export type BlobbieProps = {
-  address: Address;
+  address: string;
   style?: Omit<React.CSSProperties, "backgroundImage">;
   className?: string;
   size?: number;

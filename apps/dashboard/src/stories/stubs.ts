@@ -42,7 +42,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
-    growthTrialEligible: true,
+    growthTrialEligible: false,
     enabledScopes: [
       "pay",
       "storage",

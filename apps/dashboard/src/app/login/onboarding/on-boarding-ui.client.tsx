@@ -21,6 +21,7 @@ type OnboardingScreen =
 function OnboardingUI(props: {
   account: Account;
   onComplete: () => void;
+  onLogout: () => void;
   // path to redirect from stripe
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
@@ -68,6 +69,7 @@ function OnboardingUI(props: {
       {screen.id === "onboarding" && (
         <OnboardingGeneral
           account={account}
+          onLogout={props.onLogout}
           onSave={(email) => {
             setUpdatedEmail(email);
             setScreen({

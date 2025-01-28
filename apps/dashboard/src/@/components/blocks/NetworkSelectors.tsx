@@ -16,6 +16,8 @@ type Option = { label: string; value: string };
 export function MultiNetworkSelector(props: {
   selectedChainIds: number[];
   onChange: (chainIds: number[]) => void;
+  disableChainId?: boolean;
+  className?: string;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -53,16 +55,24 @@ export function MultiNetworkSelector(props: {
       return (
         <div className="flex justify-between gap-4">
           <span className="flex grow gap-2 truncate text-left">
+            <ChainIcon
+              className="size-5"
+              ipfsSrc={chain.icon?.url}
+              loading="lazy"
+            />
             {cleanChainName(chain.name)}
           </span>
-          <Badge variant="outline" className="gap-2">
-            <span className="text-muted-foreground">Chain ID</span>
-            {chain.chainId}
-          </Badge>
+
+          {!props.disableChainId && (
+            <Badge variant="outline" className="gap-2">
+              <span className="text-muted-foreground">Chain ID</span>
+              {chain.chainId}
+            </Badge>
+          )}
         </div>
       );
     },
-    [idToChain],
+    [idToChain, props.disableChainId],
   );
 
   return (
@@ -79,6 +89,7 @@ export function MultiNetworkSelector(props: {
       disabled={allChains.length === 0}
       overrideSearchFn={searchFn}
       renderOption={renderOption}
+      className={props.className}
     />
   );
 }
@@ -143,7 +154,7 @@ export function SingleNetworkSelector(props: {
               ipfsSrc={chain.icon?.url}
               loading="lazy"
             />
-            {chain.name}
+            {cleanChainName(chain.name)}
           </span>
 
           {!props.disableChainId && (
@@ -168,6 +179,7 @@ export function SingleNetworkSelector(props: {
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
+      closeOnSelect={true}
       placeholder={isLoadingChains ? "Loading Chains..." : "Select Chain"}
       overrideSearchFn={searchFn}
       renderOption={renderOption}

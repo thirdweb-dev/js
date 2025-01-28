@@ -5,6 +5,7 @@ import {
   ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
+import { getAddress } from "../../address.js";
 import { keccak256 } from "../../hashing/keccak256.js";
 import { convertQuantity } from "./convert-quantity.js";
 import type { OverrideEntry } from "./types.js";
@@ -39,7 +40,7 @@ export async function hashEntry(options: {
     encodePacked(
       ["address", "uint256", "uint256", "address"],
       [
-        options.entry.address,
+        getAddress(options.entry.address),
         convertQuantity({
           quantity: options.entry.maxClaimable || "unlimited",
           tokenDecimals: options.tokenDecimals,
@@ -48,7 +49,7 @@ export async function hashEntry(options: {
           quantity: options.entry.price || "unlimited",
           tokenDecimals: currencyDecimals,
         }),
-        currencyAddress,
+        getAddress(currencyAddress),
       ],
     ),
   );

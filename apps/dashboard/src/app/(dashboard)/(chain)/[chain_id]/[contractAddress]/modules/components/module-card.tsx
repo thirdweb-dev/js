@@ -23,7 +23,7 @@ import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { toast } from "sonner";
 import {
-  type ContractOptions,
+  type ThirdwebContract,
   getContract,
   sendTransaction,
   waitForReceipt,
@@ -35,7 +35,7 @@ import { useModuleContractInfo } from "./moduleContractInfo";
 
 type ModuleCardProps = {
   moduleAddress: string;
-  contract: ContractOptions;
+  contract: ThirdwebContract;
   onRemoveModule: () => void;
   ownerAccount: Account | undefined;
   allModuleContractInfo: {

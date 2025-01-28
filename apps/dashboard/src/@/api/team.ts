@@ -25,7 +25,7 @@ export type Team = {
   billingPlan: "pro" | "growth" | "free" | "starter";
   billingStatus: "validPayment" | (string & {}) | null;
   billingEmail: string | null;
-  growthTrialEligible: boolean | null;
+  growthTrialEligible: false;
   enabledScopes: EnabledTeamScope[];
 };
 

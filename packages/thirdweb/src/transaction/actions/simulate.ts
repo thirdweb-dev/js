@@ -3,6 +3,7 @@ import { decodeAbiParameters, formatTransactionRequest } from "viem";
 import { eth_call } from "../../rpc/actions/eth_call.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import type { PreparedMethod } from "../../utils/abi/prepare-method.js";
+import { getAddress } from "../../utils/address.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
@@ -61,8 +62,8 @@ export async function simulateTransaction<
 
   const serializedTx = formatTransactionRequest({
     data,
-    from,
-    to,
+    from: from ? getAddress(from) : undefined,
+    to: to ? getAddress(to) : undefined,
     value,
     accessList,
   });
