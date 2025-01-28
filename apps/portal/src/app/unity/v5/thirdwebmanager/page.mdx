@@ -6,75 +6,75 @@ import thirdwebmanager_misc from "./thirdwebmanager_misc.png";
 import thirdwebmanager_debug from "./thirdwebmanager_debug.png";
 
 export const metadata = createMetadata({
-	title: "Thirdweb Manager | thirdweb Unity SDK",
+	title: "Thirdweb Manager | SDK de thirdweb para Unity",
 	description:
-		"ThirdwebManager is a prefab that provides a convenient way to instantiate the ThirdwebClient, and contains helper functions to create contracts and wallets. Add the prefab to your scene and the SDK will persist throughout your game's lifecycle.",
+		"ThirdwebManager es un prefab que proporciona una forma conveniente de instanciar el [ThirdwebClient](/dotnet/client) y contiene funciones auxiliares para crear contratos y billeteras. Agrega el prefab a tu escena y el SDK persistirá durante el ciclo de vida de tu juego.",
 });
 
 # Thirdweb Manager
 
-The `ThirdwebManager` is a prefab that provides a convenient way to instantiate the [ThirdwebClient](/dotnet/client), and contains helper functions to create contracts and wallets. 
-Add the prefab to your scene and the client will persist throughout your game's lifecycle, keeping track of your connected wallets.
+El `ThirdwebManager` es un prefab que proporciona una forma conveniente de instanciar el [ThirdwebClient](/dotnet/client), y contiene funciones auxiliares para crear contratos y billeteras. 
+Agrega el prefab a tu escena y el cliente persistirá durante todo el ciclo de vida de tu juego, manteniendo un registro de las billeteras conectadas.
 
-It is entirely optional, and you can opt to use the [.NET SDK](/dotnet) directly if you prefer to do so.
+Es completamente opcional, y puedes optar por usar directamente el [.NET SDK](/dotnet) si prefieres hacerlo.
 
-If you are wrapping the SDK, we recommend making your own Manager inspired by `ThirdwebManager.cs`, specifically for `ThirdwebClient` initialization.
+Si estás envolviendo el SDK, te recomendamos crear tu propio Manager inspirado en `ThirdwebManager.cs`, específicamente para la inicialización del `ThirdwebClient`.
 
-## Configuration
+## Configuración
 
-Configure `ThirdwebManager` through the Unity Inspector window.
+Configura `ThirdwebManager` a través de la ventana del Inspector de Unity.
 
-Below is a list of all the settings you can adjust.
+A continuación se muestra una lista de todas las configuraciones que puedes ajustar.
 
-### Client
+### Cliente
 
 <DocImage src={thirdwebmanager_client} />
 
-This section involves the required thirdweb client settings to configure the SDK:
+Esta sección involucra la configuración del cliente de thirdweb para configurar el SDK:
 
-- `Client ID`: Thirdweb [API Key](https://thirdweb.com/create-api-key). Used to access thirdweb services such as RPC, Storage, and Account Abstraction.
-- `Bundle ID`: The bundle ID used to access thirdweb services from native platforms. Should be the same as the bundle ID in your Unity project, e.g., `com.companyname.gamename`.
-- `Create API Key`: A link to create a new API key if you don't have one.
+- `Client ID`: Clave [API Key](https://thirdweb.com/create-api-key) de thirdweb. Se utiliza para acceder a los servicios de thirdweb como RPC, Almacenamiento y Abstracción de Cuentas.
+- `Bundle ID`: El ID del paquete utilizado para acceder a los servicios de thirdweb desde plataformas nativas. Debe ser el mismo que el ID del paquete en tu proyecto de Unity, por ejemplo, `com.companyname.gamename`.
+- `Create API Key`: Un enlace para crear una nueva clave API si no tienes una.
 
-### Preferences
+### Preferencias
 
 <DocImage src={thirdwebmanager_preferences} />
 
-This section allows you to define the default preferences for the SDK:
+Esta sección te permite definir las preferencias predeterminadas para el SDK:
 
-- `Initialize On Awake`: Whether the SDK should initialize on awake or not. If not, you can call `ThirdwebManager.Instance.Initialize()` to initialize it manually.
-- `Show Debug Logs`: Whether to show thirdweb SDK debug logs.
-- `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as the number of wallets connected to your game.
+- `Initialize On Awake`: Si el SDK debe inicializarse al despertar o no. Si no, puedes llamar a `ThirdwebManager.Instance.Initialize()` para inicializarlo manualmente.
+- `Show Debug Logs`: Si deseas mostrar los registros de depuración del SDK de thirdweb.
+- `Opt Out Usage Analytics`: Si deseas optar por no participar en las analíticas de uso de Connect, como la cantidad de billeteras conectadas a tu juego.
 
-### Miscellaneous
+### Misceláneos
 
 <DocImage src={thirdwebmanager_misc} />
 
-This section allows you to customize the SDK's behavior:
+Esta sección te permite personalizar el comportamiento del SDK:
 
-- `Supported Chains`: A list of chains that the wallets should be able to connect to by default when using `WalletConnect` as a wallet provider.
-- `Redirect Page HTML Override`: Raw HTML to override the default redirect page when connecting to `InAppWallet` or `EcosystemWallet` providers.
+- `Supported Chains`: Una lista de cadenas a las que las billeteras deberían poder conectarse por defecto cuando se use `WalletConnect` como proveedor de billetera.
+- `Redirect Page HTML Override`: HTML en bruto para sobrescribir la página de redirección predeterminada al conectarse a los proveedores `InAppWallet` o `EcosystemWallet`.
 
-### Debug
+### Depuración
 
 <DocImage src={thirdwebmanager_debug} />
 
-This section allows you to find helpful information:
+Esta sección te permite encontrar información útil:
 
-- `Log Active Wallet Info`: Logs the active (last connected) wallet's information such as its address.
-- `Open Documentation`: Opens the thirdweb SDK documentation in your default browser.
+- `Log Active Wallet Info`: Registra la información de la billetera activa (última conectada), como su dirección.
+- `Open Documentation`: Abre la documentación del SDK de thirdweb en tu navegador predeterminado.
 
-## Interacting with the ThirdwebManager
+## Interactuar con el ThirdwebManager
 
-Once your `ThirdwebManager` is set up, you can interact with it using the following methods:
+Una vez que tu `ThirdwebManager` esté configurado, puedes interactuar con él utilizando los siguientes métodos:
 
-### Initialize (If not set to `Initialize On Awake`)
+### Inicializar (Si no está configurado en `Initialize On Awake`)
 
 ```csharp
 ThirdwebManager.Instance.Initialize();
 ```
 
-Initializes the SDK with the settings specified in the Unity Inspector.
+Inicializa el SDK con la configuración especificada en el Inspector de Unity.
 
 ### GetContract
 
@@ -83,7 +83,7 @@ var contract = await ThirdwebManager.Instance.GetContract("contract-address", ch
 var result = await contract.Read<string>("name");
 ```
 
-Returns a [ThirdwebContract](/dotnet/contracts/create) instance that can be used to interact with a smart contract.
+Devuelve una instancia de [ThirdwebContract](/dotnet/contracts/create) que se puede usar para interactuar con un contrato inteligente.
 
 ### ConnectWallet
 
@@ -93,7 +93,7 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
 var address = await wallet.GetAddress();
 ```
 
-Connects a wallet based on the specified `WalletOptions` and returns an `IThirdwebWallet` instance that can be used to interact with the blockchain.
+Conecta una billetera basada en las `WalletOptions` especificadas y devuelve una instancia de `IThirdwebWallet` que se puede usar para interactuar con la blockchain.
 
 ### UpgradeToSmartWallet
 
@@ -101,7 +101,7 @@ Connects a wallet based on the specified `WalletOptions` and returns an `IThirdw
 var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(wallet, chainId, smartWalletOptions);
 ```
 
-Upgrades the specified wallet to a `SmartWallet`, returning a `SmartWallet` instance.
+Actualiza la billetera especificada a una `SmartWallet`, devolviendo una instancia de `SmartWallet`.
 
 ### LinkAccount
 
@@ -109,7 +109,7 @@ Upgrades the specified wallet to a `SmartWallet`, returning a `SmartWallet` inst
 var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainWallet, walletToLink, otp, chainId, jwtOrPayload);
 ```
 
-Links another `InAppWallet` or `EcosystemWallet` account to the main wallet and returns a list of linked accounts, allowing you to login with either authentication method later.
+Vincula otra cuenta de `InAppWallet` o `EcosystemWallet` a la billetera principal y devuelve una lista de cuentas vinculadas, lo que te permite iniciar sesión con cualquiera de los métodos de autenticación más adelante.
 
 ### GetActiveWallet
 
@@ -117,7 +117,7 @@ Links another `InAppWallet` or `EcosystemWallet` account to the main wallet and 
 var wallet = ThirdwebManager.Instance.GetActiveWallet();
 ```
 
-Returns the currently active wallet as an `IThirdwebWallet`.
+Devuelve la billetera activa actualmente como un `IThirdwebWallet`.
 
 ### SetActiveWallet
 
@@ -125,7 +125,7 @@ Returns the currently active wallet as an `IThirdwebWallet`.
 ThirdwebManager.Instance.SetActiveWallet(wallet);
 ```
 
-Sets the specified wallet as the active wallet.
+Establece la billetera especificada como la billetera activa.
 
 ### GetWallet
 
@@ -133,7 +133,7 @@ Sets the specified wallet as the active wallet.
 var wallet = ThirdwebManager.Instance.GetWallet("wallet-address");
 ```
 
-Returns a wallet from the manager's wallet mapping by its address.
+Devuelve una billetera del mapeo de billeteras del administrador por su dirección.
 
 ### AddWallet
 
@@ -141,7 +141,7 @@ Returns a wallet from the manager's wallet mapping by its address.
 var wallet = await ThirdwebManager.Instance.AddWallet(wallet);
 ```
 
-Adds a wallet to the manager's wallet mapping and returns the added wallet.
+Agrega una billetera al mapeo de billeteras del administrador y devuelve la billetera agregada.
 
 ### RemoveWallet
 
@@ -149,22 +149,22 @@ Adds a wallet to the manager's wallet mapping and returns the added wallet.
 ThirdwebManager.Instance.RemoveWallet("wallet-address");
 ```
 
-Removes a wallet from the manager's wallet mapping by its address.
+Elimina una billetera del mapeo de billeteras del administrador por su dirección.
 
-## Child Prefabs
+## Prefabs Hijos
 
 ### DefaultOTPModal
 
-The helper modal that is displayed when using the `ThirdwebManager`'s `ConnectWallet` function with an auth method that requires an OTP, such as Email or Phone login.
+El modal de ayuda que se muestra al usar la función `ConnectWallet` de `ThirdwebManager` con un método de autenticación que requiere un OTP, como el inicio de sesión por correo electrónico o teléfono.
 
-It can be replaced with a custom modal that extends `AbstractOTPVerifyModal` to customize the OTP verification process.
+Se puede reemplazar con un modal personalizado que extienda `AbstractOTPVerifyModal` para personalizar el proceso de verificación del OTP.
 
 ### WalletConnectModal
 
-The `WalletConnectModal` prefab is an out-of-the-box WalletConnect modal that can be used to connect to 400+ wallets.
+El prefab `WalletConnectModal` es un modal de WalletConnect listo para usar que se puede utilizar para conectar con más de 400 billeteras.
 
-It will be automatically activated when connecting to a `WalletConnect` provider.
+Se activará automáticamente al conectarse a un proveedor `WalletConnect`.
 
-## What Now?
+## ¿Y ahora qué?
 
-Explore the [.NET SDK](/dotnet) to learn more about interacting with smart contracts, wallets, storage, RPC, account abstraction, and more.
+Explora el [SDK de .NET](/dotnet) para aprender más sobre cómo interactuar con contratos inteligentes, billeteras, almacenamiento, RPC, abstracción de cuentas y más.

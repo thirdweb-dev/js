@@ -11,42 +11,42 @@ import {
 import { createUnrealEngineMetadata } from "../../util";
 
 export const metadata = createUnrealEngineMetadata({
-	title: "In-App Wallets",
-	description: "In-App Wallet Blueprints",
+	title: "Billeteras In-App",
+	description: "Blueprints de Billeteras In-App",
 });
 
-# In-App Wallets
+# Billeteras In-App
 
-### Create Wallet
-Creates an in-app wallet based on inputs.
+### Crear Billetera
+Crea una billetera in-app basada en los inputs proporcionados.
 <Blueprint code={createWalletNode} className='w-full h-48' />
 
-### Sign In
-Sign in, passing the required input if OTP, JWT, or Auth Endpoint
+### Iniciar Sesión
+Inicia sesión, pasando el input requerido si es OTP, JWT o Auth Endpoint
 <Blueprint code={signInNode} className='w-full h-40' />
 
-### Link Wallet
-Link a new auth method with a created - but never signed in - wallet
+### Vincular Billetera
+Vincula un nuevo método de autenticación con una billetera creada - pero que nunca se ha iniciado sesión
 <Blueprint code={linkWalletNode} className='w-full h-40' />
 
 ## OTP
 
-### Send OTP
-Sends an OTP for the in-app wallet.
+### Enviar OTP
+Envía un OTP para la billetera in-app.
 <Blueprint code={sendOtpNode} className='w-full h-40' />
 
 ## OAuth
 
-### Fetch OAuth login link
-Fetches the OAuth login link for the in-app wallet.
+### Obtener enlace de login OAuth
+Obtiene el enlace de login OAuth para la billetera in-app.
 <Blueprint code={fetchOAuthLoginLinkNode} className='w-full h-40' />
 
-## Utilities
+## Utilidades
 
-### Is Connected
-Checks if the wallet handle is connected to a session. boolean and macro variants
+### ¿Está Conectado?
+Verifica si el manejador de billetera está conectado a una sesión. Variantes booleanas y macro
 <Blueprint code={isConnectedNode} className='w-full h-48' />
 
-### Disconnect
-Disconnects the wallet handle from its session.
+### Desconectar
+Desconecta el manejador de billetera de su sesión.
 <Blueprint code={disconnectNode} className='w-full h-28' />

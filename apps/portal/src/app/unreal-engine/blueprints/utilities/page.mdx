@@ -14,48 +14,48 @@ import {
 import { Blueprint } from "../blueprint";
 
 export const metadata = createUnrealEngineMetadata({
-	title: "Utilities",
-	description: "Utility & Helper functions",
+	title: "Utilidades",
+	description: "Funciones de utilidad y ayuda",
 });
 
-# Utilities
+# Utilidades
 
-### Sign Message
-Signs a message with the specified wallet handle.
+### Firmar Mensaje
+Firma un mensaje con el manejador de billetera especificado.
 <Blueprint code={signMessageNode} className='w-full h-48' />
 
-### To Text/String
-Signs a message with the specified wallet handle.
+### Convertir a Texto/Cadena
+Convierte un mensaje a texto/cadena con el manejador de billetera especificado.
 <Blueprint code={toTextStringNode} className='w-full h-40' />
 
-### Is Valid Address
-Checks the validity of the address
+### Dirección Válida
+Verifica la validez de la dirección.
 <Blueprint code={isValidAddressNode} className='w-full h-32' />
 
-### Is Checksummed Address
-Signs a message with the specified wallet handle.
+### Dirección con Suma de Control
+Verifica si una dirección tiene suma de control válida.
 <Blueprint code={isChecksummedAddressNode} className='w-full h-32' />
 
-### To Checksummed Address
-Signs a message with the specified wallet handle.
+### Convertir a Dirección con Suma de Control
+Convierte una dirección a su versión con suma de control.
 <Blueprint code={toChecksummedAddressNode} className='w-full h-32' />
 
-### Is Valid
-Signs a message with the specified wallet handle.
+### Es Válido
+Verifica si un valor es válido.
 <Blueprint code={isValidNode} className='w-full h-48' />
 
-### Equality
-Native equality/inequality operators
+### Igualdad
+Operadores nativos de igualdad/desigualdad.
 <Blueprint code={equalityNode} className='w-full h-60' />
 
-### Zero Address
-Constant zero address
+### Dirección Cero
+Dirección constante cero.
 <Blueprint code={zeroAddressNode} className='w-full h-28' />
 
-### OAuth Provider to String/Text
-Convert an EThirdwebOAuthProvider to string/text
+### OAuth Provider a Texto/Cadena
+Convierte un EThirdwebOAuthProvider a texto/cadena.
 <Blueprint code={oAuthProviderToStringText} className="w-full h-32" />
 
-### String/Text to OAuth Provider
-Convert string/text to an EThirdwebOAuthProvider
+### Texto/Cadena a OAuth Provider
+Convierte texto/cadena a un EThirdwebOAuthProvider.
 <Blueprint code={stringTextToOAuthProvider} className="w-full h-32" />

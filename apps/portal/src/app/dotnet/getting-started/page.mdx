@@ -2,59 +2,59 @@ import { Callout, Steps, Step, ArticleIconCard, createMetadata, Stack } from "@d
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "Interacting with Contracts | Thirdweb .NET SDK",
+	title: "Interacción con Contratos | SDK de thirdweb para .NET",
 	description:
-		"Learn how to interact with smart contracts using the thirdweb .NET SDK.",
+		"Aprende cómo interactuar con contratos inteligentes usando el SDK de thirdweb para .NET.",
 });
 
-# Getting Started
+# Primeros Pasos
 
-<Callout variant='info' title="Recommendation">
+<Callout variant='info' title="Recomendación">
 
-We recommend using an API key to use thirdweb’s default infrastructure services with the .NET SDK such as RPC, Storage, and Account Abstraction. If you haven’t created a key yet, you can do so for free from the [thirdweb dashboard](https://thirdweb.com/create-api-key).
+Recomendamos usar una clave API para utilizar los servicios de infraestructura predeterminados de thirdweb con el SDK de .NET, como RPC, Almacenamiento y Abstracción de Cuentas. Si aún no has creado una clave, puedes hacerlo de forma gratuita desde el [panel de control de thirdweb](https://thirdweb.com/create-api-key).
 
 </Callout>
 
-To get started with the Thirdweb .NET SDK, ensure you have [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
+Para comenzar con el SDK de thirdweb para .NET, asegúrate de tener instalado el [.NET SDK](https://dotnet.microsoft.com/download) en tu máquina.
 
-We recommend using the latest stable version of .NET.
+Recomendamos usar la última versión estable de .NET.
 
-## Integration Steps
+## Pasos de Integración
 
 <Steps>
 
-<Step title=".NET Package Installation" >
+<Step title="Instalación del Paquete .NET" >
 
-Install the Thirdweb .NET SDK via NuGet package manager:
+Instala el SDK de thirdweb para .NET a través del administrador de paquetes NuGet:
 
 ```bash
 dotnet add package Thirdweb
 ```
 
-This command adds the Thirdweb SDK to your project, allowing you to interact with the blockchain in your .NET applications.
+Este comando agrega el SDK de Thirdweb a tu proyecto, permitiéndote interactuar con la blockchain en tus aplicaciones .NET.
 
 </Step>
-<Step title="Initialize Thirdweb Client" >
+<Step title="Inicializar el Cliente Thirdweb" >
 
-Create a new instance of the Thirdweb client in your application:
+Crea una nueva instancia del cliente de Thirdweb en tu aplicación:
 
 ```csharp
-// For Web Applications
-var client = ThirdwebClient.Create(clientId: "yourClientId");
+// Para aplicaciones web
+var client = ThirdwebClient.Create(clientId: "tuClientId");
 
-// For Native Applications
-var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+// Para aplicaciones nativas
+var client = ThirdwebClient.Create(clientId: "tuClientId", bundleId: "tuBundleId");
 
-// For Backend Applications
-var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
+// Para aplicaciones de backend
+var client = ThirdwebClient.Create(secretKey: "tuSecretKey");
 ```
 
-Replace "yourClientId" and "yourBundleId" with your actual client ID and bundle ID.
+Reemplaza "tuClientId" y "tuBundleId" con tu ID de cliente y ID de paquete reales.
 
 </Step>
-<Step title="Interact with Smart Contracts" >
+<Step title="Interactuar con Contratos Inteligentes" >
 
-Now, you can start interacting with smart contracts. For example, to read from a contract:
+Ahora, puedes comenzar a interactuar con contratos inteligentes. Por ejemplo, para leer desde un contrato:
 
 ```csharp
 var contract = await ThirdwebContract.Create(client: client, address: "contractAddress", chain: chainId);
@@ -62,30 +62,31 @@ var readResult = await contract.Read<string>(contract, "methodName");
 Console.WriteLine($"Contract read result: {readResult}");
 ```
 
-Replace "contractAddress", chainId, and "methodName" with your contract's address, the chain ID, and the method name you wish to call.
+Reemplaza "contractAddress", chainId y "methodName" con la dirección de tu contrato, el ID de la cadena y el nombre del método que deseas llamar.
 
 </Step>
-<Step title="Explore Advanced Features" >
+<Step title="Explorar Características Avanzadas" >
 
-Check the SDK documentation for more advanced features like interacting with smart wallets, signing messages, and performing transactions.
+Consulta la documentación del SDK para más características avanzadas como interactuar con billeteras inteligentes, firmar mensajes y realizar transacciones.
 
 </Step>
 </Steps>
 
-## Gaming Integrations
+## Integraciones con Juegos
 
 <Stack>
 
 <ArticleIconCard
 	href="/dotnet/godot"
 	icon={GraduationCap}
-	title="Godot Integration"
+	title="Integración con Godot"
 />
 
 <ArticleIconCard
 	href="/unity/v5"
 	icon={GraduationCap}
-	title="Unity Integration"
+	title="Integración con Unity"
 />
 
 </Stack>
+

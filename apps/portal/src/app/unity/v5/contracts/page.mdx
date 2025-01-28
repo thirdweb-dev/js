@@ -2,16 +2,16 @@ import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "ThirdwebContract | Thirdweb Unity SDK",
+	title: "ThirdwebContract | SDK de thirdweb para Unity",
 	description:
-		"Instantiate a PrivateKeyWallet to sign transactions and messages.",
+		"Instancia un ThirdwebContract para firmar transacciones y mensajes.",
 });
 
 # ThirdwebContract
 
-`ThirdwebContract` is a wrapper around any EVM-compatible smart contract. It allows you to interact with the contract's functions easily, as well as prepare transactions.
+`ThirdwebContract` es un envoltorio alrededor de cualquier contrato inteligente compatible con EVM. Te permite interactuar fácilmente con las funciones del contrato, así como preparar transacciones.
 
-### Instantiating a ThirdwebContract
+### Instanciando un ThirdwebContract
 
 ```csharp
 var contract = await ThirdwebManager.Instance.GetContract(
@@ -21,14 +21,14 @@ var contract = await ThirdwebManager.Instance.GetContract(
 );
 ```
 
-That's it! You can now interact with the contract using the `ThirdwebContract`.
+¡Eso es todo! Ahora puedes interactuar con el contrato usando `ThirdwebContract`.
 
-It contains `Read`, `Write` and `Prepare` methods to respectively read contract state, write to the contract and prepare transactions.
+Contiene métodos `Read`, `Write` y `Prepare` para respectivamente leer el estado del contrato, escribir en el contrato y preparar transacciones.
 
-Furthermore, it contains shorthands such as `ThirdwebContract.ERC20_BalanceOf` to easily interact with common contract interfaces.
+Además, contiene atajos como `ThirdwebContract.ERC20_BalanceOf` para interactuar fácilmente con interfaces comunes de contratos.
 
 <ArticleIconCard
 	href="/dotnet/contracts/read"
 	icon={GraduationCap}
-	title="Interact with Smart Contracts"
+	title="Interactuar con Contratos Inteligentes"
 />

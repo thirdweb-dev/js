@@ -1,56 +1,62 @@
 import { Details, Callout, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "InAppWallet.Create | Thirdweb .NET SDK",
+	title: "InAppWallet.Create | SDK de Thirdweb para .NET",
 	description:
-		"Instantiate an InAppWallet for secure user authentication and interaction.",
+		"Instancia un InAppWallet para autenticación segura de usuarios e interacción.",
 });
 
 # InAppWallet.Create
 
-Create an instance of `InAppWallet` using a user's email, phone number or OAuth. This wallet type facilitates secure user authentication through OTP verification, making it suitable for client-facing applications where handling private keys directly is not ideal.
+Crea una instancia de `InAppWallet` utilizando el correo electrónico, número de teléfono u OAuth de un usuario. Este tipo de billetera facilita la autenticación segura del usuario a través de verificación OTP, lo que la hace adecuada para aplicaciones orientadas al cliente donde no es ideal manejar claves privadas directamente.
 
-## Login Methods
+## Métodos de Inicio de Sesión
 
-In-App Wallets support a variety of login methods:
-- Email (OTP Login)
-- Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch etc.)
-- SIWE (Sign-In with Ethereum)
-- Custom Auth (OIDC Compatible)
-- Custom Auth (Generic Auth Endpoint)
-- Guest (Onboard easily, link other accounts later)
+Las billeteras In-App soportan una variedad de métodos de inicio de sesión:
+- Correo electrónico (Inicio de sesión con OTP)
+- Teléfono (Inicio de sesión con OTP)
+- Redes sociales (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, etc.)
+- SIWE (Iniciar sesión con Ethereum)
+- Autenticación personalizada (compatible con OIDC)
+- Autenticación personalizada (Punto final de autenticación genérico)
+- Invitado (Incorporación fácil, vincula otras cuentas más tarde)
 
-## Usage
+## Uso
 
 ```csharp
-// Email
+// Correo electrónico
 var wallet = await InAppWallet.Create(client: client, email: "userEmail");
-// Phone
+
+// Teléfono
 var wallet = await InAppWallet.Create(client: client, phoneNumber: "+1234567890");
+
 // Google, Apple, Facebook, etc.
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
+
 // SIWE
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
-// Custom Auth - JWT
+
+// Autenticación personalizada - JWT
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
-// Custom Auth - AuthEndpoint
+
+// Autenticación personalizada - AuthEndpoint
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.AuthEndpoint);
-// Guest Login
+
+// Inicio de sesión como invitado
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Guest);
 
-// Session resuming supported for all methods
+// Reanudación de sesión soportada para todos los métodos
 var isConnected = await wallet.IsConnected();
 
-// If not connected, initiate login flow based on the auth provider you are using
+// Si no está conectado, inicia el flujo de inicio de sesión según el proveedor de autenticación que estés usando
 
-// Email & Phone (OTP)
-await wallet.SendOTP(); // and fetch the otp
-var address = await wallet.LoginWithOtp("userEnteredOTP"); // try catch and retry if needed
+// Correo electrónico y teléfono (OTP)
+await wallet.SendOTP(); // y obtener el otp
+var address = await wallet.LoginWithOtp("userEnteredOTP"); // prueba con catch y vuelve a intentar si es necesario
 
-// Socials (OAuth)
+// Redes sociales (OAuth)
 var address = await wallet.LoginWithOauth(
-    // Windows console app example, adaptable to any runtime
+    // Ejemplo para aplicación de consola en Windows, adaptable a cualquier entorno
     isMobile: false,
     browserOpenAction: (url) =>
     {
@@ -60,104 +66,103 @@ var address = await wallet.LoginWithOauth(
     mobileRedirectScheme: "myBundleId://"
 );
 
-// SIWE (Wallet)
+// SIWE (Billetera)
 var address = await siweWallet.LoginWithSiwe(chainId: 1);
 
-// Custom Auth (JWT)
+// Autenticación personalizada (JWT)
 var address = await wallet.LoginWithCustomAuth(jwt: "myjwt");
 
-// Custom Auth (AuthEndpoint)
+// Autenticación personalizada (AuthEndpoint)
 var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload");
 
-// Guest Login (Easy onboarding)
+// Inicio de sesión como invitado (Incorporación fácil)
 var address = await wallet.LoginWithGuest();
 ```
 
-<Callout variant="info" title="Client-Side Use">
-	This wallet is designed for client-side use in applications where direct access to the user's private keys is not safe or necessary. It leverages OTP for secure authentication, allowing users to interact with blockchain applications seamlessly.
+<Callout variant="info" title="Uso en el Lado del Cliente">
+  Esta billetera está diseñada para uso en el lado del cliente en aplicaciones donde el acceso directo a las claves privadas del usuario no es seguro ni necesario. Utiliza OTP para una autenticación segura, permitiendo a los usuarios interactuar con aplicaciones blockchain de manera fluida.
 </Callout>
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### client (required)
+### client (requerido)
 
-An instance of `ThirdwebClient`.
+Una instancia de `ThirdwebClient`.
 
-### email (optional)
+### email (opcional)
 
-The user's email address. Required if `phoneNumber` is not provided.
+La dirección de correo electrónico del usuario. Es requerido si no se proporciona `phoneNumber`.
 
-### phoneNumber (optional)
+### phoneNumber (opcional)
 
-The user's phone number. Required if `email` is not provided.
+El número de teléfono del usuario. Es requerido si no se proporciona `email`.
 
-### authProvider (optional)
+### authProvider (opcional)
 
-The OAuth provider to use for authentication. Supported values are `AuthProvider.Google`, `AuthProvider.Apple`, `AuthProvider.Facebook`.
+El proveedor de OAuth que se utilizará para la autenticación. Los valores soportados son `AuthProvider.Google`, `AuthProvider.Apple`, `AuthProvider.Facebook`.
 
-### storageDirectoryPath (optional)
+### storageDirectoryPath (opcional)
 
-The path to the directory where the wallet data is stored. Defaults to the application's data directory.
+La ruta al directorio donde se almacenarán los datos de la billetera. El valor predeterminado es el directorio de datos de la aplicación.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### InAppWallet
 
-Returns an instance of InAppWallet, initialized for the user based on the provided email or phone number. This wallet is ready for OTP authentication and further blockchain interactions.
+Devuelve una instancia de InAppWallet, inicializada para el usuario según el correo electrónico o número de teléfono proporcionado. Esta billetera está lista para la autenticación OTP y futuras interacciones con blockchain.
 
 </Details>
 
-## OTP Authentication Flow
+## Flujo de Autenticación OTP
 
-The OTP authentication flow involves sending an OTP to the user's email or phone and then verifying the OTP to complete authentication:
+El flujo de autenticación OTP implica enviar un OTP al correo electrónico o teléfono del usuario y luego verificar el OTP para completar la autenticación:
 
-**Send OTP:** Initiate the login process by calling SendOTP on the InAppWallet instance. This sends an OTP to the user's email or phone number.
-
+**Enviar OTP:** Inicia el proceso de inicio de sesión llamando a `SendOTP` en la instancia de InAppWallet. Esto envía un OTP al correo electrónico o número de teléfono del usuario.
 ```csharp
 await wallet.SendOTP();
 ```
 
-**Submit OTP:** Once the user receives the OTP, they submit it back to the application, which then calls LoginWithOtp on the InAppWallet instance to verify the OTP and complete the login process.
+**Enviar OTP:** Una vez que el usuario recibe el OTP, lo envía de vuelta a la aplicación, que luego llama a `LoginWithOtp` en la instancia de InAppWallet para verificar el OTP y completar el proceso de inicio de sesión.
 
 ```csharp
 var address = await wallet.LoginWithOtp("userEnteredOTP");
-// If this fails, feel free to catch and take in another OTP and retry the login process
+// Si esto falla, puedes capturarlo y pedir otro OTP para intentar de nuevo el proceso de inicio de sesión.
 ```
 
-## Example
+## Ejemplo
 
-Here's an example of creating an `InAppWallet` with a user's email and completing the OTP authentication flow:
+Aquí tienes un ejemplo de cómo crear un `InAppWallet` con el correo electrónico de un usuario y completar el flujo de autenticación OTP:
 
 ```csharp
-// Create InAppWallet wallet as signer to unlock web2 auth
-var inAppWallet = await InAppWallet.Create(client: client, email: "email@email.com"); // or email: null, phoneNumber: "+1234567890"
+// Crear la billetera InAppWallet como firmante para desbloquear la autenticación web2
+var inAppWallet = await InAppWallet.Create(client: client, email: "email@email.com"); // o email: null, phoneNumber: "+1234567890"
 
-// Resume session (if `InAppWallet` wallet was not logged in)
+// Reanudar sesión (si la billetera `InAppWallet` no estaba iniciada)
 if (!await inAppWallet.IsConnected())
 {
     await inAppWallet.SendOTP();
-    Console.WriteLine("Please submit the OTP.");
+    Console.WriteLine("Por favor, ingrese el OTP.");
     var otp = Console.ReadLine();
-    var inAppWalletAddress = await inAppWallet.LoginWithOtp(otp); // try catch and retry if needed
+    var inAppWalletAddress = await inAppWallet.LoginWithOtp(otp); // prueba con catch y vuelve a intentar si es necesario
 }
 
-Console.WriteLine($"InAppWallet address: {await inAppWallet.GetAddress()}");
+Console.WriteLine($"Dirección de InAppWallet: {await inAppWallet.GetAddress()}");
 
-// Sign a message
-var message = "Hello, Thirdweb!";
+// Firmar un mensaje
+var message = "¡Hola, Thirdweb!";
 var signature = await wallet.PersonalSign(message);
-Console.WriteLine($"Signature: {signature}");
+Console.WriteLine($"Firma: {signature}");
 ```
 
-**Note:** InAppWallet leverages the security of OTP-based authentication to ensure a secure and user-friendly experience in blockchain applications.
+**Nota:** InAppWallet aprovecha la seguridad de la autenticación basada en OTP para garantizar una experiencia segura y fácil de usar en aplicaciones blockchain.
 
-## OAuth Authentication Flow
+## Flujo de Autenticación OAuth
 
-**LoginWithOauth:** Initiate the login process by calling LoginWithOauth on the InAppWallet instance. This redirects the user to the OAuth provider's login page.
+**LoginWithOauth:** Inicia el proceso de inicio de sesión llamando a `LoginWithOauth` en la instancia de InAppWallet. Esto redirige al usuario a la página de inicio de sesión del proveedor de OAuth.
 
 ```csharp
-// Windows console app example
+// Ejemplo para aplicación de consola en Windows
 var address = await inAppWallet.LoginWithOauth(
     isMobile: false,
     browserOpenAction: (url) =>
@@ -166,7 +171,8 @@ var address = await inAppWallet.LoginWithOauth(
         _ = Process.Start(psi);
     },
 );
-// Godot standalone example
+
+// Ejemplo para Godot en modo independiente
 var address = await ThirdwebManager.Instance.InAppWallet.LoginWithOauth(
         isMobile: OS.GetName() == "Android" || OS.GetName() == "iOS",
         browserOpenAction: (url) => OS.ShellOpen(url),
@@ -174,47 +180,47 @@ var address = await ThirdwebManager.Instance.InAppWallet.LoginWithOauth(
 );
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### isMobile
 
-A `bool` indicating whether the application is running on a mobile platform.
+Un `bool` que indica si la aplicación se está ejecutando en una plataforma móvil.
 
 ### browserOpenAction
 
-An `Action<string>` that opens the OAuth provider's login page in a browser.
+Una `Action<string>` que abre la página de inicio de sesión del proveedor de OAuth en un navegador.
 
 ### mobileRedirectScheme
 
-The redirect scheme to use for mobile platforms. Defaults to `"thirdweb://"`.
+El esquema de redirección a usar para plataformas móviles. El valor predeterminado es `"thirdweb://"`. 
 
 ### browser
 
-An instance of `IThirdwebBrowser` to use for the OAuth login process. Defaults to `null`.
+Una instancia de `IThirdwebBrowser` que se utiliza para el proceso de inicio de sesión OAuth. El valor predeterminado es `null`.
 
 ### cancellationToken
 
-A `CancellationToken` to cancel the operation. Defaults to `default`.
+Un `CancellationToken` para cancelar la operación. El valor predeterminado es `default`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### string
 
-The InAppWallet address as a hexadecimal `string`.
+La dirección de InAppWallet como una cadena hexadecimal `string`.
 
 </Details>
 
-## Example
+## Ejemplo
 
-Here's an example of creating an `InAppWallet` using OAuth.
+Aquí tienes un ejemplo de cómo crear un `InAppWallet` usando OAuth.
 
 ```csharp
-// Create InAppWallet wallet as signer to unlock web2 auth
+// Crear la billetera InAppWallet como firmante para desbloquear la autenticación web2
 var inAppWallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
 
-// Resume session (if `InAppWallet` wallet was not logged in)
+// Reanudar sesión (si la billetera `InAppWallet` no estaba iniciada)
 if (!await inAppWallet.IsConnected())
 {
     try {
@@ -226,21 +232,21 @@ if (!await inAppWallet.IsConnected())
                 _ = Process.Start(psi);
             },
         );
-        Console.WriteLine($"OAuth login successful. InAppWallet address: {address}");
+        Console.WriteLine($"Inicio de sesión OAuth exitoso. Dirección de InAppWallet: {address}");
     } catch (Exception ex) {
-        Console.WriteLine($"OAuth login failed: {ex.Message}");
+        Console.WriteLine($"Error en el inicio de sesión OAuth: {ex.Message}");
         return;
     }
 }
 ```
 
-**Note:** The `LoginWithOauth` API allows for custom browser handling, making it suitable for various application types and platforms.
+**Nota:** La API `LoginWithOauth` permite un manejo personalizado del navegador, lo que la hace adecuada para diversos tipos de aplicaciones y plataformas.
 
-## Unified Identity - Account Linking
+## Identidad Unificada - Vinculación de Cuentas
 
-InAppWallet supports linking multiple authentication methods to a single user account. This feature enables users to access their account using different authentication methods, such as email, phone, or OAuth, without creating separate accounts for each method.
+InAppWallet soporta la vinculación de múltiples métodos de autenticación a una sola cuenta de usuario. Esta función permite a los usuarios acceder a su cuenta utilizando diferentes métodos de autenticación, como correo electrónico, teléfono o OAuth, sin necesidad de crear cuentas separadas para cada método.
 
-### Linking Accounts
+### Vinculación de Cuentas
 
 ```csharp
 var inAppWalletMain = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
@@ -272,13 +278,13 @@ var otp = Console.ReadLine();
 _ = await inAppWalletMain.LinkAccount(walletToLink: phoneWallet, otp: otp);
 ```
 
-### Getting Linked Accounts
+### Obtener Cuentas Vinculadas
 
 ```csharp
 List<LinkedAccount> linkedAccounts = await inAppWalletMain.GetLinkedAccounts();
 ```
 
-### Unlinking Accounts
+### Desvinculación de Cuentas
 
 ```csharp
 List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();

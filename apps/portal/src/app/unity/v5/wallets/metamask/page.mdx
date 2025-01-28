@@ -2,30 +2,30 @@ import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "MetaMaskWallet | Thirdweb Unity SDK",
+	title: "MetaMaskWallet | SDK de thirdweb para Unity",
 	description:
-		"Instantiate a MetaMaskWallet to sign transactions and messages.",
+		"Instancia un MetaMaskWallet para firmar transacciones y mensajes.",
 });
 
 # MetaMaskWallet
 
-`MetaMaskWallet` is the most popular external wallet provider that allows users to connect their MetaMask wallet to your game.
+`MetaMaskWallet` es el proveedor de billetera externa más popular que permite a los usuarios conectar su billetera MetaMask a tu juego.
 
-This connection method allows you to connect to the browser extension and is only available for WebGL builds.
+Este método de conexión permite conectarse a la extensión del navegador y solo está disponible para construcciones WebGL.
 
-Use [WalletConnectWallet](/unity/v5/wallets/walletconnect) if you are building for standalone or mobile runtime platforms.
+Utiliza [WalletConnectWallet](/unity/v5/wallets/walletconnect) si estás construyendo para plataformas de runtime independientes o móviles.
 
-### Connecting using MetaMask
+### Conectando usando MetaMask
 
 ```csharp
 var options = new WalletOptions(provider: WalletProvider.MetaMaskWallet, chainId: 1);
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will prompt the user to connect their MetaMask browser extension to your game.
+Solicitará al usuario que conecte su extensión de MetaMask en el navegador a tu juego.
 
 <ArticleIconCard
 	href="/dotnet/wallets/actions/getaddress"
 	icon={GraduationCap}
-	title="Explore the IThirdwebWallet API"
+	title="Explora la API de IThirdwebWallet"
 />

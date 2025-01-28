@@ -2,29 +2,29 @@ import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "InAppWallet | Thirdweb Unity SDK",
+	title: "InAppWallet | SDK de thirdweb para Unity",
 	description:
-		"Instantiate an InAppWallet to sign transactions and messages.",
+		"Instancia un InAppWallet para firmar transacciones y mensajes.",
 });
 
 # InAppWallet
 
-`InAppWallet` is the ultimate persistent wallet provider option for your game. It supports email, phone, social and custom authentication schemes, and will persist across devices, platforms, and other SDKs.
+`InAppWallet` es la opción de proveedor de billetera persistente definitiva para tu juego. Soporta autenticación por correo electrónico, teléfono, redes sociales y esquemas personalizados de autenticación, y persistirá a través de dispositivos, plataformas y otros SDKs.
 
-It makes for a fantastic [SmartWallet](/unity/v5/wallets/account-abstraction) admin/signer and will make sure your users can have the same wallet address across all your games, apps and blockchains.
+Es una excelente opción para un administrador/firmante de [SmartWallet](/unity/v5/wallets/account-abstraction) y asegurará que tus usuarios puedan tener la misma dirección de billetera en todos tus juegos, aplicaciones y cadenas de bloques.
 
-## Login Methods
+## Métodos de Inicio de Sesión
 
-In-App Wallets support a variety of login methods:
-- Email (OTP Login)
-- Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
-- SIWE (Sign-In with Ethereum)
-- Custom Auth (OIDC Compatible)
-- Custom Auth (Generic Auth Endpoint)
-- Guest (Onboard easily, link other accounts later)
+Las billeteras In-App soportan una variedad de métodos de inicio de sesión:
+- Correo Electrónico (Inicio de sesión OTP)
+- Teléfono (Inicio de sesión OTP)
+- Redes Sociales (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
+- SIWE (Inicio de sesión con Ethereum)
+- Autenticación Personalizada (Compatible con OIDC)
+- Autenticación Personalizada (Endpoint de Autenticación Genérico)
+- Invitado (Facilita la incorporación, vincula otras cuentas más tarde)
 
-### Login with Email
+### Inicio de sesión con Correo Electrónico
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(email: "myepicemail@domain.id");
@@ -36,9 +36,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will instantiate `InAppWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+Instanciará `InAppWalletModal` o reanudará la sesión: un prefab simple que verificará el OTP del usuario.
 
-### Login with Phone
+### Inicio de sesión con Teléfono
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(phoneNumber: "+1234567890");
@@ -50,9 +50,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will instantiate `InAppWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+Instanciará `InAppWalletModal` o reanudará la sesión: un prefab simple que verificará el OTP del usuario.
 
-### Login with Socials (Google, Apple, Facebook, etc.)
+### Inicio de sesión con Redes Sociales (Google, Apple, Facebook, etc.)
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Google);
@@ -64,9 +64,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will open a native browser or oauth session to authenticate the user and redirect back to the game.
+Abrirá un navegador nativo o una sesión OAuth para autenticar al usuario y redirigirlo de vuelta al juego.
 
-### Login with SIWE
+### Inicio de sesión con SIWE
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
@@ -78,9 +78,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will use the external wallet to sign a message and login to the InAppWallet.
+Usará la billetera externa para firmar un mensaje e iniciar sesión en la billetera InAppWallet.
 
-### Login with Custom Auth - OIDC Compatible
+### Inicio de sesión con Autenticación Personalizada - Compatible con OIDC
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.JWT, jwtOrPayload: "myjwt", encryptionKey: "myencryptionkey");
@@ -92,7 +92,7 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-### Login with Custom Auth - Generic Auth Endpoint
+### Inicio de sesión con Autenticación Personalizada - Endpoint de Autenticación Genérico
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(
@@ -108,7 +108,7 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-### Login with Guest - Onboard easily, link other accounts later
+### Inicio de sesión como Invitado - Facilita la incorporación, vincula otras cuentas más tarde
 
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(
@@ -122,27 +122,27 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-## Account Linking
+## Vinculación de Cuentas
 
-InAppWallets support linking multiple authentication methods to a single wallet, for instance linking Google to your Email-based In-App-Wallet. This is useful to have a unified identity across platforms.
+Las billeteras In-App soportan vincular múltiples métodos de autenticación a una sola billetera, por ejemplo, vincular Google a tu billetera In-App basada en correo electrónico. Esto es útil para tener una identidad unificada a través de plataformas.
 
 ```csharp
-// Your main InAppWallet account, already authenticated and connected
+// Tu cuenta principal de InAppWallet, ya autenticada y conectada
 InAppWallet mainInAppWallet = ...
 
-// An InAppWallet with a new auth provider to be linked to the main account, not connected
+// Una InAppWallet con un nuevo proveedor de autenticación para vincular a la cuenta principal, no conectada
 InAppWallet walletToLink = await InAppWallet.Create(client: Client, authProvider: AuthProvider.Telegram);
 
-// Link Account - Headless version
+// Vincular Cuenta - Versión sin interfaz gráfica
 var linkedAccounts = await mainInAppWallet.LinkAccount(walletToLink: walletToLink);
 
-// Link Account - Unity wrapper version
+// Vincular Cuenta - Versión con el wrapper de Unity
 var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet, walletToLink);
 
-// You can also fetch linked accounts at any time
+// También puedes obtener las cuentas vinculadas en cualquier momento
 List<LinkedAccount> linkedAccounts = await mainInAppWallet.GetLinkedAccounts();
 
-// Unlink an account
+// Desvincular una cuenta
 List<LinkedAccount> linkedAccounts = await mainInAppWallet.UnlinkAccount(linkedAccounts[0]);
 ```
 

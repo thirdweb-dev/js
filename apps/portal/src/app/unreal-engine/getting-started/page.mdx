@@ -9,36 +9,35 @@ import unrealLevel from "../assets/unreal-engine-level.png";
 import { createUnrealEngineMetadata } from "../util";
 
 export const metadata = createUnrealEngineMetadata({
-	title: "Plugin Getting Started",
-	description: "Learn how to integrate Thirdweb's Unreal Engine SDK into your Engine.",
+	title: "Guía de Inicio Rápido del Plugin",
+	description: "Aprende a integrar el SDK de Unreal Engine de Thirdweb en tu Engine.",
 });
 
-# Getting Started
+# Guía de Inicio Rápido
 
-<Callout variant='info' title="API Key Required">
-To get started with the Unreal SDK, you will need to have a [thirdweb API Key][api-key] created. Make sure you
-allowlist a bundle ID to use within Unreal native applications.
+<Callout variant='info' title="Se requiere una clave de API">
+Para comenzar con el SDK de Unreal, necesitarás tener una [clave de API de thirdweb][api-key] creada. Asegúrate de
+permitir un ID de paquete para usar dentro de aplicaciones nativas de Unreal.
 </Callout>
 
-## Integration Steps
+## Pasos para la Integración
 
 <Steps>
 
-<Step title="Plugin Download" >
-Download and install the Thirdweb Unreal Plugin from the [Unreal Marketplace][marketplace].
+<Step title="Descarga del Plugin" >
+Descarga e instala el Plugin de Unreal de Thirdweb desde el [Unreal Marketplace][marketplace].
 </Step>
 
-<Step title="Runtime Settings" >
-Once you import the plugin into your project, you will need to set up the plugin settings with your Client ID and
+<Step title="Configuración de Runtime" >
+Una vez que importes el plugin a tu proyecto, deberás configurar los ajustes del plugin con tu Client ID y
 Bundle ID.
 
-You can do so by clicking the thirdweb icon on your engine action bar, or by navigating to
-`Edit > Project Settings > Engine > Thirdweb` and filling in the required fields.
+Puedes hacerlo haciendo clic en el icono de thirdweb en la barra de acciones de tu engine, o navegando a
+`Editar > Configuración del Proyecto > Engine > Thirdweb` y completando los campos requeridos.
 
 <DocImage src={unrealSettings} className="w-[800px]" />
 
-Alternatively, you can head to your root `Config` folder and open the `DefaultEngine.ini` file to set up the plugin
-settings.
+Alternativamente, puedes ir a la carpeta raíz `Config` y abrir el archivo `DefaultEngine.ini` para configurar los ajustes del plugin.
 
 ```ini
 [/Script/Thirdweb.ThirdwebRuntimeSettings]
@@ -48,9 +47,9 @@ BundleID=
 
 </Step>
 
-<Step title="Test it!" >
-Try out our prebuilt example `Level_Thirdweb` to create and login to wallets seamlessly, using all kinds of
-authentication, and explore advanced Account Abstraction use cases.
+<Step title="¡Pruébalo!" >
+Prueba nuestro ejemplo preconstruido `Level_Thirdweb` para crear e iniciar sesión en billeteras sin problemas, utilizando todo tipo de
+autenticación, y explora casos avanzados de Abstracción de Cuentas.
 <DocImage src={unrealLevel} className="w-[800px]" />
 </Step>
 

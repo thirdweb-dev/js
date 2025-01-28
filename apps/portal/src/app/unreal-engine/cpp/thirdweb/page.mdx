@@ -2,101 +2,89 @@ import { Callout } from "@doc";
 import { createUnrealEngineMetadata } from "../../util";
 
 export const metadata = createUnrealEngineMetadata({
-    title: "Thirdweb Namespace",
-    description: "The Core Rust Wrapper",
+    title: "Namespace de Thirdweb",
+    description: "El Wrapper Principal de Rust",
 });
 
 # Thirdweb
 
-The `Thirdweb` namespace is a low-level wrapper around the `Thirdweb` Rust library, providing a set of utility functions
-and classes to interact with the Thirdweb SDK.
+El namespace `Thirdweb` es un envoltorio de bajo nivel alrededor de la librería `Thirdweb` en Rust, que proporciona un conjunto de funciones y clases auxiliares para interactuar con el SDK de Thirdweb.
 
-<Callout variant='info' title="Note">
-	Although accessible, this namespace is designed as an internal wrapper. All functionality is exposed in its intended
-	place throughout the plugin, and the following is documented is for posterity.
+<Callout variant='info' title="Nota">
+	Aunque es accesible, este namespace está diseñado como un envoltorio interno. Toda la funcionalidad está expuesta en su lugar previsto a lo largo del plugin, y lo siguiente está documentado para posteridad.
 </Callout>
 
-## Structures
+## Estructuras
 
 ### **FFIResult**
-Encapsulates operation results, returning success status and messages.
+Encapsula los resultados de la operación, devolviendo el estado de éxito y los mensajes.
 
-#### Properties
-- **`bool success`**: Success status of the operation result
-- **`const char* message`**: Operation result message
+#### Propiedades
+- **`bool success`**: Estado de éxito del resultado de la operación
+- **`const char* message`**: Mensaje del resultado de la operación
 
-#### Member Functions
-- **`AssignResult(Output, bErrorOnlyResult)`**: Assign's result and then frees the underlying pointer
-- **`GetOutput()`**: Assign's result to output directly
-- **`Free()`**: Frees the underlying pointer for functions that have no relevant output
-- **`Log()`**: Convenience function to log all properties
+#### Funciones Miembro
+- **`AssignResult(Output, bErrorOnlyResult)`**: Asigna el resultado y luego libera el puntero subyacente
+- **`GetOutput()`**: Asigna el resultado directamente al output
+- **`Free()`**: Libera el puntero subyacente para funciones que no tienen salida relevante
+- **`Log()`**: Función de conveniencia para registrar todas las propiedades
 
-## Internal Functions
+## Funciones Internas
 
-The `Thirdweb` namespace in `Thirdweb.h` offers various methods for managing wallets and interacting with smart
-contracts. Note that inputs may change in future versions, so always refer to the latest documentation or source code
-for the most accurate information.
+El namespace `Thirdweb` en `Thirdweb.h` ofrece varios métodos para gestionar billeteras e interactuar con contratos inteligentes. Ten en cuenta que los inputs pueden cambiar en versiones futuras, así que siempre consulta la documentación más reciente o el código fuente para obtener la información más precisa.
 
-### Wallet Management
+### Gestión de Billeteras
 
-#### Private Key Wallet
-- **`create_private_key_wallet(private_key)`**: Creates a wallet using a private key.
-- **`generate_private_key_wallet()`**: Generates a new private key wallet.
-- **`private_key_wallet_export(handle_id)`**: Exports the private key of a wallet.
+#### Billetera con Clave Privada
+- **`create_private_key_wallet(private_key)`**: Crea una billetera utilizando una clave privada.
+- **`generate_private_key_wallet()`**: Genera una nueva billetera con clave privada.
+- **`private_key_wallet_export(handle_id)`**: Exporta la clave privada de una billetera.
 
-#### In App Wallet
-- **`create_in_app_wallet(client_id, bundle_id, secret_key, email, storage_directory_path, auth_provider)`**: Creates
-  an in-app wallet.
-- **`in_app_wallet_send_otp_email(handle_id)`**: Sends an OTP for in-app email wallet.
-- **`in_app_wallet_verify_otp_email(handle_id, otp)`**: Verifies an OTP for in-app email wallet.
-- **`in_app_wallet_send_otp_phone(handle_id)`**: Sends an OTP for in-app phone wallet.
-- **`in_app_wallet_verify_otp_phone(handle_id, otp)`**: Verifies an OTP for in-app phone wallet.
-- **`in_app_wallet_fetch_oauth_login_link(handle_id, redirect_url)`**: Fetches an OAuth login link for in-app wallet.
-- **`in_app_wallet_sign_in_with_oauth(handle_id, auth_result)`**: Signs in with OAuth for in-app wallet.
-- **`in_app_wallet_sign_in_with_jwt(handle_id, jwt, encryption_key)`**: Signs in with jwt for in-app wallet.
-- **`in_app_wallet_sign_in_with_auth_endpoint(handle_id, payload, encryption_key)`**: Signs in with auth endpoint for
-in-app wallet.
-- **`in_app_wallet_sign_in_with_guest(handle_id, session_id)`**: Signs in with guest for in-app wallet.
+#### Billetera In-App
+- **`create_in_app_wallet(client_id, bundle_id, secret_key, email, storage_directory_path, auth_provider)`**: Crea una billetera in-app.
+- **`in_app_wallet_send_otp_email(handle_id)`**: Envía un OTP para billetera de correo electrónico in-app.
+- **`in_app_wallet_verify_otp_email(handle_id, otp)`**: Verifica un OTP para billetera de correo electrónico in-app.
+- **`in_app_wallet_send_otp_phone(handle_id)`**: Envía un OTP para billetera de teléfono in-app.
+- **`in_app_wallet_verify_otp_phone(handle_id, otp)`**: Verifica un OTP para billetera de teléfono in-app.
+- **`in_app_wallet_fetch_oauth_login_link(handle_id, redirect_url)`**: Obtiene un enlace de login OAuth para billetera in-app.
+- **`in_app_wallet_sign_in_with_oauth(handle_id, auth_result)`**: Inicia sesión con OAuth para billetera in-app.
+- **`in_app_wallet_sign_in_with_jwt(handle_id, jwt, encryption_key)`**: Inicia sesión con JWT para billetera in-app.
+- **`in_app_wallet_sign_in_with_auth_endpoint(handle_id, payload, encryption_key)`**: Inicia sesión con endpoint de autenticación para billetera in-app.
+- **`in_app_wallet_sign_in_with_guest(handle_id, session_id)`**: Inicia sesión como invitado para billetera in-app.
 
-### Ecosystem Wallet
-- **`create_ecosystem_wallet(ecosystem_id, ecosystem_partner_id, client_id, bundle_id, secret_key, email,
-storage_directory_path, auth_provider)`**: Creates an ecosystem wallet.
-- **`ecosystem_wallet_send_otp_email(handle_id)`**: Sends an OTP for ecosystem email wallet.
-- **`ecosystem_wallet_verify_otp_email(handle_id, otp)`**: Verifies an OTP for ecosystem email wallet.
-- **`ecosystem_wallet_send_otp_phone(handle_id)`**: Sends an OTP for ecosystem phone wallet.
-- **`ecosystem_wallet_verify_otp_phone(handle_id, otp)`**: Verifies an OTP for ecosystem phone wallet.
-- **`ecosystem_wallet_fetch_oauth_login_link(handle_id, redirect_url)`**: Fetches an OAuth login link for ecosystem
-wallet.
-- **`ecosystem_wallet_sign_in_with_oauth(handle_id, auth_result)`**: Signs in with OAuth for ecosystem wallet.
-- **`ecosystem_wallet_sign_in_with_jwt(handle_id, jwt)`**: Signs in with jwt for ecosystem wallet.
-- **`ecosystem_wallet_sign_in_with_auth_endpoint(handle_id, payload)`**: Signs in with auth endpoint for
-ecosystem wallet.
-- **`ecosystem_wallet_sign_in_with_guest(handle_id, session_id)`**: Signs in with guest for ecosystem wallet.
+### Billetera Ecosystem
+- **`create_ecosystem_wallet(ecosystem_id, ecosystem_partner_id, client_id, bundle_id, secret_key, email, storage_directory_path, auth_provider)`**: Crea una billetera de ecosistema.
+- **`ecosystem_wallet_send_otp_email(handle_id)`**: Envía un OTP para billetera de correo electrónico en ecosistema.
+- **`ecosystem_wallet_verify_otp_email(handle_id, otp)`**: Verifica un OTP para billetera de correo electrónico en ecosistema.
+- **`ecosystem_wallet_send_otp_phone(handle_id)`**: Envía un OTP para billetera de teléfono en ecosistema.
+- **`ecosystem_wallet_verify_otp_phone(handle_id, otp)`**: Verifica un OTP para billetera de teléfono en ecosistema.
+- **`ecosystem_wallet_fetch_oauth_login_link(handle_id, redirect_url)`**: Obtiene un enlace de login OAuth para billetera de ecosistema.
+- **`ecosystem_wallet_sign_in_with_oauth(handle_id, auth_result)`**: Inicia sesión con OAuth para billetera de ecosistema.
+- **`ecosystem_wallet_sign_in_with_jwt(handle_id, jwt)`**: Inicia sesión con JWT para billetera de ecosistema.
+- **`ecosystem_wallet_sign_in_with_auth_endpoint(handle_id, payload)`**: Inicia sesión con endpoint de autenticación para billetera de ecosistema.
+- **`ecosystem_wallet_sign_in_with_guest(handle_id, session_id)`**: Inicia sesión como invitado para billetera de ecosistema.
 
-### Smart Wallet
-- **`create_smart_wallet(client_id, bundle_id, secret_key, personal_wallet_handle_id, chain_id, gasless, factory,
-  account_override)`**: Creates a smart wallet.
-- **`smart_wallet_is_deployed(handle_id)`**: Checks if the smart wallet is deployed.
-- **`smart_wallet_get_all_admins(handle_id)`**: Retrieves all admins of the smart wallet.
-- **`smart_wallet_get_all_active_signers(handle_id)`**: Retrieves all active signers of the smart wallet.
-- **`smart_wallet_create_session_key(handle_id, signer_address, approved_targets, approved_targets_count,
-  native_token_limit_per_transaction_in_wei, permission_start_timestamp, permission_end_timestamp,
-  req_validity_start_timestamp, req_validity_end_timestamp)`**: Creates a session key for the smart wallet.
-- **`smart_wallet_revoke_session_key(handle_id, signer_address)`**: Revokes a session key for the smart wallet.
-- **`smart_wallet_add_admin(handle_id, signer_address)`**: Adds an admin to the smart wallet.
-- **`smart_wallet_remove_admin(handle_id, signer_address)`**: Removes an admin from the smart wallet.
+### Billetera Inteligente
+- **`create_smart_wallet(client_id, bundle_id, secret_key, personal_wallet_handle_id, chain_id, gasless, factory, account_override)`**: Crea una billetera inteligente.
+- **`smart_wallet_is_deployed(handle_id)`**: Verifica si la billetera inteligente está desplegada.
+- **`smart_wallet_get_all_admins(handle_id)`**: Recupera todos los administradores de la billetera inteligente.
+- **`smart_wallet_get_all_active_signers(handle_id)`**: Recupera todos los firmantes activos de la billetera inteligente.
+- **`smart_wallet_create_session_key(handle_id, signer_address, approved_targets, approved_targets_count, native_token_limit_per_transaction_in_wei, permission_start_timestamp, permission_end_timestamp, req_validity_start_timestamp, req_validity_end_timestamp)`**: Crea una clave de sesión para la billetera inteligente.
+- **`smart_wallet_revoke_session_key(handle_id, signer_address)`**: Revoca una clave de sesión para la billetera inteligente.
+- **`smart_wallet_add_admin(handle_id, signer_address)`**: Agrega un administrador a la billetera inteligente.
+- **`smart_wallet_remove_admin(handle_id, signer_address)`**: Elimina un administrador de la billetera inteligente.
 
-### Utility
-- **`get_wallet_address(handle_id)`**: Retrieves the wallet address.
-- **`sign_message(handle_id, message)`**: Signs a message with the wallet.
-- **`is_connected(handle_id)`**: Checks if the wallet is connected.
-- **`disconnect(handle_id)`**: Disconnects the wallet.
-- **`free_wallet(handle_id)`**: Frees the wallet handle.
-- **`free_ffi_result(result)`**: Frees the FFI result.
-- **`free_string(result)`**: Frees the string.
-- **`is_valid_address(address, check_checksum)`**: Validates an Ethereum address.
-- **`to_checksummed_address(address)`**: Converts an address to checksummed format.
-- **`is_valid_private_key(private_key)`**: Validates a private key.
-- **`compute_client_id_from_secret_key(secret_key)`**: Gets the client id of a secret key.
-- **`get_unix_timestamp_now()`**: Gets the current unix timestamp.
-- **`get_unix_timestamp_in_ten_years()`**: Gets the unix timestamp in 10 years.
+### Utilidades
+- **`get_wallet_address(handle_id)`**: Recupera la dirección de la billetera.
+- **`sign_message(handle_id, message)`**: Firma un mensaje con la billetera.
+- **`is_connected(handle_id)`**: Verifica si la billetera está conectada.
+- **`disconnect(handle_id)`**: Desconecta la billetera.
+- **`free_wallet(handle_id)`**: Libera el manejador de la billetera.
+- **`free_ffi_result(result)`**: Libera el resultado FFI.
+- **`free_string(result)`**: Libera la cadena.
+- **`is_valid_address(address, check_checksum)`**: Valida una dirección de Ethereum.
+- **`to_checksummed_address(address)`**: Convierte una dirección al formato con suma de control.
+- **`is_valid_private_key(private_key)`**: Valida una clave privada.
+- **`compute_client_id_from_secret_key(secret_key)`**: Obtiene el client id de una clave secreta.
+- **`get_unix_timestamp_now()`**: Obtiene el timestamp Unix actual.
+- **`get_unix_timestamp_in_ten_years()`**: Obtiene el timestamp Unix dentro de 10 años.

@@ -2,24 +2,24 @@ import { Blueprint } from "../blueprint";
 import { getTransactionReceiptNode, getTransactionStatusNode, readContractNode, writeContractNode } from "./nodes";
 import { createUnrealEngineMetadata } from "../../util";
 
-export const metadata = createUnrealEngineMetadata({ title: "Engine", description: "Engine Blueprints" });
+export const metadata = createUnrealEngineMetadata({ title: "Engine", description: "Blueprints de Engine" });
 
 # Engine
 
-## Contract Interaction
+## Interacción con Contratos
 
-### Read Contract
-Call the Read Contract endpoint on an engine instance.
+### Leer Contrato
+Llama al endpoint de Leer Contrato en una instancia de engine.
 <Blueprint code={readContractNode} className='w-full h-48' />
 
-### Write Contract
-Call the Write Contract endpoint on an engine instance.
+### Escribir Contrato
+Llama al endpoint de Escribir Contrato en una instancia de engine.
 <Blueprint code={writeContractNode} className='w-full h-64' />
 
-### Get Transaction Status
-Get the transaction Status of a queue id from an engine instance.
+### Obtener Estado de la Transacción
+Obtén el estado de la transacción de un ID de cola en una instancia de engine.
 <Blueprint code={getTransactionStatusNode} className='w-full h-48' />
 
-### Get Transaction Receipt
-Get the transaction receipt of a transaction hash from a chain.
+### Obtener Recibo de la Transacción
+Obtén el recibo de la transacción de un hash de transacción desde una cadena.
 <Blueprint code={getTransactionReceiptNode} className='w-full h-48' />
