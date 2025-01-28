@@ -7,13 +7,9 @@ import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../../../../../chains/chain-definitions/sepolia.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
-import {
-  AccountBalance,
-  formatAccountFiatBalance,
-  formatAccountTokenBalance,
-  loadAccountBalance,
-} from "./balance.js";
-import { AccountProvider } from "./provider.js";
+import { AccountProvider } from "../../../../core/account/provider.js";
+import { loadAccountBalance } from "../../../../core/utils/account.js";
+import { AccountBalance } from "./balance.js";
 
 const queryClient = new QueryClient();
 

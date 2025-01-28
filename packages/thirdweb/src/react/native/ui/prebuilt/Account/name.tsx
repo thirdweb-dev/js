@@ -1,8 +1,7 @@
 "use client";
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
-import type React from "react";
-import type { JSX } from "react";
+import { Text, type TextProps } from "react-native";
 import {
   type ResolveNameOptions,
   resolveName,
@@ -17,7 +16,7 @@ import { useAccountContext } from "../../../../core/account/provider.js";
  * @wallet
  */
 export interface AccountNameProps
-  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children">,
+  extends Omit<TextProps, "children">,
     Omit<ResolveNameOptions, "client" | "address"> {
   /**
    * A function used to transform (format) the name of the account.
@@ -41,7 +40,7 @@ export interface AccountNameProps
    * <AccountName loadingComponent={<Spinner />} />
    * ```
    */
-  loadingComponent?: JSX.Element;
+  loadingComponent?: React.ComponentType;
   /**
    * This component will be shown if the request for fetching the name is done but could not retreive any result.
    * You can pass the wallet address as the fallback option if that's the case.
@@ -53,7 +52,7 @@ export interface AccountNameProps
    * <AccountName fallbackComponent={"0x1234....3f3f"} />
    * ```
    */
-  fallbackComponent?: JSX.Element;
+  fallbackComponent?: React.ComponentType;
   /**
    * Optional `useQuery` params
    */
@@ -177,5 +176,5 @@ export function AccountName({
     return fallbackComponent || null;
   }
 
-  return <span {...restProps}>{nameQuery.data}</span>;
+  return <Text {...restProps}>{nameQuery.data}</Text>;
 }

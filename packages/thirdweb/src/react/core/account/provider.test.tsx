@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "~test/react-render.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { AccountAddress } from "./address.js";
+import { AccountAddress } from "../../web/ui/prebuilt/Account/address.js";
 import { AccountProvider } from "./provider.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("AccountProvider component", () => {

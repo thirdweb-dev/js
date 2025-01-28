@@ -1,16 +1,14 @@
 "use client";
 
 import type { UseQueryOptions } from "@tanstack/react-query";
-import type { JSX } from "react";
+import { Text, type TextProps } from "react-native";
 import { useWalletName } from "../../../../core/utils/walletname.js";
-
 /**
  * Props for the WalletName component
  * @component
  * @wallet
  */
-export interface WalletNameProps
-  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+export interface WalletNameProps extends Omit<TextProps, "children"> {
   /**
    * This component will be shown while the name of the wallet name is being fetched
    * If not passed, the component will return `null`.
@@ -21,7 +19,7 @@ export interface WalletNameProps
    * <WalletName loadingComponent={<Spinner />} />
    * ```
    */
-  loadingComponent?: JSX.Element;
+  loadingComponent?: React.ComponentType;
   /**
    * This component will be shown if the name fails to be retreived
    * If not passed, the component will return `null`.
@@ -34,7 +32,7 @@ export interface WalletNameProps
    * />
    * ```
    */
-  fallbackComponent?: JSX.Element;
+  fallbackComponent?: React.ComponentType;
   /**
    * Optional `useQuery` params
    */
@@ -110,5 +108,5 @@ export function WalletName({
   if (!nameQuery.data) {
     return fallbackComponent || null;
   }
-  return <span {...restProps}>{nameQuery.data}</span>;
+  return <Text {...restProps}>{nameQuery.data}</Text>;
 }

@@ -13,6 +13,9 @@
  * @utils
  */
 export function shortenLargeNumber(value: number) {
+  if (value === 0) {
+    return "0.00";
+  }
   if (value < 1000) {
     return value.toString();
   }

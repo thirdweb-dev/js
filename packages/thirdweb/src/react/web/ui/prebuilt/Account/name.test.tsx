@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { render, screen, waitFor } from "~test/react-render.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { AccountProvider } from "../../../../core/account/provider.js";
 import { AccountName } from "./name.js";
-import { AccountProvider } from "./provider.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("AccountName component", () => {
   it("should return the correct social name", () => {
