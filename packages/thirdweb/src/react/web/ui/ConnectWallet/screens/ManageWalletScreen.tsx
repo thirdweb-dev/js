@@ -30,6 +30,7 @@ export function ManageWalletScreen(props: {
 }) {
   const adminWallet = useAdminWallet();
   const activeWallet = useActiveWallet();
+  const wallet = adminWallet || activeWallet;
 
   return (
     <Container
@@ -60,7 +61,7 @@ export function ManageWalletScreen(props: {
           />
 
           {/* Unified Identity */}
-          {typeof activeWallet !== "undefined" &&
+          {typeof wallet !== "undefined" &&
             props.manageWallet?.allowLinkingProfiles !== false && (
               <MenuButton
                 onClick={() => {
@@ -93,9 +94,9 @@ export function ManageWalletScreen(props: {
           </MenuButton>
 
           {/* Private Key Export (if enabled) */}
-          {adminWallet &&
-            isInAppWallet(adminWallet) &&
-            !adminWallet.getConfig()?.hidePrivateKeyExport && (
+          {wallet &&
+            isInAppWallet(wallet) &&
+            !wallet.getConfig()?.hidePrivateKeyExport && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("private-key");

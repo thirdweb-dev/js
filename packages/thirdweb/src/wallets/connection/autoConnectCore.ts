@@ -55,11 +55,11 @@ export const autoConnectCore = async ({
     getStoredActiveWalletId(storage),
   ]);
 
-  const { authResult, walletId, authProvider, authCookie } = getUrlToken();
-  const wallet = wallets.find((w) => w.id === walletId);
+  const result = getUrlToken();
 
   // If an auth cookie is found and this site supports the wallet, we'll set the auth cookie in the client storage
-  if (authCookie && wallet) {
+  const wallet = wallets.find((w) => w.id === result?.walletId);
+  if (result?.authCookie && wallet) {
     const clientStorage = new ClientScopedStorage({
       storage,
       clientId: props.client.clientId,
@@ -70,17 +70,17 @@ export const autoConnectCore = async ({
           }
         : undefined,
     });
-    await clientStorage.saveAuthCookie(authCookie);
+    await clientStorage.saveAuthCookie(result.authCookie);
+  }
+  if (result?.walletId) {
+    lastActiveWalletId = result.walletId;
+    lastConnectedWalletIds = lastConnectedWalletIds?.includes(result.walletId)
+      ? lastConnectedWalletIds
+      : [result.walletId, ...(lastConnectedWalletIds || [])];
   }
 
-  if (walletId) {
-    lastActiveWalletId = walletId;
-    lastConnectedWalletIds = lastConnectedWalletIds?.includes(walletId)
-      ? lastConnectedWalletIds
-      : [walletId, ...(lastConnectedWalletIds || [])];
-  }
-  if (authProvider) {
-    await setLastAuthProvider?.(authProvider, storage);
+  if (result?.authProvider) {
+    await setLastAuthProvider?.(result.authProvider, storage);
   }
 
   // if no wallets were last connected or we didn't receive an auth token
@@ -105,7 +105,7 @@ export const autoConnectCore = async ({
         wallet: activeWallet,
         client: props.client,
         lastConnectedChain,
-        authResult,
+        authResult: result?.authResult,
       }),
       {
         ms: timeout,
@@ -156,7 +156,7 @@ export const autoConnectCore = async ({
         wallet,
         client: props.client,
         lastConnectedChain,
-        authResult,
+        authResult: result?.authResult,
       });
       manager.addConnectedWallet(wallet);
     } catch {
