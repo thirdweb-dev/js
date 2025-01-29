@@ -168,7 +168,7 @@ interface QueriedWalletBalance {
   last_acquired_date: string;
 }
 
-export interface SimpleHashResponse {
+interface SimpleHashResponse {
   next_cursor: null | string;
   next: null | string;
   previous: null | string;

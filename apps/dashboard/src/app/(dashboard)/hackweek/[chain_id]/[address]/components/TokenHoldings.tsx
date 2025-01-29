@@ -63,7 +63,11 @@ export function TokenHoldings({
         ) : activeTab === "nft" ? (
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {nfts.map((nft, idx) => (
-              <NFTCard key={idx} nft={nft} chain={chain} />
+              <NFTCard
+                key={`${nft.contractAddress}-${idx}`}
+                nft={nft}
+                chain={chain}
+              />
             ))}
           </div>
         ) : null}

@@ -9,12 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
-import {} from "@radix-ui/react-tabs";
 import { useState } from "react";
 
 interface Transaction {
-  id: number;
-  type: string;
+  id: string;
+  type: "out" | "in";
   amount: string;
   to?: string;
   from?: string;
@@ -43,6 +42,17 @@ export function ActivityOverview({
   const [activeTab, setActiveTab] = useState<"transactions" | "contracts">(
     "transactions",
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Calculate the index of the last transaction on the current page
+  const lastIndex = currentPage * itemsPerPage;
+  // Calculate the index of the first transaction on the current page
+  const firstIndex = lastIndex - itemsPerPage;
+  // Get the current transactions to display
+  const currentTransactions = transactions.slice(firstIndex, lastIndex);
+  // Calculate total pages
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
   return (
     <Card>
@@ -71,31 +81,62 @@ export function ActivityOverview({
         {isLoading ? (
           <Spinner />
         ) : activeTab === "transactions" ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Details</TableHead>
-                <TableHead>Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((tx) => (
-                <TableRow key={tx.id}>
-                  <TableCell>{tx.type}</TableCell>
-                  <TableCell>{tx.amount}</TableCell>
-                  <TableCell>
-                    {tx.to && `To: ${tx.to}`}
-                    {tx.from && `From: ${tx.from}`}
-                    {tx.contract && `Contract: ${tx.contract}`}
-                    {tx.method && ` Method: ${tx.method}`}
-                  </TableCell>
-                  <TableCell>{tx.date}</TableCell>
+          <>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Details</TableHead>
+                  <TableHead>Date</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentTransactions.map((tx) => (
+                  <TableRow key={tx.id}>
+                    <TableCell>{tx.type}</TableCell>
+                    <TableCell>{tx.amount}</TableCell>
+                    <TableCell>
+                      {tx.to && `To: ${tx.to} `}
+                      {tx.from && `From: ${tx.from} `}
+                      {tx.contract && `Contract: ${tx.contract} `}
+                      {tx.method && ` Method: ${tx.method}`}
+                    </TableCell>
+                    <TableCell>{tx.date}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            {/* Pagination Controls */}
+            <div className="pagination">
+              <TabButtons
+                tabs={[
+                  {
+                    name: "Previous",
+                    isActive: currentPage === 1,
+                    isEnabled: currentPage > 1,
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1)),
+                  },
+                  {
+                    name: `Page ${currentPage} of ${totalPages}`,
+                    isActive: true,
+                    isEnabled: false,
+                    onClick: () => {}, // No action needed
+                  },
+                  {
+                    name: "Next",
+                    isActive: currentPage === totalPages,
+                    isEnabled: currentPage < totalPages,
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
+                  },
+                ]}
+                tabClassName="font-medium !text-sm"
+              />
+            </div>
+          </>
         ) : activeTab === "contracts" ? (
           <Table>
             <TableHeader>
@@ -107,7 +148,7 @@ export function ActivityOverview({
             </TableHeader>
             <TableBody>
               {contracts.map((contract, index) => (
-                <TableRow key={index}>
+                <TableRow key={`${contract.address}-${index}`}>
                   <TableCell>{contract.name}</TableCell>
                   <TableCell>{contract.address}</TableCell>
                   <TableCell>{contract.lastInteraction}</TableCell>
