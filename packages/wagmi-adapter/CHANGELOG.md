@@ -1,5 +1,11 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.8
+
+### Patch Changes
+
+- [#6100](https://github.com/thirdweb-dev/js/pull/6100) [`411895c`](https://github.com/thirdweb-dev/js/commit/411895c0027200fc580fcd58a2ac440da6e227a0) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wagmi adapter usage with account factories
+
 ## 0.2.7
 
 ### Patch Changes
