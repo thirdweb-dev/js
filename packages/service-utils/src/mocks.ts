@@ -42,6 +42,7 @@ export const validTeamResponse: TeamResponse = {
   createdAt: new Date("2024-06-01"),
   updatedAt: new Date("2024-06-01"),
   billingPlan: "free",
+  billingPlanVersion: 1,
   billingEmail: "test@example.com",
   billingStatus: "noPayment",
   growthTrialEligible: false,
