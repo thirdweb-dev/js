@@ -90,9 +90,6 @@ export async function fetchRecentTransactions(args: {
   const incomingTxsData: InsightsResponse =
     await incomingTransactionsResponse.json();
 
-  console.log("outgoingTxsData", JSON.stringify(outgoingTxsData, null, 2));
-  console.log("incomingTxsData", JSON.stringify(incomingTxsData, null, 2));
-
   return [...outgoingTxsData.data, ...incomingTxsData.data].sort(
     (a, b) => b.block_number - a.block_number,
   );
