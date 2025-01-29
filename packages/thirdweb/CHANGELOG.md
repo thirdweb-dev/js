@@ -1,5 +1,72 @@
 # thirdweb
 
+## 5.87.0
+
+### Minor Changes
+
+- [#6082](https://github.com/thirdweb-dev/js/pull/6082) [`4550bb2`](https://github.com/thirdweb-dev/js/commit/4550bb26632b88964a298835575af152a355bccd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support Account and Wallet headless components in react native
+
+  You can now use the Account and Wallet headless components in react native, this lets you build your own UI, styling it however you want, but letting the components handle the logic.
+
+  Example Account components usage:
+
+  ```tsx
+  <AccountProvider address={account.address} client={client}>
+    /* avatar */
+    <AccountAvatar
+      loadingComponent={
+        <AccountBlobbie size={92} style={{ borderRadius: 100 }} />
+      }
+      fallbackComponent={
+        <AccountBlobbie size={92} style={{ borderRadius: 100 }} />
+      }
+      style={{
+        width: 92,
+        height: 92,
+        borderRadius: 100,
+      }}
+    />
+    /* address */
+    <AccountAddress
+      style={{ fontSize: 16, color: Colors.secondary }}
+      formatFn={shortenAddress}
+    />
+    /* balance */
+    <AccountBalance
+      showBalanceInFiat={"USD"}
+      chain={chain}
+      loadingComponent={
+        <ActivityIndicator size="large" color={Colors.accent} />
+      }
+      fallbackComponent={
+        <Text className="text-primary">Failed to load balance</Text>
+      }
+      style={{
+        color: "white",
+        fontSize: 48,
+        fontWeight: "bold",
+      }}
+    />
+  </AccountProvider>
+  ```
+
+  Example Wallet components usage:
+
+  ```tsx
+  <WalletProvider id={"io.metamask"}>
+    <WalletIcon width={32} height={32} />
+    <WalletName style={{ fontSize: 16, color: Colors.primary }} />
+  </WalletProvider>
+  ```
+
+### Patch Changes
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - export `randomPrivateKey` from `thirdweb/wallets`
+
+- [#6076](https://github.com/thirdweb-dev/js/pull/6076) [`1401f8d`](https://github.com/thirdweb-dev/js/commit/1401f8d0393bbea149e9e09ba686416fc0a7b4f3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix autoconnection of inapp wallets in react native
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
 ## 5.86.6
 
 ### Patch Changes
