@@ -13,7 +13,7 @@ import {} from "@radix-ui/react-tabs";
 import { useState } from "react";
 
 interface Transaction {
-  id: number;
+  id: string;
   type: string;
   amount: string;
   to?: string;
@@ -86,9 +86,9 @@ export function ActivityOverview({
                   <TableCell>{tx.type}</TableCell>
                   <TableCell>{tx.amount}</TableCell>
                   <TableCell>
-                    {tx.to && `To: ${tx.to}`}
-                    {tx.from && `From: ${tx.from}`}
-                    {tx.contract && `Contract: ${tx.contract}`}
+                    {tx.to && `To: ${tx.to} `}
+                    {tx.from && `From: ${tx.from} `}
+                    {tx.contract && `Contract: ${tx.contract} `}
                     {tx.method && ` Method: ${tx.method}`}
                   </TableCell>
                   <TableCell>{tx.date}</TableCell>
