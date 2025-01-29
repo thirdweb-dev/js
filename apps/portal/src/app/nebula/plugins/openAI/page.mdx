@@ -9,7 +9,6 @@ client = OpenAI(
 	base_url="https://nebula-api.thirdweb.com",
 	api_key="{{THIRDWEB_SECRET_KEY}}",
 )
-
 chat_completion = client.chat.completions.create(
 	model="t0",
 	messages=[{"role": "user", "content": "Hello Nebula!"}],
