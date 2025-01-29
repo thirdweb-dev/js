@@ -92,7 +92,7 @@ export async function fetchERC20Tokens(args: {
       lastTransferredDate:
         token.queried_wallet_balances[0]?.last_transferred_date,
     }));
-    const fungibleTokens = data.fungibles.map((token) => ({
+    let fungibleTokens = data.fungibles.map((token) => ({
       name: token.name,
       symbol: token.symbol,
       contractAddress: token.fungible_id.split(".")[1] ?? "--",
@@ -104,6 +104,7 @@ export async function fetchERC20Tokens(args: {
       lastTransferredDate:
         token.queried_wallet_balances[0]?.last_transferred_date,
     }));
+    fungibleTokens = fungibleTokens.filter(d => d.name != null || d.symbol != null);
     return [...nativeTokens, ...fungibleTokens];
   } catch (error) {
     console.error("Error fetching tokens:", error);

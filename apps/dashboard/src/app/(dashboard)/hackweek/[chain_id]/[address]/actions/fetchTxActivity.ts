@@ -51,6 +51,7 @@ export async function fetchTxActivity(args: {
   limit_per_type?: number;
   page?: number;
 }): Promise<Transaction[]> {
+  try {
   let { chainId, address, limit_per_type, page } = args;
   if (!limit_per_type) limit_per_type = 100;
   if (!page) page = 0;
@@ -83,4 +84,8 @@ export async function fetchTxActivity(args: {
   return [...outgoingTxsData.data, ...incomingTxsData.data].sort(
     (a, b) => b.block_number - a.block_number,
   );
+} catch (err) {
+    console.log("Failed to fetch tx activity", err);
+    return [];
+  }
 }

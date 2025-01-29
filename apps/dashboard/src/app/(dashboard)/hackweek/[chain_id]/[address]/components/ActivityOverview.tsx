@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
 import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 interface Transaction {
   id: string;
   type: "out" | "in";
-  amount: string;
+  value: string;
   to?: string;
   from?: string;
-  contract?: string;
   method?: string;
   date: string;
 }
@@ -68,12 +68,12 @@ export function ActivityOverview({
               isEnabled: true,
               onClick: () => setActiveTab("transactions"),
             },
-            {
-              name: "Contracts",
-              isActive: activeTab === "contracts",
-              isEnabled: true,
-              onClick: () => setActiveTab("contracts"),
-            },
+            // {
+            //   name: "Contracts",
+            //   isActive: activeTab === "contracts",
+            //   isEnabled: true,
+            //   onClick: () => setActiveTab("contracts"),
+            // },
           ]}
           tabClassName="font-medium !text-sm"
         />
@@ -85,24 +85,23 @@ export function ActivityOverview({
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Tx Hash</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Amount</TableHead>
-                  <TableHead>Details</TableHead>
+                  <TableHead>From</TableHead>
+                  <TableHead>To</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currentTransactions.map((tx) => (
                   <TableRow key={tx.id}>
+                    <TableCell>{tx.id.slice(0, 12)}...</TableCell>
                     <TableCell>{tx.type}</TableCell>
-                    <TableCell>{tx.amount}</TableCell>
-                    <TableCell>
-                      {tx.to && `To: ${tx.to} `}
-                      {tx.from && `From: ${tx.from} `}
-                      {tx.contract && `Contract: ${tx.contract} `}
-                      {tx.method && ` Method: ${tx.method}`}
-                    </TableCell>
-                    <TableCell>{tx.date}</TableCell>
+                    <TableCell>{tx.value}</TableCell>
+                    <TableCell>{tx.from}</TableCell>
+                    <TableCell>{tx.to}</TableCell>
+                    <TableCell>{formatDistanceToNow(tx.date)} ago</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

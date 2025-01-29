@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchTxActivity as getRecentTransactions } from "../actions/fetchTxActivity";
+import { toEther } from "thirdweb/utils";
 
 export interface TransactionDetails {
   id: string;
-  type: "out" | "in";
-  value: bigint;
+  type: "in" | "out";
+  value: string;
   to?: string;
   from?: string;
   method?: string;
@@ -24,7 +25,7 @@ export function useGetRecentTransactions(chainId: number, address: string) {
         return {
           id: tx.hash,
           type,
-          value: BigInt(tx.value),
+          value: toEther(BigInt(tx.value)).toString(),
           to: tx.to_address || undefined,
           from: tx.from_address,
           method: tx.function_selector || undefined,
