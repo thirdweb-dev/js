@@ -3,7 +3,6 @@
 import type React from "react";
 import { createContext, useContext } from "react";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { isAddress } from "../../../utils/address.js";
 /**
  * Props for the <AccountProvider /> component
  * @component
@@ -52,9 +51,6 @@ export function AccountProvider(
     throw new Error(
       "AccountProvider: No address passed. Ensure an address is always provided to the AccountProvider",
     );
-  }
-  if (!isAddress(props.address)) {
-    throw new Error(`AccountProvider: Invalid address: ${props.address}`);
   }
   return (
     <AccountProviderContext.Provider value={props}>
