@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.0
+
+### Minor Changes
+
+- [#6101](https://github.com/thirdweb-dev/js/pull/6101) [`e8892b1`](https://github.com/thirdweb-dev/js/commit/e8892b152f70d3024dfbefcddcfa74a69a12bdd0) Thanks [@jnsdls](https://github.com/jnsdls)! - pass `team` instead of `project` to `rateLimit`
+
 ## 0.7.3
 
 ### Patch Changes
