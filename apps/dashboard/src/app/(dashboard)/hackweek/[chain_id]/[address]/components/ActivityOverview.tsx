@@ -101,7 +101,7 @@ export function ActivityOverview({
                     <TableCell>{tx.value}</TableCell>
                     <TableCell>{tx.from}</TableCell>
                     <TableCell>{tx.to}</TableCell>
-                    <TableCell>{formatDistanceToNow(tx.date)}</TableCell>
+                    <TableCell>{formatDistanceToNow(tx.date)} ago</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
