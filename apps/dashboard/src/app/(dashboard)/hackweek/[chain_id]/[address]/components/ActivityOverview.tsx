@@ -14,7 +14,7 @@ import { useState } from "react";
 
 interface Transaction {
   id: string;
-  type: string;
+  // type: string;
   amount: string;
   to?: string;
   from?: string;
@@ -74,7 +74,7 @@ export function ActivityOverview({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Type</TableHead>
+                {/* <TableHead>Type</TableHead> */}
                 <TableHead>Amount</TableHead>
                 <TableHead>Details</TableHead>
                 <TableHead>Date</TableHead>
@@ -83,7 +83,7 @@ export function ActivityOverview({
             <TableBody>
               {transactions.map((tx) => (
                 <TableRow key={tx.id}>
-                  <TableCell>{tx.type}</TableCell>
+                  {/* <TableCell>{tx.type}</TableCell> */}
                   <TableCell>{tx.amount}</TableCell>
                   <TableCell>
                     {tx.to && `To: ${tx.to} `}

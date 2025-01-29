@@ -33,33 +33,36 @@ export interface Transaction {
 }
 
 interface InsightsResponse {
-    meta: {
-        address: string;
-        signature: string;
-        page: number;
-        total_items: number;
-        total_pages: number;
-        limit_per_chain: number;
-        chain_ids: number[];
-    };
-    data: Transaction[];
+  meta: {
+    address: string;
+    signature: string;
+    page: number;
+    total_items: number;
+    total_pages: number;
+    limit_per_chain: number;
+    chain_ids: number[];
+  };
+  data: Transaction[];
 }
 
-export async function fetchActivity(args: {
+export async function fetchTxActivity(args: {
   chainId: number;
   address: string;
-  page?: string;
+  limit?: number,
+  page?: number;
 }): Promise<InsightsResponse> {
-  const { chainId, address, page } = args;
+  let { chainId, address, limit, page } = args;
+  if (!limit) limit = 100;
+  if (!page) page = 0;
 
   const response = await fetch(
-    `https://insight.thirdweb.com/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=10&sort_by=block_number&sort_order=desc`,
-      {
-          headers: {
-            "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
-          },
-        },
-);
+    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit}&sort_by=block_number&sort_order=desc`,
+    {
+      headers: {
+        "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
+      },
+    },
+  );
 
   if (!response.ok) {
     throw new Error('Failed to fetch transaction history');
