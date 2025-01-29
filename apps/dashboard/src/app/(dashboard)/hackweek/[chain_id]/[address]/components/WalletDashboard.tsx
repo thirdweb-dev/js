@@ -2,7 +2,7 @@
 import type { ChainMetadata } from "thirdweb/chains";
 import { useGetERC20Tokens } from "../hooks/useGetERC20Tokens";
 import { useGetNFTs } from "../hooks/useGetNFTs";
-import { useGetTxActivity } from "../hooks/useGetTxActivity";
+import { useGetRecentTransactions } from "../hooks/useGetTxActivity";
 import { mockWalletData } from "../utils/mockData";
 import { ActivityOverview } from "./ActivityOverview";
 import { NebulaInterface } from "./NebulaInterface";
@@ -20,7 +20,7 @@ export function WalletDashboard(props: {
     props.chain.chainId,
     props.address,
   );
-  const { txActivity, isLoading: isLoadingActivity } = useGetTxActivity(
+  const { txActivity, isLoading: isLoadingActivity } = useGetRecentTransactions(
     props.chain.chainId,
     props.address,
   );
