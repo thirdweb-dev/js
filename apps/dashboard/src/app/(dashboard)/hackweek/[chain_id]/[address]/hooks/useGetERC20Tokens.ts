@@ -7,6 +7,7 @@ export interface TokenDetails {
   contractAddress: string;
   decimals: number;
   balance: bigint;
+  balanceTokens: number;
   totalValueUsdCents?: number;
   firstTransferredDate?: string;
   lastTransferredDate?: string;

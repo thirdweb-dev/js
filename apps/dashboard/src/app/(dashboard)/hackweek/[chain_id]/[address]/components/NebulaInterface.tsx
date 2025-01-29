@@ -1,4 +1,3 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,16 +5,18 @@ import { NebulaIcon } from "app/nebula-app/(app)/icons/NebulaIcon";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { SendHorizonal } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { ChainMetadata } from "thirdweb/chains";
 import { stringify } from "thirdweb/utils";
 import { createNebulaSesssion } from "../actions/createNebulaSession";
 import { sendNebulaMessage } from "../actions/sendNebulaMessage";
 import type { TokenDetails } from "../hooks/useGetERC20Tokens";
 import type { NFTDetails } from "../hooks/useGetNFTs";
+import type { TransactionDetails } from "../hooks/useGetRecentTransactions";
 
 interface NebulaInterfaceProps {
-  chainId: number;
+  chain: ChainMetadata;
   address: string;
-  transactions: any;
+  transactions: TransactionDetails[];
   contracts: any;
   tokens: TokenDetails[];
   nfts: NFTDetails[];
@@ -42,10 +43,11 @@ const getOrCreateSession = async (chainId: number, address: string) => {
 };
 
 export function NebulaInterface({
-  chainId,
+  chain,
   address,
   tokens,
   nfts,
+  transactions,
 }: NebulaInterfaceProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
@@ -61,7 +63,7 @@ export function NebulaInterface({
 
     const handleMouseMove = (e: MouseEvent) => {
       const deltaY = e.clientY - startY;
-      setMessagesHeight(Math.max(200, startHeight + deltaY));
+      setMessagesHeight(Math.max(40, startHeight + deltaY));
     };
 
     const handleMouseUp = () => {
@@ -77,22 +79,35 @@ export function NebulaInterface({
     (async () => {
       setIsWaitingForResponse(true);
       try {
-        setSessionId(await getOrCreateSession(chainId, address));
+        setSessionId(await getOrCreateSession(chain.chainId, address));
 
-        const initMessage = [
-          `My wallet address on chain ${chainId} is ${address}.`,
-          "Please update your knowledge base with the following information:",
-          `I have ${tokens.length} tokens: ${stringify(tokens)}`,
-          `I have ${nfts.length} NFTs: ${stringify(nfts)}`,
-          "Answer these questions:",
-          "Give me a 3 sentence summary of my wallet.",
-          "Give me a list of notable NFTs and ERC20 tokens in my wallet.",
-          "Give me an overview of recent activity in my wallet in the last 30 days.",
-        ].join("\n");
+        await Promise.all([
+          sendNebulaMessage({
+            sessionId,
+            message: [
+              `I will provide details about the wallet address ${address} on chain ${chain.name} (${chain.chainId}).`,
+              "Please update your knowledge base with the following information:",
+              `This wallet holds ${tokens.length} tokens: ${stringify(tokens)}`,
+            ].join(" "),
+          }),
+          sendNebulaMessage({
+            sessionId,
+            message: `This wallet holds ${nfts.length} NFTs: ${stringify(nfts)}`,
+          }),
+          sendNebulaMessage({
+            sessionId,
+            message: `This wallet's ${transactions.length} recent transactions: ${stringify(transactions)}`,
+          }),
+        ]);
 
         const initResponse = await sendNebulaMessage({
           sessionId,
-          message: initMessage,
+          message: [
+            "Answer these questions:",
+            "Give me a 3 sentence summary of my wallet.",
+            "Give me a list of notable NFTs and ERC20 tokens in my wallet.",
+            "Give me an overview of recent activity in my wallet in the last 30 days.",
+          ].join("\n"),
         });
 
         setMessages([
@@ -108,7 +123,7 @@ export function NebulaInterface({
         setIsWaitingForResponse(false);
       }
     })();
-  }, [address, chainId, tokens, nfts, sessionId]);
+  }, [address, chain, tokens, nfts, transactions, sessionId]);
 
   function displayNewChatMessageOrResponse(
     args: { userMessage: string } | { nebulaResponse: string },
@@ -172,7 +187,7 @@ export function NebulaInterface({
                   markdownText={msg.text}
                   p={{
                     className: msg.isUser
-                      ? "text-bold text-gray-800"
+                      ? "font-bold text-gray-300"
                       : "text-gray-300",
                   }}
                 />
@@ -181,7 +196,11 @@ export function NebulaInterface({
           ))}
           {isWaitingForResponse && (
             <div className="flex items-center gap-2">
-              <Spinner />
+              <div className="flex gap-1">
+                <NebulaIcon className="size-4 animate-bounce" />
+                <NebulaIcon className="size-4 animate-bounce [animation-delay:150ms]" />
+                <NebulaIcon className="size-4 animate-bounce [animation-delay:300ms]" />
+              </div>
               {messages.length === 0 && (
                 <p className="text-muted-foreground text-sm">
                   Summarizing this wallet...

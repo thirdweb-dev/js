@@ -2,7 +2,7 @@
 import type { ChainMetadata } from "thirdweb/chains";
 import { useGetERC20Tokens } from "../hooks/useGetERC20Tokens";
 import { useGetNFTs } from "../hooks/useGetNFTs";
-import { useGetRecentTransactions } from "../hooks/useGetTxActivity";
+import { useGetRecentTransactions } from "../hooks/useGetRecentTransactions";
 import { mockWalletData } from "../utils/mockData";
 import { ActivityOverview } from "./ActivityOverview";
 import { NebulaInterface } from "./NebulaInterface";
@@ -20,18 +20,16 @@ export function WalletDashboard(props: {
     props.chain.chainId,
     props.address,
   );
-  const { txActivity, isLoading: isLoadingActivity } = useGetRecentTransactions(
-    props.chain.chainId,
-    props.address,
-  );
+  const { transactions, isLoading: isLoadingActivity } =
+    useGetRecentTransactions(props.chain.chainId, props.address);
 
   return (
     <div className="grid gap-6">
       {!isLoadingERC20 && !isLoadingNFTs && (
         <NebulaInterface
-          chainId={props.chain.chainId}
+          chain={props.chain}
           address={props.address}
-          transactions={mockWalletData.transactions}
+          transactions={transactions}
           contracts={mockWalletData.contracts}
           tokens={tokens}
           nfts={nfts}
@@ -39,7 +37,8 @@ export function WalletDashboard(props: {
       )}
 
       <ActivityOverview
-        transactions={txActivity}
+        chain={props.chain}
+        transactions={transactions}
         isLoading={isLoadingActivity}
         contracts={mockWalletData.contracts}
       />

@@ -1,4 +1,6 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -9,18 +11,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft, ArrowRight, WalletIcon } from "lucide-react";
 import { useState } from "react";
-
-interface Transaction {
-  id: string;
-  type: "out" | "in";
-  amount: string;
-  to?: string;
-  from?: string;
-  contract?: string;
-  method?: string;
-  date: string;
-}
+import type { ChainMetadata } from "thirdweb/chains";
+import { shortenHex } from "thirdweb/utils";
+import type { TransactionDetails } from "../hooks/useGetRecentTransactions";
 
 interface Contract {
   address: string;
@@ -29,12 +25,14 @@ interface Contract {
 }
 
 interface ActivityOverviewProps {
-  transactions: Transaction[];
+  chain: ChainMetadata;
+  transactions: TransactionDetails[];
   contracts: Contract[];
   isLoading: boolean;
 }
 
 export function ActivityOverview({
+  chain,
   transactions,
   contracts,
   isLoading,
@@ -53,6 +51,8 @@ export function ActivityOverview({
   const currentTransactions = transactions.slice(firstIndex, lastIndex);
   // Calculate total pages
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
+
+  const explorer = chain.explorers?.[0];
 
   return (
     <Card>
@@ -85,24 +85,58 @@ export function ActivityOverview({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Details</TableHead>
                   <TableHead>Date</TableHead>
+                  <TableHead>Hash</TableHead>
+                  <TableHead>Activity</TableHead>
+                  <TableHead>Value ({chain.nativeCurrency.symbol})</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentTransactions.map((tx) => (
-                  <TableRow key={tx.id}>
-                    <TableCell>{tx.type}</TableCell>
-                    <TableCell>{tx.amount}</TableCell>
+                {currentTransactions.map((transaction) => (
+                  <TableRow key={transaction.hash}>
                     <TableCell>
-                      {tx.to && `To: ${tx.to} `}
-                      {tx.from && `From: ${tx.from} `}
-                      {tx.contract && `Contract: ${tx.contract} `}
-                      {tx.method && ` Method: ${tx.method}`}
+                      <span title={transaction.date.toLocaleString()}>
+                        {formatDistanceToNow(transaction.date, {
+                          addSuffix: true,
+                        })}
+                      </span>
                     </TableCell>
-                    <TableCell>{tx.date}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="link"
+                        onClick={() =>
+                          window.open(`${explorer?.url}/tx/${transaction.hash}`)
+                        }
+                        className="font-mono"
+                      >
+                        {shortenHex(transaction.hash)}
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      {transaction.type === "in" ? (
+                        <div className="flex items-center gap-2">
+                          <WalletIcon />
+                          <ArrowLeft className="text-blue-500" />
+                          <WalletAddress
+                            address={transaction.from}
+                            shortenAddress={false}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <WalletIcon />
+                          <ArrowRight className="text-green-500" />
+                          <WalletAddress
+                            address={transaction.to}
+                            shortenAddress={false}
+                          />
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {transaction.valueTokens > 0 &&
+                        transaction.valueTokens.toPrecision(4)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -139,22 +173,21 @@ export function ActivityOverview({
           </>
         ) : activeTab === "contracts" ? (
           <Table>
-            <TableHeader>
+            {/* <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Last Interaction</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {contracts.map((contract, index) => (
+            <TableBody>contracts.map((contract, index) => (
                 <TableRow key={`${contract.address}-${index}`}>
                   <TableCell>{contract.name}</TableCell>
                   <TableCell>{contract.address}</TableCell>
                   <TableCell>{contract.lastInteraction}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              ))
+            </TableBody> */}
           </Table>
         ) : null}
       </CardContent>

@@ -1,3 +1,4 @@
+import assert from "node:assert";
 import { DASHBOARD_THIRDWEB_CLIENT_ID } from "@/constants/env";
 
 interface Transaction {
@@ -45,40 +46,42 @@ interface InsightsResponse {
   data: Transaction[];
 }
 
-export async function fetchTxActivity(args: {
+export async function fetchRecentTransactions(args: {
   chainId: number;
   address: string;
   limit_per_type?: number;
   page?: number;
 }): Promise<Transaction[]> {
-  let { chainId, address, limit_per_type, page } = args;
-  if (!limit_per_type) limit_per_type = 100;
-  if (!page) page = 0;
+  // const { NEXT_PUBLIC_INSIGHT_URL } = process.env;
+  const NEXT_PUBLIC_INSIGHT_URL = "https://insight.thirdweb-dev.com";
+  console.log("[DEBUG] NEXT_PUBLIC_INSIGHT_URL:", NEXT_PUBLIC_INSIGHT_URL);
+  assert(NEXT_PUBLIC_INSIGHT_URL, "NEXT_PUBLIC_INSIGHT_URL is not set");
 
-  const outgoingTxsResponse = await fetch(
-    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
-    {
-      headers: {
-        "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
-      },
-    },
-  );
+  const { chainId, address, limit_per_type = 100, page = 0 } = args;
 
-  const incomingTxsResponse = await fetch(
-    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_to_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
-    {
-      headers: {
-        "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
-      },
-    },
-  );
-
-  if (!outgoingTxsResponse.ok || !incomingTxsResponse.ok) {
+  const [outgoingTransactionsResponse, incomingTransactionsResponse] =
+    await Promise.all([
+      fetch(
+        `${NEXT_PUBLIC_INSIGHT_URL}/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
+        {
+          headers: { "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID },
+        },
+      ),
+      fetch(
+        `${NEXT_PUBLIC_INSIGHT_URL}/v1/transactions?chain=${chainId}&filter_to_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
+        {
+          headers: { "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID },
+        },
+      ),
+    ]);
+  if (!outgoingTransactionsResponse.ok || !incomingTransactionsResponse.ok) {
     throw new Error("Failed to fetch transaction history");
   }
 
-  const outgoingTxsData: InsightsResponse = await outgoingTxsResponse.json();
-  const incomingTxsData: InsightsResponse = await incomingTxsResponse.json();
+  const outgoingTxsData: InsightsResponse =
+    await outgoingTransactionsResponse.json();
+  const incomingTxsData: InsightsResponse =
+    await incomingTransactionsResponse.json();
 
   return [...outgoingTxsData.data, ...incomingTxsData.data].sort(
     (a, b) => b.block_number - a.block_number,

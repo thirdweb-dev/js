@@ -1,28 +1,8 @@
 "use server";
 
 import assert from "node:assert";
+import { toTokens } from "thirdweb";
 import type { TokenDetails } from "../hooks/useGetERC20Tokens";
-
-// "native_tokens": [
-//   {
-//     "token_id": "ethereum.native",
-//     "name": "Ether",
-//     "symbol": "ETH",
-//     "decimals": 18,
-//     "chain": "ethereum",
-//     "total_quantity": 1527391387004726000,
-//     "total_quantity_string": "1527391387004725927",
-//     "total_value_usd_cents": 477180,
-//     "queried_wallet_balances": [
-//       {
-//         "address": "0xa5B8492D8223D255dB279C7c3ebdA34Be5eC9D85",
-//         "quantity": 1527391387004726000,
-//         "quantity_string": "1527391387004725927",
-//         "value_usd_cents": 477180
-//       }
-//     ]
-//   }
-// ]
 
 interface QueriedWalletBalance {
   address: string;
@@ -86,6 +66,9 @@ export async function fetchERC20Tokens(args: {
       contractAddress: "Native",
       decimals: token.decimals,
       balance: BigInt(token.total_quantity_string ?? 0n),
+      balanceTokens: Number(
+        toTokens(BigInt(token.total_quantity_string), token.decimals),
+      ),
       totalValueUsdCents: token.total_value_usd_cents,
       firstTransferredDate:
         token.queried_wallet_balances[0]?.first_transferred_date,
@@ -98,6 +81,9 @@ export async function fetchERC20Tokens(args: {
       contractAddress: token.fungible_id.split(".")[1] ?? "--",
       decimals: token.decimals,
       balance: BigInt(token.total_quantity_string ?? 0n),
+      balanceTokens: Number(
+        toTokens(BigInt(token.total_quantity_string), token.decimals),
+      ),
       totalValueUsdCents: token.total_value_usd_cents,
       firstTransferredDate:
         token.queried_wallet_balances[0]?.first_transferred_date,

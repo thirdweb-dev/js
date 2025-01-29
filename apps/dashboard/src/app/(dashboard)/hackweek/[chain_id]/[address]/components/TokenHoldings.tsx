@@ -11,7 +11,6 @@ import {
 import { TabButtons } from "@/components/ui/tabs";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
-import { toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { TokenDetails } from "../hooks/useGetERC20Tokens";
 import type { NFTDetails } from "../hooks/useGetNFTs";
@@ -90,7 +89,7 @@ function ERC20Table({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead colSpan={3} />
+          <TableHead colSpan={4} />
           <TableHead>Total: ${totalValueUsdCents.toFixed(2)}</TableHead>
         </TableRow>
       </TableHeader>
@@ -140,7 +139,7 @@ function ERC20Table({
                   </span>
                 )}
               </TableCell>
-              <TableCell>{toTokens(token.balance, token.decimals)}</TableCell>
+              <TableCell>{token.balanceTokens.toPrecision(4)}</TableCell>
               <TableCell>
                 {token.totalValueUsdCents
                   ? `$${(token.totalValueUsdCents * 0.01).toFixed(2)}`
