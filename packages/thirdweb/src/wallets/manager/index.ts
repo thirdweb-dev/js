@@ -24,6 +24,7 @@ export type ConnectionManager = ReturnType<typeof createConnectionManager>;
 export type ConnectManagerOptions = {
   client: ThirdwebClient;
   accountAbstraction?: SmartWalletOptions;
+  setWalletAsActive?: boolean;
   onConnect?: (wallet: Wallet) => void;
 };
 
@@ -146,7 +147,9 @@ export function createConnectionManager(storage: AsyncStorage) {
     // add personal wallet to connected wallets list even if it's not the active one
     addConnectedWallet(wallet);
 
-    handleSetActiveWallet(activeWallet);
+    if (options?.setWalletAsActive !== false) {
+      handleSetActiveWallet(activeWallet);
+    }
 
     wallet.subscribe("accountChanged", async () => {
       // We reimplement connect here to prevent memory leaks
