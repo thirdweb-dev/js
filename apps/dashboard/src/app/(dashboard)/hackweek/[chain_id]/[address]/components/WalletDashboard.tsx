@@ -3,6 +3,7 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { useBalance } from "../hooks/getBalance";
 import { useGetERC20Tokens } from "../hooks/useGetERC20Tokens";
 import { useGetNFTs } from "../hooks/useGetNFTs";
+import { useGetTxActivity } from "../hooks/useGetTxActivity";
 import { mockWalletData } from "../utils/mockData";
 import { ActivityOverview } from "./ActivityOverview";
 import { BalanceOverview } from "./BalanceOverview";
@@ -23,19 +24,24 @@ export function WalletDashboard(props: {
   const {
     tokens,
     isLoading: isLoadingERC20,
-    error: errorERC20,
+    // error: errorERC20,
   } = useGetERC20Tokens(props.chain.chainId, props.address);
-  if (errorERC20) {
-    console.error("Error fetching ERC20 tokens:", errorERC20);
-  }
+  // if (errorERC20) {
+  //   console.error("Error fetching ERC20 tokens:", errorERC20);
+  // }
   const {
     nfts,
     isLoading: isLoadingNFTs,
-    error: errorNFTs,
+    // error: errorNFTs,
   } = useGetNFTs(props.chain.chainId, props.address);
-  if (errorNFTs) {
-    console.error("Error fetching NFTs:", errorNFTs);
-  }
+  // if (errorNFTs) {
+  //   console.error("Error fetching NFTs:", errorNFTs);
+  // }
+
+  const { txActivity, isLoading: isLoadingActivity } = useGetTxActivity(
+    props.chain.chainId,
+    props.address,
+  );
 
   return (
     <div className="grid gap-6">
@@ -45,7 +51,8 @@ export function WalletDashboard(props: {
         isLoading={isLoadingBalance}
       />
       <ActivityOverview
-        transactions={mockWalletData.transactions}
+        transactions={txActivity}
+        isLoading={isLoadingActivity}
         contracts={mockWalletData.contracts}
       />
       <TokenHoldings

@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
-import {} from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -72,7 +71,7 @@ export function TokenHoldings({
                 <Spinner />
               ) : (
                 tokens.map((token, idx) => (
-                  <TableRow key={idx}>
+                  <TableRow key={`${token.name}-${idx}`}>
                     <TableCell>
                       {token.symbol} ({token.name})
                     </TableCell>
@@ -90,7 +89,11 @@ export function TokenHoldings({
         ) : activeTab === "nft" ? (
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {nfts.map((nft, idx) => (
-              <NFTCard key={idx} nft={nft} chain={chain} />
+              <NFTCard
+                key={`${nft.contractAddress}-${idx}`}
+                nft={nft}
+                chain={chain}
+              />
             ))}
           </div>
         ) : null}
