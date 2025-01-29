@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
-import { formatDistanceToNow } from "date-fns";
 import { ArrowLeft, ArrowRight, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -68,12 +67,12 @@ export function ActivityOverview({
               isEnabled: true,
               onClick: () => setActiveTab("transactions"),
             },
-            {
-              name: "Contracts",
-              isActive: activeTab === "contracts",
-              isEnabled: true,
-              onClick: () => setActiveTab("contracts"),
-            },
+            // {
+            //   name: "Contracts",
+            //   isActive: activeTab === "contracts",
+            //   isEnabled: true,
+            //   onClick: () => setActiveTab("contracts"),
+            // },
           ]}
           tabClassName="font-medium !text-sm"
         />

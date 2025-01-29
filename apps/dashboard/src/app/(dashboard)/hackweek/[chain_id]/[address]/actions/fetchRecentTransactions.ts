@@ -86,4 +86,8 @@ export async function fetchRecentTransactions(args: {
   return [...outgoingTxsData.data, ...incomingTxsData.data].sort(
     (a, b) => b.block_number - a.block_number,
   );
+} catch (err) {
+    console.log("Failed to fetch tx activity", err);
+    return [];
+  }
 }
