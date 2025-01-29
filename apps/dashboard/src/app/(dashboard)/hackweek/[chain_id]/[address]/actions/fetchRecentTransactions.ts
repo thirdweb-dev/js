@@ -1,5 +1,5 @@
+"use server";
 import assert from "node:assert";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "@/constants/env";
 
 interface Transaction {
   chain_id: number;
@@ -54,8 +54,10 @@ export async function fetchRecentTransactions(args: {
 }): Promise<Transaction[]> {
   // const { NEXT_PUBLIC_INSIGHT_URL } = process.env;
   const NEXT_PUBLIC_INSIGHT_URL = "https://insight.thirdweb-dev.com";
-  console.log("[DEBUG] NEXT_PUBLIC_INSIGHT_URL:", NEXT_PUBLIC_INSIGHT_URL);
   assert(NEXT_PUBLIC_INSIGHT_URL, "NEXT_PUBLIC_INSIGHT_URL is not set");
+
+  const { DASHBOARD_SECRET_KEY } = process.env;
+  assert(DASHBOARD_SECRET_KEY, "DASHBOARD_SECRET_KEY is not set");
 
   const { chainId, address, limit_per_type = 100, page = 0 } = args;
 
@@ -64,16 +66,21 @@ export async function fetchRecentTransactions(args: {
       fetch(
         `${NEXT_PUBLIC_INSIGHT_URL}/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
         {
-          headers: { "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID },
+          headers: {
+            "x-secret-key": DASHBOARD_SECRET_KEY,
+          },
         },
       ),
       fetch(
         `${NEXT_PUBLIC_INSIGHT_URL}/v1/transactions?chain=${chainId}&filter_to_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
         {
-          headers: { "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID },
+          headers: {
+            "x-secret-key": DASHBOARD_SECRET_KEY,
+          },
         },
       ),
     ]);
+
   if (!outgoingTransactionsResponse.ok || !incomingTransactionsResponse.ok) {
     throw new Error("Failed to fetch transaction history");
   }
@@ -83,11 +90,10 @@ export async function fetchRecentTransactions(args: {
   const incomingTxsData: InsightsResponse =
     await incomingTransactionsResponse.json();
 
+  console.log("outgoingTxsData", JSON.stringify(outgoingTxsData, null, 2));
+  console.log("incomingTxsData", JSON.stringify(incomingTxsData, null, 2));
+
   return [...outgoingTxsData.data, ...incomingTxsData.data].sort(
     (a, b) => b.block_number - a.block_number,
   );
-} catch (err) {
-    console.log("Failed to fetch tx activity", err);
-    return [];
-  }
 }

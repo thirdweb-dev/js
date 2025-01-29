@@ -25,7 +25,7 @@ export function WalletDashboard(props: {
 
   return (
     <div className="grid gap-6">
-      {!isLoadingERC20 && !isLoadingNFTs && (
+      {/* {!isLoadingERC20 && !isLoadingNFTs && (
         <NebulaInterface
           chain={props.chain}
           address={props.address}
@@ -34,7 +34,7 @@ export function WalletDashboard(props: {
           tokens={tokens}
           nfts={nfts}
         />
-      )}
+      )} */}
 
       <ActivityOverview
         chain={props.chain}
