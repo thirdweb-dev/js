@@ -2,15 +2,16 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-    title: "IThirdwebWallet.Transfer | Thirdweb .NET SDK",
-    description: "Method to transfer the specified amount of native tokens or ERC20 tokens to a given address.",
+    title: "IThirdwebWallet.Transfer | SDK de Thirdweb .NET",
+    description: "Método para transferir la cantidad especificada de tokens nativos o tokens ERC20 a una dirección dada.",
 });
 
 # IThirdwebWallet.Transfer
 
-This method transfers a specified amount of Wei (smallest denomination of Ether) or ERC20s to a specified wallet address on a given chain.
+Este método transfiere una cantidad especificada de Wei (la denominación más pequeña de Ether) o tokens ERC20 a una dirección de billetera especificada en una cadena dada.
 
-## Usage
+## Uso
+
 
 ```csharp
 // Transfer Wei
@@ -19,41 +20,41 @@ var receipt = await wallet.Transfer(chainId, toAddress, weiAmount);
 var receipt = await wallet.Transfer(chainId, toAddress, weiAmount, erc20ContractAddress);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (requerido)
 
-An instance of `IThirdwebWallet`. This represents the wallet from which the Wei is being transferred.
+Una instancia de `IThirdwebWallet`. Representa la billetera desde la cual se está transfiriendo el Wei.
 
-### chainId (required)
+### chainId (requerido)
 
-The chain ID of the network on which the transfer is to occur.
+El ID de la cadena de la red en la que se realizará la transferencia.
 
-### toAddress (required)
+### toAddress (requerido)
 
-The address to which the Wei will be transferred.
+La dirección a la cual se transferirá el Wei.
 
-### weiAmount (required)
+### weiAmount (requerido)
 
-The amount of Wei to transfer. It must be 0 or greater.
+La cantidad de Wei a transferir. Debe ser 0 o mayor.
 
-### erc20ContractAddress (optional)
+### erc20ContractAddress (opcional)
 
-The contract address of the ERC20 token to transfer. If not provided, the transfer will be in native tokens.
+La dirección del contrato del token ERC20 a transferir. Si no se proporciona, la transferencia será en tokens nativos.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ThirdwebTransactionReceipt
 
-The method returns a `ThirdwebTransactionReceipt` which contains details about the transaction.
+El método devuelve un `ThirdwebTransactionReceipt` que contiene detalles sobre la transacción.
 
 </Details>
 
-## Exceptions
+## Excepciones
 
-- `ArgumentNullException`: Thrown when the `wallet` is null.
-- `ArgumentOutOfRangeException`: Thrown when the `chainId` is less than or equal to 0.
-- `ArgumentException`: Thrown when the recipient `toAddress` is null or empty.
-- `ArgumentOutOfRangeException`: Thrown when the `weiAmount` is less than 0.
+- `ArgumentNullException`: Lanzado cuando `wallet` es nulo.
+- `ArgumentOutOfRangeException`: Lanzado cuando `chainId` es menor o igual a 0.
+- `ArgumentException`: Lanzado cuando la dirección del destinatario `toAddress` es nula o vacía.
+- `ArgumentOutOfRangeException`: Lanzado cuando `weiAmount` es menor a 0.

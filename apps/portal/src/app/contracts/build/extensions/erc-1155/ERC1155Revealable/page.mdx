@@ -2,13 +2,13 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC1155Revealable contract",
-		icon: "solidity",
-	},
-	title: "ERC1155Revealable | thirdweb contract",
-	description:
-		"Create batches of 'delayed-reveal' NFTs that can be revealed at a later date after they have been minted and claimed",
+  image: {
+    title: "ERC1155Revealable contract",
+    icon: "solidity",
+  },
+  title: "ERC1155Revealable | contrato de thirdweb",
+  description:
+    "Crea lotes de NFTs de 'revelación retardada' que pueden ser revelados en una fecha posterior después de haber sido acuñados y reclamados",
 });
 
 # ERC1155Revealable
@@ -18,16 +18,16 @@ import "@thirdweb-dev/contracts/eip/ERC1155.sol";
 import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
 ```
 
-Create batches of ['delayed-reveal'](/glossary/delayed-reveal) NFTs that can be revealed at a later date after they have been minted and claimed.
+Crea lotes de NFTs de ['revelación retardada'](/glossary/delayed-reveal) que pueden ser revelados en una fecha posterior después de haber sido acuñados y reclamados.
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`DelayedReveal`](/contracts/build/extensions/general/DelayedReveal) extensions.
+Esta es una extensión que es detectable en el panel de control si el contrato inteligente implementa las extensiones
+[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`DelayedReveal`](/contracts/build/extensions/general/DelayedReveal).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DelayedReveal.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar funcionalidad personalizada (opcional).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -62,7 +62,7 @@ contract Contract is ERC1155, LazyMint, DelayedReveal {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)
 - [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop)

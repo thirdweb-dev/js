@@ -2,54 +2,54 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "ThirdwebContract.Write | Thirdweb .NET SDK",
-	description: "Execute state-changing transactions on a smart contract.",
+	description: "Ejecuta transacciones que cambian el estado de un contrato inteligente.",
 });
 
 # ThirdwebContract.Write
 
-The `ThirdwebContract.Write` method allows you to execute transactions that alter the state of the blockchain via a smart contract. This is typically used for functions that create, modify, or delete data on the blockchain.
+El método `ThirdwebContract.Write` te permite ejecutar transacciones que alteran el estado de la blockchain a través de un contrato inteligente. Esto se utiliza típicamente para funciones que crean, modifican o eliminan datos en la blockchain.
 
-## Usage
+## Uso
 
 ```csharp
 var transactionReceipt = await contract.Write(wallet, contract, "methodName", weiValue, parameters);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (requerido)
 
-An instance of `IThirdwebWallet`. This represents the signer of the transaction, which can be any type of wallet provider.
+Una instancia de `IThirdwebWallet`. Representa al firmante de la transacción, que puede ser cualquier tipo de proveedor de billetera.
 
-### contract (required)
+### contract (requerido)
 
-An instance of `ThirdwebContract`. Represents the smart contract you wish to interact with.
+Una instancia de `ThirdwebContract`. Representa el contrato inteligente con el que deseas interactuar.
 
-### methodName (required)
+### methodName (requerido)
 
-The name of the smart contract method you intend to call. Must be a `string`.
+El nombre del método del contrato inteligente que deseas llamar. Debe ser un `string`.
 
-### weiValue (required)
+### weiValue (requerido)
 
-The amount of Wei to send with payable transactions as a `BigInteger`. This is often set to 0 for methods that don't require sending Ether.
+La cantidad de Wei para enviar con las transacciones pagaderas como `BigInteger`. A menudo se establece en 0 para métodos que no requieren enviar Ether.
 
-### parameters (optional)
+### parameters (opcional)
 
-The parameters to pass to the smart contract method, if any. Provide these as a comma-separated list after weiValue.
+Los parámetros a pasar al método del contrato inteligente, si los hay. Proporciónalos como una lista separada por comas después de weiValue.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### TransactionReceipt
 
-Returns the transaction receipt as a `TransactionReceipt` object, which contains information about the executed transaction.
+Devuelve el recibo de la transacción como un objeto `TransactionReceipt`, que contiene información sobre la transacción ejecutada.
 
 </Details>
 
-## Example
+## Ejemplo
 
-Let's say you have a smart contract with a `transfer` method that transfers ERC20 tokens from the caller's address to another address. Here's how you could execute a transaction to transfer tokens using `ThirdwebContract.Write`:
+Supongamos que tienes un contrato inteligente con un método `transfer` que transfiere tokens ERC20 desde la dirección del llamador a otra dirección. Aquí te mostramos cómo podrías ejecutar una transacción para transferir tokens utilizando `ThirdwebContract.Write`:
 
 ```csharp
 BigInteger chainId = 1; // Ethereum mainnet
@@ -72,4 +72,4 @@ var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAdd
 Console.WriteLine($"Transaction receipt: {receipt}");
 ```
 
-This method is essential for interacting with smart contracts when you need to make changes to the blockchain, such as updating state or transferring assets.
+Este método es esencial para interactuar con contratos inteligentes cuando necesitas realizar cambios en la blockchain, como actualizar el estado o transferir activos.

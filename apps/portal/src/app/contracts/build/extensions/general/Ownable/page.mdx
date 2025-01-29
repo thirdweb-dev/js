@@ -2,12 +2,12 @@ import { Details, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Ownable contract",
+		title: "Contrato Ownable",
 		icon: "solidity",
 	},
-	title: "Ownable | thirdweb contract",
+	title: "Ownable | Contrato de thirdweb",
 	description:
-		"The Ownable smart contract extension is usable with any base smart contract. It lets you set an owner for your smart contract.",
+		"La extensión del contrato inteligente Ownable es utilizable con cualquier contrato inteligente base. Te permite establecer un propietario para tu contrato inteligente.",
 });
 
 # Ownable
@@ -16,19 +16,19 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/Ownable.sol";
 ```
 
-The `Ownable` smart contract extension is usable with any base smart contract. It lets you set an owner for your smart contract.
+La extensión del contrato inteligente `Ownable` es utilizable con cualquier contrato inteligente base. Te permite establecer un propietario para tu contrato inteligente.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Ownable.sol" />
 
-## Usage
+## Uso
 
-The `Ownable` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `Ownable` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                       | Type                    | Returns | Description                                                                                                                  |
-| -------------------------------------------------------------------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSetOwner`](/contracts/build/extensions/general/Ownable#_cansetowner) | internal view _virtual_ | `bool`  | Runs on every attempt to set the owner of the contract. Returns whether the owner can be set in the given execution context. |
+| Nombre                                                                      | Tipo                    | Retorna | Descripción                                                                                                                  |
+| --------------------------------------------------------------------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetOwner`](/contracts/build/extensions/general/Ownable#_cansetowner)  | internal view _virtual_ | `bool`  | Se ejecuta en cada intento de establecer el propietario del contrato. Devuelve si el propietario puede ser establecido en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -38,11 +38,11 @@ import "@thirdweb-dev/contracts/extension/Ownable.sol";
 
 contract MyContract is Ownable {
     /**
-     *  This function returns who is authorized to set the owner of your contract.
+     *  Esta función devuelve quién está autorizado para establecer el propietario de tu contrato.
      *
-     *  As an EXAMPLE, we'll only allow the current owner to set the contract's new owner.
+     *  Como EJEMPLO, solo permitiremos que el propietario actual establezca el nuevo propietario del contrato.
      *
-     *  You MUST complete the body of this function to use the `Ownable` extension.
+     *  DEBES completar el cuerpo de esta función para usar la extensión `Ownable`.
      */
     function _canSetOwner() internal virtual view override returns (bool) {
         return msg.sender == owner();
@@ -50,11 +50,11 @@ contract MyContract is Ownable {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-All of the base contracts implement this extension.
+Todos los contratos base implementan esta extensión.
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="owner">
 
@@ -62,8 +62,8 @@ All of the base contracts implement this extension.
 function owner() public view override returns (address);
 ```
 
-- Returns the owner of the contract.
-- Set this value using the `setOwner` function.
+- Devuelve el propietario del contrato.
+- Establece este valor usando la función `setOwner`.
 
 </Details>
 
@@ -73,9 +73,9 @@ function owner() public view override returns (address);
 function setOwner(address _newOwner) external;
 ```
 
-- Lets an authorized wallet set a new owner for the contract. This value can be read from the `owner` function.
-- Parameter `_newOwner`: The address to make the owner of the contract.
-- The `_canSetOwner` function is run on every call to this function. If the return value of `_canSetOwner` is `false`, the `setOwner` call will revert.
+- Permite que una billetera autorizada establezca un nuevo propietario para el contrato. Este valor puede ser leído desde la función `owner`.
+- Parámetro `_newOwner`: La dirección para establecer como propietario del contrato.
+- La función `_canSetOwner` se ejecuta en cada llamada a esta función. Si el valor devuelto de `_canSetOwner` es `false`, la llamada a `setOwner` se revertirá.
 
 </Details>
 
@@ -85,9 +85,9 @@ function setOwner(address _newOwner) external;
 function _setupOwner(address _newOwner) internal;
 ```
 
-- Sets the owner of the smart contract. This value can be read from the `owner` function.
-- Parameter `_newOwner`: The address to make the owner of the contract.
-- The `_canSetOwner` function is _not_ run on a call to this function.
+- Establece el propietario del contrato inteligente. Este valor puede ser leído desde la función `owner`.
+- Parámetro `_newOwner`: La dirección para establecer como propietario del contrato.
+- La función `_canSetOwner` _no_ se ejecuta en una llamada a esta función.
 
 </Details>
 
@@ -97,8 +97,8 @@ function _setupOwner(address _newOwner) internal;
 function _canSetOwner() internal view virtual returns (bool);
 ```
 
-- Runs on every `setOwner` function call.
-- Returns whether a new owner can be set in the given execution context.
-- For example, this function can check whether the wallet calling `setOwner` is the contract owner, and enforce that only the current owner should be able to successfully call `setOwner`.
+- Se ejecuta en cada llamada a la función `setOwner`.
+- Devuelve si un nuevo propietario puede ser establecido en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `setOwner` es el propietario del contrato, y hacer cumplir que solo el propietario actual pueda llamar exitosamente a `setOwner`.
 
 </Details>

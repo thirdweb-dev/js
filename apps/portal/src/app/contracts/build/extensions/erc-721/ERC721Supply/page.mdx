@@ -4,12 +4,12 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Supply contract",
+		title: "Contrato ERC721Supply",
 		icon: "solidity",
 	},
-	title: "ERC721Supply | thirdweb contract",
+	title: "ERC721Supply | contrato de thirdweb",
 	description:
-		"View all of the NFTs from the collection by implementing the totalSupply function on your ERC721(A) contract",
+		"Ver todos los NFTs de la colección implementando la función totalSupply en tu contrato ERC721(A)",
 });
 
 # ERC721Supply
@@ -18,11 +18,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/interface/IERC721Supply.sol"
 ```
 
-View all of the NFTs from the collection by implementing the `totalSupply` function on your ERC721(A) contract.
+Ver todos los NFTs de la colección implementando la función `totalSupply` en tu contrato ERC721(A).
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -30,16 +30,15 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC721Supply.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
-The [ERC721A](/contracts/build/extensions/erc-721/ERC721) contract comes with a `totalSupply`
-function that returns the total number of NFTs that have been minted in the collection (including tokens that have been burned).
+El contrato [ERC721A](/contracts/build/extensions/erc-721/ERC721) viene con una función `totalSupply` que devuelve el número total de NFTs que han sido emitidos en la colección (incluyendo los tokens que han sido quemados).
 
-This means you can already view the total supply of NFTs in the collection by implementing the `ERC721A` contract.
+Esto significa que ya puedes ver el suministro total de NFTs en la colección implementando el contrato `ERC721A`.
 
-You can optionally override the functionality of this function as outlined below:
+Opcionalmente, puedes sobrescribir la funcionalidad de esta función como se describe a continuación:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -65,7 +64,7 @@ contract Contract is ERC721A {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721Base](/contracts/build/base-contracts/erc-721/base)
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)

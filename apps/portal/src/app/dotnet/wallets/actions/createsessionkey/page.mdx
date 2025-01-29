@@ -3,14 +3,15 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "SmartWallet.CreateSessionKey | Thirdweb .NET SDK",
 	description:
-		"Grants a signer restricted access to the connected Smart Wallet.",
+		"Concede acceso restringido al Smart Wallet a un firmante.",
 });
 
 # SmartWallet.CreateSessionKey
 
-Grants restricted Smart Wallet access to a signer, otherwise known as session keys, allowing that signer to connect to this Smart Wallet and interact with it, alongside the original admin.
+Concede acceso restringido al Smart Wallet a un firmante, también conocido como clave de sesión, permitiendo que dicho firmante se conecte a este Smart Wallet e interactúe con él, junto con el administrador original.
 
-## Usage
+## Uso
+
 
 ```csharp
 // Grant a session key to pk wallet (advanced use case)
@@ -25,42 +26,43 @@ var receipt = await smartWallet.CreateSessionKey(
 );
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### signerAddress
 
-`string`: the address of the signer to grant access to.
+`string`: la dirección del firmante al que se le concederá acceso.
 
 ### approvedTargets
 
-`List<string>`: the contracts this signer may interact with, set to ADDRESS_ZERO to allow all.
+`List<string>`: los contratos con los que este firmante puede interactuar, establece a ADDRESS_ZERO para permitir todos.
 
 ### nativeTokenLimitPerTransactionInWei
 
-`string`: amount of native tokens per transaction this signer is allowed to use, in wei.
+`string`: cantidad de tokens nativos por transacción que este firmante puede usar, en wei.
 
 ### permissionStartTimestamp
 
-`string`: UNIX timestamp representing the date at which this session key shall be granted, set to 0 to immediately activate it.
+`string`: marca de tiempo UNIX que representa la fecha en la que se concederá esta clave de sesión, establece en 0 para activarla de inmediato.
 
 ### permissionEndTimestamp
 
-`string`: UNIX timestamp representing the date at which this session key shall end, set to 0 to immediately activate it.
+`string`: marca de tiempo UNIX que representa la fecha en la que esta clave de sesión terminará, establece en 0 para activarla de inmediato.
 
 ### reqValidityStartTimestamp
 
-`string`: UNIX timestamp representing the date at which this signed request shall begin to be valid and processable.
+`string`: marca de tiempo UNIX que representa la fecha en la que esta solicitud firmada comenzará a ser válida y procesable.
 
 ### reqValidityEndTimestamp
 
-`string`: UNIX timestamp representing the date at which this signed request shall no longer be valid and processable.
+`string`: marca de tiempo UNIX que representa la fecha en la que esta solicitud firmada ya no será válida ni procesable.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### TransactionReceipt
 
-The transaction receipt for this user operation, as a `TransactionReceipt` object.
+El recibo de la transacción para esta operación de usuario, como un objeto `TransactionReceipt`.
 
 </Details>
+

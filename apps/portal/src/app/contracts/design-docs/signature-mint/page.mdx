@@ -4,53 +4,52 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Signature minting design document",
+		title: "Documento de diseño de minting por firma",
 		icon: "contract",
 	},
-	title: "Signature minting design document | thirdweb",
+	title: "Documento de diseño de minting por firma | thirdweb",
 	description:
-		"This is a live document that explains what the thirdweb Signature minting smart contract is, how it works and can be used, and why it is designed the way it is",
+		"Este es un documento en vivo que explica qué es el contrato inteligente de minting por firma de thirdweb, cómo funciona, cómo puede ser utilizado y por qué está diseñado de la manera en que está.",
 });
 
-# Signature minting design document.
+# Documento de diseño de minting por firma.
 
-This is a live document that explains the 'signature minting' mechanism used in [thirdweb](https://thirdweb.com/) `Token` smart contracts.
+Este es un documento en vivo que explica el mecanismo de 'minting por firma' utilizado en los contratos inteligentes de [thirdweb](https://thirdweb.com/) `Token`.
 
-The document is written for technical and non-technical readers. To ask further questions about any of thirdweb's `Drop`, please [visit our support site](https://thirdweb.com/support) or create a github issue.
+El documento está escrito para lectores tanto técnicos como no técnicos. Si tienes más preguntas sobre los `Drop` de thirdweb, por favor [visita nuestro sitio de soporte](https://thirdweb.com/support) o crea un issue en GitHub.
 
-## Background
+## Contexto
 
-The 'signature minting' mechanism used in [thirdweb](https://thirdweb.com/) `Token` smart contracts is a way for a contract admin to
-authorize an external party's request to mint tokens on the admin's contract. At a high level, this means you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.
+El mecanismo de 'minting por firma' utilizado en los contratos inteligentes de [thirdweb](https://thirdweb.com/) `Token` es una forma en que un administrador de contrato autoriza la solicitud de una parte externa para acuñar tokens en el contrato del administrador. A un nivel alto, esto significa que puedes autorizar a una parte externa para acuñar tokens en tu contrato y especificar qué exactamente será acuñado por esa parte externa.
 
-A contract admin signs a 'payload' or 'mint request' which specifies parameters around a mint e.g. which address should tokens be minted to, what price should be collected in exchange for the minted tokens, etc.
+Un administrador de contrato firma un 'payload' o 'solicitud de minting' que especifica parámetros alrededor de un mint, por ejemplo, a qué dirección deben ser acuñados los tokens, qué precio debe cobrarse a cambio de los tokens acuñados, etc.
 
-Any external party can then present a smart contract implementing the 'signature minting' mechanism with a payload, along with the signature generated from a contract admin signing the payload. Tokens will then be minted according to the information specified in the payload.
+Cualquier parte externa puede entonces presentar un contrato inteligente que implemente el mecanismo de 'minting por firma' con un payload, junto con la firma generada del administrador del contrato firmando el payload. Los tokens serán acuñados según la información especificada en el payload.
 
-The following diagram illustrates how the 'signature minting' flow looks like. For example, consider a webapp like [wombo.art](https://www.wombo.art/) which lets a user generate artwork on its website. Once a user has generated artwork on the wombo website, wombo can allow the user to mint their generated artwork as an NFT on wombo's own contract, where wombo can ensure that what the user will mint on wombo's contract is the intended generated artwork.
+El siguiente diagrama ilustra cómo es el flujo de 'minting por firma'. Por ejemplo, considera una aplicación web como [wombo.art](https://www.wombo.art/) que permite a un usuario generar arte en su sitio web. Una vez que un usuario haya generado arte en el sitio de wombo, wombo puede permitir al usuario acuñar su obra de arte generada como un NFT en el contrato de wombo, donde wombo puede garantizar que lo que el usuario acuñará en el contrato de wombo es la obra de arte generada prevista.
 
 <DocImage src={diagram1} />
 
-### Why we're developing `Signature Minting`
+### Por qué estamos desarrollando `Signature Minting`
 
-We've observed that there are largely three distinct contexts under which one mints tokens:
+Hemos observado que existen principalmente tres contextos distintos bajo los cuales se acuñan tokens:
 
-1. Minting tokens for yourself on a contract you own. E.g. a person wants to mint their Twitter profile picture as an NFT.
-2. Having an audience mint tokens on a contract you own.
-   1. The nature of tokens to be minted by the audience is pre-determined by the contract admin. E.g. a 10k NFT drop where the contents of the NFTs to be minted by the audience is already known and determined by the contract admin before the audience comes in to mint NFTs.
-   2. The nature of tokens to be minted by the audience is _not_ pre-determined by the contract admin. E.g. a course ‘certificate' dynamically generated with the name of the course participant, to be minted by the course participant at the time of course completion.
+1. Acuñar tokens para ti mismo en un contrato que posees. Ej. una persona quiere acuñar su foto de perfil de Twitter como un NFT.
+2. Hacer que una audiencia acuñe tokens en un contrato que posees.
+   1. La naturaleza de los tokens a acuñar por la audiencia está pre-determinada por el administrador del contrato. Ej. una colección de NFT de 10k donde el contenido de los NFTs a acuñar por la audiencia ya es conocido y determinado por el administrador del contrato antes de que la audiencia comience a acuñar los NFTs.
+   2. La naturaleza de los tokens a acuñar por la audiencia _no_ está pre-determinada por el administrador del contrato. Ej. un 'certificado' de curso generado dinámicamente con el nombre del participante del curso, que debe ser acuñado por el participante al completar el curso.
 
-The thirdweb `Drop` contracts serve the cases described in 2(i).
+Los contratos `Drop` de thirdweb sirven para los casos descritos en 2(i).
 
-The thirdweb `Token` contracts serve the cases described in (1) and 2(ii). And the 'signature minting' mechanism is particularly designed to serve the case described in 2(ii).
+Los contratos `Token` de thirdweb sirven para los casos descritos en (1) y 2(ii). Y el mecanismo de 'minting por firma' está diseñado especialmente para servir al caso descrito en 2(ii).
 
-## Technical Details
+## Detalles técnicos
 
-We'll now go over the technical details involved in the 'signature minting' mechanism illustrated in the diagram in the preceding section.
+Ahora repasaremos los detalles técnicos involucrados en el mecanismo de 'minting por firma' ilustrado en el diagrama de la sección anterior.
 
-### Payload / Mint request
+### Payload / Solicitud de minting
 
-We'll now cover what makes up a payload, or 'mint request':
+Ahora cubriremos qué compone un payload, o 'solicitud de minting':
 
 ```solidity
 struct MintRequest {
@@ -69,40 +68,40 @@ struct MintRequest {
 }
 ```
 
-| Parameter              | Description                                                                                                                           |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| to                     | The receiver of the tokens to mint.                                                                                                   |
-| royaltyRecipient       | The recipient of the minted token's secondary sales royalties. (Not applicable for ERC20 tokens)                                      |
-| royaltyBps             | The percentage of the minted token's secondary sales to take as royalties. (Not applicable for ERC20 tokens)                          |
-| primarySaleRecipient   | The recipient of the minted token's primary sales proceeds.                                                                           |
-| tokenId                | The tokenId of the token to mint. (Only applicable for ERC1155 tokens)                                                                |
-| uri                    | The metadata URI of the token to mint. (Not applicable for ERC20 tokens)                                                              |
-| quantity               | The quantity of tokens to mint.                                                                                                       |
-| pricePerToken          | The price to pay per quantity of tokens minted. (For TokenERC20, this parameter is `price`, indicating the total price of all tokens) |
-| currency               | The currency in which to pay the price per token minted.                                                                              |
-| validityStartTimestamp | The unix timestamp after which the payload is valid.                                                                                  |
-| validityEndTimestamp   | The unix timestamp at which the payload expires.                                                                                      |
-| uid                    | A unique identifier for the payload.                                                                                                  |
+| Parámetro             | Descripción                                                                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| to                    | El receptor de los tokens a acuñar.                                                                                                  |
+| royaltyRecipient      | El receptor de las regalías por ventas secundarias del token acuñado. (No aplicable para tokens ERC20)                               |
+| royaltyBps            | El porcentaje de las ventas secundarias del token acuñado que se tomará como regalías. (No aplicable para tokens ERC20)              |
+| primarySaleRecipient  | El receptor de los ingresos de las ventas primarias del token acuñado.                                                               |
+| tokenId               | El tokenId del token a acuñar. (Solo aplicable para tokens ERC1155)                                                                  |
+| uri                   | La URI de metadatos del token a acuñar. (No aplicable para tokens ERC20)                                                            |
+| quantity              | La cantidad de tokens a acuñar.                                                                                                      |
+| pricePerToken         | El precio a pagar por cada cantidad de tokens acuñados. (Para TokenERC20, este parámetro es `price`, lo que indica el precio total de todos los tokens) |
+| currency              | La moneda con la que se pagará el precio por cada token acuñado.                                                                     |
+| validityStartTimestamp| La marca de tiempo unix después de la cual el payload es válido.                                                                      |
+| validityEndTimestamp  | La marca de tiempo unix en la que el payload expira.                                                                                  |
+| uid                   | Un identificador único para el payload.                                                                                              |
 
-The described fields in `MintRequest` are what make up a payload or 'mint request'. This is the payload that a contract admin signs off, to be used by an external party to mint tokens on the admin's contract.
+Los campos descritos en `MintRequest` son lo que conforman un payload o 'solicitud de minting'. Este es el payload que un administrador de contrato firma, para ser usado por una parte externa para acuñar tokens en el contrato del administrador.
 
-When any external party presents a payload to the contract implementing the 'signature minting' mechanism, tokens are minted exactly according to the information specified in the presented `MintRequest`.
+Cuando cualquier parte externa presenta un payload al contrato que implementa el mecanismo de 'minting por firma', los tokens son acuñados exactamente de acuerdo con la información especificada en el `MintRequest` presentado.
 
-### Minting tokens with a payload / 'mint request'
+### Acuñación de tokens con un payload / 'solicitud de minting'
 
-Any external party can present a smart contract implementing the 'signature minting' mechanism with a payload, along with the signature generated from a contract admin signing the payload. Tokens will then be minted according to the information specified in the payload.
+Cualquier parte externa puede presentar un contrato inteligente que implemente el mecanismo de 'minting por firma' con un payload, junto con la firma generada por un administrador de contrato al firmar el payload. Los tokens serán acuñados de acuerdo con la información especificada en el payload.
 
-To mint tokens with a payload, the following function is called:
+Para acuñar tokens con un payload, se llama a la siguiente función:
 
 ```solidity
 function mintWithSignature(MintRequest calldata req, bytes calldata signature) external payable;
 ```
 
-| Parameter | Description                                                    |
+| Parámetro | Descripción                                                    |
 | --------- | -------------------------------------------------------------- |
-| req       | The payload / mint request.                                    |
-| signature | The signature produced by an account signing the mint request. |
+| req       | El payload / solicitud de minting.                              |
+| signature| La firma producida por una cuenta al firmar la solicitud de minting. |
 
-The contract implementing the 'signature minting' mechanism first recover's the address of the signer from the given payload i.e. `req` and the `signature`, and verifies that an authorized address has signed off this incoming mint request.
+El contrato que implementa el mecanismo de 'minting por firma' primero recupera la dirección del firmante a partir del payload dado, es decir, `req` y la `firma`, y verifica que una dirección autorizada haya firmado esta solicitud de minting entrante.
 
-Once verified, tokens are minted according to the information specified in the payload.
+Una vez verificado, los tokens son acuñados de acuerdo con la información especificada en el payload.

@@ -1,10 +1,10 @@
 import { Details, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: { title: "PrimarySale contract", icon: "solidity" },
-	title: "PrimarySale | thirdweb contract",
+	image: { title: "Contrato PrimarySale", icon: "solidity" },
+	title: "PrimarySale | Contrato de thirdweb",
 	description:
-		"PrimarySale lets you set a recipient for any sale value you intend to collect in your smart contract",
+		"PrimarySale te permite establecer un receptor para cualquier valor de venta que tengas la intención de recaudar en tu contrato inteligente",
 });
 
 # PrimarySale
@@ -13,19 +13,19 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/PrimarySale.sol";
 ```
 
-`PrimarySale` lets you set a recipient for any sale value you intend to collect in your smart contract.
+`PrimarySale` te permite establecer un receptor para cualquier valor de venta que tengas la intención de recaudar en tu contrato inteligente.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/PrimarySale.sol" />
 
-## Usage
+## Uso
 
-The `PrimarySale` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `PrimarySale` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                                                         | Type                    | Returns | Description                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------ | ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSetPrimarySaleRecipient`](/contracts/build/extensions/general/PrimarySale#_cansetprimarysalerecipient) | internal view _virtual_ | `bool`  | Runs on every attempt to set a new primary sale recipient. Returns whether this info can be set in the given execution context. |
+| Nombre                                                                                                         | Tipo                    | Devuelve | Descripción                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------- | ----------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetPrimarySaleRecipient`](/contracts/build/extensions/general/PrimarySale#_cansetprimarysalerecipient) | internal view _virtual_ | `bool`   | Se ejecuta en cada intento de establecer un nuevo receptor de venta primaria. Devuelve si esta información puede ser establecida en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -35,10 +35,10 @@ import "@thirdweb-dev/contracts/extension/PrimarySale.sol";
 
 contract MyContract is PrimarySale {
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para los fines del ejemplo
+     *  en el comentario de código a continuación.
      *
-     *  Doing this is not necessary to use the `PrimarySale` extension.
+     *  Hacer esto no es necesario para usar la extensión `PrimarySale`.
      */
     address public deployer;
 
@@ -46,12 +46,12 @@ contract MyContract is PrimarySale {
         deployer = msg.sender;
     }
 
-    /**
-     *  This function returns who is authorized to set primary sale recipient address for your contract.
+   /**
+     *  Esta función devuelve quién está autorizado para establecer la dirección del receptor de la venta primaria para tu contrato.
      *
-     *  As an EXAMPLE, we'll only allow the contract deployer to set the primary sale recipient address.
+     *  Como EJEMPLO, solo permitiremos que el desplegador del contrato establezca la dirección del receptor de la venta primaria.
      *
-     *  You MUST complete the body of this function to use the `PrimarySale` extension.
+     *  DEBES completar el cuerpo de esta función para usar la extensión `PrimarySale`.
      */
     function _canSetPrimarySaleRecipient()
         internal
@@ -64,7 +64,7 @@ contract MyContract is PrimarySale {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [`ERC20Drop`](/contracts/build/extensions/erc-1155/ERC1155Claimable)
 - [`ERC20DropVote`](/contracts/build/base-contracts/erc-20/drop-vote)
@@ -75,7 +75,7 @@ contract MyContract is PrimarySale {
 - [`ERC1155Drop`](/contracts/build/base-contracts/erc-1155/drop)
 - [`ERC1155SignatureMint`](/contracts/build/base-contracts/erc-1155/signature-mint)
 
-## Full API Reference
+## Referencia Completa de la API
 
 <Details summary="primarySaleRecipient">
 
@@ -83,8 +83,8 @@ contract MyContract is PrimarySale {
 function primarySaleRecipient() public view returns (address);
 ```
 
-- Returns the primary sale recipient address stored in the contract.
-- Set this value using the `setPrimarySaleRecipient` function.
+- Devuelve la dirección del receptor de la venta primaria almacenada en el contrato.
+- Establece este valor usando la función `setPrimarySaleRecipient`.
 
 </Details>
 
@@ -94,9 +94,9 @@ function primarySaleRecipient() public view returns (address);
 function setPrimarySaleRecipient(address saleRecipient) external;
 ```
 
-- Lets an authorized wallet set the primary sale recipient address.
-- Parameter `saleRecipient`: The address to set as the new primary sale recipient.
-- The `_canSetPrimarySaleRecipient` function is run on every call to this function. If the return value of `_canSetPrimarySaleRecipient` is `false`, the `setPrimarySaleRecipient` call will revert.
+- Permite que una billetera autorizada establezca la dirección del receptor de la venta primaria.
+- Parámetro `saleRecipient`: La dirección que se establecerá como el nuevo receptor de la venta primaria.
+- La función `_canSetPrimarySaleRecipient` se ejecuta en cada llamada a esta función. Si el valor devuelto de `_canSetPrimarySaleRecipient` es `false`, la llamada a `setPrimarySaleRecipient` se revertirá.
 
 </Details>
 
@@ -106,9 +106,9 @@ function setPrimarySaleRecipient(address saleRecipient) external;
 function _setupPrimarySaleRecipient(address saleRecipient) internal;
 ```
 
-- Sets the primary sale recipient.
-- Parameter `saleRecipient`: The address to set as the new primary sale recipient.
-- The `_canSetPrimarySaleRecipient` function is _not_ run on a call to this function.
+- Establece el receptor de la venta primaria.
+- Parámetro `saleRecipient`: La dirección que se establecerá como el nuevo receptor de la venta primaria.
+- La función `_canSetPrimarySaleRecipient` _no_ se ejecuta en una llamada a esta función.
 
 </Details>
 
@@ -118,8 +118,8 @@ function _setupPrimarySaleRecipient(address saleRecipient) internal;
 function _canSetPrimarySaleRecipient() internal view virtual returns (bool);
 ```
 
-- Runs on every `setPrimarySaleRecipient` function call.
-- Returns whether a new primary sale recipient can be set in the given execution context.
-- For example, this function can check whether the wallet calling `setPrimarySaleRecipient` is the contract owner, and enforce that only the current owner should be able to successfully call `setPrimarySaleRecipient`.
+- Se ejecuta en cada llamada a la función `setPrimarySaleRecipient`.
+- Devuelve si se puede establecer un nuevo receptor de la venta primaria en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `setPrimarySaleRecipient` es el propietario del contrato, y hacer cumplir que solo el propietario actual pueda llamar exitosamente a `setPrimarySaleRecipient`.
 
 </Details>

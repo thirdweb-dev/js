@@ -2,12 +2,12 @@ import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "LazyMint contract",
+		title: "Contrato LazyMint",
 		icon: "solidity",
 	},
-	title: "LazyMint | thirdweb contract",
+	title: "LazyMint | Contrato de thirdweb",
 	description:
-		"The LazyMint smart contract is an extension for any base NFT contract. It lets you 'lazy mint' any number of NFTs at once.",
+		"El contrato inteligente LazyMint es una extensión para cualquier contrato base de NFT. Te permite 'acuñar perezosamente' cualquier número de NFTs a la vez.",
 });
 
 # LazyMint
@@ -16,31 +16,32 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/LazyMint.sol";
 ```
 
-The `LazyMint` smart contract is an extension for any base NFT contract. It lets you 'lazy mint' any number of NFTs at once.
+El contrato inteligente `LazyMint` es una extensión para cualquier contrato base de NFT. Te permite 'acuñar perezosamente' cualquier número de NFTs a la vez.
 
-Here, ['lazy mint'](/glossary/lazy-minting) means defining the metadata for particular tokenIds of your NFT contract, without actually minting a non-zero balance of NFTs of those tokenIds.
+Aquí, ['acuñar perezosamente'](/glossary/lazy-minting) significa definir los metadatos para tokenIds particulares de tu contrato NFT, sin acuñar realmente un saldo distinto de cero de NFTs de esos tokenIds.
 
 <Callout title="info" variant="info">
 
-In order for the `ERC721LazyMintable`, `ERC1155LazyMintable` or `ERC20LazyMintable` extension to be detected
-in the Dashboard, the corresponding [`ERC721`](/contracts/build/extensions/erc-721/ERC721), [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) or [`ERC20`](/contracts/build/extensions/erc-20/ERC20) extensions need to be added alongside
-the `LazyMint` extension.
+Para que la extensión `ERC721LazyMintable`, `ERC1155LazyMintable` o `ERC20LazyMintable` sea detectada
+en el Dashboard, las extensiones correspondientes [`ERC721`](/contracts/build/extensions/erc-721/ERC721), [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) o [`ERC20`](/contracts/build/extensions/erc-20/ERC20) deben ser agregadas junto con
+la extensión `LazyMint`.
 
 </Callout>
+
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/LazyMint.sol" />
 
-## Usage
+## Uso
 
-The `LazyMint` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `LazyMint` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                        | Type                    | Returns | Description                                                                                                                      |
+| Nombre                                                                      | Tipo                    | Retorna | Descripción                                                                                                                      |
 | --------------------------------------------------------------------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canLazyMint`](/contracts/build/extensions/general/LazyMint#_canlazymint) | internal view _virtual_ | `bool`  | Runs on every attempt to lazy mint NFTs on the contract. Returns whether NFTs can be lazy minted in the given execution context. |
+| [`_canLazyMint`](/contracts/build/extensions/general/LazyMint#_canlazymint) | internal view _virtual_ | `bool`  | Se ejecuta en cada intento de acuñar perezosamente NFTs en el contrato. Devuelve si los NFTs pueden ser acuñados perezosamente en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -50,10 +51,10 @@ import "@thirdweb-dev/contracts/extension/LazyMint.sol";
 
 contract MyContract is LazyMint {
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para los fines del ejemplo
+     *  en el comentario de código abajo.
      *
-     *  Doing this is not necessary to use the `LazyMint` extension.
+     *  Hacer esto no es necesario para usar la extensión `LazyMint`.
      */
     address public deployer;
 
@@ -62,11 +63,11 @@ contract MyContract is LazyMint {
     }
 
     /**
-     *  This function returns who is authorized to lazy mint NFTs on this contract.
+     *  Esta función devuelve quién está autorizado para acuñar perezosamente NFTs en este contrato.
      *
-     *  As an EXAMPLE, we'll only allow the contract deployer to lazy mint NFTs.
+     *  Como EJEMPLO, solo permitiremos que el desplegador del contrato acuñe perezosamente NFTs.
      *
-     *  You MUST complete the body of this function to use the `LazyMint` extension.
+     *  DEBES completar el cuerpo de esta función para usar la extensión `LazyMint`.
      */
     function _canLazyMint() internal view virtual override returns (bool) {
         return msg.sender == deployer;
@@ -74,9 +75,9 @@ contract MyContract is LazyMint {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-(if combined with either [`ERC721`](/contracts/build/extensions/erc-721/ERC721) or [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155))
+(si se combina con cualquiera de [`ERC721`](/contracts/build/extensions/erc-721/ERC721) o [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155))
 
 - [`ERC721LazyMint`](/contracts/build/base-contracts/erc-721/lazy-mint)
 - [`ERC721DelayedReveal`](/contracts/build/base-contracts/erc-721/delayed-reveal)
@@ -85,7 +86,7 @@ contract MyContract is LazyMint {
 - [`ERC1155DelayedReveal`](/contracts/build/base-contracts/erc-1155/delayed-reveal)
 - [`ERC1155Drop`](/contracts/build/base-contracts/erc-1155/drop)
 
-## Full API Reference
+## Referencia Completa de la API
 
 <Details summary="lazyMint">
 
@@ -97,10 +98,10 @@ function lazyMint(
 ) external returns (uint256 batchId);
 ```
 
-- Lazy mints a given amount of NFTs.
-- Parameter `amount`: The number of NFTs to lazy mint.
-- Parameter `baseURIForTokens`: The base URI for the 'n' number of NFTs being lazy minted, where the metadata for each of those NFTs is `baseURIForTokens/tokenId`.
-- Parameter `extraData`: Additional bytes data to be used at the discretion of the contract.
+- Acuña perezosamente una cantidad dada de NFTs.
+- Parámetro `amount`: El número de NFTs a acuñar perezosamente.
+- Parámetro `baseURIForTokens`: La URI base para los 'n' NFTs que se están acuñando perezosamente, donde los metadatos de cada uno de esos NFTs son `baseURIForTokens/tokenId`.
+- Parámetro `extraData`: Datos adicionales en bytes que serán utilizados a discreción del contrato.
 
 </Details>
 
@@ -110,8 +111,8 @@ function lazyMint(
 function _canLazyMint() internal view virtual returns (bool);
 ```
 
-- Runs on every `lazyMint` function call.
-- Returns whether NFTs can be lazy minted in the given execution context.
-- For example, this function can check whether the wallet calling `lazyMint` is the contract owner, and enforce that only the owner should be able to successfully call `lazyMint`.
+- Se ejecuta en cada llamada a la función `lazyMint`.
+- Devuelve si los NFTs pueden ser acuñados perezosamente en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `lazyMint` es el propietario del contrato, y hacer cumplir que solo el propietario pueda llamar exitosamente a `lazyMint`.
 
 </Details>

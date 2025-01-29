@@ -4,11 +4,11 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155Claimable contract",
+		title: "Contrato ERC1155Claimable",
 		icon: "solidity",
 	},
-	title: "ERC1155Claimable | thirdweb contract",
-	description: "Allow other wallets to claim NFTs that you have lazy-minted",
+	title: "ERC1155Claimable | contrato de thirdweb",
+	description: "Permite que otras billeteras reclamen NFTs que has mintado de manera perezosa",
 });
 
 # ERC1155Claimable
@@ -17,23 +17,23 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
 ```
 
-Allow other wallets to **claim** NFTs that you have lazy-minted.
+Permite que otras billeteras **reclamen** NFTs que has mintado de manera perezosa.
 
-It is recommended to use this extension alongside the [`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+Se recomienda usar esta extensión junto con la extensión [`LazyMint`](/contracts/build/extensions/general/LazyMint).
 
 <Callout title="info" variant="info">
-
-This extension is an interface and requires all of the functions to be implemented
-
+  
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
+  
 </Callout>
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IClaimableERC1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -69,10 +69,10 @@ contract Contract is ERC1155, LazyMint, IClaimableERC1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
-This extension is used as part of the [ERC1155ClaimCustom](/contracts/build/extensions/erc-1155/ERC1155ClaimCustom) extension.
-The base contracts which have ERC1155ClaimCustom detected on them will also implement ERC1155Claimable.
+Esta extensión se utiliza como parte de la extensión [ERC1155ClaimCustom](/contracts/build/extensions/erc-1155/ERC1155ClaimCustom).
+Los contratos base que tienen detectado ERC1155ClaimCustom también implementarán ERC1155Claimable.
 
 - [ERC1155DelayedReveal](/contracts/build/extensions/erc-1155/ERC1155Revealable)
 - [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint)

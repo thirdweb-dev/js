@@ -1,50 +1,48 @@
 import { Details, Callout, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "PrivateKeyWallet.Create | Thirdweb .NET SDK",
-	description:
-		"Instantiate a PrivateKeyWallet to sign transactions and messages.",
+    title: "PrivateKeyWallet.Create | Thirdweb .NET SDK",
+    description:
+        "Instancia un PrivateKeyWallet para firmar transacciones y mensajes.",
 });
 
 # PrivateKeyWallet.Create
 
-Instantiate a `PrivateKeyWallet` with a given private key. This wallet is capable of signing transactions and messages, interacting with smart contracts, and performing other blockchain operations. **This wallet type is intended for backend applications only,** due to the sensitive nature of private keys.
+Instancia un `PrivateKeyWallet` con una clave privada dada. Esta billetera es capaz de firmar transacciones y mensajes, interactuar con contratos inteligentes y realizar otras operaciones en la blockchain. **Este tipo de billetera está destinada solo para aplicaciones backend**, debido a la naturaleza sensible de las claves privadas.
 
-## Usage
+## Uso
+
 
 ```csharp
 var wallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
 ```
 
-<Callout variant="warning" title="Important">
-	This method involves using a raw private key, which should be handled with the
-	utmost care. Never expose private keys in client-side code or store them in an
-	insecure manner. Ideally, use environment variables or secure vaults to manage
-	private keys in backend services.
+<Callout variant="warning" title="Importante">
+    Este método implica el uso de una clave privada sin procesar, que debe manejarse con la máxima precaución. Nunca expongas claves privadas en el código del cliente ni las almacenes de manera insegura. Idealmente, usa variables de entorno o bóvedas seguras para gestionar las claves privadas en servicios backend.
 </Callout>
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### client (required)
+### client (requerido)
 
-An instance of `ThirdwebClient`.
+Una instancia de `ThirdwebClient`.
 
-### privateKeyHex (required)
+### privateKeyHex (requerido)
 
-The private key of the wallet, provided as a hexadecimal `string`. This key grants full control over the wallet's funds and assets on the blockchain.
+La clave privada de la billetera, proporcionada como un `string` hexadecimal. Esta clave otorga control total sobre los fondos y activos de la billetera en la blockchain.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 PrivateKeyWallet
 
-Returns an instance of `PrivateKeyWallet`, ready to sign transactions and messages with the provided private key.
+Devuelve una instancia de `PrivateKeyWallet`, lista para firmar transacciones y mensajes con la clave privada proporcionada.
 
 </Details>
 
-## Example
+## Ejemplo
 
-Here is an example of creating a PrivateKeyWallet to sign a simple message. This example assumes you have a ThirdwebClient instance already created:
+Aquí tienes un ejemplo de cómo crear un PrivateKeyWallet para firmar un mensaje simple. Este ejemplo asume que ya tienes una instancia de ThirdwebClient creada:
 
 ```csharp
 var client = ThirdwebClient.Create("yourClientId");
@@ -59,4 +57,4 @@ var signature = await wallet.PersonalSign(message);
 Console.WriteLine($"Signature: {signature}");
 ```
 
-**Note**: The `PrivateKeyWallet` is intended for use in secure, backend environments. Ensure private keys are never exposed or hard-coded in client-side applications. Use `InAppWallet` and `SmartWallet` for client-side applications.
+**Nota**: El `PrivateKeyWallet` está destinado a ser utilizado en entornos seguros y backend. Asegúrate de que las claves privadas nunca sean expuestas ni codificadas de manera fija en aplicaciones del lado del cliente. Usa `InAppWallet` y `SmartWallet` para aplicaciones del lado del cliente.

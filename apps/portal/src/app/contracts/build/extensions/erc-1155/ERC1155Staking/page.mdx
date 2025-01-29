@@ -2,14 +2,15 @@ import { Details, GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC1155Staking contract",
-		icon: "solidity",
-	},
-	title: "ERC1155Staking | thirdweb contract",
-	description:
-		"The Staking1155 smart contract extension implements NFT staking mechanism for ERC1155",
+  image: {
+    title: "Contrato ERC1155Staking",
+    icon: "solidity",
+  },
+  title: "ERC1155Staking | contrato de thirdweb",
+  description:
+    "La extensión de contrato Staking1155 implementa el mecanismo de staking de NFTs para ERC1155",
 });
+
 
 # ERC1155Staking
 
@@ -17,13 +18,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/Staking1155.sol";
 ```
 
-The `Staking1155` smart contract extension implements NFT staking mechanism for ERC1155. With this extension you can setup a staking contract for NFT holders of your ERC1155 Collection. Users can stake their NFTs and earn ERC20 tokens as rewards.
+La extensión de contrato `Staking1155` implementa el mecanismo de staking de NFTs para ERC1155. Con esta extensión, puedes configurar un contrato de staking para los poseedores de NFTs de tu colección ERC1155. Los usuarios pueden hacer staking de sus NFTs y ganar tokens ERC20 como recompensas.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Staking1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -37,10 +38,10 @@ contract MyContract is Staking1155 {
     address public rewardToken;
 
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para fines del ejemplo
+     *  en el comentario de código a continuación.
      *
-     *  Doing this is not necessary to use the `Staking1155` extension.
+     *  Hacer esto no es necesario para usar la extensión `Staking1155`.
      */
     address public deployer;
 
@@ -74,11 +75,12 @@ contract MyContract is Staking1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [Staking1155Base](/contracts/build/base-contracts/erc-1155/staking)
 
-## Full API Reference
+## Referencia Completa de la API
+
 
 <Details summary="stake">
 
@@ -86,9 +88,9 @@ contract MyContract is Staking1155 {
 function stake(uint256 tokenId, uint256 amount) external;
 ```
 
-- Lets a user stake a number of ERC1155 tokens of a specific token-Id.
-- Parameter `tokenId`: ERC1155 token-id to stake.
-- Parameter `amount`: Amount to stake.
+- Permite a un usuario apostar una cantidad de tokens ERC1155 de un token-id específico.
+- Parámetro `tokenId`: El ID de token ERC1155 para apostar.
+- Parámetro `amount`: Cantidad a apostar.
 
 </Details>
 
@@ -98,9 +100,9 @@ function stake(uint256 tokenId, uint256 amount) external;
 function stake(uint256 tokenId, uint256 amount) external;
 ```
 
-- Un-stake and withdraw NFTs from the contract.
-- Parameter `tokenId`: ERC1155 token-id to withdraw.
-- Parameter `amount`: Amount to withdraw.
+- Retirar y deshacer la apuesta de NFTs del contrato.
+- Parámetro `tokenId`: El ID de token ERC1155 para retirar.
+- Parámetro `amount`: Cantidad a retirar.
 
 </Details>
 
@@ -110,8 +112,8 @@ function stake(uint256 tokenId, uint256 amount) external;
 function claimRewards(uint256 tokenId) external;
 ```
 
-- Claim accumulated rewards. This claim method allows for a pull mechanism where users must initiate claiming of rewards.
-- Parameter `tokenId`: ERC1155 token-id to claim rewards for.
+- Reclamar recompensas acumuladas. Este método de reclamación permite un mecanismo de extracción donde los usuarios deben iniciar la reclamación de recompensas.
+- Parámetro `tokenId`: El ID de token ERC1155 para el cual reclamar recompensas.
 
 </Details>
 
@@ -121,8 +123,8 @@ function claimRewards(uint256 tokenId) external;
 function getStakeInfo(address staker) external view returns (uint256[] memory tokensStaked, uint256[] memory tokenAmounts, uint256 totalRewards)
 ```
 
-- View number of NFTs staked and total rewards available for a user.
-- Parameter `staker`: Account address of staker.
+- Ver el número de NFTs apostados y las recompensas totales disponibles para un usuario.
+- Parámetro `staker`: Dirección de la cuenta del apostador.
 
 </Details>
 
@@ -132,9 +134,9 @@ function getStakeInfo(address staker) external view returns (uint256[] memory to
 function getStakeInfoForToken(uint256 tokenId, address staker) external view returns (uint256 tokensStaked, uint256 rewards)
 ```
 
-- View number of NFTs staked and total rewards available for a user.
-- Parameter `tokenId`: ERC1155 token-id to view rewards for.
-- Parameter `staker`: Account address of staker.
+- Ver el número de NFTs apostados y las recompensas totales disponibles para un usuario.
+- Parámetro `tokenId`: El token-id ERC1155 para ver las recompensas.
+- Parámetro `staker`: Dirección de la cuenta del apostador.
 
 </Details>
 
@@ -144,9 +146,9 @@ function getStakeInfoForToken(uint256 tokenId, address staker) external view ret
 function setRewardsPerUnitTime(uint256 tokenId, uint256 rewardsPerUnitTime) external;
 ```
 
-- Allows an authorized account to set rewards per unit of time. Interpreted as x rewards per second/per day/etc based on time-unit.
-- Parameter `tokenId`: ERC1155 token-id to set this for.
-- Parameter `rewardsPerUnitTime`: New rewards per unit time.
+- Permite que una cuenta autorizada establezca las recompensas por unidad de tiempo. Se interpreta como x recompensas por segundo/día/etc., según la unidad de tiempo.
+- Parámetro `tokenId`: El token-id ERC1155 para el cual se establece esto.
+- Parámetro `rewardsPerUnitTime`: Nuevas recompensas por unidad de tiempo.
 
 </Details>
 
@@ -156,9 +158,9 @@ function setRewardsPerUnitTime(uint256 tokenId, uint256 rewardsPerUnitTime) exte
 function setTimeUnit(uint256 tokenId, uint256 timeUnit) external;
 ```
 
-- Allows an authorized account to set time unit as a number of seconds. For e.g. 1 hour can be set as 3600 seconds - setting the reward frequency as _per hour_.
-- Parameter `tokenId`: ERC1155 token-id to set this for.
-- Parameter `timeUnit`: New time unit.
+- Permite que una cuenta autorizada establezca la unidad de tiempo como un número de segundos. Por ejemplo, se puede establecer 1 hora como 3600 segundos, configurando la frecuencia de recompensas como _por hora_.
+- Parámetro `tokenId`: El token-id ERC1155 para el cual se establece esto.
+- Parámetro `timeUnit`: Nueva unidad de tiempo.
 
 </Details>
 
@@ -168,8 +170,8 @@ function setTimeUnit(uint256 tokenId, uint256 timeUnit) external;
 function setDefaultRewardsPerUnitTime(uint256 defaultRewardsPerUnitTime) external;
 ```
 
-- Allows an authorized account to set rewards per unit of time applicable for all token-Ids by default.
-- Parameter `defaultRewardsPerUnitTime`: New rewards per unit time.
+- Permite que una cuenta autorizada establezca las recompensas por unidad de tiempo aplicables a todos los token-Ids por defecto.
+- Parámetro `defaultRewardsPerUnitTime`: Nuevas recompensas por unidad de tiempo.
 
 </Details>
 
@@ -179,7 +181,7 @@ function setDefaultRewardsPerUnitTime(uint256 defaultRewardsPerUnitTime) externa
 function setDefaultTimeUnit(uint256 defaultTimeUnit) external;
 ```
 
-- Allows an authorized account to set time unit applicable for all token-Ids by default.
-- Parameter `defaultTimeUnit`: New time unit.
+- Permite que una cuenta autorizada establezca la unidad de tiempo aplicable a todos los token-Ids por defecto.
+- Parámetro `defaultTimeUnit`: Nueva unidad de tiempo.
 
 </Details>

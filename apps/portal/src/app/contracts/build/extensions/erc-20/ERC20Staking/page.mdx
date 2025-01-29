@@ -3,12 +3,12 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20Staking contract",
+		title: "Contrato ERC20Staking",
 		icon: "solidity",
 	},
-	title: "ERC20Staking | thirdweb contract",
+	title: "ERC20Staking | contrato de thirdweb",
 	description:
-		"The Staking20 smart contract extension implements ERC20 staking mechanism. With this extension, you can set up a staking contract for holders of your ERC20 tokens",
+		"La extensión Staking20 de smart contract implementa el mecanismo de staking ERC20. Con esta extensión, puedes configurar un contrato de staking para los poseedores de tus tokens ERC20",
 });
 
 # ERC20Staking
@@ -17,13 +17,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/Staking20.sol";
 ```
 
-The `Staking20` smart contract extension implements ERC20 staking mechanism. With this extension, you can set up a staking contract for holders of your ERC20 tokens. Users can stake their tokens and earn a different set of ERC20 tokens as rewards.
+La extensión `Staking20` de smart contract implementa el mecanismo de staking ERC20. Con esta extensión, puedes configurar un contrato de staking para los poseedores de tus tokens ERC20. Los usuarios pueden hacer staking de sus tokens y ganar un conjunto diferente de tokens ERC20 como recompensas.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Staking20.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de smart contract que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar funcionalidad personalizada (opcional).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -34,15 +34,16 @@ import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
 import "@thirdweb-dev/contracts/eip/interface/IERC20Metadata.sol";
 
 contract MyContract is Staking20 {
-    // ERC20 Reward Token address. See {_mintRewards}.
+    // Dirección del token de recompensa ERC20. Ver {_mintRewards}.
     address public rewardToken;
 
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
-     *
-     *  Doing this is not necessary to use the `Staking20` extension.
-     */
+    *  Solo almacenamos la dirección del desplegador del contrato para los fines del ejemplo
+    *  en el comentario del código abajo.
+    *
+    *  Hacer esto no es necesario para usar la extensión `Staking20`.
+    */
+
     address public deployer;
 
     constructor(
@@ -65,12 +66,13 @@ contract MyContract is Staking20 {
     }
 
     /**
-     *  @dev    Mint/Transfer ERC20 rewards to the staker. Must override.
-     *
-     *  @param _staker    Address for sending rewards to.
-     *  @param _rewards   Amount of tokens to be given out as reward.
-     *
-     */
+    *  @dev    Acumular/Transferir recompensas ERC20 al staker. Debe sobrescribirse.
+    *
+    *  @param _staker    Dirección a la que se enviarán las recompensas.
+    *  @param _rewards   Cantidad de tokens a ser entregados como recompensa.
+    *
+    */
+
     function _mintRewards(address _staker, uint256 _rewards) internal override {
         IERC20(rewardToken).transfer(_staker, _rewards);
     }
@@ -82,11 +84,11 @@ contract MyContract is Staking20 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [Staking20Base](/contracts/build/base-contracts/erc-20/staking)
 
-## Full API Reference
+## Referencia Completa de la API
 
 <Details summary="stake">
 
@@ -94,8 +96,8 @@ contract MyContract is Staking20 {
 function stake(uint256 amount) external;
 ```
 
-- Lets a user stake a number of ERC20 tokens by passing in amount.
-- Parameter `amount`: Amount of tokens to stake.
+- Permite a un usuario hacer staking de una cantidad de tokens ERC20 pasando la cantidad.
+- Parámetro `amount`: Cantidad de tokens a poner en staking.
 
 </Details>
 
@@ -105,8 +107,8 @@ function stake(uint256 amount) external;
 function withdraw(uint256 amount) external payable;
 ```
 
-- Un-stake and withdraw tokens from the contract.
-- Parameter `amount`: Amount of tokens to withdraw.
+- Retira los tokens del staking y los retira del contrato.
+- Parámetro `amount`: Cantidad de tokens a retirar.
 
 </Details>
 
@@ -116,7 +118,7 @@ function withdraw(uint256 amount) external payable;
 function claimRewards() external;
 ```
 
-- Claim accumulated rewards. This claim method allows for a pull mechanism where users must initiate claiming of rewards.
+- Reclama las recompensas acumuladas. Este método de reclamo permite un mecanismo de extracción donde los usuarios deben iniciar el reclamo de las recompensas.
 
 </Details>
 
@@ -126,8 +128,8 @@ function claimRewards() external;
 function getStakeInfo(address staker) external view returns (uint256 tokensStaked, uint256 rewards);
 ```
 
-- View number of tokens staked and total rewards available for a user.
-- Parameter `staker`: Account address of staker.
+- Ver el número de tokens apostados y las recompensas totales disponibles para un usuario.
+- Parámetro `staker`: Dirección de la cuenta del apostador.
 
 </Details>
 
@@ -137,9 +139,9 @@ function getStakeInfo(address staker) external view returns (uint256 tokensStake
 function setRewardRatio(uint256 numerator, uint256 denominator) external
 ```
 
-- Allows an authorized account to set reward ratio. Interpreted as (numerator/denominator) rewards per second/per day/etc based on time-unit. For e.g., ratio of 1/20 would mean 1 reward token for every 20 tokens staked.
-- Parameter `numerator`: Reward ratio numerator.
-- Parameter `denominator`: Reward ratio denominator.
+- Permite a una cuenta autorizada establecer la proporción de recompensas. Interpretada como (numerador/denominador) recompensas por segundo/día/etc., según la unidad de tiempo. Por ejemplo, una proporción de 1/20 significaría 1 token de recompensa por cada 20 tokens apostados.
+- Parámetro `numerator`: Numerador de la proporción de recompensas.
+- Parámetro `denominator`: Denominador de la proporción de recompensas.
 
 </Details>
 
@@ -149,7 +151,7 @@ function setRewardRatio(uint256 numerator, uint256 denominator) external
 function setTimeUnit(uint256 timeUnit) external;
 ```
 
-- Allows an authorized account to set time unit as a number of seconds. For e.g. 1 hour can be set as 3600 seconds - setting the reward frequency as _per hour_.
-- Parameter `timeUnit`: New time unit.
+- Permite a una cuenta autorizada establecer la unidad de tiempo como un número de segundos. Por ejemplo, 1 hora puede establecerse como 3600 segundos, lo que establece la frecuencia de recompensas como _por hora_.
+- Parámetro `timeUnit`: Nueva unidad de tiempo.
 
 </Details>

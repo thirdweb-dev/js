@@ -2,14 +2,15 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "IThirdwebWallet.GetBalance | Thirdweb .NET SDK",
-	description: "Extension method to get the balance of a wallet.",
+	description: "Método de extensión para obtener el saldo de una billetera.",
 });
 
 # IThirdwebWallet.GetBalance
 
-This method allows getting either the native token balance or the balance of a specific token for a wallet.
+Este método permite obtener el saldo de tokens nativos o el saldo de un token específico para una billetera.
 
-## Usage
+## Uso
+
 
 ```csharp
 // Get native balance
@@ -19,26 +20,27 @@ BigInteger nativeBalance = await wallet.GetBalance(chainId);
 BigInteger tokenBalance = await wallet.GetBalance(chainId, erc20ContractAddress);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (obligatorio)
 
-An instance of `IThirdwebWallet`. This represents the wallet for which you want to retrieve the balance.
+Una instancia de `IThirdwebWallet`. Esto representa la billetera para la cual deseas obtener el saldo.
 
-### chainId (required)
+### chainId (obligatorio)
 
-The chain ID from which you want to retrieve the balance.
+El ID de la cadena desde la cual deseas obtener el saldo.
 
-### erc20ContractAddress (optional)
+### erc20ContractAddress (opcional)
 
-The optional ERC20 contract address from which you want to retrieve the balance. If not provided, the method will return the native token balance.
+La dirección del contrato ERC20 opcional desde la cual deseas obtener el saldo. Si no se proporciona, el método devolverá el saldo del token nativo.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### string
 
-The method returns a `BigInteger` representing the balance in Wei.
+El método devuelve un `BigInteger` representando el saldo en Wei.
 
 </Details>
+

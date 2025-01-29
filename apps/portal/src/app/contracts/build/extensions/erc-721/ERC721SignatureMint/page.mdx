@@ -2,14 +2,15 @@ import { Details, GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC721SignatureMint contract",
-		icon: "solidity",
-	},
-	title: "ERC721SignatureMint | thirdweb contract",
-	description:
-		"The SignatureMintERC721 smart contract is an extension meant for distributing ERC721 tokens",
+  image: {
+    title: "Contrato ERC721SignatureMint",
+    icon: "solidity",
+  },
+  title: "ERC721SignatureMint | contrato de thirdweb",
+  description:
+    "El contrato SignatureMintERC721 es una extensión destinada a distribuir tokens ERC721",
 });
+
 
 # ERC721SignatureMint
 
@@ -19,20 +20,20 @@ import "@thirdweb-dev/contracts/extension/SignatureMintERC721.sol";
 
 The `SignatureMintERC721` smart contract is an extension meant for distributing ERC721 tokens.
 
-The ['signature minting'](/glossary/signature-based-minting) mechanism in the `SignatureMintERC721` extension uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712), and is a way for a contract admin to authorize an external party's request to mint tokens on the admin's contract. At a high level, this means you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.
+El mecanismo de ['firma de minting'](/glossary/signature-based-minting) en la extensión `SignatureMintERC721` usa [EIP-712](https://eips.ethereum.org/EIPS/eip-712), y es una manera en la que un administrador de contrato puede autorizar la solicitud de una parte externa para acuñar tokens en el contrato del administrador. A un alto nivel, esto significa que puedes autorizar a una parte externa para acuñar tokens en tu contrato y especificar qué exactamente será acuñado por esa parte externa.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/SignatureMintERC721.sol" />
 
-## Usage
+## Uso
 
-The `SignatureMintERC721` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `SignatureMintERC721` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                             | Type                    | Description                                                                                                                                     |
+| Nombre                                                                            | Tipo                    | Descripción                                                                                                                                     |
 | -------------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSignMintRequest`](/contracts/build/extensions/erc-721/ERC721SignatureMint) | internal view _virtual_ | Runs on every attempt to mint tokens with signature on the contract. Returns whether the signer is authorized to issue a signature for minting. |
-| [`mintWithSignature`](/contracts/build/extensions/erc-721/ERC721SignatureMint)   | external payable        | Mints tokens according to the provided mint request.                                                                                            |
+| [`_canSignMintRequest`](/contracts/build/extensions/erc-721/ERC721SignatureMint) | interno de vista _virtual_ | Se ejecuta en cada intento de acuñar tokens con firma en el contrato. Devuelve si el firmante está autorizado para emitir una firma para acuñar. |
+| [`mintWithSignature`](/contracts/build/extensions/erc-721/ERC721SignatureMint)   | externo pagadero        | Acuña tokens según la solicitud de acuñación proporcionada.                                                                                        |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -120,11 +121,11 @@ contract ERC721SignatureMint is ERC721Base, SignatureMintERC721 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)
 
-## Full API reference
+## Referencia completa de la API
 
 <Details summary="verify">
 
@@ -149,20 +150,20 @@ function verify(MintRequest calldata req, bytes calldata signature)
     returns (bool success, address signer)
 ```
 
-- Verifies that a mint request is valid and signed by an authorized wallet.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
-  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `uri`: The metadata URI of the token to mint.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Verifica que una solicitud de mint sea válida y esté firmada por una billetera autorizada.
+- Parámetro `req`: La solicitud de mint.
+  - `to`: El destinatario de los tokens a mintear.
+  - `royaltyRecipient`: El destinatario de las regalías de ventas secundarias del token minteado.
+  - `royaltyBps`: El porcentaje de las ventas secundarias del token minteado que se toma como regalías.
+  - `primarySaleRecipient`: El destinatario de los ingresos por ventas primarias del token minteado.
+  - `uri`: La URI de los metadatos del token a mintear.
+  - `quantity`: La cantidad de tokens a mintear.
+  - `pricePerToken`: El precio a pagar por cada cantidad de tokens minteados.
+  - `currency`: La moneda en la que se paga el precio por cada token minteado.
+  - `validityStartTimestamp`: El timestamp unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El timestamp unix en el que la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada firmando la solicitud de mint.
 
 </Details>
 
@@ -189,20 +190,20 @@ function mintWithSignature(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Mints tokens according to the provided mint request.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
-  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `uri`: The metadata URI of the token to mint.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Mintea tokens de acuerdo con la solicitud de mint proporcionada.
+- Parámetro `req`: La solicitud de mint.
+  - `to`: El destinatario de los tokens a mintear.
+  - `royaltyRecipient`: El destinatario de las regalías de ventas secundarias del token minteado.
+  - `royaltyBps`: El porcentaje de las ventas secundarias del token minteado que se tomará como regalías.
+  - `primarySaleRecipient`: El destinatario de los ingresos de las ventas primarias del token minteado.
+  - `uri`: La URI de los metadatos del token a mintear.
+  - `quantity`: La cantidad de tokens a mintear.
+  - `pricePerToken`: El precio a pagar por cada cantidad de tokens minteados.
+  - `currency`: La moneda en la que se pagará el precio por cada token minteado.
+  - `validityStartTimestamp`: El timestamp unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El timestamp unix en el que la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada firmando la solicitud de mint.
 
 </Details>
 
@@ -228,20 +229,20 @@ function _processRequest(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Verifies a mint request and marks the request and signature as used.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
-  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `uri`: The metadata URI of the token to mint.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Verifica una solicitud de mint y marca la solicitud y la firma como utilizadas.
+- Parámetro `req`: La solicitud de mint.
+  - `to`: El destinatario de los tokens a mintear.
+  - `royaltyRecipient`: El destinatario de las regalías de ventas secundarias del token minteado.
+  - `royaltyBps`: El porcentaje de las ventas secundarias del token minteado que se tomará como regalías.
+  - `primarySaleRecipient`: El destinatario de los ingresos de las ventas primarias del token minteado.
+  - `uri`: La URI de los metadatos del token a mintear.
+  - `quantity`: La cantidad de tokens a mintear.
+  - `pricePerToken`: El precio a pagar por cada cantidad de tokens minteados.
+  - `currency`: La moneda en la que se pagará el precio por cada token minteado.
+  - `validityStartTimestamp`: El timestamp unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El timestamp unix en el que la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada firmando la solicitud de mint.
 
 </Details>
 
@@ -268,20 +269,20 @@ function _recoverAddress(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Returns the address of the signer of the mint request.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
-  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `uri`: The metadata URI of the token to mint.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Devuelve la dirección del firmante de la solicitud de mint.
+- Parámetro `req`: La solicitud de mint.
+  - `to`: El destinatario de los tokens a mintear.
+  - `royaltyRecipient`: El destinatario de las regalías de ventas secundarias del token minteado.
+  - `royaltyBps`: El porcentaje de las ventas secundarias del token minteado que se tomará como regalías.
+  - `primarySaleRecipient`: El destinatario de los ingresos de las ventas primarias del token minteado.
+  - `uri`: La URI de los metadatos del token a mintear.
+  - `quantity`: La cantidad de tokens a mintear.
+  - `pricePerToken`: El precio a pagar por cada cantidad de tokens minteados.
+  - `currency`: La moneda en la que se pagará el precio por cada token minteado.
+  - `validityStartTimestamp`: El timestamp unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El timestamp unix en el que la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada firmando la solicitud de mint.
 
 </Details>
 
@@ -291,7 +292,7 @@ function _recoverAddress(MintRequest calldata req, bytes calldata signature)
 function _canSignMintRequest(address signer) internal view virtual returns (bool);
 ```
 
-- Returns whether a given address is authorized to sign mint requests.
-- Parameter `signer`: the address that the contract checks is eligible to sign mint requests, or not.
+- Devuelve si una dirección dada está autorizada para firmar solicitudes de mint.
+- Parámetro `signer`: la dirección que el contrato verifica si es elegible para firmar solicitudes de mint o no.
 
 </Details>

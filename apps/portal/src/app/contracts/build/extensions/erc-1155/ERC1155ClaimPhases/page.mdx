@@ -2,14 +2,15 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC1155ClaimPhases contract",
-		icon: "solidity",
-	},
-	title: "ERC1155ClaimPhases | thirdweb contract",
-	description:
-		"Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by implementing ERC1155 and Drop",
+  image: {
+    title: "Contrato ERC1155ClaimPhases",
+    icon: "solidity",
+  },
+  title: "ERC1155ClaimPhases | contrato de thirdweb",
+  description:
+    "Permite a otras carteras reclamar/mintear tokens desde el contrato bajo los criterios de condiciones de reclamo implementando ERC1155 y Drop",
 });
+
 
 # ERC1155ClaimPhases
 
@@ -18,20 +19,20 @@ import "@thirdweb-dev/contracts/eip/ERC721.sol";
 import "@thirdweb-dev/contracts/extension/Drop1155.sol";
 ```
 
-Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by
-implementing [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`Drop`](/contracts/build/extensions/general/Drop).
+Permite a otras carteras reclamar/mintear tokens desde el contrato bajo los criterios de condiciones de reclamo al
+implementar [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`Drop`](/contracts/build/extensions/general/Drop).
 
-Unlike [`ERC1155ClaimCondition`](/contracts/build/extensions/erc-1155/ERC1155ClaimConditions), this extension allows you to set _multiple_ [claim phases](/glossary/claim-phases).
+A diferencia de [`ERC1155ClaimCondition`](/contracts/build/extensions/erc-1155/ERC1155ClaimConditions), esta extensión te permite establecer _varias_ [fases de reclamo](/glossary/claim-phases).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`Drop`](/contracts/build/extensions/general/Drop) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las
+extensiones [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`Drop`](/contracts/build/extensions/general/Drop).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Drop1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC1155ClaimPhases` detectable extension.
-The functions which are available to be (optionally) overridden are also detailed.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de las extensiones que componen la extensión detectable `ERC1155ClaimPhases`.
+También se detallan las funciones que se pueden (opcionalmente) sobrescribir.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -124,6 +125,6 @@ contract Contract is ERC1155, LazyMint, Drop1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-None of the base contracts implement this extension.
+Ninguno de los contratos base implementa esta extensión.

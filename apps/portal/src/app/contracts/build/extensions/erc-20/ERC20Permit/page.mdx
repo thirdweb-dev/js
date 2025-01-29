@@ -4,12 +4,12 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Permit contract",
+		title: "Contrato ERC721Permit",
 		icon: "solidity",
 	},
-	title: "ERC721Permit | thirdweb contract",
+	title: "ERC721Permit | contrato de thirdweb",
 	description:
-		"Implementing the ERC20Permit extensions allows approvals to be made via signatures, as defined in EIP-2612",
+		"La implementación de las extensiones ERC20Permit permite que las aprobaciones se realicen a través de firmas, tal como se define en el EIP-2612",
 });
 
 # ERC721Permit
@@ -18,16 +18,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/interface/IERC20Permit.sol";
 ```
 
-Implementing the `ERC20Permit` extensions allows approvals to be made via signatures, as defined in
-[EIP-2612](https://eips.ethereum.org/EIPS/eip-2612[EIP-2612]).
+La implementación de las extensiones `ERC20Permit` permite que las aprobaciones se realicen mediante firmas, tal como se define en [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612).
 
-The `permit` function can be used to change an account's ERC20 allowance (IERC20-allowance) by
-presenting a message signed by the account. By not relying on (IERC20-approve), the token holder account doesn't
-need to send a transaction and thus is not required to hold Ether at all.
+La función `permit` se puede utilizar para cambiar la asignación de ERC20 de una cuenta (IERC20-allowance) presentando un mensaje firmado por la cuenta. Al no depender de (IERC20-approve), la cuenta del titular del token no necesita enviar una transacción y, por lo tanto, no se requiere que tenga Ether en absoluto.
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas.
 
 </Callout>
 
@@ -35,16 +32,16 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC20Permit.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
-The [ERC721A](/contracts/build/extensions/erc-721/ERC721) contract comes with a `totalPermit`
-function that returns the total number of NFTs that have been minted in the collection (including tokens that have been burned).
+El contrato [ERC721A](/contracts/build/extensions/erc-721/ERC721) viene con una función `totalPermit`
+que devuelve el número total de NFTs que se han acuñado en la colección (incluyendo los tokens que han sido quemados).
 
-This means you can already view the total Permit of NFTs in the collection by implementing the `ERC721A` contract.
+Esto significa que ya puedes ver el total de Permisos de NFTs en la colección implementando el contrato `ERC721A`.
 
-You can optionally override the functionality of this function as outlined below:
+Opcionalmente, puedes sobrescribir la funcionalidad de esta función como se detalla a continuación:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -65,25 +62,24 @@ contract Contract is ERC20, IERC20Permit {
     {}
 
     /**
-     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
-     * given ``owner``'s signed approval.
+     * @dev Establece `value` como la asignación de `spender` sobre los tokens de `owner`,
+     * dado la aprobación firmada de `owner`.
      *
-     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
-     * ordering also apply here.
+     * IMPORTANTE: Los mismos problemas que tiene {IERC20-approve} relacionados con el
+     * orden de las transacciones también se aplican aquí.
      *
-     * Emits an {Approval} event.
+     * Emite un evento {Approval}.
      *
-     * Requirements:
+     * Requisitos:
      *
-     * - `spender` cannot be the zero address.
-     * - `deadline` must be a timestamp in the future.
-     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
-     * over the EIP712-formatted function arguments.
-     * - the signature must use ``owner``'s current nonce (see {nonces}).
+     * - `spender` no puede ser la dirección cero.
+     * - `deadline` debe ser una marca de tiempo en el futuro.
+     * - `v`, `r` y `s` deben ser una firma válida `secp256k1` de `owner`
+     * sobre los argumentos de la función formateados en EIP712.
+     * - la firma debe usar el nonce actual de `owner` (ver {nonces}).
      *
-     * For more information on the signature format, see the
-     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
-     * section].
+     * Para más información sobre el formato de la firma, consulta la
+     * https://eips.ethereum.org/EIPS/eip-2612#specification[sección relevante de EIP].
      */
     function permit(
         address owner,
@@ -98,14 +94,14 @@ contract Contract is ERC20, IERC20Permit {
     }
 
     /**
-     * @dev Returns the current nonce for `owner`. This value must be
-     * included whenever a signature is generated for {permit}.
+     * @dev Devuelve el nonce actual de `owner`. Este valor debe ser
+     * incluido cada vez que se genere una firma para {permit}.
      *
-     * Every successful call to {permit} increases ``owner``'s nonce by one. This
-     * prevents a signature from being used multiple times.
+     * Cada llamada exitosa a {permit} incrementa el nonce de `owner` en uno. Esto
+     * previene que una firma se use varias veces.
      */
     function nonces(address owner) external view returns (uint256) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     /**
@@ -113,13 +109,13 @@ contract Contract is ERC20, IERC20Permit {
      */
     // solhint-disable-next-line func-name-mixedcase
     function DOMAIN_SEPARATOR() external view returns (bytes32) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos base que implementan esta extensión
 
 - [ERC20Base](/contracts/build/base-contracts/erc-20/base)
 - [ERC20Drop](/contracts/build/base-contracts/erc-20/drop)

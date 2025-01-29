@@ -1,33 +1,34 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "IThirdwebWallet.SendTransaction | Thirdweb .NET SDK",
-	description:
-		"Sends a raw transaction from the connected wallet and returns a hash.",
+    title: "IThirdwebWallet.SendTransaction | Thirdweb .NET SDK",
+    description:
+        "Envía una transacción sin procesar desde la billetera conectada y devuelve un hash.",
 });
 
 # IThirdwebWallet.SendTransaction
 
-Sends a raw transaction from the connected wallet (if supported) and returns the hash. It is recommended to use `ThirdwebContract.Write` instead.
+Envía una transacción sin procesar desde la billetera conectada (si es compatible) y devuelve el hash. Se recomienda usar `ThirdwebContract.Write` en su lugar.
 
-## Usage
+## Uso
 
 ```csharp
 string transactionHash = await wallet.SendTransaction(new ThirdwebTransactionInput(...));
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### ThirdwebTransactionInput
 
-`ThirdwebTransactionInput` object containing necessary transaction details such as `To`, `Data`, `Value`.
+Objeto `ThirdwebTransactionInput` que contiene los detalles necesarios de la transacción, como `To`, `Data`, `Value`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### string
 
-The transaction hash as a `string`.
+El hash de la transacción como un `string`.
 
 </Details>
+

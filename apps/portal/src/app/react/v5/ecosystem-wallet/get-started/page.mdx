@@ -15,43 +15,43 @@ import EcosystemSocialConfig from './social-config.png'
 import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
-	title: "Connect users with Ecosystem Wallets",
+	title: "Conectar usuarios con Carteras del Ecosistema",
 	description:
-		"use the prebuilt connect UI components to authenticate users and connect ecosystem wallets",
+		"Usa los componentes de UI preconstruidos para autenticar a los usuarios y conectar carteras del ecosistema",
 	image: {
-		title: "Connect users with Ecosystem Wallets",
+		title: "Conectar usuarios con Carteras del Ecosistema",
 		icon: "wallets",
 	},
 });
 
-# Connect Users to your Ecosystem
+# Conectar usuarios a tu Ecosistema
 
-Ecosystem wallets inherit all the functionality of [in-app wallets](/react/v5/in-app-wallet/get-started), but instead of being scoped to a single app, they can be used across multiple applications.
+Las carteras del ecosistema heredan toda la funcionalidad de [carteras dentro de la aplicación](/react/v5/in-app-wallet/get-started), pero en lugar de estar limitadas a una sola aplicación, pueden usarse en múltiples aplicaciones.
 
-Head over to the [thirdweb dashboard](https://thirdweb.com/team) to create an ecosystem and obtain your ecosystem id.
+Dirígete al [panel de control de thirdweb](https://thirdweb.com/team) para crear un ecosistema y obtener tu id de ecosistema.
 
-## Available auth methods
+## Métodos de autenticación disponibles
 
 <AuthList />
 
-## Live Playground
+## Playground en vivo
 
-Try out ecosystem wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/in-app-wallet/ecosystem)
+Prueba las carteras del ecosistema por ti mismo en el [playground en vivo de carteras dentro de la aplicación](https://playground.thirdweb.com/connect/in-app-wallet/ecosystem)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/in-app-wallet/ecosystem"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 
 </Stack>
 
-## Configure ecosystem wallets
+## Configurar carteras del ecosistema
 
-The only difference with in-app wallets is how you create an ecosystem wallet using the `ecosystemWallet()` function and passing your ecosystem id.
+La única diferencia con las carteras dentro de la aplicación es cómo creas una cartera del ecosistema usando la función `ecosystemWallet()` y pasando tu id de ecosistema.
 
 ```tsx
 import { ecosystemWallet } from "thirdweb/wallets";
@@ -59,23 +59,23 @@ import { ecosystemWallet } from "thirdweb/wallets";
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
 ```
 
-## Configuring auth strategies
+## Configuración de estrategias de autenticación
 
-You can configure the allowed auth strategies on [your dashboard](https://thirdweb.com/team/~/~/ecosystem).
+Puedes configurar las estrategias de autenticación permitidas en [tu panel de control](https://thirdweb.com/team/~/~/ecosystem).
 
 <DocImage src={EcosystemSocialConfig}/>
 
-For prebuilt UIs, the enabled auth strategies are automatically read from your dashbaord configurations.
+Para las interfaces de usuario preconstruidas, las estrategias de autenticación habilitadas se leen automáticamente desde las configuraciones de tu panel de control.
 
-For custom UIs, you can configure the auth options when connecting the wallet. See [using your own UI](#using-your-own-ui) for an example. 
+Para interfaces de usuario personalizadas, puedes configurar las opciones de autenticación al conectar la cartera. Consulta [usando tu propia interfaz de usuario](#usando-tu-propia-ui) para un ejemplo.
 
-<Callout variant="warning" title="Using disabled auth strategies">
-	Note that while you're allowed to pass any auth strategy today, we recommend only passing the strategies that are enabled on your dashboard. We might enforce this in the future.
+<Callout variant="warning" title="Uso de estrategias de autenticación deshabilitadas">
+	Nota que, aunque hoy se permite pasar cualquier estrategia de autenticación, recomendamos pasar solo las estrategias habilitadas en tu panel de control. Podríamos hacer cumplir esto en el futuro.
 </Callout>
 
-## Passing a partner ID
+## Pasando un ID de socio
 
-For closed ecosystems, you can invite partners to your ecosystem. Partners will have to pass a valid `partnerId` to the `ecosystemWallet()` function in order to connect to your ecosystem.
+Para ecosistemas cerrados, puedes invitar a socios a tu ecosistema. Los socios deberán pasar un `partnerId` válido a la función `ecosystemWallet()` para poder conectarse a tu ecosistema.
 
 ```tsx
 const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
@@ -83,19 +83,19 @@ const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
 });
 ```
 
-For more information, refer to the [ecosystemWallet API reference](/references/typescript/v5/ecosystemWallet).
+Para más información, consulta la [referencia de la API de ecosystemWallet](/references/typescript/v5/ecosystemWallet).
 
 <Stack>
 
 <ArticleIconCard
-	title="ecosystemWallet API reference"
+	title="Referencia de la API de ecosystemWallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/ecosystemWallet"
-	description="Learn more about the ecosystemWallet function"
+	description="Aprende más sobre la función ecosystemWallet"
 />
 
 </Stack>
 
-## Using ecosystem wallets
+## Usando carteras del ecosistema
 
-Refer to the [in-app wallets](/react/v5/in-app-wallet/get-started) documentation to add your ecosystem wallet to the connect UI components or build your own UI.
+Consulta la documentación de [carteras en la aplicación](/react/v5/in-app-wallet/get-started) para agregar tu cartera del ecosistema a los componentes de la interfaz de usuario de conexión o para construir tu propia interfaz de usuario.

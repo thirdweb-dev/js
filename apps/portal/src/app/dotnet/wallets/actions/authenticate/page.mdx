@@ -3,76 +3,76 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
     title: "IThirdwebWallet.Authenticate | Thirdweb .NET SDK",
-    description: "Login to your thirdweb Auth-integrated backend.",
+    description: "Inicia sesión en tu backend integrado con thirdweb Auth.",
 });
 
 # IThirdwebWallet.Authenticate
 
-Login to your [thirdweb Auth](https://portal.thirdweb.com/connect/auth)-integrated backend.
+Inicia sesión en tu backend integrado con [thirdweb Auth](https://portal.thirdweb.com/connect/auth).
 
-## Usage
+## Uso
 
 ```csharp
 var authResult = await wallet.Authenticate<string>(domain: "https://mydomain.com", chainId: 1);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### wallet
 
-The wallet instance that will sign the SIWE (Sign-In With Ethereum) payload, must be an `IThirdwebWallet`.
+La instancia de la wallet que firmará el payload SIWE (Sign-In With Ethereum), debe ser un `IThirdwebWallet`.
 
 ### domain
 
-The domain of the backend to authenticate with, must be a `string`.
+El dominio del backend con el que autenticarse, debe ser un `string`.
 
 ### chainId
 
-The chain ID of the blockchain to authenticate with, must be a `BigInteger`.
+El ID de la cadena del blockchain con el que autenticarse, debe ser un `BigInteger`.
 
-### authPayloadPath (optional)
+### authPayloadPath (opcional)
 
-The path to the auth payload endpoint, defaults to `"/auth/payload"`, must be a `string`.
+La ruta al endpoint del payload de autenticación, por defecto es `"/auth/payload"`, debe ser un `string`.
 
-### authLoginPath (optional)
+### authLoginPath (opcional)
 
-The path to the auth login endpoint, defaults to `"/auth/login"`, must be a `string`.
+La ruta al endpoint de inicio de sesión de autenticación, por defecto es `"/auth/login"`, debe ser un `string`.
 
-### authPayloadMethod (optional)
+### authPayloadMethod (opcional)
 
-The HTTP method for the auth payload request, either `"GET"` or `"POST"`. Defaults to `"GET"`.
+El método HTTP para la solicitud del payload de autenticación, puede ser `"GET"` o `"POST"`. Por defecto es `"GET"`.
 
-### authLoginMethod (optional)
+### authLoginMethod (opcional)
 
-The HTTP method for the auth login request, either `"GET"` or `"POST"`. Defaults to `"POST"`.
+El método HTTP para la solicitud de inicio de sesión de autenticación, puede ser `"GET"` o `"POST"`. Por defecto es `"POST"`.
 
-### separatePayloadAndSignatureInBody (optional)
+### separatePayloadAndSignatureInBody (opcional)
 
-Whether to separate the payload and signature in the body of the login request, must be a `boolean`. Defaults to `false`.
+Si separar el payload y la firma en el cuerpo de la solicitud de inicio de sesión, debe ser un `booleano`. Por defecto es `false`.
 
-### httpClientOverride (optional)
+### httpClientOverride (opcional)
 
-An `IThirdwebHttpClient` instance to override the default HTTP client, defaults to `null`.
+Una instancia de `IThirdwebHttpClient` para sobrescribir el cliente HTTP por defecto, por defecto es `null`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### T
 
-The authentication result as the type `T`. Can be `string`, `byte[]`, or a deserialized object.
+El resultado de la autenticación como el tipo `T`. Puede ser `string`, `byte[]` o un objeto deserializado.
 
 </Details>
 
-## Example
+## Ejemplo
 
 ```csharp
-// Example usage returning the auth result as a string
+// Ejemplo de uso retornando el resultado de autenticación como un string
 var authResult = await wallet.Authenticate<string>(domain: "https://mydomain.com", chainId: 1);
 
-// Example usage returning the auth result as a byte array
+// Ejemplo de uso retornando el resultado de autenticación como un array de bytes
 var authResultBytes = await wallet.Authenticate<byte[]>(domain: "https://mydomain.com", chainId: 1);
 
-// Example usage returning the auth result as a custom object
+// Ejemplo de uso retornando el resultado de autenticación como un objeto personalizado
 var authResultObject = await wallet.Authenticate<MyCustomType>(domain: "https://mydomain.com", chainId: 1);
 ```

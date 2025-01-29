@@ -1,24 +1,26 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "SmartWallet.GetPersonalWallet | thirdweb .NET SDK",
-	description: "Get the current signer of the connected SmartWallet.",
+    title: "SmartWallet.GetPersonalWallet | thirdweb .NET SDK",
+    description: "Obtén el firmante actual del SmartWallet conectado.",
 });
 
 # GetPersonalWallet
 
-This method retrieves the current signer of the connected SmartWallet.
+Este método recupera el firmante actual del SmartWallet conectado.
 
-## Usage
+## Uso
+
 
 ```csharp
 var signer = await smartWallet.GetPersonalWallet();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### IThirdwebWallet
 
-The method returns an instance of `IThirdwebWallet` representing the current signer of the connected SmartWallet.
+El método devuelve una instancia de `IThirdwebWallet` que representa el firmante actual del SmartWallet conectado.
 
 </Details>
+

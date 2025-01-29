@@ -14,50 +14,50 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Get started with Account Abstraction",
+		title: "Comenzando con la Abstracción de Cuentas",
 		icon: "wallets",
 	},
-	title: "Getting Started with Account Abstraction | thirdweb",
+	title: "Comenzando con la Abstracción de Cuentas | thirdweb",
 	description:
-		"Getting started to add ERC-4337 Account Abstraction support to your application easily.",
+		"Comienza a agregar soporte para ERC-4337 Account Abstraction a tu aplicación fácilmente.",
 });
 
-# ERC-4337 Smart Accounts
+# Cuentas Inteligentes ERC-4337
 
-Convert any wallet to a ERC-4337 smart account to your application.
+Convierte cualquier billetera en una cuenta inteligente ERC-4337 en tu aplicación.
 
-- Let users **connect to their smart account** using any personal wallet, including in-app wallets for easy onboarding.
-- Automatically **deploy individual account contracts** for your users when they do their first onchain transaction.
-- **Sponsor gas costs for all transactions** via the thirdweb paymaster.
+- Permite que los usuarios **se conecten a su cuenta inteligente** usando cualquier billetera personal, incluidas billeteras integradas para una incorporación fácil.
+- **Despliega automáticamente contratos de cuenta individuales** para tus usuarios cuando realicen su primera transacción en la cadena.
+- **Patrocina los costos de gas para todas las transacciones** a través del paymaster de thirdweb.
 
+<Callout title="Transacciones patrocinadas" variant="info">
 
-<Callout title="Sponsored transactions" variant="info">
-
-To set up sponsored transactions, set the `sponsorGas` option to `true` in the smart account configuration.
-All transactions performed with the smart account will then be sponsored by your application. Testnet transactions are free, but you need a valid credit card on file for mainnet transactions.
+Para configurar transacciones patrocinadas, establece la opción `sponsorGas` en `true` en la configuración de la cuenta inteligente.
+Todas las transacciones realizadas con la cuenta inteligente serán patrocinadas por tu aplicación. Las transacciones en testnet son gratuitas, pero necesitas tener una tarjeta de crédito válida registrada para transacciones en mainnet.
 
 </Callout>
 
 ## Live Playground
 
-Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/account-abstraction/connect)
+Prueba las billeteras integradas por ti mismo en el [live playground de billeteras integradas](https://playground.thirdweb.com/connect/account-abstraction/connect)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/account-abstraction/connect"
-	description="See the SDK in action on the live playground"
+	description="Ve el SDK en acción en el live playground"
 />
 
 </Stack>
 
-## Usage with Connect UI components
 
-The easiest way to get started with account abstraction is to use the [ConnectButton](/connect/sign-in/ConnectButton) component. Simply add the `accountAbstraction` property with the desired chain and whether to sponsor gas for your users.
+## Uso con los componentes UI de Connect
 
-With this property, all connected wallets will be automatically converted to smart accounts. The connected wallet will be the admin wallet of the smart account.
+La forma más sencilla de comenzar con la abstracción de cuentas es usar el componente [ConnectButton](/connect/sign-in/ConnectButton). Simplemente agrega la propiedad `accountAbstraction` con la cadena deseada y si deseas patrocinar el gas para tus usuarios.
+
+Con esta propiedad, todas las billeteras conectadas se convertirán automáticamente en cuentas inteligentes. La billetera conectada será la billetera administrativa de la cuenta inteligente.
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -82,7 +82,7 @@ return (
 }
 ```
 
-You can also make it so *only* in-app wallets get converted to smart accounts, by configuring the in-app wallet individually. Other external wallets will not be converted to smart accounts with this setup.
+También puedes configurarlo para que *solo* las billeteras dentro de la aplicación se conviertan en cuentas inteligentes, configurando la billetera dentro de la aplicación de manera individual. Otras billeteras externas no se convertirán en cuentas inteligentes con esta configuración.
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -116,9 +116,9 @@ return (
 }
 ```
 
-## Usage with your own UI
+## Uso con tu propia interfaz
 
-You can also use the connection hooks and functions to connect to your smart accounts and build your fully custom UI.
+También puedes usar los hooks y funciones de conexión para conectarte a tus cuentas inteligentes y construir tu interfaz completamente personalizada.
 
 ```tsx
 import { useConnect } from "thirdweb/react";
@@ -152,19 +152,19 @@ function App() {
 }
 ```
 
-<Callout title="Auto connection of smart accounts" variant="info">
-When building your own UI, remember to also pass the `accountAbstraction` prop to `useAutoConnect` to always reconnect to the smart account on page reload. 
+<Callout title="Conexión automática de cuentas inteligentes" variant="info">
+Al crear tu propia interfaz, recuerda también pasar la propiedad `accountAbstraction` a `useAutoConnect` para reconectar siempre a la cuenta inteligente al recargar la página.
 </Callout>
 
-Refer to the [Smart Wallet API reference](/references/typescript/v5/smartWallet) for more advanced configuration of your smart accounts.
+Consulta la [referencia de la API de Smart Wallet](/references/typescript/v5/smartWallet) para una configuración más avanzada de tus cuentas inteligentes.
 
 <Stack>
 
 <ArticleIconCard
-	title="Smart Wallet API reference"
+	title="Referencia de la API de Smart Wallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/smartWallet"
-	description="More advanced configuration of your smart accounts"
+	description="Configuración más avanzada de tus cuentas inteligentes"
 />
 
 </Stack>

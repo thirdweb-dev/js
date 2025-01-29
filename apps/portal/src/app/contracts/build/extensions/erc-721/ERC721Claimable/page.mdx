@@ -4,12 +4,13 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Claimable contract",
+		title: "Contrato ERC721Claimable",
 		icon: "solidity",
 	},
-	title: "ERC721Claimable | thirdweb contract",
-	description: "Allow other wallets to claim NFTs that you have lazy-minted",
+	title: "ERC721Claimable | contrato de thirdweb",
+	description: "Permite que otras billeteras reclamen NFTs que hayas acuñado de forma perezosa",
 });
+
 
 # ERC721Claimable
 
@@ -17,15 +18,15 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/interface/IClaimableERC721.sol";
 ```
 
-Allow other wallets to **claim** NFTs that you have lazy-minted.
+Permite que otras billeteras **reclamen** NFTs que hayas acuñado de forma perezosa.
 
-This is not an extension which is detectable on the dashboard without also inheriting from other extensions.
+Esta no es una extensión que sea detectable en el panel sin heredar también de otras extensiones.
 
-It is recommended to use this extension alongside the [`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+Se recomienda usar esta extensión junto con la extensión [`LazyMint`](/contracts/build/extensions/general/LazyMint).
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -33,9 +34,9 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IClaimableERC721.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrecargar las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -69,10 +70,10 @@ contract Contract is ERC721A, IClaimableERC721 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
-This extension is used as part of the [ERC721ClaimCustom](/contracts/build/extensions/erc-721/ERC721ClaimCustom) extension.
-The base contracts which have ERC721ClaimCustom detected on them will also implement ERC721Claimable.
+Esta extensión se utiliza como parte de la extensión [ERC721ClaimCustom](/contracts/build/extensions/erc-721/ERC721ClaimCustom).
+Los contratos base que tienen detectada la extensión ERC721ClaimCustom también implementarán ERC721Claimable.
 
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
 - [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint)

@@ -2,12 +2,12 @@ import { Details, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "PermissionsEnumerable contract",
+		title: "Contrato PermissionsEnumerable",
 		icon: "solidity",
 	},
-	title: "PermissionsEnumerable | thirdweb contract",
+	title: "PermissionsEnumerable | Contrato de thirdweb",
 	description:
-		"The PermissionsEnumerable extension provides role-based access control: you can create roles and write custom logic in your smart contract that depends on whether a given wallet holds a given role",
+		"La extensión PermissionsEnumerable proporciona control de acceso basado en roles: puedes crear roles y escribir lógica personalizada en tu contrato inteligente que dependa de si una billetera dada tiene un rol específico",
 });
 
 # PermissionsEnumerable
@@ -16,14 +16,14 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/PermissionsEnumerable.sol";
 ```
 
-The `PermissionsEnumerable` extension provides role-based access control: you can create roles and write custom logic in your smart contract that depends on whether a given wallet holds a given role.
-The `Enumerable` part provides the capability to view all the addresses holding a specific role.
+La extensión `PermissionsEnumerable` proporciona control de acceso basado en roles: puedes crear roles y escribir lógica personalizada en tu contrato inteligente que dependa de si una billetera dada tiene un rol específico.
+La parte `Enumerable` proporciona la capacidad de ver todas las direcciones que tienen un rol específico.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/PermissionsEnumerable.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -39,19 +39,19 @@ contract MyContract is PermissionsEnumerable {
     uint256 public number;
 
     /**
-     *  The `PermissionsEnumerable` contract makes an already defined role available: the `DEFAULT_ADMIN_ROLE`.
+     *  El contrato `PermissionsEnumerable` pone a disposición un rol ya definido: el `DEFAULT_ADMIN_ROLE`.
      *
-     *  As an EXAMPLE, we grant the deployer of the contract this admin role.
+     *  Como EJEMPLO, otorgamos a quien despliegue el contrato este rol de administrador.
      */
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     /**
-     *  EXAMPLE: here we have a function that we want to restrict only to holders of `NUMBER_ROLE`.
+     *  EJEMPLO: aquí tenemos una función que queremos restringir solo a los poseedores de `NUMBER_ROLE`.
      *
-     *  To accomplish this, we use the `onlyRole` modifier made available by `PermissionsEnumerable`, and
-     *  pass it `NUMBER_ROLE` as an argument.
+     *  Para lograr esto, usamos el modificador `onlyRole` proporcionado por `PermissionsEnumerable`, y
+     *  le pasamos `NUMBER_ROLE` como argumento.
      */
     function setNumber(uint256 _newNumber) public onlyRole(NUMBER_ROLE) {
         number = _newNumber;
@@ -59,14 +59,14 @@ contract MyContract is PermissionsEnumerable {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-None of the base contracts implement this extension.
+Ninguno de los contratos base implementa esta extensión.
 
-## Full API Reference
+## Referencia Completa de la API
 
-`PermissionsEnumerable` inherits from the [`Permissions`](/contracts/build/extensions/general/Permissions#full-api-reference) extension so includes
-all of the functions in that extension. It also includes the following functions:
+`PermissionsEnumerable` hereda de la extensión [`Permissions`](/contracts/build/extensions/general/Permissions#full-api-reference), por lo que incluye
+todas las funciones de esa extensión. También incluye las siguientes funciones:
 
 <Details summary="getRoleMember">
 
@@ -74,10 +74,10 @@ all of the functions in that extension. It also includes the following functions
 function getRoleMember(bytes32 role, uint256 index) external view returns (address member);
 ```
 
-- Returns one of the accounts that have `role`. `index` must be a value between 0 and the value of `getRoleMemberCount` at the time, non-inclusive.
-- Parameters:
-  - `role`: keccak256 hash of the role. e.g. keccak256("TRANSFER_ROLE")
-  - `index`: Index in list of current members for the role.
+- Devuelve una de las cuentas que tienen el rol `role`. `index` debe ser un valor entre 0 y el valor de `getRoleMemberCount` en ese momento, sin incluirlo.
+- Parámetros:
+  - `role`: hash keccak256 del rol. Ej. keccak256("TRANSFER_ROLE")
+  - `index`: Índice en la lista de miembros actuales para el rol.
 
 </Details>
 
@@ -87,8 +87,8 @@ function getRoleMember(bytes32 role, uint256 index) external view returns (addre
 function getRoleMemberCount(bytes32 role) external view returns (uint256 count);
 ```
 
-- Returns the number of accounts that have `role`. Can be used together with `getRoleMember` to enumerate all bearers of a role.
-- Parameters:
-  - `role`: keccak256 hash of the role. e.g. keccak256("TRANSFER_ROLE")
+- Devuelve el número de cuentas que tienen el rol `role`. Puede usarse junto con `getRoleMember` para enumerar todos los poseedores de un rol.
+- Parámetros:
+  - `role`: hash keccak256 del rol. Ej. keccak256("TRANSFER_ROLE")
 
 </Details>

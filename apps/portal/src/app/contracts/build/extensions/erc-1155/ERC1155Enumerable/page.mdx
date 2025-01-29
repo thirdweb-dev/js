@@ -4,13 +4,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155Enumerable contract",
+		title: "Contrato ERC1155Enumerable",
 		icon: "solidity",
 	},
-	title: "ERC1155Enumerable | thirdweb contract",
+	title: "ERC1155Enumerable | contrato de thirdweb",
 	description:
-		"View all of the NFTs in the collection and all the NFTs owned by a specific wallet address by implementing the IERC1155Enumerable interface",
+		"Ver todos los NFTs en la colección y todos los NFTs poseídos por una dirección de wallet específica implementando la interfaz IERC1155Enumerable",
 });
+
 
 # ERC1155Enumerable
 
@@ -18,11 +19,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/interface/IERC1155Enumerable.sol";
 ```
 
-View all of the NFTs in the collection and all the NFTs owned by a specific wallet address by implementing the `IERC1155Enumerable` interface.
+Ver todos los NFTs en la colección y todos los NFTs poseídos por una dirección de wallet específica implementando la interfaz `IERC1155Enumerable`.
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -30,9 +31,9 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC1155Enumerable.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -58,7 +59,7 @@ contract Contract is ERC1155, IERC1155Enumerable {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
 - [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)

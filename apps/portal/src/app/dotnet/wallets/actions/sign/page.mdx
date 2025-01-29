@@ -2,33 +2,35 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "IThirdwebWallet.PersonalSign | Thirdweb .NET SDK",
-	description: "Sign a string message using the wallet's private key.",
+	description: "Firmar un mensaje de cadena utilizando la clave privada de la billetera.",
 });
 
 # IThirdwebWallet.PersonalSign
 
-This method allows signing a string message using the wallet's private key. The signed message proves the message's integrity and authenticity, demonstrating that the message was indeed created by the owner of the private key.
+Este método permite firmar un mensaje de cadena utilizando la clave privada de la billetera. El mensaje firmado demuestra la integridad y autenticidad del mensaje, demostrando que el mensaje fue creado por el propietario de la clave privada.
 
-**Note:** When using `SmartWallet`, calling this method from an undeployed smart account will make use of [EIP-6492](https://eips.ethereum.org/EIPS/eip-6492).
+**Nota:** Al utilizar `SmartWallet`, al llamar a este método desde una cuenta inteligente no desplegada se hará uso de [EIP-6492](https://eips.ethereum.org/EIPS/eip-6492).
 
-## Usage
+## Uso
+
 
 ```csharp
 string signature = await wallet.PersonalSign("Your message here");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### message (required)
+### message (requerido)
 
-A `string` message to be signed. This is the message whose integrity and authenticity you want to ensure.
+Un mensaje de tipo `string` que debe ser firmado. Este es el mensaje cuya integridad y autenticidad deseas asegurar.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### string
 
-The method returns a `string` representing the hexadecimal signature of the message. This signature can be used to verify the message's authenticity.
+El método devuelve un `string` que representa la firma hexadecimal del mensaje. Esta firma puede ser utilizada para verificar la autenticidad del mensaje.
 
 </Details>
+

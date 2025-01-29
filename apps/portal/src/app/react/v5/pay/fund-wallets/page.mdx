@@ -4,31 +4,31 @@ import { ReactIcon } from "@/icons";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Fund wallets | thirdweb",
-	description: "Let users fund their wallets with crypto or fiat",
+	title: "Fondos para billeteras | thirdweb",
+	description: "Permite que los usuarios financien sus billeteras con cripto o fiat",
 });
 
-# Funding wallets
+# Financiar billeteras
 
-Let users fund their wallets with crypto or fiat on all the supported chains.
+Permite que los usuarios financien sus billeteras con cripto o fiat en todas las cadenas soportadas.
 
 ## Live Playground
 
-Try out the demo for yourself in the [fund wallets live playground](https://playground.thirdweb.com/connect/pay)
+Prueba la demostración por ti mismo en el [live playground para financiar billeteras](https://playground.thirdweb.com/connect/pay)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/pay"
-	description="See the SDK in action on the live playground"
+	description="Ve el SDK en acción en el live playground"
 />
 </Stack>
 
-## Usage with UI Components
+## Uso con Componentes UI
 
-The easiest way to fund wallets is to use the `PayEmbed` prebuilt UI component. Note that the `ConnectButton` also has a built-in funding flow that can also be customised.
+La forma más fácil de financiar billeteras es usar el componente UI preconstruido `PayEmbed`. Ten en cuenta que el `ConnectButton` también tiene un flujo de financiamiento integrado que también puede ser personalizado.
 
 ```tsx
 import { PayEmbed } from "thirdweb/react";
@@ -53,7 +53,7 @@ function App() {
 }
 ```
 
-Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
+Consulta la [referencia de la API de PayEmbed](/references/typescript/v5/PayEmbed) para más información.
 
 <Stack>
 
@@ -61,15 +61,15 @@ Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for m
 	title="PayEmbed"
 	icon={ReactIcon}
 	href="/references/typescript/v5/PayEmbed"
-	description="Prebuilt UI to fund wallets with crypto or fiat"
+	description="UI preconstruida para financiar billeteras con cripto o fiat"
 />
 
 </Stack>
 
 
-## Usage with your own UI
+## Uso con tu propia UI
 
-If you want more control over the funding flow, you can use the [Buy with Crypto or Fiat hooks](/references/typescript/v5/hooks#buy-crypto) to create your own custom UI.
+Si deseas tener más control sobre el flujo de financiamiento, puedes usar los [hooks de Comprar con Cripto o Fiat](/references/typescript/v5/hooks#buy-crypto) para crear tu propia UI personalizada.
 
 <Stack>
 
@@ -77,13 +77,13 @@ If you want more control over the funding flow, you can use the [Buy with Crypto
 	title="useBuyWithCryptoQuote"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useBuyWithCryptoQuote"
-	description="Get a quote for funding a wallet with crypto from another wallet, chain, or token"
+	description="Obtén una cotización para financiar una billetera con cripto desde otra billetera, cadena o token"
 />
 
 <ArticleIconCard
 	title="useBuyWithFiatQuote"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useBuyWithFiatQuote"
-	description="Get a quote for funding a wallet with fiat"
+	description="Obtén una cotización para financiar una billetera con fiat"
 />
 </Stack>

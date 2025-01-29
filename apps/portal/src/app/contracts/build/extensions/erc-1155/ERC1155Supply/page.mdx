@@ -3,13 +3,13 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	image: {
-		title: "ERC1155Supply contract",
-		icon: "solidity",
-	},
-	title: "ERC1155Supply | thirdweb contract",
-	description:
-		"View all of the NFTs on the contract by implementing the totalSupply function in your ERC1155 contract",
+  image: {
+    title: "Contrato ERC1155Supply",
+    icon: "solidity",
+  },
+  title: "ERC1155Supply | contrato de thirdweb",
+  description:
+    "Ver todos los NFTs en el contrato implementando la función totalSupply en tu contrato ERC1155",
 });
 
 # ERC1155Supply
@@ -18,11 +18,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/interface/IERC721Supply.sol"
 ```
 
-View all of the NFTs on the contract by implementing the `totalSupply` function in your ERC1155 contract.
+Ver todos los NFTs en el contrato implementando la función `totalSupply` en tu contrato ERC1155.
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas.
 
 </Callout>
 
@@ -30,16 +30,16 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC1155Supply.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrecargar las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
-The [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop) contract comes with a `totalSupply`
-function that returns the total number of NFTs that have been minted in the collection (including tokens that have been burned).
+El contrato [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop) viene con una función `totalSupply`
+que devuelve el número total de NFTs que se han acuñado en la colección (incluyendo los tokens que han sido quemados).
 
-This means you can already view the total supply of NFTs in the collection by implementing the `ERC1155Base` contract.
+Esto significa que ya puedes ver el suministro total de NFTs en la colección al implementar el contrato `ERC1155Base`.
 
-You can optionally override the functionality of this function as outlined below:
+Puedes sobrecargar opcionalmente la funcionalidad de esta función como se detalla a continuación:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -65,7 +65,7 @@ contract Contract is ERC1155Base {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721Base](/contracts/build/base-contracts/erc-721/base)
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)

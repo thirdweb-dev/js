@@ -2,12 +2,12 @@ import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "DropSinglePhase contract",
+		title: "Contrato DropSinglePhase",
 		icon: "solidity",
 	},
-	title: "DropSinglePhase | thirdweb contract",
+	title: "DropSinglePhase | Contrato de thirdweb",
 	description:
-		"The DropSinglePhase smart contract is an extension meant for distributing ERC20 or ERC721 tokens.",
+		"El contrato inteligente DropSinglePhase es una extensión destinada para distribuir tokens ERC20 o ERC721.",
 });
 
 # DropSinglePhase (ERC20 & ERC721)
@@ -16,15 +16,15 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
 ```
 
-The `DropSinglePhase` smart contract is an extension meant for distributing ERC20 or ERC721 tokens.
+El contrato inteligente `DropSinglePhase` es una extensión destinada para distribuir tokens ERC20 o ERC721.
 
-This extension implements the 'Drop' distribution mechanism: set restrictions, known as a claim phase, such as a price to charge, an allowlist etc. for the public / allowlisted mint of your tokens.
+Esta extensión implementa el mecanismo de distribución 'Drop': establece restricciones, conocidas como una fase de reclamo, tales como un precio a cobrar, una lista de permitidos, etc., para la acuñación pública / de lista permitida de tus tokens.
 
-`DropSinglePhase` allows you to set one claim phase unlike the [`Drop`](/contracts/build/extensions/general/Drop) extension.
+`DropSinglePhase` te permite establecer una fase de reclamo a diferencia de la extensión [`Drop`](/contracts/build/extensions/general/Drop).
 
 <Callout title="info" variant="info">
 
-It is recommended to use this extension alongside the [`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+Se recomienda usar esta extensión junto con la extensión [`LazyMint`](/contracts/build/extensions/general/LazyMint).
 
 </Callout>
 
@@ -32,19 +32,19 @@ It is recommended to use this extension alongside the [`LazyMint`](/contracts/bu
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DropSinglePhase.sol" />
 
-## Usage
+## Uso
 
-The `DropSinglePhase` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `DropSinglePhase` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                     | Type                    | Description                                                                                                                                      |
-| ------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `_afterClaim`            | internal _virtual_      | Runs after every `claim` function call.                                                                                                          |
-| `_beforeClaim`           | internal _virtual_      | Runs before every `claim` function call.                                                                                                         |
-| `_collectPriceOnClaim`   | internal _virtual_      | Collects and distributes the primary sale value of NFTs being claimed.                                                                           |
-| `_transferTokensOnClaim` | internal _virtual_      | Transfers the NFTs being claimed.                                                                                                                |
-| `_canSetClaimConditions` | internal view _virtual_ | Runs on every attempt to set the claim condition on the contract. Returns whether the claim condition can be set in the given execution context. |
+| Nombre                     | Tipo                    | Descripción                                                                                                                                      |
+| -------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `_afterClaim`              | internal _virtual_       | Se ejecuta después de cada llamada a la función `claim`.                                                                                         |
+| `_beforeClaim`             | internal _virtual_       | Se ejecuta antes de cada llamada a la función `claim`.                                                                                          |
+| `_collectPriceOnClaim`     | internal _virtual_       | Cobra y distribuye el valor de la venta primaria de los NFTs que están siendo reclamados.                                                        |
+| `_transferTokensOnClaim`   | internal _virtual_       | Transfiere los NFTs que están siendo reclamados.                                                                                                |
+| `_canSetClaimConditions`   | internal view _virtual_  | Se ejecuta en cada intento de establecer las condiciones de reclamo en el contrato. Devuelve si las condiciones de reclamo pueden establecerse en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -54,7 +54,7 @@ import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 import "@thirdweb-dev/contracts/lib/CurrencyTransferLib.sol";
 
-/// This is an EXAMPLE of the usage of `DropSinglePhase` for distributing ERC20 tokens.
+/// Este es un EJEMPLO del uso de `DropSinglePhase` para distribuir tokens ERC20.
 
 contract MyContract is ERC20Base, DropSinglePhase {
     /*//////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ contract MyContract is ERC20Base, DropSinglePhase {
                         Internal (overrideable) functions
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Runs before every `claim` function call.
+    /// @dev Se ejecuta antes de cada llamada a la función `claim`.
     function _beforeClaim(
         uint256 _tokenId,
         address _receiver,
@@ -82,7 +82,7 @@ contract MyContract is ERC20Base, DropSinglePhase {
       // Your custom implementation logic here
     }
 
-    /// @dev Runs after every `claim` function call.
+    /// @dev Se ejecuta después de cada llamada a la función `claim`.
     function _afterClaim(
         uint256 _tokenId,
         address _receiver,
@@ -95,7 +95,7 @@ contract MyContract is ERC20Base, DropSinglePhase {
       // Your custom implementation logic here
     }
 
-    /// @dev Collects and distributes the primary sale value of tokens being claimed.
+   /// @dev Cobra y distribuye el valor de la venta primaria de los tokens que están siendo reclamados.
     function _collectPriceOnClaim(
         address _primarySaleRecipient,
         uint256 _quantityToClaim,
@@ -122,7 +122,7 @@ contract MyContract is ERC20Base, DropSinglePhase {
         );
     }
 
-    /// @dev Transfers the tokens being claimed.
+   /// @dev Transfiere los tokens que están siendo reclamados.
     function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
         internal
         virtual
@@ -133,7 +133,7 @@ contract MyContract is ERC20Base, DropSinglePhase {
         return 0;
     }
 
-    /// @dev Checks whether platform fee info can be set in the given execution context.
+  /// @dev Verifica si la información de la tarifa de la plataforma puede ser establecida en el contexto de ejecución dado.
     function _canSetClaimConditions()
         internal
         view
@@ -146,12 +146,12 @@ contract MyContract is ERC20Base, DropSinglePhase {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
 - [ERC20Drop](/contracts/build/extensions/erc-1155/ERC1155Claimable)
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="claim">
 
@@ -166,13 +166,13 @@ function claim(
 ) external payable;
 ```
 
-- Lets an account claim a given quantity of tokens.
-- Parameter `receiver`: The receiver of the tokens to claim.
-- Parameter `quantity`: The quantity of tokens to claim.
-- Parameter `currency`: The currency in which to pay for the claim.
-- Parameter `pricePerToken`: The price per token to pay for the claim.
-- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
-- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+- Permite que una cuenta reclame una cantidad dada de tokens.
+- Parámetro `receiver`: El receptor de los tokens a reclamar.
+- Parámetro `quantity`: La cantidad de tokens a reclamar.
+- Parámetro `currency`: La moneda con la que pagar por el reclamo.
+- Parámetro `pricePerToken`: El precio por token a pagar por el reclamo.
+- Parámetro `allowlistProof`: La prueba de la inclusión del reclamante en la lista permitida del merkle root.
+- Parámetro `data`: Datos arbitrarios en bytes que pueden ser utilizados en la implementación de esta interfaz.
 
 </Details>
 
@@ -193,18 +193,18 @@ struct ClaimCondition {
 function setClaimConditions(ClaimCondition calldata phase, bool resetClaimEligibility) external;
 ```
 
-- Lets an authorized wallet set the claim condition for the contract.
-- Parameter `phase`: The set of restrictions that will apply to the minting of tokens on the contract.
-  - `startTimestamp`: The unix timestamp after which the claim condition applies.
-  - `maxClaimableSupply`: The maximum total number of tokens that can be claimed under the claim condition.
-  - `supplyClaimed`: At any given point, the number of tokens that have been claimed under the claim condition.
-  - `quantityLimitPerWallet`: The maximum number of tokens that can be claimed by a wallet.
-  - `merkleRoot`: The allowlist of addresses that can claim tokens under the claim condition.
-  - `pricePerToken`: The price required to pay per token claimed.
-  - `currency`: The currency in which the price must be paid.
-  - `metadata`: Claim condition metadata.
-- Parameter `resetClaimEligibility`: Whether to carry over the restrictions active for wallets that claimed tokens in the incumbent claim condition (e.g. next valid claim timestamp for a given wallet).
-- The `_canSetClaimConditions` function is run on every call to this function. If the return value of `_canSetClaimConditions` is `false`, the `setClaimConditions` call will revert.
+- Permite que una billetera autorizada establezca las condiciones de reclamo para el contrato.
+- Parámetro `phase`: El conjunto de restricciones que se aplicarán a la acuñación de tokens en el contrato.
+  - `startTimestamp`: La marca de tiempo unix después de la cual se aplican las condiciones de reclamo.
+  - `maxClaimableSupply`: El número total máximo de tokens que se pueden reclamar bajo la condición de reclamo.
+  - `supplyClaimed`: En un momento dado, el número de tokens que han sido reclamados bajo la condición de reclamo.
+  - `quantityLimitPerWallet`: El número máximo de tokens que puede reclamar una billetera.
+  - `merkleRoot`: La lista de direcciones permitidas que pueden reclamar tokens bajo la condición de reclamo.
+  - `pricePerToken`: El precio requerido para pagar por cada token reclamado.
+  - `currency`: La moneda en la que debe pagarse el precio.
+  - `metadata`: Metadatos de la condición de reclamo.
+- Parámetro `resetClaimEligibility`: Si se deben trasladar las restricciones activas para las billeteras que reclamaron tokens en la condición de reclamo actual (por ejemplo, la siguiente marca de tiempo de reclamo válida para una billetera dada).
+- La función `_canSetClaimConditions` se ejecuta en cada llamada a esta función. Si el valor devuelto de `_canSetClaimConditions` es `false`, la llamada a `setClaimConditions` se revertirá.
 
 </Details>
 
@@ -227,16 +227,16 @@ function verifyClaim(
 ) public view returns (bool isOverride);
 ```
 
-- Checks a request to claim tokens against the active claim condition's criteria.
-- Parameter `claimer`: The wallet claiming tokens.
-- Parameter `quantity`: The quantity of tokens to claim.
-- Parameter `currency`: The currency in which to pay the price for the claim.
-- Parameter `pricePerToken`: The price to pay per token claimed.
-- Parameter `allowlistProof`: Struct containing below elements:
-  - `proof`: Proof of concerned wallet's inclusion in an allowlist.
-  - `quantityLimitPerWallet`: The total quantity of tokens the allowlisted wallet is eligible to claim over time.
-  - `pricePerToken`: The price per token the allowlisted wallet must pay to claim tokens.
-  - `currency`: The currency in which the allowlisted wallet must pay the price for claiming tokens.
+- Verifica una solicitud para reclamar tokens contra los criterios de la condición de reclamo activa.
+- Parámetro `claimer`: La billetera que está reclamando los tokens.
+- Parámetro `quantity`: La cantidad de tokens a reclamar.
+- Parámetro `currency`: La moneda con la que pagar el precio por el reclamo.
+- Parámetro `pricePerToken`: El precio a pagar por cada token reclamado.
+- Parámetro `allowlistProof`: Estructura que contiene los siguientes elementos:
+  - `proof`: Prueba de la inclusión de la billetera concerniente en una lista permitida.
+  - `quantityLimitPerWallet`: La cantidad total de tokens que la billetera de la lista permitida es elegible para reclamar con el tiempo.
+  - `pricePerToken`: El precio por token que la billetera de la lista permitida debe pagar para reclamar tokens.
+  - `currency`: La moneda en la que la billetera de la lista permitida debe pagar el precio para reclamar tokens.
 
 </Details>
 
@@ -246,8 +246,8 @@ function verifyClaim(
 function getSupplyClaimedByWallet(address claimer) public view returns (uint256);
 ```
 
-- Returns the number of tokens claimed by a wallet under the active condition.
-- Parameter `claimer`: The wallet claiming tokens.
+- Devuelve el número de tokens reclamados por una billetera bajo la condición activa.
+- Parámetro `claimer`: La billetera que está reclamando los tokens.
 
 </Details>
 
@@ -257,7 +257,7 @@ function getSupplyClaimedByWallet(address claimer) public view returns (uint256)
 function _dropMsgSender() internal virtual returns (address);
 ```
 
-- Exposes the ability to override the msg sender.
+- Expone la capacidad de sobrescribir el remitente del mensaje (msg sender).
 
 </Details>
 
@@ -274,13 +274,13 @@ function _beforeClaim(
 ) internal virtual
 ```
 
-- Runs before every `claim` function call. Exposes the ability to add custom logic that runs before every claim of tokens.
-- Parameter `receiver`: The receiver of the tokens to claim.
-- Parameter `quantity`: The quantity of tokens to claim.
-- Parameter `currency`: The currency in which to pay for the claim.
-- Parameter `pricePerToken`: The price per token to pay for the claim.
-- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
-- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+- Se ejecuta antes de cada llamada a la función `claim`. Expone la capacidad de agregar lógica personalizada que se ejecute antes de cada reclamo de tokens.
+- Parámetro `receiver`: El receptor de los tokens a reclamar.
+- Parámetro `quantity`: La cantidad de tokens a reclamar.
+- Parámetro `currency`: La moneda con la que pagar por el reclamo.
+- Parámetro `pricePerToken`: El precio por token a pagar por el reclamo.
+- Parámetro `allowlistProof`: La prueba de la inclusión del reclamante en la lista permitida del merkle root.
+- Parámetro `data`: Datos arbitrarios en bytes que pueden ser utilizados en la implementación de esta interfaz.
 
 </Details>
 
@@ -297,13 +297,13 @@ function _afterClaim(
 ) internal virtual
 ```
 
-- Runs after every `claim` function call. Exposes the ability to add custom logic that runs after every claim of tokens.
-- Parameter `receiver`: The receiver of the tokens to claim.
-- Parameter `quantity`: The quantity of tokens to claim.
-- Parameter `currency`: The currency in which to pay for the claim.
-- Parameter `pricePerToken`: The price per token to pay for the claim.
-- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
-- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+- Se ejecuta después de cada llamada a la función `claim`. Expone la capacidad de agregar lógica personalizada que se ejecute después de cada reclamo de tokens.
+- Parámetro `receiver`: El receptor de los tokens a reclamar.
+- Parámetro `quantity`: La cantidad de tokens a reclamar.
+- Parámetro `currency`: La moneda con la que pagar por el reclamo.
+- Parámetro `pricePerToken`: El precio por token a pagar por el reclamo.
+- Parámetro `allowlistProof`: La prueba de la inclusión del reclamante en la lista permitida del merkle root.
+- Parámetro `data`: Datos arbitrarios en bytes que pueden ser utilizados en la implementación de esta interfaz.
 
 </Details>
 
@@ -318,11 +318,11 @@ function _collectPriceOnClaim(
 ) internal virtual;
 ```
 
-- Collects and distributes the primary sale value of tokens being claimed.
-- Parameter `primarySaleRecipient`: The recipient of the primary sale value generated from a claim.
-- Parameter `quantityToClaim`: The quantity of tokens being claimed.
-- Parameter `currency`: The currency used to pay for the claim.
-- Parameter `pricePerToken`: The price per token to pay for the claim.
+- Cobra y distribuye el valor de la venta primaria de los tokens que están siendo reclamados.
+- Parámetro `primarySaleRecipient`: El receptor del valor de la venta primaria generado a partir de un reclamo.
+- Parámetro `quantityToClaim`: La cantidad de tokens que están siendo reclamados.
+- Parámetro `currency`: La moneda utilizada para pagar el reclamo.
+- Parámetro `pricePerToken`: El precio por token a pagar por el reclamo.
 
 </Details>
 
@@ -335,9 +335,9 @@ function _transferTokensOnClaim(address to, uint256 quantityBeingClaimed)
     returns (uint256 startTokenId);
 ```
 
-- Transfers the tokens being claimed to the appropriate recipient.
-- Parameter `to`: The recipient of the tokens for a claim.
-- Parameter `quantityBeingClaimed`: The quantity of tokens being claimed.
+- Transfiere los tokens que están siendo reclamados al receptor correspondiente.
+- Parámetro `to`: El receptor de los tokens para el reclamo.
+- Parámetro `quantityBeingClaimed`: La cantidad de tokens que están siendo reclamados.
 
 </Details>
 
@@ -347,8 +347,8 @@ function _transferTokensOnClaim(address to, uint256 quantityBeingClaimed)
 function _canSetClaimConditions() internal view virtual returns (bool);
 ```
 
-- Runs on every `setClaimConditions` function call.
-- Returns whether the claim condition can be set in the given execution context.
-- For example, this function can check whether the wallet calling `setClaimConditions` is the contract owner, and enforce that only the owner should be able to successfully call `setClaimConditions`.
+- Se ejecuta en cada llamada a la función `setClaimConditions`.
+- Devuelve si las condiciones de reclamo pueden establecerse en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `setClaimConditions` es el propietario del contrato, y hacer cumplir que solo el propietario pueda llamar exitosamente a `setClaimConditions`.
 
 </Details>

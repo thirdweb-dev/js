@@ -3,12 +3,12 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20ClaimConditions contract",
+		title: "Contrato ERC20ClaimConditions",
 		icon: "solidity",
 	},
-	title: "ERC20ClaimConditions | thirdweb contract",
+	title: "ERC20ClaimConditions | contrato thirdweb",
 	description:
-		"Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by implementing ERC20 and DropSinglePhase extensions",
+		"Permite que otras carteras reclamen/mintan tokens desde el contrato bajo los criterios de las condiciones de reclamo implementando las extensiones ERC20 y DropSinglePhase",
 });
 
 # ERC20ClaimConditions
@@ -18,18 +18,16 @@ import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
 import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
 ```
 
-Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by
-implementing [`ERC20`](/contracts/build/extensions/erc-20/ERC20) and [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase) extensions.
+Permite que otras carteras reclamen/mintan tokens desde el contrato bajo los criterios de las condiciones de reclamo implementando las extensiones [`ERC20`](/contracts/build/extensions/erc-20/ERC20) y [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC20`](/contracts/build/extensions/erc-20/ERC20) and [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase) extensions.
+Esta es una extensión que es detectable en el panel si el contrato inteligente implementa las extensiones [`ERC20`](/contracts/build/extensions/erc-20/ERC20) y [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DropSinglePhase.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC20ClaimConditions` detectable extension.
-The functions which are available to be (optionally) overridden are detailed.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de las extensiones que componen la extensión detectable `ERC20ClaimConditions`.
+Se detallan las funciones que están disponibles para ser (opcionalmente) sobrescritas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -50,7 +48,8 @@ contract Contract is ERC20, DropSinglePhase {
     {}
 
     function _canSetClaimConditions() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
+
     }
 
     function _collectPriceOnClaim(
@@ -59,7 +58,8 @@ contract Contract is ERC20, DropSinglePhase {
         address _currency,
         uint256 _pricePerToken
     ) internal virtual override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
+
     }
 
     function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
@@ -68,12 +68,13 @@ contract Contract is ERC20, DropSinglePhase {
         override
         returns (uint256 startTokenId)
     {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
+
     }
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC20Drop](/contracts/build/base-contracts/erc-20/drop)
 - [ERC20DropVote](/contracts/build/base-contracts/erc-20/drop-vote)

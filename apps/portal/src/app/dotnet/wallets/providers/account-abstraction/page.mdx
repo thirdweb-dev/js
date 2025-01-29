@@ -3,75 +3,74 @@ import { Details, Callout, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "SmartWallet.Create | Thirdweb .NET SDK",
 	description:
-		"Instantiate a SmartWallet for enhanced user interactions with blockchain applications.",
+		"Instanciar un SmartWallet para mejorar las interacciones del usuario con aplicaciones blockchain.",
 });
 
 # SmartWallet.Create
 
-Instantiate a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through account abstraction. This wallet type is especially useful for creating a user-friendly experience in decentralized applications.
+Instancia un `SmartWallet` para habilitar interacciones avanzadas con blockchain, incluyendo transacciones sin gas a través de la abstracción de cuentas. Este tipo de billetera es especialmente útil para crear una experiencia amigable para el usuario en aplicaciones descentralizadas.
 
-## Usage
+## Uso
+
 
 ```csharp
 var smartWallet = await SmartWallet.Create(personalWallet, chainId);
 ```
 
-<Callout variant="info" title="Advanced Functionality">
-	This method sets up a SmartWallet with optional gasless transactions,
-	leveraging account abstraction. It's designed for developers looking to create
-	seamless blockchain interactions within their applications.
+<Callout variant="info" title="Funcionalidad Avanzada">
+	Este método configura un SmartWallet con transacciones opcionales sin gas, aprovechando la abstracción de cuentas. Está diseñado para desarrolladores que buscan crear interacciones blockchain sin interrupciones dentro de sus aplicaciones.
 </Callout>
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### personalWallet (required)
+### personalWallet (requerido)
 
-An instance of IThirdwebWallet (e.g., `PrivateKeyWallet` or `InAppWallet`). Represents the personal wallet connected to the SmartWallet.
+Una instancia de IThirdwebWallet (por ejemplo, `PrivateKeyWallet` o `InAppWallet`). Representa la billetera personal conectada al SmartWallet.
 
-### chainId (required)
+### chainId (requerido)
 
-The blockchain network's chain ID as a `BigInteger`. Identifies the network the smart wallet interacts with.
+El ID de la cadena de la red blockchain como un `BigInteger`. Identifica la red con la que interactúa el SmartWallet.
 
-### factoryAddress (optional)
+### factoryAddress (opcional)
 
-The address of the factory contract used to deploy new smart wallet instances.
+La dirección del contrato de fábrica utilizado para desplegar nuevas instancias de SmartWallet.
 
-### gasless (optional)
+### gasless (opcional)
 
-A `boolean` indicating if the wallet should operate in a gasless mode for transactions.
+Un `booleano` que indica si la billetera debe operar en modo sin gas para las transacciones.
 
-### accountAddressOverride (optional)
+### accountAddressOverride (opcional)
 
-Overrides the default account address for the smart wallet. Useful for session key advanced use cases.
+Sobrescribe la dirección de cuenta predeterminada para el SmartWallet. Útil para casos de uso avanzados de claves de sesión.
 
-### entryPoint (optional)
+### entryPoint (opcional)
 
-The entry point contract address for account abstraction.
+La dirección del contrato de entryPoint para la abstracción de cuentas.
 
-### bundlerUrl (optional)
+### bundlerUrl (opcional)
 
-URL of the bundler server used for processing User Operations.
+La URL del servidor de bundler utilizado para procesar las Operaciones de Usuario.
 
-### paymasterUrl (optional)
+### paymasterUrl (opcional)
 
-URL of the paymaster service that sponsors gas for User Operations.
+La URL del servicio de paymaster que financia el gas para las Operaciones de Usuario.
 
-### tokenPaymaster (optional)
+### tokenPaymaster (opcional)
 
-The `TokenPaymaster` (enum) representing the ERC20 token you want users to pay gas fees with.
+El `TokenPaymaster` (enum) que representa el token ERC20 con el que quieres que los usuarios paguen las tarifas de gas.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### SmartWallet
 
-Returns an instance of `SmartWallet`, configured with the provided parameters and ready for blockchain interactions.
+Devuelve una instancia de `SmartWallet`, configurada con los parámetros proporcionados y lista para las interacciones blockchain.
 
 </Details>
-Example
+Ejemplo
 
-Here's how you can create a SmartWallet for a user, assuming you already have a ThirdwebClient and a personal wallet (PrivateKeyWallet or InAppWallet) set up:
+Así es como puedes crear un SmartWallet para un usuario, suponiendo que ya tienes configurado un ThirdwebClient y una billetera personal (PrivateKeyWallet o InAppWallet):
 
 ```csharp
 var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");

@@ -273,266 +273,277 @@ Converts a regular string to a hexadecimal string.
 var hexString = "Hello".StringToHex();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### str
 
-A `string` representing the regular string to convert.
+Una `string` que representa la cadena regular a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### hexString
 
-A `string` representing the converted hexadecimal string.
+Una `string` que representa la cadena hexadecimal convertida.
 
 </Details>
 
 ## GetUnixTimeStampNow
 
-Gets the current Unix timestamp in seconds.
+Obtiene el timestamp Unix actual en segundos.
+
 
 ```csharp
 var timestampNow = Utils.GetUnixTimeStampNow();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### timestampNow
 
-A `long` representing the current Unix timestamp.
+Un `long` que representa el timestamp Unix actual.
 
 </Details>
 
 ## GetUnixTimeStampIn10Years
 
-Gets the Unix timestamp for 10 years from now.
+Obtiene el timestamp Unix para dentro de 10 años.
+
 
 ```csharp
 var timestampIn10Years = Utils.GetUnixTimeStampIn10Years();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### timestampIn10Years
 
-A `long` representing the Unix timestamp 10 years from now.
+Un `long` que representa el timestamp Unix dentro de 10 años.
 
 </Details>
 
 ## ReplaceIPFS
 
-Replaces an IPFS URI with a specified gateway.
+Reemplaza un URI de IPFS con un gateway especificado.
+
 
 ```csharp
 var gatewayUri = ipfsUri.ReplaceIPFS("https://ipfs.io/ipfs/");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### uri
 
-A `string` representing the IPFS URI to replace.
+Un `string` que representa el URI de IPFS que se va a reemplazar.
 
 ### gateway
 
-A `string` representing the gateway to use. Default is `Constants.FALLBACK_IPFS_GATEWAY`.
+Un `string` que representa el gateway a utilizar. El valor predeterminado es `Constants.FALLBACK_IPFS_GATEWAY`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### gatewayUri
 
-A `string` representing the replaced URI with the specified gateway.
+Un `string` que representa el URI reemplazado con el gateway especificado.
 
 </Details>
 
 ## ToWei
 
-Converts Ether values to Wei.
+Convierte los valores de Ether a Wei.
+
 
 ```csharp
 var weiValue = ethValue.ToWei();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### eth
 
-A `string` representing the Ether value to convert.
+Un `string` que representa el valor en Ether a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### weiValue
 
-A `string` representing the converted Wei value.
+Un `string` que representa el valor convertido a Wei.
 
 </Details>
 
 ## ToEth
 
-Converts Wei values to Ether.
+Convierte los valores de Wei a Ether.
+
 
 ```csharp
 var ethValue = weiValue.ToEth();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### wei
 
-A `string` representing the Wei value to convert.
+Un `string` que representa el valor en Wei a convertir.
 
 ### decimalsToDisplay
 
-An `int` specifying the number of decimals to display. Default is `4`.
+Un `int` que especifica la cantidad de decimales a mostrar. El valor predeterminado es `4`.
 
 ### addCommas
 
-A `bool` indicating whether to add commas to the output. Default is `false`.
+Un `bool` que indica si se deben agregar comas al resultado. El valor predeterminado es `false`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ethValue
 
-A `string` representing the converted Ether value.
+Un `string` que representa el valor convertido a Ether.
 
 </Details>
 
 ## GenerateSIWE
 
-Generates a Sign-In With Ethereum (SIWE) message.
+Genera un mensaje de "Sign-In With Ethereum" (SIWE).
+
 
 ```csharp
 var siweMessage = Utils.GenerateSIWE(loginPayloadData);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### loginPayloadData
 
-A `LoginPayloadData` object containing the payload data for generating the SIWE message.
+Un objeto `LoginPayloadData` que contiene los datos del payload para generar el mensaje SIWE.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### siweMessage
 
-A `string` representing the generated SIWE message.
+Un `string` que representa el mensaje SIWE generado.
 
 </Details>
 
 ## IsZkSync
 
-Checks if a given chain ID corresponds to zkSync.
+Verifica si un ID de cadena dado corresponde a zkSync.
+
 
 ```csharp
 var isZkSync = Utils.IsZkSync(chainId);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### chainId
 
-A `BigInteger` representing the chain ID to check.
+Un `BigInteger` que representa el ID de la cadena a verificar.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### isZkSync
 
-A `bool` indicating whether the chain ID corresponds to zkSync.
+Un `bool` que indica si el ID de la cadena corresponde a zkSync.
 
 </Details>
 
 ## ToChecksumAddress
 
-Converts an Ethereum address to its checksum format.
+Convierte una dirección de Ethereum a su formato con suma de verificación.
+
 
 ```csharp
 var checksummedAddress = address.ToChecksumAddress();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### address
 
-A `string` representing the Ethereum address to convert.
+Una `string` que representa la dirección de Ethereum a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### checksummedAddress
 
-A `string` representing the checksummed Ethereum address.
+Una `string` que representa la dirección de Ethereum con suma de verificación.
 
 </Details>
 
 ## AdjustDecimals
 
-Adjusts the decimal places of a value.
+Ajusta los lugares decimales de un valor.
+
 
 ```csharp
 var adjustedValue = value.AdjustDecimals(18, 6);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### value
 
-A `BigInteger` representing the value to adjust.
+Un `BigInteger` que representa el valor a ajustar.
 
 ### fromDecimals
 
-An `int` specifying the original number of decimals.
+Un `int` que especifica el número original de decimales.
 
 ### toDecimals
 
-An `int` specifying the target number of decimals.
+Un `int` que especifica el número de decimales objetivo.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### adjustedValue
 
-A `BigInteger` representing the value adjusted to the new decimals.
+Un `BigInteger` que representa el valor ajustado a los nuevos decimales.
 
 </Details>
 
 ## ToJsonExternalWalletFriendly
 
-Converts typed data into a JSON string suitable for external wallet interaction.
+Convierte datos tipados en una cadena JSON adecuada para la interacción con billeteras externas.
+
 
 ```csharp
 var jsonString = Utils.ToJsonExternalWalletFriendly(typedData, message);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### typedData
 
-A `TypedData<TDomain>` object representing the typed data to convert.
+Un objeto `TypedData<TDomain>` que representa los datos tipados a convertir.
 
 ### message
 
-A `TMessage` object representing the message to include in the JSON.
+Un objeto `TMessage` que representa el mensaje a incluir en el JSON.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### jsonString
 
-A `string` representing the JSON formatted data.
+Una `string` que representa los datos formateados en JSON.
 
 </Details>
+

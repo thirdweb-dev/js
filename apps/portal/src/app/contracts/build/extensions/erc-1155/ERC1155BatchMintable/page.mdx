@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155BatchMintable contract",
+		title: "Contrato ERC1155BatchMintable",
 		icon: "solidity",
 	},
-	title: "ERC1155BatchMintable | thirdweb contract",
+	title: "ERC1155BatchMintable | contrato de thirdweb",
 	description:
-		"Enable minting multiple NFTs at once in a single transaction by Implementing ERC1155, IMintableERC1155, and Multicall extensions",
+		"Permite la creación de múltiples NFTs de una vez en una sola transacción implementando las extensiones ERC1155, IMintableERC1155 y Multicall",
 });
+
 
 # ERC1155BatchMintable
 
@@ -19,16 +20,17 @@ import "@thirdweb-dev/contracts/extension/multicall.sol";
 import "@thirdweb-dev/contracts/extension/interface/IMintableERC1155.sol";
 ```
 
-Enable minting multiple NFTs at once in a single transaction by Implementing [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`IMintableERC1155`](/contracts/build/extensions/erc-1155/ERC1155Mintable), and [`Multicall`](/contracts/build/extensions/general/Multicall) extensions.
+Permite la creación de múltiples NFTs de una vez en una sola transacción implementando las extensiones
+[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`IMintableERC1155`](/contracts/build/extensions/erc-1155/ERC1155Mintable) y [`Multicall`](/contracts/build/extensions/general/Multicall).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`Multicall`](/contracts/build/extensions/general/Multicall) and [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable) extensions.
+Esta es una extensión que se detecta en el panel si el contrato inteligente implementa las extensiones
+[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`Multicall`](/contracts/build/extensions/general/Multicall) y [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IMintableERC1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract which will have ERC1155BatchMintable detected on it in the dashboard. It also highlights the functions which can be (optionally) overridden to add custom logic.
+Este es un ejemplo de contrato inteligente que tendrá la extensión ERC1155BatchMintable detectada en el panel. También destaca las funciones que pueden ser (opcionalmente) sobrecargadas para agregar lógica personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -60,7 +62,7 @@ contract Contract is ERC1155, IMintableERC1155, Multicall {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos base que implementan esta extensión
 
 - [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
 - [ERC1155SignatureMint](/contracts/build/base-contracts/erc-1155/signature-mint)

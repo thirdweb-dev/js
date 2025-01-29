@@ -4,67 +4,67 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Multiwrap design document",
+		title: "Documento de diseño de Multiwrap",
 		icon: "contract",
 	},
-	title: "Multiwrap design document | thirdweb",
+	title: "Documento de diseño de Multiwrap | thirdweb",
 	description:
-		"This is a live document that explains what the thirdweb Multiwrap smart contract is, how it works and can be used, and why it is designed the way it is",
+		"Este es un documento en vivo que explica qué es el contrato inteligente Multiwrap de thirdweb, cómo funciona, cómo puede ser utilizado y por qué está diseñado de la manera en que está.",
 });
 
-# Multiwrap design document.
+# Documento de diseño de Multiwrap.
 
-This is a live document that explains what the [thirdweb](https://thirdweb.com/) `Multiwrap` smart contract is, how it works and can be used, and why it is designed the way it is.
+Este es un documento en vivo que explica qué es el contrato inteligente `Multiwrap` de [thirdweb](https://thirdweb.com/), cómo funciona, cómo puede ser utilizado y por qué está diseñado de la manera en que está.
 
-The document is written for technical and non-technical readers. To ask further questions about thirdweb's `Multiwrap` contract, please [visit our support site](https://thirdweb.com/support) or create a github issue.
+El documento está escrito para lectores tanto técnicos como no técnicos. Si tienes más preguntas sobre el contrato `Multiwrap` de thirdweb, por favor [visita nuestro sitio de soporte](https://thirdweb.com/support) o crea un issue en GitHub.
 
-## Background
+## Contexto
 
-The thirdweb Multiwrap contract lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
+El contrato Multiwrap de thirdweb te permite agrupar tokens arbitrarios ERC20, ERC721 y ERC1155 que poseas en un único token agrupado / NFT.
 
-The `Multiwrap` contract is meant to be used for bundling up multiple assets (ERC20 / ERC721 / ERC1155) into a single wrapped token, which can then be unwrapped in exchange for the underlying tokens.
+El contrato `Multiwrap` está diseñado para agrupar múltiples activos (ERC20 / ERC721 / ERC1155) en un solo token agrupado, que luego puede ser desagrupado a cambio de los tokens subyacentes.
 
-The single wrapped token received on bundling up multiple assets, as mentioned above, is an ERC721 NFT. It can be transferred, sold on any NFT Marketplace, and generate royalties just like any other NFTs.
+El único token agrupado recibido al agrupar múltiples activos, como se mencionó anteriormente, es un NFT ERC721. Este puede ser transferido, vendido en cualquier mercado de NFT y generar regalías como cualquier otro NFT.
 
-### How the `Multiwrap` product _should_ work
+### Cómo debería funcionar el producto `Multiwrap`
 
-<DocImage src={multiwrapDiagramImage} alt="Multiwrap diagram" />
+<DocImage src={multiwrapDiagramImage} alt="Diagrama de Multiwrap" />
 
-A token owner should be able to wrap any combination of _n_ ERC20, ERC721 or ERC1155 tokens as a wrapped NFT. When wrapping, the token owner should be able to specify a recipient for the wrapped NFT. At the time of wrapping, the token owner should be able to set the metadata of the wrapped NFT that will be minted.
+El propietario de un token debería poder agrupar cualquier combinación de _n_ tokens ERC20, ERC721 o ERC1155 como un NFT agrupado. Al agrupar, el propietario del token debería poder especificar un destinatario para el NFT agrupado. En el momento de agrupar, el propietario del token debería poder establecer los metadatos del NFT agrupado que se acuñará.
 
-The wrapped NFT owner should be able to unwrap the NFT to retrieve the underlying tokens of the wrapped NFT. At the time of unwrapping, the wrapped NFT owner should be able to specify a recipient for the underlying tokens of the wrapped NFT.
+El propietario del NFT agrupado debería poder desagrupar el NFT para recuperar los tokens subyacentes del NFT agrupado. En el momento de desagrupar, el propietario del NFT agrupado debería poder especificar un destinatario para los tokens subyacentes del NFT agrupado.
 
-The `Multiwrap` contract creator should be able to apply the following role-based restrictions:
+El creador del contrato `Multiwrap` debería poder aplicar las siguientes restricciones basadas en roles:
 
-- Restrict what assets can be wrapped on the contract.
-- Restrict which wallets can wrap tokens on the contract.
-- Restrict what wallets can unwrap owned wrapped NFTs.
+- Restringir qué activos se pueden agrupar en el contrato.
+- Restringir qué carteras pueden agrupar tokens en el contrato.
+- Restringir qué carteras pueden desagrupar NFTs agrupados que posean.
 
-### Core parts of the `Multiwrap` product
+### Partes clave del producto `Multiwrap`
 
-- A token owner should be able to wrap any combination of _n_ ERC20, ERC721 or ERC1155 tokens as a wrapped token.
-- A wrapped token owner should be able to unwrap the token to retrieve the underlying contents of the wrapped token.
+- Un propietario de un token debería poder agrupar cualquier combinación de _n_ tokens ERC20, ERC721 o ERC1155 como un token agrupado.
+- Un propietario de un token agrupado debería poder desagrupar el token para recuperar los contenidos subyacentes del token agrupado.
 
-### Why we're building `Multiwrap`
+### Por qué estamos construyendo `Multiwrap`
 
-We're building `Multiwrap` for cases where an application wishes to bundle up / distribute / transact over _n_ independent tokens all at once, as a single asset. This opens up several novel NFT use cases.
+Estamos construyendo `Multiwrap` para casos donde una aplicación desea agrupar / distribuir / realizar transacciones sobre _n_ tokens independientes al mismo tiempo, como un único activo. Esto abre varios casos de uso novedosos para los NFTs.
 
-For example, consider a lending service where people can take out a loan while putting up an NFT as a collateral. Using `Multiwrap`, a borrower can wrap their NFT with some ether, and put up the resultant wrapped ERC721 NFT as collateral on the lending service. Now, the borrower's NFT, as collateral, has a floor value.
+Por ejemplo, considera un servicio de préstamos donde las personas pueden tomar un préstamo poniendo un NFT como garantía. Usando `Multiwrap`, un prestatario puede agrupar su NFT con algo de ether, y poner el NFT ERC721 agrupado resultante como garantía en el servicio de préstamos. Ahora, el NFT del prestatario, como garantía, tiene un valor mínimo.
 
-## Technical Details
+## Detalles Técnicos
 
-The `Multiwrap`contract itself is an ERC721 contract.
+El contrato `Multiwrap` en sí es un contrato ERC721.
 
-It lets you wrap arbitrary ERC20, ERC721 or ERC1155 tokens you own into a single wrapped token / NFT. This means escrowing the relevant ERC20, ERC721 and ERC1155 tokens into the `Multiwrap` contract, and receiving the wrapped NFT in exchange.
+Permite agrupar tokens arbitrarios ERC20, ERC721 o ERC1155 que poseas en un único token agrupado / NFT. Esto significa embargar los tokens ERC20, ERC721 y ERC1155 relevantes en el contrato `Multiwrap`, y recibir el NFT agrupado a cambio.
 
-This wrapped NFT can later be 'unwrapped' i.e. burned in exchange for the underlying tokens.
+Este NFT agrupado puede ser más tarde "desagrupado", es decir, quemado a cambio de los tokens subyacentes.
 
-### Wrapping tokens
+### Agrupar tokens
 
-To wrap multiple ERC20, ERC721 or ERC1155 tokens as a single wrapped NFT, a token owner must:
+Para agrupar múltiples tokens ERC20, ERC721 o ERC1155 como un único NFT agrupado, un propietario de un token debe:
 
-- approve the relevant tokens to be transferred by the `Multiwrap` contract.
-- specify the tokens to be wrapped into a single wrapped NFT. The following is the format in which each token to be wrapped must be specified:
+- aprobar los tokens relevantes para ser transferidos por el contrato `Multiwrap`.
+- especificar los tokens a agrupar en un único NFT agrupado. El siguiente es el formato en el que cada token a agrupar debe ser especificado:
 
 ```solidity
 /// @notice The type of assets that can be wrapped.
@@ -78,16 +78,16 @@ struct Token {
 }
 ```
 
-| Parameters    | Type      | Description                                                                         |
-| ------------- | --------- | ----------------------------------------------------------------------------------- |
-| assetContract | address   | The contract address of the asset to wrap.                                          |
-| tokenType     | TokenType | The token type (ERC20 / ERC721 / ERC1155) of the asset to wrap.                     |
-| tokenId       | uint256   | The token Id of the asset to wrap, if the asset is an ERC721 / ERC1155 NFT.         |
-| totalAmount   | uint256   | The amount of the asset to wrap, if the asset is an ERC20 / ERC1155 fungible token. |
+| Parámetros    | Tipo      | Descripción                                                                          |
+| ------------- | --------- | ------------------------------------------------------------------------------------ |
+| assetContract | address   | La dirección del contrato del activo a agrupar.                                      |
+| tokenType     | TokenType | El tipo de token (ERC20 / ERC721 / ERC1155) del activo a agrupar.                   |
+| tokenId       | uint256   | El ID del token del activo a agrupar, si el activo es un NFT ERC721 / ERC1155.      |
+| totalAmount   | uint256   | La cantidad del activo a agrupar, si el activo es un token fungible ERC20 / ERC1155. |
 
-Each token in the bundle of tokens to be wrapped as a single wrapped NFT must be specified to the `Multiwrap` contract in the form of the `Token` struct. The contract handles the respective token based on the value of `tokenType` provided. Any incorrect values passed (e.g. the `totalAmount` specified to be wrapped exceeds the token owner's token balance) will cause the wrapping transaction to revert.
+Cada token en el conjunto de tokens a agrupar como un único NFT agrupado debe ser especificado al contrato `Multiwrap` en forma de la estructura `Token`. El contrato maneja el token respectivo según el valor de `tokenType` proporcionado. Cualquier valor incorrecto pasado (por ejemplo, si la cantidad especificada para agrupar excede el saldo del token del propietario) causará que la transacción de agrupamiento se revierta.
 
-Multiple tokens can be wrapped as a single wrapped NFT by calling the following function:
+Se pueden agrupar múltiples tokens como un solo NFT agrupado llamando a la siguiente función:
 
 ```solidity
 function wrap(
@@ -97,21 +97,21 @@ function wrap(
 ) external payable returns (uint256 tokenId);
 ```
 
-| Parameters         | Type    | Description                           |
-| ------------------ | ------- | ------------------------------------- |
-| tokensToWrap       | Token[] | The tokens to wrap.                   |
-| uriForWrappedToken | string  | The metadata URI for the wrapped NFT. |
-| recipient          | address | The recipient of the wrapped NFT.     |
+| Parámetros         | Tipo    | Descripción                            |
+| ------------------ | ------- | -------------------------------------- |
+| tokensToWrap       | Token[] | Los tokens a agrupar.                  |
+| uriForWrappedToken | string  | La URI de metadatos para el NFT agrupado. |
+| recipient          | address | El destinatario del NFT agrupado.     |
 
-### Unwrapping the wrapped NFT
+### Desagrupando el NFT agrupado
 
-The single wrapped NFT, received on wrapping multiple assets as explained in the previous section, can be unwrapped in exchange for the underlying assets.
+El único NFT agrupado, recibido al agrupar múltiples activos como se explicó en la sección anterior, puede ser desagrupado a cambio de los activos subyacentes.
 
-A wrapped NFT can be unwrapped either by the owner, or a wallet approved by the owner to transfer the NFT via `setApprovalForAll` or `approve` ERC721 functions.
+Un NFT agrupado puede ser desagrupado por el propietario o una cartera aprobada por el propietario para transferir el NFT mediante las funciones `setApprovalForAll` o `approve` de ERC721.
 
-When unwrapping the wrapped NFT, the wrapped NFT is burned.\*\*\*\*
+Cuando se desagrupa el NFT agrupado, el NFT agrupado se quema.****
 
-A wrapped NFT can be unwrapped by calling the following function:
+Un NFT agrupado puede ser desagrupado llamando a la siguiente función:
 
 ```solidity
 function unwrap(
@@ -120,31 +120,31 @@ function unwrap(
 ) external;
 ```
 
-| Parameters | Type    | Description                                                                         |
+| Parámetros | Tipo    | Descripción                                                                         |
 | ---------- | ------- | ----------------------------------------------------------------------------------- |
-| tokenId    | Token[] | The token Id of the wrapped NFT to unwrap.                                          |
-| recipient  | address | The recipient of the underlying ERC20, ERC721 or ERC1155 tokens of the wrapped NFT. |
+| tokenId    | Token[] | El ID del token del NFT agrupado a desagrupar.                                       |
+| recipient  | address | El destinatario de los tokens subyacentes ERC20, ERC721 o ERC1155 del NFT agrupado. |
 
-## Permissions
+## Permisos
 
-| Role name     | Type (Switch / !Switch) | Purpose                                                   |
-| ------------- | ----------------------- | --------------------------------------------------------- |
-| TRANSFER_ROLE | Switch                  | Only token transfers to or from role holders are allowed. |
-| MINTER_ROLE   | Switch                  | Only role holders can wrap tokens.                        |
-| UNWRAP_ROLE   | Switch                  | Only role holders can unwrap wrapped NFTs.                |
-| ASSET_ROLE    | Switch                  | Only assets with the role can be wrapped.                 |
+| Nombre del rol | Tipo (Switch / !Switch) | Propósito                                                   |
+| --------------- | ----------------------- | ----------------------------------------------------------- |
+| TRANSFER_ROLE   | Switch                  | Solo se permiten transferencias de tokens hacia o desde los titulares del rol. |
+| MINTER_ROLE     | Switch                  | Solo los titulares del rol pueden agrupar tokens.           |
+| UNWRAP_ROLE     | Switch                  | Solo los titulares del rol pueden desagrupar NFTs agrupados.|
+| ASSET_ROLE      | Switch                  | Solo los activos con el rol pueden ser agrupados.           |
 
-What does **Type (Switch / !Switch)** mean?
+¿Qué significa **Tipo (Switch / !Switch)**?
 
-- **Switch:** If `address(0)` has `ROLE`, then the `ROLE` restrictions don't apply.
-- **!Switch:** `ROLE` restrictions always apply.
+- **Switch:** Si `address(0)` tiene el `ROL`, entonces las restricciones del `ROL` no aplican.
+- **!Switch:** Las restricciones del `ROL` siempre aplican.
 
-## Relevant EIPs
+## EIPs relevantes
 
-| EIP  | Link                                    | Relation to `Multiwrap`                                                                                                                                     |
-| ---- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 721  | https://eips.ethereum.org/EIPS/eip-721  | Multiwrap itself is an ERC721 contract. The wrapped NFT received by a token owner on wrapping is an ERC721 NFT. Additionally, ERC721 tokens can be wrapped. |
-| 20   | https://eips.ethereum.org/EIPS/eip-20   | ERC20 tokens can be wrapped.                                                                                                                                |
-| 1155 | https://eips.ethereum.org/EIPS/eip-1155 | ERC1155 tokens can be wrapped.                                                                                                                              |
-| 2981 | https://eips.ethereum.org/EIPS/eip-2981 | Multiwrap implements ERC 2981 for distributing royalties for sales of the wrapped NFTs.                                                                     |
-| 2771 | https://eips.ethereum.org/EIPS/eip-2771 | Multiwrap implements ERC 2771 to support meta-transactions (aka “gasless” transactions).                                                                    |
+| EIP  | Enlace                                    | Relación con `Multiwrap`                                                                                                                                     |
+| ---- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 721  | https://eips.ethereum.org/EIPS/eip-721    | Multiwrap es un contrato ERC721. El NFT agrupado recibido por un propietario de token al agrupar es un NFT ERC721. Además, los tokens ERC721 pueden ser agrupados. |
+| 20   | https://eips.ethereum.org/EIPS/eip-20     | Los tokens ERC20 pueden ser agrupados.                                                                                                                       |
+| 1155 | https://eips.ethereum.org/EIPS/eip-1155   | Los tokens ERC1155 pueden ser agrupados.                                                                                                                     |
+| 2981 | https://eips.ethereum.org/EIPS/eip-2981   | Multiwrap implementa ERC 2981 para distribuir regalías por ventas de los NFTs agrupados.                                                                     |
+| 2771 | https://eips.ethereum.org/EIPS/eip-2771   | Multiwrap implementa ERC 2771 para soportar meta-transacciones (también llamadas transacciones “sin gas”).                                                     |
