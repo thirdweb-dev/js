@@ -5,7 +5,7 @@ interface TxActivityItem {
     id: string;
     // all txs we retrieve for now are outgoing
     // TODO: add incoming
-    // type: string;
+    type: "out" | "in";
     amount: string;
     to?: string;
     from?: string;
@@ -20,11 +20,11 @@ export function useGetTxActivity(chainId: number, address: string) {
   useEffect(() => {
     (async () => {
       const response = await fetchTxActivity({ chainId, address });
-      const activity = response.data.map((tx): TxActivityItem => {
-        // let type = tx.to_address?.toLowerCase() === address.toLowerCase() ? "Receive" : "Send";
+      const activity = response.map((tx): TxActivityItem => {
+        let type = tx.to_address?.toLowerCase() === address.toLowerCase() ? "in" : "out";
         return {
           id: tx.hash,
-          // type,
+          type,
           amount: `${tx.value / Math.pow(10, 18)} ETH`,
           to: tx.to_address || undefined,
           from: tx.from_address,

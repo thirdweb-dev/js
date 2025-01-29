@@ -48,15 +48,15 @@ interface InsightsResponse {
 export async function fetchTxActivity(args: {
   chainId: number;
   address: string;
-  limit?: number,
+  limit_per_type?: number,
   page?: number;
-}): Promise<InsightsResponse> {
-  let { chainId, address, limit, page } = args;
-  if (!limit) limit = 100;
+}): Promise<Transaction[]> {
+  let { chainId, address, limit_per_type, page } = args;
+  if (!limit_per_type) limit_per_type = 100;
   if (!page) page = 0;
 
-  const response = await fetch(
-    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit}&sort_by=block_number&sort_order=desc`,
+  const outgoingTxsResponse = await fetch(
+    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_from_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
     {
       headers: {
         "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
@@ -64,10 +64,21 @@ export async function fetchTxActivity(args: {
     },
   );
 
-  if (!response.ok) {
+  const incomingTxsResponse = await fetch(
+    `https://insight.thirdweb-dev.com/v1/transactions?chain=${chainId}&filter_to_address=${address}&page=${page}&limit=${limit_per_type}&sort_by=block_number&sort_order=desc`,
+    {
+      headers: {
+        "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
+      },
+    },
+  );
+
+  if (!outgoingTxsResponse.ok || !incomingTxsResponse.ok) {
     throw new Error('Failed to fetch transaction history');
   }
 
-  const data: InsightsResponse = await response.json();
-  return data;
+  const outgoingTxsData: InsightsResponse = await outgoingTxsResponse.json();
+  const incomingTxsData: InsightsResponse = await incomingTxsResponse.json();
+
+  return [...outgoingTxsData.data, ...incomingTxsData.data].sort((a, b) => b.block_number - a.block_number);
 } 
