@@ -3,10 +3,17 @@ import { fetchNFTs } from "../actions/fetchNFTs";
 
 export interface NFTDetails {
   name: string;
+  description?: string;
   contractAddress: string;
+  contractType: "ERC721" | "ERC1155";
   tokenId: string;
+  quantity: number;
+  firstAcquiredDate?: string;
+  lastAcquiredDate?: string;
   imageUrl: string;
-  blurHash: string;
+  createdAt?: string;
+  tokenCount?: number;
+  ownerCount?: number;
 }
 
 export function useGetNFTs(chainId: number, address: string) {

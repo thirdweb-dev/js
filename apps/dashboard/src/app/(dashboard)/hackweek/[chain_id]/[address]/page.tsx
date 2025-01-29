@@ -1,5 +1,6 @@
 import { getChain } from "app/(dashboard)/(chain)/utils";
 import { WalletDashboard } from "./components/WalletDashboard";
+import { WalletProfile } from "./components/WalletProfile";
 
 export default async function Page(props: {
   params: Promise<{
@@ -12,8 +13,8 @@ export default async function Page(props: {
 
   return (
     <main className="container mx-auto p-4">
-      <h1 className="mb-2 font-bold text-3xl">Wallet Overview</h1>
-      <p className="mb-6 text-muted-foreground text-sm">{params.address}</p>
+      <WalletProfile address={params.address} />
+      <hr />
       <WalletDashboard address={params.address} chain={chain} />
     </main>
   );

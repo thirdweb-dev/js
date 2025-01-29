@@ -45,7 +45,6 @@
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-switch": "^1.1.2",
-    "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "1.1.7",
     "@sentry/nextjs": "8.51.0",
     "@shazow/whatsabi": "^0.19.0",

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -7,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { formatDistanceToNow } from "date-fns";
 import { Info } from "lucide-react";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { NFTDetails } from "../hooks/useGetNFTs";
@@ -21,6 +23,9 @@ export function NFTCard({ nft, chain }: NFTCardProps) {
     <Card className="relative overflow-hidden">
       <CardContent className="p-0">
         <div className="relative aspect-square">
+          <Badge variant="secondary" className="absolute top-2 right-2">
+            #{nft.tokenId}
+          </Badge>
           {!nft.imageUrl ? (
             <div className="h-full w-full bg-gray-600" />
           ) : (
@@ -34,8 +39,18 @@ export function NFTCard({ nft, chain }: NFTCardProps) {
       </CardContent>
       <CardFooter className="flex flex-col items-start space-y-2 p-4">
         <div className="space-y-0.5">
-          <h4 className="font-semibold text-sm">{nft.name}</h4>
-          <p className="text-muted-foreground text-xs">#{nft.tokenId}</p>
+          <h4 className="font-semibold text-sm">{nft.name ?? "(unnamed)"}</h4>
+          {nft.lastAcquiredDate && (
+            <p
+              className="text-muted-foreground text-xs"
+              title={new Date(nft.lastAcquiredDate).toLocaleString()}
+            >
+              Acquired{" "}
+              {formatDistanceToNow(new Date(nft.lastAcquiredDate), {
+                addSuffix: true,
+              })}
+            </p>
+          )}
         </div>
       </CardFooter>
 
@@ -62,15 +77,59 @@ function NFTExpandedDetails({ nft, chain }: NFTCardProps) {
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <h4 className="font-semibold text-sm">Token ID</h4>
-            <p className="text-muted-foreground text-sm">{nft.tokenId}</p>
-          </div>
-          <div>
             <h4 className="font-semibold text-sm">Contract Address</h4>
             <p className="break-all font-mono text-muted-foreground text-sm">
               {nft.contractAddress}
             </p>
           </div>
+          <div>
+            <h4 className="font-semibold text-sm">Token ID</h4>
+            <p className="text-muted-foreground text-sm">{nft.tokenId}</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-sm">Contract Type</h4>
+            <p className="text-muted-foreground text-sm">{nft.contractType}</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-sm">Quantity</h4>
+            <p className="text-muted-foreground text-sm">{nft.quantity}</p>
+          </div>
+          {nft.firstAcquiredDate && (
+            <div>
+              <h4 className="font-semibold text-sm">First Acquired</h4>
+              <p className="text-muted-foreground text-sm">
+                {new Date(nft.firstAcquiredDate).toLocaleString()}
+              </p>
+            </div>
+          )}
+          {nft.lastAcquiredDate && (
+            <div>
+              <h4 className="font-semibold text-sm">Last Acquired</h4>
+              <p className="text-muted-foreground text-sm">
+                {new Date(nft.lastAcquiredDate).toLocaleString()}
+              </p>
+            </div>
+          )}
+          {nft.createdAt && (
+            <div>
+              <h4 className="font-semibold text-sm">Created At</h4>
+              <p className="text-muted-foreground text-sm">
+                {new Date(nft.createdAt).toLocaleString()}
+              </p>
+            </div>
+          )}
+          {nft.tokenCount && (
+            <div>
+              <h4 className="font-semibold text-sm">Total Supply</h4>
+              <p className="text-muted-foreground text-sm">{nft.tokenCount}</p>
+            </div>
+          )}
+          {nft.ownerCount && (
+            <div>
+              <h4 className="font-semibold text-sm">Unique Owners</h4>
+              <p className="text-muted-foreground text-sm">{nft.ownerCount}</p>
+            </div>
+          )}
           <div className="flex gap-2">
             <Button
               size="sm"

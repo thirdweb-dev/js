@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
-import {} from "@radix-ui/react-tabs";
+import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import { toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -59,34 +59,7 @@ export function TokenHoldings({
         {isLoading ? (
           <Spinner />
         ) : activeTab === "erc20" ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Balance</TableHead>
-                <TableHead>Value</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                tokens.map((token, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>
-                      {token.symbol} ({token.name})
-                    </TableCell>
-                    <TableCell>
-                      {toTokens(BigInt(token.balance), token.decimals)}
-                    </TableCell>
-                    <TableCell>
-                      ${token.totalValueUsdString ?? "0.00"}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+          <ERC20Table chain={chain} tokens={tokens} isLoading={isLoading} />
         ) : activeTab === "nft" ? (
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {nfts.map((nft, idx) => (
@@ -96,5 +69,83 @@ export function TokenHoldings({
         ) : null}
       </CardContent>
     </Card>
+  );
+}
+
+function ERC20Table({
+  chain,
+  tokens,
+  isLoading,
+}: { chain: ChainMetadata; tokens: TokenDetails[]; isLoading: boolean }) {
+  const explorer = chain.explorers?.[0];
+  const totalValueUsdCents =
+    tokens.reduce((sum, token) => sum + (token.totalValueUsdCents ?? 0), 0) *
+    0.01;
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead colSpan={3} />
+          <TableHead>Total: ${totalValueUsdCents.toFixed(2)}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Decimals</TableHead>
+          <TableHead>Last Transferred</TableHead>
+          <TableHead>Balance</TableHead>
+          <TableHead>USD Value</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          tokens.map((token) => (
+            <TableRow key={token.contractAddress}>
+              <TableCell>
+                <div>
+                  <span>
+                    {token.symbol} ({token.name})
+                  </span>
+                  <div className="text-gray-500 text-sm">
+                    {explorer && token.contractAddress !== "Native" ? (
+                      <a
+                        href={`${explorer.url}/address/${token.contractAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {token.contractAddress}
+                      </a>
+                    ) : (
+                      token.contractAddress
+                    )}
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell>{token.decimals}</TableCell>
+              <TableCell>
+                {token.lastTransferredDate && (
+                  <span title={token.lastTransferredDate}>
+                    {formatDistanceToNow(new Date(token.lastTransferredDate), {
+                      addSuffix: true,
+                    })}
+                  </span>
+                )}
+              </TableCell>
+              <TableCell>{toTokens(token.balance, token.decimals)}</TableCell>
+              <TableCell>
+                {token.totalValueUsdCents
+                  ? `$${(token.totalValueUsdCents * 0.01).toFixed(2)}`
+                  : "--"}
+              </TableCell>
+            </TableRow>
+          ))
+        )}
+      </TableBody>
+    </Table>
   );
 }

@@ -4,9 +4,12 @@ import { fetchERC20Tokens } from "../actions/fetchERC20Tokens";
 export interface TokenDetails {
   name: string;
   symbol: string;
+  contractAddress: string;
   decimals: number;
-  balance: string;
-  totalValueUsdString: string;
+  balance: bigint;
+  totalValueUsdCents?: number;
+  firstTransferredDate?: string;
+  lastTransferredDate?: string;
 }
 
 export function useGetERC20Tokens(chainId: number, address: string) {
