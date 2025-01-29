@@ -1,9 +1,9 @@
 "use client";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useBalance } from "../hooks/getBalance";
-import { useGetTxActivity } from "../hooks/useGetTxActivity";
 import { useGetERC20Tokens } from "../hooks/useGetERC20Tokens";
 import { useGetNFTs } from "../hooks/useGetNFTs";
+import { useGetTxActivity } from "../hooks/useGetTxActivity";
 import { mockWalletData } from "../utils/mockData";
 import { ActivityOverview } from "./ActivityOverview";
 import { BalanceOverview } from "./BalanceOverview";
@@ -38,7 +38,10 @@ export function WalletDashboard(props: {
   //   console.error("Error fetching NFTs:", errorNFTs);
   // }
 
-  const { txActivity, isLoading: isLoadingActivity } = useGetTxActivity(props.chain.chainId, props.address)
+  const { txActivity, isLoading: isLoadingActivity } = useGetTxActivity(
+    props.chain.chainId,
+    props.address,
+  );
 
   return (
     <div className="grid gap-6">

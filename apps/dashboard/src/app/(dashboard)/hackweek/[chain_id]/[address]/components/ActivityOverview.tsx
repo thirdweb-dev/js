@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TabButtons } from "@/components/ui/tabs";
-import {} from "@radix-ui/react-tabs";
 import { useState } from "react";
 
 interface Transaction {
@@ -40,7 +39,9 @@ export function ActivityOverview({
   contracts,
   isLoading,
 }: ActivityOverviewProps) {
-  const [activeTab, setActiveTab] = useState<"transactions" | "contracts">("transactions");
+  const [activeTab, setActiveTab] = useState<"transactions" | "contracts">(
+    "transactions",
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -115,7 +116,8 @@ export function ActivityOverview({
                     name: "Previous",
                     isActive: currentPage === 1,
                     isEnabled: currentPage > 1,
-                    onClick: () => setCurrentPage((prev) => Math.max(prev - 1, 1)),
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1)),
                   },
                   {
                     name: `Page ${currentPage} of ${totalPages}`,
@@ -127,7 +129,8 @@ export function ActivityOverview({
                     name: "Next",
                     isActive: currentPage === totalPages,
                     isEnabled: currentPage < totalPages,
-                    onClick: () => setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
                   },
                 ]}
                 tabClassName="font-medium !text-sm"
@@ -145,7 +148,7 @@ export function ActivityOverview({
             </TableHeader>
             <TableBody>
               {contracts.map((contract, index) => (
-                <TableRow key={index}>
+                <TableRow key={`${contract.address}-${index}`}>
                   <TableCell>{contract.name}</TableCell>
                   <TableCell>{contract.address}</TableCell>
                   <TableCell>{contract.lastInteraction}</TableCell>

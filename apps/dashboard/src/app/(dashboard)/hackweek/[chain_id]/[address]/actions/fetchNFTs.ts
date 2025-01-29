@@ -84,7 +84,7 @@ interface Collection {
   telegram_url: string | null;
   marketplace_pages: MarketplacePage[];
   floor_prices: FloorPrice[];
-  top_bids: any[];
+  top_bids: unknown[];
   distinct_owner_count: number;
   distinct_nft_count: number;
   total_quantity: number;
@@ -148,7 +148,7 @@ interface NFT {
   queried_wallet_balances: Owner[];
 }
 
-export interface SimpleHashResponse {
+interface SimpleHashResponse {
   next_cursor: null | string;
   next: null | string;
   previous: null | string;

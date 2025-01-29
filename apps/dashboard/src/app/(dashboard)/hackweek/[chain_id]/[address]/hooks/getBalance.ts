@@ -19,7 +19,7 @@ export function useBalance(chainId: number, address: string): UseBalanceResult {
         setIsLoading(true);
         setError(null);
         const client = createThirdwebClient({
-          clientId: process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID!,
+          clientId: process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
         });
         const rpcRequest = getRpcClient({
           client,
