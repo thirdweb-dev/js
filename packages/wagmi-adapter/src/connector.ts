@@ -120,9 +120,9 @@ export function inAppWalletConnector(
       }
       const chain = defineChain(
         inAppOptions?.chainId ||
-        lastChainId ||
-        args.smartAccount?.chain?.id ||
-        1,
+          lastChainId ||
+          args.smartAccount?.chain?.id ||
+          1,
       );
       const decoratedOptions = {
         ...inAppOptions,
