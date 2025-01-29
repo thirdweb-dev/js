@@ -30,6 +30,17 @@ export function TokenHoldings({
   isLoading,
 }: TokenHoldingsProps) {
   const [activeTab, setActiveTab] = useState<"erc20" | "nft">("erc20");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Set items per page
+
+  // Calculate the index of the last token on the current page
+  const lastIndex = currentPage * itemsPerPage;
+  // Calculate the index of the first token on the current page
+  const firstIndex = lastIndex - itemsPerPage;
+  // Get the current tokens to display
+  const currentTokens = tokens.slice(firstIndex, lastIndex);
+  // Calculate total pages
+  const totalPages = Math.ceil(tokens.length / itemsPerPage);
 
   return (
     <Card>
@@ -58,7 +69,35 @@ export function TokenHoldings({
         {isLoading ? (
           <Spinner />
         ) : activeTab === "erc20" ? (
-          <ERC20Table chain={chain} tokens={tokens} isLoading={isLoading} />
+          <>
+            <ERC20Table chain={chain} tokens={currentTokens} isLoading={isLoading} />
+            {/* Pagination Controls */}
+            <div className="pagination">
+              <TabButtons
+                tabs={[
+                  {
+                    name: "Previous",
+                    isActive: currentPage === 1,
+                    isEnabled: currentPage > 1,
+                    onClick: () => setCurrentPage((prev) => Math.max(prev - 1, 1)),
+                  },
+                  {
+                    name: `Page ${currentPage} of ${totalPages}`,
+                    isActive: true,
+                    isEnabled: false,
+                    onClick: () => {}, // No action needed
+                  },
+                  {
+                    name: "Next",
+                    isActive: currentPage === totalPages,
+                    isEnabled: currentPage < totalPages,
+                    onClick: () => setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
+                  },
+                ]}
+                tabClassName="font-medium !text-sm"
+              />
+            </div>
+          </>
         ) : activeTab === "nft" ? (
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {nfts.map((nft, idx) => (
