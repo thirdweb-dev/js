@@ -45,6 +45,7 @@ export type TeamResponse = {
   slug: string;
   image: string | null;
   billingPlan: "free" | "starter" | "growth" | "pro";
+  billingPlanVersion: number;
   createdAt: Date;
   updatedAt: Date | null;
   billingEmail: string | null;
@@ -162,25 +163,4 @@ export async function fetchTeamAndProject(
       `Error fetching key metadata from API: ${response.status} - ${text}`,
     );
   }
-}
-
-export async function updateRateLimitedAt(
-  projectId: string,
-  config: CoreServiceConfig,
-): Promise<void> {
-  const { apiUrl, serviceScope: scope, serviceApiKey } = config;
-
-  const url = `${apiUrl}/usage/rateLimit`;
-
-  await fetch(url, {
-    method: "PUT",
-    headers: {
-      "x-service-api-key": serviceApiKey,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      apiKeyId: projectId, // projectId is the apiKeyId
-      scope,
-    }),
-  });
 }
