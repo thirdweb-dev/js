@@ -10,7 +10,7 @@ export type {
   TeamResponse,
 } from "./core/api.js";
 
-export { fetchTeamAndProject, updateRateLimitedAt } from "./core/api.js";
+export { fetchTeamAndProject } from "./core/api.js";
 
 export {
   authorizeBundleId,

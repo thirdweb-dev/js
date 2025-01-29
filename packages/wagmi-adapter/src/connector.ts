@@ -95,9 +95,10 @@ export function inAppWalletConnector(
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
       if (params?.isReconnecting) {
         const { autoConnect } = await import("thirdweb/wallets");
+        const chainId = lastChainId || args.smartAccount?.chain?.id || 1;
         await autoConnect({
           client,
-          chain: defineChain(lastChainId || 1),
+          chain: defineChain(chainId),
           wallets: [wallet],
         });
 
@@ -108,7 +109,7 @@ export function inAppWalletConnector(
 
         return {
           accounts: [getAddress(account.address)],
-          chainId: lastChainId || 1,
+          chainId: chainId,
         };
       }
       const inAppOptions = params && "strategy" in params ? params : undefined;
@@ -117,7 +118,12 @@ export function inAppWalletConnector(
           "Missing strategy prop, pass it to connect() when connecting to this connector",
         );
       }
-      const chain = defineChain(inAppOptions?.chainId || lastChainId || 1);
+      const chain = defineChain(
+        inAppOptions?.chainId ||
+          lastChainId ||
+          args.smartAccount?.chain?.id ||
+          1,
+      );
       const decoratedOptions = {
         ...inAppOptions,
         client,

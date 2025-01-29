@@ -1,0 +1,40 @@
+# OpenAI
+
+### Chat Completions API
+
+Compatible with OpenAI’s Chat Completion API to process chat history and generate context-aware responses.
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+	base_url="https://nebula-api.thirdweb.com",
+	api_key="{{THIRDWEB_SECRET_KEY}}",
+)
+chat_completion = client.chat.completions.create(
+	model="t0",
+	messages=[{"role": "user", "content": "Hello Nebula!"}],
+	stream=False,
+    extra_body={ "context": { "wallet_address": "0x..." }}
+)
+
+print(chat_completion)
+```
+
+### Models API
+
+Compatible with OpenAI’s Models API to list out models used. 
+
+```python
+from openai import OpenAI
+
+# https://nebula-api.thirdweb.com/models
+
+client = OpenAI(
+    base_url="https://nebula-api.thirdweb.com/",
+    api_key="",
+)
+
+models = client.models.list()
+print(models)
+```
