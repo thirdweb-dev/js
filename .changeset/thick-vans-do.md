@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/service-utils": patch
+"@thirdweb-dev/wagmi-adapter": patch
 ---
 
 Fix wagmi adapter usage with account factories
