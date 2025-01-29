@@ -1,13 +1,13 @@
 "use client";
 
+import { Text, type TextProps } from "react-native";
 import { useAccountContext } from "../../../../core/account/provider.js";
 
 /**
  * @component
  * @wallet
  */
-export interface AccountAddressProps
-  extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+export interface AccountAddressProps extends Omit<TextProps, "children"> {
   /**
    * The function used to transform (format) the wallet address
    * Specifically useful for shortening the wallet.
@@ -15,6 +15,7 @@ export interface AccountAddressProps
    * This function should take in a string and output a string
    */
   formatFn?: (str: string) => string;
+  className?: string;
 }
 
 /**
@@ -60,5 +61,5 @@ export function AccountAddress({
 }: AccountAddressProps) {
   const { address } = useAccountContext();
   const value = formatFn ? formatFn(address) : address;
-  return <span {...restProps}>{value}</span>;
+  return <Text {...restProps}>{value}</Text>;
 }

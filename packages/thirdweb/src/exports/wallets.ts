@@ -47,6 +47,8 @@ export {
    */
   type PrivateKeyToAccountOptions as PrivateKeyAccountOptions,
 } from "../wallets/private-key.js";
+// generate a random private key
+export { randomPrivateKey } from "ox/Secp256k1";
 
 export type {
   WalletId,

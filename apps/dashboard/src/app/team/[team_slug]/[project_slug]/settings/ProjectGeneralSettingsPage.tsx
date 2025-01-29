@@ -1,12 +1,21 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,13 +23,14 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import type { ApiKey, UpdateKeyInput } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   useRevokeApiKey,
   useUpdateApiKey,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseMutationResult } from "@tanstack/react-query";
+import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import {
   type ServiceName,
@@ -28,8 +38,13 @@ import {
 } from "@thirdweb-dev/service-utils";
 import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon } from "lucide-react";
+import {
+  CircleAlertIcon,
+  ExternalLinkIcon,
+  RefreshCcwIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,11 +62,20 @@ type EditProjectUIPaths = {
   afterDeleteRedirectTo: string;
 };
 
+type RotateSecretKeyAPIReturnType = {
+  data: {
+    secret: string;
+    secretMasked: string;
+    secretHash: string;
+  };
+};
+
 export function ProjectGeneralSettingsPage(props: {
   apiKey: ApiKey;
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
   showNebulaSettings: boolean;
+  projectId: string;
 }) {
   const updateMutation = useUpdateApiKey();
   const deleteMutation = useRevokeApiKey();
@@ -64,6 +88,24 @@ export function ProjectGeneralSettingsPage(props: {
       paths={props.paths}
       onKeyUpdated={props.onKeyUpdated}
       showNebulaSettings={props.showNebulaSettings}
+      rotateSecretKey={async () => {
+        const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
+          pathname: "/v2/keys/rotate-secret-key",
+          method: "POST",
+          body: JSON.stringify({
+            projectId: props.projectId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(res.error);
+        }
+
+        return res.data;
+      }}
     />
   );
 }
@@ -84,6 +126,7 @@ interface EditApiKeyProps {
   paths: EditProjectUIPaths;
   onKeyUpdated: (() => void) | undefined;
   showNebulaSettings: boolean;
+  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
 }
 
 type UpdateAPIForm = UseFormReturn<ProjectSettingsPageFormSchema>;
@@ -216,7 +259,10 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
             handleSubmit={handleSubmit}
           />
 
-          <APIKeyDetails apiKey={apiKey} />
+          <APIKeyDetails
+            apiKey={apiKey}
+            rotateSecretKey={props.rotateSecretKey}
+          />
 
           <AllowedDomainsSetting
             form={form}
@@ -609,10 +655,13 @@ function EnabledServicesSetting(props: {
 
 function APIKeyDetails({
   apiKey,
+  rotateSecretKey,
 }: {
+  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
   apiKey: ApiKey;
 }) {
   const { createdAt, updatedAt, lastAccessedAt } = apiKey;
+  const [secretKeyMasked, setSecretKeyMasked] = useState(apiKey.secretMasked);
 
   return (
     <div className="flex flex-col gap-6 rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
@@ -632,7 +681,7 @@ function APIKeyDetails({
       </div>
 
       {/* NOTE: for very old api keys the secret might be `null`, if that's the case we skip it */}
-      {apiKey.secretMasked && (
+      {secretKeyMasked && (
         <div>
           <h3>Secret Key</h3>
           <p className="mb-2 text-muted-foreground text-sm">
@@ -641,8 +690,17 @@ function APIKeyDetails({
             the time of creation for the full secret key.
           </p>
 
-          <div className="max-w-[350px] rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
-            {apiKey.secretMasked}
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm lg:w-[350px]">
+              {secretKeyMasked}
+            </div>
+
+            <RotateSecretKeyButton
+              rotateSecretKey={rotateSecretKey}
+              onSuccess={(data) => {
+                setSecretKeyMasked(data.data.secretMasked);
+              }}
+            />
           </div>
         </div>
       )}
@@ -724,5 +782,216 @@ function DeleteProject(props: {
       isPending={deleteMutation.isPending}
       title="Delete Project"
     />
+  );
+}
+
+function RotateSecretKeyButton(props: {
+  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isModalCloseAllowed, setIsModalCloseAllowed] = useState(true);
+  return (
+    <Dialog
+      open={isOpen}
+      onOpenChange={(v) => {
+        if (!isModalCloseAllowed) {
+          return;
+        }
+        setIsOpen(v);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
+          onClick={() => setIsOpen(true)}
+        >
+          <RefreshCcwIcon className="size-4" />
+          Rotate Secret Key
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent
+        className="overflow-hidden p-0"
+        dialogCloseClassName={cn(!isModalCloseAllowed && "hidden")}
+      >
+        <RotateSecretKeyModalContent
+          rotateSecretKey={props.rotateSecretKey}
+          closeModal={() => {
+            setIsOpen(false);
+            setIsModalCloseAllowed(true);
+          }}
+          disableModalClose={() => setIsModalCloseAllowed(false)}
+          onSuccess={props.onSuccess}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+type RotateSecretKeyScreen =
+  | { id: "initial" }
+  | { id: "save-newkey"; secretKey: string };
+
+function RotateSecretKeyModalContent(props: {
+  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  closeModal: () => void;
+  disableModalClose: () => void;
+  onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
+}) {
+  const [screen, setScreen] = useState<RotateSecretKeyScreen>({
+    id: "initial",
+  });
+
+  if (screen.id === "save-newkey") {
+    return (
+      <SaveNewKeyScreen
+        secretKey={screen.secretKey}
+        closeModal={props.closeModal}
+      />
+    );
+  }
+
+  if (screen.id === "initial") {
+    return (
+      <RotateSecretKeyInitialScreen
+        rotateSecretKey={props.rotateSecretKey}
+        onSuccess={(data) => {
+          props.disableModalClose();
+          props.onSuccess(data);
+          setScreen({ id: "save-newkey", secretKey: data.data.secret });
+        }}
+        closeModal={props.closeModal}
+      />
+    );
+  }
+
+  return null;
+}
+
+function RotateSecretKeyInitialScreen(props: {
+  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
+  closeModal: () => void;
+}) {
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const rotateKeyMutation = useMutation({
+    mutationFn: props.rotateSecretKey,
+    onSuccess: (data) => {
+      props.onSuccess(data);
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error("Failed to rotate secret key");
+    },
+  });
+  return (
+    <div>
+      <div className="flex flex-col p-6">
+        <DialogHeader>
+          <DialogTitle>Rotate Secret Key</DialogTitle>
+        </DialogHeader>
+
+        <div className="h-6" />
+
+        <Alert variant="destructive">
+          <CircleAlertIcon className="size-5" />
+          <AlertTitle>Current secret key will stop working</AlertTitle>
+          <AlertDescription>
+            Rotating the secret key will invalidate the current secret key and
+            generate a new one. This action is irreversible.
+          </AlertDescription>
+        </Alert>
+
+        <div className="h-4" />
+
+        <CheckboxWithLabel className="text-foreground">
+          <Checkbox
+            checked={isConfirmed}
+            onCheckedChange={(v) => setIsConfirmed(!!v)}
+          />
+          I understand the consequences of rotating the secret key
+        </CheckboxWithLabel>
+      </div>
+
+      <div className="flex justify-end gap-3 border-t bg-card p-6">
+        <Button variant="outline" onClick={props.closeModal}>
+          Close
+        </Button>
+        <Button
+          variant="destructive"
+          className="gap-2"
+          disabled={!isConfirmed || rotateKeyMutation.isPending}
+          onClick={() => {
+            rotateKeyMutation.mutate();
+          }}
+        >
+          {rotateKeyMutation.isPending ? (
+            <Spinner className="size-4" />
+          ) : (
+            <RefreshCcwIcon className="size-4" />
+          )}
+          Rotate Secret Key
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function SaveNewKeyScreen(props: {
+  secretKey: string;
+  closeModal: () => void;
+}) {
+  const [isSecretStored, setIsSecretStored] = useState(false);
+  return (
+    <div className="flex min-w-0 flex-col">
+      <div className="flex flex-col p-6">
+        <DialogHeader>
+          <DialogTitle>Save New Secret Key</DialogTitle>
+        </DialogHeader>
+
+        <div className="h-6" />
+
+        <CopyTextButton
+          textToCopy={props.secretKey}
+          className="!h-auto w-full justify-between bg-card px-3 py-3 font-mono"
+          textToShow={props.secretKey}
+          copyIconPosition="right"
+          tooltip="Copy Secret Key"
+        />
+        <div className="h-4" />
+
+        <Alert variant="destructive">
+          <AlertTitle>Do not share or expose your secret key</AlertTitle>
+          <AlertDescription>
+            <div className="mb-5">
+              Secret keys cannot be recovered. If you lose your secret key, you
+              will need to rotate the secret key or create a new Project.
+            </div>
+            <CheckboxWithLabel className="text-foreground">
+              <Checkbox
+                checked={isSecretStored}
+                onCheckedChange={(v) => {
+                  setIsSecretStored(!!v);
+                }}
+              />
+              I confirm that I've securely stored my secret key
+            </CheckboxWithLabel>
+          </AlertDescription>
+        </Alert>
+      </div>
+
+      <div className="flex justify-end gap-3 border-t bg-card p-6">
+        <Button
+          variant="outline"
+          className="gap-2"
+          disabled={!isSecretStored}
+          onClick={props.closeModal}
+        >
+          Close
+        </Button>
+      </div>
+    </div>
   );
 }

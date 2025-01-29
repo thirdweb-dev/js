@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
-import {} from "~test/react-render.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import {
   UNISWAPV3_FACTORY_CONTRACT,

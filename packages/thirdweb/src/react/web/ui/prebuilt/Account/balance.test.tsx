@@ -7,13 +7,13 @@ import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../../../../../chains/chain-definitions/sepolia.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { AccountProvider } from "../../../../core/account/provider.js";
 import {
-  AccountBalance,
   formatAccountFiatBalance,
   formatAccountTokenBalance,
   loadAccountBalance,
-} from "./balance.js";
-import { AccountProvider } from "./provider.js";
+} from "../../../../core/utils/account.js";
+import { AccountBalance } from "./balance.js";
 
 const queryClient = new QueryClient();
 
@@ -95,7 +95,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
     await expect(() =>
       loadAccountBalance({
         client: TEST_CLIENT,
-        address: "haha",
+        // biome-ignore lint/suspicious/noExplicitAny: for the test
+        address: "haha" as any,
         chain: ethereum,
       }),
     ).rejects.toThrowError("Invalid wallet address. Expected an EVM address");
@@ -106,7 +107,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
-        tokenAddress: "haha",
+        // biome-ignore lint/suspicious/noExplicitAny: for the test
+        tokenAddress: "haha" as any,
         chain: ethereum,
       }),
     ).rejects.toThrowError(
