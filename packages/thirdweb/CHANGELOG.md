@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.87.1
+
+### Patch Changes
+
+- [#6106](https://github.com/thirdweb-dev/js/pull/6106) [`3361140`](https://github.com/thirdweb-dev/js/commit/33611409b0efd58803be4a96194f5872ddf4bde0) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6105](https://github.com/thirdweb-dev/js/pull/6105) [`ab55aec`](https://github.com/thirdweb-dev/js/commit/ab55aec10ccb078add40bd774d157bc0f19ab0bf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow connecting wallets without setting them as active with useConnect
+
 ## 5.87.0
 
 ### Minor Changes
