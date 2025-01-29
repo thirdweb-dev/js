@@ -37,9 +37,8 @@ export function TransactionModal(props: ModalProps) {
   useQuery({
     queryKey: ["transaction-modal-event"],
     queryFn: () => {
-      // Query data cannot be undefined, return null
       if (!account || !wallet) {
-        return null;
+        throw new Error(); // never happens, because enabled is false
       }
       trackPayEvent({
         client: props.client,
@@ -51,7 +50,7 @@ export function TransactionModal(props: ModalProps) {
 
       return null;
     },
-    enabled: !!wallet,
+    enabled: !!wallet && !!account,
   });
 
   return (
