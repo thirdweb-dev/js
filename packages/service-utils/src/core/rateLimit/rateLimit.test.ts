@@ -1,17 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { validProjectResponse, validServiceConfig } from "../../mocks.js";
-import { updateRateLimitedAt } from "../api.js";
+import { validServiceConfig, validTeamResponse } from "../../mocks.js";
 import { rateLimit } from "./index.js";
 
 const mockRedis = {
   incr: vi.fn(),
   expire: vi.fn(),
 };
-
-// Mocking the updateRateLimitedAt function
-vi.mock("../../../src/core/api", () => ({
-  updateRateLimitedAt: vi.fn().mockResolvedValue({}),
-}));
 
 describe("rateLimit", () => {
   beforeEach(() => {
@@ -27,7 +21,7 @@ describe("rateLimit", () => {
 
   it("should not rate limit if service scope is not in rate limits", async () => {
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 0,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
@@ -44,7 +38,7 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(50); // Current count is 50 requests in 10 seconds.
 
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
@@ -55,7 +49,7 @@ describe("rateLimit", () => {
       requestCount: 50,
       rateLimit: 50,
     });
-    expect(updateRateLimitedAt).not.toHaveBeenCalled();
+
     expect(mockRedis.expire).not.toHaveBeenCalled();
   });
 
@@ -63,7 +57,7 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(51);
 
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
@@ -77,7 +71,7 @@ describe("rateLimit", () => {
       errorMessage: `You've exceeded your storage rate limit at 5 reqs/sec. To get higher rate limits, contact us at https://thirdweb.com/contact-us.`,
       errorCode: "RATE_LIMIT_EXCEEDED",
     });
-    expect(updateRateLimitedAt).toHaveBeenCalled();
+
     expect(mockRedis.expire).not.toHaveBeenCalled();
   });
 
@@ -85,7 +79,7 @@ describe("rateLimit", () => {
     mockRedis.incr.mockResolvedValue(1);
 
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
@@ -104,7 +98,7 @@ describe("rateLimit", () => {
     vi.spyOn(global.Math, "random").mockReturnValue(0.08);
 
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
@@ -127,7 +121,7 @@ describe("rateLimit", () => {
     vi.spyOn(global.Math, "random").mockReturnValue(0.15);
 
     const result = await rateLimit({
-      project: validProjectResponse,
+      team: validTeamResponse,
       limitPerSecond: 5,
       serviceConfig: validServiceConfig,
       redis: mockRedis,
