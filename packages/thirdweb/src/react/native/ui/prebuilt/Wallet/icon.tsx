@@ -1,15 +1,13 @@
 "use client";
 
 import type { UseQueryOptions } from "@tanstack/react-query";
-import type { JSX } from "react";
+import { Image, type ImageProps } from "react-native";
+import { SvgXml, type XmlProps } from "react-native-svg";
 import type { AuthOption } from "../../../../../wallets/types.js";
-import {
-  getSocialIcon,
-  useWalletIcon,
-} from "../../../../core/utils/walletIcon.js";
+import { useWalletIcon } from "../../../../core/utils/walletIcon.js";
+import { getAuthProviderImage } from "../../components/WalletImage.js";
 
-export interface WalletIconProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+export interface WalletIconProps extends Omit<ImageProps, "uri"> {
   /**
    * This component will be shown while the icon of the wallet is being fetched
    * If not passed, the component will return `null`.
@@ -20,7 +18,7 @@ export interface WalletIconProps
    * <WalletIcon loadingComponent={<Spinner />} />
    * ```
    */
-  loadingComponent?: JSX.Element;
+  loadingComponent?: React.ComponentType;
   /**
    * This component will be shown if the icon fails to be retrieved
    * If not passed, the component will return `null`.
@@ -33,7 +31,7 @@ export interface WalletIconProps
    * />
    * ```
    */
-  fallbackComponent?: JSX.Element;
+  fallbackComponent?: React.ComponentType;
   /**
    * Optional `useQuery` params
    */
@@ -93,12 +91,11 @@ export function WalletIcon({
   if (!imageQuery.data) {
     return fallbackComponent || null;
   }
-  return <img src={imageQuery.data} {...restProps} alt={restProps.alt} />;
+  return <Image source={{ uri: imageQuery.data }} {...restProps} />;
 }
 
-export interface SocialIconProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
-  provider: AuthOption | string;
+export interface SocialIconProps extends Omit<XmlProps, "xml"> {
+  provider: AuthOption | (string & {});
 }
 
 /**
@@ -122,6 +119,6 @@ export interface SocialIconProps
  * @beta
  */
 export function SocialIcon({ provider, ...restProps }: SocialIconProps) {
-  const src = getSocialIcon(provider);
-  return <img src={src} {...restProps} alt={restProps.alt} />;
+  const src = getAuthProviderImage(provider);
+  return <SvgXml xml={src} {...restProps} />;
 }

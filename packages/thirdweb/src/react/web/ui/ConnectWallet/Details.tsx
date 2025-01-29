@@ -40,6 +40,7 @@ import type {
   EcosystemWalletId,
   WalletId,
 } from "../../../../wallets/wallet-types.js";
+import { AccountProvider } from "../../../core/account/provider.js";
 import {
   CustomThemeProvider,
   parseTheme,
@@ -67,6 +68,11 @@ import { useAdminWallet } from "../../../core/hooks/wallets/useAdminWallet.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
+import {
+  type AccountBalanceInfo,
+  formatAccountFiatBalance,
+  formatAccountTokenBalance,
+} from "../../../core/utils/account.js";
 import type {
   SupportedNFTs,
   SupportedTokens,
@@ -91,15 +97,9 @@ import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import { AccountAddress } from "../prebuilt/Account/address.js";
 import { AccountAvatar } from "../prebuilt/Account/avatar.js";
-import {
-  AccountBalance,
-  type AccountBalanceInfo,
-  formatAccountFiatBalance,
-  formatAccountTokenBalance,
-} from "../prebuilt/Account/balance.js";
+import { AccountBalance } from "../prebuilt/Account/balance.js";
 import { AccountBlobbie } from "../prebuilt/Account/blobbie.js";
 import { AccountName } from "../prebuilt/Account/name.js";
-import { AccountProvider } from "../prebuilt/Account/provider.js";
 import { ChainIcon } from "../prebuilt/Chain/icon.js";
 import { ChainName } from "../prebuilt/Chain/name.js";
 import { ChainProvider } from "../prebuilt/Chain/provider.js";

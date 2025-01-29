@@ -1,8 +1,7 @@
 "use client";
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
-import type React from "react";
-import type { JSX } from "react";
+import { Image, type ImageProps } from "react-native";
 import { resolveAvatar } from "../../../../../extensions/ens/resolve-avatar.js";
 import {
   type ResolveNameOptions,
@@ -18,7 +17,7 @@ import { useAccountContext } from "../../../../core/account/provider.js";
  * @wallet
  */
 export interface AccountAvatarProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src">,
+  extends Omit<ImageProps, "source">,
     Omit<ResolveNameOptions, "client" | "address"> {
   /**
    * Use this prop to prioritize the social profile that you want to display
@@ -46,7 +45,7 @@ export interface AccountAvatarProps
    * <AccountAvatar loadingComponent={<Spinner />} />
    * ```
    */
-  loadingComponent?: JSX.Element;
+  loadingComponent?: React.ComponentType;
   /**
    * This component will be shown if the request for fetching the avatar is done
    * but could not retreive any result.
@@ -59,7 +58,7 @@ export interface AccountAvatarProps
    * <AccountAvatar fallbackComponent={<DummyImage />} />
    * ```
    */
-  fallbackComponent?: JSX.Element;
+  fallbackComponent?: React.ComponentType;
 
   /**
    * Optional query options for `useQuery`
@@ -222,5 +221,5 @@ export function AccountAvatar({
     return fallbackComponent || null;
   }
 
-  return <img src={avatarQuery.data} {...restProps} alt={restProps.alt} />;
+  return <Image source={{ uri: avatarQuery.data }} {...restProps} />;
 }

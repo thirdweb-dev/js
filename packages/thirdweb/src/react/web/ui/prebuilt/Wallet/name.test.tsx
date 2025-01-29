@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { render, waitFor } from "~test/react-render.js";
 import { getFunctionId } from "../../../../../utils/function-id.js";
-import { WalletName, fetchWalletName, getQueryKeys } from "./name.js";
-import { WalletProvider } from "./provider.js";
+import {
+  fetchWalletName,
+  getQueryKeys,
+} from "../../../../core/utils/walletname.js";
+import { WalletProvider } from "../../../../core/wallet/provider.js";
+import { WalletName } from "./name.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("WalletName", () => {
   it("fetchWalletName: should fetch wallet name from id", async () => {

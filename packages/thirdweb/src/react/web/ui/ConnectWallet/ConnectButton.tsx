@@ -3,6 +3,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
+import { AccountProvider } from "../../../core/account/provider.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -23,7 +24,6 @@ import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { AccountProvider } from "../prebuilt/Account/provider.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { LockIcon } from "./icons/LockIcon.js";
