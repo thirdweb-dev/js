@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.7.3
+
+### Patch Changes
+
+- [#6084](https://github.com/thirdweb-dev/js/pull/6084) [`b5e327e`](https://github.com/thirdweb-dev/js/commit/b5e327e5ec745ce1beb9a79404fa5b11d0c5588e) Thanks [@jnsdls](https://github.com/jnsdls)! - add `billingPlanVersion` to `TeamResponse`
+
+## 0.7.2
+
+### Patch Changes
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
 ## 0.7.1
 
 ### Patch Changes

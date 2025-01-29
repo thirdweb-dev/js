@@ -1,5 +1,11 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.7
+
+### Patch Changes
+
+- [#6079](https://github.com/thirdweb-dev/js/pull/6079) [`1616b7f`](https://github.com/thirdweb-dev/js/commit/1616b7f6198d43fc48a1269b1cca93958cbf7dba) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
 ## 0.2.6
 
 ## 0.2.5

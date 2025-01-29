@@ -1,10 +1,9 @@
 "use client";
 
-import type { Address } from "abitype";
 import type React from "react";
 import { createContext, useContext } from "react";
-import type { ThirdwebClient } from "../../../../../client/client.js";
-
+import type { ThirdwebClient } from "../../../client/client.js";
+import { isAddress } from "../../../utils/address.js";
 /**
  * Props for the <AccountProvider /> component
  * @component
@@ -14,7 +13,7 @@ export type AccountProviderProps = {
   /**
    * The user's wallet address
    */
-  address: Address;
+  address: string;
   /**
    * thirdweb Client
    */
@@ -35,7 +34,7 @@ const AccountProviderContext = /* @__PURE__ */ createContext<
  * ```tsx
  * import { AccountProvider, AccountAvatar, AccountName, AccountAddress  } from "thirdweb/react";
  *
- * <AccountProvider>
+ * <AccountProvider address="0x..." client={client}>
  *   <AccountAvatar />
  *   <AccountName />
  *   <AccountAddress />
@@ -53,6 +52,9 @@ export function AccountProvider(
     throw new Error(
       "AccountProvider: No address passed. Ensure an address is always provided to the AccountProvider",
     );
+  }
+  if (!isAddress(props.address)) {
+    throw new Error(`AccountProvider: Invalid address: ${props.address}`);
   }
   return (
     <AccountProviderContext.Provider value={props}>

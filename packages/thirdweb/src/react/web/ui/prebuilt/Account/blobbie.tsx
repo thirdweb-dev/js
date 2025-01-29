@@ -1,7 +1,7 @@
 "use client";
 
+import { useAccountContext } from "../../../../core/account/provider.js";
 import { Blobbie, type BlobbieProps } from "../../ConnectWallet/Blobbie.js";
-import { useAccountContext } from "./provider.js";
 
 /**
  * A wrapper for the Blobbie component

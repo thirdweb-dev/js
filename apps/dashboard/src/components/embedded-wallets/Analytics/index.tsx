@@ -20,7 +20,10 @@ export async function InAppWalletAnalytics({
     from: range.from,
     to: range.to,
     period: interval,
-  }).catch(() => null);
+  }).catch((error) => {
+    console.error(error);
+    return [];
+  });
 
   return (
     <div>

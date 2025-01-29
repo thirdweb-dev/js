@@ -60,6 +60,16 @@ function Story() {
           payConfig: "/payConfig",
         }}
         onKeyUpdated={undefined}
+        rotateSecretKey={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return {
+            data: {
+              secret: new Array(86).fill("x").join(""),
+              secretHash: new Array(64).fill("x").join(""),
+              secretMasked: "123...4567",
+            },
+          };
+        }}
         showNebulaSettings={false}
       />
 
