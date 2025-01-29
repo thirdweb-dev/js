@@ -110,10 +110,14 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Plugins",
+      name: "Plugins & Integrations",
       href: "/nebula/plugins",
       icon: <Blocks />,
       links: [
+        {
+          name: "OpenAI",
+          href: "/nebula/plugins/openai",
+        },
         {
           name: "Eliza",
           href: "/nebula/plugins/eliza",
