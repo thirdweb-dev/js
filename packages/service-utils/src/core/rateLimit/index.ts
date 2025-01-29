@@ -1,8 +1,4 @@
-import {
-  type CoreServiceConfig,
-  type ProjectResponse,
-  updateRateLimitedAt,
-} from "../api.js";
+import type { CoreServiceConfig, TeamResponse } from "../api.js";
 import type { RateLimitResult } from "./types.js";
 
 const RATE_LIMIT_WINDOW_SECONDS = 10;
@@ -14,7 +10,7 @@ type IRedis = {
 };
 
 export async function rateLimit(args: {
-  project?: ProjectResponse;
+  team: TeamResponse;
   limitPerSecond: number;
   serviceConfig: CoreServiceConfig;
   redis: IRedis;
@@ -25,13 +21,7 @@ export async function rateLimit(args: {
    */
   sampleRate?: number;
 }): Promise<RateLimitResult> {
-  const {
-    project,
-    limitPerSecond,
-    serviceConfig,
-    redis,
-    sampleRate = 1.0,
-  } = args;
+  const { team, limitPerSecond, serviceConfig, redis, sampleRate = 1.0 } = args;
 
   const shouldSampleRequest = Math.random() < sampleRate;
   if (!shouldSampleRequest) {
@@ -57,7 +47,7 @@ export async function rateLimit(args: {
   const timestampWindow =
     Math.floor(Date.now() / (1000 * RATE_LIMIT_WINDOW_SECONDS)) *
     RATE_LIMIT_WINDOW_SECONDS;
-  const key = `rate-limit:${serviceScope}:${project?.id}:${timestampWindow}`;
+  const key = `rate-limit:${serviceScope}:${team.id}:${timestampWindow}`;
 
   // Increment and get the current request count in this window.
   const requestCount = await redis.incr(key);
@@ -71,17 +61,6 @@ export async function rateLimit(args: {
     limitPerSecond * sampleRate * RATE_LIMIT_WINDOW_SECONDS;
 
   if (requestCount > limitPerWindow) {
-    /**
-     * Report rate limit hits.
-     * Only track rate limit when its hit for the first time.
-     * Not waiting for tracking to complete as user doesn't need to wait.
-     */
-    if (requestCount === limitPerWindow + 1 && project?.id) {
-      updateRateLimitedAt(project.id, serviceConfig).catch(() => {
-        // no-op
-      });
-    }
-
     return {
       rateLimited: true,
       requestCount,
