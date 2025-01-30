@@ -28,6 +28,7 @@ export function useGetRecentTransactions(chainId: number, address: string) {
           value: toEther(BigInt(tx.value)).toString(),
           to: tx.to_address || undefined,
           from: tx.from_address,
+          // TODO: fix method retrieval
           method: tx.function_selector || undefined,
           date: new Date(tx.block_timestamp * 1000).toLocaleString(),
         };
