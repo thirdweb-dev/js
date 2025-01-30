@@ -1,13 +1,17 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import {
+  CompressionCodecs,
   CompressionTypes,
   Kafka,
   type Producer,
   type ProducerConfig,
 } from "kafkajs";
+import LZ4Codec from "kafkajs-lz4";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
+
+CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
