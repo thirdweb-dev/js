@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.87.2
+
+### Patch Changes
+
+- [#6104](https://github.com/thirdweb-dev/js/pull/6104) [`bf43196`](https://github.com/thirdweb-dev/js/commit/bf431961ec685deefc0089b8d644c35f849fbf86) Thanks [@MananTank](https://github.com/MananTank)! - Fix thirdweb Pay Modal logging react-query error when opened
+
 ## 5.87.1
 
 ### Patch Changes
