@@ -1,11 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import {
+  CompressionCodecs,
   CompressionTypes,
   Kafka,
   type Producer,
   type ProducerConfig,
 } from "kafkajs";
+import LZ4Codec from "kafkajs-lz4";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
@@ -26,6 +28,7 @@ export class UsageV2Producer {
   private kafka: Kafka;
   private producer: Producer | null = null;
   private topic: string;
+  private compression: CompressionTypes;
 
   constructor(config: {
     /**
@@ -40,14 +43,27 @@ export class UsageV2Producer {
      * The product "source" where usage is coming from.
      */
     productName: ServiceName;
+    /**
+     * The compression algorithm to use.
+     */
+    compression?: CompressionTypes;
 
     username: string;
     password: string;
   }) {
+    const {
+      producerName,
+      environment,
+      productName,
+      compression = CompressionTypes.LZ4,
+      username,
+      password,
+    } = config;
+
     this.kafka = new Kafka({
-      clientId: `${config.producerName}-${config.environment}`,
+      clientId: `${producerName}-${environment}`,
       brokers:
-        config.environment === "production"
+        environment === "production"
           ? ["warpstream.thirdweb.xyz:9092"]
           : ["warpstream-dev.thirdweb.xyz:9092"],
       ssl: {
@@ -57,12 +73,13 @@ export class UsageV2Producer {
       },
       sasl: {
         mechanism: "plain",
-        username: config.username,
-        password: config.password,
+        username,
+        password,
       },
     });
 
-    this.topic = getTopicName(config.productName);
+    this.topic = getTopicName(productName);
+    this.compression = compression;
   }
 
   /**
@@ -70,6 +87,10 @@ export class UsageV2Producer {
    * This must be called before calling `sendEvents()`.
    */
   async init(configOverrides?: ProducerConfig) {
+    if (this.compression === CompressionTypes.LZ4) {
+      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
+    }
+
     this.producer = this.kafka.producer({
       allowAutoTopicCreation: false,
       ...configOverrides,
@@ -95,7 +116,6 @@ export class UsageV2Producer {
     configOverrides?: {
       acks?: number;
       timeout?: number;
-      compression?: CompressionTypes;
     },
   ): Promise<void> {
     if (!this.producer) {
@@ -121,7 +141,7 @@ export class UsageV2Producer {
       })),
       acks: -1, // All brokers must acknowledge
       timeout: 10_000, // 10 seconds
-      compression: CompressionTypes.LZ4,
+      compression: this.compression,
       ...configOverrides,
     });
   }
