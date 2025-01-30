@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
@@ -15,6 +16,7 @@ import { useChainContext } from "./provider.js";
  */
 export interface ChainNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   /**
    * This prop can be a string or a (async) function that resolves to a string, representing the name of the chain
    * This is particularly useful if you already have a way to fetch the chain name.
@@ -153,6 +155,7 @@ export function ChainName({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  asChild,
   ...restProps
 }: ChainNameProps) {
   const { chain } = useChainContext();
@@ -172,7 +175,8 @@ export function ChainName({
 
   const displayValue = formatFn ? formatFn(nameQuery.data) : nameQuery.data;
 
-  return <span {...restProps}>{displayValue}</span>;
+  const Comp = asChild ? Slot.Root : "span";
+  return <Comp {...restProps}>{displayValue}</Comp>;
 }
 
 /**

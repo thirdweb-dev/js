@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
@@ -20,6 +21,7 @@ import { useTokenContext } from "./provider.js";
  */
 export interface TokenNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   /**
    * This prop can be a string or a (async) function that resolves to a string, representing the name of the token
    * This is particularly useful if you already have a way to fetch the token name.
@@ -156,6 +158,7 @@ export function TokenName({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  asChild,
   ...restProps
 }: TokenNameProps) {
   const { address, client, chain } = useTokenContext();
@@ -174,11 +177,13 @@ export function TokenName({
     return fallbackComponent || null;
   }
 
+  const Comp = asChild ? Slot.Root : "span";
+
   if (formatFn && typeof formatFn === "function") {
-    return <span {...restProps}>{formatFn(nameQuery.data)}</span>;
+    return <Comp {...restProps}>{formatFn(nameQuery.data)}</Comp>;
   }
 
-  return <span {...restProps}>{nameQuery.data}</span>;
+  return <Comp {...restProps}>{nameQuery.data}</Comp>;
 }
 
 /**

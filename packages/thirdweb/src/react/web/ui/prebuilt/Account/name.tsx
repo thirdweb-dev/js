@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
@@ -19,6 +20,7 @@ import { useAccountContext } from "../../../../core/account/provider.js";
 export interface AccountNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children">,
     Omit<ResolveNameOptions, "client" | "address"> {
+  asChild?: boolean;
   /**
    * A function used to transform (format) the name of the account.
    * it should take in a string and output a string.
@@ -134,6 +136,7 @@ export function AccountName({
   queryOptions,
   loadingComponent,
   fallbackComponent,
+  asChild,
   ...restProps
 }: AccountNameProps) {
   const { address, client } = useAccountContext();
@@ -177,5 +180,6 @@ export function AccountName({
     return fallbackComponent || null;
   }
 
-  return <span {...restProps}>{nameQuery.data}</span>;
+  const Comp = asChild ? Slot.Root : "span";
+  return <Comp {...restProps}>{nameQuery.data}</Comp>;
 }

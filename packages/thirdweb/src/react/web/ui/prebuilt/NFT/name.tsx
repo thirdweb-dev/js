@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import type { ThirdwebContract } from "../../../../../contract/contract.js";
@@ -9,6 +10,7 @@ import { getNFTInfo } from "./utils.js";
 
 export interface NFTNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   loadingComponent?: JSX.Element;
   fallbackComponent?: JSX.Element;
   /**
@@ -89,6 +91,7 @@ export function NFTName({
   fallbackComponent,
   queryOptions,
   nameResolver,
+  asChild,
   ...restProps
 }: NFTNameProps) {
   const { contract, tokenId } = useNFTContext();
@@ -112,7 +115,8 @@ export function NFTName({
   if (!nameQuery.data) {
     return fallbackComponent || null;
   }
-  return <span {...restProps}>{nameQuery.data}</span>;
+  const Comp = asChild ? Slot.Root : "span";
+  return <Comp {...restProps}>{nameQuery.data}</Comp>;
 }
 
 /**

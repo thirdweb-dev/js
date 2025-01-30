@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { useAccountContext } from "../../../../core/account/provider.js";
 
 /**
@@ -8,6 +9,7 @@ import { useAccountContext } from "../../../../core/account/provider.js";
  */
 export interface AccountAddressProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   /**
    * The function used to transform (format) the wallet address
    * Specifically useful for shortening the wallet.
@@ -56,9 +58,11 @@ export interface AccountAddressProps
  */
 export function AccountAddress({
   formatFn,
+  asChild,
   ...restProps
 }: AccountAddressProps) {
   const { address } = useAccountContext();
   const value = formatFn ? formatFn(address) : address;
-  return <span {...restProps}>{value}</span>;
+  const Comp = asChild ? Slot.Root : "span";
+  return <Comp {...restProps}>{value}</Comp>;
 }

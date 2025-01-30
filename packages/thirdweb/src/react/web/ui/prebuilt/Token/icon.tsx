@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { getChainMetadata } from "../../../../../chains/utils.js";
@@ -17,6 +18,7 @@ import { useTokenContext } from "./provider.js";
  */
 export interface TokenIconProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  asChild?: boolean;
   /**
    * This prop can be a string or a (async) function that resolves to a string, representing the icon url of the token
    * This is particularly useful if you already have a way to fetch the token icon.
@@ -114,6 +116,7 @@ export function TokenIcon({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  asChild,
   ...restProps
 }: TokenIconProps) {
   const { address, client, chain } = useTokenContext();
@@ -180,5 +183,6 @@ export function TokenIcon({
     return fallbackComponent || null;
   }
 
-  return <img src={iconQuery.data} {...restProps} alt={restProps.alt} />;
+  const Comp = asChild ? Slot.Root : "img";
+  return <Comp src={iconQuery.data} {...restProps} alt={restProps.alt} />;
 }

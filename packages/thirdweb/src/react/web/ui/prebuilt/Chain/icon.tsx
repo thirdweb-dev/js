@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type { JSX } from "react";
 import type { Chain } from "../../../../../chains/types.js";
@@ -16,6 +17,7 @@ import { useChainContext } from "./provider.js";
  */
 export interface ChainIconProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  asChild?: boolean;
   /**
    * You need a ThirdwebClient to resolve the icon which is hosted on IPFS.
    * (since most chain icons are hosted on IPFS, loading them via thirdweb gateway will ensure better performance)
@@ -119,6 +121,7 @@ export function ChainIcon({
   fallbackComponent,
   queryOptions,
   client,
+  asChild,
   ...restProps
 }: ChainIconProps) {
   const { chain } = useChainContext();
@@ -136,7 +139,8 @@ export function ChainIcon({
     return fallbackComponent || null;
   }
 
-  return <img src={iconQuery.data} {...restProps} alt={restProps.alt} />;
+  const Comp = asChild ? Slot.Root : "img";
+  return <Comp src={iconQuery.data} {...restProps} alt={restProps.alt} />;
 }
 
 /**

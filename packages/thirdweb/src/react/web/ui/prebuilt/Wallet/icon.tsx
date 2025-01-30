@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import type { JSX } from "react";
 import type { AuthOption } from "../../../../../wallets/types.js";
@@ -10,6 +11,7 @@ import {
 
 export interface WalletIconProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  asChild?: boolean;
   /**
    * This component will be shown while the icon of the wallet is being fetched
    * If not passed, the component will return `null`.
@@ -81,6 +83,7 @@ export interface WalletIconProps
  * @beta
  */
 export function WalletIcon({
+  asChild,
   loadingComponent,
   fallbackComponent,
   queryOptions,
@@ -93,11 +96,14 @@ export function WalletIcon({
   if (!imageQuery.data) {
     return fallbackComponent || null;
   }
-  return <img src={imageQuery.data} {...restProps} alt={restProps.alt} />;
+
+  const Comp = asChild ? Slot.Root : "img";
+  return <Comp src={imageQuery.data} {...restProps} alt={restProps.alt} />;
 }
 
 export interface SocialIconProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  asChild?: boolean;
   provider: AuthOption | string;
 }
 
@@ -121,7 +127,12 @@ export interface SocialIconProps
  * @wallet
  * @beta
  */
-export function SocialIcon({ provider, ...restProps }: SocialIconProps) {
+export function SocialIcon({
+  provider,
+  asChild,
+  ...restProps
+}: SocialIconProps) {
   const src = getSocialIcon(provider);
-  return <img src={src} {...restProps} alt={restProps.alt} />;
+  const Comp = asChild ? Slot.Root : "img";
+  return <Comp src={src} {...restProps} alt={restProps.alt} />;
 }

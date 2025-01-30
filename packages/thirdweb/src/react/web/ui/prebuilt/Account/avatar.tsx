@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
@@ -20,6 +21,7 @@ import { useAccountContext } from "../../../../core/account/provider.js";
 export interface AccountAvatarProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src">,
     Omit<ResolveNameOptions, "client" | "address"> {
+  asChild?: boolean;
   /**
    * Use this prop to prioritize the social profile that you want to display
    * This is useful for a wallet containing multiple social profiles.
@@ -159,6 +161,7 @@ export function AccountAvatar({
   loadingComponent,
   fallbackComponent,
   queryOptions,
+  asChild,
   ...restProps
 }: AccountAvatarProps) {
   const { address, client } = useAccountContext();
@@ -222,5 +225,6 @@ export function AccountAvatar({
     return fallbackComponent || null;
   }
 
-  return <img src={avatarQuery.data} {...restProps} alt={restProps.alt} />;
+  const Comp = asChild ? Slot.Root : "img";
+  return <Comp src={avatarQuery.data} {...restProps} alt={restProps.alt} />;
 }

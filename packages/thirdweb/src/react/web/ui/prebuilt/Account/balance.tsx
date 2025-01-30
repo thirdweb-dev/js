@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
 import type React from "react";
 import type { JSX } from "react";
@@ -22,6 +23,7 @@ import { formatAccountTokenBalance } from "../../../../core/utils/account.js";
  */
 export interface AccountBalanceProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   /**
    * The network to fetch balance on
    * If not passed, the component will use the current chain that the wallet is connected to (`useActiveWalletChain()`)
@@ -166,6 +168,7 @@ export function AccountBalance({
   queryOptions,
   formatFn,
   showBalanceInFiat,
+  asChild,
   ...restProps
 }: AccountBalanceProps) {
   const { address, client } = useAccountContext();
@@ -212,12 +215,13 @@ export function AccountBalance({
     );
   }
 
+  const Comp = asChild ? Slot.Root : "span";
   return (
-    <span {...restProps}>
+    <Comp {...restProps}>
       {formatAccountTokenBalance({
         ...balanceQuery.data,
         decimals: balanceQuery.data.balance < 1 ? 3 : 2,
       })}
-    </span>
+    </Comp>
   );
 }

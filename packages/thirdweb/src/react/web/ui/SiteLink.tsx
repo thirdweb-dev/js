@@ -1,4 +1,5 @@
 "use client";
+import * as Slot from "@radix-ui/react-slot";
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getLastAuthProvider } from "../../../react/core/utils/storage.js";
@@ -34,8 +35,10 @@ export function SiteLink({
   client,
   ecosystem,
   children,
+  asChild,
   ...props
 }: {
+  asChild?: boolean;
   href: string;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
@@ -82,9 +85,10 @@ export function SiteLink({
     url.searchParams.set("authCookie", authCookie);
   }
 
+  const Comp = asChild ? Slot.Root : "a";
   return (
-    <a href={encodeURI(url.toString())} {...props}>
+    <Comp href={encodeURI(url.toString())} {...props}>
       {children}
-    </a>
+    </Comp>
   );
 }

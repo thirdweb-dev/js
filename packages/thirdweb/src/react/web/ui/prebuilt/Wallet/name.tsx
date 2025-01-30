@@ -1,5 +1,6 @@
 "use client";
 
+import * as Slot from "@radix-ui/react-slot";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import type { JSX } from "react";
 import { useWalletName } from "../../../../core/utils/walletname.js";
@@ -11,6 +12,7 @@ import { useWalletName } from "../../../../core/utils/walletname.js";
  */
 export interface WalletNameProps
   extends Omit<React.HTMLAttributes<HTMLSpanElement>, "children"> {
+  asChild?: boolean;
   /**
    * This component will be shown while the name of the wallet name is being fetched
    * If not passed, the component will return `null`.
@@ -101,6 +103,7 @@ export function WalletName({
   fallbackComponent,
   queryOptions,
   formatFn,
+  asChild,
   ...restProps
 }: WalletNameProps) {
   const nameQuery = useWalletName({ queryOptions, formatFn });
@@ -110,5 +113,6 @@ export function WalletName({
   if (!nameQuery.data) {
     return fallbackComponent || null;
   }
-  return <span {...restProps}>{nameQuery.data}</span>;
+  const Comp = asChild ? Slot.Root : "span";
+  return <Comp {...restProps}>{nameQuery.data}</Comp>;
 }
