@@ -1,9 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import { Kafka, type Producer } from "kafkajs";
-import type { UsageV2Event } from "../core/usageV2.js";
-
-const TOPIC_USAGE_V2 = "usage_v2.raw_events";
+import type { ServiceName } from "src/core/services.js";
+import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -21,6 +20,7 @@ const TOPIC_USAGE_V2 = "usage_v2.raw_events";
 export class UsageV2Producer {
   private kafka: Kafka;
   private producer: Producer | null = null;
+  private productName: ServiceName;
 
   constructor(config: {
     /**
@@ -31,6 +31,10 @@ export class UsageV2Producer {
      * The environment the service is running in.
      */
     environment: "development" | "production";
+    /**
+     * The product "source" where usage is coming from.
+     */
+    productName: ServiceName;
 
     username: string;
     password: string;
@@ -52,6 +56,8 @@ export class UsageV2Producer {
         password: config.password,
       },
     });
+
+    this.productName = config.productName;
   }
 
   /**
@@ -82,27 +88,18 @@ export class UsageV2Producer {
 
     const parsedEvents = events.map((event) => {
       return {
+        ...event,
         id: event.id ?? randomUUID(),
         created_at: event.created_at ?? new Date(),
-        source: event.source,
-        action: event.action,
         // Remove the "team_" prefix, if any.
         team_id: event.team_id.startsWith("team_")
           ? event.team_id.slice(5)
           : event.team_id,
-        project_id: event.project_id,
-        sdk_name: event.sdk_name,
-        sdk_platform: event.sdk_platform,
-        sdk_version: event.sdk_version,
-        sdk_os: event.sdk_os,
-        product_name: event.product_name,
-        product_version: event.product_version,
-        data: JSON.stringify(event.data),
       };
     });
 
     await this.producer.send({
-      topic: TOPIC_USAGE_V2,
+      topic: getTopicName(this.productName),
       messages: parsedEvents.map((event) => ({
         value: JSON.stringify(event),
       })),
