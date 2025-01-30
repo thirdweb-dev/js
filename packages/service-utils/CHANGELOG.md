@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.2
+
+### Patch Changes
+
+- [#6113](https://github.com/thirdweb-dev/js/pull/6113) [`6818cba`](https://github.com/thirdweb-dev/js/commit/6818cbabf25ce73d09dfc971ae793cd9844ceca7) Thanks [@arcoraven](https://github.com/arcoraven)! - Change UsageV2 to per-product topics
+
 ## 0.8.1
 
 ### Patch Changes
