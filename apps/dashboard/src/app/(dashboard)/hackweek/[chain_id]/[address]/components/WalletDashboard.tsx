@@ -6,6 +6,7 @@ import { useGetRecentTransactions } from "../hooks/useGetRecentTransactions";
 import { mockWalletData } from "../utils/mockData";
 import { ActivityOverview } from "./ActivityOverview";
 import { NebulaInterface } from "./NebulaInterface";
+import { TimelineOverview } from "./TimelineOverview";
 import { TokenHoldings } from "./TokenHoldings";
 
 export function WalletDashboard(props: {
@@ -36,6 +37,11 @@ export function WalletDashboard(props: {
         />
       )}
 
+      <TimelineOverview
+        chain={props.chain}
+        address={props.address}
+        transactions={transactions}
+      />
       <ActivityOverview
         chain={props.chain}
         transactions={transactions}

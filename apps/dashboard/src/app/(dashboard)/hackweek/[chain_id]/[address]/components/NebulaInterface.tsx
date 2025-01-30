@@ -49,6 +49,9 @@ export function NebulaInterface({
   nfts,
   transactions,
 }: NebulaInterfaceProps) {
+  // DEBUG
+  return "Commented out";
+
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
     Array<{ text: string; timestamp: number; isUser: boolean }>
