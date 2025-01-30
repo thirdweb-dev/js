@@ -1,79 +1,79 @@
 import { Callout, Steps, Step, GithubTemplateCard } from "@doc";
 
-# Getting Started
+# Comenzando
 
-### Automatic Installation
+### Instalación Automática
 
-We recommend starting a new thirdweb React Native project using our CLI, which sets up everything automatically for you.
+Recomendamos comenzar un nuevo proyecto de thirdweb React Native utilizando nuestra CLI, que configura todo automáticamente por ti.
 
-In your CLI, run:
+En tu CLI, ejecuta:
 
 ```bash
 npx thirdweb create app --react-native
 ```
 
-or clone the [expo-starter](https://github.com/thirdweb-dev/expo-starter) repo using git.
+o clona el repositorio [expo-starter](https://github.com/thirdweb-dev/expo-starter) usando git.
 
 <GithubTemplateCard
 	title="Expo + thirdweb demo repo"
-	descrption="A starter template for using the thirdweb package in a React Native app"
+	descrption="Una plantilla de inicio para usar el paquete thirdweb en una aplicación React Native"
 	href="https://github.com/thirdweb-dev/expo-starter"
 />
 
-### Manual Installation
+### Instalación Manual
 
-To manually install the React Native SDK, you'll need to install the `@thirdweb/react-native-adapter` package from npm on top of the `thirdweb` package.
+Para instalar manualmente el SDK de React Native, necesitarás instalar el paquete `@thirdweb/react-native-adapter` desde npm, además del paquete `thirdweb`.
 
 <Steps>
-<Step title="Install the packages">
+<Step title="Instalar los paquetes">
 
-Using your favorite package manager or expo, install all the require dependencies
+Usando tu administrador de paquetes favorito o expo, instala todas las dependencias requeridas.
 
 ```shell
 npx expo install thirdweb @thirdweb-dev/react-native-adapter
 ```
 
-Since react native requires installing native dependencies directly, you also have to install these required peer dependencies:
+Dado que React Native requiere la instalación directa de dependencias nativas, también deberás instalar estas dependencias de pares requeridas:
 
 ```shell
 npx expo install react-native-get-random-values @react-native-community/netinfo expo-application @react-native-async-storage/async-storage expo-web-browser expo-linking react-native-aes-gcm-crypto react-native-quick-crypto amazon-cognito-identity-js @coinbase/wallet-mobile-sdk react-native-mmkv react-native-svg @walletconnect/react-native-compat react-native-passkey
 ```
 
-Here's an explanation of each peer dependency and why its needed:
+Aquí tienes una explicación de cada dependencia de pares y por qué es necesaria:
 
 ```ts
-// needed for wallet connect
+// Necesario para wallet connect
 react-native-get-random-values
 @react-native-community/netinfo
 expo-application
 
-// needed wallet connect + in-app wallet
+// Necesario para wallet connect + billetera en la aplicación
 @react-native-async-storage/async-storage
 
-// needed for inapp wallet
-expo-web-browser // for oauth flows
-amazon-cognito-identity-js // for authentication
-react-native-aes-gcm-crypto // for encryption
-react-native-quick-crypto@0.7.0-rc.6 // for fast hashing
+// Necesario para billetera en la aplicación
+expo-web-browser // para flujos oauth
+amazon-cognito-identity-js // para autenticación
+react-native-aes-gcm-crypto // para cifrado
+react-native-quick-crypto@0.7.0-rc.6 // para hashing rápido
 
-// needed for coinbase wallet
+// Necesario para Coinbase Wallet
 @coinbase/wallet-mobile-sdk
 react-native-mmkv
 
-// needed for UI components
-react-native-svg 
+// Necesario para componentes de UI
+react-native-svg
 ```
 
 </Step>
 <Step title="Edit your `metro.config.js`">
 
-If you don't already have a `metro.config.file.js` in your project, you can create one by running:
+Si aún no tienes un archivo `metro.config.file.js` en tu proyecto, puedes crear uno ejecutando:
 
 ```shell
 npx expo customize metro.config.js
 ```
 
-Then, you need to add 2 properties to the metro resolver: `unstable_enablePackageExports` and `unstable_conditionNames`. This is to tell metro to resolve named `exports` properly.
+Luego, necesitas agregar 2 propiedades al resolver de Metro: `unstable_enablePackageExports` y `unstable_conditionNames`. Esto es para indicar a Metro que resuelva correctamente los `exports` con nombre.
 
 ```js
 // file: metro.config.js
@@ -98,9 +98,9 @@ module.exports = config;
 </Step>
 <Step title="Import `@thirdweb-dev/react-native-adapter`">
 
-### Without `expo-router`
+### Sin `expo-router`
 
-Simply import the package in the entrypoint of your app before any other import. This will polyfill all the required functionality needed.
+Simplemente importa el paquete en el punto de entrada de tu aplicación antes de cualquier otro import. Esto llenará de forma automática todas las funcionalidades necesarias.
 
 ```js
 // file: App.tsx
@@ -109,14 +109,13 @@ Simply import the package in the entrypoint of your app before any other import.
 import "@thirdweb-dev/react-native-adapter";
 // ... the rest of your app
 ```
+### Con `expo-router`
 
-### With `expo-router`
+Si estás utilizando `expo-router`, necesitas llenar automáticamente las funcionalidades antes de la entrada del enrutador:
 
-If you're using `expo-router`, you need to polyfill before the router entry:
+#### 1. Crear un archivo `index.js`
 
-#### 1. create a `index.js`
-
-Create an `index.js` file at the root of the repo. This will be the new entrypoint to your app, ensuring the polyfills happen before any routing.
+Crea un archivo `index.js` en la raíz del repositorio. Este será el nuevo punto de entrada de tu aplicación, asegurando que las funcionalidades se llenen antes de cualquier enrutamiento.
 
 ```ts
 // file: index.js
@@ -126,9 +125,9 @@ import "@thirdweb-dev/react-native-adapter";
 import "expo-router/entry";
 ```
 
-#### 2. Change your main entrypoint in `package.json`
+#### 2. Cambia tu punto de entrada principal en `package.json`
 
-Now you can replace `expo-router/entry` with `./index.js` as your main entrypoint.
+Ahora puedes reemplazar `expo-router/entry` con `./index.js` como tu punto de entrada principal.
 
 ```ts
 // file: package.json
@@ -136,42 +135,42 @@ Now you can replace `expo-router/entry` with `./index.js` as your main entrypoin
 "main": "./index.js",
 ```
 
-<Callout variant="info" title="Additional notes">
+<Callout variant="info" title="Notas adicionales">
 
-1. `react-native-aes-gcm-crypto` requires `minSDK 26` for android, you can edit this in your `app.json` file.
-2. You will get some warnings about unresolved exports, this is normal and will get better as the libraries get updated.
+1. `react-native-aes-gcm-crypto` requiere `minSDK 26` para Android, puedes editar esto en tu archivo `app.json`.
+2. Recibirás algunas advertencias sobre exportaciones no resueltas, esto es normal y mejorará a medida que las bibliotecas se actualicen.
 
 </Callout>
 
 </Step>
 
-<Step title="Run the development build">
+<Step title="Ejecutar la compilación de desarrollo">
 
-You can run the development build using the Expo CLI, note that this needs to use the 'development build' option and not Expo Go.
+Puedes ejecutar la compilación de desarrollo utilizando Expo CLI, ten en cuenta que esto debe usar la opción de 'compilación de desarrollo' y no Expo Go.
 
 <Callout variant="info" title="Expo Go">
 
-Due to conflicts between Expo Go's wrapper and thirdweb's, **Expo Go is not currently supported**. When running your app, be sure to run a normal development build without using Expo Go.
+Debido a los conflictos entre el envoltorio de Expo Go y el de thirdweb, **Expo Go no es compatible actualmente**. Cuando ejecutes tu app, asegúrate de ejecutar una compilación de desarrollo normal sin usar Expo Go.
 
-If the Expo CLI says "Using Expo Go" when starting the app, press `s` to switch to the development build.
+Si Expo CLI dice "Usando Expo Go" cuando inicies la app, presiona `s` para cambiar a la compilación de desarrollo.
 
 <img src="https://i.ibb.co/JxyZzLn/Screenshot-2024-06-24-at-12-38-57-PM.png" width={300} />
 
 </Callout>
 
-Prebuild the app (only needed once):
+Precompila la app (solo necesario una vez):
 
 ```shell
 npx expo prebuild
 ```
 
-Run the development build on ios:
+Para ejecutar la compilación de desarrollo en iOS, utiliza el siguiente comando:
 
 ```shell
 npx expo run:ios
 ```
 
-Run the development build on android:
+Para ejecutar la compilación de desarrollo en Android, utiliza el siguiente comando:
 
 ```shell
 npx expo run:android
@@ -179,13 +178,13 @@ npx expo run:android
 
 </Step>
 
-<Step title=" Use the `thirdweb` package normally">
+<Step title="Usar el paquete `thirdweb` normalmente">
 
-Once all the setup above is all done, you can use the most of functionality in the `thirdweb` package out of the box, without having to do any react native specific code.
+Una vez que toda la configuración anterior esté lista, podrás usar la mayor parte de la funcionalidad del paquete `thirdweb` de forma predeterminada, sin necesidad de escribir código específico para React Native.
 
-This means that you can follow all the React documentation and expect it all to be exactly the same.
+Esto significa que puedes seguir toda la documentación de React y esperar que todo funcione de la misma manera.
 
-Examples:
+Ejemplos:
 
 ```tsx
 // import thirdweb hooks, extensions, provider and wallets as usual

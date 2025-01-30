@@ -3,41 +3,41 @@ import { ExternalLink } from "lucide-react";
 import { ArticleIconCard, Stack, AuthList } from "@doc";
 import { ReactIcon } from "@/icons";
 export const metadata = createMetadata({
-	title: "Link Profiles | thirdweb",
-	description: "Link profiles to your account",
+	title: "Vincular Perfiles | thirdweb",
+	description: "Vincula perfiles a tu cuenta",
 });
 
-# Link Profiles
+# Vincular Perfiles
 
-When using [in-app wallets](/react/v5/in-app-wallet/get-started) or [ecosystem wallets](/react/v5/ecosystem-wallets/get-started), you can link profiles to your account. This allows users to login with a frictionless method like guest, passkey or email, then later link their wallet or social profile to their account.
+Cuando usas [billeteras integradas](/react/v5/in-app-wallet/get-started) o [billeteras del ecosistema](/react/v5/ecosystem-wallets/get-started), puedes vincular perfiles a tu cuenta. Esto permite a los usuarios iniciar sesión con un método sin fricción como invitado, passkey o correo electrónico, y luego vincular su billetera o perfil social a su cuenta.
 
-Once linked, users can login to their account with any of their linked profiles.
+Una vez vinculados, los usuarios pueden iniciar sesión en su cuenta con cualquiera de sus perfiles vinculados.
 
 ## Live Playground
 
-Try out the demo for yourself in the [link profiles live playground](https://playground.thirdweb.com/connect/in-app-wallet)
+Prueba la demostración por ti mismo en el [link profiles live playground](https://playground.thirdweb.com/connect/in-app-wallet)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/in-app-wallet"
-	description="See the SDK in action on the live playground"
+	description="Ver el SDK en acción en el playground en vivo"
 />
 </Stack>
 
-## Available auth methods
+## Métodos de autenticación disponibles
 
 <AuthList />
 
-## Usage with UI Components
+## Uso con componentes UI
 
-When using [`ConnectButton`](/references/typescript/v5/ConnectButton) or [`useWalletDetailsModal`](/references/typescript/v5/useWalletDetailsModal), users can link a new profile by clicking the "Manage Wallet" button, as long as they are connected with an in-app or ecosystem wallet.
+Al usar [`ConnectButton`](/references/typescript/v5/ConnectButton) o [`useWalletDetailsModal`](/references/typescript/v5/useWalletDetailsModal), los usuarios pueden vincular un nuevo perfil haciendo clic en el botón "Gestionar Billetera", siempre y cuando estén conectados con una billetera integrada o del ecosistema.
 
-## Usage with your own UI
+## Uso con tu propia UI
 
-You can use the [`useLinkProfile`](/references/typescript/v5/useLinkProfile) function to link a new profile to your account. This can be useful if you want to use a custom UI for the linking flow.
+Puedes usar la función [`useLinkProfile`](/references/typescript/v5/useLinkProfile) para vincular un nuevo perfil a tu cuenta. Esto es útil si deseas usar una UI personalizada para el flujo de vinculación.
 
 <Stack>
 
@@ -45,7 +45,6 @@ You can use the [`useLinkProfile`](/references/typescript/v5/useLinkProfile) fun
 	title="useLinkProfile"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useLinkProfile"
-	description="Hook to link a new profile to your account"
+	description="Hook para vincular un nuevo perfil a tu cuenta"
 />
 </Stack>
-

@@ -2,14 +2,14 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "GetBuyWithFiatStatus | thirdweb .NET SDK",
-	description: "Get swap status for a transaction hash.",
+	description: "Obtener el estado de un intercambio para un hash de transacción.",
 });
 
 # GetBuyWithFiatStatus
 
-Get onramp status for an intent id returned by [BuyWithFiat](/dotnet/pay/buywithfiat).
+Obtén el estado del onramp para un id de intención devuelto por [BuyWithFiat](/dotnet/pay/buywithfiat).
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -17,17 +17,17 @@ using Thirdweb.Pay;
 var status = await ThirdwebPay.GetBuyWithFiatStatus(client, _quote.IntentId);
 ```
 
-In some cases, you may onramp to an intermediary token that requires an additional step, in these cases the `CRYPTO_SWAP_REQUIRED` status indicates that the onramp transfer has completed and you may now use the intent id to trigger a [BuyWithCrypto](/dotnet/pay/buywithcrypto) transaction to get to your destination token. The flow is the same for [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote), though you may now pass the intent id as a parameter to link both statuses together.
+En algunos casos, es posible que realices una compra a través de un token intermedio que requiera un paso adicional. En estos casos, el estado `CRYPTO_SWAP_REQUIRED` indica que la transferencia del onramp se ha completado y ahora puedes usar el id de la intención para activar una transacción [BuyWithCrypto](/dotnet/pay/buywithcrypto) para llegar al token de destino. El flujo es el mismo para [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote), aunque ahora puedes pasar el id de la intención como parámetro para vincular ambos estados.
 
 <Details summary="Configuration">
 
 #### Client (required)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
 
 #### Intent ID
 
-`string`: The intent id returned by the quote.
+`string`: El id de intención devuelto por la cotización.
 
 </Details>
 
@@ -35,17 +35,17 @@ In some cases, you may onramp to an intermediary token that requires an addition
 
 ### Return Value
 
-A `BuyWithFiatStatusResult` object containing the following properties:
+Un objeto `BuyWithFiatStatusResult` que contiene las siguientes propiedades:
 
 ```csharp
-string IntentId; // Intent identifier to track onramp flow status
-string Status; // Status of the onramp flow
-string ToAddress; // Address to receive the tokens
-OnRampQuote Quote; // OnRamp Quote details
-TransactionDetails Source; // Source transaction details
-TransactionDetails Destination; // Destination transaction details
-string FailureMessage; // Failure message if any
-object PurchaseData; // Additional data passed when creating the quote
+string IntentId; // Identificador de intención para rastrear el estado del flujo de onramp
+string Status; // Estado del flujo de onramp
+string ToAddress; // Dirección para recibir los tokens
+OnRampQuote Quote; // Detalles de la cotización de OnRamp
+TransactionDetails Source; // Detalles de la transacción de origen
+TransactionDetails Destination; // Detalles de la transacción de destino
+string FailureMessage; // Mensaje de error si lo hay
+object PurchaseData; // Datos adicionales pasados al crear la cotización
 ```
 
 </Details>
@@ -54,21 +54,21 @@ object PurchaseData; // Additional data passed when creating the quote
 
 ### OnRamp Status
 
-Possible status returned for a onramp transactions
+Posibles estados devueltos para las transacciones de onramp
 
 ```csharp
-NONE - No status.
-PENDING_PAYMENT - Payment is pending.
-PAYMENT_FAILED - Payment has failed.
-PENDING_ON_RAMP_TRANSFER -  Pending on-ramp transfer.
-ON_RAMP_TRANSFER_IN_PROGRESS - On-ramp transfer is in progress.
-ON_RAMP_TRANSFER_COMPLETED - On-ramp transfer is completed
-ON_RAMP_TRANSFER_FAILED - On-ramp transfer has failed.
-CRYPTO_SWAP_REQUIRED - Crypto swap is required.
-CRYPTO_SWAP_COMPLETED - Crypto swap is completed.
-CRYPTO_SWAP_FALLBACK - Crypto swap fallback.
-CRYPTO_SWAP_IN_PROGRESS - Crypto swap is in progress.
-CRYPTO_SWAP_FAILED -  Crypto swap has failed.
+NONE - No status.  
+PENDING_PAYMENT - Payment is pending.  
+PAYMENT_FAILED - Payment has failed.  
+PENDING_ON_RAMP_TRANSFER - Pending on-ramp transfer.  
+ON_RAMP_TRANSFER_IN_PROGRESS - On-ramp transfer is in progress.  
+ON_RAMP_TRANSFER_COMPLETED - On-ramp transfer is completed.  
+ON_RAMP_TRANSFER_FAILED - On-ramp transfer has failed.  
+CRYPTO_SWAP_REQUIRED - Crypto swap is required.  
+CRYPTO_SWAP_COMPLETED - Crypto swap is completed.  
+CRYPTO_SWAP_FALLBACK - Crypto swap fallback.  
+CRYPTO_SWAP_IN_PROGRESS - Crypto swap is in progress.  
+CRYPTO_SWAP_FAILED - Crypto swap has failed.
 ```
 
 </Details>

@@ -1,16 +1,16 @@
-# Troubleshooting
+# Solución de problemas
 
 ## Expo Go
 
-Due to required native dependencies, you cannot use Expo Go for running your app. You must use a development build.
+Debido a las dependencias nativas necesarias, no puedes usar Expo Go para ejecutar tu aplicación. Debes usar una compilación de desarrollo.
 
-You can create ios/android development builds using the following command:
+Puedes crear compilaciones de desarrollo para iOS/Android usando el siguiente comando:
 
 ```shell
 npx expo prebuild
 ```
 
-You can then run the development build using the following command:
+Puedes ejecutar la compilación de desarrollo usando el siguiente comando:
 
 ```shell
 npx expo run:ios
@@ -20,11 +20,11 @@ npx expo run:ios
 npx expo run:android
 ```
 
-## OpenSSL iOS build error
+## Error de compilación de OpenSSL en iOS
 
-If you see a build error that mentions OpenSSL, you may need to update `app.json` to pin a version of OpenSSL that is compatible with your Xcode version.
+Si ves un error de compilación que menciona OpenSSL, es posible que necesites actualizar `app.json` para fijar una versión de OpenSSL que sea compatible con tu versión de Xcode.
 
-Here's how to pin the OpenSSL version in `app.json`:
+Aquí te mostramos cómo fijar la versión de OpenSSL en `app.json`:
 
 ```json
 {
@@ -48,18 +48,18 @@ Here's how to pin the OpenSSL version in `app.json`:
 }
 ```
 
-Replace `<OPENSSL_VERSION>` with the correct version of OpenSSL for your Xcode version:
+Reemplaza `<OPENSSL_VERSION>` con la versión correcta de OpenSSL para tu versión de Xcode:
 
 - Xcode 16: `3.3.2000`
 - Xcode 15: `3.1.5004`
 
-Make sure you have `expo-build-properties` added to your `package.json` dependencies.
+Asegúrate de tener `expo-build-properties` agregado en las dependencias de tu `package.json`.
 
-## Android minSdkVersion error
+## Error de minSdkVersion en Android
 
-If you see an Android error mentioning `minSdkVersion`, you may need to update your `app.json` to set the `minSdkVersion` to a higher version.
+Si ves un error en Android que menciona `minSdkVersion`, es posible que necesites actualizar tu `app.json` para establecer la `minSdkVersion` a una versión superior.
 
-Here's how to update the `minSdkVersion` in `app.json`:
+Aquí te mostramos cómo actualizar la `minSdkVersion` en `app.json`:
 
 ```json
 {
@@ -76,4 +76,4 @@ Here's how to update the `minSdkVersion` in `app.json`:
 }
 ```
 
-Make sure you have `expo-build-properties` added to your `package.json` dependencies.
+Asegúrate de tener `expo-build-properties` agregado en las dependencias de tu `package.json`.

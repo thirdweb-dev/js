@@ -3,46 +3,47 @@ import { Details, Callout, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "ThirdwebTransaction.Create | Thirdweb .NET SDK",
 	description:
-		"Instantiate a low level ThirdwebTransaction object to manipulate, simulate and execute transactions using specific wallet credentials and transaction inputs.",
+		"Instancia un objeto de bajo nivel `ThirdwebTransaction` para manipular, simular y ejecutar transacciones usando credenciales específicas de la billetera y entradas de transacción.",
 });
 
 # ThirdwebTransaction.Create
 
-<Callout variant="warning" title="Advanced Use Case">
-	If you are interacting with a contract, it is best to use
-	[ThirdwebContract.Prepare](/dotnet/contracts/prepare) to create a transaction.
+<Callout variant="warning" title="Caso de uso avanzado">
+	Si estás interactuando con un contrato, es mejor usar
+	[ThirdwebContract.Prepare](/dotnet/contracts/prepare) para crear una transacción.
 </Callout>
 
-The `ThirdwebTransaction.Create` method allows advanced users to manually create transactions using specific wallet credentials and transaction inputs. This method is ideal for users who need precise control over the transaction details.
+El método `ThirdwebTransaction.Create` permite a los usuarios avanzados crear manualmente transacciones usando credenciales específicas de la billetera y entradas de transacción. Este método es ideal para usuarios que necesitan control preciso sobre los detalles de la transacción.
 
-## Usage
+## Uso
 
 ```csharp
 ThirdwebTransaction transaction = await ThirdwebTransaction.Create(wallet, txInput, chainId);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (requerido)
 
-An instance of `IThirdwebWallet`. This represents the wallet that will be used to perform the transaction. The wallet's address must match the from address specified in txInput, if provided.
+Una instancia de `IThirdwebWallet`. Representa la billetera que se utilizará para realizar la transacción. La dirección de la billetera debe coincidir con la dirección desde la cual se especifica en txInput, si se proporciona.
 
-### txInput (required)
+### txInput (requerido)
 
-An instance of `ThirdwebTransactionInput`. This structure includes necessary details such as the from address, value, gas limit, and data payload.
+Una instancia de `ThirdwebTransactionInput`. Esta estructura incluye los detalles necesarios, como la dirección de origen, el valor, el límite de gas y los datos de la transacción.
 
-The `from` field is optional and, if not provided, will default to the wallet's address.
+El campo `from` es opcional y, si no se proporciona, se establecerá por defecto en la dirección de la billetera.
 
-### chainId (required)
+### chainId (requerido)
 
-The blockchain network's chain ID as a `BigInteger`. This ID specifies which network the transaction is intended for.
+El ID de cadena de la red blockchain como un `BigInteger`. Este ID especifica a qué red está destinada la transacción.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ThirdwebTransaction
 
-Returns an instance of `ThirdwebTransaction` configured with the provided parameters, ready to interact with the blockchain.
+Devuelve una instancia de `ThirdwebTransaction` configurada con los parámetros proporcionados, lista para interactuar con la blockchain.
 
 </Details>
+

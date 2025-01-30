@@ -1,17 +1,17 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Thirdweb Pay Quickstart | thirdweb .NET SDK",
-	description: "End to end examples for using the Thirdweb Pay SDK.",
+	title: "Guía Rápida de Thirdweb Pay | SDK .NET de thirdweb",
+	description: "Ejemplos completos para usar el SDK de Thirdweb Pay.",
 });
 
-# Quickstart
+# Guía Rápida
 
-Thirdweb Pay is a powerful service that allows you to easily integrate fiat onramps and cross-chain crypto purchases.
+Thirdweb Pay es un servicio potente que te permite integrar fácilmente plataformas de pago fiat y compras de criptomonedas entre cadenas.
 
-## Cross-Chain Swaps
+## Intercambios entre Cadenas
 
-This example demonstrates how to perform a cross-chain swap using the Thirdweb Pay SDK.
+Este ejemplo demuestra cómo realizar un intercambio entre cadenas utilizando el SDK de Thirdweb Pay.
 
 ```csharp
 using Thirdweb.Pay;
@@ -43,9 +43,9 @@ while (currentSwapStatus is not SwapStatus.COMPLETED and not SwapStatus.FAILED)
 }
 ```
 
-## Fiat Onramps
+## Puentes Fiat
 
-This example demonstrates how to use the Thirdweb Pay SDK to initiate a fiat onramp.
+Este ejemplo demuestra cómo usar el SDK de Thirdweb Pay para iniciar un puente fiat.
 
 ```csharp
 // Get a Buy with Fiat quote
@@ -78,6 +78,6 @@ while (currentOnRampStatus is not OnRampStatus.ON_RAMP_TRANSFER_COMPLETED and no
 }
 ```
 
-## Learn More
+## Aprende más
 
-Please refer to our official [Thirdweb Pay](/connect/pay/overview) documentation for more general information.
+Consulta nuestra documentación oficial de [Thirdweb Pay](/connect/pay/overview) para más información general.

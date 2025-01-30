@@ -7,30 +7,31 @@ export const metadata = createMetadata({
 
 # BuyWithFiat
 
-Generate an onramp link to redirect users to. See [GetBuyWithFiatQuote](/dotnet/pay/getbuywithfiatquote) for more information on how to get an onramp quote.
+Genera un enlace de onramp para redirigir a los usuarios. Consulta [GetBuyWithFiatQuote](/dotnet/pay/getbuywithfiatquote) para obtener más información sobre cómo obtener una cotización de onramp.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
 
-// We return the raw onramp link you should redirect the user to.
+// Devolvemos el enlace de onramp crudo al que deberías redirigir al usuario.
 var onRampLink = await ThirdwebPay.BuyWithFiat(buyWithFiatQuoteResult);
-// You can then use the quote's intent id to track the onramp status.
+// Luego, puedes usar el id del intento de la cotización para rastrear el estado del onramp.
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### BuyWithFiatQuoteResult (required)
+#### BuyWithFiatQuoteResult (requerido)
 
-See [GetBuyWithFiatQuote](/dotnet/pay/getbuywithfiatquote) for more information on the `BuyWithFiatQuoteResult` object.
+Consulta [GetBuyWithFiatQuote](/dotnet/pay/getbuywithfiatquote) para más información sobre el objeto `BuyWithFiatQuoteResult`.
+
+</Details>
+
+<Details summary="Valor de retorno">
+
+### Valor de retorno
+
+`string`: El enlace de onramp al que debes redirigir al usuario.
 
 </Details>
 
-<Details summary="Return Value">
-
-### Return Value
-
-`string`: The onramp link to redirect the user to.
-
-</Details>
