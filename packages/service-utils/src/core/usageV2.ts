@@ -1,3 +1,5 @@
+import type { ServiceName } from "../node/index.js";
+
 export interface UsageV2Event {
   /**
    * A unique identifier for the event. Defaults to a random UUID.
@@ -8,10 +10,6 @@ export interface UsageV2Event {
    * The event timestamp. Defaults to now().
    */
   created_at?: Date;
-  /**
-   * The source of the event. Example: "storage"
-   */
-  source: string;
   /**
    * The action of the event. Example: "upload"
    */
@@ -49,8 +47,12 @@ export interface UsageV2Event {
    */
   product_version?: string;
   /**
-   * An object of service-specific data. Example: "file_size_bytes"
-   * It is safe to pass any new JSON-serializable data here before updating the usageV2 schema.
+   * An object of arbitrary key-value pairs.
+   * Values can be boolean, number, string, Date, or null.
    */
-  data: Record<string, unknown>;
+  [key: string]: boolean | number | string | Date | null | undefined;
+}
+
+export function getTopicName(productName: ServiceName) {
+  return `usage_v2.raw_${productName}`;
 }
