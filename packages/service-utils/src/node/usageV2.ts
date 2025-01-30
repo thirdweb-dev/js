@@ -20,7 +20,7 @@ import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 export class UsageV2Producer {
   private kafka: Kafka;
   private producer: Producer | null = null;
-  private productName: ServiceName;
+  private topic: string;
 
   constructor(config: {
     /**
@@ -57,7 +57,7 @@ export class UsageV2Producer {
       },
     });
 
-    this.productName = config.productName;
+    this.topic = getTopicName(config.productName);
   }
 
   /**
@@ -99,7 +99,7 @@ export class UsageV2Producer {
     });
 
     await this.producer.send({
-      topic: getTopicName(this.productName),
+      topic: this.topic,
       messages: parsedEvents.map((event) => ({
         value: JSON.stringify(event),
       })),
