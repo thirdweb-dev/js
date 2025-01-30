@@ -80,9 +80,6 @@ export class UsageV2Producer {
 
     this.topic = getTopicName(productName);
     this.compression = compression;
-    if (compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
-    }
   }
 
   /**
@@ -90,6 +87,10 @@ export class UsageV2Producer {
    * This must be called before calling `sendEvents()`.
    */
   async init(configOverrides?: ProducerConfig) {
+    if (this.compression === CompressionTypes.LZ4) {
+      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
+    }
+
     this.producer = this.kafka.producer({
       allowAutoTopicCreation: false,
       ...configOverrides,
