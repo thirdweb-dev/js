@@ -95,9 +95,14 @@ export async function connectSmartAccount(
 
   const options = creationOptions;
   const chain = connectChain ?? options.chain;
+  const isZksyncChain = await isZkSyncChain(chain);
 
   // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
-  if (options.factoryAddress && !options.overrides?.entrypointAddress) {
+  if (
+    !isZksyncChain &&
+    options.factoryAddress &&
+    !options.overrides?.entrypointAddress
+  ) {
     const entrypointAddress = await getEntrypointFromFactory(
       options.factoryAddress,
       client,
@@ -122,13 +127,10 @@ export async function connectSmartAccount(
     };
   }
 
-  const factoryAddress =
-    options.factoryAddress ??
-    getDefaultAccountFactory(options.overrides?.entrypointAddress);
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
 
-  if (await isZkSyncChain(chain)) {
+  if (isZksyncChain) {
     return [
       createZkSyncAccount({
         creationOptions,
@@ -139,6 +141,10 @@ export async function connectSmartAccount(
       chain,
     ];
   }
+
+  const factoryAddress =
+    options.factoryAddress ??
+    getDefaultAccountFactory(options.overrides?.entrypointAddress);
 
   const factoryContract = getContract({
     client: client,
