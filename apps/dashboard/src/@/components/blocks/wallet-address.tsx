@@ -8,7 +8,7 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useClipboard } from "hooks/useClipboard";
-import { Check, Copy, ExternalLinkIcon } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useMemo } from "react";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
@@ -148,21 +148,6 @@ export function WalletAddress(props: {
               );
             })
           )}
-          <Button
-            asChild
-            variant="upsell"
-            className="flex flex-row items-center gap-2 text-sm"
-            size="sm"
-          >
-            <a
-              target="_blank"
-              href="https://blog.thirdweb.com/changelog/introducing-the-social-sdk?ref=dashboard-social-wallet"
-              rel="noreferrer"
-            >
-              Learn more
-              <ExternalLinkIcon className="size-4" />
-            </a>
-          </Button>
         </div>
       </HoverCardContent>
     </HoverCard>
