@@ -1,12 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
-import {
-  CompressionCodecs,
-  CompressionTypes,
-  Kafka,
-  type Producer,
-  type ProducerConfig,
-} from "kafkajs";
+import * as KafkaJS from "kafkajs";
 import LZ4Codec from "kafkajs-lz4";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
@@ -25,10 +19,10 @@ import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
  * ```
  */
 export class UsageV2Producer {
-  private kafka: Kafka;
-  private producer: Producer | null = null;
+  private kafka: KafkaJS.Kafka;
+  private producer: KafkaJS.Producer | null = null;
   private topic: string;
-  private compression: CompressionTypes;
+  private compression: KafkaJS.CompressionTypes;
 
   constructor(config: {
     /**
@@ -46,7 +40,7 @@ export class UsageV2Producer {
     /**
      * The compression algorithm to use.
      */
-    compression?: CompressionTypes;
+    compression?: KafkaJS.CompressionTypes;
 
     username: string;
     password: string;
@@ -55,12 +49,12 @@ export class UsageV2Producer {
       producerName,
       environment,
       productName,
-      compression = CompressionTypes.LZ4,
+      compression = KafkaJS.CompressionTypes.LZ4,
       username,
       password,
     } = config;
 
-    this.kafka = new Kafka({
+    this.kafka = new KafkaJS.Kafka({
       clientId: `${producerName}-${environment}`,
       brokers:
         environment === "production"
@@ -86,9 +80,10 @@ export class UsageV2Producer {
    * Connect the producer.
    * This must be called before calling `sendEvents()`.
    */
-  async init(configOverrides?: ProducerConfig) {
-    if (this.compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
+  async init(configOverrides?: KafkaJS.ProducerConfig) {
+    if (this.compression === KafkaJS.CompressionTypes.LZ4) {
+      KafkaJS.CompressionCodecs[KafkaJS.CompressionTypes.LZ4] =
+        new LZ4Codec().codec;
     }
 
     this.producer = this.kafka.producer({
