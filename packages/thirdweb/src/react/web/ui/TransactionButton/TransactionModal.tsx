@@ -37,7 +37,9 @@ export function TransactionModal(props: ModalProps) {
   useQuery({
     queryKey: ["transaction-modal-event"],
     queryFn: () => {
-      if (!account || !wallet) return;
+      if (!account || !wallet) {
+        throw new Error(); // never happens, because enabled is false
+      }
       trackPayEvent({
         client: props.client,
         walletAddress: account.address,
@@ -45,8 +47,10 @@ export function TransactionModal(props: ModalProps) {
         dstChainId: props.tx.chain.id,
         event: "open_pay_transaction_modal",
       });
+
+      return null;
     },
-    enabled: !!wallet,
+    enabled: !!wallet && !!account,
   });
 
   return (
