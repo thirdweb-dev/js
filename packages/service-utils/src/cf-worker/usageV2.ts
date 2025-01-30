@@ -1,4 +1,4 @@
-import type { ServiceName } from "src/core/services.js";
+import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
 /**

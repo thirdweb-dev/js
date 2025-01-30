@@ -1,4 +1,4 @@
-import type { ServiceName } from "src/node/index.js";
+import type { ServiceName } from "../node/index.js";
 
 export interface UsageV2Event {
   /**

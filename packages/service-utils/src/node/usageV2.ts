@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import { Kafka, type Producer } from "kafkajs";
-import type { ServiceName } from "src/core/services.js";
+import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
 /**
