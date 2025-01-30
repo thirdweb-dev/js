@@ -810,9 +810,9 @@ export const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
 /**
  * @internal Exported for tests
  */
-export const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(
-  MagnifyingGlassIcon,
-)((_) => {
+export const StyledMagnifyingGlassIcon: React.FC<
+  React.ComponentProps<typeof MagnifyingGlassIcon>
+> = /* @__PURE__ */ styled(MagnifyingGlassIcon)((_) => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.secondaryText,

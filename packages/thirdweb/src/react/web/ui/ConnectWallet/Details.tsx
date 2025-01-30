@@ -1186,9 +1186,9 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
 /**
  * @internal Export for tests
  */
-export const StyledChevronRightIcon = /* @__PURE__ */ styled(
-  /* @__PURE__ */ ChevronRightIcon,
-)(() => {
+export const StyledChevronRightIcon: React.FC<
+  React.ComponentProps<typeof ChevronRightIcon>
+> = /* @__PURE__ */ styled(/* @__PURE__ */ ChevronRightIcon)(() => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.secondaryText,
