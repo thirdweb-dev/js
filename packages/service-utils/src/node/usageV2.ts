@@ -1,6 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
-import { Kafka, type Producer } from "kafkajs";
+import {
+  CompressionTypes,
+  Kafka,
+  type Producer,
+  type ProducerConfig,
+} from "kafkajs";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
@@ -64,9 +69,10 @@ export class UsageV2Producer {
    * Connect the producer.
    * This must be called before calling `sendEvents()`.
    */
-  async init() {
+  async init(configOverrides?: ProducerConfig) {
     this.producer = this.kafka.producer({
       allowAutoTopicCreation: false,
+      ...configOverrides,
     });
     await this.producer.connect();
   }
@@ -81,7 +87,17 @@ export class UsageV2Producer {
    *
    * @param events - The events to send.
    */
-  async sendEvents(events: UsageV2Event[]): Promise<void> {
+  async sendEvents(
+    events: UsageV2Event[],
+    /**
+     * Reference: https://kafka.js.org/docs/producing#producing-messages
+     */
+    configOverrides?: {
+      acks?: number;
+      timeout?: number;
+      compression?: CompressionTypes;
+    },
+  ): Promise<void> {
     if (!this.producer) {
       throw new Error("Producer not initialized. Call `init()` first.");
     }
@@ -103,6 +119,10 @@ export class UsageV2Producer {
       messages: parsedEvents.map((event) => ({
         value: JSON.stringify(event),
       })),
+      acks: -1, // All brokers must acknowledge
+      timeout: 10_000, // 10 seconds
+      compression: CompressionTypes.LZ4,
+      ...configOverrides,
     });
   }
 
