@@ -134,7 +134,7 @@ function ERC20Table({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead colSpan={4} />
+          <TableHead colSpan={3} />
           <TableHead>Total: ${totalValueUsdCents.toFixed(2)}</TableHead>
         </TableRow>
       </TableHeader>
@@ -144,7 +144,6 @@ function ERC20Table({
           <TableHead>Decimals</TableHead>
           <TableHead>Last Transferred</TableHead>
           <TableHead>Balance</TableHead>
-          <TableHead>USD Value</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -165,10 +164,10 @@ function ERC20Table({
                     }}
                   />
                   <div>
-                    <span>
+                    <span className="inline-block max-w-[650px] truncate font-bold">
                       {token.symbol} ({token.name})
                     </span>
-                    <div className="text-gray-500 text-sm">
+                    <div className="text-muted-foreground text-sm">
                       {explorer && token.contractAddress !== "Native" ? (
                         <a
                           href={`${explorer.url}/address/${token.contractAddress}`}
@@ -185,22 +184,36 @@ function ERC20Table({
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{token.decimals}</TableCell>
+              <TableCell>
+                <span className="text-muted-foreground text-sm">
+                  {token.decimals}
+                </span>
+              </TableCell>
               <TableCell>
                 {token.lastTransferredDate && (
-                  <span title={token.lastTransferredDate}>
+                  <span
+                    title={token.lastTransferredDate}
+                    className="text-muted-foreground text-sm"
+                  >
                     {formatDistanceToNow(new Date(token.lastTransferredDate), {
                       addSuffix: true,
                     })}
                   </span>
                 )}
               </TableCell>
-              <TableCell>{token.balanceTokens.toPrecision(4)}</TableCell>
               <TableCell>
-                {token.totalValueUsdCents
-                  ? `$${(token.totalValueUsdCents * 0.01).toFixed(2)}`
-                  : "--"}
+                <div>
+                  <span className="font-bold">
+                    {token.balanceTokens.toFixed(2)}
+                  </span>
+                  {token.totalValueUsdCents && (
+                    <div className="text-muted-foreground text-sm">
+                      ${(token.totalValueUsdCents * 0.01).toFixed(2)}
+                    </div>
+                  )}
+                </div>
               </TableCell>
+              <TableCell />
             </TableRow>
           ))
         )}

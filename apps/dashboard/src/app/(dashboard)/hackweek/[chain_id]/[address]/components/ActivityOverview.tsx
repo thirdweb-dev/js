@@ -113,9 +113,7 @@ export function ActivityOverview({
                         {shortenHex(transaction.hash)}
                       </Button>
                     </TableCell>
-                    <TableCell>
-                      {transaction.method}
-                    </TableCell>
+                    <TableCell>{transaction.method}</TableCell>
                     <TableCell>
                       {transaction.type === "in" ? (
                         <div className="flex items-center gap-2">
@@ -139,7 +137,7 @@ export function ActivityOverview({
                     </TableCell>
                     <TableCell>
                       {transaction.valueTokens > 0 &&
-                        transaction.valueTokens.toPrecision(4)}
+                        transaction.valueTokens.toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))}

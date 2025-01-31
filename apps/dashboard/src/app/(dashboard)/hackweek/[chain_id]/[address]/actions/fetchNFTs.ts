@@ -209,8 +209,8 @@ export async function fetchNFTs(args: {
       lastAcquiredDate: token.queried_wallet_balances[0]?.last_acquired_date,
       imageUrl: token.previews.image_medium_url,
       createdAt: token.created_date ?? undefined,
-      tokenCount: token.token_count,
-      ownerCount: token.owner_count,
+      tokenCount: token.collection.distinct_nft_count,
+      ownerCount: token.collection.distinct_owner_count,
     }));
   } catch (error) {
     console.error("Error fetching tokens:", error);
