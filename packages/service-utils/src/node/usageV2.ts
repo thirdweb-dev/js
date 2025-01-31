@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
-import { codec as lz4Codec } from "kafka-lz4-lite";
 import {
   CompressionTypes,
   Kafka,
   type Producer,
   type ProducerConfig,
 } from "kafkajs";
+import { compress, decompress } from "lz4js";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
@@ -91,7 +91,20 @@ export class UsageV2Producer {
    */
   async init(configOverrides?: ProducerConfig) {
     if (this.compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = lz4Codec;
+      CompressionCodecs[CompressionTypes.LZ4] = () => ({
+        // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
+        compress: (encoder: { buffer: Buffer }) => {
+          const compressed = compress(encoder.buffer);
+          // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
+          return Buffer.from(compressed);
+        },
+        // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
+        decompress: (buffer: Buffer) => {
+          const decompressed = decompress(buffer);
+          // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
+          return Buffer.from(decompressed);
+        },
+      });
     }
 
     this.producer = this.kafka.producer({

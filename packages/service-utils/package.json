@@ -45,9 +45,10 @@
   ],
   "sideEffects": false,
   "dependencies": {
+    "@types/lz4js": "^0.2.1",
     "aws4fetch": "1.0.20",
-    "kafka-lz4-lite": "^1.0.5",
     "kafkajs": "2.2.4",
+    "lz4js": "^0.2.0",
     "zod": "3.24.1"
   },
   "devDependencies": {
