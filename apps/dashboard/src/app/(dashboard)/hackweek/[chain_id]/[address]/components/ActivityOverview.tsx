@@ -137,7 +137,7 @@ export function ActivityOverview({
                     </TableCell>
                     <TableCell>
                       {transaction.valueTokens > 0 &&
-                        transaction.valueTokens.toFixed(2)}
+                        transaction.valueTokens.toPrecision(2)}
                     </TableCell>
                   </TableRow>
                 ))}

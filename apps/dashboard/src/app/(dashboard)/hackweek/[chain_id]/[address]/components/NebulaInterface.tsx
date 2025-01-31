@@ -49,16 +49,13 @@ export function NebulaInterface({
   nfts,
   transactions,
 }: NebulaInterfaceProps) {
-  // DEBUG
-  return "Commented out";
-
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<
     Array<{ text: string; timestamp: number; isUser: boolean }>
   >([]);
   const [sessionId, setSessionId] = useState("");
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-  const [messagesHeight, setMessagesHeight] = useState(320);
+  const [messagesHeight, setMessagesHeight] = useState(50);
 
   const handleResize = (e: React.MouseEvent<HTMLDivElement>) => {
     const startY = e.clientY;
@@ -66,7 +63,7 @@ export function NebulaInterface({
 
     const handleMouseMove = (e: MouseEvent) => {
       const deltaY = e.clientY - startY;
-      setMessagesHeight(Math.max(40, startHeight + deltaY));
+      setMessagesHeight(Math.max(50, startHeight + deltaY));
     };
 
     const handleMouseUp = () => {

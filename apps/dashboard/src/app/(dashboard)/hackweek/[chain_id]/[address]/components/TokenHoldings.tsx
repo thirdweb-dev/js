@@ -31,7 +31,7 @@ export function TokenHoldings({
 }: TokenHoldingsProps) {
   const [activeTab, setActiveTab] = useState<"erc20" | "nft">("erc20");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Set items per page
+  const itemsPerPage = 10; // Set items per page
 
   // Calculate the index of the last token on the current page
   const lastIndex = currentPage * itemsPerPage;
@@ -135,7 +135,7 @@ function ERC20Table({
       <TableHeader>
         <TableRow>
           <TableHead colSpan={3} />
-          <TableHead>Total: ${totalValueUsdCents.toFixed(2)}</TableHead>
+          <TableHead>Total: ${totalValueUsdCents.toPrecision(2)}</TableHead>
         </TableRow>
       </TableHeader>
       <TableHeader>
