@@ -1,4 +1,5 @@
-(() => {
+// biome-ignore lint/complexity/useArrowFunction: This is a self-executing function, we do not want to use an arrow function here.
+(function () {
   const globalSetup = getSetup();
 
   const USER_ADDRESS_KEY = "tw.login:userAddress";
