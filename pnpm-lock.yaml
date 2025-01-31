@@ -422,6 +422,9 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       thirdweb:
         specifier: workspace:*
         version: link:../../packages/thirdweb
