@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
+import { codec as lz4Codec } from "kafka-lz4-lite";
 import {
   CompressionTypes,
   Kafka,
   type Producer,
   type ProducerConfig,
 } from "kafkajs";
-import LZ4Codec from "kafkajs-lz4";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
 
@@ -91,7 +91,7 @@ export class UsageV2Producer {
    */
   async init(configOverrides?: ProducerConfig) {
     if (this.compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
+      CompressionCodecs[CompressionTypes.LZ4] = lz4Codec;
     }
 
     this.producer = this.kafka.producer({
