@@ -37,11 +37,12 @@ export function WalletDashboard(props: {
         />
       )}
 
-      <TimelineOverview
+      {/* <TimelineOverview
         chain={props.chain}
         address={props.address}
         transactions={transactions}
-      />
+        isLoading={isLoadingActivity}
+      /> */}
       <ActivityOverview
         chain={props.chain}
         transactions={transactions}
