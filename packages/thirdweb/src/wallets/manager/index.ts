@@ -9,6 +9,7 @@ import { stringify } from "../../utils/json.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import { deleteConnectParamsFromStorage } from "../../utils/storage/walletStorage.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import { isSmartWallet } from "../smart/index.js";
 import { smartWallet } from "../smart/smart-wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
 import type { WalletId } from "../wallet-types.js";
@@ -257,7 +258,7 @@ export function createConnectionManager(storage: AsyncStorage) {
       throw new Error("Wallet does not support switching chains");
     }
 
-    if (wallet.id === "smart") {
+    if (isSmartWallet(wallet)) {
       // also switch personal wallet
       const personalWalletId = await getStoredActiveWalletId(storage);
       if (personalWalletId) {
@@ -266,10 +267,14 @@ export function createConnectionManager(storage: AsyncStorage) {
           .find((w) => w.id === personalWalletId);
         if (personalWallet) {
           await personalWallet.switchChain(chain);
+          await wallet.switchChain(chain);
+          // reset the active wallet as switch chain recreates a new smart account
+          handleSetActiveWallet(wallet);
+          return;
         }
       }
+      // If we couldn't find the personal wallet, just switch the smart wallet
       await wallet.switchChain(chain);
-      // reset the active wallet as switch chain recreates a new smart account
       handleSetActiveWallet(wallet);
     } else {
       await wallet.switchChain(chain);

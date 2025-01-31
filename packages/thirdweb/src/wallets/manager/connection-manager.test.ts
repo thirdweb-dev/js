@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
+import { inAppWallet } from "../in-app/web/in-app.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import { smartWallet } from "../smart/smart-wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
 import {
   createConnectionManager,
@@ -155,6 +158,46 @@ describe.runIf(process.env.TW_SECRET_KEY)("Connection Manager", () => {
     await manager.switchActiveWalletChain(newChain);
 
     expect(wallet.switchChain).toHaveBeenCalledWith(newChain);
+  });
+
+  it("should switch admin wallet for smart wallet if available", async () => {
+    const manager = createConnectionManager(storage);
+    const adminAccount = TEST_ACCOUNT_A;
+    const adminWallet = inAppWallet();
+    adminWallet.getAccount = () => adminAccount;
+
+    const _wallet = smartWallet({
+      chain: baseSepolia,
+      sponsorGas: true,
+    });
+    await _wallet.connect({
+      client,
+      personalAccount: adminAccount,
+    });
+
+    await manager.handleConnection(adminWallet, { client });
+    await manager.handleConnection(_wallet, { client });
+
+    const newChain = {
+      id: 2,
+      name: "New Chain",
+      rpc: "https://rpc.example.com",
+    };
+
+    // Mock storage and wallet setup
+    storage.getItem = vi.fn().mockResolvedValue("inApp");
+    adminWallet.id = "inApp";
+    _wallet.switchChain = vi.fn();
+    adminWallet.switchChain = vi.fn();
+
+    // Add wallets to connected wallets store
+    manager.addConnectedWallet(adminWallet);
+    manager.addConnectedWallet(_wallet);
+
+    await manager.switchActiveWalletChain(newChain);
+
+    expect(_wallet.switchChain).toHaveBeenCalledWith(newChain);
+    expect(adminWallet.switchChain).toHaveBeenCalledWith(newChain);
   });
 
   it("should define chains", async () => {
