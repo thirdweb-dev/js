@@ -1,26 +1,22 @@
 (() => {
-  const { targetId, clientId, baseUrl } = getSetup();
-
-  // the code to verify login was not tampered with
-  let code = "";
+  const globalSetup = getSetup();
 
   const USER_ADDRESS_KEY = "tw.login:userAddress";
   const SESSION_KEY_ADDRESS_KEY = "tw.login:sessionKeyAddress";
+  const CODE_KEY = "tw.login:code";
 
   function main() {
     // check if redirected first, this sets up the logged in state if it was from redirect
     const params = parseURLHash(new URL(window.location));
-    console.log(params);
-    // TECHNICALLY this should verify the code... but can't do that without backend of some sort
-    if (params) {
+    if (params && params.code === localStorage.getItem(CODE_KEY)) {
+      // reset the URL hash
+      window.location.hash = "";
       // reset the code
-      code = "";
+      localStorage.setItem(CODE_KEY, params.code);
       // write the userAddress to local storage
       localStorage.setItem(USER_ADDRESS_KEY, params.userAddress);
       // write the sessionKeyAddress to local storage
       localStorage.setItem(SESSION_KEY_ADDRESS_KEY, params.sessionKeyAddress);
-      // reset the URL hash
-      window.location.hash = "";
     }
 
     const userAddress = localStorage.getItem(USER_ADDRESS_KEY);
@@ -46,17 +42,6 @@
         window.localStorage.removeItem(SESSION_KEY_ADDRESS_KEY);
         window.location.reload();
       },
-      makeRequest: async () => {
-        const res = await fetch(`${baseUrl}/api/request`, {
-          method: "POST",
-          body: JSON.stringify({
-            userAddress: getAddress(),
-            sessionKeyAddress: getSessionKeyAddress(),
-          }),
-        });
-        const data = await res.json();
-        console.log(data);
-      },
     };
   }
 
@@ -65,11 +50,12 @@
   }
 
   function onLogin() {
-    code = window.crypto.getRandomValues(new Uint8Array(4)).join("");
+    const code = window.crypto.getRandomValues(new Uint8Array(4)).join("");
+    localStorage.setItem(CODE_KEY, code);
     // redirect to the login page
-    const redirect = new URL(baseUrl);
+    const redirect = new URL(globalSetup.baseUrl);
     redirect.searchParams.set("code", code);
-    redirect.searchParams.set("clientId", clientId);
+    redirect.searchParams.set("clientId", globalSetup.clientId);
     redirect.searchParams.set("redirect", window.location.href);
     window.location.href = redirect.href;
   }
@@ -78,12 +64,7 @@
     return localStorage.getItem(USER_ADDRESS_KEY);
   }
 
-  function getSessionKeyAddress() {
-    return localStorage.getItem(SESSION_KEY_ADDRESS_KEY);
-  }
-
   // utils
-
   function getSetup() {
     const el = document.currentScript;
     if (!el) {
@@ -91,12 +72,11 @@
     }
     const baseUrl = new URL(el.src).origin;
     const dataset = el.dataset;
-    const targetId = dataset.target || "tw-login";
     const clientId = dataset.clientId;
     if (!clientId) {
       throw new Error("Missing client-id");
     }
-    return { targetId, clientId, baseUrl };
+    return { clientId, baseUrl };
   }
 
   /**
