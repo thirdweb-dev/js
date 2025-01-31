@@ -36,13 +36,10 @@ export function WalletDashboard(props: {
           nfts={nfts}
         />
       )}
-
-      {/* <TimelineOverview
-        chain={props.chain}
-        address={props.address}
+      <TimelineOverview
         transactions={transactions}
         isLoading={isLoadingActivity}
-      /> */}
+      />
       <ActivityOverview
         chain={props.chain}
         transactions={transactions}
