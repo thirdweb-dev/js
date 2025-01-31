@@ -17,7 +17,6 @@ import { useState } from "react";
 import type { ChainMetadata } from "thirdweb/chains";
 import { shortenHex } from "thirdweb/utils";
 import type { TransactionDetails } from "../hooks/useGetRecentTransactions";
-import { formatDistanceToNow } from "date-fns";
 
 interface Contract {
   address: string;
@@ -88,6 +87,7 @@ export function ActivityOverview({
                 <TableRow>
                   <TableHead>Date</TableHead>
                   <TableHead>Hash</TableHead>
+                  <TableHead>Method</TableHead>
                   <TableHead>Activity</TableHead>
                   <TableHead>Value ({chain.nativeCurrency.symbol})</TableHead>
                 </TableRow>
@@ -112,6 +112,9 @@ export function ActivityOverview({
                       >
                         {shortenHex(transaction.hash)}
                       </Button>
+                    </TableCell>
+                    <TableCell>
+                      {transaction.method}
                     </TableCell>
                     <TableCell>
                       {transaction.type === "in" ? (

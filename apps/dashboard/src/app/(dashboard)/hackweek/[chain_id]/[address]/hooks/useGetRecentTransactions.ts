@@ -29,7 +29,7 @@ export function useGetRecentTransactions(chainId: number, address: string) {
           valueTokens: transaction.value / 10 ** 18,
           to: transaction.to_address || undefined,
           from: transaction.from_address,
-          method: transaction.function_selector || undefined,
+          method: transaction.decodedData.name || "transfer",
           date: new Date(transaction.block_timestamp * 1000),
         };
       });

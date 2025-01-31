@@ -31,6 +31,11 @@ interface Transaction {
   blob_gas_price: number | null;
   logs_bloom: string | null;
   status: boolean | null; // true for success, false for failure
+  decodedData: {
+    name: string;
+    signature: string;
+    inputs: Record<string, unknown>;
+  };
 }
 
 interface InsightsResponse {
