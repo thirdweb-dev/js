@@ -70,7 +70,11 @@ export function TokenHoldings({
           <Spinner />
         ) : activeTab === "erc20" ? (
           <>
-            <ERC20Table chain={chain} tokens={currentTokens} isLoading={isLoading} />
+            <ERC20Table
+              chain={chain}
+              tokens={currentTokens}
+              isLoading={isLoading}
+            />
             {/* Pagination Controls */}
             <div className="pagination">
               <TabButtons
@@ -79,7 +83,8 @@ export function TokenHoldings({
                     name: "Previous",
                     isActive: currentPage === 1,
                     isEnabled: currentPage > 1,
-                    onClick: () => setCurrentPage((prev) => Math.max(prev - 1, 1)),
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1)),
                   },
                   {
                     name: `Page ${currentPage} of ${totalPages}`,
@@ -91,7 +96,8 @@ export function TokenHoldings({
                     name: "Next",
                     isActive: currentPage === totalPages,
                     isEnabled: currentPage < totalPages,
-                    onClick: () => setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
+                    onClick: () =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
                   },
                 ]}
                 tabClassName="font-medium !text-sm"
@@ -148,23 +154,34 @@ function ERC20Table({
           tokens.map((token) => (
             <TableRow key={token.contractAddress}>
               <TableCell>
-                <div>
-                  <span>
-                    {token.symbol} ({token.name})
-                  </span>
-                  <div className="text-gray-500 text-sm">
-                    {explorer && token.contractAddress !== "Native" ? (
-                      <a
-                        href={`${explorer.url}/address/${token.contractAddress}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline"
-                      >
-                        {token.contractAddress}
-                      </a>
-                    ) : (
-                      token.contractAddress
-                    )}
+                <div className="flex items-center gap-2">
+                  <img
+                    src={`https://raw.githubusercontent.com/spothq/cryptocurrency-icons/1a63530be6e374711a8554f31b17e4cb92c25fa5/128/icon/${token.symbol.toLowerCase()}.png`}
+                    alt="token logo"
+                    className="size-6"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://raw.githubusercontent.com/spothq/cryptocurrency-icons/1a63530be6e374711a8554f31b17e4cb92c25fa5/128/icon/generic.png";
+                    }}
+                  />
+                  <div>
+                    <span>
+                      {token.symbol} ({token.name})
+                    </span>
+                    <div className="text-gray-500 text-sm">
+                      {explorer && token.contractAddress !== "Native" ? (
+                        <a
+                          href={`${explorer.url}/address/${token.contractAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          {token.contractAddress}
+                        </a>
+                      ) : (
+                        token.contractAddress
+                      )}
+                    </div>
                   </div>
                 </div>
               </TableCell>
