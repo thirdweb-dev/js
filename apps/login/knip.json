@@ -1,0 +1,8 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "next": true,
+  "ignore": ["public/**"],
+  "project": ["src/**"],
+  "ignoreBinaries": ["only-allow", "biome"],
+  "ignoreDependencies": ["thirdweb", "eslint-config-next"]
+}
