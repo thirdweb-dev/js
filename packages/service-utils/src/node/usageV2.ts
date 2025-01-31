@@ -91,7 +91,7 @@ export class UsageV2Producer {
    */
   async init(configOverrides?: ProducerConfig) {
     if (this.compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec.default().codec;
+      CompressionCodecs[CompressionTypes.LZ4] = new LZ4Codec().codec;
     }
 
     this.producer = this.kafka.producer({
