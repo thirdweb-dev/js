@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
+import { Suspense } from "react";
 
 import "./globals.css";
 import { Providers } from "./providers";
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${sansFont.variable} ${monoFont.variable} h-full w-full font-sans antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <Suspense>{children}</Suspense>
+        </Providers>
       </body>
     </html>
   );
