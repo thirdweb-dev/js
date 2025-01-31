@@ -47,11 +47,12 @@
   "dependencies": {
     "aws4fetch": "1.0.20",
     "kafkajs": "2.2.4",
-    "kafkajs-lz4": "2.0.0-beta.0",
+    "lz4js": "^0.2.0",
     "zod": "3.24.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250129.0",
+    "@types/lz4js": "^0.2.1",
     "@types/node": "22.10.10",
     "typescript": "5.7.3",
     "vitest": "3.0.4"
