@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.3
+
+### Patch Changes
+
+- [#6121](https://github.com/thirdweb-dev/js/pull/6121) [`6ed2fd1`](https://github.com/thirdweb-dev/js/commit/6ed2fd13de1638bcf1c28fd4fdbeb00c0d449994) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] import LZ4 codec
+
+- [#6120](https://github.com/thirdweb-dev/js/pull/6120) [`a22457a`](https://github.com/thirdweb-dev/js/commit/a22457a69cc6667ac13599d10ebddc41ceafa0ff) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Expose kafkajs config
+
 ## 0.8.2
 
 ### Patch Changes
