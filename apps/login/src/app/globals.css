@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  /* scroll-behavior: smooth; */
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-feature-settings: "rlig" 1, "calt" 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: normal;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --sticky-top-height: 70px;
+  }
+
+  :root,
+  [data-theme="dark"] {
+    /* bg - neutral  */
+    --background: 0 0% 0%;
+    --card: 0 0% 3.92%;
+    --popover: 0 0% 0%;
+    --secondary: 0 0% 11%;
+    --muted: 0 0% 11%;
+    --accent: 0 0% 11%;
+    --inverted: 0 0% 100%;
+
+    /* bg - colorful */
+    --primary: 221 83% 54%;
+    --destructive: 360 72% 51%;
+
+    /* Text */
+    --foreground: 0 0% 98%;
+    --card-foreground: 0 0% 98%;
+    --popover-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 98%;
+    --muted-foreground: 0 0% 63%;
+    --accent-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
+    --link-foreground: 215.88 100% 65%;
+    --warning-text: 38 92% 50%;
+    --destructive-text: 360 72% 55%;
+    --success-text: 142 75% 50%;
+    --inverted-foreground: 0 0% 0%;
+
+    /* Borders */
+    --border: 0 0% 15%;
+    --active-border: 0 0% 22%;
+    --ring: 0 0% 30%;
+    --input: 0 0% 15%;
+  }
+
+  [data-theme="light"] {
+    /* bg - neutral  */
+    --background: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --card: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --muted: 0 0% 93%;
+    --accent: 0 0% 93%;
+    --inverted: 0 0 0%;
+
+    /* bg - colorful */
+    --primary: 221 83% 54%;
+    --destructive: 360 72% 51%;
+
+    /* Text */
+    --foreground: 0 0% 4%;
+    --card-foreground: 0 0% 4%;
+    --popover-foreground: 240 10% 4%;
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 4%;
+    --muted-foreground: 0 0% 40%;
+    --accent-foreground: 0 0% 9%;
+    --destructive-foreground: 0 0% 100%;
+    --inverted-foreground: 0 0% 100%;
+    --link-foreground: 221.21deg 83.19% 53.33%;
+    --success-text: 142.09 70.56% 35.29%;
+    --warning-text: 38 92% 40%;
+    --destructive-text: 357.15deg 100% 68.72%;
+
+    /* Borders */
+    --border: 0 0% 85%;
+    --active-border: 0 0% 70%;
+    --input: 0 0% 85%;
+    --ring: 0 0% 80%;
+  }
+}
+
+/* If no data-theme is added in body, its in dark theme  */
+body:not([data-theme="light"]) .light-only {
+  display: none;
+}
+
+[data-theme="light"] .dark-only {
+  display: none;
+}
+
+code span {
+  color: var(--code-dark-color);
+}
+
+body[data-theme="light"] code span {
+  color: var(--code-light-color);
+}
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+
+.styled-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .styled-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  transition: color 200ms ease;
+  background: var(--border);
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground));
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

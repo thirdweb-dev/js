@@ -1,0 +1,36 @@
+import { type NextRequest, NextResponse } from "next/server";
+
+export const POST = async (req: NextRequest) => {
+  const body = await req.json();
+  const userAddress = body.userAddress;
+  const sessionKeyAddress = body.sessionKeyAddress;
+  if (!userAddress || !sessionKeyAddress) {
+    return NextResponse.json(
+      {
+        message: "Missing userAddress or sessionKeyAddress",
+      },
+      { status: 400 },
+    );
+  }
+  const url = `${ENGINE_URL}/contract/84532/0x638263e3eAa3917a53630e61B1fBa685308024fa/erc1155/claim-to`;
+
+  console.log("url", url);
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${ACCESS_TOKEN}`,
+      "x-account-address": userAddress,
+      "x-backend-wallet-address": sessionKeyAddress,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      receiver: userAddress,
+      tokenId: "0",
+      quantity: "1",
+    }),
+  });
+  const data = await res.json();
+
+  return NextResponse.json(data, { status: res.status });
+};
