@@ -548,41 +548,6 @@ export function useResendEmailConfirmation() {
   });
 }
 
-export function useApiKeys(props: {
-  isLoggedIn: boolean;
-}) {
-  const address = useActiveAccount()?.address;
-  return useQuery({
-    queryKey: apiKeys.keys(address || ""),
-    queryFn: async () => {
-      type Result = {
-        data: ApiKey[];
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/keys",
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-      return json.data;
-    },
-    enabled: !!address && props.isLoggedIn,
-  });
-}
-
 export function useCreateApiKey() {
   const address = useActiveAccount()?.address;
   const queryClient = useQueryClient();
