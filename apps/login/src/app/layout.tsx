@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full w-full">
+    <html lang="en" className="h-full w-full bg-black text-white">
       <body
         className={`${sansFont.variable} ${monoFont.variable} h-full w-full font-sans antialiased`}
       >
