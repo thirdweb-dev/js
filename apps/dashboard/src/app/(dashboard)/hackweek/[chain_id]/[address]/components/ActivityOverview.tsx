@@ -41,7 +41,7 @@ export function ActivityOverview({
     "transactions",
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // Calculate the index of the last transaction on the current page
   const lastIndex = currentPage * itemsPerPage;
