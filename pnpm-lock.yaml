@@ -928,9 +928,6 @@ importers:
 
   packages/service-utils:
     dependencies:
-      '@types/lz4js':
-        specifier: ^0.2.1
-        version: 0.2.1
       aws4fetch:
         specifier: 1.0.20
         version: 1.0.20
@@ -947,6 +944,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: 4.20250129.0
         version: 4.20250129.0
+      '@types/lz4js':
+        specifier: ^0.2.1
+        version: 0.2.1
       '@types/node':
         specifier: 22.10.10
         version: 22.10.10
