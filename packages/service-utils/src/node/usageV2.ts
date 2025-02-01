@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import {
+  CompressionCodecs,
   CompressionTypes,
   Kafka,
   type Producer,
@@ -9,10 +10,6 @@ import {
 import { compress, decompress } from "lz4js";
 import type { ServiceName } from "../core/services.js";
 import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
-
-// Import KafkaJS with CJS pattern (source: https://github.com/tulios/kafkajs/issues/1391)
-import KafkaJS from "kafkajs";
-const { CompressionCodecs } = KafkaJS;
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -47,9 +44,9 @@ export class UsageV2Producer {
      */
     productName: ServiceName;
     /**
-     * The compression algorithm to use.
+     * Whether to compress the events.
      */
-    compression?: CompressionTypes;
+    shouldCompress?: boolean;
 
     username: string;
     password: string;
@@ -58,7 +55,7 @@ export class UsageV2Producer {
       producerName,
       environment,
       productName,
-      compression = CompressionTypes.LZ4,
+      shouldCompress = true,
       username,
       password,
     } = config;
@@ -82,7 +79,9 @@ export class UsageV2Producer {
     });
 
     this.topic = getTopicName(productName);
-    this.compression = compression;
+    this.compression = shouldCompress
+      ? CompressionTypes.LZ4
+      : CompressionTypes.None;
   }
 
   /**
