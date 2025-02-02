@@ -1,5 +1,5 @@
 import type { ServiceName } from "../core/services.js";
-import { type UsageV2Event } from "../core/usageV2.js";
+import type { UsageV2Event } from "../core/usageV2.js";
 
 /**
  * Send events to Kafka.
