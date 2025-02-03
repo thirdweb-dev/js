@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.87.3
+
+### Patch Changes
+
+- [#6137](https://github.com/thirdweb-dev/js/pull/6137) [`a6b7e8d`](https://github.com/thirdweb-dev/js/commit/a6b7e8d81868b5f32f1c8b7ff093bb1f06c734ca) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6116](https://github.com/thirdweb-dev/js/pull/6116) [`9d5828e`](https://github.com/thirdweb-dev/js/commit/9d5828eeab201960a720744ca3a59c85a0d8e548) Thanks [@alecananian](https://github.com/alecananian)! - Skip factory entrypoint lookup for ZKsync chains
+
+- [#6119](https://github.com/thirdweb-dev/js/pull/6119) [`b693b78`](https://github.com/thirdweb-dev/js/commit/b693b78645e2b214a5f8be0eec6d335d569ceb8c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Ecosystem smart wallets now properly trigger switch chain on their admin wallets
+
+- [#6093](https://github.com/thirdweb-dev/js/pull/6093) [`08cc489`](https://github.com/thirdweb-dev/js/commit/08cc48910df351d068c1ce224d4102f40cb1dce1) Thanks [@kumaryash90](https://github.com/kumaryash90)! - 7702 delegation designator
+
 ## 5.87.2
 
 ### Patch Changes
