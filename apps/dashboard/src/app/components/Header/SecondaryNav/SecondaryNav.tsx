@@ -30,19 +30,27 @@ export function SecondaryNavLinks() {
       <ResourcesDropdownButton />
 
       <Link
+        href="https://portal.thirdweb.com"
+        className="text-muted-foreground text-sm hover:text-foreground"
         target="_blank"
-        href="https://thirdweb.com/support"
+      >
+        Docs
+      </Link>
+
+      <Link
+        target="_blank"
+        href="/support"
         className="text-muted-foreground text-sm hover:text-foreground"
       >
         Support
       </Link>
 
       <Link
-        href="https://portal.thirdweb.com/"
-        className="text-muted-foreground text-sm hover:text-foreground"
         target="_blank"
+        href="https://feedback.thirdweb.com"
+        className="text-muted-foreground text-sm hover:text-foreground"
       >
-        Docs
+        Feedback
       </Link>
     </div>
   );
