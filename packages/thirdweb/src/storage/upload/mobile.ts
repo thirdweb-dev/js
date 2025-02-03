@@ -104,7 +104,7 @@ export async function uploadBatchMobile(
           );
         }
 
-        return reject(new Error("Unknown upload error occured"));
+        return reject(new Error("Unknown upload error occurred"));
       });
 
       xhr.open("POST", `https://${getThirdwebDomains().storage}/ipfs/upload`);
