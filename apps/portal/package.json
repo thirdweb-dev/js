@@ -38,7 +38,7 @@
     "next": "15.1.6",
     "nextjs-toploader": "^1.6.12",
     "node-html-parser": "^6.1.13",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.215.1",
     "prettier": "3.3.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
