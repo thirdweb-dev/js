@@ -9,9 +9,13 @@ type ExamplePrompt = {
 
 export const examplePrompts: ExamplePrompt[] = [
   {
-    title: "Deploy an ERC-20 Token",
+    title: "Launch a Token",
     message:
       "Deploy an ERC-20 Token with name 'Hello World', description 'Hello world token deployed by Nebula', and symbol 'HELLO'",
+  },
+  {
+    title: "Send 0.001 ETH to thirdweb.eth",
+    message: "Transfer 0.001 ETH to thirdweb.eth",
   },
   {
     title: "USDC contract address on Ethereum",
@@ -22,11 +26,7 @@ export const examplePrompts: ExamplePrompt[] = [
     message: "Analyze 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 on ethereum",
   },
   {
-    title: "Transfer 0.001 ETH to thirdweb.eth",
-    message: "Transfer 0.001 ETH to thirdweb.eth",
-  },
-  {
-    title: "Using session keys in Unity",
+    title: "Use session keys in Unity",
     message: "How to use session key in Unity?",
   },
 ];
