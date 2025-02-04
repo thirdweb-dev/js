@@ -331,6 +331,12 @@ async function redirects() {
       destination: "/templates/:slug",
       permanent: false,
     },
+    // redirect /account-abstraction to /connect/account-abstraction
+    {
+      source: "/account-abstraction",
+      destination: "/connect/account-abstraction",
+      permanent: false,
+    },
     // PREVIOUS CAMPAIGNS
     {
       source: "/unlimited-wallets",
