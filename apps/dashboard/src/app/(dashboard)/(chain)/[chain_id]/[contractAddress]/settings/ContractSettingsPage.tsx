@@ -4,7 +4,6 @@ import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import * as CommonExt from "thirdweb/extensions/common";
 import { SettingsMetadata } from "./components/metadata";
-import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
 
@@ -22,7 +21,6 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   isContractMetadataSupported,
   isPrimarySaleSupported,
   isRoyaltiesSupported,
-  isPlatformFeesSupported,
   twAccount,
 }) => {
   return (
@@ -55,16 +53,6 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsRoyalties
                 contract={contract}
                 detectedState={isRoyaltiesSupported ? "enabled" : "disabled"}
-                twAccount={twAccount}
-              />
-            </GridItem>
-          )}
-
-          {contract && (
-            <GridItem order={isPlatformFeesSupported ? 4 : 103}>
-              <SettingsPlatformFees
-                contract={contract}
-                detectedState={isPlatformFeesSupported ? "enabled" : "disabled"}
                 twAccount={twAccount}
               />
             </GridItem>

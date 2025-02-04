@@ -52,7 +52,6 @@ import {
   showRoyaltyFieldset,
 } from "./modular-contract-default-modules-fieldset";
 import { Param } from "./param";
-import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 import { type Recipient, SplitFieldset } from "./split-fieldset";
@@ -109,6 +108,9 @@ const voteParamsSet = new Set([
   "_initialProposalThreshold",
   "_initialVoteQuorumFraction",
 ]);
+
+const DEFAULT_FEE_BPS = 300;
+const DEFAULT_FEE_RECIPIENT = "0x0000000000000000000000000000000000000000"; // TODO
 
 function checkTwPublisher(publisher: string | undefined) {
   switch (publisher) {
@@ -440,9 +442,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: Number(params.deployParams._platformFeeBps),
-            platformFeeRecipient: params.deployParams
-              ._platformFeeRecipient as string,
+            platformFeeBps: DEFAULT_FEE_BPS,
+            platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
@@ -457,6 +458,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         payees,
         shares,
         _contractURI,
+        _platformFeeBps: DEFAULT_FEE_BPS,
+        _platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
@@ -514,6 +517,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   return (
     <>
+      <p className="mb-3 text-muted-foreground text-sm">
+        Placeholder text for default configs
+      </p>
       <FormProvider {...form}>
         <Flex
           flexGrow={1}
@@ -701,8 +707,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   }}
                 />
               )}
-
-              {hasPlatformFee && <PlatformFeeFieldset form={form} />}
 
               {isSplit && <SplitFieldset form={form} />}
 
