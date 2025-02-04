@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { FormItem } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { engineKeys } from "@3rdweb-sdk/react";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
@@ -30,7 +32,7 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
@@ -40,18 +42,21 @@ import { EngineBackendWalletOptions } from "lib/engine";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import {
   DownloadIcon,
+  ExternalLinkIcon,
   PencilIcon,
+  RefreshCcwIcon,
   TrashIcon,
   TriangleAlertIcon,
   UploadIcon,
 } from "lucide-react";
+import Link from "next/link";
 import QRCode from "qrcode";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import { FormHelperText, FormLabel, LinkButton, Text } from "tw-components";
+import { FormHelperText, FormLabel, Text } from "tw-components";
 import { prettyPrintCurrency } from "./utils";
 
 interface BackendWalletsTableProps {
@@ -83,16 +88,17 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   authToken,
   chainId,
 }) => {
-  const { data: backendWalletBalance } = useEngineBackendWalletBalance({
-    instanceUrl: instanceUrl,
-    address,
-    authToken,
-    chainId,
-  });
+  const { data: backendWalletBalance, isFetching } =
+    useEngineBackendWalletBalance({
+      instanceUrl: instanceUrl,
+      address,
+      authToken,
+      chainId,
+    });
   const chain = useV5DashboardChain(chainId);
 
-  if (!backendWalletBalance) {
-    return <Skeleton className="h-5 w-32 rounded-lg" />;
+  if (!backendWalletBalance || isFetching) {
+    return <Skeleton className="h-6 w-36 rounded-lg" />;
   }
 
   const balanceDisplay = prettyPrintCurrency({
@@ -100,9 +106,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
     symbol: backendWalletBalance.symbol || chain.nativeCurrency?.symbol,
   });
 
-  const balanceComponent = (
-    <div className="text-muted-foreground">{balanceDisplay}</div>
-  );
+  const balanceComponent = <span>{balanceDisplay}</span>;
 
   const explorer = chain.blockExplorers?.[0];
   if (!explorer) {
@@ -110,14 +114,14 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   }
 
   return (
-    <LinkButton
-      variant="ghost"
-      isExternal
-      size="xs"
+    <Link
+      target="_blank"
       href={`${explorer.url}/address/${address}`}
+      className="inline-flex items-center gap-2.5 rounded-lg px-2 py-1 text-muted-foreground hover:bg-muted hover:text-foreground"
     >
       {balanceComponent}
-    </LinkButton>
+      <ExternalLinkIcon className="size-4" />
+    </Link>
   );
 };
 
@@ -133,6 +137,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   const receiveDisclosure = useDisclosure();
   const sendDisclosure = useDisclosure();
   const deleteDisclosure = useDisclosure();
+  const queryClient = useQueryClient();
 
   const columns = useMemo(() => {
     return [
@@ -160,7 +165,31 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         },
       }),
       columnHelper.accessor("address", {
-        header: "Balance",
+        header: () => (
+          <div className="flex w-[180px] items-center gap-1.5">
+            Balance
+            <ToolTipLabel
+              label="Refresh Balance"
+              contentClassName="capitalize font-normal tracking-normal leading-normal"
+            >
+              <Button
+                className="z-20 h-auto p-1.5 [&[data-pending='true']_svg]:animate-spin"
+                variant="ghost"
+                size="sm"
+                onClick={async (e) => {
+                  const buttonEl = e.currentTarget;
+                  buttonEl.setAttribute("data-pending", "true");
+                  await queryClient.invalidateQueries({
+                    queryKey: engineKeys.backendWalletBalanceAll(),
+                  });
+                  buttonEl.setAttribute("data-pending", "false");
+                }}
+              >
+                <RefreshCcwIcon className="size-4" />
+              </Button>
+            </ToolTipLabel>
+          </div>
+        ),
         cell: (cell) => {
           const address = cell.getValue();
           return (
@@ -175,7 +204,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         id: "balance",
       }),
     ];
-  }, [instanceUrl, authToken, chainId]);
+  }, [instanceUrl, authToken, chainId, queryClient]);
 
   const [selectedBackendWallet, setSelectedBackendWallet] =
     useState<BackendWallet>();
