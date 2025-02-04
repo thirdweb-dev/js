@@ -166,7 +166,7 @@ export async function ChainsData(props: {
         ) : props.activeView === "table" ? (
           <TableContainer>
             <Table>
-              <TableHeader>
+              <TableHeader className="z-0">
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Chain ID</TableHead>
