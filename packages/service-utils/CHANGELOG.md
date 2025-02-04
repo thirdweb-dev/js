@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.4
+
+### Patch Changes
+
+- [#6137](https://github.com/thirdweb-dev/js/pull/6137) [`a6b7e8d`](https://github.com/thirdweb-dev/js/commit/a6b7e8d81868b5f32f1c8b7ff093bb1f06c734ca) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6139](https://github.com/thirdweb-dev/js/pull/6139) [`f4f93e6`](https://github.com/thirdweb-dev/js/commit/f4f93e6353d3951c580df25b757b1ac20fdcf763) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Update to ESM for compression typrse
+
+- [#6131](https://github.com/thirdweb-dev/js/pull/6131) [`a76e653`](https://github.com/thirdweb-dev/js/commit/a76e6534c49480f30ec1fd1e404f76d04947cd49) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] switch to lz4js for compression lib
+
 ## 0.8.3
 
 ### Patch Changes
