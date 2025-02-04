@@ -12,7 +12,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' vercel.live;
   font-src 'self' vercel.live assets.vercel.com framerusercontent.com fonts.gstatic.com;
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com challenges.cloudflare.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com challenges.cloudflare.com pl.thirdweb.com;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
@@ -187,36 +187,30 @@ function getConfig(): NextConfig {
     const withBundleAnalyzer = require("@next/bundle-analyzer")({
       enabled: process.env.ANALYZE === "true",
     });
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { withPlausibleProxy } = require("next-plausible");
+
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { withSentryConfig } = require("@sentry/nextjs");
     return withBundleAnalyzer(
-      withPlausibleProxy({
-        customDomain: "https://pl.thirdweb.com",
-        scriptName: "pl",
-      })(
-        withSentryConfig(
-          {
-            ...baseNextConfig,
-            // @ts-expect-error - this is a valid option
-            webpack: (config) => {
-              if (config.cache) {
-                config.cache = Object.freeze({
-                  type: "memory",
-                });
-              }
-              config.externals.push("pino-pretty");
-              config.module = {
-                ...config.module,
-                exprContextCritical: false,
-              };
-              // Important: return the modified config
-              return config;
-            },
+      withSentryConfig(
+        {
+          ...baseNextConfig,
+          // @ts-expect-error - this is a valid option
+          webpack: (config) => {
+            if (config.cache) {
+              config.cache = Object.freeze({
+                type: "memory",
+              });
+            }
+            config.externals.push("pino-pretty");
+            config.module = {
+              ...config.module,
+              exprContextCritical: false,
+            };
+            // Important: return the modified config
+            return config;
           },
-          SENTRY_OPTIONS,
-        ),
+        },
+        SENTRY_OPTIONS,
       ),
     );
   }

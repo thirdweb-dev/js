@@ -337,6 +337,12 @@ async function redirects() {
       destination: "/",
       permanent: false,
     },
+    // plausible script redirect
+    {
+      source: "/js/pl.js",
+      destination: "https://pl.thirdweb.com/js/script.js",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }
