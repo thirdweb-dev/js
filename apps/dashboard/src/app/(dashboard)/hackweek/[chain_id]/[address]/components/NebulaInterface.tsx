@@ -42,6 +42,13 @@ const getOrCreateSession = async (chainId: number, address: string) => {
   return sessionId;
 };
 
+// New BubbleMessage component for displaying proposals
+const BubbleMessage = ({ text }: { text: string }) => (
+  <div className="bg-blue-500 text-white rounded-lg p-1 mb-2 max-w-[50%] flex items-center">
+    <span className="text-sm">{text}</span>
+  </div>
+);
+
 export function NebulaInterface({
   chain,
   address,
@@ -53,6 +60,9 @@ export function NebulaInterface({
   const [messages, setMessages] = useState<
     Array<{ text: string; timestamp: number; isUser: boolean }>
   >([]);
+  const [proposal, setProposal] = useState<
+    { text: string }
+  >({ text: "" });
   const [sessionId, setSessionId] = useState("");
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [messagesHeight, setMessagesHeight] = useState(50);
@@ -88,6 +98,8 @@ export function NebulaInterface({
               `I will provide details about the wallet address ${address} on chain ${chain.name} (${chain.chainId}).`,
               "Please update your knowledge base with the following information:",
               `This wallet holds ${tokens.length} tokens: ${stringify(tokens)}`,
+              // `This wallet holds ${nfts.length} NFTs: ${stringify(nfts)}`,
+              // `This wallet's ${transactions.length} recent transactions: ${stringify(transactions)}`,
             ].join(" "),
           }),
           sendNebulaMessage({
@@ -100,23 +112,35 @@ export function NebulaInterface({
           }),
         ]);
 
-        const initResponse = await sendNebulaMessage({
-          sessionId,
-          message: [
-            "Answer these questions:",
-            "Give me a 3 sentence summary of my wallet.",
-            "Give me a list of notable NFTs and ERC20 tokens in my wallet.",
-            "Give me an overview of recent activity in my wallet in the last 30 days.",
-          ].join("\n"),
-        });
-
+        const [initResponse, proposalsResponse] = await Promise.all([
+          sendNebulaMessage({
+            sessionId,
+            message: [
+              "Answer these questions:",
+              "Give me a 3 sentence summary of my wallet.",
+              "Give me a list of notable NFTs and ERC20 tokens in my wallet.",
+              "Give me an overview of the activity in my wallet.",
+            ].join("\n"),
+          }),
+          sendNebulaMessage({
+            sessionId,
+            message: [
+              "Provide one most promising action to take with my wallet.",
+              "It should be worded as a 1 sentence command to be executed by a wallet.",
+            ].join("\n"),
+          }),
+        ]);
+        
         setMessages([
           {
             text: initResponse.message,
             timestamp: Date.now(),
             isUser: false,
-          },
+          }
         ]);
+        setProposal({
+          text: proposalsResponse.message
+        });
       } catch (e) {
         console.error("Error creating Nebula session:", e);
       } finally {
@@ -215,6 +239,21 @@ export function NebulaInterface({
           className="h-1 w-full cursor-ns-resize bg-gray-800 hover:bg-gray-700"
           onMouseDown={handleResize}
         />
+
+        {/* Proposals Messages */}
+        <div className="space-y-2 p-4">
+          {messages.length > 0 && messages.map((msg) => (
+            <div key={msg.timestamp}>
+              {msg.isUser ? (
+                <div className="ml-auto bg-blue-500 max-w-[80%] rounded-lg px-4 py-2 text-sm">
+                  {msg.text}
+                </div>
+              ) : (
+                <BubbleMessage text={proposal.text} />
+              )}
+            </div>
+          ))}
+        </div>
 
         {/* Input form */}
         {messages.length > 0 && (
