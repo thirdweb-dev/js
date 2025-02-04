@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import { Toaster } from "@/components/ui/sonner";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -82,7 +81,6 @@ export default function RootLayout({
               <EnsureValidConnectedWalletLoginServer />
             </Suspense>
           </AppRouterProviders>
-          <Toaster richColors />
           <DashboardRouterTopProgressBar />
           <NextTopLoader
             color="hsl(var(--primary))"

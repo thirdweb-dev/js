@@ -1,13 +1,32 @@
 "use client";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   THIRDWEB_ENGINE_FAUCET_WALLET,
   TURNSTILE_SITE_KEY,
 } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
@@ -17,9 +36,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { toUnits } from "thirdweb";
+import {
+  type ThirdwebClient,
+  prepareTransaction,
+  toUnits,
+  toWei,
+} from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+import type { Chain } from "thirdweb/chains";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSendTransaction,
+  useSwitchActiveWalletChain,
+  useWalletBalance,
+} from "thirdweb/react";
 import { z } from "zod";
 import { isOnboardingComplete } from "../../../../../../login/onboarding/isOnboardingRequired";
 
@@ -137,6 +168,35 @@ export function FaucetButton({
 
   const form = useForm<z.infer<typeof claimFaucetSchema>>();
 
+  // loading state
+  if (faucetWalletBalanceQuery.isPending || canClaimFaucetQuery.isPending) {
+    return (
+      <Button variant="outline" className="w-full gap-2">
+        Checking Faucet <Spinner className="size-3" />
+      </Button>
+    );
+  }
+
+  // faucet is empty
+  if (isFaucetEmpty) {
+    return (
+      <div className="w-full">
+        <div className="mb-3 text-center text-muted-foreground text-sm">
+          Faucet is empty right now
+        </div>
+        <SendFundsToFaucetModalButton
+          chain={definedChain}
+          isLoggedIn={!!twAccount}
+          client={client}
+          chainMeta={chain}
+          onFaucetRefill={() => {
+            faucetWalletBalanceQuery.refetch();
+          }}
+        />
+      </div>
+    );
+  }
+
   // Force users to log in to claim the faucet
   if (!address || !twAccount) {
     return (
@@ -160,24 +220,6 @@ export function FaucetButton({
         >
           Verify your Email
         </Link>
-      </Button>
-    );
-  }
-
-  // loading state
-  if (faucetWalletBalanceQuery.isPending || canClaimFaucetQuery.isPending) {
-    return (
-      <Button variant="outline" className="w-full gap-2">
-        Checking Faucet <Spinner className="size-3" />
-      </Button>
-    );
-  }
-
-  // faucet is empty
-  if (isFaucetEmpty) {
-    return (
-      <Button variant="outline" disabled className="!opacity-100 w-full">
-        Faucet is empty right now
       </Button>
     );
   }
@@ -248,5 +290,167 @@ export function FaucetButton({
         </p>
       )}
     </div>
+  );
+}
+
+const faucetFormSchema = z.object({
+  amount: z.coerce.number().refine((value) => value > 0, {
+    message: "Amount must be greater than 0",
+  }),
+});
+
+function SendFundsToFaucetModalButton(props: {
+  chain: Chain;
+  isLoggedIn: boolean;
+  client: ThirdwebClient;
+  chainMeta: ChainMetadata;
+  onFaucetRefill: () => void;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="default" className="w-full">
+          Refill Faucet
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="mb-2">
+          <DialogTitle>Refill Faucet</DialogTitle>
+          <DialogDescription>Send funds to faucet wallet</DialogDescription>
+        </DialogHeader>
+
+        <SendFundsToFaucetModalContent {...props} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function SendFundsToFaucetModalContent(props: {
+  chain: Chain;
+  isLoggedIn: boolean;
+  client: ThirdwebClient;
+  chainMeta: ChainMetadata;
+  onFaucetRefill: () => void;
+}) {
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const switchActiveWalletChain = useSwitchActiveWalletChain();
+  const sendTxMutation = useSendTransaction({
+    payModal: false,
+  });
+  const switchChainMutation = useMutation({
+    mutationFn: async () => {
+      await switchActiveWalletChain(props.chain);
+    },
+  });
+
+  const form = useForm<z.infer<typeof faucetFormSchema>>({
+    resolver: zodResolver(faucetFormSchema),
+    defaultValues: {
+      amount: 0.1,
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof faucetFormSchema>) {
+    const sendNativeTokenTx = prepareTransaction({
+      chain: props.chain,
+      client: props.client,
+      to: THIRDWEB_ENGINE_FAUCET_WALLET,
+      value: toWei(values.amount.toString()),
+    });
+
+    const promise = sendTxMutation.mutateAsync(sendNativeTokenTx);
+
+    toast.promise(promise, {
+      success: `Sent ${values.amount} ${props.chainMeta.nativeCurrency.symbol} to faucet`,
+      error: `Failed to send ${values.amount} ${props.chainMeta.nativeCurrency.symbol} to faucet`,
+    });
+
+    promise.then(() => {
+      props.onFaucetRefill();
+    });
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex min-w-0 flex-col gap-5"
+      >
+        <div className="min-w-0">
+          <p className="mb-2 text-foreground text-sm"> Faucet Wallet </p>
+          <CopyTextButton
+            copyIconPosition="right"
+            variant="outline"
+            className="w-full justify-between bg-card py-2 font-mono"
+            textToCopy={THIRDWEB_ENGINE_FAUCET_WALLET}
+            textToShow={THIRDWEB_ENGINE_FAUCET_WALLET}
+            tooltip={undefined}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    type="number"
+                    className="h-auto bg-card text-2xl md:text-2xl [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                  <div className="-translate-y-1/2 absolute top-1/2 right-4 text-muted-foreground text-sm">
+                    {props.chainMeta.nativeCurrency.symbol}
+                  </div>
+                </div>
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {!account && (
+          <CustomConnectWallet
+            chain={props.chain}
+            loginRequired={false}
+            isLoggedIn={props.isLoggedIn}
+            connectButtonClassName="!w-full"
+            detailsButtonClassName="!w-full"
+          />
+        )}
+
+        {account && activeChain && (
+          <div>
+            {activeChain.id === props.chain.id ? (
+              <Button
+                key="submit"
+                type="submit"
+                className="mt-4 w-full gap-2"
+                disabled={sendTxMutation.isPending}
+              >
+                {sendTxMutation.isPending && <Spinner className="size-4" />}
+                Send funds to faucet
+              </Button>
+            ) : (
+              <Button
+                key="switch"
+                className="mt-4 w-full gap-2"
+                disabled={switchChainMutation.isPending}
+                onClick={() => switchChainMutation.mutate()}
+              >
+                Switch to {props.chainMeta.name}{" "}
+                {switchChainMutation.isPending && (
+                  <Spinner className="size-4" />
+                )}
+              </Button>
+            )}
+          </div>
+        )}
+      </form>
+    </Form>
   );
 }
