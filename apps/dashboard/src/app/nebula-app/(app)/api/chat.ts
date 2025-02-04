@@ -2,40 +2,31 @@ import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
 // TODO - copy the source of this library to dashboard
 import { stream } from "fetch-event-stream";
 import type { NebulaTxData } from "../components/Chats";
-import type { ExecuteConfig } from "./types";
 
-export type ContextFilters = {
-  chainIds?: string[];
-  contractAddresses?: string[];
-  walletAddresses?: string[];
+export type NebulaContext = {
+  chainIds: string[] | null;
+  walletAddress: string | null;
 };
 
 export async function promptNebula(params: {
   message: string;
   sessionId: string;
-  config: ExecuteConfig | null;
   authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
   abortController: AbortController;
-  contextFilters: undefined | ContextFilters;
+  context: undefined | NebulaContext;
 }) {
   const body: Record<string, string | boolean | object> = {
     message: params.message,
-    user_id: "default-user",
-    session_id: params.sessionId,
     stream: true,
+    session_id: params.sessionId,
   };
 
-  if (params.contextFilters) {
-    body.context_filter = {
-      chain_ids: params.contextFilters.chainIds || [],
-      contract_addresses: params.contextFilters.contractAddresses || [],
-      wallet_addresses: params.contextFilters.walletAddresses || [],
+  if (params.context) {
+    body.context = {
+      chain_ids: params.context.chainIds || [],
+      wallet_address: params.context.walletAddress,
     };
-  }
-
-  if (params.config) {
-    body.execute_config = params.config;
   }
 
   const events = await stream(`${NEXT_PUBLIC_NEBULA_URL}/chat`, {

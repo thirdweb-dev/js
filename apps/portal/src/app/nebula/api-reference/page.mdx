@@ -28,10 +28,6 @@ curl -X POST https://nebula-api.thirdweb.com/chat \
     "message": "send 0.0001 ETH on sepolia to vitalik.eth",
     "user_id": "default-user",
     "stream": false,
-    "execute_config": {
-      "mode": "client",
-      "signer_wallet_address": "0xc3F2b2a12Eba0f5989cD75B2964E31D56603a2cE"
-    }
   }'
 ```
 
@@ -52,10 +48,9 @@ Control what blockchain data informs AI responses through context filtering:
 
 ```json
 {
-  "context_filter": {
-    "chain_ids": [1],              // comma delimited list of chain ID's
-    "contract_addresses": ["0x..."], // Comma delimited list of contract addresses
-    "wallet_addresses": ["0x..."] // Comma delimited list of wallet addresses
+  "context": {
+    "chain_ids": ["1"], // comma delimited list of chain ID's
+    "wallet_address": "0x..." // wallet address
   }
 }
 ```

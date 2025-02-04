@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -31,52 +31,34 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb";
 import { z } from "zod";
-import type { ContextFilters } from "../api/chat";
+import type { NebulaContext } from "../api/chat";
 
 export default function ContextFiltersButton(props: {
-  contextFilters: ContextFilters | undefined;
-  setContextFilters: (filters: ContextFilters | undefined) => void;
-  updateContextFilters: (filters: ContextFilters | undefined) => Promise<void>;
+  contextFilters: NebulaContext | undefined;
+  setContextFilters: (filters: NebulaContext | undefined) => void;
+  updateContextFilters: (filters: NebulaContext | undefined) => Promise<void>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const chainIds = props.contextFilters?.chainIds;
-  const contractAddresses = props.contextFilters?.contractAddresses;
-  const walletAddresses = props.contextFilters?.walletAddresses;
+  const walletAddress = props.contextFilters?.walletAddress;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline" className="max-w-full gap-2">
           <SlidersHorizontalIcon className="size-3.5 shrink-0 text-muted-foreground" />
-          Context Filters
+          Context
           <div className="flex gap-1 overflow-hidden">
             {chainIds && chainIds.length > 0 && (
               <Badge className="gap-1 truncate" variant="secondary">
                 Chain
-                <span className="max-sm:hidden">{chainIds.join(", ")}</span>
               </Badge>
             )}
 
-            {contractAddresses && contractAddresses.length > 0 && (
-              <Badge className="gap-1 truncate" variant="secondary">
-                Contract
-                <span className="max-sm:hidden">
-                  {contractAddresses
-                    .map((add) => `${add.trim().slice(0, 6)}..`)
-                    .join(", ")}
-                </span>
-              </Badge>
-            )}
-
-            {walletAddresses && walletAddresses.length > 0 && (
+            {walletAddress && (
               <Badge className="gap-1 truncate" variant="secondary">
                 Wallet
-                <span className="max-sm:hidden">
-                  {walletAddresses
-                    .map((add) => `${add.trim().slice(0, 6)}..`)
-                    .join(", ")}
-                </span>
               </Badge>
             )}
           </div>
@@ -84,9 +66,7 @@ export default function ContextFiltersButton(props: {
       </DialogTrigger>
       <DialogContent className="overflow-hidden p-0">
         <DialogHeader className="px-6 pt-6 pb-1">
-          <DialogTitle className="font-semibold text-xl">
-            Context Filters
-          </DialogTitle>
+          <DialogTitle className="font-semibold text-xl">Context</DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Provide context to Nebula for your prompts
           </DialogDescription>
@@ -105,17 +85,21 @@ export default function ContextFiltersButton(props: {
   );
 }
 
-const commaSeparateListOfAddresses = z.string().refine(
-  (s) => {
-    if (s.trim() === "") {
-      return true;
-    }
-    return s.split(",").every((s) => isAddress(s.trim()));
-  },
-  {
-    message: "Must be a comma-separated list of valid addresses",
-  },
-);
+const optionalAddressSchema = z
+  .string()
+  .transform((v) => v.trim())
+  .optional()
+  .refine(
+    (s) => {
+      if (!s) {
+        return true;
+      }
+      return isAddress(s);
+    },
+    {
+      message: "Must be a valid addresses",
+    },
+  );
 
 const formSchema = z.object({
   chainIds: z.string().refine(
@@ -132,14 +116,13 @@ const formSchema = z.object({
       message: "Chain IDs must be a comma-separated list of integers",
     },
   ),
-  contractAddresses: commaSeparateListOfAddresses,
-  walletAddresses: commaSeparateListOfAddresses,
+  walletAddress: optionalAddressSchema,
 });
 
 export function ContextFiltersForm(props: {
-  contextFilters: ContextFilters | undefined;
-  updateContextFilters: (filters: ContextFilters | undefined) => Promise<void>;
-  setContextFilters: (filters: ContextFilters | undefined) => void;
+  contextFilters: NebulaContext | undefined;
+  updateContextFilters: (filters: NebulaContext | undefined) => Promise<void>;
+  setContextFilters: (filters: NebulaContext | undefined) => void;
   formBodyClassName?: string;
   formActionContainerClassName?: string;
   modal:
@@ -158,40 +141,26 @@ export function ContextFiltersForm(props: {
       chainIds: props.contextFilters?.chainIds
         ? props.contextFilters.chainIds.join(",")
         : "",
-      contractAddresses: props.contextFilters?.contractAddresses
-        ? props.contextFilters.contractAddresses.join(",")
-        : "",
-      walletAddresses: props.contextFilters?.walletAddresses
-        ? props.contextFilters.walletAddresses.join(",")
-        : "",
+      walletAddress: props.contextFilters?.walletAddress || "",
     },
     reValidateMode: "onChange",
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { chainIds, contractAddresses, walletAddresses } = values;
+    const { chainIds, walletAddress } = values;
 
     const chainIdsArray = chainIds.split(",").filter((id) => id.trim());
 
-    const contractAddressesArray = contractAddresses
-      .split(",")
-      .filter((v) => v.trim());
-
-    const walletAddressesArray = walletAddresses
-      .split(",")
-      .filter((v) => v.trim());
-
     const data = {
       chainIds: chainIdsArray,
-      contractAddresses: contractAddressesArray,
-      walletAddresses: walletAddressesArray,
+      walletAddress: walletAddress || null,
     };
 
     const promise = updateMutation.mutateAsync(data);
 
     toast.promise(promise, {
-      success: "Context filters updated",
-      error: "Failed to update context filters",
+      success: "Context updated",
+      error: "Failed to update context",
     });
 
     promise.then(() => {
@@ -228,7 +197,6 @@ export function ContextFiltersForm(props: {
                       .filter(Boolean)
                       .map(Number)}
                     onChange={(values) => {
-                      console.log("values", values);
                       form.setValue("chainIds", values.join(","));
                     }}
                   />
@@ -240,33 +208,15 @@ export function ContextFiltersForm(props: {
 
           <FormField
             control={form.control}
-            name="contractAddresses"
+            name="walletAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contract Addresses</FormLabel>
+                <FormLabel>Wallet Address</FormLabel>
                 <FormControl>
-                  <AutoResizeTextarea
+                  <Input
                     {...field}
-                    placeholder="0x123..., 0x456..."
-                    className="!leading-relaxed min-h-[52px] resize-none md:text-xs"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="walletAddresses"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Wallet Addresses</FormLabel>
-                <FormControl>
-                  <AutoResizeTextarea
-                    {...field}
-                    placeholder="0x123..., 0x456..."
-                    className="!leading-relaxed min-h-[52px] resize-none md:text-xs"
+                    placeholder="0x123.."
+                    className="md:text-xs md:placeholder:text-xs"
                   />
                 </FormControl>
                 <FormMessage />
