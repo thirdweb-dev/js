@@ -1,10 +1,5 @@
 import { checkServerIdentity } from "node:tls";
-import {
-  CompressionTypes,
-  Kafka,
-  type Producer,
-  type ProducerConfig,
-} from "kafkajs";
+import { CompressionTypes, Kafka, type Producer } from "kafkajs";
 import { compress, decompress } from "lz4js";
 
 // CompressionCodecs is not exported properly in kafkajs. Source: https://github.com/tulios/kafkajs/issues/1391
@@ -17,11 +12,10 @@ const { CompressionCodecs } = KafkaJS;
  *
  * Example:
  * ```ts
- * usageV2 = new KafkaProducer(..)
- * await usageV2.init()
- * await usageV2.sendEvents(events)
+ * kafka = new KafkaProducer(...)
+ * await kafka.send(topic, events)
  * // Non-blocking:
- * // void usageV2.sendEvents(events).catch(console.error)
+ * // void kafka.send(topic, events).catch((e) => console.error(e))
  * ```
  */
 export class KafkaProducer {
@@ -95,25 +89,8 @@ export class KafkaProducer {
   }
 
   /**
-   * Connect the producer.
-   * This must be called before calling `sendEvents()`.
-   */
-  async init(configOverrides?: ProducerConfig) {
-    this.producer = this.kafka.producer({
-      allowAutoTopicCreation: false,
-      ...configOverrides,
-    });
-    await this.producer.connect();
-  }
-
-  /**
    * Send messages to a Kafka topic.
    * This method may throw. To call this non-blocking:
-   *
-   * ```ts
-   * kafka = new KafkaProducer(...)
-   * void kafka.send(topic, messages).catch(console.error)
-   *
    * @param topic
    * @param messages
    * @param configOverrides
@@ -124,13 +101,17 @@ export class KafkaProducer {
     /**
      * Reference: https://kafka.js.org/docs/producing#producing-messages
      */
-    configOverrides?: {
+    options?: {
       acks?: number;
       timeout?: number;
+      allowAutoTopicCreation?: boolean;
     },
   ): Promise<void> {
     if (!this.producer) {
-      throw new Error("Producer not initialized. Call `init()` first.");
+      this.producer = this.kafka.producer({
+        allowAutoTopicCreation: options?.allowAutoTopicCreation ?? false,
+      });
+      await this.producer.connect();
     }
 
     await this.producer.send({
@@ -139,9 +120,8 @@ export class KafkaProducer {
         value: JSON.stringify(m),
       })),
       compression: this.compression,
-      acks: -1, // All brokers must acknowledge
-      timeout: 10_000, // 10 seconds
-      ...configOverrides,
+      acks: options?.acks ?? -1, // Default: All brokers must acknowledge
+      timeout: options?.timeout ?? 10_000, // Default: 10 seconds
     });
   }
 

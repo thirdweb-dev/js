@@ -1,5 +1,4 @@
 import { randomUUID } from "node:crypto";
-import type { ProducerConfig } from "kafkajs";
 import {
   type UsageV2Event,
   type UsageV2Source,
@@ -14,10 +13,9 @@ import { KafkaProducer } from "./kafka.js";
  * Example:
  * ```ts
  * usageV2 = new UsageV2Producer(..)
- * await usageV2.init()
  * await usageV2.sendEvents(events)
  * // Non-blocking:
- * // void usageV2.sendEvents(events).catch(console.error)
+ * // void usageV2.sendEvents(events).catch((e) => console.error(e))
  * ```
  */
 export class UsageV2Producer {
@@ -56,31 +54,19 @@ export class UsageV2Producer {
   }
 
   /**
-   * Connect the producer.
-   * This must be called before calling `sendEvents()`.
-   */
-  async init(configOverrides?: ProducerConfig) {
-    return this.kafkaProducer.init(configOverrides);
-  }
-
-  /**
    * Send usageV2 events.
    * This method may throw. To call this non-blocking:
-   *
-   * ```ts
-   * usageV2 = new UsageV2Producer(...)
-   * void usageV2.sendEvents(events).catch(console.error)
-   *
-   * @param events - The events to send.
+   * @param events
    */
   async sendEvents(
     events: UsageV2Event[],
     /**
      * Reference: https://kafka.js.org/docs/producing#producing-messages
      */
-    configOverrides?: {
+    options?: {
       acks?: number;
       timeout?: number;
+      allowAutoTopicCreation?: boolean;
     },
   ): Promise<void> {
     const parsedEvents = events.map((event) => ({
@@ -92,7 +78,7 @@ export class UsageV2Producer {
         ? event.team_id.slice(5)
         : event.team_id,
     }));
-    await this.kafkaProducer.send(this.topic, parsedEvents, configOverrides);
+    await this.kafkaProducer.send(this.topic, parsedEvents, options);
   }
 
   /**
