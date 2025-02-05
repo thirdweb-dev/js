@@ -37,7 +37,7 @@
     "lucide-react": "0.474.0",
     "next": "15.1.6",
     "nextjs-toploader": "^1.6.12",
-    "node-html-parser": "^6.1.13",
+    "node-html-parser": "^7.0.1",
     "posthog-js": "1.67.1",
     "prettier": "3.3.3",
     "react": "19.0.0",
