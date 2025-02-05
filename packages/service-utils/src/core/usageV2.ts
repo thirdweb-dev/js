@@ -1,4 +1,6 @@
-import type { ServiceName } from "../node/index.js";
+import type { ServiceName } from "./services.js";
+
+export type UsageV2Source = ServiceName | "sdk";
 
 export interface UsageV2Event {
   /**
@@ -53,6 +55,6 @@ export interface UsageV2Event {
   [key: string]: boolean | number | string | Date | null | undefined;
 }
 
-export function getTopicName(productName: ServiceName) {
-  return `usage_v2.raw_${productName}`;
+export function getTopicName(source: UsageV2Source) {
+  return `usage_v2.raw_${source}`;
 }
