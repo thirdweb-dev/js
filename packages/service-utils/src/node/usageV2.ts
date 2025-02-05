@@ -1,21 +1,11 @@
 import { randomUUID } from "node:crypto";
-import { checkServerIdentity } from "node:tls";
-import {
-  CompressionTypes,
-  Kafka,
-  type Producer,
-  type ProducerConfig,
-} from "kafkajs";
-import { compress, decompress } from "lz4js";
+import type { ProducerConfig } from "kafkajs";
 import {
   type UsageV2Event,
   type UsageV2Source,
   getTopicName,
 } from "../core/usageV2.js";
-
-// CompressionCodecs is not exported properly in kafkajs. Source: https://github.com/tulios/kafkajs/issues/1391
-import KafkaJS from "kafkajs";
-const { CompressionCodecs } = KafkaJS;
+import { KafkaProducer } from "./kafka.js";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -31,10 +21,8 @@ const { CompressionCodecs } = KafkaJS;
  * ```
  */
 export class UsageV2Producer {
-  private kafka: Kafka;
-  private producer: Producer | null = null;
+  private kafkaProducer: KafkaProducer;
   private topic: string;
-  private compression: CompressionTypes;
 
   constructor(config: {
     /**
@@ -57,37 +45,14 @@ export class UsageV2Producer {
     username: string;
     password: string;
   }) {
-    const {
-      producerName,
-      environment,
-      source,
-      shouldCompress = true,
-      username,
-      password,
-    } = config;
-
-    this.kafka = new Kafka({
-      clientId: `${producerName}-${environment}`,
-      brokers:
-        environment === "production"
-          ? ["warpstream.thirdweb.xyz:9092"]
-          : ["warpstream-dev.thirdweb.xyz:9092"],
-      ssl: {
-        checkServerIdentity(hostname, cert) {
-          return checkServerIdentity(hostname.toLowerCase(), cert);
-        },
-      },
-      sasl: {
-        mechanism: "plain",
-        username,
-        password,
-      },
+    this.kafkaProducer = new KafkaProducer({
+      producerName: config.producerName,
+      environment: config.environment,
+      shouldCompress: config.shouldCompress,
+      username: config.username,
+      password: config.password,
     });
-
-    this.topic = getTopicName(source);
-    this.compression = shouldCompress
-      ? CompressionTypes.LZ4
-      : CompressionTypes.None;
+    this.topic = getTopicName(config.source);
   }
 
   /**
@@ -95,28 +60,7 @@ export class UsageV2Producer {
    * This must be called before calling `sendEvents()`.
    */
   async init(configOverrides?: ProducerConfig) {
-    if (this.compression === CompressionTypes.LZ4) {
-      CompressionCodecs[CompressionTypes.LZ4] = () => ({
-        // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
-        compress: (encoder: { buffer: Buffer }) => {
-          const compressed = compress(encoder.buffer);
-          // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
-          return Buffer.from(compressed);
-        },
-        // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
-        decompress: (buffer: Buffer) => {
-          const decompressed = decompress(buffer);
-          // biome-ignore lint/style/noRestrictedGlobals: kafkajs expects a Buffer
-          return Buffer.from(decompressed);
-        },
-      });
-    }
-
-    this.producer = this.kafka.producer({
-      allowAutoTopicCreation: false,
-      ...configOverrides,
-    });
-    await this.producer.connect();
+    return this.kafkaProducer.init(configOverrides);
   }
 
   /**
@@ -139,32 +83,16 @@ export class UsageV2Producer {
       timeout?: number;
     },
   ): Promise<void> {
-    if (!this.producer) {
-      throw new Error("Producer not initialized. Call `init()` first.");
-    }
-
-    const parsedEvents = events.map((event) => {
-      return {
-        ...event,
-        id: event.id ?? randomUUID(),
-        created_at: event.created_at ?? new Date(),
-        // Remove the "team_" prefix, if any.
-        team_id: event.team_id.startsWith("team_")
-          ? event.team_id.slice(5)
-          : event.team_id,
-      };
-    });
-
-    await this.producer.send({
-      topic: this.topic,
-      messages: parsedEvents.map((event) => ({
-        value: JSON.stringify(event),
-      })),
-      acks: -1, // All brokers must acknowledge
-      timeout: 10_000, // 10 seconds
-      compression: this.compression,
-      ...configOverrides,
-    });
+    const parsedEvents = events.map((event) => ({
+      ...event,
+      id: event.id ?? randomUUID(),
+      created_at: event.created_at ?? new Date(),
+      // Remove the "team_" prefix, if any.
+      team_id: event.team_id.startsWith("team_")
+        ? event.team_id.slice(5)
+        : event.team_id,
+    }));
+    await this.kafkaProducer.send(this.topic, parsedEvents, configOverrides);
   }
 
   /**
@@ -172,9 +100,6 @@ export class UsageV2Producer {
    * Useful when shutting down the service to flush in-flight events.
    */
   async disconnect() {
-    if (this.producer) {
-      await this.producer.disconnect();
-      this.producer = null;
-    }
+    await this.kafkaProducer.disconnect();
   }
 }
