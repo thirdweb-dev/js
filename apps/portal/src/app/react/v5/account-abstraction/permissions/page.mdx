@@ -4,25 +4,25 @@ import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Permissions & Session Keys",
+		title: "Permisos y Claves de Sesión",
 		icon: "thirdweb",
 	},
-	title: "Account Permissions & Session Keys | thirdweb",
+	title: "Permisos de Cuenta y Claves de Sesión | thirdweb",
 	description:
-		"All of the account contracts - Simple and Managed - share the same permission model. In this section, we'll describe this permission model in detail",
+		"Todos los contratos de cuenta - Simple y Administrada - comparten el mismo modelo de permisos. En esta sección, describiremos este modelo en detalle.",
 });
 
-# Account Permissions & Session Keys
+# Permisos de Cuenta y Claves de Sesión
 
-A [smart account](/react/v5/account-abstraction/get-started) can have two types of actors: _Session Keys_ and _Admins_.
+Una [cuenta inteligente](/react/v5/account-abstraction/get-started) puede tener dos tipos de actores: _Claves de Sesión_ y _Administradores_.
 
-## Admins
+## Administradores
 
-Admins have **unrestricted access** to the account; call any functions on the contract, use the contract without going through the ERC-4337 infrastructure (bundlers, EntryPoint, etc.), withdraw the account's native token balance, and so on.
+Los administradores tienen **acceso sin restricciones** a la cuenta; pueden llamar a cualquier función en el contrato, usar el contrato sin pasar por la infraestructura de ERC-4337 (bundlers, EntryPoint, etc.), retirar el saldo de tokens nativos de la cuenta, entre otras acciones.
 
-### Assigning Admin Permissions
+### Asignación de Permisos de Administrador
 
-Existing admins on the account can add new admins, remove existing admins or renounce their own admin status.
+Los administradores existentes en la cuenta pueden agregar nuevos administradores, eliminar administradores existentes o renunciar a su estado de administrador.
 
 ```tsx
 import { addAdmin } from "thirdweb/extensions/erc4337";
@@ -47,7 +47,7 @@ const onClick = () => {
 };
 ```
 
-Check out the [API reference](/references/typescript/v5/erc4337/addAdmin) function for more information.
+Consulta la función [Referencia de la API](/references/typescript/v5/erc4337/addAdmin) para más información.
 
 <Stack>
 
@@ -55,37 +55,37 @@ Check out the [API reference](/references/typescript/v5/erc4337/addAdmin) functi
 	title="addAdmin"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/addAdmin"
-	description="Function to add a new admin to the account"
+	description="Función para agregar un nuevo administrador a la cuenta"
 />
 
 <ArticleIconCard
 	title="getAllAdmins"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/getAllAdmins"
-	description="Function to get all admins of the account"
+	description="Función para obtener todos los administradores de la cuenta"
 />
 
 <ArticleIconCard
 	title="removeAdmin"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/removeAdmin"
-	description="Function to remove an admin from the account"
+	description="Función para eliminar un administrador de la cuenta"
 />
 </Stack>
 
-## Session Keys
+## Claves de Sesión
 
-Session Keys are additional authorized signers that must go through ERC-4337 infrastructure (bundlers, EntryPoint, etc.) to use an account to execute transactions. Session keys can use an account under certain restrictions.
+Las claves de sesión son firmantes adicionales autorizados que deben pasar por la infraestructura de ERC-4337 (bundlers, EntryPoint, etc.) para usar una cuenta y ejecutar transacciones. Las claves de sesión pueden utilizar una cuenta bajo ciertas restricciones.
 
-### Assigning Session Key Permissions
+### Asignación de Permisos a las Claves de Sesión
 
-Each individual session key has its own permissions to use the account. Only admins can set the permissions for session keys.
+Cada clave de sesión individual tiene sus propios permisos para usar la cuenta. Solo los administradores pueden establecer los permisos para las claves de sesión.
 
-Session keys can be assigned the following permissions:
+Las claves de sesión pueden asignarse con los siguientes permisos:
 
-- [Required] Allow interaction with specific contracts with the account ("*" for any contracts)
-- [Optional] Have a maximum amount of native tokens that can be transferred per transaction (defaults to 0 eth, transactions with value will be rejected)
-- [Optional] Have access to the account only during a specific time window (defaults to 10 years from now)
+- [Obligatorio] Permitir la interacción con contratos específicos usando la cuenta ("*" para cualquier contrato).
+- [Opcional] Definir un monto máximo de tokens nativos que se pueden transferir por transacción (por defecto es 0 ETH, por lo que las transacciones con valor serán rechazadas).
+- [Opcional] Restringir el acceso a la cuenta a un período de tiempo específico (por defecto es 10 años a partir de ahora).
 
 ```tsx
 import { addSessionKey } from "thirdweb/extensions/erc4337";
@@ -104,19 +104,19 @@ const onClick = () => {
 			client,
 		}),
 		account: smartAccount,
-		sessionKeyAddress: "0x...", // the address of the new session key
+		sessionKeyAddress: "0x...", // la dirección de la nueva clave de sesión
 		permissions: {
-			approvedTargets: "*", // the addresses of allowed contracts, or '*' for any contract
-			nativeTokenLimitPerTransaction: 0.1, // the maximum amount of native token (in ETH) that the session key can spend per transaction
-			permissionStartTimestamp: new Date(), // the date when the session key becomes active
-			permissionEndTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000), // the date when the session key expires
+			approvedTargets: "*", // las direcciones de los contratos permitidos, o '*' para cualquier contrato
+			nativeTokenLimitPerTransaction: 0.1, // la cantidad máxima de tokens nativos (en ETH) que la clave de sesión puede gastar por transacción
+			permissionStartTimestamp: new Date(), // la fecha en que la clave de sesión se activa
+			permissionEndTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000), // la fecha en que la clave de sesión expira
 		},
 	});
 	sendTransaction(transaction);
 };
 ```
 
-Check out the [API reference](/references/typescript/v5/erc4337/addSessionKey) for more information.
+Consulta la [Referencia de la API](/references/typescript/v5/erc4337/addSessionKey) para más información.
 
 <Stack>
 
@@ -124,27 +124,28 @@ Check out the [API reference](/references/typescript/v5/erc4337/addSessionKey) f
 	title="addSessionKey"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/addSessionKey"
-	description="Function to add a new session key to the account"
+	description="Función para agregar una nueva clave de sesión a la cuenta"
 />
 
 <ArticleIconCard
 	title="getAllActiveSigners"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/getAllActiveSigners"
-	description="Function to get all session keys of the account"
+	description="Función para obtener todas las claves de sesión de la cuenta"
 />
 
 <ArticleIconCard
 	title="getPermissionsForSigner"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/getPermissionsForSigner"
-	description="Function to get the permissions assigned to a session key"
+	description="Función para obtener los permisos asignados a una clave de sesión"
 />
 
 <ArticleIconCard
 	title="removeSessionKey"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/erc4337/removeSessionKey"
-	description="Function to remove a session key from the account"
+	description="Función para eliminar una clave de sesión de la cuenta"
 />
 </Stack>
+

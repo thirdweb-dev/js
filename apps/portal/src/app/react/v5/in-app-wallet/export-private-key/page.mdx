@@ -6,50 +6,49 @@ import ExportedKey from './exported-key.png'
 
 export const metadata = createMetadata({
 	image: {
-		title: "Export private key of In-App Wallet",
+		title: "Exportar clave privada de la billetera In-App",
 		icon: "wallets",
 	},
-	title: "Export private key | thirdweb In-App Wallet",
+	title: "Exportar clave privada | thirdweb In-App Wallet",
 	description:
-		"Learn how to export private keys for thirdweb in-app wallets",
+		"Aprende cómo exportar claves privadas de las billeteras in-app de thirdweb.",
 });
 
-# Export Private Key
+# Exportar Clave Privada
 
-Learn how to export the private key for a thirdweb in-app wallet using the Connect modal. 
+Aprende cómo exportar la clave privada de una billetera in-app de thirdweb utilizando el modal de conexión.
 
 <Steps>
 
-  <Step title="Login">
-    Login to your in-app wallet on the application using the [ConnectButton](/react/v5/connect-button) component.
+  <Step title="Iniciar sesión">
+    Inicia sesión en tu billetera in-app en la aplicación utilizando el componente [ConnectButton](/react/v5/connect-button).
   </Step>
 
-  <Step title="Manage">
-    Select "Manage Wallet".
+  <Step title="Administrar">
+    Selecciona "Administrar Billetera".
     <DocImage src={ManageWallet} />
   </Step>
 
-  <Step title="Export">
-    Choose "Export Private Key" and confirm the action to reveal the private key.
+  <Step title="Exportar">
+    Elige "Exportar Clave Privada" y confirma la acción para revelar la clave privada.
     <DocImage src={ExportKey} />
   </Step>
 
-  <Step title="Confirm">
-	Confirm you want to reveal your private key.
-    <Callout variant="warning" title="Secure Private Keys">
-      Revealing private keys can compromise your assets and security. Keep them safe and confidential at all times.
+  <Step title="Confirmar">
+	Confirma que deseas revelar tu clave privada.
+    <Callout variant="warning" title="Seguridad de Claves Privadas">
+      Revelar claves privadas puede comprometer tus activos y seguridad. Manténlas seguras y confidenciales en todo momento.
     </Callout>
     <DocImage src={ConfirmReveal} />
   </Step>
 
-  <Step title="Reveal">
-    Copy the exported private key directly from the modal.
+  <Step title="Revelar">
+    Copia la clave privada exportada directamente desde el modal.
     <DocImage src={ExportedKey} />
   </Step>
 
 </Steps>
 
-
-<Callout variant="info" title="Advanced Configuration">
-As an advanced option, to hide the export private key option from the modal, set the `hidePrivateKeyOption` to `true`
+<Callout variant="info" title="Configuración Avanzada">
+Como opción avanzada, para ocultar la opción de exportar la clave privada en el modal, establece `hidePrivateKeyOption` en `true`.
 </Callout>

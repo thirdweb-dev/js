@@ -9,26 +9,27 @@ import type { Ecosystem } from "../../../wallets/in-app/core/wallet/types.js";
 import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 
 /**
- * Creates a link to another thirdweb-supported site with wallet connection parameters.
+ * Crea un enlace a otro sitio compatible con thirdweb con parámetros de conexión de billetera.
  *
- *  The target site must support the connected wallet (ecosystem or in-app).
+ * El sitio de destino debe soportar la billetera conectada (del ecosistema o in-app).
  *
- * @param {Object} props - The props to pass to the anchor tag
- * @param {String} props.href - The URL of the site to link to
- * @param {ThirdwebClient} props.client - The current site's thirdweb client
- * @param {Ecosystem} [props.ecosystem] - The ecosystem to use for the wallet connection in the target site
- * @param {React.ReactNode} props.children - The content to render inside the link
+ * @param {Object} props - Las propiedades a pasar a la etiqueta de ancla
+ * @param {String} props.href - La URL del sitio al que enlazar
+ * @param {ThirdwebClient} props.client - El cliente de thirdweb del sitio actual
+ * @param {Ecosystem} [props.ecosystem] - El ecosistema a usar para la conexión de la billetera en el sitio de destino
+ * @param {React.ReactNode} props.children - El contenido que se renderizará dentro del enlace
  *
  * @example
  * ```tsx
  * import { SiteLink } from "thirdweb/react";
  *
  * <SiteLink href="https://thirdweb.com" client={thirdwebClient} ecosystem={{ id: "ecosystem.thirdweb" }}>
- *   Visit Site
+ *   Visitar el sitio
  * </SiteLink>
  * ```
  * @walletConnection
  */
+
 export function SiteLink({
   href,
   client,

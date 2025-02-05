@@ -1,27 +1,28 @@
 import { InstallTabs, Steps, Step, Callout } from "@doc";
 
-# Getting Started
+# Primeros Pasos
 
-In this quickstart guide, we'll create a basic script to generate a wallet using a private key and send a transaction. We’ll assume you already have a TypeScript project created.
+En esta guía de inicio rápido, crearemos un script básico para generar una billetera usando una clave privada y enviar una transacción. Supondremos que ya tienes un proyecto en TypeScript creado.
 
 <Steps>
-<Step title="Install the SDK">
+<Step title="Instalar el SDK">
 
-To get started, install the thirdweb SDK using your preferred package manager.
+Para comenzar, instala el SDK de thirdweb usando tu gestor de paquetes preferido.
 
 <InstallTabs npm="npm i thirdweb" yarn="yarn add thirdweb" pnpm="pnpm i thirdweb" bun="bun i thirdweb" />
 </Step>
 
-<Step title="Create a thirdweb client">
+<Step title="Crear un cliente de thirdweb">
 
-Get a client id from https://thirdweb.com/create-api-key by creating a new project and add it to your `.env`.
+Obtén un client id desde [thirdweb](https://thirdweb.com/create-api-key) creando un nuevo proyecto y agrégalo a tu archivo `.env`.
+
 
 ```shell
 THIRDWEB_SECRET_KEY=[YOUR SECRET KEY]
 WALLET_PRIVATE_KEY=[YOUR WALLET PRIVATE KEY]
 ```
 
-Create a thirdweb client in your script.
+Crea un cliente de thirdweb en tu script.
 
 ```ts
 import { createThirdwebClient } from "thirdweb"
@@ -33,36 +34,35 @@ const client = createThirdwebClient({
 ```
 
 <Callout variant="warning" title="Client Id vs Secret Key">
-	Client Id is used for **client side usage** and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+	El Client Id se usa para **uso en el lado del cliente** y está restringido por las restricciones de dominio que configures en tu clave API. Es un identificador público que se puede utilizar de forma segura en el frontend.
 
-    Secret key is used for **server side or script usage** and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+    La Secret Key se usa para **uso en el lado del servidor o en scripts** y no está restringida por las restricciones de dominio. Nunca expongas tu Secret Key en el código del cliente.
 </Callout>
-
 
 </Step>
 
-<Step title="Read Contract State">
+<Step title="Leer el estado del contrato">
 
-A client is all your need to start reading blockchain data.
+Un cliente es todo lo que necesitas para comenzar a leer datos de la blockchain.
 
-1. Import the extensions you want to use.
-2. Define a contract with `getContract` at a given address and chain.
-3. Call the extension function to read the data.
+1. Importa las extensiones que deseas usar.
+2. Define un contrato con `getContract` en una dirección y cadena específicas.
+3. Llama a la función de la extensión para leer los datos.
 
 ```ts
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
-// 1. import the extension you want to use
+// 1. Importar la extensión que deseas usar
 import { getOwnedNFTs } from "thirdweb/extensions/erc1155";
 
-// 2. get the contract
+// 2. Obtener el contrato
 const contract = getContract({
     client,
     address: "0x1234...",
     chain: sepolia,
 });
 
-// 3. call the extension function
+// 3. Llamar a la función de la extensión
 const ownedNFTs = await getOwnedNFTs({
 	contract,
 	address: "0x1234...",
@@ -73,9 +73,9 @@ console.log(ownedNFTs);
 
 </Step>
 
-<Step title="Generate a wallet from a private key">
+<Step title="Generar una billetera desde una clave privada">
 
-To perform transactions from your script, you'll need an account. You can generate a wallet from a private key using the `privateKeyToAccount` function.
+Para realizar transacciones desde tu script, necesitarás una cuenta. Puedes generar una billetera a partir de una clave privada utilizando la función `privateKeyToAccount`.
 
 ```ts
 import { privateKeyToAccount } from "thirdweb/wallets"
@@ -85,21 +85,21 @@ const account = privateKeyToAccount({
 	privateKey: process.env.PRIVATE_KEY
 });
 
-// Get the address of the account
+// Obtener la dirección de la cuenta
 const address = account.address;
 console.log("Connected as", address);
 ```
 
 </Step>
 
-<Step title="Read Wallet Data">
+<Step title="Leer datos de la billetera">
 
-Let's read balance of the account you just created, you'll need funds to perform transactions.
+Leamos el saldo de la cuenta que acabas de crear. Necesitarás fondos para realizar transacciones.
 
 ```ts
 import { getWalletBalance } from "thirdweb/wallets";
 
-// Get the balance of the account
+// Obtener el saldo de la cuenta
 const balance = await getWalletBalance({
 	account,
 	chain: sepolia,
@@ -109,68 +109,69 @@ console.log("Balance:", balance.displayValue, balance.symbol);
 
 </Step>
 
-<Step title="Send a transaction">
+<Step title="Enviar una transacción">
 
-With the account created and funded, you can now send a transaction.
+Con la cuenta creada y financiada, ahora puedes enviar una transacción.
 
-1. Import the extension you want to use.
-2. Define a contract with `getContract` at a given address and chain.
-3. Call the extension function to prepare the transaction.
-4. Send the transaction.
+1. Importa la extensión que deseas usar.
+2. Define un contrato con `getContract` en una dirección y cadena específicas.
+3. Llama a la función de la extensión para preparar la transacción.
+4. Envía la transacción.
+
 
 ```ts
 import { getContract, sendTransaction } from "thirdweb";
-// 1. Import the extension you want to use
+// 1. Importar la extensión que deseas usar
 import { transfer } from "thirdweb/extensions/erc20";
 
-// 2. Define the contract
+// 2. Definir el contrato
 const contract = getContract({
     client,
     address: "0x1234...",
     chain: sepolia,
 });
 
-// 3. Call the extension function to prepare the transaction
+// 3. Llamar a la función de la extensión para preparar la transacción
 const transaction = transfer({
   contract,
   to: "0x1234...",
   amount: "0.01",
 });
 
-// 4. Send the transaction
+// 4. Enviar la transacción
 const result = await sendTransaction({
   transaction,
   account,
 });
 
-console.log("Transaction hash:", result.transactionHash);
+console.log("Hash de la transacción:", result.transactionHash);
 ```
 
-You can also call generic contract functions using the `prepareContractCall` function by just specifying the solidity method signature you want to call. The arguments will be automatically inferred based on the method signature.
+También puedes llamar funciones genéricas de contratos utilizando la función `prepareContractCall`, simplemente especificando la firma del método de Solidity que deseas llamar. Los argumentos se inferirán automáticamente según la firma del método.
 
 ```ts
 import { getContract, prepareContractCall, sendTransaction } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { toWei } from "thirdweb/utils";
 
-// 1. Define the contract
+// 1. Definir el contrato
 const contract = getContract({
     client,
     address: "0x1234...",
     chain: sepolia,
 });
 
-// 2. Prepare the transaction
+// 2. Preparar la transacción
 const transaction = prepareContractCall({
   contract,
-  // Pass the method signature that you want to call
+  // Especifica la firma del método que deseas llamar
   method: "function mintTo(address to, uint256 amount)",
-  // and the params for that method
-  // Their types are automatically inferred based on the method signature
+  // Y los parámetros para ese método
+  // Sus tipos se infieren automáticamente según la firma del método
   params: ["0x123...", toWei("100")],
 });
 
-// 3. Send the transaction
+// 3. Enviar la transacción
 const result = await sendTransaction({
   transaction,
   account,
@@ -180,12 +181,11 @@ console.log("Transaction hash:", result.transactionHash);
 ```
 
 </Step>
-<Step title="Conclusion">
+<Step title="Conclusión">
 
-You've now learned the basics of how to use the thirdweb SDK to read and write to the blockchain. You can now start building your own applications and explore the full potential of the SDK.
+Ahora has aprendido los conceptos básicos sobre cómo usar el SDK de thirdweb para leer y escribir en la blockchain. Ahora puedes comenzar a construir tus propias aplicaciones y explorar todo el potencial del SDK.
 
-[View the full SDK reference](/references/typescript/v5).
-
+[Consulta la referencia completa del SDK](/references/typescript/v5).
 
 </Step>
 

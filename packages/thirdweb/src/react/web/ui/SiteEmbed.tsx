@@ -9,16 +9,16 @@ import type { Ecosystem } from "../../../wallets/in-app/core/wallet/types.js";
 import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 
 /**
- * Embeds another thirdweb-supported site for seamless in-app and ecosystem wallet connection.
+ * Incrusta otro sitio compatible con thirdweb para una conexión fluida de billeteras in-app y del ecosistema.
  *
- *  Make sure the embedded site includes <AutoConnect /> and supports frame ancestors, see [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) for more information.
+ * Asegúrate de que el sitio incrustado incluya <AutoConnect /> y soporte los ancestros de marcos, consulta [aquí](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) para más información.
  *
- *  The embedded site must support the connected wallet (ecosystem or in-app).
+ * El sitio incrustado debe soportar la billetera conectada (del ecosistema o in-app).
  *
- * @param {Object} props - The props to pass to the iframe
- * @param {String} props.src - The URL of the site to embed
- * @param {ThirdwebClient} props.client - The current site's thirdweb client
- * @param {Ecosystem} [props.ecosystem] - The ecosystem to use for the wallet connection in the embedded site
+ * @param {Object} props - Las propiedades a pasar al iframe
+ * @param {String} props.src - La URL del sitio a incrustar
+ * @param {ThirdwebClient} props.client - El cliente de thirdweb del sitio actual
+ * @param {Ecosystem} [props.ecosystem] - El ecosistema a usar para la conexión de la billetera en el sitio incrustado
  *
  * @example
  * ```tsx

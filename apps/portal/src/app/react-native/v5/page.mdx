@@ -15,72 +15,73 @@ import { Callout } from "@doc";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-# React Native SDK
+# SDK de React Native
 
-You can use all of the `thirdweb` and `thirdweb/react` exports in your React Native app, with some exceptions (see differences).
+Puedes usar todos los módulos de `thirdweb` y `thirdweb/react` en tu aplicación de React Native, con algunas excepciones (ver diferencias).
 
-## Quickstart
+## Inicio rápido
 
-Many of the components and hooks in the React Native SDK use a [`client`](/typescript/v5/core/client) to interface with the core SDK and your private RPC endpoints. You'll need to create a `clientId` in the [Dashboard](https://thirdweb.com/create-api-key) to generate this client.
+Muchos de los componentes y hooks en el SDK de React Native utilizan un [`cliente`](/typescript/v5/core/client) para interactuar con el SDK central y tus endpoints RPC privados. Necesitarás crear un `clientId` en el [Dashboard](https://thirdweb.com/create-api-key) para generar este cliente.
 
 <Stack>
 
 <ArticleIconCard
-	title="Getting started"
+	title="Primeros pasos"
 	icon={ZapIcon}
 	href="/react-native/v5/installation"
-	description="Get started with the React Native SDK"
+	description="Comienza con el SDK de React Native"
 />
 
 <ArticleIconCard
-	title="Differences from React"
+	title="Diferencias con React"
 	icon={ComponentIcon}
 	href="/react-native/v5/differences"
-	description="Get to know the differences between React and React Native usage"
+	description="Conoce las diferencias entre el uso en React y React Native"
 />
 
-<Callout variant="info" title="Have you generated a client ID?">
+<Callout variant="info" title="¿Has generado un client ID?">
 	<div className="flex flex-col gap-4 items-start">
 	<p>
-		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+		Necesitarás un client ID para acceder a las API blockchain gratuitas del SDK, almacenamiento y más.
 	</p>
 	<Button variant='outline' asChild>
-			<Link href="https://thirdweb.com/create-api-key" target="_blank"> Generate </Link>
+			<Link href="https://thirdweb.com/create-api-key" target="_blank"> Generar </Link>
 	</Button>
 	</div>
 </Callout>
 
-## Starter kit
+## Kit de inicio
 
-If you want to get started quickly run:
+Si quieres empezar rápidamente, ejecuta:
 
 ```bash
 npx thirdweb create app --react-native
 ```
 
-or clone the [expo-starter](https://github.com/thirdweb-dev/expo-starter) repo using git.
+o clona el repositorio [expo-starter](https://github.com/thirdweb-dev/expo-starter) usando git.
 
 <GithubTemplateCard
-	title="Expo + thirdweb starter repo"
-	descrption="A starter template for using the thirdweb package in a React Native app"
+	title="Repositorio de inicio Expo + thirdweb"
+	descrption="Una plantilla de inicio para usar el paquete de thirdweb en una aplicación de React Native"
 	href="https://github.com/thirdweb-dev/expo-starter"
 />
 
 
-## Usage
+## Uso
 
 <ArticleIconCard
 	title="TypeScript"
 	icon={TypeScriptIcon}
 	href="/typescript/v5/client"
-	description="Follow the TypeScript docs for functions and types"
+	description="Sigue la documentación de TypeScript para funciones y tipos"
 />
 
 <ArticleIconCard
 	title="React"
 	icon={ReactIcon}
 	href="/react/v5"
-	description="Follow the React docs for hooks, providers and components"
+	description="Sigue la documentación de React para hooks, proveedores y componentes"
 />
 
 </Stack>
+
