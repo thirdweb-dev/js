@@ -1,5 +1,5 @@
 import { Wallet, File, MessageCircle, Braces, Bot, Blocks } from "lucide-react";
-import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack } from "@doc";
+import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack, Grid, ArticleCard } from "@doc";
 import NebulaDiagram from "./assets/nebula-diagram.png";
 import SupportedChains from "./assets/supported-chains.png";
 
@@ -53,10 +53,17 @@ Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.co
     />
 </div>
 
-## Supported Chains
-Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
+## Video Tutorials
 
-<DocImage src={SupportedChains} />
+<Grid>
+
+<ArticleCard
+	title="Blockchain Explorer"
+	description="Learn how to use Nebula to create an AI-powered block explorer"
+	href="https://www.youtube.com/watch?v=vBooJytkXa4&t=596s"
+/>
+
+</Grid>
 
 ## Templates
 
@@ -65,6 +72,11 @@ Nebula is supported on every EVM compatible chain. To view the full list, visit 
 <GithubTemplateCard title="Bouncer Eliza Agent" href="https://github.com/thirdweb-example/bouncer-eliza-agent" />
 
 </Stack>
+
+## Supported Chains
+Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
+
+<DocImage src={SupportedChains} />
 
 
 
