@@ -17,7 +17,7 @@ export type AccountHeaderCompProps = {
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   createProject: (team: Team) => void;
-  account: Pick<Account, "email" | "id"> | undefined;
+  account: Pick<Account, "email" | "id" | "image"> | undefined;
   client: ThirdwebClient;
 };
 
@@ -41,10 +41,9 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
             href="/account"
             className="flex flex-row items-center gap-2 font-normal text-sm"
           >
-            {/* TODO - set account Image  */}
             <GradientAvatar
               id={props.account?.id || "default"}
-              src={""}
+              src={props.account?.image || ""}
               className="size-6"
               client={props.client}
             />
@@ -90,10 +89,9 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
           >
-            {/* TODO - set account image */}
             <GradientAvatar
               id={props.account?.id}
-              src={props.account ? "" : undefined}
+              src={props.account?.image || ""}
               className="size-6"
               client={props.client}
             />

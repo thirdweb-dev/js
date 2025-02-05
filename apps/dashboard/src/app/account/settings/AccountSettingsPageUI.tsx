@@ -30,6 +30,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -39,29 +40,34 @@ import { EllipsisIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
 import { FileInput } from "../../../components/shared/FileInput";
 
 type MinimalAccount = Pick<
   Account,
-  "name" | "email" | "emailConfirmedAt" | "unconfirmedEmail"
+  "name" | "email" | "emailConfirmedAt" | "unconfirmedEmail" | "image"
 >;
 
 export function AccountSettingsPageUI(props: {
   account: MinimalAccount;
-  // TODO - remove hide props these when these fields are functional
-  hideAvatar?: boolean;
   hideDeleteAccount?: boolean;
   sendEmail: (email: string) => Promise<void>;
   updateName: (name: string) => Promise<void>;
   updateEmailWithOTP: (otp: string) => Promise<void>;
+  updateAccountAvatar: (avatar: File | undefined) => Promise<void>;
+  client: ThirdwebClient;
 }) {
   return (
     <div className="flex flex-col gap-8">
-      {!props.hideAvatar && <AccountAvatarFormControl />}
       <AccountNameFormControl
         name={props.account.name || ""}
         updateName={(name) => props.updateName(name)}
+      />
+      <AccountAvatarFormControl
+        updateAccountAvatar={props.updateAccountAvatar}
+        avatar={props.account.image || undefined}
+        client={props.client}
       />
       <AccountEmailFormControl
         email={props.account.email || ""}
@@ -75,18 +81,24 @@ export function AccountSettingsPageUI(props: {
   );
 }
 
-function AccountAvatarFormControl() {
+function AccountAvatarFormControl(props: {
+  updateAccountAvatar: (avatar: File | undefined) => Promise<void>;
+  avatar: string | undefined;
+  client: ThirdwebClient;
+}) {
+  const accountAvatarUrl = resolveSchemeWithErrorHandler({
+    client: props.client,
+    uri: props.avatar,
+  });
   const [avatar, setAvatar] = useState<File>();
-
-  // TODO - implement
   const updateAvatarMutation = useMutation({
-    mutationFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+    mutationFn: (_avatar: File | undefined) => {
+      return props.updateAccountAvatar(_avatar);
     },
   });
 
   function handleSave() {
-    const promises = updateAvatarMutation.mutateAsync();
+    const promises = updateAvatarMutation.mutateAsync(avatar);
     toast.promise(promises, {
       success: "Account avatar updated successfully",
       error: "Failed to update account avatar",
@@ -118,6 +130,7 @@ function AccountAvatarFormControl() {
           setValue={setAvatar}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
+          fileUrl={accountAvatarUrl}
         />
       </div>
     </SettingsCard>

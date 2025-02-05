@@ -5,6 +5,7 @@ import { updateAccount } from "@/actions/updateAccount";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebClient } from "thirdweb";
+import { upload } from "thirdweb/storage";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
 export function AccountSettingsPage(props: {
@@ -23,9 +24,25 @@ export function AccountSettingsPage(props: {
       </div>
       <div className="container max-w-[950px] grow pt-8 pb-20">
         <AccountSettingsPageUI
-          // TODO - remove hide props these when these fields are functional
-          hideAvatar
           hideDeleteAccount
+          client={props.client}
+          updateAccountAvatar={async (file) => {
+            let uri: string | undefined = undefined;
+
+            if (file) {
+              // upload to IPFS
+              uri = await upload({
+                client: props.client,
+                files: [file],
+              });
+            }
+
+            await updateAccount({
+              image: uri,
+            });
+
+            router.refresh();
+          }}
           account={props.account}
           updateEmailWithOTP={async (otp) => {
             const res = await confirmEmailWithOTP(otp);

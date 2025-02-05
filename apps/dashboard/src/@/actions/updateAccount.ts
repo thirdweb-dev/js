@@ -5,6 +5,7 @@ import { API_SERVER_URL } from "../constants/env";
 export async function updateAccount(values: {
   name?: string;
   email?: string;
+  image?: string | null;
 }) {
   const token = await getAuthToken();
 
