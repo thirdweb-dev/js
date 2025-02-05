@@ -5,31 +5,32 @@ import { BlocksIcon } from "lucide-react";
 import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "Sending Transactions | thirdweb",
-	description: "How to send transactions in react",
+	title: "Envío de Transacciones | thirdweb",
+	description: "Cómo enviar transacciones en React",
 });
 
-# Transactions
+# Transacciones
 
-Sending a transaction in react is done via the `useSendTransaction` hook. The hook returns a React Query `mutate` function that you can call with a transaction object created with `prepareContractCall` or `prepareTransaction`.
+El envío de una transacción en React se realiza mediante el hook `useSendTransaction`.  
+Este hook devuelve una función `mutate` de React Query que puedes llamar con un objeto de transacción creado con `prepareContractCall` o `prepareTransaction`.
 
-Note that unlike in TypeScript core, `useSendTransaction` does not require passing the active `Account`, it will used the current active account from the React context.
+Ten en cuenta que, a diferencia del núcleo de TypeScript, `useSendTransaction` no requiere pasar la `Account` activa, ya que usará automáticamente la cuenta activa actual desde el contexto de React.
 
-## Live Playground
+## Playground en Vivo
 
-Try out the demo for yourself in the [sending transactions playground](https://playground.thirdweb.com/connect/transactions)
+Prueba la demostración por ti mismo en el [playground de envío de transacciones](https://playground.thirdweb.com/connect/transactions)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demo"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/blockchain-api"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 </Stack>
 
-## Sending a generic contract call
+## Envío de una llamada genérica a un contrato
 
 ```ts
 import { prepareContractCall, getContract } from "thirdweb";
@@ -56,18 +57,18 @@ const MyComponent = () => {
 };
 ```
 
-## Using extensions
+## Uso de extensiones
 
 <Stack>
 <ArticleIconCard
-	title="Understanding Extensions"
-	description="Learn how to use extensions in your project"
+	title="Entendiendo las Extensiones"
+	description="Aprende cómo usar extensiones en tu proyecto"
 	icon={BlocksIcon}
 	href="/typescript/v5/extensions/use"
 />
 </Stack>
 
-Extensions are a way to make complex transactions in a type-safe way with a simple API.
+Las extensiones son una forma de realizar transacciones complejas de manera segura en términos de tipos, utilizando una API sencilla.
 
 ```tsx
 import { getContract } from "thirdweb";
@@ -98,11 +99,11 @@ const MyComponent = () => {
 };
 ```
 
-Check out all the [available extensions](/references/typescript/v5/functions#extensions) for more details.
+Consulta todas las [extensiones disponibles](/references/typescript/v5/functions#extensions) para más detalles.
 
-## API References
+## Referencias de la API
 
-Check out the [transaction hooks](https://thirdweb.com/docs/references/typescript/v5/useSendTransaction) reference for more details.
+Consulta la referencia de [hooks de transacción](https://thirdweb.com/docs/references/typescript/v5/useSendTransaction) para más detalles.
 
 <Stack>
 
@@ -110,49 +111,50 @@ Check out the [transaction hooks](https://thirdweb.com/docs/references/typescrip
 	title="useSendTransaction"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useSendTransaction"
-	description="Hook to send transactions"
+	description="Hook para enviar transacciones"
 />
 
 <ArticleIconCard
 	title="useWaitForReceipt"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useWaitForReceipt"
-	description="Hook to wait for a transaction receipt"
+	description="Hook para esperar un recibo de transacción"
 />
 
 <ArticleIconCard
 	title="useSendAndConfirmTransaction"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useSendAndConfirmTransaction"
-	description="Hook to send and confirm transactions"
+	description="Hook para enviar y confirmar transacciones"
 />
 
 <ArticleIconCard
 	title="useSimulateTransaction"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useSimulateTransaction"
-	description="Hook to simulate transactions"
+	description="Hook para simular transacciones"
 />
 
 <ArticleIconCard
 	title="useEstimateGas"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useEstimateGas"
-	description="Hook to estimate gas units of a transaction"
+	description="Hook para estimar las unidades de gas de una transacción"
 />
 
 <ArticleIconCard
 	title="useEstimateGasCost"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useEstimateGasCost"
-	description="Hook to estimate gas cost of a transaction"
+	description="Hook para estimar el costo de gas de una transacción"
 />
 
 <ArticleIconCard
 	title="useSendBatchTransaction"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useSendBatchTransaction"
-	description="Hook to send a batch of transactions"
+	description="Hook para enviar un lote de transacciones"
 />
 
 </Stack>
+

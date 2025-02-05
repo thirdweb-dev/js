@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155ClaimCustom contract",
+		title: "Contrato ERC1155ClaimCustom",
 		icon: "solidity",
 	},
-	title: "ERC1155ClaimCustom | thirdweb contract",
+	title: "ERC1155ClaimCustom | contrato de thirdweb",
 	description:
-		"Allow other wallets to claim/mint tokens that you have Lazy Minted by implementing ERC1155 and ERC1155Claimable extensions",
+		"Permite que otras billeteras reclamen/minteen tokens que hayas Lazy Minted implementando las extensiones ERC1155 y ERC1155Claimable",
 });
+
 
 # ERC1155ClaimCustom
 
@@ -18,18 +19,18 @@ import "@thirdweb-dev/contracts/eip/ERC1155.sol";
 import "@thirdweb-dev/contracts/extension/interface/IClaimableERC1155.sol";
 ```
 
-Allow other wallets to claim/mint tokens that you have Lazy Minted by
-implementing [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`ERC1155Claimable`](/contracts/build/extensions/erc-1155/ERC1155Claimable) extensions.
+Permite que otras billeteras reclamen/minteen tokens que hayas Lazy Minted implementando
+las extensiones [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`ERC1155Claimable`](/contracts/build/extensions/erc-1155/ERC1155Claimable).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`ERC1155Claimable`](/contracts/build/extensions/erc-1155/ERC1155Claimable) extensions.
+Esta es una extensión que es detectable en el panel si el contrato inteligente implementa las
+extensiones [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`ERC1155Claimable`](/contracts/build/extensions/erc-1155/ERC1155Claimable).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IClaimableERC1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC1155ClaimCustom` detectable extension.
-The functions which are available to be (optionally) overridden are also detailed.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de las extensiones que conforman la extensión detectable `ERC1155ClaimCustom`.
+También se detallan las funciones que están disponibles para ser (opcionalmente) sobrescritas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -86,7 +87,7 @@ contract Contract is ERC1155, LazyMint, IClaimableERC1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC1155DelayedReveal](/contracts/build/extensions/erc-1155/ERC1155Revealable)
 - [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint)

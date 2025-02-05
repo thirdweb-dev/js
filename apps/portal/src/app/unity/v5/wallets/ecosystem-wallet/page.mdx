@@ -2,31 +2,31 @@ import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "EcosystemWallet | Thirdweb Unity SDK",
+	title: "EcosystemWallet | SDK de thirdweb para Unity",
 	description:
-		"Instantiate an EcosystemWallet to sign transactions and messages.",
+		"Instancia un EcosystemWallet para firmar transacciones y mensajes.",
 });
 
 # EcosystemWallet
 
-`EcosystemWallet` is the ultimate persistent wallet provider option for your game. It supports email, phone, social and custom authentication schemes, and will persist across devices, platforms, and other SDKs.
+`EcosystemWallet` es la opción de proveedor de billetera persistente definitiva para tu juego. Soporta correo electrónico, teléfono, redes sociales y esquemas de autenticación personalizados, y persistirá a través de dispositivos, plataformas y otros SDKs.
 
-It makes for a fantastic [SmartWallet](/unity/v5/wallets/account-abstraction) admin/signer and will make sure your users can have the same wallet address across all your games, apps and blockchains.
+Es una excelente opción para un administrador/firmante de [SmartWallet](/unity/v5/wallets/account-abstraction) y asegurará que tus usuarios puedan tener la misma dirección de billetera en todos tus juegos, aplicaciones y cadenas de bloques.
 
-Ecosystem Wallets have a very similar API to the [In-App Wallet](/unity/v5/wallets/in-app-wallet) but with the added benefit of being able to share your wallets with ecosystem partners through special identifiers that they can use, preserving the user's identity across not only your apps and games, but other ecosystem partners' as well. It is secure, easy to use, and use enclave technology to protect your user's data. All examples below can take in an `ecosystemPartnerId` if you are the ecosystem partner integrating with a third-party ecosystem.
+Las Billeteras de Ecosistema tienen una API muy similar a la de la [Billetera In-App](/unity/v5/wallets/in-app-wallet), pero con el beneficio adicional de poder compartir tus billeteras con socios del ecosistema mediante identificadores especiales que ellos pueden usar, preservando la identidad del usuario no solo a través de tus aplicaciones y juegos, sino también con otros socios del ecosistema. Es segura, fácil de usar y utiliza tecnología de enclaves para proteger los datos del usuario. Todos los ejemplos a continuación pueden aceptar un `ecosystemPartnerId` si eres el socio del ecosistema integrándote con un ecosistema de terceros.
 
-## Login Methods
+## Métodos de Inicio de Sesión
 
-Ecosystem Wallets support a variety of login methods:
-- Email (OTP Login)
-- Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
-- SIWE (Sign-In with Ethereum)
-- Custom Auth (OIDC Compatible)
-- Custom Auth (Generic Auth Endpoint)
-- Guest (Onboard easily, link other accounts later)
+Las Billeteras de Ecosistema soportan una variedad de métodos de inicio de sesión:
+- Correo Electrónico (Inicio de sesión OTP)
+- Teléfono (Inicio de sesión OTP)
+- Redes Sociales (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
+- SIWE (Inicio de sesión con Ethereum)
+- Autenticación Personalizada (Compatible con OIDC)
+- Autenticación Personalizada (Endpoint de Autenticación Genérico)
+- Invitado (Facilita la incorporación, vincula otras cuentas más tarde)
 
-### Login with Email
+### Inicio de sesión con Correo Electrónico
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -41,9 +41,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will instantiate `EcosystemWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+Instanciará `EcosystemWalletModal` o reanudará la sesión: un prefab simple que verificará el OTP del usuario.
 
-### Login with Phone
+### Inicio de sesión con Teléfono
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -58,9 +58,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will instantiate `EcosystemWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+Instanciará `EcosystemWalletModal` o reanudará la sesión: un prefab simple que verificará el OTP del usuario.
 
-### Login with Socials (Google, Apple, Facebook, etc.)
+### Inicio de sesión con Redes Sociales (Google, Apple, Facebook, etc.)
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -75,9 +75,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will open a native browser or oauth session to authenticate the user and redirect back to the game.
+Abrirá un navegador nativo o una sesión OAuth para autenticar al usuario y redirigirlo de vuelta al juego.
 
-### Login with SIWE
+### Inicio de sesión con SIWE
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -93,9 +93,9 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will use the external wallet to sign a message and login to the EcosystemWallet.
+Usará la billetera externa para firmar un mensaje e iniciar sesión en la EcosystemWallet.
 
-### Login with Custom Auth - OIDC Compatible
+### Inicio de sesión con Autenticación Personalizada - Compatible con OIDC
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -111,7 +111,7 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-### Login with Custom Auth - Generic Auth Endpoint
+### Inicio de sesión con Autenticación Personalizada - Endpoint de Autenticación Genérico
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -127,7 +127,7 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-### Login with Guest - Onboard easily, link other accounts later
+### Inicio de sesión como Invitado - Facilita la incorporación, vincula otras cuentas más tarde
 
 ```csharp
 var ecosystemWalletOptions = new EcosystemWalletOptions(
@@ -142,27 +142,27 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-## Account Linking
+## Vinculación de Cuentas
 
-EcosystemWallets support linking multiple authentication methods to a single wallet, for instance linking Google to your Email-based In-App-Wallet. This is useful to have a unified identity across platforms.
+Las Billeteras de Ecosistema soportan vincular múltiples métodos de autenticación a una sola billetera, por ejemplo, vincular Google a tu billetera In-App basada en correo electrónico. Esto es útil para tener una identidad unificada a través de plataformas.
 
 ```csharp
-// Your main EcosystemWallet account, already authenticated and connected
+// Tu cuenta principal de EcosystemWallet, ya autenticada y conectada
 EcosystemWallet mainEcosystemWallet = ...
 
-// An EcosystemWallet with a new auth provider to be linked to the main account, not connected
-EcosystemWallet walletToLink = await EcosystemWallet.Create(client: Client, ecosystemId: "ecosystem.your-ecosystem", authProvider: AuthProvider.Telegram);
+// Una EcosystemWallet con un nuevo proveedor de autenticación para vincular a la cuenta principal, no conectada
+EcosystemWallet walletToLink = await EcosystemWallet.Create(client: Client, ecosystemId: "ecosystem.tu-ecosistema", authProvider: AuthProvider.Telegram);
 
-// Link Account - Headless version
+// Vincular Cuenta - Versión sin interfaz gráfica
 var linkedAccounts = await mainEcosystemWallet.LinkAccount(walletToLink: walletToLink);
 
-// Link Account - Unity wrapper version
+// Vincular Cuenta - Versión con el wrapper de Unity
 var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainEcosystemWallet, walletToLink);
 
-// You can also fetch linked accounts at any time
+// También puedes obtener las cuentas vinculadas en cualquier momento
 List<LinkedAccount> linkedAccounts = await mainEcosystemWallet.GetLinkedAccounts();
 
-// Unlink an account
+// Desvincular una cuenta
 List<LinkedAccount> linkedAccounts = await mainEcosystemWallet.UnlinkAccount(linkedAccounts[0]);
 ```
 

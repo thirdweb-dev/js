@@ -1,15 +1,15 @@
-# Ethers.js in v5
+# Ethers.js en v5
 
-One common misconception about the thirdweb SDK v5 is that it will no longer work with Ethers.js.
-As a matter of fact, the SDK v5 is built so that it can play well with polular web3 SDKs like viem, ethers v5 and ether v6!
+Una idea errónea común sobre el SDK de thirdweb v5 es que ya no funcionará con Ethers.js.  
+De hecho, el SDK v5 está diseñado para funcionar bien con SDKs web3 populares como viem, ethers v5 y ethers v6.
 
-Let's say you decide to upgrade to v5, and still want to stick with ethers.js,
-you can utilize thirdweb's ethers Adapter to achieve that!
+Supongamos que decides actualizar a v5 y aún quieres seguir usando ethers.js,  
+¡puedes utilizar el adaptador de ethers de thirdweb para lograrlo!
 
 ### Signer
 
-In v5, instead of having "signer", we pivoted to [`Account`](/references/typescript/v5/Account), which is the replacement for "signer".
-Thanks to the thirdweb ethers adapter, you can conveniently convert between ethers's Signer and thirdweb's Account.
+En v5, en lugar de tener "signer", pasamos a [`Account`](/references/typescript/v5/Account), que es el reemplazo de "signer".  
+Gracias al adaptador de ethers de thirdweb, puedes convertir de manera conveniente entre el Signer de ethers y el Account de thirdweb.
 
 ```ts
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
@@ -19,7 +19,7 @@ const account = useActiveAccount();
 ...
 const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
 ```
-Once you have the signer, you can perform different tasks using ethers.js as usual:
+Una vez que tengas el signer, puedes realizar diferentes tareas usando ethers.js como de costumbre:
 
 ```tsx
 // Get balance
@@ -30,7 +30,8 @@ const signature = await signer.signMessage(message);
 ```
 
 ### Provider
-Similar to `signer`, you can retrieve the ethers provider in thirdweb v5 using the same adapter:
+Similar al `signer`, puedes obtener el proveedor de ethers en thirdweb v5 utilizando el mismo adaptador:
+
 ```ts
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
 import { createThirdwebClient } from "thirdweb";
@@ -42,13 +43,14 @@ const client = createThirdwebClient({
 const provider = ethers5Adapter.provider.toEthers({ client, chainId });
 ```
 
-and perform tasks with it:
+y realizar tareas con él:
+
 ```ts
 const blockNumber = await provider.getBlockNumber();
 ```
 
-### Contracts
-Similarly to the 2 components above, here's how you can convert a [thirdweb contract instance](/references/typescript/v5/ThirdwebContract) to ethers's:
+### Contratos
+De manera similar a los 2 componentes anteriores, así es como puedes convertir una [instancia de contrato de thirdweb](/references/typescript/v5/ThirdwebContract) a ethers:
 ```tsx
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
 const ethersContract = await ethers5Adapter.contract.toEthers({

@@ -18,35 +18,36 @@ export const metadata = createMetadata({
 		"Get Started with Pay -  Onchain Purchases Directly From Credit or Debit Card",
 });
 
-# Get Started
+# Comienza
 
-Learn how to add onramps and crypto purchases to your application. To see which integration is right for you, refer to our [integrations overview](/connect/pay/overview#integration-options).
+Aprende cómo agregar onramps y compras de criptomonedas a tu aplicación. Para determinar cuál integración es la adecuada para ti, consulta nuestra [visión general de integraciones](/connect/pay/overview#integration-options).
 
-The following guide uses our React SDK. You can also learn how to integrate Pay with our [Unity SDK](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
+La siguiente guía utiliza nuestro SDK de React. También puedes aprender cómo integrar Pay con nuestro [SDK de Unity](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
 
 ---
 
-## Installation
+## Instalación
 
 <Steps>
-<Step title="Install the Connect SDK">
+<Step title="Instala el SDK de Connect">
 <InstallTabs
 	npm="npm i thirdweb"
 	yarn="yarn add thirdweb"
 	pnpm="pnpm i thirdweb"
 />
 </Step>
-<Step title="Get Your Client ID">
+<Step title="Obtén tu Client ID">
 
-Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Connect SDK.
+Inicia sesión en el [dashboard de thirdweb](https://thirdweb.com/team). Ve a la página de **Configuración** y crea una clave API para obtener tu **Client ID**. Necesitarás tu Client ID para interactuar con el SDK de Connect.
 
 </Step>
 </Steps>
+
 ---
 
 ## Option 1: ConnectButton
 
-Pay is available by default with our `ConnectButton` component. When users log in with Connect, they'll be able to onramp and purchase crypto directly from the logged in Connect interface. You can read more about `ConnectButton` [in this guide](/connect/sign-in/ConnectButton).
+Pay está disponible de forma predeterminada con nuestro componente `ConnectButton`. Cuando los usuarios inician sesión con Connect, podrán cargar fondos y comprar criptomonedas directamente desde la interfaz de Connect. Puedes leer más sobre `ConnectButton` [en esta guía](/connect/sign-in/ConnectButton).
 
 ```tsx
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
@@ -62,13 +63,13 @@ export default function App() {
 }
 ```
 
-Our `ConnectButton` has a number of [customization options](/connect/pay/customization/connectbutton) so you can tailor it to your experience.
+Nuestro `ConnectButton` tiene varias [opciones de personalización](/connect/pay/customization/connectbutton) para que puedas adaptarlo a tu experiencia.
 
 ---
 
 ## Option 2: Embed Pay
 
-The `PayEmbed` allows users to onramp and purchase crypto directly from your application interface.
+El componente `PayEmbed` permite a los usuarios recargar fondos y comprar criptomonedas directamente desde la interfaz de tu aplicación.
 
 ```tsx
 import { ThirdwebProvider, PayEmbed } from "thirdweb/react";
@@ -84,24 +85,24 @@ export default function App() {
 }
 ```
 
-The embedded Pay component will be displayed like so in your application interface:
+El componente integrado de Pay se mostrará de la siguiente manera en la interfaz de tu aplicación:
 
 <DocImage src={GetStartedEmbed} />
 
-And voila! Your users can now onramp and convert crypto directly from your application.
+¡Y voilà! Tus usuarios ahora pueden agregar fondos y convertir criptomonedas directamente desde tu aplicación.
 
-Our `PayEmbed` has a number of [customization options](/connect/pay/customization/payembed) so you can tailor it to your experience.
+Nuestro componente `PayEmbed` ofrece varias [opciones de personalización](/connect/pay/customization/payembed) para que lo adaptes a tu experiencia.
 
 ---
 
 ## Option 3: Send a Transaction with Pay
 
-Pay is enabled by default for any contract call sent with `sendTransaction`. It will automatically be invoked when a user does not have enough funds to complete the transaction.
+Pay está habilitado de forma predeterminada para cualquier llamada a un contrato realizada con `sendTransaction`. Se invocará automáticamente cuando un usuario no tenga suficientes fondos para completar la transacción.
 
 <Callout variant="info">
-	ℹ️ `sendTransaction` is available in [Connect SDK v5](/typescript/v5) or
-	above.
+	ℹ️ `sendTransaction` está disponible en [Connect SDK v5](/typescript/v5) o versiones superiores.
 </Callout>
+
 
 ```tsx
 import { useSendTransaction } from "thirdweb/react";
@@ -123,10 +124,10 @@ const onClick = () => {
 };
 ```
 
-When a user clicks this button, Pay will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
+Cuando un usuario haga clic en este botón, Pay realizará una estimación de gas para determinar si el usuario tiene un saldo suficiente. Si su saldo es suficiente, la transacción se ejecutará normalmente. Si su saldo no es suficiente, aparecerá el siguiente modal solicitando al usuario que agregue fondos o convierta criptomonedas a la cantidad requerida:
 
 <DocImage src={GetStartedSend} />
 
-Once a user onramps or converts their funds to the required token, the user will be prompted once more to confirm the transaction. The transaction will then execute as expected.
+Una vez que el usuario agregue fondos o convierta sus criptomonedas al token requerido, se le pedirá nuevamente que confirme la transacción. La transacción se ejecutará como se espera.
 
-For deeper customization of the Pay transaction modal, you can refer to our [sendTransaction customization guide](/connect/pay/customization/send-transaction).
+Para una personalización más profunda del modal de transacciones de Pay, puedes consultar nuestra [guía de personalización de sendTransaction](/connect/pay/customization/send-transaction).

@@ -4,13 +4,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Mintable contract",
+		title: "Contrato ERC721Mintable",
 		icon: "solidity",
 	},
-	title: "ERC721Mintable | thirdweb contract",
+	title: "ERC721Mintable | contrato thirdweb",
 	description:
-		"Enable new NFTs to be minted into the collection by implementing the IMintableERC721 interface on your ERC721(A) contract",
+		"Habilita la creación de nuevos NFTs en la colección implementando la interfaz IMintableERC721 en tu contrato ERC721(A)",
 });
+
 
 # ERC721Mintable
 
@@ -18,11 +19,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
 ```
 
-Enable new NFTs to be minted into the collection by implementing the `IMintableERC721` interface on your ERC721(A) contract.
+Habilita la creación de nuevos NFTs en la colección implementando la interfaz `IMintableERC721` en tu contrato ERC721(A).
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -30,9 +31,9 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IMintableERC721.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de un contrato inteligente que demuestra cómo heredar de esta extensión y anular las funciones para agregar (de forma opcional) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -59,7 +60,7 @@ contract Contract is ERC721A, IMintableERC721 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC721Base](/contracts/build/base-contracts/erc-721/base)
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)

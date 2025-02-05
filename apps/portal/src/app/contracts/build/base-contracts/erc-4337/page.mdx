@@ -1,47 +1,47 @@
-# ERC-4337 Smart Accounts
+# Cuentas inteligentes ERC-4337
 
-All of thirdweb's [smart accounts](/connect/account-abstraction) are [EIP-4337](https://eips.ethereum.org/EIPS/eip-4337) smart contract accounts with role-based permission control.
+Todas las [cuentas inteligentes](/connect/account-abstraction) de thirdweb son cuentas de contrato inteligente [EIP-4337](https://eips.ethereum.org/EIPS/eip-4337) con control de permisos basado en roles.
 
-Users can deploy a smart accounts for individual use, and app developers can issue smart accounts to their users programmatically.
+Los usuarios pueden desplegar cuentas inteligentes para su uso individual, y los desarrolladores de aplicaciones pueden emitir cuentas inteligentes a sus usuarios programáticamente.
 
-thirdweb's smart accounts have the following features by default:
+Las cuentas inteligentes de thirdweb tienen las siguientes características por defecto:
 
-- Have multiple owners
-- Execute transactions (single and batched).
-- Send and receive native tokens.
-- Send and receive ERC-721 and ERC-1155 NFTs.
-- Multicall-able.
-- Store contract metadata.
+- Tienen múltiples propietarios.
+- Ejecutan transacciones (individuales y por lotes).
+- Envían y reciben tokens nativos.
+- Envían y reciben NFTs ERC-721 y ERC-1155.
+- Se pueden ejecutar múltiples llamadas.
+- Almacenan metadatos del contrato.
 
-thirdweb offers the following three different kinds of account factories:
+thirdweb ofrece los siguientes tres tipos diferentes de fábricas de cuentas:
 
 |                    | [`Simple`](/contracts/build/base-contracts/erc-4337/account)                                                                            | [`Managed`](/contracts/build/base-contracts/erc-4337/managed-account)                                                                                                                         |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Upgradeability** | Non-upgradeable                                                                                                                         | Account upgrades controlled centrally by the parent account factory admin.                                                                                                                    |
-| **User persona**   | Developer wants to issue simple smart accounts to their users. They do not anticipate that users wallets will need any feature upgrades. | Developer wants to issue smart accounts to their users. They do anticipate feature upgrades to user wallets, and want to push upgrades to user wallets for seamless/invisible UX for upgrades. |
+| **Actualización** | No actualizable                                                                                                                         | Las actualizaciones de cuentas están controladas centralmente por el administrador de la fábrica de cuentas principal.                                                                                                                    |
+| **Perfil de usuario**   | El desarrollador quiere emitir cuentas inteligentes simples a sus usuarios. No anticipa que las billeteras de los usuarios necesiten actualizaciones de características. | El desarrollador quiere emitir cuentas inteligentes a sus usuarios. Anticipa actualizaciones de características a las billeteras de los usuarios y desea empujar actualizaciones a las billeteras para una experiencia de usuario fluida/invisible. |
 
-## Simple smart accounts
+## Cuentas inteligentes simples
 
 **[`Account.sol`](/contracts/build/base-contracts/erc-4337/account) & [`AccountFactory.sol`](/contracts/build/base-contracts/erc-4337/account-factory)**
 
-The `Account` contract is a simple smart account that comes with all the basic benefits of account abstraction, along with the mentioned default features.
+El contrato `Account` es una cuenta inteligente simple que viene con todos los beneficios básicos de la abstracción de cuentas, junto con las características predeterminadas mencionadas.
 
-App developers can issue [`Account`](/contracts/build/base-contracts/erc-4337/account) smart accounts programmatically by deploying an [`AccountFactory`](/contracts/build/base-contracts/erc-4337/account-factory) smart contract.
+Los desarrolladores de aplicaciones pueden emitir cuentas inteligentes [`Account`](/contracts/build/base-contracts/erc-4337/account) programáticamente desplegando un contrato inteligente [`AccountFactory`](/contracts/build/base-contracts/erc-4337/account-factory).
 
-The `Account` smart contract is _non-upgradeable_. Developers should use this wallet if they do not anticipate making any future upgrades to their users’ wallets.
+El contrato inteligente `Account` es _no actualizable_. Los desarrolladores deben usar esta billetera si no anticipan hacer futuras actualizaciones a las billeteras de sus usuarios.
 
-## Managed smart accounts
+## Cuentas inteligentes gestionadas
 
 **[`ManagedAccount.sol`](/contracts/build/base-contracts/erc-4337/managed-account) & [`ManagedAccountFactory.sol`](/contracts/build/base-contracts/erc-4337/managed-account-factory)**
 
-The `ManagedAccount` smart account is an _upgradeable_ smart contract written in the [dynamic contract pattern](https://github.com/thirdweb-dev/dynamic-contracts).
+La cuenta inteligente `ManagedAccount` es un contrato inteligente _actualizable_ escrito en el [patrón de contrato dinámico](https://github.com/thirdweb-dev/dynamic-contracts).
 
-App developers can issue `ManagedAccount` smart accounts programmatically by deploying a [`ManagedAccountFactory`](/contracts/build/base-contracts/erc-4337/managed-account-factory) smart contract.
+Los desarrolladores de aplicaciones pueden emitir cuentas inteligentes `ManagedAccount` programáticamente desplegando un contrato inteligente [`ManagedAccountFactory`](/contracts/build/base-contracts/erc-4337/managed-account-factory).
 
-The admin of the [`ManagedAccountFactory`](/contracts/build/base-contracts/erc-4337/managed-account-factory) contract can push upgrades to all `ManagedAccount` that it creates. This admin does not require any permissions on the `ManagedAccount` smart accounts to do so. An upgrade to the features of `ManagedAccount` applies to _all_ `ManagedAccount` smart accounts created by the factory. This is the right wallet for developers who anticipate _pushing upgrades_ to their users’ wallets.
+El administrador del contrato [`ManagedAccountFactory`](/contracts/build/base-contracts/erc-4337/managed-account-factory) puede empujar actualizaciones a todas las cuentas `ManagedAccount` que crea. Este administrador no requiere permisos sobre las cuentas inteligentes `ManagedAccount` para hacerlo. Una actualización de las características de `ManagedAccount` se aplica a _todas_ las cuentas inteligentes `ManagedAccount` creadas por la fábrica. Esta es la billetera adecuada para los desarrolladores que anticipan _empujar actualizaciones_ a las billeteras de sus usuarios.
 
-#### Example use case of push upgrades:
+#### Ejemplo de caso de uso de actualizaciones automáticas:
 
-An app wants its user wallets to only be able to own NFTs within its ecosystem. This would be an upgrade to the smart account's `onERC721Received` and `onERC1155Received` transfer hooks.
+Una aplicación quiere que las billeteras de sus usuarios solo puedan poseer NFTs dentro de su ecosistema. Esto sería una actualización en los hooks de transferencia `onERC721Received` y `onERC1155Received` de la cuenta inteligente.
 
-The app can enforce this behaviour by pushing this upgrade to its user wallets.
+La aplicación puede imponer este comportamiento empujando esta actualización a las billeteras de sus usuarios.

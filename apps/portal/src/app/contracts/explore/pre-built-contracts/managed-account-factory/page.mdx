@@ -2,37 +2,37 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Managed Account Factory",
+		title: "Contrato Managed Account Factory",
 		icon: "contract",
 	},
-	title: "Managed Account Factory | thirdweb",
-	description: `The Managed Account Factory contract is used to deploy upgradeable ERC-4337 smart wallets with role based permission control.`,
+	title: "Contrato Managed Account Factory | thirdweb",
+	description: `El contrato Managed Account Factory se usa para desplegar billeteras inteligentes ERC-4337 actualizables con control de permisos basado en roles.`,
 });
 
 # Managed Account Factory
 
-The **Managed Account Factory** contract is used to deploy upgradeable [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337s) smart wallets with role based permission control.
+El contrato **Managed Account Factory** se usa para desplegar billeteras inteligentes [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337s) actualizables con control de permisos basado en roles.
 
-The `ManagedAccount` smart wallet is an **upgradeable** smart contract written in the [dynamic contract pattern](https://github.com/thirdweb-dev/dynamic-contracts).
+La billetera inteligente `ManagedAccount` es un contrato inteligente **actualizable** escrito en el [patrón de contrato dinámico](https://github.com/thirdweb-dev/dynamic-contracts).
 
-App developers can issue `ManagedAccount` smart wallets programmatically by deploying a `ManagedAccountFactory` smart contract.
+Los desarrolladores de aplicaciones pueden emitir billeteras inteligentes `ManagedAccount` programáticamente desplegando un contrato inteligente `ManagedAccountFactory`.
 
-The admin of the `ManagedAccountFactory` contract can push upgrades to all `ManagedAccounts` that it creates. This admin does not require any permissions on the `ManagedAccount` smart wallets to do so.
-An upgrade to the features of `ManagedAccount` applies to all `ManagedAccount` smart wallets created by the factory.
-This is the right wallet for developers who anticipate pushing upgrades to their users' wallets.
+El administrador del contrato `ManagedAccountFactory` puede enviar actualizaciones a todas las `ManagedAccounts` que crea. Este administrador no requiere permisos sobre las billeteras inteligentes `ManagedAccount` para hacerlo.
+Una actualización de las características de `ManagedAccount` se aplica a todas las billeteras inteligentes `ManagedAccount` creadas por la fábrica.
+Esta es la billetera adecuada para los desarrolladores que anticipan realizar actualizaciones en las billeteras de sus usuarios.
 
-thirdweb's smart wallets have the following features by default:
+Las billeteras inteligentes de thirdweb tienen las siguientes características por defecto:
 
-- Have multiple signers with different permissions
-- Execute transactions (single and batched).
-- Send and receive native tokens.
-- Send and receive ERC-721 and ERC-1155 NFTs.
-- Multicall-able.
-- Store contract metadata.
+- Tener múltiples firmantes con permisos diferentes
+- Ejecutar transacciones (simples y por lotes).
+- Enviar y recibir tokens nativos.
+- Enviar y recibir NFTs ERC-721 y ERC-1155.
+- Multillamadas.
+- Almacenar metadatos del contrato.
 
-## Extensions
+## Extensiones
 
-This contract includes the following extensions:
+Este contrato incluye las siguientes extensiones:
 
 - [Permissions](/contracts/build/extensions/general/Permissions)
 - [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
@@ -40,10 +40,10 @@ This contract includes the following extensions:
 - [AccountFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory)
 - [DynamicContract](https://github.com/thirdweb-dev/dynamic-contracts)
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-Use the `ManagedAccountFactory` contract alongside the [Connect SDK](/connect/account-abstraction) to easily use account abstraction in your projects:
+Usa el contrato `ManagedAccountFactory` junto con el [SDK de Connect](/connect/account-abstraction) para usar fácilmente la abstracción de cuentas en tus proyectos:
 
-- [React Guide](/connect/account-abstraction/guides/react)
-- [Typescript Guide](/connect/account-abstraction/guides/typescript)
-- [Unity Guide](/unity/wallets/providers/account-abstraction)
+- [Guía de React](/connect/account-abstraction/guides/react)
+- [Guía de Typescript](/connect/account-abstraction/guides/typescript)
+- [Guía de Unity](/unity/wallets/providers/account-abstraction)

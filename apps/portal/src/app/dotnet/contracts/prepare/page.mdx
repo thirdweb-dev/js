@@ -12,40 +12,41 @@ Instantiate a low level [Transaction](/dotnet/transactions/create) object from a
 
 Useful for preparing, simulating and manipulating transactions before sending them to the blockchain.
 
-## Usage
+## Uso
 
 ```csharp
 ThirdwebTransaction transaction = await contract.Prepare(wallet, contract, "methodName", weiValue, parameters);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (requerido)
 
-An instance of `IThirdwebWallet`. This represents the signer of the transaction, which can be any type of wallet provider.
+Una instancia de `IThirdwebWallet`. Representa al firmante de la transacción, que puede ser cualquier tipo de proveedor de billetera.
 
-### contract (required)
+### contract (requerido)
 
-An instance of `ThirdwebContract`. Represents the smart contract you wish to interact with.
+Una instancia de `ThirdwebContract`. Representa el contrato inteligente con el que deseas interactuar.
 
-### methodName (required)
+### methodName (requerido)
 
-The name of the smart contract method you intend to call. Must be a `string`.
+El nombre del método del contrato inteligente que deseas llamar. Debe ser un `string`.
 
-### weiValue (required)
+### weiValue (requerido)
 
-The amount of Wei to send with payable transactions as a `BigInteger`. This is often set to 0 for methods that don't require sending Ether.
+La cantidad de Wei a enviar con las transacciones pagaderas como un `BigInteger`. Esto generalmente se establece en 0 para métodos que no requieren el envío de Ether.
 
-### parameters (optional)
+### parameters (opcional)
 
-The parameters to pass to the smart contract method, if any. Provide these as a comma-separated list after weiValue.
+Los parámetros a pasar al método del contrato inteligente, si los hay. Proporciona estos como una lista separada por comas después de weiValue.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### Transaction
 
-Returns an instance of `ThirdwebTransaction` configured with the provided parameters, ready to be sent to the blockchain.
+Devuelve una instancia de `ThirdwebTransaction` configurada con los parámetros proporcionados, lista para ser enviada a la blockchain.
 
 </Details>
+

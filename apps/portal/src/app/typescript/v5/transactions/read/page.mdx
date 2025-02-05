@@ -1,6 +1,6 @@
-# Reading contract state
+# Leer el estado del contrato
 
-The recommended way to read the contract state is to use the `readContract` function and pass the Solidity method signature and the params. This is type-safe based on the Solidity method signature you define. You can get your desired contract method signature from the solidity code directly.
+La forma recomendada de leer el estado del contrato es usar la función `readContract` y pasar la firma del método Solidity y los parámetros. Esto es seguro en cuanto a tipos, basado en la firma del método Solidity que defines. Puedes obtener la firma del método del contrato que desees directamente desde el código Solidity.
 
 ```ts
 import { readContract } from "thirdweb";
@@ -12,11 +12,11 @@ const balance = await readContract({
 });
 ```
 
-This will execute the read immediately and return the result from the blockchain.
+Esto ejecutará la lectura inmediatamente y devolverá el resultado desde la blockchain.
 
-## Reading contract events
+## Leer eventos del contrato
 
-The recommended way to read the contract events is to use the `getContractEvents` function and passing a prepared event with the Solidity event signature and the params. This is type-safe based on the Solidity event signature you define. You can get your desired contract event signature from the solidity code directly.
+La forma recomendada de leer los eventos del contrato es usar la función `getContractEvents` y pasar un evento preparado con la firma del evento Solidity y los parámetros. Esto es seguro en cuanto a tipos, basado en la firma del evento Solidity que defines. Puedes obtener la firma del evento del contrato que desees directamente desde el código Solidity.
 
 ```ts
 import { getContractEvents, prepareEvent } from "thirdweb";
@@ -32,12 +32,12 @@ const events = await getContractEvents({
 });
 ```
 
-### Generating all read functions and events for a deployed contract
+### Generar todas las funciones de lectura y eventos para un contrato desplegado
 
-Using the CLI, you can generate optimized functions for all the possible calls to a contract. This saves you time and precomputes all the necessary encoding.
+Usando la CLI, puedes generar funciones optimizadas para todas las llamadas posibles a un contrato. Esto te ahorra tiempo y precomputará toda la codificación necesaria.
 
 ```shell
 npx thirdweb generate <contractId>/<contractAddress>
 ```
 
-Read more on how to [generate extension functions using the CLI](/typescript/v5/extensions/generate).
+Lee más sobre cómo [generar funciones de extensión usando la CLI](/typescript/v5/extensions/generate).

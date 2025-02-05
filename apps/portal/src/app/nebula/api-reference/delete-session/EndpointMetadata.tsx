@@ -18,9 +18,9 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Delete Session",
+        title: "Eliminar Sesión",
         method: "DELETE",
-        description: "Deletes a session by ID",
+        description: "Elimina una sesión por ID",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
         request: {

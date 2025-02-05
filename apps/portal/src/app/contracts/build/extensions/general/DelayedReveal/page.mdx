@@ -2,13 +2,14 @@ import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "DelayedReveal contract",
+		title: "Contrato DelayedReveal",
 		icon: "solidity",
 	},
-	title: "DelayedReveal | thirdweb contract",
+	title: "DelayedReveal | Contrato de thirdweb",
 	description:
-		"The DelayedReveal smart contract is an extension for any NFT contract. It lets you create batches of 'delayed-reveal' NFTs.",
+		"El contrato inteligente DelayedReveal es una extensión para cualquier contrato NFT. Te permite crear lotes de NFTs con 'revelación retardada'.",
 });
+
 
 # DelayedReveal
 
@@ -16,29 +17,29 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
 ```
 
-The [`DelayedReveal`](/glossary/delayed-reveal) smart contract is an extension for any NFT contract. It lets you create batches of 'delayed-reveal' NFTs.
+El contrato inteligente [`DelayedReveal`](/glossary/delayed-reveal) es una extensión para cualquier contrato NFT. Te permite crear lotes de NFTs con 'revelación retardada'.
 
-In order for `ERC721Revealable` or `ERC1155Revealable` extensions to be detected in the dashboard on your contract, the respective EIP
-([`ERC721`](/contracts/build/extensions/erc-721/ERC721) or [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) needs to be inherited.
+Para que las extensiones `ERC721Revealable` o `ERC1155Revealable` sean detectadas en el panel de control de tu contrato, es necesario que se herede el respectivo EIP
+([`ERC721`](/contracts/build/extensions/erc-721/ERC721) o [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155)).
 
 <Callout title="info" variant="info">
-	It is recommended to use this extension alongside the
-	[`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+	Se recomienda usar esta extensión junto con la
+	[`LazyMint`](/contracts/build/extensions/general/LazyMint) extensión.
 </Callout>
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DelayedReveal.sol" />
 
-## Usage
+## Uso
 
-The `DelayedReveal` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `DelayedReveal` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                 | Type     | Returns         | Description                             |
-| -------------------------------------------------------------------- | -------- | --------------- | --------------------------------------- |
-| [`reveal`](/contracts/build/extensions/general/DelayedReveal#reveal) | external | `string memory` | Reveals a batch of delayed reveal NFTs. |
+| Nombre                                                                | Tipo     | Retorna         | Descripción                             |
+| --------------------------------------------------------------------- | -------- | --------------- | --------------------------------------- |
+| [`reveal`](/contracts/build/extensions/general/DelayedReveal#reveal)  | external | `string memory` | Revela un lote de NFTs con revelación retardada. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -47,7 +48,7 @@ pragma solidity ^0.8.0;
 import "@thirdweb-dev/contracts/base/ERC721LazyMint.sol";
 import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
 
-/// This is just an EXAMPLE contract that uses `DelayedReveal`.
+/// Este es solo un contrato de EJEMPLO que utiliza `DelayedReveal`.
 
 contract MyContract is ERC721LazyMint, DelayedReveal {
     using TWStrings for uint256;
@@ -60,8 +61,8 @@ contract MyContract is ERC721LazyMint, DelayedReveal {
     ) ERC721LazyMint(_name, _symbol, _royaltyRecipient, _royaltyBps) {}
 
     /**
-     *  We override the `lazyMint` function, and use the `_data` parameter for storing encrypted metadata
-     *  for 'delayed reveal' NFTs.
+     *  Sobrescribimos la función `lazyMint`, y usamos el parámetro `_data` para almacenar los metadatos cifrados
+     *  para los NFTs de 'revelación retardada'.
      */
     function lazyMint(
         uint256 _amount,
@@ -82,7 +83,7 @@ contract MyContract is ERC721LazyMint, DelayedReveal {
     }
 
     /**
-     *  We override `tokenURI` to return an appropriate URI for NFTs whose true metadata is encrypted.
+     *  Sobrescribimos `tokenURI` para devolver una URI adecuada para los NFTs cuyos metadatos reales están cifrados.
      */
     function tokenURI(uint256 _tokenId)
         public
@@ -102,7 +103,7 @@ contract MyContract is ERC721LazyMint, DelayedReveal {
     }
 
     /**
-     *  We only let the owner of the contract reveal the metadata for a batch of NFTs.
+     *  Solo permitimos que el propietario del contrato revele los metadatos para un lote de NFTs.
      */
     function reveal(uint256 _index, bytes calldata _key)
         external
@@ -120,14 +121,14 @@ contract MyContract is ERC721LazyMint, DelayedReveal {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
 - [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
 - [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)
 - [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop)
 
-## Full API Reference
+## Referencia Completa de la API
 
 <Details summary="_setEncryptedData">
 
@@ -135,9 +136,9 @@ contract MyContract is ERC721LazyMint, DelayedReveal {
 function _setEncryptedData(uint256 batchId, bytes memory encryptedData) internal;
 ```
 
-- Sets the delayed reveal data for a given batch of NFTs.
-- Parameter `batchId`: The identifier for the batch of delayed reveal NFTs.
-- Parameter `encryptedData`: The encrypted metadata to store for the given batch of NFTs.
+- Establece los datos de revelación retardada para un lote dado de NFTs.
+- Parámetro `batchId`: El identificador para el lote de NFTs con revelación retardada.
+- Parámetro `encryptedData`: Los metadatos cifrados para almacenar para el lote dado de NFTs.
 
 </Details>
 
@@ -147,9 +148,9 @@ function _setEncryptedData(uint256 batchId, bytes memory encryptedData) internal
 function getRevealURI(uint256 batchId, bytes calldata key) public view returns (string memory revealedURI);
 ```
 
-- Returns revealed URI i.e. true metadata URI for a batch of NFTs.
-- Parameter `batchId`: The identifier for the batch of delayed reveal NFTs whose true metadata URI is being retrieved.
-- Parameter `key`: Secure key used by caller/admin for initially encrypting the metadata of the relevant batch of NFTs.
+- Devuelve la URI revelada, es decir, la URI de metadatos reales para un lote de NFTs.
+- Parámetro `batchId`: El identificador para el lote de NFTs con revelación retardada cuya URI de metadatos reales se está recuperando.
+- Parámetro `key`: Clave segura utilizada por el llamador/admin para cifrar inicialmente los metadatos del lote relevante de NFTs.
 
 </Details>
 
@@ -159,8 +160,8 @@ function getRevealURI(uint256 batchId, bytes calldata key) public view returns (
 function encryptDecrypt(bytes memory data, bytes calldata key) public pure override returns (bytes memory result);
 ```
 
-- Standard XOR encryption implementation in Solidity. Used to encrypt the metadata of NFTs.
-- Learn more about the usage of this function in this [blogpost](https://blog.thirdweb.com/delayed-reveal-nfts).
+- Implementación estándar de cifrado XOR en Solidity. Se usa para cifrar los metadatos de los NFTs.
+- Aprende más sobre el uso de esta función en este [blogpost](https://blog.thirdweb.com/delayed-reveal-nfts).
 
 </Details>
 
@@ -170,8 +171,8 @@ function encryptDecrypt(bytes memory data, bytes calldata key) public pure overr
 function isEncryptedBatch(uint256 batchId) public view returns (bool);
 ```
 
-- Returns whether the relevant batch of NFTs is subject to a delayed reveal.
-- Parameter `batchId`: The identifier for a batch of NFTs.
+- Devuelve si el lote relevante de NFTs está sujeto a una revelación retardada.
+- Parámetro `batchId`: El identificador para un lote de NFTs.
 
 </Details>
 
@@ -181,8 +182,8 @@ function isEncryptedBatch(uint256 batchId) public view returns (bool);
 function reveal(uint256 batchId, bytes calldata key) external returns (string memory revealedURI);
 ```
 
-- Reveals a batch of delayed reveal NFTs.
-- Parameter `batchId`: The ID for the batch of delayed-reveal NFTs to reveal.
-- Parameter `key`: The key with which the base URI for the relevant batch of NFTs was encrypted.
+- Revela un lote de NFTs con revelación retardada.
+- Parámetro `batchId`: El ID para el lote de NFTs con revelación retardada a revelar.
+- Parámetro `key`: La clave con la cual se cifró la URI base para el lote relevante de NFTs.
 
 </Details>

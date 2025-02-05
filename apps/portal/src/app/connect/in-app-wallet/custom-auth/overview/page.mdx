@@ -3,25 +3,23 @@ import EWSpeedRacer from "../images/speedracer.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Custom Authentication with In-App Wallet",
+		title: "Autenticación Personalizada con Billetera In-App",
 		icon: "wallets",
 	},
-	title: "Custom Authentication | thirdweb In-App Wallet",
+	title: "Autenticación Personalizada | Billetera In-App de thirdweb",
 	description:
-		"In-App wallets already support most popular login methods out of the box, but we also give app developers the flexibility to use in-app wallets with any authentication method",
+		"Las billeteras In-App ya soportan los métodos de inicio de sesión más populares, pero también damos a los desarrolladores de aplicaciones la flexibilidad de usar billeteras In-App con cualquier método de autenticación.",
 });
 
-# Overview
+# Descripción General
 
-In-App wallets already support most popular login methods out of the box, but we also give app developers the flexibility to use
-in-app wallets with any authentication method. If you have a valid authenticated user, you should be able to easily spin up an
-in-app wallet for them irrespective of how they got authenticated.
+Las billeteras In-App ya permiten los métodos de inicio de sesión más populares, pero también brindan a los desarrolladores de aplicaciones la flexibilidad de usar billeteras In-App con cualquier método de autenticación. Si tienes un usuario autenticado válido, deberías poder crear una billetera In-App para él, sin importar el método de autenticación utilizado.
 
 <DocImage src={EWSpeedRacer} />
 
-This means that app developers can now
+Esto significa que los desarrolladores de aplicaciones ahora pueden:
 
-- **Spin up in-app wallets for users using an existing authentication service**. For example, if you have a game where players log in using their username and password, you can now easily create wallets when they sign up.
-- **Integrate with any social login provider**. For example, if you have a game where you want to let users login with their Steam or Epic games credentials, you can now use in-app wallets to enable these experiences.
-- **Use in-app wallets in non-frontend environments**. For example, you could authenticate users with SSH and use in-app wallets with CLI tools.
-- **Build completely custom authentication experiences**. For example, you could ask users to verify their credentials with 2FA or passkey before you consider them authenticated and provision wallets for them.
+- **Crear billeteras In-App para usuarios utilizando un servicio de autenticación existente**. Por ejemplo, si tienes un juego donde los jugadores inician sesión con su nombre de usuario y contraseña, ahora puedes crear billeteras fácilmente cuando se registren.
+- **Integrarse con cualquier proveedor de inicio de sesión social**. Por ejemplo, si tienes un juego donde quieres permitir que los usuarios inicien sesión con sus credenciales de Steam o Epic Games, ahora puedes usar billeteras In-App para habilitar estas experiencias.
+- **Utilizar billeteras In-App en entornos que no sean de frontend**. Por ejemplo, podrías autenticar usuarios con SSH y usar billeteras In-App con herramientas de línea de comandos (CLI).
+- **Construir experiencias de autenticación completamente personalizadas**. Por ejemplo, podrías pedir a los usuarios que verifiquen sus credenciales con 2FA o claves de acceso antes de considerarlos autenticados y aprovisionar billeteras para ellos.

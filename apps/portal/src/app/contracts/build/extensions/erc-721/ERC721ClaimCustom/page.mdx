@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721ClaimCustom contract",
+		title: "Contrato ERC721ClaimCustom",
 		icon: "solidity",
 	},
-	title: "ERC721ClaimCustom | thirdweb contract",
+	title: "ERC721ClaimCustom | contrato de thirdweb",
 	description:
-		"Allow other wallets to claim/mint tokens that you have Lazy Minted by implementing ERC721 and ERC721Claimable extensions",
+		"Permite que otras billeteras reclamen/minten tokens que has mintado de manera perezosa al implementar las extensiones ERC721 y ERC721Claimable",
 });
+
 
 # ERC721ClaimCustom
 
@@ -18,18 +19,18 @@ import "@thirdweb-dev/contracts/eip/ERC721.sol";
 import "@thirdweb-dev/contracts/extension/interface/IClaimableERC721.sol";
 ```
 
-Allow other wallets to claim/mint tokens that you have Lazy Minted by
-implementing [`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`ERC721Claimable`](/contracts/build/extensions/erc-721/ERC721Claimable) extensions.
+Permite que otras billeteras reclamen/minten tokens que has mintado de manera perezosa al
+implementar las extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`ERC721Claimable`](/contracts/build/extensions/erc-721/ERC721Claimable).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`ERC721Claimable`](/contracts/build/extensions/erc-721/ERC721Claimable) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las
+extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`ERC721Claimable`](/contracts/build/extensions/erc-721/ERC721Claimable).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IClaimableERC721.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC721ClaimCustom` detectable extension.
-The functions which are available to be overridden (optionally) are also detailed.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de las extensiones que componen la extensión detectable `ERC721ClaimCustom`.
+También se detallan las funciones que pueden ser sobrescritas (opcionalmente).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -51,11 +52,11 @@ contract Contract is ERC721A, LazyMint, IClaimableERC721 {
     {}
 
     function _canLazyMint() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _canSetClaimConditions() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _collectPriceOnClaim(
@@ -64,7 +65,7 @@ contract Contract is ERC721A, LazyMint, IClaimableERC721 {
         address _currency,
         uint256 _pricePerToken
     ) internal virtual override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
@@ -73,20 +74,20 @@ contract Contract is ERC721A, LazyMint, IClaimableERC721 {
         override
         returns (uint256 startTokenId)
     {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function claim(address _receiver, uint256 _quantity) external payable override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function verifyClaim(address _claimer, uint256 _quantity) external view override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
 - [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint)

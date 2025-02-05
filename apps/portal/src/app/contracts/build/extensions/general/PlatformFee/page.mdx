@@ -2,12 +2,12 @@ import { Details, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "PlatformFee contract",
+		title: "Contrato PlatformFee",
 		icon: "solidity",
 	},
-	title: "PlatformFee | thirdweb contract",
+	title: "PlatformFee | Contrato de thirdweb",
 	description:
-		"PlatformFee allows you to charge a percentage fee wherever there is a transfer of currency (ERC20 tokens or native tokens) in your contract",
+		"PlatformFee te permite cobrar una tarifa porcentual cada vez que haya una transferencia de moneda (tokens ERC20 o tokens nativos) en tu contrato",
 });
 
 # PlatformFee
@@ -16,19 +16,19 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/PlatformFee.sol";
 ```
 
-`PlatformFee` allows you to charge a percentage fee wherever there is a transfer of currency (ERC20 tokens or native tokens) in your contract.
+`PlatformFee` te permite cobrar una tarifa porcentual cada vez que haya una transferencia de moneda (tokens ERC20 o tokens nativos) en tu contrato.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/PlatformFee.sol" />
 
-## Usage
+## Uso
 
-The `PlatformFee` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `PlatformFee` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                                               | Type                    | Returns | Description                                                                                                                            |
-| -------------------------------------------------------------------------------------------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSetPlatformFeeInfo`](/contracts/build/extensions/general/PlatformFee#_cansetplatformfeeinfo) | internal view _virtual_ | `bool`  | Runs on every attempt to set a new platform fee recipient or bps. Returns whether this info can be set in the given execution context. |
+| Nombre                                                                                               | Tipo                    | Devuelve | Descripción                                                                                                                            |
+| ---------------------------------------------------------------------------------------------------- | ----------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetPlatformFeeInfo`](/contracts/build/extensions/general/PlatformFee#_cansetplatformfeeinfo) | internal view _virtual_ | `bool`   | Se ejecuta en cada intento de establecer un nuevo receptor de tarifa de la plataforma o bps. Devuelve si esta información puede ser establecida en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -38,10 +38,10 @@ import "@thirdweb-dev/contracts/extension/PlatformFee.sol";
 
 contract MyContract is PlatformFee {
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para los fines del ejemplo
+     *  en el comentario de código a continuación.
      *
-     *  Doing this is not necessary to use the `PlatformFee` extension.
+     *  Hacer esto no es necesario para usar la extensión `PlatformFee`.
      */
     address public deployer;
 
@@ -50,11 +50,11 @@ contract MyContract is PlatformFee {
     }
 
     /**
-     *  This function returns who is authorized to set platform fee info for your contract.
+     *  Esta función devuelve quién está autorizado para establecer la información de la tarifa de la plataforma para tu contrato.
      *
-     *  As an EXAMPLE, we'll only allow the contract deployer to set the platform fee info.
+     *  Como EJEMPLO, solo permitiremos que quien despliegue el contrato establezca la información de la tarifa de la plataforma.
      *
-     *  You MUST complete the body of this function to use the `PlatformFee` extension.
+     *  DEBES completar el cuerpo de esta función para usar la extensión `PlatformFee`.
      */
     function _canSetPlatformFeeInfo() internal view virtual override returns (bool) {
         return msg.sender == deployer;
@@ -62,11 +62,11 @@ contract MyContract is PlatformFee {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-None of the base contracts implement this extension.
+Ninguno de los contratos base implementa esta extensión.
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="getPlatformFeeInfo">
 
@@ -74,8 +74,8 @@ None of the base contracts implement this extension.
 function getPlatformFeeInfo() public view returns (address, uint16);
 ```
 
-- Returns the platform fee recipient and bps.
-- Set this value using the `setPlatformFeeInfo` function.
+- Devuelve el receptor de la tarifa de la plataforma y los bps.
+- Establece este valor usando la función `setPlatformFeeInfo`.
 
 </Details>
 
@@ -85,10 +85,10 @@ function getPlatformFeeInfo() public view returns (address, uint16);
 function setPlatformFeeInfo(address platformFeeRecipient, uint256 platformFeeBps) external;
 ```
 
-- Lets an authorized wallet set the platform fee recipient and bps.
-- Parameter `platformFeeRecipient`: The address to set as the new platform fee recipient.
-- Parameter `platformFeeBps`: The value to set as the new platform fee BPS.
-- The `_canSetPlatformFeeInfo` function is run on every call to this function. If the return value of `_canSetPlatformFeeInfo` is `false`, the `setPlatformFeeInfo` call will revert.
+- Permite que una billetera autorizada establezca el receptor de la tarifa de la plataforma y los bps.
+- Parámetro `platformFeeRecipient`: La dirección que se establecerá como el nuevo receptor de la tarifa de la plataforma.
+- Parámetro `platformFeeBps`: El valor que se establecerá como los nuevos bps de la tarifa de la plataforma.
+- La función `_canSetPlatformFeeInfo` se ejecuta en cada llamada a esta función. Si el valor devuelto de `_canSetPlatformFeeInfo` es `false`, la llamada a `setPlatformFeeInfo` se revertirá.
 
 </Details>
 
@@ -98,10 +98,10 @@ function setPlatformFeeInfo(address platformFeeRecipient, uint256 platformFeeBps
 function _setupPlatformFeeInfo(address platformFeeRecipient, uint256 platformFeeBps) internal;
 ```
 
-- Sets the platform fee recipient and bps.
-- Parameter `platformFeeRecipient`: The address to set as the new platform fee recipient.
-- Parameter `platformFeeBps`: The value to set as the new platform fee BPS.
-- The `_canSetPlatformFeeInfo` function is _not_ run on a call to this function.
+- Establece el receptor de la tarifa de la plataforma y los bps.
+- Parámetro `platformFeeRecipient`: La dirección que se establecerá como el nuevo receptor de la tarifa de la plataforma.
+- Parámetro `platformFeeBps`: El valor que se establecerá como los nuevos bps de la tarifa de la plataforma.
+- La función `_canSetPlatformFeeInfo` _no_ se ejecuta en una llamada a esta función.
 
 </Details>
 
@@ -111,8 +111,8 @@ function _setupPlatformFeeInfo(address platformFeeRecipient, uint256 platformFee
 function _canSetPlatformFeeInfo() internal view virtual returns (bool);
 ```
 
-- Runs on every `setPlatformFeeInfo` function call.
-- Returns whether a new platform fee recipient or bps can be set in the given execution context.
-- For example, this function can check whether the wallet calling `setPlatformFeeInfo` is the contract owner, and enforce that only the current owner should be able to successfully call `setPlatformFeeInfo`.
+- Se ejecuta en cada llamada a la función `setPlatformFeeInfo`.
+- Devuelve si se puede establecer un nuevo receptor de tarifa de la plataforma o bps en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `setPlatformFeeInfo` es el propietario del contrato, y hacer cumplir que solo el propietario actual pueda llamar exitosamente a `setPlatformFeeInfo`.
 
 </Details>

@@ -12,7 +12,7 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Update Session",
+        title: "Actualizar Sesión",
         method: "PUT",
         description: "Update session details like title, context, etc.",
         origin: "https://nebula-api.thirdweb.com",

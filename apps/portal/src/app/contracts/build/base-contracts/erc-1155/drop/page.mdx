@@ -5,9 +5,9 @@ import { createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "ERC1155Drop | thirdweb contracts",
 	description:
-		"The ERC1155Drop base contract is the foundation for an Edition (ERC1155) NFT Drop that other wallets can claim.",
+		"El contrato base ERC1155Drop es la base para un NFT Drop de Edición (ERC1155) que otras billeteras pueden reclamar.",
 	image: {
-		title: "ERC1155Drop contract",
+		title: "Contrato ERC1155Drop",
 		icon: "contract",
 	},
 });
@@ -18,17 +18,17 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC1155Drop.sol";
 ```
 
-The `ERC1155Drop` base contract is the foundation for an Edition (ERC1155) NFT Drop that other wallets can claim.
+El contrato base `ERC1155Drop` es la base para un NFT Drop de Edición (ERC1155) que otras billeteras pueden reclamar.
 
-It implements the [ERC1155 standard](/contracts/build/extensions/erc-1155/ERC1155) with [Lazy Mint](/contracts/build/extensions/general/LazyMint),
-[Delayed Reveal](/contracts/build/extensions/general/DelayedReveal) and [Drop](/contracts/build/extensions/erc-1155/ERC1155DropSinglePhase) extensions;
-allowing you to batch lazy-mint NFTs, and allow other wallets to claim them under the criteria of claim conditions, with an optional delayed reveal.
+Implementa el estándar [ERC1155](/contracts/build/extensions/erc-1155/ERC1155) con las extensiones de [Lazy Mint](/contracts/build/extensions/general/LazyMint), [Delayed Reveal](/contracts/build/extensions/general/DelayedReveal) y [Drop](/contracts/build/extensions/erc-1155/ERC1155DropSinglePhase);
+permitiendo que puedas realizar la acuñación en lotes de NFTs de manera perezosa, y permitir que otras billeteras los reclamen bajo los criterios de las condiciones de reclamo, con una opción de revelado retrasado.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155Drop.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y haz que tu contrato herede de él.
+
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -57,11 +57,11 @@ contract MyNFT is ERC1155Drop {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las funciones que estas extensiones ponen a disposición en el SDK y en el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para conocer más sobre las funciones disponibles.
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155LazyMintableV2](/contracts/build/extensions/general/LazyMint)
@@ -73,9 +73,9 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones a Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="burn" summary="burn">
 

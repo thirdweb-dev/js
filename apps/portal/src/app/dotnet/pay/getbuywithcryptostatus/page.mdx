@@ -2,14 +2,14 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "GetBuyWithCryptoStatus | thirdweb .NET SDK",
-	description: "Get swap status for a transaction hash.",
+	description: "Obtener el estado del intercambio para un hash de transacción.",
 });
 
 # GetBuyWithCryptoStatus
 
-Get swap status for a transaction hash returned by [BuyWithCrypto](/dotnet/pay/buywithcrypto).
+Obtén el estado del intercambio para un hash de transacción devuelto por [BuyWithCrypto](/dotnet/pay/buywithcrypto).
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -17,35 +17,36 @@ using Thirdweb.Pay;
 var status = await ThirdwebPay.GetBuyWithCryptoStatus(client, txHash);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### Client (required)
+#### Cliente (obligatorio)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
 
-#### Transaction Hash (required)
+#### Hash de transacción (obligatorio)
 
-`string`: The transaction hash of the swap transaction returned by [BuyWithCrypto](/dotnet/pay/buywithcrypto).
+`string`: El hash de la transacción del intercambio devuelto por [BuyWithCrypto](/dotnet/pay/buywithcrypto).
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
-### Return Value
+### Valor de retorno
 
-A `BuyWithCryptoStatusResult` object containing the following properties:
+Un objeto `BuyWithCryptoStatusResult` que contiene las siguientes propiedades:
+
 
 ```csharp
-Quote Quote; // The quote object containing the swap details.
-string SwapType; // The swap type, see SwapType enum.
-TransactionDetails Source; // The source transaction details.
-TransactionDetails Destination; // The destination transaction details.
-string Status; // The status of the swap, see SwapStatus enum.
-string SubStatus; // The sub status of the swap, see SwapSubStatus enum.
-string FromAddress; // The source address.
-string FailureMessage; // The failure message if the swap failed.
-string Bridge; // The bridge used for the swap if applicable.
-object PurchaseData; // Additional data passed when creating the quote
+Quote Quote; // El objeto de cotización que contiene los detalles del intercambio.
+string SwapType; // El tipo de intercambio, vea el enum SwapType.
+TransactionDetails Source; // Los detalles de la transacción de origen.
+TransactionDetails Destination; // Los detalles de la transacción de destino.
+string Status; // El estado del intercambio, vea el enum SwapStatus.
+string SubStatus; // El subestado del intercambio, vea el enum SwapSubStatus.
+string FromAddress; // La dirección de origen.
+string FailureMessage; // El mensaje de error si el intercambio falló.
+string Bridge; // El puente utilizado para el intercambio, si es aplicable.
+object PurchaseData; // Datos adicionales pasados al crear la cotización.
 ```
 
 </Details>

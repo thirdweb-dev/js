@@ -1,8 +1,8 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ThirdwebContract.Read | Thirdweb .NET SDK",
-	description: "Read data from a smart contract using the Thirdweb .NET SDK.",
+  title: "ThirdwebContract.Read | Thirdweb .NET SDK",
+  description: "Read data from a smart contract using the Thirdweb .NET SDK.",
 });
 
 # ThirdwebContract.Read
@@ -15,26 +15,27 @@ Use `ThirdwebContract.Read` to fetch data from a smart contract without making a
 var result = await contract.Read<T>(contract, "methodName", parameters);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### contract (required)
+### contract (requerido)
 
-An instance of `ThirdwebContract`. Represents the smart contract you want to interact with.
+Una instancia de `ThirdwebContract`. Representa el contrato inteligente con el que deseas interactuar.
 
-### methodName (required)
+### methodName (requerido)
 
-The name of the contract method you wish to call. Must be a `string`.
+El nombre del método del contrato que deseas llamar. Debe ser una cadena de texto (`string`).
 
-### parameters (optional)
+### parameters (opcional)
 
-The parameters to pass to the contract method, if any. Provide as a comma-separated list following methodName.
+Los parámetros que se pasarán al método del contrato, si los hay. Proporciónalos como una lista separada por comas después de `methodName`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### T
 
-Returns the result of the contract method call as type T. The type T should match the expected return type of the smart contract method. For example, if the smart contract method returns an uint256, you should expect to receive a BigInteger in C#.
+Devuelve el resultado de la llamada al método del contrato como tipo T. El tipo T debe coincidir con el tipo de retorno esperado del método del contrato inteligente. Por ejemplo, si el método del contrato devuelve un `uint256`, deberías esperar recibir un `BigInteger` en C#.
 
 </Details>
+

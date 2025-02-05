@@ -1,15 +1,15 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "GetBuyHistory | thirdweb .NET SDK",
-	description: "Get buy history, supports cursor and pagination.",
+    title: "GetBuyHistory | thirdweb .NET SDK",
+    description: "Get buy history, supports cursor and pagination.",
 });
 
 # GetBuyHistory
 
-Get buy history for a specific wallet that executed a [Buy With Crypto](/dotnet/pay/buywithcrypto) or [Buy With Fiat](/dotnet/pay/buywithfiat) swap, supports cursor and pagination.
+Obtén el historial de compras para una billetera específica que haya ejecutado un intercambio de [Buy With Crypto](/dotnet/pay/buywithcrypto) o [Buy With Fiat](/dotnet/pay/buywithfiat), con soporte para cursor y paginación.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -17,52 +17,53 @@ using Thirdweb.Pay;
 var history = await ThirdwebPay.GetBuyHistory(client, walletAddress);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### Client (required)
+#### Cliente (requerido)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
 
-#### Wallet Address (required)
+#### Dirección de billetera (requerido)
 
-`string`: The wallet address to get the swap history for.
+`string`: La dirección de la billetera para obtener el historial de intercambios.
 
-#### Start Index (optional)
+#### Índice de inicio (opcional)
 
-`int`: The start index of the swap history.
+`int`: El índice de inicio del historial de intercambios.
 
-#### Count (optional)
+#### Cuenta (opcional)
 
-`int`: The number of swaps to return.
+`int`: El número de intercambios para devolver.
 
-#### Cursor (optional)
+#### Cursor (opcional)
 
-`string`: The cursor to get the next page of swap history. (Optional)
+`string`: El cursor para obtener la siguiente página del historial de intercambios. (Opcional)
 
-#### Page Size (optional)
+#### Tamaño de la página (opcional)
 
-`int`: The page size of the swap history. (Optional)
+`int`: El tamaño de la página del historial de intercambios. (Opcional)
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
-### Return Value
+### Valor de retorno
 
-A `BuyHistoryResult` object containing the following properties:
+Un objeto `BuyHistoryResult` que contiene las siguientes propiedades:
+
 
 ```csharp
-string WalletAddress; // The wallet address.
-List<HistoryPage> Page; // The buy history page.
-string NextCursor; // The next cursor.
-int PageSize; // The page size.
+string WalletAddress; // La dirección de la billetera.
+List<HistoryPage> Page; // La página del historial de compras.
+string NextCursor; // El siguiente cursor.
+int PageSize; // El tamaño de la página.
 ```
 
-The `HistoryPage` object contains the following properties:
+El objeto `HistoryPage` contiene las siguientes propiedades:
 
 ```csharp
-BuyWithCryptoStatusResult BuyWithCryptoStatus; // Swap status for Buy With Crypto transactions if any.
-BuyWithFiatStatusResult BuyWithFiatStatus; // Swap status for Buy With Fiat transactions if any.
+BuyWithCryptoStatusResult BuyWithCryptoStatus; // Estado del intercambio para las transacciones de Buy With Crypto, si las hay.
+BuyWithFiatStatusResult BuyWithFiatStatus; // Estado del intercambio para las transacciones de Buy With Fiat, si las hay.
 ```
 
 </Details>

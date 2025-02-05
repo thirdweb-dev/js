@@ -1,261 +1,262 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ThirdwebTransaction Instance Methods | Thirdweb .NET SDK",
+	title: "Métodos de Instancia de ThirdwebTransaction | Thirdweb .NET SDK",
 	description:
-		"All instance methods available on the ThirdwebTransaction class in the Thirdweb .NET SDK.",
+		"Todos los métodos de instancia disponibles en la clase `ThirdwebTransaction` en el SDK .NET de Thirdweb.",
 });
 
-# ThirdwebTransaction Instance Methods
+# Métodos de Instancia de ThirdwebTransaction
 
-The `ThirdwebTransaction` class provides a set of instance methods to set various properties of your transaction's input data and gas settings.
+La clase `ThirdwebTransaction` proporciona un conjunto de métodos de instancia para establecer varias propiedades de los datos de entrada y la configuración de gas de tu transacción.
 
-Do note that in most cases those are autopolulated by the SDK and you don't need to set them manually.
+Ten en cuenta que en la mayoría de los casos, estos se autocompletan automáticamente por el SDK y no es necesario configurarlos manualmente.
 
 ## ThirdwebTransaction.SetTo
 
-Set the target address or contract of the transaction.
+Establece la dirección objetivo o el contrato de la transacción.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetTo("0xToAddress");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### toAddress (required)
+### toAddress (requerido)
 
-The target address or contract of the transaction. Must be a hexadecimal `string`.
+La dirección objetivo o contrato de la transacción. Debe ser una cadena hexadecimal `string`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `to` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `to` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetData
 
-Set the raw encoded data payload (potentially overriding previous data if the transaction was created using `ThirdwebContract.Prepare`).
+Establece la carga útil de datos codificados sin procesar (potencialmente sobrescribiendo los datos anteriores si la transacción fue creada usando `ThirdwebContract.Prepare`).
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetData("0x");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### data (required)
+### data (requerido)
 
-The raw data payload of the transaction. Must be a hexadecimal `string`.
+La carga útil de datos sin procesar de la transacción. Debe ser una cadena hexadecimal `string`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `data` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `data` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetValue
 
-Set the value of the payable transaction in Wei.
+Establece el valor de la transacción pagable en Wei.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetValue(1000000000000000000);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### value (required)
+### value (requerido)
 
-The value of the transaction in Wei. Must be a `BigInteger`.
+El valor de la transacción en Wei. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `value` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `value` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetGasLimit
 
-Set the gas limit of the transaction.
+Establece el límite de gas de la transacción.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetGasLimit(21000);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### gasLimit (required)
+### gasLimit (requerido)
 
-The gas limit of the transaction. Must be an `BigInteger`.
+El límite de gas de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
-Returns the instance of `ThirdwebTransaction` with the `gasLimit` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `gasLimit` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetGasPrice
 
-Set the gas price of a legacy transaction.
+Establece el precio de gas de una transacción heredada.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetGasPrice(1000000000);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### gasPrice (required)
+### gasPrice (requerido)
 
-The gas price of the transaction. Must be an `BigInteger`.
+El precio de gas de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `gasPrice` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `gasPrice` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetNonce
 
-Set the nonce of the transaction.
+Establece el nonce de la transacción.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetNonce(1);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### nonce (required)
+### nonce (requerido)
 
-The nonce of the transaction. Must be an `BigInteger`.
+El nonce de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `nonce` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `nonce` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetMaxFeePerGas
 
-Set the maximum fee per gas of an EIP-1559 transaction.
+Establece la tarifa máxima por gas de una transacción EIP-1559.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetMaxFeePerGas(1000000000);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### maxFeePerGas (required)
+### maxFeePerGas (requerido)
 
-The maximum fee per gas of the transaction. Must be an `BigInteger`.
+La tarifa máxima por gas de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `maxFeePerGas` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `maxFeePerGas` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetMaxPriorityFeePerGas
 
-Set the maximum priority fee per gas of an EIP-1559 transaction.
+Establece la tarifa máxima de prioridad por gas de una transacción EIP-1559.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetMaxPriorityFeePerGas(1000000000);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### maxPriorityFeePerGas (required)
+### maxPriorityFeePerGas (requerido)
 
-The maximum priority fee per gas of the transaction. Must be an `BigInteger`.
+La tarifa máxima de prioridad por gas de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `maxPriorityFeePerGas` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `maxPriorityFeePerGas` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetChainId
 
-Set the chain ID of the transaction.
+Establece el ID de la cadena de la transacción.
 
 ```csharp
 ThirdwebTransaction transaction = transaction.SetChainId(1);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### chainId (required)
+### chainId (requerido)
 
-The chain ID of the transaction. Must be an `BigInteger`.
+El ID de la cadena de la transacción. Debe ser un `BigInteger`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `chainId` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `chainId` configurada.
 
 </Details>
 
 ## ThirdwebTransaction.SetZkSyncOptions
 
-Set the ZkSync options of the transaction.
+Establece las opciones de ZkSync de la transacción.
 
-This allows you to use native ZkSync Account Abstraction with any paymaster.
+Esto te permite usar la Abstracción de Cuentas nativas de ZkSync con cualquier paymaster.
 
 ```csharp
 ZkSyncOptions zkSyncOptions = new ZkSyncOptions("0xPaymaster", "0xPaymasterInput");
 ThirdwebTransaction transaction = transaction.SetZkSyncOptions(zkSyncOptions);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### zkSyncOptions (required)
+### zkSyncOptions (requerido)
 
-The ZkSync options of the transaction. Must be an instance of `ZkSyncOptions`.
+Las opciones de ZkSync de la transacción. Debe ser una instancia de `ZkSyncOptions`.
 
-`ZkSyncOptions` includes the following properties:
+`ZkSyncOptions` incluye las siguientes propiedades:
 
-- `Paymaster` - The paymaster address. Must be a hexadecimal `string`.
-- `PaymasterInput` - The paymaster input data. Must be a hexadecimal `string`.
-- `GasPerPubdataByteLimit` - The gas limit per pubdata byte. Must be a `BigInteger`.
-- `FactoryDeps` - A list of factory dependencies. Must be a list of `byte[]`.
+- `Paymaster` - La dirección del paymaster. Debe ser una cadena hexadecimal `string`.
+- `PaymasterInput` - Los datos de entrada del paymaster. Debe ser una cadena hexadecimal `string`.
+- `GasPerPubdataByteLimit` - El límite de gas por byte de pubdata. Debe ser un `BigInteger`.
+- `FactoryDeps` - Una lista de dependencias de fábrica. Debe ser una lista de `byte[]`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de Retorno">
 
 ### ThirdwebTransaction
 
-Returns the instance of `ThirdwebTransaction` with the `zkSyncOptions` property set.
+Devuelve la instancia de `ThirdwebTransaction` con la propiedad `zkSyncOptions` configurada.
 
 </Details>
+

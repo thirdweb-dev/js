@@ -14,20 +14,20 @@ import {
 
 export const metadata = createMetadata({
 	title: "thirdweb Connect",
-	description: "Learn how to migrate to thirdweb connect components from RainbowKit",
+	description: "Aprende cómo migrar a los componentes de thirdweb Connect desde RainbowKit",
 	image: {
-		title: "Migrate from RainbowKit",
+		title: "Migrar desde RainbowKit",
 		icon: "thirdweb",
 	},
 });
 
-# Migrate from RainbowKit
+# Migrar desde RainbowKit
 
-Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](https://www.rainbowkit.com/).
+Aprende cómo migrar al componente ConnectButton de thirdweb desde [RainbowKit](https://www.rainbowkit.com/).
 
 <Steps>
-	<Step title="Installation">
-		Install the connect SDK in your application
+	<Step title="Instalación">
+		Instala el SDK de connect en tu aplicación
 		<InstallTabs
 			npm="npm i thirdweb"
 			yarn="yarn add thirdweb"
@@ -35,10 +35,11 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
 			bun="bun i thirdweb"
 		/>
 
-    <Callout variant='warning' title="Dependency Conflicts">If you are installing thirdweb using `npm` and run into any dependency conflicts, install thirdweb using `npm install thirdweb --legacy-peer-deps` </Callout>
+    <Callout variant='warning' title="Conflictos de dependencias">Si estás instalando thirdweb usando `npm` y encuentras conflictos de dependencias, instala thirdweb usando `npm install thirdweb --legacy-peer-deps` </Callout>
 	</Step>
-	<Step title="Setup">
-    Wrap application using `ThirdwebProvider` and remove `RainbowKitProvider`
+
+	<Step title="Configuración">
+    Envuelve la aplicación usando `ThirdwebProvider` y elimina `RainbowKitProvider`
 
     ```jsx
     import { ThirdwebProvider } from "thirdweb/react";
@@ -61,8 +62,8 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
 
 	</Step>
 	<Step title="Swap ConnectButton component">
-		Import `createThirdwebClient` and `ConnectButton` from thirdweb and add them to your application. Modify the `ConnectButton` component
-    by adding the [`client`](/typescript/v5/client) prop.
+		Importa `createThirdwebClient` y `ConnectButton` desde thirdweb y añádelos a tu aplicación. Modifica el componente `ConnectButton`  
+    añadiendo el prop [`client`](/typescript/v5/client).
 
     ```jsx
     import { ConnectButton } from "thirdweb/react";
@@ -85,21 +86,22 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
       );
     };
     ```
-    <Callout variant="info" title="Client ID">Get a free client ID to use in your application by creating a project in [thirdweb's dashboard](https://thirdweb.com/team).</Callout>
+    <Callout variant="info" title="Client ID">Obtén un client ID gratuito para usar en tu aplicación creando un proyecto en el [dashboard de thirdweb](https://thirdweb.com/team).</Callout>
 	</Step>
-  <Step title="Customize">
-    To customize your ConnectButton component, view the cheatsheet below or [view the customization documentation](https://portal.thirdweb.com/connect/sign-in/customization).
+  <Step title="Personalizar">
+    Para personalizar tu componente ConnectButton, consulta la hoja de referencia a continuación o [consulta la documentación de personalización](https://portal.thirdweb.com/connect/sign-in/customization).
   </Step>
-  <Step title="(Optional) Adapters">
-    If you are using Wagmi, Viem, or Ethers in your application, use thirdweb adapters to continue using contracts, providers, and wallets from these libraries.
+  <Step title="(Opcional) Adaptadores">
+    Si estás utilizando Wagmi, Viem o Ethers en tu aplicación, usa los adaptadores de thirdweb para seguir utilizando contratos, proveedores y billeteras de estas librerías.
 
-    [View the Adapter documentation.](/typescript/v5/adapters)
+    [Consulta la documentación de los adaptadores.](/typescript/v5/adapters)
   </Step>
+
 </Steps>
 
-## Cheatsheet
+## Hoja de referencia
 
-### Installation
+### Instalación
 
 #### RainbowKit
 
@@ -111,7 +113,7 @@ Learn how to migrate to thirdweb's ConnectButton component from [RainbowKit](htt
 
 <hr/>
 
-### Initalization
+### Inicialización
 
 #### RainbowKit
 
@@ -199,7 +201,7 @@ export const YourApp = () => {
 
 <hr/>
 
-### Localization
+### Localización
 
 #### RainbowKit
 
@@ -222,7 +224,7 @@ export const YourApp = () => {
 
 <hr/>
 
-### Modal Sizes
+### Tamaños del Modal
 
 #### RainbowKit
 
@@ -245,7 +247,7 @@ export const YourApp = () => {
 
 <hr/>
 
-### Theming
+### Personalización de Tema
 
 #### RainbowKit
 
@@ -271,7 +273,7 @@ import { ...etc, darkTheme } from '@rainbow-me/rainbowkit';
 <hr/>
 
 
-## Templates
+## Plantillas
 
 <Grid>
     <GithubTemplateCard

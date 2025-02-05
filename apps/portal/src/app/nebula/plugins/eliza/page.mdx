@@ -4,86 +4,87 @@ import KeysSetup from "../../assets/keys.png";
 
 # Eliza
 
-Eliza is a simple, fast, and lightweight AI agent framework to build flexible, scalable, and secure conversational agents.
+Eliza es un framework de agente de IA simple, rápido y liviano para construir agentes conversacionales flexibles, escalables y seguros.
 
-With the thirdweb plugin, you can easily integrate Nebula into an AI agent built with Eliza to provide increasingly accurate read, write, and reasoning capabilities to blockchain-related prompts:
+Con el plugin de thirdweb, puedes integrar fácilmente Nebula en un agente de IA construido con Eliza para proporcionar capacidades de lectura, escritura y razonamiento cada vez más precisas en prompts relacionados con blockchain:
 
 <OpenSourceCard
 title="Nebula Plugin"
 href="https://github.com/elizaOS/eliza/tree/main/packages/plugin-thirdweb"/>
 
 
-## Prerequisites
+## Requisitos Previos
 
-- Create a thirdweb account
-- Node.js 23+ and pnpm 9+ installed
+- Crear una cuenta en thirdweb
+- Node.js 23+ y pnpm 9+ instalados
 
-## Obtain Client ID & Secret Key
+## Obtener ID de Cliente y Clave Secreta
 
 <Steps>
 
-<Step title="Create project">
+<Step title="Crear proyecto">
 
-Navigate to the [projects dashboard](https://thirdweb.com/) and create a new project.
+Dirígete al [panel de proyectos](https://thirdweb.com/) y crea un nuevo proyecto.
 
-<DocImage src={NewProject} alt="Create a new project"/>
+<DocImage src={NewProject} alt="Crear un nuevo proyecto"/>
   
 </Step>
 
-<Step title="Obtain keys">
+<Step title="Obtener claves">
 
-Setup your project and obtain your client ID and secret key. Please note your secret key somewhere safe as it is not recoverable.
+Configura tu proyecto y obtén tu ID de cliente y clave secreta. Guarda tu clave secreta en un lugar seguro, ya que no es recuperable.
 
-<Callout variant="warning" title="Client Id vs Secret Key">
-Client Id is used for client side usage and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+<Callout variant="warning" title="ID de Cliente vs Clave Secreta">
+El ID de Cliente se utiliza para uso del lado del cliente y está restringido por las restricciones de dominio que configures en tu clave API. Es un identificador público que puede ser usado de forma segura en el frontend.
 
-Secret key is used for server side or script usage and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+La clave secreta se utiliza para uso del lado del servidor o en scripts y no está restringida por las restricciones de dominio. Nunca expongas tu clave secreta en el código del lado del cliente.
 </Callout>
 
-<DocImage  src={KeysSetup} alt="Obtain keys"/>
+<DocImage src={KeysSetup} alt="Obtener claves"/>
 
 </Step>
 
 </Steps>
 
-## Setup Eliza Starter
+## Configurar Eliza Starter
 
-If you have not created a project with Eliza, it is recommended to start with the Eliza Starter repository:
+Si no has creado un proyecto con Eliza, se recomienda comenzar con el repositorio Eliza Starter:
 
 <Steps>
-<Step title="Clone Starter">
-<Callout variant='info' title='Version'>
-The Nebula plugin is only available on version 0.1.8 of Eliza and above and is available by default.
+<Step title="Clonar Starter">
+<Callout variant='info' title='Versión'>
+El plugin de Nebula está disponible solo a partir de la versión 0.1.8 de Eliza y viene incluido por defecto.
 </Callout>
 
-Clone the starter repository
+Clona el repositorio starter
+
 
 ```bash
 git clone https://github.com/elizaos/eliza-starter.git
 ```
 </Step>
 
-<Step title="Environment Variables">
-Create a .env file and add your secret key and any other environmental variables:
+<Step title="Variables de Entorno">
+Crea un archivo `.env` y agrega tu clave secreta y otras variables de entorno:
 
 ```bash
 THIRDWEB_SECRET_KEY=your_secret_key
 ```
 
-<Callout variant="warning" title="Client Id vs Secret Key">
-Client Id is used for client side usage and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+<Callout variant="warning" title="ID de Cliente vs Clave Secreta">
+El ID de Cliente se utiliza para uso del lado del cliente y está restringido por las restricciones de dominio que configures en tu clave API. Es un identificador público que puede ser usado de forma segura en el frontend.
 
-Secret key is used for server side or script usage and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+La clave secreta se utiliza para uso del lado del servidor o en scripts y no está restringida por las restricciones de dominio. Nunca expongas tu clave secreta en el código del lado del cliente.
 </Callout>
 </Step>
 
-<Step title="Install Dependencies">
+<Step title="Instalar Dependencias">
 ```bash
 pnpm i
 ```
 </Step>
 
-<Step title="Start Eliza">
+<Step title="Iniciar Eliza">
 ```bash
 pnpm start
 ```
@@ -91,6 +92,6 @@ pnpm start
 
 </Steps>
 
-### Additional Resources
+### Recursos Adicionales
 
-- [Eliza Documentation](https://elizaos.github.io/eliza/)
+- [Documentación de Eliza](https://elizaos.github.io/eliza/)

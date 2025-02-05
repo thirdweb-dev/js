@@ -3,23 +3,24 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "IThirdwebWallet.GetAddress | Thirdweb .NET SDK",
 	description:
-		"Retrieve the blockchain address associated with a Thirdweb wallet instance.",
+		"Recupera la dirección de la blockchain asociada con una instancia de billetera Thirdweb.",
 });
 
 # IThirdwebWallet.GetAddress
 
-This method retrieves the blockchain address associated with a Thirdweb wallet instance, enabling developers to easily identify and interact with the wallet on the blockchain.
+Este método recupera la dirección de la blockchain asociada con una instancia de billetera Thirdweb, lo que permite a los desarrolladores identificar e interactuar fácilmente con la billetera en la blockchain.
 
-## Usage
+## Uso
 
 ```csharp
 string walletAddress = await wallet.GetAddress();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 `string`
 
-The blockchain address as a hexadecimal `string`. This address uniquely identifies the wallet on the blockchain, allowing for interactions such as transactions or smart contract calls.
+La dirección de blockchain como una `string` hexadecimal. Esta dirección identifica de manera única la billetera en la blockchain, permitiendo interacciones como transacciones o llamadas a contratos inteligentes.
 
 </Details>
+

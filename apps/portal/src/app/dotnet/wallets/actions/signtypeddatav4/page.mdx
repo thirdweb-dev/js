@@ -3,31 +3,32 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "IThirdwebWallet.SignTypedDataV4 | Thirdweb .NET SDK",
 	description:
-		"Sign structured data according to EIP-712 using the wallet's private key.",
+		"Firmar datos estructurados de acuerdo con EIP-712 utilizando la clave privada de la billetera.",
 });
 
 # IThirdwebWallet.SignTypedDataV4
 
-Signs structured data according to EIP-712, enhancing the security and usability of signing structured data by providing a standardized user experience across Ethereum applications.
+Firma datos estructurados de acuerdo con EIP-712, mejorando la seguridad y la usabilidad de la firma de datos estructurados al proporcionar una experiencia de usuario estandarizada en las aplicaciones de Ethereum.
 
-## Usage
+## Uso
 
 ```csharp
 string signature = await wallet.SignTypedDataV4(jsonTypedData);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### jsonTypedData (required)
+### jsonTypedData (requerido)
 
-A JSON string representing the typed data to be signed. This data should follow the EIP-712 standard, including types, domain, and message.
+Una cadena JSON que representa los datos tipados a ser firmados. Estos datos deben seguir el estándar EIP-712, incluyendo tipos, dominio y mensaje.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### string
 
-Returns a `string` representing the hexadecimal signature of the typed data. This signature can be verified to confirm the data's integrity and the signer's authenticity.
+Devuelve un `string` que representa la firma hexadecimal de los datos tipados. Esta firma puede ser verificada para confirmar la integridad de los datos y la autenticidad del firmante.
 
 </Details>
+

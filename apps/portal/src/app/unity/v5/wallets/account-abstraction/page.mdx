@@ -2,20 +2,20 @@ import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "SmartWallet | Thirdweb Unity SDK",
+	title: "SmartWallet | SDK de thirdweb para Unity",
 	description:
-		"Instantiate a SmartWallet to sign transactions and messages.",
+		"Instancia un SmartWallet para firmar transacciones y mensajes.",
 });
 
 # SmartWallet
 
-Instantiate or upgrade any other wallet to a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through Account Abstraction (ERC4337 as well as ZkSync Native AA).
+Instancia o actualiza cualquier otra billetera a un `SmartWallet` para habilitar interacciones avanzadas con blockchain, incluyendo transacciones sin gas a través de Account Abstraction (ERC4337 así como ZkSync Native AA).
 
-Account Abstraction is a system that turns any personal wallet into a smart wallet, allowing you to sponsor gas for your users and unlocking advanced permissioning features that allow for seamless user onboarding, gasless transactions, automation and more.
+Account Abstraction es un sistema que convierte cualquier billetera personal en una billetera inteligente, permitiéndote patrocinar el gas para tus usuarios y desbloqueando características avanzadas de permisos que permiten una incorporación de usuarios sin fricciones, transacciones sin gas, automatización y mucho más.
 
-We recommend using Smart Wallets as the primary wallet type for your users.
+Recomendamos usar Smart Wallets como el tipo principal de billetera para tus usuarios.
 
-### Connecting to a Smart Wallet directly
+### Conectando directamente a un Smart Wallet
 
 ```csharp
 var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)
@@ -23,7 +23,7 @@ var options = new WalletOptions(..., smartWalletOptions: smartWalletOptions);
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-### Upgrading an existing wallet to a Smart Wallet
+### Actualizando una billetera existente a un Smart Wallet
 
 ```csharp
 var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)

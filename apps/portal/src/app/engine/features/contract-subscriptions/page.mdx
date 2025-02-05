@@ -6,47 +6,47 @@ export const metadata = createMetadata({
 		"Subscribe to logs on any contract and query them from your app.",
 });
 
-# Contract Subscriptions
+# Suscripciones a Contratos
 
-Receive webhooks for any transaction log or receipt on any contract.
+Recibe webhooks para cualquier registro de transacción o recibo de cualquier contrato.
 
-A **log** is an event emitted from a successfully executed transaction. Example: a burned NFT emits a `Transfer OWNER -> 0x000...` log.
+Un **registro** es un evento emitido de una transacción ejecutada con éxito. Ejemplo: un NFT quemado emite un registro `Transfer OWNER -> 0x000...`.
 
-A **receipt** contains onchain details for any transaction. This may be useful for tracking onchain failures (reverted executions).
+Un **recibo** contiene detalles en la cadena para cualquier transacción. Esto puede ser útil para rastrear fallos en la cadena (ejecuciones revertidas).
 
-## Use cases
+## Casos de uso
 
-Your app may trigger an action when an onchain event occurs, such as:
+Tu aplicación puede activar una acción cuando ocurra un evento en la cadena, como:
 
-- ETH or an ERC20 currency is transferred to or from a wallet.
-- An token is minted from your NFT collection.
-- An token in your NFT collection is burned or transferred.
-- Metadata for an oracle contract is updated.
+- Se transfiere ETH o una moneda ERC20 a o desde una billetera.
+- Se acuña un token de tu colección de NFT.
+- Un token en tu colección de NFT es quemado o transferido.
+- Se actualizan los metadatos para un contrato oracle.
 
-## Manage Contract Subscriptions
+## Gestionar suscripciones a contratos
 
-#### Add a Contract Subscription
+#### Agregar una suscripción a contrato
 
-1. Navigate to the [thirdweb engine dashboard](https://thirdweb.com/team/~/~/engine) and select your engine.
-1. Select **Contract Subscriptions**.
-1. Select **Add Contract Subscription**.
-1. Provide a webhook URL.
+1. Navega al [panel de control de thirdweb engine](https://thirdweb.com/team/~/~/engine) y selecciona tu engine.
+1. Selecciona **Suscripciones a Contratos**.
+1. Selecciona **Agregar Suscripción a Contrato**.
+1. Proporciona una URL de webhook.
 
-API reference: [`POST /contract-subscriptions/add`](https://thirdweb-engine.apidocumentation.com/reference#tag/contract-subscriptions/POST/contract-subscriptions/add)
+Referencia de API: [`POST /contract-subscriptions/add`](https://thirdweb-engine.apidocumentation.com/reference#tag/contract-subscriptions/POST/contract-subscriptions/add)
 
-#### Remove a Contract Subscription
+#### Eliminar una suscripción a contrato
 
-1. Navigate to the [thirdweb engine dashboard](https://thirdweb.com/team/~/~/engine) and select your engine.
-1. Select **Contract Subscriptions**.
-1. Select **... > Remove** next to an existing subscription.
+1. Navega al [panel de control de thirdweb engine](https://thirdweb.com/team/~/~/engine) y selecciona tu engine.
+1. Selecciona **Suscripciones a Contratos**.
+1. Selecciona **... > Eliminar** junto a una suscripción existente.
 
-API reference: [`POST /contract-subscriptions/remove`](https://thirdweb-engine.apidocumentation.com/reference#tag/contract-subscriptions/POST/contract-subscriptions/remove)
+Referencia de API: [`POST /contract-subscriptions/remove`](https://thirdweb-engine.apidocumentation.com/reference#tag/contract-subscriptions/POST/contract-subscriptions/remove)
 
-## Handling webhooks
+## Manejo de webhooks
 
-Engine will call your webhook URL with event logs and transaction details for your specified contract(s).
+Engine llamará a tu URL de webhook con los registros de eventos y los detalles de transacciones para el contrato(s) especificado.
 
-#### Example webhook body
+#### Ejemplo de cuerpo del webhook
 
 <Details id="sample-event-log" summary="Event log">
 ```json
@@ -130,32 +130,32 @@ Engine will call your webhook URL with event logs and transaction details for yo
 
 </Details>
 
-#### Verifying webhook signatures
+#### Verificando las firmas de los webhooks
 
-See [Webhooks](/engine/features/webhooks) for more information on managing webhooks and verifying webhook signatures.
+Consulta [Webhooks](/engine/features/webhooks) para obtener más información sobre cómo gestionar webhooks y verificar las firmas de los webhooks.
 
-## FAQ
+## Preguntas Frecuentes
 
-#### How do I receive multiple webhooks for the same contract address?
+#### ¿Cómo recibo múltiples webhooks para la misma dirección de contrato?
 
-Add multiple Contract Subscriptions with different webhooks. Engine will process onchain data once to avoid duplicating work.
+Agrega múltiples Suscripciones a Contratos con diferentes webhooks. Engine procesará los datos en la cadena una sola vez para evitar duplicar el trabajo.
 
-#### Can I query data via API?
+#### ¿Puedo consultar datos a través de la API?
 
-Not at this time. This feature is on the future roadmap.
+No, no es posible en este momento. Esta función está en la hoja de ruta futura.
 
-#### Do Contract Subscriptions backfill past data?
+#### ¿Las Suscripciones a Contratos recuperan datos pasados?
 
-Not at this time. This feature is on the future roadmap.
+No, no es posible en este momento. Esta función está en la hoja de ruta futura.
 
-#### Why should I use Contract Subscriptions instead of querying the blockchain directly?
+#### ¿Por qué debería usar las Suscripciones a Contratos en lugar de consultar la blockchain directamente?
 
-Querying RPC nodes for onchain data is slow, unreliable, and costly at scale. RPCs have limits on the number of blocks that can be queried once. Even if your contract has low activity, your app must all blocks in your desired range to get accurate results.
+Consultar nodos RPC para obtener datos en la cadena es lento, poco confiable y costoso a gran escala. Los RPC tienen límites en el número de bloques que se pueden consultar a la vez. Incluso si tu contrato tiene baja actividad, tu aplicación debe consultar todos los bloques en el rango deseado para obtener resultados precisos.
 
-Contract Subscriptions allow your app to query the onchain data you care about from database, which is faster, more reliable, and less costly.
+Las Suscripciones a Contratos permiten que tu aplicación consulte los datos en la cadena que te interesan desde una base de datos, lo cual es más rápido, confiable y menos costoso.
 
-#### How is Contract Subscriptions different than using event listeners with any web3 library?
+#### ¿Cómo se diferencian las Suscripciones a Contratos de usar escuchadores de eventos con cualquier biblioteca web3?
 
-Event listeners built into web3 libraries are appropriate to listen for real-time results without any persistence or resilience. If your backend request times out or your backend has an outage, event data is missed.
+Los escuchadores de eventos integrados en las bibliotecas web3 son apropiados para escuchar resultados en tiempo real sin ninguna persistencia o resiliencia. Si tu solicitud de backend se agota o tu backend tiene una caída, los datos del evento se pierden.
 
-A Contract Subscription continuously poll the blockchain for logs and receipts since the last processed block and stores the results to database. Your app can rely on data to be stored eventually, even when unexpected issues with your backend, Engine, the RPC, or the blockchain occur.
+Una Suscripción a Contratos realiza una consulta continua a la blockchain para obtener registros y recibos desde el último bloque procesado y almacena los resultados en una base de datos. Tu aplicación puede depender de que los datos se almacenen eventualmente, incluso cuando ocurren problemas inesperados con tu backend, Engine, el RPC o la blockchain.

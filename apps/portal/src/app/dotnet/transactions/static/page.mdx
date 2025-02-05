@@ -8,13 +8,13 @@ export const metadata = createMetadata({
 
 # ThirdwebTransaction Static Methods
 
-The `ThirdwebTransaction` class includes several static methods that provide functionality to estimate costs, simulate, send and poll transactions and user operations.
+La clase `ThirdwebTransaction` incluye varios métodos estáticos que proporcionan funcionalidad para estimar costos, simular, enviar y hacer polling de transacciones y operaciones de usuario.
 
-These methods are crucial for advanced transaction management and execution in blockchain applications.
+Estos métodos son cruciales para la gestión avanzada de transacciones y la ejecución en aplicaciones blockchain.
 
 ## ThirdwebTransaction.EstimateGasCosts
 
-Estimate the gas costs of a transaction.
+Estima los costos de gas de una transacción.
 
 ```csharp
 TotalCosts gasCosts = await ThirdwebTransaction.EstimateGasCosts(transaction);
@@ -24,7 +24,7 @@ TotalCosts gasCosts = await ThirdwebTransaction.EstimateGasCosts(transaction);
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas costs.
+Una instancia de `ThirdwebTransaction`. La transacción para la que estás estimando los costos de gas.
 
 </Details>
 
@@ -32,13 +32,13 @@ An instance of `ThirdwebTransaction`. The transaction for which you are estimati
 
 ### TotalCosts
 
-Returns the estimated gas costs as `TotalCosts`, including costs in both `ether` and `wei`.
+Devuelve los costos estimados de gas como `TotalCosts`, incluyendo los costos en `ether` y `wei`.
 
 </Details>
 
 ## ThirdwebTransaction.EstimateTotalCosts
 
-Calculate the total costs of a transaction, combining the gas costs and transaction value.
+Calcula el costo total de una transacción, combinando los costos de gas y el valor de la transacción.
 
 ```csharp
 TotalCosts totalCosts = await ThirdwebTransaction.EstimateTotalCosts(transaction);
@@ -48,7 +48,7 @@ TotalCosts totalCosts = await ThirdwebTransaction.EstimateTotalCosts(transaction
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction for which you are calculating total costs.
+Una instancia de `ThirdwebTransaction`. La transacción para la que estás calculando los costos totales.
 
 </Details>
 
@@ -56,13 +56,13 @@ An instance of `ThirdwebTransaction`. The transaction for which you are calculat
 
 ### TotalCosts
 
-Returns the total costs of the transaction as `TotalCosts`, encompassing both the gas costs and the transaction value in `ether` and `wei`.
+Devuelve los costos totales de la transacción como `TotalCosts`, que abarca tanto los costos de gas como el valor de la transacción en `ether` y `wei`.
 
 </Details>
 
 ## ThirdwebTransaction.EstimateGasLimit
 
-Estimate the gas limit of a transaction or user operation.
+Estima el límite de gas de una transacción o operación de usuario.
 
 ```csharp
 BigInteger estimatedGasLimit = await ThirdwebTransaction.EstimateGasLimit(transaction);
@@ -72,7 +72,7 @@ BigInteger estimatedGasLimit = await ThirdwebTransaction.EstimateGasLimit(transa
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas limit.
+Una instancia de `ThirdwebTransaction`. La transacción para la que estás estimando el límite de gas.
 
 </Details>
 
@@ -80,13 +80,13 @@ An instance of `ThirdwebTransaction`. The transaction for which you are estimati
 
 ### BigInteger
 
-Returns the estimated gas limit as a `BigInteger`.
+Devuelve el límite de gas estimado como un `BigInteger`.
 
 </Details>
 
 ## ThirdwebTransaction.EstimateGasPrice (Legacy)
 
-Estimate the gas price for a transaction, optionally adjusting the estimate by a bump ratio.
+Estima el precio del gas para una transacción, ajustando opcionalmente la estimación mediante un ratio de incremento.
 
 ```csharp
 BigInteger estimatedGasPrice = await ThirdwebTransaction.EstimateGasPrice(transaction, withBump);
@@ -96,11 +96,11 @@ BigInteger estimatedGasPrice = await ThirdwebTransaction.EstimateGasPrice(transa
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas price.
+Una instancia de `ThirdwebTransaction`. La transacción para la que estás estimando el precio del gas.
 
-### withBump (optional)
+### withBump (opcional)
 
-A Boolean indicating whether to adjust the estimated gas price by a factor to account for network conditions. Defaults to `true`.
+Un valor booleano que indica si ajustar la estimación del precio del gas mediante un factor para tener en cuenta las condiciones de la red. El valor predeterminado es `true`.
 
 </Details>
 
@@ -108,13 +108,13 @@ A Boolean indicating whether to adjust the estimated gas price by a factor to ac
 
 ### BigInteger
 
-Returns the estimated gas price as a `BigInteger`.
+Devuelve el precio estimado del gas como un `BigInteger`.
 
 </Details>
 
 ## ThirdwebTransaction.EstimateGasFees (EIP-1559)
 
-Estimate the gas fees for a transaction, optionally adjusting the estimate by a bump ratio.
+Estima las tarifas de gas para una transacción, ajustando opcionalmente la estimación mediante un ratio de incremento.
 
 ```csharp
 (BigInteger maxFeePerGas, BigInteger maxPriorityFeePerGas) = await ThirdwebTransaction.EstimateGasFees(transaction, withBump);
@@ -124,11 +124,11 @@ Estimate the gas fees for a transaction, optionally adjusting the estimate by a 
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas fees.
+Una instancia de `ThirdwebTransaction`. La transacción para la que estás estimando las tarifas de gas.
 
-### withBump (optional)
+### withBump (opcional)
 
-A Boolean indicating whether to adjust the estimated gas fees by a factor to account for network conditions. Defaults to `true`.
+Un valor booleano que indica si ajustar las tarifas de gas estimadas mediante un factor para tener en cuenta las condiciones de la red. El valor predeterminado es `true`.
 
 </Details>
 
@@ -136,13 +136,13 @@ A Boolean indicating whether to adjust the estimated gas fees by a factor to acc
 
 ### (BigInteger maxFeePerGas, BigInteger maxPriorityFeePerGas)
 
-Returns a tuple containing the estimated maximum fee per gas and maximum priority fee per gas, both as `BigInteger`.
+Devuelve una tupla que contiene la tarifa máxima estimada por gas y la tarifa máxima de prioridad por gas, ambas como `BigInteger`.
 
 </Details>
 
 ## ThirdwebTransaction.Simulate
 
-Simulate the execution of a transaction and return raw data.
+Simula la ejecución de una transacción y devuelve los datos en bruto.
 
 ```csharp
 string data = await ThirdwebTransaction.Simulate(transaction);
@@ -152,7 +152,7 @@ string data = await ThirdwebTransaction.Simulate(transaction);
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction you are simulating.
+Una instancia de `ThirdwebTransaction`. La transacción que estás simulando.
 
 </Details>
 
@@ -160,13 +160,13 @@ An instance of `ThirdwebTransaction`. The transaction you are simulating.
 
 ### string
 
-Returns the raw data of the simulated transaction as a `string`.
+Devuelve los datos en bruto de la transacción simulada como un `string`.
 
 </Details>
 
 ## ThirdwebTransaction.Sign
 
-Sign a raw transaction and returns the signed transaction data or the signed user operation json.
+Firma una transacción en bruto y devuelve los datos de la transacción firmada o el json de la operación del usuario firmada.
 
 ```csharp
 string signedTx = await ThirdwebTransaction.Sign(transaction);
@@ -176,7 +176,7 @@ string signedTx = await ThirdwebTransaction.Sign(transaction);
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction you are signing.
+Una instancia de `ThirdwebTransaction`. La transacción que estás firmando.
 
 </Details>
 
@@ -184,13 +184,13 @@ An instance of `ThirdwebTransaction`. The transaction you are signing.
 
 ### string
 
-Returns the signed transaction data as a `string` or the signed user operation json if using Account Abstraction.
+Devuelve los datos de la transacción firmada como un `string` o el json de la operación del usuario firmada si se está utilizando Account Abstraction.
 
 </Details>
 
 ## ThirdwebTransaction.Prepare
 
-Prepares the transaction for sending by setting default values for any unset fields, such as gas limits and gas prices.
+Prepara la transacción para el envío configurando los valores predeterminados para los campos no establecidos, como los límites de gas y los precios de gas.
 
 ```csharp
 ThirdwebTransaction preparedTransaction = await ThirdwebTransaction.Prepare(transaction);
@@ -200,7 +200,7 @@ ThirdwebTransaction preparedTransaction = await ThirdwebTransaction.Prepare(tran
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction you want to prepare for sending.
+Una instancia de `ThirdwebTransaction`. La transacción que deseas preparar para el envío.
 
 </Details>
 
@@ -208,90 +208,92 @@ An instance of `ThirdwebTransaction`. The transaction you want to prepare for se
 
 ### ThirdwebTransaction
 
-Returns the prepared transaction as an instance of `ThirdwebTransaction`, with all necessary fields populated.
+Devuelve la transacción preparada como una instancia de `ThirdwebTransaction`, con todos los campos necesarios completados.
 
 </Details>
 
 ## ThirdwebTransaction.Send
 
-Send a transaction to the blockchain without waiting for confirmation.
+Envía una transacción a la blockchain sin esperar confirmación.
 
 ```csharp
 string transactionHash = await ThirdwebTransaction.Send(transaction);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction you want to send to the blockchain.
+Una instancia de `ThirdwebTransaction`. La transacción que deseas enviar a la blockchain.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### string
 
-Returns the hash of the transaction as a `string`.
+Devuelve el hash de la transacción como una `string`.
 
 </Details>
 
 ## ThirdwebTransaction.SendAndWaitForTransactionReceipt
 
-Send a transaction and wait for its receipt.
+Envía una transacción y espera su recibo.
 
 ```csharp
 TransactionReceipt receipt = await ThirdwebTransaction.SendAndWaitForTransactionReceipt(transaction);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### transaction (required)
 
-An instance of `ThirdwebTransaction`. The transaction you are sending and waiting for a receipt.
+Una instancia de `ThirdwebTransaction`. La transacción que estás enviando y esperando su recibo.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### TransactionReceipt
 
-Returns the transaction receipt as a `TransactionReceipt`, which includes details of the transaction execution result.
+Devuelve el recibo de la transacción como un `TransactionReceipt`, que incluye detalles del resultado de la ejecución de la transacción.
 
 </Details>
 
 ## ThirdwebTransaction.WaitForTransactionReceipt
 
-Wait for a transaction receipt to be available. Throws if reverted explicitly or silently and attempts to decode the revert reason.
+Espera a que el recibo de la transacción esté disponible. Lanza una excepción si se revierte explícitamente o silenciosamente, e intenta decodificar el motivo de la reversión.
 
 ```csharp
 TransactionReceipt receipt = await ThirdwebTransaction.WaitForTransactionReceipt(client, chainId, txHash);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### client (required)
 
-An instance of `ThirdwebClient`.
+Una instancia de `ThirdwebClient`.
 
 ### chainId (required)
 
-The chain ID of the blockchain network where the transaction was sent. Must be a `BigInteger`.
+El ID de la cadena de la red blockchain donde se envió la transacción. Debe ser un `BigInteger`.
 
 ### txHash (required)
 
-The hash of the transaction you are waiting for. Must be a hexadecimal `string`.
+El hash de la transacción que estás esperando. Debe ser una cadena hexadecimal (`string`).
 
 ### cancellationToken (optional)
 
-A `CancellationToken` to cancel the operation.
+Un `CancellationToken` para cancelar la operación.
 
 </Details>
 
-<Details summary="Return Value">
+
+<Details summary="Valor de retorno">
 
 ### TransactionReceipt
 
-Returns the transaction receipt as a `TransactionReceipt`, which includes details of the transaction execution result.
+Devuelve el recibo de la transacción como un `TransactionReceipt`, que incluye los detalles del resultado de la ejecución de la transacción.
 
 </Details>
+

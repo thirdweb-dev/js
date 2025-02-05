@@ -1,24 +1,25 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "IThirdwebWallet.Disconnect | Thirdweb .NET SDK",
-	description: "Disconnect the wallet from the blockchain or related services.",
+    title: "IThirdwebWallet.Disconnect | Thirdweb .NET SDK",
+    description: "Desconecta la billetera de la blockchain o servicios relacionados.",
 });
 
 # IThirdwebWallet.Disconnect
 
-This method cleanly disconnects the wallet instance from the blockchain network or any related services, effectively ending the session.
+Este método desconecta limpiamente la instancia de la billetera de la red blockchain o de cualquier servicio relacionado, finalizando efectivamente la sesión.
 
-**Note:** When using `InAppWallet` this will clear the session and require the user to re-authenticate to reconnect later on. When using `SmartWallet` this will disconnect the personal wallet it uses as a signer.
+**Nota:** Al usar `InAppWallet`, esto borrará la sesión y requerirá que el usuario vuelva a autenticarse para reconectarse más tarde. Al usar `SmartWallet`, esto desconectará la billetera personal que utiliza como firmante.
 
-## Usage
+## Uso
 
 ```csharp
 await wallet.Disconnect();
 ```
 
-<Details summary="Description">
+<Details summary="Descripción">
 
-The `Disconnect` method is used to terminate any active connection or session that the wallet might have with the blockchain network or related services. This can include disconnecting from a web3 provider, clearing any cached authentication, or other necessary cleanup actions to ensure a clean state.
+El método `Disconnect` se usa para terminar cualquier conexión o sesión activa que la billetera pueda tener con la red blockchain o servicios relacionados. Esto puede incluir desconectar de un proveedor web3, borrar cualquier autenticación almacenada en caché u otras acciones de limpieza necesarias para asegurar un estado limpio.
 
 </Details>
+

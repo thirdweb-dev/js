@@ -3,57 +3,57 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Split contract",
+		title: "Contrato Split",
 		icon: "contract",
 	},
-	title: "Split contract | thirdweb",
-	description: `The Split contract lets you specify multiple wallet addresses that are recipients of any revenue or royalty split`,
+	title: "Contrato Split | thirdweb",
+	description: `El contrato Split te permite especificar múltiples direcciones de billetera que son beneficiarios de cualquier división de ingresos o regalías.`,
 });
 
 # Split
 
-The Split contract lets you specify multiple wallet addresses that are recipients of any revenue or royalty split.
+El contrato **Split** te permite especificar múltiples direcciones de billetera que son beneficiarios de cualquier división de ingresos o regalías.
 
-You define what percentage of any funds that get sent to the split contract address is sent to each recipient.
-For example, you could define `0x1` and `0x2` as recipients, and configure them to receive 50% of the funds sent to the split contract.
+Defines qué porcentaje de los fondos que se envíen a la dirección del contrato Split se enviará a cada beneficiario.
+Por ejemplo, podrías definir `0x1` y `0x2` como beneficiarios, y configurarlos para recibir el 50% de los fondos enviados al contrato Split.
 
-The split contract will store the funds, and when any user calls the `distribute` function, the funds will be distributed to the recipients according to the percentages you define.
+El contrato Split almacenará los fondos, y cuando un usuario llame a la función `distribute`, los fondos se distribuirán entre los beneficiarios según los porcentajes que definas.
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Split contract to:
+Puedes usar el contrato Split para:
 
-- Use as a "team wallet", where funds are distributed between the members of your team with set percentages
-- Share revenue from your primary minting in an NFT drop
-- Share revenue from royalty sales with members of your team, such as an artist
-- Any programmatic split of revenue
+- Usarlo como una "billetera de equipo", donde los fondos se distribuyen entre los miembros de tu equipo con porcentajes establecidos
+- Compartir los ingresos de tu acuñación principal en una NFT drop
+- Compartir los ingresos de ventas de regalías con los miembros de tu equipo, como un artista
+- Cualquier división programática de ingresos
 
-## Creating & Configuring the Split
+## Crear y configurar el Split
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende a crear y configurar tu contrato inteligente usando el [dashboard](https://thirdweb.com/team).
 
-### Creating a Split Contract
+### Crear un contrato Split
 
-Deploy the split contract to any of our
-[supported networks](https://blog.thirdweb.com/guides/which-network-should-you-use) using the button below.
+Despliega el contrato Split en cualquiera de nuestras
+[redes compatibles](https://blog.thirdweb.com/guides/which-network-should-you-use) usando el botón a continuación.
 
-### View Recipients
+### Ver beneficiarios
 
-You can view the recipients of your Split contract in the **Overview** button on the dashboard.
+Puedes ver los beneficiarios de tu contrato Split en el botón **Resumen** del dashboard.
 
-### View Balance
+### Ver balance
 
-In the **Overview** tab of your split in the dashboard, you can see **your** (the wallet you're currently connected with) split of the funds in this contract.
+En la pestaña **Resumen** de tu contrato Split en el dashboard, puedes ver **tu** (la billetera con la que estás conectado) parte de los fondos en este contrato.
 
-### Distribute Funds
+### Distribuir fondos
 
-**Any wallet** can distribute funds to the split recipients.
+**Cualquier billetera** puede distribuir fondos a los beneficiarios del Split.
 
-To do so, click the **Distribute Funds** button.
+Para hacerlo, haz clic en el botón **Distribuir fondos**.
 
-<Callout title="Native Token Storage" variant="warning">
+<Callout title="Almacenamiento de Tokens Nativos" variant="warning">
 
-If your contract is storing both native tokens such as `ETH`, and ERC20 tokens such as `wrapped ETH`,
-it will prompt you to accept two separate transactions to distribute the funds.
+Si tu contrato está almacenando tanto tokens nativos como `ETH`, como tokens ERC20 como `wrapped ETH`,
+te pedirá que aceptes dos transacciones separadas para distribuir los fondos.
 
 </Callout>

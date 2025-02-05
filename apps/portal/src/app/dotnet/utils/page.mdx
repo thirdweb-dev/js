@@ -1,538 +1,547 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-    title: "Common Utils | Thirdweb .NET SDK",
-    description: "Useful utilities offered by thirdweb.",
+    title: "Utils comunes | Thirdweb .NET SDK",
+    description: "Utilidades útiles ofrecidas por thirdweb.",
 });
 
-# Utils
+# Utilidades
 
 ## Constants.ADDRESS_ZERO
 
 A `string` representing the zero address `0x0000000000000000000000000000000000000000`.
 
-Useful for passing the zero address to various functions.
+Útil para pasar la dirección cero a varias funciones.
 
 ## Constants.NATIVE_TOKEN_ADDRESS
 
-A `string` representing the native token address `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`.
+Una `cadena` que representa la dirección del token nativo `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`.
 
-Useful for passing the native token address (ETH or equivalent) to various functions.
+Útil para pasar la dirección del token nativo (ETH o equivalente) a varias funciones.
 
 ## Constants.DECIMALS_18
 
-A `double` representing the value `1000000000000000000`.
+Un `doble` que representa el valor `1000000000000000000`.
 
-Useful for converting values between different decimal places.
+Útil para convertir valores entre diferentes lugares decimales.
 
 ## Constants.ENTRYPOINT_ADDRESS_V06
 
-A `string` representing the entrypoint address for Account Abstraction 0.7.0 `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789`.
+Una `cadena` que representa la dirección del entrypoint para Account Abstraction 0.7.0 `0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789`.
 
 ## Constants.ENTRYPOINT_ADDRESS_V07
 
-A `string` representing the entrypoint address for Account Abstraction 0.7.0 `0x0000000071727De22E5E9d8BAf0edAc6f37da032`.
+Una `cadena` que representa la dirección del entrypoint para Account Abstraction 0.7.0 `0x0000000071727De22E5E9d8BAf0edAc6f37da032`.
 
 ## GetSocialProfiles
 
-Fetches the social profiles for the given address or ENS using a Thirdweb client.
+Obtiene los perfiles sociales para la dirección o ENS dada usando un cliente Thirdweb.
 
 ```csharp
 var socialProfiles = await Utils.GetSocialProfiles(client, addressOrEns);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### client
 
-A `ThirdwebClient` object representing the client to use for fetching social profiles.
+Un objeto `ThirdwebClient` que representa el cliente que se utilizará para obtener los perfiles sociales.
 
 ### addressOrEns
 
-A `string` representing the wallet address or ENS to fetch social profiles for.
+Una `cadena` que representa la dirección de la billetera o ENS para obtener los perfiles sociales.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### socialProfiles
 
-A `SocialProfiles` object containing the fetched social profiles.
+Un objeto `SocialProfiles` que contiene los perfiles sociales obtenidos.
 
 </Details>
 
 ## GetENSFromAddress
 
-Fetches the ENS name for the given address using a Thirdweb client.
+Obtiene el nombre ENS para la dirección dada utilizando un cliente Thirdweb.
 
 ```csharp
 var ensName = await Utils.GetENSFromAddress(client, address);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### client
 
-A `ThirdwebClient` object representing the client to use for fetching the ENS name.
+Un objeto `ThirdwebClient` que representa el cliente que se utilizará para obtener el nombre ENS.
 
 ### address
 
-A `string` representing the wallet address to fetch the ENS name for.
+Una `cadena` que representa la dirección de la billetera para obtener el nombre ENS.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ensName
 
-A `string` representing the fetched ENS name.
+Una `cadena` que representa el nombre ENS obtenido.
 
 </Details>
 
 ## GetAddressFromENS
 
-Fetches the address for the given ENS name using a Thirdweb client.
+Obtiene la dirección para el nombre ENS dado utilizando un cliente Thirdweb.
 
 ```csharp
 var address = await Utils.GetAddressFromENS(client, ensName);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### client
 
-A `ThirdwebClient` object representing the client to use for fetching the address.
+Un objeto `ThirdwebClient` que representa el cliente que se utilizará para obtener la dirección.
 
 ### ensName
 
-A `string` representing the ENS name to fetch the address for.
+Una `cadena` que representa el nombre ENS para el cual obtener la dirección.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### address
 
-A `string` representing the fetched address.
+Una `cadena` que representa la dirección obtenida.
 
 </Details>
 
 ## GetChainMetadata
 
-Fetches chain data for a specified chain ID using a Thirdweb client.
+Obtiene los datos de la cadena para un ID de cadena especificado utilizando un cliente Thirdweb.
 
 ```csharp
 var chainData = await Utils.GetChainMetadata (client, chainId);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### client
 
-A `ThirdwebClient` object representing the client to use for fetching chain data.
+Un objeto `ThirdwebClient` que representa el cliente que se utilizará para obtener los datos de la cadena.
 
 ### chainId
 
-A `BigInteger` representing the chain ID to fetch data for.
+Un `BigInteger` que representa el ID de la cadena para la cual obtener los datos.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### chainData
 
-A `ThirdwebChainData` object containing the fetched chain data such as native token name, symbol, decimals, etc.
+Un objeto `ThirdwebChainData` que contiene los datos de la cadena obtenidos, como el nombre del token nativo, símbolo, decimales, etc.
 
 </Details>
 
 ## HexConcat
 
-Concatenates the given hex strings into a single hex string.
+Concatena las cadenas hexadecimales dadas en una única cadena hexadecimal.
 
 ```csharp
 var concatenatedHex = Utils.HexConcat("0x1234", "0x5678");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### hexStrings
 
-An array of hexadecimal `string` values to concatenate.
+Un array de valores `string` hexadecimales para concatenar.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### concatenatedHex
 
-The concatenated hexadecimal `string`.
+La cadena hexadecimal concatenada.
 
 </Details>
 
 ## HashPrefixedMessage
 
-Hashes the given message bytes with a prefixed message for Ethereum signing.
+Hashea los bytes del mensaje dado con un prefijo para la firma en Ethereum.
 
 ```csharp
 var hashedMessage = messageBytes.HashPrefixedMessage();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### messageBytes
 
-A `byte[]` representing the message to hash.
+Un `byte[]` que representa el mensaje a hashear.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### hashedMessage
 
-A `byte[]` representing the hashed message.
+Un `byte[]` que representa el mensaje hasheado.
 
 </Details>
 
 ## HashMessage
 
-Hashes the given message using SHA3 Keccak hashing.
+Hashea el mensaje dado usando el hash SHA3 Keccak.
 
 ```csharp
 var hashedMessage = message.HashMessage();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### message
 
-A `string` representing the message to hash.
+Un `string` que representa el mensaje a hashear.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### hashedMessage
 
-A `string` representing the hashed message in hexadecimal format.
+Un `string` que representa el mensaje hasheado en formato hexadecimal.
 
 </Details>
 
 ## BytesToHex
 
-Converts a byte array to a hexadecimal string.
+Convierte un array de bytes a una cadena hexadecimal.
 
 ```csharp
 var hexString = byteArray.BytesToHex();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### bytes
 
-A `byte[]` representing the byte array to convert.
+Un `byte[]` que representa el array de bytes a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### hexString
 
-A `string` representing the converted hexadecimal string.
+Un `string` que representa la cadena hexadecimal convertida.
 
 </Details>
 
 ## HexToBytes
 
-Converts a hexadecimal string to a byte array.
+Convierte una cadena hexadecimal a un array de bytes.
 
 ```csharp
 var byteArray = hexString.HexToBytes();
 ```
-
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### hex
 
-A `string` representing the hexadecimal string to convert.
+Un `string` que representa la cadena hexadecimal a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### byteArray
 
-A `byte[]` representing the converted byte array.
+Un `byte[]` que representa el array de bytes convertido.
 
 </Details>
 
 ## StringToHex
 
-Converts a regular string to a hexadecimal string.
+Convierte una cadena regular a una cadena hexadecimal.
 
 ```csharp
 var hexString = "Hello".StringToHex();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### str
 
-A `string` representing the regular string to convert.
+Una `string` que representa la cadena regular a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### hexString
 
-A `string` representing the converted hexadecimal string.
+Una `string` que representa la cadena hexadecimal convertida.
 
 </Details>
 
 ## GetUnixTimeStampNow
 
-Gets the current Unix timestamp in seconds.
+Obtiene el timestamp Unix actual en segundos.
 
 ```csharp
 var timestampNow = Utils.GetUnixTimeStampNow();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### timestampNow
 
-A `long` representing the current Unix timestamp.
+Un `long` que representa el timestamp Unix actual.
 
 </Details>
 
 ## GetUnixTimeStampIn10Years
 
-Gets the Unix timestamp for 10 years from now.
+Obtiene el timestamp Unix para dentro de 10 años.
+
 
 ```csharp
 var timestampIn10Years = Utils.GetUnixTimeStampIn10Years();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### timestampIn10Years
 
-A `long` representing the Unix timestamp 10 years from now.
+Un `long` que representa el timestamp Unix dentro de 10 años.
 
 </Details>
 
 ## ReplaceIPFS
 
-Replaces an IPFS URI with a specified gateway.
+Reemplaza un URI de IPFS con un gateway especificado.
+
 
 ```csharp
 var gatewayUri = ipfsUri.ReplaceIPFS("https://ipfs.io/ipfs/");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### uri
 
-A `string` representing the IPFS URI to replace.
+Un `string` que representa el URI de IPFS que se va a reemplazar.
 
 ### gateway
 
-A `string` representing the gateway to use. Default is `Constants.FALLBACK_IPFS_GATEWAY`.
+Un `string` que representa el gateway a utilizar. El valor predeterminado es `Constants.FALLBACK_IPFS_GATEWAY`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### gatewayUri
 
-A `string` representing the replaced URI with the specified gateway.
+Un `string` que representa el URI reemplazado con el gateway especificado.
 
 </Details>
 
 ## ToWei
 
-Converts Ether values to Wei.
+Convierte los valores de Ether a Wei.
+
 
 ```csharp
 var weiValue = ethValue.ToWei();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### eth
 
-A `string` representing the Ether value to convert.
+Un `string` que representa el valor en Ether a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### weiValue
 
-A `string` representing the converted Wei value.
+Un `string` que representa el valor convertido a Wei.
 
 </Details>
 
 ## ToEth
 
-Converts Wei values to Ether.
+Convierte los valores de Wei a Ether.
+
 
 ```csharp
 var ethValue = weiValue.ToEth();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### wei
 
-A `string` representing the Wei value to convert.
+Un `string` que representa el valor en Wei a convertir.
 
 ### decimalsToDisplay
 
-An `int` specifying the number of decimals to display. Default is `4`.
+Un `int` que especifica la cantidad de decimales a mostrar. El valor predeterminado es `4`.
 
 ### addCommas
 
-A `bool` indicating whether to add commas to the output. Default is `false`.
+Un `bool` que indica si se deben agregar comas al resultado. El valor predeterminado es `false`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ethValue
 
-A `string` representing the converted Ether value.
+Un `string` que representa el valor convertido a Ether.
 
 </Details>
 
 ## GenerateSIWE
 
-Generates a Sign-In With Ethereum (SIWE) message.
+Genera un mensaje de "Sign-In With Ethereum" (SIWE).
+
 
 ```csharp
 var siweMessage = Utils.GenerateSIWE(loginPayloadData);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### loginPayloadData
 
-A `LoginPayloadData` object containing the payload data for generating the SIWE message.
+Un objeto `LoginPayloadData` que contiene los datos del payload para generar el mensaje SIWE.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### siweMessage
 
-A `string` representing the generated SIWE message.
+Un `string` que representa el mensaje SIWE generado.
 
 </Details>
 
 ## IsZkSync
 
-Checks if a given chain ID corresponds to zkSync.
+Verifica si un ID de cadena dado corresponde a zkSync.
+
 
 ```csharp
 var isZkSync = Utils.IsZkSync(chainId);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### chainId
 
-A `BigInteger` representing the chain ID to check.
+Un `BigInteger` que representa el ID de la cadena a verificar.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### isZkSync
 
-A `bool` indicating whether the chain ID corresponds to zkSync.
+Un `bool` que indica si el ID de la cadena corresponde a zkSync.
 
 </Details>
 
 ## ToChecksumAddress
 
-Converts an Ethereum address to its checksum format.
+Convierte una dirección de Ethereum a su formato con suma de verificación.
+
 
 ```csharp
 var checksummedAddress = address.ToChecksumAddress();
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### address
 
-A `string` representing the Ethereum address to convert.
+Una `string` que representa la dirección de Ethereum a convertir.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### checksummedAddress
 
-A `string` representing the checksummed Ethereum address.
+Una `string` que representa la dirección de Ethereum con suma de verificación.
 
 </Details>
 
 ## AdjustDecimals
 
-Adjusts the decimal places of a value.
+Ajusta los lugares decimales de un valor.
+
 
 ```csharp
 var adjustedValue = value.AdjustDecimals(18, 6);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### value
 
-A `BigInteger` representing the value to adjust.
+Un `BigInteger` que representa el valor a ajustar.
 
 ### fromDecimals
 
-An `int` specifying the original number of decimals.
+Un `int` que especifica el número original de decimales.
 
 ### toDecimals
 
-An `int` specifying the target number of decimals.
+Un `int` que especifica el número de decimales objetivo.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### adjustedValue
 
-A `BigInteger` representing the value adjusted to the new decimals.
+Un `BigInteger` que representa el valor ajustado a los nuevos decimales.
 
 </Details>
 
 ## ToJsonExternalWalletFriendly
 
-Converts typed data into a JSON string suitable for external wallet interaction.
+Convierte datos tipados en una cadena JSON adecuada para la interacción con billeteras externas.
+
 
 ```csharp
 var jsonString = Utils.ToJsonExternalWalletFriendly(typedData, message);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### typedData
 
-A `TypedData<TDomain>` object representing the typed data to convert.
+Un objeto `TypedData<TDomain>` que representa los datos tipados a convertir.
 
 ### message
 
-A `TMessage` object representing the message to include in the JSON.
+Un objeto `TMessage` que representa el mensaje a incluir en el JSON.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### jsonString
 
-A `string` representing the JSON formatted data.
+Una `string` que representa los datos formateados en JSON.
 
 </Details>
+

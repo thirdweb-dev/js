@@ -1,66 +1,66 @@
 import { Details, Callout, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ThirdwebClient.Create | Thirdweb .NET SDK",
+	title: "ThirdwebClient.Create | SDK de Thirdweb para .NET",
 	description:
-		"Instantiate a Thirdweb client to interact with the blockchain and smart contracts.",
+		"Instancia un cliente de Thirdweb para interactuar con la blockchain y contratos inteligentes.",
 });
 
-# Initializing a Thirdweb Client
+# Inicializando un Cliente de Thirdweb
 
-The `ThirdwebClient` class is the main entry point for interacting with the Thirdweb SDK.
+La clase `ThirdwebClient` es el principal punto de entrada para interactuar con el SDK de Thirdweb.
 
-You can pass the client to other methods to interact with wallets and smart contracts.
+Puedes pasar el cliente a otros métodos para interactuar con billeteras y contratos inteligentes.
 
-One client unlocks all thirdweb infrastructure services by default.
+Un cliente desbloquea todos los servicios de infraestructura de thirdweb por defecto.
 
-## Usage
+## Uso
 
-To start interacting with a deployed smart contract using the Thirdweb .NET SDK, first create a `ThirdwebClient` instance. You can create a client using either a `secretKey` for backend applications or a `clientId` for frontend applications. If your application is not web-based (has no origin), you should also provide a `bundleId`.
+Para comenzar a interactuar con un contrato inteligente desplegado usando el SDK de .NET de Thirdweb, primero crea una instancia de `ThirdwebClient`. Puedes crear un cliente usando un `secretKey` para aplicaciones backend o un `clientId` para aplicaciones frontend. Si tu aplicación no es web (no tiene origen), también deberías proporcionar un `bundleId`.
 
-<Callout variant='info' title="Choosing between clientId and secretKey">
+<Callout variant='info' title="Elegir entre clientId y secretKey">
 
-- Use `Client ID` for client-side or frontend applications.
-- Use `Secret Key` for server-side or backend applications where you can securely store and use the secret key.
-- A `Client ID` should be paired with a `Bundle ID` for non-web applications.
+- Usa `Client ID` para aplicaciones del lado del cliente o frontend.
+- Usa `Secret Key` para aplicaciones del lado del servidor o backend, donde puedes almacenar y usar la clave de forma segura.
+- Un `Client ID` debe emparejarse con un `Bundle ID` para aplicaciones no web.
 
-Always ensure that your secret keys are stored securely and not exposed in client-side code.
+Asegúrate de que tus claves secretas estén almacenadas de forma segura y no expuestas en el código del lado del cliente.
 
 </Callout>
 
 ```csharp
 using Thirdweb;
 
-// For native applications
-var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+// Para aplicaciones nativas
+var client = ThirdwebClient.Create(clientId: "tuClientId", bundleId: "tuBundleId");
 
-// For frontend applications
-var client = ThirdwebClient.Create(clientId: "yourClientId");
+// Para aplicaciones frontend
+var client = ThirdwebClient.Create(clientId: "tuClientId");
 
-// For backend applications
-var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
+// Para aplicaciones backend
+var client = ThirdwebClient.Create(secretKey: "tuSecretKey");
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-### clientId (optional)
+### clientId (opcional)
 
-The client ID associated with your thirdweb dashboard API Key.
+El client ID asociado con tu clave API del panel de control de thirdweb.
 
-### secretKey (optional)
+### secretKey (opcional)
 
-The secret key associated with your thirdweb dashboard API Key.
+La clave secreta asociada con tu clave API del panel de control de thirdweb.
 
-### bundleId (optional)
+### bundleId (opcional)
 
-The bundle ID associated with your thirdweb dashboard API Key. Required for non-web applications and paired with the client ID.
+El bundle ID asociado con tu clave API del panel de control de thirdweb. Requerido para aplicaciones no web y emparejado con el client ID.
 
-### fetchTimeoutOptions (optional)
+### fetchTimeoutOptions (opcional)
 
-Options for configuring timeouts for fetching data. Useful for fine-tuning request performance.
+Opciones para configurar los tiempos de espera para la obtención de datos. Útil para ajustar el rendimiento de las solicitudes.
 
 ```csharp
-// You can choose to override default timeout values for storage, rpc, and other requests.
+// Puedes optar por sobrescribir los valores predeterminados de tiempo de espera para almacenamiento, rpc y otras solicitudes.
 TimeoutOptions(int? storage = null, int? rpc = null, int? other = null)
 ```
 

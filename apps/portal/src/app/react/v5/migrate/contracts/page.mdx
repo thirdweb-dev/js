@@ -1,11 +1,12 @@
 [Migrate from React v4](/react/v5/migrate)
 
-# Interacting with contracts
+# Interactuar con contratos
 
-With SDK v4, you always have to "load" a contract with `useContract`. This process adds complexity to your app and inpacts its performance.  
-In the latest version, a smart contract (type: [`ThirdwebContract`](/references/typescript/v5/ThirdwebContract)) represents a simple object containing info about the contract address, the chain it was deployed on, and the thirdweb client object.
+Con el SDK v4, siempre tienes que "cargar" un contrato con `useContract`. Este proceso añade complejidad a tu aplicación e impacta su rendimiento.  
+En la versión más reciente, un contrato inteligente (tipo: [`ThirdwebContract`](/references/typescript/v5/ThirdwebContract)) representa un objeto simple que contiene información sobre la dirección del contrato, la cadena en la que fue desplegado y el objeto del cliente de thirdweb.
 
-Example for declaring a smart contract on Ethereum mainnet
+Ejemplo de cómo declarar un contrato inteligente en la red principal de Ethereum:
+
 ```tsx
 import { getContract, createThirdwebClient } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
@@ -21,17 +22,18 @@ const contract = getContract({
 });
 ```
 
-## Contract extensions
+## Extensiones de Contrato
 
-This is a new terminology that we introduced in the new SDK. Basically, each extension represents a method of a contract, be it a "write" or a "read" method.
+Esta es una nueva terminología que introdujimos en el nuevo SDK. Básicamente, cada extensión representa un método de un contrato, ya sea un método de "escritura" o de "lectura".
 
-An extension is a function that returns a [`PreparedTransaction`](/references/typescript/v5/PreparedTransaction) which in turn can be executed in a React hook for interacting with the contract. We will talk more about it in the section below.
+Una extensión es una función que devuelve una [`PreparedTransaction`](/references/typescript/v5/PreparedTransaction), la cual a su vez puede ser ejecutada en un hook de React para interactuar con el contrato. Hablaremos más sobre esto en la sección siguiente.
 
-One of the amazing updates that v5 brings is the rich set of prebuilt extensions. They are the contract methods that have been precompile to ensure a typesafe & performant developer experience.
+Una de las increíbles actualizaciones que trae v5 es el conjunto de extensiones preconstruidas. Son los métodos del contrato que han sido precompilados para asegurar una experiencia de desarrollo segura en cuanto a tipos y de alto rendimiento.
 
-Check out the list of over 100 prebuilt extensions [here](/typescript/v5/extensions/built-in), ranging from ERC20, ERC721, ERC1155 to top popular DeFi protocols like Uniswap, Farcaster & Lens.
+Consulta la lista de más de 100 extensiones preconstruidas [aquí](/typescript/v5/extensions/built-in), que van desde ERC20, ERC721, ERC1155 hasta populares protocolos DeFi como Uniswap, Farcaster y Lens.
 
-Example: Import an ERC1155 "read" extension, for checking the balance of a wallet
+Ejemplo: Importar una extensión "de lectura" de ERC1155, para consultar el saldo de una billetera
+
 ```tsx
 import { balanceOf } from "thirdweb/extension/erc1155";
 
@@ -42,8 +44,8 @@ const transaction = balanceOf({
 });
 ```
 
-## Reading states of a contract
-Given the task of calling `balanceOf` from an ERC1155 contract, we'll be comparing the code between v4 and v5
+## Leer los estados de un contrato
+Dado el objetivo de llamar a `balanceOf` desde un contrato ERC1155, compararemos el código entre v4 y v5.
 
 #### SDK v4
 ```tsx
@@ -78,39 +80,40 @@ function App() {
 }
 ```
 
-As you can see from the example above, we introduced the hook [`useReadContract`](/references/typescript/v5/useReadContract) in v5.
-You should use it to perform any contract "read" in your React app.
-It is the perfect replacement for the old chunky React hooks from v4. 
+Como puedes ver en el ejemplo anterior, introdujimos el hook [`useReadContract`](/references/typescript/v5/useReadContract) en v5.  
+Debes usarlo para realizar cualquier "lectura" de contrato en tu aplicación React.  
+Es el reemplazo perfecto para los antiguos hooks pesados de React de v4.
 
-The formula for reading a contract state is:
+La fórmula para leer el estado de un contrato es:
+
 ```
 useReadContract + <the read contract method>
 ```
 
-#### If the extension you are looking for is not included in the SDK
-You can always use the function signature with `useReadContract` (It's also typesafe)
+#### Si la extensión que buscas no está incluida en el SDK
+Siempre puedes usar la firma de la función con `useReadContract` (también es segura en cuanto a tipos)
 ```tsx
 useReadContract({
   contract,
   method: "function balanceOf(address _owner, uint256 tokenId) view returns (uint256)",
   ...
 })
+
 ```
 
-#### A tip for getting a function's signature
-Go to the thirdweb Dashboard's explorer page and select the function that you want to interact with.
-You should see the "Use this function in your app" section with the code snippet for the signature of the function.
+#### Un consejo para obtener la firma de una función
+Ve a la página del explorador en el Dashboard de thirdweb y selecciona la función con la que deseas interactuar.  
+Deberías ver la sección "Usa esta función en tu aplicación" con el fragmento de código para la firma de la función.
 
-[An example](https://thirdweb.com/avalanche-fuji/0xd5e815241882676F772A624E3892b27Ff3a449c4/explorer?name=balanceOf)
+[Un ejemplo](https://thirdweb.com/avalanche-fuji/0xd5e815241882676F772A624E3892b27Ff3a449c4/explorer?name=balanceOf)
 
 
-## Writing to a contract
-In v5, you can utilize the following hooks for writing to contracts: [`useSendTransaction`](/references/typescript/v5/useSendTransaction) and [`useSendAndConfirmTransaction`](/references/typescript/v5/useSendAndConfirmTransaction).
-The main difference between the 2 hooks is that `useSendTransaction` will mark the request as "complete" once the transaction is sent,
-while `useSendAndConfirmTransaction` will wait until the transaction is included in the blockchain.
+## Escribir en un contrato
+En v5, puedes utilizar los siguientes hooks para escribir en contratos: [`useSendTransaction`](/references/typescript/v5/useSendTransaction) y [`useSendAndConfirmTransaction`](/references/typescript/v5/useSendAndConfirmTransaction).  
+La principal diferencia entre los 2 hooks es que `useSendTransaction` marcará la solicitud como "completa" una vez que la transacción se haya enviado,  
+mientras que `useSendAndConfirmTransaction` esperará hasta que la transacción esté incluida en la blockchain.
 
-Given the task of claiming an NFT from an NFT Drop collection, let's compare the code between the SDK v4 and v5
-
+Dado el objetivo de reclamar un NFT de una colección de NFT Drop, comparemos el código entre el SDK v4 y v5.
 
 #### SDK V4
 ```tsx
@@ -129,7 +132,7 @@ function App() {
       contractAddress={contractAddress}
       action={() =>
         claimNft({
-          to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+          to: "{{wallet_address}}", // Usa el hook useAddress para obtener la dirección actual de la billetera
           quantity: 1,
         })
       }
@@ -155,8 +158,8 @@ function App() {
 }
 ```
 
-Another beautiful thing about the SDK v5 is that it comes with the [`TransactionButton`](/references/typescript/v5/TransactionButton) 
-which allows you to make a contract call _without_ having to use the above React hooks. As you can see, the code is much cleaner this way!
+Otra cosa maravillosa del SDK v5 es que viene con el [`TransactionButton`](/references/typescript/v5/TransactionButton),  
+el cual te permite hacer una llamada a un contrato _sin_ tener que usar los hooks de React mencionados anteriormente. ¡Como puedes ver, el código es mucho más limpio de esta manera!
 
 ```tsx
 import { TransactionButton } from "thirdweb/react";

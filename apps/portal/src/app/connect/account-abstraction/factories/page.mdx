@@ -8,71 +8,72 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WalletsSmartIcon } from "@/icons";
 
+
 export const metadata = createMetadata({
 	image: {
-		title: "Account Factories",
+		title: "Fábricas de Cuentas",
 		icon: "wallets",
 	},
-	title: "Deploy your own ERC-4337 Account Factories | thirdweb",
+	title: "Despliega tus propias Fábricas de Cuentas ERC-4337 | thirdweb",
 	description:
-		"Customize the behavior of smart accounts by deploying your own account factory contracts.",
+		"Personaliza el comportamiento de las cuentas inteligentes desplegando tus propios contratos de fábrica de cuentas.",
 });
 
-# Account Factories
+# Fábricas de Cuentas
 
-By default, the SDK uses a global account factory deployed on most chains:
+Por defecto, el SDK utiliza una fábrica de cuentas global desplegada en la mayoría de las cadenas:
 
-- [`AccountFactory`](https://thirdweb.com/thirdweb.eth/AccountFactory) at address [`0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00`](https://thirdweb.com/1/0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00) for Entrypoint v0.6.
-- [`AccountFactory_0_7`](https://thirdweb.com/thirdweb.eth/AccountFactory_0_7) at address [`0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb`](https://thirdweb.com/1/0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb) for Entrypoint v0.7.
+- [`AccountFactory`](https://thirdweb.com/thirdweb.eth/AccountFactory) en la dirección [`0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00`](https://thirdweb.com/1/0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00) para Entrypoint v0.6.
+- [`AccountFactory_0_7`](https://thirdweb.com/thirdweb.eth/AccountFactory_0_7) en la dirección [`0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb`](https://thirdweb.com/1/0x4be0ddfebca9a5a4a617dee4dece99e7c862dceb) para Entrypoint v0.7.
 
-The default account factory deploys standard, immutable accounts with the features listed below. However, you can customize the behavior of your apps smart accounts by deploying your own account factory contracts.
+La fábrica de cuentas por defecto despliega cuentas estándar e inmutables con las características listadas a continuación. Sin embargo, puedes personalizar el comportamiento de las cuentas inteligentes de tu aplicación desplegando tus propios contratos de fábrica de cuentas.
 
-## Deploy your own Account Factory contract
+## Desplegar tu propio contrato de Fábrica de Cuentas
 
-You can deploy your own Account Factory via the [explore page](https://thirdweb.com/explore/smart-wallet) or build your own [ERC 4337](https://eips.ethereum.org/EIPS/eip-4337) compatible factory contract using the [Solidity SDK](/contracts/build/base-contracts/erc-4337).
+Puedes desplegar tu propia Fábrica de Cuentas a través de la [página de exploración](https://thirdweb.com/explore/smart-wallet) o construir tu propio contrato de fábrica compatible con [ERC 4337](https://eips.ethereum.org/EIPS/eip-4337) utilizando el [SDK de Solidity](/contracts/build/base-contracts/erc-4337).
 
-thirdweb offers different kinds of prebuilt account factories:
+thirdweb ofrece diferentes tipos de fábricas de cuentas preconstruidas:
 
 <Grid>
 	<ArticleIconCard
-		title="Account Factory for Entrypoint v0.6"
+		title="Fábrica de Cuentas para Entrypoint v0.6"
 		href="https://thirdweb.com/thirdweb.eth/AccountFactory"
 		icon={WalletsSmartIcon}
 	/>
 	<ArticleIconCard
-		title="Managed Account Factory for Entrypoint v0.6"
+		title="Fábrica de Cuentas Gestionadas para Entrypoint v0.6"
 		href="https://thirdweb.com/thirdweb.eth/ManagedAccountFactory"
 		icon={WalletsSmartIcon}
 	/>
 	<ArticleIconCard
-		title="Account Factory for Entrypoint v0.7"
+		title="Fábrica de Cuentas para Entrypoint v0.7"
 		href="https://thirdweb.com/thirdweb.eth/AccountFactory_0_7"
 		icon={WalletsSmartIcon}
 	/>
 	<ArticleIconCard
-		title="Managed Account Factory for Entrypoint v0.7"
+		title="Fábrica de Cuentas Gestionadas para Entrypoint v0.7"
 		href="https://thirdweb.com/thirdweb.eth/ManagedAccountFactory_0_7"
 		icon={WalletsSmartIcon}
 	/>
 </Grid>
 
-#### Account Factories comparison
+#### Comparación de Fábricas de Cuentas
 
-| Factory Type                                                         | Upgradeability                                              | Expected Usage                                                                                                                                                                                 |
-| -------------------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`Standard`](https://thirdweb.com/thirdweb.eth/AccountFactory)       | Non-upgradeable                                             | Developer wants to issue simple smart accounts to their users. They do not anticipate that users wallets will need any feature upgrades.                                                       |
-| [`Managed`](https://thirdweb.com/thirdweb.eth/ManagedAccountFactory) | Account upgrades controlled centrally by the app developer. | Developer wants to issue smart accounts to their users. They do anticipate feature upgrades to user wallets, and want to push upgrades to user wallets for seamless/invisible UX for upgrades. |
+| Tipo de Fábrica                                                    | Actualizabilidad                                             | Uso Esperado                                                                                                                                                                                    |
+| ------------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`Standard`](https://thirdweb.com/thirdweb.eth/AccountFactory)     | No actualizable                                              | El desarrollador desea emitir cuentas inteligentes simples a sus usuarios. No anticipan que las billeteras de los usuarios necesitarán actualizaciones de funciones.                           |
+| [`Managed`](https://thirdweb.com/thirdweb.eth/ManagedAccountFactory) | Actualizaciones de cuentas controladas centralmente por el desarrollador de la aplicación. | El desarrollador desea emitir cuentas inteligentes a sus usuarios. Anticipan actualizaciones de funciones en las billeteras de los usuarios y desean enviar actualizaciones a las billeteras de los usuarios para una experiencia de usuario fluida/invisible durante las actualizaciones. |
 
-#### Account comparison
+#### Comparación de Cuentas
 
-|                                                     | Simple                     | Managed                                  |
-| --------------------------------------------------- | -------------------------- | ---------------------------------------- |
-| Contracts                                           | `AccountFactory` `Account` | `ManagedAccountFactory` `ManagedAccount` |
-| ERC-4337 Compatible                                 | ✅                         | ✅                                       |
-| Can hold native ERC-20, ERC-721 and ERC-1155 Tokens | ✅                         | ✅                                       |
-| Multi-signer                                        | ✅                         | ✅                                       |
-| Execute transactions in Batches                     | ✅                         | ✅                                       |
-| Is the Account Upgradeable                          | ❌                         | ✅                                       |
-| Who controls upgrades (?)                           | n/a                        | Admin of the account factory.            |
+|                                                    | Simple                     | Gestionada                               |
+| -------------------------------------------------- | -------------------------- | ---------------------------------------- |
+| Contratos                                         | `AccountFactory` `Account` | `ManagedAccountFactory` `ManagedAccount` |
+| Compatible con ERC-4337                           | ✅                         | ✅                                       |
+| Puede contener tokens nativos ERC-20, ERC-721 y ERC-1155 | ✅                         | ✅                                       |
+| Multi-firmante                                     | ✅                         | ✅                                       |
+| Ejecutar transacciones en lotes                    | ✅                         | ✅                                       |
+| La cuenta es actualizable                          | ❌                         | ✅                                       |
+| Quién controla las actualizaciones (?)             | n/a                        | Administrador de la fábrica de cuentas.  |
 
-To learn more about each factory and their respective account implementations, read our [smart contract deep dive](https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/).
+Para aprender más sobre cada fábrica y sus respectivas implementaciones de cuentas, lee nuestro [análisis profundo de contratos inteligentes](https://blog.thirdweb.com/smart-contract-deep-dive-building-smart-wallets-for-individuals-and-teams/).

@@ -1,46 +1,43 @@
 import { createUnrealEngineMetadata } from "../../util";
 
 export const metadata = createUnrealEngineMetadata({
-    title: "ThirdwebRuntimeSettings",
-    description: "Overview and configuration of the ThirdwebRuntimeSettings in the Thirdweb Unreal Engine SDK.",
+    title: "Configuración de ThirdwebRuntimeSettings",
+    description: "Visión general y configuración de ThirdwebRuntimeSettings en el SDK de Unreal Engine de Thirdweb.",
 });
 
-# Runtime Settings
+# Configuración de Runtime
 
-`ThirdwebRuntimeSettings` provides configuration settings for the Thirdweb SDK within Unreal Engine. These settings are
-used by the SDK to manage essential information like client credentials and storage paths.
+`ThirdwebRuntimeSettings` proporciona configuraciones para el SDK de Thirdweb dentro de Unreal Engine. Estas configuraciones son utilizadas por el SDK para gestionar información esencial como credenciales de cliente y rutas de almacenamiento.
 
-The runtime settings are located in `Edit > Project Settings > Engine > Thirdweb`. You can also access the settings
-by clicking the thirdweb logo on your Editor action bar, or manually in `DefaultEngine.ini`.
+Las configuraciones de runtime se encuentran en `Editar > Configuración del Proyecto > Engine > Thirdweb`. También puedes acceder a la configuración haciendo clic en el logo de thirdweb en la barra de acciones de tu editor, o manualmente en `DefaultEngine.ini`.
 
-## **Properties**
+## **Propiedades**
 
-- `ClientID`: The client ID used to authenticate with Thirdweb services.
-- `BundleID`: The bundle ID associated with the application.
-- `EncryptionKey`: Required if using custom auth methods via standard InApp wallets (Non-Ecosystem).
-- `EngineSigners`: Optional array of engine signers stored globally for convenience
-- `EcosystemId`: Ecosystem Wallet Identifier tied to your Thirdweb Ecosystem account.
-Only relevant when using Ecosystem Wallets. e.g. `ecosystem.my-cool-game`
-- `bSendAnalytics`: Opt in or out of connect analytics.
-- `bOverrideOAuthBrowserProviderBackends`: Edit Condition for overriding OAuth browser Provider backends
-- `OAuthBrowserProviderBackendOverrides`: Array of OAuth provider backend methods that can be overridden
+- `ClientID`: El client ID utilizado para autenticarse con los servicios de Thirdweb.
+- `BundleID`: El ID del paquete asociado con la aplicación.
+- `EncryptionKey`: Requerido si se utilizan métodos de autenticación personalizados a través de billeteras InApp estándar (No Ecosistema).
+- `EngineSigners`: Array opcional de firmantes del engine almacenados globalmente para conveniencia.
+- `EcosystemId`: Identificador de la billetera de Ecosistema vinculada a tu cuenta de Ecosistema Thirdweb.
+  Solo relevante cuando se utilizan Billeteras de Ecosistema. Ejemplo: `ecosystem.my-cool-game`.
+- `bSendAnalytics`: Opción para habilitar o deshabilitar las analíticas de conexión.
+- `bOverrideOAuthBrowserProviderBackends`: Condición de edición para sobrescribir los backends de proveedores OAuth de navegador.
+- `OAuthBrowserProviderBackendOverrides`: Array de métodos de backend de proveedores OAuth que pueden ser sobrescritos.
 
-### Configuration Requirements
+### Requisitos de Configuración
 
-`ClientID` + `BundleID` are required for authentication with Thirdweb services.
-`EcosystemId` is required if using ecosystem wallets
+`ClientID` + `BundleID` son necesarios para la autenticación con los servicios de Thirdweb.
+`EcosystemId` es requerido si se utilizan billeteras de ecosistema.
 
-### Class Functions
+### Funciones de Clase
 
-- **`Get()`**: Retrieve the current `UThirdwebRuntimeSettings` instance.
-- **`GetThirdwebGlobalEngineSigners()`**: Retrieve the `EngineSigners` array.
-- **`GetThirdwebGlobalEngineSigner(bFound)`**: Retrieve the first Engine Signer from the `EngineSigners` array, if any.
-- **`GetEncryptionKey()`**: Static accessor to get `EncryptionKey`
-- **`GetStorageDirectory()`**: Static accessor to retrieve the absolute path of the thirdweb InAppWallet platform
-save directory
-- **`IsExternalOAuthBackend(Provider)`**: Static accessor to get the resolved backend of an OAuth provider
-- **`GetEcosystemId()`**: Static accessor to get `EcosystemId`
-- **`IsEcosystem()`**: Static accessor to check `EcosystemId` validity
-- **`GetClientId()`**: Static accessor to get `ClientID`
-- **`GetBundleId()`**: Static accessor to get `BundleId`
-- **`AnalyticsEnabled()`**: Static accessor to check Analytics Opt-In status
+- **`Get()`**: Recupera la instancia actual de `UThirdwebRuntimeSettings`.
+- **`GetThirdwebGlobalEngineSigners()`**: Recupera el array de `EngineSigners`.
+- **`GetThirdwebGlobalEngineSigner(bFound)`**: Recupera el primer firmante del engine del array de `EngineSigners`, si existe.
+- **`GetEncryptionKey()`**: Accesor estático para obtener `EncryptionKey`.
+- **`GetStorageDirectory()`**: Accesor estático para recuperar la ruta absoluta del directorio de almacenamiento de la plataforma InAppWallet de thirdweb.
+- **`IsExternalOAuthBackend(Provider)`**: Accesor estático para obtener el backend resuelto de un proveedor OAuth.
+- **`GetEcosystemId()`**: Accesor estático para obtener `EcosystemId`.
+- **`IsEcosystem()`**: Accesor estático para verificar la validez de `EcosystemId`.
+- **`GetClientId()`**: Accesor estático para obtener `ClientID`.
+- **`GetBundleId()`**: Accesor estático para obtener `BundleId`.
+- **`AnalyticsEnabled()`**: Accesor estático para verificar el estado de opt-in de las analíticas.

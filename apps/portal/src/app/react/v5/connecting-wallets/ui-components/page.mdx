@@ -5,19 +5,19 @@ import { ReactIcon, TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Connecting Wallets",
+		title: "Conectando Carteras",
 		icon: "react",
 	},
-	title: "Connecting Wallets in thirdweb React SDK",
+	title: "Conectando Carteras en el SDK de React de thirdweb",
 	description:
-		"Connect wallets using ConnectButton, ConnectEmbed or useConnect hook",
+		"Conecta carteras usando el ConnectButton, ConnectEmbed o el hook useConnect",
 });
 
-# UI Components
+# Componentes de UI
 
-You can use [`ConnectButton`](/react/v5/ConnectButton) or [`ConnectEmbed`](/react/v5/ConnectEmbed) component for a quick, easy and customizable UI.
+Puedes usar el componente [`ConnectButton`](/react/v5/ConnectButton) o [`ConnectEmbed`](/react/v5/ConnectEmbed) para una interfaz rápida, fácil y personalizable.
 
-These components provide a prebuilt UI for connecting various wallets and take care of a lot of wallet-specific edge cases - so you can focus on building your app.
+Estos componentes proporcionan una interfaz preconstruida para conectar varias carteras y se encargan de muchos casos específicos de cada cartera, para que puedas concentrarte en construir tu aplicación.
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -34,38 +34,38 @@ export default function App() {
 }
 ```
 
-These components support over 500+ wallets, including support in-app wallets and account abstraction.
+Estos componentes son compatibles con más de 500 carteras, incluyendo carteras en la aplicación y abstracción de cuentas.
 
-It also automatically shows all installed `EIP-6963` compliant wallet extensions installed by the user.
+También muestra automáticamente todas las extensiones de carteras compatibles con `EIP-6963` instaladas por el usuario.
 
-## Creating Wallets
+## Crear Carteras
 
-You can create any wallet by id with auto completion using the [`createWallet`](/references/typescript/v5/createWallet) function. Or use one of the first party wallets like [`inAppWallet`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet`](/references/typescript/v5/ecosystemWallet).
+Puedes crear cualquier cartera por id con autocompletado usando la función [`createWallet`](/references/typescript/v5/createWallet). O usa una de las carteras de primera parte como [`inAppWallet`](/references/typescript/v5/inAppWallet) o [`ecosystemWallet`](/references/typescript/v5/ecosystemWallet).
 
 <Stack>
 <ArticleIconCard
 	title="inAppWallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/inAppWallet"
-	description="Create an in app wallet"
+	description="Crea una cartera dentro de la aplicación"
 />
 
 <ArticleIconCard
 	title="ecosystemWallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/ecosystemWallet"
-	description="Create an ecosystem wallet"
+	description="Crea una cartera del ecosistema"
 />
 
 <ArticleIconCard
 	title="createWallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/createWallet"
-	description="Create any external wallet by id with auto completion"
+	description="Crea cualquier cartera externa por id con autocompletado"
 />
 </Stack>
 
-## React Components
+## Componentes de React
 
 <Stack>
 
@@ -73,46 +73,46 @@ You can create any wallet by id with auto completion using the [`createWallet`](
 	title="ThirdwebProvider"
 	icon={ReactIcon}
 	href="/references/typescript/v5/ThirdwebProvider"
-	description="Provider for the maintaining wallet state"
+	description="Proveedor para mantener el estado de la cartera"
 />
 
 <ArticleIconCard
 	title="ConnectButton"
 	icon={ReactIcon}
 	href="/references/typescript/v5/ConnectButton"
-	description="All in one button with connected state"
+	description="Botón todo en uno con estado conectado"
 />
 
 <ArticleIconCard
 	title="ConnectEmbed"
 	icon={ReactIcon}
 	href="/references/typescript/v5/ConnectEmbed"
-	description="Standalone connect component"
+	description="Componente de conexión independiente"
 />
 
 <ArticleIconCard
 	title="AutoConnect"
 	icon={ReactIcon}
 	href="/references/typescript/v5/AutoConnect"
-	description="Automatically connect to the wallet that the user last connected"
+	description="Conéctate automáticamente a la cartera con la que el usuario se conectó la última vez"
 />
 
 </Stack>
 
-The SDK supports 500+ wallets out of the box, all you need to pass is their id.
+El SDK es compatible con más de 500 carteras de manera predeterminada, todo lo que necesitas hacer es pasar su id.
 
 <Stack>
 
 <ArticleIconCard
-	title="Supported Wallets"
+	title="Carteras Soportadas"
 	icon={ComponentIcon}
 	href="/typescript/v5/supported-wallets"
-	description="See all 500+ wallets supported by the Connect SDK"
+	description="Ver todas las 500+ carteras compatibles con el SDK de Conexión"
 />
 
 </Stack>
 
-## Post Connection
+## Después de la Conexión
 
-Once the wallet is connected, you can use the [Connection hooks](/react/v5/connecting-wallets/hooks) to get information about the connected wallet like getting the address, account, etc
+Una vez que la cartera esté conectada, puedes usar los [hooks de conexión](/react/v5/connecting-wallets/hooks) para obtener información sobre la cartera conectada, como la dirección, la cuenta, etc.
 

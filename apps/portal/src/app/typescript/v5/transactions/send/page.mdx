@@ -1,12 +1,12 @@
-# Acting on a prepared transaction
+# Actuar sobre una transacción preparada
 
-Transactions have a variety of actions that can be called on them, in all cases this is done by passing the transaction to the various action functions.
+Las transacciones tienen una variedad de acciones que pueden ser llamadas sobre ellas, en todos los casos esto se hace pasando la transacción a las diferentes funciones de acción.
 
-## Sending a transaction
+## Enviar una transacción
 
-Send the prepared transaction to the blockchain. Sending a transaction requires a wallet.
+Envía la transacción preparada a la blockchain. Enviar una transacción requiere una billetera.
 
-See [Wallets](/typescript/v5/wallets) for more information on how to create a wallet.
+Consulta [Billeteras](/typescript/v5/wallets) para más información sobre cómo crear una billetera.
 
 ```ts
 import { sendTransaction } from "thirdweb";
@@ -23,7 +23,7 @@ const transactionResult = await sendTransaction({
 
 ## sendAndConfirmTransaction
 
-Send a transaction and wait for it to be mined. Useful when you want to block until the transaction is fully confirmed onchain before proceeding to the next step.
+Envía una transacción y espera a que se mine. Útil cuando deseas bloquear el flujo hasta que la transacción esté completamente confirmada en la blockchain antes de proceder al siguiente paso.
 
 ```ts
 import { sendAndConfirmTransaction } from "thirdweb";
@@ -40,7 +40,7 @@ const receipt = await sendAndConfirmTransaction({
 
 ## waitForReceipt
 
-Wait for a transaction to be mined and get the transaction receipt.
+Espera a que una transacción sea minada y obtén el recibo de la transacción.
 
 ```ts
 import { sendTransaction, waitForReceipt } from "thirdweb";
@@ -59,7 +59,7 @@ const receipt = await waitForReceipt(transactionResult);
 
 ## estimateGas
 
-Estimating gas used by a transaction
+Estimación del gas utilizado por una transacción.
 
 ```ts
 import { estimateGas } from "thirdweb";
@@ -70,7 +70,7 @@ console.log("estmated gas used", gasEstimate);
 
 ## estimateGasCost
 
-Estimating gas cost in ether and wei for a transaction
+Estimación del costo de gas en ether y wei para una transacción.
 
 ```ts
 import { estimateGas } from "thirdweb";
@@ -81,7 +81,7 @@ console.log("cost in ether", gasCost.ether);
 
 ## simulateTransaction
 
-Simulate a transaction to see if it would be successful.
+Simula una transacción para ver si sería exitosa.
 
 ```ts
 import { simulateTransaction } from "thirdweb";
@@ -92,7 +92,7 @@ console.log("simulation result", result);
 
 ## encode
 
-Encode a transaction data to be used later
+Codifica los datos de una transacción para usarlos más tarde.
 
 ```ts
 import { encode } from "thirdweb";

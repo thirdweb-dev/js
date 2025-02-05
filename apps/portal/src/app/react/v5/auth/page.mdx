@@ -10,15 +10,15 @@ export const metadata = createMetadata({
 
 # Sign in with Ethereum
 
-Authenticate users with your backend securely by proving they own a given Ethereum address.
+Autentica a los usuarios de forma segura con tu backend probando que poseen una dirección Ethereum dada.
 
-SIWE (Sign-In with Ethereum) allows anyone to integrate passwordless web3-native authentication and authorization into their applications. Users can then login using any wallet (in-app, external, or smart wallet).
+SIWE (Sign-In with Ethereum) permite a cualquier persona integrar autenticación y autorización sin contraseña basada en web3 en sus aplicaciones. Los usuarios pueden iniciar sesión utilizando cualquier billetera (in-app, externa o billetera inteligente).
 
-This allows developers to create a familiar, secure authentication flow that works with traditional backends while leveraging the features of a web3 application.
+Esto permite a los desarrolladores crear un flujo de autenticación familiar y seguro que funciona con backends tradicionales mientras aprovecha las características de una aplicación web3.
 
 ## Live Playground
 
-Try out SIWE auth for yourself in the [auth live playground](https://playground.thirdweb.com/connect/auth)
+Prueba la autenticación SIWE por ti mismo en el [auth live playground](https://playground.thirdweb.com/connect/auth)
 
 <Stack>
 
@@ -31,9 +31,9 @@ Try out SIWE auth for yourself in the [auth live playground](https://playground.
 
 </Stack>
 
-## Configuring thirdweb auth
+## Configurando la autenticación de thirdweb
 
-In your backend, configure the auth object with the `createAuth` function.
+En tu backend, configura el objeto de autenticación con la función `createAuth`.
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -64,9 +64,9 @@ The `createAuth` helper returns an object with all the functions you will need t
 
 </Stack>
 
-Your backend can use those functions to expose a SIWE compliant login flow to your frontend.
+Tu backend puede usar esas funciones para exponer un flujo de inicio de sesión compatible con SIWE a tu frontend.
 
-Here's an example using server actions and a JWT for session management:
+Aquí tienes un ejemplo utilizando acciones de servidor y un JWT para la gestión de sesiones:
 
 ```tsx
 export async function generatePayload(params) {
@@ -104,9 +104,9 @@ export async function logout() {
 }
 ```
 
-## Usage with UI components
+## Uso con componentes de UI
 
-You can then add a SIWE step to the connection flow of the `ConnectWallet` or `ConnectEmbed` UI component by configuring the `auth` option. This will automatically trigger the wallet to sign the login payload returned by `getLoginPayload` and trigger the `doLogin` function you implemented in your backend.
+Luego, puedes agregar un paso SIWE al flujo de conexión del componente de UI `ConnectWallet` o `ConnectEmbed` configurando la opción `auth`. Esto activará automáticamente la firma del payload de inicio de sesión devuelto por `getLoginPayload` y activará la función `doLogin` que implementaste en tu backend.
 
 ```tsx
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
@@ -120,30 +120,30 @@ import {
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
-    // The ThirdwebProvider should be at the root of your application, but the ConnectButton can be anywhere
+    // El ThirdwebProvider debe estar en la raíz de tu aplicación, pero el ConnectButton puede estar en cualquier parte
     <ThirdwebProvider>
       <ConnectButton
         client={client}
         auth={{
           getLoginPayload: async (params) => {
-            // here you should call your backend, using generatePayload to return
-            // a SIWE compliant login payload to the client
+            // Aquí debes llamar a tu backend, usando generatePayload para devolver
+            // un payload de inicio de sesión compatible con SIWE al cliente
             return generatePayload(params);
           },
           doLogin: async (params) => {
-            // here you should call your backend to verify the signed payload passed in params
-            // this will verify that the signature matches the intended wallet
+            // Aquí debes llamar a tu backend para verificar el payload firmado pasado en los parámetros
+            // Esto verificará que la firma coincida con la billetera prevista
             return login(params);
           },
           isLoggedIn: async () => {
-            // here you should ask you backend if the user is logged in
-            // can use cookies, storage, or your method of choice
+            // Aquí debes preguntar a tu backend si el usuario está logueado
+            // Puedes usar cookies, almacenamiento o el método de tu preferencia
             const user = await getUser();
             return !!user;
           },
           doLogout: async () => {
-            // here you should call your backend to logout the user if needed
-            // and delete any local auth tokens
+            // Aquí debes llamar a tu backend para cerrar la sesión del usuario si es necesario
+            // y eliminar cualquier token de autenticación local
             return logout();
           },
         }}
@@ -153,9 +153,9 @@ export default function App() {
 }
 ```
 
-## Using your own UI
+## Usando tu propia UI
 
-You can use the [`signLoginPayload`](/references/typescript/v5/signLoginPayload) function to trigger the signing of the login payload yourself. This can be useful if you want to use a custom UI for the login flow. You can get the active account that will sign the payload from the [`useActiveAccount`](/references/typescript/v5/useActiveAccount) hook.
+Puedes usar la función [`signLoginPayload`](/references/typescript/v5/signLoginPayload) para activar la firma del payload de inicio de sesión por ti mismo. Esto puede ser útil si deseas usar una UI personalizada para el flujo de inicio de sesión. Puedes obtener la cuenta activa que firmará el payload desde el hook [`useActiveAccount`](/references/typescript/v5/useActiveAccount).
 
 <Stack>
 
@@ -163,7 +163,8 @@ You can use the [`signLoginPayload`](/references/typescript/v5/signLoginPayload)
 	title="signLoginPayload"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/signLoginPayload"
-	description="See the SDK in action on the live playground"
+	description="Ve el SDK en acción en el playground en vivo"
 />
 
 </Stack>
+

@@ -2,14 +2,14 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	title: "BuyWithCrypto | thirdweb .NET SDK",
-	description: "Send a quoted swap transaction.",
+	description: "Envía una transacción de intercambio citada.",
 });
 
 # BuyWithCrypto
 
-Send a quoted swap transaction. See [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote) for more information on how to get a swap quote.
+Envía una transacción de intercambio citada. Consulta [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote) para obtener más información sobre cómo obtener una cotización de intercambio.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -17,22 +17,23 @@ using Thirdweb.Pay;
 var txHash = await ThirdwebPay.BuyWithCrypto(wallet, buyWithCryptoquote);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### wallet (required)
+#### wallet (requerido)
 
-An instance of `IThirdwebWallet`. This represents the signer of the transaction, which can be any type of wallet provider.
+Una instancia de `IThirdwebWallet`. Este representa el firmante de la transacción, que puede ser cualquier tipo de proveedor de billetera.
 
-#### BuyWithCryptoQuoteResult (required)
+#### BuyWithCryptoQuoteResult (requerido)
 
-See [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote) for more information on the `BuyWithCryptoQuoteResult` object.
+Consulta [GetBuyWithCryptoQuote](/dotnet/pay/getbuywithcryptoquote) para obtener más información sobre el objeto `BuyWithCryptoQuoteResult`.
+
+</Details>
+
+<Details summary="Valor de retorno">
+
+### Valor de retorno
+
+`string`: El hash de la transacción del intercambio.
 
 </Details>
 
-<Details summary="Return Value">
-
-### Return Value
-
-`string`: The transaction hash of the swap transaction.
-
-</Details>

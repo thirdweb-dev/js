@@ -5,44 +5,44 @@ import {
 } from "@doc";
 
 export const metadata = createMetadata({
-    title: "Unity SDK v4 to v5 Migration Guide | thirdweb Unity SDK",
+    title: "Guía de Migración del SDK de Unity v4 a v5 | SDK de thirdweb para Unity",
     description:
-        "Migration guide from Unity SDK v4 to v5, including changes in thirdweb manager, contract interaction, wallet connection, storage, RPC, and integration with .NET SDK.",
+        "Guía de migración del SDK de Unity v4 a v5, que incluye cambios en thirdweb manager, interacción con contratos, conexión de billeteras, almacenamiento, RPC e integración con el SDK de .NET.",
 });
 
-# Unity SDK v4 to v5 Migration Guide
+# Guía de Migración del SDK de Unity v4 a v5
 
-This guide outlines the migration process from thirdweb Unity SDK v4 to v5. SDK v5 offers enhanced features and modularity, and also allows direct integration with the .NET SDK.
+Esta guía describe el proceso de migración del SDK de thirdweb para Unity v4 a v5. El SDK v5 ofrece características mejoradas y modularidad, y también permite la integración directa con el SDK de .NET.
 
-## Key Changes in Unity SDK v5
+## Cambios Clave en Unity SDK v5
 
-1. **ThirdwebManager**: The `ThirdwebManager` remains the recommended entry point and offers enhanced management of wallets, contracts, and the main ThirdwebClient. However, it simply acts as a wrapper for some lower level APIs from our .NET SDK and is optional.
-2. **Contract Interactions**: Contract interactions are done through the `ThirdwebContract` class, which has more flexible `Prepare`, `Read` and `Write` methods. This allows for easier interaction with various chains. It also has built-in extensions for common contract types like ERC721, ERC1155, etc.
-3. **Wallet Management**: Wallet management has been modularized, providing more control over wallet providers simultaenously. You can instantiate wallets directly through their `Create` function or through `ThirdwebManager.Instance.ConnectWallet`.
-4. **Infrastructure**: An API key is required in v5 for access to thirdweb services like RPC, Storage, Account Abstraction and more. Set your client id and bundle id in your `ThirdwebManager` inspector.
-5. **Integration with .NET SDK**: Unity SDK v5 allows you to directly use the .NET SDK for improved flexibility, especially in contract interaction and wallet operations.
+1. **ThirdwebManager**: El `ThirdwebManager` sigue siendo el punto de entrada recomendado y ofrece una gestión mejorada de billeteras, contratos y el ThirdwebClient principal. Sin embargo, simplemente actúa como un envoltorio para algunas APIs de nivel inferior de nuestro SDK de .NET y es opcional.
+2. **Interacción con Contratos**: Las interacciones con contratos se realizan a través de la clase `ThirdwebContract`, que tiene métodos más flexibles como `Prepare`, `Read` y `Write`. Esto permite una interacción más fácil con varias cadenas. También tiene extensiones integradas para tipos comunes de contratos como ERC721, ERC1155, etc.
+3. **Gestión de Billeteras**: La gestión de billeteras ha sido modularizada, proporcionando más control sobre los proveedores de billeteras simultáneamente. Puedes instanciar billeteras directamente a través de su función `Create` o mediante `ThirdwebManager.Instance.ConnectWallet`.
+4. **Infraestructura**: Se requiere una clave API en v5 para acceder a los servicios de thirdweb como RPC, Almacenamiento, Abstracción de Cuentas y más. Configura tu client id y bundle id en el inspector de `ThirdwebManager`.
+5. **Integración con el SDK de .NET**: El SDK de Unity v5 te permite usar directamente el SDK de .NET para una mayor flexibilidad, especialmente en la interacción con contratos y operaciones de billetera.
 
-## Migration Steps
+## Pasos para la Migración
 
-### Update Unity SDK to v5
+### Actualiza el SDK de Unity a v5
 
-Start by downloading the latest version of the Unity SDK from the [releases page](https://github.com/thirdweb-dev/unity-sdk/releases). Ensure the old SDK files are removed and the new SDK is imported into your Unity project.
+Comienza descargando la última versión del SDK de Unity desde la [página de lanzamientos](https://github.com/thirdweb-dev/unity-sdk/releases). Asegúrate de eliminar los archivos del SDK anterior e importar el nuevo SDK en tu proyecto de Unity.
 
-<Callout variant='info' title="Recommendation">
-It's recommended to back up your project before making any major updates to avoid data loss.
+<Callout variant='info' title="Recomendación">
+Es recomendable hacer una copia de seguridad de tu proyecto antes de realizar cualquier actualización importante para evitar la pérdida de datos.
 </Callout>
 
-### General Guidelines
+### Directrices Generales
 
-In v5, the majority of state management has been moved off the `ThirdwebManager` or `ThirdwebSDK`, no longer tying you to a specific chain or wallet at all times. The Unity SDK acts as a wrapper for the .NET SDK, providing a more user-friendly interface.
+En v5, la mayoría de la gestión del estado se ha movido fuera de `ThirdwebManager` o `ThirdwebSDK`, ya no vinculándote a una cadena o billetera específica en todo momento. El SDK de Unity actúa como un envoltorio para el SDK de .NET, proporcionando una interfaz más amigable para el usuario.
 
-The settings that previously crowded the `ThirdwebManager` have been removed, most of these options can now be set as runtime options when connecting to a wallet or contract. This allows for more flexibility - you may instantiate as many contracts and wallets as you need, on multiple chains, and switch between them easily, or even execute multiple cross-chain transactions simultaneously.
+Las configuraciones que previamente saturaban el `ThirdwebManager` se han eliminado, y la mayoría de estas opciones ahora pueden configurarse como opciones en tiempo de ejecución al conectar una billetera o contrato. Esto permite mayor flexibilidad: puedes instanciar tantos contratos y billeteras como necesites, en múltiples cadenas, y cambiar entre ellas fácilmente, o incluso ejecutar múltiples transacciones entre cadenas simultáneamente.
 
-You will find that the general structure of functions and classes are similar to v4, but the arguments and return types have been updated to be more flexible and modular.
+Notarás que la estructura general de funciones y clases es similar a la de v4, pero los argumentos y los tipos de retorno se han actualizado para ser más flexibles y modulares.
 
 ### ThirdwebManager
 
-We've recreated similar APIs to v4 in v5 to make the transition easier. Anything previously under `ThirdwebManager.Instance.SDK` is now directly accessible from `ThirdwebManager.Instance` or through a static class. Review the Unity v5 and .NET SDK documentation to explore the new APIs.
+Hemos recreado APIs similares a las de v4 en v5 para facilitar la transición. Todo lo que antes estaba bajo `ThirdwebManager.Instance.SDK` ahora es accesible directamente desde `ThirdwebManager.Instance` o a través de una clase estática. Revisa la documentación del SDK de Unity v5 y .NET para explorar las nuevas APIs.
 
 ```csharp
 // Unity v4
@@ -54,9 +54,9 @@ var contract = await ThirdwebManager.Instance.GetContract(..); // now async
 var contract = await ThirdwebContract.Create(..);
 ```
 
-### Contracts
+### Contratos
 
-Contract interaction has been simplified in v5. The specific contract interfaces (e.g., ERC721, ERC1155) are now handled via `ThirdwebContract` with more flexible extension methods.
+La interacción con contratos se ha simplificado en v5. Las interfaces de contrato específicas (por ejemplo, ERC721, ERC1155) ahora se manejan a través de `ThirdwebContract` con métodos de extensión más flexibles.
 
 ```csharp
 // Unity v4
@@ -68,9 +68,9 @@ var balance = await contract.ERC1155_Balance(..);
 // contract.Prepare, contract.Read, contract.Write, etc. are available and take in a chain id
 ```
 
-### Wallets
+### Billeteras
 
-In v5, wallets are more modular. You can connect to multiple wallets simultaneously and switch between them easily.
+En v5, las billeteras son más modulares. Puedes conectar múltiples billeteras simultáneamente y cambiar entre ellas fácilmente.
 
 ```csharp
 // Unity v4
@@ -87,9 +87,9 @@ var wallet = await PrivateKeyWallet.Create(..);
 var address = await wallet.GetAddress();
 ```
 
-### Storage
+### Almacenamiento
 
-v5 requires an API key for storage and RPC services. You can generate an API key from the thirdweb dashboard and integrate it into your Unity project.
+v5 requiere una clave API para los servicios de almacenamiento y RPC. Puedes generar una clave API desde el panel de control de thirdweb e integrarla en tu proyecto de Unity.
 
 ```csharp
 // Unity v4
@@ -101,16 +101,16 @@ var data = await ThirdwebStorage.Download<string>("{{text_uri}}");
 
 ## UI
 
-If you were using our example prefabs from v4 in production, you may need to back them up as they have been removed from v5. You can still use them as a reference to create your own prefabs in v5.
+Si estabas utilizando nuestros prefabs de ejemplo de v4 en producción, es posible que necesites hacer una copia de seguridad de ellos, ya que han sido eliminados en v5. Aún puedes usarlos como referencia para crear tus propios prefabs en v5.
 
-You may choose to adapt their code to v5 or recreate your own UI and use the new APIs we offer.
+Puedes optar por adaptar su código a v5 o recrear tu propia interfaz de usuario y utilizar las nuevas APIs que ofrecemos.
 
-Generally, for a wallet connect button, all you need is to call `var wallet = await ThirdwebManager.Instance.ConnectWallet` with the appropriate options.
+Generalmente, para un botón de conexión de billetera, todo lo que necesitas hacer es llamar a `var wallet = await ThirdwebManager.Instance.ConnectWallet` con las opciones adecuadas.
 
-You can then display the balance using `await wallet.GetBalance` or other extension methods. `Utils.GetChainMetadata` will help find native token symbols and more, dynamically.
+Luego, puedes mostrar el saldo usando `await wallet.GetBalance` u otros métodos de extensión. `Utils.GetChainMetadata` te ayudará a encontrar símbolos de tokens nativos y más, de manera dinámica.
 
-New production ready prefabs will be available in future releases.
+Nuevos prefabs listos para producción estarán disponibles en futuras versiones.
 
-### Full Reference
+### Referencia Completa
 
-The [.NET SDK Documentation](/dotnet) provides a comprehensive reference for all classes and methods available in the Unity SDK v5.
+La [Documentación del SDK de .NET](/dotnet) proporciona una referencia completa para todas las clases y métodos disponibles en el SDK de Unity v5.

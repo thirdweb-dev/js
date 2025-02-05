@@ -3,85 +3,85 @@ import { createMetadata, ArticleIconCard } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Pregenerate Wallets",
+		title: "Pregenerar Billeteras",
 		icon: "wallets",
 	},
-	title: "Pregenerate Wallets | thirdweb",
-	description: "Learn how to pregenerate wallets for improved user onboarding",
+	title: "Pregenerar Billeteras | thirdweb",
+	description: "Aprende cómo pregenerar billeteras para mejorar la incorporación de usuarios",
 });
 
-# Pregenerate Wallets
+# Pregenerar Billeteras
 
-## What is Wallet Pregeneration?
+## ¿Qué es la Pregeneración de Billeteras?
 
-Wallet pregeneration is a technique where you create wallets for users before they actually sign up or authenticate. This allows you to:
+La pregeneración de billeteras es una técnica en la que se crean billeteras para los usuarios antes de que realmente se registren o autentiquen. Esto te permite:
 
-1. Pre assign wallets to users before they sign up
-2. Reduce the time users spend waiting during the onboarding process
-3. Pre-fund wallets with tokens or NFTs before users claim them
-4. Create smoother user experiences for gaming and other applications
+1. Preasignar billeteras a los usuarios antes de que se registren
+2. Reducir el tiempo que los usuarios pasan esperando durante el proceso de incorporación
+3. Pre-financiar las billeteras con tokens o NFTs antes de que los usuarios las reclamen
+4. Crear experiencias de usuario más fluidas para juegos y otras aplicaciones
 
-## Why Use Wallet Pregeneration?
+## ¿Por qué Usar la Pregeneración de Billeteras?
 
-### Pre-funding Capability
-You can distribute assets to wallets before users claim them, enabling:
-- Pre-loaded game assets
-- Welcome bonus tokens
-- Promotional NFTs
+### Capacidad de Pre-financiamiento
+Puedes distribuir activos a las billeteras antes de que los usuarios las reclamen, permitiendo:
+- Activos de juego pre-cargados
+- Tokens de bienvenida
+- NFTs promocionales
 - Airdrops
 
-### Better User Experience
-- Users don't have to wait for wallet to be created during signup
-- Reduced failed wallet creation due to network issues
+### Mejor Experiencia de Usuario
+- Los usuarios no tienen que esperar a que se cree la billetera durante el registro
+- Se reduce la creación fallida de billeteras debido a problemas de red
 
-To pregenerate an in-app or ecosystem wallet wallet, you can make a `POST` request to the following endpoint:
+Para pregenerar una billetera in-app o de ecosistema, puedes hacer una solicitud `POST` al siguiente endpoint:
 
 ```
 https://in-app-wallet.thirdweb.com/api/v1/pregenerate
 ```
 
-## Request Body
+## Cuerpo de la Solicitud
 
-The request body should be a JSON object with the following parameters:
+El cuerpo de la solicitud debe ser un objeto JSON con los siguientes parámetros:
 
-- `strategy`: The strategy for wallet generation
-- `email` or `phone` or `userId`: The user identifier associated with the wallet to be generated
+- `strategy`: La estrategia para la generación de la billetera
+- `email` o `phone` o `userId`: El identificador del usuario asociado con la billetera a generar
 
-### Email based wallets
+### Billeteras basadas en correo electrónico
 
 ```
 { strategy: "email", email: "user@example.com" }
 ```
 
-When the user logs in with any method associated with that email (including google, facebook, discord auth), they will get access to the same pregenerated wallet.
+Cuando el usuario inicia sesión con cualquier método asociado con ese correo electrónico (incluyendo Google, Facebook, Discord auth), obtendrá acceso a la misma billetera pregenerada.
 
-### Phone based wallets
+### Billeteras basadas en teléfono
 
 ```
 { strategy: "phone", phone: "+1321123321" }
 ```
 
-### Custom user id based wallets
+### Billeteras basadas en ID de usuario personalizado
 
 ```
 { strategy: "custom_auth_endpoint", userId: "some_user_id" }
 ```
 
 {/* TODO: update link when custom auth documentation has been updated */}
-Use this when [bringing your own authentication method](/connect/in-app-wallet/custom-auth/configuration). When the user logs in, if the user ids you provide from the auth endpoint match, they will get access to the same pregenerated wallet.
+Usa esto cuando [implementes tu propio método de autenticación](/connect/in-app-wallet/custom-auth/configuration). Cuando el usuario inicie sesión, si los IDs de usuario que proporcionas desde el endpoint de autenticación coinciden, obtendrán acceso a la misma billetera pregenerada.
 
-## Headers
+## Encabezados
 
-You need to include the following headers:
+Necesitas incluir los siguientes encabezados:
 
-- `Content-Type`: Must be set to `application/json`
-- `x-secret-key`: Your secret key for authentication
-- `x-ecosystem-id` (optional): Your ecosystem ID
-- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
+- `Content-Type`: Debe establecerse en `application/json`
+- `x-secret-key`: Tu clave secreta para la autenticación
+- `x-ecosystem-id` (opcional): Tu ID de ecosistema
+- `x-ecosystem-partner-id` (opcional): Tu ID de socio del ecosistema
 
-## Example curl Command
+## Comando curl de Ejemplo
 
-Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
+Aquí hay un ejemplo de comando curl para pregenerar una billetera thirdweb para el usuario `user@example.com`:
 
 ```bash
 curl -X POST 'https://embedded-wallet.thirdweb.com/api/v1/pregenerate' \
@@ -95,16 +95,15 @@ curl -X POST 'https://embedded-wallet.thirdweb.com/api/v1/pregenerate' \
   }'
 ```
 
-Replace the header values with your actual client ID, ecosystem ID, and secret key.
+Reemplaza los valores de los encabezados con tu ID de cliente, ID de ecosistema y clave secreta reales.
 
-<Callout variant='info' title='Pregeneration for ecosystems'>
-For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner. If this is an issue, please reach out to us.
+<Callout variant='info' title='Pregeneración para ecosistemas'>
+Para las billeteras de ecosistema, la clave secreta debe ser del mismo titular de la cuenta que el propietario del ecosistema. Si esto es un problema, por favor contáctanos.
 </Callout>
 
+## Formato de la Respuesta
 
-## Response Format
-
-A successful API call returns a JSON object in the following format:
+Una llamada exitosa a la API devuelve un objeto JSON en el siguiente formato:
 
 ```json
 {
@@ -115,16 +114,16 @@ A successful API call returns a JSON object in the following format:
 }
 ```
 
-<Callout variant='warning' title='Smart Wallet Address'>
-Use [`predictSmartAccountAddress`](/references/typescript/v5/predictSmartAccountAddress) to generate the corresponding smart wallet address.
-The `address` field always corresponds to the EOA address that has been pregenerated.
+<Callout variant='warning' title='Dirección de Billetera Inteligente'>
+Usa [`predictSmartAccountAddress`](/references/typescript/v5/predictSmartAccountAddress) para generar la dirección correspondiente de la billetera inteligente.
+El campo `address` siempre corresponde a la dirección EOA que ha sido pre-generada.
 </Callout>
 
 
-## What's Next
+## ¿Qué Sigue?
 
-Pre-generating is independent and doesn't change the user's experience. 
+La pregeneración es independiente y no cambia la experiencia del usuario.
 
-Your users can continue to login as per usual. When they do, they will be assigned the pregenerated wallet.
+Tus usuarios pueden continuar iniciando sesión como de costumbre. Cuando lo hagan, se les asignará la billetera pregenerada.
 
-For more information on signing in, see [Sign In](/connect/wallet/sign-in-methods/configure).
+Para más información sobre el inicio de sesión, consulta [Iniciar Sesión](/connect/wallet/sign-in-methods/configure).

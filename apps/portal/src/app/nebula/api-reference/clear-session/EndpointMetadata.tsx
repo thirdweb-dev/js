@@ -10,9 +10,9 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Clear Session",
+        title: "Borrar Sesión",
         description:
-          "Clears all messages for a specific session using the session ID.",
+          "Elimina todos los mensajes de una sesión específica utilizando el ID de la sesión.",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}/clear",
         method: "POST",

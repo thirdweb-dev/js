@@ -2,12 +2,12 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20BatchMintable contract",
+		title: "Contrato ERC20BatchMintable",
 		icon: "solidity",
 	},
-	title: "ERC20BatchMintable | thirdweb contract",
+	title: "ERC20BatchMintable | contrato de thirdweb",
 	description:
-		"Enable minting multiple NFTs at once in a single transaction by Implementing ERC20, IMintableERC20, and Multicall extensions",
+		"Habilita la acuñación de múltiples NFTs a la vez en una sola transacción implementando las extensiones ERC20, IMintableERC20 y Multicall",
 });
 
 # ERC20BatchMintable
@@ -18,14 +18,14 @@ import "@thirdweb-dev/contracts/extension/multicall.sol";
 import "@thirdweb-dev/contracts/extension/interface/IMintableERC20.sol";
 ```
 
-Enable minting multiple NFTs at once in a single transaction by Implementing [`ERC20`](/contracts/build/extensions/erc-20/ERC20), [`IMintableERC20`](/contracts/build/extensions/erc-20/ERC20BatchMintable), and [`Multicall`](/contracts/build/extensions/general/Multicall) extensions.
+Habilita la acuñación de múltiples NFTs a la vez en una sola transacción implementando las extensiones [`ERC20`](/contracts/build/extensions/erc-20/ERC20), [`IMintableERC20`](/contracts/build/extensions/erc-20/ERC20BatchMintable), y [`Multicall`](/contracts/build/extensions/general/Multicall).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC20`](/contracts/build/extensions/erc-20/ERC20), [`Multicall`](/contracts/build/extensions/general/Multicall) and [`ERC20Mintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable) extensions.
+Esta es una extensión que es detectable en el panel si el contrato inteligente implementa las extensiones
+[`ERC20`](/contracts/build/extensions/erc-20/ERC20), [`Multicall`](/contracts/build/extensions/general/Multicall) y [`ERC20Mintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable).
 
-## Usage
+## Uso
 
-This is an example smart contract that will have ERC20BatchMintable detected on it in the dashboard. It also shows the function that is overridable to add custom logic.
+Este es un contrato inteligente de ejemplo que tendrá `ERC20BatchMintable` detectado en el panel. También muestra la función que se puede sobrescribir para agregar lógica personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -53,7 +53,7 @@ contract Contract is ERC20, IMintableERC20, Multicall {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC20Base](/contracts/build/base-contracts/erc-20/base)
 - [ERC20SignatureMint](/contracts/build/base-contracts/erc-20/signature-mint)

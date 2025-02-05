@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "BaseAccountFactory contract",
+		title: "Contrato BaseAccountFactory",
 		icon: "solidity",
 	},
-	title: "BaseAccountFactory | thirdweb contract",
+	title: "BaseAccountFactory | contrato de thirdweb",
 	description:
-		"The BaseAccountFactory smart contract is an extension usable with the Managed and Non-Upgradable Account smart contracts",
+		"El contrato BaseAccountFactory es una extensión que se puede usar con los contratos inteligentes de Cuenta Administrada y No Actualizable",
 });
+
 
 # BaseAccountFactory
 
@@ -17,27 +18,27 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccountFactory.sol";
 ```
 
-The `BaseAccountFactory` smart contract is an extension usable with the [Managed](/contracts/build/base-contracts/erc-4337/managed-account) and [Non-Upgradable](/contracts/build/base-contracts/erc-4337/account-factory) Account smart contracts.
-When creating your [Smart Account](/glossary/smart-wallet) account factory contract, inherit from this extension to include all of the base logic to create your factory.
+El contrato inteligente `BaseAccountFactory` es una extensión que se puede usar con los contratos inteligentes de Cuenta [Administrada](/contracts/build/base-contracts/erc-4337/managed-account) y [No Actualizable](/contracts/build/base-contracts/erc-4337/account-factory).
+Al crear tu contrato de fábrica de [Cuenta Inteligente](/glossary/smart-wallet), hereda de esta extensión para incluir toda la lógica base para crear tu fábrica.
 
 <Callout title="info" variant="info">
-	This smart contract extension conforms to the `IAccountFactory` interface
-	which is detectable on the dashboard as the `SmartWalletFactory` extension.
+	Esta extensión de contrato inteligente cumple con la interfaz `IAccountFactory`
+	que es detectable en el dashboard como la extensión `SmartWalletFactory`.
 </Callout>
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/utils/BaseAccountFactory.sol" />
 
-## Usage
+## Uso
 
-The `BaseAccountFactory` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `BaseAccountFactory` es un _contrato abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                 | Type               | Description                                                                             |
-| -------------------- | ------------------ | --------------------------------------------------------------------------------------- |
-| `_initializeAccount` | internal _virtual_ | Called in `createAccount`. Initializes the account contract created in `createAccount`. |
+| Nombre                | Tipo                | Descripción                                                                             |
+| --------------------- | ------------------- | --------------------------------------------------------------------------------------- |
+| `_initializeAccount`  | internal _virtual_  | Se llama en `createAccount`. Inicializa el contrato de cuenta creado en `createAccount`. |
 
-This is an example factory smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato de ejemplo para la fábrica que demuestra cómo heredar de esta extensión y sobrescribir las funciones para añadir (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -48,20 +49,20 @@ import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccountFactory.sol";
 contract MyAccountFactory is BaseAccountFactory { ... }
 ```
 
-## SDK Usage
+## Uso del SDK
 
-This extension unlocks the use of the [smart wallet](wallet/smart-wallet) in the wallet SDK.
+Esta extensión desbloquea el uso de la [cartera inteligente](wallet/smart-wallet) en el SDK de la cartera.
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ManagedAccountFactory](/contracts/build/base-contracts/erc-4337/managed-account-factory)
 - [AccountFactory](/contracts/build/base-contracts/erc-4337/account-factory)
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="createAccount">
 
-Deploys a new Account for admin.
+Despliega una nueva Cuenta para el administrador.
 
 ```solidity
 function createAccount(address _admin, bytes calldata _data) external virtual override returns (address) {
@@ -80,18 +81,18 @@ function createAccount(address _admin, bytes calldata _data) external virtual ov
 
 #### \_admin
 
-The address to be set as default admin role for the contract. Must be of type `address`.
+La dirección que se establecerá como el rol de administrador predeterminado para el contrato. Debe ser de tipo `address`.
 
 #### \_data
 
-If extra storage variables are required in your account contract, override this function, abi encode the variables,
-pass them to this function as a `bytes` type.
+Si se requieren variables de almacenamiento adicionales en tu contrato de cuenta, sobrescribe esta función, codifica las variables en ABI,
+pásalas a esta función como un tipo `bytes`.
 
 </Details>
 
 <Details summary="addSigner">
 
-Callback function for an Account to register its signers.
+Función de retorno de llamada para que una Cuenta registre sus firmantes.
 
 ```solidity
 function addSigner(address _signer) external {
@@ -107,13 +108,13 @@ function addSigner(address _signer) external {
 
 #### signer
 
-The address of the signer to add to the account.
+La dirección del firmante que se agregará a la cuenta.
 
 </Details>
 
 <Details summary="removeSigner">
 
-Callback function for an Account to un-register its signers.
+Función de retorno de llamada para que una Cuenta elimine su registro de firmantes.
 
 ```solidity
 function removeSigner(address _signer) external {
@@ -127,15 +128,15 @@ function removeSigner(address _signer) external {
 }
 ```
 
-#### \_signer
+#### _signer
 
-The address of the signer to remove from the account.
+La dirección del firmante que se eliminará de la cuenta.
 
 </Details>
 
 <Details summary="getAddress">
 
-Returns the address of an Account that would be deployed with the given admin signer.
+Devuelve la dirección de una Cuenta que se desplegaría con el firmante de administrador dado.
 
 ```solidity
 function getAddress(address _adminSigner) public view returns (address) {
@@ -144,15 +145,15 @@ function getAddress(address _adminSigner) public view returns (address) {
 }
 ```
 
-#### \_adminSigner
+#### _adminSigner
 
-The admin signer for the account.
+El firmante administrador para la cuenta.
 
 </Details>
 
 <Details summary="getSignersOfAccount">
 
-Returns all signers of an account.
+Devuelve todos los firmantes de una cuenta.
 
 ```solidity
 function getSignersOfAccount(address account) external view returns (address[] memory signers) {
@@ -162,13 +163,13 @@ function getSignersOfAccount(address account) external view returns (address[] m
 
 #### account
 
-The address of the account to get the signers of.
+La dirección de la cuenta para obtener los firmantes.
 
 </Details>
 
 <Details summary="getAccountsOfSigner">
 
-Returns all accounts that the given address is a signer of.
+Devuelve todas las cuentas de las que la dirección dada es firmante.
 
 ```solidity
 function getAccountsOfSigner(address signer) external view returns (address[] memory accounts) {
@@ -178,13 +179,13 @@ function getAccountsOfSigner(address signer) external view returns (address[] me
 
 #### signer
 
-The address of the signer to get the accounts of.
+La dirección del firmante para obtener las cuentas de las que es firmante.
 
 </Details>
 
 <Details summary="_initializeAccount">
 
-Called in `createAccount`. Initializes the account contract created in `createAccount`.
+Se llama en `createAccount`. Inicializa el contrato de la cuenta creado en `createAccount`.
 
 ```solidity
 function _initializeAccount(
@@ -194,20 +195,21 @@ function _initializeAccount(
 ) internal virtual;
 ```
 
-#### \_account
+#### _account
 
-The address of the smart account smart contract to initialize.
+La dirección del contrato inteligente de la cuenta inteligente para inicializar.
 
-#### \_admin
+#### _admin
 
-The address to be set as default admin role for the contract. Must be of type `address`.
+La dirección que se establecerá como el rol de administrador predeterminado para el contrato. Debe ser de tipo `address`.
 
-#### \_data
+#### _data
 
-If extra storage variables are required in your account contract, abi encode the variables,
-pass them to this function as the `bytes` argument.
+Si se requieren variables de almacenamiento adicionales en tu contrato de cuenta, codifica las variables con ABI, 
+pásalas a esta función como el argumento `bytes`.
 
-For example:
+Por ejemplo:
+
 
 ```solidity
 

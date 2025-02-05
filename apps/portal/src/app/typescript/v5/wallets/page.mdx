@@ -3,66 +3,65 @@ import { ComponentIcon } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Accounts & Wallets",
+		title: "Cuentas y Billeteras",
 		icon: "typescript",
 	},
-	title: "Accounts & Wallets | thirdweb SDK",
-	description: "Learn about accounts and wallets in the thirdweb SDK.",
+	title: "Cuentas y Billeteras | SDK de thirdweb",
+	description: "Aprende sobre cuentas y billeteras en el SDK de thirdweb.",
 });
 
-# Accounts & Wallets
+# Cuentas y Billeteras
 
-We distinguish between "accounts" and "wallets" in the thirdweb SDK. We believe this ultimately provides a more predictable and flexible API for developers.
+En el SDK de thirdweb distinguimos entre "cuentas" y "billeteras". Creemos que esto proporciona una API más predecible y flexible para los desarrolladores.
 
-## What is an Account?
+## ¿Qué es una Cuenta?
 
-- An account always has an `address` and a way to `sign` messages, transactions, and typed data.
-- An account is always mapped to exactly one address on the blockchain.
-- An account cannot be "connected" or "disconnected" like a wallet, instead it is often the result of a wallet being connected.
+- Una cuenta siempre tiene una `dirección` y una manera de `firmar` mensajes, transacciones y datos tipados.
+- Una cuenta siempre está mapeada a exactamente una dirección en la blockchain.
+- Una cuenta no puede ser "conectada" o "desconectada" como una billetera, en su lugar, a menudo es el resultado de una billetera conectada.
 
-See also: [Account (ethereum.org)](https://ethereum.org/en/glossary/#account)
+Ver también: [Cuenta (ethereum.org)](https://ethereum.org/en/glossary/#account)
 
-## What is a Wallet?
+## ¿Qué es una Billetera?
 
-- A wallet "contains" one or more accounts.
-- A wallet can be "connected" (often prompting the user for approval) or "disconnected".
-- A wallet cannot independently sign messages, transactions, or typed data, instead, it delegates this to the account(s) it "contains".
-
+- Una billetera "contiene" una o más cuentas.
+- Una billetera puede ser "conectada" (a menudo pidiendo la aprobación del usuario) o "desconectada".
+- Una billetera no puede firmar mensajes, transacciones o datos tipados de manera independiente, en su lugar, delega esto a la(s) cuenta(s) que "contiene".
 
 <Stack>
 
 <ArticleIconCard
-	title="Supported Wallets"
+	title="Billeteras soportadas"
 	icon={ComponentIcon}
 	href="/typescript/v5/supported-wallets"
-	description="See all 500+ wallets supported by the Connect SDK"
+	description="Consulta todas las 500+ billeteras soportadas por el SDK de Connect"
 />
 
 </Stack>
 
-## Example: Connect a wallet and access an account to send a transaction.
+## Ejemplo: Conectar una billetera y acceder a una cuenta para enviar una transacción.
 
 ```ts
 import { sendTransaction } from "thirdweb";
-// We use MetaMask wallet as an example, the pattern is the same for all wallets
+// Usamos MetaMask como ejemplo, el patrón es el mismo para todas las billeteras
 import { createWallet } from "thirdweb/wallets";
 
-// initialize the wallet, you can pick any of the 300+ wallet connectors supported
-// wallet ids are typed, let your TS editor autocomplete them for you
-// ex: "io.metamask", "com.coinbase.wallet", "me.rainbow", etc...
+// Inicializa la billetera, puedes elegir cualquiera de los 300+ conectores de billetera soportados
+// Los IDs de billetera están tipados, deja que tu editor TS los complete automáticamente
+// ej: "io.metamask", "com.coinbase.wallet", "me.rainbow", etc...
 const wallet = createWallet("io.metamask");
 
-// connect the wallet, this returns a promise that resolves to the connected account
+// Conecta la billetera, esto devuelve una promesa que se resuelve con la cuenta conectada
 const account = await wallet.connect({
-	// pass the client you created with `createThirdwebClient()`
+	// pasa el cliente que creaste con `createThirdwebClient()`
 	client,
 });
 
-// sign & send a transaction with the account -> returns the transaction hash
+// Firma y envía una transacción con la cuenta -> devuelve el hash de la transacción
 const { transactionHash } = await sendTransaction({
-	// assuming you have called `prepareTransaction()` or `prepareContractCall()` before which returns the prepared transaction to send
+	// suponiendo que hayas llamado a `prepareTransaction()` o `prepareContractCall()` antes, lo que devuelve la transacción preparada para enviar
 	transaction,
-	// Pass the account to sign the transaction with
+	// Pasa la cuenta para firmar la transacción
 	account,
 });
 ```

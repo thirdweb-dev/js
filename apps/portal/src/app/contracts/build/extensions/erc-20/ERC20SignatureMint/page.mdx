@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20SignatureMint contract",
+		title: "Contrato ERC20SignatureMint",
 		icon: "solidity",
 	},
-	title: "ERC20SignatureMint | thirdweb contract",
+	title: "ERC20SignatureMint | contrato thirdweb",
 	description:
-		"The SignatureMintERC20 smart contract is an extension meant for distributing ERC20 tokens",
+		"El contrato SignatureMintERC20 es una extensión destinada a distribuir tokens ERC20",
 });
+
 
 # ERC20SignatureMint
 
@@ -17,22 +18,22 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/SignatureMintERC20.sol";
 ```
 
-The `SignatureMintERC20` smart contract is an extension meant for distributing ERC20 tokens.
+El contrato `SignatureMintERC20` es una extensión destinada a distribuir tokens ERC20.
 
-The ['signature minting'](/glossary/signature-based-minting) mechanism in the `SignatureMintERC20` extension uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712), and is a way for a contract admin to authorize an external party's request to mint tokens on the admin's contract. At a high level, this means you can authorize some external party to mint tokens on your contract and specify what exactly will be minted by that external party.
+El mecanismo de ['firma de acuñación'](/glossary/signature-based-minting) en la extensión `SignatureMintERC20` utiliza [EIP-712](https://eips.ethereum.org/EIPS/eip-712), y es una forma en que un administrador de contrato puede autorizar la solicitud de una parte externa para acuñar tokens en el contrato del administrador. A grandes rasgos, esto significa que puedes autorizar a una parte externa a acuñar tokens en tu contrato y especificar qué exactamente será acuñado por esa parte externa.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/SignatureMintERC20.sol" />
 
-## Usage
+## Uso
 
-The `SignatureMintERC20` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `SignatureMintERC20` es un contrato _abstracto_, y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                         | Type                    | Description                                                                                                                                     |
-| -------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSignMintRequest`](#full-api-reference) | internal view _virtual_ | Runs on every attempt to mint tokens with signature on the contract. Returns whether the signer is authorized to issue a signature for minting. |
-| [`mintWithSignature`](#full-api-reference)   | external payable        | Mints tokens according to the provided mint request.                                                                                            |
+| Nombre                                        | Tipo                    | Descripción                                                                                                                                     |
+| --------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSignMintRequest`](#full-api-reference)  | internal view _virtual_ | Se ejecuta en cada intento de acuñar tokens con firma en el contrato. Devuelve si el firmante está autorizado para emitir una firma para la acuñación. |
+| [`mintWithSignature`](#full-api-reference)    | external payable        | Acuña tokens de acuerdo con la solicitud de acuñación proporcionada.                                                                               |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -117,12 +118,12 @@ contract ERC20SignatureMint is ERC20Base, SignatureMintERC20 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC20SignatureMint](/contracts/build/base-contracts/erc-20/signature-mint)
 - [ERC20SignatureMintVote](/contracts/build/base-contracts/erc-20/signature-mint-vote)
 
-## Full API reference
+## Referencia completa de la API
 
 <Details summary="verify">
 
@@ -144,17 +145,17 @@ function verify(MintRequest calldata req, bytes calldata signature)
     returns (bool success, address signer)
 ```
 
-- Verifies that a mint request is valid and signed by an authorized wallet.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Verifica que una solicitud de acuñación sea válida y esté firmada por una billetera autorizada.
+- Parámetro `req`: La solicitud de acuñación.
+  - `to`: El destinatario de los tokens a acuñar.
+  - `primarySaleRecipient`: El destinatario de los ingresos por ventas primarias del token acuñado.
+  - `quantity`: La cantidad de tokens a acuñar.
+  - `pricePerToken`: El precio a pagar por la cantidad de tokens acuñados.
+  - `currency`: La moneda en la que se debe pagar el precio por token acuñado.
+  - `validityStartTimestamp`: El sello de tiempo unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El sello de tiempo unix en el cual la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada que firma la solicitud de acuñación.
 
 </Details>
 
@@ -178,17 +179,17 @@ function mintWithSignature(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Mints tokens according to the provided mint request.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Acuña tokens según la solicitud de acuñación proporcionada.
+- Parámetro `req`: La solicitud de acuñación.
+  - `to`: El destinatario de los tokens a acuñar.
+  - `primarySaleRecipient`: El destinatario de los ingresos por ventas primarias del token acuñado.
+  - `quantity`: La cantidad de tokens a acuñar.
+  - `pricePerToken`: El precio a pagar por la cantidad de tokens acuñados.
+  - `currency`: La moneda en la que se debe pagar el precio por token acuñado.
+  - `validityStartTimestamp`: El sello de tiempo unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El sello de tiempo unix en el cual la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada que firma la solicitud de acuñación.
 
 </Details>
 
@@ -211,17 +212,17 @@ function _processRequest(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Verifies a mint request and marks the request and signature as used.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Verifica una solicitud de acuñación y marca la solicitud y la firma como utilizadas.
+- Parámetro `req`: La solicitud de acuñación.
+  - `to`: El destinatario de los tokens a acuñar.
+  - `primarySaleRecipient`: El destinatario de los ingresos por ventas primarias del token acuñado.
+  - `quantity`: La cantidad de tokens a acuñar.
+  - `pricePerToken`: El precio a pagar por la cantidad de tokens acuñados.
+  - `currency`: La moneda en la que se debe pagar el precio por token acuñado.
+  - `validityStartTimestamp`: El sello de tiempo unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El sello de tiempo unix en el cual la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada que firma la solicitud de acuñación.
 
 </Details>
 
@@ -245,17 +246,17 @@ function _recoverAddress(MintRequest calldata req, bytes calldata signature)
     returns (address signer)
 ```
 
-- Returns the address of the signer of the mint request.
-- Parameter `req`: The mint request.
-  - `to`: The recipient of the tokens to mint.
-  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
-  - `quantity`: The quantity of tokens to mint.
-  - `pricePerToken`: The price to pay per quantity of tokens minted.
-  - `currency`: The currency in which to pay the price per token minted.
-  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
-  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
-  - `uid`: A unique identifier for the payload.
-- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+- Devuelve la dirección del firmante de la solicitud de acuñación.
+- Parámetro `req`: La solicitud de acuñación.
+  - `to`: El destinatario de los tokens a acuñar.
+  - `primarySaleRecipient`: El destinatario de los ingresos por ventas primarias del token acuñado.
+  - `quantity`: La cantidad de tokens a acuñar.
+  - `pricePerToken`: El precio a pagar por la cantidad de tokens acuñados.
+  - `currency`: La moneda en la que se debe pagar el precio por token acuñado.
+  - `validityStartTimestamp`: El sello de tiempo unix después del cual la carga útil es válida.
+  - `validityEndTimestamp`: El sello de tiempo unix en el cual la carga útil expira.
+  - `uid`: Un identificador único para la carga útil.
+- Parámetro `signature`: La firma producida por una billetera autorizada que firma la solicitud de acuñación.
 
 </Details>
 
@@ -265,7 +266,7 @@ function _recoverAddress(MintRequest calldata req, bytes calldata signature)
 function _canSignMintRequest(address signer) internal view virtual returns (bool);
 ```
 
-- Returns whether a given address is authorized to sign mint requests.
-- Parameter `signer`: the address that the contract checks is eligible to sign mint requests, or not.
+- Devuelve si una dirección dada está autorizada para firmar solicitudes de acuñación.
+- Parámetro `signer`: la dirección que el contrato verifica si es elegible para firmar solicitudes de acuñación o no.
 
 </Details>

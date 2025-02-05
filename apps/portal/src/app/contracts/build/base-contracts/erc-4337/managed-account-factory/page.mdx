@@ -4,56 +4,56 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Managed Account Factory contract",
+		title: "Contrato de Fábrica de Cuenta Administrada",
 		icon: "contract",
 	},
-	title: "Managed Account Factory | thirdweb contracts",
+	title: "Fábrica de Cuenta Administrada | contratos thirdweb",
 	description:
-		"This factory smart contract is intended to be used to distribute ManagedAccounts programmatically",
+		"Este contrato inteligente de fábrica está destinado a ser utilizado para distribuir Cuentas Administradas de forma programática",
 });
 
-# Managed Account Factory
+# Fábrica de Cuenta Administrada
 
 ```solidity
 import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccountFactory.sol";
 ```
 
-This contract inherits from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory) contract.
+Este contrato hereda del contrato [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory).
 
-This factory smart contract is intended to be used to distribute ['ManagedAccounts`](/contracts/build/base-contracts/erc-4337/managed-account) programmatically.
+Este contrato inteligente de fábrica está destinado a ser utilizado para distribuir ['Cuentas Administradas'](/contracts/build/base-contracts/erc-4337/managed-account) de forma programática.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/managed/ManagedAccountFactory.sol" />
 
 <br />
 
-<Callout title="Modified Contract" variant="info">
+<Callout title="Contrato Modificado" variant="info">
 
-If you modify the [`ManagedAccount`](/contracts/build/base-contracts/erc-4337/managed-account) contract, it is recommended that you write your own
-factory contract by inheriting from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory) extension.
+Si modificas el contrato [`ManagedAccount`](/contracts/build/base-contracts/erc-4337/managed-account), se recomienda escribir tu propio
+contrato de fábrica heredando de la extensión [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory).
 
 </Callout>
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características disponibles por estas extensiones en el SDK y el panel de control:
 
 - [SmartWalletFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory)
 
-## Usage
+## Uso
 
-Use the [CLI](/cli) [`create`](/cli/create) command to create a `ManagedAccountFactory` smart contract:
+Usa el comando [`create`](/cli/create) del [CLI](/cli) para crear un contrato inteligente `ManagedAccountFactory`:
 
 ```bash
 npx thirdweb create contract
 ```
 
-[Deploy](/contracts/deploy/overview) your contract using the deploy cli command:
+[Desplegar](/contracts/deploy/overview) tu contrato usando el comando del CLI de despliegue:
 
 ```bash
 npx thirdweb create
 ```
 
-Or import the contract into your existing project and inherit from it.
+O importa el contrato en tu proyecto existente e inhíerelo.
 
 ```solidity
 import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccountFactory.sol";
@@ -68,14 +68,13 @@ contract MyManagedAccountFactory is ManagedAccountFactory {
     {}
 }
 ```
+## Funciones para Sobrescribir
 
-## Functions to Override
-
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="_initializeAccount" summary="_initializeAccount">
 
-Called in `createAccount`. Initializes the account contract created in `createAccount`.
+Se llama en `createAccount`. Inicializa el contrato de cuenta creado en `createAccount`.
 
 ```solidity
 function _initializeAccount(
@@ -89,18 +88,18 @@ function _initializeAccount(
 
 #### \_account
 
-The address of the smart account smart contract to initialize.
+La dirección del contrato inteligente de cuenta para inicializar.
 
 #### \_admin
 
-The address to be set as default admin role for the contract. Must be of type `address`.
+La dirección que se establecerá como el rol de administrador predeterminado para el contrato. Debe ser de tipo `address`.
 
 #### \_data
 
-If extra storage variables are required in your account contract, abi encode the variables,
-pass them to this function as the `bytes` argument.
+Si se requieren variables adicionales de almacenamiento en tu contrato de cuenta, codifica en ABI las variables,
+y pásalas a esta función como el argumento `bytes`.
 
-For example:
+Por ejemplo:
 
 ```solidity
 
@@ -116,7 +115,7 @@ function initializeAccount(
 
 <Details id="_canSetExtension" summary="_canSetExtension">
 
-Returns whether an extension can be set in the given execution context.
+Devuelve si una extensión puede ser configurada en el contexto de ejecución dado.
 
 ```solidity
 function _canSetExtension() internal view virtual override returns (bool) {

@@ -9,7 +9,7 @@ export const metadata = createMetadata({
 
 Returns a list of fiat currencies supported by Buy With Fiat that can be used when getting a quote using the [GetBuyWithFiatQuote](/dotnet/pay/getbuywithfiatquote) API.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -17,18 +17,19 @@ using Thirdweb.Pay;
 var currencies = await ThirdwebPay.GetBuyWithFiatCurrencies(client);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### Client (required)
+#### Cliente (requerido)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
+
+</Details>
+
+<Details summary="Valor de retorno">
+
+### Valor de retorno
+
+`List<string>`: Una lista de las monedas fiat compatibles.
 
 </Details>
 
-<Details summary="Return Value">
-
-### Return Value
-
-`List<string>`: A list of supported fiat currencies.
-
-</Details>

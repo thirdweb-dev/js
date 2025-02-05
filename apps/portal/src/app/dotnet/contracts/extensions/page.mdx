@@ -1,18 +1,19 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Contract Extensions | Thirdweb .NET SDK",
-	description: "Useful type-safe extensions for calling contracts.",
+	title: "Extensiones de Contrato | Thirdweb .NET SDK",
+	description: "Extensiones útiles y seguras por tipo para llamar a contratos.",
 });
 
-# Contract Extensions
+# Extensiones de Contrato
 
-Thirdweb's .NET SDK provides a set of useful type-safe extensions for calling smart contracts. These extensions simplify the process of interacting with smart contracts by providing a more intuitive and user-friendly API.
+El SDK de .NET de Thirdweb proporciona un conjunto de extensiones útiles y seguras por tipo para llamar a contratos inteligentes. Estas extensiones simplifican el proceso de interacción con los contratos inteligentes al proporcionar una API más intuitiva y fácil de usar.
 
-## Usage
+## Uso
+
 
 ```csharp
-// Write without extensions
+// Escribir sin extensiones
 var receiver = await wallet.GetAddress();
 var quantity = BigInteger.One;
 var currency = Constants.NATIVE_TOKEN_ADDRESS;
@@ -21,23 +22,23 @@ var allowlistProof = new object[] { new byte[] { }, BigInteger.Zero, BigInteger.
 var data = new byte[] { };
 var receipt = await contract.Write(smartAccount, contract, "claim", 0, receiver, quantity, currency, pricePerToken, allowlistProof, data);
 
-// Write with extensions
+// Escribir con extensiones
 var receipt = await contract.DropERC20_Claim(wallet, receiver, amount);
 
-// Read without extensions
+// Leer sin extensiones
 var balance = await contract.Read<string>("balanceOf", "0xOwnerAddress");
 
-// Read with extensions
+// Leer con extensiones
 var balance = await contract.ERC20_BalanceOf("0xOwnerAddress");
 
-// Generate low level calldata
+// Generar calldata de bajo nivel
 var calldata = contract.CreateCallData("myFunction", param1, param2);
 ```
 
-## Available Contract Extensions
+## Extensiones de Contrato Disponibles
 
-Please refer to the `ThirdwebExtensions` [full reference](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebExtensions.html) for a complete list of available contract extensions.
+Consulta la [referencia completa](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebExtensions.html) de `ThirdwebExtensions` para obtener una lista completa de las extensiones de contrato disponibles.
 
-If you are using our [Marketplace](https://thirdweb.com/thirdweb.eth/MarketplaceV3) contract, check out our [Marketplace-specific](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebMarketplaceExtensions.html) extensions.
+Si estás utilizando nuestro contrato de [Marketplace](https://thirdweb.com/thirdweb.eth/MarketplaceV3), echa un vistazo a nuestras [extensiones específicas para Marketplace](https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.ThirdwebMarketplaceExtensions.html).
 
 

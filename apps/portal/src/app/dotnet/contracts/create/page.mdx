@@ -3,43 +3,44 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "ThirdwebContract.Create | Thirdweb .NET SDK",
 	description:
-		"Instantiate a ThirdwebContract to interact with smart contracts.",
+		"Instancia un ThirdwebContract para interactuar con contratos inteligentes.",
 });
 
 # ThirdwebContract.Create
 
-Create an instance of `ThirdwebContract` to start interacting with a deployed smart contract. You can read data from and write data to the blockchain using this contract instance. If the ABI is not provided, it will attempt to fetch it automatically if available.
+Crea una instancia de `ThirdwebContract` para comenzar a interactuar con un contrato inteligente desplegado. Puedes leer y escribir datos en la blockchain usando esta instancia de contrato. Si no se proporciona el ABI, intentará obtenerlo automáticamente si está disponible.
 
-## Usage
+## Uso
 
 ```csharp
 var contract = await ThirdwebContract.Create(client, "contractAddress", chainId, "optionalAbi");
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### client (required)
+### cliente (requerido)
 
-An instance of `ThirdwebClient`.
+Una instancia de `ThirdwebClient`.
 
-### address (required)
+### dirección (requerido)
 
-The address of the smart contract you want to interact with. Must be a hexadecimal `string`.
+La dirección del contrato inteligente con el que deseas interactuar. Debe ser una cadena hexadecimal `string`.
 
-### chain (required)
+### cadena (requerido)
 
-The blockchain network's chain ID as a `BigInteger`. This ID specifies which network the contract is deployed on.
+El ID de cadena de la red blockchain como un `BigInteger`. Este ID especifica en qué red está desplegado el contrato.
 
-### abi (optional)
+### abi (opcional)
 
-The ABI of the contract. If not provided, it will attempt to fetch the ABI automatically if available.
+El ABI del contrato. Si no se proporciona, intentará obtener el ABI automáticamente si está disponible.
+
+</Details>
+
+<Details summary="Valor de retorno">
+
+### Valor de retorno
+
+Devuelve una instancia de `ThirdwebContract` configurada con los parámetros proporcionados, lista para interactuar con la blockchain.
 
 </Details>
 
-<Details summary="Return Value">
-
-### ThirdwebContract
-
-Returns an instance of `ThirdwebContract` configured with the provided parameters, ready to interact with the blockchain.
-
-</Details>

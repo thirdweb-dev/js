@@ -15,41 +15,41 @@ import {
 import {ExternalLink} from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "Connect users with In-App Wallet",
+	title: "Conectar usuarios con carteras en la aplicación",
 	description:
-		"use the prebuilt connect UI components to authenticate users and connect in-app wallets",
+		"Usa los componentes de UI de conexión preconstruidos para autenticar usuarios y conectar carteras en la aplicación",
 	image: {
-		title: "Connect users with In-App Wallets",
+		title: "Conectar usuarios con carteras en la aplicación",
 		icon: "wallets",
 	},
 });
 
-# In-App Wallets
+# Carteras en la Aplicación
 
-Create in-app wallet for your users based on their email, phone, passkey, social auth or even their external wallets. These wallets are scoped by your clientId and do not require any confirmation to sign transactions. 
+Crea una cartera en la aplicación para tus usuarios basada en su correo electrónico, teléfono, clave de acceso, autenticación social o incluso sus carteras externas. Estas carteras están vinculadas a tu clientId y no requieren ninguna confirmación para firmar transacciones.
 
-## Available auth methods
+## Métodos de autenticación disponibles
 
 <AuthList />
 
-## Live Playground
+## Playground en vivo
 
-Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/in-app-wallet)
+Prueba las carteras en la aplicación por ti mismo en el [playground en vivo de carteras en la aplicación](https://playground.thirdweb.com/connect/in-app-wallet)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/in-app-wallet"
-	description="See the SDK in action on the live playground"
+	description="Ve el SDK en acción en el playground en vivo"
 />
 
 </Stack>
 
-## Configure in-app wallets
+## Configurar carteras en la aplicación
 
-The simplest way to create an in-app wallet is to use the `inAppWallet()` function. By default, this will create a wallet that supports email/password login, Google, Apple, Facebook login, and passkey.
+La forma más sencilla de crear una cartera en la aplicación es usar la función `inAppWallet()`. De manera predeterminada, esto creará una cartera que admite inicio de sesión con correo electrónico/contraseña, Google, Apple, inicio de sesión de Facebook y clave de acceso.
 
 ```tsx
 import { inAppWallet } from "thirdweb/wallets";
@@ -74,18 +74,18 @@ const wallet = inAppWallet({
 });
 ```
 
-[View all in-app wallet options](/references/typescript/v5/InAppWalletCreationOptions).
+[Ver todas las opciones de cartera en la aplicación](/references/typescript/v5/InAppWalletCreationOptions).
 
-Once created, you can use it either with the prebuilt UI components, or with your own UI.
+Una vez creada, puedes usarla ya sea con los componentes UI preconstruidos o con tu propia interfaz de usuario.
 
-## Usage with Connect UI components
+## Uso con componentes UI de Conexión
 
-The easiest way to use in-app wallets is using the prebuilt connect UI components like [`ConnectButton`](/references/typescript/v5/ConnectButton) and [`ConnectEmbed`](/references/typescript/v5/ConnectEmbed) to authenticate users and connect their wallets.
+La forma más sencilla de usar las carteras en la aplicación es usando los componentes UI de conexión preconstruidos como [`ConnectButton`](/references/typescript/v5/ConnectButton) y [`ConnectEmbed`](/references/typescript/v5/ConnectEmbed) para autenticar a los usuarios y conectar sus carteras.
 
-By default, the connect UI supports multiple social logins as well as email, phone and passkey authentication. You can customize which authentication methods to support which will be reflected in the UI.
+De manera predeterminada, la UI de conexión admite múltiples inicios de sesión sociales, así como autenticación por correo electrónico, teléfono y clave de acceso. Puedes personalizar qué métodos de autenticación deseas admitir, los cuales se reflejarán en la UI.
 
-<Callout variant="info" title="Authentication Order">
-	By default, email login is displayed before phone number login. To display phone number first, add "phone" before "email" in the providers array
+<Callout variant="info" title="Orden de autenticación">
+	De manera predeterminada, el inicio de sesión por correo electrónico se muestra antes que el inicio de sesión por número de teléfono. Para mostrar primero el teléfono, agrega "phone" antes de "email" en el array de proveedores.
 </Callout>
 
 
@@ -107,13 +107,13 @@ export default function App() {
 }
 ```
 
-## Usage with your own UI
+## Uso con tu propia UI
 
-You have full control with the connection hooks and functions to build your own UI. Pick an authentication strategy and then connect.
+Tienes control total con los hooks y funciones de conexión para crear tu propia UI. Elige una estrategia de autenticación y luego conéctate.
 
-### Setup the ThirdwebProvider
+### Configura el ThirdwebProvider
 
-This will ensure that the wallet is available to all components in your app, handle connection states and auto-connection on page load.
+Esto asegurará que la cartera esté disponible para todos los componentes en tu aplicación, maneje los estados de conexión y realice la conexión automática al cargar la página.
 
 ```jsx
 import { ThirdwebProvider } from "thirdweb/react";
@@ -123,11 +123,11 @@ import { ThirdwebProvider } from "thirdweb/react";
 </ThirdwebProvider>;
 ```
 
-### Authenticate via Google
+### Autenticarse vía Google
 
-Note that for Apple and Facebook, you just need to update the strategy to "facebook" or "apple".
+Ten en cuenta que para Apple y Facebook, solo necesitas actualizar la estrategia a "facebook" o "apple".
 
-In React and React Native, the `useConnect()` hook handles authentication and connection states.
+En React y React Native, el hook `useConnect()` maneja la autenticación y los estados de conexión.
 
 ```tsx
 import { inAppWallet } from "thirdweb/wallets";
@@ -147,9 +147,9 @@ const handleLogin = async () => {
 };
 ```
 
-Other social options include Apple, Facebook, Discord, Farcaster and more.
+Otras opciones sociales incluyen Apple, Facebook, Discord, Farcaster y más.
 
-### Authenticate via Email verification
+### Autenticarse mediante verificación de correo electrónico
 
 ```typescript
 import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
@@ -180,7 +180,8 @@ const handleLogin = async (email: string, verificationCode: string) => {
 };
 ```
 
-### Authenticate via Phone number verification
+### Autenticarse mediante verificación de número de teléfono
+
 
 ```typescript
 import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
@@ -211,13 +212,14 @@ const handleLogin = async (phoneNumber: string, verificationCode: string) => {
 };
 ```
 
-### Authenticate via Passkey
+### Autenticarse mediante Passkey
 
-<Callout variant="info" title="React Native support">
+<Callout variant="info" title="Soporte para React Native">
 
-For React Native, `passkeyDomain` is required and must be set to a valid app universal link. To setup universal links for your application, follow the [iOS documentation](https://developer.apple.com/documentation/xcode/supporting-associated-domains) and [Android documentation](https://developer.android.com/identity/sign-in/credential-manager#add-support-dal).
+Para React Native, se requiere `passkeyDomain` y debe configurarse con un enlace universal válido de la aplicación. Para configurar los enlaces universales para tu aplicación, sigue la [documentación de iOS](https://developer.apple.com/documentation/xcode/supporting-associated-domains) y la [documentación de Android](https://developer.android.com/identity/sign-in/credential-manager#add-support-dal).
 
 </Callout>
+
 
 ```typescript
 import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
@@ -242,9 +244,9 @@ const handleLogin = async () => {
 };
 ```
 
-### Authenticate with an external wallet
+### Autenticarse con una billetera externa
 
-You can also use wallets as an authentication method, when using this method, both external and in-app wallets are connected, and you can switch between the 2 at any time.
+También puedes usar billeteras como un método de autenticación. Al usar este método, tanto las billeteras externas como las billeteras dentro de la aplicación se conectan, y puedes alternar entre las dos en cualquier momento.
 
 ```typescript
 import { inAppWallet } from "thirdweb/wallets/in-app";
@@ -266,9 +268,9 @@ const handleLogin = async () => {
 };
 ```
 
-### Authenticate as Guest
+### Autenticarse como invitado
 
-You can also create wallets for your users without any input at all. This will create a session that can be later upgraded by linking another identity. Great for progressive onboarding.
+También puedes crear billeteras para tus usuarios sin necesidad de ninguna entrada. Esto creará una sesión que luego se podrá actualizar vinculando otra identidad. Ideal para una incorporación progresiva.
 
 ```typescript
 import { inAppWallet } from "thirdweb/wallets/in-app";
@@ -288,13 +290,13 @@ const handleLogin = async () => {
 ```
 
 
-## Bring your own auth
+## Usa tu propia autenticación
 
-From the in-app wallet settings on the thirdweb dashboard, you can enable [custom authentication with your own JWT or auth endpoint](/connect/in-app-wallet/custom-auth/configuration)
+Desde la configuración de la billetera en la aplicación en el panel de control de thirdweb, puedes habilitar [autenticación personalizada con tu propio JWT o endpoint de autenticación](/connect/in-app-wallet/custom-auth/configuration)
 
-### OICD compliant JWT
+### JWT compatible con OICD
 
-Pass any OICD compliant JWT, can be used with firebase, auth0, and more.
+Pasa cualquier JWT compatible con OICD, que se puede usar con firebase, auth0 y más.
 
 ```typescript
 import { inAppWallet } from "thirdweb/wallets/in-app";
@@ -314,9 +316,9 @@ const handleLogin = async () => {
 };
 ```
 
-### Custom Auth endpoint
+### Endpoint de autenticación personalizado
 
-Fully custom auth endpoint, pass your own payload and configure your auth verification endpoint on the thirdweb dashboard. This approach lets you use virtually any auth method you can imagine.
+Endpoint de autenticación completamente personalizado, pasa tu propio payload y configura tu endpoint de verificación de autenticación en el panel de control de thirdweb. Este enfoque te permite usar prácticamente cualquier método de autenticación que se te ocurra.
 
 ```typescript
 import { inAppWallet } from "thirdweb/wallets/in-app";

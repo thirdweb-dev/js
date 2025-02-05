@@ -11,6 +11,7 @@ export const metadata = createMetadata({
 		"Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by implementing ERC1155 and DropSinglePhase extensions",
 });
 
+
 # ERC1155ClaimConditions
 
 ```solidity
@@ -18,18 +19,17 @@ import "@thirdweb-dev/contracts/eip/ERC1155.sol";
 import "@thirdweb-dev/contracts/extension/DropSinglePhase1155.sol";
 ```
 
-Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by
-implementing [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase) extensions.
+Permite que otras billeteras reclamen/minteen tokens del contrato bajo los criterios de las condiciones de reclamo implementando las extensiones [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) and [`ERC1155DropSinglePhase`](/contracts/build/extensions/erc-1155/ERC1155DropSinglePhase) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las extensiones
+[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) y [`ERC1155DropSinglePhase`](/contracts/build/extensions/erc-1155/ERC1155DropSinglePhase).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DropSinglePhase1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC1155ClaimConditions` detectable extension.
-The functions which are available to be (optionally) overridden are also detailed.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de las extensiones que conforman la extensión detectable `ERC1155ClaimConditions`.
+Las funciones que están disponibles para ser (opcionalmente) sobrescritas también están detalladas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -104,6 +104,6 @@ contract Contract is ERC1155, LazyMint, DropSinglePhase1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos base que implementan esta extensión
 
 - [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop)

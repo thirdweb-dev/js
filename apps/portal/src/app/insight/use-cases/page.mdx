@@ -1,62 +1,61 @@
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Insight Use Cases | thirdweb Infrastructure",
-	description: "Example use cases for thirdweb Insight",
+  title: "Casos de Uso de Insight | Infraestructura de thirdweb",
+  description: "Ejemplos de casos de uso para thirdweb Insight",
   image: {
     title: "Insight",
     icon: "insight",
   },
 });
 
-# Use Cases
+# Casos de Uso
 
 ## Gaming
 
-### Show assets owned by players
-In blockchain games, players often own digital assets such as in-game items or tokens. To display these assets, the events blueprint can track Transfer events of ERC-721 (NFT) or ERC-1155 tokens, allowing you to determine which assets belong to each player’s wallet.
-- The Events blueprint can be used to fetch Transfer events where the player’s wallet is the recipient, showing all NFTs or in-game items acquired by the player.
+### Mostrar activos de los jugadores
+En los juegos blockchain, los jugadores suelen tener activos digitales como objetos del juego o tokens. Para mostrar estos activos, el blueprint de eventos puede rastrear eventos de transferencia de tokens ERC-721 (NFT) o ERC-1155, lo que permite determinar qué activos están asociados a cada billetera de jugador.
+- El blueprint de eventos se puede utilizar para obtener eventos de transferencia donde la billetera del jugador sea el destinatario, mostrando todos los NFTs o elementos adquiridos por el jugador.
 
-### Show users the tokens they earned
-Some games reward players with tokens based on achievements or progress. Using the transactions blueprint, you can display these earned tokens by tracking transactions where the game’s smart contract sends tokens to the player’s wallet.
-- Transactions Blueprint: Shows all transactions where the game contract transfers tokens to players.
-- Events Blueprint: Filters Transfer events from the game’s contract to list all tokens awarded to players.
+### Mostrar a los usuarios los tokens que han ganado
+Algunos juegos recompensan a los jugadores con tokens en función de sus logros o progreso. Utilizando el blueprint de transacciones, puedes mostrar estos tokens ganados rastreando las transacciones donde el contrato inteligente del juego envía tokens a la billetera del jugador.
+- Blueprint de Transacciones: Muestra todas las transacciones donde el contrato del juego transfiere tokens a los jugadores.
+- Blueprint de Eventos: Filtra eventos de transferencia desde el contrato del juego para listar todos los tokens otorgados a los jugadores.
 
 ## DeFi
 
-### Analyse Token Economics e.g. USDC 24h volume
-Token economics, like daily trading volume, helps in understanding a token’s liquidity and market activity. By using the transactions blueprint users can get transactions involving USDC and then aggregating data based on timestamps, you can calculate 24-hour transaction volume.
-- Transactions Blueprint: Retrieves all USDC transactions in the past 24 hours, enabling calculation of volume and other economic indicators.
+### Analizar la economía de tokens, e.g., volumen de 24h de USDC
+La economía de tokens, como el volumen de transacciones diario, ayuda a comprender la liquidez y actividad del mercado de un token. Usando el blueprint de transacciones, los usuarios pueden recuperar transacciones relacionadas con USDC y, al agregar datos según marcas de tiempo, calcular el volumen de transacciones en un período de 24 horas.
+- Blueprint de Transacciones: Recupera todas las transacciones de USDC en las últimas 24 horas, permitiendo calcular el volumen y otros indicadores económicos.
 
-### Optimize protocol gas efficiency
-DeFi protocols aim to minimize gas fees for users. Using the transactions blueprint allow users to analyze the gas consumption of different transactions, you can identify areas where gas optimization is possible by evaluating high-gas transactions or commonly used functions.
-- Transactions Blueprint: Summarizes gas usage across transactions for specific functions, helping to analyze and optimize protocol functions for efficiency.
+### Optimizar la eficiencia de gas en protocolos
+Los protocolos DeFi buscan minimizar los costos de gas para los usuarios. Utilizando el blueprint de transacciones, puedes analizar el consumo de gas de diferentes transacciones e identificar áreas donde se puede optimizar, evaluando transacciones con alto consumo de gas o funciones utilizadas con frecuencia.
+- Blueprint de Transacciones: Resume el uso de gas en transacciones de funciones específicas, ayudando a identificar y optimizar áreas clave del protocolo.
 
-### Analyse Token ownership
-Understanding who holds a token (e.g., whales, retail investors) is crucial in DeFi to gauge community health and investment risk. The events blueprint helps track token transfer events, where users can analyze the distribution and concentration of token holders.
-- Events Blueprint: Retrieves Transfer events to build a map of current token holders, showing distributions among wallets.
+### Analizar la distribución de tokens
+Entender quién tiene un token (por ejemplo, grandes inversores o usuarios minoristas) es esencial en DeFi para evaluar la salud de la comunidad y el riesgo de inversión. El blueprint de eventos ayuda a rastrear eventos de transferencia, permitiendo analizar la distribución y concentración de los tokens entre los titulares.
+- Blueprint de Eventos: Recupera eventos de transferencia para construir un mapa de la distribución actual de tokens entre las billeteras.
 
 ## NFTs
 
-### Get all transfers of an NFT collection
-To track the movement of an entire NFT collection, users can use the events blueprint to capture all Transfer events for that collection. This helps show ownership history or current trading volume for the collection.
-- Events Blueprint: Queries Transfer events by contract address, returning each transfer for the NFT collection.
+### Rastrear todas las transferencias de una colección de NFT
+Para seguir el movimiento de una colección completa de NFT, los usuarios pueden usar el blueprint de eventos para capturar todos los eventos de transferencia relacionados con esa colección. Esto permite mostrar el historial de propiedad o el volumen de transacciones actual.
+- Blueprint de Eventos: Consulta eventos de transferencia por dirección de contrato, devolviendo cada transferencia de la colección NFT.
 
-### Get All NFTs owned by address
-To show all NFTs owned by a user, users can use the events blueprint to fetch Transfer events where the specified address is the recipient. This shows a complete list of NFTs in their wallet.
-- Events Blueprint: Retrieves Transfer events for each NFT contract where the wallet address is the recipient.
+### Mostrar todos los NFTs de una dirección
+Para listar todos los NFTs de un usuario, los usuarios pueden usar el blueprint de eventos para recuperar eventos de transferencia donde la dirección especificada sea el destinatario. Esto genera una lista completa de los NFTs en su billetera.
+- Blueprint de Eventos: Recupera eventos de transferencia para cada contrato NFT donde la dirección de la billetera sea el destinatario.
 
 ## Wallets
 
-### Get all transactions performed by a wallet cross chain
-Wallet activity often spans multiple chains. By using the transactions blueprint with the wallet address across different chain_ids, users can retrieve a cross-chain view of all transactions for that wallet.
-- Transactions Blueprint: Filters transactions by wallet address and chain ID, providing a history of cross-chain transactions.
+### Obtener todas las transacciones realizadas por una billetera en múltiples cadenas
+La actividad de una billetera a menudo abarca varias cadenas. Utilizando el blueprint de transacciones con la dirección de la billetera en diferentes `chain_ids`, los usuarios pueden obtener un historial completo de las transacciones realizadas por esa billetera en múltiples cadenas.
+- Blueprint de Transacciones: Filtra transacciones por dirección de billetera y Chain ID, proporcionando un historial de actividad entre cadenas.
 
-### Get all ERC-20 tokens owned by a wallet
-This allows users to see all ERC-20 tokens they own. By using the events blueprint to find Transfer events where the wallet address is the recipient, you can list each ERC-20 token held by that wallet.
-- Events Blueprint: Tracks Transfer events of ERC-20 tokens to the wallet address, providing a list of token balances.
+### Mostrar todos los tokens ERC-20 en una billetera
+Esto permite a los usuarios ver todos los tokens ERC-20 que poseen. Usando el blueprint de eventos para rastrear eventos de transferencia donde la billetera es el destinatario, puedes generar una lista de todos los tokens ERC-20 de esa billetera.
+- Blueprint de Eventos: Rastrea eventos de transferencia de tokens ERC-20 a la billetera, proporcionando una lista de saldos.
 
-### Detect wallet staking activity (e.g. AAVE)
-To identify staking activity in AAVE or any DeFi protocol, users can use the events blueprint to watch for staking-related events, such as Deposit or Stake events on any protocol e.g. AAVE’s smart contracts. This helps monitor which wallets are actively staking assets.
-- Events Blueprint: Filters by staking events on AAVE’s staking contracts for the wallet address, providing insights into wallet staking activity.
-
+### Detectar actividad de staking en billeteras (e.g., AAVE)
+Para identificar actividad de staking en protocolos como AAVE, los usuarios pueden usar el blueprint de eventos para monitorear eventos relacionados, como depósitos o staking realizados en contratos inteligentes. Esto permite rastrear qué billeteras están realizando staking de activos.
+- Blueprint de Eventos: Filtra por eventos de staking en los contratos de AAVE asociados a la dirección de la billetera, mostrando la actividad de staking.

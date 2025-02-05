@@ -26,12 +26,12 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Execute Action",
+        title: "Ejecutar Acción",
         description: (
           <>
-            Executes a specified action. <br /> It is similar to /chat but it
-            only handles transaction requests. It is designed to be used without
-            history context.
+            Ejecuta una acción especificada. <br />
+            Es similar a /chat, pero solo maneja solicitudes de transacciones.
+            Está diseñado para usarse sin contexto de historial.
           </>
         ),
         path: "/execute",

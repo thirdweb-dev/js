@@ -2,55 +2,55 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Pack contract",
+		title: "Contrato Pack",
 		icon: "contract",
 	},
-	title: "Pack contract | thirdweb",
-	description: `The packs are ERC1155 NFTs themselves, which can have the metadata you'd expect of an NFT, such as a name, image, description, etc.`,
+	title: "Contrato Pack | thirdweb",
+	description: `Los packs son NFTs ERC1155 en sí mismos, que pueden tener los metadatos que esperarías de un NFT, como nombre, imagen, descripción, etc.`,
 });
 
 # Pack
 
-The packs are ERC1155 NFTs themselves, which can have the metadata you'd expect of an NFT,
-such as a name, image, description, etc.
+Los packs son NFTs ERC1155 en sí mismos, que pueden tener los metadatos que esperarías de un NFT,
+como nombre, imagen, descripción, etc.
 
-When a pack is opened, a pre-defined quantity of tokens are randomly selected from the ones
-that were used to create the packs _(that haven't already been selected)_, and awarded to the opener.
-The pack NFT is burned as it's opened.
+Cuando se abre un pack, una cantidad predefinida de tokens son seleccionados aleatoriamente de los que
+se utilizaron para crear los packs _(que no hayan sido seleccionados previamente)_, y se otorgan al que abre el pack.
+El NFT del pack se quema al abrirlo.
 
-You can configure how many tokens get selected for the pack:
+Puedes configurar cuántos tokens se seleccionan para el pack:
 
-- How many tokens are in each "unit" (for ERC20 & ERC1155 tokens - one unit could be multiple tokens).
-- How many units are in each pack.
+- Cuántos tokens hay en cada "unidad" (para los tokens ERC20 y ERC1155, una unidad podría ser múltiples tokens).
+- Cuántas unidades hay en cada pack.
 
-> **IMPORTANT**: _Pack functions, such as opening of packs, can be costly in terms of gas usage due to random selection of rewards. Please check your gas estimates/usage, and do a trial on testnets before any mainnet deployment._
+> **IMPORTANTE**: _Las funciones del pack, como la apertura de packs, pueden ser costosas en términos de consumo de gas debido a la selección aleatoria de recompensas. Por favor, revisa tus estimaciones/uso de gas, y realiza una prueba en redes de prueba antes de cualquier implementación en mainnet._
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Pack contract to:
+Puedes usar el contrato Pack para:
 
-- Create randomized NFT loot boxes
-- Run a randomized raffle where some users open a winning ticket
-- Reward your community with token gift boxes
+- Crear cajas de botín NFT aleatorias
+- Realizar una rifa aleatoria donde algunos usuarios abran un boleto ganador
+- Premiar a tu comunidad con cajas de regalo de tokens
 
-## Smart Contract Design
+## Diseño del contrato inteligente
 
-For a detailed exploration of how the pack smart contract works, why it was built,
-and it's limitations, visit our [Pack Design Doc](/contracts/design-docs/pack)!
+Para una exploración detallada de cómo funciona el contrato inteligente de pack, por qué fue construido,
+y sus limitaciones, visita nuestro [Documento de diseño de Pack](/contracts/design-docs/pack)!
 
-## Creating & Configuring the Pack
+## Crear y configurar el Pack
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende a crear y configurar tu contrato inteligente usando el [dashboard](https://thirdweb.com/team).
 
-### Creating a Pack Contract
+### Crear un contrato Pack
 
-Deploy the pack contract to any of our
-[supported networks](https://blog.thirdweb.com/guides/which-network-should-you-use) using the button below.
+Despliega el contrato de pack en cualquiera de nuestras
+[redes compatibles](https://blog.thirdweb.com/guides/which-network-should-you-use) usando el botón a continuación.
 
-### Contract Metadata
+### Metadatos del contrato
 
-To configure the image, name, and description of the contract, click the **Settings** tab:
+Para configurar la imagen, el nombre y la descripción del contrato, haz clic en la pestaña **Configuración**:
 
-### Royalty & Platform Fees
+### Regalías y tarifas de plataforma
 
-From the **Settings** tab, you also configure the royalty fee.
+Desde la pestaña **Configuración**, también puedes configurar la tarifa de regalías.

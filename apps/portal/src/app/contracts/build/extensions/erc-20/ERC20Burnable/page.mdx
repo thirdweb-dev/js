@@ -4,13 +4,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20Burnable contract",
+		title: "Contrato ERC20Burnable",
 		icon: "solidity",
 	},
-	title: "ERC20Burnable | thirdweb contract",
+	title: "ERC20Burnable | contrato de thirdweb",
 	description:
-		"Support burning tokens by implementing the IBurnableERC20 interface",
+		"Soporte para quemar tokens implementando la interfaz IBurnableERC20",
 });
+
 
 # ERC20Burnable
 
@@ -18,20 +19,20 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/interface/IBurnableERC20.sol";
 ```
 
-Support burning tokens by implementing the `IBurnableERC20` interface.
+Soporte para quemar tokens implementando la interfaz `IBurnableERC20`.
 
 <Callout title="info" variant="info">
-	This extension is an interface and requires all of the functions to be
-	implemented
+	Esta extensión es una interfaz y requiere que todas las funciones sean
+	implementadas
 </Callout>
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IBurnableERC20.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar funcionalidad personalizada (opcional).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -52,16 +53,16 @@ contract Contract is ERC20, IBurnableERC20 {
     {}
 
     function burn(uint256 amount) external override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function burnFrom(address account, uint256 amount) external override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-No base contracts implement this functionality by default.
+Ningún contrato base implementa esta funcionalidad por defecto.

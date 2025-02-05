@@ -5,9 +5,9 @@ import { createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "ERC1155DelayedReveal | thirdweb contracts",
 	description:
-		"ERC1155DelayedReveal adds the Delayed Reveal feature to the ERC1155LazyMint base contract.",
+		"ERC1155DelayedReveal agrega la funcionalidad de Delayed Reveal al contrato base ERC1155LazyMint.",
 	image: {
-		title: "ERC1155DelayedReveal contract",
+		title: "Contrato ERC1155DelayedReveal",
 		icon: "contract",
 	},
 });
@@ -18,14 +18,14 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/base/ERC1155DelayedReveal.sol";
 ```
 
-`ERC1155DelayedReveal` adds the [Delayed Reveal](/glossary/delayed-reveal) feature to the
-[ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint) base contract.
+`ERC1155DelayedReveal` agrega la funcionalidad de [Delayed Reveal](/glossary/delayed-reveal) al contrato
+base [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155DelayedReveal.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato y haz que tu contrato herede de él.
 
 ```solidity
 // SPDX-License-Identifier: Apache-2.0
@@ -44,11 +44,11 @@ contract MyNFT is ERC1155DelayedReveal {
 }
 ```
 
-## Detected Extensions
+## Extensiones detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes usar las características habilitadas por estas extensiones en el SDK y el panel de control:
 
-Click on each feature to learn more about what functions are available.
+Haz clic en cada característica para aprender más sobre qué funciones están disponibles.
 
 - [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
 - [ERC1155LazyMintableV2](/contracts/build/extensions/general/LazyMint)
@@ -59,9 +59,9 @@ Click on each feature to learn more about what functions are available.
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 - [Ownable](/contracts/build/extensions/general/Ownable)
 
-## Functions to Override
+## Funciones a sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="uri" summary="uri">
 

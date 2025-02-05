@@ -2,80 +2,80 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Marketplace contract",
+		title: "Contrato Marketplace",
 		icon: "contract",
 	},
-	title: "Marketplace contract | thirdweb",
-	description: `A Marketplace is a contract where you can buy and sell NFTs, such as OpenSea or Rarible`,
+	title: "Contrato Marketplace | thirdweb",
+	description: `Un Marketplace es un contrato donde puedes comprar y vender NFTs, como OpenSea o Rarible.`,
 });
 
 # Marketplace
 
-A Marketplace is a contract where you can buy and sell NFTs, such as OpenSea or Rarible.
+Un Marketplace es un contrato donde puedes comprar y vender NFTs, como OpenSea o Rarible.
 
-The Marketplace contract allows users to list NFTs for direct sale or auction.
-Other users can place offers/bids or buy the NFTs for the specified amount in the listing.
+El contrato Marketplace permite a los usuarios listar NFTs para venta directa o subasta.
+Otros usuarios pueden hacer ofertas/pujar o comprar los NFTs por la cantidad especificada en la lista.
 
-The marketplace can be configured to only allow certain users to list NFTs for sale, or allow _any_ user to list NFTs for sale.
+El marketplace se puede configurar para permitir que solo ciertos usuarios listan NFTs para la venta, o permitir que _cualquier_ usuario liste NFTs para la venta.
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Marketplace contract to:
+Puedes usar el contrato Marketplace para:
 
-- Sell your NFTs on your marketplace
-- Create auctions where the highest bidder, after a certain period, wins the NFT
-- Create an open marketplace where any user can list NFTs for sale, like OpenSea.
+- Vender tus NFTs en tu marketplace
+- Crear subastas donde el mayor postor, después de un período determinado, gana el NFT
+- Crear un marketplace abierto donde cualquier usuario pueda listar NFTs para la venta, como OpenSea.
 
-## Smart Contract Design
+## Diseño del contrato inteligente
 
-For a detailed exploration of how the marketplace smart contract works, why it was built,
-and it's limitations, visit our [Marketplace Design Doc](/contracts/design-docs/marketplace)!
+Para una exploración detallada de cómo funciona el contrato inteligente del marketplace, por qué fue construido,
+y sus limitaciones, visita nuestro [Documento de diseño del Marketplace](/contracts/design-docs/marketplace)!
 
-## Creating & Configuring the Marketplace
+## Crear y configurar el Marketplace
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende a crear y configurar tu contrato inteligente usando el [dashboard](https://thirdweb.com/team).
 
-## Direct & Auction Listings
+## Listados Directos y de Subasta
 
-There are two types of listings in our prebuilt marketplace contract.
+Hay dos tipos de listados en nuestro contrato de marketplace preconstruido.
 
-### Direct Listings
+### Listados Directos
 
-Direct listings are low commitment, high-frequency listings; people constantly list and de-list their NFTs
-based on market trends. So, the listed NFTs and offer amounts are not escrowed in the Marketplace
-to keep the seller's NFTs and the buyer's currency liquid.
+Los listados directos son listados de bajo compromiso y alta frecuencia; las personas listan y des-listan constantemente sus NFTs
+basado en las tendencias del mercado. Por lo tanto, los NFTs listados y las cantidades de ofertas no se escrowan en el Marketplace
+para mantener los NFTs del vendedor y la moneda del comprador líquidos.
 
-This allows users to list NFTs for sale just by signing an approval; giving them the freedom to list the
-same NFT in multiple marketplaces, e.g. this Marketplace contract, OpenSea, etc. at the same time.
+Esto permite a los usuarios listar NFTs para la venta solo firmando una aprobación; dándoles la libertad de listar el
+mismo NFT en múltiples marketplaces, por ejemplo, este contrato Marketplace, OpenSea, etc. al mismo tiempo.
 
-**Key elements of a direct listing:**
+**Elementos clave de un listado directo:**
 
-- Sellers list their NFT for direct sale with the price users can buy it for.
-- The NFT remains in your wallet, but you provide permission for the marketplace contract to move the NFT.
-- If a user pays the asking price, the NFT will be transferred to them, and the seller will receive the funds.
-- Users can make offers below the asking price, and the listing can have multiple offers. The seller can choose to accept an offer at any time.
-- Users can cancel their bids at any time.
+- Los vendedores listan su NFT para venta directa con el precio que los usuarios pueden pagar por él.
+- El NFT permanece en tu billetera, pero proporcionas permiso para que el contrato del marketplace mueva el NFT.
+- Si un usuario paga el precio solicitado, el NFT se transferirá a ellos, y el vendedor recibirá los fondos.
+- Los usuarios pueden hacer ofertas por debajo del precio solicitado, y el listado puede tener múltiples ofertas. El vendedor puede aceptar una oferta en cualquier momento.
+- Los usuarios pueden cancelar sus ofertas en cualquier momento.
 
-### Auction Listings
+### Listados de Subasta
 
-Auction listings are high commitment, low-frequency listings.
-The seller and bidders respect the auction window, and recognize that their NFTs / bid amounts will be
-illiquid for the auction duration, and expect a guaranteed payout at auction closing — the auctioned
-items for the bidder, and the winning bid amount for the seller.
+Los listados de subasta son de alto compromiso y baja frecuencia.
+El vendedor y los postores respetan la ventana de la subasta, y reconocen que sus NFTs / cantidades de ofertas estarán
+ilíquidas durante la duración de la subasta, y esperan un pago garantizado al cierre de la subasta: los artículos subastados
+para el postor y el monto de la oferta ganadora para el vendedor.
 
-Both the NFTs that are listed for sale in an auction and the highest bid at any given moment are escrowed
-in the market.
+Tanto los NFTs listados para venta en una subasta como la oferta más alta en cualquier momento dado están escrowados
+en el mercado.
 
-**Key elements of an auction listing:**
+**Elementos clave de un listado de subasta:**
 
-- Sellers list their NFT for auction with a minimum asking price.
-- The NFT is transferred to escrow in the marketplace contract until the auction is canceled or finished.
-- Other users can place bids until the auction is closed.
-- Users can only make a bid if it is higher than the current highest bid (or asking price if there are no bids). Once made, bids cannot be withdrawn, and the auction contract holds the funds in escrow.
-- At the end of the auction, no more bids can be placed.
-- At the end of the auction, the `closeAuction` function needs to be called twice; once for the **buyer** and
-  once for the **seller**.
+- Los vendedores listan su NFT para subasta con un precio mínimo solicitado.
+- El NFT se transfiere a un escrow en el contrato del marketplace hasta que la subasta sea cancelada o finalizada.
+- Otros usuarios pueden hacer ofertas hasta que la subasta se cierre.
+- Los usuarios solo pueden hacer una oferta si es más alta que la oferta más alta actual (o el precio solicitado si no hay ofertas). Una vez realizada, las ofertas no se pueden retirar, y el contrato de la subasta mantiene los fondos en escrow.
+- Al final de la subasta, no se pueden realizar más ofertas.
+- Al final de la subasta, la función `closeAuction` debe ser llamada dos veces; una para el **comprador** y
+  una para el **vendedor**.
 
-## Creating a Listing
+## Crear un Listado
 
-Create a new listing by clicking the **New Listing** button in the dashboard.
+Crea un nuevo listado haciendo clic en el botón **Nuevo Listado** en el dashboard.

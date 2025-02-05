@@ -11,14 +11,14 @@ export const metadata = createMetadata({
 
 # Airdrop ERC1155
 
-Airdrop ERC1155 NFTs to a list of recipients.
+Airdrop de NFTs ERC1155 a una lista de destinatarios.
 
-The `AirdropERC1155` contract is suitable to use when you want to transfer ERC1155 NFTs to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop; they just receive it in a transfer.
-When airdropping tokens with this contract, you specify:
+El contrato `AirdropERC1155` es adecuado para usar cuando deseas transferir NFTs ERC1155 a una lista de direcciones de destinatarios, donde no se espera que los destinatarios reclamen individualmente su airdrop; simplemente lo reciben en una transferencia.
+Al hacer un airdrop de tokens con este contrato, debes especificar:
 
-- The address of the Edition (ERC-1155 contract) from which NFTs are being transferred.
-- The owner address of the NFTs from where the NFTs will be transferred to a list of the recipients.
-- An array of objects containing recipient-address, token-ids, and amounts for e.g.
+- La dirección de la Edición (contrato ERC-1155) desde la cual se están transfiriendo los NFTs.
+- La dirección del propietario de los NFTs desde donde los NFTs serán transferidos a la lista de destinatarios.
+- Un array de objetos que contiene la dirección del destinatario, los token-ids y las cantidades, por ejemplo:
 
 ```typescript
 [
@@ -35,12 +35,13 @@ When airdropping tokens with this contract, you specify:
 ];
 ```
 
-note: token-owner must approve their tokens to this airdrop contract, by calling approval related functions on the ERC1155 contract.
+nota: el propietario de los tokens debe aprobar sus tokens a este contrato de airdrop, llamando a las funciones relacionadas con la aprobación en el contrato ERC1155.
 
-**Estimated gas costs for airdropping tokens:**
-Cost of airdropping `1` ERC1155 token: ~`51,571` gas. Cost of airdropping each additional ERC1155 token: ~`42,672` gas.
+**Costos estimados de gas para hacer un airdrop de tokens:**
+Costo de hacer un airdrop de `1` token ERC1155: ~`51,571` gas. Costo de hacer un airdrop de cada token ERC1155 adicional: ~`42,672` gas.
 
-## Extensions
+## Extensiones
+
 
 - [Permissions](/contracts/build/extensions/general/Permissions)
 - [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)

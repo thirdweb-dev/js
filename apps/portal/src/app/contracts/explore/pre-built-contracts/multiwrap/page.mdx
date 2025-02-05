@@ -2,45 +2,45 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Multiwrap contract",
+		title: "Contrato Multiwrap",
 		icon: "contract",
 	},
-	title: "Multiwrap contract | thirdweb",
-	description: `The Multiwrap contract lets you wrap ERC20, ERC721 and ERC1155 tokens into a new wrapped ERC721 NFT`,
+	title: "Contrato Multiwrap | thirdweb",
+	description: `El contrato Multiwrap te permite envolver tokens ERC20, ERC721 y ERC1155 en un nuevo NFT ERC721 envuelto.`,
 });
 
 # Multiwrap
 
-The Multiwrap contract lets you wrap [ERC20](https://eips.ethereum.org/EIPS/eip-20),
-[ERC721](https://eips.ethereum.org/EIPS/eip-721) and
+El contrato **Multiwrap** te permite envolver tokens [ERC20](https://eips.ethereum.org/EIPS/eip-20),
+[ERC721](https://eips.ethereum.org/EIPS/eip-721) y
 [ERC1155](https://eips.ethereum.org/EIPS/eip-1155)
-tokens into a **new** wrapped ERC721 NFT.
-The wrapped NFT can be unwrapped (burned) back into the underlying tokens.
+en un **nuevo** NFT ERC721 envuelto.
+El NFT envuelto puede ser desenrollado (quemado) de nuevo en los tokens subyacentes.
 
-The wrapped NFT itself also acts as an ERC721 token, which can have the metadata you'd expect of an NFT,
-such as a name, image, description, etc.
+El propio NFT envuelto también actúa como un token ERC721, que puede tener los metadatos que esperarías de un NFT,
+como nombre, imagen, descripción, etc.
 
-## Use Cases & Examples
+## Casos de uso y ejemplos
 
-You could use the Multiwrap contract to:
+Puedes usar el contrato Multiwrap para:
 
-- Combine multiple NFTs into one NFT with new metadata
-- Wrap NFTs along with ERC20 tokens to easily trade them for other NFTs
-- Create a transparent "bundle" in your game, where the contents of the bundle are visible to the player
+- Combinar múltiples NFTs en un solo NFT con nuevos metadatos
+- Envolver NFTs junto con tokens ERC20 para intercambiarlos fácilmente por otros NFTs
+- Crear un "paquete" transparente en tu juego, donde el contenido del paquete es visible para el jugador
 
-## Smart Contract Design
+## Diseño del contrato inteligente
 
-For a detailed exploration of how the multiwrap smart contract works, why it was built,
-and it's limitations, visit our [Multiwrap Design Doc](/contracts/design-docs/multiwrap)!
+Para una exploración detallada de cómo funciona el contrato inteligente multiwrap, por qué fue construido,
+y sus limitaciones, visita nuestro [Documento de diseño de Multiwrap](/contracts/design-docs/multiwrap)!
 
-## Creating & Configuring the Multiwrap
+## Crear y configurar el Multiwrap
 
-Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/team).
+Aprende a crear y configurar tu contrato inteligente usando el [dashboard](https://thirdweb.com/team).
 
-### Contract Metadata
+### Metadatos del contrato
 
-To configure the image, name, and description of the contract, click the **Settings** tab:
+Para configurar la imagen, nombre y descripción del contrato, haz clic en la pestaña **Configuración**:
 
-### Royalty & Platform Fees
+### Regalías y tarifas de plataforma
 
-From the **Settings** tab, you also configure the royalty fee.
+Desde la pestaña **Configuración**, también puedes configurar la tarifa de regalías.

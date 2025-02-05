@@ -1,16 +1,16 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "GetBuyWithCryptoQuote | thirdweb .NET SDK",
-	description:
-		"Get a quote containing a TransactionRequest for swapping any token pair.",
+    title: "GetBuyWithCryptoQuote | thirdweb .NET SDK",
+    description:
+        "Obtén una cotización que contiene un TransactionRequest para intercambiar cualquier par de tokens.",
 });
 
 # GetBuyWithCryptoQuote
 
-Get a quote containing a TransactionRequest for swapping any token pair.
+Obtén una cotización que contiene un TransactionRequest para intercambiar cualquier par de tokens.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -26,58 +26,58 @@ var swapQuoteParams = new BuyWithCryptoQuoteParams(
 var quote = await ThirdwebPay.GetBuyWithCryptoQuote(client, swapQuoteParams);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### client (required)
+#### cliente (requerido)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
 
-#### BuyWithCryptoQuoteParams (required)
+#### BuyWithCryptoQuoteParams (requerido)
 
-A `BuyWithCryptoQuoteParams` object (with a helpful constructor) containing the following properties:
+Un objeto `BuyWithCryptoQuoteParams` (con un constructor útil) que contiene las siguientes propiedades:
 
 ```csharp
-string fromAddress; // Address executing the swap
-BigInteger? fromChainId; // Chain ID of the from token
-string fromTokenAddress; // Address of the from token
-string toTokenAddress; // Address of the to token
-string fromAmount; // Optional, amount of from token
-string fromAmountWei; // Optional, amount of from token in wei
-BigInteger? toChainId; // Optional, chain ID of the to token
-string toAmount; // Optional, amount of to token
-string toAmountWei; // Optional, amount of to token in wei
-string toAddress; // Optional, address to receive the to token
-int? maxSlippageBPS; // Optional, maximum slippage in basis points
-string intentId; // Optional, intent identifier used to link status to a BuyWithFiat onramp flow if any
-object purchaseData; // Optional, additional data to be passed and retained during the flow
+string fromAddress; // Dirección que ejecuta el intercambio
+BigInteger? fromChainId; // ID de la cadena del token de origen
+string fromTokenAddress; // Dirección del token de origen
+string toTokenAddress; // Dirección del token de destino
+string fromAmount; // Opcional, cantidad del token de origen
+string fromAmountWei; // Opcional, cantidad del token de origen en wei
+BigInteger? toChainId; // Opcional, ID de la cadena del token de destino
+string toAmount; // Opcional, cantidad del token de destino
+string toAmountWei; // Opcional, cantidad del token de destino en wei
+string toAddress; // Opcional, dirección para recibir el token de destino
+int? maxSlippageBPS; // Opcional, deslizamiento máximo en puntos básicos
+string intentId; // Opcional, identificador de intención usado para vincular el estado a un flujo de BuyWithFiat si lo hubiera
+object purchaseData; // Opcional, datos adicionales que se pasarán y retendrán durante el flujo
 ```
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
-### Return Value
+### Valor de retorno
 
-A `BuyWithCryptoQuoteResult` object containing the following properties:
+Un objeto `BuyWithCryptoQuoteResult` que contiene las siguientes propiedades:
 
 ```csharp
-string quoteId; // Quote identifier
-TransactionRequest transactionRequest; // TransactionRequest object for the swap
-Approval approval; // Approval transaction details if needed
-string fromAddress; // Address executing the swap
-Token fromToken; // Token object of the from token
-Token toToken; // Token object of the to token
-string fromAmountWei; // Amount of from token in wei
-string fromAmount; // Amount of from token
-string toAmountMinWei; // Minimum amount of to token in wei
-string toAmountMin; // Minimum amount of to token
-string toAmountWei; // Amount of to token in wei
-string toAmount; // Amount of to token
-List<PaymentToken> paymentTokens; // Payment token details
-List<ProcessingFee> processingFees; // Processing fee details
-Estimated estimated; // Estimated usd values, slippage, duration if available
-int maxSlippageBPS; // Maximum slippage in basis points
-string bridge // Bridge to be used if applicable
+string quoteId; // Identificador de la cotización
+TransactionRequest transactionRequest; // Objeto TransactionRequest para el intercambio
+Approval approval; // Detalles de la transacción de aprobación si es necesario
+string fromAddress; // Dirección que ejecuta el intercambio
+Token fromToken; // Objeto Token del token desde
+Token toToken; // Objeto Token del token hacia
+string fromAmountWei; // Cantidad del token desde en wei
+string fromAmount; // Cantidad del token desde
+string toAmountMinWei; // Cantidad mínima del token hacia en wei
+string toAmountMin; // Cantidad mínima del token hacia
+string toAmountWei; // Cantidad del token hacia en wei
+string toAmount; // Cantidad del token hacia
+List<PaymentToken> paymentTokens; // Detalles del token de pago
+List<ProcessingFee> processingFees; // Detalles de las tarifas de procesamiento
+Estimated estimated; // Valores estimados en USD, deslizamiento, duración si están disponibles
+int maxSlippageBPS; // Máximo deslizamiento en puntos básicos
+string bridge // Puente a usar si aplica
 ```
 
 </Details>

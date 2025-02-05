@@ -9,27 +9,28 @@ export const metadata = createMetadata({
 
 # Webhooks
 
-Pay can be configured to send webhook events to notify your application any time an event happens on your transaction. Pay sends a response, via a HTTP request, to any endpoint URLs that you have provided us in your Team > Project > Connect > Pay > Webhooks page in [thirdwe dashboard](https://thirdweb.com/team).
+Pay se puede configurar para enviar eventos de webhook que notifiquen a tu aplicación cada vez que ocurra un evento en tu transacción. Pay envía una respuesta, a través de una solicitud HTTP, a cualquier URL de endpoint que hayas proporcionado en la página Equipo > Proyecto > Connect > Pay > Webhooks en el [panel de thirdweb](https://thirdweb.com/team).
 
-## Events
+## Eventos
 
-To listen to events, create a webhook in your Team > Project > Connect > Pay > Webhooks page in [thirdweb dashboard](https://thirdweb.com/team). Webhook URLs must start with `https://`.
+Para escuchar eventos, crea un webhook en la página Equipo > Proyecto > Connect > Pay > Webhooks en el [panel de thirdweb](https://thirdweb.com/team). Las URLs de los webhooks deben comenzar con `https://`.
 
 | Event               | Description                         |
 | ------------------- | ----------------------------------- |
 | `purchase_complete` | A transaction is confirmed onchain. |
 
-### Purchase Complete
+### Compra completada
 
-Triggered when a transaction is confirmed onchain. This event provides information about the new status of the order and its transactionHash, as well as other relevant information.
+Se activa cuando una transacción se confirma en la cadena. Este evento proporciona información sobre el nuevo estado del pedido y su `transactionHash`, así como otros detalles relevantes.
 
-Example Response:
+Ejemplo de respuesta:
+
 
 <Tabs defaultValue="fiat">
 
 <TabsList>
-	<TabsTrigger value="fiat">Fiat Purchase</TabsTrigger>
-	<TabsTrigger value="crypto">Crypto Purchase</TabsTrigger>
+	<TabsTrigger value="fiat">Compra con Fiat</TabsTrigger>
+	<TabsTrigger value="crypto">Compra con Cripto</TabsTrigger>
 </TabsList>
 
 <TabsContent value='fiat'>
@@ -181,17 +182,18 @@ Example Response:
 </TabsContent>
 </Tabs>
 
-## Webhook Verification (Recommended)
+## Verificación de Webhook (Recomendado)
 
-Since any outside origin can call your webhook endpoint, it is recommended to verify the webhook signature to ensure a request comes from your Pay instance.
+Dado que cualquier origen externo puede realizar llamadas a tu endpoint de webhook, se recomienda verificar la firma del webhook para asegurarte de que una solicitud proviene de tu instancia de Pay.
 
-### Check the Signature
+### Verifica la Firma
 
-The payload body is signed with the webhook secret and provided in the X-Pay-Signature request header.
+El cuerpo del payload se firma con el secreto del webhook y se proporciona en el encabezado de la solicitud `X-Pay-Signature`.
 
-Get the webhook secret for your webhook endpoint from the dashboard.
+Obtén el secreto del webhook para tu endpoint desde el panel de control.
 
-This code example checks if the signature is valid:
+Este ejemplo de código verifica si la firma es válida:
+
 
 ```tsx
 const generateSignature = (
@@ -217,10 +219,12 @@ const isValidSignature = (
 };
 ```
 
-Check the timestamp
-The event timestamp is provided in the X-Pay-Timestamp request header.
+### Verifica la Marca de Tiempo
 
-This code example checks if the event exceeds a given expiration duration:
+La marca de tiempo del evento se proporciona en el encabezado de la solicitud `X-Pay-Timestamp`.
+
+Este ejemplo de código verifica si el evento excede una duración de expiración determinada:
+
 
 ```tsx
 export const isExpired = (
@@ -232,9 +236,9 @@ export const isExpired = (
 };
 ```
 
-### Example webhook endpoint
+### Ejemplo de endpoint para webhook
 
-This NodeJS code example listens for event notifications on the /webhook endpoint:
+Este ejemplo de código en NodeJS escucha notificaciones de eventos en el endpoint `/webhook`:
 
 ```tsx
 import express from "express";

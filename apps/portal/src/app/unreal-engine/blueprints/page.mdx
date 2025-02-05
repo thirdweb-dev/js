@@ -1,19 +1,19 @@
 import { createUnrealEngineMetadata } from "../util";
 
 export const metadata = createUnrealEngineMetadata({
-    title: "Blueprint Overview",
-    description: "Overview of the Thirdweb Unreal Engine SDK Blueprint system.",
+    title: "Resumen del Blueprint",
+    description: "Resumen del sistema de Blueprints del SDK de Unreal Engine de Thirdweb.",
 });
 
-# Blueprint Overview
+# Resumen del Blueprint
 
-All blueprint facing nodes are contained within the `UThirdwebFunctionLibrary` class. It provides a comprehensive set of
-Blueprint functions to interact with Thirdweb's wallet functionalities within Unreal Engine. This includes utilities
-for wallet creation, session management, signing messages, and more.
+Todos los nodos diseñados para blueprints están contenidos dentro de la clase `UThirdwebFunctionLibrary`. Proporciona un conjunto completo de
+funciones de Blueprint para interactuar con las funcionalidades de billetera de Thirdweb dentro de Unreal Engine. Esto incluye utilidades
+para la creación de billeteras, gestión de sesiones, firma de mensajes y más.
 
-## Internal Implementation Notes
+## Notas de Implementación Interna
 
-- The `BP_` function prefix is an unreal engine standard designed to ensure c++ developers do not use functions intended
-  for blueprint use
-- The `Conv_` function prefix is an unreal engine required convention to detect autocast nodes
-- All operator function prefixes are an unreal engine convention required to detect standard operator node wildcards
+- El prefijo de función `BP_` es un estándar de Unreal Engine diseñado para asegurar que los desarrolladores de C++ no utilicen funciones destinadas
+  al uso de Blueprints.
+- El prefijo de función `Conv_` es una convención requerida por Unreal Engine para detectar nodos de autocasting.
+- Todos los prefijos de las funciones de operadores son una convención de Unreal Engine necesaria para detectar los comodines de nodos operadores estándar.

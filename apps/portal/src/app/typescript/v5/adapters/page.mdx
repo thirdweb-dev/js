@@ -1,18 +1,18 @@
-# Adapters
+# Adaptadores
 
-The thirdweb SDK can work side by side with:
+El SDK de thirdweb puede trabajar junto con:
 
-- any wallet that supports EIP1193
+- Cualquier billetera que soporte EIP1193
 - ethers.js v5
 - ethers.js v6
 - viem
-- older versions of the @thirdweb-dev/sdk (using the ethers.js v5 adapter)
+- versiones anteriores del @thirdweb-dev/sdk (usando el adaptador de ethers.js v5)
 
-Adapters allow you to use contracts, providers and wallets from these libraries with the thirdweb SDK and vice versa.
+Los adaptadores te permiten usar contratos, proveedores y billeteras de estas librerías con el SDK de thirdweb y viceversa.
 
 ## EIP1193
 
-You can use any wallet that supports EIP1193 with the thirdweb SDK by converting it using `EIP1193.fromProvider`:
+Puedes usar cualquier billetera que soporte EIP1193 con el SDK de thirdweb convirtiéndola usando `EIP1193.fromProvider`:
 
 ```ts
 import { EIP1193 } from "thirdweb/wallets";
@@ -31,7 +31,7 @@ const account = await wallet.connect({
 await account.signMessage({ message: "Hello World" });
 ```
 
-You can also convert a thirdweb account to an EIP1193 provider using `EIP1193.toProvider`, which can then be used with other libraries:
+También puedes convertir una cuenta de thirdweb a un proveedor EIP1193 utilizando `EIP1193.toProvider`, el cual luego puede ser utilizado con otras librerías:
 
 ```ts
 import { EIP1193 } from "thirdweb/wallets";
@@ -51,7 +51,7 @@ const accounts = await provider.request({
 
 ## viem
 
-You can use an existing wallet client from viem with the thirdweb SDK by converting it using the `viemAdapter`:
+Puedes usar un cliente de billetera existente de viem con el SDK de thirdweb convirtiéndolo usando el `viemAdapter`:
 
 ```ts
 import { viemAdapter } from "thirdweb/adapters/viem";
@@ -70,14 +70,13 @@ const viemClientWallet = viemAdapter.walletClient.toViem({
   account,
 });
 ```
+También puedes convertir clientes públicos y contratos de viem desde y hacia el SDK de thirdweb.
 
-You can also convert viem public clients and contracts from and to the thirdweb SDK.
-
-View the [viemAdapter](/references/typescript/v5/viemAdapter) reference for more details.
+Consulta la referencia de [viemAdapter](/references/typescript/v5/viemAdapter) para más detalles.
 
 ## Ethers v6
 
-You can use an existing ethers.js v6 Signer with the thirdweb SDK by converting it using the `ethers6Adapter`:
+Puedes usar un Signer existente de ethers.js v6 con el SDK de thirdweb convirtiéndolo usando el `ethers6Adapter`:
 
 ```ts
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
@@ -96,7 +95,7 @@ await sendTransaction({
 });
 ```
 
-Similarly, you can use any wallets created with the thirdweb SDK with ethers.js v6 by converting them using the `ethers6Adapter`:
+De manera similar, puedes usar cualquier billetera creada con el SDK de thirdweb con ethers.js v6 convirtiéndola usando el `ethers6Adapter`:
 
 ```ts
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
@@ -119,13 +118,13 @@ const ethersSigner = await ethers6Adapter.signer.toEthers({
 });
 ```
 
-You can also convert ethers.js providers and contracts from and to the thirdweb SDK.
+También puedes convertir proveedores y contratos de ethers.js desde y hacia el SDK de thirdweb.
 
-View the [ethers6Adapter](/references/typescript/v5/ethers6Adapter) reference for more details.
+Consulta la referencia de [ethers6Adapter](/references/typescript/v5/ethers6Adapter) para más detalles.
 
 ## Ethers v5
 
-You can use an existing ethers.js v5 Signer with the thirdweb SDK by converting it using the `ethers5Adapter`:
+Puedes usar un Signer existente de ethers.js v5 con el SDK de thirdweb convirtiéndolo usando el `ethers5Adapter`:
 
 ```ts
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
@@ -144,7 +143,7 @@ const ethersSigner = await ethers5Adapter.signer.toEthers({
 });
 ```
 
-You can also convert ethers.js providers and contracts from and to the thirdweb SDK.
+También puedes convertir proveedores y contratos de ethers.js desde y hacia el SDK de thirdweb.
 
-View the [ethers5Adapter](/references/typescript/v5/ethers5Adapter) reference for more details.
+Consulta la referencia de [ethers5Adapter](/references/typescript/v5/ethers5Adapter) para más detalles.
 

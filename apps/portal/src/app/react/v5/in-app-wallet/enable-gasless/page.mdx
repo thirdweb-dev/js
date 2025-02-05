@@ -10,42 +10,42 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Sponsored Transactions | thirdweb",
+		title: "Transacciones Patrocinadas | thirdweb",
 		icon: "wallets",
 	},
-	title: "Sponsor Transactions with Account Abstraction",
+	title: "Patrocinar Transacciones con Abstracción de Cuentas",
 	description:
-		"By using account abstraction you can create a truly seamless user experience with gasless transactions, batched transactions, and full account recovery.",
+		"Usando la abstracción de cuentas, puedes crear una experiencia de usuario realmente fluida con transacciones sin gas, transacciones agrupadas y recuperación completa de cuentas.",
 });
 
-# Sponsor Transactions
+# Transacciones Patrocinadas
 
-By using [Account abstraction](/connect/account-abstraction) or [In-App Wallets](/connect/in-app-wallet/overview), you can sponsor all gas costs for your users transactions.
+Al usar [Abstracción de Cuentas](/connect/account-abstraction) o [Billeteras In-App](/connect/in-app-wallet/overview), puedes patrocinar todos los costos de gas para las transacciones de tus usuarios.
 
-<Callout title="Sponsored transactions" variant="info">
+<Callout title="Transacciones patrocinadas" variant="info">
 
-To set up sponsored transactions, set the `sponsorGas` option to `true` in the smart account configuration.
-All transactions performed with the smart account will then be sponsored by your application. Testnet transactions are free, but you need a valid credit card on file for mainnet transactions.
+Para configurar transacciones patrocinadas, establece la opción `sponsorGas` en `true` en la configuración de la cuenta inteligente.
+Todas las transacciones realizadas con la cuenta inteligente serán patrocinadas por tu aplicación. Las transacciones en testnet son gratuitas, pero necesitas una tarjeta de crédito válida para transacciones en mainnet.
 
 </Callout>
 
-## Live Playground
+## Playground en Vivo
 
-Try out the demo for yourself in the [sponsored transactions playground](https://playground.thirdweb.com/connect/account-abstraction/sponsor)
+Prueba la demostración por ti mismo en el [playground de transacciones patrocinadas](https://playground.thirdweb.com/connect/account-abstraction/sponsor)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demo"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/account-abstraction/sponsor"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 </Stack>
 
-## Sponsor transactions for all in-app wallets
+## Patrocinar transacciones para todas las billeteras in-app
 
-To enable account abstraction for in-app wallets, you need to add the `smartAccount` prop with the `inAppWallet` creation.
+Para habilitar la abstracción de cuentas para billeteras in-app, necesitas agregar el prop `smartAccount` con la creación de `inAppWallet`.
 
 ```jsx
 import { ConnectButton } from "thirdweb/react";
@@ -71,13 +71,13 @@ export default function App() {
 }
 ```
 
-This will create an in-app wallet and a smart account for the user. The smart account will be initialized with the in-app wallet as the owner.
+Esto creará una billetera in-app y una cuenta inteligente para el usuario. La cuenta inteligente será inicializada con la billetera in-app como la propietaria.
 
-You can sponsor transactions simply by passing `sponsrGas: true` to the `smartAccount` prop. This will allow the smart account to send transactions without the user needing to hold any ETH.
+Puedes patrocinar transacciones simplemente pasando `sponsorGas: true` al prop `smartAccount`. Esto permitirá que la cuenta inteligente envíe transacciones sin que el usuario necesite tener ETH.
 
-## Sponsor transactions for all connected wallets
+## Patrocinar transacciones para todas las billeteras conectadas
 
-To sponsor transactions for all connected wallets, you can use the `sponsorGas` prop on the `ConnectButton` or `useConnect` hook.
+Para patrocinar transacciones para todas las billeteras conectadas, puedes usar el prop `sponsorGas` en el `ConnectButton` o el hook `useConnect`.
 
 ```jsx
 import { createThirdwebClient } from "thirdweb";
@@ -93,8 +93,8 @@ export default function App() {
       <ConnectButton
         client={client}
         accountAbstraction={{
-          chain: sepolia, // the chain where your smart accounts will be or is deployed
-          sponsorGas: true, // enable or disable sponsored transactions
+          chain: sepolia, // la cadena donde se desplegarán o están desplegadas tus cuentas inteligentes
+          sponsorGas: true, // habilitar o deshabilitar transacciones patrocinadas
         }}
       />
     </ThirdwebProvider>
@@ -102,7 +102,7 @@ export default function App() {
 }
 ```
 
-or with the `useConnect` hook:
+o con el hook `useConnect`:
 
 ```jsx
 import { useConnect } from "thirdweb/react";
@@ -110,19 +110,19 @@ import { inAppWallet } from "thirdweb/wallets";
 import { sepolia } from "thirdweb/chains";
  
 function App() {
-  // 1. set the `accountAbstraction` configuration to convert wallets to smart accounts
+  // 1. Configura la configuración de `accountAbstraction` para convertir las billeteras en cuentas inteligentes
   const { connect } = useConnect({
     client,
     accountAbstraction: {
-      chain: sepolia, // the chain where your smart accounts will be or is deployed
-      sponsorGas: true, // enable or disable sponsored transactions
+      chain: sepolia, // la cadena donde se desplegarán o están desplegadas tus cuentas inteligentes
+      sponsorGas: true, // habilitar o deshabilitar transacciones patrocinadas
     },
   });
  
   const connectToSmartAccount = async () => {
-    // 2. connect with the admin wallet of the smart account
+    // 2. Conectar con la billetera admin de la cuenta inteligente
     connect(async () => {
-      const wallet = createWallet("io.metamask"); // or any other wallet
+      const wallet = createWallet("io.metamask"); // o cualquier otra billetera
       await wallet.connect({
         client,
         chain: sepolia,
@@ -137,4 +137,4 @@ function App() {
 }
 ```
 
-Once connected, all transactions sent via the `useSendTransaction` hook or the `TransactionButton` component will be sponsored.
+Una vez conectados, todas las transacciones enviadas a través del hook `useSendTransaction` o el componente `TransactionButton` serán patrocinadas.

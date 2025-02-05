@@ -12,21 +12,21 @@ import {
   Callout
 } from "@doc";
 
-[Migrate from React v4](/react/v5/migrate)
+[Migrar desde React v4](/react/v5/migrate)
 
-# Installation & Setups
+# Instalación y Configuración
 
-### High-level changes
+### Cambios principales
 
-- All imports from `@thirdweb-dev/*` should be replaced with `thirdweb` SDK with sub-exports.
-- The new SDK is `function` based rather than `class` based for better tree shaking and performance.
-- All contract calls are now prepared using `prepareContractCall` and sent using the `useSendTransaction` function.
-- Transactions are submitted without waiting for receipt by default. You can call the `useSendAndConfirmTransaction` function to wait for the transaction to be mined.
+- Todas las importaciones de `@thirdweb-dev/*` deben reemplazarse con el SDK `thirdweb` con sub-exportaciones.
+- El nuevo SDK está basado en `funciones` en lugar de `clases` para mejorar el tree shaking y el rendimiento.
+- Todas las llamadas a contratos ahora se preparan usando `prepareContractCall` y se envían usando la función `useSendTransaction`.
+- Las transacciones se envían sin esperar el recibo por defecto. Puedes llamar a la función `useSendAndConfirmTransaction` para esperar a que la transacción sea minada.
 
 
-## Installation
+## Instalación
 
-#### Below is how you install thirdweb v4 SDKs
+#### A continuación, te mostramos cómo instalar el SDK v4 de thirdweb
 <InstallTabs
 	npm="npm i @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
 	yarn="yarn add @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
@@ -34,7 +34,7 @@ import {
 	bun="bun i @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
 />
 
-#### With the latest version, everything comes in one single package
+#### Con la última versión, todo viene en un solo paquete
 <InstallTabs
 	npm="npm i thirdweb"
 	yarn="yarn add thirdweb"
@@ -43,14 +43,14 @@ import {
 />
 
 
-## Setups
+## Configuración
 
-Once you have installed the latest package (alongside the older version that you want to replace), you can start the migration process.
+Una vez que hayas instalado el paquete más reciente (junto con la versión anterior que deseas reemplazar), puedes comenzar el proceso de migración.
 
 ### ThirdwebProvider
 
-In the latest SDK, the [`ThirdwebProvider`](/references/typescript/v5/ThirdwebProvider) no longer accepts any prop such as `activeChain`, `clientId` or any extra SDK options.
-Instead, you only need to pass the clientId when necessary (we'll talk more about this in a few sections below).
+En el SDK más reciente, el [`ThirdwebProvider`](/references/typescript/v5/ThirdwebProvider) ya no acepta propiedades como `activeChain`, `clientId` o cualquier otra opción adicional del SDK.
+En su lugar, solo necesitas pasar el `clientId` cuando sea necesario (hablaremos más sobre esto en las siguientes secciones).
 
 ```tsx
 import { ThirdwebProvider } from "thirdweb/react";
@@ -60,13 +60,12 @@ import { ThirdwebProvider } from "thirdweb/react";
 </ThirdwebProvider>
 ```
 
-###### Progressive migration
+###### Migración progresiva
 
+Si actualmente estás usando el `@thirdweb-dev/sdk`, puedes migrar progresivamente al nuevo SDK `thirdweb`. Ambos SDKs pueden usarse en paralelo y son interoperables entre sí.
 
-If you're currently using the `@thirdweb-dev/sdk`, you can progressively migrate to the new `thirdweb` SDK. Both SDKs can be used side by side and are interoperable with each other.
-
-In React, you can mix and match the v4 and v5 `ThirdwebProvider`, that gives you access to the hooks and functionality of both SDKs.
-This way, once you have moved away from all the v4 functionalities, you can finally remove the `ThirdwebProviderV4` from your app.
+En React, puedes combinar los `ThirdwebProvider` de v4 y v5, lo que te da acceso a los hooks y funcionalidades de ambos SDKs.  
+De esta manera, una vez que hayas dejado de usar todas las funcionalidades de v4, finalmente podrás eliminar el `ThirdwebProviderV4` de tu aplicación.
 
 ```tsx
 import { ThirdwebProvider as ThirdwebProviderV4 } from "@thirdweb-dev/react";
@@ -79,14 +78,14 @@ import { ThirdwebProvider } from "thirdweb/react"; // v5
 </ThirdwebProviderV4>
 ```
 
-### Connecting wallets
+### Conectar billeteras
 
-Similar to v4's `ConnectWallet` component, the latest version has the [`ConnectButton`](/connect/sign-in/ConnectButton) component which has the same functionality.
+Similar al componente `ConnectWallet` de v4, la versión más reciente tiene el componente [`ConnectButton`](/connect/sign-in/ConnectButton) que tiene la misma funcionalidad.
 
-However, unlike with v4 where the number of supported wallets is limited (about 20), and adding more wallets mean your app becomes heavier,
-the SDK v5 supports [over 300 wallets](/typescript/v5/supported-wallets) with virtually no impact to your application.
+Sin embargo, a diferencia de v4, donde el número de billeteras soportadas es limitado (alrededor de 20), y agregar más billeteras hace que tu aplicación se vuelva más pesada,  
+el SDK v5 soporta [más de 300 billeteras](/typescript/v5/supported-wallets) con prácticamente ningún impacto en tu aplicación.
 
-Here's how you use the new `ConnectButton`:
+Así es como usas el nuevo `ConnectButton`:
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -99,13 +98,13 @@ const client = createThirdwebClient({
 <ConnectButton client={client} />
 ```
 
-To learn more about the new `ConnectButton`, head over to the [Playground](https://playground.thirdweb.com/connect/sign-in/button).
+Para aprender más sobre el nuevo `ConnectButton`, dirígete al [Playground](https://playground.thirdweb.com/connect/sign-in/button).
 
-Notice how you are passing the thirdweb client to the component itself and not to the `ThirdwebProvider` like in v4?
-By not putting every config inside the context wrapper, we were able to make the SDK v5 much more lightweight since you only load what you need!
+¿Notas cómo estás pasando el cliente de thirdweb al componente directamente y no al `ThirdwebProvider` como en v4?  
+Al no poner toda la configuración dentro del wrapper del contexto, pudimos hacer que el SDK v5 sea mucho más ligero, ¡ya que solo cargas lo que necesitas!
 
+Consejo: Puedes reutilizar el objeto del cliente de thirdweb colocándolo en un archivo y exportándolo.
 
-Tip: You can reuse the thirdweb client object by putting it in a file and export it.
 ```ts
 // @lib/client.ts
 

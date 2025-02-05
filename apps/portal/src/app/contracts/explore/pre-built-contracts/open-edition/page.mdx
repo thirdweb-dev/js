@@ -9,17 +9,18 @@ export const metadata = createMetadata({
 	description: `The OpenEditionERC721 contract is an 'open edition' ERC721 NFT collection. The contract uses the ERC-721A standard`,
 });
 
-# Open Edition ERC721
+# Edición Abierta ERC721
 
-The `OpenEditionERC721` contract is an 'open edition' ERC721 NFT collection. The contract uses the [ERC-721A](/contracts/build/extensions/erc-721/ERC721) standard.
+El contrato `OpenEditionERC721` es una colección de NFTs ERC721 de 'edición abierta'. El contrato utiliza el estándar [ERC-721A](/contracts/build/extensions/erc-721/ERC721).
 
-The `OpenEditionERC721` contract is ideal when you want to release an open edition of NFTs like the Base, `Introduced` collection.
+El contrato `OpenEditionERC721` es ideal cuando deseas liberar una edición abierta de NFTs como la colección Base, `Introduced`.
 
-All NFTs in the contract have shared metadata except that each NFT has its unique token ID appended to the NFT's name. An admin can set this shared metadata at any time.
+Todos los NFTs en el contrato tienen metadatos compartidos, excepto que cada NFT tiene su ID de token único añadido al nombre del NFT. Un administrador puede configurar estos metadatos compartidos en cualquier momento.
 
-The contract does not require the admin to set a limit to the total supply of NFTs. The admin can set claim phases (like in NFT Drop) to apply restrictions on the minting of NFTs, such as a price, mint start and end times, etc.
+El contrato no requiere que el administrador establezca un límite en la cantidad total de NFTs. El administrador puede establecer fases de reclamación (como en NFT Drop) para aplicar restricciones en la acuñación de NFTs, como un precio, horarios de inicio y fin de acuñación, etc.
 
-## Extensions
+## Extensiones
+
 
 - [ERC721](/contracts/build/extensions/erc-721/ERC721)
 - [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)

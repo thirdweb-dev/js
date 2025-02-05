@@ -4,31 +4,31 @@ import { ReactIcon } from "@/icons";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Transact from any chain or token | thirdweb",
-	description: "Let users transact from any chain or token",
+	title: "Transacciones desde cualquier cadena o token | thirdweb",
+	description: "Permite a los usuarios realizar transacciones desde cualquier cadena o token",
 });
 
-# Chain Abstraction
+# Abstracción de Cadenas
 
-Facilitate transactions by letting users pay with any token from any chain, or with fiat.
+Facilita las transacciones permitiendo que los usuarios paguen con cualquier token de cualquier cadena, o con fiat.
 
-## Live Playground
+## Playground en Vivo
 
-Try out the demo for yourself in the [live playground](https://playground.thirdweb.com/connect/pay/transactions)
+Prueba la demostración por ti mismo en el [playground en vivo](https://playground.thirdweb.com/connect/pay/transactions)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demo"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/pay/transactions"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 </Stack>
 
-## Usage with PayEmbed
+## Uso con PayEmbed
 
-You can use the `PayEmbed` component to let users execute a transaction from any chain, paying with any token.
+Puedes usar el componente `PayEmbed` para permitir que los usuarios ejecuten una transacción desde cualquier cadena, pagando con cualquier token.
 
 ```tsx
 import { claimTo } from "thirdweb/extensions/erc1155";
@@ -59,7 +59,7 @@ function App() {
 }
 ```
 
-Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
+Consulta la [referencia de la API de PayEmbed](/references/typescript/v5/PayEmbed) para más información.
 
 <Stack>
 
@@ -67,14 +67,13 @@ Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for m
 	title="PayEmbed"
 	icon={ReactIcon}
 	href="/references/typescript/v5/PayEmbed"
-	description="Prebuilt UI to fund wallets with crypto or fiat"
+	description="Interfaz preconstruida para financiar billeteras con cripto o fiat"
 />
 
 </Stack>
 
+## Uso con transacciones regulares
 
-## Usage with regular transactions
+Cualquier transacción enviada con `useSendTransaction` o con `TransactionButton` pedirá al usuario que elija un método de pago diferente si no tiene suficiente saldo para la transacción.
 
-Any transaction sent with `useSendTransaction` or with `TransactionButton` will prompt the user to choose a different payment method if they don't have enough balance for the transaction.
-
-You can turn off this behaviour by setting the `payModal` option to `false`.
+Puedes desactivar este comportamiento estableciendo la opción `payModal` en `false`.

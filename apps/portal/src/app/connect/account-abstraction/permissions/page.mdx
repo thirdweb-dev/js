@@ -3,27 +3,27 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Account Permissions & Session Keys",
+		title: "Permisos de Cuenta y Claves de Sesión",
 		icon: "thirdweb",
 	},
-	title: "Account Permissions & Session Keys | thirdweb",
+	title: "Permisos de Cuenta y Claves de Sesión | thirdweb",
 	description:
-		"All of the account contracts - Simple and Managed - share the same permission model. In this section, we'll describe this permission model in detail",
+		"Todos los contratos de cuenta - Simple y Administrada - comparten el mismo modelo de permisos. En esta sección, describiremos este modelo en detalle.",
 });
 
-# Account Permissions & Session Keys
+# Permisos de Cuenta y Claves de Sesión
 
-All of the account contracts - [Simple](https://thirdweb.com/thirdweb.eth/AccountFactory) and [Managed](https://thirdweb.com/thirdweb.eth/ManagedAccountFactory) - share the same permission model. In this section, we'll describe this permission model in detail.
+Todos los contratos de cuenta - [Simple](https://thirdweb.com/thirdweb.eth/AccountFactory) y [Administrada](https://thirdweb.com/thirdweb.eth/ManagedAccountFactory) - comparten el mismo modelo de permisos. En esta sección, describiremos este modelo en detalle.
 
-An account recognizes only two types of actors: _Session Keys_ and _Admins_.
+Una cuenta reconoce solo dos tipos de actores: _Claves de Sesión_ y _Administradores_.
 
-## 1. Admins
+## 1. Administradores
 
-Admins have **unrestricted access** to the account; call any functions on the contract, use the contract without going through the ERC-4337 infrastructure (bundlers, EntryPoint, etc.), withdraw the account's native token balance, and so on.
+Los administradores tienen **acceso sin restricciones** a la cuenta; pueden llamar a cualquier función en el contrato, usar el contrato sin pasar por la infraestructura de ERC-4337 (bundlers, EntryPoint, etc.), retirar el saldo de tokens nativos de la cuenta, entre otras acciones.
 
-### Assigning Admin Permissions
+### Asignación de Permisos de Administrador
 
-Existing admins on the account can add new admins, remove existing admins or renounce their own admin status.
+Los administradores existentes en la cuenta pueden agregar nuevos administradores, eliminar administradores existentes o renunciar a su estado de administrador.
 
 <Tabs defaultValue="react">
 
@@ -89,22 +89,22 @@ await sendTransaction({
 </TabsContent>
 </Tabs>
 
-## 2. Session Keys
+## 2. Claves de Sesión
 
-Session Keys are additional authorized signers that must go through ERC-4337 infrastructure (bundlers, EntryPoint, etc.) to use an account to execute transactions. Session keys can use an account under certain restrictions.
+Las claves de sesión son firmantes adicionales autorizados que deben pasar por la infraestructura de ERC-4337 (bundlers, EntryPoint, etc.) para usar una cuenta y ejecutar transacciones. Las claves de sesión pueden utilizar una cuenta bajo ciertas restricciones.
 
-### Assigning Session Key Permissions
+### Asignación de Permisos a las Claves de Sesión
 
-Each individual session key has its own permissions to use the account. Only admins can set the permissions for session keys.
+Cada clave de sesión individual tiene sus propios permisos para usar la cuenta. Solo los administradores pueden establecer los permisos para las claves de sesión.
 
-Session keys can be assigned the following permissions:
+Las claves de sesión pueden asignarse con los siguientes permisos:
 
-- [Required] Allow interaction with specific contracts with the account ("*" for any contracts)
-- [Optional] Have a maximum amount of native tokens that can be transferred per transaction (defaults to 0 eth, transactions with value will be rejected)
-- [Optional] Have access to the account only during a specific time window (defaults to 10 years from now)
+- [Obligatorio] Permitir la interacción con contratos específicos usando la cuenta ("*" para cualquier contrato).
+- [Opcional] Definir un monto máximo de tokens nativos que se pueden transferir por transacción (por defecto es 0 ETH, por lo que las transacciones con valor serán rechazadas).
+- [Opcional] Restringir el acceso a la cuenta a un período de tiempo específico (por defecto es 10 años a partir de ahora).
 
-These restrictions are set in the `SignerPermissionsRequest` struct.
-To set the permissions for a given signer, the `setPermissionsForSigner` function is called.
+Estas restricciones se establecen en la estructura `SignerPermissionsRequest`.  
+Para definir los permisos de un firmante, se debe llamar a la función `setPermissionsForSigner`.
 
 <Tabs defaultValue="react">
 

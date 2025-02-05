@@ -2,43 +2,44 @@ import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
     title: "IThirdwebWallet.GetTransactionCount | Thirdweb .NET SDK",
-    description: "Extension method to get the transaction count (nonce) of a wallet on a specific chain.",
+    description: "Método de extensión para obtener el contador de transacciones (nonce) de una billetera en una cadena específica.",
 });
 
 # IThirdwebWallet.GetTransactionCount
 
-This method retrieves the transaction count (i.e., nonce) for a specified wallet address on a given chain.
+Este método recupera el contador de transacciones (es decir, nonce) para una dirección de billetera especificada en una cadena dada.
 
-## Usage
+## Uso
+
 
 ```csharp
 BigInteger transactionCount = await wallet.GetTransactionCount(chainId, address);
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
-### wallet (required)
+### wallet (obligatorio)
 
-An instance of `IThirdwebWallet`. This represents the wallet for which you want to retrieve the transaction count.
+Una instancia de `IThirdwebWallet`. Esto representa la billetera para la cual deseas obtener el contador de transacciones.
 
-### chainId (required)
+### chainId (obligatorio)
 
-The chain ID from which you want to retrieve the transaction count.
+El ID de la cadena desde la cual deseas obtener el contador de transacciones.
 
-### address (required)
+### address (obligatorio)
 
-The wallet address for which you want to retrieve the transaction count.
+La dirección de la billetera para la cual deseas obtener el contador de transacciones.
 
-### blocktag (optional)
+### blocktag (opcional)
 
-The block tag to retrieve the transaction count at. Defaults to `"pending"`. You can set this to `"latest"` or `"earliest"`.
+La etiqueta del bloque para obtener el contador de transacciones. Por defecto es `"pending"`. Puedes configurarlo como `"latest"` o `"earliest"`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### BigInteger
 
-The method returns a `BigInteger` representing the transaction count (nonce) of the wallet.
+El método devuelve un `BigInteger` representando el contador de transacciones (nonce) de la billetera.
 
 </Details>

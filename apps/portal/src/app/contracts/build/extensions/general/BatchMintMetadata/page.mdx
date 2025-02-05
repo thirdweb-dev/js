@@ -2,13 +2,14 @@ import { Details, createMetadata, GithubButtonLink } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "BatchMintMetadata contract",
+		title: "Contrato BatchMintMetadata",
 		icon: "solidity",
 	},
-	title: "BatchMintMetadata | thirdweb contract",
+	title: "BatchMintMetadata | Contrato de thirdweb",
 	description:
-		"The BatchMintMetadata smart contract is an extension for any NFT contract. It lets the smart contract using this extension set the metadata for n number of NFTs in one transaction",
+		"El contrato inteligente BatchMintMetadata es una extensión para cualquier contrato NFT. Permite que el contrato inteligente que usa esta extensión establezca los metadatos para n número de NFTs en una sola transacción",
 });
+
 
 # BatchMintMetadata (ERC1155 & ERC721)
 
@@ -16,13 +17,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/BatchMintMetadata.sol";
 ```
 
-The `BatchMintMetadata` smart contract is an extension for any NFT contract. It lets the smart contract using this extension set the metadata for `n` number of NFTs in one transaction. A single base URI for a batch of `n` NFTs is defined, where the metadata URI for each NFT in a relevant batch is `baseURI/tokenId`.
+El contrato inteligente `BatchMintMetadata` es una extensión para cualquier contrato NFT. Permite que el contrato inteligente que usa esta extensión establezca los metadatos para `n` número de NFTs en una sola transacción. Se define una URI base para un lote de `n` NFTs, donde la URI de metadatos para cada NFT en un lote relevante es `baseURI/tokenId`.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/BatchMintMetadata.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -33,20 +34,19 @@ import "@thirdweb-dev/contracts/extension/BatchMintMetadata.sol";
 contract MyContract is BatchMintMetadata {}
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-None of the base contracts implement this extension.
+Ninguno de los contratos base implementa esta extensión.
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="getBaseURICount">
 
 ```solidity
 function getBaseURICount() public view returns (uint256);
 ```
-
-- Returns the total number of batches of NFTs, where each batch has a single base URI and metadata for NFTs in the batch is stored as `baseURI/tokenId`.
-- This value is updated when the metadata of a new set of NFTs is 'batch minted' using the `_batchMintMetadata` function.
+- Devuelve el número total de lotes de NFTs, donde cada lote tiene una única URI base y los metadatos de los NFTs en el lote se almacenan como `baseURI/tokenId`.
+- Este valor se actualiza cuando los metadatos de un nuevo conjunto de NFTs son 'acuñados por lotes' usando la función `_batchMintMetadata`.
 
 </Details>
 
@@ -56,7 +56,7 @@ function getBaseURICount() public view returns (uint256);
 function getBatchIdAtIndex(uint256 _index) public view returns (uint256);
 ```
 
-- The extension smart contract stores an array of 'batch IDs' i.e. IDs for different batches of NFTs minted on the contract. This function returns the batch ID at a given index in this ordered array of batch IDs.
+- El contrato inteligente de la extensión almacena un arreglo de 'IDs de lotes', es decir, IDs para diferentes lotes de NFTs acuñados en el contrato. Esta función devuelve el ID del lote en un índice dado de este arreglo ordenado de IDs de lotes.
 
 </Details>
 
@@ -66,8 +66,8 @@ function getBatchIdAtIndex(uint256 _index) public view returns (uint256);
 function _getBatchId(uint256 tokenId) internal view returns (uint256 batchId, uint256 index);
 ```
 
-- Returns the batch ID for the batch of NFTs the given tokenId belongs to.
-- Parameter `tokenId`: the tokenId for which to retrieve the associated batch ID.
+- Devuelve el ID del lote para el lote de NFTs al que pertenece el `tokenId` dado.
+- Parámetro `tokenId`: el `tokenId` para el cual recuperar el ID de lote asociado.
 
 </Details>
 
@@ -77,8 +77,8 @@ function _getBatchId(uint256 tokenId) internal view returns (uint256 batchId, ui
 function _getBaseURI(uint256 _tokenId) internal view returns (string memory);
 ```
 
-- Returns the base metadata URI for the given tokenId.
-- Parameter `tokenId`: the tokenId for which to retrieve the associated base metadata URI.
+- Devuelve la URI base de metadatos para el `tokenId` dado.
+- Parámetro `tokenId`: el `tokenId` para el cual recuperar la URI base de metadatos asociada.
 
 </Details>
 
@@ -88,9 +88,9 @@ function _getBaseURI(uint256 _tokenId) internal view returns (string memory);
 function _setBaseURI(uint256 batchId, string memory baseURI) internal;
 ```
 
-- Update the base metadata URI for a given batch of NFTs.
-- Parameter `batchID`: the batch ID of the batch of NFTs whose metadata URI is to be updated.
-- Parameter `baseURI`: the value to set as the new base URI for the relevant batch of NFTs.
+- Actualiza la URI base de metadatos para un lote dado de NFTs.
+- Parámetro `batchID`: el ID del lote de NFTs cuyo URI de metadatos se actualizará.
+- Parámetro `baseURI`: el valor que se establecerá como la nueva URI base para el lote relevante de NFTs.
 
 </Details>
 
@@ -104,9 +104,9 @@ function _batchMintMetadata(
 ) internal returns (uint256 nextTokenIdToMint, uint256 batchId);
 ```
 
-- Mints a batch of tokenIds and associates a common baseURI to all those Ids.
-- Parameter `_startId`: The lowest tokenId from the batch of NFTs to mint. It is assumed that token Ids are assigned to NFTs in a serial order, when batch minting e.g. `[startId, startId + 1, ... n-1, n]`
-- Parameter `_amountToMint`: The number of NFTs to mint at once.
-- Parameter `_baseURIForTokens`: The common base URI for the batch of NFTs being minted, where for a batch of NFTs with token IDs `[startId, startId + 1, ... n-1, n]`, each NFT's associated metadata URI is `[baseURI/startId, baseURI/startId+1, ... baseURI/n-1, baseURI/n]`
+- Acuña un lote de `tokenIds` y asocia una URI base común a todos esos IDs.
+- Parámetro `_startId`: El tokenId más bajo del lote de NFTs a acuñar. Se supone que los tokenIds se asignan a los NFTs en orden serial, cuando se acuñan por lotes, por ejemplo, `[startId, startId + 1, ... n-1, n]`.
+- Parámetro `_amountToMint`: El número de NFTs a acuñar a la vez.
+- Parámetro `_baseURIForTokens`: La URI base común para el lote de NFTs que se están acuñando, donde para un lote de NFTs con tokenIds `[startId, startId + 1, ... n-1, n]`, la URI de metadatos asociada para cada NFT es `[baseURI/startId, baseURI/startId+1, ... baseURI/n-1, baseURI/n]`.
 
 </Details>

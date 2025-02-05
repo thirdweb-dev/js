@@ -3,33 +3,32 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721ClaimConditions contract",
+		title: "Contrato ERC721ClaimConditions",
 		icon: "solidity",
 	},
-	title: "ERC721ClaimConditions | thirdweb contract",
+	title: "ERC721ClaimConditions | contrato de thirdweb",
 	description:
-		"Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by implementing ERC721 and DropSinglePhase extensions",
+		"Permite que otras billeteras reclamen/minte tokens del contrato bajo los criterios de condiciones de reclamo implementando las extensiones ERC721 y DropSinglePhase",
 });
 
-# ERC721ClaimConditions
+
+# ERC721ClaimConditions 
 
 ```solidity
 import "@thirdweb-dev/contracts/eip/ERC721.sol";
 import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
 ```
 
-Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by
-implementing [`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase) extensions.
+Permite que otras billeteras reclamen/minte tokens del contrato bajo los criterios de condiciones de reclamo implementando las extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`DropSinglePhase`](/contracts/build/extensions/general/DropSinglePhase).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DropSinglePhase.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC721ClaimConditions` detectable extension.
-The functions which are available to be (optionally) overridden are detailed.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de las extensiones que componen la extensión detectable `ERC721ClaimConditions`.
+Se detallan las funciones que están disponibles para ser (opcionalmente) sobrecargadas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -51,11 +50,11 @@ contract Contract is ERC721A, LazyMint, DropSinglePhase {
     {}
 
     function _canLazyMint() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _canSetClaimConditions() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _collectPriceOnClaim(
@@ -64,7 +63,7 @@ contract Contract is ERC721A, LazyMint, DropSinglePhase {
         address _currency,
         uint256 _pricePerToken
     ) internal virtual override {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
@@ -73,11 +72,11 @@ contract Contract is ERC721A, LazyMint, DropSinglePhase {
         override
         returns (uint256 startTokenId)
     {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)

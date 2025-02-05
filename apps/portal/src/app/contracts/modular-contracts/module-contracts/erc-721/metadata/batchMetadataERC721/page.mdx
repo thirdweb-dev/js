@@ -12,39 +12,38 @@ export const metadata = createMetadata({
 
 # BatchMetadataERC721
 
-## Description
+## Descripción
 
-The `BatchMetadataERC721` contract is a module that provides batch metadata management for ERC-721 tokens. It includes functionalities for uploading, updating, and retrieving metadata in batches efficiently. This contract helps manage metadata for large collections of tokens by organizing them in batches.
+El contrato `BatchMetadataERC721` es un módulo que proporciona gestión de metadatos en lotes para tokens ERC-721. Incluye funcionalidades para cargar, actualizar y recuperar metadatos de manera eficiente en lotes. Este contrato ayuda a gestionar los metadatos para colecciones grandes de tokens organizándolos en lotes.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/modular-contracts/blob/dev/src/module/token/metadata/BatchMetadataERC721.sol" />
 
-## Callback Functions
+## Funciones de Callback
 
-| Function                   | Description                                                                                |
-|----------------------------|--------------------------------------------------------------------------------------------|
-| `onTokenURI`               | Callback function that returns the token URI for ERC-721 tokens.                           |
-| `updateMetadataERC721`     | Callback function that updates metadata for a batch of ERC-721 tokens.                     |
+| Función                  | Descripción                                                                                   |
+|--------------------------|-----------------------------------------------------------------------------------------------|
+| `onTokenURI`             | Función de callback que retorna la URI del token para los tokens ERC-721.                     |
+| `updateMetadataERC721`   | Función de callback que actualiza los metadatos para un lote de tokens ERC-721.                |
 
-## Fallback Functions
+## Funciones de Fallback
 
-| Function                     | Description                                                                               |
-|------------------------------|-------------------------------------------------------------------------------------------|
-| `uploadMetadata`             | Allows uploading of metadata. Requires minter role.                                       |
-| `setBaseURI`                 | Sets the base URI for the token metadata. Requires manager role.                          |
-| `getAllMetadataBatches`      | Retrieves all metadata batches uploaded so far.                                           |
-| `nextTokenIdToMint`          | Returns the next token ID to be minted.                                                   |
-| `getBatchId`                 | Returns the batch ID for a specific token ID.                                              |
-| `getBatchRange`              | Returns the range of token IDs for a specific metadata batch.                             |
+| Función                     | Descripción                                                                                   |
+|-----------------------------|-----------------------------------------------------------------------------------------------|
+| `uploadMetadata`            | Permite cargar metadatos. Requiere el rol de minter.                                          |
+| `setBaseURI`                | Establece la URI base para los metadatos de los tokens. Requiere el rol de administrador.     |
+| `getAllMetadataBatches`     | Recupera todos los lotes de metadatos cargados hasta ahora.                                   |
+| `nextTokenIdToMint`         | Retorna el siguiente ID de token que se va a acuñar.                                          |
+| `getBatchId`                | Retorna el ID del lote para un token específico.                                               |
+| `getBatchRange`             | Retorna el rango de IDs de tokens para un lote de metadatos específico.                       |
 
-## Required Interfaces
+## Interfaces Requeridas
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC-721`  | `0x80ac58cd`|
 
-## Supported Interfaces
+## Interfaces Compatibles
 
 | Interface  | ID          |
 |------------|-------------|
 | `ERC4906`  | `0x49064906`|
-

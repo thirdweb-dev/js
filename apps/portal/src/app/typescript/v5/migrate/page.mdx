@@ -5,43 +5,45 @@ import {
   ReactIcon,
 } from "@/icons";
 
-# Migration from TypeScript SDK v4
+# Migración desde TypeScript SDK v4
 
 <ArticleIconCard
-	title="Looking to migrate to React SDK v5?"
+	title="¿Buscas migrar al React SDK v5?"
 	icon={ReactIcon}
 	href="/react/v5/migrate"
-	description="Go to this page for an in-depth React migration guide"
+	description="Consulta esta página para una guía detallada de migración a React"
 />
 
-## Why you should migrate to SDK v5
+## ¿Por qué deberías migrar al SDK v5?
 
-#### 1. Better performance, happier clients
-The new SDK is built with performance in mind and proper tree-shaking. Therefore, the minimum bundle size of your application is greatly reduced.
+#### 1. Mejor rendimiento, clientes más felices
+El nuevo SDK está diseñado con el rendimiento en mente y con un adecuado tree-shaking. Por lo tanto, el tamaño mínimo del paquete de tu aplicación se reduce significativamente.
 
-Below is the comparison of 2 similar applications, using `ConnectWallet` (v4) & `ConnectButton` (v5), which are identical in term of functionality.
+A continuación, se muestra la comparación entre dos aplicaciones similares, utilizando `ConnectWallet` (v4) y `ConnectButton` (v5), que son idénticas en funcionalidad.
 
 |                     | SDK v4 | SDK v5
 | ------------------- | ------ | -------
-| Minimum bundle size | <span style={{color: 'red'}}>766kb</span>  | <span style={{color: 'green'}}>104kb</span>
-| Dependencies        | `"@thirdweb-dev/react": "^4.9.4"`<br/>`"@thirdweb-dev/sdk": "^4.0.99"`<br/>`"ethers": "^5.7.2"`| `"thirdweb": "^5.42.0"`
+| Tamaño mínimo del paquete | <span style={{color: 'red'}}>766kb</span>  | <span style={{color: 'green'}}>104kb</span>
+| Dependencias        | `"@thirdweb-dev/react": "^4.9.4"`<br/>`"@thirdweb-dev/sdk": "^4.0.99"`<br/>`"ethers": "^5.7.2"`| `"thirdweb": "^5.42.0"`
 
-_(Built with Next.js 14.2.5)_
+_(Compilado con Next.js 14.2.5)_
 
-#### 2. More wallets supported
-The SDK v4 only supports a handful of web3 wallets and the more wallets you want to include in your app, the heavier it becomes.
+#### 2. Más billeteras compatibles
+El SDK v4 solo es compatible con un número limitado de billeteras web3 y, a medida que agregas más billeteras a tu aplicación, esta se vuelve más pesada.
 
-SDK v5 supports over 300 wallets and this number is increasing! You can [interact with wallets based on their unique IDs](/typescript/v5/wallets#example-connect-a-wallet-and-access-an-account-to-send-a-transaction).
-Hence, adding more wallets to your app has little to no effect to the final bundle.
+El SDK v5 admite más de 300 billeteras y ¡este número sigue creciendo! Puedes [interactuar con las billeteras según sus IDs únicos](/typescript/v5/wallets#example-connect-a-wallet-and-access-an-account-to-send-a-transaction).
+Por lo tanto, agregar más billeteras a tu aplicación tiene poco o ningún impacto en el tamaño final del paquete.
 
-#### 3. Flexibility with React hooks
-When building a React web3 application with thirdweb SDK v4, you have access to a set of prebuilt React hooks which let you conveniently interact with your smart contracts.
+#### 3. Flexibilidad con React hooks
+Al desarrollar una aplicación web3 en React con el SDK v4 de thirdweb, tienes acceso a un conjunto de hooks preconstruidos que te permiten interactuar fácilmente con tus contratos inteligentes.
 
-The issue with this approach is that, the number of smart-contract methods is ever-increasing, and for each hook that does not exist, we have to dedicate time & energy
-to write, test & maintain. This process is time-consuming & frankly, the more React hooks you add to your app, the slower and more unmaintainable your projects become.
+El problema con este enfoque es que el número de métodos en los contratos inteligentes está en constante aumento, y para cada hook que no existe, tenemos que dedicar tiempo y esfuerzo
+para escribirlo, probarlo y mantenerlo. Este proceso consume mucho tiempo y, sinceramente, cuantas más dependencias de hooks de React agregues a tu aplicación, más lenta y difícil de mantener se vuelve.
 
-In SDK v5, we introduce a novel concept called "prebuilt extensions" - a set of read & write methods for popular contracts which you can _plug & play_. For example:
-###### Read contract states with v5
+En el SDK v5, introducimos un nuevo concepto llamado "extensiones preconstruidas": un conjunto de métodos de lectura y escritura para contratos populares que puedes _conectar y usar_. Por ejemplo:
+
+###### Leer estados del contrato con v5
+
 ```ts
 // Get a list of owned ERC721 tokens in a wallet
 import { useReadContract } from "thirdweb/react";
@@ -50,7 +52,8 @@ import { getOwnedNFTs } from "thirdweb/extensions/erc721";
 const { data } = useReadContract(getOwned, { contract, owner });
 ```
 
-###### Write to contract with v5
+###### Escribir en un contrato con v5
+
 ```ts
 // Claim an NFT from thirdweb Drop contract
 import { useSendTransaction } from "thirdweb/react";
@@ -65,36 +68,36 @@ const transaction = claimTo({
 sendTx(transaction);
 ```
 
-As you can see, by pairing the contract extensions with `useReadContract` (for read) and `useSendTransaction` (for write),
-we are able to greatly reduce the amount of code that is packaged & shipped to the end users. Plus, with this approach we can dedicate more time
-to building contract extensions. The SDK v5 currenty supports over hundreds of extensions, with some popular protocols like Uniswap, Farcaster, Lens & more to come.
+Como puedes ver, al combinar las extensiones de contrato con `useReadContract` (para lectura) y `useSendTransaction` (para escritura),
+podemos reducir significativamente la cantidad de código que se empaqueta y envía a los usuarios finales. Además, con este enfoque podemos dedicar más tiempo 
+a desarrollar extensiones de contrato. Actualmente, el SDK v5 admite cientos de extensiones, incluyendo protocolos populares como Uniswap, Farcaster, Lens y más por venir.
 
-View a list of [supported extensions](/typescript/v5/extensions/built-in) here, or [build your own](/typescript/v5/extensions/create)!
+Consulta la lista de [extensiones compatibles](/typescript/v5/extensions/built-in) aquí, o [crea tu propia extensión](/typescript/v5/extensions/create)!
 
 
 
-#### 4. Access to latest software
-Currently the SDK v4 is using `ethers@5.7.2` and `@tanstack/react-query@^4` which can be considered "outdated".
-We unfortunately do not have a plan to upgrade v4's dependencies to the latest versions. 
-We highly recommend you to migrate to the SDK v5 to receive the latest software with better security and performance.  
-Want to keep using ethers.js 5? Worry not! The SDK v5 comes with powerful adapters which let you use thirdweb with popular web3 frameworks like viem or ethers 5 & 6.  
-[Learn more](/typescript/v5/adapters#ethers-v5)  
+#### 4. Acceso al software más reciente
+Actualmente, el SDK v4 utiliza `ethers@5.7.2` y `@tanstack/react-query@^4`, los cuales pueden considerarse versiones "desactualizadas".  
+Lamentablemente, no tenemos planes de actualizar las dependencias de la versión v4 a las últimas versiones.  
+Te recomendamos encarecidamente migrar al SDK v5 para recibir las últimas actualizaciones de software con mejor seguridad y rendimiento.  
+¿Quieres seguir usando ethers.js 5? ¡No te preocupes! El SDK v5 incluye potentes adaptadores que te permiten usar thirdweb con frameworks web3 populares como viem o ethers 5 y 6.  
+[Más información](/typescript/v5/adapters#ethers-v5)  
 
 
 <hr/>
 
-## High-level changes
+## Cambios principales
 
-- All imports from `@thirdweb-dev/*` should be replaced with `thirdweb` SDK with sub-exports.
-- The new SDK is `function` based rather than `class` based for better tree shaking and performance.
-- All contract calls are now prepared using `prepareContractCall` and sent using the `sendTransaction` function.
-- Transactions are submitted without waiting for receipt by default. You can call the `waitForReceipt` function to wait for the transaction to be mined.
+- Todas las importaciones de `@thirdweb-dev/*` deben reemplazarse con el SDK `thirdweb` usando sub-exportaciones.
+- El nuevo SDK está basado en `funciones` en lugar de `clases` para mejorar el tree shaking y el rendimiento.
+- Todas las llamadas a contratos ahora se preparan con `prepareContractCall` y se envían con la función `sendTransaction`.
+- Las transacciones se envían sin esperar el recibo por defecto. Puedes llamar a la función `waitForReceipt` para esperar a que la transacción sea minada.
 
-## Progressive migration
+## Migración progresiva
 
-If you're currently using the `@thirdweb-dev/sdk`, you can progressively migrate to the new `thirdweb` SDK. Both SDKs can be used side by side and are interoperable with each other.
+Si actualmente estás usando `@thirdweb-dev/sdk`, puedes migrar progresivamente al nuevo SDK `thirdweb`. Ambos SDKs pueden usarse en paralelo y son interoperables entre sí.
 
-You can easily share the same wallet between the two SDKs by using the `ethers5adapter` utility, allowing you to progressively replace calls one by one.
+Puedes compartir fácilmente la misma billetera entre los dos SDKs usando la utilidad `ethers5adapter`, lo que te permite reemplazar llamadas una por una de manera progresiva.
 
 ```ts
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
@@ -114,7 +117,7 @@ await sendTransaction({
 });
 ```
 
-In React, you can mix and match the v4 and v5 `ThirdwebProvider`, that gives you access to the hooks and functionality of both SDKs.
+En React, puedes combinar los `ThirdwebProvider` de v4 y v5, lo que te da acceso a los hooks y funcionalidades de ambos SDKs.
 
 ```tsx
 import { ThirdwebProvider} from "@thirdweb-dev/react" }
@@ -127,7 +130,7 @@ import { ThirdwebProvider as ThirdwebProviderV5 } from "thirdweb/react"
 </V4TWProvider>
 ```
 
-From there, you can obtain the current signer using the `useSigner` hook, and convert it when needed using the `ethers5Adapter`:
+A partir de ahí, puedes obtener el firmante actual usando el hook `useSigner` y convertirlo cuando sea necesario utilizando `ethers5Adapter`:
 
 ```tsx
 import { useSigner } from "@thirdweb-dev/react";
@@ -147,35 +150,35 @@ const onClick = async () => {
 };
 ```
 
-## TypeScript Cheatsheet
+## Guía rápida de TypeScript
 
-| Task       | `@thirdweb-dev/sdk`                                      | `thirdweb`                                        |
+| Tarea       | `@thirdweb-dev/sdk`                                      | `thirdweb`                                        |
 | ---------- | -------------------------------------------------------- | ------------------------------------------------- |
-| Chains     | `import { Sepolia } from "@thirdweb-dev/chains"`         | [`import { sepolia } from "thirdweb/chains"`](/typescript/v5/chain)       |
-| Wallets    | `import { MetaMaskWallet } from "@thirdweb-dev/wallets"` | [`import { createWallet } from "thirdweb/wallets"`](/references/typescript/v5/createWallet) |
-| Initialize | `new ThirdwebSDK(...)`                                   | [`createThirdwebClient({ ... })`](/references/typescript/v5/createThirdwebClient)                   |
-| Contract   | `await sdk.getContract(...)`                             | [`getContract(...) // no await`](/references/typescript/v5/getContract)                    |
-| Read       | `await contract.call(...)`                               | [`await readContract(...)`](/references/typescript/v5/readContract)                         |
-| Prepare    | `await contract.prepare(...)`                            | [`prepareContractCall(...) // no await`](/references/typescript/v5/prepareContractCall)            |
-| Send       | `await contract.call(...)`                               | [`await sendTransaction(...)`](/references/typescript/v5/sendTransaction)                      |
-| Extensions | `await contract.erc721.getAll()`                         | [`await getNFTs(...)`](/references/typescript/v5/erc721/getNFTs)                              |
-| Deploy     | `sdk.deployer.deployBuiltInContract(...)`                | [`await deployPublishedContract(...)`](/references/typescript/v5/deploy/deployPublishedContract)              |
+| Cadenas    | `import { Sepolia } from "@thirdweb-dev/chains"`         | [`import { sepolia } from "thirdweb/chains"`](/typescript/v5/chain)       |
+| Billeteras | `import { MetaMaskWallet } from "@thirdweb-dev/wallets"` | [`import { createWallet } from "thirdweb/wallets"`](/references/typescript/v5/createWallet) |
+| Inicializar | `new ThirdwebSDK(...)`                                   | [`createThirdwebClient({ ... })`](/references/typescript/v5/createThirdwebClient)                   |
+| Contrato   | `await sdk.getContract(...)`                             | [`getContract(...) // sin await`](/references/typescript/v5/getContract)                    |
+| Leer       | `await contract.call(...)`                               | [`await readContract(...)`](/references/typescript/v5/readContract)                         |
+| Preparar   | `await contract.prepare(...)`                            | [`prepareContractCall(...) // sin await`](/references/typescript/v5/prepareContractCall)            |
+| Enviar     | `await contract.call(...)`                               | [`await sendTransaction(...)`](/references/typescript/v5/sendTransaction)                      |
+| Extensiones | `await contract.erc721.getAll()`                         | [`await getNFTs(...)`](/references/typescript/v5/erc721/getNFTs)                              |
+| Desplegar  | `sdk.deployer.deployBuiltInContract(...)`                | [`await deployPublishedContract(...)`](/references/typescript/v5/deploy/deployPublishedContract)              |
 
 
-## React Cheatsheet
+## Guía rápida de React
 
-| Task                 | `@thirdweb-dev/react`                                 | `thirdweb`                                          |
+| Tarea                 | `@thirdweb-dev/react`                                 | `thirdweb`                                          |
 | ---------------------| ----------------------------------------------------- | --------------------------------------------------- |
-| Provider             | `import { ThirdwebProvider} from @thirdweb-dev/react` | [`import { ThirdwebProvider } from "thirdweb/react"`](/react/v5/ThirdwebProvider) |
-| Contract             | `useContract(...)`                                    | [`getContract(...) // not a hook`](/references/typescript/v5/getContract)                    |
-| Address              | `useAddress(...)`                                     | [`useActiveAccount(...) // account?.address`](/references/typescript/v5/useActiveAccount)         |
-| Read                 | `useContractRead(...)`                                | [`useReadContract(...)`](/references/typescript/v5/useReadContract)                              |
-| Write                | `useContractWrite(...)`                               | [`useSendTransaction()`](/references/typescript/v5/useSendTransaction)                             |
-| Extensions           | `useNFTs(...)`                                        | [`useReadContract(getNFTs, { ... })`](/references/typescript/v5/useReadContract)                |
-| Get Signer           | `useSigner()`                                         | [`useActiveAccount()`](/references/typescript/v5/useActiveAccount)                                |
-| Get Wallet           | `useWallet()`                                         | [`useActiveWallet()`](/references/typescript/v5/useActiveWallet)                                 |
-| Button               | `Web3Button`                                          | [`TransactionButton`](/react/v5/TransactionButton)                                 |
-| Connect              | `ConnectWallet`                                       | [`ConnectButton`](/react/v5/ConnectButton)                                     |
-| Connection Status    | `useConnectionStatus()`                               | [`useActiveWalletConnectionStatus()`](/references/typescript/v5/useActiveWalletConnectionStatus)                 |
-| Switch Chain         | `useSwitchChain()`                                    | [`useSwitchActiveWalletChain()`](/references/typescript/v5/useSwitchActiveWalletChain)                      |
-| Get Connected Chain  | `useChain()`                                          | [`useActiveWalletChain()`](/references/typescript/v5/useActiveWalletChain)                  |
+| Proveedor            | `import { ThirdwebProvider} from @thirdweb-dev/react` | [`import { ThirdwebProvider } from "thirdweb/react"`](/react/v5/ThirdwebProvider) |
+| Contrato             | `useContract(...)`                                    | [`getContract(...) // no es un hook`](/references/typescript/v5/getContract)                    |
+| Dirección            | `useAddress(...)`                                     | [`useActiveAccount(...) // account?.address`](/references/typescript/v5/useActiveAccount)         |
+| Leer                 | `useContractRead(...)`                                | [`useReadContract(...)`](/references/typescript/v5/useReadContract)                              |
+| Escribir             | `useContractWrite(...)`                               | [`useSendTransaction()`](/references/typescript/v5/useSendTransaction)                             |
+| Extensiones         | `useNFTs(...)`                                        | [`useReadContract(getNFTs, { ... })`](/references/typescript/v5/useReadContract)                |
+| Obtener Signer       | `useSigner()`                                         | [`useActiveAccount()`](/references/typescript/v5/useActiveAccount)                                |
+| Obtener Billetera   | `useWallet()`                                         | [`useActiveWallet()`](/references/typescript/v5/useActiveWallet)                                 |
+| Botón                | `Web3Button`                                          | [`TransactionButton`](/react/v5/TransactionButton)                                 |
+| Conectar            | `ConnectWallet`                                       | [`ConnectButton`](/react/v5/ConnectButton)                                     |
+| Estado de conexión  | `useConnectionStatus()`                               | [`useActiveWalletConnectionStatus()`](/references/typescript/v5/useActiveWalletConnectionStatus)                 |
+| Cambiar cadena      | `useSwitchChain()`                                    | [`useSwitchActiveWalletChain()`](/references/typescript/v5/useSwitchActiveWalletChain)                      |
+| Obtener cadena conectada | `useChain()`                                          | [`useActiveWalletChain()`](/references/typescript/v5/useActiveWalletChain)                  |

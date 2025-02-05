@@ -1,30 +1,30 @@
-# Adapters
+# Adaptadores
 
-The thirdweb SDK can work side by side with:
+El SDK de thirdweb puede trabajar junto con:
 
 - wagmi
 - viem
 - privy
 - ethers.js v5
 - ethers.js v6
-- older versions of the @thirdweb-dev/sdk (using the ethers.js v5 adapter)
-- any other library that conforms to the [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) standard
+- versiones anteriores del @thirdweb-dev/sdk (usando el adaptador de ethers.js v5)
+- cualquier otra librería que cumpla con el estándar [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)
 
-Adapters allow you to use contracts, providers and wallets from these libraries with the thirdweb SDK and vice versa.
+Los adaptadores te permiten usar contratos, proveedores y billeteras de estas librerías con el SDK de thirdweb y viceversa.
 
 ## Wagmi
 
-### Using thirdweb in-app wallets with wagmi
+### Usando billeteras in-app de thirdweb con wagmi
 
-You can use in-app and ecosystem wallets in your wagmi application by using the `@thirdweb-dev/wagmi-adapter` package.
+Puedes usar billeteras in-app y billeteras del ecosistema en tu aplicación wagmi utilizando el paquete `@thirdweb-dev/wagmi-adapter`.
 
 ```shell
 npm install thirdweb @thirdweb-dev/wagmi-adapter
 ```
 
-Make sure you're running wagmi 2.14.1 or above.
+Asegúrate de estar utilizando wagmi 2.14.1 o superior.
 
-You probably already have a wagmi config with some connectors, simply add the inAppWalletConnector to the list, along with the desired options.
+Probablemente ya tengas una configuración de wagmi con algunos conectores, simplemente agrega el `inAppWalletConnector` a la lista, junto con las opciones deseadas.
 
 ```ts
 import { http, createConfig } from "wagmi";
@@ -54,7 +54,7 @@ export const config = createConfig({
 });
 ```
 
-Then in your application, you can use the connector to trigger the in-app wallet connection.
+Luego, en tu aplicación, puedes usar el conector para activar la conexión de la billetera in-app.
 
 ```ts
 const { connect, connectors } = useConnect();
@@ -70,12 +70,12 @@ const onClick = () => {
 };
 ```
 
-### Converting a wagmi wallet client to a thirdweb wallet
+### Convertir un cliente de billetera wagmi a una billetera thirdweb
 
-You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
+Puedes usar el SDK de thirdweb dentro de una aplicación wagmi configurando la cuenta conectada de wagmi como la 'billetera activa' de thirdweb. Después de eso, puedes usar todos los componentes y hooks de React normalmente, incluyendo `PayEmbed`, `TransactionButton`, etc.
 
 ```ts
-// Assumes you've wrapped your application in a `<ThirdwebProvider>`
+// Se asume que has envuelto tu aplicación en un `<ThirdwebProvider>`
 
 import { useEffect } from 'react'
 import { defineChain } from 'thirdweb'
@@ -110,11 +110,11 @@ const setActiveWallet = useSetActiveWallet(); // from thirdweb/react
   }, [account?.connector?.getProvider, setActiveWallet]);
 ```
 
-You can view a fully functioning wagmi + thirdweb app in this [github repository](https://github.com/thirdweb-example/wagmi-thirdweb).
+Puedes ver una aplicación completamente funcional de wagmi + thirdweb en este [repositorio de github](https://github.com/thirdweb-example/wagmi-thirdweb).
 
 ## Privy
 
-Similarly, you can use the thirdweb SDK with privy by setting the privy wallet as the thirdweb 'active wallet'. After that, you can use all of the react components, functions and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
+De manera similar, puedes usar el SDK de thirdweb con privy configurando la billetera de privy como la 'billetera activa' de thirdweb. Después de eso, puedes usar todos los componentes, funciones y hooks de React normalmente, incluyendo `PayEmbed`, `TransactionButton`, etc.
 
 ```ts
 // Assumes you've wrapped your application in a `<ThirdwebProvider>`

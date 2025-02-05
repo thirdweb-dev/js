@@ -3,36 +3,36 @@ import { GithubButtonLink } from "@doc";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ERC20 | thirdweb contract",
+	title: "ERC20 | contrato de thirdweb",
 	description:
-		"ERC20 is the standard for representing fungible tokens; where each token is of equal valuable and interchangeable",
+		"ERC20 es el estándar para representar tokens fungibles; donde cada token tiene el mismo valor y es intercambiable",
 	image: {
-		title: "ERC20 contract",
+		title: "Contrato ERC20",
 		icon: "solidity",
 	},
 });
+
 
 # ERC20
 
 ```solidity
 import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
 ```
-
-ERC20 is the standard for representing fungible tokens; where each token is of equal valuable and interchangeable.
+ERC20 es el estándar para representar tokens fungibles; donde cada token tiene el mismo valor y es intercambiable.
 
 <Callout title="info" variant="info">
-	This extension is an interface and requires all of the functions to be
-	implemented
+  Esta extensión es una interfaz y requiere que todas las funciones sean
+  implementadas
 </Callout>
 
 <br />
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC20.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension
-and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión
+y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -47,23 +47,23 @@ contract Contract is IERC20 {
     ) {}
 
     function totalSupply() external view returns (uint256) {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 
     function balanceOf(address who) external view returns (uint256) {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 
     function allowance(address owner, address spender) external view returns (uint256) {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 
     function transfer(address to, uint256 value) external returns (bool) {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 
     function approve(address spender, uint256 value) external returns (bool) {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 
     function transferFrom(
@@ -71,14 +71,14 @@ contract Contract is IERC20 {
         address to,
         uint256 value
     ) external returns (bool); {
-      // Your custom implementation here
+      // Tu implementación personalizada aquí
     }
 }
 ```
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/openzeppelin-presets/token/ERC20/ERC20.sol" />
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC20Base](/contracts/build/base-contracts/erc-20/base)
 - [ERC20Drop](/contracts/build/base-contracts/erc-20/drop)

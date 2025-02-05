@@ -2,33 +2,33 @@ import { Details, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ContractMetadata contract",
+		title: "Contrato ContractMetadata",
 		icon: "solidity",
 	},
-	title: "ContractMetadata | thirdweb contract",
+	title: "ContractMetadata | Contrato de thirdweb",
 	description:
-		"This extension lets you define metadata for your smart contract. Additionally, ContractMetadata is necessary to enable royalties on NFT contracts on OpenSea.",
+		"Esta extensión te permite definir metadatos para tu contrato inteligente. Además, ContractMetadata es necesario para habilitar regalías en contratos NFT en OpenSea.",
 });
+
 
 # ContractMetadata
 
 ```solidity
 import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
 ```
-
-The `ContractMetadata` smart contract is an extension usable with any smart contract. It lets you define metadata for your smart contract. Additionally, `ContractMetadata` is necessary to enable [royalties](/contracts/build/extensions/general/Royalty) on NFT contracts on OpenSea.
+El contrato inteligente `ContractMetadata` es una extensión utilizable con cualquier contrato inteligente. Te permite definir metadatos para tu contrato inteligente. Además, `ContractMetadata` es necesario para habilitar [regalías](/contracts/build/extensions/general/Royalty) en contratos NFT en OpenSea.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/ContractMetadata.sol" />
 
-## Usage
+## Uso
 
-The `ContractMetadata` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+La extensión `ContractMetadata` es un _contrato abstracto_ y espera que implementes las siguientes funciones por ti mismo:
 
-| Name                                                                                            | Type                    | Returns | Description                                                                                                                             |
-| ----------------------------------------------------------------------------------------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [`_canSetContractURI`](/contracts/build/extensions/general/ContractMetadata#_cansetcontracturi) | internal view _virtual_ | `bool`  | Runs on every attempt to set the metadata of the contract. Returns whether contract metadata can be set in the given execution context. |
+| Nombre                                                                                             | Tipo                    | Retorna | Descripción                                                                                                                             |
+| ------------------------------------------------------------------------------------------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetContractURI`](/contracts/build/extensions/general/ContractMetadata#_cansetcontracturi)  | internal view _virtual_ | `bool`  | Se ejecuta en cada intento de establecer los metadatos del contrato. Devuelve si los metadatos del contrato pueden establecerse en el contexto de ejecución dado. |
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -39,10 +39,10 @@ import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
 contract MyContract is ContractMetadata {
 
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para los fines del ejemplo
+     *  en el comentario de código abajo.
      *
-     *  Doing this is not necessary to use the `ContractMetadata` extension.
+     *  Hacer esto no es necesario para usar la extensión `ContractMetadata`.
      */
     address public deployer;
 
@@ -51,11 +51,11 @@ contract MyContract is ContractMetadata {
     }
 
     /**
-     *  This function returns who is authorized to set the metadata for your metadata.
+     *  Esta función devuelve quién está autorizado para establecer los metadatos de tu contrato.
      *
-     *  As an EXAMPLE, we'll only allow the contract deployer to set the contract's metadata.
+     *  Como EJEMPLO, solo permitiremos que el desplegador del contrato establezca los metadatos del contrato.
      *
-     *  You MUST complete the body of this function to use the `ContractMetadata` extension.
+     *  DEBES completar el cuerpo de esta función para usar la extensión `ContractMetadata`.
      */
     function _canSetContractURI() internal view virtual override returns (bool){
         return msg.sender == deployer;
@@ -63,11 +63,11 @@ contract MyContract is ContractMetadata {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-All of the base contracts implement this extension.
+Todos los contratos base implementan esta extensión.
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="contractURI">
 
@@ -75,8 +75,8 @@ All of the base contracts implement this extension.
 function contractURI() external view returns (string memory);
 ```
 
-- Returns the URI for the metadata associated with the smart contract. Generally, an IPFS URI.
-- Set this value using the `setContractURI` function.
+- Devuelve la URI para los metadatos asociados con el contrato inteligente. Generalmente, una URI de IPFS.
+- Establece este valor usando la función `setContractURI`.
 
 </Details>
 
@@ -86,9 +86,9 @@ function contractURI() external view returns (string memory);
 function setContractURI(string calldata _uri) external;
 ```
 
-- Sets the metadata of the smart contract. This value can be read from the `contractURI` function.
-- Parameter `_uri`: The URI of the metadata to associate with the contract.
-- The `_canSetContractURI` function is run on every call to this function. If the return value of `_canSetContractURI` is `false`, the `setContractURI` call will revert.
+- Establece los metadatos del contrato inteligente. Este valor se puede leer desde la función `contractURI`.
+- Parámetro `_uri`: La URI de los metadatos para asociar con el contrato.
+- La función `_canSetContractURI` se ejecuta en cada llamada a esta función. Si el valor devuelto de `_canSetContractURI` es `false`, la llamada a `setContractURI` se revertirá.
 
 </Details>
 
@@ -98,9 +98,9 @@ function setContractURI(string calldata _uri) external;
 function _setupContractURI(string memory _uri) internal;
 ```
 
-- Sets the metadata of the smart contract. This value can be read from the `contractURI` function.
-- Parameter `_uri`: The URI of the metadata to associate with the contract.
-- The `_canSetContractURI` function is _not_ run on a call to this function.
+- Establece los metadatos del contrato inteligente. Este valor se puede leer desde la función `contractURI`.
+- Parámetro `_uri`: La URI de los metadatos para asociar con el contrato.
+- La función `_canSetContractURI` _no_ se ejecuta en una llamada a esta función.
 
 </Details>
 
@@ -110,8 +110,8 @@ function _setupContractURI(string memory _uri) internal;
 function _canSetContractURI() internal view virtual returns (bool);
 ```
 
-- Runs on every `setContractURI` function call.
-- Returns whether contract metadata can be set in the given execution context.
-- For example, this function can check whether the wallet calling `setContractURI` is the contract owner, and enforce that only the owner should be able to successfully call `setContractURI`.
+- Se ejecuta en cada llamada a la función `setContractURI`.
+- Devuelve si los metadatos del contrato pueden establecerse en el contexto de ejecución dado.
+- Por ejemplo, esta función puede verificar si la billetera que llama a `setContractURI` es el propietario del contrato, y hacer cumplir que solo el propietario pueda llamar exitosamente a `setContractURI`.
 
 </Details>

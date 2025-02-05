@@ -4,17 +4,17 @@ import { ReactIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Connecting Wallets",
+		title: "Conectar Carteras",
 		icon: "react",
 	},
-	title: "Connecting Wallets in thirdweb React SDK",
+	title: "Conectar Carteras en el SDK de React de thirdweb",
 	description:
-		"Connect wallets using ConnectButton, ConnectEmbed or useConnect hook",
+		"Conecta carteras usando ConnectButton, ConnectEmbed o el hook useConnect",
 });
 
-# Connection Hooks
+# Hooks de Conexión
 
-You can build a completely custom UI for connecting the wallet using the [`useConnect`](/references/typescript/v5/useConnect) hook to connect any of [supported wallets](/typescript/v5/supported-wallets).
+Puedes crear una interfaz de usuario completamente personalizada para conectar la cartera usando el hook [`useConnect`](/references/typescript/v5/useConnect) para conectar cualquiera de las [carteras compatibles](/typescript/v5/supported-wallets).
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
@@ -44,35 +44,36 @@ function Example() {
 }
 ```
 
-## Creating Wallets
+## Crear Carteras
 
-You can create any wallet by id with auto completion using the [`createWallet`](/references/typescript/v5/createWallet) function. Or use one of the first party wallets like [`inAppWallet`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet`](/references/typescript/v5/ecosystemWallet).
+Puedes crear cualquier cartera por ID con autocompletado usando la función [`createWallet`](/references/typescript/v5/createWallet). O usa una de las carteras nativas como [`inAppWallet`](/references/typescript/v5/inAppWallet) o [`ecosystemWallet`](/references/typescript/v5/ecosystemWallet).
 
 <Stack>
 <ArticleIconCard
 	title="inAppWallet"
 	icon={Wallet}
 	href="/references/typescript/v5/inAppWallet"
-	description="Create an in app wallet"
+	description="Crear una cartera en la aplicación"
 />
 
 <ArticleIconCard
 	title="ecosystemWallet"
 	icon={Wallet}
 	href="/references/typescript/v5/ecosystemWallet"
-	description="Create an ecosystem wallet"
+	description="Crear una cartera de ecosistema"
 />
 
 <ArticleIconCard
 	title="createWallet"
 	icon={Wallet}
 	href="/references/typescript/v5/createWallet"
-	description="Create any external wallet by id with auto completion"
+	description="Crear cualquier cartera externa por ID con autocompletado"
 />
 </Stack>
-## Pre Connection Hooks
 
-Use these hooks to trigger and manage wallet wallet connection within your own UI. Refer to [wallet connection hooks reference](/references/typescript/v5/useConnect) for more information.
+## Hooks de Pre-conexión
+
+Usa estos hooks para activar y gestionar la conexión de la cartera dentro de tu propia interfaz de usuario. Consulta la [referencia de hooks de conexión de cartera](/references/typescript/v5/useConnect) para más información.
 
 <Stack>
 
@@ -80,42 +81,42 @@ Use these hooks to trigger and manage wallet wallet connection within your own U
 	title="useConnect"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useConnect"
-	description="Hook to connect any created wallet"
+	description="Hook para conectar cualquier cartera creada"
 />
 
 <ArticleIconCard
 	title="useAutoConnect"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useAutoConnect"
-	description="Hook to auto connect a previously connected wallet"
+	description="Hook para conectar automáticamente una cartera previamente conectada"
 />
 
 <ArticleIconCard
 	title="useConnectModal"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useConnectModal"
-	description="Hook to open a prebuilt connection modal UI from anywhere"
+	description="Hook para abrir un modal de conexión preconstruido desde cualquier lugar"
 />
 
 <ArticleIconCard
 	title="useSwitchActiveWalletChain"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useSwitchActiveWalletChain"
-	description="Hook to switch the active wallet chain"
+	description="Hook para cambiar la cadena activa de la cartera"
 />
 
 <ArticleIconCard
 	title="useDisconnect"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useDisconnect"
-	description="Hook to disconnect the wallet"
+	description="Hook para desconectar la cartera"
 />
 
 </Stack>
 
-## Post Connection Hooks
+## Hooks Post-Conexión
 
-Once the wallet is connected, you can use the [wallet connection hooks](/references/typescript/v5/hooks#wallet-connection) to get information about the connected wallet like getting the address, account, etc.
+Una vez que la cartera está conectada, puedes usar los [hooks de conexión de cartera](/references/typescript/v5/hooks#wallet-connection) para obtener información sobre la cartera conectada, como obtener la dirección, cuenta, etc.
 
 <Stack>
 
@@ -123,35 +124,35 @@ Once the wallet is connected, you can use the [wallet connection hooks](/referen
 	title="useActiveAccount"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useActiveAccount"
-	description="Get the currently connected account"
+	description="Obtener la cuenta actualmente conectada"
 />
 
 <ArticleIconCard
 	title="useActiveWallet"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useActiveWallet"
-	description="Get the currently connected wallet"
+	description="Obtener la cartera actualmente conectada"
 />
 
 <ArticleIconCard
 	title="useWalletDetailsModal"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useWalletDetailsModal"
-	description="Show a prebuilt modal UI with wallet details from anywhere"
+	description="Mostrar un modal preconstruido con detalles de la cartera desde cualquier lugar"
 />
 
 <ArticleIconCard
 	title="useConnectedWallets"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useConnectedWallets"
-	description="Get all connected wallets"
+	description="Obtener todas las carteras conectadas"
 />
 
 <ArticleIconCard
 	title="useAdminWallet"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useConnectedWallets"
-	description="Get the underlying admin wallet of a smart account"
+	description="Obtener la cartera administrativa subyacente de una cuenta inteligente"
 />
 
 </Stack>

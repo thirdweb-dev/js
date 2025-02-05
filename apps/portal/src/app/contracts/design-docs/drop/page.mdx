@@ -4,48 +4,48 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Drop contract design document",
+		title: "Documento de diseño del contrato Drop",
 		icon: "contract",
 	},
-	title: "Drop contract design document | thirdweb",
+	title: "Documento de diseño del contrato Drop | thirdweb",
 	description:
-		"This is a live document that explains what the thirdweb Drop smart contracts are, how they work and can be used, and why they are written the way they are",
+		"Este es un documento en vivo que explica qué son los contratos inteligentes Drop de thirdweb, cómo funcionan, cómo se pueden usar y por qué están escritos de la manera en que están.",
 });
 
-# Drop design document.
+# Documento de diseño de Drop.
 
-This is a live document that explains what the [thirdweb](https://thirdweb.com/) `Drop` smart contracts are, how they work and can be used, and why they are written the way they are.
+Este es un documento en vivo que explica qué son los contratos inteligentes `Drop` de [thirdweb](https://thirdweb.com/), cómo funcionan, cómo se pueden usar y por qué están escritos de la manera en que están.
 
-The document is written for technical and non-technical readers. To ask further questions about any of thirdweb's `Drop`, please [visit our support site](https://thirdweb.com/support) or create a github issue.
+El documento está dirigido a lectores tanto técnicos como no técnicos. Para realizar más preguntas sobre cualquiera de los contratos `Drop` de thirdweb, por favor [visita nuestro sitio de soporte](https://thirdweb.com/support) o crea un problema en GitHub.
 
-## Background
+## Contexto
 
-The thirdweb `Drop` contracts are distribution mechanisms for tokens. This distribution mechanism is offered for ERC20, ERC721 and ERC1155 tokens, as `DropERC20`, `DropERC721` and `DropERC1155`.
+Los contratos `Drop` de thirdweb son mecanismos de distribución de tokens. Este mecanismo de distribución está disponible para tokens ERC20, ERC721 y ERC1155, como `DropERC20`, `DropERC721` y `DropERC1155`.
 
-The `Drop` contracts are meant to be used when the goal of the contract creator is for an audience to come in and claim tokens within certain restrictions e.g. — ‘only addresses in an allowlist can mint tokens', or ‘minters must pay _x_ amount of price in _y_ currency to mint', etc.
+Los contratos `Drop` están destinados a ser utilizados cuando el objetivo del creador del contrato es que una audiencia venga y reclame tokens dentro de ciertas restricciones, por ejemplo: "solo las direcciones en una lista de permitidos pueden acuñar tokens", o "los minters deben pagar _x_ cantidad en _y_ moneda para acuñar", etc.
 
-The `Drop` contracts let the contract creator establish phases (periods of time), where each phase can specify multiple such restrictions on the minting of tokens during that period of time. We refer to such a phase as a ‘claim condition'.
+Los contratos `Drop` permiten que el creador del contrato establezca fases (periodos de tiempo), donde cada fase puede especificar múltiples restricciones sobre la acuñación de tokens durante ese periodo de tiempo. Nos referimos a una de estas fases como una ‘condición de reclamo’.
 
-### Why we're building `Drop`
+### Por qué estamos construyendo `Drop`
 
-We've observed that there are largely three distinct contexts under which one mints tokens —
+Hemos observado que existen tres contextos distintos bajo los cuales se acuñan tokens —
 
-1. Minting tokens for yourself on a contract you own. E.g. a person wants to mint their Twitter profile picture as an NFT.
-2. Having an audience mint tokens on a contract you own.
-   1. The nature of tokens to be minted by the audience is pre-determined by the contract admin. E.g. a 10k NFT drop where the contents of the NFTs to be minted by the audience is already known and determined by the contract admin before the audience comes in to mint NFTs.
-   2. The nature of tokens to be minted by the audience is _not_ pre-determined by the contract admin. E.g. a course 'certificate' dynamically generated with the name of the course participant, to be minted by the course participant at the time of course completion.
+1. Acuñar tokens para ti mismo en un contrato que posees. Ejemplo: una persona quiere acuñar su foto de perfil de Twitter como un NFT.
+2. Hacer que una audiencia acuñe tokens en un contrato que posees.
+   1. La naturaleza de los tokens a acuñar por la audiencia está pre-determinada por el administrador del contrato. Ejemplo: una caída de 10k NFT en la que el contenido de los NFT a ser acuñados por la audiencia ya está conocido y determinado por el administrador del contrato antes de que la audiencia venga a acuñar los NFT.
+   2. La naturaleza de los tokens a acuñar por la audiencia _no_ está pre-determinada por el administrador del contrato. Ejemplo: un 'certificado' de curso generado dinámicamente con el nombre del participante del curso, para ser acuñado por el participante del curso en el momento de completar el curso.
 
-The thirdweb `Token` contracts serve the cases described in (1) and 2(ii).
+Los contratos `Token` de thirdweb sirven para los casos descritos en (1) y 2(ii).
 
-The thirdweb `Drop` contracts serve the case described in 2(i). They are written to give a contract creator granular control over restrictions around an audience minting tokens from the same contract (or ‘collection', in the case of NFTs) over an extended period of time.
+Los contratos `Drop` de thirdweb sirven para el caso descrito en 2(i). Están escritos para dar al creador de un contrato un control granular sobre las restricciones en torno a que una audiencia acuñe tokens del mismo contrato (o ‘colección', en el caso de los NFT) durante un período de tiempo extendido.
 
-## Technical Details
+## Detalles técnicos
 
-The distribution mechanism of `Drop` is as follows — A contract admin establishes a series of 'claim conditions'. A 'claim condition' is a period of time in which accounts can mint tokens on the respective `Drop` contract, within a set of restrictions defined by the ‘claim condition'.
+El mecanismo de distribución de `Drop` es el siguiente — Un administrador de contrato establece una serie de 'condiciones de reclamo'. Una 'condición de reclamo' es un período de tiempo en el que las cuentas pueden acuñar tokens en el respectivo contrato `Drop`, dentro de un conjunto de restricciones definidas por la 'condición de reclamo'.
 
-### Claim Conditions
+### Condiciones de reclamo
 
-The following makes up a claim condition —
+Lo siguiente constituye una condición de reclamo —
 
 ```solidity
 struct ClaimCondition {
@@ -60,28 +60,28 @@ struct ClaimCondition {
 
 ```
 
-| Parameters             | Type    | Description                                                                                                                                        |
+| Parámetros             | Tipo    | Descripción                                                                                                                                        |
 | ---------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| startTimestamp         | uint256 | The unix timestamp after which the claim condition applies. The same claim condition applies until the startTimestamp of the next claim condition. |
-| maxClaimableSupply     | uint256 | The maximum total number of tokens that can be claimed under the claim condition.                                                                  |
-| supplyClaimed          | uint256 | At any given point, the number of tokens that have been claimed under the claim condition.                                                         |
-| quantityLimitPerWallet | uint256 | The maximum number of tokens that can be claimed by a wallet under a given claim condition.                                                        |
-| merkleRoot             | bytes32 | The allowlist of addresses that can claim tokens under the claim condition.                                                                        |
+| startTimestamp         | uint256 | El timestamp unix después del cual se aplica la condición de reclamo. La misma condición de reclamo se aplica hasta el startTimestamp de la siguiente condición de reclamo. |
+| maxClaimableSupply     | uint256 | El número total máximo de tokens que pueden ser reclamados bajo la condición de reclamo.                                                          |
+| supplyClaimed          | uint256 | En un momento dado, el número de tokens que han sido reclamados bajo la condición de reclamo.                                                     |
+| quantityLimitPerWallet | uint256 | El número máximo de tokens que una billetera puede reclamar bajo una condición de reclamo dada.                                                   |
+| merkleRoot             | bytes32 | La lista permitida de direcciones que pueden reclamar tokens bajo la condición de reclamo.                                                        |
 
-(Optional) The allowlist may specify quantity limits, price and currency for addresses in the list, overriding these values under that claim condition.
+(Optional) La lista permitida puede especificar límites de cantidad, precio y moneda para las direcciones en la lista, anulando estos valores bajo esa condición de reclamo.
 
-The parameters that make up a claim condition can be composed in different ways to create specific restrictions around a mint. For example, a single claim condition where:
+Los parámetros que componen una condición de reclamo pueden combinarse de diferentes maneras para crear restricciones específicas alrededor de una acuñación. Por ejemplo, una única condición de reclamo donde:
 
 - `quantityLimitPerWallet = 5`
 - `merkleRoot = bytes32(0)`
 
-creates restrictions around a mint, where (1) a wallet can mint at most 5 tokens and (2) all wallets are subject to general claim condition limits, without any overrides.
+crea restricciones alrededor de una acuñación, donde (1) una billetera puede acuñar como máximo 5 tokens y (2) todas las billeteras están sujetas a los límites generales de la condición de reclamo, sin ninguna anulación.
 
-A `Drop` contract lets a contract admin establish a series of claim conditions, at once. Since each claim condition specifies a `startTime`, a contract admin can establish a series of claim conditions, ordered by their start time, to specify different set of restrictions around minting, during different periods of time.
+Un contrato `Drop` permite a un administrador de contrato establecer una serie de condiciones de reclamo de una vez. Dado que cada condición de reclamo especifica un `startTime`, un administrador de contrato puede establecer una serie de condiciones de reclamo, ordenadas por su hora de inicio, para especificar diferentes conjuntos de restricciones alrededor de la acuñación, durante diferentes períodos de tiempo.
 
-At any moment, there is only one active claim condition, and an account attempting to mint tokens on the respective `Drop` contract successfully or unsuccessfully, based on whether the account passes the restrictions defined by that moment's active claim condition.
+En cualquier momento, solo hay una condición de reclamo activa, y una cuenta que intente acuñar tokens en el respectivo contrato `Drop` lo hará con éxito o no, según si la cuenta cumple con las restricciones definidas por la condición de reclamo activa en ese momento.
 
-A `Drop` contract natively keeps track of claim conditions set by a contract admin in a ‘claim conditions list', which looks as follows —
+Un contrato `Drop` realiza un seguimiento nativo de las condiciones de reclamo establecidas por un administrador de contrato en una 'lista de condiciones de reclamo', que luce de la siguiente manera —
 
 ```solidity
 struct ClaimConditionList {
@@ -92,63 +92,62 @@ struct ClaimConditionList {
 }
 
 ```
-
-| Parameter             | Description                                                                                                                                                                   |
+| Parámetro             | Descripción                                                                                                                                                                   |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| currentStartId        | The uid for the first claim condition amongst the current set of claim conditions. The uid for each next claim condition is one more than the previous claim condition's uid. |
-| count                 | The total number of claim conditions in the list of claim conditions.                                                                                                         |
-| conditions            | The claim conditions at a given uid. Claim conditions are ordered in an ascending order by their startTimestamp.                                                              |
-| supplyClaimedByWallet | Map from a claim condition uid and account to the supply claimed by that account.                                                                                             |
+| currentStartId        | El uid para la primera condición de reclamo entre el conjunto actual de condiciones de reclamo. El uid de cada condición de reclamo siguiente es uno más que el uid de la condición anterior. |
+| count                 | El número total de condiciones de reclamo en la lista de condiciones de reclamo.                                                                                               |
+| conditions            | Las condiciones de reclamo en un uid dado. Las condiciones de reclamo están ordenadas en orden ascendente por su `startTimestamp`.                                             |
+| supplyClaimedByWallet | Mapa desde un uid de condición de reclamo y una cuenta hasta el suministro reclamado por esa cuenta.                                                                            |
 
-### Allowlist as an override list
+### Allowlist como lista de sobrescritura
 
-As mentioned above, an allowlist can specify different conditions for addresses in the list. This way, it serves as an override over general/open restrictions for non-allowlisted addresses.
-In this allowlist or override-list, an admin can set any/all of these three:
+Como se mencionó anteriormente, una allowlist puede especificar diferentes condiciones para las direcciones en la lista. De esta manera, actúa como una sobrescritura sobre las restricciones generales/abiertas para las direcciones no incluidas en la allowlist.
+En esta allowlist o lista de sobrescritura, un administrador puede establecer cualquiera de estos tres valores:
 
-- quantity limit
-- price
-- currency
+- límite de cantidad
+- precio
+- moneda
 
-If a value is not set for any of these, then the value specified in general claim condition will be used. However, currency override will be considered only when a price override is set too, and not without it.
+Si no se establece un valor para cualquiera de estos, se usará el valor especificado en la condición general de reclamo. Sin embargo, la sobrescritura de la moneda se considerará solo cuando también se establezca una sobrescritura del precio, y no sin ella.
 
-> **IMPORTANT**: _The allowlist should not contain an address more than once in the same merkle tree. Multiple instances for the same address (with different/same quantity, price etc.) may not function as expected and may lead to unexpected behavior during claim. (More details in Limitations section)._
+> **IMPORTANTE**: _La allowlist no debe contener una dirección más de una vez en el mismo árbol de Merkle. Las múltiples instancias para la misma dirección (con cantidad, precio, etc., diferentes o iguales) pueden no funcionar como se espera y pueden generar comportamientos inesperados durante el reclamo. (Más detalles en la sección de Limitaciones)._
 
-### Setting claim conditions
+### Estableciendo condiciones de reclamo
 
-In all `Drop` contracts, a contract admin specifies the following when setting claim conditions:
+En todos los contratos `Drop`, un administrador de contrato especifica lo siguiente al establecer condiciones de reclamo:
 
-| Parameter             | Type             | Description                                                                        |
+| Parámetro             | Tipo             | Descripción                                                                        |
 | --------------------- | ---------------- | ---------------------------------------------------------------------------------- |
-| conditions            | ClaimCondition[] | Claim conditions in ascending order by `startTimestamp`.                           |
-| resetClaimEligibility | bool             | Whether to reset `supplyClaimedByWallet` values when setting new claim conditions. |
+| conditions            | ClaimCondition[] | Condiciones de reclamo en orden ascendente por `startTimestamp`.                   |
+| resetClaimEligibility | bool             | Si se deben restablecer los valores de `supplyClaimedByWallet` al establecer nuevas condiciones de reclamo. |
 
-When setting claim conditions, any existing set of claim conditions stored in `ClaimConditionsList` are overwritten with the new claim conditions specified in `conditions`.
+Al establecer condiciones de reclamo, cualquier conjunto de condiciones de reclamo existentes almacenadas en `ClaimConditionsList` se sobrescribirá con las nuevas condiciones de reclamo especificadas en `conditions`.
 
-The claim conditions specified in `conditions` are expected to be in ordered in ascending order, by their ‘start time'. As a result, only one claim condition is active during at any given time.
+Se espera que las condiciones de reclamo especificadas en `conditions` estén ordenadas en orden ascendente, por su 'hora de inicio'. Como resultado, solo una condición de reclamo está activa en cualquier momento dado.
 
-Each of the claim conditions specified in `conditions` is assigned a unique integer ID. The UID of the first condition in `conditions` is stored as the `ClaimConditionList.currentStartId` and each next claim condition's UID is one more than the previous condition's UID.
+A cada una de las condiciones de reclamo especificadas en `conditions` se le asigna un ID único de tipo entero. El UID de la primera condición en `conditions` se almacena como `ClaimConditionList.currentStartId` y el UID de cada condición de reclamo siguiente es uno más que el UID de la condición anterior.
 
 <DocImage src={claimConditionsImage} alt="Claim conditions" />
 
-The `resetClaimEligibility` boolean flag determines what UIDs are assigned to the claim conditions specified in `conditions`. Since `ClaimConditionList.supplyClaimedByWallet` is indexed by the UID of claim conditions, this gives a contract admin more granular control over the restrictions that claim conditions can express. We now illustrate this with an example:
+El flag booleano `resetClaimEligibility` determina qué UIDs se asignan a las condiciones de reclamo especificadas en `conditions`. Dado que `ClaimConditionList.supplyClaimedByWallet` se indexa por el UID de las condiciones de reclamo, esto otorga al administrador del contrato un control más granular sobre las restricciones que las condiciones de reclamo pueden expresar. Ahora ilustramos esto con un ejemplo:
 
-Let's say an existing claim condition **C1** specifies the following restrictions:
+Supongamos que una condición de reclamo existente **C1** especifica las siguientes restricciones:
 
 - `quantityLimitPerWallet = 1`
 - `merkleRoot = bytes32(0)`
 - `pricePerToken = 0.1 ether`
 - `currency = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` (i.e. native token of the chain e.g ether for Ethereum mainnet)
 
-At a high level, **C1** expresses the following restrictions on minting — any address can claim at most one token, ever, by paying 0.1 ether in price.
+A un alto nivel, **C1** expresa las siguientes restricciones sobre el minting: cualquier dirección puede reclamar como máximo un token, en algún momento, pagando 0.1 ether de precio.
 
-Let's say the contract admin wants to increase the price per token from 0.1 ether to 0.2 ether, while ensuring that wallets that have already claimed tokens are not able to claim tokens again. Essentially, the contract admin now wants to instantiate a claim condition **C2** with the following restrictions:
+Supongamos que el administrador del contrato desea aumentar el precio por token de 0.1 ether a 0.2 ether, mientras asegura que las carteras que ya han reclamado tokens no puedan reclamar tokens nuevamente. Esencialmente, el administrador del contrato ahora quiere instanciar una condición de reclamo **C2** con las siguientes restricciones:
 
 - `quantityLimitPerWallet = 1`
 - `merkleRoot = bytes32(0)`
 - `pricePerToken = 0.2 ether`
 - `currency = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` (i.e. native token of the chain e.g ether for Ethereum mainnet)
 
-To go from **C1** to **C2** while ensuring that wallets that have already claimed tokens are not able to claim tokens again, the contract admin will set claim conditions while specifying `resetClaimEligibility == false`. As a result, the **C2** will be assigned the same UID as **C1**. Since `ClaimConditionList.supplyClaimedByWallet` is indexed by the UID of claim conditions, the information of the quantity of tokens claimed by the wallet during **C1** will not be lost. And so, wallets that claimed tokens during **C1** will now be ineligible to claim tokens during **C2** because of the following check:
+Para pasar de **C1** a **C2** asegurando que las carteras que ya han reclamado tokens no puedan reclamar tokens nuevamente, el administrador del contrato configurará las condiciones de reclamo especificando `resetClaimEligibility == false`. Como resultado, el **C2** se asignará el mismo UID que **C1**. Dado que `ClaimConditionList.supplyClaimedByWallet` está indexado por el UID de las condiciones de reclamo, la información de la cantidad de tokens reclamados por la cartera durante **C1** no se perderá. Por lo tanto, las carteras que reclamaron tokens durante **C1** ahora serán inelegibles para reclamar tokens durante **C2** debido a la siguiente verificación:
 
 ```solidity
 // pseudo-code
@@ -157,27 +156,27 @@ supplyClaimedByWallet = claimCondition.supplyClaimedByWallet[conditionId][claime
 require(quantityToClaim + supplyClaimedByWallet <= quantityLimitPerWallet);
 ```
 
-### EIPs supported / implemented
+### EIPs soportados / implementados
 
-The distribution mechanism for tokens expressed by thirdweb's `Drop` is implemented for ERC20, ERC721 and ERC1155 tokens, as `DropERC20`, `DropERC721` and `DropERC1155`.
+El mecanismo de distribución de tokens expresado por los `Drop` de thirdweb está implementado para tokens ERC20, ERC721 y ERC1155, como `DropERC20`, `DropERC721` y `DropERC1155`.
 
-There are a few key differences between the three implementations —
+Existen algunas diferencias clave entre las tres implementaciones —
 
-- `DropERC20` is written for the distribution of completely fungible, ERC20 tokens. On the other hand, `DropERC721` and `DropERC1155` are written for the distribution of NFTs, which requires ‘lazy minting' i.e. defining the content of the NFTs before an audience comes in to mint them during a claim condition.
-- Both `DropERC20` and `DropERC721` maintain a global, contract-wide `ClaimConditionsList` which stores the claim conditions under which tokens can be minted. The `DropERC1155` contract, on the other hand, maintains a `ClaimConditionList` for every integer token ID that an NFT can assume. And so, a contract admin can set up claim conditions per NFT i.e. per token ID, in the `DropERC1155` contract.
+- `DropERC20` está escrito para la distribución de tokens completamente fungibles ERC20. Por otro lado, `DropERC721` y `DropERC1155` están escritos para la distribución de NFTs, lo que requiere ‘lazy minting', es decir, definir el contenido de los NFTs antes de que el público venga a acuñarlos durante una condición de reclamo.
+- Tanto `DropERC20` como `DropERC721` mantienen una `ClaimConditionsList` global y de contrato, que almacena las condiciones bajo las cuales los tokens pueden ser acuñados. El contrato `DropERC1155`, por otro lado, mantiene una `ClaimConditionList` para cada token ID entero que un NFT puede asumir. Así que, un administrador del contrato puede configurar condiciones de reclamo por NFT, es decir, por token ID, en el contrato `DropERC1155`.
 
-## Limitations
+## Limitaciones
 
-### Sybil attacks
+### Ataques Sybil
 
-The distribution mechanism of thirdweb's `Drop` contracts is vulnerable to [sybil attacks](https://en.wikipedia.org/wiki/Sybil_attack). That is, despite the various ways in which restrictions can be applied to the minting of tokens, some restrictions that claim conditions can express target wallets and not persons.
+El mecanismo de distribución de los contratos `Drop` de thirdweb es vulnerable a [ataques Sybil](https://en.wikipedia.org/wiki/Sybil_attack). Es decir, a pesar de las diversas formas en que se pueden aplicar restricciones para la acuñación de tokens, algunas restricciones que las condiciones de reclamo pueden expresar están dirigidas a carteras y no a personas.
 
-For example, the restriction `quantityLimitPerWallet` expresses the max quantity a _wallet_ can claim during the respective claim condition. A sophisticated actor may generate multiple wallets to claim tokens in a way that undermine such restrictions, when viewing such restrictions as restrictions on unique persons, and not wallets.
+Por ejemplo, la restricción `quantityLimitPerWallet` expresa la cantidad máxima que una _cartera_ puede reclamar durante la respectiva condición de reclamo. Un actor sofisticado puede generar múltiples carteras para reclamar tokens de una manera que socave tales restricciones, cuando se ven estas restricciones como restricciones sobre personas únicas, y no sobre carteras.
 
-### Allowlist behavior
+### Comportamiento de la lista blanca (allowlist)
 
-When specifying allowlist of addresses, and quantities, price, etc. for those addresses, contract admins must ensure that they don't list an address more than once in the same merkle tree.
+Al especificar la lista blanca de direcciones, cantidades, precios, etc. para esas direcciones, los administradores del contrato deben asegurarse de no listar una dirección más de una vez en el mismo árbol Merkle.
 
-For e.g. admin wishes to grant user X permission to mint 2 tokens at 0.25 ETH, and 4 tokens at 0.5 ETH. In this case, the contract design will not permit the user X to claim 6 tokens with different prices as desired. Instead, the user may be limited to claiming just 2 tokens or 4 tokens based on their order of claiming.
+Por ejemplo, si un administrador desea otorgar al usuario X permiso para acuñar 2 tokens a 0.25 ETH y 4 tokens a 0.5 ETH. En este caso, el diseño del contrato no permitirá que el usuario X reclame 6 tokens con precios diferentes como se desea. En cambio, el usuario puede estar limitado a reclamar solo 2 tokens o 4 tokens según el orden en que los reclame.
 
-To avoid such pitfalls, an address should be listed only once per merkle tree or allowlist.
+Para evitar tales inconvenientes, una dirección debe aparecer solo una vez por árbol Merkle o lista blanca.

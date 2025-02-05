@@ -1,33 +1,35 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "IThirdwebWallet.ExecuteTransaction | Thirdweb .NET SDK",
+	title: "IThirdwebWallet.ExecuteTransaction | Terceraweb .NET SDK",
 	description:
-		"Sends a raw transaction from the connected wallet and returns the receipt.",
+		"Envía una transacción sin procesar desde la billetera conectada y devuelve el recibo.",
 });
 
 # IThirdwebWallet.ExecuteTransaction
 
-Sends a raw transaction from the connected wallet (if supported), waits for it to be mined and returns the receipt. It is recommended to use `ThirdwebContract.Write` instead.
+Envía una transacción sin procesar desde la billetera conectada (si es compatible), espera a que sea minada y devuelve el recibo. Se recomienda usar `ThirdwebContract.Write` en su lugar.
 
-## Usage
+## Uso
+
 
 ```csharp
 var receipt = await wallet.ExecuteTransaction(new ThirdwebTransactionInput(...));
 ```
 
-<Details summary="Parameters">
+<Details summary="Parámetros">
 
 ### ThirdwebTransactionInput
 
-`ThirdwebTransactionInput` object containing necessary transaction details such as `To`, `Data`, `Value`.
+Objeto `ThirdwebTransactionInput` que contiene los detalles necesarios de la transacción, como `To`, `Data`, `Value`.
 
 </Details>
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### ThirdwebTransactionReceipt
 
-The transaction receipt as a `ThirdwebTransactionReceipt`.
+El recibo de la transacción como un `ThirdwebTransactionReceipt`.
 
 </Details>
+

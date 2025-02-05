@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Staking contract",
+		title: "Contrato ERC721Staking",
 		icon: "solidity",
 	},
-	title: "ERC721Staking | thirdweb contract",
+	title: "ERC721Staking | contrato de thirdweb",
 	description:
-		"The Staking721 smart contract extension implements NFT staking mechanism. With this extension you can setup a staking contract for NFT holders of your ERC721 Collection",
+		"La extensión del contrato Staking721 implementa el mecanismo de staking para NFTs. Con esta extensión, puedes configurar un contrato de staking para los poseedores de NFTs de tu colección ERC721.",
 });
+
 
 # ERC721Staking
 
@@ -17,13 +18,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/Staking721.sol";
 ```
 
-The `Staking721` smart contract extension implements NFT staking mechanism. With this extension you can setup a staking contract for NFT holders of your ERC721 Collection. Users can stake their NFTs and earn ERC20 tokens as rewards.
+La extensión del contrato `Staking721` implementa el mecanismo de staking para NFTs. Con esta extensión, puedes configurar un contrato de staking para los poseedores de NFTs de tu colección ERC721. Los usuarios pueden hacer staking de sus NFTs y ganar tokens ERC20 como recompensas.
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Staking721.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (de forma opcional) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -37,10 +38,10 @@ contract MyContract is Staking721 {
     address public rewardToken;
 
     /**
-     *  We store the contract deployer's address only for the purposes of the example
-     *  in the code comment below.
+     *  Almacenamos la dirección del desplegador del contrato solo para los fines del ejemplo
+     *  en el comentario de código a continuación.
      *
-     *  Doing this is not necessary to use the `Staking721` extension.
+     *  Hacer esto no es necesario para usar la extensión `Staking721`.
      */
     address public deployer;
 
@@ -57,10 +58,10 @@ contract MyContract is Staking721 {
     }
 
     /**
-     *  @dev    Mint/Transfer ERC20 rewards to the staker. Must override.
+     *  @dev    Minta/Transfiere recompensas ERC20 al staker. Debe ser sobreescrito.
      *
-     *  @param _staker    Address for sending rewards to.
-     *  @param _rewards   Amount of tokens to be given out as reward.
+     *  @param _staker    Dirección a la que se enviarán las recompensas.
+     *  @param _rewards   Cantidad de tokens a entregar como recompensa.
      *
      */
     function _mintRewards(address _staker, uint256 _rewards) internal override {
@@ -74,11 +75,11 @@ contract MyContract is Staking721 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [Staking721Base](/contracts/build/base-contracts/erc-721/staking)
 
-## Full API Reference
+## Referencia Completa de la API
 
 <Details summary="stake">
 
@@ -86,8 +87,8 @@ contract MyContract is Staking721 {
 function stake(uint256[] calldata tokenIds) external;
 ```
 
-- Lets a user stake a number of ERC721 tokens by passing in token-Ids.
-- Parameter `tokenIds`: List of token-Ids to stake.
+- Permite a un usuario apostar una cantidad de tokens ERC721 pasando los identificadores de los tokens.
+- Parámetro `tokenIds`: Lista de identificadores de los tokens para apostar.
 
 </Details>
 
@@ -97,8 +98,8 @@ function stake(uint256[] calldata tokenIds) external;
 function withdraw(uint256[] calldata tokenIds) external;
 ```
 
-- Un-stake and withdraw NFTs from the contract.
-- Parameter `tokenIds`: List of token-Ids to withdraw.
+- Deshacer la apuesta y retirar NFTs del contrato.
+- Parámetro `tokenIds`: Lista de identificadores de los tokens para retirar.
 
 </Details>
 
@@ -108,7 +109,7 @@ function withdraw(uint256[] calldata tokenIds) external;
 function claimRewards() external;
 ```
 
-- Claim accumulated rewards. This claim method allows for a pull mechanism where users must initiate claiming of rewards.
+- Reclamar las recompensas acumuladas. Este método de reclamo permite un mecanismo de "pull", donde los usuarios deben iniciar el reclamo de recompensas.
 
 </Details>
 
@@ -118,8 +119,8 @@ function claimRewards() external;
 function getStakeInfo(address staker) external view returns (uint256 tokensStaked, uint256 rewards);
 ```
 
-- View number of NFTs staked and total rewards available for a user.
-- Parameter `staker`: Account address of staker.
+- Ver la cantidad de NFTs apostados y las recompensas totales disponibles para un usuario.
+- Parámetro `staker`: Dirección de la cuenta del apostador.
 
 </Details>
 
@@ -129,8 +130,8 @@ function getStakeInfo(address staker) external view returns (uint256 tokensStake
 function setRewardsPerUnitTime(uint256 rewardsPerUnitTime) external;
 ```
 
-- Allows an authorized account to set rewards per unit of time. Interpreted as x rewards per second/per day/etc based on time-unit.
-- Parameter `rewardsPerUnitTime`: New rewards per unit time.
+- Permite que una cuenta autorizada establezca las recompensas por unidad de tiempo. Interpretado como x recompensas por segundo/día/etc. según la unidad de tiempo.
+- Parámetro `rewardsPerUnitTime`: Nuevas recompensas por unidad de tiempo.
 
 </Details>
 
@@ -140,7 +141,7 @@ function setRewardsPerUnitTime(uint256 rewardsPerUnitTime) external;
 function setTimeUnit(uint256 timeUnit) external;
 ```
 
-- Allows an authorized account to set time unit as a number of seconds. For e.g. 1 hour can be set as 3600 seconds - setting the reward frequency as _per hour_.
-- Parameter `timeUnit`: New time unit.
+- Permite que una cuenta autorizada establezca la unidad de tiempo como un número de segundos. Por ejemplo, 1 hora puede establecerse como 3600 segundos, estableciendo la frecuencia de recompensas como _por hora_.
+- Parámetro `timeUnit`: Nueva unidad de tiempo.
 
 </Details>

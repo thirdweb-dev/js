@@ -4,13 +4,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Enumerable contract",
+		title: "Contrato ERC721Enumerable",
 		icon: "solidity",
 	},
-	title: "ERC721Enumerable | thirdweb contract",
+	title: "ERC721Enumerable | contrato de thirdweb",
 	description:
-		"View all of the NFTs owned by a specific wallet address by implementing the IERC721Enumerable interface",
+		"Ver todos los NFTs poseídos por una dirección de wallet específica implementando la interfaz IERC721Enumerable",
 });
+
 
 # ERC721Enumerable
 
@@ -18,11 +19,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/interface/IERC721Enumerable.sol";
 ```
 
-View all of the NFTs owned by a specific wallet address by implementing the `IERC721Enumerable` interface.
+Ver todos los NFTs poseídos por una dirección de wallet específica implementando la interfaz `IERC721Enumerable`.
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -30,9 +31,9 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC721Enumerable.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -62,7 +63,7 @@ contract Contract is ERC721A, IERC721Enumerable {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721Base](/contracts/build/base-contracts/erc-721/base)
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)

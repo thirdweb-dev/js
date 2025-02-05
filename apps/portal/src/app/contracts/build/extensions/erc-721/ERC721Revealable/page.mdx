@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721Revealable contract",
+		title: "Contrato ERC721Revealable",
 		icon: "solidity",
 	},
-	title: "ERC721Revealable | thirdweb contract",
+	title: "ERC721Revealable | contrato de thirdweb",
 	description:
-		"Create batches of 'delayed-reveal' NFTs that can be revealed at a later date after they have been minted and claimed",
+		"Crea lotes de NFTs de 'revelación retrasada' que pueden ser revelados en una fecha posterior, después de haber sido acuñados y reclamados",
 });
+
 
 # ERC721Revealable
 
@@ -18,16 +19,16 @@ import "@thirdweb-dev/contracts/eip/ERC721.sol";
 import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
 ```
 
-Create batches of ['delayed-reveal'](/glossary/delayed-reveal) NFTs that can be revealed at a later date after they have been minted and claimed.
+Crea lotes de NFTs de ['revelación retrasada'](/glossary/delayed-reveal) que pueden ser revelados en una fecha posterior, después de haber sido acuñados y reclamados.
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`DelayedReveal`](/contracts/build/extensions/general/DelayedReveal) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las extensiones
+[`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`DelayedReveal`](/contracts/build/extensions/general/DelayedReveal).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DelayedReveal.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -61,7 +62,7 @@ contract Contract is ERC721A, LazyMint, DelayedReveal {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
 - [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)

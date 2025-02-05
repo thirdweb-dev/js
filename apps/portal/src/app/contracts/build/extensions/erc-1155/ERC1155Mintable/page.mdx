@@ -4,13 +4,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155Mintable contract",
+		title: "Contrato ERC1155Mintable",
 		icon: "solidity",
 	},
-	title: "ERC1155Mintable | thirdweb contract",
+	title: "ERC1155Mintable | contrato de thirdweb",
 	description:
-		"ERC1155Mintable allows you to mint new NFTs into your ERC1155 NFT collection contract",
+		"ERC1155Mintable te permite acuñar nuevos NFTs en tu contrato de colección ERC1155 NFT",
 });
+
 
 # ERC1155Mintable
 
@@ -18,11 +19,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
 ```
 
-`ERC1155Mintable` allows you to mint new NFTs into your ERC1155 NFT collection contract.
+`ERC1155Mintable` te permite acuñar nuevos NFTs en tu contrato de colección ERC1155 NFT.
 
 <Callout title="info" variant="info">
 
-This extension is an interface and requires all of the functions to be implemented
+Esta extensión es una interfaz y requiere que todas las funciones sean implementadas
 
 </Callout>
 
@@ -30,9 +31,9 @@ This extension is an interface and requires all of the functions to be implement
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IMintableERC1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidades personalizadas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -63,7 +64,7 @@ contract Contract is ERC1155, IMintableERC1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
 - [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)

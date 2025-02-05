@@ -3,17 +3,17 @@ import { GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC20Base contract",
+		title: "Contrato ERC20Base",
 		icon: "contract",
 	},
-	title: "ERC20Base | thirdweb contracts",
+	title: "ERC20Base | Contratos thirdweb",
 	description:
-		"The ERC20Base smart contract implements the ERC-20 standard. Additionally, it supports EIP-2612, allowing approvals to be made via signatures.",
+		"El contrato inteligente ERC20Base implementa el estándar ERC-20. Además, es compatible con EIP-2612, lo que permite que las aprobaciones se realicen mediante firmas.",
 });
 
 # ERC20Base
 
-The `ERC20Base` smart contract implements the [ERC-20](https://eips.ethereum.org/EIPS/eip-20) standard. Additionally, it supports [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612), allowing approvals to be made via signatures.
+El contrato inteligente `ERC20Base` implementa el estándar [ERC-20](https://eips.ethereum.org/EIPS/eip-20). Además, es compatible con [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612), lo que permite que las aprobaciones se realicen mediante firmas.
 
 ```solidity
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
@@ -21,9 +21,9 @@ import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20Base.sol" />
 
-## Usage
+## Uso
 
-Import the contract and inherit from it.
+Importa el contrato e inhírelo.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -46,9 +46,9 @@ contract MyToken is ERC20Base {
 }
 ```
 
-## Detected Extensions
+## Extensiones Detectadas
 
-Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+Una vez desplegado, puedes utilizar las funciones proporcionadas por estas extensiones en el SDK y el panel de control:
 
 - [ERC20](/contracts/build/extensions/erc-20/ERC20)
 - [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
@@ -57,9 +57,9 @@ Once deployed, you can use the features made available by these extensions on th
 - [Ownable](/contracts/build/extensions/general/Ownable)
 - [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
 
-### Functions to Override
+### Funciones para Sobrescribir
 
-The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+Las siguientes funciones han sido implementadas en este contrato y están disponibles para ser sobrescritas para agregar lógica personalizada:
 
 <Details id="mintTo" summary="mintTo">
 

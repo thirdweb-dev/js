@@ -1,90 +1,89 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "ThirdwebStorage | Thirdweb .NET SDK",
-	description: "Interact with IPFS for downloading and uploading data.",
+	title: "ThirdwebStorage | SDK de Thirdweb para .NET",
+	description: "Interactúa con IPFS para descargar y cargar datos.",
 });
 
 # ThirdwebStorage
 
-The `ThirdwebStorage` class provides methods to interact with any URL including IPFS, allowing you to download and upload data easily.
+La clase `ThirdwebStorage` proporciona métodos para interactuar con cualquier URL, incluyendo IPFS, permitiéndote descargar y cargar datos fácilmente.
 
-## Download
+## Descargar
 
-Download data from an HTTP or IPFS URI.
+Descarga datos desde una URI HTTP o IPFS.
 
 ```csharp
 var data = await ThirdwebStorage.Download<string>(client, "{{uri}}");
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
 ### uri
 
-The IPFS URI or a URL that points to the data.
+La URI de IPFS o una URL que apunte a los datos.
 
-Must be a `string`.
+Debe ser un `string`.
 
-### Return Value
+### Valor de Retorno
 
-Returns the data as the specified type. If you're downloading a string, such as JSON data, it's directly returned. For other types, the method attempts to deserialize the data to the specified type using `Newtonsoft.Json`.
+Devuelve los datos como el tipo especificado. Si estás descargando una cadena, como datos JSON, se devuelve directamente. Para otros tipos, el método intenta deserializar los datos al tipo especificado utilizando `Newtonsoft.Json`.
 
 </Details>
 
-## Upload
+## Cargar
 
-Upload file to IPFS and pin it.
+Carga un archivo a IPFS y lo fija.
 
 ```csharp
 var result = await ThirdwebStorage.Upload(client, "{{path/to-file}}");
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
 ### path
 
-The path to the file to upload.
+La ruta del archivo que deseas cargar.
 
-Must be a `string`.
+Debe ser un `string`.
 
-### Return Value
+### Valor de Retorno
 
-Returns an `IPFSUploadResult` containing the IPFS hash (IpfsHash), the size of the pinned content (PinSize), the timestamp of the pinning (Timestamp), and a preview URL (PreviewUrl) constructed using the client ID and the IPFS hash.
+Devuelve un `IPFSUploadResult` que contiene el hash de IPFS (IpfsHash), el tamaño del contenido fijado (PinSize), la marca de tiempo del fijado (Timestamp) y una URL de vista previa (PreviewUrl) construida usando el client ID y el hash de IPFS.
 
 </Details>
 
-## UploadRaw
+## CargarDatosRaw
 
-Upload raw data to IPFS and pin it.
+Carga datos crudos a IPFS y los fija.
 
 ```csharp
 var bytes = Encoding.UTF8.GetBytes("{{data}}");
 var result = await ThirdwebStorage.UploadRaw(client, bytes);
 ```
-
-<Details summary="Configuration">
+<Details summary="Configuración">
 
 ### rawBytes
 
-The raw data to upload.
+Los datos crudos que deseas cargar.
 
-Must be a `byte[]`.
+Debe ser un `byte[]`.
 
-### Return Value
+### Valor de Retorno
 
-Returns an `IPFSUploadResult` containing the IPFS hash (IpfsHash), the size of the pinned content (PinSize), the timestamp of the pinning (Timestamp), and a preview URL (PreviewUrl) constructed using the client ID and the IPFS hash.
+Devuelve un `IPFSUploadResult` que contiene el hash de IPFS (IpfsHash), el tamaño del contenido fijado (PinSize), la marca de tiempo del fijado (Timestamp) y una URL de vista previa (PreviewUrl) construida usando el client ID y el hash de IPFS.
 
 </Details>
 
-## Example Usage
+## Ejemplo de Uso
 
-### Downloading JSON Data
+### Descargando Datos JSON
 
 ```csharp
 var jsonData = await ThirdwebStorage.Download<Dictionary<string, object>>(client, "ipfs://Qm...");
 ```
 
-### Uploading a File
+### Cargando un Archivo
 
 ```csharp
 var uploadResult = await ThirdwebStorage.Upload(client, @"C:\path\to\your\file.txt");

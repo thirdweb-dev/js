@@ -3,14 +3,14 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "GetBuyWithFiatQuote | thirdweb .NET SDK",
 	description:
-		"Get a quote containing an intent id and onramp link for a fiat to crypto swap.",
+		"Obtén una cotización que contenga un id de intención y un enlace de onramp para un intercambio de fiat a cripto.",
 });
 
 # GetBuyWithFiatQuote
 
-Get a quote containing an intent id and onramp link for a fiat to crypto swap.
+Obtén una cotización que contenga un id de intención y un enlace de onramp para un intercambio de fiat a cripto.
 
-## Usage
+## Uso
 
 ```csharp
 using Thirdweb.Pay;
@@ -28,29 +28,29 @@ var fiatQuoteParams = new BuyWithFiatQuoteParams(
 var quote = await ThirdwebPay.GetBuyWithFiatQuote(client, fiatQuoteParams);
 ```
 
-<Details summary="Configuration">
+<Details summary="Configuración">
 
-#### Client (required)
+#### Cliente (requerido)
 
-`ThirdwebClient`: The Thirdweb client instance.
+`ThirdwebClient`: La instancia del cliente de Thirdweb.
 
 #### BuyWithFiatQuoteParams
 
-A `BuyWithFiatQuoteParams` object (with a helpful constructor) containing the following properties:
+Un objeto `BuyWithFiatQuoteParams` (con un constructor útil) que contiene las siguientes propiedades:
 
 ```csharp
-string fromCurrencySymbol; // Currency symbol of the from token
-string toAddress; // Address executing the swap
-string toChainId; // Chain ID of the to token
-string toTokenAddress; // Address of the to token
-string fromAmount; // Optional, amount of from token
-string fromAmountUnits; // Optional, amount of from token in units
-string toAmount; // Optional, amount of to token
-string toAmountWei; // Optional, amount of to token in wei
-double? maxSlippageBPS; // Optional, maximum slippage in basis points
-bool isTestMode; // Optional, enters test mode onramp flow, defaults to false
-string preferredProvider; // Optional, can be set to "STRIPE", "KADO", etc.
-object purchaseData; // Optional, additional data to be passed and retained during the flow
+string fromCurrencySymbol; // Símbolo de la moneda del token de origen
+string toAddress; // Dirección que ejecuta el intercambio
+string toChainId; // ID de la cadena del token de destino
+string toTokenAddress; // Dirección del token de destino
+string fromAmount; // Opcional, cantidad del token de origen
+string fromAmountUnits; // Opcional, cantidad del token de origen en unidades
+string toAmount; // Opcional, cantidad del token de destino
+string toAmountWei; // Opcional, cantidad del token de destino en wei
+double? maxSlippageBPS; // Opcional, deslizamiento máximo en puntos básicos
+bool isTestMode; // Opcional, entra en modo de prueba en el flujo de intercambio, por defecto es falso
+string preferredProvider; // Opcional, puede establecerse en "STRIPE", "KADO", etc.
+object purchaseData; // Opcional, datos adicionales que se pasarán y se retendrán durante el flujo
 ```
 
 </Details>
@@ -59,22 +59,22 @@ object purchaseData; // Optional, additional data to be passed and retained duri
 
 ### Return Value
 
-A `BuyWithFiatQuoteResult` object containing the following properties:
+Un objeto `BuyWithFiatQuoteResult` que contiene las siguientes propiedades:
 
 ```csharp
-string IntentId; // Intent identifier used to track the onramp status
-string ToAddress; // Address to receive the tokens
-OnRampCurrency FromCurrency; // OnRamp Currency details
-OnRampCurrency FromCurrencyWithFees; // OnRamp Currency details with fees
-OnRampToken OnRampToken; // OnRamp Token details
-string Provider; // Onramp provider
-Token ToToken; // Token details of the to token
-string EstimatedToAmountMinWei; // Estimated to token amount received min in wei
-string EstimatedToAmountMin; // Estimated to token amount received min
-List<OnRampFees> ProcessingFees; // Processing fee details
-string EstimatedDurationSeconds; // Estimated onramp duration in seconds
-double MaxSlippageBPS; // Maximum slippage in basis points
-string OnRampLink; // Onramp link that will be used to trigger the onramp flow
+string IntentId; // Identificador de intento utilizado para hacer seguimiento al estado del flujo de onramp
+string ToAddress; // Dirección para recibir los tokens
+OnRampCurrency FromCurrency; // Detalles de la moneda de origen para el onramp
+OnRampCurrency FromCurrencyWithFees; // Detalles de la moneda de origen con tarifas para el onramp
+OnRampToken OnRampToken; // Detalles del token para el onramp
+string Provider; // Proveedor del flujo de onramp
+Token ToToken; // Detalles del token de destino
+string EstimatedToAmountMinWei; // Estimación mínima de la cantidad de token de destino recibida en wei
+string EstimatedToAmountMin; // Estimación mínima de la cantidad de token de destino recibida
+List<OnRampFees> ProcessingFees; // Detalles de las tarifas de procesamiento
+string EstimatedDurationSeconds; // Duración estimada del flujo de onramp en segundos
+double MaxSlippageBPS; // Desviación máxima permitida en puntos base
+string OnRampLink; // Enlace del onramp que se utilizará para iniciar el flujo
 ```
 
 </Details>

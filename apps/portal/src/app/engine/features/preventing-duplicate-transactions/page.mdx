@@ -5,22 +5,22 @@ export const metadata = createMetadata({
 	description: "Manage dashboard and API access to your Engine instance.",
 });
 
-# Preventing Duplicate Transactions
+# Prevención de transacciones duplicadas
 
-Your backend server may implement retries to handle when an HTTP response from Engine was not received successfully.
-In these cases, set an **idempotency key** to drop duplicate submissions of the same transaction.
+Tu servidor backend puede implementar reintentos para manejar situaciones en las que no se recibe una respuesta HTTP exitosa de Engine. En estos casos, establece una **clave de idempotencia** para evitar la sumisión duplicada de la misma transacción.
 
-This approach prevents costly and irreversible errors like transferring funds or minting NFTs more than once.
+Este enfoque previene errores costosos e irreversibles, como transferir fondos o acuñar NFTs más de una vez.
 
-## Usage
+## Uso
 
-Set the `x-idempotency-key` header to a unique string.
+Establece el encabezado `x-idempotency-key` con una cadena única.
 
-Engine only submits a transaction if there was not another transaction sent with the same idempotency key in the past 24 hours. Subsequent calls with the same idempotency key return the original transaction `queueId`.
+Engine solo enviará una transacción si no se ha enviado otra transacción con la misma clave de idempotencia en las últimas 24 horas. Las llamadas subsiguientes con la misma clave de idempotencia devolverán el `queueId` de la transacción original.
 
-## Example
+## Ejemplo
 
-This example safely retries a request up to three times if a 2xx is not received.
+Este ejemplo reintenta de forma segura una solicitud hasta tres veces si no se recibe una respuesta 2xx.
+
 
 ```typescript
 const idempotencyKey = "27R82mBV"; // Some unique identifier from your app

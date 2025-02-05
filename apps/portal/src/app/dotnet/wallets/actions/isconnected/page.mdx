@@ -3,25 +3,26 @@ import { Details, createMetadata } from "@doc";
 export const metadata = createMetadata({
 	title: "IThirdwebWallet.IsConnected | Thirdweb .NET SDK",
 	description:
-		"Check if the wallet is currently connected to the blockchain or related services.",
+		"Verifica si la billetera está actualmente conectada a la blockchain o servicios relacionados.",
 });
 
 # IThirdwebWallet.IsConnected
 
-Determines whether the wallet instance is currently connected to the blockchain network and any related services.
+Determina si la instancia de la billetera está actualmente conectada a la red de blockchain y a los servicios relacionados.
 
-**Note:** an `InAppWallet` returning `false` here means that it could not auto-connect to the wallet right after creation, and requires user authentication, see [InAppWallet.Connect](/dotnet/wallets/providers/in-app-wallet) for more information.
+**Nota:** una billetera `InAppWallet` que retorne `false` aquí significa que no pudo conectarse automáticamente a la billetera justo después de su creación, y requiere autenticación del usuario. Consulta [InAppWallet.Connect](/dotnet/wallets/providers/in-app-wallet) para más información.
 
-## Usage
+## Uso
 
 ```csharp
 bool isConnected = await wallet.IsConnected();
 ```
 
-<Details summary="Return Value">
+<Details summary="Valor de retorno">
 
 ### bool
 
-Returns a `bool` indicating the wallet's connection status. `true` signifies that the wallet is currently connected and ready to go, whereas `false` indicates it is not.
+Devuelve un `bool` que indica el estado de conexión de la billetera. `true` significa que la billetera está actualmente conectada y lista para usar, mientras que `false` indica que no lo está.
 
 </Details>
+

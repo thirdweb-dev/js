@@ -3,35 +3,34 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC721ClaimPhases contract",
+		title: "Contrato ERC721ClaimPhases",
 		icon: "solidity",
 	},
-	title: "ERC721ClaimPhases | thirdweb contract",
+	title: "ERC721ClaimPhases | contrato de thirdweb",
 	description:
-		"Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by implementing ERC721 and Drop extensions",
+		"Permite que otras billeteras reclamen/minteen tokens del contrato bajo los criterios de condiciones de reclamo implementando las extensiones ERC721 y Drop",
 });
 
-# ERC721ClaimPhases
+
+# ERC721ClaimPhases 
 
 ```solidity
 import "@thirdweb-dev/contracts/eip/ERC721.sol";
 import "@thirdweb-dev/contracts/extension/Drop.sol";
 ```
 
-Allow other wallets to claim/mint tokens from the contract under the criteria of claim conditions by
-implementing [`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`Drop`](/contracts/build/extensions/general/Drop) extensions.
+Permite que otras billeteras reclamen/minteen tokens del contrato bajo los criterios de condiciones de reclamo implementando las extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`Drop`](/contracts/build/extensions/general/Drop).
 
-Unlike [`ERC721ClaimCondition`](/contracts/build/extensions/erc-721/ERC721ClaimConditions), this extension allows you to set _multiple_ [claim phases](/glossary/claim-phases).
+A diferencia de [`ERC721ClaimCondition`](/contracts/build/extensions/erc-721/ERC721ClaimConditions), esta extensión te permite establecer _múltiples_ [fases de reclamo](/glossary/claim-phases).
 
-This is an extension which is detectable in the dashboard if the smart contract implements the
-[`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`Drop`](/contracts/build/extensions/general/Drop) extensions.
+Esta es una extensión que se puede detectar en el panel si el contrato inteligente implementa las extensiones [`ERC721`](/contracts/build/extensions/erc-721/ERC721) y [`Drop`](/contracts/build/extensions/general/Drop).
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Drop.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from the extensions which make up the `ERC721ClaimPhases` detectable extension.
-The functions which are available to be (optionally) overridden are also detailed.
+Este es un ejemplo de contrato inteligente que demuestra cómo heredar de las extensiones que componen la extensión detectable `ERC721ClaimPhases`.
+También se detallan las funciones que están disponibles para ser (opcionalmente) sobrescritas.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -53,7 +52,7 @@ contract Contract is ERC721A, LazyMint, Drop {
     {}
 
     function _canLazyMint() internal view override returns (bool) {
-        // Your custom implementation here
+        // Tu implementación personalizada aquí
     }
 
     /// @dev Runs before every `claim` function call.
@@ -133,6 +132,6 @@ contract Contract is ERC721A, LazyMint, Drop {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
-None of the base contracts implement this extension.
+Ninguno de los contratos base implementa esta extensión.

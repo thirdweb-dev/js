@@ -1,33 +1,33 @@
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-    title: "thirdweb Modular Contracts",
+    title: "Contratos Modulares de thirdweb",
     description:
-        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+        "El Contrato Modular proporciona un marco para construir contratos inteligentes personalizados de manera más eficiente al ofrecer un conjunto de contratos base preconstruidos y componentes reutilizables, conocidos como módulos.",
     image: {
-        title: "thirdweb Modular Contracts",
+        title: "Contratos Modulares de thirdweb",
         icon: "solidity",
     },
 });
 
 # ERC-721 Core
 
-## Supported Callback Functions
+## Funciones de Callback Soportadas
 
-| Function                          | Mode      |
+| Función                          | Modo      |
 |-----------------------------------|-----------|
-| `beforeMintERC721`                | REQUIRED  |
-| `beforeMintWithSignatureERC721`   | REQUIRED  |
-| `beforeTransferERC721`            | OPTIONAL  |
-| `beforeBurnERC721`                | OPTIONAL  |
-| `beforeApproveERC721`             | OPTIONAL  |
-| `beforeApproveForAll`             | OPTIONAL  |
-| `onTokenURI`                      | REQUIRED  |
-| `updateMetadataERC721`            | REQUIRED  |
+| `beforeMintERC721`                | REQUERIDO |
+| `beforeMintWithSignatureERC721`   | REQUERIDO |
+| `beforeTransferERC721`            | OPCIONAL |
+| `beforeBurnERC721`                | OPCIONAL |
+| `beforeApproveERC721`             | OPCIONAL |
+| `beforeApproveForAll`             | OPCIONAL |
+| `onTokenURI`                      | REQUERIDO |
+| `updateMetadataERC721`            | REQUERIDO |
 
-## Supported Interfaces
+## Interfaces Soportadas
 
-| Interface        | ID              |
+| Interfaz        | ID              |
 |------------------|-----------------|
 | `ERC165`         | `0x01ffc9a7`    |
 | `ERC721`         | `0x80ac58cd`    |
@@ -35,21 +35,21 @@ export const metadata = createMetadata({
 | `ERC-7572`       | `0xe8a3d485`    |
 | `ERC-173`        | `0x7f5828d0`    |
 
-## Functions Supported
+## Funciones Soportadas
 
-| Function                | Description                                                                 |
+| Función                | Descripción                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
-| `_initialize`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and their data. |
-| `contractURI`           | Returns the contract metadata URI.                                          |
-| `startTokenId`          | Returns the starting token ID for sequential mints.                         |
-| `totalMinted`           | Returns the total number of tokens minted ever.                             |
-| `tokenURI`              | Returns the token metadata of an NFT.                                       |
-| `supportsInterface`     | Checks if the contract implements an interface with the given interface ID. |
-| `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
-| `setContractURI`        | Sets the contract metadata URI. Callable only by the contract admin.        |
-| `mint`                  | Mints tokens to a specified address, calling the beforeMint hook.           |
-| `mintWithSignature`     | Mints tokens with a signature, calling the beforeMintWithSignature hook.    |
-| `burn`                  | Burns a specified token, calling the beforeBurn hook if it exists.          |
-| `transferFrom`          | Transfers ownership of an NFT, calling the beforeTransfer hook if it exists.|
-| `approve`               | Approves an address to transfer a specific NFT, calling the beforeApprove hook if it exists. |
-| `setApprovalForAll`     | Approves or revokes approval from an operator to transfer or approve for all of the caller's NFTs. |
+| `_initialize`           | Inicializa el contrato con parámetros para el nombre, símbolo, URI de metadatos, propietario, módulos y sus datos. |
+| `contractURI`           | Devuelve la URI de metadatos del contrato.                                  |
+| `startTokenId`          | Devuelve el ID inicial del token para las acuñaciones secuenciales.         |
+| `totalMinted`           | Devuelve el número total de tokens acuñados.                                |
+| `tokenURI`              | Devuelve los metadatos del token de un NFT.                                 |
+| `supportsInterface`     | Verifica si el contrato implementa una interfaz con el ID de interfaz dado. |
+| `getSupportedCallbackFunctions` | Devuelve las funciones de callback soportadas.                  |
+| `setContractURI`        | Establece la URI de metadatos del contrato. Solo puede ser llamada por el administrador del contrato. |
+| `mint`                  | Mina tokens a una dirección especificada, llamando a la función beforeMint. |
+| `mintWithSignature`     | Mina tokens con una firma, llamando a la función beforeMintWithSignature.  |
+| `burn`                  | Quema un token especificado, llamando a la función beforeBurn si existe.   |
+| `transferFrom`          | Transfiere la propiedad de un NFT, llamando a la función beforeTransfer si existe. |
+| `approve`               | Aprueba una dirección para transferir un NFT específico, llamando a la función beforeApprove si existe. |
+| `setApprovalForAll`     | Aprueba o revoca la aprobación de un operador para transferir o aprobar todos los NFTs del llamador. |

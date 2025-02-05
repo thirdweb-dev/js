@@ -3,13 +3,14 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "ERC1155 contract",
+		title: "Contrato ERC1155",
 		icon: "solidity",
 	},
-	title: "ERC1155 | thirdweb contract",
+	title: "ERC1155 | contrato de thirdweb",
 	description:
-		"ERC1155 is the standard for representing 'Edition' NFTs where each NFT in the collection can have more than 1 quantity; also known as 'semi-fungible' tokens",
+		"ERC1155 es el estándar para representar NFTs de 'Edición', donde cada NFT en la colección puede tener más de 1 cantidad; también conocido como tokens 'semi-fungibles'",
 });
+
 
 # ERC1155
 
@@ -17,14 +18,13 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/eip/ERC1155.sol";
 ```
 
-ERC1155 is the standard for representing "Edition" NFTs
-where each NFT in the collection can have more than 1 quantity; also known as "semi-fungible" tokens.
+ERC1155 es el estándar para representar NFTs de "Edición", donde cada NFT en la colección puede tener más de 1 cantidad; también conocido como tokens "semi-fungibles".
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/ERC1155.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar funcionalidad personalizada (opcional).
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -45,7 +45,7 @@ contract Contract is ERC1155 {
 }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos de Base que implementan esta extensión
 
 - [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
 - [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)

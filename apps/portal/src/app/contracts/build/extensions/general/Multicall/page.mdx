@@ -2,12 +2,12 @@ import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Multicall contract",
+		title: "Contrato Multicall",
 		icon: "solidity",
 	},
-	title: "Multicall | thirdweb contract",
+	title: "Multicall | Contrato de thirdweb",
 	description:
-		"The Multicall smart contract is an extension usable with any base smart contract. It provides a function multicall to batch together multiple calls in a single external call",
+		"El contrato inteligente Multicall es una extensión utilizable con cualquier contrato inteligente base. Proporciona una función multicall para agrupar múltiples llamadas en una sola llamada externa",
 });
 
 # Multicall
@@ -16,12 +16,11 @@ export const metadata = createMetadata({
 import "@thirdweb-dev/contracts/extension/Multicall.sol";
 ```
 
-The `Multicall` smart contract is an extension usable with any base smart contract. It provides a function `multicall` to batch together multiple calls in a single external call.
+El contrato inteligente `Multicall` es una extensión utilizable con cualquier contrato inteligente base. Proporciona una función `multicall` para agrupar múltiples llamadas en una sola llamada externa.
 
 <Callout title="info" variant="info">
 
-It is recommended to use this extension alongside the [`ERC721Mintable`](/contracts/build/extensions/erc-721/ERC721Mintable), [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable) or [`ERC20Mintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable)
-extension to unlock the [`ERC721BatchMintable`](/contracts/build/extensions/erc-721/ERC721BatchMintable), [`ERC1155BatchMintable`](/contracts/build/extensions/erc-1155/ERC1155BatchMintable) or [`ERC20BatchMintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable) dashboard extension detection.
+Se recomienda usar esta extensión junto con la extensión [`ERC721Mintable`](/contracts/build/extensions/erc-721/ERC721Mintable), [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable) o [`ERC20Mintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable) para desbloquear la detección de la extensión del panel de control [`ERC721BatchMintable`](/contracts/build/extensions/erc-721/ERC721BatchMintable), [`ERC1155BatchMintable`](/contracts/build/extensions/erc-1155/ERC1155BatchMintable) o [`ERC20BatchMintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable).
 
 </Callout>
 
@@ -29,9 +28,9 @@ extension to unlock the [`ERC721BatchMintable`](/contracts/build/extensions/erc-
 
 <GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Multicall.sol" />
 
-## Usage
+## Uso
 
-This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+Este es un contrato inteligente de ejemplo que demuestra cómo heredar de esta extensión y sobrescribir las funciones para agregar (opcionalmente) funcionalidad personalizada.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -42,7 +41,7 @@ import "@thirdweb-dev/contracts/extension/Multicall.sol";
 contract MyContract is Multicall { ... }
 ```
 
-## Base Contracts Implementing This Extension
+## Contratos Base que Implementan Esta Extensión
 
 - [ERC721Base](/contracts/build/base-contracts/erc-721/base)
 - [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)
@@ -53,7 +52,7 @@ contract MyContract is Multicall { ... }
 - [ERC20SignatureMintVote](/contracts/build/base-contracts/erc-20/signature-mint-vote)
 - [ERC20Vote](/contracts/build/base-contracts/erc-20/base)
 
-## Full API reference
+## Referencia Completa de la API
 
 <Details summary="multicall">
 
@@ -61,8 +60,8 @@ contract MyContract is Multicall { ... }
 function multicall(bytes[] calldata data) external virtual override returns (bytes[] memory results);
 ```
 
-- Receives and executes a batch of function calls on the contract.
-- Parameter `data`: The bytes data that makes up the batch of function calls to execute.
-- Return value `results`: The bytes data that makes up the result of the batch of function calls executed.
+- Recibe y ejecuta un lote de llamadas a funciones en el contrato.
+- Parámetro `data`: Los datos en bytes que conforman el lote de llamadas a funciones a ejecutar.
+- Valor de retorno `results`: Los datos en bytes que conforman el resultado del lote de llamadas a funciones ejecutadas.
 
 </Details>

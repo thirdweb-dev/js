@@ -5,31 +5,32 @@ import { BlocksIcon } from "lucide-react";
 import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "Reading Contract State | thirdweb",
-	description: "How to read contract state in react",
+	title: "Lectura del Estado del Contrato | thirdweb",
+	description: "Cómo leer el estado de un contrato en React",
 });
 
-# Read contract state
+# Leer el estado del contrato
 
-Read onchain data from any contract on any chain.
+Lee datos onchain de cualquier contrato en cualquier cadena.
 
-## Live Playground
+## Playground en Vivo
 
-Try out the demo for yourself in the [reading contract state playground](https://playground.thirdweb.com/connect/blockchain-api)
+Prueba la demostración por ti mismo en el [playground de lectura del estado del contrato](https://playground.thirdweb.com/connect/blockchain-api)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demo"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/blockchain-api"
-	description="See the SDK in action on the live playground"
+	description="Mira el SDK en acción en el playground en vivo"
 />
 </Stack>
 
-## Generic Contract Read
+## Lectura Genérica de Contratos
 
-Reading contract state in react is done via the `useReadContract` hook. The hook returns a React Query `data`, `isLoading`, and other useful state that you can use to render your component.
+La lectura del estado de un contrato en React se realiza mediante el hook `useReadContract`.  
+Este hook devuelve `data`, `isLoading` y otros estados útiles de React Query que puedes usar para renderizar tu componente.
 
 ```ts
 import { getContract } from "thirdweb";
@@ -50,18 +51,18 @@ const MyComponent = () => {
 };
 ```
 
-## Using Extensions
+## Uso de Extensiones
 
 <Stack>
 <ArticleIconCard
-	title="Understanding Extensions"
-	description="Learn how to use extensions in your project"
+	title="Entendiendo las Extensiones"
+	description="Aprende cómo usar extensiones en tu proyecto"
 	icon={BlocksIcon}
 	href="/typescript/v5/extensions/use"
 />
 </Stack>
 
-Extensions are a way to make complex queries from a contract in a type-safe way with a simple API.
+Las extensiones son una forma de realizar consultas complejas a un contrato de manera segura en términos de tipos, utilizando una API sencilla.
 
 ```tsx
 import { getContract } from "thirdweb";
@@ -82,11 +83,11 @@ const MyComponent = () => {
 };
 ```
 
-Check out all the [available extensions](/references/typescript/v5/functions#extensions) for more details.
+Consulta todas las [extensiones disponibles](/references/typescript/v5/functions#extensions) para más detalles.
 
-## Generic Contract Events
+## Eventos Genéricos de Contrato
 
-Query and listen to contract events with the `useContractEvents` hook.
+Consulta y escucha eventos de contratos con el hook `useContractEvents`.
 
 ```tsx
 import { useContractEvents } from "thirdweb/react";
@@ -102,7 +103,7 @@ const { data: events } = useContractEvents({
 });
 ```
 
-or with extensions:
+o con extensiones:
 
 ```tsx
 import { useContractEvents } from "thirdweb/react";
@@ -114,9 +115,9 @@ const { data: events } = useContractEvents({
 });
 ```
 
-## API References
+## Referencias de la API
 
-Check out the [contract hooks](https://thirdweb.com/docs/references/typescript/v5/useReadContract) reference for more details.
+Consulta la referencia de [hooks de contrato](https://thirdweb.com/docs/references/typescript/v5/useReadContract) para más detalles.
 
 <Stack>
 
@@ -124,14 +125,15 @@ Check out the [contract hooks](https://thirdweb.com/docs/references/typescript/v
 	title="useReadContract"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useReadContract"
-	description="Hook to read contract state"
+	description="Hook para leer el estado de un contrato"
 />
 
 <ArticleIconCard
 	title="useContractEvents"
 	icon={ReactIcon}
 	href="/references/typescript/v5/useContractEvents"
-	description="Hook to query and listen to contract events"
+	description="Hook para consultar y escuchar eventos de un contrato"
 />
 
 </Stack>
+

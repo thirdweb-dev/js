@@ -25,15 +25,15 @@ export const metadata = createMetadata({
 		"Auth allows anyone to integrate passwordless web3-native authentication and authorization into their applications.",
 });
 
-# Overview
+# Visión General
 
-Auth allows anyone to integrate passwordless web3-native authentication and authorization into their applications. Users can then **login using any thirdweb wallet** (in-app, browser, or smart wallet).
+Auth permite a cualquiera integrar autenticación y autorización web3-nativa sin contraseña en sus aplicaciones. Los usuarios pueden entonces **iniciar sesión usando cualquier billetera thirdweb** (in-app, navegador o billetera inteligente).
 
-This allows developers to create a familiar, secure authentication flow that works with traditional backends while leveraging the features of a web3 application.
+Esto permite a los desarrolladores crear un flujo de autenticación familiar y seguro que funciona con backends tradicionales mientras aprovechan las características de una aplicación web3.
 
 ---
 
-# Get Started
+# Comenzar
 
 <InstallTabs
 	npm="npm i thirdweb"
@@ -42,11 +42,11 @@ This allows developers to create a familiar, secure authentication flow that wor
 	bun="bun i thirdweb"
 />
 
-## Get Your Client ID
+## Obtén tu ID de Cliente
 
-To use Auth in your app, you'll need a client ID. You can get one for free on [your thirdweb dashboard](https://thirdweb.com/create-api-key).
+Para usar Auth en tu aplicación, necesitarás un ID de cliente. Puedes obtener uno de forma gratuita en [tu panel de control de thirdweb](https://thirdweb.com/create-api-key).
 
-## Setting Up Auth
+## Configuración de Auth
 
 <Tabs defaultValue="react">
 
@@ -152,22 +152,21 @@ const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
 
 </TabsContent>
 
-<Callout variant="warning" title="Deploying to Production">
-	These examples are intended to get up and running quickly, but aren't secure
-	for production. Before deploying your app to real users, checkout out our
-	walkthrough on [Deploying to
-	Production](/connect/auth/deploying-to-production).
+<Callout variant="warning" title="Desplegando a Producción">
+	Estos ejemplos están destinados a poner en marcha rápidamente, pero no son seguros
+	para producción. Antes de desplegar tu aplicación a usuarios reales, revisa nuestra
+	guía sobre [Desplegar a Producción](/connect/auth/deploying-to-production).
 </Callout>
 
-### Auth with Smart Accounts (Account Abstraction)
+### Auth con Cuentas Inteligentes (Abstracción de Cuentas)
 
-When using Auth with a smart account, you **must** specify a client (on `createAuth`) and a chain ID (on `generatePayload`). The smart account is deployed on a specific chain and the payload must reflect that, and the client is needed to call the wallet contract to verify the signature.
+Al usar Auth con una cuenta inteligente, **debes** especificar un cliente (en `createAuth`) y un ID de cadena (en `generatePayload`). La cuenta inteligente se despliega en una cadena específica y la carga debe reflejar eso, y el cliente es necesario para llamar al contrato de la billetera para verificar la firma.
 
 </Tabs>
 
-## Templates
+## Plantillas
 
-Quickly get started with one of our templates:
+Comienza rápidamente con una de nuestras plantillas:
 
 <OpenSourceCard
 	title="Auth + Next.js"
@@ -183,7 +182,7 @@ Quickly get started with one of our templates:
 
 ## Frameworks
 
-Auth integrates with a variety of server-side and client-side development frameworks. We&apos;re always adding support for more frameworks, so if you don&apos;t see yours, [let us know](https://thirdweb.com/contact-us).
+Auth se integra con una variedad de frameworks de desarrollo del lado del servidor y del cliente. Siempre estamos añadiendo soporte para más frameworks, así que si no ves el tuyo, [haznoslo saber](https://thirdweb.com/contact-us).
 
 <Stack>
 

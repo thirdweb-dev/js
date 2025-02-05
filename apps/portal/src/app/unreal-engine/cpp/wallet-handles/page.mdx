@@ -3,98 +3,95 @@ import { GraduationCap } from "lucide-react";
 import { createUnrealEngineMetadata } from "../../util";
 
 export const metadata = createUnrealEngineMetadata({
-    title: "Thirdweb Wallet Handles",
-    description: "Manage wallet handles and operations.",
+    title: "Manejadores de Billeteras de Thirdweb",
+    description: "Gestiona los manejadores de billeteras y operaciones.",
 });
 
 # WalletHandle
 
-`FWalletHandle` is the base struct that provides a unique handle for distinguishing different types of wallets in the
-Thirdweb SDK. It supports a variety of shared operations and is not used directly, but rather inherited.
+`FWalletHandle` es la estructura base que proporciona un manejador único para distinguir diferentes tipos de billeteras en el
+SDK de Thirdweb. Soporta una variedad de operaciones compartidas y no se usa directamente, sino que se hereda.
 
 ## Enums
 
 ### EWalletHandleType
-Wallet handle type identifier.
-- `InvalidHandle`: Represents an uninitialized or invalid handle.
-- `InApp`: Represents an in-app wallet.
-- `Smart`: Represents a smart contract wallet.
+Identificador del tipo de manejador de billetera.
+- `InvalidHandle`: Representa un manejador no inicializado o inválido.
+- `InApp`: Representa una billetera in-app.
+- `Smart`: Representa una billetera de contrato inteligente.
 
-## Member Functions
+## Funciones Miembro
 
-- **`IsValid()`**: Checks if the wallet handle is valid.
-- **`Invalidate()`**: Invalidates the wallet handle, setting its ID to zero and marking its type as invalid.
-- **`ToAddress()`**: Retrieves the wallet address associated with this handle.
-- **`Sign(Message)`**: Sign a message using the wallet handle.
-- **`GetType()`**: Get the type of wallet handle.
-- **`GetID()`**: Gets the ID of the wallet handle.
-- **`GetDisplayName()`**: Retrieves the debug display name of the wallet handle.
-- **`GetTypeString()`**: Retrieves the type of the wallet handle as a string.
+- **`IsValid()`**: Verifica si el manejador de billetera es válido.
+- **`Invalidate()`**: Invalida el manejador de billetera, configurando su ID a cero y marcando su tipo como inválido.
+- **`ToAddress()`**: Recupera la dirección de billetera asociada a este manejador.
+- **`Sign(Message)`**: Firma un mensaje utilizando el manejador de billetera.
+- **`GetType()`**: Obtiene el tipo de manejador de billetera.
+- **`GetID()`**: Obtiene el ID del manejador de billetera.
+- **`GetDisplayName()`**: Recupera el nombre de depuración del manejador de billetera.
+- **`GetTypeString()`**: Recupera el tipo del manejador de billetera como una cadena.
 
-## Operators
+## Operadores
 
-- **`operator==`**: Compares two wallet handles for equality.
-- **`operator!=`**: Compares two wallet handles for inequality.
+- **`operator==`**: Compara dos manejadores de billetera para verificar si son iguales.
+- **`operator!=`**: Compara dos manejadores de billetera para verificar si son diferentes.
 
 # InAppWalletHandle
 
-`FInAppWalletHandle` provides a unique handle for InApp wallets. It supports a variety of operations for authentication.
+`FInAppWalletHandle` proporciona un manejador único para billeteras InApp. Soporta una variedad de operaciones para autenticación.
 
 ## Enums
 
 ### EInAppSource
-Source that created the InApp wallet
-- `InvalidSource`: Represents an uninitialized or invalid source.
-- `OAuthProvider`: Represents an OAuth provider source.
-- `Email`: Represents an email source.
-- `Phone`: Represents a phone source.
-- `Jwt`: Represents a JWT source.
-- `AuthEndpoint`: Represents an auth endpoint source.
-- `Guest`: Represents a guest source.
+Fuente que creó la billetera InApp
+- `InvalidSource`: Representa una fuente no inicializada o inválida.
+- `OAuthProvider`: Representa una fuente de proveedor OAuth.
+- `Email`: Representa una fuente de correo electrónico.
+- `Phone`: Representa una fuente de teléfono.
+- `Jwt`: Representa una fuente JWT.
+- `AuthEndpoint`: Representa una fuente de endpoint de autenticación.
+- `Guest`: Representa una fuente de invitado.
 
-## Member Functions
+## Funciones Miembro
 
-- **`CreateEmailWallet(Email, Wallet, Error)`**: Creates an in-app email wallet.
-- **`CreateEcosystemEmailWallet(PartnerId, Email, Wallet, Error)`**: Creates an ecosystem email wallet.
-- **`CreateOAuthWallet(Provider, Wallet, Error)`**: Creates an in-app OAuth wallet using the specified provider.
-- **`CreateEcosystemOAuthWallet(PartnerId, Provider, Wallet, Error)`**: Creates an ecosystem OAuth wallet using the
-specified provider.
-- **`CreatePhoneWallet(Phone, Wallet, Error)`**: Creates an in-app phone wallet.
-- **`CreateEcosystemPhoneWallet(PartnerId, Phone, Wallet, Error)`**: Creates an ecosystem phone wallet.
-- **`CreateJwtWallet(Wallet, Error)`**: Creates an in-app JWT wallet.
-- **`CreateEcosystemJwtWallet(PartnerId, Wallet, Error)`**: Creates an ecosystem JWT wallet.
-- **`CreateAuthEndpointWallet(Wallet, Error)`**: Creates an in-app wallet using an authentication endpoint.
-- **`CreateEcosystemAuthEndpointWallet(PartnerId, Wallet, Error)`**: Creates an ecosystem wallet using an
-authentication endpoint.
-- **`CreateGuestWallet(Email, Wallet, Error)`**: Creates an in-app guest wallet.
-- **`CreateEcosystemGuestWallet(PartnerId, Email, Wallet, Error)`**: Creates an ecosystem guest wallet.
-- **`IsConnected()`**: Checks if the wallet is connected to a session.
-- **`Disconnect()`**: Disconnects a wallet from a session.
-- **`VerifyOTP(Method, OTP, Error)`**: Verifies an OTP for in-app wallets.
-- **`SendOTP(Method, Error)`**: Sends an OTP for in-app wallets.
-- **`FetchOAuthLoginURL(RedirectUrl, LoginLink, Error)`**: Fetches the OAuth login URL for in-app wallets.
-- **`SignInWithOAuth(AuthResult, Error)`**: Signs in using OAuth authentication details.
-- **`SignInWithJwt(Jwt, Error)`**: Signs in using a JSON Web Token (JWT).
-- **`SignInWithAuthEndpoint(Jwt, Error)`**: Signs in using any payload.
-- **`SignInWithGuest(Error)`**: Signs in as an anonymous guest user using a semi-reproducible device fingerprint.
-Fingerprints can change from update to update and should not be relied upon for long term use.
-- **`GetSourceString()`**: Retrieves the source as an `FString`.
-- **`GetSourceString(Source)`**: Retrieves the specified source as an `FString`.
-- **`GetOAuthProvider()`**: Retrieves the configured OAuth provider.
+- **`CreateEmailWallet(Email, Wallet, Error)`**: Crea una billetera in-app de correo electrónico.
+- **`CreateEcosystemEmailWallet(PartnerId, Email, Wallet, Error)`**: Crea una billetera in-app de correo electrónico para ecosistema.
+- **`CreateOAuthWallet(Provider, Wallet, Error)`**: Crea una billetera in-app OAuth utilizando el proveedor especificado.
+- **`CreateEcosystemOAuthWallet(PartnerId, Provider, Wallet, Error)`**: Crea una billetera in-app OAuth para ecosistema utilizando el proveedor especificado.
+- **`CreatePhoneWallet(Phone, Wallet, Error)`**: Crea una billetera in-app de teléfono.
+- **`CreateEcosystemPhoneWallet(PartnerId, Phone, Wallet, Error)`**: Crea una billetera in-app de teléfono para ecosistema.
+- **`CreateJwtWallet(Wallet, Error)`**: Crea una billetera in-app JWT.
+- **`CreateEcosystemJwtWallet(PartnerId, Wallet, Error)`**: Crea una billetera JWT para ecosistema.
+- **`CreateAuthEndpointWallet(Wallet, Error)`**: Crea una billetera in-app utilizando un endpoint de autenticación.
+- **`CreateEcosystemAuthEndpointWallet(PartnerId, Wallet, Error)`**: Crea una billetera para ecosistema utilizando un endpoint de autenticación.
+- **`CreateGuestWallet(Email, Wallet, Error)`**: Crea una billetera in-app para invitados.
+- **`CreateEcosystemGuestWallet(PartnerId, Email, Wallet, Error)`**: Crea una billetera para invitados en ecosistema.
+- **`IsConnected()`**: Verifica si la billetera está conectada a una sesión.
+- **`Disconnect()`**: Desconecta una billetera de una sesión.
+- **`VerifyOTP(Method, OTP, Error)`**: Verifica un OTP para billeteras in-app.
+- **`SendOTP(Method, Error)`**: Envía un OTP para billeteras in-app.
+- **`FetchOAuthLoginURL(RedirectUrl, LoginLink, Error)`**: Recupera la URL de login OAuth para billeteras in-app.
+- **`SignInWithOAuth(AuthResult, Error)`**: Inicia sesión utilizando los detalles de autenticación OAuth.
+- **`SignInWithJwt(Jwt, Error)`**: Inicia sesión utilizando un JWT.
+- **`SignInWithAuthEndpoint(Jwt, Error)`**: Inicia sesión utilizando cualquier payload.
+- **`SignInWithGuest(Error)`**: Inicia sesión como usuario invitado utilizando una huella digital semi-reproducible del dispositivo. Las huellas pueden cambiar con cada actualización y no deben ser usadas a largo plazo.
+- **`GetSourceString()`**: Recupera la fuente como un `FString`.
+- **`GetSourceString(Source)`**: Recupera la fuente especificada como un `FString`.
+- **`GetOAuthProvider()`**: Recupera el proveedor OAuth configurado.
 
 # SmartWalletHandle
 
-`FSmartWalletHandle` provides a unique handle for smart wallets. It supports a variety of operations for handling
-sessions, and interacting with smart contract wallets.
+`FSmartWalletHandle` proporciona un manejador único para billeteras inteligentes. Soporta una variedad de operaciones para gestionar
+sesiones e interactuar con billeteras de contratos inteligentes.
 
-## Member Functions
+## Funciones Miembro
 
-- **`Create(InInAppWallet, ChainID, bGasless, Factory, AccountOverride, bSuccess, Error)`**: Creates a smart wallet.
-- **`IsDeployed(bDeployed, Error)`**: Checks if the smart wallet is deployed.
+- **`Create(InInAppWallet, ChainID, bGasless, Factory, AccountOverride, bSuccess, Error)`**: Crea una billetera inteligente.
+- **`IsDeployed(bDeployed, Error)`**: Verifica si la billetera inteligente está desplegada.
 - **`CreateSessionKey(Signer, ApprovedTargets, NativeTokenLimitPerTransactionInWei, PermissionStart, PermissionEnd,
-RequestValidityStart, RequestValidityEnd, TransactionHash, Error)`**: Creates a session key for a smart wallet.
-- **`RevokeSessionKey(Signer, Error)`**: Revokes a session key for a smart wallet.
-- **`GetAdmins(Admins, Error)`**: Retrieves the admins of a smart wallet.
-- **`AddAdmin(Signer, Error)`**: Adds an admin to a smart wallet.
-- **`RemoveAdmin(Signer, Error)`**: Removes an admin from a smart wallet.
-- **`GetActiveSigners(Signers, Error)`**: Retrieves the active signers of a smart wallet.
+RequestValidityStart, RequestValidityEnd, TransactionHash, Error)`**: Crea una clave de sesión para una billetera inteligente.
+- **`RevokeSessionKey(Signer, Error)`**: Revoca una clave de sesión para una billetera inteligente.
+- **`GetAdmins(Admins, Error)`**: Recupera los administradores de una billetera inteligente.
+- **`AddAdmin(Signer, Error)`**: Agrega un administrador a una billetera inteligente.
+- **`RemoveAdmin(Signer, Error)`**: Elimina un administrador de una billetera inteligente.
+- **`GetActiveSigners(Signers, Error)`**: Recupera los firmantes activos de una billetera inteligente.
