@@ -1,39 +1,41 @@
 import { OpenSourceCard, Callout } from "@doc";
 
-# Auth
+# Autenticación
 
-Using [`EIP-4361`](https://eips.ethereum.org/EIPS/eip-4361) (Sign in with Ethererum) standard, you can authenticate users to your backend using only their wallet. This is a secure and easy way to authenticate users without requiring them to create an additional account.
+Usando el estándar [`EIP-4361`](https://eips.ethereum.org/EIPS/eip-4361) (Iniciar sesión con Ethereum), puedes autenticar a los usuarios en tu backend utilizando solo su billetera. Esta es una forma segura y fácil de autenticar usuarios sin requerirles que creen una cuenta adicional.
 
-## Usage
+## Uso
 
-### Client Functions
+### Funciones del Cliente
 
-<Callout variant="info" title="Auth with React">
-	If you're using React, Auth integrates directly with our built-in
-	[ConnectButton component](/react/v5/ConnectButton). This
-	handles things like caching, error handling, and retries for you.
+<Callout variant="info" title="Autenticación con React">
+	Si estás usando React, la autenticación se integra directamente con nuestro componente
+	[ConnectButton](/react/v5/ConnectButton). Esto
+	gestiona aspectos como el almacenamiento en caché, manejo de errores y reintentos por ti.
 </Callout>
+
 
 ```ts
 import { signLoginPayload } from 'thirdweb/auth';
 
-// 1. fetch a login payload from your server
+// 1. obtener el login payload desde tu servidor
 const result = await fetch(...);
 const loginPayload = await result.json();
 
-// 2. sign the login payload with the user's account
+// 2. firmar el login payload con la cuenta del usuario
 const signature = await signLoginPayload({ payload: loginPayload, account });
 
-// 3. send the login payload and signature to your server
+// 3. enviar el login payload y la firma a tu servidor
 const result = await fetch(...);
 const verifiedPayload = await result.json();
 ```
 
-How you store and maintain a user session is up to you, but our recommended approach is to store a JWT token in a cookie that is verified on the server. The server functions below include utility functions to generate and verify the JWT.
+Cómo almacenas y mantienes la sesión de un usuario depende de ti, pero nuestra enfoque recomendado es almacenar un token JWT en una cookie que se verifique en el servidor. Las funciones del servidor a continuación incluyen funciones de utilidad para generar y verificar el JWT.
 
-In order to generate and verify the JWT you will also need an EOA private key. This private key's wallet does not need to hold any funds, it is only used for signing.
+Para generar y verificar el JWT, también necesitarás una clave privada EOA. La billetera de esta clave privada no necesita tener fondos, solo se usa para firmar.
 
-### Server Functions
+### Funciones del Servidor
+
 
 ```ts
 import { createThirdwebClient } from "thirdweb";
@@ -51,36 +53,38 @@ const auth = createAuth({
 	adminAccount: privateKeyToAccount({client, privateKey})
 });
 
-// 1. generate a login payload for a client on the server side
+// 1. generar un login payload para un cliente en el lado del servidor
 const loginPayload = await auth.generatePayload({ address: "0x123..." });
 
-// 2. send the login payload to the client to sign
+// 2. enviar el login payload al cliente para que lo firme
 
-// 3. verify the login payload and signature that the client sends back later
+// 3. verificar el login payload y la firma que el cliente enviará más tarde
 const verifiedPayload = await auth.verifyPayload({
 	payload: loginPayload,
 	signature: "0x123...",
 });
 
-// 4. generate a JWT for the client
+// 4. generar un JWT para el cliente
 const jwt = await auth.generateJWT({ payload: verifiedPayload });
 
-// 5. set the JWT as a cookie or otherwise provide it to the client
+// 5. establecer el JWT como una cookie o proporcionarlo al cliente de alguna otra manera
 
-// 6. authenticate the client based on the JWT on subsequent calls
+// 6. autenticar al cliente basándose en el JWT en las siguientes llamadas
 const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
+
 ```
 
-## Example Repos
+## Repositorios de Ejemplo
 
 <OpenSourceCard
 	title="Auth + Next.js"
 	href="https://github.com/thirdweb-example/thirdweb-auth-next"
-	description="A working example of Auth + Next.js"
+	description="Un ejemplo funcional de Auth + Next.js"
 />
 
 <OpenSourceCard
 	title="Auth + Express"
 	href="https://github.com/thirdweb-example/thirdweb-auth-express"
-	description="A working example of a React + Express app using Auth"
+	description="Un ejemplo funcional de una app React + Express usando Auth"
 />
+

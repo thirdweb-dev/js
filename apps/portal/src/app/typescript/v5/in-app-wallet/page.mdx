@@ -16,41 +16,41 @@ import {ExternalLink} from "lucide-react";
 import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
-	title: "Connect users with In-App Wallet",
+	title: "Conectar usuarios con Billetera In-App",
 	description:
-		"use the prebuilt connect UI components to authenticate users and connect in-app wallets",
+		"Usa los componentes de UI preconstruidos para autenticar usuarios y conectar billeteras in-app",
 	image: {
-		title: "Connect users with In-App Wallets",
+		title: "Conectar usuarios con Billeteras In-App",
 		icon: "wallets",
 	},
 });
 
-# In-App Wallets
+# Billeteras In-App
 
-Create in-app wallet for your users based on their email, phone, passkey, social auth or even their external wallets. These wallets are scoped by your clientId and do not require any confirmation to sign transactions. 
+Crea billeteras in-app para tus usuarios basadas en su correo electrónico, teléfono, passkey, autenticación social o incluso sus billeteras externas. Estas billeteras están limitadas por tu clientId y no requieren ninguna confirmación para firmar transacciones.
 
-## Available auth methods
+## Métodos de autenticación disponibles
 
 <AuthList />
 
 ## Live Playground
 
-Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/in-app-wallet)
+Prueba las billeteras in-app por ti mismo en el [playground en vivo de billetera in-app](https://playground.thirdweb.com/connect/in-app-wallet)
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
+	title="Prueba la demostración"
 	icon={ExternalLink}
 	href="https://playground.thirdweb.com/connect/in-app-wallet"
-	description="See the SDK in action on the live playground"
+	description="Ve el SDK en acción en el playground en vivo"
 />
 
 </Stack>
 
-## Configure in-app wallets
+## Configurar billeteras in-app
 
-The simplest way to create an in-app wallet is to use the `inAppWallet()` function. By default, this will create a wallet that supports email/password login, Google, Apple, Facebook login, and passkey.
+La forma más sencilla de crear una billetera in-app es usar la función `inAppWallet()`. Por defecto, esto creará una billetera que soporta inicio de sesión con correo electrónico/contraseña, Google, Apple, Facebook y passkey.
 
 ```tsx
 import { inAppWallet } from "thirdweb/wallets";
@@ -58,28 +58,29 @@ import { inAppWallet } from "thirdweb/wallets";
 const wallet = inAppWallet();
 ```
 
-You can also customize the wallet by passing in options.
+También puedes personalizar la billetera pasando opciones.
 
 ```tsx
 import { inAppWallet } from "thirdweb/wallets";
 
 const wallet = inAppWallet({
 	auth: {
-        mode, // options are "popup" | "redirect" | "window";
-        options, // ex: ["discord", "farcaster", "apple", "facebook", "google", "passkey"],
-        passkeyDomain, // for passkey, the domain that the passkey is created on
-        redirectUrl, // the URL to redirect to after authentication
+        mode, // las opciones son "popup" | "redirect" | "window";
+        options, // ej: ["discord", "farcaster", "apple", "facebook", "google", "passkey"],
+        passkeyDomain, // para passkey, el dominio en el que se crea el passkey
+        redirectUrl, // la URL a la que redirigir después de la autenticación
 	},
-	metadata, // metadata for the wallet (name, icon, etc.)
-	smartAccount, // smart account options for the wallet (for gasless tx)
+	metadata, // metadatos para la billetera (nombre, icono, etc.)
+	smartAccount, // opciones de cuenta inteligente para la billetera (para transacciones sin gas)
 });
+
 ```
 
-[View all in-app wallet options](/references/typescript/v5/InAppWalletCreationOptions).
+[Ver todas las opciones de billetera in-app](/references/typescript/v5/InAppWalletCreationOptions).
 
-Once created, you can use it either with the prebuilt UI components, or with your own UI.
+Una vez creada, puedes usarla tanto con los componentes de UI preconstruidos, como con tu propia UI.
 
-## Usage
+## Uso
 
 ```tsx
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
@@ -97,9 +98,9 @@ console.log("connected as", account.address);
 
 ```
 
-## API Reference
+## Referencia de la API
 
-View all the auth and configuration options for in-app wallets in the [API Reference](/references/typescript/v5/inAppWallet).
+Consulta todas las opciones de autenticación y configuración para billeteras in-app en la [Referencia de la API](/references/typescript/v5/inAppWallet).
 
 <Stack>
 
@@ -107,7 +108,7 @@ View all the auth and configuration options for in-app wallets in the [API Refer
 	title="inAppWallet"
 	icon={TypeScriptIcon}
 	href="/references/typescript/v5/inAppWallet"
-	description="Create an in-app wallet from any auth"
+	description="Crea una billetera in-app desde cualquier método de autenticación"
 />
 
 </Stack>

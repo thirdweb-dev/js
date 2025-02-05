@@ -1,8 +1,8 @@
-# Chain
+# Blockchain
 
-The thirdweb SDK works with **any EVM chain**.
+El SDK de thirdweb funciona con **cualquier blockchain EVM**.
 
-All you need to connect a chain is its chain id. RPC connection to the chain is handled for you.
+Lo único que necesitas para conectar una blockchain es su ID de cadena. La conexión RPC a la blockchain se maneja automáticamente.
 
 ```ts
 import { defineChain } from "thirdweb";
@@ -10,7 +10,7 @@ import { defineChain } from "thirdweb";
 const myChain = defineChain(myChainId);
 ```
 
-The SDK comes with predefined popular chains like `base`, `polygon`, and more exported from the `thirdweb/chains` entrypoint.
+El SDK viene con Blockchain populares predefinidas como `base`, `polygon` y más, exportadas desde el punto de entrada `thirdweb/chains`.
 
 ```ts
 import { polygon } from "thirdweb/chains";
@@ -18,9 +18,9 @@ import { polygon } from "thirdweb/chains";
 const myChain = polygon;
 ```
 
-### Configuring chains (Advanced)
+### Configuración de Blockchain (Avanzado)
 
-You can also configure chains with custom RPC endpoints, native currency, block explorers, and more.
+También puedes configurar blockchain con puntos de acceso RPC personalizados, moneda nativa, exploradores de bloques y más.
 
 ```ts
 const myChain = defineChain({
