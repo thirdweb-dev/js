@@ -1,15 +1,21 @@
 import { randomUUID } from "node:crypto";
 import { checkServerIdentity } from "node:tls";
 import {
-  CompressionCodecs,
   CompressionTypes,
   Kafka,
   type Producer,
   type ProducerConfig,
 } from "kafkajs";
 import { compress, decompress } from "lz4js";
-import type { ServiceName } from "../core/services.js";
-import { type UsageV2Event, getTopicName } from "../core/usageV2.js";
+import {
+  type UsageV2Event,
+  type UsageV2Source,
+  getTopicName,
+} from "../core/usageV2.js";
+
+// CompressionCodecs is not exported properly in kafkajs. Source: https://github.com/tulios/kafkajs/issues/1391
+import KafkaJS from "kafkajs";
+const { CompressionCodecs } = KafkaJS;
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -40,9 +46,9 @@ export class UsageV2Producer {
      */
     environment: "development" | "production";
     /**
-     * The product "source" where usage is coming from.
+     * The product where usage is coming from.
      */
-    productName: ServiceName;
+    source: UsageV2Source;
     /**
      * Whether to compress the events.
      */
@@ -54,7 +60,7 @@ export class UsageV2Producer {
     const {
       producerName,
       environment,
-      productName,
+      source,
       shouldCompress = true,
       username,
       password,
@@ -78,7 +84,7 @@ export class UsageV2Producer {
       },
     });
 
-    this.topic = getTopicName(productName);
+    this.topic = getTopicName(source);
     this.compression = shouldCompress
       ? CompressionTypes.LZ4
       : CompressionTypes.None;
