@@ -1,3 +1,4 @@
+import { NebulaIcon } from "../../../../nebula-app/(app)/icons/NebulaIcon";
 import type { ChainSupportedService } from "../../types/chain";
 import { ConnectSDKIcon } from "./icons/ConnectSDKIcon";
 import { ContractIcon } from "./icons/ContractIcon";
@@ -13,14 +14,14 @@ export const products = [
     id: "contracts",
     icon: ContractIcon,
     description: "Pre-built contracts & deployment tools",
-    link: "https://portal.thirdweb.com/contracts",
+    link: "https://thirdweb.com/contracts",
   },
   {
     name: "Connect SDK",
     id: "connect-sdk",
     icon: ConnectSDKIcon,
     description: "Client-side SDKs for wallets and blockchain interactions",
-    link: "https://portal.thirdweb.com/connect",
+    link: "https://thirdweb.com/connect",
   },
   {
     name: "RPC Edge",
@@ -34,7 +35,7 @@ export const products = [
     id: "engine",
     icon: EngineIcon,
     description: "Backend server that reads, writes, and deploys contracts",
-    link: "https://portal.thirdweb.com/engine",
+    link: "https://thirdweb.com/engine",
   },
   {
     name: "Account Abstraction",
@@ -55,7 +56,14 @@ export const products = [
     id: "insight",
     icon: InsightIcon,
     description: "Query, transform and analyze blockchain data",
-    link: "https://portal.thirdweb.com/insight",
+    link: "https://thirdweb.com/insight",
+  },
+  {
+    name: "Nebula",
+    id: "nebula",
+    icon: NebulaIcon,
+    description: "The most powerful AI for interacting with the blockchain",
+    link: "https://thirdweb.com/nebula",
   },
 ] satisfies Array<{
   name: string;

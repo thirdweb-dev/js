@@ -14,6 +14,10 @@
       "outputs": ["typedoc/**"],
       "dependsOn": ["^build"]
     },
+    "thirdweb-login#build": {
+      "outputs": [".next/**", "!.next/cache/**"],
+      "dependsOn": ["^build"]
+    },
     "thirdweb-dashboard#build": {
       "env": [
         "SENTRY_AUTH_TOKEN",

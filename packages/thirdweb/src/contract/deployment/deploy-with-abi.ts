@@ -83,7 +83,7 @@ export function prepareDirectDeployTransaction(
  * ## Deploying a regular contract from ABI and bytecode
  *
  * ```ts
- * import { deployContract } from "thirdweb/deployContract";
+ * import { deployContract } from "thirdweb/deploys";
  *
  * const address = await deployContract({
  *  client,
@@ -101,7 +101,7 @@ export function prepareDirectDeployTransaction(
  * ## Deploying a contract deterministically
  *
  * ```ts
- * import { deployContract } from "thirdweb/deployContract";
+ * import { deployContract } from "thirdweb/deploys";
  *
  * const address = await deployContract({
  *  client,

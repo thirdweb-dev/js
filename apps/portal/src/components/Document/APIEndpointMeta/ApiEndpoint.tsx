@@ -10,7 +10,7 @@ export type APIParameter =
   | {
       name: string;
       required: false;
-      description: string;
+      description: React.ReactNode;
       type?: string;
       example?: string | boolean | number | object;
     }
@@ -18,7 +18,7 @@ export type APIParameter =
       name: string;
       required: true;
       example: string;
-      description: string;
+      description: React.ReactNode;
       type?: string;
     };
 

@@ -1,5 +1,35 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.4
+
+### Patch Changes
+
+- [#6137](https://github.com/thirdweb-dev/js/pull/6137) [`a6b7e8d`](https://github.com/thirdweb-dev/js/commit/a6b7e8d81868b5f32f1c8b7ff093bb1f06c734ca) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6139](https://github.com/thirdweb-dev/js/pull/6139) [`f4f93e6`](https://github.com/thirdweb-dev/js/commit/f4f93e6353d3951c580df25b757b1ac20fdcf763) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Update to ESM for compression typrse
+
+- [#6131](https://github.com/thirdweb-dev/js/pull/6131) [`a76e653`](https://github.com/thirdweb-dev/js/commit/a76e6534c49480f30ec1fd1e404f76d04947cd49) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] switch to lz4js for compression lib
+
+## 0.8.3
+
+### Patch Changes
+
+- [#6121](https://github.com/thirdweb-dev/js/pull/6121) [`6ed2fd1`](https://github.com/thirdweb-dev/js/commit/6ed2fd13de1638bcf1c28fd4fdbeb00c0d449994) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] import LZ4 codec
+
+- [#6120](https://github.com/thirdweb-dev/js/pull/6120) [`a22457a`](https://github.com/thirdweb-dev/js/commit/a22457a69cc6667ac13599d10ebddc41ceafa0ff) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Expose kafkajs config
+
+## 0.8.2
+
+### Patch Changes
+
+- [#6113](https://github.com/thirdweb-dev/js/pull/6113) [`6818cba`](https://github.com/thirdweb-dev/js/commit/6818cbabf25ce73d09dfc971ae793cd9844ceca7) Thanks [@arcoraven](https://github.com/arcoraven)! - Change UsageV2 to per-product topics
+
+## 0.8.1
+
+### Patch Changes
+
+- [#6106](https://github.com/thirdweb-dev/js/pull/6106) [`3361140`](https://github.com/thirdweb-dev/js/commit/33611409b0efd58803be4a96194f5872ddf4bde0) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
 ## 0.8.0
 
 ### Minor Changes

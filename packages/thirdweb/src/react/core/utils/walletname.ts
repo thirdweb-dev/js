@@ -24,7 +24,7 @@ export function useWalletName(props: {
 /**
  * @internal Exported for tests only
  */
-function getQueryKeys(props: {
+export function getQueryKeys(props: {
   id: WalletId;
   formatFn?: (str: string) => string;
 }) {
@@ -41,7 +41,7 @@ function getQueryKeys(props: {
 /**
  * @internal Exported for tests only
  */
-async function fetchWalletName(props: {
+export async function fetchWalletName(props: {
   id: WalletId;
   formatFn?: (str: string) => string;
 }) {

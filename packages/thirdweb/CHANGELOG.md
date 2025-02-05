@@ -1,5 +1,31 @@
 # thirdweb
 
+## 5.87.3
+
+### Patch Changes
+
+- [#6137](https://github.com/thirdweb-dev/js/pull/6137) [`a6b7e8d`](https://github.com/thirdweb-dev/js/commit/a6b7e8d81868b5f32f1c8b7ff093bb1f06c734ca) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6116](https://github.com/thirdweb-dev/js/pull/6116) [`9d5828e`](https://github.com/thirdweb-dev/js/commit/9d5828eeab201960a720744ca3a59c85a0d8e548) Thanks [@alecananian](https://github.com/alecananian)! - Skip factory entrypoint lookup for ZKsync chains
+
+- [#6119](https://github.com/thirdweb-dev/js/pull/6119) [`b693b78`](https://github.com/thirdweb-dev/js/commit/b693b78645e2b214a5f8be0eec6d335d569ceb8c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix: Ecosystem smart wallets now properly trigger switch chain on their admin wallets
+
+- [#6093](https://github.com/thirdweb-dev/js/pull/6093) [`08cc489`](https://github.com/thirdweb-dev/js/commit/08cc48910df351d068c1ce224d4102f40cb1dce1) Thanks [@kumaryash90](https://github.com/kumaryash90)! - 7702 delegation designator
+
+## 5.87.2
+
+### Patch Changes
+
+- [#6104](https://github.com/thirdweb-dev/js/pull/6104) [`bf43196`](https://github.com/thirdweb-dev/js/commit/bf431961ec685deefc0089b8d644c35f849fbf86) Thanks [@MananTank](https://github.com/MananTank)! - Fix thirdweb Pay Modal logging react-query error when opened
+
+## 5.87.1
+
+### Patch Changes
+
+- [#6106](https://github.com/thirdweb-dev/js/pull/6106) [`3361140`](https://github.com/thirdweb-dev/js/commit/33611409b0efd58803be4a96194f5872ddf4bde0) Thanks [@jnsdls](https://github.com/jnsdls)! - updated dependencies
+
+- [#6105](https://github.com/thirdweb-dev/js/pull/6105) [`ab55aec`](https://github.com/thirdweb-dev/js/commit/ab55aec10ccb078add40bd774d157bc0f19ab0bf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow connecting wallets without setting them as active with useConnect
+
 ## 5.87.0
 
 ### Minor Changes

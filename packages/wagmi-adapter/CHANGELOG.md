@@ -1,5 +1,17 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.12
+
+## 0.2.11
+
+### Patch Changes
+
+- [#6117](https://github.com/thirdweb-dev/js/pull/6117) [`ae675db`](https://github.com/thirdweb-dev/js/commit/ae675db8c86a9e4cddb6eb208cd132e0eeaa1978) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes getProvider autoconnections with account factory
+
+## 0.2.10
+
+## 0.2.9
+
 ## 0.2.8
 
 ### Patch Changes

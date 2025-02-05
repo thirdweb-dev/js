@@ -417,14 +417,9 @@ function AuthEndpointFields(props: {
   canEditAdvancedFeatures: boolean;
 }) {
   const { form, canEditAdvancedFeatures } = props;
-  const customHeaderFields = useFieldArray({
-    control: form.control,
-    name: "customAuthEndpoint.customHeaders",
-  });
 
   const expandCustomAuthEndpointField =
-    form.watch("customAuthEndpoint")?.authEndpoint !== undefined &&
-    canEditAdvancedFeatures;
+    form.watch("customAuthEndpoint") !== undefined && canEditAdvancedFeatures;
 
   return (
     <div>
@@ -464,88 +459,107 @@ function AuthEndpointFields(props: {
           }}
         />
       </SwitchContainer>
-
-      <AdvancedConfigurationContainer
-        show={expandCustomAuthEndpointField}
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-      >
-        <FormField
-          control={form.control}
-          name="customAuthEndpoint.authEndpoint"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Authentication Endpoint</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="https://example.com/your-auth-verifier"
-                />
-              </FormControl>
-              <FormDescription>
-                Enter the URL of your server where we will send the user payload
-                for verification
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+      {/* useFieldArray used on this component - it creates empty customAuthEndpoint.customHeaders array on mount */}
+      {/* So only mount if expandCustomAuthEndpointField is true */}
+      {expandCustomAuthEndpointField && (
+        <AuthEndpointFieldsContent
+          form={form}
+          canEditAdvancedFeatures={canEditAdvancedFeatures}
         />
+      )}
+    </div>
+  );
+}
 
-        <div>
-          <Label className="mb-3 inline-block">Custom Headers</Label>
-          <div className="flex flex-col gap-4">
-            {customHeaderFields.fields.map((field, customHeaderIdx) => {
-              return (
-                <div className="flex gap-4" key={field.id}>
-                  <Input
-                    placeholder="Name"
-                    type="text"
-                    {...form.register(
-                      `customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
-                    )}
-                  />
-                  <Input
-                    placeholder="Value"
-                    type="text"
-                    {...form.register(
-                      `customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
-                    )}
-                  />
-                  <Button
-                    variant="outline"
-                    aria-label="Remove header"
-                    onClick={() => {
-                      customHeaderFields.remove(customHeaderIdx);
-                    }}
-                    className="!w-auto px-3"
-                  >
-                    <Trash2Icon className="size-4 shrink-0 text-destructive-text" />
-                  </Button>
-                </div>
-              );
-            })}
+function AuthEndpointFieldsContent(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  canEditAdvancedFeatures: boolean;
+}) {
+  const { form } = props;
 
-            <Button
-              variant="outline"
-              className="w-full gap-2 bg-background"
-              onClick={() => {
-                customHeaderFields.append({
-                  key: "",
-                  value: "",
-                });
-              }}
-            >
-              <PlusIcon className="size-4" />
-              Add header
-            </Button>
-          </div>
+  const customHeaderFields = useFieldArray({
+    control: form.control,
+    name: "customAuthEndpoint.customHeaders",
+  });
 
-          <p className="mt-3 text-muted-foreground text-sm">
-            Set custom headers to be sent along the request with the payload to
-            the authentication endpoint above. This can be used to verify the
-            incoming requests
-          </p>
+  return (
+    <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <FormField
+        control={form.control}
+        name="customAuthEndpoint.authEndpoint"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Authentication Endpoint</FormLabel>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="https://example.com/your-auth-verifier"
+              />
+            </FormControl>
+            <FormDescription>
+              Enter the URL of your server where we will send the user payload
+              for verification
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <div>
+        <Label className="mb-3 inline-block">Custom Headers</Label>
+        <div className="flex flex-col gap-4">
+          {customHeaderFields.fields.map((field, customHeaderIdx) => {
+            return (
+              <div className="flex gap-4" key={field.id}>
+                <Input
+                  placeholder="Name"
+                  type="text"
+                  {...form.register(
+                    `customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
+                  )}
+                />
+                <Input
+                  placeholder="Value"
+                  type="text"
+                  {...form.register(
+                    `customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
+                  )}
+                />
+                <Button
+                  variant="outline"
+                  aria-label="Remove header"
+                  onClick={() => {
+                    customHeaderFields.remove(customHeaderIdx);
+                  }}
+                  className="!w-auto px-3"
+                >
+                  <Trash2Icon className="size-4 shrink-0 text-destructive-text" />
+                </Button>
+              </div>
+            );
+          })}
+
+          <Button
+            variant="outline"
+            className="w-full gap-2 bg-background"
+            onClick={() => {
+              customHeaderFields.append({
+                key: "",
+                value: "",
+              });
+            }}
+          >
+            <PlusIcon className="size-4" />
+            Add header
+          </Button>
         </div>
-      </AdvancedConfigurationContainer>
+
+        <p className="mt-3 text-muted-foreground text-sm">
+          Set custom headers to be sent along the request with the payload to
+          the authentication endpoint above. This can be used to verify the
+          incoming requests
+        </p>
+      </div>
     </div>
   );
 }

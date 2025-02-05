@@ -51,6 +51,12 @@ describe("extractMinimalProxyImplementationAddress", () => {
     expect(result).toBe("0xbebebebebebebebebebebebebebebebebebebebe");
   });
 
+  it("should extract address from EIP-7702 delegation designator", () => {
+    const bytecode = "0xef0100bebebebebebebebebebebebebebebebebebebebe";
+    const result = extractMinimalProxyImplementationAddress(bytecode);
+    expect(result).toBe("0xbebebebebebebebebebebebebebebebebebebebe");
+  });
+
   it("should return undefined for non-matching bytecode", () => {
     const bytecode =
       "0x60806040526000805534801561001457600080fd5b50610150806100246000396000f3fe";

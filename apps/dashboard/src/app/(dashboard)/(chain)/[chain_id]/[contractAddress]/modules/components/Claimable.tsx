@@ -26,6 +26,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -119,22 +120,39 @@ function ClaimableModule(props: ModuleInstanceProps) {
     claimConditionQuery.data?.startTimestamp === 0 &&
     claimConditionQuery.data?.endTimestamp === 0;
 
-  const currencyContract = getContract({
-    address: claimConditionQuery.data?.currency || "",
-    chain: props.contract.chain,
-    client: props.contract.client,
-  });
+  const claimConditionCurrency = claimConditionQuery.data?.currency;
 
-  const shouldFetchTokenDecimals =
-    claimConditionQuery.data &&
-    claimConditionQuery.data?.currency !== ZERO_ADDRESS;
+  const shouldFetchCurrencyDecimals =
+    !!claimConditionCurrency && claimConditionCurrency !== ZERO_ADDRESS;
 
-  const currencyDecimalsQuery = useReadContract(decimals, {
-    contract: currencyContract,
-    queryOptions: {
-      enabled: shouldFetchTokenDecimals,
+  const currencyDecimalsQuery = useQuery({
+    queryKey: [
+      "currency-decimals",
+      {
+        contractAddress: props.contract.address,
+        chainId: props.contract.chain.id,
+        claimConditionCurrency,
+      },
+    ],
+    queryFn: async () => {
+      if (!claimConditionCurrency) {
+        throw new Error();
+      }
+      const currencyContract = getContract({
+        address: claimConditionCurrency,
+        chain: props.contract.chain,
+        client: props.contract.client,
+      });
+
+      const decimalsVal = await decimals({
+        contract: currencyContract,
+      });
+
+      return decimalsVal;
     },
+    enabled: shouldFetchCurrencyDecimals,
   });
+
   const tokenDecimalsQuery = useReadContract(decimals, {
     contract: contract,
     queryOptions: {
@@ -265,7 +283,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
           // claim conditions data is present
           claimConditionQuery.data &&
           // token decimals is fetched if it should be fetched
-          (shouldFetchTokenDecimals ? currencyDecimalsQuery.isFetched : true)
+          (shouldFetchCurrencyDecimals ? currencyDecimalsQuery.isFetched : true)
             ? {
                 claimCondition: claimConditionQuery.data,
                 currencyDecimals: currencyDecimalsQuery.data,
@@ -276,7 +294,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
         tokenId,
         isLoading:
           claimConditionQuery.isLoading ||
-          (!!shouldFetchTokenDecimals && currencyDecimalsQuery.isLoading),
+          (!!shouldFetchCurrencyDecimals && currencyDecimalsQuery.isLoading),
       }}
       isOwnerAccount={!!ownerAccount}
       name={props.contractInfo.name}
@@ -565,6 +583,7 @@ function ClaimConditionSection(props: {
             onClick={() => setAddClaimConditionButtonClicked(true)}
             variant="outline"
             className="w-full"
+            disabled={!props.isOwnerAccount}
           >
             Add Claim Condition
           </Button>

@@ -54,5 +54,11 @@ export function extractMinimalProxyImplementationAddress(
     return `0x${implementationAddress}`;
   }
 
+  // EIP-7702 - https://eips.ethereum.org/EIPS/eip-7702#abstract
+  if (bytecode.length === 48 && bytecode.startsWith("0xef0100")) {
+    const implementationAddress = bytecode.slice(8, 48);
+    return `0x${implementationAddress}`;
+  }
+
   return undefined;
 }

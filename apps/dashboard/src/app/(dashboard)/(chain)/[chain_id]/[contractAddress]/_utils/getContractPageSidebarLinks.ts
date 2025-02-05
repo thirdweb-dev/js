@@ -40,12 +40,6 @@ export function getContractPageSidebarLinks(data: {
       exactMatch: true,
     },
     {
-      label: "Embed",
-      href: `${layoutPrefix}/embed`,
-      hide: data.metadata.embedType === null,
-      exactMatch: true,
-    },
-    {
       label: "Analytics",
       href: `${layoutPrefix}/analytics`,
       hide: !data.metadata.isAnalyticsSupported,

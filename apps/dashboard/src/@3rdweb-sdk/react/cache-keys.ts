@@ -95,7 +95,8 @@ export const engineKeys = {
   backendWallet: (address: string, chainId: number) =>
     ["backendWallet", address, chainId] as const,
   backendWalletBalance: (address: string, chainId: number) =>
-    [...engineKeys.backendWallet(address, chainId), "balance"] as const,
+    ["backendWallet", "balance", address, chainId] as const,
+  backendWalletBalanceAll: () => ["backendWallet", "balance"] as const,
   corsUrls: (instance: string) =>
     [...engineKeys.all, instance, "corsUrls"] as const,
   ipAllowlist: (instance: string) =>

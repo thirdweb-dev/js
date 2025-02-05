@@ -7,86 +7,15 @@ export function SmartAccountIcon(props: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
+      role="presentation"
     >
-      <title>Smart Account</title>
-      <rect
-        x="11.6693"
-        y="16.9566"
-        width="13.4583"
-        height="9.33069"
-        rx="1.49536"
-        transform="rotate(-90 11.6693 16.9566)"
-        fill="url(#paint0_linear_195_3925)"
-      />
-      <g filter="url(#filter0_bi_195_3925)">
-        <path
-          d="M8.18321 21.2503C8.7189 21.581 9.37914 21.581 9.91484 21.2503C11.5871 20.2182 15.098 17.6396 15.098 14.1832V10.2763C15.098 9.44263 14.5809 8.69639 13.8003 8.40366L9.75127 6.88528C9.2985 6.71549 8.79955 6.71549 8.34678 6.88528L4.29775 8.40366C3.51715 8.69639 3 9.44263 3 10.2763V14.1832C3 17.6396 6.51095 20.2182 8.18321 21.2503Z"
-          fill="#B9DDFF"
-          fillOpacity="0.8"
-        />
-      </g>
       <path
-        d="M9.04903 14.4024C9.98975 14.4024 10.7524 13.6398 10.7524 12.6991C10.7524 11.7583 9.98975 10.9957 9.04903 10.9957C8.10831 10.9957 7.3457 11.7583 7.3457 12.6991C7.3457 13.6398 8.10831 14.4024 9.04903 14.4024Z"
-        fill="white"
+        d="M13 7L11.8845 4.76892C11.5634 4.1268 11.4029 3.80573 11.1634 3.57116C10.9516 3.36373 10.6963 3.20597 10.4161 3.10931C10.0992 3 9.74021 3 9.02229 3H5.2C4.0799 3 3.51984 3 3.09202 3.21799C2.71569 3.40973 2.40973 3.71569 2.21799 4.09202C2 4.51984 2 5.0799 2 6.2V7M2 7H17.2C18.8802 7 19.7202 7 20.362 7.32698C20.9265 7.6146 21.3854 8.07354 21.673 8.63803C22 9.27976 22 10.1198 22 11.8V16.2C22 17.8802 22 18.7202 21.673 19.362C21.3854 19.9265 20.9265 20.3854 20.362 20.673C19.7202 21 18.8802 21 17.2 21H6.8C5.11984 21 4.27976 21 3.63803 20.673C3.07354 20.3854 2.6146 19.9265 2.32698 19.362C2 18.7202 2 17.8802 2 16.2V7ZM12 17.5C12 17.5 15 16.0701 15 13.9252V11.4229L12.8124 10.6412C12.2868 10.4529 11.712 10.4529 11.1864 10.6412L9 11.4229V13.9252C9 16.0701 12 17.5 12 17.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <path
-        d="M9.04906 13.6652C9.3792 13.6652 9.6472 13.9415 9.6472 14.2828V16.7528C9.6472 17.0937 9.37954 17.3704 9.04906 17.3704C8.71893 17.3704 8.45093 17.094 8.45093 16.7528V14.2828C8.45093 13.9419 8.71859 13.6652 9.04906 13.6652Z"
-        fill="white"
-      />
-      <defs>
-        <filter
-          id="filter0_bi_195_3925"
-          x="1"
-          y="4.75793"
-          width="16.098"
-          height="18.7404"
-          filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
-        >
-          <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feGaussianBlur in="BackgroundImageFix" stdDeviation="1" />
-          <feComposite
-            in2="SourceAlpha"
-            operator="in"
-            result="effect1_backgroundBlur_195_3925"
-          />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect1_backgroundBlur_195_3925"
-            result="shape"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            result="hardAlpha"
-          />
-          <feOffset dy="0.2" />
-          <feGaussianBlur stdDeviation="0.05" />
-          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
-          />
-          <feBlend
-            mode="normal"
-            in2="shape"
-            result="effect2_innerShadow_195_3925"
-          />
-        </filter>
-        <linearGradient
-          id="paint0_linear_195_3925"
-          x1="22.4602"
-          y1="20.8654"
-          x2="12.4019"
-          y2="25.2643"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#2567FF" />
-          <stop offset="1" stopColor="#22A7FF" />
-        </linearGradient>
-      </defs>
     </svg>
   );
 }

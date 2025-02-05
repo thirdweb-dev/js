@@ -1,8 +1,9 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
 import { useEffect, useMemo } from "react";
+import { Toaster } from "sonner";
 import {
   ThirdwebProvider,
   useActiveAccount,
@@ -31,6 +32,7 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
           enableSystem={false}
           defaultTheme="dark"
         >
+          <ToasterSetup />
           <SanctionedAddressesChecker>
             {props.children}
           </SanctionedAddressesChecker>
@@ -38,6 +40,11 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
       </ThirdwebProvider>
     </QueryClientProvider>
   );
+}
+
+function ToasterSetup() {
+  const { theme } = useTheme();
+  return <Toaster richColors theme={theme === "light" ? "light" : "dark"} />;
 }
 
 function SyncChainDefinitionsToConnectionManager() {

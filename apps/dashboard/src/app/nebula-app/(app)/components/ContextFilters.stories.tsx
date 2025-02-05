@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
-import type { ContextFilters } from "../api/chat";
+import type { NebulaContext } from "../api/chat";
 import ContextFiltersButton from "./ContextFilters";
 
 const meta = {
@@ -37,6 +37,7 @@ function Story() {
       <Variant
         contextFilters={{
           chainIds: ["137"],
+          walletAddress: null,
         }}
         label="1 chain"
       />
@@ -44,57 +45,25 @@ function Story() {
       <Variant
         contextFilters={{
           chainIds: ["137", "10", "421614"],
+          walletAddress: null,
         }}
         label="Few chains"
       />
 
       <Variant
         contextFilters={{
-          contractAddresses: ["0x1E51e33F9838A5a043E099C60409f62aA564272f"],
-        }}
-        label="1 contract"
-      />
-
-      <Variant
-        contextFilters={{
-          contractAddresses: [
-            "0x1E51e33F9838A5a043E099C60409f62aA564272f",
-            "0xF61c8d5492139b40af09bDB353733d5F0a348aCf",
-          ],
-        }}
-        label="Few contracts"
-      />
-
-      <Variant
-        contextFilters={{
-          walletAddresses: ["0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"],
+          walletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+          chainIds: null,
         }}
         label="1 wallet"
       />
 
       <Variant
         contextFilters={{
-          walletAddresses: [
-            "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
-            "0x83Dd93fA5D8343094f850f90B3fb90088C1bB425",
-          ],
-        }}
-        label="Few wallets"
-      />
-
-      <Variant
-        contextFilters={{
           chainIds: ["137", "10", "421614"],
-          contractAddresses: [
-            "0x1E51e33F9838A5a043E099C60409f62aA564272f",
-            "0xF61c8d5492139b40af09bDB353733d5F0a348aCf",
-          ],
-          walletAddresses: [
-            "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
-            "0x83Dd93fA5D8343094f850f90B3fb90088C1bB425",
-          ],
+          walletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
         }}
-        label="chains + wallets + contracts"
+        label="chains + wallet"
       />
       <Toaster richColors />
     </div>
@@ -103,10 +72,10 @@ function Story() {
 
 function Variant(props: {
   label: string;
-  contextFilters: ContextFilters | undefined;
+  contextFilters: NebulaContext | undefined;
 }) {
   const [contextFilters, setContextFilters] = useState<
-    ContextFilters | undefined
+    NebulaContext | undefined
   >(props.contextFilters);
   return (
     <BadgeContainer label={props.label}>
@@ -114,7 +83,7 @@ function Variant(props: {
         contextFilters={contextFilters}
         setContextFilters={setContextFilters}
         updateContextFilters={async (values) => {
-          console.log("Updating context filters", values);
+          console.log("Updating context", values);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />

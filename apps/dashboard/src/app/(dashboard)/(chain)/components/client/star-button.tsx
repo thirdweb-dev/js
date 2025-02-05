@@ -106,9 +106,8 @@ export function StarButton(props: {
         ) : (
           <Star
             className={cn(
-              "size-6 transition-all",
+              "size-6 text-foreground transition-all",
               props.iconClassName,
-              isPreferred ? "text-yellow-400" : "text-foreground",
             )}
             fill={isPreferred ? "currentColor" : "none"}
             strokeWidth="1px"

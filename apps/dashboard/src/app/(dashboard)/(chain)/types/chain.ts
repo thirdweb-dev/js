@@ -5,6 +5,7 @@ export type ChainSupportedService =
   | "connect-sdk"
   | "engine"
   | "account-abstraction"
+  | "nebula"
   | "pay"
   | "rpc-edge"
   | "chainsaw"

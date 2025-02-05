@@ -148,7 +148,9 @@ export function inAppWalletConnector(
     },
     getProvider: async (params) => {
       const lastChainId = await config.storage?.getItem("tw.lastChainId");
-      const chain = defineChain(params?.chainId || lastChainId || 1);
+      const chain = defineChain(
+        params?.chainId || args.smartAccount?.chain?.id || lastChainId || 1,
+      );
       if (!wallet.getAccount()) {
         const { autoConnect } = await import("thirdweb/wallets");
         await autoConnect({

@@ -1,0 +1,36 @@
+{
+  "name": "thirdweb-login",
+  "version": "0.1.1",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src && knip && eslint ./src",
+    "fix": "biome check ./src --fix && eslint ./src --fix",
+    "typecheck": "tsc --noEmit",
+    "knip": "knip"
+  },
+  "dependencies": {
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "server-only": "^0.0.1",
+    "thirdweb": "workspace:*"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "22.13.0",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.6",
+    "knip": "5.43.6",
+    "postcss": "8.5.1",
+    "postcss-load-config": "^6.0.1",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3"
+  }
+}

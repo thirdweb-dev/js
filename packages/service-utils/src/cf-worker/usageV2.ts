@@ -1,3 +1,4 @@
+import type { ServiceName } from "../core/services.js";
 import type { UsageV2Event } from "../core/usageV2.js";
 
 /**
@@ -19,6 +20,7 @@ export async function sendUsageV2Events(
   events: UsageV2Event[],
   options: {
     environment: "development" | "production";
+    productName: ServiceName;
     serviceKey: string;
   },
 ): Promise<void> {
@@ -27,7 +29,7 @@ export async function sendUsageV2Events(
       ? "https://u.thirdweb.com"
       : "https://u.thirdweb-dev.com";
 
-  const resp = await fetch(`${baseUrl}/usage-v2/raw-events`, {
+  const resp = await fetch(`${baseUrl}/usage-v2/${options.productName}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

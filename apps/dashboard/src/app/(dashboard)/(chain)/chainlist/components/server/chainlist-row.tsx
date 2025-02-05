@@ -83,14 +83,14 @@ export async function ChainListRow({
 
       <TableCell>
         <div className="flex w-[520px] flex-row items-center gap-14 ">
-          <div className="z-10 flex items-center gap-7">
+          <div className="z-10 flex items-center gap-4">
             {products.map((p) => {
               return (
                 <ProductIcon
                   key={p.name}
                   icon={p.icon}
                   label={p.name}
-                  href={pidToHref(p.id)}
+                  href={p.link}
                   isEnabled={enabledServices.includes(p.id)}
                 />
               );
@@ -100,32 +100,6 @@ export async function ChainListRow({
       </TableCell>
     </TableRow>
   );
-}
-
-function pidToHref(pid: (typeof products)[number]["id"]) {
-  switch (pid) {
-    case "account-abstraction": {
-      return "https://portal.thirdweb.com/connect/account-abstraction/overview";
-    }
-    case "contracts": {
-      return "https://portal.thirdweb.com/contracts";
-    }
-    case "connect-sdk": {
-      return "https://portal.thirdweb.com/connect";
-    }
-    case "engine": {
-      return "https://portal.thirdweb.com/engine";
-    }
-    case "pay": {
-      return "https://portal.thirdweb.com/connect/pay/overview";
-    }
-    case "rpc-edge": {
-      return "https://portal.thirdweb.com/infrastructure/rpc-edge/overview";
-    }
-    case "insight": {
-      return "https://portal.thirdweb.com/insight";
-    }
-  }
 }
 
 function ProductIcon(props: {
@@ -148,8 +122,15 @@ function ProductIcon(props: {
       <Link
         href={props.href}
         target={props.href.startsWith("http") ? "_blank" : undefined}
+        className="group rounded-lg p-2 hover:bg-accent"
       >
-        <props.icon className={cn("size-8", !props.isEnabled && "grayscale")} />
+        <props.icon
+          className={cn(
+            "size-6 text-foreground group-hover:text-link-foreground",
+            !props.isEnabled &&
+              "text-muted-foreground opacity-50 group-hover:opacity-100",
+          )}
+        />
       </Link>
     </ToolTipLabel>
   );

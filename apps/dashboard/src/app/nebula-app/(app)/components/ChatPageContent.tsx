@@ -12,11 +12,11 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
-import { type ContextFilters, promptNebula } from "../api/chat";
+import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
-import type { ExecuteConfig, SessionInfo } from "../api/types";
+import type { SessionInfo } from "../api/types";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
 import { ChatBar } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
@@ -81,27 +81,26 @@ export function ChatPageContent(props: {
     useState(false);
 
   const [contextFilters, _setContextFilters] = useState<
-    ContextFilters | undefined
+    NebulaContext | undefined
   >(() => {
-    const contextFilterRes = props.session?.context_filter;
-    const value: ContextFilters = {
-      chainIds: contextFilterRes?.chain_ids || undefined,
-      contractAddresses: contextFilterRes?.contract_addresses || undefined,
-      walletAddresses: contextFilterRes?.wallet_addresses || undefined,
+    const contextRes = props.session?.context;
+    const value: NebulaContext = {
+      chainIds: contextRes?.chain_ids || null,
+      walletAddress: contextRes?.wallet_address || null,
     };
 
     return value;
   });
 
-  const setContextFilters = useCallback((v: ContextFilters | undefined) => {
+  const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
     setHasUserUpdatedContextFilters(true);
   }, []);
 
   const isNewSession = !props.session;
 
-  // if this is a new session, user has not manually updated context filters
-  // update the context filters to the current user's wallet address and chain id
+  // if this is a new session, user has not manually updated context
+  // update the context to the current user's wallet address and chain id
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isNewSession || hasUserUpdatedContextFilters) {
@@ -109,11 +108,16 @@ export function ChatPageContent(props: {
     }
 
     _setContextFilters((_contextFilters) => {
-      const updatedContextFilters: ContextFilters = _contextFilters
-        ? { ..._contextFilters }
-        : {};
+      const updatedContextFilters: NebulaContext = _contextFilters
+        ? {
+            ..._contextFilters,
+          }
+        : {
+            chainIds: [],
+            walletAddress: null,
+          };
 
-      updatedContextFilters.walletAddresses = address ? [address] : [];
+      updatedContextFilters.walletAddress = address || null;
       updatedContextFilters.chainIds = activeChain
         ? [activeChain.id.toString()]
         : [];
@@ -121,15 +125,6 @@ export function ChatPageContent(props: {
       return updatedContextFilters;
     });
   }, [address, isNewSession, hasUserUpdatedContextFilters, activeChain]);
-
-  const config: ExecuteConfig | null = useMemo(() => {
-    return address
-      ? {
-          mode: "client",
-          signer_wallet_address: address,
-        }
-      : null;
-  }, [address]);
 
   const [sessionId, _setSessionId] = useState<string | undefined>(
     props.session?.id,
@@ -163,12 +158,11 @@ export function ChatPageContent(props: {
   const initSession = useCallback(async () => {
     const session = await createSession({
       authToken: props.authToken,
-      config,
-      contextFilters,
+      context: contextFilters,
     });
     setSessionId(session.id);
     return session;
-  }, [config, contextFilters, props.authToken, setSessionId]);
+  }, [contextFilters, props.authToken, setSessionId]);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
@@ -221,7 +215,6 @@ export function ChatPageContent(props: {
           abortController,
           message: message,
           sessionId: currentSessionId,
-          config: config,
           authToken: props.authToken,
           handleStream(res) {
             if (abortController.signal.aborted) {
@@ -308,7 +301,7 @@ export function ChatPageContent(props: {
               }
             }
           },
-          contextFilters: contextFilters,
+          context: contextFilters,
         });
       } catch (error) {
         if (abortController.signal.aborted) {
@@ -338,7 +331,6 @@ export function ChatPageContent(props: {
     [
       sessionId,
       contextFilters,
-      config,
       props.authToken,
       messages.length,
       initSession,
@@ -363,13 +355,12 @@ export function ChatPageContent(props: {
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
 
   const handleUpdateContextFilters = async (
-    values: ContextFilters | undefined,
+    values: NebulaContext | undefined,
   ) => {
-    // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context filters
+    // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context
     if (sessionId) {
       await updateSession({
         authToken: props.authToken,
-        config,
         sessionId,
         contextFilters: values,
       });

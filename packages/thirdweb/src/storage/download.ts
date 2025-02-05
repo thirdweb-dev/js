@@ -25,7 +25,7 @@ export type DownloadOptions = Prettify<
  * Download a file from IPFS:
  * ```ts
  * import { download } from "thirdweb/storage";
- * import { createThirdwebClient } from "@thirdweb-dev/sdk";
+ * import { createThirdwebClient } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
  *
@@ -38,7 +38,7 @@ export type DownloadOptions = Prettify<
  * Download a file from Arweave:
  * ```ts
  * import { download } from "thirdweb/storage";
- * import { createThirdwebClient } from "@thirdweb-dev/sdk";
+ * import { createThirdwebClient } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
  *
@@ -51,7 +51,7 @@ export type DownloadOptions = Prettify<
  * Download a file from HTTP:
  * ```ts
  * import { download } from "thirdweb/storage";
- * import { createThirdwebClient } from "@thirdweb-dev/sdk";
+ * import { createThirdwebClient } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
  *

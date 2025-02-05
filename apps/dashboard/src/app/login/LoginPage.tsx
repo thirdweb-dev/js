@@ -55,7 +55,15 @@ export function LoginAndOnboardingPage(props: {
             <ThirdwebMiniLogo className="size-7 md:size-8" />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Link
+              href="https://portal.thirdweb.com/"
+              className="px-2 text-muted-foreground text-sm hover:text-foreground"
+              target="_blank"
+            >
+              Docs
+            </Link>
+
             <Link
               href="/support"
               target="_blank"
@@ -65,11 +73,11 @@ export function LoginAndOnboardingPage(props: {
             </Link>
 
             <Link
-              href="https://portal.thirdweb.com/"
-              className="px-2 text-muted-foreground text-sm hover:text-foreground"
               target="_blank"
+              href="https://feedback.thirdweb.com"
+              className="px-2 text-muted-foreground text-sm hover:text-foreground"
             >
-              Docs
+              Feedback
             </Link>
 
             <ColorModeToggle />

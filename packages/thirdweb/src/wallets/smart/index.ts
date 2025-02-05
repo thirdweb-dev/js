@@ -20,12 +20,7 @@ import type { Hex } from "../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { type SignableMessage, maxUint96 } from "../../utils/types.js";
-import type {
-  Account,
-  SendTransactionOption,
-  Wallet,
-} from "../interfaces/wallet.js";
-import type { WalletId } from "../wallet-types.js";
+import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import {
   broadcastZkTransaction,
   bundleUserOp,
@@ -58,17 +53,7 @@ import type {
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
-/**
- * Checks if the provided wallet is a smart wallet.
- *
- * @param wallet - The wallet to check.
- * @returns True if the wallet is a smart wallet, false otherwise.
- */
-export function isSmartWallet(
-  wallet: Wallet<WalletId>,
-): wallet is Wallet<"smart"> {
-  return wallet.id === "smart";
-}
+export { isSmartWallet } from "./is-smart-wallet.js";
 
 /**
  * For in-app wallets, the smart wallet creation is implicit so we track these to be able to retrieve the personal account for a smart account on the wallet API.
@@ -95,6 +80,19 @@ export async function connectSmartAccount(
 
   const options = creationOptions;
   const chain = connectChain ?? options.chain;
+  const sponsorGas =
+    "gasless" in options ? options.gasless : options.sponsorGas;
+  if (await isZkSyncChain(chain)) {
+    return [
+      createZkSyncAccount({
+        creationOptions,
+        connectionOptions,
+        chain,
+        sponsorGas,
+      }),
+      chain,
+    ];
+  }
 
   // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
   if (options.factoryAddress && !options.overrides?.entrypointAddress) {
@@ -125,20 +123,6 @@ export async function connectSmartAccount(
   const factoryAddress =
     options.factoryAddress ??
     getDefaultAccountFactory(options.overrides?.entrypointAddress);
-  const sponsorGas =
-    "gasless" in options ? options.gasless : options.sponsorGas;
-
-  if (await isZkSyncChain(chain)) {
-    return [
-      createZkSyncAccount({
-        creationOptions,
-        connectionOptions,
-        chain,
-        sponsorGas,
-      }),
-      chain,
-    ];
-  }
 
   const factoryContract = getContract({
     client: client,

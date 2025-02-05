@@ -159,6 +159,34 @@ export function MobileBurgerMenuButton(
           </div>
 
           <div className="mt-auto">
+            <div className="flex flex-col gap-5">
+              <Link
+                target="_blank"
+                href="https://portal.thirdweb.com"
+                className="text-muted-foreground hover:text-foreground "
+              >
+                Docs
+              </Link>
+
+              <Link
+                target="_blank"
+                href="/support"
+                className="text-muted-foreground hover:text-foreground "
+              >
+                Support
+              </Link>
+
+              <Link
+                target="_blank"
+                href="https://feedback.thirdweb.com"
+                className="text-muted-foreground hover:text-foreground "
+              >
+                Feedback
+              </Link>
+            </div>
+
+            <div className="h-6" />
+
             <Separator />
             <div className="h-6" />
 

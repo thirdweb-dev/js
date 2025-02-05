@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { checkServerIdentity } from "node:tls";
-import { Kafka, type Producer } from "kafkajs";
-import type { UsageV2Event } from "../core/usageV2.js";
-
-const TOPIC_USAGE_V2 = "usage_v2.raw_events";
+import {
+  type UsageV2Event,
+  type UsageV2Source,
+  getTopicName,
+} from "../core/usageV2.js";
+import { KafkaProducer } from "./kafka.js";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -12,15 +13,14 @@ const TOPIC_USAGE_V2 = "usage_v2.raw_events";
  * Example:
  * ```ts
  * usageV2 = new UsageV2Producer(..)
- * await usageV2.init()
  * await usageV2.sendEvents(events)
  * // Non-blocking:
- * // void usageV2.sendEvents(events).catch(console.error)
+ * // void usageV2.sendEvents(events).catch((e) => console.error(e))
  * ```
  */
 export class UsageV2Producer {
-  private kafka: Kafka;
-  private producer: Producer | null = null;
+  private kafkaProducer: KafkaProducer;
+  private topic: string;
 
   constructor(config: {
     /**
@@ -31,82 +31,54 @@ export class UsageV2Producer {
      * The environment the service is running in.
      */
     environment: "development" | "production";
+    /**
+     * The product where usage is coming from.
+     */
+    source: UsageV2Source;
+    /**
+     * Whether to compress the events.
+     */
+    shouldCompress?: boolean;
 
     username: string;
     password: string;
   }) {
-    this.kafka = new Kafka({
-      clientId: `${config.producerName}-${config.environment}`,
-      brokers:
-        config.environment === "production"
-          ? ["warpstream.thirdweb.xyz:9092"]
-          : ["warpstream-dev.thirdweb.xyz:9092"],
-      ssl: {
-        checkServerIdentity(hostname, cert) {
-          return checkServerIdentity(hostname.toLowerCase(), cert);
-        },
-      },
-      sasl: {
-        mechanism: "plain",
-        username: config.username,
-        password: config.password,
-      },
+    this.kafkaProducer = new KafkaProducer({
+      producerName: config.producerName,
+      environment: config.environment,
+      shouldCompress: config.shouldCompress,
+      username: config.username,
+      password: config.password,
     });
-  }
-
-  /**
-   * Connect the producer.
-   * This must be called before calling `sendEvents()`.
-   */
-  async init() {
-    this.producer = this.kafka.producer({
-      allowAutoTopicCreation: false,
-    });
-    await this.producer.connect();
+    this.topic = getTopicName(config.source);
   }
 
   /**
    * Send usageV2 events.
    * This method may throw. To call this non-blocking:
-   *
-   * ```ts
-   * usageV2 = new UsageV2Producer(...)
-   * void usageV2.sendEvents(events).catch(console.error)
-   *
-   * @param events - The events to send.
+   * @param events
    */
-  async sendEvents(events: UsageV2Event[]): Promise<void> {
-    if (!this.producer) {
-      throw new Error("Producer not initialized. Call `init()` first.");
-    }
-
-    const parsedEvents = events.map((event) => {
-      return {
-        id: event.id ?? randomUUID(),
-        created_at: event.created_at ?? new Date(),
-        source: event.source,
-        action: event.action,
-        // Remove the "team_" prefix, if any.
-        team_id: event.team_id.startsWith("team_")
-          ? event.team_id.slice(5)
-          : event.team_id,
-        project_id: event.project_id,
-        sdk_name: event.sdk_name,
-        sdk_platform: event.sdk_platform,
-        sdk_version: event.sdk_version,
-        sdk_os: event.sdk_os,
-        product_name: event.product_name,
-        product_version: event.product_version,
-        data: JSON.stringify(event.data),
-      };
-    });
-
-    await this.producer.send({
-      topic: TOPIC_USAGE_V2,
-      messages: parsedEvents.map((event) => ({
-        value: JSON.stringify(event),
-      })),
-    });
+  async sendEvents(
+    events: UsageV2Event[],
+    /**
+     * Reference: https://kafka.js.org/docs/producing#producing-messages
+     */
+    options?: {
+      acks?: number;
+      timeout?: number;
+      allowAutoTopicCreation?: boolean;
+    },
+  ): Promise<void> {
+    const parsedEvents = events.map((event) => ({
+      ...event,
+      id: event.id ?? randomUUID(),
+      created_at: event.created_at ?? new Date(),
+      // Remove the "team_" prefix, if any.
+      team_id: event.team_id.startsWith("team_")
+        ? event.team_id.slice(5)
+        : event.team_id,
+    }));
+    await this.kafkaProducer.send(this.topic, parsedEvents, options);
   }
 
   /**
@@ -114,9 +86,6 @@ export class UsageV2Producer {
    * Useful when shutting down the service to flush in-flight events.
    */
   async disconnect() {
-    if (this.producer) {
-      await this.producer.disconnect();
-      this.producer = null;
-    }
+    await this.kafkaProducer.disconnect();
   }
 }
