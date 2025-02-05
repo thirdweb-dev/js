@@ -9,7 +9,6 @@ module.exports = [
   // -- connect
   "/connect",
   "/connect/sign-in",
-  "/connect/pay",
   "/connect/account-abstraction",
   "/connect/universal-bridge",
   // -- nebula
