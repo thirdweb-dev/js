@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.5
+
+### Patch Changes
+
+- [#6171](https://github.com/thirdweb-dev/js/pull/6171) [`ee6bd4f`](https://github.com/thirdweb-dev/js/commit/ee6bd4f8982d2b0db823c8cb472aeb9d6f9408fb) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] export KafkaProducer
+
+- [#6181](https://github.com/thirdweb-dev/js/pull/6181) [`dfd64d2`](https://github.com/thirdweb-dev/js/commit/dfd64d2896444b223cbe999c7973ed1287cd833e) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Expose maxInFlightRequests in Kafka producer
+
+- [#6164](https://github.com/thirdweb-dev/js/pull/6164) [`821caa6`](https://github.com/thirdweb-dev/js/commit/821caa63d78a2f985925d6c1be24143f46f435f4) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix: Add missing CompressionCodecs import
+
+- [#6170](https://github.com/thirdweb-dev/js/pull/6170) [`ccf6329`](https://github.com/thirdweb-dev/js/commit/ccf6329810c1426fadc4483660e154ae38a2927b) Thanks [@arcoraven](https://github.com/arcoraven)! - Add raw kafka producer
+
 ## 0.8.4
 
 ### Patch Changes

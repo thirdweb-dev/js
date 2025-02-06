@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.87.4
+
+### Patch Changes
+
+- [#6182](https://github.com/thirdweb-dev/js/pull/6182) [`f77165e`](https://github.com/thirdweb-dev/js/commit/f77165e2d1dd13a1887604c3431bd49b9bd67f28) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Skip swap approvals if already approved and always calculate gas prices locally
+
 ## 5.87.3
 
 ### Patch Changes

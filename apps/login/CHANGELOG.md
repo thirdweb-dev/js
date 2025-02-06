@@ -1,5 +1,12 @@
 # thirdweb-login
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`f77165e`](https://github.com/thirdweb-dev/js/commit/f77165e2d1dd13a1887604c3431bd49b9bd67f28)]:
+  - thirdweb@5.87.4
+
 ## 0.1.1
 
 ### Patch Changes
