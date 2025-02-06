@@ -236,19 +236,7 @@ export function SwapConfirmationScreen(props: {
             if (step === "swap") {
               setStatus("pending");
               try {
-                let tx = props.quote.transactionRequest;
-
-                // Fix for inApp wallet
-                // Ideally - the pay server sends a non-legacy transaction to avoid this issue
-                if (
-                  props.payer.wallet.id === "inApp" ||
-                  props.payer.wallet.id === "embedded"
-                ) {
-                  tx = {
-                    ...props.quote.transactionRequest,
-                    gasPrice: undefined,
-                  };
-                }
+                const tx = props.quote.transactionRequest;
 
                 trackPayEvent({
                   event: "prompt_swap_execution",

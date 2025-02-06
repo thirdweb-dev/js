@@ -248,11 +248,9 @@ function OnrampStatusScreenUI(props: {
             </>
           )}
 
-          {!props.isEmbed && (
-            <Button variant="accent" fullWidth onClick={props.onDone}>
-              {props.transactionMode ? "Continue Transaction" : "Done"}
-            </Button>
-          )}
+          <Button variant="accent" fullWidth onClick={props.onDone}>
+            {props.transactionMode ? "Continue Transaction" : "Done"}
+          </Button>
         </>
       )}
     </Container>

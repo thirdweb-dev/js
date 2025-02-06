@@ -1006,34 +1006,6 @@ function SwapScreenContent(props: {
   const switchChainRequired =
     props.payer.wallet.getChain()?.id !== fromChain.id;
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  function getErrorMessage(err: any) {
-    type AmountTooLowError = {
-      code: "MINIMUM_PURCHASE_AMOUNT";
-      data: {
-        minimumAmountUSDCents: number;
-        requestedAmountUSDCents: number;
-        minimumAmountWei: string;
-        minimumAmountEth: string;
-      };
-    };
-
-    const defaultMessage = "Unable to get price quote";
-    try {
-      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
-        const obj = err.error as AmountTooLowError;
-        const minAmountToken = obj.data.minimumAmountEth;
-        return {
-          minAmount: formatNumber(Number(minAmountToken), 6),
-        };
-      }
-    } catch {}
-
-    return {
-      msg: [defaultMessage],
-    };
-  }
-
   const errorMsg =
     !quoteQuery.isLoading && quoteQuery.error
       ? getErrorMessage(quoteQuery.error)
@@ -1133,9 +1105,10 @@ function SwapScreenContent(props: {
       {/* Error message */}
       {errorMsg && (
         <div>
-          {errorMsg.minAmount && (
+          {errorMsg.data?.minimumAmountEth ? (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
+              Minimum amount is{" "}
+              {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}
@@ -1144,13 +1117,11 @@ function SwapScreenContent(props: {
                 color="danger"
               />
             </Text>
-          )}
-
-          {errorMsg.msg?.map((msg) => (
-            <Text color="danger" size="sm" center multiline key={msg}>
-              {msg}
+          ) : (
+            <Text color="danger" size="sm" center multiline>
+              {errorMsg.message || defaultMessage}
             </Text>
-          ))}
+          )}
         </div>
       )}
 
@@ -1166,12 +1137,17 @@ function SwapScreenContent(props: {
       )}
 
       {/* Button */}
-      {errorMsg?.minAmount ? (
+      {errorMsg?.data?.minimumAmountEth ? (
         <Button
           variant="accent"
           fullWidth
           onClick={() => {
-            props.setTokenAmount(String(errorMsg.minAmount));
+            props.setTokenAmount(
+              formatNumber(
+                Number(errorMsg.data?.minimumAmountEth),
+                6,
+              ).toString(),
+            );
             props.setHasEditedAmount(true);
           }}
         >
@@ -1306,34 +1282,6 @@ function FiatScreenContent(props: {
     setIsOpen(true);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  function getErrorMessage(err: any) {
-    type AmountTooLowError = {
-      code: "MINIMUM_PURCHASE_AMOUNT";
-      data: {
-        minimumAmountUSDCents: number;
-        requestedAmountUSDCents: number;
-        minimumAmountWei: string;
-        minimumAmountEth: string;
-      };
-    };
-
-    const defaultMessage = "Unable to get price quote";
-    try {
-      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
-        const obj = err.error as AmountTooLowError;
-        const minAmountToken = obj.data.minimumAmountEth;
-        return {
-          minAmount: formatNumber(Number(minAmountToken), 6),
-        };
-      }
-    } catch {}
-
-    return {
-      msg: [defaultMessage],
-    };
-  }
-
   const disableSubmit = !fiatQuoteQuery.data;
 
   const errorMsg =
@@ -1381,9 +1329,10 @@ function FiatScreenContent(props: {
       {/* Error message */}
       {errorMsg && (
         <div>
-          {errorMsg.minAmount && (
+          {errorMsg.data?.minimumAmountEth ? (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
+              Minimum amount is{" "}
+              {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}
@@ -1392,22 +1341,25 @@ function FiatScreenContent(props: {
                 color="danger"
               />
             </Text>
-          )}
-
-          {errorMsg.msg?.map((msg) => (
-            <Text color="danger" size="sm" center multiline key={msg}>
-              {msg}
+          ) : (
+            <Text color="danger" size="sm" center multiline>
+              {errorMsg.message || defaultMessage}
             </Text>
-          ))}
+          )}
         </div>
       )}
 
-      {errorMsg?.minAmount ? (
+      {errorMsg?.data?.minimumAmountEth ? (
         <Button
           variant="accent"
           fullWidth
           onClick={() => {
-            props.setTokenAmount(String(errorMsg.minAmount));
+            props.setTokenAmount(
+              formatNumber(
+                Number(errorMsg.data?.minimumAmountEth),
+                6,
+              ).toString(),
+            );
             props.setHasEditedAmount(true);
           }}
         >
@@ -1525,4 +1477,27 @@ function ChainSelectionScreen(props: {
       }}
     />
   );
+}
+
+type ApiError = {
+  code: string;
+  message?: string;
+  data?: {
+    minimumAmountUSDCents?: string;
+    requestedAmountUSDCents?: string;
+    minimumAmountWei?: string;
+    minimumAmountEth?: string;
+  };
+};
+
+const defaultMessage = "Unable to get price quote";
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function getErrorMessage(err: any): ApiError {
+  if (typeof err.error === "object") {
+    return err.error;
+  }
+  return {
+    code: "UNABLE_TO_GET_PRICE_QUOTE",
+    message: defaultMessage,
+  };
 }

@@ -113,11 +113,9 @@ export function SwapStatusScreen(props: {
             <Spacer y="xl" />
             {swapDetails}
             <Spacer y="sm" />
-            {!props.isEmbed && (
-              <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.transactionMode ? "Continue Transaction" : "Done"}
-              </Button>
-            )}
+            <Button variant="accent" fullWidth onClick={props.onDone}>
+              {props.transactionMode ? "Continue Transaction" : "Done"}
+            </Button>
           </>
         )}
 
