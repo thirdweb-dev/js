@@ -2,6 +2,7 @@ import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
+import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -251,6 +252,31 @@ export async function getBuyWithCryptoQuote(
     const data: BuyWithCryptoQuoteRouteResponse = (await response.json())
       .result;
 
+    // check if the fromAddress already has approval for the given amount
+    const approvalData = data.approval;
+    let approval = undefined;
+    if (approvalData) {
+      const contract = getContract({
+        client: params.client,
+        address: approvalData.tokenAddress,
+        chain: getCachedChain(approvalData.chainId),
+      });
+
+      const approvedAmount = await allowance({
+        contract,
+        spender: approvalData.spenderAddress,
+        owner: params.fromAddress,
+      });
+
+      if (approvedAmount < BigInt(approvalData.amountWei)) {
+        approval = approve({
+          contract,
+          spender: approvalData.spenderAddress,
+          amountWei: BigInt(approvalData.amountWei),
+        });
+      }
+    }
+
     const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: {
         chain: getCachedChain(data.transactionRequest.chainId),
@@ -259,19 +285,9 @@ export async function getBuyWithCryptoQuote(
         to: data.transactionRequest.to,
         value: BigInt(data.transactionRequest.value),
         gas: BigInt(data.transactionRequest.gasLimit),
-        gasPrice: BigInt(data.transactionRequest.gasPrice),
+        gasPrice: undefined, // ignore gas price returned by the quote, we handle it ourselves
       },
-      approval: data.approval
-        ? approve({
-            contract: getContract({
-              client: params.client,
-              address: data.approval.tokenAddress,
-              chain: getCachedChain(data.approval.chainId),
-            }),
-            spender: data.approval?.spenderAddress,
-            amountWei: BigInt(data.approval.amountWei),
-          })
-        : undefined,
+      approval: approval,
       swapDetails: {
         fromAddress: data.fromAddress,
         toAddress: data.toAddress,

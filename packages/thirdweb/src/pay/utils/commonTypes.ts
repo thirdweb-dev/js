@@ -17,4 +17,4 @@ export type PayOnChainTransactionDetails = {
   explorerLink?: string;
 };
 
-export type FiatProvider = "STRIPE" | "TRANSAK" | "KADO";
+export type FiatProvider = "STRIPE" | "TRANSAK" | "KADO" | "COINBASE";
