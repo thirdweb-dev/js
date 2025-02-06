@@ -1,17 +1,11 @@
-"use client";
-
-import { THIRDWEB_CLIENT } from "@/lib/client";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
-import { ethereum } from "thirdweb/chains";
-import {
-  TokenIcon,
-  TokenName,
-  TokenProvider,
-  TokenSymbol,
-} from "thirdweb/react";
 import { CodeExample } from "../code/code-example";
-
-const USDC_ADDRESS = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+import {
+  TokenCardPreview,
+  TokenImageBasicPreview,
+  TokenImageOverridePreview,
+  TokenNameBasicPreview,
+  TokenSymbolBasicPreview,
+} from "./token-previews";
 
 export function TokenImageBasic() {
   return (
@@ -26,15 +20,7 @@ export function TokenImageBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <TokenProvider
-            address={NATIVE_TOKEN_ADDRESS}
-            client={THIRDWEB_CLIENT}
-            chain={ethereum}
-          >
-            <TokenIcon className="h-auto w-20 rounded-full" />
-          </TokenProvider>
-        }
+        preview={<TokenImageBasicPreview />}
         code={`import { TokenProvider, TokenIcon } from "thirdweb/react";
 
 function App() {
@@ -68,18 +54,7 @@ export function TokenImageOverride() {
       </div>
 
       <CodeExample
-        preview={
-          <TokenProvider
-            address={USDC_ADDRESS}
-            client={THIRDWEB_CLIENT}
-            chain={ethereum}
-          >
-            <TokenIcon
-              className="h-auto w-20 rounded-full"
-              iconResolver="/usdc.svg"
-            />
-          </TokenProvider>
-        }
+        preview={<TokenImageOverridePreview />}
         code={`import { TokenProvider, TokenIcon } from "thirdweb/react";
 
 function App() {
@@ -114,15 +89,7 @@ export function TokenNameBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <TokenProvider
-            address={USDC_ADDRESS}
-            client={THIRDWEB_CLIENT}
-            chain={ethereum}
-          >
-            <TokenName loadingComponent={<span>Loading...</span>} />
-          </TokenProvider>
-        }
+        preview={<TokenNameBasicPreview />}
         code={`import { TokenProvider, TokenName } from "thirdweb/react";
 
 function App() {
@@ -153,15 +120,7 @@ export function TokenSymbolBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <TokenProvider
-            address={USDC_ADDRESS}
-            client={THIRDWEB_CLIENT}
-            chain={ethereum}
-          >
-            <TokenSymbol loadingComponent={<span>Loading...</span>} />
-          </TokenProvider>
-        }
+        preview={<TokenSymbolBasicPreview />}
         code={`import { TokenProvider, TokenSymbol } from "thirdweb/react";
 
 function App() {
@@ -194,27 +153,7 @@ export function TokenCard() {
       </div>
 
       <CodeExample
-        preview={
-          <TokenProvider
-            address={USDC_ADDRESS}
-            client={THIRDWEB_CLIENT}
-            chain={ethereum}
-          >
-            <div className="flex flex-row items-center gap-2 rounded-lg border bg-slate-950 px-4 py-1">
-              <TokenIcon className="h-10 w-10" iconResolver="/usdc.svg" />
-              <div className="flex flex-col">
-                <TokenName
-                  className="font-bold"
-                  loadingComponent={<span>Loading...</span>}
-                />
-                <TokenSymbol
-                  className="text-gray-500"
-                  loadingComponent={<span>Loading...</span>}
-                />
-              </div>
-            </div>
-          </TokenProvider>
-        }
+        preview={<TokenCardPreview />}
         code={`import { TokenProvider, TokenSymbol } from "thirdweb/react";
 
 function App() {
