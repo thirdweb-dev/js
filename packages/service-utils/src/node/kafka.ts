@@ -10,8 +10,12 @@ const { CompressionCodecs } = KafkaJS;
  * Reference: https://kafka.js.org/docs/producing#producing-messages
  */
 export interface KafkaProducerSendOptions {
+  // Per-message settings.
   acks?: number;
   timeout?: number;
+
+  // Per-producer settings.
+  retries?: number;
   allowAutoTopicCreation?: boolean;
   maxInFlightRequests?: number;
 }
@@ -114,6 +118,7 @@ export class KafkaProducer {
       this.producer = this.kafka.producer({
         allowAutoTopicCreation: options?.allowAutoTopicCreation ?? false,
         maxInFlightRequests: options?.maxInFlightRequests ?? 1000,
+        retry: { retries: options?.retries ?? 5 },
       });
       await this.producer.connect();
     }
