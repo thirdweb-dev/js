@@ -4,7 +4,7 @@ import {
   type UsageV2Source,
   getTopicName,
 } from "../core/usageV2.js";
-import { KafkaProducer } from "./kafka.js";
+import { KafkaProducer, type KafkaProducerSendOptions } from "./kafka.js";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -63,11 +63,7 @@ export class UsageV2Producer {
     /**
      * Reference: https://kafka.js.org/docs/producing#producing-messages
      */
-    options?: {
-      acks?: number;
-      timeout?: number;
-      allowAutoTopicCreation?: boolean;
-    },
+    options?: KafkaProducerSendOptions,
   ): Promise<void> {
     const parsedEvents = events.map((event) => ({
       ...event,
