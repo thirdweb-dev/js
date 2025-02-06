@@ -114,18 +114,21 @@ export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chain: Chain,
 ) {
-  // if chain is in the force gas price list, always use gas price
-  if (!FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)) {
-    const feeData = await getDynamicFeeData(client, chain);
-    if (
-      feeData.maxFeePerGas !== null &&
-      feeData.maxPriorityFeePerGas !== null
-    ) {
-      return {
-        maxFeePerGas: feeData.maxFeePerGas,
-        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
-      };
-    }
+  // if chain is configured to force legacy transactions or is in the legacy chain list
+  if (
+    chain.fees?.forceLegacyTransactions ||
+    FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
+  ) {
+    return {
+      gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+    };
+  }
+  const feeData = await getDynamicFeeData(client, chain);
+  if (feeData.maxFeePerGas !== null && feeData.maxPriorityFeePerGas !== null) {
+    return {
+      maxFeePerGas: feeData.maxFeePerGas,
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+    };
   }
   return {
     gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),

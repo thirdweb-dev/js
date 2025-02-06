@@ -26,6 +26,12 @@ export type ChainOptions = {
     increaseZeroByteCount?: boolean;
   };
   faucets?: Array<string>;
+  fees?: {
+    /**
+     * Whether to force legacy transactions (pre EIP-1559) for this chain
+     */
+    forceLegacyTransactions?: boolean;
+  };
 };
 
 /**
