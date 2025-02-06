@@ -117,7 +117,7 @@ export class KafkaProducer {
     if (!this.producer) {
       this.producer = this.kafka.producer({
         allowAutoTopicCreation: options?.allowAutoTopicCreation ?? false,
-        maxInFlightRequests: options?.maxInFlightRequests ?? 1000,
+        maxInFlightRequests: options?.maxInFlightRequests ?? 2000,
         retry: { retries: options?.retries ?? 5 },
       });
       await this.producer.connect();
