@@ -15,6 +15,7 @@ export function Img(props: imgElementProps) {
       {/* biome-ignore lint/a11y/useAltText: <explanation> */}
       <img
         {...props}
+        src={props.src || undefined}
         onLoad={() => {
           setIsLoading(false);
         }}

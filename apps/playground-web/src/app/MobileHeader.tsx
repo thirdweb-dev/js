@@ -5,6 +5,7 @@ import { MenuIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ScrollShadow } from "../components/ui/ScrollShadow/ScrollShadow";
 import { Button } from "../components/ui/button";
 import { Sidebar } from "../components/ui/sidebar";
 import { navLinks } from "./navLinks";
@@ -60,9 +61,17 @@ export function MobileHeader() {
         )}
       </Button>
       {isOpen && (
-        <div className="fade-in-0 slide-in-from-top-5 fixed top-[75px] right-0 bottom-0 left-0 z-50 flex animate-in flex-col gap-6 overflow-auto bg-background p-6 duration-200">
-          <Sidebar links={navLinks} />
-          <div className="mt-auto flex flex-col gap-4">
+        <div className="fade-in-0 slide-in-from-top-5 fixed top-[75px] right-0 bottom-0 left-0 z-50 flex animate-in flex-col bg-background duration-200">
+          <div className="relative flex max-h-full flex-1 flex-col overflow-hidden">
+            <ScrollShadow
+              className="grow px-6"
+              scrollableClassName="max-h-full pt-6"
+            >
+              <Sidebar links={navLinks} />
+            </ScrollShadow>
+          </div>
+
+          <div className="mt-auto flex flex-col gap-4 border-t px-6 py-6">
             {otherLinks.map((link) => {
               return (
                 <Link

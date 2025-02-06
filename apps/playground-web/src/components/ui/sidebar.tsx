@@ -33,7 +33,7 @@ type ReferenceSideBarProps = {
 
 export function Sidebar(props: ReferenceSideBarProps) {
   return (
-    <ul className="transform-gpu pb-10">
+    <ul className="transform-gpu">
       {props.links.map((link, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <li key={i}>
@@ -98,8 +98,8 @@ function DocSidebarNonCollapsible(props: {
   const isCategoryActive = href ? isSamePage(pathname, href) : false;
 
   return (
-    <div className="my-4">
-      <div className="mb-2 flex items-center gap-2">
+    <div className="mb-4">
+      <div className="mb-1 flex items-center gap-2">
         {href ? (
           <Link
             className={cn(
@@ -111,10 +111,10 @@ function DocSidebarNonCollapsible(props: {
             {name}
           </Link>
         ) : (
-          <div className="font-semibold lg:text-base">{name}</div>
+          <div className="font-medium text-lg">{name}</div>
         )}
       </div>
-      <ul className="flex flex-col">
+      <ul className="mb-8 flex flex-col">
         {links.map((link, i) => {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -152,7 +152,7 @@ function SidebarCategory(props: {
     <div
       className={cn(
         isCategoryActive && "!font-semibold !text-foreground",
-        "text-muted-foreground",
+        "group-hover:!text-foreground text-muted-foreground",
       )}
     >
       <div className="flex gap-2 py-1 font-medium" ref={triggerRef}>
@@ -173,7 +173,7 @@ function SidebarCategory(props: {
     <CustomAccordion
       defaultOpen={defaultOpen}
       containerClassName="border-none"
-      triggerContainerClassName="lg:text-base"
+      triggerContainerClassName="lg:text-base group"
       trigger={triggerEl}
       chevronPosition="right"
     >

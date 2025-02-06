@@ -85,7 +85,7 @@ export function CustomAccordion(props: CustomAccordionProps) {
       >
         <ChevronDown
           className={cn(
-            "ease size-4 shrink-0 transition-transform duration-300",
+            "ease size-4 shrink-0 text-muted-foreground transition-transform duration-300",
             isOpen && "rotate-180",
             props.chevronClassName,
           )}
