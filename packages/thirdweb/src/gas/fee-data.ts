@@ -3,7 +3,10 @@ import type { ThirdwebClient } from "../client/client.js";
 import { eth_getBlockByNumber } from "../rpc/actions/eth_getBlockByNumber.js";
 import { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import type {
+  FeeType,
+  PreparedTransaction,
+} from "../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { toUnits } from "../utils/units.js";
 import { getGasPrice } from "./get-gas-price.js";
@@ -50,11 +53,13 @@ export async function getGasOverridesForTransaction(
   transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
   // first check for explicit values
-  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice] = await Promise.all([
-    resolvePromisedValue(transaction.maxFeePerGas),
-    resolvePromisedValue(transaction.maxPriorityFeePerGas),
-    resolvePromisedValue(transaction.gasPrice),
-  ]);
+  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice, feeType] =
+    await Promise.all([
+      resolvePromisedValue(transaction.maxFeePerGas),
+      resolvePromisedValue(transaction.maxPriorityFeePerGas),
+      resolvePromisedValue(transaction.gasPrice),
+      resolvePromisedValue(transaction.feeType),
+    ]);
 
   // Exit early if the user explicitly provided enough options
   if (maxFeePerGas !== undefined && maxPriorityFeePerGas !== undefined) {
@@ -63,6 +68,7 @@ export async function getGasOverridesForTransaction(
       maxPriorityFeePerGas,
     };
   }
+
   if (typeof gasPrice === "bigint") {
     return { gasPrice };
   }
@@ -71,6 +77,7 @@ export async function getGasOverridesForTransaction(
   const defaultGasOverrides = await getDefaultGasOverrides(
     transaction.client,
     transaction.chain,
+    feeType,
   );
 
   if (transaction.chain.experimental?.increaseZeroByteCount) {
@@ -113,10 +120,13 @@ export async function getGasOverridesForTransaction(
 export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chain: Chain,
+  feeType?: FeeType,
 ) {
+  // give priority to the transaction fee type over the chain fee type
+  const resolvedFeeType = feeType ?? chain.feeType;
   // if chain is configured to force legacy transactions or is in the legacy chain list
   if (
-    chain.fees?.forceLegacyTransactions ||
+    resolvedFeeType === "legacy" ||
     FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
   ) {
     return {
@@ -130,6 +140,7 @@ export async function getDefaultGasOverrides(
       maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
     };
   }
+  // TODO: resolvedFeeType here could be "EIP1559", but we could not get EIP1559 fee data. should we throw?
   return {
     gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
   };
