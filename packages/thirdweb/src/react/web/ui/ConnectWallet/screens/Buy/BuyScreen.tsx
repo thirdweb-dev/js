@@ -52,7 +52,6 @@ import {
   useToTokenSelectionStates,
 } from "./main/useUISelectionStates.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import {} from "./swap/Fees.js";
 import { PaymentSelectionScreen } from "./swap/PaymentSelectionScreen.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenContent } from "./swap/SwapScreenContent.js";

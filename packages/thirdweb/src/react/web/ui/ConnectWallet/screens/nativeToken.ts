@@ -1,4 +1,5 @@
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { type Address, getAddress } from "../../../../../utils/address.js";
 import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
 
 export type NativeToken = { nativeToken: true };
@@ -15,6 +16,13 @@ export function isNativeToken(
     "nativeToken" in token ||
     token.address?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()
   );
+}
+
+export function getTokenAddress(token: TokenInfo | NativeToken): Address {
+  if (isNativeToken(token)) {
+    return NATIVE_TOKEN_ADDRESS;
+  }
+  return getAddress(token.address);
 }
 
 export type ERC20OrNativeToken = TokenInfo | NativeToken;
