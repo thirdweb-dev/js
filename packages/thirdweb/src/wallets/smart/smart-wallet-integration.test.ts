@@ -15,6 +15,7 @@ import {
 } from "../../exports/extensions/erc4337.js";
 import { balanceOf } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
+import { isActiveSigner } from "../../extensions/erc4337/__generated__/IAccountPermissions/read/isActiveSigner.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
@@ -457,6 +458,30 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
           account: newSmartAccount,
         }),
       ).rejects.toThrowError(/AA21 didn't pay prefund/);
+    });
+
+    it("can use a session key right after connecting", async () => {
+      const sessionKey = await generateAccount({ client });
+      const wallet = smartWallet({
+        chain,
+        gasless: true,
+        sessionKey: {
+          address: sessionKey.address,
+          permissions: {
+            approvedTargets: "*",
+          },
+        },
+      });
+      await wallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+
+      const isSigner = await isActiveSigner({
+        contract: accountContract,
+        signer: sessionKey.address,
+      });
+      expect(isSigner).toEqual(true);
     });
   },
 );
