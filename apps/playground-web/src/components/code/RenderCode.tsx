@@ -7,17 +7,21 @@ export function RenderCode(props: {
   html: string;
   className?: string;
   scrollableClassName?: string;
+  scrollableContainerClassName?: string;
 }) {
   return (
     <div
       className={cn(
-        "group relative max-w-full rounded-xl border bg-code",
+        "group relative max-w-full overflow-hidden rounded-xl border bg-code",
         props.className,
       )}
     >
       <ScrollShadow
         scrollableClassName={cn("p-4 lg:p-6", props.scrollableClassName)}
-        className="text-xs md:text-sm [&_*]:leading-relaxed"
+        className={cn(
+          "text-xs md:text-sm [&_*]:leading-relaxed",
+          props.scrollableContainerClassName,
+        )}
         shadowColor="hsl(var(--code))"
       >
         <div

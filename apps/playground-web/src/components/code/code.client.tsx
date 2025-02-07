@@ -13,6 +13,7 @@ export type CodeProps = {
   loader: React.ReactNode;
   className?: string;
   scrollableClassName?: string;
+  scrollableContainerClassName?: string;
 };
 
 export function CodeLoading() {
@@ -29,6 +30,7 @@ export const CodeClient: React.FC<CodeProps> = ({
   loader,
   className,
   scrollableClassName,
+  scrollableContainerClassName,
 }) => {
   const codeQuery = useQuery({
     queryKey: ["html", code],
@@ -46,6 +48,7 @@ export const CodeClient: React.FC<CodeProps> = ({
       html={codeQuery.data.html}
       className={className}
       scrollableClassName={scrollableClassName}
+      scrollableContainerClassName={scrollableContainerClassName}
     />
   );
 };

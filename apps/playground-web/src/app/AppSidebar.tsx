@@ -1,12 +1,13 @@
 import thirdwebIconSrc from "@/../public/thirdweb.svg";
-import { Sidebar } from "@/components/ui/sidebar";
+import { Sidebar, type SidebarLink } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollShadow } from "../components/ui/ScrollShadow/ScrollShadow";
-import { navLinks } from "./navLinks";
 import { otherLinks } from "./otherLinks";
 
-export function AppSidebar() {
+export function AppSidebar(props: {
+  links: SidebarLink[];
+}) {
   return (
     <div className="z-10 hidden h-dvh w-[300px] flex-col border-border/50 border-r-2 xl:flex">
       <div className="border-b px-6 py-5">
@@ -23,7 +24,7 @@ export function AppSidebar() {
           className="grow pr-4 pl-6"
           scrollableClassName="max-h-full pt-6"
         >
-          <Sidebar links={navLinks} />
+          <Sidebar links={props.links} />
         </ScrollShadow>
       </div>
 
