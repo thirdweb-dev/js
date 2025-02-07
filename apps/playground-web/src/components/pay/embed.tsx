@@ -10,7 +10,7 @@ export function StyledPayEmbedPreview() {
   const { theme } = useTheme();
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       <StyledConnectButton />
       <div className="h-10" />
       <PayEmbed
@@ -27,6 +27,6 @@ export function StyledPayEmbedPreview() {
           },
         }}
       />
-    </>
+    </div>
   );
 }

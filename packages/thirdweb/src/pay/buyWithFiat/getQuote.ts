@@ -238,6 +238,11 @@ export type BuyWithFiatQuote = {
    *
    */
   onRampLink: string;
+
+  /**
+   * The provider that was used to get the quote.
+   */
+  provider: FiatProvider;
 };
 
 /**

@@ -2,6 +2,7 @@ import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import type { AuthArgsType } from "../../../wallets/in-app/core/authentication/types.js";
 
 export const LAST_AUTH_PROVIDER_STORAGE_KEY = "lastAuthProvider";
+export const PREFERRED_FIAT_PROVIDER_STORAGE_KEY = "preferredFiatProvider";
 
 export async function setLastAuthProvider(
   authProvider: AuthArgsType["strategy"],

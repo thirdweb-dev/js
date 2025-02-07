@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
@@ -10,11 +11,13 @@ import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithC
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
+import type { FiatProvider } from "../../../../../../pay/utils/commonTypes.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
+  iconSize,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type {
@@ -27,6 +30,7 @@ import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFia
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
+import { PREFERRED_FIAT_PROVIDER_STORAGE_KEY } from "../../../../../core/utils/storage.js";
 import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
@@ -56,6 +60,7 @@ import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { TransactionModeScreen } from "./TransactionModeScreen.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
+import { Providers } from "./fiat/Providers.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
 import type { SelectedScreen } from "./main/types.js";
 import {
@@ -1255,9 +1260,22 @@ function FiatScreenContent(props: {
   const receiverAddress =
     defaultRecipientAddress || props.payer.account.address;
   const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<"fees">("fees");
+  const [drawerScreen, setDrawerScreen] = useState<"fees" | "providers">(
+    "fees",
+  );
 
   const buyWithFiatOptions = props.payOptions.buyWithFiat;
+  const [preferredProvider, setPreferredProvider] = useState<
+    FiatProvider | undefined
+  >(
+    buyWithFiatOptions !== false
+      ? buyWithFiatOptions?.preferredProvider ||
+          ((localStorage.getItem(
+            PREFERRED_FIAT_PROVIDER_STORAGE_KEY,
+          ) as FiatProvider | null) ??
+            undefined)
+      : undefined,
+  );
 
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
@@ -1273,7 +1291,7 @@ function FiatScreenContent(props: {
           isTestMode: buyWithFiatOptions?.testMode,
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
-          preferredProvider: buyWithFiatOptions?.preferredProvider,
+          preferredProvider: preferredProvider,
         }
       : undefined,
   );
@@ -1314,6 +1332,11 @@ function FiatScreenContent(props: {
     setIsOpen(true);
   }
 
+  function showProviders() {
+    setDrawerScreen("providers");
+    setIsOpen(true);
+  }
+
   const disableSubmit = !fiatQuoteQuery.data;
 
   const errorMsg =
@@ -1337,6 +1360,28 @@ function FiatScreenContent(props: {
                 <FiatFees quote={fiatQuoteQuery.data} />
               </div>
             )}
+            {drawerScreen === "providers" && (
+              <div>
+                <Text size="lg" color="primaryText">
+                  Providers
+                </Text>
+                <Spacer y="lg" />
+                <Providers
+                  preferredProvider={
+                    preferredProvider || fiatQuoteQuery.data?.provider
+                  }
+                  onSelect={(provider) => {
+                    setPreferredProvider(provider);
+                    // save the pref in local storage
+                    localStorage.setItem(
+                      PREFERRED_FIAT_PROVIDER_STORAGE_KEY,
+                      provider,
+                    );
+                    setIsOpen(false);
+                  }}
+                />
+              </div>
+            )}
           </Drawer>
         </>
       )}
@@ -1349,6 +1394,35 @@ function FiatScreenContent(props: {
           currency={selectedCurrency}
           onSelectCurrency={showCurrencySelector}
         />
+        <Container
+          bg="tertiaryBg"
+          flex="row"
+          borderColor="borderColor"
+          style={{
+            paddingLeft: spacing.md,
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderBottom: "none",
+          }}
+        >
+          <Text size="xs" color="secondaryText">
+            Provider
+          </Text>
+          <Button variant="ghost" onClick={showProviders}>
+            <Container flex="row" center="y" gap="xxs" color="secondaryText">
+              <Text size="xs">
+                {preferredProvider
+                  ? `${preferredProvider.charAt(0).toUpperCase() + preferredProvider.slice(1).toLowerCase()}`
+                  : fiatQuoteQuery.data?.provider
+                    ? `${fiatQuoteQuery.data?.provider.charAt(0).toUpperCase() + fiatQuoteQuery.data?.provider.slice(1).toLowerCase()}`
+                    : ""}
+              </Text>
+              <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+            </Container>
+          </Button>
+        </Container>
         {/* Estimated time + View fees button */}
         <EstimatedTimeAndFees
           quoteIsLoading={fiatQuoteQuery.isLoading}
