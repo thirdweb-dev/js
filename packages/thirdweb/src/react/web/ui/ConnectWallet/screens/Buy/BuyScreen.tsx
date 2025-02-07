@@ -1,8 +1,11 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import { getContract } from "../../../../../../contract/contract.js";
+import { allowance } from "../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
@@ -322,6 +325,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           });
         }}
         onSuccess={onSwapSuccess}
+        approvalAmount={screen.approvalAmount}
       />
     );
   }
@@ -992,6 +996,30 @@ function SwapScreenContent(props: {
     gcTime: 30 * 1000,
   });
 
+  const allowanceQuery = useQuery({
+    queryKey: [
+      "allowance",
+      payer.account.address,
+      quoteQuery.data?.approvalData,
+    ],
+    queryFn: () => {
+      if (!quoteQuery.data?.approvalData) {
+        return null;
+      }
+      return allowance({
+        contract: getContract({
+          client: props.client,
+          address: quoteQuery.data.swapDetails.fromToken.tokenAddress,
+          chain: getCachedChain(quoteQuery.data.swapDetails.fromToken.chainId),
+        }),
+        spender: quoteQuery.data.approvalData.spenderAddress,
+        owner: props.payer.account.address,
+      });
+    },
+    enabled: !!quoteQuery.data?.approvalData,
+    refetchOnMount: true,
+  });
+
   const sourceTokenAmount = swapRequired
     ? quoteQuery.data?.swapDetails.fromAmount
     : tokenAmount;
@@ -1002,7 +1030,9 @@ function SwapScreenContent(props: {
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
   const disableContinue =
-    (swapRequired && !quoteQuery.data) || isNotEnoughBalance;
+    (swapRequired && !quoteQuery.data) ||
+    isNotEnoughBalance ||
+    allowanceQuery.isLoading;
   const switchChainRequired =
     props.payer.wallet.getChain()?.id !== fromChain.id;
 
@@ -1047,6 +1077,7 @@ function SwapScreenContent(props: {
     setScreen({
       id: "swap-flow",
       quote: quoteQuery.data,
+      approvalAmount: allowanceQuery.data ?? undefined,
     });
   }
 
@@ -1155,6 +1186,7 @@ function SwapScreenContent(props: {
         </Button>
       ) : switchChainRequired &&
         !quoteQuery.isLoading &&
+        !allowanceQuery.isLoading &&
         !isNotEnoughBalance &&
         !quoteQuery.error ? (
         <SwitchNetworkButton
@@ -1493,7 +1525,7 @@ type ApiError = {
 const defaultMessage = "Unable to get price quote";
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function getErrorMessage(err: any): ApiError {
-  if (typeof err.error === "object") {
+  if (typeof err.error === "object" && err.error.code) {
     return err.error;
   }
   return {
