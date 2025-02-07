@@ -1,8 +1,6 @@
 import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
-import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -83,7 +81,7 @@ type BuyWithCryptoTransferResponse = {
  */
 export type BuyWithCryptoTransfer = {
   transactionRequest: PrepareTransactionOptions;
-  approval?: PrepareTransactionOptions;
+  approvalData?: QuoteApprovalInfo;
   fromAddress: string;
   toAddress: string;
   paymentToken: QuotePaymentToken;
@@ -159,17 +157,7 @@ export async function getBuyWithCryptoTransfer(
         value: BigInt(data.transactionRequest.value),
         gas: BigInt(data.transactionRequest.gasLimit),
       },
-      approval: data.approval
-        ? approve({
-            contract: getContract({
-              client: params.client,
-              address: data.approval.tokenAddress,
-              chain: getCachedChain(data.approval.chainId),
-            }),
-            spender: data.approval.spenderAddress as Address,
-            amountWei: BigInt(data.approval.amountWei),
-          })
-        : undefined,
+      approvalData: data.approval,
       fromAddress: data.fromAddress,
       toAddress: data.toAddress,
       paymentToken: data.paymentToken,

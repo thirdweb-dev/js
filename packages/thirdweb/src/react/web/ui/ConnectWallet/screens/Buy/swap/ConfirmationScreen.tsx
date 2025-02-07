@@ -3,6 +3,8 @@ import { useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { getContract } from "../../../../../../../contract/contract.js";
+import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
@@ -51,9 +53,13 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
   payer: PayerInfo;
+  preApprovedAmount?: bigint;
 }) {
-  const isApprovalRequired = props.quote.approval !== undefined;
-  const initialStep = isApprovalRequired ? "approval" : "swap";
+  const needsApproval =
+    props.quote.approvalData &&
+    props.preApprovedAmount !== undefined &&
+    props.preApprovedAmount < BigInt(props.quote.approvalData.amountWei);
+  const initialStep = needsApproval ? "approval" : "swap";
 
   const [step, setStep] = useState<"approval" | "swap">(initialStep);
   const [status, setStatus] = useState<
@@ -136,7 +142,7 @@ export function SwapConfirmationScreen(props: {
       <Spacer y="xl" />
 
       {/* Show 2 steps - Approve and confirm  */}
-      {isApprovalRequired && (
+      {needsApproval && (
         <>
           <Spacer y="sm" />
           <Container
@@ -187,7 +193,7 @@ export function SwapConfirmationScreen(props: {
           fullWidth
           disabled={status === "pending"}
           onClick={async () => {
-            if (step === "approval" && props.quote.approval) {
+            if (step === "approval" && props.quote.approvalData) {
               try {
                 setStatus("pending");
 
@@ -204,13 +210,22 @@ export function SwapConfirmationScreen(props: {
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
 
+                const transaction = approve({
+                  contract: getContract({
+                    client: props.client,
+                    address: props.quote.swapDetails.fromToken.tokenAddress,
+                    chain: props.fromChain,
+                  }),
+                  spender: props.quote.approvalData.spenderAddress,
+                  amountWei: BigInt(props.quote.approvalData.amountWei),
+                });
+
                 const tx = await sendTransaction({
                   account: props.payer.account,
-                  transaction: props.quote.approval,
+                  transaction,
                 });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-                // props.onQuoteFinalized(props.quote);
 
                 trackPayEvent({
                   event: "swap_approval_success",

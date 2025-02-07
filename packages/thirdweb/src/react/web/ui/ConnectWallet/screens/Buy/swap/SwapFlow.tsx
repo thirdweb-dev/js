@@ -22,6 +22,7 @@ type SwapFlowProps = {
   transactionMode: boolean;
   isEmbed: boolean;
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
+  approvalAmount?: bigint;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
@@ -109,6 +110,7 @@ export function SwapFlow(props: SwapFlowProps) {
       quote={quote}
       isFiatFlow={props.isFiatFlow}
       payer={props.payer}
+      preApprovedAmount={props.approvalAmount}
     />
   );
 }
