@@ -247,7 +247,7 @@ const port = 3000;
 
 const WEBHOOK_SECRET = "<your_webhook_auth_secret>";
 
-app.use(bodyParser.text());
+app.use(bodyParser.json());
 
 app.post("/webhook", (req, res) => {
 	const signatureFromHeader = req.header("X-Engine-Signature");
