@@ -1,6 +1,7 @@
 import type { SidebarLink } from "../components/ui/sidebar";
+import { fetchAllBlueprints } from "./insight/utils";
 
-export const navLinks: SidebarLink[] = [
+export const staticSidebarLinks: SidebarLink[] = [
   {
     name: "Connect",
     isCollapsible: false,
@@ -117,31 +118,59 @@ export const navLinks: SidebarLink[] = [
       },
     ],
   },
-  {
-    name: "Engine",
-    isCollapsible: false,
-    expanded: false,
-    links: [
-      {
-        name: "Airdrop",
-        href: "/engine/airdrop",
-      },
-      {
-        name: "Minting",
-        href: "/engine/minting",
-      },
-      {
-        name: "Webhooks",
-        href: "/engine/webhooks",
-      },
-      // {
-      //   name: "Session Keys",
-      //   href: "/engine/account-abstraction/session-keys",
-      // },
-      // {
-      //   name: "Smart Backend Wallets",
-      //   href: "/engine/account-abstraction/smart-backend-wallets",
-      // },
-    ],
-  },
 ];
+
+const engineSidebarLinks: SidebarLink = {
+  name: "Engine",
+  isCollapsible: false,
+  expanded: false,
+  links: [
+    {
+      name: "Airdrop",
+      href: "/engine/airdrop",
+    },
+    {
+      name: "Minting",
+      href: "/engine/minting",
+    },
+    {
+      name: "Webhooks",
+      href: "/engine/webhooks",
+    },
+  ],
+};
+
+export async function getSidebarLinks() {
+  const insightBlueprints = await fetchAllBlueprints();
+
+  const insightLinks: SidebarLink[] = insightBlueprints.map((blueprint) => {
+    const paths = Object.keys(blueprint.openapiJson.paths);
+    return {
+      name: blueprint.name,
+      expanded: false,
+      links: paths.map((pathName) => {
+        const pathObj = blueprint.openapiJson.paths[pathName];
+        if (!pathObj) {
+          throw new Error(`Path not found: ${pathName}`);
+        }
+        return {
+          name: pathObj.get?.summary || pathName,
+          href: `/insight/${blueprint.id}?path=${pathName}`,
+        };
+      }),
+    };
+  });
+
+  const sidebarLinks: SidebarLink[] = [
+    ...staticSidebarLinks,
+    {
+      name: "Insight",
+      isCollapsible: false,
+      expanded: false,
+      links: insightLinks,
+    },
+    engineSidebarLinks,
+  ];
+
+  return sidebarLinks;
+}

@@ -10,7 +10,7 @@ export function APIHeader(props: {
 }) {
   return (
     <div
-      className="mb-12 flex flex-col-reverse items-center justify-between gap-6 rounded-3xl px-6 py-8 lg:flex-row lg:px-14 lg:py-14"
+      className="mb-10 flex flex-col-reverse items-center justify-between gap-6 rounded-3xl px-6 py-8 lg:flex-row lg:px-10"
       style={{
         background:
           "linear-gradient(to top, hsl(var(--secondary)/80%), transparent)",
@@ -21,7 +21,7 @@ export function APIHeader(props: {
         <h1 className="mb-2 font-bold text-4xl tracking-tighter md:text-5xl">
           {props.title}
         </h1>
-        <p className="mb-5 max-w-[700px] text-balance text-muted-foreground">
+        <p className="mb-7 max-w-[700px] text-balance text-muted-foreground leading-relaxed">
           {props.description}
         </p>
 
