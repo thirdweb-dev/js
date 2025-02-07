@@ -6,6 +6,7 @@ import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import { normalizeFunctionParams } from "../../../utils/abi/normalizeFunctionParams.js";
 import { CONTRACT_DEPLOYER_ADDRESS } from "../../../utils/any-evm/zksync/constants.js";
+import { ensureBytecodePrefix } from "../../../utils/bytecode/prefix.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { zkDeployContractDeterministic } from "./zkDeployDeterministic.js";
@@ -22,6 +23,8 @@ export async function zkDeployContract(
     deploymentType?: "create" | "create2";
   },
 ) {
+  const bytecode = ensureBytecodePrefix(options.bytecode);
+
   if (options.salt !== undefined) {
     // if a salt is provided, use the deterministic deployer
     return zkDeployContractDeterministic(options);
@@ -29,7 +32,7 @@ export async function zkDeployContract(
 
   const data = encodeDeployData({
     abi: options.abi,
-    bytecode: options.bytecode,
+    bytecode,
     deploymentType: options.deploymentType ?? "create",
     args: normalizeFunctionParams(
       options.abi.find((abi) => abi.type === "constructor"),
@@ -45,7 +48,7 @@ export async function zkDeployContract(
       to: CONTRACT_DEPLOYER_ADDRESS,
       data,
       eip712: {
-        factoryDeps: [options.bytecode],
+        factoryDeps: [bytecode],
         // TODO (zksync): allow passing in a paymaster
       },
     }),
