@@ -1,6 +1,4 @@
 coverage:
-  ignore:
-    - "packages/thirdweb/src/contract/deployment/zksync/zkDeployContract.ts"
   status:
     project:
       default:
@@ -12,6 +10,7 @@ coverage:
           - packages
         ignore:
           - "**/__generated__/**"
+          - "thirdweb/src/contract/deployment/zksync/zkDeployContract.ts"
       
 
 github_checks:
