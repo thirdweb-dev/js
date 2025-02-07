@@ -10,7 +10,7 @@ coverage:
           - packages
         ignore:
           - "**/__generated__/**"
-          - "packages/thirdweb/src/contract/deployment/zksync/zkDeployContract.ts"
+          - "packages/thirdweb/src/contract/deployment/zksync/**"
       
 
 github_checks:
