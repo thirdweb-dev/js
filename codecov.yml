@@ -1,4 +1,8 @@
 coverage:
+  ignore:
+    - "**/__generated__/**"
+    - "**/contract/deployment/zksync/**"
+    - "*/thirdweb/src/contract/deployment/zksync/zkDeployContract.ts"
   status:
     project:
       default:
