@@ -18,11 +18,13 @@ It makes for a fantastic [SmartWallet](/unity/v5/wallets/account-abstraction) ad
 In-App Wallets support a variety of login methods:
 - Email (OTP Login)
 - Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
-- SIWE (Sign-In with Ethereum)
+- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam etc.)
 - Custom Auth (OIDC Compatible)
 - Custom Auth (Generic Auth Endpoint)
 - Guest (Onboard easily, link other accounts later)
+- Backend (Server Wallets)
+- Siwe (Login with a seperate wallet supported by the SDK)
+- SiweExternal (Login with an external wallet that only supports web using a browser loading a static thirdweb React page temporarily)
 
 ### Login with Email
 
@@ -66,10 +68,10 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 
 Will open a native browser or oauth session to authenticate the user and redirect back to the game.
 
-### Login with SIWE
+### Login with Siwe
 
 ```csharp
-var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Siwe, siweSigner: sdkSupportedExternalWallet);
 var options = new WalletOptions(
     provider: WalletProvider.InAppWallet, 
     chainId: 1, 
@@ -78,7 +80,29 @@ var options = new WalletOptions(
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
-Will use the external wallet to sign a message and login to the InAppWallet.
+Will use a separate wallet to sign a message and login to the InAppWallet.
+
+### Login with SiweExternal
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.SiweExternal)
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet,
+    chainId: 421614,
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ConnectWallet(inAppWalletOptions);
+```
+
+Will open a browser and load a static thirdweb React page to authenticate the user and redirect back to the game.
+You can pass `forceSiweExternalWalletIds` to force the page to use one or more wallets.
+
+Example:
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(
+    authprovider: AuthProvider.SiweExternal,
+    forceSiweExternalWalletIds: new List<string> { "xyz.abs" });
+```
 
 ### Login with Custom Auth - OIDC Compatible
 
@@ -116,6 +140,21 @@ var inAppWalletOptions = new InAppWalletOptions(
 );
 var options = new WalletOptions(
     provider: WalletProvider.EcosystemWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+### Login with Backend - Server Wallets
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(
+    authprovider: AuthProvider.Backend, 
+    walletSecret: "very-secret"
+);
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
     chainId: 1, 
     inAppWalletOptions: inAppWalletOptions
 );

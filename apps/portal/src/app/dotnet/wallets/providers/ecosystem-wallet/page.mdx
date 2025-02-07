@@ -15,11 +15,13 @@ Create an instance of `EcosystemWallet` using a user's email, phone number or OA
 Ecosystem Wallets support a variety of login methods:
 - Email (OTP Login)
 - Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam, etc.)
-- SIWE (Sign-In with Ethereum)
+- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam etc.)
 - Custom Auth (OIDC Compatible)
 - Custom Auth (Generic Auth Endpoint)
 - Guest (Onboard easily, link other accounts later)
+- Backend (Server Wallets)
+- Siwe (Login with a seperate wallet supported by the SDK)
+- SiweExternal (Login with an external wallet that only supports web using a browser loading a static thirdweb React page temporarily)
 
 ## Usage
 
@@ -32,14 +34,18 @@ var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosyste
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", phoneNumber: "+1234567890");
 // Google, Apple, Facebook, etc.
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Google);
-// SIWE
-var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
 // Custom Auth - JWT
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.JWT);
 // Custom Auth - AuthEndpoint
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.AuthEndpoint);
 // Guest Login
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Guest);
+// Server Login
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Backend, walletSecret: "very-secret");
+// Siwe
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+// SiweExternal
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.SiweExternal);
 
 // Session resuming supported for all methods
 var isConnected = await wallet.IsConnected();
@@ -62,9 +68,6 @@ var address = await wallet.LoginWithOauth(
     mobileRedirectScheme: "myBundleId://"
 );
 
-// SIWE (Wallet)
-var address = await siweWallet.LoginWithSiwe(chainId: 1);
-
 // Custom Auth (JWT)
 var address = await wallet.LoginWithCustomAuth(jwt: "myjwt");
 
@@ -73,11 +76,26 @@ var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload");
 
 // Guest Login (Easy onboarding)
 var address = await wallet.LoginWithGuest();
+
+// Backend (Server Wallets)
+var address = await wallet.LoginWithBackend();
+
+// SIWE (Wallet)
+var address = await siweWallet.LoginWithSiwe(chainId: 1);
+
+// SiweExternal (React-only wallet)
+var address = await wallet.LoginWithSiweExternal(
+    // Windows console app example, adaptable to any runtime
+    isMobile: false,
+    browserOpenAction: (url) =>
+    {
+        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+         _ = Process.Start(psi);
+    },
+    forceWalletIds: new List<string> { "io.metamask", "com.coinbase.wallet", "xyz.abs" }
+);
 ```
 
-<Callout variant="info" title="Client-Side Use">
-	This wallet is designed for client-side use in applications where direct access to the user's private keys is not safe or necessary. It leverages OTP for secure authentication, allowing users to interact with blockchain applications seamlessly.
-</Callout>
 <Details summary="Parameters">
 
 ### client (required)
@@ -107,6 +125,18 @@ The OAuth provider to use for authentication. Supported values are `AuthProvider
 ### storageDirectoryPath (optional)
 
 The path to the directory where the wallet data is stored. Defaults to the application's data directory.
+
+### siweSigner (optional)
+
+An external wallet instance to use for SIWE authentication.
+
+### legacyEncryptionKey (optional)
+
+The encryption key that is no longer required but was used in the past. Only pass this if you had used custom auth before this was deprecated.
+
+### walletSecret (optional)
+
+The secret identifier to use when creating server-side wallets with backend authentication.
 
 </Details>
 
@@ -245,6 +275,31 @@ if (!await ecosystemWallet.IsConnected())
 ```
 
 **Note:** The `LoginWithOauth` API allows for custom browser handling, making it suitable for various application types and platforms.
+
+## External Wallet Auth (Siwe & SiweExternal)
+
+**LoginWithSiwe:** Initiate the login process by calling LoginWithSiwe on the EcosystemWallet instance. This will prompt the external wallet to sign a message instantly.
+
+```csharp
+var address = await siweWallet.LoginWithSiwe(chainId: 1);
+```
+
+**LoginWithSiweExternal:** Initiate the login process by calling LoginWithSiweExternal on the EcosystemWallet instance. This will initiate a browser-based login flow for external wallets that only support web platforms.
+
+```csharp
+var address = await wallet.LoginWithSiweExternal(
+    // Windows console app example, adaptable to any runtime
+    isMobile: false,
+    browserOpenAction: (url) =>
+    {
+        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+        _ = Process.Start(psi);
+    },
+    forceWalletIds: new List<string> { "io.metamask", "com.coinbase.wallet", "xyz.abs" }
+);
+```
+
+Note: The parameters are similar to the OAuth flow, with the addition of `forceWalletIds` to specify the wallet IDs to force the user to use. Using a single wallet id will skip the wallet selection screen and directly open the wallet.
 
 ## Unified Identity - Account Linking
 

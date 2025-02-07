@@ -1,5 +1,5 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { ZapIcon } from "lucide-react";
+import { CodeIcon, ZapIcon } from "lucide-react";
 
 const sdkSlug = "/unity/v5";
 const walletProvidersSlug = `${sdkSlug}/wallets`;
@@ -16,6 +16,12 @@ export const sidebar: SideBar = {
       name: "Getting Started",
       href: `${sdkSlug}/getting-started`,
       icon: <ZapIcon />,
+    },
+    {
+      name: "API Reference",
+      href: "/dotnet",
+      isCollapsible: false,
+      icon: <CodeIcon />,
     },
     {
       name: "Core",
@@ -62,6 +68,20 @@ export const sidebar: SideBar = {
       ],
     },
     {
+      name: "Blockchain API",
+      isCollapsible: false,
+      links: [
+        {
+          name: "Interacting with Contracts",
+          href: `${sdkSlug}/contracts`,
+        },
+        {
+          name: "Full Reference",
+          href: "https://thirdweb-dev.github.io/dotnet/index.html",
+        },
+      ],
+    },
+    {
       name: "Pay",
       isCollapsible: false,
       links: [
@@ -72,27 +92,19 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Blockchain API",
+      name: "Nebula AI",
       isCollapsible: false,
       links: [
         {
-          name: "Interacting with Contracts",
-          href: `${sdkSlug}/contracts`,
-        },
-        { separator: true },
-        {
-          name: "Migrate from v4",
-          href: `${sdkSlug}/migration-guide`,
-        },
-        {
-          name: ".NET SDK Portal",
-          href: "/dotnet",
-        },
-        {
-          name: "Full Reference",
-          href: "https://thirdweb-dev.github.io/dotnet/index.html",
+          name: ".NET SDK QuickStart",
+          href: "/dotnet/nebula/quickstart",
         },
       ],
+    },
+    { separator: true },
+    {
+      name: "Migrate from v4",
+      href: `${sdkSlug}/migration-guide`,
     },
   ],
 };
