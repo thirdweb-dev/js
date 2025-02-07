@@ -51,6 +51,7 @@ export type TeamResponse = {
   billingEmail: string | null;
   billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
   growthTrialEligible: false;
+  canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
 };
 
