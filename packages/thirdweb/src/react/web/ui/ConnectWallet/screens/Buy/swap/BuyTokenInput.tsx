@@ -19,6 +19,7 @@ import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { getBuyTokenAmountFontSize } from "../utils.js";
+import { FiatValue } from "./FiatValue.js";
 
 /**
  * @internal
@@ -35,7 +36,6 @@ export function BuyTokenInput(props: {
   freezeChainAndToken?: boolean;
 }) {
   const { name } = useChainName(props.chain);
-
   const getWidth = () => {
     let chars = props.value.replace(".", "").length;
     const hasDot = props.value.includes(".");
@@ -122,9 +122,19 @@ export function BuyTokenInput(props: {
         </Container>
       </div>
 
+      <Container flex="row" center="both">
+        <FiatValue
+          tokenAmount={props.value}
+          token={props.token}
+          chain={props.chain}
+          client={props.client}
+          size="md"
+        />
+      </Container>
+
       {!props.hideTokenSelector && (
         <>
-          <Spacer y="sm" />
+          <Spacer y="md" />
 
           {/* Token / Chain selector */}
           <Container flex="row" center="x">

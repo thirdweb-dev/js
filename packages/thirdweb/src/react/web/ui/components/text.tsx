@@ -3,7 +3,7 @@ import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.
 import { type Theme, fontSize } from "../../../core/design-system/index.js";
 import { StyledAnchor, StyledSpan } from "../design-system/elements.js";
 
-type TextProps = {
+export type TextProps = {
   theme?: Theme;
   color?: keyof Theme["colors"];
   center?: boolean;
