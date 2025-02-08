@@ -233,7 +233,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = partialSuccessToTokenInfo || (
     <Text color="primaryText" size="sm">
-      {formatNumber(Number(toTokenAmount), 6)}
+      {formatNumber(Number(toTokenAmount), 6)}{" "}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
