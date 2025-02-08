@@ -1,14 +1,12 @@
-export const USAGE_V2_SOURCES = [
-  "bundler",
-  "engine",
-  "insight",
-  "nebula",
-  "rpc",
-  "sdk",
-  "storage",
-  "wallet",
-] as const;
-export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
+export type UsageV2Source =
+  | "bundler"
+  | "engine"
+  | "insight"
+  | "nebula"
+  | "rpc"
+  | "sdk"
+  | "storage"
+  | "wallet";
 export function getTopicName(source: UsageV2Source) {
   return `usage_v2.raw_${source}`;
 }

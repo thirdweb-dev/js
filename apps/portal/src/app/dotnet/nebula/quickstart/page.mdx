@@ -1,0 +1,100 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract.Create | Thirdweb .NET SDK",
+	description:
+		"Instantiate a ThirdwebContract to interact with smart contracts.",
+});
+
+# [Nebula AI](https://thirdweb.com/nebula) .NET Integration
+The last piece of the puzzle required to create .NET apps and games leveraging a blockchain-powered AI assistant or NPC that also has the power to fully execute transactions.
+
+## Read, Write, Reason.
+The best way to understand is to look at examples.
+
+We'll prepare some context for the AI - here, we'll generate a basic `PrivateKeyWallet` and upgrade it to a `SmartWallet` on Sepolia.
+```csharp
+// Prepare some context
+var myChain = 11155111; // Sepolia
+var mySigner = await PrivateKeyWallet.Generate(client);
+var myWallet = await SmartWallet.Create(mySigner, myChain);
+var myContractAddress = "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8"; // DropERC1155
+var usdcAddress = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"; // Sepolia USDC
+```
+
+A one liner creates a Nebula session.
+```csharp
+// Create a Nebula session
+var nebula = await ThirdwebNebula.Create(client);
+```
+
+You can **Chat** with Nebula. The Chat method accepts any `IThirdwebWallet` as an optional parameter, context will automatically be updated.
+```csharp
+// Chat, passing wallet context
+var response1 = await nebula.Chat(message: "What is my wallet address?", wallet: myWallet);
+Console.WriteLine($"Response 1: {response1.Message}");
+```
+
+You may also pass it smart contract context.
+```csharp
+// Chat, passing contract context
+var response2 = await nebula.Chat(
+    message: "What's the total supply of token id 0 for this contract?",
+    context: new NebulaContext(contractAddresses: new List<string> { myContractAddress }, chainIds: new List<BigInteger> { myChain })
+);
+Console.WriteLine($"Response 2: {response2.Message}");
+```
+
+You can have a full on conversation with it with our **Chat** override accepting multiple messages.
+```csharp
+// Chat, passing multiple messages and context
+var response3 = await nebula.Chat(
+    messages: new List<NebulaChatMessage>
+    {
+        new($"Tell me the name of this contract: {myContractAddress}", NebulaChatRole.User),
+        new("The name of the contract is CatDrop", NebulaChatRole.Assistant),
+        new("What's the symbol of this contract?", NebulaChatRole.User),
+    },
+    context: new NebulaContext(contractAddresses: new List<string> { myContractAddress }, chainIds: new List<BigInteger> { myChain })
+);
+Console.WriteLine($"Response 3: {response3.Message}");
+```
+
+Chatting is cool, but what if I just want it to _**do**_ things and stop talking so much?
+
+You can **Execute** transactions directly with a simple prompt.
+```csharp
+// Execute, this directly sends transactions
+var executionResult = await nebula.Execute("Approve 1 USDC to vitalik.eth", wallet: myWallet, context: new NebulaContext(contractAddresses: new List<string>() { usdcAddress }));
+if (executionResult.TransactionReceipts != null && executionResult.TransactionReceipts.Count > 0)
+{
+    Console.WriteLine($"Receipt: {executionResult.TransactionReceipts[0]}");
+}
+else
+{
+    Console.WriteLine($"Message: {executionResult.Message}");
+}
+```
+
+Similarly, **Execute** can take in multiple messages.
+```csharp
+// Batch execute
+var batchExecutionResult = await nebula.Execute(
+    new List<NebulaChatMessage>
+    {
+        new("What's the address of vitalik.eth", NebulaChatRole.User),
+        new("The address of vitalik.eth is 0xd8dA6BF26964aF8E437eEa5e3616511D7G3a3298", NebulaChatRole.Assistant),
+        new("Approve 1 USDC to them", NebulaChatRole.User),
+    },
+    wallet: myWallet,
+    context: new NebulaContext(contractAddresses: new List<string>() { usdcAddress })
+);
+if (batchExecutionResult.TransactionReceipts != null && batchExecutionResult.TransactionReceipts.Count > 0)
+{
+    Console.WriteLine($"Receipts: {JsonConvert.SerializeObject(batchExecutionResult.TransactionReceipts, Formatting.Indented)}");
+}
+else
+{
+    Console.WriteLine($"Message: {batchExecutionResult.Message}");
+}
+```

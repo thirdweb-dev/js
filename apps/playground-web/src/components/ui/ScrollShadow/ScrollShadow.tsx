@@ -10,6 +10,7 @@ export function ScrollShadow(props: {
   scrollableClassName?: string;
   disableTopShadow?: boolean;
   shadowColor?: string;
+  shadowClassName?: string;
 }) {
   const scrollableEl = useRef<HTMLDivElement>(null);
   const shadowTopEl = useRef<HTMLDivElement>(null);
@@ -30,19 +31,20 @@ export function ScrollShadow(props: {
       return;
     }
 
-    const contentScrollHeight = content.scrollHeight - wrapper.offsetHeight;
-    const contentScrollWidth = content.scrollWidth - wrapper.offsetWidth;
-
     function handleScroll() {
       if (
         !content ||
         !shadowTop ||
         !shadowBottom ||
         !shadowLeft ||
-        !shadowRight
+        !shadowRight ||
+        !wrapper
       ) {
         return;
       }
+
+      const contentScrollHeight = content.scrollHeight - wrapper.offsetHeight;
+      const contentScrollWidth = content.scrollWidth - wrapper.offsetWidth;
 
       if (contentScrollHeight > 10) {
         const currentScroll = content.scrollTop / contentScrollHeight;
@@ -63,25 +65,40 @@ export function ScrollShadow(props: {
       }
     }
 
-    handleScroll();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        handleScroll();
+      });
+    });
     content.addEventListener("scroll", handleScroll);
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleScroll();
+    });
+
+    resizeObserver.observe(content);
     return () => {
       content.removeEventListener("scroll", handleScroll);
+      resizeObserver.disconnect();
     };
   }, []);
 
   return (
     <div
-      className={cn(props.className, "relative z-base overflow-hidden")}
+      className={cn(props.className, "relative overflow-hidden")}
       ref={wrapperEl}
       style={
         {
-          "--shadow": props.shadowColor || "hsl(var(--background))",
+          "--shadow": props.shadowColor || "hsl(var(--muted))",
         } as React.CSSProperties
       }
     >
       <div
-        className={cn(styles.scrollShadowTop, styles.scrollShadowY)}
+        className={cn(
+          styles.scrollShadowTop,
+          styles.scrollShadowY,
+          props.shadowClassName,
+        )}
         ref={shadowTopEl}
         style={{
           opacity: "0",
@@ -89,32 +106,42 @@ export function ScrollShadow(props: {
         }}
       />
       <div
-        className={cn(styles.scrollShadowBottom, styles.scrollShadowY)}
+        className={cn(
+          styles.scrollShadowBottom,
+          styles.scrollShadowY,
+          props.shadowClassName,
+        )}
         ref={shadowBottomEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={cn(styles.scrollShadowLeft, styles.scrollShadowX)}
+        className={cn(
+          styles.scrollShadowLeft,
+          styles.scrollShadowX,
+          props.shadowClassName,
+        )}
         ref={shadowLeftEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={cn(styles.scrollShadowRight, styles.scrollShadowX)}
+        className={cn(
+          styles.scrollShadowRight,
+          styles.scrollShadowX,
+          props.shadowClassName,
+        )}
         ref={shadowRightEl}
         style={{
           opacity: "0",
         }}
       />
       <div
-        className={cn("overflow-auto", props.scrollableClassName)}
-        style={{
-          scrollbarWidth: "none",
-        }}
+        className={cn("no-scrollbar overflow-auto", props.scrollableClassName)}
         ref={scrollableEl}
+        data-scrollable
       >
         {props.children}
       </div>

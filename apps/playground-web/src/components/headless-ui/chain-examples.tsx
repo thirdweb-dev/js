@@ -1,9 +1,5 @@
-"use client";
-
-import { THIRDWEB_CLIENT } from "@/lib/client";
-import { avalanche } from "thirdweb/chains";
-import { ChainIcon, ChainName, ChainProvider } from "thirdweb/react";
 import { CodeExample } from "../code/code-example";
+import { ChainIconPreview, ChainNamePreview } from "./chain-previews";
 
 export function ChainIconBasic() {
   return (
@@ -18,15 +14,7 @@ export function ChainIconBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <ChainProvider chain={avalanche}>
-            <ChainIcon
-              client={THIRDWEB_CLIENT}
-              className="h-auto w-20 rounded-full"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </ChainProvider>
-        }
+        preview={<ChainIconPreview />}
         code={`import { ChainProvider, ChainIcon } from "thirdweb/react";
 
 function App() {
@@ -57,11 +45,7 @@ export function ChainNameBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <ChainProvider chain={avalanche}>
-            <ChainName loadingComponent={<span>Loading...</span>} />
-          </ChainProvider>
-        }
+        preview={<ChainNamePreview />}
         code={`import { ChainProvider, ChainName } from "thirdweb/react";
 
 function App() {

@@ -337,6 +337,12 @@ async function redirects() {
       destination: "/connect/account-abstraction",
       permanent: false,
     },
+    // redirect /connect/pay to /connect/universal-bridge
+    {
+      source: "/connect/pay",
+      destination: "/connect/universal-bridge",
+      permanent: false,
+    },
     // PREVIOUS CAMPAIGNS
     {
       source: "/unlimited-wallets",

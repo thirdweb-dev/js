@@ -1,6 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import type { SidebarLink } from "@/components/others/Sidebar";
-import { ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
 
 const walletProviders: SidebarLink = (() => {
   const parentSlug = "/dotnet/wallets/providers";
@@ -261,16 +261,29 @@ export const sidebar: SideBar = {
       icon: <ZapIcon />,
     },
     {
-      name: "Godot Integration",
-      href: "/dotnet/godot",
+      name: "API Reference",
+      href: "https://thirdweb-dev.github.io/dotnet/index.html",
+      isCollapsible: false,
+      icon: <ExternalLink />,
     },
     {
-      name: "Unity Integration",
-      href: "/unity/v5",
-    },
-    {
-      name: "MAUI Integration",
-      href: "/dotnet/maui",
+      name: "Integrations",
+      isCollapsible: true,
+      icon: <CodeIcon />,
+      links: [
+        {
+          name: "Unity",
+          href: "/unity/v5",
+        },
+        {
+          name: "Godot",
+          href: "/dotnet/godot",
+        },
+        {
+          name: "MAUI",
+          href: "/dotnet/maui",
+        },
+      ],
     },
     {
       name: "Core",
@@ -291,7 +304,6 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [walletProviders, walletActions],
     },
-    pay,
     {
       name: "Blockchain API",
       isCollapsible: false,
@@ -304,10 +316,20 @@ export const sidebar: SideBar = {
         },
       ],
     },
-    { separator: true },
     {
-      name: "Full Reference",
-      href: "https://thirdweb-dev.github.io/dotnet/index.html",
+      name: "Nebula AI",
+      isCollapsible: false,
+      links: [
+        {
+          name: "Quickstart",
+          href: "/dotnet/nebula/quickstart",
+        },
+        {
+          name: "Nebula Full Reference",
+          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.AI.ThirdwebNebula.html",
+        },
+      ],
     },
+    pay,
   ],
 };

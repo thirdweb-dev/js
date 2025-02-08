@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.6
+
+### Patch Changes
+
+- [#6172](https://github.com/thirdweb-dev/js/pull/6172) [`a8ac98b`](https://github.com/thirdweb-dev/js/commit/a8ac98bd493d1d6e824aad868dea1ec42ff22768) Thanks [@catalyst17](https://github.com/catalyst17)! - add `canCreatePublicChains` to TeamResponse
+
+- [#6183](https://github.com/thirdweb-dev/js/pull/6183) [`18f0e57`](https://github.com/thirdweb-dev/js/commit/18f0e575c4a9764b3192931451cbd3f632a21e3c) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Update list of usageV2 sources"
+
 ## 0.8.5
 
 ### Patch Changes

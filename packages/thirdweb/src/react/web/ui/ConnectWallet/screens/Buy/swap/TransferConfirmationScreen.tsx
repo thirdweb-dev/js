@@ -1,14 +1,18 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { getContract } from "../../../../../../../contract/contract.js";
+import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import { transfer } from "../../../../../../../extensions/erc20/write/transfer.js";
 import { getBuyWithCryptoTransfer } from "../../../../../../../pay/buyWithCrypto/getTransfer.js";
 import { sendAndConfirmTransaction } from "../../../../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { Address } from "../../../../../../../utils/address.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
@@ -248,13 +252,46 @@ export function TransferConfirmationScreen(
                   purchaseData: payOptions?.purchaseData,
                 });
 
-                if (transferResponse.approval) {
-                  setStep("approve");
-                  // approve the transfer
-                  await sendAndConfirmTransaction({
-                    account: props.payer.account,
-                    transaction: transferResponse.approval,
+                if (transferResponse.approvalData) {
+                  // check allowance
+                  const prevAllowance = await allowance({
+                    contract: getContract({
+                      client: client,
+                      address: transferResponse.approvalData.tokenAddress,
+                      chain: getCachedChain(
+                        transferResponse.approvalData.chainId,
+                      ),
+                    }),
+                    spender: transferResponse.approvalData
+                      .spenderAddress as Address,
+                    owner: payer.account.address,
                   });
+
+                  if (
+                    prevAllowance <
+                    BigInt(transferResponse.approvalData.amountWei)
+                  ) {
+                    setStep("approve");
+                    const transaction = approve({
+                      contract: getContract({
+                        client: client,
+                        address: transferResponse.approvalData.tokenAddress,
+                        chain: getCachedChain(
+                          transferResponse.approvalData.chainId,
+                        ),
+                      }),
+                      spender: transferResponse.approvalData
+                        .spenderAddress as Address,
+                      amountWei: BigInt(
+                        transferResponse.approvalData.amountWei,
+                      ),
+                    });
+                    // approve the transfer
+                    await sendAndConfirmTransaction({
+                      account: props.payer.account,
+                      transaction,
+                    });
+                  }
                 }
 
                 setStep("transfer");

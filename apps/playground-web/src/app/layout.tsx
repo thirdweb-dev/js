@@ -6,7 +6,9 @@ import Script from "next/script";
 import { AppSidebar } from "./AppSidebar";
 import { Providers } from "./providers";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
 import { MobileHeader } from "./MobileHeader";
+import { getSidebarLinks } from "./navLinks";
 
 const sansFont = Inter({
   subsets: ["latin"],
@@ -26,11 +28,12 @@ export const metadata: Metadata = {
   description: "thirdweb playground",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const sidebarLinks = await getSidebarLinks();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -49,14 +52,18 @@ export default function RootLayout({
           monoFont.variable,
         )}
       >
-        <MobileHeader />
-        <div className="relative">
-          <div className="flex flex-col lg:flex-row">
-            <AppSidebar />
-            <div className="flex grow flex-col">
-              <div className="container relative grow px-4 md:px-6">
-                <Providers>{children}</Providers>
-              </div>
+        <NextTopLoader
+          color="hsl(var(--foreground))"
+          height={2}
+          shadow={false}
+          showSpinner={false}
+        />
+        <MobileHeader links={sidebarLinks} />
+        <div className="flex flex-col lg:h-dvh lg:flex-row">
+          <AppSidebar links={sidebarLinks} />
+          <div className="flex grow flex-col lg:overflow-auto">
+            <div className="container relative grow px-4 md:px-6">
+              <Providers>{children}</Providers>
             </div>
           </div>
         </div>

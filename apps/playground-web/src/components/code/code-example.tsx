@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import type { BundledLanguage } from "shiki";
+import { ClientOnly } from "../ClientOnly";
 import { Code } from "./code";
 
 export type CodeExampleProps = {
@@ -23,7 +24,7 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
         />
       </div>
       <div className="relative grid h-full min-h-[300px] place-items-center bg-secondary/10 py-8">
-        {preview}
+        <ClientOnly ssr={null}>{preview}</ClientOnly>
         <BackgroundPattern />
       </div>
     </div>

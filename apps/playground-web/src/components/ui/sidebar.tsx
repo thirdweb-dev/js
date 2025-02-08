@@ -3,8 +3,9 @@
 import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense, useRef } from "react";
+import { ClientOnly } from "../ClientOnly";
 import { CustomAccordion } from "./CustomAccordion";
 
 export type LinkMeta = {
@@ -33,11 +34,13 @@ type ReferenceSideBarProps = {
 
 export function Sidebar(props: ReferenceSideBarProps) {
   return (
-    <ul className="transform-gpu pb-10">
+    <ul className="transform-gpu">
       {props.links.map((link, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <li key={i}>
-          <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+          <Suspense fallback={null}>
+            <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+          </Suspense>
         </li>
       ))}
     </ul>
@@ -45,15 +48,13 @@ export function Sidebar(props: ReferenceSideBarProps) {
 }
 
 function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
-  const pathname = usePathname();
+  const href = useCurrentHref();
 
   if ("separator" in props.link) {
     return <hr className="my-2 border-t" />;
   }
 
-  const isActive = props.link.href
-    ? isSamePage(pathname, props.link.href)
-    : false;
+  const isActive = props.link.href ? isSamePage(href, props.link.href) : false;
 
   const { link } = props;
   if ("links" in link) {
@@ -93,13 +94,13 @@ function DocSidebarNonCollapsible(props: {
   linkGroup: LinkGroup;
   onLinkClick?: () => void;
 }) {
-  const pathname = usePathname();
+  const currentHref = useCurrentHref();
   const { href, name, links } = props.linkGroup;
-  const isCategoryActive = href ? isSamePage(pathname, href) : false;
+  const isCategoryActive = href ? isSamePage(currentHref, href) : false;
 
   return (
-    <div className="my-4">
-      <div className="mb-2 flex items-center gap-2">
+    <div className="mb-4">
+      <div className="mb-1 flex items-center gap-2">
         {href ? (
           <Link
             className={cn(
@@ -111,10 +112,10 @@ function DocSidebarNonCollapsible(props: {
             {name}
           </Link>
         ) : (
-          <div className="font-semibold lg:text-base">{name}</div>
+          <div className="font-medium text-lg">{name}</div>
         )}
       </div>
-      <ul className="flex flex-col">
+      <ul className="mb-8 flex flex-col">
         {links.map((link, i) => {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -128,13 +129,21 @@ function DocSidebarNonCollapsible(props: {
   );
 }
 
+function useCurrentHref() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  return decodeURIComponent(
+    `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`,
+  );
+}
+
 function SidebarCategory(props: {
   linkGroup: LinkGroup;
   onLinkClick?: () => void;
 }) {
-  const pathname = usePathname();
+  const currentPageHref = useCurrentHref();
   const { href, name, links, expanded } = props.linkGroup;
-  const isCategoryActive = href ? isSamePage(pathname, href) : false;
+  const isCategoryActive = href ? isSamePage(currentPageHref, href) : false;
 
   const hasActiveHref = containsActiveHref(
     {
@@ -142,8 +151,9 @@ function SidebarCategory(props: {
       links: links,
       href: href,
     },
-    pathname,
+    currentPageHref,
   );
+
   const defaultOpen = isCategoryActive || !!(hasActiveHref || expanded);
 
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -152,7 +162,7 @@ function SidebarCategory(props: {
     <div
       className={cn(
         isCategoryActive && "!font-semibold !text-foreground",
-        "text-muted-foreground",
+        "group-hover:!text-foreground text-muted-foreground",
       )}
     >
       <div className="flex gap-2 py-1 font-medium" ref={triggerRef}>
@@ -170,24 +180,26 @@ function SidebarCategory(props: {
   );
 
   return (
-    <CustomAccordion
-      defaultOpen={defaultOpen}
-      containerClassName="border-none"
-      triggerContainerClassName="lg:text-base"
-      trigger={triggerEl}
-      chevronPosition="right"
-    >
-      <ul className="flex flex-col border-l-2 pl-4">
-        {links.map((link, i) => {
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <li key={i}>
-              <SidebarItem link={link} onLinkClick={props.onLinkClick} />
-            </li>
-          );
-        })}
-      </ul>
-    </CustomAccordion>
+    <ClientOnly ssr={triggerEl}>
+      <CustomAccordion
+        defaultOpen={defaultOpen}
+        containerClassName="border-none"
+        triggerContainerClassName="lg:text-base group"
+        trigger={triggerEl}
+        chevronPosition="right"
+      >
+        <ul className="flex flex-col border-l pl-4">
+          {links.map((link, i) => {
+            return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <li key={i}>
+                <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+              </li>
+            );
+          })}
+        </ul>
+      </CustomAccordion>
+    </ClientOnly>
   );
 }
 
@@ -210,20 +222,6 @@ function containsActiveHref(
   return false;
 }
 
-function isSamePage(pathname: string, pathOrHref: string): boolean {
-  try {
-    if (pathOrHref === pathname) {
-      return true;
-    }
-
-    const u1 = new URL(pathname, window.location.href);
-    const u2 = new URL(pathOrHref, window.location.href);
-    if (u1.pathname === u2.pathname && u1.origin === u2.origin) {
-      return true;
-    }
-  } catch {
-    // ignore
-  }
-
-  return false;
+function isSamePage(currentPageHref: string, testHref: string): boolean {
+  return currentPageHref === testHref;
 }
