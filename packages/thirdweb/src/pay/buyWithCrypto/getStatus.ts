@@ -43,6 +43,7 @@ type BuyWithCryptoQuoteSummary = {
 export type BuyWithCryptoTransaction = {
   client: ThirdwebClient;
   transactionHash: string;
+  chainId: number; // optional for backwards compatibility
 };
 
 type BuyWithCryptoStatuses = "NONE" | "PENDING" | "FAILED" | "COMPLETED";
@@ -133,6 +134,7 @@ export async function getBuyWithCryptoStatus(
     }
     const queryString = new URLSearchParams({
       transactionHash: buyWithCryptoTransaction.transactionHash,
+      chainId: buyWithCryptoTransaction.chainId.toString(),
     }).toString();
     const url = `${getPayBuyWithCryptoStatusUrl()}?${queryString}`;
 
