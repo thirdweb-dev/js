@@ -2,6 +2,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DialogContent,
   DialogFooter,
@@ -102,6 +103,9 @@ export const CreateBackendWalletButton: React.FC<
   );
   invariant(selectedOption, "Selected a valid backend wallet type.");
 
+  const isCircleWallet =
+    walletType === "circle" || walletType === "smart:circle";
+
   // List all wallet types only if Engine is updated to support it.
   let walletTypeOptions = [selectedOption];
   if (supportsSmartBackendWallets) {
@@ -126,7 +130,7 @@ export const CreateBackendWalletButton: React.FC<
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className="z-[10001] p-0"
+          className="z-[10001] overflow-hidden p-0"
           dialogOverlayClassName="z-[10000]"
         >
           <Form {...form}>
@@ -138,7 +142,7 @@ export const CreateBackendWalletButton: React.FC<
                   </DialogTitle>
                 </DialogHeader>
 
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-3">
                   {/* Wallet type */}
                   <FormFieldSetup
                     label="Wallet Type"
@@ -201,25 +205,107 @@ export const CreateBackendWalletButton: React.FC<
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    // Label
-                    <FormFieldSetup
-                      key="label"
-                      label="Label"
-                      errorMessage={
-                        form.getFieldState("label", form.formState).error
-                          ?.message
-                      }
-                      htmlFor="wallet-label"
-                      isRequired
-                      tooltip={null}
-                    >
-                      <Input
-                        id="wallet-label"
-                        type="text"
-                        placeholder="A description to identify this backend wallet"
-                        {...form.register("label", { required: true })}
-                      />
-                    </FormFieldSetup>
+                    <>
+                      {/* Label */}
+                      <FormFieldSetup
+                        key="label"
+                        label="Label"
+                        errorMessage={
+                          form.getFieldState("label", form.formState).error
+                            ?.message
+                        }
+                        htmlFor="wallet-label"
+                        isRequired
+                        tooltip={null}
+                      >
+                        <Input
+                          id="wallet-label"
+                          type="text"
+                          placeholder="A description to identify this backend wallet"
+                          {...form.register("label", { required: true })}
+                        />
+                      </FormFieldSetup>
+
+                      {/* Credential ID for Circle wallets */}
+                      {isCircleWallet && (
+                        <>
+                          <FormFieldSetup
+                            key="credentialId"
+                            label="Credential ID"
+                            errorMessage={
+                              form.getFieldState("credentialId", form.formState)
+                                .error?.message
+                            }
+                            htmlFor="credential-id"
+                            isRequired
+                            tooltip={null}
+                          >
+                            <Input
+                              id="credential-id"
+                              type="text"
+                              placeholder="Enter the Circle credential ID"
+                              {...form.register("credentialId", {
+                                required: isCircleWallet,
+                              })}
+                            />
+                            <FormDescription className="py-2">
+                              The ID of the Circle credential to use for this
+                              wallet. You can find this in the{" "}
+                              <Link
+                                href={`/team/${teamSlug}/~/engine/${instance.id}/wallet-credentials`}
+                                className="text-link-foreground hover:text-foreground"
+                              >
+                                Wallet Credentials
+                              </Link>{" "}
+                              section.
+                            </FormDescription>
+                          </FormFieldSetup>
+
+                          <FormFieldSetup
+                            key="isTestnet"
+                            label="Testnet"
+                            errorMessage={
+                              form.getFieldState("isTestnet", form.formState)
+                                .error?.message
+                            }
+                            htmlFor="is-testnet"
+                            tooltip={null}
+                            isRequired={false}
+                          >
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="is-testnet"
+                                  checked={form.watch("isTestnet")}
+                                  onCheckedChange={(checked) =>
+                                    form.setValue("isTestnet", !!checked)
+                                  }
+                                />
+                                <label
+                                  htmlFor="is-testnet"
+                                  className="text-sm leading-none opacity-70 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                  Use testnet mode for creating backend wallet
+                                </label>
+                              </div>
+                              <FormDescription className="py-2">
+                                If your engine is configured with a testnet API
+                                Key for Circle, you can only create testnet
+                                wallets. A production API Key cannot be used for
+                                testnet transactions, and vice versa.{" "}
+                                <Link
+                                  href="https://developers.circle.com/w3s/sandbox-vs-production"
+                                  target="_blank"
+                                  className="text-link-foreground hover:text-foreground"
+                                >
+                                  Learn more
+                                </Link>
+                              </FormDescription>
+                            </div>
+                          </FormFieldSetup>
+                        </>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

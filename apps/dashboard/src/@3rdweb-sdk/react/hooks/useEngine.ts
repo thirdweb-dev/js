@@ -93,7 +93,8 @@ type EngineFeature =
   | "CONTRACT_SUBSCRIPTIONS"
   | "IP_ALLOWLIST"
   | "HETEROGENEOUS_WALLET_TYPES"
-  | "SMART_BACKEND_WALLETS";
+  | "SMART_BACKEND_WALLETS"
+  | "WALLET_CREDENTIALS";
 
 interface EngineSystemHealth {
   status: string;
@@ -860,6 +861,10 @@ export type SetWalletConfigInput =
       gcpKmsKeyRingId: string;
       gcpApplicationCredentialEmail: string;
       gcpApplicationCredentialPrivateKey: string;
+    }
+  | {
+      type: "circle";
+      circleApiKey: string;
     };
 
 export function useEngineSetWalletConfig(params: {
@@ -869,8 +874,8 @@ export function useEngineSetWalletConfig(params: {
   const { instanceUrl, authToken } = params;
   const queryClient = useQueryClient();
 
-  return useMutation<WalletConfigResponse, void, SetWalletConfigInput>({
-    mutationFn: async (input) => {
+  return useMutation({
+    mutationFn: async (input: SetWalletConfigInput) => {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}configuration/wallets`, {
@@ -884,7 +889,7 @@ export function useEngineSetWalletConfig(params: {
         throw new Error(json.error.message);
       }
 
-      return json.result;
+      return json.result as WalletConfigResponse;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -894,10 +899,17 @@ export function useEngineSetWalletConfig(params: {
   });
 }
 
-export type CreateBackendWalletInput = {
-  type: EngineBackendWalletType;
-  label?: string;
-};
+export type CreateBackendWalletInput =
+  | {
+      type: Exclude<EngineBackendWalletType, "circle" | "smart:circle">;
+      label?: string;
+    }
+  | {
+      type: "circle" | "smart:circle";
+      label?: string;
+      credentialId: string;
+      isTestnet: boolean;
+    };
 
 export function useEngineCreateBackendWallet(params: {
   instanceUrl: string;
@@ -1847,6 +1859,121 @@ export function useEngineDeleteNotificationChannel(engineId: string) {
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: engineKeys.notificationChannels(engineId),
+      });
+    },
+  });
+}
+
+export interface WalletCredential {
+  id: string;
+  type: string;
+  label: string;
+  isDefault: boolean | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateWalletCredentialInput {
+  type: "circle";
+  label: string;
+  entitySecret?: string;
+  isDefault?: boolean;
+}
+
+export function useEngineWalletCredentials(params: {
+  instanceUrl: string;
+  authToken: string;
+  page?: number;
+  limit?: number;
+}) {
+  const { instanceUrl, authToken, page = 1, limit = 100 } = params;
+
+  return useQuery({
+    queryKey: [...engineKeys.walletCredentials(instanceUrl), page, limit],
+    queryFn: async () => {
+      const res = await fetch(
+        `${instanceUrl}wallet-credentials?page=${page}&limit=${limit}`,
+        {
+          method: "GET",
+          headers: getEngineRequestHeaders(authToken),
+        },
+      );
+
+      const json = await res.json();
+      return (json.result as WalletCredential[]) || [];
+    },
+    enabled: !!instanceUrl,
+  });
+}
+
+export function useEngineCreateWalletCredential(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: CreateWalletCredentialInput) => {
+      invariant(instanceUrl, "instance is required");
+
+      const res = await fetch(`${instanceUrl}wallet-credentials`, {
+        method: "POST",
+        headers: getEngineRequestHeaders(authToken),
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.result as WalletCredential;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.walletCredentials(instanceUrl),
+      });
+    },
+  });
+}
+
+interface UpdateWalletCredentialInput {
+  label?: string;
+  isDefault?: boolean;
+  entitySecret?: string;
+}
+
+export function useEngineUpdateWalletCredential(params: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const { instanceUrl, authToken } = params;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...input
+    }: UpdateWalletCredentialInput & { id: string }) => {
+      invariant(instanceUrl, "instance is required");
+
+      const res = await fetch(`${instanceUrl}wallet-credentials/${id}`, {
+        method: "PUT",
+        headers: getEngineRequestHeaders(authToken),
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.result as WalletCredential;
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: engineKeys.walletCredentials(instanceUrl),
       });
     },
   });
