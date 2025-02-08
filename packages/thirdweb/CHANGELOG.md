@@ -1,5 +1,81 @@
 # thirdweb
 
+## 5.88.0
+
+### Minor Changes
+
+- [#6194](https://github.com/thirdweb-dev/js/pull/6194) [`9663079`](https://github.com/thirdweb-dev/js/commit/966307906212ac99dc0a2a9be88e514c920d39c4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added session keys to smart wallet options
+
+  You can now pass a `sessionKey` to the `smartWallet` options function to immediately add a session key to the smart wallet upon connection.
+
+  This is great in combination with an engine backend wallet! Let's you act on behalf of the user from your backend, making executing transactions as easy as a REST API call. Also unblocks automations, like renewing a subscription, or paying for a service.
+
+  ```ts
+  const wallet = smartWallet({
+    sessionKey: {
+      address: "0x...", // the session key address (ex: engine backend wallet)
+      permissions: {
+        approvedTargets: ["0x..."], // allowed contract addresses (or * for all)
+        nativeTokenLimitPerTransaction: 0.1, // max spend per transaction in ETH
+        permissionEndTimestamp: new Date(Date.now() + 1000 * 60 * 60), // expiration date
+      },
+    },
+  });
+
+  // this will connect the user wallet and add the session key if not already added
+  await wallet.connect({
+    client: TEST_CLIENT,
+    personalAccount,
+  });
+  ```
+
+  You can also pass the `sessionKey` to the `ConnectButton`, `ConnectEmbed` components and `useConnect` hook.
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    accountAbstraction={{
+      chain,
+      sponsorGas: true,
+      sessionKey: {
+        address: "0x...",
+        permissions: {
+          approvedTargets: "*",
+        },
+      },
+    }}
+  />
+  ```
+
+  Also works for the `inAppWallet` `smartAccount` option!
+
+  ```ts
+  const wallet = inAppWallet({
+    smartAccount: {
+      chain,
+      sponsorGas: true,
+      sessionKey: {
+        address: "0x...",
+        permissions: {
+          approvedTargets: "*",
+        },
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#6193](https://github.com/thirdweb-dev/js/pull/6193) [`1f6bb7c`](https://github.com/thirdweb-dev/js/commit/1f6bb7c3294d70648b120a6a6a6cba13302a84fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show fiat amount in PayEmbed main screen
+
+- [#6192](https://github.com/thirdweb-dev/js/pull/6192) [`30e13e6`](https://github.com/thirdweb-dev/js/commit/30e13e6b9176265a2f4eddfa53578889abbcb750) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow editing pay amount mid flow
+
+- [#6190](https://github.com/thirdweb-dev/js/pull/6190) [`2dfc245`](https://github.com/thirdweb-dev/js/commit/2dfc245d44dde86e42f6c799305db707316432aa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add fiat provider selection in PayEmbed
+
+- [#6187](https://github.com/thirdweb-dev/js/pull/6187) [`ee57ded`](https://github.com/thirdweb-dev/js/commit/ee57ded902cb69da6fc171599a4a90776e650149) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Requery allowances when getting back to quote screen
+
+- [#6188](https://github.com/thirdweb-dev/js/pull/6188) [`64d7bf3`](https://github.com/thirdweb-dev/js/commit/64d7bf358fe2014b684688d41d525a75e47f1b82) Thanks [@jnsdls](https://github.com/jnsdls)! - when explicitly passing `clientId` to `createThirdwebClient()` prefer it over computing the `clientId` from a passed `secretKey` option
+
 ## 5.87.4
 
 ### Patch Changes
