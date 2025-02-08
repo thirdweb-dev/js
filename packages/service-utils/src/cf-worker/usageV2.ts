@@ -28,14 +28,23 @@ export async function sendUsageV2Events(
       ? "https://u.thirdweb.com"
       : "https://u.thirdweb-dev.com";
 
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-  };
+  // Unauthed calls are routed to the /client path
+  let url: string;
+  let headers: HeadersInit;
   if (options.serviceKey) {
-    headers["x-service-api-key"] = options.serviceKey;
+    url = `${baseUrl}/usage-v2/${options.source}`;
+    headers = {
+      "Content-Type": "application/json",
+      "x-service-api-key": options.serviceKey,
+    };
+  } else {
+    url = `${baseUrl}/usage-v2/${options.source}/client`;
+    headers = {
+      "Content-Type": "application/json",
+    };
   }
 
-  const resp = await fetch(`${baseUrl}/usage-v2/${options.source}`, {
+  const resp = await fetch(url, {
     method: "POST",
     headers,
     body: JSON.stringify({ events }),
