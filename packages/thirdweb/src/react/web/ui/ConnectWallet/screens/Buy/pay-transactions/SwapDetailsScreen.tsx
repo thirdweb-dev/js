@@ -34,6 +34,7 @@ export function SwapDetailsScreen(props: {
       ? {
           client: client,
           transactionHash: initialStatus.source.transactionHash,
+          chainId: initialStatus.source.token.chainId,
         }
       : undefined,
   );

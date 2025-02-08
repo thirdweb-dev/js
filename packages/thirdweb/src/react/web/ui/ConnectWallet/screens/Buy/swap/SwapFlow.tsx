@@ -82,6 +82,7 @@ export function SwapFlow(props: SwapFlowProps) {
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
         swapTxHash={swapTxHash}
+        fromChain={fromChain}
         client={props.client}
         onDone={props.onDone}
         transactionMode={props.transactionMode}

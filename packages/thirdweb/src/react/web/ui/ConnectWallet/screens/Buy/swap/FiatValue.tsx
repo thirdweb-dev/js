@@ -45,7 +45,7 @@ export function FiatValue(
     <Text {...props}>
       {cryptoToFiatQuery.data?.result
         ? `$${formatNumber(cryptoToFiatQuery.data.result, 2)}`
-        : "$0.00"}
+        : "-"}
     </Text>
   );
 }
