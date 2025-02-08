@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.7
+
+### Patch Changes
+
+- [#6206](https://github.com/thirdweb-dev/js/pull/6206) [`8aeb4d6`](https://github.com/thirdweb-dev/js/commit/8aeb4d6308a2624a3e483aa4da408bbbdc8da688) Thanks [@arcoraven](https://github.com/arcoraven)! - Export usageV2 sources
+
 ## 0.8.6
 
 ### Patch Changes
