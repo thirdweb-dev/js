@@ -1,6 +1,9 @@
 "use client";
 
-import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
+import {
+  useEngineSystemHealth,
+  useEngineWebhooks,
+} from "@3rdweb-sdk/react/hooks/useEngine";
 import { Heading, Link, Text } from "tw-components";
 import { AddWebhookButton } from "./add-webhook-button";
 import { WebhooksTable } from "./webhooks-table";
@@ -18,6 +21,10 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
     authToken,
     instanceUrl,
   });
+  const healthQuery = useEngineSystemHealth(instanceUrl);
+
+  const supportedWebhookConfig =
+    healthQuery.data?.features?.includes("WEBHOOK_CONFIG") || false;
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,8 +49,13 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
         isPending={webhooks.isPending}
         isFetched={webhooks.isFetched}
         authToken={authToken}
+        supportedWebhookConfig={supportedWebhookConfig}
       />
-      <AddWebhookButton instanceUrl={instanceUrl} authToken={authToken} />
+      <AddWebhookButton
+        instanceUrl={instanceUrl}
+        authToken={authToken}
+        supportedWebhookConfig={supportedWebhookConfig}
+      />
     </div>
   );
 };

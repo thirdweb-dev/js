@@ -93,7 +93,8 @@ type EngineFeature =
   | "CONTRACT_SUBSCRIPTIONS"
   | "IP_ALLOWLIST"
   | "HETEROGENEOUS_WALLET_TYPES"
-  | "SMART_BACKEND_WALLETS";
+  | "SMART_BACKEND_WALLETS"
+  | "WEBHOOK_CONFIG";
 
 interface EngineSystemHealth {
   status: string;
@@ -821,6 +822,7 @@ export interface EngineWebhook {
   active: boolean;
   createdAt: string;
   id: number;
+  config?: string;
 }
 
 export function useEngineWebhooks(params: {
@@ -1232,6 +1234,7 @@ export type CreateWebhookInput = {
   url: string;
   name: string;
   eventType: string;
+  config?: string;
 };
 
 export function useEngineCreateWebhook(params: {
