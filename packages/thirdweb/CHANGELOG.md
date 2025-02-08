@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.88.1
+
+### Patch Changes
+
+- [#6204](https://github.com/thirdweb-dev/js/pull/6204) [`f1cd253`](https://github.com/thirdweb-dev/js/commit/f1cd2539d1be15eb18807b3f5f2b90509e3d58cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update coinbase wallet sdk
+
 ## 5.88.0
 
 ### Minor Changes
