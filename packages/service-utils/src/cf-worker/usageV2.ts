@@ -1,5 +1,4 @@
-import type { ServiceName } from "../core/services.js";
-import type { UsageV2Event } from "../core/usageV2.js";
+import type { UsageV2Event, UsageV2Source } from "../core/usageV2.js";
 
 /**
  * Send events to Kafka.
@@ -20,8 +19,8 @@ export async function sendUsageV2Events(
   events: UsageV2Event[],
   options: {
     environment: "development" | "production";
-    productName: ServiceName;
-    serviceKey: string;
+    source: UsageV2Source;
+    serviceKey?: string;
   },
 ): Promise<void> {
   const baseUrl =
@@ -29,12 +28,16 @@ export async function sendUsageV2Events(
       ? "https://u.thirdweb.com"
       : "https://u.thirdweb-dev.com";
 
-  const resp = await fetch(`${baseUrl}/usage-v2/${options.productName}`, {
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+  if (options.serviceKey) {
+    headers["x-service-api-key"] = options.serviceKey;
+  }
+
+  const resp = await fetch(`${baseUrl}/usage-v2/${options.source}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-service-api-key": options.serviceKey,
-    },
+    headers,
     body: JSON.stringify({ events }),
   });
 
