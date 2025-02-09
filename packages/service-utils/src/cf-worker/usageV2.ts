@@ -1,4 +1,8 @@
-import type { UsageV2Event, UsageV2Source } from "../core/usageV2.js";
+import type {
+  ClientUsageV2Event,
+  UsageV2Event,
+  UsageV2Source,
+} from "../core/usageV2.js";
 
 type UsageV2Options = {
   environment: "development" | "production";
@@ -17,14 +21,18 @@ type UsageV2Options = {
  * - thirdwebClientId: for public clients (MUST be the user's project)
  * - thirdwebSecretKey: for public clients (MUST be the user's project)
  *
+ * NOTE: `team_id` is required if `serviceKey` is provided.
+ *
  * This method may throw. To call this non-blocking:
  * ```ts
  * void sendUsageV2Events(...).catch((e) => console.error(e))
  * ```
  */
-export async function sendUsageV2Events(
-  events: UsageV2Event[],
-  options: UsageV2Options,
+export async function sendUsageV2Events<T extends UsageV2Options>(
+  events: T extends { serviceKey: string }
+    ? UsageV2Event[]
+    : ClientUsageV2Event[],
+  options: T,
 ): Promise<void> {
   const baseUrl =
     options.environment === "production"
