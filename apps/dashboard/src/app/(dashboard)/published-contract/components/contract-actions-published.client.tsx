@@ -19,6 +19,7 @@ export function PublishedActions(props: {
     <div className="flex gap-3">
       <Button
         variant="outline"
+        className="bg-card"
         onClick={() => {
           shareLink({
             title: `Deploy ${props.displayName}`,
@@ -27,7 +28,7 @@ export function PublishedActions(props: {
       >
         Share
       </Button>
-      <Button asChild variant="primary" className="gap-2">
+      <Button asChild className="gap-2">
         <Link
           href={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy${stringifiedSearchParams ? `?${stringifiedSearchParams}` : ""}`}
         >

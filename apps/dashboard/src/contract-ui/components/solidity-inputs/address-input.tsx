@@ -1,12 +1,12 @@
 "use client";
 
-import { Box, Flex, Input, Spinner } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { isAddress, isValidENSName } from "thirdweb/utils";
-import { FormHelperText } from "tw-components";
 import type { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";
 
@@ -138,12 +138,12 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
       />
 
       {!hasError && (helperTextLeft || helperTextRight) && (
-        <FormHelperText>
-          <Flex gap={1} align="center">
+        <p className="mt-2 text-muted-foreground text-sm">
+          <div className="items-center gap-1">
             {helperTextLeft}
             {helperTextRight}
-          </Flex>
-        </FormHelperText>
+          </div>
+        </p>
       )}
     </>
   );

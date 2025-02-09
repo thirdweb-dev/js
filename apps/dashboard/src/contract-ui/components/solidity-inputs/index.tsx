@@ -1,4 +1,4 @@
-import { Input, type InputProps } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
 import { forwardRef } from "react";
 import { type UseFormReturn, useFormContext } from "react-hook-form";
 import { SolidityAddressInput } from "./address-input";
@@ -8,6 +8,8 @@ import { SolidityIntInput } from "./int-input";
 import { SolidityRawInput } from "./raw-input";
 import { SolidityStringInput } from "./string-input";
 import { SolidityTupleInput } from "./tuple-input";
+
+type InputProps = React.ComponentProps<typeof Input>;
 
 export interface SolidityInputProps extends InputProps {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME

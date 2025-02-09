@@ -1,13 +1,15 @@
 import { Input } from "@chakra-ui/react";
-import type { SolidityInputWithTypeProps } from ".";
 import { validateBytes } from "./helpers";
+import type { SolidityInputWithTypeProps } from "./index";
 
 export const SolidityBytesInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
   solidityType,
   ...inputProps
 }) => {
-  const { name, ...restOfInputProps } = inputProps;
+  // discard size prop to fix type
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { name, size, ...restOfInputProps } = inputProps;
   const inputName = name as string;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

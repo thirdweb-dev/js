@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
+import { cn } from "@/lib/utils";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
@@ -28,6 +29,7 @@ interface NetworkSelectorButtonProps {
   networksEnabled?: number[];
   isDisabled?: boolean;
   onSwitchChain?: (chain: StoredChain) => void;
+  className?: string;
 }
 
 export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
@@ -35,6 +37,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   networksEnabled,
   isDisabled,
   onSwitchChain,
+  className,
 }) => {
   const client = useThirdwebClient();
   const { idToChain, allChains } = useAllChainsData();
@@ -142,7 +145,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
       <Button
         variant="outline"
         disabled={isDisabled || !wallet}
-        className="w-full justify-start gap-2 text-left"
+        className={cn("w-full justify-start gap-2 text-left", className)}
         onClick={() => {
           networkSwitcherModal.open({
             theme: getSDKTheme(theme === "light" ? "light" : "dark"),

@@ -1,8 +1,8 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FormControl, Input } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { FormErrorMessage, FormLabel } from "tw-components";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -15,100 +15,81 @@ export const ContractMetadataFieldset: React.FC<
 > = ({ form }) => {
   return (
     <Fieldset legend="Contract Metadata">
-      <div className="flex flex-col gap-6 md:grid md:grid-cols-[270px_1fr]">
-        <div>
-          <FormControl
-            display="flex"
-            flexDirection="column"
-            isInvalid={
-              !!form.getFieldState("contractMetadata.image", form.formState)
-                .error
+      <div className="flex flex-col gap-6 md:grid md:grid-cols-[200px_1fr]">
+        <FormFieldSetup
+          errorMessage={
+            form.getFieldState("contractMetadata.image", form.formState).error
+              ?.message
+          }
+          label="Image"
+          isRequired={false}
+        >
+          <FileInput
+            accept={{ "image/*": [] }}
+            value={useImageFileOrUrl(form.watch("contractMetadata.image"))}
+            setValue={(file) =>
+              form.setValue("contractMetadata.image", file, {
+                shouldTouch: true,
+              })
             }
-          >
-            <FormLabel>Image</FormLabel>
-            <FileInput
-              accept={{ "image/*": [] }}
-              value={useImageFileOrUrl(form.watch("contractMetadata.image"))}
-              setValue={(file) =>
-                form.setValue("contractMetadata.image", file, {
-                  shouldTouch: true,
-                })
-              }
-              className="rounded border-2 border-border border-dotted transition-all duration-200"
-            />
-            <FormErrorMessage>
-              {
-                form.getFieldState("contractMetadata.image", form.formState)
-                  .error?.message
-              }
-            </FormErrorMessage>
-          </FormControl>
-        </div>
+            className="rounded border-border bg-background transition-all duration-200 hover:border-active-border hover:bg-background"
+          />
+        </FormFieldSetup>
 
         <div className="flex flex-col gap-6">
-          <FormControl
-            isRequired
-            isInvalid={
-              !!form.getFieldState("contractMetadata.name", form.formState)
-                .error
-            }
-          >
-            <FormLabel>Name</FormLabel>
-            <Input
-              autoFocus
-              variant="filled"
-              {...form.register("contractMetadata.name")}
-            />
-            <FormErrorMessage>
-              {
+          {/* name + symbol */}
+          <div className="flex flex-col gap-6 lg:flex-row lg:gap-4">
+            <FormFieldSetup
+              className="grow"
+              label="Name"
+              isRequired
+              htmlFor="contractMetadata-name"
+              errorMessage={
                 form.getFieldState("contractMetadata.name", form.formState)
                   .error?.message
               }
-            </FormErrorMessage>
-          </FormControl>
+            >
+              <Input
+                id="contractMetadata-name"
+                {...form.register("contractMetadata.name", {
+                  required: "Name is Required",
+                })}
+              />
+            </FormFieldSetup>
 
-          <FormControl
-            isInvalid={
-              !!form.getFieldState("contractMetadata.symbol", form.formState)
-                .error
-            }
-          >
-            <FormLabel>Symbol</FormLabel>
-            <Input
-              variant="filled"
-              {...form.register("contractMetadata.symbol")}
-            />
-            <FormErrorMessage>
-              {
+            <FormFieldSetup
+              className="lg:max-w-[300px]"
+              isRequired={false}
+              label="Symbol"
+              htmlFor="contractMetadata-symbol"
+              errorMessage={
                 form.getFieldState("contractMetadata.symbol", form.formState)
                   .error?.message
               }
-            </FormErrorMessage>
-          </FormControl>
+            >
+              <Input
+                {...form.register("contractMetadata.symbol")}
+                id="contractMetadata-symbol"
+              />
+            </FormFieldSetup>
+          </div>
 
-          <FormControl
+          <FormFieldSetup
             className="flex grow flex-col"
-            isInvalid={
-              !!form.getFieldState(
-                "contractMetadata.description",
-                form.formState,
-              ).error
+            label="Description"
+            isRequired={false}
+            htmlFor="contractMetadata-description"
+            errorMessage={
+              form.getFieldState("contractMetadata.description", form.formState)
+                .error?.message
             }
           >
-            <FormLabel>Description</FormLabel>
             <Textarea
               {...form.register("contractMetadata.description")}
-              className="grow bg-transparent"
+              className="grow"
+              id="contractMetadata-description"
             />
-            <FormErrorMessage>
-              {
-                form.getFieldState(
-                  "contractMetadata.description",
-                  form.formState,
-                ).error?.message
-              }
-            </FormErrorMessage>
-          </FormControl>
+          </FormFieldSetup>
         </div>
       </div>
     </Fieldset>

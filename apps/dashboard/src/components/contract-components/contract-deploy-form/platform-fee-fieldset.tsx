@@ -1,7 +1,6 @@
-import { FormControl } from "@chakra-ui/react";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -15,48 +14,43 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
   return (
     <Fieldset legend="Platform fees">
       <div className="flex flex-col gap-4 md:flex-row">
-        <FormControl
+        <FormFieldSetup
+          className="grow"
+          label="Recipient Address"
           isRequired
-          isInvalid={
-            !!form.getFieldState(
+          errorMessage={
+            form.getFieldState(
               "deployParams._platformFeeRecipient",
               form.formState,
-            ).error
+            ).error?.message
+          }
+          helperText={
+            <>
+              For contract with primary sales, get additional fees for all
+              primary sales that happen on this contract. (This is useful if you
+              are deploying this contract for a 3rd party and want to take fees
+              for your service). <br /> If this contract is a marketplace, get a
+              percentage of all the secondary sales that happen on your
+              contract.
+            </>
           }
         >
-          <FormLabel>Recipient Address</FormLabel>
           <SolidityInput
             solidityType="address"
-            variant="filled"
             {...form.register("deployParams._platformFeeRecipient")}
           />
-          <FormErrorMessage>
-            {
-              form.getFieldState(
-                "deployParams._platformFeeRecipient",
-                form.formState,
-              ).error?.message
-            }
-          </FormErrorMessage>
-          <FormHelperText className="!text-sm text-muted-foreground">
-            For contract with primary sales, get additional fees for all primary
-            sales that happen on this contract. (This is useful if you are
-            deploying this contract for a 3rd party and want to take fees for
-            your service). If this contract is a marketplace, get a percentage
-            of all the secondary sales that happen on your contract.
-          </FormHelperText>
-        </FormControl>
-        <FormControl
+        </FormFieldSetup>
+
+        <FormFieldSetup
+          label="Percentage"
           isRequired
-          maxW={{ base: "100%", md: "150px" }}
-          isInvalid={
-            !!form.getFieldState("deployParams._platformFeeBps", form.formState)
-              .error
+          className="shrink-0 md:max-w-[150px]"
+          errorMessage={
+            form.getFieldState("deployParams._platformFeeBps", form.formState)
+              .error?.message
           }
         >
-          <FormLabel>Percentage</FormLabel>
           <BasisPointsInput
-            variant="filled"
             value={Number(form.watch("deployParams._platformFeeBps"))}
             onChange={(value) =>
               form.setValue("deployParams._platformFeeBps", value.toString(), {
@@ -64,13 +58,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
               })
             }
           />
-          <FormErrorMessage>
-            {
-              form.getFieldState("deployParams._platformFeeBps", form.formState)
-                .error?.message
-            }
-          </FormErrorMessage>
-        </FormControl>
+        </FormFieldSetup>
       </div>
     </Fieldset>
   );

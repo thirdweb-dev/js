@@ -21,11 +21,7 @@ export const SequentialTokenIdFieldset: React.FC<
       helperText="The starting token ID for the NFT collection."
     >
       <FormControl>
-        <SolidityInput
-          solidityType="uint256"
-          variant="filled"
-          {...props.register}
-        />
+        <SolidityInput solidityType="uint256" {...props.register} />
       </FormControl>
     </FormFieldSetup>
   );

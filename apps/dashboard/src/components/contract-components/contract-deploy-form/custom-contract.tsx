@@ -1,19 +1,17 @@
 "use client";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Flex,
-  FormControl,
-} from "@chakra-ui/react";
+import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
@@ -21,7 +19,12 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { CircleAlertIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
+import {
+  ArrowUpFromLineIcon,
+  CircleAlertIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
@@ -35,7 +38,7 @@ import {
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
-import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
+import { FormHelperText, FormLabel, Text } from "tw-components";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { addContractToMultiChainRegistry } from "../utils";
 import { Fieldset } from "./common";
@@ -387,6 +390,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               paramKey={paramKey}
               deployParam={deployParam}
               extraMetadataParam={extraMetadataParam}
+              isRequired
+              inputClassName="bg-background"
             />
           );
         })
@@ -729,6 +734,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           paramKey={paramKey}
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
+                          isRequired
                         />
                       );
                     })}
@@ -755,6 +761,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           paramKey={paramKey}
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
+                          isRequired
                         />
                       );
                     })}
@@ -795,6 +802,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       paramKey={paramKey}
                       deployParam={deployParam}
                       extraMetadataParam={extraMetadataParam}
+                      inputClassName="bg-card"
+                      isRequired
                     />
                   );
                 })}
@@ -808,25 +817,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               )}
 
               {advancedParams.length > 0 && (
-                <Accordion allowToggle>
-                  <AccordionItem borderColor="borderColor" borderBottom="none">
-                    <AccordionButton px={0}>
-                      <Heading size="subtitle.md" flex="1" textAlign="left">
-                        Advanced Configuration
-                      </Heading>
-
-                      <AccordionIcon />
-                    </AccordionButton>
-
-                    <AccordionPanel
-                      py={4}
-                      px={0}
-                      as={Flex}
-                      flexDir="column"
-                      gap={4}
-                    >
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="rounded-lg border border-border bg-card"
+                >
+                  <AccordionItem value="advanced" className="border-b-0">
+                    <AccordionTrigger className="px-4 font-semibold text-xl tracking-tight lg:px-6">
+                      Advanced Configuration
+                    </AccordionTrigger>
+                    <AccordionContent className="flex flex-col gap-5 border-border border-t px-4 pt-6 pb-8 lg:px-6">
                       {advancedParams}
-                    </AccordionPanel>
+                    </AccordionContent>
                   </AccordionItem>
                 </Accordion>
               )}
@@ -841,21 +843,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                 <p className="mb-3 text-muted-foreground text-sm">
                   Select a network to deploy this contract on. We recommend
-                  starting with a testnet.{" "}
-                  <TrackedLinkTW
-                    href="/chainlist"
-                    category="deploy"
-                    label="chainlist"
-                    target="_blank"
-                    className="text-link-foreground hover:text-foreground"
-                  >
-                    View all chains
-                  </TrackedLinkTW>
+                  starting with a testnet
                 </p>
 
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
+                      className="bg-background"
                       networksEnabled={
                         metadata?.name === "AccountFactory" ||
                         metadata?.networksForDeployment?.allNetworks ||
@@ -866,8 +860,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     />
 
                     <Button asChild variant="outline">
-                      <Link href="/chainlist" className="gap-2">
-                        View all chains <ExternalLinkIcon className="size-4" />
+                      <Link href="/chainlist" className="gap-3" target="_blank">
+                        View all chains
+                        <ExternalLinkIcon className="size-4 bg-background text-muted-foreground" />
                       </Link>
                     </Button>
                   </div>
@@ -967,13 +962,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               </CheckboxWithLabel>
 
               {/* Deploy */}
-              <div className="flex md:justify-end">
+              <div className="flex border-border border-t pt-6 md:justify-end">
                 <Button
                   disabled={!activeAccount || !walletChain}
                   type="submit"
-                  size="lg"
+                  className="gap-2"
                 >
                   Deploy Now
+                  <ArrowUpFromLineIcon className="size-4" />
                 </Button>
               </div>
             </div>

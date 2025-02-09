@@ -1,9 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { Flex, Skeleton } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceDeployerAddress } from "lib/publisher-utils";
+import Link from "next/link";
 import { ZERO_ADDRESS } from "thirdweb";
 import {
   AccountAddress,
@@ -12,7 +14,6 @@ import {
   AccountName,
   AccountProvider,
 } from "thirdweb/react";
-import { Heading, Link, LinkButton } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { useEns } from "../hooks";
 
@@ -20,90 +21,67 @@ const TRACKING_CATEGORY = "releaser-header";
 
 interface PublisherHeaderProps {
   wallet: string;
-  page?: boolean;
 }
-export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
-  wallet,
-  page,
-}) => {
+export const PublisherHeader: React.FC<PublisherHeaderProps> = ({ wallet }) => {
   const ensQuery = useEns(wallet);
   const client = useThirdwebClient();
-
   const trackEvent = useTrack();
 
   return (
-    <Flex
-      flexDirection={{ base: "column", md: page ? "column" : "row" }}
-      justifyContent="space-between"
-      align="center"
-    >
-      <Flex direction="column" gap={4} w="full">
-        <Heading as="h4" size="title.sm">
-          Published by
-        </Heading>
+    <div className="flex w-full flex-col gap-4">
+      <h4 className="font-semibold text-lg tracking-tight">Published by</h4>
 
-        <AccountProvider
-          // passing zero address during loading time to prevent the component from crashing
-          address={ensQuery.data?.address || ZERO_ADDRESS}
-          client={client}
-        >
-          <div className="flex items-center gap-4">
-            <Link
-              href={replaceDeployerAddress(
-                `/${ensQuery.data?.ensName || wallet}`,
-              )}
-              onClick={() =>
-                trackEvent({
-                  category: TRACKING_CATEGORY,
-                  action: "click",
-                  label: "releaser-avatar",
-                })
+      <AccountProvider
+        // passing zero address during loading time to prevent the component from crashing
+        address={ensQuery.data?.address || ZERO_ADDRESS}
+        client={client}
+      >
+        <div className="relative flex items-center gap-3">
+          <AccountAvatar
+            fallbackComponent={
+              <AccountBlobbie className="size-10 rounded-full" />
+            }
+            loadingComponent={<Skeleton className="size-14 rounded-full" />}
+            className="size-10 rounded-full border border-border border-solid object-cover"
+          />
+
+          <Link
+            className="before:absolute before:inset-0 hover:underline"
+            target="_blank"
+            href={replaceDeployerAddress(
+              `/${ensQuery.data?.ensName || wallet}`,
+            )}
+            onClick={() =>
+              trackEvent({
+                category: TRACKING_CATEGORY,
+                action: "click",
+                label: "releaser-name",
+              })
+            }
+          >
+            <AccountName
+              className="font-medium"
+              fallbackComponent={
+                // When social profile API support other TLDs as well - we can remove this condition
+                ensQuery.data?.ensName ? (
+                  <span> {ensQuery.data?.ensName} </span>
+                ) : (
+                  <AccountAddress
+                    formatFn={(addr) =>
+                      shortenIfAddress(replaceDeployerAddress(addr))
+                    }
+                  />
+                )
               }
-            >
-              <AccountAvatar
-                fallbackComponent={
-                  <AccountBlobbie className="size-14 rounded-full" />
-                }
-                loadingComponent={<Skeleton className="size-14 rounded-full" />}
-                className="size-14 rounded-full object-cover"
-              />
-            </Link>
+              loadingComponent={<Skeleton className="h-8 w-40" />}
+              formatFn={(name) => replaceDeployerAddress(name)}
+            />
+          </Link>
+        </div>
+      </AccountProvider>
 
-            <Link
-              href={replaceDeployerAddress(
-                `/${ensQuery.data?.ensName || wallet}`,
-              )}
-              onClick={() =>
-                trackEvent({
-                  category: TRACKING_CATEGORY,
-                  action: "click",
-                  label: "releaser-name",
-                })
-              }
-            >
-              <AccountName
-                fallbackComponent={
-                  // When social profile API support other TLDs as well - we can remove this condition
-                  ensQuery.data?.ensName ? (
-                    <span> {ensQuery.data?.ensName} </span>
-                  ) : (
-                    <AccountAddress
-                      formatFn={(addr) =>
-                        shortenIfAddress(replaceDeployerAddress(addr))
-                      }
-                    />
-                  )
-                }
-                loadingComponent={<Skeleton className="h-8 w-40" />}
-                formatFn={(name) => replaceDeployerAddress(name)}
-              />
-            </Link>
-          </div>
-        </AccountProvider>
-
-        <LinkButton
-          variant="outline"
-          size="sm"
+      <Button variant="outline" asChild className="bg-card">
+        <Link
           href={replaceDeployerAddress(`/${wallet}`)}
           onClick={() =>
             trackEvent({
@@ -114,8 +92,8 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
           }
         >
           View all contracts
-        </LinkButton>
-      </Flex>
-    </Flex>
+        </Link>
+      </Button>
+    </div>
   );
 };
