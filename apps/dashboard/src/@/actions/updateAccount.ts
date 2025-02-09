@@ -1,5 +1,7 @@
 "use server";
+import { revalidateTag } from "next/cache";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { accountCacheTag } from "../constants/cacheTags";
 import { API_SERVER_URL } from "../constants/env";
 
 export async function updateAccount(values: {
@@ -7,9 +9,9 @@ export async function updateAccount(values: {
   email?: string;
   image?: string | null;
 }) {
-  const token = await getAuthToken();
+  const authToken = await getAuthToken();
 
-  if (!token) {
+  if (!authToken) {
     throw new Error("No Auth token");
   }
 
@@ -17,7 +19,7 @@ export async function updateAccount(values: {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(values),
   });
@@ -35,4 +37,6 @@ export async function updateAccount(values: {
       errorMessage: "Failed To Update Account",
     };
   }
+
+  revalidateTag(accountCacheTag(authToken));
 }

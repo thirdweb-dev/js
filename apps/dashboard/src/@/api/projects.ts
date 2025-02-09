@@ -1,6 +1,8 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
+import { unstable_cache } from "next/cache";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { projectsCacheTag } from "../constants/cacheTags";
 
 export type Project = {
   id: string;
@@ -26,37 +28,74 @@ export async function getProjects(teamSlug: string) {
     return [];
   }
 
-  const teamsRes = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/projects`,
+  const getCachedProjects = unstable_cache(
+    getProjectsForAuthToken,
+    ["getProjects"],
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      tags: [projectsCacheTag(token)],
+      revalidate: 3600, // 1 hour
     },
   );
-  if (teamsRes.ok) {
-    return (await teamsRes.json())?.result as Project[];
+
+  return getCachedProjects(token, teamSlug);
+}
+
+export async function getProjectsForAuthToken(
+  authToken: string,
+  teamSlug: string,
+) {
+  console.log("FETCHING PROJECTS ------------------------");
+  const res = await fetch(`${API_SERVER_URL}/v1/teams/${teamSlug}/projects`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+  if (res.ok) {
+    return (await res.json())?.result as Project[];
   }
   return [];
 }
 
 export async function getProject(teamSlug: string, projectSlug: string) {
-  const token = await getAuthToken();
+  const authToken = await getAuthToken();
 
-  if (!token) {
+  if (!authToken) {
     return null;
   }
 
-  const teamsRes = await fetch(
+  const getCachedProject = unstable_cache(
+    getProjectForAuthToken,
+    ["getProject"],
+    {
+      tags: [projectsCacheTag(authToken)],
+      revalidate: 3600, // 1 hour
+    },
+  );
+
+  return getCachedProject(authToken, teamSlug, projectSlug);
+}
+
+async function getProjectForAuthToken(
+  authToken: string,
+  teamSlug: string,
+  projectSlug: string,
+) {
+  console.log(
+    "FETCHING PROJECT ------------------------",
+    teamSlug,
+    projectSlug,
+  );
+  const res = await fetch(
     `${API_SERVER_URL}/v1/teams/${teamSlug}/projects/${projectSlug}`,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     },
   );
-  if (teamsRes.ok) {
-    return (await teamsRes.json())?.result as Project;
+
+  if (res.ok) {
+    return (await res.json())?.result as Project;
   }
   return null;
 }

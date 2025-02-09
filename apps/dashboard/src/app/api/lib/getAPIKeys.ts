@@ -1,5 +1,7 @@
+import { projectsCacheTag } from "@/constants/cacheTags";
 import { API_SERVER_URL } from "@/constants/env";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { unstable_cache } from "next/cache";
 import { getAuthToken } from "./getAuthToken";
 
 // TODO - Fix the `/v1/keys/${apiKeyId}` endpoint in API server
@@ -38,6 +40,23 @@ async function getAPIKey(apiKeyId: string) {
 async function getApiKeys() {
   const authToken = await getAuthToken();
 
+  if (!authToken) {
+    return [];
+  }
+
+  const getCachedAPIKeys = unstable_cache(
+    getAPIKeysForAuthToken,
+    ["getApiKeys"],
+    {
+      tags: [projectsCacheTag(authToken)],
+      revalidate: 3600, // 1 hour
+    },
+  );
+
+  return getCachedAPIKeys(authToken);
+}
+
+async function getAPIKeysForAuthToken(authToken: string) {
   const res = await fetch(`${API_SERVER_URL}/v1/keys`, {
     method: "GET",
     headers: {

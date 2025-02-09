@@ -1,6 +1,8 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { accountCacheTag } from "../constants/cacheTags";
 import { API_SERVER_URL } from "../constants/env";
 
 export async function confirmEmailWithOTP(otp: string) {
@@ -36,4 +38,6 @@ export async function confirmEmailWithOTP(otp: string) {
       errorMessage: "Failed to confirm email",
     };
   }
+
+  revalidateTag(accountCacheTag(token));
 }

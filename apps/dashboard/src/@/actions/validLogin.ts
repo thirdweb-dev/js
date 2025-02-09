@@ -3,8 +3,8 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
+import { getCachedRawAccountForAuthToken } from "../../app/account/settings/getAccount";
 import { COOKIE_PREFIX_TOKEN } from "../constants/cookie";
-import { API_SERVER_URL } from "../constants/env";
 
 /**
  * Check that the connected wallet is valid for the current active account
@@ -30,18 +30,11 @@ export async function isWalletValidForActiveAccount(params: {
   }
 
   // authToken should be valid
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authTokenForAddress}`,
-    },
-  });
+  const account = await getCachedRawAccountForAuthToken(authTokenForAddress);
 
-  if (accountRes.status !== 200) {
+  if (!account) {
     return false;
   }
-
-  const account = (await accountRes.json()).data as Account;
 
   // the current account should match the account fetched for the authToken
   return account.id === params.account.id;

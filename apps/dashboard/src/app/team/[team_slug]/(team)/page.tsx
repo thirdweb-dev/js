@@ -1,9 +1,13 @@
 import { getWalletConnections } from "@/api/analytics";
-import { type Project, getProjects } from "@/api/projects";
+import { getProjectsForAuthToken } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { projectsCacheTag } from "@/constants/cacheTags";
 import { Changelog } from "components/dashboard/Changelog";
 import { subDays } from "date-fns";
+import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 import {
   type ProjectWithAnalytics,
   TeamProjectsPage,
@@ -13,14 +17,33 @@ export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const params = await props.params;
-  const team = await getTeamBySlug(params.team_slug);
+
+  const [team, authToken] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getAuthToken(),
+  ]);
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}`);
+  }
 
   if (!team) {
     redirect("/team");
   }
 
-  const projects = await getProjects(params.team_slug);
-  const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
+  const getCachedProjectsWithAnalytics = unstable_cache(
+    getProjectsWithAnalytics,
+    ["getProjectsWithAnalytics"],
+    {
+      revalidate: 3600, // 1 hour,
+      tags: [projectsCacheTag(authToken)],
+    },
+  );
+
+  const projectsWithTotalWallets = await getCachedProjectsWithAnalytics(
+    authToken,
+    params.team_slug,
+  );
 
   return (
     <div className="container flex grow flex-col gap-12 py-8 lg:flex-row">
@@ -39,8 +62,12 @@ export default async function Page(props: {
 }
 
 async function getProjectsWithAnalytics(
-  projects: Project[],
+  authToken: string,
+  teamSlug: string,
 ): Promise<Array<ProjectWithAnalytics>> {
+  console.log("FETCHING PROJECTS WITH ANALYTICS -------------", teamSlug);
+  const projects = await getProjectsForAuthToken(authToken, teamSlug);
+
   return Promise.all(
     projects.map(async (p) => {
       try {

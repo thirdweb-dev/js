@@ -1,5 +1,7 @@
+import { accountCacheTag } from "@/constants/cacheTags";
 import { API_SERVER_URL } from "@/constants/env";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { unstable_cache } from "next/cache";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
 import { isOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
@@ -15,6 +17,23 @@ export async function getRawAccount() {
     return undefined;
   }
 
+  return getCachedRawAccountForAuthToken(authToken);
+}
+
+export async function getCachedRawAccountForAuthToken(authToken: string) {
+  const getCachedAccount = unstable_cache(
+    getRawAccountForAuthToken,
+    ["getRawAccount"],
+    {
+      tags: [accountCacheTag(authToken)],
+    },
+  );
+
+  return getCachedAccount(authToken);
+}
+
+async function getRawAccountForAuthToken(authToken: string) {
+  console.log("FETCHING ACCOUNT -------------");
   const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
     method: "GET",
     headers: {

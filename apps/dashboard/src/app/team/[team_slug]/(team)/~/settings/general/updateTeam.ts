@@ -1,7 +1,9 @@
 "use server";
 
 import type { Team } from "@/api/team";
+import { teamsCacheTag } from "@/constants/cacheTags";
 import { API_SERVER_URL } from "@/constants/env";
+import { revalidateTag } from "next/cache";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 
 export async function updateTeam(params: {
@@ -26,4 +28,6 @@ export async function updateTeam(params: {
   if (!res.ok) {
     throw new Error("failed to update team");
   }
+
+  revalidateTag(teamsCacheTag(authToken));
 }

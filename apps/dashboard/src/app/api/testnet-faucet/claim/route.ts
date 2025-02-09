@@ -1,16 +1,15 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import {
-  API_SERVER_URL,
   THIRDWEB_ACCESS_TOKEN,
   THIRDWEB_ENGINE_FAUCET_WALLET,
   THIRDWEB_ENGINE_URL,
 } from "@/constants/env";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
 import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
 import { ZERO_ADDRESS, getAddress } from "thirdweb";
+import { getCachedRawAccountForAuthToken } from "../../../account/settings/getAccount";
 import { getFaucetClaimAmount } from "./claim-amount";
 
 interface RequestTestnetFundsPayload {
@@ -53,15 +52,12 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
-  // Make sure the connected wallet has a thirdweb account
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authCookie.value}`,
-    },
-  });
+  const authToken = authCookie.value;
 
-  if (accountRes.status !== 200) {
+  // Make sure the connected wallet has a thirdweb account
+  const account = await getCachedRawAccountForAuthToken(authToken);
+
+  if (!account) {
     // Account not found on this connected address
     return NextResponse.json(
       {
@@ -71,10 +67,8 @@ export const POST = async (req: NextRequest) => {
     );
   }
 
-  const account: { data: Account } = await accountRes.json();
-
   // Make sure the logged-in account has verified its email
-  if (!account.data.email) {
+  if (!account.email) {
     return NextResponse.json(
       {
         error: "Account owner hasn't verified email",
@@ -152,7 +146,7 @@ export const POST = async (req: NextRequest) => {
 
   const ipCacheKey = `testnet-faucet:${chainId}:${ip}`;
   const addressCacheKey = `testnet-faucet:${chainId}:${toAddress}`;
-  const accountCacheKey = `testnet-faucet:${chainId}:${account.data.id}`;
+  const accountCacheKey = `testnet-faucet:${chainId}:${account.id}`;
 
   // Assert 1 request per IP/chain every 24 hours.
   // get the cached value
