@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
-import { Suspense } from "react";
-
 import "./globals.css";
-import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/sonner";
+import { Provider } from "@/providers/thirdweb-provider";
+import { ThemeProvider } from "../providers/theme-provider";
 
 const sansFont = Inter({
   subsets: ["latin"],
@@ -18,7 +18,7 @@ const monoFont = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: "login with thirdweb",
+  title: "thirdweb login",
 };
 
 export default function RootLayout({
@@ -27,13 +27,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full w-full bg-black text-white">
-      <body
-        className={`${sansFont.variable} ${monoFont.variable} h-full w-full font-sans antialiased`}
-      >
-        <Providers>
-          <Suspense>{children}</Suspense>
-        </Providers>
+    <html lang="en">
+      <body className={`${sansFont.variable} ${monoFont.variable} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Provider>{children}</Provider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
