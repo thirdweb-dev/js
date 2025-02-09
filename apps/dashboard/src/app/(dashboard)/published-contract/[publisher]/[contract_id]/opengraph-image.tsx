@@ -3,7 +3,7 @@ import { format } from "date-fns/format";
 import { resolveEns } from "lib/ens";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { getSocialProfiles } from "thirdweb/social";
-import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
+import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 import { publishedContractOGImageTemplate } from "./utils/publishedContractOGImageTemplate";
 
 export const runtime = "edge";
@@ -22,8 +22,8 @@ export default async function Image(props: {
   const client = getThirdwebClient();
   const { publisher, contract_id } = props.params;
 
-  const [publishedContracts, socialProfiles] = await Promise.all([
-    getPublishedContractsWithPublisherMapping({
+  const [publishedContract, socialProfiles] = await Promise.all([
+    getLatestPublishedContractsWithPublisherMapping({
       publisher: publisher,
       contract_id: contract_id,
     }),
@@ -41,12 +41,6 @@ export default async function Image(props: {
       avatar,
     };
   })();
-
-  if (!publishedContracts) {
-    return null;
-  }
-
-  const publishedContract = publishedContracts[0];
 
   if (!publishedContract) {
     return null;

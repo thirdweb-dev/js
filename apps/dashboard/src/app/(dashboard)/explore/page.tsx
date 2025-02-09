@@ -48,3 +48,5 @@ export default async function ExplorePage() {
     </div>
   );
 }
+
+export const dynamic = "force-static";
