@@ -9,8 +9,8 @@ export const treasure = /* @__PURE__ */ defineChain({
   nativeCurrency: { name: "MAGIC", symbol: "MAGIC", decimals: 18 },
   blockExplorers: [
     {
-      name: 'Treasure Block Explorer',
-      url: 'https://treasurescan.io',
+      name: "Treasure Block Explorer",
+      url: "https://treasurescan.io",
     },
   ],
 });
