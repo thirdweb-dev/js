@@ -223,7 +223,7 @@
     "@walletconnect/sign-client": "2.17.5",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
-    "fuse.js": "7.0.0",
+    "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
     "mipd": "0.0.7",
     "ox": "0.6.9",
