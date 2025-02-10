@@ -1,6 +1,10 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
+import {
+  fetchLatestPublishedContractVersion,
+  fetchPublishedContractVersions,
+} from "components/contract-components/fetch-contracts-with-versions";
 import { isAddress } from "thirdweb";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
 import type { ModuleMeta } from "./install-module-params";
@@ -14,16 +18,24 @@ export async function getModuleInstalledParams(ext: ModuleMeta) {
         client: getThirdwebClient(),
         name: ext.publisherAddress,
       });
-  const allPublishedModules = await fetchPublishedContractVersions(
-    publisherAddress,
-    ext.moduleName,
-  );
 
-  // find the version we want
-  const publishedModule =
-    ext.moduleVersion === "latest"
-      ? allPublishedModules[0]
-      : allPublishedModules.find((v) => v.version === ext.moduleVersion);
+  let publishedModule: FetchDeployMetadataResult | undefined = undefined;
+
+  if (ext.moduleVersion === "latest") {
+    publishedModule = await fetchLatestPublishedContractVersion(
+      publisherAddress,
+      ext.moduleName,
+    );
+  } else {
+    const allPublishedModules = await fetchPublishedContractVersions(
+      publisherAddress,
+      ext.moduleName,
+    );
+
+    publishedModule = allPublishedModules.find(
+      (v) => v.version === ext.moduleVersion,
+    );
+  }
 
   invariant(
     publishedModule,

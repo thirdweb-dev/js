@@ -20,6 +20,11 @@
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+    --destructive-text: 357.15deg 100% 68.72%;
+    --success-text: 142.09 70.56% 35.29%;
+    --warning-text: 38 92% 40%;
+    --inverted-foreground: 0 0% 100%;
+    --inverted: 0 0% 4%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
@@ -35,7 +40,7 @@
   .dark {
     --background: 240deg 2% 11%;
     --foreground: 0 0% 98%;
-    --card: 240deg 2% 11%;
+    --card: 240deg 2% 13%;
     --card-foreground: 0 0% 98%;
     --popover: 240deg 2% 11%;
     --popover-foreground: 0 0% 98%;
@@ -49,7 +54,13 @@
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+    --destructive-text: 360 72% 55%;
+    --warning-text: 38 92% 50%;
+    --success-text: 142 75% 50%;
     --border: 240deg 2% 20%;
+    --active-border: 240deg 2% 25%;
+    --inverted-foreground: 0 0% 0%;
+    --inverted: 0 0% 100%;
     --input: 240deg 2% 20%;
     --ring: 240deg 2% 30%;
     --chart-1: 220 70% 50%;
@@ -78,4 +89,18 @@ html.dark .shiki span {
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar,
+  .no-scrollbar *::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar,
+  .no-scrollbar * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

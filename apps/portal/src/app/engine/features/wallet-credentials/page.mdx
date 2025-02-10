@@ -1,0 +1,61 @@
+import { createMetadata, Details } from "@doc";
+import { Callout } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Wallet Credentials | thirdweb Engine",
+	description:
+		"Engine can securely store and manage wallet credentials for thirdweb backend wallets.",
+});
+
+# Wallet Credentials
+
+Wallet credentials are authentication details required to interact with different cloud providers and wallet services. They enable secure access to wallet functionality across various platforms.
+
+<Callout variant="info">
+	Currently, the credentials system has only been rolled out for Circle wallets.
+	Default credentials are not yet supported. Existing wallets will continue to
+	work as normal, but new wallet creations will use the new credential system
+	after the rollout.
+</Callout>
+
+## Overview
+
+Each wallet in the system is associated with a credential that contains the necessary authentication details for its specific provider (AWS, GCP, etc.). These credentials are stored securely and can be either:
+
+- Specified explicitly when creating a wallet
+- Used automatically through default credentials configured for each provider type
+
+## Default Credentials
+
+Each provider type (AWS, GCP, etc.) can have one default credential. When creating a wallet without specifying a credential, the system automatically uses the default credential for that provider type.
+
+## Creating a Credential
+
+Credentials are created in the dashboard and can be reused across multiple wallets of the same type.
+
+### Create a credential
+
+1. In the dashboard, navigate to **Configuration > Credentials**.
+2. Click on **Create**.
+3. Assign a name to the credential.
+4. Select the type of the credential.
+5. Populate the credential fields which are specific to the type.
+6. Click on **Create**.
+
+<Details id="circle" summary="Circle Credentials">
+	Circle credentials require an `entitySecret` to be created and registered
+	before creating a credential with engine. Consult
+	https://developers.circle.com/w3s/entity-secret-management to create and
+	register an entity secret.
+</Details>
+
+## Usage
+
+When creating a wallet, you can either:
+
+1. Provide a specific credential ID to use custom authentication details
+2. Omit the credential ID to automatically use the default credential for your chosen provider
+
+## Security
+
+Credential details are stored encrypted securely in the database and are only accessible through authorized system operations. Once created, they are not retrievable. You can still view the credential (label, type), but you cannot access the credential details. This ensures that credentials are secure and cannot be used to gain unauthorized access to your wallets.

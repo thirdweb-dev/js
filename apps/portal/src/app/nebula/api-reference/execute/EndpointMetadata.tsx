@@ -2,10 +2,8 @@ import { ApiEndpoint } from "@/components/Document/APIEndpointMeta/ApiEndpoint";
 import {
   nebulaAPI401Response,
   nebulaAPI422Response,
-  nebulaContextFilterPathParameter,
-  nebulaExecuteConfigPathParameter,
+  nebulaContextParameter,
   nebulaSecretKeyHeaderParameter,
-  nebulaSessionIdPathParameter,
 } from "../common";
 
 const response200Example = `\
@@ -58,13 +56,14 @@ export function EndpointMetadata() {
               example: false,
             },
             {
-              ...nebulaSessionIdPathParameter,
+              name: "session_id",
+              type: "string",
+              example: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
               required: false,
               description:
                 "The session ID to associate with the message. If not provided, a new session will be created.",
             },
-            nebulaExecuteConfigPathParameter,
-            nebulaContextFilterPathParameter,
+            nebulaContextParameter,
           ],
         },
         responseExamples: {

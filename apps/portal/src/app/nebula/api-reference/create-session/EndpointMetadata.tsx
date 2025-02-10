@@ -2,8 +2,7 @@ import { ApiEndpoint } from "@/components/Document/APIEndpointMeta/ApiEndpoint";
 import {
   nebulaAPI401Response,
   nebulaAPI422Response,
-  nebulaContextFilterPathParameter,
-  nebulaExecuteConfigPathParameter,
+  nebulaContextParameter,
   nebulaFullSessionResponse,
   nebulaSecretKeyHeaderParameter,
 } from "../common";
@@ -27,8 +26,7 @@ export function EndpointMetadata() {
               type: "string",
               required: false,
             },
-            nebulaExecuteConfigPathParameter,
-            nebulaContextFilterPathParameter,
+            nebulaContextParameter,
           ],
         },
         responseExamples: {

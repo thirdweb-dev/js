@@ -61,7 +61,7 @@ export function NebulaAccountButton(props: {
             <div className="shrink-0">
               <GradientAvatar
                 id={props.account?.id || "default"}
-                src={""}
+                src={props.account?.image || ""}
                 className="size-9 rounded-lg"
                 client={client}
               />
@@ -88,7 +88,7 @@ export function NebulaAccountButton(props: {
             <div className="shrink-0">
               <GradientAvatar
                 id={props.account?.id || "default"}
-                src={""}
+                src={props.account?.image || ""}
                 className="size-9 rounded-full"
                 client={client}
               />

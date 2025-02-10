@@ -44,7 +44,7 @@ This section allows you to define the default preferences for the SDK:
 
 - `Initialize On Awake`: Whether the SDK should initialize on awake or not. If not, you can call `ThirdwebManager.Instance.Initialize()` to initialize it manually.
 - `Show Debug Logs`: Whether to show thirdweb SDK debug logs.
-- `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as the number of wallets connected to your game.
+- `Auto-Connect Last Wallet`: If enabled, we will automatically connect to the last connected wallet on initialization (this behavior does not apply to the WalletConnectWallet provider option). If a wallet was connected as a non smart wallet, then later upgraded, the smart wallet is saved as the last wallet, and the next session will autoconnect to the smart wallet. Any failure during this entire flow should not throw.
 
 ### Miscellaneous
 
@@ -52,8 +52,10 @@ This section allows you to define the default preferences for the SDK:
 
 This section allows you to customize the SDK's behavior:
 
-- `Supported Chains`: A list of chains that the wallets should be able to connect to by default when using `WalletConnect` as a wallet provider.
-- `Redirect Page HTML Override`: Raw HTML to override the default redirect page when connecting to `InAppWallet` or `EcosystemWallet` providers.
+- `RPC Overrides`: A list of RPC overrides to use when connecting to a chain. You can bypass using thirdweb's RPC that way (not recommended).
+- `OAuth Redirect Page HTML Override`: Raw HTML to override the default redirect page when connecting to `InAppWallet` or `EcosystemWallet` providers.
+- `WalletConnect Supported Chains`: A list of chains that the wallets should be able to connect to by default when using `WalletConnect` as a wallet provider.
+- `WalletConnect Included Wallet IDs`: A list of wallet IDs that should be included in the WalletConnect modal by default (optional override).
 
 ### Debug
 

@@ -7,7 +7,7 @@ import { getTeamSettingsLinks } from "./getTeamSettingsLinks";
 
 export function TeamSettingsSidebar(props: {
   team: Team;
-  account: Pick<Account, "id"> | undefined;
+  account: Pick<Account, "id" | "image"> | undefined;
   client: ThirdwebClient;
 }) {
   const teamLinks = getTeamSettingsLinks(props.team.slug);
@@ -34,7 +34,7 @@ export function TeamSettingsSidebar(props: {
         team={props.team}
         titleAvatarIcon={{
           id: props.account?.id,
-          src: "", // TODO - set account image
+          src: props.account?.image || "",
         }}
         client={props.client}
       />
@@ -60,7 +60,7 @@ function RenderLinkGroup(props: {
       <div className="flex items-center gap-1.5 px-4">
         <GradientAvatar
           src={props.titleAvatarIcon.src}
-          className="size-4"
+          className="size-[18px]"
           id={props.titleAvatarIcon.id}
           client={props.client}
         />

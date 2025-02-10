@@ -1,33 +1,23 @@
 import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
 import { fetchWithAuthToken } from "../../../../utils/fetchWithAuthToken";
-import type { ContextFilters } from "./chat";
+import type { NebulaContext } from "./chat";
 import type {
   DeletedSessionInfo,
-  ExecuteConfig,
   SessionInfo,
   TruncatedSessionInfo,
   UpdatedSessionInfo,
 } from "./types";
 
-// TODO - get the spec for return types on /session POST and PUT
-
 export async function createSession(params: {
   authToken: string;
-  config: ExecuteConfig | null;
-  contextFilters: ContextFilters | undefined;
+  context: NebulaContext | undefined;
 }) {
-  const body: Record<string, string | boolean | object> = {
-    can_execute: !!params.config,
-  };
-  if (params.config) {
-    body.execute_config = params.config;
-  }
+  const body: Record<string, string | boolean | object> = {};
 
-  if (params.contextFilters) {
-    body.context_filter = {
-      chain_ids: params.contextFilters.chainIds || [],
-      contract_addresses: params.contextFilters.contractAddresses || [],
-      wallet_addresses: params.contextFilters.walletAddresses || [],
+  if (params.context) {
+    body.context = {
+      chain_ids: params.context.chainIds || [],
+      wallet_address: params.context.walletAddress,
     };
   }
 
@@ -48,22 +38,15 @@ export async function createSession(params: {
 
 export async function updateSession(params: {
   authToken: string;
-  config: ExecuteConfig | null;
   sessionId: string;
-  contextFilters: ContextFilters | undefined;
+  contextFilters: NebulaContext | undefined;
 }) {
-  const body: Record<string, string | boolean | object> = {
-    can_execute: !!params.config,
-  };
-  if (params.config) {
-    body.execute_config = params.config;
-  }
+  const body: Record<string, string | boolean | object> = {};
 
   if (params.contextFilters) {
-    body.context_filter = {
+    body.context = {
       chain_ids: params.contextFilters.chainIds || [],
-      contract_addresses: params.contextFilters.contractAddresses || [],
-      wallet_addresses: params.contextFilters.walletAddresses || [],
+      wallet_address: params.contextFilters.walletAddress,
     };
   }
 

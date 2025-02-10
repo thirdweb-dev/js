@@ -144,9 +144,8 @@ export const SettingsRoyalties = ({
               <SolidityInput
                 solidityType="address"
                 formContext={form}
-                variant="filled"
                 {...form.register("fee_recipient")}
-                isDisabled={!address}
+                disabled={!address}
               />
               <FormErrorMessage>
                 {
@@ -165,7 +164,6 @@ export const SettingsRoyalties = ({
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
-                variant="filled"
                 value={form.watch("seller_fee_basis_points")}
                 onChange={(value) =>
                   form.setValue("seller_fee_basis_points", value, {

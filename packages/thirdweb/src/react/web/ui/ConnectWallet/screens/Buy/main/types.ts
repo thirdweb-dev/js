@@ -34,6 +34,7 @@ export type SelectedScreen =
   | {
       id: "swap-flow";
       quote: BuyWithCryptoQuote;
+      approvalAmount?: bigint;
     }
   | {
       id: "fiat-flow";

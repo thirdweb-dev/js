@@ -18,7 +18,7 @@ import type { ThirdwebClient } from "thirdweb";
 export function AccountButton(props: {
   logout: () => void;
   connectButton: React.ReactNode;
-  account?: Pick<Account, "email" | "id">;
+  account?: Pick<Account, "email" | "id" | "image">;
   client: ThirdwebClient;
 }) {
   const { setTheme, theme } = useTheme();
@@ -35,11 +35,10 @@ export function AccountButton(props: {
         >
           {/* Don't remove the div */}
           <div>
-            {/* TODO - set account image */}
             <GradientAvatar
               id={props.account?.id || "default"}
-              src={""}
-              className="size-9"
+              src={props.account?.image || ""}
+              className="size-9 border"
               client={props.client}
             />
           </div>

@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   type AccountValidationSchema,
   accountValidationSchema,
@@ -81,15 +82,21 @@ export const AccountForm: React.FC<AccountFormProps> = ({
           data,
         });
       },
-      onError: (err) => {
-        const error = err as Error;
+      onError: (error) => {
+        console.error(error);
 
         if (
           onDuplicateError &&
           error?.message.match(/email address already exists/)
         ) {
           onDuplicateError(values.email);
+          return;
+        } else if (error.message.includes("INVALID_EMAIL_ADDRESS")) {
+          toast.error("Invalid Email Address");
+        } else {
+          toast.error(error.message || "Failed to update account");
         }
+
         trackEvent({
           category: "account",
           action: "update",

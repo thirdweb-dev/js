@@ -10,6 +10,7 @@ import {
 	SDKCard,
 	Callout,
 	ArticleIconCard,
+	DocImage
 } from "@doc";
 import { ExternalLink } from "lucide-react";
 import {
@@ -22,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import SupportedChains from "../_images/supported-chains.png";
 
 export const metadata = createMetadata({
 	title: "thirdweb Connect",
@@ -102,6 +104,8 @@ Get started with Connect in your preferred language.
 
 Connect is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
 
+<DocImage src={SupportedChains} />
+
 ## Starter Kits & demos
 
 View all available starter kits, demos and templates on Github.
@@ -109,5 +113,4 @@ View all available starter kits, demos and templates on Github.
 <GithubTemplateCard
 	title="View all templates"
 	href="https://github.com/thirdweb-example"
-	tag="Starter"
 />

@@ -125,4 +125,6 @@ export const engineKeys = {
     [...engineKeys.all, engineId, "alerts"] as const,
   notificationChannels: (engineId: string) =>
     [...engineKeys.all, engineId, "notificationChannels"] as const,
+  walletCredentials: (instance: string) =>
+    [...engineKeys.all, instance, "walletCredentials"] as const,
 };

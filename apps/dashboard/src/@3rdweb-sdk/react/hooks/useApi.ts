@@ -39,6 +39,7 @@ export type Account = {
   id: string;
   isStaff: boolean;
   creatorWalletAddress: string;
+  image?: string | null;
   name?: string;
   email?: string;
   advancedEnabled: boolean;

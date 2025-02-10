@@ -11,16 +11,20 @@ import { replaceIpfsUrl } from "lib/sdk";
 import {
   BookOpenTextIcon,
   CalendarDaysIcon,
+  ExternalLinkIcon,
   PencilIcon,
   ServerIcon,
   ShieldCheckIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import { Card, Heading, LinkButton, Text } from "tw-components";
+import { Button } from "../../../@/components/ui/button";
+import { Separator } from "../../../@/components/ui/separator";
 import type { PublishedContractWithVersion } from "../fetch-contracts-with-versions";
 import {
   usePublishedContractEvents,
@@ -150,21 +154,22 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
           )}
         </Flex>
       </GridItem>
+
       <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex flexDir="column" gap={6}>
           {publishedContract.publisher && (
             <PublisherHeader wallet={publishedContract.publisher} />
           )}
-          <Divider />
-          <Flex flexDir="column" gap={4}>
-            <Heading as="h4" size="title.sm">
-              Details
-            </Heading>
-            <List as={Flex} flexDir="column" gap={3}>
+
+          <Separator />
+
+          <div className="flex flex-col gap-4">
+            <h4 className="font-semibold text-xl tracking-tight">Details</h4>
+            <List as={Flex} flexDir="column" gap={5}>
               <>
                 {publishedContract.publishTimestamp && (
                   <ListItem>
-                    <Flex gap={2} alignItems="flex-start">
+                    <Flex gap={3} alignItems="flex-start">
                       <CalendarDaysIcon className="size-5 text-muted-foreground" />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
@@ -179,7 +184,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 )}
                 {publishedContract?.audit && (
                   <ListItem>
-                    <Flex gap={2} alignItems="flex-start">
+                    <Flex gap={3} alignItems="flex-start">
                       <ShieldCheckIcon className="size-5 text-green-500" />
                       <Flex direction="column" gap={1}>
                         <Heading as="h5" size="label.sm">
@@ -188,15 +193,8 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                         <Text size="body.md" lineHeight={1.2}>
                           <Link
                             href={replaceIpfsUrl(publishedContract.audit)}
-                            isExternal
-                            _dark={{
-                              color: "blue.400",
-                              _hover: { color: "blue.500" },
-                            }}
-                            _light={{
-                              color: "blue.500",
-                              _hover: { color: "blue.500" },
-                            }}
+                            target="_blank"
+                            className="text-link-foreground hover:text-foreground"
                           >
                             View Audit Report
                           </Link>
@@ -206,7 +204,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                   </ListItem>
                 )}
                 <ListItem>
-                  <Flex gap={2} alignItems="flex-start">
+                  <Flex gap={3} alignItems="flex-start">
                     <BookOpenTextIcon className="size-5 text-muted-foreground" />
                     <Flex direction="column" gap={1}>
                       <Heading as="h5" size="label.sm">
@@ -239,21 +237,19 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 ) : null}
               </>
             </List>
-          </Flex>
-          <Divider />
-          <Flex flexDir="column" gap={4}>
-            <Flex gap={2} alignItems="center">
-              <LinkButton
-                colorScheme="blue"
-                href="https://portal.thirdweb.com/contracts/publish/overview"
-                w="full"
-                variant="ghost"
-                isExternal
-              >
-                Learn more about Publish
-              </LinkButton>
-            </Flex>
-          </Flex>
+          </div>
+
+          <Separator />
+
+          <Button asChild variant="outline" className="w-full gap-2 bg-card">
+            <Link
+              href="https://portal.thirdweb.com/contracts/publish/overview"
+              target="_blank"
+            >
+              Learn more about Publish{" "}
+              <ExternalLinkIcon className="size-4 text-muted-foreground" />
+            </Link>
+          </Button>
         </Flex>
       </GridItem>
     </>

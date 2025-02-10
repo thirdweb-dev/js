@@ -3,24 +3,19 @@ import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
-import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
-import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
-import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../../../wallets/wallet-types.js";
 import {
   type Theme,
+  fontSize,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type {
   FundWalletOptions,
   PayUIOptions,
 } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
-import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
-import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
@@ -28,16 +23,10 @@ import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainName } from "../../../components/ChainName.js";
-import {
-  Drawer,
-  DrawerOverlay,
-  useDrawer,
-} from "../../../components/Drawer.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Spinner } from "../../../components/Spinner.js";
-import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
+import { Input } from "../../../components/formElements.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
@@ -47,13 +36,11 @@ import { TokenSelector } from "../TokenSelector.js";
 import { WalletSwitcherConnectionScreen } from "../WalletSwitcherConnectionScreen.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
 import { DirectPaymentModeScreen } from "./DirectPaymentModeScreen.js";
-import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayTokenIcon } from "./PayTokenIcon.js";
-import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { TransactionModeScreen } from "./TransactionModeScreen.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
-import type { CurrencyMeta } from "./fiat/currencies.js";
+import { FiatScreenContent } from "./fiat/FiatScreenContent.js";
 import type { SelectedScreen } from "./main/types.js";
 import {
   type PaymentMethods,
@@ -64,20 +51,16 @@ import {
   useFromTokenSelectionStates,
   useToTokenSelectionStates,
 } from "./main/useUISelectionStates.js";
-import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
-import { FiatFees, SwapFees } from "./swap/Fees.js";
-import { PayWithCryptoQuoteInfo } from "./swap/PayWithCrypto.js";
 import { PaymentSelectionScreen } from "./swap/PaymentSelectionScreen.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
+import { SwapScreenContent } from "./swap/SwapScreenContent.js";
 import { TransferFlow } from "./swap/TransferFlow.js";
-import { addPendingTx } from "./swap/pendingSwapTx.js";
 import {
   type SupportedChainAndTokens,
   useBuySupportedDestinations,
   useBuySupportedSources,
 } from "./swap/useSwapSupportedChains.js";
-import type { PayerInfo } from "./types.js";
 import { usePayerSetup } from "./usePayerSetup.js";
 
 export type BuyScreenProps = {
@@ -322,6 +305,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           });
         }}
         onSuccess={onSwapSuccess}
+        approvalAmount={screen.approvalAmount}
       />
     );
   }
@@ -536,6 +520,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               selectedChain={toChain}
               selectedToken={toToken}
               tokenAmount={tokenAmount}
+              setTokenAmount={setTokenAmount}
               client={client}
               onBack={() => {
                 if (
@@ -663,8 +648,17 @@ function SelectedTokenInfo(props: {
   selectedToken: ERC20OrNativeToken;
   selectedChain: Chain;
   tokenAmount: string;
+  setTokenAmount: (amount: string) => void;
   client: ThirdwebClient;
 }) {
+  const getWidth = () => {
+    let chars = props.tokenAmount.replace(".", "").length;
+    const hasDot = props.tokenAmount.includes(".");
+    if (hasDot) {
+      chars += 0.3;
+    }
+    return `calc(${`${Math.max(1, chars)}ch + 2px`})`;
+  };
   return (
     <div>
       <Container
@@ -676,9 +670,59 @@ function SelectedTokenInfo(props: {
         }}
       >
         <Container flex="row" gap="xs" center="y">
-          <Text color="primaryText" data-testid="tokenAmount" size="xl">
-            {formatNumber(Number(props.tokenAmount), 6)}
-          </Text>
+          <Input
+            variant="outline"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            inputMode="decimal"
+            tabIndex={-1}
+            placeholder="0"
+            type="text"
+            data-placeholder={props.tokenAmount === ""}
+            value={props.tokenAmount || "0"}
+            disabled={false} // TODO: add disabled freeze amount
+            onClick={(e) => {
+              // put cursor at the end of the input
+              if (props.tokenAmount === "") {
+                e.currentTarget.setSelectionRange(
+                  e.currentTarget.value.length,
+                  e.currentTarget.value.length,
+                );
+              }
+            }}
+            onChange={(e) => {
+              let value = e.target.value;
+
+              if (value.startsWith(".")) {
+                value = `0${value}`;
+              }
+
+              if (value.length > 10) {
+                return;
+              }
+
+              const numValue = Number(value);
+              if (Number.isNaN(numValue)) {
+                return;
+              }
+
+              if (value.startsWith("0") && !value.startsWith("0.")) {
+                props.setTokenAmount(value.slice(1));
+              } else {
+                props.setTokenAmount(value);
+              }
+            }}
+            style={{
+              border: "none",
+              fontSize: fontSize.lg,
+              boxShadow: "none",
+              borderRadius: "0",
+              padding: "0",
+              paddingBlock: "2px",
+              fontWeight: 600,
+              textAlign: "left",
+              width: getWidth(),
+            }}
+          />
 
           <Container flex="row" gap="xxs" center="y">
             <TokenSymbol
@@ -866,6 +910,7 @@ function TokenSelectedLayout(props: {
   title: string;
   children: React.ReactNode;
   tokenAmount: string;
+  setTokenAmount: (amount: string) => void;
   selectedToken: ERC20OrNativeToken;
   selectedChain: Chain;
   client: ThirdwebClient;
@@ -888,6 +933,7 @@ function TokenSelectedLayout(props: {
           selectedToken={props.selectedToken}
           selectedChain={props.selectedChain}
           tokenAmount={props.tokenAmount}
+          setTokenAmount={props.setTokenAmount}
           client={props.client}
         />
 
@@ -900,538 +946,6 @@ function TokenSelectedLayout(props: {
 
         {props.children}
       </Container>
-    </Container>
-  );
-}
-
-function SwapScreenContent(props: {
-  setScreen: (screen: SelectedScreen) => void;
-  tokenAmount: string;
-  toToken: ERC20OrNativeToken;
-  toChain: Chain;
-  fromChain: Chain;
-  fromToken: ERC20OrNativeToken;
-  showFromTokenSelector: () => void;
-  payer: PayerInfo;
-  client: ThirdwebClient;
-  payOptions: PayUIOptions;
-  isEmbed: boolean;
-  onDone: () => void;
-  connectOptions: PayEmbedConnectOptions | undefined;
-  connectLocale: ConnectLocale;
-  setPayer: (payer: PayerInfo) => void;
-  activeAccount: Account;
-  setTokenAmount: (amount: string) => void;
-  setHasEditedAmount: (hasEdited: boolean) => void;
-  disableTokenSelection: boolean;
-}) {
-  const {
-    setScreen,
-    payer,
-    client,
-    toChain,
-    tokenAmount,
-    toToken,
-    fromChain,
-    fromToken,
-    payOptions,
-    disableTokenSelection,
-  } = props;
-
-  const defaultRecipientAddress = (
-    props.payOptions as Extract<PayUIOptions, { mode: "direct_payment" }>
-  )?.paymentInfo?.sellerAddress;
-  const receiverAddress =
-    defaultRecipientAddress || props.activeAccount.address;
-  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<
-    "fees" | "receiver" | "payer"
-  >("fees");
-
-  const fromTokenBalanceQuery = useWalletBalance({
-    address: payer.account.address,
-    chain: fromChain,
-    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
-    client,
-  });
-
-  const fromTokenId = isNativeToken(fromToken)
-    ? NATIVE_TOKEN_ADDRESS
-    : fromToken.address.toLowerCase();
-  const toTokenId = isNativeToken(toToken)
-    ? NATIVE_TOKEN_ADDRESS
-    : toToken.address.toLowerCase();
-  const swapRequired =
-    !!tokenAmount &&
-    !(fromChain.id === toChain.id && fromTokenId === toTokenId);
-  const quoteParams: GetBuyWithCryptoQuoteParams | undefined = swapRequired
-    ? {
-        // wallets
-        fromAddress: payer.account.address,
-        toAddress: receiverAddress,
-        // from
-        fromChainId: fromChain.id,
-        fromTokenAddress: isNativeToken(fromToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : fromToken.address,
-        // to
-        toChainId: toChain.id,
-        toTokenAddress: isNativeToken(toToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : toToken.address,
-        toAmount: tokenAmount,
-        client,
-        purchaseData: payOptions.purchaseData,
-      }
-    : undefined;
-
-  const quoteQuery = useBuyWithCryptoQuote(quoteParams, {
-    // refetch every 30 seconds
-    staleTime: 30 * 1000,
-    refetchInterval: 30 * 1000,
-    gcTime: 30 * 1000,
-  });
-
-  const sourceTokenAmount = swapRequired
-    ? quoteQuery.data?.swapDetails.fromAmount
-    : tokenAmount;
-
-  const isNotEnoughBalance =
-    !!sourceTokenAmount &&
-    !!fromTokenBalanceQuery.data &&
-    Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
-
-  const disableContinue =
-    (swapRequired && !quoteQuery.data) || isNotEnoughBalance;
-  const switchChainRequired =
-    props.payer.wallet.getChain()?.id !== fromChain.id;
-
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  function getErrorMessage(err: any) {
-    type AmountTooLowError = {
-      code: "MINIMUM_PURCHASE_AMOUNT";
-      data: {
-        minimumAmountUSDCents: number;
-        requestedAmountUSDCents: number;
-        minimumAmountWei: string;
-        minimumAmountEth: string;
-      };
-    };
-
-    const defaultMessage = "Unable to get price quote";
-    try {
-      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
-        const obj = err.error as AmountTooLowError;
-        const minAmountToken = obj.data.minimumAmountEth;
-        return {
-          minAmount: formatNumber(Number(minAmountToken), 6),
-        };
-      }
-    } catch {}
-
-    return {
-      msg: [defaultMessage],
-    };
-  }
-
-  const errorMsg =
-    !quoteQuery.isLoading && quoteQuery.error
-      ? getErrorMessage(quoteQuery.error)
-      : undefined;
-
-  function showSwapFlow() {
-    if (
-      (props.payOptions.mode === "direct_payment" ||
-        props.payOptions.mode === "fund_wallet") &&
-      !isNotEnoughBalance &&
-      !swapRequired
-    ) {
-      // same currency, just direct transfer
-      setScreen({
-        id: "transfer-flow",
-      });
-    } else if (
-      props.payOptions.mode === "transaction" &&
-      !isNotEnoughBalance &&
-      !swapRequired
-    ) {
-      if (payer.account.address !== receiverAddress) {
-        // needs transfer from another wallet before executing the transaction
-        setScreen({
-          id: "transfer-flow",
-        });
-      } else {
-        // has enough balance to just do the transaction directly
-        props.onDone();
-      }
-
-      return;
-    }
-
-    if (!quoteQuery.data) {
-      return;
-    }
-
-    setScreen({
-      id: "swap-flow",
-      quote: quoteQuery.data,
-    });
-  }
-
-  function showFees() {
-    if (!quoteQuery.data) {
-      return;
-    }
-
-    setIsOpen(true);
-    setDrawerScreen("fees");
-  }
-
-  return (
-    <Container flex="column" gap="md" animate="fadein">
-      {isOpen && (
-        <>
-          <DrawerOverlay ref={drawerOverlayRef} />
-          <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && quoteQuery.data && (
-              <div>
-                <Text size="lg" color="primaryText">
-                  Fees
-                </Text>
-                <Spacer y="lg" />
-                <SwapFees quote={quoteQuery.data} />
-              </div>
-            )}
-          </Drawer>
-        </>
-      )}
-
-      {/* Quote info */}
-      <div>
-        <PayWithCryptoQuoteInfo
-          value={sourceTokenAmount || ""}
-          chain={fromChain}
-          token={fromToken}
-          isLoading={quoteQuery.isLoading && !sourceTokenAmount}
-          client={client}
-          freezeChainAndTokenSelection={disableTokenSelection}
-          payerAccount={props.payer.account}
-          swapRequired={swapRequired}
-        />
-        {swapRequired && (
-          <EstimatedTimeAndFees
-            quoteIsLoading={quoteQuery.isLoading}
-            estimatedSeconds={
-              quoteQuery.data?.swapDetails.estimated.durationSeconds
-            }
-            onViewFees={showFees}
-          />
-        )}
-        <Spacer y="md" />
-      </div>
-
-      {/* Error message */}
-      {errorMsg && (
-        <div>
-          {errorMsg.minAmount && (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
-            </Text>
-          )}
-
-          {errorMsg.msg?.map((msg) => (
-            <Text color="danger" size="sm" center multiline key={msg}>
-              {msg}
-            </Text>
-          ))}
-        </div>
-      )}
-
-      {!errorMsg && isNotEnoughBalance && (
-        <div>
-          <Text color="danger" size="sm" center multiline>
-            Not enough funds.
-          </Text>
-          <Text color="danger" size="sm" center multiline>
-            Try a different wallet or token.
-          </Text>
-        </div>
-      )}
-
-      {/* Button */}
-      {errorMsg?.minAmount ? (
-        <Button
-          variant="accent"
-          fullWidth
-          onClick={() => {
-            props.setTokenAmount(String(errorMsg.minAmount));
-            props.setHasEditedAmount(true);
-          }}
-        >
-          Set Minimum
-        </Button>
-      ) : switchChainRequired &&
-        !quoteQuery.isLoading &&
-        !isNotEnoughBalance &&
-        !quoteQuery.error ? (
-        <SwitchNetworkButton
-          variant="accent"
-          fullWidth
-          switchChain={async () => {
-            await props.payer.wallet.switchChain(fromChain);
-          }}
-        />
-      ) : (
-        <Button
-          variant={disableContinue ? "outline" : "accent"}
-          fullWidth
-          data-disabled={disableContinue}
-          disabled={disableContinue}
-          onClick={async () => {
-            if (!disableContinue) {
-              showSwapFlow();
-            }
-          }}
-          gap="xs"
-        >
-          {quoteQuery.isLoading ? (
-            <>
-              Getting price quote
-              <Spinner size="sm" color="accentText" />
-            </>
-          ) : (
-            "Continue"
-          )}
-        </Button>
-      )}
-    </Container>
-  );
-}
-
-function FiatScreenContent(props: {
-  setScreen: (screen: SelectedScreen) => void;
-  tokenAmount: string;
-  toToken: ERC20OrNativeToken;
-  toChain: Chain;
-  selectedCurrency: CurrencyMeta;
-  showCurrencySelector: () => void;
-  payOptions: PayUIOptions;
-  theme: "light" | "dark" | Theme;
-  client: ThirdwebClient;
-  onDone: () => void;
-  isEmbed: boolean;
-  payer: PayerInfo;
-  setTokenAmount: (amount: string) => void;
-  setHasEditedAmount: (hasEdited: boolean) => void;
-}) {
-  const {
-    toToken,
-    tokenAmount,
-    payer,
-    client,
-    setScreen,
-    toChain,
-    showCurrencySelector,
-    selectedCurrency,
-  } = props;
-  const defaultRecipientAddress = (
-    props.payOptions as Extract<PayUIOptions, { mode: "direct_payment" }>
-  )?.paymentInfo?.sellerAddress;
-  const receiverAddress =
-    defaultRecipientAddress || props.payer.account.address;
-  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<"fees">("fees");
-
-  const buyWithFiatOptions = props.payOptions.buyWithFiat;
-
-  const fiatQuoteQuery = useBuyWithFiatQuote(
-    buyWithFiatOptions !== false && tokenAmount
-      ? {
-          fromCurrencySymbol: selectedCurrency.shorthand,
-          toChainId: toChain.id,
-          toAddress: receiverAddress,
-          toTokenAddress: isNativeToken(toToken)
-            ? NATIVE_TOKEN_ADDRESS
-            : toToken.address,
-          toAmount: tokenAmount,
-          client,
-          isTestMode: buyWithFiatOptions?.testMode,
-          purchaseData: props.payOptions.purchaseData,
-          fromAddress: payer.account.address,
-          preferredProvider: buyWithFiatOptions?.preferredProvider,
-        }
-      : undefined,
-  );
-
-  function handleSubmit() {
-    if (!fiatQuoteQuery.data) {
-      return;
-    }
-
-    const hasTwoSteps = isSwapRequiredPostOnramp(fiatQuoteQuery.data);
-    let openedWindow: Window | null = null;
-
-    if (!hasTwoSteps) {
-      openedWindow = openOnrampPopup(
-        fiatQuoteQuery.data.onRampLink,
-        typeof props.theme === "string" ? props.theme : props.theme.type,
-      );
-
-      addPendingTx({
-        type: "fiat",
-        intentId: fiatQuoteQuery.data.intentId,
-      });
-    }
-
-    setScreen({
-      id: "fiat-flow",
-      quote: fiatQuoteQuery.data,
-      openedWindow,
-    });
-  }
-
-  function showFees() {
-    if (!fiatQuoteQuery.data) {
-      return;
-    }
-
-    setDrawerScreen("fees");
-    setIsOpen(true);
-  }
-
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  function getErrorMessage(err: any) {
-    type AmountTooLowError = {
-      code: "MINIMUM_PURCHASE_AMOUNT";
-      data: {
-        minimumAmountUSDCents: number;
-        requestedAmountUSDCents: number;
-        minimumAmountWei: string;
-        minimumAmountEth: string;
-      };
-    };
-
-    const defaultMessage = "Unable to get price quote";
-    try {
-      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
-        const obj = err.error as AmountTooLowError;
-        const minAmountToken = obj.data.minimumAmountEth;
-        return {
-          minAmount: formatNumber(Number(minAmountToken), 6),
-        };
-      }
-    } catch {}
-
-    return {
-      msg: [defaultMessage],
-    };
-  }
-
-  const disableSubmit = !fiatQuoteQuery.data;
-
-  const errorMsg =
-    !fiatQuoteQuery.isLoading && fiatQuoteQuery.error
-      ? getErrorMessage(fiatQuoteQuery.error)
-      : undefined;
-
-  return (
-    <Container flex="column" gap="md" animate="fadein">
-      {isOpen && (
-        <>
-          <DrawerOverlay ref={drawerOverlayRef} />
-          <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && fiatQuoteQuery.data && (
-              <div>
-                <Text size="lg" color="primaryText">
-                  Fees
-                </Text>
-
-                <Spacer y="lg" />
-                <FiatFees quote={fiatQuoteQuery.data} />
-              </div>
-            )}
-          </Drawer>
-        </>
-      )}
-
-      <div>
-        <PayWithCreditCard
-          isLoading={fiatQuoteQuery.isLoading}
-          value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
-          client={client}
-          currency={selectedCurrency}
-          onSelectCurrency={showCurrencySelector}
-        />
-        {/* Estimated time + View fees button */}
-        <EstimatedTimeAndFees
-          quoteIsLoading={fiatQuoteQuery.isLoading}
-          estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
-          onViewFees={showFees}
-        />
-        <Spacer y="md" />
-      </div>
-
-      {/* Error message */}
-      {errorMsg && (
-        <div>
-          {errorMsg.minAmount && (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is {errorMsg.minAmount}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
-            </Text>
-          )}
-
-          {errorMsg.msg?.map((msg) => (
-            <Text color="danger" size="sm" center multiline key={msg}>
-              {msg}
-            </Text>
-          ))}
-        </div>
-      )}
-
-      {errorMsg?.minAmount ? (
-        <Button
-          variant="accent"
-          fullWidth
-          onClick={() => {
-            props.setTokenAmount(String(errorMsg.minAmount));
-            props.setHasEditedAmount(true);
-          }}
-        >
-          Set Minimum
-        </Button>
-      ) : (
-        <Button
-          variant={disableSubmit ? "outline" : "accent"}
-          data-disabled={disableSubmit}
-          disabled={disableSubmit}
-          fullWidth
-          onClick={handleSubmit}
-          gap="xs"
-        >
-          {fiatQuoteQuery.isLoading ? (
-            <>
-              Getting price quote
-              <Spinner size="sm" color="accentText" />
-            </>
-          ) : (
-            "Continue"
-          )}
-        </Button>
-      )}
     </Container>
   );
 }

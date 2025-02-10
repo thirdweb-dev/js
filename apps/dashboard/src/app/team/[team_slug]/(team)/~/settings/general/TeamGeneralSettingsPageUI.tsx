@@ -188,7 +188,7 @@ function TeamAvatarFormControl(props: {
         disabled: false,
         isPending: updateTeamAvatarMutation.isPending,
       }}
-      noPermissionText={undefined} // TODO
+      noPermissionText={undefined}
       errorText={undefined}
     >
       <div className="flex flex-row gap-4 md:justify-between">

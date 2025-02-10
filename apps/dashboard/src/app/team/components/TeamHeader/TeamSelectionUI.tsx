@@ -19,7 +19,7 @@ export function TeamSelectionUI(props: {
   currentTeam: Team | undefined;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   upgradeTeamLink: string | undefined;
-  account: Pick<Account, "email" | "id"> | undefined;
+  account: Pick<Account, "email" | "id" | "image"> | undefined;
   client: ThirdwebClient;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
@@ -52,9 +52,8 @@ export function TeamSelectionUI(props: {
             asChild
           >
             <Link href="/account">
-              {/* TODO set Image src */}
               <GradientAvatar
-                src={""}
+                src={props.account?.image || ""}
                 className="size-4"
                 id={props.account?.id}
                 client={props.client}

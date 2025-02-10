@@ -2,8 +2,7 @@ import { ApiEndpoint } from "@/components/Document/APIEndpointMeta/ApiEndpoint";
 import {
   nebulaAPI401Response,
   nebulaAPI422Response,
-  nebulaContextFilterPathParameter,
-  nebulaExecuteConfigPathParameter,
+  nebulaContextParameter,
   nebulaFullSessionResponse,
   nebulaSecretKeyHeaderParameter,
   nebulaSessionIdPathParameter,
@@ -15,8 +14,7 @@ export function EndpointMetadata() {
       metadata={{
         title: "Update Session",
         method: "PUT",
-        description:
-          "Update session details like title, context_filter, execute_config, etc.",
+        description: "Update session details like title, context, etc.",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
         request: {
@@ -29,8 +27,7 @@ export function EndpointMetadata() {
               type: "string",
               required: false,
             },
-            nebulaExecuteConfigPathParameter,
-            nebulaContextFilterPathParameter,
+            nebulaContextParameter,
           ],
         },
         responseExamples: {

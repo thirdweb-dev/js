@@ -1,6 +1,7 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
@@ -21,6 +22,7 @@ export function SwapStatusScreen(props: {
   title: string;
   onBack?: () => void;
   swapTxHash: string;
+  fromChain: Chain;
   client: ThirdwebClient;
   onTryAgain: () => void;
   onDone: () => void;
@@ -34,6 +36,7 @@ export function SwapStatusScreen(props: {
   const swapStatus = useBuyWithCryptoStatus({
     client: props.client,
     transactionHash: props.swapTxHash,
+    chainId: props.fromChain.id,
   });
 
   let uiStatus: UIStatus = "pending";
@@ -113,11 +116,9 @@ export function SwapStatusScreen(props: {
             <Spacer y="xl" />
             {swapDetails}
             <Spacer y="sm" />
-            {!props.isEmbed && (
-              <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.transactionMode ? "Continue Transaction" : "Done"}
-              </Button>
-            )}
+            <Button variant="accent" fullWidth onClick={props.onDone}>
+              {props.transactionMode ? "Continue Transaction" : "Done"}
+            </Button>
           </>
         )}
 

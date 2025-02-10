@@ -15,11 +15,13 @@ Create an instance of `InAppWallet` using a user's email, phone number or OAuth.
 In-App Wallets support a variety of login methods:
 - Email (OTP Login)
 - Phone (OTP Login)
-- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch etc.)
-- SIWE (Sign-In with Ethereum)
+- Socials (Google, Apple, Facebook, Telegram, Farcaster, Line, Github, Twitch, Steam etc.)
 - Custom Auth (OIDC Compatible)
 - Custom Auth (Generic Auth Endpoint)
 - Guest (Onboard easily, link other accounts later)
+- Backend (Server Wallets)
+- Siwe (Login with a seperate wallet supported by the SDK)
+- SiweExternal (Login with an external wallet that only supports web using a browser loading a static thirdweb React page temporarily)
 
 ## Usage
 
@@ -30,14 +32,18 @@ var wallet = await InAppWallet.Create(client: client, email: "userEmail");
 var wallet = await InAppWallet.Create(client: client, phoneNumber: "+1234567890");
 // Google, Apple, Facebook, etc.
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
-// SIWE
-var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
 // Custom Auth - JWT
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
 // Custom Auth - AuthEndpoint
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.AuthEndpoint);
 // Guest Login
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Guest);
+// Server Login
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Backend, walletSecret: "very-secret");
+// Siwe
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+// SiweExternal
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.SiweExternal);
 
 // Session resuming supported for all methods
 var isConnected = await wallet.IsConnected();
@@ -60,9 +66,6 @@ var address = await wallet.LoginWithOauth(
     mobileRedirectScheme: "myBundleId://"
 );
 
-// SIWE (Wallet)
-var address = await siweWallet.LoginWithSiwe(chainId: 1);
-
 // Custom Auth (JWT)
 var address = await wallet.LoginWithCustomAuth(jwt: "myjwt");
 
@@ -71,11 +74,26 @@ var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload");
 
 // Guest Login (Easy onboarding)
 var address = await wallet.LoginWithGuest();
+
+// Backend (Server Wallets)
+var address = await wallet.LoginWithBackend();
+
+// SIWE (Wallet)
+var address = await siweWallet.LoginWithSiwe(chainId: 1);
+
+// SiweExternal (React-only wallet)
+var address = await wallet.LoginWithSiweExternal(
+    // Windows console app example, adaptable to any runtime
+    isMobile: false,
+    browserOpenAction: (url) =>
+    {
+        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+         _ = Process.Start(psi);
+    },
+    forceWalletIds: new List<string> { "io.metamask", "com.coinbase.wallet", "xyz.abs" }
+);
 ```
 
-<Callout variant="info" title="Client-Side Use">
-	This wallet is designed for client-side use in applications where direct access to the user's private keys is not safe or necessary. It leverages OTP for secure authentication, allowing users to interact with blockchain applications seamlessly.
-</Callout>
 <Details summary="Parameters">
 
 ### client (required)
@@ -98,6 +116,18 @@ The OAuth provider to use for authentication. Supported values are `AuthProvider
 
 The path to the directory where the wallet data is stored. Defaults to the application's data directory.
 
+### siweSigner (optional)
+
+An external wallet instance to use for SIWE authentication.
+
+### legacyEncryptionKey (optional)
+
+The encryption key that is no longer required but was used in the past. Only pass this if you had used custom auth before this was deprecated.
+
+### walletSecret (optional)
+
+The secret identifier to use when creating server-side wallets with backend authentication.
+
 </Details>
 
 <Details summary="Return Value">
@@ -108,179 +138,7 @@ Returns an instance of InAppWallet, initialized for the user based on the provid
 
 </Details>
 
-## OTP Authentication Flow
+## Authentication, Linking and more.
 
-The OTP authentication flow involves sending an OTP to the user's email or phone and then verifying the OTP to complete authentication:
+`InAppWallet` extends `EcosystemWallet`, refer to the [EcosystemWallet](/dotnet/wallets/providers/ecosystem-wallet) documentation for information about authentication, linking multiple auth providers to the same wallet, and more. All functionality outside of creation and third-party integrations is the same as `EcosystemWallet`.
 
-**Send OTP:** Initiate the login process by calling SendOTP on the InAppWallet instance. This sends an OTP to the user's email or phone number.
-
-```csharp
-await wallet.SendOTP();
-```
-
-**Submit OTP:** Once the user receives the OTP, they submit it back to the application, which then calls LoginWithOtp on the InAppWallet instance to verify the OTP and complete the login process.
-
-```csharp
-var address = await wallet.LoginWithOtp("userEnteredOTP");
-// If this fails, feel free to catch and take in another OTP and retry the login process
-```
-
-## Example
-
-Here's an example of creating an `InAppWallet` with a user's email and completing the OTP authentication flow:
-
-```csharp
-// Create InAppWallet wallet as signer to unlock web2 auth
-var inAppWallet = await InAppWallet.Create(client: client, email: "email@email.com"); // or email: null, phoneNumber: "+1234567890"
-
-// Resume session (if `InAppWallet` wallet was not logged in)
-if (!await inAppWallet.IsConnected())
-{
-    await inAppWallet.SendOTP();
-    Console.WriteLine("Please submit the OTP.");
-    var otp = Console.ReadLine();
-    var inAppWalletAddress = await inAppWallet.LoginWithOtp(otp); // try catch and retry if needed
-}
-
-Console.WriteLine($"InAppWallet address: {await inAppWallet.GetAddress()}");
-
-// Sign a message
-var message = "Hello, Thirdweb!";
-var signature = await wallet.PersonalSign(message);
-Console.WriteLine($"Signature: {signature}");
-```
-
-**Note:** InAppWallet leverages the security of OTP-based authentication to ensure a secure and user-friendly experience in blockchain applications.
-
-## OAuth Authentication Flow
-
-**LoginWithOauth:** Initiate the login process by calling LoginWithOauth on the InAppWallet instance. This redirects the user to the OAuth provider's login page.
-
-```csharp
-// Windows console app example
-var address = await inAppWallet.LoginWithOauth(
-    isMobile: false,
-    browserOpenAction: (url) =>
-    {
-        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
-        _ = Process.Start(psi);
-    },
-);
-// Godot standalone example
-var address = await ThirdwebManager.Instance.InAppWallet.LoginWithOauth(
-        isMobile: OS.GetName() == "Android" || OS.GetName() == "iOS",
-        browserOpenAction: (url) => OS.ShellOpen(url),
-        mobileRedirectScheme: "thirdweb://"
-);
-```
-
-<Details summary="Parameters">
-
-### isMobile
-
-A `bool` indicating whether the application is running on a mobile platform.
-
-### browserOpenAction
-
-An `Action<string>` that opens the OAuth provider's login page in a browser.
-
-### mobileRedirectScheme
-
-The redirect scheme to use for mobile platforms. Defaults to `"thirdweb://"`.
-
-### browser
-
-An instance of `IThirdwebBrowser` to use for the OAuth login process. Defaults to `null`.
-
-### cancellationToken
-
-A `CancellationToken` to cancel the operation. Defaults to `default`.
-
-</Details>
-
-<Details summary="Return Value">
-
-### string
-
-The InAppWallet address as a hexadecimal `string`.
-
-</Details>
-
-## Example
-
-Here's an example of creating an `InAppWallet` using OAuth.
-
-```csharp
-// Create InAppWallet wallet as signer to unlock web2 auth
-var inAppWallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
-
-// Resume session (if `InAppWallet` wallet was not logged in)
-if (!await inAppWallet.IsConnected())
-{
-    try {
-        var address = await inAppWallet.LoginWithOauth(
-            isMobile: false,
-            browserOpenAction: (url) =>
-            {
-                var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
-                _ = Process.Start(psi);
-            },
-        );
-        Console.WriteLine($"OAuth login successful. InAppWallet address: {address}");
-    } catch (Exception ex) {
-        Console.WriteLine($"OAuth login failed: {ex.Message}");
-        return;
-    }
-}
-```
-
-**Note:** The `LoginWithOauth` API allows for custom browser handling, making it suitable for various application types and platforms.
-
-## Unified Identity - Account Linking
-
-InAppWallet supports linking multiple authentication methods to a single user account. This feature enables users to access their account using different authentication methods, such as email, phone, or OAuth, without creating separate accounts for each method.
-
-### Linking Accounts
-
-```csharp
-var inAppWalletMain = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
-if (!await inAppWalletMain.IsConnected())
-{
-    _ = await inAppWalletMain.LoginWithOauth(
-        isMobile: false,
-        (url) =>
-        {
-            var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
-            _ = Process.Start(psi);
-        },
-        "thirdweb://",
-        new InAppWalletBrowser()
-    );
-}
-Console.WriteLine($"Main InAppWallet address: {await inAppWalletMain.GetAddress()}");
-
-// Prepare Telegram
-var socialWallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Telegram);
-// Link Telegram
-_ = await inAppWalletMain.LinkAccount(walletToLink: socialWallet,);
-
-// Prepare Phone
-var phoneWallet = await InAppWallet.Create(client: client, phoneNumber: "+1234567890");
-_ = await phoneWallet.SendOTP();
-var otp = Console.ReadLine();
-// Link Phone
-_ = await inAppWalletMain.LinkAccount(walletToLink: phoneWallet, otp: otp);
-```
-
-### Getting Linked Accounts
-
-```csharp
-List<LinkedAccount> linkedAccounts = await inAppWalletMain.GetLinkedAccounts();
-```
-
-### Unlinking Accounts
-
-```csharp
-List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();
-List<LinkedAccount> linkedAccountsAfterUnlinking = await inAppWallet.UnlinkAccount(linkedAccounts[0]);
-```

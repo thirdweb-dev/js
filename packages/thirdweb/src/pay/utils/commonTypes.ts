@@ -17,4 +17,6 @@ export type PayOnChainTransactionDetails = {
   explorerLink?: string;
 };
 
-export type FiatProvider = "STRIPE" | "TRANSAK" | "KADO";
+export type FiatProvider = (typeof FiatProviders)[number];
+
+export const FiatProviders = ["COINBASE", "STRIPE", "TRANSAK", "KADO"] as const;

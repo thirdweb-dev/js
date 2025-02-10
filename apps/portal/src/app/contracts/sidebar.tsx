@@ -1,10 +1,5 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import {
-  ContractDeployIcon,
-  ContractExploreIcon,
-  ContractModularContractIcon,
-  ContractPublishIcon,
-} from "@/icons";
+import { ContractModularContractIcon } from "@/icons";
 
 const prebuiltSlug = "/contracts/explore/pre-built-contracts";
 const prebuiltModular = "/contracts/explore/pre-built-modular";
@@ -28,10 +23,35 @@ export const sidebar: SideBar = {
       href: "/contracts",
     },
     { separator: true },
+    {
+      name: "Deployment Tools",
+      isCollapsible: false,
+      links: [
+        {
+          name: "Overview",
+          href: `${deploySlug}/overview`,
+        },
+        {
+          name: "Deploy Contract",
+          href: `${deploySlug}/deploy-contract`,
+        },
+        {
+          name: "Publish Contract",
+          href: `${publishSlug}/publish-contract`,
+        },
+        {
+          name: "CLI Reference",
+          href: `${deploySlug}/reference`,
+        },
+        {
+          name: "Publish Options",
+          href: `${publishSlug}/publish-options`,
+        },
+      ],
+    },
     // explore
     {
-      name: "Explore",
-      icon: <ContractExploreIcon />,
+      name: "Explore (Contract Library)",
       isCollapsible: false,
       links: [
         {
@@ -219,8 +239,7 @@ export const sidebar: SideBar = {
     // modular contracts
 
     {
-      name: "Modular Contracts",
-      icon: <ContractModularContractIcon />,
+      name: "Modular Contract Framework",
       isCollapsible: false,
       links: [
         {
@@ -770,52 +789,6 @@ export const sidebar: SideBar = {
               ],
             },
           ],
-        },
-      ],
-    },
-    { separator: true },
-    // deploy
-    {
-      name: "Deploy",
-      icon: <ContractDeployIcon />,
-      isCollapsible: false,
-      links: [
-        {
-          name: "Overview",
-          href: `${deploySlug}/overview`,
-        },
-        {
-          name: "Deploy Contract",
-          href: `${deploySlug}/deploy-contract`,
-        },
-        {
-          name: "CLI Reference",
-          href: `${deploySlug}/reference`,
-        },
-      ],
-    },
-    { separator: true },
-    // publish
-    {
-      name: "Publish",
-      icon: <ContractPublishIcon />,
-      isCollapsible: false,
-      links: [
-        {
-          name: "Overview",
-          href: `${publishSlug}/overview`,
-        },
-        {
-          name: "Publish Contract",
-          href: `${publishSlug}/publish-contract`,
-        },
-        {
-          name: "Publish Options",
-          href: `${publishSlug}/publish-options`,
-        },
-        {
-          name: "CLI Reference",
-          href: `${publishSlug}/reference`,
         },
       ],
     },

@@ -1,7 +1,7 @@
 import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
 import { XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   arbitrumSepolia,
   baseSepolia,
@@ -25,21 +25,26 @@ import { cn } from "../../../../lib/utils";
 import { CodeGen } from "../components/CodeGen";
 import type { ConnectPlaygroundOptions } from "../components/types";
 
+type Tab = "modal" | "button" | "code";
+
 export function RightSection(props: {
   connectOptions: ConnectPlaygroundOptions;
   tab?: string;
 }) {
-  const router = useRouter();
-  const previewTab = useMemo(
-    () =>
-      ["modal", "button", "code"].includes(props.tab || "")
-        ? (props.tab as "modal" | "button" | "code")
-        : "modal",
-    [props.tab],
-  );
-  const setPreviewTab = (tab: "modal" | "button" | "code") => {
-    router.push(`/connect/sign-in?tab=${tab}`);
-  };
+  const pathname = usePathname();
+  const [previewTab, _setPreviewTab] = useState<Tab>(() => {
+    return props.tab === "code"
+      ? "code"
+      : props.tab === "button"
+        ? "button"
+        : "modal";
+  });
+
+  function setPreviewTab(tab: "modal" | "button" | "code") {
+    _setPreviewTab(tab);
+    window.history.replaceState({}, "", `${pathname}?tab=${tab}`);
+  }
+
   const { connectOptions } = props;
   const wallet = useActiveWallet();
   const account = useActiveAccount();

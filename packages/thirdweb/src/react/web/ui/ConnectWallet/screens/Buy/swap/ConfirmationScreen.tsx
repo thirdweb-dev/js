@@ -3,9 +3,15 @@ import { useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { getContract } from "../../../../../../../contract/contract.js";
+import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { sendBatchTransaction } from "../../../../../../../transaction/actions/send-batch-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
-import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import {
+  type WaitForReceiptOptions,
+  waitForReceipt,
+} from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
@@ -51,9 +57,15 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
   payer: PayerInfo;
+  preApprovedAmount?: bigint;
 }) {
-  const isApprovalRequired = props.quote.approval !== undefined;
-  const initialStep = isApprovalRequired ? "approval" : "swap";
+  const approveTxRequired =
+    props.quote.approvalData &&
+    props.preApprovedAmount !== undefined &&
+    props.preApprovedAmount < BigInt(props.quote.approvalData.amountWei);
+  const needsApprovalStep =
+    approveTxRequired && !props.payer.account.sendBatchTransaction;
+  const initialStep = needsApprovalStep ? "approval" : "swap";
 
   const [step, setStep] = useState<"approval" | "swap">(initialStep);
   const [status, setStatus] = useState<
@@ -136,7 +148,7 @@ export function SwapConfirmationScreen(props: {
       <Spacer y="xl" />
 
       {/* Show 2 steps - Approve and confirm  */}
-      {isApprovalRequired && (
+      {needsApprovalStep && (
         <>
           <Spacer y="sm" />
           <Container
@@ -187,7 +199,7 @@ export function SwapConfirmationScreen(props: {
           fullWidth
           disabled={status === "pending"}
           onClick={async () => {
-            if (step === "approval" && props.quote.approval) {
+            if (step === "approval" && props.quote.approvalData) {
               try {
                 setStatus("pending");
 
@@ -204,13 +216,22 @@ export function SwapConfirmationScreen(props: {
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
 
+                const transaction = approve({
+                  contract: getContract({
+                    client: props.client,
+                    address: props.quote.swapDetails.fromToken.tokenAddress,
+                    chain: props.fromChain,
+                  }),
+                  spender: props.quote.approvalData.spenderAddress,
+                  amountWei: BigInt(props.quote.approvalData.amountWei),
+                });
+
                 const tx = await sendTransaction({
                   account: props.payer.account,
-                  transaction: props.quote.approval,
+                  transaction,
                 });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-                // props.onQuoteFinalized(props.quote);
 
                 trackPayEvent({
                   event: "swap_approval_success",
@@ -236,20 +257,6 @@ export function SwapConfirmationScreen(props: {
             if (step === "swap") {
               setStatus("pending");
               try {
-                let tx = props.quote.transactionRequest;
-
-                // Fix for inApp wallet
-                // Ideally - the pay server sends a non-legacy transaction to avoid this issue
-                if (
-                  props.payer.wallet.id === "inApp" ||
-                  props.payer.wallet.id === "embedded"
-                ) {
-                  tx = {
-                    ...props.quote.transactionRequest,
-                    gasPrice: undefined,
-                  };
-                }
-
                 trackPayEvent({
                   event: "prompt_swap_execution",
                   client: props.client,
@@ -262,11 +269,31 @@ export function SwapConfirmationScreen(props: {
                   chainId: props.quote.swapDetails.fromToken.chainId,
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
+                const tx = props.quote.transactionRequest;
+                let _swapTx: WaitForReceiptOptions;
+                // check if we can batch approval and swap
+                const canBatch = props.payer.account.sendBatchTransaction;
+                if (canBatch && props.quote.approvalData && approveTxRequired) {
+                  const approveTx = approve({
+                    contract: getContract({
+                      client: props.client,
+                      address: props.quote.swapDetails.fromToken.tokenAddress,
+                      chain: props.fromChain,
+                    }),
+                    spender: props.quote.approvalData.spenderAddress,
+                    amountWei: BigInt(props.quote.approvalData.amountWei),
+                  });
 
-                const _swapTx = await sendTransaction({
-                  account: props.payer.account,
-                  transaction: tx,
-                });
+                  _swapTx = await sendBatchTransaction({
+                    account: props.payer.account,
+                    transactions: [approveTx, tx],
+                  });
+                } else {
+                  _swapTx = await sendTransaction({
+                    account: props.payer.account,
+                    transaction: tx,
+                  });
+                }
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 
@@ -288,6 +315,7 @@ export function SwapConfirmationScreen(props: {
                   addPendingTx({
                     type: "swap",
                     txHash: _swapTx.transactionHash,
+                    chainId: _swapTx.chain.id,
                   });
                 }
 

@@ -1,4 +1,5 @@
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { Toaster } from "sonner";
@@ -32,6 +33,8 @@ export const Mobile: Story = {
     viewport: mobileViewport("iphone14"),
   },
 };
+
+const client = getThirdwebClient();
 
 function Variants() {
   const [isVerifiedEmail, setIsVerifiedEmail] = useState(true);
@@ -73,6 +76,10 @@ function Variants() {
           emailConfirmedAt: isVerifiedEmail
             ? new Date().toISOString()
             : undefined,
+        }}
+        client={client}
+        updateAccountAvatar={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
         updateEmailWithOTP={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));

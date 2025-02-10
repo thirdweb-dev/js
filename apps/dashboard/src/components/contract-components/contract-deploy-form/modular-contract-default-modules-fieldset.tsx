@@ -22,19 +22,17 @@ export function ModularContractDefaultModulesFieldset(props: {
   isTWPublisher: boolean;
 }) {
   return (
-    <div className="py-4">
-      <div className="flex flex-col gap-4">
-        {props.modules.map((mod) => {
-          return (
-            <RenderModule
-              key={mod.name}
-              module={mod}
-              isTWPublisher={props.isTWPublisher}
-              form={props.form}
-            />
-          );
-        })}
-      </div>
+    <div className="flex flex-col gap-8">
+      {props.modules.map((mod) => {
+        return (
+          <RenderModule
+            key={mod.name}
+            module={mod}
+            isTWPublisher={props.isTWPublisher}
+            form={props.form}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -103,7 +101,6 @@ function RenderModule(props: {
                 solidityType={param.type}
                 // @ts-expect-error - old types, need to update
                 solidityComponents={param.components}
-                variant="filled"
                 {...form.register(formFieldKey)}
               />
               <FormErrorMessage>

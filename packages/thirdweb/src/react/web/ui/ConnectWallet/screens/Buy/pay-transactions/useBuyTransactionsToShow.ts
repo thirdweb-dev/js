@@ -57,6 +57,7 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
             const swapStatus = await getBuyWithCryptoStatus({
               client: client,
               transactionHash: tx.txHash,
+              chainId: tx.chainId,
             });
 
             if (

@@ -29,6 +29,10 @@ export const sidebar: SideBar = {
           href: `${engineSlug}/features/backend-wallets`,
         },
         {
+          name: "Wallet Credentials",
+          href: `${engineSlug}/features/wallet-credentials`,
+        },
+        {
           name: "Contracts",
           href: `${engineSlug}/features/contracts`,
         },

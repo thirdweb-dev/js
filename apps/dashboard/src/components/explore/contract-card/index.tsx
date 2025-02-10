@@ -9,6 +9,7 @@ import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
+import { ClientOnly } from "../../ClientOnly/ClientOnly";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher } from "../publisher";
 
@@ -109,25 +110,6 @@ export async function ContractCard({
         "relative flex min-h-[220px] flex-col rounded-lg border border-border bg-card p-4 hover:border-active-border"
       }
     >
-      <TrackedLinkTW
-        className="absolute inset-0 z-0 cursor-pointer"
-        href={getContractUrl({
-          publisher,
-          contractId,
-          version,
-          modules,
-          titleOverride,
-        })}
-        category="contract_card"
-        label={contractId}
-        trackingProps={{
-          publisher,
-          contractId,
-          version,
-          ...(tracking || {}),
-        }}
-      />
-
       {/* Audited + Version  + Tags */}
       <div className="flex justify-between">
         <div className="flex items-center gap-1.5">
@@ -167,11 +149,30 @@ export async function ContractCard({
 
       {/* Title */}
       <h3 className="font-semibold text-lg tracking-tight">
-        {(
-          titleOverride ||
-          publishedContractResult.displayName ||
-          publishedContractResult.name
-        ).replace("[Beta]", "")}
+        <TrackedLinkTW
+          className="cursor-pointer before:absolute before:inset-0 before:z-0"
+          href={getContractUrl({
+            publisher,
+            contractId,
+            version,
+            modules,
+            titleOverride,
+          })}
+          category="contract_card"
+          label={contractId}
+          trackingProps={{
+            publisher,
+            contractId,
+            version,
+            ...(tracking || {}),
+          }}
+        >
+          {(
+            titleOverride ||
+            publishedContractResult.displayName ||
+            publishedContractResult.name
+          ).replace("[Beta]", "")}
+        </TrackedLinkTW>
       </h3>
 
       {/* Desc */}
@@ -198,7 +199,11 @@ export async function ContractCard({
         )}
       >
         {publishedContractResult.publisher && (
-          <ContractPublisher addressOrEns={publishedContractResult.publisher} />
+          <ClientOnly ssr={<Skeleton className="size-5 rounded-full" />}>
+            <ContractPublisher
+              addressOrEns={publishedContractResult.publisher}
+            />
+          </ClientOnly>
         )}
 
         <div className="flex items-center justify-between">

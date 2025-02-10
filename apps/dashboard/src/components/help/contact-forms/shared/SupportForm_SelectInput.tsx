@@ -13,7 +13,7 @@ type Props = {
   formLabel: string;
   name: string;
   required: boolean;
-  value: string;
+  value: string | undefined;
   onValueChange: (value: string) => void;
 };
 
@@ -22,14 +22,6 @@ export const SupportForm_SelectInput = (props: Props) => {
 
   return (
     <>
-      <input
-        hidden
-        value={props.value}
-        name={name}
-        onChange={(e) => props.onValueChange(e.target.value)}
-        required={required}
-      />
-
       <div className="flex flex-col items-start gap-2">
         <Label htmlFor={name} className="relative">
           {formLabel}
@@ -41,6 +33,8 @@ export const SupportForm_SelectInput = (props: Props) => {
         </Label>
 
         <Select
+          name={name}
+          required={required}
           value={props.value}
           onValueChange={(val) => {
             props.onValueChange(val);

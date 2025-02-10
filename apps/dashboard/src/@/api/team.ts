@@ -47,6 +47,10 @@ export async function getTeamBySlug(slug: string) {
   return null;
 }
 
+export function getTeamById(id: string) {
+  return getTeamBySlug(id);
+}
+
 export async function getTeams() {
   const token = await getAuthToken();
   if (!token) {

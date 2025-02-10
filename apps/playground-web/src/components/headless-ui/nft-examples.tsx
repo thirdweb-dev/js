@@ -1,16 +1,11 @@
-"use client";
-
-import { THIRDWEB_CLIENT } from "@/lib/client";
-import { getContract } from "thirdweb";
-import { ethereum } from "thirdweb/chains";
-import { NFTDescription, NFTMedia, NFTName, NFTProvider } from "thirdweb/react";
 import { CodeExample } from "../code/code-example";
-
-const nftContract = getContract({
-  address: "0xbd3531da5cf5857e7cfaa92426877b022e612cf8",
-  chain: ethereum,
-  client: THIRDWEB_CLIENT,
-});
+import {
+  NftCardDemoPreview,
+  NftDescriptionBasicPreview,
+  NftMediaBasicPreview,
+  NftMediaOverridePreview,
+  NftNameBasicPreview,
+} from "./nft-previews";
 
 export function NftMediaBasic() {
   return (
@@ -25,14 +20,7 @@ export function NftMediaBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <NFTProvider tokenId={0n} contract={nftContract}>
-            <NFTMedia
-              className="h-40 w-40 rounded-md"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </NFTProvider>
-        }
+        preview={<NftMediaBasicPreview />}
         code={`import { NFTProvider, NFTMedia } from "thirdweb/react";
 
 function App() {
@@ -60,18 +48,7 @@ export function NftMediaOverride() {
       </div>
 
       <CodeExample
-        preview={
-          <NFTProvider tokenId={0n} contract={nftContract}>
-            <NFTMedia
-              className="h-40 w-40 rounded-md border"
-              mediaResolver={{
-                src: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/1.mp4",
-                poster:
-                  "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/0.png",
-              }}
-            />
-          </NFTProvider>
-        }
+        preview={<NftMediaOverridePreview />}
         code={`import { NFTProvider, NFTMedia } from "thirdweb/react";
 
 function App() {
@@ -104,11 +81,7 @@ export function NftNameBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <NFTProvider tokenId={0n} contract={nftContract}>
-            <NFTName loadingComponent={<span>Loading...</span>} />
-          </NFTProvider>
-        }
+        preview={<NftNameBasicPreview />}
         code={`import { NFTProvider, NFTName } from "thirdweb/react";
 
 function App() {
@@ -135,14 +108,7 @@ export function NftDescriptionBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <NFTProvider tokenId={0n} contract={nftContract}>
-            <NFTDescription
-              className="text-center"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </NFTProvider>
-        }
+        preview={<NftDescriptionBasicPreview />}
         code={`import { NFTProvider, NFTDescription } from "thirdweb/react";
 
 function App() {
@@ -170,24 +136,13 @@ export function NftCardDemo() {
       </div>
 
       <CodeExample
-        preview={
-          <NFTProvider tokenId={0n} contract={nftContract}>
-            <div className="flex w-[230px] flex-col gap-3 rounded-lg border bg-gray-900 px-1 py-3">
-              <NFTMedia className="rounded-md px-2 text-center" />
-              <NFTName className="px-2 font-bold" />
-              <NFTDescription
-                className="px-2 text-sm"
-                loadingComponent={<span>Loading...</span>}
-              />
-            </div>
-          </NFTProvider>
-        }
+        preview={<NftCardDemoPreview />}
         code={`import { NFTProvider, NFTDescription, NFTName, NFTMedia } from "thirdweb/react";
 
 function App() {
   return (
       <NFTProvider tokenId={0n} contract={nftContract}>
-      <div className="flex w-[230px] flex-col gap-3 rounded-lg border bg-gray-900 px-1 py-3">
+      <div className="flex w-[230px] flex-col gap-3 rounded-lg border bg-zinc-900 px-1 py-3">
         <NFTMedia className="rounded-md px-2 text-center" />
         <NFTName className="px-2 font-bold" />
         <NFTDescription

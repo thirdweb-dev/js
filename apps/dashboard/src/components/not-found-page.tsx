@@ -13,15 +13,14 @@ export function NotFoundPage() {
 
           <p className="text-center font-bold text-3xl tracking-tighter md:text-5xl">
             <span className="block"> Uh oh. </span>
-            <span className="block">Looks like web3</span>
-            <span className="block">can't be found here.</span>
+            <span className="block">Looks like you're lost!</span>
           </p>
 
           <div className="h-12" />
 
           <div>
             <p className="text-center text-muted-foreground text-xl leading-7">
-              Try our{" "}
+              Find live content on our{" "}
               <TrackedLinkTW
                 category="page-not-found"
                 label="homepage"
@@ -47,8 +46,8 @@ export function NotFoundPage() {
                 className="text-foreground hover:underline"
               >
                 developer portal
-              </TrackedLinkTW>{" "}
-              instead
+              </TrackedLinkTW>
+              .
             </p>
           </div>
 

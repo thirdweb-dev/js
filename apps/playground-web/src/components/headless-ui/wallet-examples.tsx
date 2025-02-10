@@ -1,7 +1,9 @@
-"use client";
-
-import { WalletIcon, WalletName, WalletProvider } from "thirdweb/react";
 import { CodeExample } from "../code/code-example";
+import {
+  WalletIconBasicPreview,
+  WalletNameBasicPreview,
+  WalletNameFormatPreview,
+} from "./wallet-previews";
 
 export function WalletIconBasic() {
   return (
@@ -16,14 +18,7 @@ export function WalletIconBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <WalletProvider id="io.metamask">
-            <WalletIcon
-              className="h-20 w-20 rounded-full"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </WalletProvider>
-        }
+        preview={<WalletIconBasicPreview />}
         code={`import { WalletProvider, WalletIcon } from "thirdweb/react";
 
 function App() {
@@ -55,11 +50,7 @@ export function WalletNameBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <WalletProvider id="io.metamask">
-            <WalletName loadingComponent={<span>Loading...</span>} />
-          </WalletProvider>
-        }
+        preview={<WalletNameBasicPreview />}
         code={`import { WalletProvider, WalletName } from "thirdweb/react";
 
 function App() {
@@ -85,18 +76,14 @@ export function WalletNameFormat() {
       </div>
 
       <CodeExample
-        preview={
-          <WalletProvider id="io.metamask">
-            <WalletName formatFn={(str: string) => `${str} Wallet`} />
-          </WalletProvider>
-        }
+        preview={<WalletNameFormatPreview />}
         code={`import { WalletProvider, WalletName } from "thirdweb/react";
 
 function App() {
   return (
     <WalletProvider id="io.metamask">
-      <WalletName 
-        loadingComponent={<span>Loading...</span>} 
+      <WalletName
+        loadingComponent={<span>Loading...</span>}
         formatFn={(str: string) => \`\${str} Wallet\`}
       />
     </WalletProvider>
