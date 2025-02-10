@@ -10,6 +10,7 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
+import { getCachedRawAccountForAuthToken } from "../account/settings/getAccount";
 
 const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
 
@@ -154,28 +155,9 @@ export async function isLoggedIn(address: string) {
     return false;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const account = await getCachedRawAccountForAuthToken(token);
 
-  if (!res.ok) {
-    console.error(
-      "Failed to check if logged in - api call failed",
-      res.status,
-      res.statusText,
-    );
-    // not logged in
-    // clear the cookie
-    cookieStore.delete(cookieName);
-    return false;
-  }
-  const json = await res.json();
-
-  if (!json) {
+  if (!account) {
     // not logged in
     // clear the cookie
     cookieStore.delete(cookieName);

@@ -51,6 +51,7 @@ export type Account = {
     billing: "email" | "none";
     updates: "email" | "none";
   };
+  plan: string; // This is being used in ticket creation flow
   // TODO - add image URL
 };
 
@@ -222,6 +223,7 @@ export function useAccountCredits() {
         error?: { message: string };
       };
 
+      // TODO - this can be cached in server action
       const res = await apiServerProxy<Result>({
         pathname: "/v1/account/credits",
         method: "GET",
@@ -397,6 +399,9 @@ export function useUpdateAccount() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
+        revalidateCacheTags: {
+          accountTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -438,6 +443,9 @@ export function useUpdateNotifications() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ preferences: input }),
+        revalidateCacheTags: {
+          accountTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -478,6 +486,9 @@ export function useConfirmEmail() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
+        revalidateCacheTags: {
+          accountTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -527,6 +538,9 @@ export function useResendEmailConfirmation() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({}),
+        revalidateCacheTags: {
+          accountTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -567,6 +581,9 @@ export function useCreateApiKey() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
+        revalidateCacheTags: {
+          projectTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -607,6 +624,9 @@ export function useUpdateApiKey() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
+        revalidateCacheTags: {
+          projectTag: true,
+        },
       });
 
       if (!res.ok) {
@@ -647,6 +667,9 @@ export function useRevokeApiKey() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({}),
+        revalidateCacheTags: {
+          projectTag: true,
+        },
       });
 
       if (!res.ok) {

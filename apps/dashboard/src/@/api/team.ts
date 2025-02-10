@@ -1,6 +1,8 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
+import { unstable_cache } from "next/cache";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { teamsCacheTag } from "../constants/cacheTags";
 
 type EnabledTeamScope =
   | "pay"
@@ -29,16 +31,31 @@ export type Team = {
   enabledScopes: EnabledTeamScope[];
 };
 
-export async function getTeamBySlug(slug: string) {
-  const token = await getAuthToken();
+export async function getTeamBySlug(teamSlug: string) {
+  const authToken = await getAuthToken();
 
-  if (!token) {
+  if (!authToken) {
     return null;
   }
 
-  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
+  const getCachedTeam = unstable_cache(
+    getTeamBySlugForAuthToken,
+    ["getTeamBySlug"],
+    {
+      tags: [teamsCacheTag(authToken)],
+      revalidate: 3600, // 1 hour
+    },
+  );
+
+  return getCachedTeam(teamSlug, authToken);
+}
+
+async function getTeamBySlugForAuthToken(teamSlug: string, authToken: string) {
+  console.log("FETCHING TEAM ------------------------", teamSlug);
+
+  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${teamSlug}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
     },
   });
   if (teamRes.ok) {
@@ -48,14 +65,26 @@ export async function getTeamBySlug(slug: string) {
 }
 
 export async function getTeams() {
-  const token = await getAuthToken();
-  if (!token) {
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
     return null;
   }
 
+  const getCachedTeams = unstable_cache(getTeamsForAuthToken, ["getTeams"], {
+    tags: [teamsCacheTag(authToken)],
+    revalidate: 3600, // 1 hour
+  });
+
+  return getCachedTeams(authToken);
+}
+
+async function getTeamsForAuthToken(authToken: string) {
+  console.log("FETCHING ALL TEAMs ------------------------");
+
   const teamsRes = await fetch(`${API_SERVER_URL}/v1/teams`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
     },
   });
   if (teamsRes.ok) {
@@ -70,17 +99,33 @@ type TeamNebulaWaitList = {
 };
 
 export async function getTeamNebulaWaitList(teamSlug: string) {
-  const token = await getAuthToken();
+  const authToken = await getAuthToken();
 
-  if (!token) {
+  if (!authToken) {
     return null;
   }
 
+  const getCachedNebulaWaitlist = unstable_cache(
+    getTeamNebulaWaitListForAuthToken,
+    ["getTeamNebulaWaitList"],
+    {
+      tags: [teamsCacheTag(authToken)],
+      revalidate: 3600, // 1 hour
+    },
+  );
+
+  return getCachedNebulaWaitlist(teamSlug, authToken);
+}
+
+async function getTeamNebulaWaitListForAuthToken(
+  teamSlug: string,
+  authToken: string,
+) {
   const res = await fetch(
     `${API_SERVER_URL}/v1/teams/${teamSlug}/waitlist?scope=nebula`,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     },
   );
@@ -88,6 +133,5 @@ export async function getTeamNebulaWaitList(teamSlug: string) {
   if (res.ok) {
     return (await res.json()).result as TeamNebulaWaitList;
   }
-
   return null;
 }

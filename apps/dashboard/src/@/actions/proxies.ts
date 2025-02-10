@@ -1,6 +1,11 @@
 "use server";
-
+import { revalidateTag } from "next/cache";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import {
+  accountCacheTag,
+  projectsCacheTag,
+  teamsCacheTag,
+} from "../constants/cacheTags";
 import { API_SERVER_URL } from "../constants/env";
 
 type ProxyActionParams = {
@@ -9,6 +14,13 @@ type ProxyActionParams = {
   method: "GET" | "POST" | "PUT" | "DELETE";
   body?: string;
   headers?: Record<string, string>;
+  revalidateCacheTags?: RevalidateCacheTagOptions;
+};
+
+type RevalidateCacheTagOptions = {
+  teamTag?: true;
+  projectTag?: true;
+  accountTag?: true;
 };
 
 type ProxyActionResult<T extends object> =
@@ -28,6 +40,15 @@ async function proxy<T extends object>(
   params: ProxyActionParams,
 ): Promise<ProxyActionResult<T>> {
   const authToken = await getAuthToken();
+  const { revalidateCacheTags: revalidateCacheTag } = params;
+
+  if (!authToken) {
+    return {
+      status: 401,
+      ok: false,
+      error: "Unauthorized",
+    };
+  }
 
   // build URL
   const url = new URL(baseUrl);
@@ -61,6 +82,20 @@ async function proxy<T extends object>(
         ok: false,
         error: res.statusText,
       };
+    }
+  }
+
+  if (revalidateCacheTag) {
+    if (revalidateCacheTag.teamTag) {
+      revalidateTag(teamsCacheTag(authToken));
+    }
+
+    if (revalidateCacheTag.projectTag) {
+      revalidateTag(projectsCacheTag(authToken));
+    }
+
+    if (revalidateCacheTag.accountTag) {
+      revalidateTag(accountCacheTag(authToken));
     }
   }
 

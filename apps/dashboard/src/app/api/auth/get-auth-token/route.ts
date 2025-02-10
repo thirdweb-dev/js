@@ -1,8 +1,8 @@
 import { COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { API_SERVER_URL } from "@/constants/env";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb/utils";
+import { getCachedRawAccountForAuthToken } from "../../../account/settings/getAccount";
 
 export type GetAuthTokenResponse = {
   jwt: string | null;
@@ -41,14 +41,9 @@ export const GET = async (req: NextRequest) => {
   }
 
   // check token validity
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const account = await getCachedRawAccountForAuthToken(token);
 
-  if (accountRes.status !== 200) {
+  if (!account) {
     return respond(null);
   }
 
