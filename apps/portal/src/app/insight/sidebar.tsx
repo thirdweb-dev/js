@@ -1,4 +1,14 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
+import {
+  Album,
+  Box,
+  Braces,
+  Brain,
+  MessageCircleQuestionIcon,
+  Rocket,
+  StickyNote,
+  Wrench,
+} from "lucide-react";
 
 const insightSlug = "/insight";
 
@@ -8,26 +18,27 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/insight",
+      icon: <Box />,
+    },
+    {
+      name: "Use Cases",
+      href: `${insightSlug}/use-cases`,
+      icon: <StickyNote />,
     },
     {
       name: "Get Started",
       href: `${insightSlug}/get-started`,
-    },
-    {
-      name: "Supported Chains",
-      href: `${insightSlug}/supported-chains`,
+      icon: <Rocket />,
     },
     {
       name: "Blueprints",
       href: `${insightSlug}/blueprints`,
-    },
-    {
-      name: "Use cases",
-      href: `${insightSlug}/use-cases`,
+      icon: <Album />,
     },
     {
       name: "Agents & LLMs",
       href: `${insightSlug}/agents-and-llms`,
+      icon: <Brain />,
       links: [
         {
           name: "llms.txt",
@@ -38,6 +49,17 @@ export const sidebar: SideBar = {
     {
       name: "API Reference",
       href: "https://insight-api.thirdweb.com/reference",
+      icon: <Braces />,
+    },
+    {
+      name: "Troubleshoot",
+      href: `${insightSlug}/troubleshoot`,
+      icon: <Wrench />,
+    },
+    {
+      name: "FAQs",
+      href: `${insightSlug}/faqs`,
+      icon: <MessageCircleQuestionIcon />,
     },
   ],
 };
