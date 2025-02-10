@@ -36,6 +36,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
   const team: Team = {
     id: `team-${id}-id`,
     billingPlan: billingPlan,
+    supportPlan: billingPlan,
     billingStatus: "validPayment",
     name: `Team ${id}`,
     slug: `team-${id}`,

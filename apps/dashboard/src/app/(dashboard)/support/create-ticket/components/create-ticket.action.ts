@@ -98,9 +98,10 @@ export async function createTicketAction(
     loginRedirect("/support");
   }
 
-  const customerId = isValidPlan(team.billingPlan)
-    ? planToCustomerId[team.billingPlan]
-    : undefined;
+  const customerId = isValidPlan(team.supportPlan)
+    ? planToCustomerId[team.supportPlan]
+    : // fallback to "free" tier
+      planToCustomerId.free;
 
   const product = formData.get("product")?.toString() || "";
   const problemArea = formData.get("extraInfo_Problem_Area")?.toString() || "";
