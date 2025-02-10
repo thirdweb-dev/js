@@ -27,6 +27,7 @@ export function DatePickerWithRange(props: {
   header?: React.ReactNode;
   footer?: React.ReactNode;
   labelOverride?: string;
+  popoverAlign?: "start" | "end" | "center";
 }) {
   const [screen, setScreen] = React.useState<"from" | "to">("from");
   const { from, to, setFrom, setTo } = props;
@@ -65,7 +66,11 @@ export function DatePickerWithRange(props: {
       </PopoverTrigger>
 
       {/* Popover */}
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent
+        className="w-auto p-0"
+        align={props.popoverAlign || "start"}
+        sideOffset={10}
+      >
         <DynamicHeight>
           <div>
             {!isValid && (

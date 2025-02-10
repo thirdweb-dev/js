@@ -4,9 +4,8 @@ import { TabPathLinks } from "@/components/ui/tabs";
 
 export function ProjectTabs(props: {
   layoutPath: string;
-  isOnNebulaWaitList: boolean;
 }) {
-  const { layoutPath, isOnNebulaWaitList } = props;
+  const { layoutPath } = props;
 
   return (
     <TabPathLinks
@@ -27,14 +26,7 @@ export function ProjectTabs(props: {
           path: `${layoutPath}/contracts`,
           name: "Contracts",
         },
-        ...(isOnNebulaWaitList
-          ? [
-              {
-                path: `${layoutPath}/nebula`,
-                name: "Nebula",
-              },
-            ]
-          : []),
+
         {
           path: `${layoutPath}/insight`,
           name: "Insight",

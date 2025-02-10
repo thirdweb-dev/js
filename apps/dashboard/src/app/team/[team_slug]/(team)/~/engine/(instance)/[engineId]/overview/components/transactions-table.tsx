@@ -52,6 +52,7 @@ import Link from "next/link";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { toTokens } from "thirdweb";
 import { FormLabel, LinkButton, Text } from "tw-components";
+import { normalizeTime } from "../../../../../../../../../../lib/time";
 import { TransactionTimeline } from "./transaction-timeline";
 
 export type EngineStatus =
@@ -496,9 +497,7 @@ export function TransactionCharts(props: {
       if (!tx.queuedAt || !tx.status) {
         continue;
       }
-      const normalizedDate = new Date(tx.queuedAt);
-      normalizedDate.setHours(0, 0, 0, 0); // normalize time
-      const time = normalizedDate.getTime();
+      const time = normalizeTime(new Date(tx.queuedAt)).getTime();
       const entry = dayToTxCountMap.get(time) ?? {};
       entry[tx.status] = (entry[tx.status] ?? 0) + 1;
       uniqueStatuses.add(tx.status);

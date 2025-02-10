@@ -262,6 +262,9 @@ importers:
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
+      responsive-rsc:
+        specifier: 0.0.7
+        version: 0.0.7(next@15.1.6(@babel/core@7.26.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -13096,6 +13099,12 @@ packages:
   responselike@3.0.0:
     resolution: {integrity: sha512-40yHxbNcl2+rzXvZuVkrYohathsSJlMTXKryG5y8uciHv1+xDLHQpgjG64JUO9nrEq2jGLH6IZ8BcZyw3wrweg==}
     engines: {node: '>=14.16'}
+
+  responsive-rsc@0.0.7:
+    resolution: {integrity: sha512-M0OxXCHJWL+QUUf3McCM5dd/7lmHXoUK1xoshVdInCGfRVq2L9MvhLiWfs6xcELutUwd6bjNQrTE3HLlpqFtZQ==}
+    peerDependencies:
+      next: '>=13'
+      react: '>=18'
 
   restore-cursor@2.0.0:
     resolution: {integrity: sha512-6IzJLuGi4+R14vwagDHX+JrXmPVtPpn4mffDJ1UdR7/Edm87fl6yi8mMBIVvFtJaNTUvjughmW4hwLhRG7gC1Q==}
@@ -32159,6 +32168,11 @@ snapshots:
   responselike@3.0.0:
     dependencies:
       lowercase-keys: 3.0.0
+
+  responsive-rsc@0.0.7(next@15.1.6(@babel/core@7.26.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0):
+    dependencies:
+      next: 15.1.6(@babel/core@7.26.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react: 19.0.0
 
   restore-cursor@2.0.0:
     dependencies:
