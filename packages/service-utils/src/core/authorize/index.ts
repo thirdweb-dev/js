@@ -28,7 +28,7 @@ export type CacheOptions = {
   cacheTtlSeconds: number;
 };
 
-type TeamAndProjectCacheWithPossibleTTL =
+export type TeamAndProjectCacheWithPossibleTTL =
   | {
       teamAndProjectResponse: TeamAndProjectResponse;
       updatedAt: number;
