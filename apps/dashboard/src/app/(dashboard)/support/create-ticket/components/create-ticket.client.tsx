@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { SupportForm_SelectInput } from "components/help/contact-forms/shared/SupportForm_SelectInput";
 import dynamic from "next/dynamic";
 import {
@@ -14,6 +15,7 @@ import {
 } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
+import { SupportForm_TeamSelection } from "../../../../../components/help/contact-forms/shared/SupportForm_TeamSelection";
 import { createTicketAction } from "./create-ticket.action";
 
 const ConnectSupportForm = dynamic(
@@ -75,14 +77,46 @@ const productOptions: { label: string; component: ReactElement }[] = [
   },
 ];
 
-export function CreateTicket() {
+function ProductAreaSelection(props: {
+  productLabel: string;
+  setProductLabel: (val: string) => void;
+}) {
+  const { productLabel, setProductLabel } = props;
+
+  return (
+    <div className="flex flex-col gap-6">
+      <SupportForm_SelectInput
+        formLabel="What do you need help with?"
+        name="product"
+        options={productOptions.map((o) => o.label)}
+        promptText="Select a product"
+        onValueChange={setProductLabel}
+        value={productLabel}
+        required={true}
+      />
+      {productOptions.find((o) => o.label === productLabel)?.component}
+    </div>
+  );
+}
+
+export function CreateTicket(props: {
+  teams: {
+    name: string;
+    id: string;
+  }[];
+}) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [selectedTeamId, setSelectedTeamId] = useState<string | undefined>(
+    props.teams[0]?.id,
+  );
+
   const [productLabel, setProductLabel] = useState("");
 
   const [state, formAction] = useActionState(createTicketAction, {
     message: "",
     success: false,
   });
+
   // needed here
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -112,16 +146,19 @@ export function CreateTicket() {
         <div className="h-7" />
 
         <div className="flex flex-col gap-6">
-          <SupportForm_SelectInput
-            formLabel="What do you need help with?"
-            name="product"
-            options={productOptions.map((o) => o.label)}
-            promptText="Select a product"
-            onValueChange={setProductLabel}
-            value={productLabel}
-            required={true}
+          {/* Don't conditionally render this - it has be rendered to submit the input values */}
+          <div className={cn(props.teams.length === 1 && "hidden")}>
+            <SupportForm_TeamSelection
+              selectedTeamId={selectedTeamId}
+              onChange={(teamId) => setSelectedTeamId(teamId)}
+              teams={props.teams}
+            />
+          </div>
+
+          <ProductAreaSelection
+            productLabel={productLabel}
+            setProductLabel={setProductLabel}
           />
-          {productOptions.find((o) => o.label === productLabel)?.component}
         </div>
       </div>
 

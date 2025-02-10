@@ -1,10 +1,10 @@
 "use server";
 import "server-only";
 
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { API_SERVER_URL } from "@/constants/env";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { getTeamById } from "@/api/team";
+import { getRawAccount } from "../../../../account/settings/getAccount";
+import { getAuthTokenWalletAddress } from "../../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../../login/loginRedirect";
 
 type State = {
   success: boolean;
@@ -71,32 +71,35 @@ export async function createTicketAction(
   _previousState: State,
   formData: FormData,
 ) {
-  const cookieManager = await cookies();
-  const activeAccount = cookieManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  const token = activeAccount
-    ? cookieManager.get(COOKIE_PREFIX_TOKEN + activeAccount)?.value
-    : null;
-  if (!activeAccount || !token) {
-    // user is not logged in, make them log in
-    redirect(`/login?next=${encodeURIComponent("/support")}`);
-  }
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (accountRes.status !== 200) {
-    // user is not logged in, make them log in
-    redirect(`/login?next=${encodeURIComponent("/support")}`);
+  const teamId = formData.get("teamId")?.toString();
+
+  if (!teamId) {
+    return {
+      success: false,
+      message: "teamId is required",
+    };
   }
 
-  const account = (await accountRes.json()) as {
-    data: { name: string; email: string; plan: string; id: string };
-  };
+  const team = await getTeamById(teamId);
 
-  const customerId = isValidPlan(account.data.plan)
-    ? planToCustomerId[account.data.plan]
+  if (!team) {
+    return {
+      success: false,
+      message: `Team with id "${teamId}" not found`,
+    };
+  }
+
+  const [walletAddress, account] = await Promise.all([
+    getAuthTokenWalletAddress(),
+    getRawAccount(),
+  ]);
+
+  if (!walletAddress || !account) {
+    loginRedirect("/support");
+  }
+
+  const customerId = isValidPlan(team.billingPlan)
+    ? planToCustomerId[team.billingPlan]
     : undefined;
 
   const product = formData.get("product")?.toString() || "";
@@ -105,8 +108,8 @@ export async function createTicketAction(
   const title = prepareEmailTitle(
     product,
     problemArea,
-    account.data.email,
-    account.data.name,
+    account.email || "",
+    account.name || "",
   );
 
   const keyVal: Record<string, string> = {};
@@ -117,10 +120,10 @@ export async function createTicketAction(
   const markdown = prepareEmailBody({
     product,
     markdownInput: keyVal.markdown || "",
-    email: account.data.email,
-    name: account.data.name,
+    email: account.email || "",
+    name: account.name || "",
     extraInfoInput: keyVal,
-    walletAddress: activeAccount,
+    walletAddress: walletAddress,
   });
 
   const content = {
@@ -129,9 +132,9 @@ export async function createTicketAction(
     markdown,
     status: "open",
     onBehalfOf: {
-      email: account.data.email,
-      name: account.data.name,
-      id: account.data.id,
+      email: account.email,
+      name: account.name,
+      id: account.id,
     },
     customerId,
     emailInboxId: process.env.UNTHREAD_EMAIL_INBOX_ID,
