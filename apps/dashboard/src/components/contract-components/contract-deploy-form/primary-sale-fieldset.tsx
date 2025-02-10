@@ -27,6 +27,10 @@ export const PrimarySaleFieldset: React.FC<PrimarySaleFieldsetProps> = (
       >
         <SolidityInput solidityType="address" {...props.register} />
       </FormFieldSetup>
+      <p className="mb-3 pt-4 text-muted-foreground text-sm italic">
+        A 2.5% platform fee is deducted from each primary sale price to support
+        ongoing platform operations and improvements.
+      </p>
     </Fieldset>
   );
 };

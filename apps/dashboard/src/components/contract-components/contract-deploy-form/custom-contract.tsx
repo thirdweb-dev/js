@@ -522,10 +522,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   return (
     <>
-      <p className="mb-3 text-muted-foreground text-sm">
-        A 2.5% minting fee is applied per primary sale at no cost to the
-        contract deployer.
-      </p>
       <FormProvider {...form}>
         <Flex
           flexGrow={1}
