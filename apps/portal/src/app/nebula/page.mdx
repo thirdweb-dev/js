@@ -3,6 +3,16 @@ import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack, Grid,
 import NebulaDiagram from "./assets/nebula-diagram.png";
 import SupportedChains from "./assets/supported-chains.png";
 
+export const metadata = createMetadata({
+	image: {
+		title: "Nebula Documentation",
+		icon: "nebula",
+	},
+	title: "thirdweb Nebula Documentation",
+	description:
+		"thirdweb Nebula Docs : explore the Nebula API Reference and unlock the most powerful AI to interact with the blockchain & build AI powered web3 apps.",
+});
+
 # What is Nebula?
 
 Natural language model with improved blockchain reasoning, autonomous transaction capabilities, and real-time access to the blockchain.
@@ -35,18 +45,6 @@ Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.co
     />
 
 	<FeatureCard
-    	title="Easy-to-use API"
-    	description="Integrate into existing applications with ease using Nebula's API"
-    	iconUrl={<Braces />}
-    />
-
-	<FeatureCard
-    	title="Create Autonomous Agents"
-    	description="Wallet execution agents for automated transactions on any EVM chain"
-    	iconUrl={<Bot/>}
-    />
-
-	<FeatureCard
     	title="Framework Integration"
     	description="Integrate with popular AI orchestration frameworks"
 		iconUrl={<Blocks/>}
@@ -67,14 +65,15 @@ Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.co
 
 ## Templates
 
-<Stack>
+<Grid>
 
 <GithubTemplateCard title="Bouncer Eliza Agent" href="https://github.com/thirdweb-example/bouncer-eliza-agent" />
+<GithubTemplateCard title="Block Explorer" href="https://github.com/thirdweb-example/nebula-block-explorer" />
 
-</Stack>
+</Grid>
 
 ## Supported Chains
-Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
+Nebula is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=nebula).
 
 <DocImage src={SupportedChains} />
 

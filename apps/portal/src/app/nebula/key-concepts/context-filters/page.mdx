@@ -1,0 +1,24 @@
+# Context Filters
+
+Context filters help control what blockchain data the AI uses to generate responses. 
+
+You can specify:
+
+- Chain IDs – Choose which blockchain networks to pull data from.
+- Wallet Address – Focus on a specific wallet’s transactions, balances, and interactions.
+
+Benefits: 
+
+- **More relevant answers:** AI focuses only on the data you care about.
+- **Enable Scope**: Keep results relevant to networks and wallets specified.
+
+Example,
+
+```jsx
+{
+  "context": {
+    "chain_ids": ["1"],  // Ethereum network
+    "wallet_address": "0x123...abc"  // Specific wallet to analyze
+  }
+}
+```
