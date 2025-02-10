@@ -6,7 +6,10 @@ import type {
 import type { Request } from "@cloudflare/workers-types";
 import type { CoreServiceConfig, TeamAndProjectResponse } from "../core/api.js";
 import { authorize } from "../core/authorize/index.js";
-import type { AuthorizationInput } from "../core/authorize/index.js";
+import type {
+  AuthorizationInput,
+  TeamAndProjectCacheWithPossibleTTL,
+} from "../core/authorize/index.js";
 import type { AuthorizationResult } from "../core/authorize/types.js";
 import type { CoreAuthInput } from "../core/types.js";
 
@@ -54,14 +57,14 @@ export async function authorizeWorker(
 
   return await authorize(authData, serviceConfig, {
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
-    put: (clientId: string, data: TeamAndProjectResponse) =>
+    put: (clientId: string, teamAndProjectResponse: TeamAndProjectResponse) =>
       serviceConfig.ctx.waitUntil(
         serviceConfig.kvStore.put(
           clientId,
           JSON.stringify({
             updatedAt: Date.now(),
-            data,
-          }),
+            teamAndProjectResponse,
+          } satisfies TeamAndProjectCacheWithPossibleTTL),
           {
             expirationTtl:
               serviceConfig.cacheTtlSeconds &&
