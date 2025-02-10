@@ -112,7 +112,7 @@ const voteParamsSet = new Set([
   "_initialVoteQuorumFraction",
 ]);
 
-const DEFAULT_FEE_BPS = 300;
+const DEFAULT_FEE_BPS = 250;
 const DEFAULT_FEE_RECIPIENT = "0x0000000000000000000000000000000000000000"; // TODO
 
 function checkTwPublisher(publisher: string | undefined) {
@@ -523,7 +523,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   return (
     <>
       <p className="mb-3 text-muted-foreground text-sm">
-        Placeholder text for default configs
+        A 2.5% minting fee is applied per primary sale at no cost to the
+        contract deployer.
       </p>
       <FormProvider {...form}>
         <Flex
