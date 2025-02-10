@@ -52,10 +52,6 @@ export default async function PublishContractPage(
         contract_id: publishMetadataFromUri.name,
       });
 
-    if (!publishedContract) {
-      notFound();
-    }
-
     if (publishedContract) {
       publishMetadata = {
         ...publishedContract,
