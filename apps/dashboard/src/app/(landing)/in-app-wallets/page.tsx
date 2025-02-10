@@ -14,7 +14,6 @@ import analyticsImage from "../../../../public/assets/landingpage/desktop/analyt
 import authDesktopImage from "../../../../public/assets/landingpage/desktop/auth.png";
 import crossPlatformDesktopImage from "../../../../public/assets/landingpage/desktop/cross-platform.png";
 import enterpriseSecurityImage from "../../../../public/assets/landingpage/desktop/enterprise-security.png";
-import guestImage from "../../../../public/assets/landingpage/desktop/guest.png";
 import magicImage from "../../../../public/assets/landingpage/desktop/magic.png";
 import onboardImage from "../../../../public/assets/landingpage/desktop/onboard.png";
 import powerfulImage from "../../../../public/assets/landingpage/desktop/powerful.png";
@@ -24,7 +23,6 @@ import analyticsMobileImage from "../../../../public/assets/landingpage/mobile/a
 import authMobileImage from "../../../../public/assets/landingpage/mobile/auth.png";
 import crossPlatformMobileImage from "../../../../public/assets/landingpage/mobile/cross-platform.png";
 import enterpriseSecurityMobileImage from "../../../../public/assets/landingpage/mobile/enterprise-security.png";
-import guestMobileImage from "../../../../public/assets/landingpage/mobile/guest.png";
 import magicMobileImage from "../../../../public/assets/landingpage/mobile/magic.png";
 import mobileOnboardImage from "../../../../public/assets/landingpage/mobile/onboard.png";
 import powerfulMobileImage from "../../../../public/assets/landingpage/mobile/powerful.png";
@@ -188,16 +186,6 @@ export default function Page() {
           mobileImage={magicMobileImage}
           TRACKING_CATEGORY={TRACKING_CATEGORY}
           href="https://portal.thirdweb.com/connect/in-app-wallet/how-to/enable-gasless"
-        />
-
-        <LandingCardWithImage
-          title="Guest mode"
-          description={`Allow anyone to use your app in seconds — with a wallet that's generated automatically when they press "Continue as guest."`}
-          image={guestImage}
-          mobileImage={guestMobileImage}
-          TRACKING_CATEGORY={TRACKING_CATEGORY}
-          href="https://portal.thirdweb.com/references/wallets/latest/LocalWallet"
-          colSpan={1}
         />
 
         <LandingCardWithImage
