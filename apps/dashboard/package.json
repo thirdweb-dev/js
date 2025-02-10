@@ -114,7 +114,7 @@
     "@storybook/addon-onboarding": "8.5.2",
     "@storybook/addon-viewport": "8.5.2",
     "@storybook/blocks": "8.5.2",
-    "@storybook/nextjs": "8.5.2",
+    "@storybook/nextjs": "8.5.3",
     "@storybook/react": "8.5.2",
     "@storybook/test": "8.5.2",
     "@types/color": "4.2.0",
