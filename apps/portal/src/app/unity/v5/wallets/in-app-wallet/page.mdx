@@ -107,7 +107,7 @@ var inAppWalletOptions = new InAppWalletOptions(
 ### Login with Custom Auth - OIDC Compatible
 
 ```csharp
-var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.JWT, jwtOrPayload: "myjwt", encryptionKey: "myencryptionkey");
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.JWT, jwtOrPayload: "myjwt");
 var options = new WalletOptions(
     provider: WalletProvider.InAppWallet, 
     chainId: 1, 
@@ -121,8 +121,7 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```csharp
 var inAppWalletOptions = new InAppWalletOptions(
     authprovider: AuthProvider.AuthEndpoint, 
-    jwtOrPayload: "mypayload", 
-    encryptionKey: "myencryptionkey"
+    jwtOrPayload: "mypayload"
 );
 var options = new WalletOptions(
     provider: WalletProvider.InAppWallet, 
