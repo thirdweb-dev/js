@@ -113,7 +113,7 @@ const voteParamsSet = new Set([
 ]);
 
 const DEFAULT_FEE_BPS = 250;
-const DEFAULT_FEE_RECIPIENT = "0x000000000000000000000000000000000000dEaD"; // TODO
+const DEFAULT_FEE_RECIPIENT = "0x1af20c6b23373350ad464700b5965ce4b0d2ad94";
 
 function checkTwPublisher(publisher: string | undefined) {
   switch (publisher) {
