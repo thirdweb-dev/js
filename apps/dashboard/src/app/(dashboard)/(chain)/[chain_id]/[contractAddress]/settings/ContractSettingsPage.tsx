@@ -4,6 +4,7 @@ import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import * as CommonExt from "thirdweb/extensions/common";
 import { SettingsMetadata } from "./components/metadata";
+import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
 
@@ -21,6 +22,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   isContractMetadataSupported,
   isPrimarySaleSupported,
   isRoyaltiesSupported,
+  isPlatformFeesSupported,
   twAccount,
 }) => {
   return (
@@ -57,6 +59,16 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               />
             </GridItem>
           )}
+
+          {contract && (
+            <GridItem order={isPlatformFeesSupported ? 4 : 103}>
+              <SettingsPlatformFees
+                contract={contract}
+                detectedState={isPlatformFeesSupported ? "enabled" : "disabled"}
+                twAccount={twAccount}
+              />
+            </GridItem>
+          )}
         </SimpleGrid>
       </Flex>
     </Flex>
@@ -67,8 +79,9 @@ export function ContractSettingsPage(props: {
   contract: ThirdwebContract;
   functionSelectors: string[];
   twAccount: Account | undefined;
+  hasFeeConfig: boolean;
 }) {
-  const { functionSelectors, contract, twAccount } = props;
+  const { functionSelectors, contract, twAccount, hasFeeConfig } = props;
   return (
     <ContractSettingsPageInner
       contract={contract}
@@ -84,10 +97,13 @@ export function ContractSettingsPage(props: {
         CommonExt.isGetDefaultRoyaltyInfoSupported(functionSelectors),
         CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
       ].every(Boolean)}
-      isPlatformFeesSupported={[
-        CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
-        CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
-      ].every(Boolean)}
+      isPlatformFeesSupported={
+        !hasFeeConfig &&
+        [
+          CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
+          CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
+        ].every(Boolean)
+      }
       twAccount={twAccount}
     />
   );

@@ -15,6 +15,7 @@ import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { DEFAULT_FEE_BPS, DEFAULT_FEE_RECIPIENT } from "constants/addresses";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -112,9 +113,6 @@ const voteParamsSet = new Set([
   "_initialProposalThreshold",
   "_initialVoteQuorumFraction",
 ]);
-
-const DEFAULT_FEE_BPS = 250;
-const DEFAULT_FEE_RECIPIENT = "0x1af20c6b23373350ad464700b5965ce4b0d2ad94";
 
 function checkTwPublisher(publisher: string | undefined) {
   switch (publisher) {

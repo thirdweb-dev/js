@@ -1,5 +1,7 @@
+import { DEFAULT_FEE_RECIPIENT } from "constants/addresses";
 import { notFound } from "next/navigation";
 import { localhost } from "thirdweb/chains";
+import { getPlatformFeeInfo } from "thirdweb/extensions/common";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -33,11 +35,19 @@ export default async function Page(props: {
     getContractPageMetadata(info.contract),
   ]);
 
+  let hasFeeConfig = true;
+  try {
+    const feeInfo = await getPlatformFeeInfo({ contract });
+    hasFeeConfig =
+      feeInfo[0].toLowerCase() === DEFAULT_FEE_RECIPIENT.toLowerCase();
+  } catch {}
+
   return (
     <ContractSettingsPage
       contract={info.contract}
       functionSelectors={metadata.functionSelectors}
       twAccount={account}
+      hasFeeConfig={hasFeeConfig}
     />
   );
 }
