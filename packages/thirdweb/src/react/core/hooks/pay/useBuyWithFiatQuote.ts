@@ -18,15 +18,6 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
 >;
 
 /**
- * @internal
- */
-type BuyWithFiatQuoteError = {
-  status: string;
-  code: string;
-  statusCode: number;
-};
-
-/**
  * Hook to get a price quote for performing a "Buy with Fiat" transaction that allows users to buy a token with fiat currency.
  *
  * The price quote is an object of type [`BuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote).
@@ -85,26 +76,6 @@ export function useBuyWithFiatQuote(
       return getBuyWithFiatQuote(params);
     },
     enabled: !!params,
-    retry(failureCount, error) {
-      if (failureCount > 3) {
-        return false;
-      }
-      try {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        const serverError = (error as any).error as BuyWithFiatQuoteError;
-
-        if (serverError.code === "MINIMUM_PURCHASE_AMOUNT") {
-          return false;
-        }
-
-        if (serverError.statusCode === 404 || serverError.statusCode >= 500) {
-          return false;
-        }
-      } catch {
-        return true;
-      }
-
-      return true;
-    },
+    retry: false,
   });
 }

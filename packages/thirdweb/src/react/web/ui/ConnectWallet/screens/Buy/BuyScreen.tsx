@@ -52,6 +52,7 @@ import {
   useToTokenSelectionStates,
 } from "./main/useUISelectionStates.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
+import { FiatValue } from "./swap/FiatValue.js";
 import { PaymentSelectionScreen } from "./swap/PaymentSelectionScreen.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenContent } from "./swap/SwapScreenContent.js";
@@ -669,7 +670,7 @@ function SelectedTokenInfo(props: {
           justifyContent: "space-between",
         }}
       >
-        <Container flex="row" gap="xs" center="y">
+        <Container flex="row" gap="xxs" center="y">
           <Input
             variant="outline"
             pattern="^[0-9]*[.,]?[0-9]*$"
@@ -738,6 +739,14 @@ function SelectedTokenInfo(props: {
               token={props.selectedToken}
             />
           </Container>
+
+          <FiatValue
+            chain={props.selectedChain}
+            client={props.client}
+            tokenAmount={props.tokenAmount}
+            token={props.selectedToken}
+            size="sm"
+          />
         </Container>
 
         <ChainName
