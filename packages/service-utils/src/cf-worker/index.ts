@@ -75,7 +75,7 @@ export async function authorizeWorker(
             },
           )
           .catch((e) => {
-            console.error(e);
+            console.warn(e);
           }),
       ),
     cacheTtlSeconds: serviceConfig.cacheTtlSeconds ?? DEFAULT_CACHE_TTL_SECONDS,
