@@ -1,5 +1,10 @@
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
+import { toWei } from "../../../utils/units.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { getPermissionsForSigner } from "../__generated__/IAccountPermissions/read/getPermissionsForSigner.js";
 import {
   isSetPermissionsForSignerSupported,
   setPermissionsForSigner,
@@ -85,4 +90,79 @@ export function addSessionKey(
  */
 export function isAddSessionKeySupported(availableSelectors: string[]) {
   return isSetPermissionsForSignerSupported(availableSelectors);
+}
+
+/**
+ * Checks if the session key should be updated.
+ * @param currentPermissions - The current permissions of the session key.
+ * @param newPermissions - The new permissions to set for the session key.
+ * @returns A boolean indicating if the session key should be updated.
+ */
+export async function shouldUpdateSessionKey(args: {
+  accountContract: ThirdwebContract;
+  sessionKeyAddress: string;
+  newPermissions: AccountPermissions;
+}): Promise<boolean> {
+  const { accountContract, sessionKeyAddress, newPermissions } = args;
+
+  // check if account is deployed
+  const accountDeployed = await isContractDeployed(accountContract);
+  if (!accountDeployed) {
+    return true;
+  }
+
+  // get current permissions
+  const currentPermissions = await getPermissionsForSigner({
+    contract: accountContract,
+    signer: sessionKeyAddress,
+  });
+  // check end time validity
+  if (
+    currentPermissions.endTimestamp &&
+    currentPermissions.endTimestamp < Math.floor(new Date().getTime() / 1000)
+  ) {
+    return true;
+  }
+
+  // check targets
+  if (
+    !areSessionKeyContractTargetsEqual(
+      currentPermissions.approvedTargets,
+      newPermissions.approvedTargets,
+    )
+  ) {
+    return true;
+  }
+
+  // check if the new native token limit is greater than the current one
+  if (
+    toWei(newPermissions.nativeTokenLimitPerTransaction?.toString() ?? "0") >
+    currentPermissions.nativeTokenLimitPerTransaction
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function areSessionKeyContractTargetsEqual(
+  currentTargets: readonly string[],
+  newTargets: string[] | "*",
+): boolean {
+  // Handle the case where approvedTargets is "*"
+  if (
+    newTargets === "*" &&
+    currentTargets.length === 1 &&
+    currentTargets[0] === ZERO_ADDRESS
+  ) {
+    return true;
+  }
+  if (newTargets !== "*") {
+    return newTargets
+      .map((target) => target.toLowerCase())
+      .every((target) =>
+        currentTargets.map((t) => t.toLowerCase()).includes(target),
+      );
+  }
+  return false;
 }

@@ -998,6 +998,8 @@ const v4ToV5Redirects = {
   "/storage-sdk/v2/:path*": "/typescript/v5/storage",
   "/unity/v4": "/unity/v5",
   "/unity/v4/:path*": "/unity/v5",
+  "/references/wallets": "/typescript/v5/supported-wallets",
+  "/references/wallets/:path*": "/typescript/v5/supported-wallets",
 };
 
 /**

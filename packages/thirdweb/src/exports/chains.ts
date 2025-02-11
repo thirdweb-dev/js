@@ -80,3 +80,5 @@ export { metalL2Testnet } from "../chains/chain-definitions/metal-l2-testnet.js"
 export { modeTestnet } from "../chains/chain-definitions/mode-testnet.js";
 export { mode } from "../chains/chain-definitions/mode.js";
 export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";
+export { treasure } from "../chains/chain-definitions/treasure.js";
+export { treasureTopaz } from "../chains/chain-definitions/treasureTopaz.js";
