@@ -6,8 +6,10 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
-import { isActiveSigner } from "../../extensions/erc4337/__generated__/IAccountPermissions/read/isActiveSigner.js";
-import { addSessionKey } from "../../extensions/erc4337/account/addSessionKey.js";
+import {
+  addSessionKey,
+  shouldUpdateSessionKey,
+} from "../../extensions/erc4337/account/addSessionKey.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { toSerializableTransaction } from "../../transaction/actions/to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
@@ -19,7 +21,6 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import { readContract } from "../../transaction/read-contract.js";
 import { getAddress } from "../../utils/address.js";
 import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
-import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
@@ -169,16 +170,13 @@ export async function connectSmartAccount(
   smartAccountToAdminAccountMap.set(account, personalAccount);
 
   if (options.sessionKey) {
-    let hasSessionKey = false;
-    // check if already added
-    const accountDeployed = await isContractDeployed(accountContract);
-    if (accountDeployed) {
-      hasSessionKey = await isActiveSigner({
-        contract: accountContract,
-        signer: options.sessionKey.address,
-      });
-    }
-    if (!hasSessionKey) {
+    if (
+      await shouldUpdateSessionKey({
+        accountContract,
+        sessionKeyAddress: options.sessionKey.address,
+        newPermissions: options.sessionKey.permissions,
+      })
+    ) {
       const transaction = addSessionKey({
         account: personalAccount,
         contract: accountContract,

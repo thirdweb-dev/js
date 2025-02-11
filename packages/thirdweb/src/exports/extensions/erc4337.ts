@@ -16,6 +16,7 @@ export {
   type AddSessionKeyOptions,
   addSessionKey,
   isAddSessionKeySupported,
+  shouldUpdateSessionKey,
 } from "../../extensions/erc4337/account/addSessionKey.js";
 
 export {

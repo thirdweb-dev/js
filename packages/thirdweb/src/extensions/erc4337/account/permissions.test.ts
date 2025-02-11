@@ -1,9 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
+import { USDT_CONTRACT_ADDRESS } from "../../../../test/src/test-contracts.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
+  TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import {
@@ -20,7 +22,7 @@ import { adminUpdatedEvent } from "../__generated__/IAccountPermissions/events/A
 import { signerPermissionsUpdatedEvent } from "../__generated__/IAccountPermissions/events/SignerPermissionsUpdated.js";
 import { getAllAdmins } from "../__generated__/IAccountPermissions/read/getAllAdmins.js";
 import { addAdmin } from "./addAdmin.js";
-import { addSessionKey } from "./addSessionKey.js";
+import { addSessionKey, shouldUpdateSessionKey } from "./addSessionKey.js";
 import { removeAdmin } from "./removeAdmin.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
@@ -129,5 +131,62 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
     expect(logs[0]?.args.permissions.approvedTargets).toStrictEqual([
       ZERO_ADDRESS,
     ]);
+
+    expect(
+      await shouldUpdateSessionKey({
+        accountContract,
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
+        newPermissions: {
+          approvedTargets: "*",
+        },
+      }),
+    ).toBe(false);
+
+    expect(
+      await shouldUpdateSessionKey({
+        accountContract,
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
+        newPermissions: {
+          approvedTargets: "*",
+          nativeTokenLimitPerTransaction: 0,
+        },
+      }),
+    ).toBe(false);
+
+    expect(
+      await shouldUpdateSessionKey({
+        accountContract,
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
+        newPermissions: {
+          approvedTargets: [USDT_CONTRACT_ADDRESS],
+        },
+      }),
+    ).toBe(true);
+
+    expect(
+      await shouldUpdateSessionKey({
+        accountContract,
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
+        newPermissions: {
+          approvedTargets: "*",
+          nativeTokenLimitPerTransaction: 0.1,
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it("should update session key if account is not deployed", async () => {
+    const shouldUpdate = await shouldUpdateSessionKey({
+      accountContract: getContract({
+        address: TEST_ACCOUNT_C.address,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      }),
+      sessionKeyAddress: TEST_ACCOUNT_A.address,
+      newPermissions: {
+        approvedTargets: "*",
+      },
+    });
+    expect(shouldUpdate).toBe(true);
   });
 });
