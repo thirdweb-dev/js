@@ -25,6 +25,7 @@ export function ContractSettingsPageClient(props: {
       contract={props.contract}
       functionSelectors={metadataQuery.data.functionSelectors}
       twAccount={props.twAccount}
+      hasDefaultFeeConfig={true}
     />
   );
 }
