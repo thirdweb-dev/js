@@ -1,0 +1,53 @@
+{
+  "name": "@thirdweb-dev/aws-kms-wallet",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "typings": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/aws-kms-wallet",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": ["dist/"],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.592.0",
+    "aws-kms-signer": "0.5.3",
+    "viem": "2.22.17"
+  },
+  "peerDependencies": {
+    "thirdweb": "^5.88.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^22.13.0",
+    "typescript": "5.7.3",
+    "vitest": "3.0.5"
+  },
+  "scripts": {
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
+    "fix": "biome check ./src --fix",
+    "clean": "rm -rf dist/",
+    "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "test": "vitest run"
+  }
+}
