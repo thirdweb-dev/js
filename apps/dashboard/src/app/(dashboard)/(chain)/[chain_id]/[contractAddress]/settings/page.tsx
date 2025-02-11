@@ -35,10 +35,10 @@ export default async function Page(props: {
     getContractPageMetadata(info.contract),
   ]);
 
-  let hasFeeConfig = true;
+  let hasDefaultFeeConfig = true;
   try {
     const feeInfo = await getPlatformFeeInfo({ contract });
-    hasFeeConfig =
+    hasDefaultFeeConfig =
       feeInfo[0].toLowerCase() === DEFAULT_FEE_RECIPIENT.toLowerCase();
   } catch {}
 
@@ -47,7 +47,7 @@ export default async function Page(props: {
       contract={info.contract}
       functionSelectors={metadata.functionSelectors}
       twAccount={account}
-      hasFeeConfig={hasFeeConfig}
+      hasDefaultFeeConfig={hasDefaultFeeConfig}
     />
   );
 }

@@ -79,9 +79,9 @@ export function ContractSettingsPage(props: {
   contract: ThirdwebContract;
   functionSelectors: string[];
   twAccount: Account | undefined;
-  hasFeeConfig: boolean;
+  hasDefaultFeeConfig: boolean;
 }) {
-  const { functionSelectors, contract, twAccount, hasFeeConfig } = props;
+  const { functionSelectors, contract, twAccount, hasDefaultFeeConfig } = props;
   return (
     <ContractSettingsPageInner
       contract={contract}
@@ -98,7 +98,7 @@ export function ContractSettingsPage(props: {
         CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
       ].every(Boolean)}
       isPlatformFeesSupported={
-        !hasFeeConfig &&
+        !hasDefaultFeeConfig &&
         [
           CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
           CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
