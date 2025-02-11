@@ -55,6 +55,7 @@ import {
   showRoyaltyFieldset,
 } from "./modular-contract-default-modules-fieldset";
 import { Param } from "./param";
+import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 import { type Recipient, SplitFieldset } from "./split-fieldset";
@@ -191,6 +192,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const isAccountFactory =
     !isFactoryDeployment &&
     (metadata?.name.includes("AccountFactory") || false);
+
+  const isMarketplace = metadata?.name.includes("MarketplaceV3") || false;
 
   const parsedDeployParams = useMemo(
     () => ({
@@ -708,6 +711,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     ).error?.message,
                   }}
                 />
+              )}
+
+              {hasPlatformFee && (
+                <PlatformFeeFieldset isMarketplace={isMarketplace} />
               )}
 
               {isSplit && <SplitFieldset form={form} />}
