@@ -242,7 +242,7 @@ const WALLETS_SNIPPETS = [
     description: "Deploy accounts for your users",
     iconUrl:
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
-    link: "https://portal.thirdweb.com/references/wallets/latest/SmartWallet",
+    link: "https://portal.thirdweb.com/references/typescript/v5/smartWallet",
     supportedLanguages: {
       javascript: `import { defineChain } from "thirdweb";
 import { inAppWallet, smartWallet } from "thirdweb/wallets";
