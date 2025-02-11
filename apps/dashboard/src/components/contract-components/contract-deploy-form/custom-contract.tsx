@@ -15,6 +15,7 @@ import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { DEFAULT_FEE_BPS, DEFAULT_FEE_RECIPIENT } from "constants/addresses";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -189,6 +190,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const isAccountFactory =
     !isFactoryDeployment &&
     (metadata?.name.includes("AccountFactory") || false);
+
+  const isMarketplace = metadata?.name.includes("MarketplaceV3") || false;
 
   const parsedDeployParams = useMemo(
     () => ({
@@ -445,9 +448,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: Number(params.deployParams._platformFeeBps),
-            platformFeeRecipient: params.deployParams
-              ._platformFeeRecipient as string,
+            platformFeeBps: DEFAULT_FEE_BPS,
+            platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
@@ -462,6 +464,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         payees,
         shares,
         _contractURI,
+        _platformFeeBps: DEFAULT_FEE_BPS,
+        _platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
@@ -707,7 +711,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 />
               )}
 
-              {hasPlatformFee && <PlatformFeeFieldset form={form} />}
+              {hasPlatformFee && (
+                <PlatformFeeFieldset isMarketplace={isMarketplace} />
+              )}
 
               {isSplit && <SplitFieldset form={form} />}
 
