@@ -59,20 +59,24 @@ export async function authorizeWorker(
     get: async (clientId: string) => serviceConfig.kvStore.get(clientId),
     put: (clientId: string, teamAndProjectResponse: TeamAndProjectResponse) =>
       serviceConfig.ctx.waitUntil(
-        serviceConfig.kvStore.put(
-          clientId,
-          JSON.stringify({
-            updatedAt: Date.now(),
-            teamAndProjectResponse,
-          } satisfies TeamAndProjectCacheWithPossibleTTL),
-          {
-            expirationTtl:
-              serviceConfig.cacheTtlSeconds &&
-              serviceConfig.cacheTtlSeconds >= DEFAULT_CACHE_TTL_SECONDS
-                ? serviceConfig.cacheTtlSeconds
-                : DEFAULT_CACHE_TTL_SECONDS,
-          },
-        ),
+        serviceConfig.kvStore
+          .put(
+            clientId,
+            JSON.stringify({
+              updatedAt: Date.now(),
+              teamAndProjectResponse,
+            } satisfies TeamAndProjectCacheWithPossibleTTL),
+            {
+              expirationTtl:
+                serviceConfig.cacheTtlSeconds &&
+                serviceConfig.cacheTtlSeconds >= DEFAULT_CACHE_TTL_SECONDS
+                  ? serviceConfig.cacheTtlSeconds
+                  : DEFAULT_CACHE_TTL_SECONDS,
+            },
+          )
+          .catch((e) => {
+            console.error(e);
+          }),
       ),
     cacheTtlSeconds: serviceConfig.cacheTtlSeconds ?? DEFAULT_CACHE_TTL_SECONDS,
   });
