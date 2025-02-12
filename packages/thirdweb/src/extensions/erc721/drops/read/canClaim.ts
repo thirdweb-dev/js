@@ -15,6 +15,23 @@ export type CanClaimResult = {
   reason?: string;
 };
 
+/**
+ * Check if a user can claim a drop.
+ *
+ * @param options - The options for the transaction.
+ * @returns Whether the user can claim the drop.
+ *
+ * @example
+ * ```ts
+ * const claimResult = await canClaim({
+ *   contract: contract,
+ *   claimer: "0x1234567890123456789012345678901234567890",
+ *   quantity: "1",
+ * });
+ * ```
+ *
+ * @extension ERC721
+ */
 export async function canClaim(
   options: BaseTransactionOptions<CanClaimParams>,
 ): Promise<CanClaimResult> {

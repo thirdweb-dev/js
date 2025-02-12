@@ -122,7 +122,13 @@ export function BuyTokenInput(props: {
         </Container>
       </div>
 
-      <Container flex="row" center="both">
+      <Container
+        flex="row"
+        center="both"
+        style={{
+          height: fontSize.xl,
+        }}
+      >
         <FiatValue
           tokenAmount={props.value}
           token={props.token}
