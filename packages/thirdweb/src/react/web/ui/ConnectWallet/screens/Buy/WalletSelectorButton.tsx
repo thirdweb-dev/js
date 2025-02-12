@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -22,7 +23,7 @@ import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { Blobbie } from "../../Blobbie.js";
-import { formatTokenBalance } from "../formatTokenBalance.js";
+import { FiatValue } from "./swap/FiatValue.js";
 import type { TokenBalance } from "./swap/PaymentSelectionScreen.js";
 
 export function WalletRowWithBalances(props: {
@@ -100,23 +101,29 @@ function TokenBalanceRow(props: {
       onClick={() => onClick(tokenBalance.token, wallet)}
       variant="secondary"
     >
-      <TokenIcon
-        token={tokenBalance.token}
-        chain={tokenBalance.chain}
-        size="md"
-        client={client}
-      />
-      <Container flex="column" gap="3xs">
-        <Text size="xs" color="primaryText">
-          {tokenBalance.token.symbol}
-        </Text>
-        {chainInfo && <Text size="xs">{chainInfo.name}</Text>}
+      <Container flex="row" center="y" gap="md">
+        <TokenIcon
+          token={tokenBalance.token}
+          chain={tokenBalance.chain}
+          size="md"
+          client={client}
+        />
+        <Container flex="column" gap="3xs">
+          <Text size="xs" color="primaryText">
+            {tokenBalance.token.symbol}
+          </Text>
+          {chainInfo && <Text size="xs">{chainInfo.name}</Text>}
+        </Container>
       </Container>
-      <div style={{ flex: 1 }} />
-      <Container flex="row" center="y" gap="3xs">
-        <Text size="xs" color="secondaryText">
-          {formatTokenBalance(tokenBalance.balance, true)}
-        </Text>
+      <Container flex="row" center="y" gap="3xs" color="secondaryText">
+        <FiatValue
+          tokenAmount={tokenBalance.balance.displayValue}
+          token={tokenBalance.token}
+          chain={tokenBalance.chain}
+          client={client}
+          size="xs"
+        />
+        <ChevronRightIcon width={iconSize.md} height={iconSize.md} />
       </Container>
     </StyledButton>
   );
@@ -149,7 +156,7 @@ export function WalletRow(props: {
           width={props.iconSize ? iconSize[props.iconSize] : iconSize.md}
           height={props.iconSize ? iconSize[props.iconSize] : iconSize.md}
           style={{
-            borderRadius: "100%",
+            borderRadius: radius.sm,
             overflow: "hidden",
             border: `1px solid ${theme.colors.borderColor}`,
           }}
@@ -166,7 +173,7 @@ export function WalletRow(props: {
           style={{
             width: iconSize.md,
             height: iconSize.md,
-            borderRadius: "100%",
+            borderRadius: radius.sm,
             overflow: "hidden",
             border: `1px solid ${theme.colors.borderColor}`,
           }}
@@ -186,7 +193,7 @@ const StyledButton = /* @__PURE__ */ styled(Button)((_) => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.tertiaryBg,
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     flexDirection: "row",
     padding: spacing.sm,
     gap: spacing.sm,

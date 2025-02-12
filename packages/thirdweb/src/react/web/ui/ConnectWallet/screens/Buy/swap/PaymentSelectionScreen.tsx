@@ -166,25 +166,37 @@ export function PaymentSelectionScreen(props: {
     return <LoadingScreen />;
   }
 
+  const filteredWallets = Array.from(walletsAndBalances.data?.entries() || [])
+    .filter(([w]) => !props.hiddenWallets?.includes(w.id))
+    .filter(([, balances]) => {
+      const hasEnoughBalance = balances.some((b) => b.balance.value > 0);
+      return hasEnoughBalance;
+    });
+
   return (
     <Container>
       <Container flex="column" gap="xs">
-        {Array.from(walletsAndBalances.data?.entries() || [])
-          .filter(([w]) => !props.hiddenWallets?.includes(w.id))
-          .map(([w, balances]) => {
-            const address = w.getAccount()?.address;
-            if (!address) return null;
-            return (
-              <WalletRowWithBalances
-                key={w.id}
-                wallet={w}
-                balances={balances}
-                client={props.client}
-                address={address}
-                onClick={props.onSelect}
-              />
-            );
-          })}
+        {filteredWallets.length === 0 && (
+          <Container flex="column" gap="xs" py="md">
+            <Text size="xs" color="secondaryText" center>
+              <i>Insufficient funds in connected wallets</i>
+            </Text>
+          </Container>
+        )}
+        {filteredWallets.map(([w, balances]) => {
+          const address = w.getAccount()?.address;
+          if (!address) return null;
+          return (
+            <WalletRowWithBalances
+              key={w.id}
+              wallet={w}
+              balances={balances}
+              client={props.client}
+              address={address}
+              onClick={props.onSelect}
+            />
+          );
+        })}
         {!hideConnectButton && (
           <Button
             variant="secondary"
