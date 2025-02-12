@@ -41,11 +41,7 @@ export function FiatValue(
     return <Skeleton width={"50px"} height={fontSize.lg} />;
   }
 
-  return (
-    <Text {...props}>
-      {cryptoToFiatQuery.data?.result
-        ? `$${formatNumber(cryptoToFiatQuery.data.result, 2)}`
-        : "-"}
-    </Text>
-  );
+  return cryptoToFiatQuery.data?.result ? (
+    <Text {...props}>${formatNumber(cryptoToFiatQuery.data.result, 2)}</Text>
+  ) : null;
 }

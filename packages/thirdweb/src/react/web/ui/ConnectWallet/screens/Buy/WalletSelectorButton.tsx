@@ -23,6 +23,7 @@ import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { Blobbie } from "../../Blobbie.js";
+import { formatTokenBalance } from "../formatTokenBalance.js";
 import { FiatValue } from "./swap/FiatValue.js";
 import type { TokenBalance } from "./swap/PaymentSelectionScreen.js";
 
@@ -116,13 +117,26 @@ function TokenBalanceRow(props: {
         </Container>
       </Container>
       <Container flex="row" center="y" gap="3xs" color="secondaryText">
-        <FiatValue
-          tokenAmount={tokenBalance.balance.displayValue}
-          token={tokenBalance.token}
-          chain={tokenBalance.chain}
-          client={client}
-          size="xs"
-        />
+        <Container
+          flex="column"
+          color="secondaryText"
+          gap="3xs"
+          style={{
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+          }}
+        >
+          <Text size="xs" color="primaryText">
+            {formatTokenBalance(tokenBalance.balance, true, 2)}
+          </Text>
+          <FiatValue
+            tokenAmount={tokenBalance.balance.displayValue}
+            token={tokenBalance.token}
+            chain={tokenBalance.chain}
+            client={client}
+            size="xs"
+          />
+        </Container>
         <ChevronRightIcon width={iconSize.md} height={iconSize.md} />
       </Container>
     </StyledButton>
