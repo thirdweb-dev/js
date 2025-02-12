@@ -517,6 +517,11 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           screen.id === "buy-with-fiat") &&
           payer && (
             <TokenSelectedLayout
+              disabled={
+                ("prefillBuy" in payOptions &&
+                  payOptions.prefillBuy?.allowEdits?.amount === false) ||
+                payOptions.mode !== "fund_wallet"
+              }
               title={props.title}
               selectedChain={toChain}
               selectedToken={toToken}
@@ -651,6 +656,7 @@ function SelectedTokenInfo(props: {
   tokenAmount: string;
   setTokenAmount: (amount: string) => void;
   client: ThirdwebClient;
+  disabled?: boolean;
 }) {
   const getWidth = () => {
     let chars = props.tokenAmount.replace(".", "").length;
@@ -680,7 +686,7 @@ function SelectedTokenInfo(props: {
             type="text"
             data-placeholder={props.tokenAmount === ""}
             value={props.tokenAmount || "0"}
-            disabled={false} // TODO: add disabled freeze amount
+            disabled={props.disabled}
             onClick={(e) => {
               // put cursor at the end of the input
               if (props.tokenAmount === "") {
@@ -865,8 +871,13 @@ function MainScreen(props: {
             }}
             freezeAmount={payOptions.prefillBuy?.allowEdits?.amount === false}
             freezeChainAndToken={
-              payOptions.prefillBuy?.allowEdits?.chain === false &&
-              payOptions.prefillBuy?.allowEdits?.token === false
+              (payOptions.prefillBuy?.allowEdits?.chain === false &&
+                payOptions.prefillBuy?.allowEdits?.token === false) ||
+              (payOptions.buyWithCrypto !== false &&
+                payOptions.buyWithCrypto?.prefillSource?.allowEdits?.token ===
+                  false &&
+                payOptions.buyWithCrypto?.prefillSource?.allowEdits?.chain ===
+                  false)
             }
             token={toToken}
             chain={toChain}
@@ -924,6 +935,7 @@ function TokenSelectedLayout(props: {
   selectedChain: Chain;
   client: ThirdwebClient;
   onBack: () => void;
+  disabled?: boolean;
 }) {
   return (
     <Container>
@@ -944,6 +956,7 @@ function TokenSelectedLayout(props: {
           tokenAmount={props.tokenAmount}
           setTokenAmount={props.setTokenAmount}
           client={props.client}
+          disabled={props.disabled}
         />
 
         <Spacer y="md" />
