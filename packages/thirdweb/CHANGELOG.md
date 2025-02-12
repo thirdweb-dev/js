@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.88.3
+
+### Patch Changes
+
+- [#6240](https://github.com/thirdweb-dev/js/pull/6240) [`ee1bc3e`](https://github.com/thirdweb-dev/js/commit/ee1bc3eb076a189fa806dd6008bf2f97e0bd052f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont display dollar and token values for wallet balances
+
 ## 5.88.2
 
 ### Patch Changes
