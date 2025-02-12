@@ -22,6 +22,7 @@ import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
 import { totalSupply } from "./__generated__/IERC1155/read/totalSupply.js";
 import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+import { canClaim } from "./drops/read/canClaim.js";
 import { getActiveClaimCondition } from "./drops/read/getActiveClaimCondition.js";
 import { getClaimConditions } from "./drops/read/getClaimConditions.js";
 import { claimTo } from "./drops/write/claimTo.js";
@@ -130,6 +131,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
         account: TEST_ACCOUNT_C,
       });
+
+      expect(
+        await canClaim({
+          contract,
+          claimer: TEST_ACCOUNT_C.address,
+          quantity: 1n,
+          tokenId: 0n,
+        }),
+      ).toMatchInlineSnapshot(`
+        {
+          "result": true,
+        }
+      `);
+
       const claimTx = claimTo({
         contract,
         to: TEST_ACCOUNT_C.address,
@@ -204,6 +219,33 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         await expect(
           balanceOf({ contract, owner: TEST_ACCOUNT_B.address, tokenId }),
         ).resolves.toBe(0n);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_C.address,
+            quantity: 1n,
+            tokenId,
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "result": true,
+          }
+        `);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_B.address,
+            quantity: 1n,
+            tokenId,
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "reason": "DropClaimExceedLimit - 0,1",
+            "result": false,
+          }
+        `);
 
         await sendAndConfirmTransaction({
           account: TEST_ACCOUNT_C,

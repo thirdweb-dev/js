@@ -535,8 +535,7 @@ function PaymentSubStep(props: {
         {props.icon}
       </Container>
       <Container flex="column" gap="xxs">
-        {props.primaryText}
-        {props.secondaryText}
+        {props.primaryText} {props.secondaryText}
       </Container>
     </Container>
   );

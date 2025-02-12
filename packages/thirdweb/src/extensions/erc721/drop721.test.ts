@@ -25,6 +25,7 @@ import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getNFT } from "./read/getNFT.js";
 import { lazyMint } from "./write/lazyMint.js";
 
+import { canClaim } from "./drops/read/canClaim.js";
 describe.runIf(process.env.TW_SECRET_KEY)(
   "DropERC721",
   {
@@ -121,6 +122,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
         account: TEST_ACCOUNT_A,
       });
+
+      expect(
+        await canClaim({
+          contract,
+          claimer: TEST_ACCOUNT_A.address,
+          quantity: 1n,
+        }),
+      ).toMatchInlineSnapshot(`
+        {
+          "result": true,
+        }
+      `);
+
       const claimTx = claimTo({
         contract,
         to: TEST_ACCOUNT_A.address,
@@ -207,6 +221,31 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         await expect(
           balanceOf({ contract, owner: TEST_ACCOUNT_B.address }),
         ).resolves.toBe(0n);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_A.address,
+            quantity: 1n,
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "result": true,
+          }
+        `);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_B.address,
+            quantity: 1n,
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "reason": "DropClaimExceedLimit - 0,1",
+            "result": false,
+          }
+        `);
 
         await sendAndConfirmTransaction({
           account: TEST_ACCOUNT_A,
