@@ -1,6 +1,6 @@
 {
   "name": "thirdweb-login",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",

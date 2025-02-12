@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.88.2
+
+### Patch Changes
+
+- [#6210](https://github.com/thirdweb-dev/js/pull/6210) [`2fbf105`](https://github.com/thirdweb-dev/js/commit/2fbf105d156ee551eec29e545fa08c43fd649051) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont retry on quote errors, show fiat value in every step
+
+- [#6209](https://github.com/thirdweb-dev/js/pull/6209) [`97c9ab7`](https://github.com/thirdweb-dev/js/commit/97c9ab7e1caa8b3e006ecc7f64b54b392ba83eda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Batch approvals and swaps if using smart wallets
+
+- [#6217](https://github.com/thirdweb-dev/js/pull/6217) [`6b2a90a`](https://github.com/thirdweb-dev/js/commit/6b2a90ac89fd8c1bb8b784fb67e2a1a1a0e99816) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle updating session keys with new params and expose `shouldUpdateSessionKey` from `extensions/erc4337`
+
+- [#6237](https://github.com/thirdweb-dev/js/pull/6237) [`fbafb65`](https://github.com/thirdweb-dev/js/commit/fbafb65f5c8669efd23028dd365982274cc06034) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PayEmbed UI polish
+
+- [#6191](https://github.com/thirdweb-dev/js/pull/6191) [`66bbedb`](https://github.com/thirdweb-dev/js/commit/66bbedbe3afef8b3eb6902e47391bd914f18bcca) Thanks [@jcheese1](https://github.com/jcheese1)! - Add treasure and treasureTopaz chain definitions
+
+- [#6234](https://github.com/thirdweb-dev/js/pull/6234) [`159ffbf`](https://github.com/thirdweb-dev/js/commit/159ffbfaeed19dc6e37c19ad502b45a6a9a80669) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `canClaim` extension function for erc20/721/1155 drops
+
+- [#6236](https://github.com/thirdweb-dev/js/pull/6236) [`6b286c7`](https://github.com/thirdweb-dev/js/commit/6b286c7e83dbba4beb6eeedc6ec24d9d3617f0cd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont allow editing amoutns for non fund_wallet modes in PayEmbed
+
 ## 5.88.1
 
 ### Patch Changes
