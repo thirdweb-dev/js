@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
