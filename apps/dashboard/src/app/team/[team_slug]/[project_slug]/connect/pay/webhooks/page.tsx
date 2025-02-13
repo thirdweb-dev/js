@@ -17,5 +17,11 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <PayWebhooksPage clientId={project.publishableKey} />;
+  return (
+    <PayWebhooksPage
+      clientId={project.publishableKey}
+      projectId={project.id}
+      teamId={project.teamId}
+    />
+  );
 }

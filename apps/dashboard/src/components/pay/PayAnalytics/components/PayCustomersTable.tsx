@@ -71,7 +71,13 @@ function processQuery(
 }
 
 export function PayCustomersTable(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
 }) {
@@ -80,7 +86,13 @@ export function PayCustomersTable(props: {
   );
 
   const topCustomersQuery = usePayCustomers({
+    /**
+     *  @deprecated - remove after migration
+     */
     clientId: props.clientId,
+    // switching to projectId for lookup, but have to send both during migration
+    projectId: props.projectId,
+    teamId: props.teamId,
     from: props.from,
     to: props.to,
     pageSize: 100,

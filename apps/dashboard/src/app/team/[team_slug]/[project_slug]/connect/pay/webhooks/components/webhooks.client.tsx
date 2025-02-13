@@ -60,7 +60,13 @@ type Webhook = {
 };
 
 type PayWebhooksPageProps = {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
 };
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
@@ -71,7 +77,13 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
         method: "GET",
         pathname: "/webhooks/get-all",
         searchParams: {
+          /**
+           *  @deprecated - remove after migration
+           */
           clientId: props.clientId,
+          // switching to projectId for lookup, but have to send both during migration
+          projectId: props.projectId,
+          teamId: props.teamId,
         },
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +107,11 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton clientId={props.clientId}>
+        <CreateWebhookButton
+          clientId={props.clientId}
+          projectId={props.projectId}
+          teamId={props.teamId}
+        >
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -109,7 +125,11 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
-        <CreateWebhookButton clientId={props.clientId}>
+        <CreateWebhookButton
+          clientId={props.clientId}
+          projectId={props.projectId}
+          teamId={props.teamId}
+        >
           <Button size="sm" variant="default" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -149,7 +169,9 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
+                    projectId={props.projectId}
                     webhookId={webhook.id}
+                    teamId={props.teamId}
                   >
                     <Button variant="ghost" size="icon">
                       <TrashIcon className="size-5" strokeWidth={1} />
@@ -185,7 +207,15 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
       const res = await payServerProxy({
         method: "POST",
         pathname: "/webhooks/create",
-        body: JSON.stringify({ ...values, clientId: props.clientId }),
+        body: JSON.stringify({
+          ...values,
+          /**
+           *  @deprecated - remove after migration
+           */
+          clientId: props.clientId,
+          // switching to projectId for lookup, but have to send both during migration
+          projectId: props.projectId,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -311,7 +341,15 @@ function DeleteWebhookButton(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, clientId: props.clientId }),
+        body: JSON.stringify({
+          id,
+          /**
+           *  @deprecated - remove after migration
+           */
+          clientId: props.clientId,
+          // switching to projectId for lookup, but have to send both during migration
+          projectId: props.projectId,
+        }),
         pathname: "/webhooks/revoke",
       });
 

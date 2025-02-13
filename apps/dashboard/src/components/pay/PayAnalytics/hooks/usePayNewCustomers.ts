@@ -25,7 +25,13 @@ type Response = {
 };
 
 export function usePayNewCustomers(options: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
   intervalType: "day" | "week";
@@ -38,7 +44,13 @@ export function usePayNewCustomers(options: {
         pathname: "/stats/aggregate/customers/v1",
         searchParams: {
           intervalType: options.intervalType,
+          /**
+           *  @deprecated - remove after migration
+           */
           clientId: options.clientId,
+          // switching to projectId for lookup, but have to send both during migration
+          projectId: options.projectId,
+          teamId: options.teamId,
           fromDate: `${options.from.getTime()}`,
           toDate: `${options.to.getTime()}`,
         },
