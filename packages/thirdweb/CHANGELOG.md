@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.88.4
+
+### Patch Changes
+
+- [#6246](https://github.com/thirdweb-dev/js/pull/6246) [`98b6198`](https://github.com/thirdweb-dev/js/commit/98b6198687b11022033fb08410407f0ccb09cd1c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Prevent popup opening when logging in with auth mode: "redirect"
+
 ## 5.88.3
 
 ### Patch Changes
