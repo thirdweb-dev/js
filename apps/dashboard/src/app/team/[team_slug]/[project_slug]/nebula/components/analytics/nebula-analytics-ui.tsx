@@ -1,3 +1,5 @@
+"use client";
+
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { formatDate } from "date-fns";
