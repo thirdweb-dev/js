@@ -37,9 +37,6 @@ function Story() {
   return (
     <div className="container flex flex-col gap-8 py-10">
       <div>
-        <h2 className="mb-1 font-semibold text-xl tracking-tight">
-          Story Variants
-        </h2>
         <TabButtons
           tabs={[
             {
@@ -103,13 +100,13 @@ function generateRandomNebulaAnalyticsData(
 ): NebulaAnalyticsDataItem[] {
   return Array.from({ length: days }, (_, i) => ({
     date: subDays(new Date(), i).toISOString(),
-    totalPromptTokens: randomInt(1000),
-    totalCompletionTokens: randomInt(1000),
-    totalSessions: randomInt(100),
-    totalRequests: randomInt(4000),
+    totalPromptTokens: randomInt(500, 700 + i * 100),
+    totalCompletionTokens: randomInt(1000, 2000 + i * 100),
+    totalSessions: randomInt(400, 1000 + i * 100),
+    totalRequests: randomInt(4000, 5000 + i * 100),
   }));
 }
 
-function randomInt(max: number) {
-  return Math.floor(Math.random() * max);
+function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

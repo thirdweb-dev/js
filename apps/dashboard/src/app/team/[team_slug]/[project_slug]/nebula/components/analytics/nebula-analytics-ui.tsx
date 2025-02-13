@@ -1,5 +1,6 @@
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import { formatDate } from "date-fns";
 import {
   ActivityIcon,
   MessageCircleQuestionIcon,
@@ -7,17 +8,7 @@ import {
   MessageSquareQuoteIcon,
 } from "lucide-react";
 import { useMemo } from "react";
-import {
-  ResponsiveSearchParamsProvider,
-  ResponsiveSuspense,
-} from "responsive-rsc";
-import { normalizeTimeISOString } from "../../../../../../../lib/time";
-import {
-  type NebulaAnalyticsDataItem,
-  fetchNebulaAnalytics,
-} from "./fetch-nebula-analytics";
-import { NebulaAnalyticsFilter } from "./nebula-analytics-filter";
-import { getNebulaAnalyticsRangeFromSearchParams } from "./utils";
+import type { NebulaAnalyticsDataItem } from "./fetch-nebula-analytics";
 
 type ChartData = {
   time: Date;
@@ -27,79 +18,46 @@ type ChartData = {
   totalRequests: number;
 };
 
-export function NebulaAnalyticsPage(props: {
-  searchParams: {
-    from: string | undefined | string[];
-    to: string | undefined | string[];
-    interval: string | undefined | string[];
-  };
-  accountId: string;
-  authToken: string;
-}) {
+type AnalyticsChartProps = {
+  data: ChartData[];
+  isPending: boolean;
+  title: string;
+  description: string;
+  dataKey: keyof ChartData;
+  color: string;
+};
+
+function AnalyticsChart({
+  data,
+  isPending,
+  title,
+  description,
+  dataKey,
+  color,
+}: AnalyticsChartProps) {
   return (
-    <ResponsiveSearchParamsProvider value={props.searchParams}>
-      <header className="border-b">
-        <div className="container flex flex-col items-start gap-3 py-10 md:flex-row md:items-center">
-          <div className="flex-1">
-            <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
-              Nebula
-            </h1>
-          </div>
-          <NebulaAnalyticsFilter />
-        </div>
-      </header>
-
-      <div className="container pt-8 pb-20">
-        <ResponsiveSuspense
-          searchParamsUsed={["from", "to", "interval"]}
-          fallback={<NebulaAnalyticsDashboardUI data={[]} isPending={true} />}
-        >
-          <NebulaAnalyticDashboard
-            searchParams={props.searchParams}
-            accountId={props.accountId}
-            authToken={props.authToken}
-          />
-        </ResponsiveSuspense>
-      </div>
-    </ResponsiveSearchParamsProvider>
+    <ThirdwebAreaChart
+      data={data.map((item) => ({
+        ...item,
+        time: item.time.getTime(),
+      }))}
+      isPending={isPending}
+      header={{
+        title,
+        description,
+        titleClassName: "text-xl mb-1",
+      }}
+      chartClassName="aspect-[1.5] lg:aspect-[2.5]"
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
+      config={{
+        [dataKey]: {
+          label: title,
+          color,
+        },
+      }}
+    />
   );
-}
-
-async function NebulaAnalyticDashboard(props: {
-  accountId: string;
-  authToken: string;
-  searchParams: {
-    from: string | undefined | string[];
-    to: string | undefined | string[];
-    interval: string | undefined | string[];
-  };
-}) {
-  const { range, interval } = getNebulaAnalyticsRangeFromSearchParams(
-    props.searchParams,
-  );
-
-  const res = await fetchNebulaAnalytics({
-    accountId: props.accountId,
-    authToken: props.authToken,
-    from: normalizeTimeISOString(range.from),
-    to: normalizeTimeISOString(range.to),
-    interval,
-  });
-
-  if (!res.ok) {
-    return (
-      <div className="flex min-h-[300px] grow items-center justify-center rounded-lg border">
-        <div>
-          <p className="mb-2 text-center text-destructive-text">
-            Failed to fetch Nebula analytics
-          </p>
-          <p className="text-muted-foreground">{res.error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return <NebulaAnalyticsDashboardUI data={res.data} isPending={false} />;
 }
 
 export function NebulaAnalyticsDashboardUI(props: {
@@ -142,92 +100,80 @@ export function NebulaAnalyticsDashboardUI(props: {
     <div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          title="Requests sent"
+          title="User Prompts"
           value={data.totalRequests}
           icon={ActivityIcon}
           isPending={props.isPending}
         />
         <StatCard
-          title="Sessions created"
+          title="Sessions Created"
           value={data.totalSessions}
           icon={MessageSquareIcon}
           isPending={props.isPending}
         />
         <StatCard
-          title="Prompt tokens received"
+          title="Prompt Tokens"
           value={data.totalPromptTokens}
           icon={MessageCircleQuestionIcon}
           isPending={props.isPending}
         />
         <StatCard
-          title="Response tokens sent"
+          title="Response Tokens"
           value={data.totalCompletionTokens}
           icon={MessageSquareQuoteIcon}
           isPending={props.isPending}
         />
       </div>
 
-      <div className="h-8" />
+      <div className="h-4" />
 
-      <div className="flex flex-col gap-8">
-        <ThirdwebBarChart
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <AnalyticsChart
           data={data.chartData}
           isPending={props.isPending}
-          title="Requests sent"
-          description="Total number of requests sent to the Nebula from users"
-          chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-          config={{
-            totalRequests: {
-              label: "Total requests",
-              color: "hsl(var(--chart-1))",
-            },
-          }}
+          title="Prompts"
+          description="Total user-generated prompts"
+          dataKey="totalRequests"
+          color="hsl(var(--chart-1))"
         />
 
-        <ThirdwebBarChart
+        <AnalyticsChart
           data={data.chartData}
           isPending={props.isPending}
-          title="Sessions created"
-          description="Total chat sessions created by users. A session is a conversation thread between a user and the Nebula"
-          chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-          config={{
-            totalSessions: {
-              label: "Total sessions",
-              color: "hsl(var(--chart-3))",
-            },
-          }}
+          title="Sessions Created"
+          description="Total chat sessions created by users"
+          dataKey="totalSessions"
+          color="hsl(var(--chart-3))"
         />
 
-        <ThirdwebBarChart
+        <AnalyticsChart
           data={data.chartData}
           isPending={props.isPending}
-          title="Prompt tokens received"
-          description="Total tokens sent from users to Nebula as prompts"
-          chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-          config={{
-            totalPromptTokens: {
-              label: "Total prompt tokens",
-              color: "hsl(var(--chart-2))",
-            },
-          }}
+          title="Prompt Tokens"
+          description="Total tokens sent in prompts"
+          dataKey="totalPromptTokens"
+          color="hsl(var(--chart-2))"
         />
 
-        <ThirdwebBarChart
+        <AnalyticsChart
           data={data.chartData}
           isPending={props.isPending}
-          title="Response tokens sent"
-          description="Total tokens sent from Nebula to users as responses"
-          chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-          config={{
-            totalCompletionTokens: {
-              label: "Total response tokens",
-              color: "hsl(var(--chart-5))",
-            },
-          }}
+          title="Response Tokens"
+          description="Total tokens sent in responses"
+          dataKey="totalCompletionTokens"
+          color="hsl(var(--chart-5))"
         />
       </div>
     </div>
   );
+}
+
+function toolTipLabelFormatter(_v: string, item: unknown) {
+  if (Array.isArray(item)) {
+    const time = item[0].payload.time as number;
+    return formatDate(new Date(time), "MMM d, yyyy");
+  }
+  return undefined;
 }
 
 function StatCard(props: {
@@ -238,7 +184,7 @@ function StatCard(props: {
 }) {
   return (
     <div className="rounded-lg border bg-card p-4">
-      <div className="mb-1 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-sm lg:text-base">{props.title}</h2>
         <props.icon className="size-4 text-muted-foreground" />
       </div>
@@ -247,9 +193,7 @@ function StatCard(props: {
         skeletonData={10000}
         loadedData={props.isPending ? undefined : props.value}
         render={(v) => (
-          <p className="font-semibold text-2xl tracking-tight lg:text-3xl">
-            {v}
-          </p>
+          <p className="font-semibold text-2xl tracking-tight">{v}</p>
         )}
       />
     </div>

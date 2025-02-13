@@ -2,7 +2,7 @@ import { getTeamBySlug } from "@/api/team";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
-import { NebulaAnalyticsPage } from "../../../[project_slug]/nebula/components/analytics/nebula-analytics-ui";
+import { NebulaAnalyticsPage } from "../../../[project_slug]/nebula/components/analytics/nebula-analytics-page";
 import { NebulaWaitListPage } from "../../../[project_slug]/nebula/components/nebula-waitlist-page";
 
 export default async function Page(props: {

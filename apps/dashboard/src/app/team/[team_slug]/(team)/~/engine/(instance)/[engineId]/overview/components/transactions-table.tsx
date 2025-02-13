@@ -532,13 +532,15 @@ export function TransactionCharts(props: {
 
   return (
     <ThirdwebBarChart
-      title="Transactions Breakdown"
-      description="Transactions sent from your backend wallets per day"
+      header={{
+        title: "Transactions Breakdown",
+        description: "Transactions sent from your backend wallets per day",
+        titleClassName: "text-xl mb-0",
+      }}
       config={chartConfig}
       data={analyticsData}
       isPending={transactionsQuery.isPending}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-      titleClassName="text-xl mb-0"
       hideLabel={false}
       variant="stacked"
       showLegend

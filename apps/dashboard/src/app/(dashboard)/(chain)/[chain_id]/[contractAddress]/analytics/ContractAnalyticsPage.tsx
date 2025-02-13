@@ -126,8 +126,11 @@ function UniqueWalletsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      title="Unique Wallets"
-      description="The number of unique wallet addresses that have sent a transaction to this contract."
+      header={{
+        title: "Unique Wallets",
+        description:
+          "The number of unique wallet addresses that have sent a transaction to this contract.",
+      }}
       data={analyticsQuery.data || []}
       isPending={analyticsQuery.isPending}
       config={{
@@ -151,8 +154,11 @@ function TotalTransactionsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      title="Total Transactions"
-      description="The number of transactions that have been sent to this contract."
+      header={{
+        title: "Total Transactions",
+        description:
+          "The number of transactions that have been sent to this contract.",
+      }}
       data={analyticsQuery.data || []}
       isPending={analyticsQuery.isPending}
       config={{
@@ -171,8 +177,11 @@ function TotalEventsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      title="Total Events"
-      description="The number of on-chain events that have been emitted from this contract."
+      header={{
+        title: "Total Events",
+        description:
+          "The number of on-chain events that have been emitted from this contract.",
+      }}
       data={analyticsQuery.data || []}
       isPending={analyticsQuery.isPending}
       config={{
@@ -216,8 +225,11 @@ function FunctionBreakdownChart(
 
   return (
     <ThirdwebBarChart
-      title="Function Breakdown"
-      description="The breakdown of calls to each write function from transactions."
+      header={{
+        title: "Function Breakdown",
+        description:
+          "The breakdown of calls to each write function from transactions.",
+      }}
       data={mappedQueryData || []}
       isPending={analyticsQuery.isPending}
       config={Object.keys(mappedQueryData?.[0] || {}).reduce(
@@ -269,8 +281,10 @@ function EventBreakdownChart(
 
   return (
     <ThirdwebBarChart
-      title="Event Breakdown"
-      description="The breakdown of events emitted by this contract."
+      header={{
+        title: "Event Breakdown",
+        description: "The breakdown of events emitted by this contract.",
+      }}
       data={mappedQueryData || []}
       isPending={analyticsQuery.isPending}
       config={Object.keys(mappedQueryData?.[0] || {}).reduce(
@@ -319,7 +333,7 @@ const AnalyticsStat: React.FC<AnalyticsStatProps> = ({
 
 const AnalyticsSkeleton: React.FC<{ label: string }> = ({ label }) => {
   return (
-    <Card as={Stat}>
+    <Card as={Stat} className="bg-card">
       <StatLabel mb={{ base: 1, md: 0 }}>{label}</StatLabel>
       <Skeleton isLoaded={false}>
         <StatNumber>{0}</StatNumber>
@@ -350,7 +364,7 @@ const AnalyticsData: React.FC<AnalyticsStatProps> = ({
   }, [totalQuery.data]);
 
   return (
-    <Card as={Stat}>
+    <Card as={Stat} className="bg-card">
       <StatLabel mb={{ base: 1, md: 0 }}>{label}</StatLabel>
       <Skeleton isLoaded={totalQuery.isFetched}>
         <StatNumber>{data.toLocaleString()}</StatNumber>

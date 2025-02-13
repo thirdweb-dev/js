@@ -135,7 +135,7 @@ function OverviewAnalytics(props: ChartProps) {
       data={mergedData || []}
       isPending={isPending}
       showLegend
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
     />
   );
 }
