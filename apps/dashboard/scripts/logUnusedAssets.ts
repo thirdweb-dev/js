@@ -26,9 +26,6 @@ const filesToIgnore = new Set([
   // macOS stuff
   "public/assets/product-pages/.DS_Store",
   "public/assets/.DS_Store",
-  // pdfs
-  "public/Thirdweb_Terms_of_Service.pdf",
-  "public/thirdweb_Privacy_Policy_May_2022.pdf",
 ]);
 
 function getAllFilesInFolder(folderPath: string) {
