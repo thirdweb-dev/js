@@ -54,7 +54,13 @@ function processQuery(
 }
 
 export function TotalPayVolume(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
   numberOfDays: number;
@@ -71,7 +77,13 @@ export function TotalPayVolume(props: {
 
   const volumeQuery = processQuery(
     usePayVolume({
+      /**
+       *  @deprecated - remove after migration
+       */
       clientId: props.clientId,
+      // switching to projectId for lookup, but have to send both during migration
+      projectId: props.projectId,
+      teamId: props.teamId,
       from: props.from,
       intervalType,
       to: props.to,

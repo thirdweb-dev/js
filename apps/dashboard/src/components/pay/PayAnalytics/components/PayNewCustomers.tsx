@@ -69,7 +69,13 @@ function processQuery(
 }
 
 export function PayNewCustomers(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
   numberOfDays: number;
@@ -86,7 +92,13 @@ export function PayNewCustomers(props: {
 
   const uiQuery = processQuery(
     usePayNewCustomers({
+      /**
+       *  @deprecated - remove after migration
+       */
       clientId: props.clientId,
+      // switching to projectId for lookup, but have to send both during migration
+      projectId: props.projectId,
+      teamId: props.teamId,
       from: props.from,
       to: props.to,
       intervalType,

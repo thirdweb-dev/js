@@ -17,5 +17,11 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <PayAnalytics clientId={project.publishableKey} />;
+  return (
+    <PayAnalytics
+      clientId={project.publishableKey}
+      projectId={project.id}
+      teamId={project.teamId}
+    />
+  );
 }
