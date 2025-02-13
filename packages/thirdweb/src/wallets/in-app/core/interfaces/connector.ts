@@ -21,7 +21,7 @@ export interface InAppConnector {
     strategy: SocialAuthOption,
     mode?: "redirect" | "popup" | "window",
     redirectUrl?: string,
-  ): void;
+  ): Promise<void>;
   // Login takes an auth token and connects a user with it
   loginWithAuthToken?(
     authResult: AuthStoredTokenWithCookieReturnType,

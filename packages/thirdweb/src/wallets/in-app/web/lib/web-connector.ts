@@ -260,12 +260,12 @@ export class InAppWebConnector implements InAppConnector {
     });
   }
 
-  authenticateWithRedirect(
+  async authenticateWithRedirect(
     strategy: SocialAuthOption,
     mode?: "redirect" | "popup" | "window",
     redirectUrl?: string,
-  ): void {
-    loginWithOauthRedirect({
+  ): Promise<void> {
+    return loginWithOauthRedirect({
       authOption: strategy,
       client: this.client,
       ecosystem: this.ecosystem,
