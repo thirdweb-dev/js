@@ -74,6 +74,7 @@ import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
 import { API_SERVER_URL } from "@/constants/env";
 import type { ChainMetadata } from "thirdweb/chains";
+import { getGasSponsoredChains } from "../../../@/api/chain";
 import type {
   ChainMetadataWithServices,
   ChainService,
@@ -133,7 +134,6 @@ export async function getChain(
 type ExtraChainMetadata = Partial<{
   headerImgUrl: string;
   about: string;
-  gasSponsored: boolean;
   cta: ChainCTAProps;
 }>;
 
@@ -167,34 +167,6 @@ const chainMetaRecord = {
     headerImgUrl: baseBanner.src,
     about:
       "Base is a secure, low-cost, builder-friendly Ethereum L2 built to bring the next billion users onchain.",
-    gasSponsored: true,
-
-    cta: OP_CTA,
-  },
-  //celo Mainnet
-  42220: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
-  // optimism
-  10: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
-  // fraxtal
-  252: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
-  // zora
-  7777777: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
-  // mode
-  34443: {
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   // cyber
   7560: {
@@ -207,21 +179,13 @@ const chainMetaRecord = {
       buttonLink: "https://cyber.co/",
       buttonText: "Learn more",
     },
-    gasSponsored: true,
   },
-  // redstone
-  690: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
+
   // ancient8
   888888888: {
     about:
       "Ancient8 is building an ETH gaming Layer 2 built with OP Stack, offering a suite of Web3 gaming infrastructure tools that serve as the distribution and marketing channel for games globally. With Space3 Game Publishing Platform, Ancient8 Gaming Guild, Reneverse Web3 Ads engine, A8ID, and Gosu Network, Ancient8 is dedicated to onboard millions of gamers to Web3 gaming, while providing unparalleled support to game developers looking to reach more players. Ancient8’s products have helped 100+ Web3 games and 200K+ users better navigate Web3.\n\nAncient8 has raised $10M in total financing from leading investors including Pantera, Dragonfly, Hashed, Makers Fund, Mechanism, Coinbase, IOSG, Jump and Animoca.",
-    // TODO: add CTA
     headerImgUrl: ancient8Banner.src,
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   // mantle
   5000: {
@@ -233,7 +197,6 @@ const chainMetaRecord = {
       buttonText: "Learn More",
       buttonLink: "https://x.com/0xMantleDevs",
     },
-    gasSponsored: true,
   },
   // Flare
   14: {
@@ -252,18 +215,12 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //Superseed
-  5330: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
+
   // Ink
   57073: {
     headerImgUrl: inkBanner.src,
     about:
       "Ink is an Ethereum OP Stack layer 2 blockchain designed to be the house of DeFi for the Superchain, a powerful base layer for deploying innovative DeFi protocols.",
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   // vanar
   2040: {
@@ -341,11 +298,6 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-  //Arena Z Mainnet
-  7897: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
   //Appchain
   466: {
     headerImgUrl: appChainBanner.src,
@@ -399,8 +351,6 @@ const chainMetaRecord = {
     headerImgUrl: thirdwebBanner.src,
     about:
       "Monetize your passion, your way. Discover the freedom to grow with our creator-focused platform.",
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   //Etherlink Testnet
   128123: {
@@ -554,33 +504,12 @@ const chainMetaRecord = {
     headerImgUrl: liskBanner.src,
     about:
       "Lisk is focused on serving builders in high-growth markets like Africa and Southeast Asia. When you build on Lisk, you become part of the strongest Ethereum collective, alongside Coinbase, Sony, World, Kraken and Uniswap -- the OP Superchain.",
-    // cta: {
-    //   backgroundImageUrl: liskCTA.src,
-    //   title: "Ready to reshape the world?",
-    //   buttonLink: "https://lisk.com",
-    //   buttonText: "Learn more",
-    // },
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   //Metal L2
   1750: {
     headerImgUrl: metalBanner.src,
     about:
       "Metal L2 is a banking-focused Layer 2 blockchain built on the Optimism Superchain, designed to enable direct on-chain fiat deposits through its connection to The Digital Banking Network—an open-source blockchain banking protocol developed by Metallicus",
-    // cta: {
-    //   backgroundImageUrl: metalCTA.src,
-    //   title: "Connect to The Banking Layer, Metal L2",
-    //   buttonLink: "https://metall2.com/",
-    //   buttonText: "Connect Here",
-    // },
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
-  //Ozean Testnet
-  7849306: {
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   //0G-Newton-Testnet
   16600: {
@@ -678,11 +607,6 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
-  //Unichain Sepolis Testnet
-  1301: {
-    cta: OP_CTA,
-    gasSponsored: true,
-  },
   //viction Mainnet
   88: {
     headerImgUrl: victionBanner.src,
@@ -714,14 +638,6 @@ const chainMetaRecord = {
     headerImgUrl: worldChainBanner.src,
     about:
       "World Chain is the blockchain for real humans, offering priority blockspace and gas-free transactions for World ID-verified users.",
-    // cta: {
-    //   backgroundImageUrl: worldChainCTA.src,
-    //   title: "Build for real humans with World Chain",
-    //   buttonLink: "https://world.org/world-chain",
-    //   buttonText: "Learn More",
-    // },
-    cta: OP_CTA,
-    gasSponsored: true,
   },
   //World Chain Testnet
   4801: {
@@ -848,14 +764,12 @@ const chainMetaRecord = {
     headerImgUrl: soneiumBanner.src,
     about:
       "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
-    cta: OP_CTA,
   },
   //Soneium Mainnet
   1868: {
     headerImgUrl: soneiumBanner.src,
     about:
       "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
-    cta: OP_CTA,
   },
   //Shido
   9008: {
@@ -874,10 +788,23 @@ const chainMetaRecord = {
 
 export async function getChainMetadata(
   chainId: number,
-): Promise<ExtraChainMetadata | null> {
+): Promise<(ExtraChainMetadata & { gasSponsored?: true }) | null> {
+  const gasSponsoredChains = await getGasSponsoredChains();
+
+  const isGasSponsored = gasSponsoredChains.includes(chainId);
+
   // TODO: fetch this from the API
   if (chainId in chainMetaRecord) {
-    return chainMetaRecord[chainId as keyof typeof chainMetaRecord];
+    return {
+      ...(isGasSponsored ? { cta: OP_CTA, gasSponsored: true } : {}),
+      // this will OVERRIDE the op CTA if there is a custom one configured
+      ...chainMetaRecord[chainId as keyof typeof chainMetaRecord],
+    };
+  } else if (isGasSponsored) {
+    return {
+      cta: OP_CTA,
+      gasSponsored: true,
+    };
   }
   return null;
 }
