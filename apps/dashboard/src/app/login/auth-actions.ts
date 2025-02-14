@@ -2,7 +2,7 @@
 import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { API_SERVER_URL } from "@/constants/env";
+import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
@@ -10,8 +10,6 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
-
-const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
 
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
