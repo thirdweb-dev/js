@@ -13,10 +13,15 @@ export function normalizeFunctionParams(
     abiFunction.inputs.map((i) => i.type),
     abiFunction.inputs.map((input, index) => {
       const value = input.name;
-      if (value === undefined) {
-        throw new Error(
-          `Missing named parameter for ${"name" in abiFunction ? abiFunction.name : "constructor"} at index ${index}`,
-        );
+      if (value === undefined || value.length === 0) {
+        // TODO: Handle multiple unnamed params
+        if (!params["*"]) {
+          throw new Error(
+            `Missing named parameter for ${"name" in abiFunction ? abiFunction.name : "constructor"} at index ${index}`,
+          );
+        }
+
+        return params["*"];
       }
       const valueWithoutUnderscore = value.replace(/^_+/, "");
       const normalizedValue =
