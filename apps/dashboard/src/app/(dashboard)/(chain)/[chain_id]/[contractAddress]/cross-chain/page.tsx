@@ -1,6 +1,7 @@
 import { fetchPublishedContractsFromDeploy } from "components/contract-components/fetchPublishedContractsFromDeploy";
 import { notFound } from "next/navigation";
 import {
+  type ContractOptions,
   eth_getTransactionByHash,
   eth_getTransactionReceipt,
   getContractEvents,
@@ -37,6 +38,11 @@ export default async function Page(props: {
     chain_id: string;
   }>;
 }) {
+  const ProxyDeployedEvent = prepareEvent({
+    signature:
+      "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
+  });
+
   const params = await props.params;
   const info = await getContractPageParamsInfo(params);
 
@@ -46,17 +52,17 @@ export default async function Page(props: {
 
   const { contract } = info;
 
-  const { isModularCore } = await getContractPageMetadata(contract);
+  const isModularCore = (await getContractPageMetadata(contract)).isModularCore;
 
-  const ProxyDeployedEvent = prepareEvent({
-    signature:
-      "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
-  });
-
-  const twCloneFactoryContract = await getDeployedCloneFactoryContract({
-    chain: contract.chain,
-    client: contract.client,
-  });
+  let twCloneFactoryContract: Readonly<
+    ContractOptions<[], `0x${string}`>
+  > | null = null;
+  try {
+    twCloneFactoryContract = await getDeployedCloneFactoryContract({
+      chain: contract.chain,
+      client: contract.client,
+    });
+  } catch {}
 
   const originalCode = await eth_getCode(
     getRpcClient({

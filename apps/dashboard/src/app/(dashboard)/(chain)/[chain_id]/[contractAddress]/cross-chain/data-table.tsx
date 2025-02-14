@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import {
   type ColumnDef,
   flexRender,
@@ -95,6 +96,30 @@ export function DataTable({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
+
+  const addRowMutation = useMutation({
+    mutationFn: async (chain: { chainId: number; name: string }) => {
+      const code = await eth_getCode(
+        getRpcClient({
+          client: getThirdwebClient(),
+          // eslint-disable-next-line no-restricted-syntax
+          chain: defineChain(chain.chainId),
+        }),
+        { address: coreContract.address },
+      );
+
+      const newRow: CrossChain = {
+        id: chain.chainId,
+        network: chain.name,
+        chainId: chain.chainId,
+        status: code?.length > 2 ? "DEPLOYED" : "NOT_DEPLOYED",
+      };
+
+      if (!customChainData.some((row) => row.chainId === chain.chainId)) {
+        setCustomChainData((prevData) => [...prevData, newRow]);
+      }
+    },
+  });
 
   const [customChainData, setCustomChainData] = useState<CrossChain[]>(() => {
     try {
@@ -288,26 +313,6 @@ export function DataTable({
     }
   };
 
-  const handleAddRow = (chain: { chainId: number; name: string }) => {
-    const existingChain = customChainData.find(
-      (row) => row.chainId === chain.chainId,
-    );
-    if (existingChain) {
-      return;
-    }
-
-    const newRow: CrossChain = {
-      id: chain.chainId,
-      network: chain.name,
-      chainId: chain.chainId,
-      status: "NOT_DEPLOYED",
-    };
-
-    if (!customChainData.some((row) => row.chainId === chain.chainId)) {
-      setCustomChainData((prevData) => [...prevData, newRow]);
-    }
-  };
-
   return (
     <Form {...form}>
       <form>
@@ -359,8 +364,24 @@ export function DataTable({
           </TableContainer>
         </div>
 
+        {addRowMutation.isPending && (
+          <div className="my-4 animate-pulse text-center text-blue-500">
+            Processing...
+          </div>
+        )}
+
+        {addRowMutation.isError && (
+          <div className="my-4 text-center text-red-500">
+            Error while adding selected chain!
+          </div>
+        )}
+
         <div className="mt-4">
-          <SingleNetworkSelector onAddRow={handleAddRow} className="w-full" />
+          <SingleNetworkSelector
+            onAddRow={addRowMutation.mutate}
+            isAddingRow={addRowMutation.isPending}
+            className="w-full"
+          />
         </div>
       </form>
     </Form>

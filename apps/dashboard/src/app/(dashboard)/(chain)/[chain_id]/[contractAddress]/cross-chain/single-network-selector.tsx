@@ -8,6 +8,7 @@ type Option = { label: string; value: string };
 
 export function SingleNetworkSelector(props: {
   onAddRow: (chain: { chainId: number; name: string }) => void;
+  isAddingRow: boolean;
   className?: string;
 }) {
   const { allChains, idToChain } = useAllChainsData();
@@ -61,7 +62,7 @@ export function SingleNetworkSelector(props: {
     [idToChain],
   );
 
-  const handleChange = (chainId: string) => {
+  const handleChange = async (chainId: string) => {
     const chain = idToChain.get(Number(chainId));
     if (chain) {
       props.onAddRow({ chainId: chain.chainId, name: chain.name });
@@ -71,7 +72,7 @@ export function SingleNetworkSelector(props: {
   return (
     <SelectWithSearch
       searchPlaceholder="Search by Name or Chain ID"
-      value={undefined} // Reset the search field after selection
+      value={undefined}
       options={options}
       onValueChange={handleChange}
       placeholder={
@@ -82,7 +83,7 @@ export function SingleNetworkSelector(props: {
       overrideSearchFn={searchFn}
       renderOption={renderOption}
       className={props.className}
-      disabled={allChains.length === 0}
+      disabled={props.isAddingRow || allChains.length === 0}
       closeOnSelect={true}
     />
   );
