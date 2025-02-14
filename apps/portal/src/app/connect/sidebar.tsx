@@ -64,6 +64,10 @@ export const sidebar: SideBar = {
               href: `${walletSlug}/sign-in-methods/configure`,
             },
             {
+              name: "Fetch Users",
+              href: `${walletSlug}/get-users`,
+            },
+            {
               name: "Pregenerate Wallets",
               href: `${walletSlug}/pregenerate-wallets`,
             },
