@@ -215,6 +215,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
           clientId: props.clientId,
           // switching to projectId for lookup, but have to send both during migration
           projectId: props.projectId,
+          teamId: props.teamId,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -349,6 +350,7 @@ function DeleteWebhookButton(
           clientId: props.clientId,
           // switching to projectId for lookup, but have to send both during migration
           projectId: props.projectId,
+          teamId: props.teamId,
         }),
         pathname: "/webhooks/revoke",
       });
