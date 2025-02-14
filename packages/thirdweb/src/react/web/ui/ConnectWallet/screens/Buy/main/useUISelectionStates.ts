@@ -80,7 +80,9 @@ export function useFromTokenSelectionStates(options: {
 
   // --------------------------------------------------------------------------
   const firstSupportedSource = supportedSources?.length
-    ? supportedSources[0]
+    ? supportedSources.length === 1
+      ? supportedSources[0]
+      : supportedSources.find((x) => x.chain.id !== 1) // dont use mainnet as a default source, unless its the only source
     : undefined;
 
   // Source token and chain selection ---------------------------------------------------

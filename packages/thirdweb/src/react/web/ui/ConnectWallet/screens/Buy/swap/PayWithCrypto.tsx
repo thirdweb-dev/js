@@ -18,7 +18,7 @@ import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 import { PayTokenIcon } from "../PayTokenIcon.js";
-import { WalletRow } from "../WalletSelectorButton.js";
+import { WalletRow } from "./TokenSelectorScreen.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain

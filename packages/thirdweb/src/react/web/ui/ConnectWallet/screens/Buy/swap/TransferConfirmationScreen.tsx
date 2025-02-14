@@ -26,10 +26,10 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
-import { WalletRow } from "../WalletSelectorButton.js";
 import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
+import { WalletRow } from "./TokenSelectorScreen.js";
 
 type TransferConfirmationScreenProps = {
   title: string;
