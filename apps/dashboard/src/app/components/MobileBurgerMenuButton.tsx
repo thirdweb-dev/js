@@ -10,11 +10,13 @@ import {
   Moon,
   Sun,
   UserRoundIcon,
+  WalletIcon,
   XIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
+import { useEns } from "../../components/contract-components/hooks";
 import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 
 export function MobileBurgerMenuButton(
@@ -23,6 +25,7 @@ export function MobileBurgerMenuButton(
         type: "loggedIn";
         email: string | undefined;
         logout: () => void;
+        accountAddress: string;
         connectButton: React.ReactNode;
       }
     | {
@@ -31,6 +34,9 @@ export function MobileBurgerMenuButton(
 ) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
+  const ensQuery = useEns(
+    props.type === "loggedIn" ? props.accountAddress : undefined,
+  );
   // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
 
   useLayoutEffect(() => {
@@ -90,13 +96,22 @@ export function MobileBurgerMenuButton(
 
               <div className="h-6" />
 
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 <Link
                   href="/account"
-                  className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground "
+                  className="flex items-center gap-2 py-1 text-base text-muted-foreground hover:text-foreground"
                 >
                   <UserRoundIcon className="size-4" />
                   My Account
+                </Link>
+
+                <Link
+                  href={`/${ensQuery.data?.ensName || props.accountAddress}`}
+                  target="_blank"
+                  className="flex items-center gap-2 py-1 text-base text-muted-foreground hover:text-foreground"
+                >
+                  <WalletIcon className="size-4" />
+                  My Wallet
                 </Link>
 
                 <Button

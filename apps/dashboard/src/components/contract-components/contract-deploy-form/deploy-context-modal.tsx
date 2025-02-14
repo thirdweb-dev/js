@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 
 export type DeployModalStep = {
-  type: "deploy" | "setNFTMetadata" | "import";
+  type: "deploy" | "setNFTMetadata";
   signatureCount: number;
 };
 
@@ -104,11 +104,11 @@ export function DeployStatusModal(props: {
         </div>
 
         {viewContractLink && (
-          <div className="mt-2 flex justify-between gap-4 border-border border-t p-6">
+          <div className="mt-2 flex justify-end gap-4 border-border border-t p-6">
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Close
             </Button>
-            <Button variant="primary" asChild>
+            <Button asChild>
               <Link href={viewContractLink}>View Contract</Link>
             </Button>
           </div>
@@ -128,7 +128,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
   const { isActive, hasCompleted } = props;
   const { title, description } = getStepInfo(props.step);
   return (
-    <div className="rounded-lg border border-border">
+    <div className="rounded-lg border border-border bg-card">
       <div
         className={cn(
           "flex items-center gap-4 p-4",
@@ -137,7 +137,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
       >
         <div className="flex shrink-0 items-center justify-center">
           {isActive ? (
-            <Spinner className="size-6 text-link-foreground" />
+            <Spinner className="size-6 text-foreground" />
           ) : hasCompleted ? (
             <CircleCheck className="size-6 text-green-500" />
           ) : (
@@ -181,22 +181,6 @@ function getStepInfo(step: DeployModalStep): TitleAndDesc {
             {step.signatureCount > 0
               ? "Your wallet will prompt you to sign the transaction. "
               : "This may take a few seconds."}
-          </>
-        ),
-      };
-    }
-
-    case "import": {
-      return {
-        title: "Adding to dashboard",
-        description: (
-          <>
-            {step.signatureCount > 0
-              ? "Your wallet will prompt you to sign the transaction. "
-              : ""}
-            <i>
-              This step is <b>gasless</b>.
-            </i>
           </>
         ),
       };

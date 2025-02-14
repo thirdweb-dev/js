@@ -1,8 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
+import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {
@@ -11,28 +12,30 @@ export default async function TeamLayout(props: {
 }) {
   const params = await props.params;
 
-  const [account, teams] = await Promise.all([
+  const [accountAddress, account, teams] = await Promise.all([
+    getAuthTokenWalletAddress(),
     getValidAccount(`/team/${params.team_slug}`),
     getTeams(),
   ]);
 
-  if (!teams) {
+  if (!teams || !accountAddress) {
     redirect("/login");
   }
 
   const team = teams.find(
     (t) => t.slug === decodeURIComponent(params.team_slug),
   );
+
+  if (!team) {
+    redirect("/team");
+  }
+
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
       team,
       projects: await getProjects(team.slug),
     })),
   );
-
-  if (!team) {
-    notFound();
-  }
 
   const isOnNebulaWaitList = (await getTeamNebulaWaitList(team.slug))
     ?.onWaitlist;
@@ -45,6 +48,7 @@ export default async function TeamLayout(props: {
           teamsAndProjects={teamsAndProjects}
           currentProject={undefined}
           account={account}
+          accountAddress={accountAddress}
         />
 
         <TabPathLinks
@@ -58,10 +62,6 @@ export default async function TeamLayout(props: {
             {
               path: `/team/${params.team_slug}/~/analytics`,
               name: "Analytics",
-            },
-            {
-              path: `/team/${params.team_slug}/~/contracts`,
-              name: "Contracts",
             },
             {
               path: `/team/${params.team_slug}/~/engine`,

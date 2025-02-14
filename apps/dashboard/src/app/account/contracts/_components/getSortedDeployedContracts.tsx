@@ -1,15 +1,19 @@
-import { MULTICHAIN_REGISTRY_CONTRACT } from "constants/contracts";
-import type { BasicContract } from "contract-ui/types/types";
-import { getAllMultichainRegistry } from "../../../../dashboard-extensions/common/read/getAllMultichainRegistry";
 import { fetchChain } from "../../../../utils/fetchChain";
+import {
+  type ProjectContract,
+  getProjectContracts,
+} from "./getProjectContracts";
 
 export async function getSortedDeployedContracts(params: {
-  address: string;
   onlyMainnet?: boolean;
+  teamId: string;
+  projectId: string;
+  authToken: string;
 }) {
-  const contracts = await getAllMultichainRegistry({
-    contract: MULTICHAIN_REGISTRY_CONTRACT,
-    address: params.address,
+  const contracts = await getProjectContracts({
+    teamId: params.teamId,
+    projectId: params.projectId,
+    authToken: params.authToken,
   });
 
   const chainIds = Array.from(new Set(contracts.map((c) => c.chainId)));
@@ -22,11 +26,13 @@ export async function getSortedDeployedContracts(params: {
     .map((c) => c.value)
     .filter((c) => c !== null);
 
-  const mainnetContracts: BasicContract[] = [];
-  const testnetContracts: BasicContract[] = [];
+  const mainnetContracts: ProjectContract[] = [];
+  const testnetContracts: ProjectContract[] = [];
 
   for (const contract of contracts) {
-    const chain = chains.find((chain) => contract.chainId === chain.chainId);
+    const chain = chains.find(
+      (chain) => contract.chainId === chain.chainId.toString(),
+    );
     if (chain && chain.status !== "deprecated") {
       if (chain.testnet) {
         testnetContracts.push(contract);
@@ -36,13 +42,13 @@ export async function getSortedDeployedContracts(params: {
     }
   }
 
-  mainnetContracts.sort((a, b) => a.chainId - b.chainId);
+  mainnetContracts.sort((a, b) => Number(a.chainId) - Number(b.chainId));
 
   if (params.onlyMainnet) {
     return mainnetContracts;
   }
 
-  testnetContracts.sort((a, b) => a.chainId - b.chainId);
+  testnetContracts.sort((a, b) => Number(a.chainId) - Number(b.chainId));
 
   return [...mainnetContracts, ...testnetContracts];
 }

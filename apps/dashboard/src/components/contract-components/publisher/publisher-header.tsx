@@ -41,7 +41,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({ wallet }) => {
             fallbackComponent={
               <AccountBlobbie className="size-10 rounded-full" />
             }
-            loadingComponent={<Skeleton className="size-14 rounded-full" />}
+            loadingComponent={<Skeleton className="size-10 rounded-full" />}
             className="size-10 rounded-full border border-border border-solid object-cover"
           />
 

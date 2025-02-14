@@ -2,6 +2,7 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
+import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectTabs } from "./tabs";
 
@@ -11,12 +12,13 @@ export default async function TeamLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const [teams, account] = await Promise.all([
+  const [accountAddress, teams, account] = await Promise.all([
+    getAuthTokenWalletAddress(),
     getTeams(),
     getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
   ]);
 
-  if (!teams) {
+  if (!teams || !accountAddress) {
     redirect("/login");
   }
 
@@ -53,6 +55,7 @@ export default async function TeamLayout(props: {
           currentTeam={team}
           teamsAndProjects={teamsAndProjects}
           account={account}
+          accountAddress={accountAddress}
         />
         <ProjectTabs
           layoutPath={`/team/${params.team_slug}/${params.project_slug}`}

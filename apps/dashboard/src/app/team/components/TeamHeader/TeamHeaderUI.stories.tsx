@@ -42,6 +42,8 @@ function Variants(props: {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
 
+  const acccountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
+
   const team1 = teamsAndProjectsStub[0]?.team;
   const team2 = teamsAndProjectsStub[1]?.team;
   const team3 = teamsAndProjectsStub[2]?.team;
@@ -57,6 +59,7 @@ function Variants(props: {
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={team1}
+            accountAddress={acccountAddressStub}
             currentProject={undefined}
             logout={() => {}}
             connectButton={<ConnectButtonStub />}
@@ -69,24 +72,12 @@ function Variants(props: {
           />
         </BadgeContainer>
 
-        <BadgeContainer label="Team Growth, Account Loading">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            currentTeam={team2}
-            currentProject={undefined}
-            account={undefined}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            client={client}
-          />
-        </BadgeContainer>
-
         <BadgeContainer label="Team, Pro">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
             currentTeam={team3}
             currentProject={undefined}
+            accountAddress={acccountAddressStub}
             account={{
               email: "foo@example.com",
               id: "foo",
@@ -101,6 +92,7 @@ function Variants(props: {
         <BadgeContainer label="Team + Project, Pro">
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
+            accountAddress={acccountAddressStub}
             currentTeam={team3}
             currentProject={team3Project}
             account={{

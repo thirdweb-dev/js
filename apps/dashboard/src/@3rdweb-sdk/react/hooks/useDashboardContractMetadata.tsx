@@ -15,6 +15,7 @@ export function useDashboardContractMetadata(contract: ThirdwebContract) {
   return useQuery({
     queryKey: ["contract-metadata-header", contract.chain.id, contract.address],
     queryFn: () => fetchDashboardContractMetadata(contract),
+    refetchOnWindowFocus: false,
   });
 }
 

@@ -1,10 +1,10 @@
+import { getProjects } from "@/api/projects";
+import { getTeams } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { getAddress } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 
 type DeployFormForUriProps = {
   contractMetadata: FetchDeployMetadataResult | null;
@@ -19,16 +19,26 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     return <div>Could not fetch metadata</div>;
   }
 
-  const cookieStore = await cookies();
-  const address = cookieStore.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  if (!address) {
-    redirect(`/login?next=${encodeURIComponent(pathname)}`);
+  const [authToken, teams] = await Promise.all([getAuthToken(), getTeams()]);
+
+  if (!teams || !authToken) {
+    loginRedirect(pathname);
   }
-  const authCookieName = COOKIE_PREFIX_TOKEN + getAddress(address);
-  const token = cookieStore.get(authCookieName)?.value;
-  if (!token) {
-    redirect(`/login?next=${encodeURIComponent(pathname)}`);
-  }
+
+  const teamsAndProjects = await Promise.all(
+    teams.map(async (team) => ({
+      team: {
+        id: team.id,
+        name: team.name,
+        slug: team.slug,
+        image: team.image,
+      },
+      projects: (await getProjects(team.slug)).map((x) => ({
+        id: x.id,
+        name: x.name,
+      })),
+    })),
+  );
 
   // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chakra
   return (
@@ -36,7 +46,8 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
       <CustomContractForm
         metadata={contractMetadata}
         modules={modules?.filter((m) => m !== null)}
-        jwt={token}
+        jwt={authToken}
+        teamsAndProjects={teamsAndProjects}
       />
     </ChakraProviderSetup>
   );

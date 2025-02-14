@@ -9,7 +9,6 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -27,7 +26,7 @@ import {
   InfoIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
@@ -40,8 +39,12 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
+import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
-import { addContractToMultiChainRegistry } from "../utils";
+import {
+  AddToProjectCardUI,
+  type MinimalTeamsAndProjects,
+} from "./add-to-project-card";
 import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
@@ -66,10 +69,10 @@ interface CustomContractFormProps {
   metadata: FetchDeployMetadataResult;
   jwt: string;
   modules?: FetchDeployMetadataResult[];
+  teamsAndProjects: MinimalTeamsAndProjects;
 }
 
 type CustomContractDeploymentFormData = {
-  addToDashboard: boolean;
   deployDeterministic: boolean;
   saltForCreate2: string;
   signerAsSalt: boolean;
@@ -137,8 +140,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   modules,
   jwt,
+  teamsAndProjects,
 }) => {
   const thirdwebClient = useThirdwebClient(jwt);
+
+  const [isImportEnabled, setIsImportEnabled] = useState(true);
+  const [importSelection, setImportSelection] = useState({
+    team: teamsAndProjects[0]?.team,
+    project: teamsAndProjects[0]?.projects[0],
+  });
 
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
@@ -243,7 +253,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const transformedQueryData = useMemo(
     () =>
       ({
-        addToDashboard: true,
         deployDeterministic: isAccountFactory,
         saltForCreate2: "",
         signerAsSalt: true,
@@ -521,6 +530,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const shouldShowDeterministicDeployWarning =
     constructorParams.length > 0 && form.watch("deployDeterministic");
 
+  const addContractToProjectMutation = useAddContractToProject();
+
   return (
     <>
       <FormProvider {...form}>
@@ -537,22 +548,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             }
 
             // open the status modal
-            let steps: DeployModalStep[] = [
+            const steps: DeployModalStep[] = [
               {
                 type: "deploy",
                 signatureCount: deployTransactions.data?.length || 1,
               },
             ];
-            // if the add to dashboard is checked add that step
-            if (formData.addToDashboard) {
-              steps = [
-                ...steps,
-                {
-                  type: "import",
-                  signatureCount: 1,
-                },
-              ];
-            }
 
             const publisherAnalyticsData = metadata.publisher
               ? {
@@ -594,32 +595,24 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 metadataUri: metadata.metadataUri,
               });
               deployStatusModal.nextStep();
-              // if add to dashboard is checked, add the contract to the dashboard
-              if (formData.addToDashboard) {
-                // add the contract to the dashboard
-                await addContractToMultiChainRegistry(
-                  {
-                    address: contractAddr,
-                    chainId: walletChain.id,
-                  },
-                  activeAccount,
-                  300000n,
-                );
-                trackEvent({
-                  category: "custom-contract",
-                  action: "add-to-dashboard",
-                  label: "success",
-                  ...publisherAnalyticsData,
-                  contractAddress: contractAddr,
-                  chainId: walletChain.id,
-                  metadataUri: metadata.metadataUri,
-                });
-                deployStatusModal.nextStep();
-              }
-
               deployStatusModal.setViewContractLink(
                 `/${walletChain.id}/${contractAddr}`,
               );
+
+              // if the contract should be added to a project
+              if (
+                importSelection.team &&
+                importSelection.project &&
+                isImportEnabled
+              ) {
+                // no await - do it in the background
+                addContractToProjectMutation.mutateAsync({
+                  chainId: walletChain.id.toString(),
+                  contractAddress: contractAddr,
+                  projectId: importSelection.project.id,
+                  teamId: importSelection.team.id,
+                });
+              }
             } catch (e) {
               onError(e);
               console.error("failed to deploy contract", e);
@@ -841,6 +834,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             </>
           )}
 
+          <AddToProjectCardUI
+            client={thirdwebClient}
+            teamsAndProjects={teamsAndProjects}
+            selection={importSelection}
+            enabled={isImportEnabled}
+            onSelectionChange={setImportSelection}
+            onSetEnabled={setIsImportEnabled}
+          />
+
           <Fieldset legend="Deploy Options">
             <div className="flex flex-col gap-6">
               {/* Chain */}
@@ -943,29 +945,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   )}
                 </>
               )}
-
-              {/* Import Enable/Disable */}
-              <CheckboxWithLabel>
-                <Checkbox
-                  {...form.register("addToDashboard")}
-                  checked={form.watch("addToDashboard")}
-                  onCheckedChange={(checked) =>
-                    form.setValue("addToDashboard", !!checked)
-                  }
-                />
-                <span>
-                  Import so I can find it in the list of{" "}
-                  <TrackedLinkTW
-                    className="text-link-foreground hover:text-foreground"
-                    href="/team/~/~/contracts"
-                    target="_blank"
-                    category="custom-contract"
-                    label="visit-dashboard"
-                  >
-                    my contracts
-                  </TrackedLinkTW>
-                </span>
-              </CheckboxWithLabel>
 
               {/* Deploy */}
               <div className="flex border-border border-t pt-6 md:justify-end">

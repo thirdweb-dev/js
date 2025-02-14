@@ -38,6 +38,7 @@ export const Mobile: Story = {
 };
 
 const client = getThirdwebClient();
+const accountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Variants(props: {
   type: "mobile" | "desktop";
@@ -52,23 +53,13 @@ function Variants(props: {
           <Comp
             teamsAndProjects={teamsAndProjectsStub}
             logout={() => {}}
+            accountAddress={accountAddressStub}
             connectButton={<ConnectButtonStub />}
             createProject={() => {}}
             account={{
               id: "foo",
               email: "foo@example.com",
             }}
-            client={client}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Account Loading">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            account={undefined}
             client={client}
           />
         </BadgeContainer>

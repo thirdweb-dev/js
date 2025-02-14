@@ -1,19 +1,18 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getRawAccount } from "../../../account/settings/getAccount";
+import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedOut } from "./TeamHeaderLoggedOut";
 import { TeamHeaderLoggedIn } from "./team-header-logged-in.client";
 
 export async function TeamHeader() {
-  const account = await getRawAccount();
+  const [account, teams, accountAddress] = await Promise.all([
+    getRawAccount(),
+    getTeams(),
+    getAuthTokenWalletAddress(),
+  ]);
 
-  if (!account) {
-    return <TeamHeaderLoggedOut />;
-  }
-
-  const teams = await getTeams();
-
-  if (!teams) {
+  if (!account || !accountAddress || !teams) {
     return <TeamHeaderLoggedOut />;
   }
 
@@ -35,6 +34,7 @@ export async function TeamHeader() {
       teamsAndProjects={teamsAndProjects}
       currentProject={undefined}
       account={account}
+      accountAddress={accountAddress}
     />
   );
 }
