@@ -2,27 +2,29 @@
 
 import { Button } from "@/components/ui/button";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import { Moon, Sun } from "lucide-react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Skeleton } from "./ui/skeleton";
 
-export function ColorModeToggle() {
+export function ToggleThemeButton() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <ClientOnly ssr={<Skeleton className="size-10 border bg-accent" />}>
+    <ClientOnly
+      ssr={<Skeleton className="size-[34px] rounded-full border bg-accent" />}
+    >
       <Button
-        variant="ghost"
-        size="icon"
+        variant="outline"
         onClick={() => {
           setTheme(theme === "dark" ? "light" : "dark");
         }}
         aria-label="Toggle theme"
+        className="h-auto w-auto rounded-full border border-border bg-background p-2"
       >
         {theme === "light" ? (
-          <Sun strokeWidth={1} className="size-5" />
+          <SunIcon className="size-4" />
         ) : (
-          <Moon strokeWidth={1} className="size-5" />
+          <MoonIcon className="size-4" />
         )}
       </Button>
     </ClientOnly>

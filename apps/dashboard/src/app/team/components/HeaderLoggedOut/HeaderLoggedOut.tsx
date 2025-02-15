@@ -1,14 +1,16 @@
 "use client";
 
+import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SecondaryNavLinks } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
 
-export function TeamHeaderLoggedOutDesktopUI(props: {
+function HeaderLoggedOutDesktopUI(props: {
   className?: string;
 }) {
   const pathname = usePathname();
@@ -31,19 +33,23 @@ export function TeamHeaderLoggedOutDesktopUI(props: {
       <div className="flex items-center gap-6">
         <SecondaryNavLinks />
 
-        <Button size="sm" variant="primary" className="rounded-lg" asChild>
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Connect Wallet
-          </Link>
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button size="sm" className="rounded-lg" asChild>
+            <Link
+              href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+            >
+              Connect Wallet
+            </Link>
+          </Button>
+
+          <ToggleThemeButton />
+        </div>
       </div>
     </header>
   );
 }
 
-export function TeamHeaderLoggedOutMobileUI(props: {
+function HeaderLoggedOutMobileUI(props: {
   className?: string;
 }) {
   const pathname = usePathname();
@@ -60,7 +66,7 @@ export function TeamHeaderLoggedOutMobileUI(props: {
       </Link>
 
       <div className="flex items-center gap-3">
-        <Button size="sm" variant="primary" className="rounded-lg" asChild>
+        <Button size="sm" className="rounded-lg" asChild>
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
           >
@@ -73,11 +79,11 @@ export function TeamHeaderLoggedOutMobileUI(props: {
   );
 }
 
-export function TeamHeaderLoggedOut() {
+export function HeaderLoggedOut() {
   return (
     <div>
-      <TeamHeaderLoggedOutDesktopUI className="max-lg:hidden" />
-      <TeamHeaderLoggedOutMobileUI className="lg:hidden" />
+      <HeaderLoggedOutDesktopUI className="max-lg:hidden" />
+      <HeaderLoggedOutMobileUI className="lg:hidden" />
     </div>
   );
 }

@@ -1,11 +1,12 @@
 "use client";
 
+import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { Button } from "@/components/ui/button";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyStateChatPageContent } from "../(app)/components/EmptyStateChatPageContent";
 import { NebulaIcon } from "../(app)/icons/NebulaIcon";
-import { Button } from "../../../@/components/ui/button";
-import type { Account } from "../../../@3rdweb-sdk/react/hooks/useApi";
 import { LoginAndOnboardingPageContent } from "../../login/LoginPage";
 
 export function NebulaLoginPage(props: {
@@ -18,11 +19,13 @@ export function NebulaLoginPage(props: {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
       {/* nav */}
-      <header className="border-b">
+      <header className="border-b bg-card">
         <div className="container flex items-center justify-between p-4">
           <NebulaIcon className="size-8 shrink-0 text-foreground" />
 
-          <div className="flex items-center gap-7">
+          <div className="flex items-center gap-6">
+            <ToggleThemeButton />
+
             <Link
               href="https://thirdweb.com/support"
               className="text-muted-foreground text-sm hover:text-foreground"

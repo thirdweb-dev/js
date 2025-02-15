@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { mobileViewport } from "../../../../stories/utils";
-import {
-  TeamHeaderLoggedOutDesktopUI,
-  TeamHeaderLoggedOutMobileUI,
-} from "./TeamHeaderLoggedOut";
+import { HeaderLoggedOut } from "./HeaderLoggedOut";
 
 const meta = {
-  title: "Headers/TeamHeader/LoggedOut",
+  title: "Headers/LoggedOut",
   component: Variants,
   parameters: {
     nextjs: {
@@ -33,18 +30,11 @@ export const Mobile: Story = {
   },
 };
 
-function Variants(props: {
-  type: "mobile" | "desktop";
-}) {
-  const Comp =
-    props.type === "mobile"
-      ? TeamHeaderLoggedOutMobileUI
-      : TeamHeaderLoggedOutDesktopUI;
-
+function Variants() {
   return (
-    <div className="container min-h-dvh bg-zinc-900 py-10">
-      <div className="bg-background">
-        <Comp />
+    <div className="background flex min-h-dvh flex-col gap-6">
+      <div className="border-b bg-card">
+        <HeaderLoggedOut />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getRawAccount } from "../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
-import { TeamHeaderLoggedOut } from "./TeamHeaderLoggedOut";
+import { HeaderLoggedOut } from "../HeaderLoggedOut/HeaderLoggedOut";
 import { TeamHeaderLoggedIn } from "./team-header-logged-in.client";
 
 export async function TeamHeader() {
@@ -13,7 +13,7 @@ export async function TeamHeader() {
   ]);
 
   if (!account || !accountAddress || !teams) {
-    return <TeamHeaderLoggedOut />;
+    return <HeaderLoggedOut />;
   }
 
   const teamsAndProjects = await Promise.all(
@@ -25,7 +25,7 @@ export async function TeamHeader() {
 
   const firstTeam = teams[0];
   if (!firstTeam) {
-    return <TeamHeaderLoggedOut />;
+    return <HeaderLoggedOut />;
   }
 
   return (
