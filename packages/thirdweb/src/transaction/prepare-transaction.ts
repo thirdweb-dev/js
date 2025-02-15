@@ -17,6 +17,7 @@ export type StaticPrepareTransactionOptions = {
   maxFeePerGas?: bigint | undefined;
   maxPriorityFeePerGas?: bigint | undefined;
   maxFeePerBlobGas?: bigint | undefined;
+  feeType?: FeeType | undefined;
   nonce?: number | undefined;
   extraGas?: bigint | undefined;
   // eip7702
@@ -33,6 +34,8 @@ export type StaticPrepareTransactionOptions = {
     tokenAddress: Address;
   };
 };
+
+export type FeeType = "legacy" | "eip1559";
 
 export type EIP712TransactionOptions = {
   // constant or user input
