@@ -1,6 +1,5 @@
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -8,16 +7,15 @@ import {
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
+import { TokenRow } from "../../../../components/token/TokenRow.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
-import { PayTokenIcon } from "../PayTokenIcon.js";
 import { WalletRow } from "./TokenSelectorScreen.js";
 
 /**
@@ -35,9 +33,9 @@ export function PayWithCryptoQuoteInfo(props: {
   freezeChainAndTokenSelection?: boolean;
   payerAccount: Account;
   swapRequired: boolean;
+  onSelectToken: () => void;
 }) {
   const theme = useCustomTheme();
-  const { name } = useChainName(props.chain);
   const balanceQuery = useWalletBalance({
     address: props.payerAccount.address,
     chain: props.chain,
@@ -88,44 +86,18 @@ export function PayWithCryptoQuoteInfo(props: {
         )}
       </Container>
       {/* Quoted price */}
-      <Container
-        flex="row"
-        gap="sm"
+      <TokenRow
+        token={props.token}
+        chain={props.chain}
+        client={props.client}
+        isLoading={props.isLoading}
+        value={props.value}
+        onSelectToken={props.onSelectToken}
         style={{
-          paddingInline: spacing.sm,
-          paddingBlock: spacing.sm,
-          minWidth: "50%",
-          justifyContent: "flex-start",
-          minHeight: "64px",
+          border: "none",
+          borderRadius: 0,
         }}
-      >
-        <PayTokenIcon
-          token={props.token}
-          chain={props.chain}
-          size="md"
-          client={props.client}
-        />
-        <Container flex="column" gap="3xs">
-          {props.isLoading ? (
-            <Skeleton width="120px" height={fontSize.md} color="borderColor" />
-          ) : (
-            <Container flex="row" gap="xxs" center="y" color="primaryText">
-              <Text
-                size="md"
-                color={props.value ? "primaryText" : "secondaryText"}
-              >
-                {formatNumber(Number(props.value), 6) || ""}
-              </Text>
-              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
-            </Container>
-          )}
-          {name ? (
-            <Text size="xs">{name}</Text>
-          ) : (
-            <Skeleton width="90px" height={fontSize.xs} />
-          )}
-        </Container>
-      </Container>
+      />
     </Container>
   );
 }

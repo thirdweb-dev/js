@@ -6,7 +6,10 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { shortenAddress } from "../../../../../../../utils/address.js";
 import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
-import { getWalletBalance } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import {
+  type GetWalletBalanceResult,
+  getWalletBalance,
+} from "../../../../../../../wallets/utils/getWalletBalance.js";
 import type { WalletId } from "../../../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -44,7 +47,12 @@ import type { ConnectLocale } from "../../../locale/types.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { FiatValue } from "./FiatValue.js";
-import type { TokenBalance } from "./PaymentSelectionScreen.js";
+
+type TokenBalance = {
+  balance: GetWalletBalanceResult;
+  chain: Chain;
+  token: TokenInfo;
+};
 
 export function TokenSelectorScreen(props: {
   client: ThirdwebClient;

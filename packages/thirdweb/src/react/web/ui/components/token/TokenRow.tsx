@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -23,6 +24,9 @@ export function TokenRow(props: {
   client: ThirdwebClient;
   onSelectToken: () => void;
   freezeChainAndToken?: boolean;
+  value?: string;
+  isLoading?: boolean;
+  style?: React.CSSProperties;
 }) {
   const { name } = useChainName(props.chain);
   return (
@@ -31,6 +35,7 @@ export function TokenRow(props: {
       fullWidth
       style={{
         fontSize: fontSize.sm,
+        ...props.style,
       }}
       gap="xxs"
       onClick={props.onSelectToken}
@@ -51,7 +56,31 @@ export function TokenRow(props: {
           }}
         >
           {/* Token Symbol */}
-          <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+          <Container flex="column" gap="3xs">
+            {props.isLoading ? (
+              <Skeleton
+                width="120px"
+                height={fontSize.md}
+                color="borderColor"
+              />
+            ) : props.value ? (
+              <Container flex="row" gap="xxs" center="y" color="primaryText">
+                <Text
+                  size="md"
+                  color={props.value ? "primaryText" : "secondaryText"}
+                >
+                  {formatNumber(Number(props.value), 6) || ""}
+                </Text>
+                <TokenSymbol
+                  token={props.token}
+                  chain={props.chain}
+                  size="sm"
+                />
+              </Container>
+            ) : (
+              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+            )}
+          </Container>
 
           {/* Network Name */}
           {name ? (
@@ -63,14 +92,9 @@ export function TokenRow(props: {
           )}
         </Container>
       </Container>
-
-      <ChevronDownIcon
-        width={iconSize.sm}
-        height={iconSize.sm}
-        style={{
-          marginLeft: "auto",
-        }}
-      />
+      <Container color="primaryText">
+        <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+      </Container>
     </TokenButton>
   );
 }
@@ -80,7 +104,7 @@ const TokenButton = /* @__PURE__ */ styled(Button)(() => {
   return {
     background: theme.colors.tertiaryBg,
     border: `1px solid ${theme.colors.borderColor}`,
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     transition: "background 0.3s",
     padding: spacing.sm,
   };
