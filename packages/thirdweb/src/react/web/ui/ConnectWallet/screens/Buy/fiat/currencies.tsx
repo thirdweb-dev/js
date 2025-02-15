@@ -9,12 +9,14 @@ import type { IconFC } from "../../../icons/types.js";
 export type CurrencyMeta = {
   shorthand: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
   name: string;
+  symbol: string;
   icon: IconFC;
 };
 
 export const usdCurrency: CurrencyMeta = {
   shorthand: "USD",
   name: "US Dollar",
+  symbol: "$",
   icon: USDIcon,
 };
 
@@ -23,21 +25,25 @@ export const currencies: CurrencyMeta[] = [
   {
     shorthand: "CAD",
     name: "Canadian Dollar",
+    symbol: "$",
     icon: CADIcon,
   },
   {
     shorthand: "GBP",
     name: "British Pound",
+    symbol: "£",
     icon: GBPIcon,
   },
   {
     shorthand: "EUR",
     name: "Euro",
+    symbol: "€",
     icon: EURIcon,
   },
   {
     shorthand: "JPY",
     name: "Japanese Yen",
+    symbol: "¥",
     icon: JPYIcon,
   },
 ];
@@ -51,6 +57,7 @@ export function getCurrencyMeta(shorthand: string): CurrencyMeta {
       // This should never happen
       icon: UnknownCurrencyIcon,
       name: shorthand,
+      symbol: "$",
       shorthand: shorthand as CurrencyMeta["shorthand"],
     }
   );

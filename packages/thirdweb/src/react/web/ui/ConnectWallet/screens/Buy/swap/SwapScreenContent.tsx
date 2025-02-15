@@ -220,7 +220,7 @@ export function SwapScreenContent(props: {
   }
 
   return (
-    <Container flex="column" gap="md" animate="fadein">
+    <Container flex="column" gap="lg" animate="fadein">
       {isOpen && (
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
@@ -239,62 +239,60 @@ export function SwapScreenContent(props: {
       )}
 
       {/* Quote info */}
-      <div>
-        <PayWithCryptoQuoteInfo
-          value={sourceTokenAmount || ""}
-          chain={fromChain}
-          token={fromToken}
-          isLoading={quoteQuery.isLoading && !sourceTokenAmount}
-          client={client}
-          freezeChainAndTokenSelection={disableTokenSelection}
-          payerAccount={props.payer.account}
-          swapRequired={swapRequired}
-        />
-        {swapRequired && (
-          <EstimatedTimeAndFees
-            quoteIsLoading={quoteQuery.isLoading}
-            estimatedSeconds={
-              quoteQuery.data?.swapDetails.estimated.durationSeconds
-            }
-            onViewFees={showFees}
-          />
-        )}
-        <Spacer y="md" />
-      </div>
-
-      {/* Error message */}
-      {errorMsg && (
+      <Container flex="column" gap="sm">
         <div>
-          {errorMsg.data?.minimumAmountEth ? (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is{" "}
-              {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
-            </Text>
-          ) : (
-            <Text color="danger" size="sm" center multiline>
-              {errorMsg.message || defaultMessage}
-            </Text>
+          <PayWithCryptoQuoteInfo
+            value={sourceTokenAmount || ""}
+            chain={fromChain}
+            token={fromToken}
+            isLoading={quoteQuery.isLoading && !sourceTokenAmount}
+            client={client}
+            freezeChainAndTokenSelection={disableTokenSelection}
+            payerAccount={props.payer.account}
+            swapRequired={swapRequired}
+            onSelectToken={props.showFromTokenSelector}
+          />
+          {swapRequired && (
+            <EstimatedTimeAndFees
+              quoteIsLoading={quoteQuery.isLoading}
+              estimatedSeconds={
+                quoteQuery.data?.swapDetails.estimated.durationSeconds
+              }
+              onViewFees={showFees}
+            />
           )}
         </div>
-      )}
+        {/* Error message */}
+        {errorMsg && (
+          <div>
+            {errorMsg.data?.minimumAmountEth ? (
+              <Text color="danger" size="xs" center multiline>
+                Minimum amount is{" "}
+                {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
+                <TokenSymbol
+                  token={toToken}
+                  chain={toChain}
+                  size="sm"
+                  inline
+                  color="danger"
+                />
+              </Text>
+            ) : (
+              <Text color="danger" size="xs" center multiline>
+                {errorMsg.message || defaultMessage}
+              </Text>
+            )}
+          </div>
+        )}
 
-      {!errorMsg && isNotEnoughBalance && (
-        <div>
-          <Text color="danger" size="sm" center multiline>
-            Not enough funds.
-          </Text>
-          <Text color="danger" size="sm" center multiline>
-            Try a different wallet or token.
-          </Text>
-        </div>
-      )}
+        {!errorMsg && isNotEnoughBalance && (
+          <div>
+            <Text color="danger" size="xs" center multiline>
+              Not enough funds.
+            </Text>
+          </div>
+        )}
+      </Container>
 
       {/* Button */}
       {errorMsg?.data?.minimumAmountEth ? (
@@ -312,6 +310,14 @@ export function SwapScreenContent(props: {
           }}
         >
           Set Minimum
+        </Button>
+      ) : isNotEnoughBalance || errorMsg ? (
+        <Button
+          variant="accent"
+          fullWidth
+          onClick={() => props.showFromTokenSelector()}
+        >
+          Select another token
         </Button>
       ) : switchChainRequired &&
         !quoteQuery.isLoading &&

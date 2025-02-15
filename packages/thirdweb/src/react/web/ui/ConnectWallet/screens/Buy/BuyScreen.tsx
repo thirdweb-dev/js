@@ -8,9 +8,11 @@ import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getSta
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
   fontSize,
+  radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type {
@@ -25,7 +27,7 @@ import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainName } from "../../../components/ChainName.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Container, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Input } from "../../../components/formElements.js";
 import { Text } from "../../../components/text.js";
@@ -54,7 +56,6 @@ import {
 } from "./main/useUISelectionStates.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatValue } from "./swap/FiatValue.js";
-import { PaymentSelectionScreen } from "./swap/PaymentSelectionScreen.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenContent } from "./swap/SwapScreenContent.js";
 import { TokenSelectorScreen } from "./swap/TokenSelectorScreen.js";
@@ -528,6 +529,16 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           screen.id === "buy-with-fiat") &&
           payer && (
             <TokenSelectedLayout
+              isBuyWithFiatEnabled={enabledPaymentMethods.buyWithFiatEnabled}
+              isBuyWithCryptoEnabled={
+                enabledPaymentMethods.buyWithCryptoEnabled
+              }
+              mode={screen.id === "buy-with-fiat" ? "buy" : "swap"}
+              onModeChange={(mode) => {
+                setScreen({
+                  id: mode === "swap" ? "buy-with-crypto" : "buy-with-fiat",
+                });
+              }}
               disabled={
                 ("prefillBuy" in payOptions &&
                   payOptions.prefillBuy?.allowEdits?.amount === false) ||
@@ -540,60 +551,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               setTokenAmount={setTokenAmount}
               client={client}
               onBack={() => {
-                if (
-                  enabledPaymentMethods.buyWithCryptoEnabled &&
-                  screen.id === "buy-with-fiat"
-                ) {
-                  setScreen({ id: "select-payment-method" });
-                } else if (screen.id === "buy-with-crypto") {
-                  setScreen({ id: "select-payment-method" });
-                } else {
-                  setScreen({ id: "main" });
-                }
+                setScreen({ id: "main" });
               }}
             >
-              {screen.id === "select-payment-method" && (
-                <PaymentSelectionScreen
-                  client={client}
-                  mode={payOptions.mode}
-                  sourceSupportedTokens={sourceSupportedTokens}
-                  hiddenWallets={props.hiddenWallets}
-                  payWithFiatEnabled={props.payOptions.buyWithFiat !== false}
-                  toChain={toChain}
-                  toToken={toToken}
-                  fromToken={fromToken}
-                  fromChain={fromChain}
-                  tokenAmount={tokenAmount}
-                  onContinue={() => {
-                    setScreen({ id: "buy-with-crypto" });
-                  }}
-                  onSelectFiat={() => {
-                    setScreen({ id: "buy-with-fiat" });
-                  }}
-                  onPickToken={() => {
-                    setScreen({
-                      id: "select-from-token",
-                      backScreen: {
-                        id: "select-payment-method",
-                      },
-                    });
-                  }}
-                  showAllWallets={!!props.connectOptions?.showAllWallets}
-                  wallets={props.connectOptions?.wallets}
-                  onBack={() => {
-                    // no-op
-                  }}
-                  onConnect={() => {
-                    setScreen({
-                      id: "connect-payer-wallet",
-                      backScreen: {
-                        id: "select-payment-method",
-                      },
-                    });
-                  }}
-                />
-              )}
-
               {screen.id === "buy-with-crypto" && activeAccount && (
                 <SwapScreenContent
                   setScreen={setScreen}
@@ -842,7 +802,7 @@ function MainScreen(props: {
             if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
               props.setScreen({ id: "buy-with-fiat" });
             } else {
-              props.setScreen({ id: "select-payment-method" });
+              props.setScreen({ id: "buy-with-crypto" });
             }
           }}
         />
@@ -865,7 +825,7 @@ function MainScreen(props: {
             if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
               props.setScreen({ id: "buy-with-fiat" });
             } else {
-              props.setScreen({ id: "select-payment-method" });
+              props.setScreen({ id: "buy-with-crypto" });
             }
           }}
         />
@@ -928,7 +888,7 @@ function MainScreen(props: {
                   if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
                     props.setScreen({ id: "buy-with-fiat" });
                   } else {
-                    props.setScreen({ id: "select-payment-method" });
+                    props.setScreen({ id: "buy-with-crypto" });
                   }
                 }}
               >
@@ -952,7 +912,12 @@ function TokenSelectedLayout(props: {
   client: ThirdwebClient;
   onBack: () => void;
   disabled?: boolean;
+  mode: "buy" | "swap";
+  onModeChange: (mode: "buy" | "swap") => void;
+  isBuyWithFiatEnabled: boolean;
+  isBuyWithCryptoEnabled: boolean;
 }) {
+  const theme = useCustomTheme();
   return (
     <Container>
       <Container p="lg">
@@ -975,12 +940,77 @@ function TokenSelectedLayout(props: {
           disabled={props.disabled}
         />
 
-        <Spacer y="md" />
-        <Line />
         <Spacer y="lg" />
+        <Container flex="row" gap="md" center="y">
+          <Text size="sm"> Pay with </Text>
+          {props.isBuyWithFiatEnabled && props.isBuyWithCryptoEnabled && (
+            <Container
+              flex="row"
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                borderRadius: radius.xl,
+                border: `1px solid ${theme.colors.borderColor}`,
+                alignItems: "stretch",
+              }}
+            >
+              <Button
+                variant="ghost"
+                style={{
+                  flex: 1,
+                  background:
+                    props.mode === "swap"
+                      ? theme.colors.tertiaryBg
+                      : "transparent",
+                  borderRadius: radius.xl,
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                  padding: spacing.xs,
+                }}
+                onClick={() => props.onModeChange("swap")}
+              >
+                <Text
+                  size="sm"
+                  color={
+                    props.mode === "swap" ? "primaryText" : "secondaryText"
+                  }
+                >
+                  Crypto
+                </Text>
+              </Button>
+              <div
+                style={{
+                  width: "1px",
+                  background: theme.colors.borderColor,
+                }}
+              />
+              <Button
+                variant="ghost"
+                style={{
+                  flex: 1,
+                  background:
+                    props.mode === "buy"
+                      ? theme.colors.tertiaryBg
+                      : "transparent",
+                  borderRadius: radius.xl,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  padding: spacing.xs,
+                }}
+                onClick={() => props.onModeChange("buy")}
+              >
+                <Text
+                  size="sm"
+                  color={props.mode === "buy" ? "primaryText" : "secondaryText"}
+                >
+                  Card
+                </Text>
+              </Button>
+            </Container>
+          )}
+        </Container>
 
-        <Text size="sm"> Pay with </Text>
-        <Spacer y="sm" />
+        <Spacer y="lg" />
 
         {props.children}
       </Container>
