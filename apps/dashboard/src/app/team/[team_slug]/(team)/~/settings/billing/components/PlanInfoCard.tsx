@@ -36,10 +36,14 @@ export function PlanInfoCard(props: {
     <div className="rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <h3 className="font-semibold text-2xl capitalize tracking-tight">
               {validPlan} Plan
             </h3>
+            <p className="text-sm">
+              Go to "Manage Billing" to view your invoices, update your payment
+              method, or edit your billing details.
+            </p>
             {trialEndsInFuture && <Badge>Trial</Badge>}
           </div>
           {trialEndsAfterDays > 0 && (
@@ -53,7 +57,7 @@ export function PlanInfoCard(props: {
           {/* manage team billing */}
           <BillingPortalButton
             teamSlug={team.slug}
-            variant="outline"
+            variant="primary"
             redirectPath={`/team/${team.slug}/~/settings/billing`}
             redirectToBillingPortal={props.redirectToBillingPortal}
           >
