@@ -12,7 +12,6 @@ import {
   type WaitForReceiptOptions,
   waitForReceipt,
 } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -20,7 +19,6 @@ import {
   iconSize,
 } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useEnsName } from "../../../../../../core/utils/wallet.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -34,6 +32,7 @@ import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
+import { WalletRow } from "./WalletRow.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
@@ -75,8 +74,6 @@ export function SwapConfirmationScreen(props: {
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
   const isDifferentRecipient = receiver.toLowerCase() !== sender.toLowerCase();
-
-  const ensName = useEnsName({ client: props.client, address: receiver });
 
   return (
     <Container p="lg">
@@ -139,9 +136,12 @@ export function SwapConfirmationScreen(props: {
       {/* Send to  */}
       {isDifferentRecipient && (
         <ConfirmItem label="Receiver">
-          <Text color="primaryText" size="sm">
-            {ensName.data || shortenAddress(receiver)}
-          </Text>
+          <WalletRow
+            client={props.client}
+            address={receiver}
+            iconSize="sm"
+            textSize="sm"
+          />
         </ConfirmItem>
       )}
 

@@ -432,67 +432,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     );
   }
 
-  if (
-    screen.id === "select-from-token" &&
-    supportedSourcesQuery.data &&
-    sourceSupportedTokens
-  ) {
-    const chains = supportedSourcesQuery.data.map((x) => x.chain);
-    const goBack = () => setScreen(screen.backScreen);
-    // if token selection is disabled - only show network selector screen
-    if (
-      payOptions.buyWithCrypto !== false &&
-      payOptions.buyWithCrypto?.prefillSource?.allowEdits?.token === false
-    ) {
-      return (
-        <ChainSelectionScreen
-          chains={chains}
-          client={props.client}
-          connectLocale={props.connectLocale}
-          setChain={setFromChain}
-          goBack={goBack}
-        />
-      );
-    }
-
-    return (
-      <TokenSelectorScreen
-        onBack={goBack}
-        onConnect={() => {
-          setScreen({
-            id: "connect-payer-wallet",
-            backScreen: screen,
-          });
-        }}
-        modalTitle="Available tokens"
-        connectLocale={props.connectLocale}
-        client={props.client}
-        sourceTokens={sourceSupportedTokens}
-        sourceSupportedTokens={sourceSupportedTokens}
-        toChain={toChain}
-        toToken={toToken}
-        tokenAmount={tokenAmount}
-        fromChain={fromChain}
-        fromToken={fromToken}
-        mode={payOptions.mode}
-        hiddenWallets={props.hiddenWallets}
-        onSelect={(w, token, chain) => {
-          const account = w.getAccount();
-          if (account) {
-            setPayer({
-              account,
-              chain,
-              wallet: w,
-            });
-            setFromToken(token);
-            setFromChain(chain);
-          }
-          goBack();
-        }}
-      />
-    );
-  }
-
   return (
     <Container animate="fadein">
       <div>
@@ -526,7 +465,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
         {(screen.id === "select-payment-method" ||
           screen.id === "buy-with-crypto" ||
-          screen.id === "buy-with-fiat") &&
+          screen.id === "buy-with-fiat" ||
+          screen.id === "select-from-token") &&
           payer && (
             <TokenSelectedLayout
               isBuyWithFiatEnabled={enabledPaymentMethods.buyWithFiatEnabled}
@@ -551,7 +491,11 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               setTokenAmount={setTokenAmount}
               client={client}
               onBack={() => {
-                setScreen({ id: "main" });
+                if (screen.id === "select-from-token") {
+                  setScreen({ id: "buy-with-crypto" });
+                } else {
+                  setScreen({ id: "main" });
+                }
               }}
             >
               {screen.id === "buy-with-crypto" && activeAccount && (
@@ -614,6 +558,40 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   setHasEditedAmount={setHasEditedAmount}
                 />
               )}
+
+              {screen.id === "select-from-token" &&
+                supportedSourcesQuery.data &&
+                sourceSupportedTokens && (
+                  <TokenSelectorScreen
+                    onConnect={() => {
+                      setScreen({
+                        id: "connect-payer-wallet",
+                        backScreen: screen,
+                      });
+                    }}
+                    client={props.client}
+                    sourceTokens={sourceSupportedTokens}
+                    sourceSupportedTokens={sourceSupportedTokens}
+                    toChain={toChain}
+                    toToken={toToken}
+                    tokenAmount={tokenAmount}
+                    mode={payOptions.mode}
+                    hiddenWallets={props.hiddenWallets}
+                    onSelect={(w, token, chain) => {
+                      const account = w.getAccount();
+                      if (account) {
+                        setPayer({
+                          account,
+                          chain,
+                          wallet: w,
+                        });
+                        setFromToken(token);
+                        setFromChain(chain);
+                      }
+                      setScreen({ id: "buy-with-crypto" });
+                    }}
+                  />
+                )}
             </TokenSelectedLayout>
           )}
       </div>
