@@ -12,29 +12,20 @@ import {
   type WaitForReceiptOptions,
   waitForReceipt,
 } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
-import {
-  fontSize,
-  iconSize,
-} from "../../../../../../core/design-system/index.js";
-import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useEnsName } from "../../../../../../core/utils/wallet.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
-import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
-import { formatSeconds } from "./formatSeconds.js";
+import { SwapSummary } from "./SwapSummary.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
 /**
@@ -74,9 +65,6 @@ export function SwapConfirmationScreen(props: {
 
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
-  const isDifferentRecipient = receiver.toLowerCase() !== sender.toLowerCase();
-
-  const ensName = useEnsName({ client: props.client, address: receiver });
 
   return (
     <Container p="lg">
@@ -94,58 +82,26 @@ export function SwapConfirmationScreen(props: {
           <Spacer y="md" />
         </>
       ) : (
-        <Spacer y="lg" />
+        <>
+          <Spacer y="lg" />
+          <Text size="sm">Confirm payment</Text>
+          <Spacer y="md" />
+        </>
       )}
 
-      {/* Pay */}
-      <ConfirmItem label="Pay">
-        <RenderTokenInfo
-          chain={props.fromChain}
-          amount={String(formatNumber(Number(props.fromAmount), 6))}
-          symbol={props.fromTokenSymbol || ""}
-          token={props.fromToken}
-          client={props.client}
-        />
-      </ConfirmItem>
+      <SwapSummary
+        sender={sender}
+        receiver={receiver}
+        client={props.client}
+        fromToken={props.fromToken}
+        fromChain={props.fromChain}
+        toToken={props.toToken}
+        toChain={props.toChain}
+        fromAmount={props.fromAmount}
+        toAmount={props.toAmount}
+      />
 
-      {/* Receive */}
-      {!isDifferentRecipient && (
-        <ConfirmItem label="Receive">
-          <RenderTokenInfo
-            chain={props.toChain}
-            amount={String(formatNumber(Number(props.toAmount), 6))}
-            symbol={props.toTokenSymbol}
-            token={props.toToken}
-            client={props.client}
-          />
-        </ConfirmItem>
-      )}
-
-      {/* Fees  */}
-      <ConfirmItem label="Fees">
-        <SwapFeesRightAligned quote={props.quote} />
-      </ConfirmItem>
-
-      {/* Time  */}
-      <ConfirmItem label="Time">
-        <Text size="sm" color="primaryText">
-          ~
-          {formatSeconds(
-            props.quote.swapDetails.estimated.durationSeconds || 0,
-          )}
-        </Text>
-      </ConfirmItem>
-
-      {/* Send to  */}
-      {isDifferentRecipient && (
-        <ConfirmItem label="Receiver">
-          <Text color="primaryText" size="sm">
-            {ensName.data || shortenAddress(receiver)}
-          </Text>
-        </ConfirmItem>
-      )}
-
-      <Spacer y="xl" />
+      <Spacer y="md" />
 
       {/* Show 2 steps - Approve and confirm  */}
       {needsApprovalStep && (
@@ -348,100 +304,3 @@ export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
     flex: 1,
   };
 });
-
-function RenderTokenInfo(props: {
-  chain: Chain;
-  token: ERC20OrNativeToken;
-  amount: string;
-  symbol: string;
-  client: ThirdwebClient;
-}) {
-  const { name } = useChainName(props.chain);
-  return (
-    <Container
-      flex="column"
-      gap="xxs"
-      style={{
-        alignItems: "flex-end",
-      }}
-    >
-      <Container flex="row" center="y" gap="xs">
-        <Text color="primaryText" size="sm">
-          {props.amount} {props.symbol}
-        </Text>
-        <PayTokenIcon
-          token={props.token}
-          chain={props.chain}
-          size="xs"
-          client={props.client}
-        />
-      </Container>
-
-      {name ? (
-        <Text size="xs">{name}</Text>
-      ) : (
-        <Skeleton width="100px" height={fontSize.xs} />
-      )}
-    </Container>
-  );
-}
-
-function ConfirmItem(props: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <Container
-        flex="row"
-        gap="md"
-        py="md"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm" color="secondaryText">
-          {props.label}
-        </Text>
-        {props.children}
-      </Container>
-      <Line />
-    </>
-  );
-}
-
-/**
- * @internal
- */
-function SwapFeesRightAligned(props: {
-  quote: BuyWithCryptoQuote;
-}) {
-  return (
-    <Container
-      flex="column"
-      gap="xs"
-      style={{
-        alignItems: "flex-end",
-      }}
-    >
-      {props.quote.processingFees.map((fee) => {
-        const feeAmount = formatNumber(Number(fee.amount), 6);
-        return (
-          <Container
-            key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
-            flex="row"
-            gap="xxs"
-          >
-            <Text color="primaryText" size="sm">
-              {feeAmount === 0 ? "~" : ""}
-              {feeAmount} {fee.token.symbol}
-            </Text>
-            <Text color="secondaryText" size="sm">
-              (${(fee.amountUSDCents / 100).toFixed(2)})
-            </Text>
-          </Container>
-        );
-      })}
-    </Container>
-  );
-}

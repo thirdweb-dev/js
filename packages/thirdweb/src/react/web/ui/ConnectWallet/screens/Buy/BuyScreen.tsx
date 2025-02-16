@@ -8,11 +8,9 @@ import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getSta
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../../../wallets/wallet-types.js";
-import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
   fontSize,
-  radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type {
@@ -27,10 +25,9 @@ import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainName } from "../../../components/ChainName.js";
 import { Spacer } from "../../../components/Spacer.js";
-import { Container, ModalHeader } from "../../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Input } from "../../../components/formElements.js";
-import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
@@ -432,67 +429,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     );
   }
 
-  if (
-    screen.id === "select-from-token" &&
-    supportedSourcesQuery.data &&
-    sourceSupportedTokens
-  ) {
-    const chains = supportedSourcesQuery.data.map((x) => x.chain);
-    const goBack = () => setScreen(screen.backScreen);
-    // if token selection is disabled - only show network selector screen
-    if (
-      payOptions.buyWithCrypto !== false &&
-      payOptions.buyWithCrypto?.prefillSource?.allowEdits?.token === false
-    ) {
-      return (
-        <ChainSelectionScreen
-          chains={chains}
-          client={props.client}
-          connectLocale={props.connectLocale}
-          setChain={setFromChain}
-          goBack={goBack}
-        />
-      );
-    }
-
-    return (
-      <TokenSelectorScreen
-        onBack={goBack}
-        onConnect={() => {
-          setScreen({
-            id: "connect-payer-wallet",
-            backScreen: screen,
-          });
-        }}
-        modalTitle="Available tokens"
-        connectLocale={props.connectLocale}
-        client={props.client}
-        sourceTokens={sourceSupportedTokens}
-        sourceSupportedTokens={sourceSupportedTokens}
-        toChain={toChain}
-        toToken={toToken}
-        tokenAmount={tokenAmount}
-        fromChain={fromChain}
-        fromToken={fromToken}
-        mode={payOptions.mode}
-        hiddenWallets={props.hiddenWallets}
-        onSelect={(w, token, chain) => {
-          const account = w.getAccount();
-          if (account) {
-            setPayer({
-              account,
-              chain,
-              wallet: w,
-            });
-            setFromToken(token);
-            setFromChain(chain);
-          }
-          goBack();
-        }}
-      />
-    );
-  }
-
   return (
     <Container animate="fadein">
       <div>
@@ -526,19 +462,10 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
         {(screen.id === "select-payment-method" ||
           screen.id === "buy-with-crypto" ||
-          screen.id === "buy-with-fiat") &&
+          screen.id === "buy-with-fiat" ||
+          screen.id === "select-from-token") &&
           payer && (
             <TokenSelectedLayout
-              isBuyWithFiatEnabled={enabledPaymentMethods.buyWithFiatEnabled}
-              isBuyWithCryptoEnabled={
-                enabledPaymentMethods.buyWithCryptoEnabled
-              }
-              mode={screen.id === "buy-with-fiat" ? "buy" : "swap"}
-              onModeChange={(mode) => {
-                setScreen({
-                  id: mode === "swap" ? "buy-with-crypto" : "buy-with-fiat",
-                });
-              }}
               disabled={
                 ("prefillBuy" in payOptions &&
                   payOptions.prefillBuy?.allowEdits?.amount === false) ||
@@ -551,7 +478,19 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               setTokenAmount={setTokenAmount}
               client={client}
               onBack={() => {
-                setScreen({ id: "main" });
+                if (
+                  screen.id === "buy-with-crypto" ||
+                  screen.id === "buy-with-fiat"
+                ) {
+                  setScreen({
+                    id: "select-from-token",
+                    backScreen: { id: "main" },
+                  });
+                } else if (screen.id === "select-from-token") {
+                  setScreen(screen.backScreen);
+                } else {
+                  setScreen({ id: "main" });
+                }
               }}
             >
               {screen.id === "buy-with-crypto" && activeAccount && (
@@ -614,6 +553,45 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   setHasEditedAmount={setHasEditedAmount}
                 />
               )}
+
+              {screen.id === "select-from-token" &&
+                supportedSourcesQuery.data &&
+                sourceSupportedTokens && (
+                  <TokenSelectorScreen
+                    client={props.client}
+                    sourceTokens={sourceSupportedTokens}
+                    sourceSupportedTokens={sourceSupportedTokens}
+                    toChain={toChain}
+                    toToken={toToken}
+                    tokenAmount={tokenAmount}
+                    mode={payOptions.mode}
+                    hiddenWallets={props.hiddenWallets}
+                    onConnect={() => {
+                      setScreen({
+                        id: "connect-payer-wallet",
+                        backScreen: screen,
+                      });
+                    }}
+                    onPayWithFiat={() => {
+                      setScreen({
+                        id: "buy-with-fiat",
+                      });
+                    }}
+                    onSelectToken={(w, token, chain) => {
+                      const account = w.getAccount();
+                      if (account) {
+                        setPayer({
+                          account,
+                          chain,
+                          wallet: w,
+                        });
+                        setFromToken(token);
+                        setFromChain(chain);
+                      }
+                      setScreen({ id: "buy-with-crypto" });
+                    }}
+                  />
+                )}
             </TokenSelectedLayout>
           )}
       </div>
@@ -802,7 +780,10 @@ function MainScreen(props: {
             if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
               props.setScreen({ id: "buy-with-fiat" });
             } else {
-              props.setScreen({ id: "buy-with-crypto" });
+              props.setScreen({
+                id: "select-from-token",
+                backScreen: { id: "main" },
+              });
             }
           }}
         />
@@ -825,7 +806,10 @@ function MainScreen(props: {
             if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
               props.setScreen({ id: "buy-with-fiat" });
             } else {
-              props.setScreen({ id: "buy-with-crypto" });
+              props.setScreen({
+                id: "select-from-token",
+                backScreen: { id: "main" },
+              });
             }
           }}
         />
@@ -888,7 +872,10 @@ function MainScreen(props: {
                   if (buyWithFiatEnabled && !buyWithCryptoEnabled) {
                     props.setScreen({ id: "buy-with-fiat" });
                   } else {
-                    props.setScreen({ id: "buy-with-crypto" });
+                    props.setScreen({
+                      id: "select-from-token",
+                      backScreen: { id: "main" },
+                    });
                   }
                 }}
               >
@@ -912,12 +899,7 @@ function TokenSelectedLayout(props: {
   client: ThirdwebClient;
   onBack: () => void;
   disabled?: boolean;
-  mode: "buy" | "swap";
-  onModeChange: (mode: "buy" | "swap") => void;
-  isBuyWithFiatEnabled: boolean;
-  isBuyWithCryptoEnabled: boolean;
 }) {
-  const theme = useCustomTheme();
   return (
     <Container>
       <Container p="lg">
@@ -940,78 +922,9 @@ function TokenSelectedLayout(props: {
           disabled={props.disabled}
         />
 
-        <Spacer y="lg" />
-        <Container flex="row" gap="md" center="y">
-          <Text size="sm"> Pay with </Text>
-          {props.isBuyWithFiatEnabled && props.isBuyWithCryptoEnabled && (
-            <Container
-              flex="row"
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                borderRadius: radius.xl,
-                border: `1px solid ${theme.colors.borderColor}`,
-                alignItems: "stretch",
-              }}
-            >
-              <Button
-                variant="ghost"
-                style={{
-                  flex: 1,
-                  background:
-                    props.mode === "swap"
-                      ? theme.colors.tertiaryBg
-                      : "transparent",
-                  borderRadius: radius.xl,
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                  padding: spacing.xs,
-                }}
-                onClick={() => props.onModeChange("swap")}
-              >
-                <Text
-                  size="sm"
-                  color={
-                    props.mode === "swap" ? "primaryText" : "secondaryText"
-                  }
-                >
-                  Crypto
-                </Text>
-              </Button>
-              <div
-                style={{
-                  width: "1px",
-                  background: theme.colors.borderColor,
-                }}
-              />
-              <Button
-                variant="ghost"
-                style={{
-                  flex: 1,
-                  background:
-                    props.mode === "buy"
-                      ? theme.colors.tertiaryBg
-                      : "transparent",
-                  borderRadius: radius.xl,
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                  padding: spacing.xs,
-                }}
-                onClick={() => props.onModeChange("buy")}
-              >
-                <Text
-                  size="sm"
-                  color={props.mode === "buy" ? "primaryText" : "secondaryText"}
-                >
-                  Card
-                </Text>
-              </Button>
-            </Container>
-          )}
-        </Container>
-
-        <Spacer y="lg" />
-
+        <Spacer y="sm" />
+        <Line />
+        <Spacer y="sm" />
         {props.children}
       </Container>
     </Container>

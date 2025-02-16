@@ -33,7 +33,7 @@ import {
   isNativeToken,
 } from "../nativeToken.js";
 import { useTransactionCostAndData } from "./main/useBuyTxStates.js";
-import { WalletRow } from "./swap/TokenSelectorScreen.js";
+import { WalletRow } from "./swap/WalletRow.js";
 import type { SupportedChainAndTokens } from "./swap/useSwapSupportedChains.js";
 
 export function TransactionModeScreen(props: {

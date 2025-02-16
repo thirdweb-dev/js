@@ -1,10 +1,14 @@
 import styled from "@emotion/styled";
+import {
+  CardStackIcon,
+  ChevronRightIcon,
+  Cross2Icon,
+} from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
 import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
 import {
   type GetWalletBalanceResult,
@@ -13,7 +17,6 @@ import {
 import type { WalletId } from "../../../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
-  type fontSize,
   iconSize,
   radius,
   spacing,
@@ -25,33 +28,33 @@ import {
 } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
 import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
+import { useDisconnect } from "../../../../../../core/hooks/wallets/useDisconnect.js";
 import type {
   SupportedTokens,
   TokenInfo,
 } from "../../../../../../core/utils/defaultTokens.js";
-import {
-  useEnsAvatar,
-  useEnsName,
-} from "../../../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
-import { Img } from "../../../../components/Img.js";
+import { Spacer } from "../../../../components/Spacer.js";
 import { TextDivider } from "../../../../components/TextDivider.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { WalletImage } from "../../../../components/WalletImage.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { Blobbie } from "../../../Blobbie.js";
 import { OutlineWalletIcon } from "../../../icons/OutlineWalletIcon.js";
-import type { ConnectLocale } from "../../../locale/types.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { FiatValue } from "./FiatValue.js";
+import { WalletRow } from "./WalletRow.js";
 
 type TokenBalance = {
   balance: GetWalletBalanceResult;
   chain: Chain;
   token: TokenInfo;
+};
+
+type WalletKey = {
+  id: WalletId;
+  address: string;
 };
 
 export function TokenSelectorScreen(props: {
@@ -60,22 +63,17 @@ export function TokenSelectorScreen(props: {
   sourceSupportedTokens: SupportedTokens | undefined;
   toChain: Chain;
   toToken: ERC20OrNativeToken;
-  fromToken: ERC20OrNativeToken;
-  fromChain: Chain;
   tokenAmount: string;
   mode: PayUIOptions["mode"];
   hiddenWallets?: WalletId[];
-  onSelect: (wallet: Wallet, token: TokenInfo, chain: Chain) => void;
-  onBack: () => void;
+  onSelectToken: (wallet: Wallet, token: TokenInfo, chain: Chain) => void;
   onConnect: () => void;
-  modalTitle?: string;
-  connectLocale: ConnectLocale;
+  onPayWithFiat: () => void;
 }) {
   const connectedWallets = useConnectedWallets();
   const activeAccount = useActiveAccount();
   const chainInfo = useChainMetadata(props.toChain);
   const theme = useCustomTheme();
-  const locale = props.connectLocale.sendFundsScreen;
 
   const walletsAndBalances = useQuery({
     queryKey: [
@@ -90,12 +88,16 @@ export function TokenSelectorScreen(props: {
     ],
     queryFn: async () => {
       // in parallel, get the balances of all the wallets on each of the sourceSupportedTokens
-      const walletBalanceMap = new Map<Wallet, TokenBalance[]>();
+      const walletBalanceMap = new Map<WalletKey, TokenBalance[]>();
 
       const balancePromises = connectedWallets.flatMap((wallet) => {
         const account = wallet.getAccount();
         if (!account) return [];
-        walletBalanceMap.set(wallet, []);
+        const walletKey: WalletKey = {
+          id: wallet.id,
+          address: account.address,
+        };
+        walletBalanceMap.set(walletKey, []);
 
         // inject the destination token too since it can be used as well to pay/transfer
         const toToken = isNativeToken(props.toToken)
@@ -139,7 +141,7 @@ export function TokenSelectorScreen(props: {
                   : balance.value > 0n;
 
               if (shouldInclude) {
-                const existingBalances = walletBalanceMap.get(wallet) || [];
+                const existingBalances = walletBalanceMap.get(walletKey) || [];
                 existingBalances.push({ balance, chain, token });
                 existingBalances.sort((a, b) => {
                   if (
@@ -188,47 +190,44 @@ export function TokenSelectorScreen(props: {
     <Container
       animate="fadein"
       style={{
-        minHeight: "300px",
+        minHeight: "200px",
       }}
     >
-      <Container py="md" px="lg">
-        <ModalHeader
-          onBack={props.onBack}
-          title={props.modalTitle || locale.selectTokenTitle}
-        />
-      </Container>
-
-      <Line />
-
+      {filteredWallets.length === 0 ? (
+        <Container flex="column" gap="xs" py="lg">
+          <Text size="xs" color="secondaryText" center>
+            No suitable payment token found
+            <br />
+            in connected wallets
+          </Text>
+        </Container>
+      ) : (
+        <Container flex="column" gap="xs">
+          <Text size="sm">Select payment token</Text>
+          <Spacer y="xs" />
+        </Container>
+      )}
       <Container
         scrollY
         style={{
-          maxHeight: "450px",
+          maxHeight: "350px",
         }}
       >
-        <Container flex="column" gap="sm" p="lg">
-          {filteredWallets.length === 0 && (
-            <Container flex="column" gap="xs" py="md">
-              <Text size="xs" color="secondaryText" center>
-                <i>
-                  No suitable payment token found
-                  <br />
-                  in connected wallets
-                </i>
-              </Text>
-            </Container>
-          )}
+        <Container flex="column" gap="sm">
           {filteredWallets.map(([w, balances]) => {
-            const address = w.getAccount()?.address;
-            if (!address) return null;
+            const address = w.address;
+            const wallet = connectedWallets.find(
+              (w) => w.getAccount()?.address === address,
+            );
+            if (!wallet) return null;
             return (
               <WalletRowWithBalances
                 key={w.id}
-                wallet={w}
+                wallet={wallet}
                 balances={balances}
                 client={props.client}
                 address={address}
-                onClick={props.onSelect}
+                onClick={props.onSelectToken}
               />
             );
           })}
@@ -237,10 +236,8 @@ export function TokenSelectorScreen(props: {
             variant="secondary"
             fullWidth
             onClick={props.onConnect}
-            gap="xs"
             bg="tertiaryBg"
             style={{
-              borderRadius: radius.md,
               border: `1px solid ${theme.colors.borderColor}`,
               padding: spacing.sm,
             }}
@@ -254,7 +251,30 @@ export function TokenSelectorScreen(props: {
             >
               <OutlineWalletIcon size={iconSize.md} />
               <Text size="sm" color="primaryText">
-                Connect another wallet
+                Pay with another wallet
+              </Text>
+            </Container>
+          </Button>
+          <Button
+            variant="secondary"
+            fullWidth
+            onClick={props.onPayWithFiat}
+            bg="tertiaryBg"
+            style={{
+              border: `1px solid ${theme.colors.borderColor}`,
+              padding: spacing.sm,
+            }}
+          >
+            <Container
+              flex="row"
+              gap="sm"
+              center="y"
+              expand
+              color="secondaryIconColor"
+            >
+              <CardStackIcon width={iconSize.md} height={iconSize.md} />
+              <Text size="sm" color="primaryText">
+                Pay with credit card
               </Text>
             </Container>
           </Button>
@@ -272,28 +292,74 @@ function WalletRowWithBalances(props: {
   onClick: (wallet: Wallet, token: TokenInfo, chain: Chain) => void;
   hideConnectButton?: boolean;
 }) {
+  const theme = useCustomTheme();
   const displayedBalances = props.balances;
+  const activeAccount = useActiveAccount();
+  const { disconnect } = useDisconnect();
+  const isActiveAccount = activeAccount?.address === props.address;
 
   return (
-    <Container flex="column" gap="sm">
-      <Container px="sm">
+    <Container
+      flex="column"
+      style={{
+        borderRadius: radius.lg,
+        border: `1px solid ${theme.colors.borderColor}`,
+      }}
+    >
+      <Container
+        flex="row"
+        gap="sm"
+        bg="tertiaryBg"
+        style={{
+          justifyContent: "space-between",
+          borderTopRightRadius: radius.lg,
+          borderTopLeftRadius: radius.lg,
+          padding: spacing.sm,
+          paddingRight: spacing.xs,
+          borderBottom: `1px solid ${theme.colors.borderColor}`,
+        }}
+      >
         <WalletRow {...props} />
+        {!isActiveAccount && (
+          <Button
+            variant="ghost"
+            onClick={() => disconnect(props.wallet)}
+            style={{
+              padding: spacing.xxs,
+              color: theme.colors.secondaryText,
+            }}
+          >
+            <Cross2Icon width={iconSize.sm} height={iconSize.sm} />
+          </Button>
+        )}
       </Container>
-      <Container flex="column" gap="sm">
+      <Container flex="column">
         {props.balances.length > 0 ? (
-          displayedBalances.map((b) => (
+          displayedBalances.map((b, idx) => (
             <TokenBalanceRow
               client={props.client}
               onClick={() => props.onClick(props.wallet, b.token, b.chain)}
               key={`${b.token.address}-${b.chain.id}`}
               tokenBalance={b}
               wallet={props.wallet}
+              style={{
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius:
+                  idx === displayedBalances.length - 1 ? radius.lg : 0,
+                borderBottomLeftRadius:
+                  idx === displayedBalances.length - 1 ? radius.lg : 0,
+                borderBottom:
+                  idx === displayedBalances.length - 1
+                    ? "none"
+                    : `1px solid ${theme.colors.borderColor}`,
+              }}
             />
           ))
         ) : (
           <Container style={{ padding: spacing.sm }}>
             <Text size="sm" color="secondaryText">
-              Not enough funds
+              Insufficient funds
             </Text>
           </Container>
         )}
@@ -307,33 +373,35 @@ function TokenBalanceRow(props: {
   tokenBalance: TokenBalance;
   wallet: Wallet;
   onClick: (token: TokenInfo, wallet: Wallet) => void;
+  style?: React.CSSProperties;
 }) {
-  const { tokenBalance, wallet, onClick, client } = props;
+  const { tokenBalance, wallet, onClick, client, style } = props;
   const chainInfo = useChainName(tokenBalance.chain);
   return (
     <StyledButton
       onClick={() => onClick(tokenBalance.token, wallet)}
       variant="secondary"
+      style={style}
     >
-      <Container flex="row" center="y" gap="md">
+      <Container flex="row" center="y" gap="sm">
         <TokenIcon
           token={tokenBalance.token}
           chain={tokenBalance.chain}
           size="md"
           client={client}
         />
-        <Container flex="column" gap="3xs">
+        <Container flex="column" gap="4xs">
           <Text size="xs" color="primaryText">
             {tokenBalance.token.symbol}
           </Text>
           {chainInfo && <Text size="xs">{chainInfo.name}</Text>}
         </Container>
       </Container>
-      <Container flex="row" center="y" gap="3xs" color="secondaryText">
+      <Container flex="row" center="y" gap="4xs" color="secondaryText">
         <Container
           flex="column"
           color="secondaryText"
-          gap="3xs"
+          gap="4xs"
           style={{
             justifyContent: "flex-end",
             alignItems: "flex-end",
@@ -350,88 +418,26 @@ function TokenBalanceRow(props: {
             size="xs"
           />
         </Container>
-        {/* <ChevronRightIcon width={iconSize.md} height={iconSize.md} /> */}
+        <ChevronRightIcon width={iconSize.md} height={iconSize.md} />
       </Container>
     </StyledButton>
   );
 }
 
-export function WalletRow(props: {
-  client: ThirdwebClient;
-  address: string;
-  iconSize?: keyof typeof iconSize;
-  textSize?: keyof typeof fontSize;
-  walletId?: WalletId;
-  wallet?: Wallet;
-}) {
-  const { client, address } = props;
-  const walletId = props.walletId;
-  const theme = useCustomTheme();
-  const ensNameQuery = useEnsName({
-    client,
-    address,
-  });
-  const addressOrENS = ensNameQuery.data || shortenAddress(address);
-  const ensAvatarQuery = useEnsAvatar({
-    client,
-    ensName: ensNameQuery.data,
-  });
-  return (
-    <Container flex="row" style={{ justifyContent: "space-between" }}>
-      <Container flex="row" center="y" gap="sm" color="secondaryText">
-        {ensAvatarQuery.data ? (
-          <Img
-            src={ensAvatarQuery.data}
-            width={props.iconSize ? iconSize[props.iconSize] : iconSize.md}
-            height={props.iconSize ? iconSize[props.iconSize] : iconSize.md}
-            style={{
-              borderRadius: radius.sm,
-              overflow: "hidden",
-              border: `1px solid ${theme.colors.borderColor}`,
-            }}
-            client={props.client}
-          />
-        ) : walletId ? (
-          <WalletImage
-            id={walletId}
-            size={props.iconSize || iconSize.md}
-            client={props.client}
-          />
-        ) : (
-          <Container
-            style={{
-              width: iconSize.md,
-              height: iconSize.md,
-              borderRadius: radius.sm,
-              overflow: "hidden",
-              border: `1px solid ${theme.colors.borderColor}`,
-            }}
-          >
-            <Blobbie address={props.address} size={Number(iconSize.md)} />
-          </Container>
-        )}
-
-        <Text size={props.textSize || "sm"} color="primaryText">
-          {addressOrENS || shortenAddress(props.address)}
-        </Text>
-      </Container>
-    </Container>
-  );
-}
-
-const StyledButton = /* @__PURE__ */ styled(Button)((_) => {
+const StyledButton = /* @__PURE__ */ styled(Button)((props) => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.tertiaryBg,
+    background: "transparent",
     justifyContent: "space-between",
     flexDirection: "row",
     padding: spacing.sm,
-    border: `1px solid ${theme.colors.borderColor}`,
+    paddingRight: spacing.xs,
     gap: spacing.sm,
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
       transform: "scale(1.01)",
     },
     transition: "background 200ms ease, transform 150ms ease",
+    ...props.style,
   };
 });

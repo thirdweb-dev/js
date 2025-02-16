@@ -42,8 +42,8 @@ export function SwapScreenContent(props: {
   tokenAmount: string;
   toToken: ERC20OrNativeToken;
   toChain: Chain;
-  fromChain: Chain;
-  fromToken: ERC20OrNativeToken;
+  fromChain: Chain | undefined;
+  fromToken: ERC20OrNativeToken | undefined;
   showFromTokenSelector: () => void;
   payer: PayerInfo;
   client: ThirdwebClient;
@@ -81,42 +81,50 @@ export function SwapScreenContent(props: {
     "fees" | "receiver" | "payer"
   >("fees");
 
-  const fromTokenBalanceQuery = useWalletBalance({
-    address: payer.account.address,
-    chain: fromChain,
-    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
-    client,
-  });
+  const fromTokenBalanceQuery = useWalletBalance(
+    {
+      address: payer.account.address,
+      chain: fromChain,
+      tokenAddress: isNativeToken(fromToken) ? undefined : fromToken?.address,
+      client,
+    },
+    {
+      enabled: !!fromChain && !!fromToken,
+    },
+  );
 
   const fromTokenId = isNativeToken(fromToken)
     ? NATIVE_TOKEN_ADDRESS
-    : fromToken.address.toLowerCase();
+    : fromToken?.address?.toLowerCase();
   const toTokenId = isNativeToken(toToken)
     ? NATIVE_TOKEN_ADDRESS
     : toToken.address.toLowerCase();
   const swapRequired =
     !!tokenAmount &&
-    !(fromChain.id === toChain.id && fromTokenId === toTokenId);
-  const quoteParams: GetBuyWithCryptoQuoteParams | undefined = swapRequired
-    ? {
-        // wallets
-        fromAddress: payer.account.address,
-        toAddress: receiverAddress,
-        // from
-        fromChainId: fromChain.id,
-        fromTokenAddress: isNativeToken(fromToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : fromToken.address,
-        // to
-        toChainId: toChain.id,
-        toTokenAddress: isNativeToken(toToken)
-          ? NATIVE_TOKEN_ADDRESS
-          : toToken.address,
-        toAmount: tokenAmount,
-        client,
-        purchaseData: payOptions.purchaseData,
-      }
-    : undefined;
+    !!fromChain &&
+    !!fromTokenId &&
+    !(fromChain?.id === toChain.id && fromTokenId === toTokenId);
+  const quoteParams: GetBuyWithCryptoQuoteParams | undefined =
+    fromChain && fromToken && swapRequired
+      ? {
+          // wallets
+          fromAddress: payer.account.address,
+          toAddress: receiverAddress,
+          // from
+          fromChainId: fromChain.id,
+          fromTokenAddress: isNativeToken(fromToken)
+            ? NATIVE_TOKEN_ADDRESS
+            : fromToken.address,
+          // to
+          toChainId: toChain.id,
+          toTokenAddress: isNativeToken(toToken)
+            ? NATIVE_TOKEN_ADDRESS
+            : toToken.address,
+          toAmount: tokenAmount,
+          client,
+          purchaseData: payOptions.purchaseData,
+        }
+      : undefined;
 
   const quoteQuery = useBuyWithCryptoQuote(quoteParams, {
     // refetch every 30 seconds
@@ -159,11 +167,13 @@ export function SwapScreenContent(props: {
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
   const disableContinue =
+    !fromChain ||
+    !fromToken ||
     (swapRequired && !quoteQuery.data) ||
     isNotEnoughBalance ||
     allowanceQuery.isLoading;
   const switchChainRequired =
-    props.payer.wallet.getChain()?.id !== fromChain.id;
+    props.payer.wallet.getChain()?.id !== fromChain?.id;
 
   const errorMsg =
     !quoteQuery.isLoading && quoteQuery.error
@@ -240,6 +250,19 @@ export function SwapScreenContent(props: {
 
       {/* Quote info */}
       <Container flex="column" gap="sm">
+        <Container flex="row" gap="xxs" center="y">
+          <Text size="sm">Pay with</Text>
+          {fromToken && fromChain ? (
+            <TokenSymbol
+              token={fromToken}
+              chain={fromChain}
+              size="sm"
+              color="secondaryText"
+            />
+          ) : (
+            "crypto"
+          )}
+        </Container>
         <div>
           <PayWithCryptoQuoteInfo
             value={sourceTokenAmount || ""}
@@ -252,7 +275,7 @@ export function SwapScreenContent(props: {
             swapRequired={swapRequired}
             onSelectToken={props.showFromTokenSelector}
           />
-          {swapRequired && (
+          {swapRequired && fromChain && fromToken && (
             <EstimatedTimeAndFees
               quoteIsLoading={quoteQuery.isLoading}
               estimatedSeconds={
@@ -288,7 +311,7 @@ export function SwapScreenContent(props: {
         {!errorMsg && isNotEnoughBalance && (
           <div>
             <Text color="danger" size="xs" center multiline>
-              Not enough funds.
+              Insufficient funds
             </Text>
           </div>
         )}
@@ -317,9 +340,10 @@ export function SwapScreenContent(props: {
           fullWidth
           onClick={() => props.showFromTokenSelector()}
         >
-          Select another token
+          Pay with another token
         </Button>
       ) : switchChainRequired &&
+        fromChain &&
         !quoteQuery.isLoading &&
         !allowanceQuery.isLoading &&
         !isNotEnoughBalance &&

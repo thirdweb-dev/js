@@ -55,17 +55,22 @@ export async function fetchBlueprintSpec(params: {
 }
 
 export async function fetchAllBlueprints() {
-  // fetch list
-  const blueprintSpecs = await fetchBlueprintList();
+  try {
+    // fetch list
+    const blueprintSpecs = await fetchBlueprintList();
 
-  // fetch all blueprints
-  const blueprints = await Promise.all(
-    blueprintSpecs.map((spec) =>
-      fetchBlueprintSpec({
-        blueprintId: spec.id,
-      }),
-    ),
-  );
+    // fetch all blueprints
+    const blueprints = await Promise.all(
+      blueprintSpecs.map((spec) =>
+        fetchBlueprintSpec({
+          blueprintId: spec.id,
+        }),
+      ),
+    );
 
-  return blueprints;
+    return blueprints;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
