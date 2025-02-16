@@ -10,11 +10,13 @@ export const NATIVE_TOKEN: NativeToken = { nativeToken: true };
  * @internal
  */
 export function isNativeToken(
-  token: Partial<TokenInfo> | NativeToken,
+  token?: Partial<TokenInfo> | NativeToken,
 ): token is NativeToken {
   return (
-    "nativeToken" in token ||
-    token.address?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase()
+    (token &&
+      ("nativeToken" in token ||
+        token.address?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase())) ||
+    false
   );
 }
 

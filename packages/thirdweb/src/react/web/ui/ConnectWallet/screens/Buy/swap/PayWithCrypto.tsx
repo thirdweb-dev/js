@@ -16,7 +16,7 @@ import { TokenRow } from "../../../../components/token/TokenRow.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
-import { WalletRow } from "./TokenSelectorScreen.js";
+import { WalletRow } from "./WalletRow.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -26,8 +26,8 @@ import { WalletRow } from "./TokenSelectorScreen.js";
  */
 export function PayWithCryptoQuoteInfo(props: {
   value: string;
-  chain: Chain;
-  token: TokenInfo | NativeToken;
+  chain: Chain | undefined;
+  token: TokenInfo | NativeToken | undefined;
   isLoading: boolean;
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
@@ -36,12 +36,19 @@ export function PayWithCryptoQuoteInfo(props: {
   onSelectToken: () => void;
 }) {
   const theme = useCustomTheme();
-  const balanceQuery = useWalletBalance({
-    address: props.payerAccount.address,
-    chain: props.chain,
-    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
-    client: props.client,
-  });
+  const balanceQuery = useWalletBalance(
+    {
+      address: props.payerAccount.address,
+      chain: props.chain,
+      tokenAddress: isNativeToken(props.token)
+        ? undefined
+        : props.token?.address,
+      client: props.client,
+    },
+    {
+      enabled: !!props.chain && !!props.token,
+    },
+  );
 
   return (
     <Container
@@ -69,10 +76,10 @@ export function PayWithCryptoQuoteInfo(props: {
         }}
       >
         <WalletRow client={props.client} address={props.payerAccount.address} />
-        {balanceQuery.data ? (
+        {props.token && props.chain && balanceQuery.data ? (
           <Container flex="row" gap="3xs" center="y">
             <Text size="xs" color="secondaryText" weight={500}>
-              {formatTokenBalance(balanceQuery.data, false)}
+              {formatTokenBalance(balanceQuery.data, false, 4)}
             </Text>
             <TokenSymbol
               token={props.token}
@@ -81,11 +88,11 @@ export function PayWithCryptoQuoteInfo(props: {
               color="secondaryText"
             />
           </Container>
-        ) : (
+        ) : props.token && props.chain && balanceQuery.isLoading ? (
           <Skeleton width="70px" height={fontSize.xs} />
-        )}
+        ) : null}
       </Container>
-      {/* Quoted price */}
+      {/* Quoted price & token selector */}
       <TokenRow
         token={props.token}
         chain={props.chain}
@@ -96,6 +103,10 @@ export function PayWithCryptoQuoteInfo(props: {
         style={{
           border: "none",
           borderRadius: 0,
+          borderBottomLeftRadius:
+            !props.token || !props.chain || !props.swapRequired ? radius.lg : 0,
+          borderBottomRightRadius:
+            !props.token || !props.chain || !props.swapRequired ? radius.lg : 0,
         }}
       />
     </Container>

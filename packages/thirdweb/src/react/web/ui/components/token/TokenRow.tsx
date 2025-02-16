@@ -19,8 +19,8 @@ import { Text } from "../text.js";
 import { TokenSymbol } from "./TokenSymbol.js";
 
 export function TokenRow(props: {
-  token: ERC20OrNativeToken;
-  chain: Chain;
+  token: ERC20OrNativeToken | undefined;
+  chain: Chain | undefined;
   client: ThirdwebClient;
   onSelectToken: () => void;
   freezeChainAndToken?: boolean;
@@ -29,6 +29,32 @@ export function TokenRow(props: {
   style?: React.CSSProperties;
 }) {
   const { name } = useChainName(props.chain);
+
+  if (!props.token || !props.chain) {
+    return (
+      <Button
+        variant="secondary"
+        fullWidth
+        style={{
+          fontSize: fontSize.sm,
+          justifyContent: "space-between",
+          paddingTop: spacing.md,
+          paddingBottom: spacing.md,
+          ...props.style,
+        }}
+        gap="xxs"
+        onClick={props.onSelectToken}
+      >
+        <Text size="sm" color="primaryText">
+          Select payment token
+        </Text>
+        <Container color="primaryText">
+          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+        </Container>
+      </Button>
+    );
+  }
+
   return (
     <TokenButton
       variant="secondary"

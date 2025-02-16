@@ -29,7 +29,7 @@ import { Step } from "../Stepper.js";
 import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
-import { WalletRow } from "./TokenSelectorScreen.js";
+import { WalletRow } from "./WalletRow.js";
 
 type TransferConfirmationScreenProps = {
   title: string;
