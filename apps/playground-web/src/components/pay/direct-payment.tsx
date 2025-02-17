@@ -1,6 +1,5 @@
 "use client";
-
-import { sepolia } from "thirdweb/chains";
+import { base } from "thirdweb/chains";
 import { PayEmbed, getDefaultToken } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
@@ -16,9 +15,9 @@ export function BuyMerchPreview() {
         payOptions={{
           mode: "direct_payment",
           paymentInfo: {
-            amount: "0.1",
-            chain: sepolia,
-            token: getDefaultToken(sepolia, "USDC"),
+            amount: "2",
+            chain: base,
+            token: getDefaultToken(base, "USDC"),
             sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
           },
           metadata: {
