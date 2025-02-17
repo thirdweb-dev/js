@@ -98,7 +98,14 @@ export function SwapSummary(props: {
         }}
       >
         {isDifferentRecipient && (
-          <Container flex="row" gap="sm" p="sm">
+          <Container
+            flex="row"
+            gap="sm"
+            p="sm"
+            style={{
+              borderBottom: `1px solid ${theme.colors.borderColor}`,
+            }}
+          >
             <WalletRow
               address={props.receiver}
               client={props.client}
@@ -119,7 +126,6 @@ export function SwapSummary(props: {
             background: "transparent",
             borderRadius: 0,
             border: "none",
-            borderTop: `1px solid ${theme.colors.borderColor}`,
           }}
         />
       </Container>
