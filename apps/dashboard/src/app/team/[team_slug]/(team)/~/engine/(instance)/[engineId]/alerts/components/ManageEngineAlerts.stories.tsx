@@ -4,7 +4,6 @@ import type {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
-import { Toaster } from "sonner";
 import {
   createEngineAlertRuleStub,
   createEngineNotificationChannelStub,
@@ -125,7 +124,6 @@ function Story() {
           deleteAlert={deleteAlert}
         />
       </BadgeContainer>
-      <Toaster richColors />
     </div>
   );
 }

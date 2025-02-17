@@ -1,7 +1,6 @@
 import type { UpdateKeyInput } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
-import { Toaster } from "sonner";
 import { createApiKeyStub } from "../../../../../stories/stubs";
 import { mobileViewport } from "../../../../../stories/utils";
 import { ProjectGeneralSettingsPageUI } from "./ProjectGeneralSettingsPage";
@@ -72,8 +71,6 @@ function Story() {
         }}
         showNebulaSettings={false}
       />
-
-      <Toaster richColors />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/sonner";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
@@ -50,7 +49,6 @@ function Story() {
         client={getThirdwebClient()}
       />
       <ComponentVariants />
-      <Toaster richColors />
     </div>
   );
 }

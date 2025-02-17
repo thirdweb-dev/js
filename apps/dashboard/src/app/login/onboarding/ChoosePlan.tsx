@@ -8,7 +8,6 @@ import { TitleAndDescription } from "./Title";
 
 export function OnboardingChoosePlan(props: {
   skipPlan: () => Promise<void>;
-  canTrialGrowth: boolean;
   teamSlug: string;
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
@@ -48,7 +47,6 @@ export function OnboardingChoosePlan(props: {
             },
             variant: "default",
           }}
-          canTrialGrowth={false}
           highlighted
           redirectPath={props.redirectPath}
           redirectToCheckout={props.redirectToCheckout}

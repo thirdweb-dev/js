@@ -2,7 +2,6 @@ import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { mobileViewport } from "../../../stories/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
@@ -97,7 +96,6 @@ function Variants() {
           }
         }}
       />
-      <Toaster richColors />
     </div>
   );
 }

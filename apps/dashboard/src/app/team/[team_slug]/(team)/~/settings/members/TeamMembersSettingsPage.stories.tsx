@@ -1,5 +1,4 @@
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
-import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
 import {
@@ -78,8 +77,6 @@ function Story() {
       />
 
       <CompVariants />
-
-      <Toaster richColors />
     </div>
   );
 }
