@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
 type EnabledTeamScope =
@@ -29,6 +29,23 @@ export type Team = {
   growthTrialEligible: false;
   enabledScopes: EnabledTeamScope[];
 };
+
+export async function service_getTeamBySlug(slug: string) {
+  if (!THIRDWEB_API_SECRET) {
+    throw new Error("API_SERVER_SECRET is not set");
+  }
+
+  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
+    headers: {
+      "x-service-api-key": THIRDWEB_API_SECRET,
+    },
+  });
+
+  if (teamRes.ok) {
+    return (await teamRes.json())?.result as Team;
+  }
+  return null;
+}
 
 export async function getTeamBySlug(slug: string) {
   const token = await getAuthToken();

@@ -25,7 +25,7 @@ import {
   AddToProjectSelector,
   type MinimalTeamsAndProjects,
 } from "../../../../../../components/contract-components/contract-deploy-form/add-to-project-card";
-import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../../../team/[team_slug]/(internal)/[project_slug]/hooks/project-contracts";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 

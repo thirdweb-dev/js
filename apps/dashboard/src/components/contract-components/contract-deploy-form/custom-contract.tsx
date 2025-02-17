@@ -39,7 +39,7 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
-import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../app/team/[team_slug]/(internal)/[project_slug]/hooks/project-contracts";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import {
   AddToProjectCardUI,

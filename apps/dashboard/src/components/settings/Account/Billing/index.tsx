@@ -5,7 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
-import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";
+import { PlanInfoCard } from "../../../../app/team/[team_slug]/(internal)/(team)/~/settings/billing/components/PlanInfoCard";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
 import { CouponSection } from "./CouponCard";
 import { CreditsInfoCard } from "./PlanCard";

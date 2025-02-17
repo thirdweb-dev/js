@@ -33,7 +33,7 @@ import {
   toWei,
 } from "thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { parseAbiParams, stringify, toFunctionSelector } from "thirdweb/utils";
+import { parseAbiParams, stringify } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -178,11 +178,6 @@ function useSimulateTransaction() {
         type: "function",
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
       } as any);
-      console.log(
-        "formattedAbi",
-        formattedAbi,
-        toFunctionSelector(abiFunction),
-      );
       const transaction = prepareContractCall({
         contract,
         // biome-ignore lint/suspicious/noExplicitAny: dynamic typing

@@ -8,7 +8,7 @@ import {
   getAuthTokenWalletAddress,
 } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
-import { NebulaWaitListPage } from "../../team/[team_slug]/[project_slug]/nebula/components/nebula-waitlist-page";
+import { NebulaWaitListPage } from "../../team/[team_slug]/(internal)/[project_slug]/nebula/components/nebula-waitlist-page";
 import { getSessions } from "./api/session";
 import { ChatPageLayout } from "./components/ChatPageLayout";
 import { NebulaAccountButton } from "./components/NebulaAccountButton";
