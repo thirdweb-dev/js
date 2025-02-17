@@ -381,33 +381,90 @@ function TokenBalanceRow(props: {
     <StyledButton
       onClick={() => onClick(tokenBalance.token, wallet)}
       variant="secondary"
-      style={style}
+      style={{
+        ...style,
+        display: "flex",
+        justifyContent: "space-between",
+        minWidth: 0, // Needed for text truncation to work
+      }}
     >
-      <Container flex="row" center="y" gap="sm">
+      <Container
+        flex="row"
+        center="y"
+        gap="sm"
+        style={{
+          flex: "1 1 50%",
+          minWidth: 0,
+          maxWidth: "50%",
+          overflow: "hidden",
+          flexWrap: "nowrap",
+        }}
+      >
         <TokenIcon
           token={tokenBalance.token}
           chain={tokenBalance.chain}
           size="md"
           client={client}
         />
-        <Container flex="column" gap="4xs">
-          <Text size="xs" color="primaryText">
+        <Container flex="column" gap="4xs" style={{ minWidth: 0 }}>
+          <Text
+            size="xs"
+            color="primaryText"
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {tokenBalance.token.symbol}
           </Text>
-          {chainInfo && <Text size="xs">{chainInfo.name}</Text>}
+          {chainInfo && (
+            <Text
+              size="xs"
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {chainInfo.name}
+            </Text>
+          )}
         </Container>
       </Container>
-      <Container flex="row" center="y" gap="4xs" color="secondaryText">
+
+      <Container
+        flex="row"
+        center="y"
+        gap="4xs"
+        color="secondaryText"
+        style={{
+          flex: "1 1 50%",
+          maxWidth: "50%",
+          minWidth: 0,
+          justifyContent: "flex-end",
+          flexWrap: "nowrap",
+        }}
+      >
         <Container
           flex="column"
           color="secondaryText"
           gap="4xs"
           style={{
-            justifyContent: "flex-end",
             alignItems: "flex-end",
+            minWidth: 0,
+            overflow: "hidden",
           }}
         >
-          <Text size="xs" color="primaryText">
+          <Text
+            size="xs"
+            color="primaryText"
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {formatTokenBalance(tokenBalance.balance, true, 2)}
           </Text>
           <FiatValue
@@ -418,7 +475,11 @@ function TokenBalanceRow(props: {
             size="xs"
           />
         </Container>
-        <ChevronRightIcon width={iconSize.md} height={iconSize.md} />
+        <ChevronRightIcon
+          width={iconSize.md}
+          height={iconSize.md}
+          style={{ flexShrink: 0 }}
+        />
       </Container>
     </StyledButton>
   );
@@ -429,6 +490,7 @@ const StyledButton = /* @__PURE__ */ styled(Button)((props) => {
   return {
     background: "transparent",
     justifyContent: "space-between",
+    flexWrap: "nowrap",
     flexDirection: "row",
     padding: spacing.sm,
     paddingRight: spacing.xs,
