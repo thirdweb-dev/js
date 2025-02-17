@@ -7,6 +7,8 @@ import {
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
+import { computePublishedContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
+import { keccakId } from "../../utils/any-evm/keccak-id.js";
 import { ENTRYPOINT_ADDRESS_v0_6 } from "../../wallets/smart/lib/constants.js";
 import { prepareDeterministicDeployTransaction } from "./deploy-deterministic.js";
 
@@ -51,6 +53,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       salt: "some-salt",
     });
     const tx2 = prepareDeterministicDeployTransaction({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      contractId: "AccountFactory",
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
+      salt: keccakId("some-salt"),
+    });
+    const tx3 = prepareDeterministicDeployTransaction({
       chain: FORKED_OPTIMISM_CHAIN,
       client: TEST_CLIENT,
       contractId: "AccountFactory",
@@ -59,11 +71,42 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
     });
-    const [tx1Result, tx2Result] = await Promise.all([
+    const [tx1Result, tx2Result, tx3Result] = await Promise.all([
       simulateTransaction({ transaction: tx1 }),
       simulateTransaction({ transaction: tx2 }),
+      simulateTransaction({ transaction: tx3 }),
     ]);
-    expect(tx1Result !== tx2Result).toBe(true);
+    expect(tx1Result === tx2Result).toBe(true);
+    expect(tx1Result !== tx3Result).toBe(true);
+  });
+
+  it("computed address and deployed address should match", async () => {
+    const computedPromise = computePublishedContractAddress({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      contractId: "AccountFactory",
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
+      salt: keccakId("some-salt"),
+    });
+    const tx = prepareDeterministicDeployTransaction({
+      chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
+      contractId: "AccountFactory",
+      constructorParams: {
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        entrypoint: ENTRYPOINT_ADDRESS_v0_6,
+      },
+      salt: keccakId("some-salt"),
+    });
+
+    const [computed, txResult] = await Promise.all([
+      computedPromise,
+      simulateTransaction({ transaction: tx }),
+    ]);
+    expect(computed === txResult).toBe(true);
   });
   // TODO: Replace these tests' live contracts with mocks
   it("should deploy a published contract with no constructor", async () => {
