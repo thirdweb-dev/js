@@ -17,7 +17,7 @@ export type StaticPrepareTransactionOptions = {
   maxFeePerGas?: bigint | undefined;
   maxPriorityFeePerGas?: bigint | undefined;
   maxFeePerBlobGas?: bigint | undefined;
-  feeType?: FeeType | undefined;
+  type?: undefined | TransactionType;
   nonce?: number | undefined;
   extraGas?: bigint | undefined;
   // eip7702
@@ -35,7 +35,20 @@ export type StaticPrepareTransactionOptions = {
   };
 };
 
-export type FeeType = "legacy" | "eip1559";
+export type TransactionType =
+  | "legacy"
+  | "eip1559"
+  | "eip2930"
+  | "eip4844"
+  | "eip7702";
+
+export const TransactionTypeMap: Record<TransactionType, number> = {
+  legacy: 0,
+  eip1559: 1,
+  eip2930: 2,
+  eip4844: 3,
+  eip7702: 4,
+};
 
 export type EIP712TransactionOptions = {
   // constant or user input

@@ -3,10 +3,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { eth_getBlockByNumber } from "../rpc/actions/eth_getBlockByNumber.js";
 import { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
 import { getRpcClient } from "../rpc/rpc.js";
-import type {
-  FeeType,
-  PreparedTransaction,
-} from "../transaction/prepare-transaction.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import { toUnits } from "../utils/units.js";
 import { getGasPrice } from "./get-gas-price.js";
@@ -54,12 +51,12 @@ export async function getGasOverridesForTransaction(
   transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
   // first check for explicit values
-  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice, feeType] =
+  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice, type] =
     await Promise.all([
       resolvePromisedValue(transaction.maxFeePerGas),
       resolvePromisedValue(transaction.maxPriorityFeePerGas),
       resolvePromisedValue(transaction.gasPrice),
-      resolvePromisedValue(transaction.feeType),
+      resolvePromisedValue(transaction.type),
     ]);
 
   // Exit early if the user explicitly provided enough options
@@ -78,7 +75,7 @@ export async function getGasOverridesForTransaction(
   const defaultGasOverrides = await getDefaultGasOverrides(
     transaction.client,
     transaction.chain,
-    feeType,
+    type === "legacy" ? "legacy" : "eip1559", // 7702, 2930, and eip1559 all qualify as "eip1559" fee type
   );
 
   if (transaction.chain.experimental?.increaseZeroByteCount) {
@@ -108,6 +105,8 @@ export async function getGasOverridesForTransaction(
       maxPriorityFeePerGas ?? defaultGasOverrides.maxPriorityFeePerGas,
   };
 }
+
+export type FeeType = "legacy" | "eip1559";
 
 /**
  * Retrieves the default gas overrides for a given client and chain ID.

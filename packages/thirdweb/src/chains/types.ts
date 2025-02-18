@@ -1,4 +1,4 @@
-import type { FeeType } from "../transaction/prepare-transaction.js";
+import type { FeeType } from "../gas/fee-data.js";
 
 /**
  * @chain
