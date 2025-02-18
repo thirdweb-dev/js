@@ -314,6 +314,10 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
     name: "Europa",
     gasPrice: 110000n,
   },
+  "2020": {
+    name: "Ronin",
+    gasPrice: 110n * 10n ** 9n,
+  },
 };
 
 const CUSTOM_GAS_BINS = [
