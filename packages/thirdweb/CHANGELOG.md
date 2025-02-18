@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.88.7
+
+### Patch Changes
+
+- [#6289](https://github.com/thirdweb-dev/js/pull/6289) [`5abbae7`](https://github.com/thirdweb-dev/js/commit/5abbae7368854e1be4f774bd3a7bd48e0dde04f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect buy with fiat disabled in pay embed
+
 ## 5.88.6
 
 ### Patch Changes
