@@ -635,11 +635,7 @@ function SelectedTokenInfo(props: {
             placeholder="0"
             type="text"
             data-placeholder={props.tokenAmount === ""}
-            value={
-              props.tokenAmount
-                ? formatNumber(Number(props.tokenAmount), 5)
-                : "0"
-            }
+            value={props.tokenAmount || "0"}
             disabled={props.disabled}
             onClick={(e) => {
               // put cursor at the end of the input
