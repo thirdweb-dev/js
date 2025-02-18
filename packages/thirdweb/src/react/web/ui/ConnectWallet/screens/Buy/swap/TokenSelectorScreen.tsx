@@ -69,6 +69,7 @@ export function TokenSelectorScreen(props: {
   onSelectToken: (wallet: Wallet, token: TokenInfo, chain: Chain) => void;
   onConnect: () => void;
   onPayWithFiat: () => void;
+  fiatSupported: boolean;
 }) {
   const connectedWallets = useConnectedWallets();
   const activeAccount = useActiveAccount();
@@ -255,29 +256,31 @@ export function TokenSelectorScreen(props: {
               </Text>
             </Container>
           </Button>
-          <Button
-            variant="secondary"
-            fullWidth
-            onClick={props.onPayWithFiat}
-            bg="tertiaryBg"
-            style={{
-              border: `1px solid ${theme.colors.borderColor}`,
-              padding: spacing.sm,
-            }}
-          >
-            <Container
-              flex="row"
-              gap="sm"
-              center="y"
-              expand
-              color="secondaryIconColor"
+          {props.fiatSupported && (
+            <Button
+              variant="secondary"
+              fullWidth
+              onClick={props.onPayWithFiat}
+              bg="tertiaryBg"
+              style={{
+                border: `1px solid ${theme.colors.borderColor}`,
+                padding: spacing.sm,
+              }}
             >
-              <CardStackIcon width={iconSize.md} height={iconSize.md} />
-              <Text size="sm" color="primaryText">
-                Pay with credit card
-              </Text>
-            </Container>
-          </Button>
+              <Container
+                flex="row"
+                gap="sm"
+                center="y"
+                expand
+                color="secondaryIconColor"
+              >
+                <CardStackIcon width={iconSize.md} height={iconSize.md} />
+                <Text size="sm" color="primaryText">
+                  Pay with credit card
+                </Text>
+              </Container>
+            </Button>
+          )}
         </Container>
       </Container>
     </Container>
