@@ -5,7 +5,7 @@ import { ContractPublishForm } from "components/contract-components/contract-pub
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { getPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
+import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
   params: Promise<{
@@ -46,17 +46,11 @@ export default async function PublishContractPage(
   // - get the publish metadata with name+publisher address
   // - merge the two objects with publishMetadataFromUri taking higher precedence
   if (!publishMetadataFromUri.version) {
-    const publishedContractVersions =
-      await getPublishedContractsWithPublisherMapping({
+    const publishedContract =
+      await getLatestPublishedContractsWithPublisherMapping({
         publisher: address,
         contract_id: publishMetadataFromUri.name,
       });
-
-    if (!publishedContractVersions) {
-      notFound();
-    }
-
-    const publishedContract = publishedContractVersions[0];
 
     if (publishedContract) {
       publishMetadata = {

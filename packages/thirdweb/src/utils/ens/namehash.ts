@@ -20,7 +20,10 @@ export function namehash(name: string) {
     const hashed = hashFromEncodedLabel
       ? toBytes(hashFromEncodedLabel)
       : keccak256(stringToBytes(item), "bytes");
-    result = keccak256(concat([result, hashed]), "bytes");
+    result = keccak256(
+      concat([result, hashed]),
+      "bytes",
+    ) as Uint8Array<ArrayBuffer>;
   }
 
   return bytesToHex(result);

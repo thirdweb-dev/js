@@ -12,6 +12,10 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
 export const metadata = createMetadata({
   title: "thirdweb Nebula Documentation",
+  image: {
+    title: "Nebula Docs",
+    icon: "nebula",
+  },
   description:
     "thirdweb Nebula Docs : explore the Nebula API Reference and unlock the most powerful AI to interact with the blockchain yet.",
 });

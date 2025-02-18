@@ -10,7 +10,7 @@ export const arbitrumNova = /* @__PURE__ */ defineChain({
   blockExplorers: [
     {
       name: "Arbiscan",
-      url: "https://nova-explorer.arbitrum.io/",
+      url: "https://nova.arbiscan.io/",
     },
   ],
 });

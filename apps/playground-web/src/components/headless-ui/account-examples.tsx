@@ -1,20 +1,17 @@
-"use client";
-
-import { THIRDWEB_CLIENT } from "@/lib/client";
-import { ethereum } from "thirdweb/chains";
-import {
-  AccountAddress,
-  AccountAvatar,
-  AccountBalance,
-  type AccountBalanceInfo,
-  AccountBlobbie,
-  AccountName,
-  AccountProvider,
-} from "thirdweb/react";
-import { shortenAddress } from "thirdweb/utils";
 import { CodeExample } from "../code/code-example";
-
-const vitalikAddress = "0xd8da6bf26964af9d7eed9e03e53415d37aa96045";
+import {
+  AccountAddressBasicPreview,
+  AccountAddressFormatPreview,
+  AccountAvatarBasicPreview,
+  AccountBalanceBasicPreview,
+  AccountBalanceCustomTokenPreview,
+  AccountBalanceFormatPreview,
+  AccountBalanceUSDPreview,
+  AccountBlobbieBasicPreview,
+  AccountNameBasicPreview,
+  AccountNameCustomPreview,
+  ConnectDetailsButtonClonePreview,
+} from "./account-previews";
 
 /**
  * Show full wallet address with AccountAddress
@@ -32,11 +29,7 @@ export function AccountAddressBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountAddress />
-          </AccountProvider>
-        }
+        preview={<AccountAddressBasicPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 
 function App() {
@@ -63,11 +56,7 @@ export function AccountAddressFormat() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountAddress formatFn={shortenAddress} />
-          </AccountProvider>
-        }
+        preview={<AccountAddressFormatPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 
@@ -98,11 +87,7 @@ export function AccountNameBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountName loadingComponent={<span>Loading...</span>} />
-          </AccountProvider>
-        }
+        preview={<AccountNameBasicPreview />}
         code={`import { AccountProvider, AccountName } from "thirdweb/react";
 
 function App() {
@@ -126,14 +111,7 @@ export function AccountNameCustom() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountName
-              socialType="lens"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountNameCustomPreview />}
         code={`import { AccountProvider, AccountName } from "thirdweb/react";
 
 function App() {
@@ -164,21 +142,14 @@ export function AccountBalanceBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountBalance
-              chain={ethereum}
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountBalanceBasicPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 
 function App() {
   return <AccountProvider address="0xd8da6bf26964af9d7eed9e03e53415d37aa96045" client={thirdwebClient}>
-    <AccountBalance 
-      chain={ethereum} 
+    <AccountBalance
+      chain={ethereum}
       loadingComponent={<span>Loading...</span>}
     />
   </AccountProvider>
@@ -202,15 +173,7 @@ export function AccountBalanceCustomToken() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountBalance
-              chain={ethereum}
-              tokenAddress="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountBalanceCustomTokenPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 
@@ -218,9 +181,9 @@ const USDC_ETHEREUM = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
 
 function App() {
   return <AccountProvider address="0xd8da6bf26964af9d7eed9e03e53415d37aa96045" client={thirdwebClient}>
-    <AccountBalance 
-      chain={ethereum} 
-      tokenAddress={USDC_ETHEREUM} 
+    <AccountBalance
+      chain={ethereum}
+      tokenAddress={USDC_ETHEREUM}
       loadingComponent={<span>Loading...</span>}
     />
   </AccountProvider>
@@ -244,23 +207,13 @@ export function AccountBalanceFormat() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountBalance
-              chain={ethereum}
-              formatFn={(props: AccountBalanceInfo) =>
-                `${Math.ceil(props.balance * 1000) / 1000} ${props.symbol}`
-              }
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountBalanceFormatPreview />}
         code={`import { AccountProvider, AccountAddress, type AccountBalanceFormatParams } from "thirdweb/react";
 
 function App() {
   return <AccountProvider address="0xd8da6bf26964af9d7eed9e03e53415d37aa96045" client={thirdwebClient}>
-    <AccountBalance 
-      chain={ethereum} 
+    <AccountBalance
+      chain={ethereum}
       loadingComponent={<span>Loading...</span>}
       formatFn={(props: AccountBalanceInfo) => \`\${Math.ceil(props.balance * 1000) / 1000} \${props.symbol}\`} />
   </AccountProvider>
@@ -284,23 +237,15 @@ export function AccountBalanceUSD() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountBalance
-              chain={ethereum}
-              showBalanceInFiat="USD"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountBalanceUSDPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 
 function App() {
   return (
     <AccountProvider address="0xd8da6bf26964af9d7eed9e03e53415d37aa96045" client={thirdwebClient}>
-      <AccountBalance 
-        chain={ethereum} 
-        showBalanceInFiat="USD" 
+      <AccountBalance
+        chain={ethereum}
+        showBalanceInFiat="USD"
         loadingComponent={<span>Loading...</span>}
       />
     </AccountProvider>
@@ -328,14 +273,7 @@ export function AccountAvatarBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountAvatar
-              className="h-20 w-20 rounded-full"
-              loadingComponent={<span>Loading...</span>}
-            />
-          </AccountProvider>
-        }
+        preview={<AccountAvatarBasicPreview />}
         code={`import { AccountProvider, AccountAvatar } from "thirdweb/react";
 
 function App() {
@@ -362,11 +300,7 @@ export function AccountBlobbieBasic() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <AccountBlobbie className="h-20 w-20 rounded-full" />
-          </AccountProvider>
-        }
+        preview={<AccountBlobbieBasicPreview />}
         code={`import { AccountProvider, AccountBlobbie } from "thirdweb/react";
 
 function App() {
@@ -394,58 +328,7 @@ export function ConnectDetailsButtonClone() {
       </div>
 
       <CodeExample
-        preview={
-          <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
-            <button
-              type="button"
-              className="flex min-w-[200px] flex-row items-center gap-2 rounded-md border bg-gray-800 px-4 py-2"
-            >
-              <AccountAvatar
-                className="h-10 w-10 rounded-full"
-                loadingComponent={
-                  <AccountBlobbie className="h-10 w-10 rounded-full" />
-                }
-                fallbackComponent={
-                  <AccountBlobbie className="h-10 w-10 rounded-full" />
-                }
-              />
-              <div className="flex flex-col gap-1">
-                <AccountName
-                  className="text-left"
-                  loadingComponent={
-                    <AccountAddress
-                      formatFn={shortenAddress}
-                      className="text-left"
-                    />
-                  }
-                  fallbackComponent={
-                    <AccountAddress
-                      formatFn={shortenAddress}
-                      className="text-left"
-                    />
-                  }
-                />
-                <div className="flex flex-row items-center gap-2">
-                  <AccountBalance
-                    className="text-left text-sm"
-                    chain={ethereum}
-                    loadingComponent={
-                      <span className="text-left text-sm">Loading...</span>
-                    }
-                    fallbackComponent={
-                      <span className="text-left text-sm">Loading...</span>
-                    }
-                  />
-                  <AccountBalance
-                    className="text-left text-sm"
-                    chain={ethereum}
-                    showBalanceInFiat="USD"
-                  />
-                </div>
-              </div>
-            </button>
-          </AccountProvider>
-        }
+        preview={<ConnectDetailsButtonClonePreview />}
         code={`import { AccountProvider, AccountAvatar, AccountName, AccountBalance, AccountAddress, AccountBlobbie } from "thirdweb/react";
 
 function App() {
@@ -499,7 +382,7 @@ function App() {
           </div>
         </div>
       </button>
-    </AccountProvider>  
+    </AccountProvider>
   )
 }`}
         lang="tsx"

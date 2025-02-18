@@ -46,6 +46,7 @@ export const validTeamResponse: TeamResponse = {
   billingEmail: "test@example.com",
   billingStatus: "noPayment",
   growthTrialEligible: false,
+  canCreatePublicChains: false,
   enabledScopes: ["storage", "rpc", "bundler"],
 };
 

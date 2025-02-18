@@ -13,9 +13,9 @@ describe("client", () => {
     expect(client.clientId).toBe(computeClientIdFromSecretKey("bar"));
     expect(client.secretKey).toBe("bar");
   });
-  it("should ignore clientId if secretKey is provided", () => {
+  it("should NOT ignore clientId if secretKey is provided", () => {
     const client = createThirdwebClient({ clientId: "foo", secretKey: "bar" });
-    expect(client.clientId).toBe(computeClientIdFromSecretKey("bar"));
+    expect(client.clientId).toBe("foo");
     expect(client.secretKey).toBe("bar");
   });
   it("should throw an error if neither clientId nor secretKey is provided", () => {

@@ -4,6 +4,7 @@ type PendingTxInfo =
   | {
       type: "swap";
       txHash: string;
+      chainId: number;
     }
   | {
       type: "fiat";

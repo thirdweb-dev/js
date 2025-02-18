@@ -128,10 +128,9 @@ export const SettingsPrimarySale = ({
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
-                isDisabled={mutation.isPending || !address}
+                disabled={mutation.isPending || !address}
                 solidityType="address"
                 formContext={form}
-                variant="filled"
                 {...form.register("primary_sale_recipient")}
               />
               <FormErrorMessage>

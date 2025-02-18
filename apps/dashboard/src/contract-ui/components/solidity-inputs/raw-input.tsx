@@ -1,6 +1,9 @@
-import { Textarea, type TextareaProps } from "@chakra-ui/react";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type { SolidityInputWithTypeProps } from ".";
 import { formatHint, validateSolidityInput } from "./helpers";
+
+type TextareaProps = React.ComponentProps<typeof Textarea>;
 
 export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
@@ -49,9 +52,9 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
   return (
     <div className="flex flex-col">
       <Textarea
-        fontFamily="mono"
         placeholder={solidityType}
         {...(restOfInputProps as TextareaProps)}
+        className={cn("font-mono", restOfInputProps.className)}
         value={form.watch(inputName)}
         onChange={handleChange}
       />

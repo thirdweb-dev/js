@@ -1,5 +1,43 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.8
+
+### Patch Changes
+
+- [#6212](https://github.com/thirdweb-dev/js/pull/6212) [`6f2f92d`](https://github.com/thirdweb-dev/js/commit/6f2f92ddea333679ff1962b2df0da4ecf43be966) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Helper to call client usageV2 reporting endpoint
+
+- [#6213](https://github.com/thirdweb-dev/js/pull/6213) [`cad9c74`](https://github.com/thirdweb-dev/js/commit/cad9c74befe33bef2cc6a12a8ade8d9c996ffe41) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Omit team_id for client usageV2 events
+
+- [#6219](https://github.com/thirdweb-dev/js/pull/6219) [`91b0367`](https://github.com/thirdweb-dev/js/commit/91b0367b23d5a9b4c345210d430839f7c2351301) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix auth for cf workers
+
+- [#6207](https://github.com/thirdweb-dev/js/pull/6207) [`cbfe9ec`](https://github.com/thirdweb-dev/js/commit/cbfe9ec459b33884136ba23a87effd8ab4e99aeb) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Allow client-side usageV2 reporting
+
+## 0.8.7
+
+### Patch Changes
+
+- [#6206](https://github.com/thirdweb-dev/js/pull/6206) [`8aeb4d6`](https://github.com/thirdweb-dev/js/commit/8aeb4d6308a2624a3e483aa4da408bbbdc8da688) Thanks [@arcoraven](https://github.com/arcoraven)! - Export usageV2 sources
+
+## 0.8.6
+
+### Patch Changes
+
+- [#6172](https://github.com/thirdweb-dev/js/pull/6172) [`a8ac98b`](https://github.com/thirdweb-dev/js/commit/a8ac98bd493d1d6e824aad868dea1ec42ff22768) Thanks [@catalyst17](https://github.com/catalyst17)! - add `canCreatePublicChains` to TeamResponse
+
+- [#6183](https://github.com/thirdweb-dev/js/pull/6183) [`18f0e57`](https://github.com/thirdweb-dev/js/commit/18f0e575c4a9764b3192931451cbd3f632a21e3c) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Update list of usageV2 sources"
+
+## 0.8.5
+
+### Patch Changes
+
+- [#6171](https://github.com/thirdweb-dev/js/pull/6171) [`ee6bd4f`](https://github.com/thirdweb-dev/js/commit/ee6bd4f8982d2b0db823c8cb472aeb9d6f9408fb) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] export KafkaProducer
+
+- [#6181](https://github.com/thirdweb-dev/js/pull/6181) [`dfd64d2`](https://github.com/thirdweb-dev/js/commit/dfd64d2896444b223cbe999c7973ed1287cd833e) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Expose maxInFlightRequests in Kafka producer
+
+- [#6164](https://github.com/thirdweb-dev/js/pull/6164) [`821caa6`](https://github.com/thirdweb-dev/js/commit/821caa63d78a2f985925d6c1be24143f46f435f4) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix: Add missing CompressionCodecs import
+
+- [#6170](https://github.com/thirdweb-dev/js/pull/6170) [`ccf6329`](https://github.com/thirdweb-dev/js/commit/ccf6329810c1426fadc4483660e154ae38a2927b) Thanks [@arcoraven](https://github.com/arcoraven)! - Add raw kafka producer
+
 ## 0.8.4
 
 ### Patch Changes

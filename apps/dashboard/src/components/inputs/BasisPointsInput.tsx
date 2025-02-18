@@ -1,11 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-import {
-  Input,
-  InputGroup,
-  type InputProps,
-  InputRightAddon,
-} from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { PercentIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+
+type InputProps = React.ComponentProps<typeof Input>;
 
 interface BasisPointsInputProps
   extends Omit<InputProps, "onChange" | "value" | "onBlur" | "max" | "min"> {
@@ -44,9 +42,11 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
   }, [stringValue]);
 
   return (
-    <InputGroup {...restInputProps}>
+    <div className="flex overflow-hidden rounded-lg border border-border ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
       <Input
+        className="rounded-r-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
         value={stringValue}
+        {...restInputProps}
         onChange={(e) => setStringValue(e.target.value)}
         onBlur={(e) => {
           const val = e.target.value;
@@ -61,7 +61,9 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
         }}
         maxLength={5}
       />
-      <InputRightAddon>%</InputRightAddon>
-    </InputGroup>
+      <div className="flex items-center justify-center border-border border-l bg-card px-3 font-medium">
+        <PercentIcon className="size-4" />
+      </div>
+    </div>
   );
 };

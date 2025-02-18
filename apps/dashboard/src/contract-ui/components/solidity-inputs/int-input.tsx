@@ -1,4 +1,5 @@
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useCallback } from "react";
 import { toWei } from "thirdweb";
 import { Button } from "tw-components";

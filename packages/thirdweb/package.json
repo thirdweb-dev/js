@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.87.3",
+  "version": "5.88.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -207,7 +207,7 @@
     "!tsconfig.build.json"
   ],
   "dependencies": {
-    "@coinbase/wallet-sdk": "4.2.4",
+    "@coinbase/wallet-sdk": "4.3.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.0",
     "@google/model-viewer": "2.1.1",

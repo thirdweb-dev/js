@@ -21,6 +21,7 @@ export function TeamHeaderLoggedIn(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
   account: Pick<Account, "email" | "id">;
+  accountAddress: string;
 }) {
   const [createProjectDialogState, setCreateProjectDialogState] = useState<
     { team: Team; isOpen: true } | { isOpen: false }
@@ -56,6 +57,7 @@ export function TeamHeaderLoggedIn(props: {
       });
     },
     client: getThirdwebClient(),
+    accountAddress: props.accountAddress,
   };
 
   return (

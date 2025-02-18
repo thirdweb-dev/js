@@ -1,5 +1,8 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
+import {
+  fetchLatestPublishedContractVersion,
+  fetchPublishedContractVersions,
+} from "components/contract-components/fetch-contracts-with-versions";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 
@@ -32,6 +35,27 @@ export async function getPublishedContractsWithPublisherMapping(options: {
     );
 
     return publishedContractVersions;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function getLatestPublishedContractsWithPublisherMapping(options: {
+  publisher: string;
+  contract_id: string;
+}) {
+  const { publisher, contract_id } = options;
+
+  try {
+    // resolve ENS
+    const publisherAddress = isAddress(publisher)
+      ? publisher
+      : await resolveAddress({
+          client: getThirdwebClient(),
+          name: mapThirdwebPublisher(publisher),
+        });
+
+    return fetchLatestPublishedContractVersion(publisherAddress, contract_id);
   } catch {
     return undefined;
   }

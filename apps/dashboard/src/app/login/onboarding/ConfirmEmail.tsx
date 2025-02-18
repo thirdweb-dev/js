@@ -206,6 +206,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
           <InputOTP
             maxLength={6}
             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+            inputMode="text"
             value={token}
             onChange={handleChange}
             disabled={saving}

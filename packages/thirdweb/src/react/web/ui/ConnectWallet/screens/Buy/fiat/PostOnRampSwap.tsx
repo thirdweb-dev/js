@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { getContract } from "../../../../../../../contract/contract.js";
+import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
@@ -43,11 +46,38 @@ export function PostOnRampSwap(props: {
     refetchOnWindowFocus: false,
   });
 
+  const allowanceQuery = useQuery({
+    queryKey: [
+      "allowance",
+      props.payer.account.address,
+      postOnRampQuoteQuery.data?.approvalData,
+    ],
+    queryFn: () => {
+      if (!postOnRampQuoteQuery.data?.approvalData) {
+        return null;
+      }
+      return allowance({
+        contract: getContract({
+          client: props.client,
+          address: postOnRampQuoteQuery.data.swapDetails.fromToken.tokenAddress,
+          chain: getCachedChain(
+            postOnRampQuoteQuery.data.swapDetails.fromToken.chainId,
+          ),
+        }),
+        spender: postOnRampQuoteQuery.data.approvalData.spenderAddress,
+        owner: props.payer.account.address,
+      });
+    },
+    enabled: !!postOnRampQuoteQuery.data?.approvalData,
+    refetchOnMount: true,
+  });
+
   useEffect(() => {
     if (
       postOnRampQuoteQuery.data &&
       !lockedOnRampQuote &&
-      !postOnRampQuoteQuery.isRefetching
+      !postOnRampQuoteQuery.isRefetching &&
+      !allowanceQuery.isLoading
     ) {
       setLockedOnRampQuote(postOnRampQuoteQuery.data);
     }
@@ -55,6 +85,7 @@ export function PostOnRampSwap(props: {
     postOnRampQuoteQuery.data,
     lockedOnRampQuote,
     postOnRampQuoteQuery.isRefetching,
+    allowanceQuery.isLoading,
   ]);
 
   if (postOnRampQuoteQuery.isError) {
@@ -133,6 +164,7 @@ export function PostOnRampSwap(props: {
       transactionMode={props.transactionMode}
       isEmbed={props.isEmbed}
       onSuccess={props.onSuccess}
+      approvalAmount={allowanceQuery.data ?? undefined}
     />
   );
 }

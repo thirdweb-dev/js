@@ -132,9 +132,8 @@ export const SettingsPlatformFees = ({
               <SolidityInput
                 solidityType="address"
                 formContext={form}
-                variant="filled"
                 {...form.register("platform_fee_recipient")}
-                isDisabled={!address || sendAndConfirmTx.isPending}
+                disabled={!address || sendAndConfirmTx.isPending}
               />
               <FormErrorMessage>
                 {
@@ -155,7 +154,6 @@ export const SettingsPlatformFees = ({
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
-                variant="filled"
                 value={form.watch("platform_fee_basis_points")}
                 onChange={(value) =>
                   form.setValue("platform_fee_basis_points", value, {
@@ -163,7 +161,7 @@ export const SettingsPlatformFees = ({
                     shouldTouch: true,
                   })
                 }
-                isDisabled={sendAndConfirmTx.isPending}
+                disabled={sendAndConfirmTx.isPending}
               />
               <FormErrorMessage>
                 {

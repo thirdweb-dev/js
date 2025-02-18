@@ -1,7 +1,9 @@
-import { Flex, Textarea, type TextareaProps } from "@chakra-ui/react";
-import { FormHelperText } from "tw-components";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type { SolidityInputWithTypeProps } from ".";
 import { formatHint } from "./helpers";
+
+type TextareaProps = React.ComponentProps<typeof Textarea>;
 
 export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
@@ -50,18 +52,18 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
   };
 
   return (
-    <Flex flexDir="column">
+    <div>
       <Textarea
-        fontFamily="mono"
         placeholder={solidityType}
         {...(restOfInputProps as TextareaProps)}
         value={form.watch(inputName)}
+        className={cn("font-mono", restOfInputProps.className)}
         onChange={handleChange}
       />
-      <FormHelperText>
+      <p className="mt-2 text-muted-foreground text-sm">
         Input should be passed in JSON format - Ex:{" "}
         {formatHint(solidityType, solidityComponents)}
-      </FormHelperText>
-    </Flex>
+      </p>
+    </div>
   );
 };

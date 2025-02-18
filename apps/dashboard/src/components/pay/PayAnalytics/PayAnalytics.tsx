@@ -14,8 +14,18 @@ import { Payouts } from "./components/Payouts";
 import { TotalPayVolume } from "./components/TotalPayVolume";
 import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
 
-export function PayAnalytics(props: { clientId: string }) {
+export function PayAnalytics(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
+  clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
+}) {
   const clientId = props.clientId;
+  const projectId = props.projectId;
+  const teamId = props.teamId;
   const [range, setRange] = useState<Range>(() =>
     getLastNDaysRange("last-120"),
   );
@@ -34,12 +44,16 @@ export function PayAnalytics(props: { clientId: string }) {
           <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
             <TotalVolumePieChart
               clientId={clientId}
+              projectId={projectId}
+              teamId={teamId}
               from={range.from}
               to={range.to}
             />
           </div>
           <TotalPayVolume
             clientId={clientId}
+            projectId={projectId}
+            teamId={teamId}
             from={range.from}
             to={range.to}
             numberOfDays={numberOfDays}
@@ -50,6 +64,8 @@ export function PayAnalytics(props: { clientId: string }) {
           <CardContainer>
             <Payouts
               clientId={clientId}
+              projectId={projectId}
+              teamId={teamId}
               from={range.from}
               to={range.to}
               numberOfDays={numberOfDays}
@@ -58,6 +74,8 @@ export function PayAnalytics(props: { clientId: string }) {
           <CardContainer>
             <PaymentsSuccessRate
               clientId={clientId}
+              projectId={projectId}
+              teamId={teamId}
               from={range.from}
               to={range.to}
             />
@@ -68,6 +86,8 @@ export function PayAnalytics(props: { clientId: string }) {
           <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
             <PayNewCustomers
               clientId={clientId}
+              projectId={projectId}
+              teamId={teamId}
               from={range.from}
               to={range.to}
               numberOfDays={numberOfDays}
@@ -75,13 +95,21 @@ export function PayAnalytics(props: { clientId: string }) {
           </div>
           <PayCustomersTable
             clientId={clientId}
+            projectId={projectId}
+            teamId={teamId}
             from={range.from}
             to={range.to}
           />
         </GridWithSeparator>
 
         <CardContainer>
-          <PaymentHistory clientId={clientId} from={range.from} to={range.to} />
+          <PaymentHistory
+            clientId={clientId}
+            projectId={projectId}
+            teamId={teamId}
+            from={range.from}
+            to={range.to}
+          />
         </CardContainer>
       </div>
     </div>

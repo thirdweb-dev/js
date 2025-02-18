@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { getContract } from "thirdweb";
-import { base, sepolia } from "thirdweb/chains";
+import { base, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
@@ -21,12 +21,12 @@ const nftContract = getContract({
   client: THIRDWEB_CLIENT,
 });
 
-const USDC = getDefaultToken(sepolia, "USDC");
+const USDC = getDefaultToken(polygon, "USDC");
 
 const usdcContract = getContract({
   // biome-ignore lint/style/noNonNullAssertion: its there
   address: USDC!.address,
-  chain: sepolia,
+  chain: polygon,
   client: THIRDWEB_CLIENT,
 });
 
@@ -55,6 +55,7 @@ export function PayTransactionPreview() {
               to: account?.address || "",
             }),
             metadata: nft?.metadata,
+            buyWithFiat: false,
           }}
         />
       )}
@@ -69,6 +70,7 @@ export function PayTransactionButtonPreview() {
   return (
     <>
       <StyledConnectButton />
+      <div className="h-10" />
       {account && (
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-2">

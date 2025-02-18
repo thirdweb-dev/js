@@ -1,5 +1,179 @@
 # thirdweb
 
+## 5.88.7
+
+### Patch Changes
+
+- [#6289](https://github.com/thirdweb-dev/js/pull/6289) [`5abbae7`](https://github.com/thirdweb-dev/js/commit/5abbae7368854e1be4f774bd3a7bd48e0dde04f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect buy with fiat disabled in pay embed
+
+## 5.88.6
+
+### Patch Changes
+
+- [#6274](https://github.com/thirdweb-dev/js/pull/6274) [`b182302`](https://github.com/thirdweb-dev/js/commit/b182302f590e75c9881cebd0ca1cc8b1425d50b8) Thanks [@kumaryash90](https://github.com/kumaryash90)! - bytes32 salt for deterministic deployment
+
+- [#6283](https://github.com/thirdweb-dev/js/pull/6283) [`5a08176`](https://github.com/thirdweb-dev/js/commit/5a08176eb0eb6d258d1d521a1e7a44c08145a043) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect supportedTokens override in PayEmbed
+
+- [#6281](https://github.com/thirdweb-dev/js/pull/6281) [`a0f3557`](https://github.com/thirdweb-dev/js/commit/a0f355717ad3c829f3d692183be46a43187eca49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix text wrapping for long balances in token selector
+
+- [#6282](https://github.com/thirdweb-dev/js/pull/6282) [`45ca033`](https://github.com/thirdweb-dev/js/commit/45ca0334bb4e8378fefd683e48aef95e4ce8b886) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Deprecated `viemAdapter.walletClient` in favor of `viemAdapter.wallet` to take wallet instances instead of accounts
+
+  BEFORE:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.walletClient.toViem({
+    account, // Account
+    chain,
+    client,
+  });
+  ```
+
+  AFTER:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.wallet.toViem({
+    wallet, // now pass a connected Wallet instance instead of an account
+    chain,
+    client,
+  });
+  ```
+
+  This allows for full wallet lifecycle management with the viem adapter, including switching chains, adding chains, events and more.
+
+## 5.88.5
+
+### Patch Changes
+
+- [#6269](https://github.com/thirdweb-dev/js/pull/6269) [`0574eac`](https://github.com/thirdweb-dev/js/commit/0574eac02c832c382972fd545df79c36e11796e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable chain switching for toEIP1194 provider
+
+- [#6257](https://github.com/thirdweb-dev/js/pull/6257) [`562c534`](https://github.com/thirdweb-dev/js/commit/562c534d3763ac645618386d8fa9a3b8db3769d9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New PayEmbed UI for token selection
+
+- [#6243](https://github.com/thirdweb-dev/js/pull/6243) [`52cbcd2`](https://github.com/thirdweb-dev/js/commit/52cbcd2d57abf4d69ee417fe98fca815e19f2f34) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix PayEmbed fiat values to 2 decimal places
+
+- [#6262](https://github.com/thirdweb-dev/js/pull/6262) [`b882e29`](https://github.com/thirdweb-dev/js/commit/b882e299353d895724c4e44216ffb47353a9bf7f) Thanks [@MananTank](https://github.com/MananTank)! - Fix ConnectEmbed briefly showing "Sign In" prompt while the login status is not known - show loading indicator instead
+
+## 5.88.4
+
+### Patch Changes
+
+- [#6246](https://github.com/thirdweb-dev/js/pull/6246) [`98b6198`](https://github.com/thirdweb-dev/js/commit/98b6198687b11022033fb08410407f0ccb09cd1c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Prevent popup opening when logging in with auth mode: "redirect"
+
+## 5.88.3
+
+### Patch Changes
+
+- [#6240](https://github.com/thirdweb-dev/js/pull/6240) [`ee1bc3e`](https://github.com/thirdweb-dev/js/commit/ee1bc3eb076a189fa806dd6008bf2f97e0bd052f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont display dollar and token values for wallet balances
+
+## 5.88.2
+
+### Patch Changes
+
+- [#6210](https://github.com/thirdweb-dev/js/pull/6210) [`2fbf105`](https://github.com/thirdweb-dev/js/commit/2fbf105d156ee551eec29e545fa08c43fd649051) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont retry on quote errors, show fiat value in every step
+
+- [#6209](https://github.com/thirdweb-dev/js/pull/6209) [`97c9ab7`](https://github.com/thirdweb-dev/js/commit/97c9ab7e1caa8b3e006ecc7f64b54b392ba83eda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Batch approvals and swaps if using smart wallets
+
+- [#6217](https://github.com/thirdweb-dev/js/pull/6217) [`6b2a90a`](https://github.com/thirdweb-dev/js/commit/6b2a90ac89fd8c1bb8b784fb67e2a1a1a0e99816) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle updating session keys with new params and expose `shouldUpdateSessionKey` from `extensions/erc4337`
+
+- [#6237](https://github.com/thirdweb-dev/js/pull/6237) [`fbafb65`](https://github.com/thirdweb-dev/js/commit/fbafb65f5c8669efd23028dd365982274cc06034) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PayEmbed UI polish
+
+- [#6191](https://github.com/thirdweb-dev/js/pull/6191) [`66bbedb`](https://github.com/thirdweb-dev/js/commit/66bbedbe3afef8b3eb6902e47391bd914f18bcca) Thanks [@jcheese1](https://github.com/jcheese1)! - Add treasure and treasureTopaz chain definitions
+
+- [#6234](https://github.com/thirdweb-dev/js/pull/6234) [`159ffbf`](https://github.com/thirdweb-dev/js/commit/159ffbfaeed19dc6e37c19ad502b45a6a9a80669) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `canClaim` extension function for erc20/721/1155 drops
+
+- [#6236](https://github.com/thirdweb-dev/js/pull/6236) [`6b286c7`](https://github.com/thirdweb-dev/js/commit/6b286c7e83dbba4beb6eeedc6ec24d9d3617f0cd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont allow editing amoutns for non fund_wallet modes in PayEmbed
+
+## 5.88.1
+
+### Patch Changes
+
+- [#6204](https://github.com/thirdweb-dev/js/pull/6204) [`f1cd253`](https://github.com/thirdweb-dev/js/commit/f1cd2539d1be15eb18807b3f5f2b90509e3d58cf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update coinbase wallet sdk
+
+## 5.88.0
+
+### Minor Changes
+
+- [#6194](https://github.com/thirdweb-dev/js/pull/6194) [`9663079`](https://github.com/thirdweb-dev/js/commit/966307906212ac99dc0a2a9be88e514c920d39c4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added session keys to smart wallet options
+
+  You can now pass a `sessionKey` to the `smartWallet` options function to immediately add a session key to the smart wallet upon connection.
+
+  This is great in combination with an engine backend wallet! Let's you act on behalf of the user from your backend, making executing transactions as easy as a REST API call. Also unblocks automations, like renewing a subscription, or paying for a service.
+
+  ```ts
+  const wallet = smartWallet({
+    sessionKey: {
+      address: "0x...", // the session key address (ex: engine backend wallet)
+      permissions: {
+        approvedTargets: ["0x..."], // allowed contract addresses (or * for all)
+        nativeTokenLimitPerTransaction: 0.1, // max spend per transaction in ETH
+        permissionEndTimestamp: new Date(Date.now() + 1000 * 60 * 60), // expiration date
+      },
+    },
+  });
+
+  // this will connect the user wallet and add the session key if not already added
+  await wallet.connect({
+    client: TEST_CLIENT,
+    personalAccount,
+  });
+  ```
+
+  You can also pass the `sessionKey` to the `ConnectButton`, `ConnectEmbed` components and `useConnect` hook.
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    accountAbstraction={{
+      chain,
+      sponsorGas: true,
+      sessionKey: {
+        address: "0x...",
+        permissions: {
+          approvedTargets: "*",
+        },
+      },
+    }}
+  />
+  ```
+
+  Also works for the `inAppWallet` `smartAccount` option!
+
+  ```ts
+  const wallet = inAppWallet({
+    smartAccount: {
+      chain,
+      sponsorGas: true,
+      sessionKey: {
+        address: "0x...",
+        permissions: {
+          approvedTargets: "*",
+        },
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#6193](https://github.com/thirdweb-dev/js/pull/6193) [`1f6bb7c`](https://github.com/thirdweb-dev/js/commit/1f6bb7c3294d70648b120a6a6a6cba13302a84fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show fiat amount in PayEmbed main screen
+
+- [#6192](https://github.com/thirdweb-dev/js/pull/6192) [`30e13e6`](https://github.com/thirdweb-dev/js/commit/30e13e6b9176265a2f4eddfa53578889abbcb750) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow editing pay amount mid flow
+
+- [#6190](https://github.com/thirdweb-dev/js/pull/6190) [`2dfc245`](https://github.com/thirdweb-dev/js/commit/2dfc245d44dde86e42f6c799305db707316432aa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add fiat provider selection in PayEmbed
+
+- [#6187](https://github.com/thirdweb-dev/js/pull/6187) [`ee57ded`](https://github.com/thirdweb-dev/js/commit/ee57ded902cb69da6fc171599a4a90776e650149) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Requery allowances when getting back to quote screen
+
+- [#6188](https://github.com/thirdweb-dev/js/pull/6188) [`64d7bf3`](https://github.com/thirdweb-dev/js/commit/64d7bf358fe2014b684688d41d525a75e47f1b82) Thanks [@jnsdls](https://github.com/jnsdls)! - when explicitly passing `clientId` to `createThirdwebClient()` prefer it over computing the `clientId` from a passed `secretKey` option
+
+## 5.87.4
+
+### Patch Changes
+
+- [#6182](https://github.com/thirdweb-dev/js/pull/6182) [`f77165e`](https://github.com/thirdweb-dev/js/commit/f77165e2d1dd13a1887604c3431bd49b9bd67f28) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Skip swap approvals if already approved and always calculate gas prices locally
+
 ## 5.87.3
 
 ### Patch Changes

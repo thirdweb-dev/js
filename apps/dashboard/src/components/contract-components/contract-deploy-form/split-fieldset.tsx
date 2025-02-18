@@ -1,12 +1,11 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { InfoIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { ZERO_ADDRESS } from "thirdweb";
-import { FormErrorMessage, FormLabel } from "tw-components";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -33,48 +32,42 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
   return (
     <Fieldset legend="Split Settings">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           {fields.map((field, index) => {
             return (
               <div key={field.id} className="flex items-end gap-3">
-                <FormControl
-                  isInvalid={
-                    !!form.getFieldState(
+                <FormFieldSetup
+                  className="grow"
+                  isRequired={false}
+                  label="Recipient Address"
+                  errorMessage={
+                    form.getFieldState(
                       `recipients.${index}.address`,
                       form.formState,
-                    ).error
+                    ).error?.message
                   }
                 >
-                  <FormLabel>Recipient Address</FormLabel>
                   <SolidityInput
                     solidityType="address"
                     formContext={form}
-                    variant="filled"
                     placeholder={ZERO_ADDRESS}
                     {...form.register(`recipients.${index}.address`)}
                   />
-                  <FormErrorMessage>
-                    {
-                      form.getFieldState(
-                        `recipients.${index}.address`,
-                        form.formState,
-                      ).error?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
+                </FormFieldSetup>
 
-                <FormControl
+                {/*  */}
+                <FormFieldSetup
+                  label="Percentage"
                   className="max-w-[160px]"
-                  isInvalid={
-                    !!form.getFieldState(
+                  isRequired={false}
+                  errorMessage={
+                    form.getFieldState(
                       `recipients.${index}.sharesBps`,
                       form.formState,
-                    ).error
+                    ).error?.message
                   }
                 >
-                  <FormLabel> Percentage </FormLabel>
                   <BasisPointsInput
-                    variant="filled"
                     value={form.watch(`recipients.${index}.sharesBps`)}
                     onChange={(value) =>
                       form.setValue(`recipients.${index}.sharesBps`, value, {
@@ -84,18 +77,11 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                       })
                     }
                   />
-                  <FormErrorMessage>
-                    {
-                      form.getFieldState(
-                        `recipients.${index}.sharesBps`,
-                        form.formState,
-                      ).error?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
+                </FormFieldSetup>
 
                 <Button
-                  variant="destructive"
+                  variant="outline"
+                  className="px-3 text-destructive-text"
                   disabled={fields.length === 1 || form.formState.isSubmitting}
                   aria-label="remove row"
                   onClick={() => remove(index)}
@@ -112,6 +98,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
           <Button
             className="gap-2"
             variant="outline"
+            size="sm"
             onClick={() => append({ address: "", sharesBps: 0 })}
           >
             <PlusIcon className="size-4" />

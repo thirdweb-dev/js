@@ -6,27 +6,26 @@ import {
   USDT_CONTRACT_ADDRESS,
   USDT_CONTRACT_WITH_ABI,
 } from "~test/test-contracts.js";
-import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "~test/test-wallets.js";
+import {
+  ANVIL_PKEY_A,
+  TEST_ACCOUNT_B,
+  TEST_IN_APP_WALLET_A,
+} from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
-
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { randomBytesBuffer } from "../utils/random.js";
-import { privateKeyToAccount } from "../wallets/private-key.js";
 import { toViemContract, viemAdapter } from "./viem.js";
 
-const account = privateKeyToAccount({
-  privateKey: ANVIL_PKEY_A,
-  client: TEST_CLIENT,
-});
+const wallet = TEST_IN_APP_WALLET_A;
 
 describe("walletClient.toViem", () => {
-  let walletClient: ReturnType<typeof viemAdapter.walletClient.toViem>;
+  let walletClient: ReturnType<typeof viemAdapter.wallet.toViem>;
 
   beforeAll(() => {
-    walletClient = viemAdapter.walletClient.toViem({
+    walletClient = viemAdapter.wallet.toViem({
       client: TEST_CLIENT,
-      account,
+      wallet,
       chain: ANVIL_CHAIN,
     });
   });
@@ -37,7 +36,8 @@ describe("walletClient.toViem", () => {
   });
 
   test("should sign message", async () => {
-    if (!walletClient.account) {
+    const account = wallet.getAccount();
+    if (!walletClient.account || !account) {
       throw new Error("Account not found");
     }
     const expectedSig = await account.signMessage({ message: "hello world" });
@@ -49,7 +49,8 @@ describe("walletClient.toViem", () => {
   });
 
   test("should sign raw message", async () => {
-    if (!walletClient.account) {
+    const account = wallet.getAccount();
+    if (!walletClient.account || !account) {
       throw new Error("Account not found");
     }
     const bytes = randomBytesBuffer(32);
@@ -110,12 +111,16 @@ describe("walletClient.toViem", () => {
   });
 
   test("should get address on live chain", async () => {
-    walletClient = viemAdapter.walletClient.toViem({
+    walletClient = viemAdapter.wallet.toViem({
       client: TEST_CLIENT,
-      account,
+      wallet,
       chain: FORKED_ETHEREUM_CHAIN,
     });
 
+    const account = wallet.getAccount();
+    if (!walletClient.account || !account) {
+      throw new Error("Account not found");
+    }
     const address = await walletClient.getAddresses();
     expect(address[0]).toBeDefined();
     expect(address[0]).toBe(account.address);
@@ -123,6 +128,10 @@ describe("walletClient.toViem", () => {
 
   test("should match thirdweb account signature", async () => {
     const message = "testing123";
+    const account = wallet.getAccount();
+    if (!walletClient.account || !account) {
+      throw new Error("Account not found");
+    }
 
     const rawViemAccount = viemPrivateKeyToAccount(ANVIL_PKEY_A);
     const twSignature = await account.signMessage({ message });
@@ -142,5 +151,12 @@ describe("walletClient.toViem", () => {
     });
     expect(result.abi).toEqual(USDT_ABI);
     expect(result.address).toBe(USDT_CONTRACT_ADDRESS);
+  });
+
+  test("should switch chain", async () => {
+    await walletClient.switchChain({
+      id: FORKED_ETHEREUM_CHAIN.id,
+    });
+    expect(await walletClient.getChainId()).toBe(FORKED_ETHEREUM_CHAIN.id);
   });
 });

@@ -96,5 +96,6 @@ export async function computeDeploymentInfoFromBytecode(args: {
     initBytecodeWithsalt,
     encodedArgs,
     create2FactoryAddress,
+    salt,
   };
 }

@@ -46,7 +46,7 @@ export async function connectInAppWallet(
   ) {
     const strategy = options.strategy;
     if (socialAuthOptions.includes(strategy as SocialAuthOption)) {
-      connector.authenticateWithRedirect(
+      await connector.authenticateWithRedirect(
         strategy as SocialAuthOption,
         createOptions?.auth?.mode,
         createOptions?.auth?.redirectUrl,

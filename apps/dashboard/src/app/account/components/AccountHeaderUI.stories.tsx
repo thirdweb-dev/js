@@ -38,6 +38,7 @@ export const Mobile: Story = {
 };
 
 const client = getThirdwebClient();
+const accountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Variants(props: {
   type: "mobile" | "desktop";
@@ -47,30 +48,22 @@ function Variants(props: {
 
   return (
     <ThirdwebProvider>
-      <div className="flex min-h-dvh flex-col gap-6 bg-gray-700 px-4 py-10">
+      <div className="flex min-h-dvh flex-col gap-6 bg-background py-10">
         <BadgeContainer label="Account Loaded">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            account={{
-              id: "foo",
-              email: "foo@example.com",
-            }}
-            client={client}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Account Loading">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            account={undefined}
-            client={client}
-          />
+          <div className="border-y bg-card">
+            <Comp
+              teamsAndProjects={teamsAndProjectsStub}
+              logout={() => {}}
+              accountAddress={accountAddressStub}
+              connectButton={<ConnectButtonStub />}
+              createProject={() => {}}
+              account={{
+                id: "foo",
+                email: "foo@example.com",
+              }}
+              client={client}
+            />
+          </div>
         </BadgeContainer>
       </div>
     </ThirdwebProvider>

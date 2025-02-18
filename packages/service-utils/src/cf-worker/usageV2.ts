@@ -1,46 +1,70 @@
-import type { ServiceName } from "../core/services.js";
-import type { UsageV2Event } from "../core/usageV2.js";
+import type {
+  ClientUsageV2Event,
+  UsageV2Event,
+  UsageV2Source,
+} from "../core/usageV2.js";
+
+type UsageV2Options = {
+  environment: "development" | "production";
+  source: UsageV2Source;
+} & (
+  | { serviceKey: string; thirdwebClientId?: never; thirdwebSecretKey?: never }
+  | { serviceKey?: never; thirdwebClientId: string; thirdwebSecretKey?: never }
+  | { serviceKey?: never; thirdwebClientId?: never; thirdwebSecretKey: string }
+);
 
 /**
- * Send events to Kafka.
+ * Send usageV2 events from either internal services or public clients.
+ *
+ * Exactly one authentication method must be provided:
+ * - serviceKey: for internal services
+ * - thirdwebClientId: for public clients (MUST be the user's project)
+ * - thirdwebSecretKey: for public clients (MUST be the user's project)
+ *
+ * NOTE: `team_id` is required if `serviceKey` is provided.
+ *
  * This method may throw. To call this non-blocking:
- *
  * ```ts
- * void sendUsageV2Events(events, {
- *   environment: "production",
- *   serviceKey: "..."
- * }).catch(console.error)
+ * void sendUsageV2Events(...).catch((e) => console.error(e))
  * ```
- *
- * @param events - The events to send.
- * @param options.environment - The environment the service is running in.
- * @param options.serviceKey - The service key required for authentication.
  */
-export async function sendUsageV2Events(
-  events: UsageV2Event[],
-  options: {
-    environment: "development" | "production";
-    productName: ServiceName;
-    serviceKey: string;
-  },
+export async function sendUsageV2Events<T extends UsageV2Options>(
+  events: T extends { serviceKey: string }
+    ? UsageV2Event[]
+    : ClientUsageV2Event[],
+  options: T,
 ): Promise<void> {
   const baseUrl =
     options.environment === "production"
       ? "https://u.thirdweb.com"
       : "https://u.thirdweb-dev.com";
 
-  const resp = await fetch(`${baseUrl}/usage-v2/${options.productName}`, {
+  // Determine endpoint and auth header based on provided credentials.
+  let url: string;
+  const headers: HeadersInit = { "Content-Type": "application/json" };
+
+  if (options.serviceKey) {
+    url = `${baseUrl}/usage-v2/${options.source}`;
+    headers["x-service-api-key"] = options.serviceKey;
+  } else if (options.thirdwebSecretKey) {
+    url = `${baseUrl}/usage-v2/${options.source}/client`;
+    headers["x-secret-key"] = options.thirdwebSecretKey;
+  } else if (options.thirdwebClientId) {
+    url = `${baseUrl}/usage-v2/${options.source}/client`;
+    headers["x-client-id"] = options.thirdwebClientId;
+  } else {
+    throw new Error("[UsageV2] No authentication method provided.");
+  }
+
+  const resp = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-service-api-key": options.serviceKey,
-    },
+    headers,
     body: JSON.stringify({ events }),
   });
 
   if (!resp.ok) {
     throw new Error(
-      `[UsageV2] unexpected response ${resp.status}: ${await resp.text()}`,
+      `[UsageV2] Unexpected response ${resp.status}: ${await resp.text()}`,
     );
   }
   resp.body?.cancel();

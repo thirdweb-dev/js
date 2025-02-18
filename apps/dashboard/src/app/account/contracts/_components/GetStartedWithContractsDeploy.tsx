@@ -6,18 +6,23 @@ import { StepsCard } from "components/dashboard/StepsCard";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useMemo, useState } from "react";
 
-export function GetStartedWithContractsDeploy() {
+export function GetStartedWithContractsDeploy(props: {
+  teamId: string;
+  projectId: string;
+}) {
   const steps = useMemo(
     () => [
       {
         title: "Build, deploy or import a contract",
         description:
           "Choose between deploying your own contract or import an existing one.",
-        children: <DeployOptions />,
+        children: (
+          <DeployOptions teamId={props.teamId} projectId={props.projectId} />
+        ),
         completed: false, // because we only show this component if the user does not have any contracts
       },
     ],
-    [],
+    [props.teamId, props.projectId],
   );
 
   return (
@@ -38,7 +43,10 @@ type ContentItem = {
 
 type TabId = "explore" | "import" | "build" | "deploy";
 
-const DeployOptions = () => {
+const DeployOptions = (props: {
+  teamId: string;
+  projectId: string;
+}) => {
   const [showImportModal, setShowImportModal] = useState(false);
   const router = useDashboardRouter();
   const trackEvent = useTrack();
@@ -83,6 +91,8 @@ const DeployOptions = () => {
         onClose={() => {
           setShowImportModal(false);
         }}
+        teamId={props.teamId}
+        projectId={props.projectId}
       />
 
       <TabButtons

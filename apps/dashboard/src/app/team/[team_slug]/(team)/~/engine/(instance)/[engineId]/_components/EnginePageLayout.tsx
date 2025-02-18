@@ -39,6 +39,10 @@ const sidebarLinkMeta: Array<{ pathId: string; label: string }> = [
     label: "Alerts",
   },
   {
+    pathId: "wallet-credentials",
+    label: "Wallet Credentials",
+  },
+  {
     pathId: "configuration",
     label: "Configuration",
   },

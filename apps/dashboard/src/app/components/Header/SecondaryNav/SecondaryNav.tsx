@@ -6,10 +6,11 @@ import { ResourcesDropdownButton } from "./ResourcesDropdownButton";
 import { AccountButton } from "./account-button.client";
 
 export function SecondaryNav(props: {
-  account: Pick<Account, "email" | "id"> | undefined;
+  account: Pick<Account, "email" | "id">;
   logout: () => void;
   connectButton: React.ReactNode;
   client: ThirdwebClient;
+  accountAddress: string;
 }) {
   return (
     <div className="flex items-center gap-6">
@@ -19,6 +20,7 @@ export function SecondaryNav(props: {
         connectButton={props.connectButton}
         account={props.account}
         client={props.client}
+        accountAddress={props.accountAddress}
       />
     </div>
   );

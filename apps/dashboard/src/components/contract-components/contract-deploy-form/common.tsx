@@ -1,16 +1,32 @@
+import { cn } from "@/lib/utils";
+
 export function Fieldset(props: {
   legend: string;
+  description?: React.ReactNode;
+  headerChildren?: React.ReactNode;
   children: React.ReactNode;
+  headerClassName?: string;
 }) {
   return (
-    <fieldset>
-      <legend className="mb-3 font-semibold text-2xl tracking-tight">
-        {props.legend}
-      </legend>
-
-      <div className="rounded-lg border border-border p-4 md:p-6">
-        {props.children}
+    <fieldset className="relative rounded-lg border border-border bg-card">
+      <div
+        className={cn(
+          "border-border border-b p-4 md:px-6 md:py-5",
+          props.headerClassName,
+        )}
+      >
+        <legend className="font-semibold text-xl tracking-tight">
+          {props.legend}
+        </legend>
+        {props.description && (
+          <p className="mt-1 text-muted-foreground text-sm">
+            {props.description}
+          </p>
+        )}
+        {props.headerChildren}
       </div>
+
+      <div className="p-4 md:px-6 md:py-6">{props.children}</div>
     </fieldset>
   );
 }

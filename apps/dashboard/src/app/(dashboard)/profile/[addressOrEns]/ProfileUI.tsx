@@ -1,8 +1,6 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { fetchPublishedContracts } from "components/contract-components/fetchPublishedContracts";
-import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { Suspense } from "react";
-import { getSortedDeployedContracts } from "../../../account/contracts/_components/getSortedDeployedContracts";
 import { ProfileHeader } from "./components/profile-header";
 import { PublishedContracts } from "./components/published-contracts";
 
@@ -32,34 +30,8 @@ export function ProfileUI(props: {
       </div>
 
       <div className="h-12" />
-
-      <div>
-        <h2 className="font-semibold text-2xl tracking-tight">
-          Deployed contracts
-        </h2>
-
-        <p className="text-muted-foreground">
-          List of contracts deployed across all Mainnets
-        </p>
-
-        <div className="h-4" />
-        <Suspense fallback={<LoadingSection />}>
-          <AsyncDeployedContracts profileAddress={profileAddress} />
-        </Suspense>
-      </div>
     </div>
   );
-}
-
-async function AsyncDeployedContracts(props: {
-  profileAddress: string;
-}) {
-  const contracts = await getSortedDeployedContracts({
-    address: props.profileAddress,
-    onlyMainnet: true,
-  });
-
-  return <DeployedContracts contractList={contracts} limit={50} />;
 }
 
 async function AsyncPublishedContracts(props: {

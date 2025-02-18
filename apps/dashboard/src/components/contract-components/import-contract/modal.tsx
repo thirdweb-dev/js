@@ -21,23 +21,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import {
-  useAddContractMutation,
-  useAllContractList,
-} from "@3rdweb-sdk/react/hooks/useRegistry";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { ExternalLinkIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAddress, isAddress } from "thirdweb";
-import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { useActiveWalletChain } from "thirdweb/react";
 import { z } from "zod";
+import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
 
 type ImportModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  teamId: string;
+  projectId: string;
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -64,7 +63,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           </DialogDescription>
         </DialogHeader>
 
-        <ImportForm />
+        <ImportForm teamId={props.teamId} projectId={props.projectId} />
       </DialogContent>
     </Dialog>
   );
@@ -86,10 +85,12 @@ const importFormSchema = z.object({
   chainId: z.coerce.number(),
 });
 
-function ImportForm() {
+function ImportForm(props: {
+  teamId: string;
+  projectId: string;
+}) {
   const router = useDashboardRouter();
   const activeChainId = useActiveWalletChain()?.id;
-  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(importFormSchema),
@@ -99,15 +100,7 @@ function ImportForm() {
     },
   });
   const chainSlug = useChainSlug(form.watch("chainId"));
-  const addToDashboard = useAddContractMutation();
-  const address = useActiveAccount()?.address;
-  const registry = useAllContractList(address);
-
-  const showLoading =
-    form.formState.isSubmitting ||
-    addToDashboard.isPending ||
-    addToDashboard.isSuccess ||
-    isRedirecting;
+  const addContractToProject = useAddContractToProject();
 
   return (
     <Form {...form}>
@@ -148,35 +141,25 @@ function ImportForm() {
               return;
             }
 
-            const isInRegistry =
-              registry.isFetched &&
-              registry.data?.find(
-                (c) =>
-                  contractAddress &&
-                  // compare address...
-                  c.address.toLowerCase() === contractAddress.toLowerCase() &&
-                  // ... and chainId
-                  c.chainId === chainId,
-              ) &&
-              registry.isSuccess;
-
-            if (isInRegistry) {
-              router.push(`/${chainSlug}/${contractAddress}`);
-              setIsRedirecting(true);
-              return;
-            }
-
-            addToDashboard.mutate(
+            addContractToProject.mutate(
               {
                 contractAddress,
-                chainId,
+                chainId: chainId.toString(),
+                teamId: props.teamId,
+                projectId: props.projectId,
               },
               {
                 onSuccess: () => {
-                  router.push(`/${chainSlug}/${contractAddress}`);
+                  router.refresh();
+                  toast.success("Contract imported successfully");
                 },
                 onError: (err) => {
                   console.error(err);
+                  if (err.message.includes("PROJECT_CONTRACT_ALREADY_EXISTS")) {
+                    toast.error("Contract is already added to the project");
+                  } else {
+                    toast.error("Failed to import contract");
+                  }
                 },
               },
             );
@@ -213,19 +196,29 @@ function ImportForm() {
         <div className="h-8" />
 
         <div className="flex justify-end">
-          <Button type="submit" className="gap-2">
-            {showLoading ? (
-              <Spinner className="size-4" />
-            ) : (
-              <PlusIcon className="size-4" />
-            )}
+          {addContractToProject.isSuccess &&
+          addContractToProject.data?.result ? (
+            <Button asChild className="gap-2">
+              <Link
+                href={`/${chainSlug}/${addContractToProject.data.result.contractAddress}`}
+                target="_blank"
+              >
+                View Contract <ExternalLinkIcon className="size-4" />
+              </Link>
+            </Button>
+          ) : (
+            <Button type="submit" className="gap-2">
+              {addContractToProject.isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <PlusIcon className="size-4" />
+              )}
 
-            {showLoading
-              ? addToDashboard.isSuccess || isRedirecting
-                ? "Redirecting"
-                : "Importing contract"
-              : "Import Contract"}
-          </Button>
+              {addContractToProject.isPending
+                ? "Importing contract"
+                : "Import Contract"}
+            </Button>
+          )}
         </div>
       </form>
     </Form>

@@ -7,7 +7,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Divider,
   FormControl,
   Input,
   Textarea,
@@ -32,6 +31,7 @@ import {
   updateTokenURI as updateTokenURI1155,
 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import type { NFTMetadata } from "thirdweb/utils";
 import {
   Button,
   FormErrorMessage,
@@ -68,20 +68,20 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   const address = useActiveAccount()?.address;
 
   const transformedQueryData = useMemo(() => {
-    return {
-      name: nft?.metadata.name || "",
-      description: nft?.metadata.description || "",
-      external_url: nft?.metadata.external_url || "",
-      background_color: nft?.metadata.background_color || "",
-      attributes: nft?.metadata.attributes || [],
-      // We override these in the submit if they haven't been changed
-      image: nft?.metadata.image || undefined,
-      animation_url: nft?.metadata.animation_url || undefined,
-      // No need for these, but we need to pass them to the form
-      supply: 0,
-      customImage: "",
-      customAnimationUrl: "",
+    const nftMetadata: Partial<NFTMetadata> = {
+      // basic
+      name: nft.metadata.name || "",
+      description: nft.metadata.description || "",
+      // media
+      image: nft.metadata.image,
+      animation_url: nft.metadata.animation_url,
+      // advanced
+      external_url: nft.metadata.external_url || "",
+      background_color: nft.metadata.background_color || "",
+      attributes: nft.metadata.attributes,
     };
+
+    return nftMetadata;
   }, [nft]);
 
   const {
@@ -91,13 +91,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
     watch,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<
-    NFTMetadataInputLimited & {
-      supply: number;
-      customImage: string;
-      customAnimationUrl: string;
-    }
-  >({
+  } = useForm<NFTMetadataInputLimited>({
     defaultValues: transformedQueryData,
     values: transformedQueryData,
   });
@@ -140,6 +134,9 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   };
 
   const imageUrl = useImageFileOrUrl(watch("image") as File | string);
+  const animationUrlFormValue = watch("animation_url");
+  const imageUrlFormValue = watch("image");
+
   const mediaFileUrl =
     watch("animation_url") instanceof File
       ? watch("animation_url")
@@ -190,11 +187,8 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         try {
           const newMetadata = parseAttributes({
             ...data,
-            image: data.image || data.customImage || nft.metadata.image,
-            animation_url:
-              data.animation_url ||
-              data.customAnimationUrl ||
-              nft.metadata.animation_url,
+            image: data.image || nft.metadata.image,
+            animation_url: data.animation_url || nft.metadata.animation_url,
           });
 
           const transaction = useUpdateMetadata
@@ -249,10 +243,6 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         }
       })}
     >
-      <div className="flex flex-col gap-2">
-        <Heading size="subtitle.md">Metadata</Heading>
-        <Divider />
-      </div>
       <FormControl isRequired isInvalid={!!errors.name}>
         <FormLabel>Name</FormLabel>
         <Input autoFocus {...register("name")} />
@@ -263,22 +253,34 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <div className="flex flex-row flex-wrap gap-3">
           {nft?.metadata && !mediaFileUrl && (
             <NFTMediaWithEmptyState
-              metadata={nft.metadata}
+              metadata={{
+                name: nft.metadata.name,
+                animation_url:
+                  typeof animationUrlFormValue === "string"
+                    ? animationUrlFormValue
+                    : nft.metadata.animation_url,
+                image:
+                  typeof imageUrlFormValue === "string"
+                    ? imageUrlFormValue
+                    : nft.metadata.image,
+              }}
               width="200px"
               height="200px"
             />
           )}
+
           <FileInput
             previewMaxWidth="200px"
             value={mediaFileUrl as File | string}
             showUploadButton
             showPreview={nft?.metadata ? !!mediaFileUrl : true}
             setValue={setFile}
-            className="rounded border border-border transition-all duration-200"
+            className="shrink-0 rounded border border-border transition-all duration-200"
             selectOrUpload="Upload"
             helperText={nft?.metadata ? "New Media" : "Media"}
           />
         </div>
+
         <FormHelperText>
           You can upload image, audio, video, html, text, pdf, and 3d model
           files here.
@@ -319,6 +321,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         register={register}
         setValue={setValue}
       />
+
       <Accordion
         allowToggle={!(errors.background_color || errors.external_url)}
         index={errors.background_color || errors.external_url ? [0] : undefined}
@@ -328,7 +331,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
             <Heading size="subtitle.md">Advanced Options</Heading>
             <AccordionIcon />
           </AccordionButton>
-          <AccordionPanel className="flex flex-col gap-6 px-0">
+          <AccordionPanel className="!px-0 flex flex-col gap-6">
             <FormControl isInvalid={!!errors.background_color}>
               <FormLabel>
                 Background Color <OpenSeaPropertyBadge />
@@ -357,26 +360,40 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                 </FormErrorMessage>
               </FormControl>
             )}
-            <FormControl isInvalid={!!errors.customImage}>
+            <FormControl isInvalid={!!errors.image}>
               <FormLabel>Image URL</FormLabel>
-              <Input max="6" {...register("customImage")} />
+              <Input
+                value={
+                  typeof imageUrlFormValue === "string" ? imageUrlFormValue : ""
+                }
+                onChange={(e) => {
+                  setValue("image", e.target.value);
+                }}
+              />
               <FormHelperText>
-                If you already have your NFT image pre-uploaded, you can set the
-                URL or URI here.
+                If you already have your NFT image pre-uploaded to a URL, you
+                can specify it here instead of uploading the media file
               </FormHelperText>
-              <FormErrorMessage>
-                {errors?.customImage?.message}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.customAnimationUrl}>
+            <FormControl isInvalid={!!errors.animation_url}>
               <FormLabel>Animation URL</FormLabel>
-              <Input max="6" {...register("customAnimationUrl")} />
+              <Input
+                value={
+                  typeof animationUrlFormValue === "string"
+                    ? animationUrlFormValue
+                    : ""
+                }
+                onChange={(e) => {
+                  setValue("animation_url", e.target.value);
+                }}
+              />
               <FormHelperText>
-                If you already have your NFT Animation URL pre-uploaded, you can
-                set the URL or URI here.
+                If you already have your NFT Animation URL pre-uploaded to a
+                URL, you can specify it here instead of uploading the media file
               </FormHelperText>
               <FormErrorMessage>
-                {errors?.customAnimationUrl?.message}
+                {errors?.animation_url?.message}
               </FormErrorMessage>
             </FormControl>
           </AccordionPanel>

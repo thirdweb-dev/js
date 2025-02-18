@@ -43,3 +43,4 @@ export { prepareAutoFactoryDeployTransaction } from "../contract/deployment/depl
 export { prepareMethod } from "../utils/abi/prepare-method.js";
 
 export { getCompilerMetadata } from "../contract/actions/get-compiler-metadata.js";
+export { getDeployedCloneFactoryContract } from "../contract/deployment/utils/clone-factory.js";

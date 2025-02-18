@@ -3,6 +3,7 @@ import type * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
+import type { AccountPermissions } from "../../extensions/erc4337/account/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -21,6 +22,10 @@ export type SmartWalletOptions = Prettify<
   {
     chain: Chain; // TODO consider making default chain optional
     factoryAddress?: string;
+    sessionKey?: {
+      address: string;
+      permissions: AccountPermissions;
+    };
     overrides?: {
       bundlerUrl?: string;
       accountAddress?: string;

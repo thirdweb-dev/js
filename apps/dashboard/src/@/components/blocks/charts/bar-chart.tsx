@@ -27,8 +27,11 @@ import { cn } from "../../../lib/utils";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata
-  title: string;
-  description?: string;
+  header?: {
+    title: string;
+    description?: string;
+    titleClassName?: string;
+  };
   // chart config
   config: TConfig;
   data: Array<Record<keyof TConfig, number> & { time: number | string | Date }>;
@@ -39,7 +42,6 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   isPending: boolean;
   toolTipLabelFormatter?: (label: string, payload: unknown) => React.ReactNode;
   hideLabel?: boolean;
-  titleClassName?: string;
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -52,15 +54,18 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className={cn("mb-2", props.titleClassName)}>
-          {props.title}
-        </CardTitle>
-        {props.description && (
-          <CardDescription>{props.description}</CardDescription>
-        )}
-      </CardHeader>
-      <CardContent>
+      {props.header && (
+        <CardHeader>
+          <CardTitle className={cn("mb-2", props.header.titleClassName)}>
+            {props.header.title}
+          </CardTitle>
+          {props.header.description && (
+            <CardDescription>{props.header.description}</CardDescription>
+          )}
+        </CardHeader>
+      )}
+
+      <CardContent className={cn(!props.header && "pt-6")}>
         <ChartContainer config={props.config} className={props.chartClassName}>
           {props.isPending ? (
             <LoadingChartState />
@@ -87,7 +92,9 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                 }
               />
               {props.showLegend && (
-                <ChartLegend content={<ChartLegendContent />} />
+                <ChartLegend
+                  content={<ChartLegendContent className="pt-5" />}
+                />
               )}
               {configKeys.map((key, idx) => (
                 <Bar

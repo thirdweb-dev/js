@@ -1,8 +1,19 @@
-import type { ServiceName } from "./services.js";
+export const USAGE_V2_SOURCES = [
+  "bundler",
+  "engine",
+  "insight",
+  "nebula",
+  "rpc",
+  "sdk",
+  "storage",
+  "wallet",
+] as const;
+export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
+export function getTopicName(source: UsageV2Source) {
+  return `usage_v2.raw_${source}`;
+}
 
-export type UsageV2Source = ServiceName | "sdk";
-
-export interface UsageV2Event {
+export interface ClientUsageV2Event {
   /**
    * A unique identifier for the event. Defaults to a random UUID.
    * Useful if your service retries sending events.
@@ -16,10 +27,6 @@ export interface UsageV2Event {
    * The action of the event. Example: "upload"
    */
   action: string;
-  /**
-   * The team ID.
-   */
-  team_id: string;
   /**
    * The project ID, if available.
    */
@@ -55,6 +62,9 @@ export interface UsageV2Event {
   [key: string]: boolean | number | string | Date | null | undefined;
 }
 
-export function getTopicName(source: UsageV2Source) {
-  return `usage_v2.raw_${source}`;
+export interface UsageV2Event extends ClientUsageV2Event {
+  /**
+   * The team ID.
+   */
+  team_id: string;
 }

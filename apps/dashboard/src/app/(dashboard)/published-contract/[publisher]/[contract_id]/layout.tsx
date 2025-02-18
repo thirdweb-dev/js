@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
 import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
-import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
+import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type Params = { publisher: string; contract_id: string };
 
@@ -20,16 +19,11 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
   const params = await props.params;
   const { publisher, contract_id } = params;
 
-  const publishedContracts = await getPublishedContractsWithPublisherMapping({
-    publisher: publisher,
-    contract_id: contract_id,
-  });
-
-  if (!publishedContracts) {
-    notFound();
-  }
-
-  const publishedContract = publishedContracts[0];
+  const publishedContract =
+    await getLatestPublishedContractsWithPublisherMapping({
+      publisher: publisher,
+      contract_id: contract_id,
+    });
 
   if (!publishedContract) {
     return {

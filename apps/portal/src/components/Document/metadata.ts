@@ -20,6 +20,7 @@ type DynamicImageOptions = {
     | "storage"
     | "changelog"
     | "dotnet"
+    | "nebula"
     | "unreal-engine"
     | "insight";
 };

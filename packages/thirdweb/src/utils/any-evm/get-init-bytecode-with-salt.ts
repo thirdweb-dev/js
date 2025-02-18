@@ -1,6 +1,6 @@
 import { encodePacked } from "viem/utils";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
-import { type Hex, uint8ArrayToHex } from "../encoding/hex.js";
+import { type Hex, isHex, uint8ArrayToHex } from "../encoding/hex.js";
 import { getSaltHash } from "./get-salt-hash.js";
 import { keccakId } from "./keccak-id.js";
 
@@ -29,8 +29,11 @@ export function getInitBytecodeWithSalt(
   options: GetInitiBytecodeWithSaltOptions,
 ): Hex {
   const bytecode = ensureBytecodePrefix(options.bytecode);
+
   const saltHash = options.salt
-    ? keccakId(options.salt)
+    ? isHex(options.salt) && options.salt.length === 66
+      ? options.salt
+      : keccakId(options.salt)
     : getSaltHash(bytecode);
 
   const encodedArgs =

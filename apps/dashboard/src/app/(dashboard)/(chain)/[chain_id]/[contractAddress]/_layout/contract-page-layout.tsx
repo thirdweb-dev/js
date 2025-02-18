@@ -3,8 +3,9 @@ import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import type { DashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
-import type { ThirdwebContract } from "thirdweb";
+import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import type { MinimalTeamsAndProjects } from "../../../../../../components/contract-components/contract-deploy-form/add-to-project-card";
 import { ContractMetadata } from "./contract-metadata";
 import { PrimaryDashboardButton } from "./primary-dashboard-button";
 
@@ -14,6 +15,8 @@ export function ContractPageLayout(props: {
   children: React.ReactNode;
   sidebarLinks: SidebarLink[];
   dashboardContractMetadata: DashboardContractMetadata | undefined;
+  client: ThirdwebClient;
+  teamsAndProjects: MinimalTeamsAndProjects | undefined;
   externalLinks:
     | {
         name: string;
@@ -27,6 +30,8 @@ export function ContractPageLayout(props: {
     sidebarLinks,
     dashboardContractMetadata,
     externalLinks,
+    teamsAndProjects,
+    client,
   } = props;
 
   return (
@@ -49,6 +54,8 @@ export function ContractPageLayout(props: {
                   chainSlug: chainMetadata.slug,
                   contractAddress: contract.address,
                 }}
+                teamsAndProjects={teamsAndProjects}
+                client={client}
               />
             </div>
             <DeprecatedAlert chain={chainMetadata} />

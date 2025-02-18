@@ -3,32 +3,29 @@ import { useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { getContract } from "../../../../../../../contract/contract.js";
+import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { sendBatchTransaction } from "../../../../../../../transaction/actions/send-batch-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
-import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
-  fontSize,
-  iconSize,
-} from "../../../../../../core/design-system/index.js";
-import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useEnsName } from "../../../../../../core/utils/wallet.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
+  type WaitForReceiptOptions,
+  waitForReceipt,
+} from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
-import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
-import { formatSeconds } from "./formatSeconds.js";
+import { SwapSummary } from "./SwapSummary.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
 /**
@@ -51,9 +48,15 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
   payer: PayerInfo;
+  preApprovedAmount?: bigint;
 }) {
-  const isApprovalRequired = props.quote.approval !== undefined;
-  const initialStep = isApprovalRequired ? "approval" : "swap";
+  const approveTxRequired =
+    props.quote.approvalData &&
+    props.preApprovedAmount !== undefined &&
+    props.preApprovedAmount < BigInt(props.quote.approvalData.amountWei);
+  const needsApprovalStep =
+    approveTxRequired && !props.payer.account.sendBatchTransaction;
+  const initialStep = needsApprovalStep ? "approval" : "swap";
 
   const [step, setStep] = useState<"approval" | "swap">(initialStep);
   const [status, setStatus] = useState<
@@ -62,9 +65,6 @@ export function SwapConfirmationScreen(props: {
 
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
-  const isDifferentRecipient = receiver.toLowerCase() !== sender.toLowerCase();
-
-  const ensName = useEnsName({ client: props.client, address: receiver });
 
   return (
     <Container p="lg">
@@ -82,61 +82,29 @@ export function SwapConfirmationScreen(props: {
           <Spacer y="md" />
         </>
       ) : (
-        <Spacer y="lg" />
+        <>
+          <Spacer y="lg" />
+          <Text size="sm">Confirm payment</Text>
+          <Spacer y="md" />
+        </>
       )}
 
-      {/* Pay */}
-      <ConfirmItem label="Pay">
-        <RenderTokenInfo
-          chain={props.fromChain}
-          amount={String(formatNumber(Number(props.fromAmount), 6))}
-          symbol={props.fromTokenSymbol || ""}
-          token={props.fromToken}
-          client={props.client}
-        />
-      </ConfirmItem>
+      <SwapSummary
+        sender={sender}
+        receiver={receiver}
+        client={props.client}
+        fromToken={props.fromToken}
+        fromChain={props.fromChain}
+        toToken={props.toToken}
+        toChain={props.toChain}
+        fromAmount={props.fromAmount}
+        toAmount={props.toAmount}
+      />
 
-      {/* Receive */}
-      {!isDifferentRecipient && (
-        <ConfirmItem label="Receive">
-          <RenderTokenInfo
-            chain={props.toChain}
-            amount={String(formatNumber(Number(props.toAmount), 6))}
-            symbol={props.toTokenSymbol}
-            token={props.toToken}
-            client={props.client}
-          />
-        </ConfirmItem>
-      )}
-
-      {/* Fees  */}
-      <ConfirmItem label="Fees">
-        <SwapFeesRightAligned quote={props.quote} />
-      </ConfirmItem>
-
-      {/* Time  */}
-      <ConfirmItem label="Time">
-        <Text size="sm" color="primaryText">
-          ~
-          {formatSeconds(
-            props.quote.swapDetails.estimated.durationSeconds || 0,
-          )}
-        </Text>
-      </ConfirmItem>
-
-      {/* Send to  */}
-      {isDifferentRecipient && (
-        <ConfirmItem label="Receiver">
-          <Text color="primaryText" size="sm">
-            {ensName.data || shortenAddress(receiver)}
-          </Text>
-        </ConfirmItem>
-      )}
-
-      <Spacer y="xl" />
+      <Spacer y="md" />
 
       {/* Show 2 steps - Approve and confirm  */}
-      {isApprovalRequired && (
+      {needsApprovalStep && (
         <>
           <Spacer y="sm" />
           <Container
@@ -187,7 +155,7 @@ export function SwapConfirmationScreen(props: {
           fullWidth
           disabled={status === "pending"}
           onClick={async () => {
-            if (step === "approval" && props.quote.approval) {
+            if (step === "approval" && props.quote.approvalData) {
               try {
                 setStatus("pending");
 
@@ -204,13 +172,22 @@ export function SwapConfirmationScreen(props: {
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
 
+                const transaction = approve({
+                  contract: getContract({
+                    client: props.client,
+                    address: props.quote.swapDetails.fromToken.tokenAddress,
+                    chain: props.fromChain,
+                  }),
+                  spender: props.quote.approvalData.spenderAddress,
+                  amountWei: BigInt(props.quote.approvalData.amountWei),
+                });
+
                 const tx = await sendTransaction({
                   account: props.payer.account,
-                  transaction: props.quote.approval,
+                  transaction,
                 });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-                // props.onQuoteFinalized(props.quote);
 
                 trackPayEvent({
                   event: "swap_approval_success",
@@ -236,20 +213,6 @@ export function SwapConfirmationScreen(props: {
             if (step === "swap") {
               setStatus("pending");
               try {
-                let tx = props.quote.transactionRequest;
-
-                // Fix for inApp wallet
-                // Ideally - the pay server sends a non-legacy transaction to avoid this issue
-                if (
-                  props.payer.wallet.id === "inApp" ||
-                  props.payer.wallet.id === "embedded"
-                ) {
-                  tx = {
-                    ...props.quote.transactionRequest,
-                    gasPrice: undefined,
-                  };
-                }
-
                 trackPayEvent({
                   event: "prompt_swap_execution",
                   client: props.client,
@@ -262,11 +225,31 @@ export function SwapConfirmationScreen(props: {
                   chainId: props.quote.swapDetails.fromToken.chainId,
                   dstChainId: props.quote.swapDetails.toToken.chainId,
                 });
+                const tx = props.quote.transactionRequest;
+                let _swapTx: WaitForReceiptOptions;
+                // check if we can batch approval and swap
+                const canBatch = props.payer.account.sendBatchTransaction;
+                if (canBatch && props.quote.approvalData && approveTxRequired) {
+                  const approveTx = approve({
+                    contract: getContract({
+                      client: props.client,
+                      address: props.quote.swapDetails.fromToken.tokenAddress,
+                      chain: props.fromChain,
+                    }),
+                    spender: props.quote.approvalData.spenderAddress,
+                    amountWei: BigInt(props.quote.approvalData.amountWei),
+                  });
 
-                const _swapTx = await sendTransaction({
-                  account: props.payer.account,
-                  transaction: tx,
-                });
+                  _swapTx = await sendBatchTransaction({
+                    account: props.payer.account,
+                    transactions: [approveTx, tx],
+                  });
+                } else {
+                  _swapTx = await sendTransaction({
+                    account: props.payer.account,
+                    transaction: tx,
+                  });
+                }
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 
@@ -288,6 +271,7 @@ export function SwapConfirmationScreen(props: {
                   addPendingTx({
                     type: "swap",
                     txHash: _swapTx.transactionHash,
+                    chainId: _swapTx.chain.id,
                   });
                 }
 
@@ -320,100 +304,3 @@ export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
     flex: 1,
   };
 });
-
-function RenderTokenInfo(props: {
-  chain: Chain;
-  token: ERC20OrNativeToken;
-  amount: string;
-  symbol: string;
-  client: ThirdwebClient;
-}) {
-  const { name } = useChainName(props.chain);
-  return (
-    <Container
-      flex="column"
-      gap="xxs"
-      style={{
-        alignItems: "flex-end",
-      }}
-    >
-      <Container flex="row" center="y" gap="xs">
-        <Text color="primaryText" size="sm">
-          {props.amount} {props.symbol}
-        </Text>
-        <PayTokenIcon
-          token={props.token}
-          chain={props.chain}
-          size="xs"
-          client={props.client}
-        />
-      </Container>
-
-      {name ? (
-        <Text size="xs">{name}</Text>
-      ) : (
-        <Skeleton width="100px" height={fontSize.xs} />
-      )}
-    </Container>
-  );
-}
-
-function ConfirmItem(props: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <Container
-        flex="row"
-        gap="md"
-        py="md"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm" color="secondaryText">
-          {props.label}
-        </Text>
-        {props.children}
-      </Container>
-      <Line />
-    </>
-  );
-}
-
-/**
- * @internal
- */
-function SwapFeesRightAligned(props: {
-  quote: BuyWithCryptoQuote;
-}) {
-  return (
-    <Container
-      flex="column"
-      gap="xs"
-      style={{
-        alignItems: "flex-end",
-      }}
-    >
-      {props.quote.processingFees.map((fee) => {
-        const feeAmount = formatNumber(Number(fee.amount), 6);
-        return (
-          <Container
-            key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
-            flex="row"
-            gap="xxs"
-          >
-            <Text color="primaryText" size="sm">
-              {feeAmount === 0 ? "~" : ""}
-              {feeAmount} {fee.token.symbol}
-            </Text>
-            <Text color="secondaryText" size="sm">
-              (${(fee.amountUSDCents / 100).toFixed(2)})
-            </Text>
-          </Container>
-        );
-      })}
-    </Container>
-  );
-}

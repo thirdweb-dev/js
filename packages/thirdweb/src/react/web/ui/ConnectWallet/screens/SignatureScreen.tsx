@@ -69,7 +69,7 @@ export const SignatureScreen: React.FC<{
     }
   }, [onDone, siweAuth]);
 
-  if (!wallet) {
+  if (!wallet || siweAuth.isLoading) {
     return <LoadingScreen data-testid="loading-screen" />;
   }
 

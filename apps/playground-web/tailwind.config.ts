@@ -16,6 +16,7 @@ module.exports = {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "active-border": "hsl(var(--active-border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -31,6 +32,7 @@ module.exports = {
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
+          text: "hsl(var(--destructive-text))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -48,8 +50,21 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          text: "hsl(var(--success-text))",
+        },
+        inverted: {
+          DEFAULT: "hsl(var(--inverted))",
+          foreground: "hsl(var(--inverted-foreground))",
+        },
         code: {
           DEFAULT: "hsl(var(--code))",
+        },
+        warning: {
+          text: "hsl(var(--warning-text))",
+        },
+        link: {
+          foreground: "hsl(var(--link-foreground))",
         },
       },
       borderRadius: {

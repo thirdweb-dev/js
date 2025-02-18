@@ -1,11 +1,12 @@
 "use client";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import Link from "next/link";
 import { useState } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
 import { BackendWalletsTable } from "./backend-wallets-table";
@@ -73,20 +74,21 @@ function BackendWalletsSection(props: {
           </p>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Set up other wallet types from the{" "}
-            <Link
+            <UnderlineLink
               href={`/team/${teamSlug}/~/engine/${instance.id}/configuration`}
-              className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-4 hover:text-foreground hover:decoration-foreground hover:decoration-solid"
             >
               Configuration
-            </Link>{" "}
+            </UnderlineLink>{" "}
             tab, or{" "}
-            <Link
+            <TrackedLinkTW
               href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
               target="_blank"
-              className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-4 hover:text-foreground hover:decoration-foreground hover:decoration-solid"
+              label="learn-more"
+              category="engine"
+              className="text-link-foreground hover:text-foreground"
             >
               learn more about backend wallets.
-            </Link>
+            </TrackedLinkTW>
           </p>
         </div>
 

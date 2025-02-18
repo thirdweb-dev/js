@@ -56,7 +56,7 @@ describe("normalizeFunctionParams", () => {
   });
 
   it("should throw an error if a parameter name is missing", () => {
-    const abiFunction: AbiFunction = {
+    let abiFunction: AbiFunction = {
       inputs: [{ name: undefined, type: "uint256" }],
       type: "function",
       stateMutability: "pure",
@@ -67,6 +67,31 @@ describe("normalizeFunctionParams", () => {
     expect(() => normalizeFunctionParams(abiFunction, {})).toThrow(
       "Missing named parameter for test at index 0",
     );
+
+    abiFunction = {
+      inputs: [{ name: "", type: "uint256" }],
+      type: "function",
+      stateMutability: "pure",
+      name: "test",
+      outputs: [],
+    };
+
+    expect(() => normalizeFunctionParams(abiFunction, {})).toThrow(
+      "Missing named parameter for test at index 0",
+    );
+
+    abiFunction = {
+      inputs: [{ name: undefined, type: "uint256" }],
+      type: "function",
+      stateMutability: "pure",
+      name: "test",
+      outputs: [],
+    };
+
+    const normalized = normalizeFunctionParams(abiFunction, { "*": 123 });
+
+    expect(normalized.length).to.eq(1);
+    expect(normalized[0]).to.eq(123);
   });
 
   it("should throw an error if a parameter value is missing", () => {

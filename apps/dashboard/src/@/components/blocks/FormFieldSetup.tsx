@@ -1,10 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AsteriskIcon, InfoIcon } from "lucide-react";
+import type React from "react";
 
 export function FormFieldSetup(props: {
   htmlFor?: string;
-  label: string;
+  label: React.ReactNode;
   errorMessage: React.ReactNode | undefined;
   children: React.ReactNode;
   tooltip?: React.ReactNode;

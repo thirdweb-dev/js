@@ -1,8 +1,6 @@
 import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
-import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { stringify } from "../../utils/json.js";
@@ -150,7 +148,7 @@ type BuyWithCryptoQuoteRouteResponse = {
  */
 export type BuyWithCryptoQuote = {
   transactionRequest: PrepareTransactionOptions;
-  approval?: PrepareTransactionOptions;
+  approvalData?: QuoteApprovalInfo;
 
   swapDetails: {
     fromAddress: string;
@@ -251,6 +249,9 @@ export async function getBuyWithCryptoQuote(
     const data: BuyWithCryptoQuoteRouteResponse = (await response.json())
       .result;
 
+    // check if the fromAddress already has approval for the given amount
+    const approvalData = data.approval;
+
     const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: {
         chain: getCachedChain(data.transactionRequest.chainId),
@@ -259,19 +260,9 @@ export async function getBuyWithCryptoQuote(
         to: data.transactionRequest.to,
         value: BigInt(data.transactionRequest.value),
         gas: BigInt(data.transactionRequest.gasLimit),
-        gasPrice: BigInt(data.transactionRequest.gasPrice),
+        gasPrice: undefined, // ignore gas price returned by the quote, we handle it ourselves
       },
-      approval: data.approval
-        ? approve({
-            contract: getContract({
-              client: params.client,
-              address: data.approval.tokenAddress,
-              chain: getCachedChain(data.approval.chainId),
-            }),
-            spender: data.approval?.spenderAddress,
-            amountWei: BigInt(data.approval.amountWei),
-          })
-        : undefined,
+      approvalData,
       swapDetails: {
         fromAddress: data.fromAddress,
         toAddress: data.toAddress,

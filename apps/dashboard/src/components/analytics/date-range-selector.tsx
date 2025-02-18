@@ -6,18 +6,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format, subDays } from "date-fns";
+import { differenceInCalendarDays, format, subDays } from "date-fns";
+import { normalizeTime } from "../../lib/time";
 
 export function DateRangeSelector(props: {
   range: Range;
   setRange: (range: Range) => void;
+  popoverAlign?: "start" | "end" | "center";
 }) {
   const { range, setRange } = props;
+  const daysDiff = differenceInCalendarDays(range.to, range.from);
+  const matchingRange =
+    normalizeTime(range.to).getTime() === normalizeTime(new Date()).getTime()
+      ? durationPresets.find((preset) => preset.days === daysDiff)
+      : undefined;
+
+  const rangeType = matchingRange?.id || range.type;
+  const rangeLabel = matchingRange?.name || range.label;
 
   return (
     <DatePickerWithRange
       from={range.from}
       to={range.to}
+      popoverAlign={props.popoverAlign}
       setFrom={(from) =>
         setRange({
           from,
@@ -35,7 +46,7 @@ export function DateRangeSelector(props: {
       header={
         <div className="mb-2 border-border border-b p-4">
           <Select
-            value={range.type}
+            value={rangeType}
             onValueChange={(id: DurationId) => {
               setRange(getLastNDaysRange(id));
             }}
@@ -50,7 +61,7 @@ export function DateRangeSelector(props: {
                 </SelectItem>
               ))}
 
-              {range.type === "custom" && (
+              {rangeType === "custom" && (
                 <SelectItem value="custom">
                   {format(range.from, "LLL dd, y")} -{" "}
                   {format(range.to, "LLL dd, y")}
@@ -60,7 +71,7 @@ export function DateRangeSelector(props: {
           </Select>
         </div>
       }
-      labelOverride={range.label}
+      labelOverride={rangeLabel}
       className="w-auto bg-card"
     />
   );

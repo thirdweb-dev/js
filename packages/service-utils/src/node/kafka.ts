@@ -7,6 +7,20 @@ import KafkaJS from "kafkajs";
 const { CompressionCodecs } = KafkaJS;
 
 /**
+ * Reference: https://kafka.js.org/docs/producing#producing-messages
+ */
+export interface KafkaProducerSendOptions {
+  // Per-message settings.
+  acks?: number;
+  timeout?: number;
+
+  // Per-producer settings.
+  retries?: number;
+  allowAutoTopicCreation?: boolean;
+  maxInFlightRequests?: number;
+}
+
+/**
  * Creates a KafkaProducer which opens a persistent TCP connection.
  * This class is thread-safe so your service should re-use one instance.
  *
@@ -98,18 +112,13 @@ export class KafkaProducer {
   async send(
     topic: string,
     messages: Record<string, unknown>[],
-    /**
-     * Reference: https://kafka.js.org/docs/producing#producing-messages
-     */
-    options?: {
-      acks?: number;
-      timeout?: number;
-      allowAutoTopicCreation?: boolean;
-    },
+    options?: KafkaProducerSendOptions,
   ): Promise<void> {
     if (!this.producer) {
       this.producer = this.kafka.producer({
         allowAutoTopicCreation: options?.allowAutoTopicCreation ?? false,
+        maxInFlightRequests: options?.maxInFlightRequests ?? 2000,
+        retry: { retries: options?.retries ?? 5 },
       });
       await this.producer.connect();
     }

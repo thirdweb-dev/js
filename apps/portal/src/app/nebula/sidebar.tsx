@@ -1,11 +1,12 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { NebulaSideIcon, TypeScriptIcon } from "@/icons";
+import { NebulaSideIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 
 import {
   Blocks,
   Braces,
   Code,
   ExternalLink,
+  Key,
   MessageCircleQuestion,
   PencilRuler,
   Rocket,
@@ -34,6 +35,32 @@ export const sidebar: SideBar = {
       name: "Get Started",
       href: "/nebula/get-started",
       icon: <Rocket />,
+    },
+    {
+      name: "Key Concepts",
+      icon: <Key />,
+      links: [
+        {
+          name: "Chat & Execute",
+          href: "/nebula/key-concepts/chat-execute",
+        },
+        {
+          name: "Context Filters",
+          href: "/nebula/key-concepts/context-filters",
+        },
+        {
+          name: "Execute Config",
+          href: "/nebula/key-concepts/execute-configuration",
+        },
+        {
+          name: "Response Handling",
+          href: "/nebula/key-concepts/response-handling",
+        },
+        {
+          name: "Sessions",
+          href: "/nebula/key-concepts/sessions",
+        },
+      ],
     },
     {
       name: "API Reference",
@@ -106,6 +133,11 @@ export const sidebar: SideBar = {
           name: "Typescript",
           href: "/references/typescript/v5/chat",
           icon: <TypeScriptIcon />,
+        },
+        {
+          name: "Unity",
+          href: "/dotnet/nebula/quickstart",
+          icon: <UnityIcon />,
         },
       ],
     },

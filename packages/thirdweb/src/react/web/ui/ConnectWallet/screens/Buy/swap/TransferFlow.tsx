@@ -35,6 +35,7 @@ export function TransferFlow(props: TransferFlowProps) {
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
         swapTxHash={transferTxHash}
+        fromChain={props.chain}
         client={props.client}
         onDone={props.onDone}
         transactionMode={false}

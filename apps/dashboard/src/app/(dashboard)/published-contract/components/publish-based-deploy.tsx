@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   fetchPublishedContractVersion,
@@ -7,7 +6,6 @@ import {
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { DeployActions } from "./contract-actions-deploy.client";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
 
@@ -73,23 +71,17 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
   ]);
 
   return (
-    <>
+    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8 pb-20">
       <DeployContractHeader
         {...props}
         allVersions={publishedContractVersions}
         activeVersion={publishedContract}
-      >
-        <DeployActions
-          {...props}
-          displayName={publishedContract.displayName || publishedContract.name}
-        />
-      </DeployContractHeader>
-      <Separator />
+      />
       <DeployFormForUri
         contractMetadata={contractMetadata}
         modules={fetchedModules.filter((m) => m !== null)}
         pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
       />
-    </>
+    </div>
   );
 }

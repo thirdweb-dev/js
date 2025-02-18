@@ -63,14 +63,26 @@ function processQuery(
 }
 
 export function PaymentHistory(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
 }) {
   const [page, setPage] = useState(1);
 
   const purchasesQuery = usePayPurchases({
+    /**
+     *  @deprecated - remove after migration
+     */
     clientId: props.clientId,
+    // switching to projectId for lookup, but have to send both during migration
+    projectId: props.projectId,
+    teamId: props.teamId,
     from: props.from,
     to: props.to,
     start: (page - 1) * pageSize,
@@ -88,7 +100,13 @@ export function PaymentHistory(props: {
             fileName="transaction_history"
             getData={async () => {
               const purchaseData = await getPayPurchases({
+                /**
+                 *  @deprecated - remove after migration
+                 */
                 clientId: props.clientId,
+                // switching to projectId for lookup, but have to send both during migration
+                projectId: props.projectId,
+                teamId: props.teamId,
                 count: 10000,
                 from: props.from,
                 start: 0,

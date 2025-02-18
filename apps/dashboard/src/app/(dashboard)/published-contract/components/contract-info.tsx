@@ -18,7 +18,7 @@ export function DeployContractInfo(props: {
     <div className="flex flex-col gap-2">
       <div className="flex flex-1 items-center gap-4">
         {contractImageLink && (
-          <div className="hidden shrink-0 items-center justify-center rounded-xl border border-border p-2 md:flex">
+          <div className="hidden shrink-0 items-center justify-center rounded-xl border border-border bg-card p-2 md:flex">
             {/*eslint-disable-next-line @next/next/no-img-element*/}
             <img className="size-12" alt={props.name} src={contractImageLink} />
           </div>

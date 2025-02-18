@@ -58,13 +58,25 @@ function processQuery(
 }
 
 export function TotalVolumePieChart(props: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
 }) {
   const uiQuery = processQuery(
     usePayVolume({
+      /**
+       *  @deprecated - remove after migration
+       */
       clientId: props.clientId,
+      // switching to projectId for lookup, but have to send both during migration
+      projectId: props.projectId,
+      teamId: props.teamId,
       from: props.from,
       intervalType: "day",
       to: props.to,

@@ -64,4 +64,19 @@ Options for configuring timeouts for fetching data. Useful for fine-tuning reque
 TimeoutOptions(int? storage = null, int? rpc = null, int? other = null)
 ```
 
+### rpcOverrides (optional)
+
+Overrides for the default RPC endpoints. Will use your custom endpoints instead of thirdweb RPC endpoints.
+
+```csharp
+var client = ThirdwebClient.Create(
+    ...,
+    rpcOverrides: new()
+    {
+        { 1, "https://eth.llamarpc.com" },
+        { 42161, "https://arbitrum.llamarpc.com" }
+    }
+);
+```
+
 </Details>

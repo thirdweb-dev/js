@@ -27,9 +27,26 @@ export function CustomLoginForm() {
       const wallet = inAppWallet();
       await wallet.connect({
         strategy: "email",
-        client: THIRDWEB_CLIENT,
         email,
         verificationCode,
+        client: THIRDWEB_CLIENT,
+      });
+      return wallet;
+    });
+  };
+
+  const loginWithGoogle = async () => {
+    connect(async () => {
+      const wallet = inAppWallet({
+        auth: {
+          options: ["google"],
+          mode: "redirect",
+          redirectUrl: `${window.location.origin}/connect/in-app-wallet`,
+        },
+      });
+      await wallet.connect({
+        strategy: "google",
+        client: THIRDWEB_CLIENT,
       });
       return wallet;
     });
@@ -41,7 +58,7 @@ export function CustomLoginForm() {
 
   if (screen === "login") {
     return (
-      <div className="flex flex-col space-y-2">
+      <div className="flex w-full flex-col space-y-4">
         <label htmlFor="email" className="font-medium text-sm">
           Email Address
         </label>
@@ -61,6 +78,14 @@ export function CustomLoginForm() {
           disabled={isConnecting || !email}
         >
           {isConnecting ? "Submitting..." : "Submit"}
+        </button>
+        <p className="text-center text-sm text-white">Or</p>
+        <button
+          type="button"
+          onClick={loginWithGoogle}
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors enabled:hover:bg-blue-600"
+        >
+          Login with Google
         </button>
         {error && <p className="max-w-[300px] text-red-500">{error.message}</p>}
       </div>

@@ -1,31 +1,33 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { getContract } from "../../../../../../../contract/contract.js";
+import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import { transfer } from "../../../../../../../extensions/erc20/write/transfer.js";
 import { getBuyWithCryptoTransfer } from "../../../../../../../pay/buyWithCrypto/getTransfer.js";
 import { sendAndConfirmTransaction } from "../../../../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { Address } from "../../../../../../../utils/address.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainSymbol } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
-import { WalletRow } from "../WalletSelectorButton.js";
-import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
+import { SwapSummary } from "./SwapSummary.js";
 
 type TransferConfirmationScreenProps = {
   title: string;
@@ -68,14 +70,13 @@ export function TransferConfirmationScreen(
     | { id: "error"; error: string }
     | { id: "done" }
   >({ id: "idle" });
-  const { symbol } = useChainSymbol(chain);
 
   return (
     <Container p="lg">
       <ModalHeader title={title} onBack={onBack} />
       <Spacer y="xl" />
 
-      {transactionMode && (
+      {transactionMode ? (
         <>
           <StepBar steps={2} currentStep={step === "transfer" ? 1 : 2} />
           <Spacer y="sm" />
@@ -84,52 +85,25 @@ export function TransferConfirmationScreen(
               ? "Step 1 of 2 - Transfer funds"
               : "Step 2 of 2 - Finalize transaction"}
           </Text>
-          <Spacer y="xl" />
+          <Spacer y="md" />
+        </>
+      ) : (
+        <>
+          <Text size="sm">Confirm payment</Text>
+          <Spacer y="md" />
         </>
       )}
 
-      {/* Sender Address */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">From</Text>
-        <WalletRow address={payer.account.address} client={client} />
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-
-      {/* Receiver Address */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">To</Text>
-        <WalletRow address={receiverAddress} client={client} />
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-
-      {/* Token Info */}
-      <TokenInfoRow
-        chainId={chain.id}
+      <SwapSummary
+        sender={payer.account.address}
+        receiver={receiverAddress}
         client={client}
-        label="Amount"
-        tokenAmount={tokenAmount}
-        tokenSymbol={isNativeToken(token) ? symbol || "" : token.symbol}
-        tokenAddress={
-          isNativeToken(token) ? NATIVE_TOKEN_ADDRESS : token.address
-        }
+        fromToken={token}
+        fromChain={chain}
+        toToken={token}
+        toChain={chain}
+        fromAmount={tokenAmount}
+        toAmount={tokenAmount}
       />
 
       <Spacer y="lg" />
@@ -248,13 +222,46 @@ export function TransferConfirmationScreen(
                   purchaseData: payOptions?.purchaseData,
                 });
 
-                if (transferResponse.approval) {
-                  setStep("approve");
-                  // approve the transfer
-                  await sendAndConfirmTransaction({
-                    account: props.payer.account,
-                    transaction: transferResponse.approval,
+                if (transferResponse.approvalData) {
+                  // check allowance
+                  const prevAllowance = await allowance({
+                    contract: getContract({
+                      client: client,
+                      address: transferResponse.approvalData.tokenAddress,
+                      chain: getCachedChain(
+                        transferResponse.approvalData.chainId,
+                      ),
+                    }),
+                    spender: transferResponse.approvalData
+                      .spenderAddress as Address,
+                    owner: payer.account.address,
                   });
+
+                  if (
+                    prevAllowance <
+                    BigInt(transferResponse.approvalData.amountWei)
+                  ) {
+                    setStep("approve");
+                    const transaction = approve({
+                      contract: getContract({
+                        client: client,
+                        address: transferResponse.approvalData.tokenAddress,
+                        chain: getCachedChain(
+                          transferResponse.approvalData.chainId,
+                        ),
+                      }),
+                      spender: transferResponse.approvalData
+                        .spenderAddress as Address,
+                      amountWei: BigInt(
+                        transferResponse.approvalData.amountWei,
+                      ),
+                    });
+                    // approve the transfer
+                    await sendAndConfirmTransaction({
+                      account: props.payer.account,
+                      transaction,
+                    });
+                  }
                 }
 
                 setStep("transfer");

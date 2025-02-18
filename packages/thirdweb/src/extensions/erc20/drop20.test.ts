@@ -14,6 +14,7 @@ import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value
 import { toEther } from "../../utils/units.js";
 import { name } from "../common/read/name.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
+import { canClaim } from "./drops/read/canClaim.js";
 import { getClaimConditions } from "./drops/read/getClaimConditions.js";
 import { claimTo } from "./drops/write/claimTo.js";
 import { resetClaimEligibility } from "./drops/write/resetClaimEligibility.js";
@@ -76,6 +77,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
         account: TEST_ACCOUNT_A,
       });
+
+      expect(
+        await canClaim({
+          contract,
+          claimer: TEST_ACCOUNT_A.address,
+          quantity: "1",
+        }),
+      ).toMatchInlineSnapshot(`
+        {
+          "result": true,
+        }
+      `);
       const claimTx = claimTo({
         contract,
         to: TEST_ACCOUNT_A.address,
@@ -177,6 +190,31 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             "name": "Test DropERC20",
             "symbol": "",
             "value": 0n,
+          }
+        `);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_A.address,
+            quantity: "1",
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "result": true,
+          }
+        `);
+
+        expect(
+          await canClaim({
+            contract,
+            claimer: TEST_ACCOUNT_B.address,
+            quantity: "1",
+          }),
+        ).toMatchInlineSnapshot(`
+          {
+            "reason": "DropClaimExceedLimit - 0,1000000000000000000",
+            "result": false,
           }
         `);
 

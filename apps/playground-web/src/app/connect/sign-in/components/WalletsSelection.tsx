@@ -134,7 +134,7 @@ function WalletButton(props: {
     >
       <span className="flex items-center gap-3">
         <Img
-          src={walletImage.data || ""}
+          src={walletImage.data}
           alt=""
           className="size-7 rounded-lg"
           loading="lazy"
