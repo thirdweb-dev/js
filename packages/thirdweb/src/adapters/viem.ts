@@ -20,7 +20,9 @@ import { estimateGas } from "../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { getAddress } from "../utils/address.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
+import { fromProvider } from "./eip1193/from-eip1193.js";
+import { toProvider } from "./eip1193/to-eip1193.js";
 
 /**
  * Converts thirdweb accounts and contracts to viem wallet clients and contract objects or the other way around.
@@ -149,6 +151,7 @@ export const viemAdapter = {
    *   walletClient,
    * });
    * ```
+   * @deprecated use viemAdapter.wallet instead
    */
   walletClient: {
     /**
@@ -161,6 +164,7 @@ export const viemAdapter = {
      * import { viemAdapter } from "thirdweb/adapters";
      * const walletClient = viemAdapter.walletClient.toViem({ account, client, chain });
      * ```
+     * @deprecated use viemAdapter.wallet instead
      */
     toViem: toViemWalletClient,
     /**
@@ -173,8 +177,61 @@ export const viemAdapter = {
      * import { viemAdapter } from "thirdweb/adapters";
      * const account = viemAdapter.walletClient.fromViem({ walletClient });
      * ```
+     * @deprecated use viemAdapter.wallet instead
      */
     fromViem: fromViemWalletClient,
+  },
+  /**
+   * Converts a thirdweb account to a Viem Wallet client or the other way around.
+   * @param options - The options for creating the Viem Wallet client.
+   * @returns The Viem Wallet client.
+   * @example
+   *
+   * ### toViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters/viem";
+   *
+   * const walletClient = viemAdapter.wallet.toViem({
+   *  wallet,
+   *  client,
+   *  chain: ethereum,
+   * });
+   * ```
+   *
+   * ### fromViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters";
+   *
+   * const wallet = viemAdapter.wallet.fromViem({
+   *   walletClient,
+   * });
+   * ```
+   */
+  wallet: {
+    /**
+     * Converts a Thirdweb wallet to a Viem wallet client.
+     * @param options - The options for converting a Thirdweb wallet to a Viem wallet client.
+     * @param options.wallet - The Thirdweb wallet to convert.
+     * @returns A Promise that resolves to a Viem wallet client.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const walletClient = viemAdapter.wallet.toViem({ wallet, client, chain });
+     * ```
+     */
+    toViem: walletToViem,
+    /**
+     * Converts a Viem wallet client to a Thirdweb wallet.
+     * @param options - The options for converting a Viem wallet client to a Thirdweb wallet.
+     * @param options.walletClient - The Viem wallet client to convert.
+     * @returns A Promise that resolves to a Thirdweb wallet.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const wallet = viemAdapter.wallet.fromViem({ walletClient });
+     * ```
+     */
+    fromViem: walletFromViem,
   },
 };
 
@@ -247,6 +304,7 @@ type ToViemWalletClientOptions = {
   chain: Chain;
 };
 
+// DEPRECATED
 function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const { account, chain, client } = options;
   if (!account) {
@@ -305,6 +363,14 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
       if (request.method === "eth_accounts") {
         return [account.address];
       }
+      if (
+        request.method === "wallet_switchEthereumChain" ||
+        request.method === "wallet_addEthereumChain"
+      ) {
+        throw new Error(
+          "Can't switch chains because only an account was passed to 'viemAdapter.walletClient.toViem()', please pass a connected wallet instance instead.",
+        );
+      }
       return rpcClient(request);
     },
   });
@@ -317,6 +383,7 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   });
 }
 
+// DEPRECATED
 function fromViemWalletClient(options: {
   walletClient: WalletClient;
 }): Account {
@@ -354,4 +421,68 @@ function fromViemWalletClient(options: {
       return options.walletClient.signTypedData(_typedData as any);
     },
   };
+}
+
+type WalletToViemOptions = {
+  client: ThirdwebClient;
+  chain: Chain;
+  wallet: Wallet;
+};
+
+function walletToViem(options: WalletToViemOptions): WalletClient {
+  const { wallet, chain, client } = options;
+
+  if (!wallet.getAccount()) {
+    throw new Error("Wallet is not connected.");
+  }
+
+  const rpcUrl = getRpcUrlForChain({ chain, client });
+  const viemChain: ViemChain = {
+    id: chain.id,
+    name: chain.name || "",
+    rpcUrls: {
+      default: { http: [rpcUrl] },
+    },
+    nativeCurrency: {
+      name: chain.nativeCurrency?.name || "Ether",
+      symbol: chain.nativeCurrency?.symbol || "ETH",
+      decimals: chain.nativeCurrency?.decimals || 18,
+    },
+  };
+
+  const eip1193Provider = toProvider({
+    chain,
+    client,
+    wallet,
+  });
+  return createWalletClient({
+    transport: custom({
+      request: (request) => eip1193Provider.request(request),
+    }),
+    account: wallet.getAccount()?.address,
+    chain: viemChain,
+    key: "thirdweb-wallet",
+  });
+}
+
+function walletFromViem(options: {
+  walletClient: WalletClient;
+}): Wallet {
+  const viemAccount = options.walletClient.account;
+  if (!viemAccount) {
+    throw new Error(
+      "Account not found in walletClient, please pass it explicitly.",
+    );
+  }
+
+  const wallet = fromProvider({
+    provider: {
+      request: (request) => options.walletClient.request(request),
+      on: () => {},
+      removeListener: () => {},
+    },
+    walletId: "adapter",
+  });
+
+  return wallet;
 }
