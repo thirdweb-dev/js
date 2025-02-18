@@ -932,12 +932,14 @@ function createSupportedTokens(
   payOptions: PayUIOptions,
   supportedTokensOverrides?: SupportedTokens,
 ): SupportedTokens {
-  const tokens: SupportedTokens = {};
+  // dev override
+  if (supportedTokensOverrides) {
+    return supportedTokensOverrides;
+  }
 
+  const tokens: SupportedTokens = {};
   const isBuyWithFiatDisabled = payOptions.buyWithFiat === false;
   const isBuyWithCryptoDisabled = payOptions.buyWithCrypto === false;
-
-  // FIXME (pay) when buywithFiat is disabled, missing a bunch of tokens on base??
 
   for (const x of data) {
     tokens[x.chain.id] = x.tokens.filter((t) => {
@@ -966,19 +968,6 @@ function createSupportedTokens(
       return true; // include the token
     });
   }
-
-  // override with props.supportedTokens
-  if (supportedTokensOverrides) {
-    for (const k in supportedTokensOverrides) {
-      const key = Number(k);
-      const tokenList = supportedTokensOverrides[key];
-
-      if (tokenList) {
-        tokens[key] = tokenList;
-      }
-    }
-  }
-
   return tokens;
 }
 
