@@ -54,8 +54,6 @@ export type MintFormValues = NFTMetadataInputLimited & {
   useNextTokenId: boolean;
   recipient: string;
   amount: number;
-  customImage: string;
-  customAnimationUrl: string;
   attributes: { trait_type: string; value: string }[];
   tokenId?: string;
 };
@@ -65,8 +63,7 @@ const isValidNft = (values: MintFormValues) =>
   values.description ||
   values.image ||
   values.animation_url ||
-  values.external_url ||
-  values.customAnimationUrl;
+  values.external_url;
 
 const MINTER_ROLE = 1n;
 
@@ -334,8 +331,6 @@ function PrimarySalesSection(props: {
 
 const mintFormSchema = z.object({
   useNextTokenId: z.boolean(),
-  customImage: z.string().optional(),
-  customAnimationUrl: z.string().optional(),
   recipient: addressSchema,
   tokenId: z.coerce.number().min(0, { message: "Invalid tokenId" }).optional(),
 });
@@ -351,8 +346,6 @@ function MintNFTSection(props: {
     resolver: zodResolver(mintFormSchema),
     values: {
       useNextTokenId: false,
-      customImage: "",
-      customAnimationUrl: "",
       recipient: "",
       attributes: [{ trait_type: "", value: "" }],
       amount: 1,

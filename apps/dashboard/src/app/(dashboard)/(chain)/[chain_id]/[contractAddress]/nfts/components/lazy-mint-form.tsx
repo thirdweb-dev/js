@@ -62,13 +62,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
     watch,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<
-    NFTMetadataInputLimited & {
-      supply: number;
-      customImage: string;
-      customAnimationUrl: string;
-    }
-  >();
+  } = useForm<NFTMetadataInputLimited>();
 
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
@@ -108,6 +102,9 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   };
 
   const imageUrl = useImageFileOrUrl(watch("image") as File | string);
+  const animationUrlFormValue = watch("animation_url");
+  const imageUrlFormValue = watch("image");
+
   const mediaFileUrl =
     watch("animation_url") instanceof File
       ? watch("animation_url")
@@ -261,7 +258,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
               <Heading size="subtitle.md">Advanced Options</Heading>
               <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel className="flex flex-col gap-6 px-0">
+            <AccordionPanel className="!px-0 flex flex-col gap-6">
               <FormControl isInvalid={!!errors.background_color}>
                 <FormLabel>
                   Background Color <OpenSeaPropertyBadge />
@@ -290,26 +287,45 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                   </FormErrorMessage>
                 </FormControl>
               )}
-              <FormControl isInvalid={!!errors.customImage}>
+              <FormControl isInvalid={!!errors.image}>
                 <FormLabel>Image URL</FormLabel>
-                <Input max="6" {...register("customImage")} />
+                <Input
+                  {...register("image")}
+                  value={
+                    typeof imageUrlFormValue === "string"
+                      ? imageUrlFormValue
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setValue("image", e.target.value);
+                  }}
+                />
                 <FormHelperText>
-                  If you already have your NFT image pre-uploaded, you can set
-                  the URL or URI here.
+                  If you already have your NFT image pre-uploaded to a URL, you
+                  can specify it here instead of uploading the media file
                 </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.customImage?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.customAnimationUrl}>
+              <FormControl isInvalid={!!errors.animation_url}>
                 <FormLabel>Animation URL</FormLabel>
-                <Input max="6" {...register("customAnimationUrl")} />
+                <Input
+                  {...register("animation_url")}
+                  value={
+                    typeof animationUrlFormValue === "string"
+                      ? animationUrlFormValue
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setValue("animation_url", e.target.value);
+                  }}
+                />
                 <FormHelperText>
-                  If you already have your NFT Animation URL pre-uploaded, you
-                  can set the URL or URI here.
+                  If you already have your NFT Animation URL pre-uploaded to a
+                  URL, you can specify it here instead of uploading the media
+                  file
                 </FormHelperText>
                 <FormErrorMessage>
-                  {errors?.customAnimationUrl?.message}
+                  {errors?.animation_url?.message}
                 </FormErrorMessage>
               </FormControl>
             </AccordionPanel>
