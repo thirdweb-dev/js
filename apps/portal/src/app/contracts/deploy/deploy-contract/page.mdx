@@ -1,68 +1,59 @@
-import deployCLI from "./assets/deploy-cli.png";
-import linkDevice from "./assets/link-device.png";
-import detectedExtensions from "./assets/detected-extensions.png";
-import deployContract from "./assets/deploy-contract.png";
-import { DocImage, createMetadata } from "@doc";
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-export const metadata = createMetadata({
-	title: "Deploy Contract | thirdweb deploy",
-	description: "deploy a contract using Deploy using thirdweb deploy CLI",
-	image: {
-		title: "Deploy Contract",
-		icon: "contract",
-	},
-});
+import "@aave/core-v3/contracts/interfaces/IPool.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { Steps, Step } from "@doc";
+contract FlashLoanArbitrage {
+    address private owner;
+    IPool public lendingPool;
+    
+    // Ethereum Mainnet DAI Token Adresi
+    address public daiTokenAddress = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
 
-# Deploy Contract
+    event FlashLoanExecuted(uint256 amount);
+    event ArbitrageExecuted(address tokenA, address tokenB, uint256 amount);
+    event ProfitWithdrawn(address to, uint256 amount);
 
-To deploy a contract using Deploy:
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can execute");
+        _;
+    }
 
-<Steps>
+    constructor(address _lendingPool) {
+        owner = msg.sender;
+        lendingPool = IPool(_lendingPool);
+    }
 
-<Step title="Run CLI">
+    function executeFlashLoan(uint256 amount) external onlyOwner {
+        address;
+        assets[0] = daiTokenAddress;
+        uint256;
+        amounts[0] = amount;
+        uint256;
+        modes[0] = 0; // Teminat gerektirmez
 
-Navigate to the root of the smart contract repository using the CLI. Then, run the command `npx thirdweb deploy`.
+        lendingPool.flashLoan(
+            address(this),
+            assets,
+            amounts,
+            modes,
+            address(this),
+            "",
+            0
+        );
 
-<DocImage src={deployCLI} alt="Screenshot of CLI deployment output text" />
+        emit FlashLoanExecuted(amount);
+    }
 
-</Step>
+    function swapTokens(address tokenA, address tokenB, uint256 amount) external onlyOwner {
+        require(IERC20(tokenA).transfer(tokenB, amount), "Swap failed");
+        emit ArbitrageExecuted(tokenA, tokenB, amount);
+    }
 
-<Step title="Authorize device">
+    function withdrawFunds(address token, uint256 amount) external onlyOwner {
+        require(IERC20(token).transfer(owner, amount), "Withdraw failed");
+        emit ProfitWithdrawn(owner, amount);
+    }
+}
 
-To deploy from a desired wallet in the browser, connect and authorize the device.
-
-<DocImage src={linkDevice} alt="Screenshot to link Device" />
-
-</Step>
-
-<Step title="Fill parameter">
-
-Once completed, a user interface will open in the browser that allows filling out the parameters of the contract.
-
-<DocImage
-	src={detectedExtensions}
-	alt="Screenshot to detected extensions when deploying contracts"
-/>
-
-</Step>
-
-<Step title="Select Options">
-
-Fill in the necessary fields, then find the Network / Chain drop-down menu to select a network for deployment. Choose the `Add to dashboard` option if managing this contract from the dashboard and select Deploy Now. This will require signing a transaction in the connected wallet.
-
-<DocImage
-	src={deployContract}
-	alt="Screenshot of contract deployment confirmation"
-/>
-
-</Step>
-
-<Step title="Manage contract">
-
-Once deployed, you can manage your contract through the dashboard.
-
-</Step>
-
-</Steps>
