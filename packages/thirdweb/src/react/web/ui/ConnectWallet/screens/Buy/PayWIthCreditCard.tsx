@@ -82,7 +82,12 @@ export function PayWithCreditCard(props: {
           <Skeleton width="100px" height={fontSize.lg} />
         ) : (
           <Text size="lg" color={props.value ? "primaryText" : "secondaryText"}>
-            {props.value ? `${formatNumber(Number(props.value), 6)}` : "--"}
+            {props.value
+              ? `${props.currency.symbol}${formatNumber(
+                  Number(props.value),
+                  6,
+                )}`
+              : "--"}
           </Text>
         )}
       </div>

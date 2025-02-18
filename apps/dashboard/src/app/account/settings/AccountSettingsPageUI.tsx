@@ -428,6 +428,7 @@ function EnterEmailOTP(props: {
         <InputOTP
           maxLength={6}
           pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+          inputMode="text"
           value={otp}
           onChange={(v) => {
             setOtp(v);

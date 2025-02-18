@@ -1,5 +1,33 @@
 # thirdweb-login
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`0574eac`](https://github.com/thirdweb-dev/js/commit/0574eac02c832c382972fd545df79c36e11796e1), [`562c534`](https://github.com/thirdweb-dev/js/commit/562c534d3763ac645618386d8fa9a3b8db3769d9), [`52cbcd2`](https://github.com/thirdweb-dev/js/commit/52cbcd2d57abf4d69ee417fe98fca815e19f2f34), [`b882e29`](https://github.com/thirdweb-dev/js/commit/b882e299353d895724c4e44216ffb47353a9bf7f)]:
+  - thirdweb@5.88.5
+
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [[`98b6198`](https://github.com/thirdweb-dev/js/commit/98b6198687b11022033fb08410407f0ccb09cd1c)]:
+  - thirdweb@5.88.4
+
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`ee1bc3e`](https://github.com/thirdweb-dev/js/commit/ee1bc3eb076a189fa806dd6008bf2f97e0bd052f)]:
+  - thirdweb@5.88.3
+
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`2fbf105`](https://github.com/thirdweb-dev/js/commit/2fbf105d156ee551eec29e545fa08c43fd649051), [`97c9ab7`](https://github.com/thirdweb-dev/js/commit/97c9ab7e1caa8b3e006ecc7f64b54b392ba83eda), [`6b2a90a`](https://github.com/thirdweb-dev/js/commit/6b2a90ac89fd8c1bb8b784fb67e2a1a1a0e99816), [`fbafb65`](https://github.com/thirdweb-dev/js/commit/fbafb65f5c8669efd23028dd365982274cc06034), [`66bbedb`](https://github.com/thirdweb-dev/js/commit/66bbedbe3afef8b3eb6902e47391bd914f18bcca), [`159ffbf`](https://github.com/thirdweb-dev/js/commit/159ffbfaeed19dc6e37c19ad502b45a6a9a80669), [`6b286c7`](https://github.com/thirdweb-dev/js/commit/6b286c7e83dbba4beb6eeedc6ec24d9d3617f0cd)]:
+  - thirdweb@5.88.2
+
 ## 0.1.4
 
 ### Patch Changes

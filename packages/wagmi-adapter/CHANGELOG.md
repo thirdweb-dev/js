@@ -1,5 +1,17 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.19
+
+### Patch Changes
+
+- [#6273](https://github.com/thirdweb-dev/js/pull/6273) [`739a2ae`](https://github.com/thirdweb-dev/js/commit/739a2ae3c53b398fa348fc3a3fd2a30d9b785189) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better autoconnection handling
+
+## 0.2.18
+
+## 0.2.17
+
+## 0.2.16
+
 ## 0.2.15
 
 ## 0.2.14

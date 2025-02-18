@@ -17,7 +17,13 @@ type Response = {
 };
 
 export function usePayCustomers(options: {
+  /**
+   *  @deprecated - remove after migration
+   */
   clientId: string;
+  // switching to projectId for lookup, but have to send both during migration
+  projectId: string;
+  teamId: string;
   from: Date;
   to: Date;
   pageSize: number;
@@ -40,9 +46,15 @@ export function usePayCustomers(options: {
         searchParams: {
           skip: `${start}`,
           take: `${options.pageSize}`,
+          /**
+           *  @deprecated - remove after migration
+           */
           clientId: options.clientId,
+          // switching to projectId for lookup, but have to send both during migration
+          projectId: options.projectId,
           fromDate: `${options.from.getTime()}`,
           toDate: `${options.to.getTime()}`,
+          teamId: options.teamId,
         },
       });
 

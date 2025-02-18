@@ -6,7 +6,7 @@ import PlausibleProvider from "next-plausible";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
-import { UnlimitedWalletsBanner } from "../components/notices/AnnouncementBanner";
+import { OrganizeContractsToProjectsBanner } from "../components/notices/AnnouncementBanner";
 import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
 import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { PostHogProvider } from "./components/root-providers";
@@ -71,7 +71,7 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <UnlimitedWalletsBanner />
+          <OrganizeContractsToProjectsBanner />
           <AppRouterProviders>
             {children}
             <Suspense fallback={null}>
@@ -83,8 +83,8 @@ export default function RootLayout({
           </AppRouterProviders>
           <DashboardRouterTopProgressBar />
           <NextTopLoader
-            color="hsl(var(--primary))"
-            height={2}
+            color="hsl(var(--foreground))"
+            height={3}
             shadow={false}
             showSpinner={false}
           />

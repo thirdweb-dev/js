@@ -29,11 +29,11 @@ import type { AutoConnectProps } from "./types.js";
  * @returns {boolean} a promise resolving to true or false depending on whether the auto connect function connected to a wallet or not
  * @walletConnection
  */
-export const autoConnect = async (
+export async function autoConnect(
   props: AutoConnectProps & {
     wallets?: Wallet[];
   },
-) => {
+): Promise<boolean> {
   const wallets = props.wallets || getDefaultWallets(props);
   const manager = createConnectionManager(webLocalStorage);
   const result = await autoConnectCore({
@@ -56,4 +56,4 @@ export const autoConnect = async (
     manager,
   });
   return result;
-};
+}

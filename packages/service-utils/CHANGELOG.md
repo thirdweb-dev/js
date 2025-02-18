@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.8
+
+### Patch Changes
+
+- [#6212](https://github.com/thirdweb-dev/js/pull/6212) [`6f2f92d`](https://github.com/thirdweb-dev/js/commit/6f2f92ddea333679ff1962b2df0da4ecf43be966) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Helper to call client usageV2 reporting endpoint
+
+- [#6213](https://github.com/thirdweb-dev/js/pull/6213) [`cad9c74`](https://github.com/thirdweb-dev/js/commit/cad9c74befe33bef2cc6a12a8ade8d9c996ffe41) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Omit team_id for client usageV2 events
+
+- [#6219](https://github.com/thirdweb-dev/js/pull/6219) [`91b0367`](https://github.com/thirdweb-dev/js/commit/91b0367b23d5a9b4c345210d430839f7c2351301) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix auth for cf workers
+
+- [#6207](https://github.com/thirdweb-dev/js/pull/6207) [`cbfe9ec`](https://github.com/thirdweb-dev/js/commit/cbfe9ec459b33884136ba23a87effd8ab4e99aeb) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Allow client-side usageV2 reporting
+
 ## 0.8.7
 
 ### Patch Changes

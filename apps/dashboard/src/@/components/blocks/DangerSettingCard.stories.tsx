@@ -28,7 +28,7 @@ export const Mobile: Story = {
 
 function Story() {
   return (
-    <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
+    <div className="container flex max-w-[1000px] flex-col gap-8 py-10">
       <BadgeContainer label="Base">
         <DangerSettingCard
           title="This is a title"

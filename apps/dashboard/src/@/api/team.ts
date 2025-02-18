@@ -24,6 +24,7 @@ export type Team = {
   image?: string;
   billingPlan: "pro" | "growth" | "free" | "starter";
   billingStatus: "validPayment" | (string & {}) | null;
+  supportPlan: "pro" | "growth" | "free" | "starter";
   billingEmail: string | null;
   growthTrialEligible: false;
   enabledScopes: EnabledTeamScope[];
@@ -45,6 +46,10 @@ export async function getTeamBySlug(slug: string) {
     return (await teamRes.json())?.result as Team;
   }
   return null;
+}
+
+export function getTeamById(id: string) {
+  return getTeamBySlug(id);
 }
 
 export async function getTeams() {

@@ -131,5 +131,3 @@ export default async function ExploreCategoryPage(
     </div>
   );
 }
-
-export const dynamic = "force-static";

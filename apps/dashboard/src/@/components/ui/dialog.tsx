@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 bg-black/80 data-[state=closed]:animate-out data-[state=open]:animate-in",
+      "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-out data-[state=open]:animate-in",
       className,
     )}
     {...props}
@@ -43,7 +43,7 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-lg",
+          "fixed z-50 grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-lg",
           // on mobile - put the dialog at the bottom of the screen, animate - slide up and fade in
           "right-0 bottom-0 left-0",
           "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",

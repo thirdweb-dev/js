@@ -61,13 +61,17 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         <SelectValue />
       </SelectTrigger>
 
-      <SelectContent align="center" className="rounded-lg shadow-lg">
+      <SelectContent
+        align="center"
+        className="min-w-[280px] rounded-lg shadow-lg"
+      >
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
             <ChainIcon ipfsSrc={undefined} className="size-5" />
             All Networks
           </div>
         </SelectItem>
+
         {chains.map((chain) => (
           <SelectItem key={chain.chainId} value={String(chain.chainId)}>
             <div className="flex items-center gap-2 py-1">

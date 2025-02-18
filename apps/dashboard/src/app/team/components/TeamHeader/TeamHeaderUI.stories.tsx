@@ -7,7 +7,7 @@ import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
-  title: "Headers/TeamHeader/LoggedIn",
+  title: "Headers/TeamHeader",
   component: Variants,
   parameters: {
     nextjs: {
@@ -42,6 +42,8 @@ function Variants(props: {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
 
+  const acccountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
+
   const team1 = teamsAndProjectsStub[0]?.team;
   const team2 = teamsAndProjectsStub[1]?.team;
   const team3 = teamsAndProjectsStub[2]?.team;
@@ -52,66 +54,62 @@ function Variants(props: {
   }
   return (
     <ThirdwebProvider>
-      <div className="flex min-h-dvh flex-col gap-6 bg-gray-700 px-4 py-10">
+      <div className="flex min-h-dvh flex-col gap-6 bg-background py-10">
         <BadgeContainer label="Team Free, Account Loaded">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            currentTeam={team1}
-            currentProject={undefined}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            account={{
-              email: "foo@example.com",
-              id: "1",
-            }}
-            client={client}
-          />
-        </BadgeContainer>
-
-        <BadgeContainer label="Team Growth, Account Loading">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            currentTeam={team2}
-            currentProject={undefined}
-            account={undefined}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            client={client}
-          />
+          <div className="border-y bg-card">
+            <Comp
+              teamsAndProjects={teamsAndProjectsStub}
+              currentTeam={team1}
+              accountAddress={acccountAddressStub}
+              currentProject={undefined}
+              logout={() => {}}
+              connectButton={<ConnectButtonStub />}
+              createProject={() => {}}
+              account={{
+                email: "foo@example.com",
+                id: "1",
+              }}
+              client={client}
+            />
+          </div>
         </BadgeContainer>
 
         <BadgeContainer label="Team, Pro">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            currentTeam={team3}
-            currentProject={undefined}
-            account={{
-              email: "foo@example.com",
-              id: "foo",
-            }}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            client={client}
-          />
+          <div className="border-y bg-card">
+            <Comp
+              teamsAndProjects={teamsAndProjectsStub}
+              currentTeam={team3}
+              currentProject={undefined}
+              accountAddress={acccountAddressStub}
+              account={{
+                email: "foo@example.com",
+                id: "foo",
+              }}
+              logout={() => {}}
+              connectButton={<ConnectButtonStub />}
+              createProject={() => {}}
+              client={client}
+            />
+          </div>
         </BadgeContainer>
 
         <BadgeContainer label="Team + Project, Pro">
-          <Comp
-            teamsAndProjects={teamsAndProjectsStub}
-            currentTeam={team3}
-            currentProject={team3Project}
-            account={{
-              email: "foo@example.com",
-              id: "foo",
-            }}
-            logout={() => {}}
-            connectButton={<ConnectButtonStub />}
-            createProject={() => {}}
-            client={client}
-          />
+          <div className="border-y bg-card">
+            <Comp
+              teamsAndProjects={teamsAndProjectsStub}
+              accountAddress={acccountAddressStub}
+              currentTeam={team3}
+              currentProject={team3Project}
+              account={{
+                email: "foo@example.com",
+                id: "foo",
+              }}
+              logout={() => {}}
+              connectButton={<ConnectButtonStub />}
+              createProject={() => {}}
+              client={client}
+            />
+          </div>
         </BadgeContainer>
       </div>
     </ThirdwebProvider>

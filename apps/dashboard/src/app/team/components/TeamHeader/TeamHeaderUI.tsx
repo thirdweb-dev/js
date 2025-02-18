@@ -20,11 +20,12 @@ export type TeamHeaderCompProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
   className?: string;
-  account: Pick<Account, "email" | "id"> | undefined;
+  account: Pick<Account, "email" | "id">;
   logout: () => void;
   connectButton: React.ReactNode;
   createProject: (team: Team) => void;
   client: ThirdwebClient;
+  accountAddress: string;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -101,6 +102,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         logout={props.logout}
         connectButton={props.connectButton}
         client={props.client}
+        accountAddress={props.accountAddress}
       />
     </header>
   );
@@ -180,6 +182,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
         email={props.account?.email}
         logout={props.logout}
         connectButton={props.connectButton}
+        accountAddress={props.accountAddress}
       />
     </header>
   );

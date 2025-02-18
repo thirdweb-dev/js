@@ -19,6 +19,7 @@ import {
 export function AccountHeader(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   account: Account;
+  accountAddress: string;
 }) {
   const router = useDashboardRouter();
   const [createProjectDialogState, setCreateProjectDialogState] = useState<
@@ -52,6 +53,7 @@ export function AccountHeader(props: {
       }),
     account: props.account,
     client,
+    accountAddress: props.accountAddress,
   };
 
   return (

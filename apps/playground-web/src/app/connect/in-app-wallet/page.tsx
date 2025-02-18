@@ -80,14 +80,12 @@ function AnyAuth() {
           limits on customizations and auth methods.
         </p>
         <CodeExample
-          preview={
-            <div className="w-1/2">
-              <CustomLoginForm />
-            </div>
-          }
+          preview={<CustomLoginForm />}
           code={`import { useState } from "react";
 import { useConnect } from "thirdweb/react";
 import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
+
+const wallet = inAppWallet();
 
 export function CustomLoginUi() {
   const { connect, isConnecting, error } = useConnect();
@@ -101,15 +99,25 @@ export function CustomLoginUi() {
     });
   };
 
-  const handleLogin = async (email: string, verificationCode: string) => {
+  const loginWithEmail = async (email: string, verificationCode: string) => {
     // verify email with verificationCode and connect
     connect(async () => {
-      const wallet = inAppWallet();
       await wallet.connect({
         client,
         strategy: "email",
         email,
         verificationCode,
+      });
+      return wallet;
+    });
+  };
+
+  const loginWithGoogle = async () => {
+    // connect with google
+    connect(async () => {
+      await wallet.connect({
+        client,
+        strategy: "google",
       });
       return wallet;
     });

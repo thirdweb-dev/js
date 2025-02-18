@@ -32,7 +32,12 @@ type Properties = {
     chainId: number;
   }>;
 };
-type StorageItem = { "tw.lastChainId": number };
+type StorageItem = {
+  "thirdweb:lastChainId": number;
+};
+
+const activeWalletIdKey = "thirdweb:active-wallet-id";
+const connectedWalletIdsKey = "thirdweb:connected-wallet-ids";
 
 /**
  * Connect to an in-app wallet using the auth strategy of your choice.
@@ -92,7 +97,11 @@ export function inAppWalletConnector(
     name: "In-App wallet",
     type: "in-app",
     connect: async (params) => {
-      const lastChainId = await config.storage?.getItem("tw.lastChainId");
+      const rawStorage =
+        typeof window !== "undefined" && window.localStorage
+          ? window.localStorage
+          : undefined;
+      const lastChainId = await config.storage?.getItem("thirdweb:lastChainId");
       if (params?.isReconnecting) {
         const { autoConnect } = await import("thirdweb/wallets");
         const chainId = lastChainId || args.smartAccount?.chain?.id || 1;
@@ -130,7 +139,10 @@ export function inAppWalletConnector(
         chain,
       } as InAppWalletConnectionOptions;
       const account = await wallet.connect(decoratedOptions);
-      await config.storage?.setItem("tw.lastChainId", chain.id);
+      // setting up raw local storage value for autoConnect
+      rawStorage?.setItem(connectedWalletIdsKey, JSON.stringify([wallet.id]));
+      rawStorage?.setItem(activeWalletIdKey, wallet.id);
+      await config.storage?.setItem("thirdweb:lastChainId", chain.id);
       return { accounts: [getAddress(account.address)], chainId: chain.id };
     },
     disconnect: async () => {
@@ -147,7 +159,7 @@ export function inAppWalletConnector(
       return wallet.getChain()?.id || 1;
     },
     getProvider: async (params) => {
-      const lastChainId = await config.storage?.getItem("tw.lastChainId");
+      const lastChainId = await config.storage?.getItem("thirdweb:lastChainId");
       const chain = defineChain(
         params?.chainId || args.smartAccount?.chain?.id || lastChainId || 1,
       );
@@ -169,9 +181,13 @@ export function inAppWalletConnector(
     switchChain: async (params) => {
       const chain = config.chains.find((x) => x.id === params.chainId);
       if (!chain) {
-        throw new Error(`Chain ${params.chainId} not supported`);
+        throw new Error(`Chain ${params.chainId} not configured`);
       }
       await wallet.switchChain(defineChain(chain.id));
+      config.emitter.emit("change", {
+        chainId: chain.id,
+      });
+      await config.storage?.setItem("thirdweb:lastChainId", chain.id);
       return chain;
     },
     onAccountsChanged: () => {

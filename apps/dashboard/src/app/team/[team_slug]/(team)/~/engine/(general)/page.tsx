@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { getEngineInstances } from "../_utils/getEngineInstances";
@@ -10,8 +11,21 @@ export default async function Page(props: {
   params: Promise<{
     team_slug: string;
   }>;
+  searchParams: Promise<{
+    importUrl?: string;
+  }>;
 }) {
-  const params = await props.params;
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ]);
+
+  if (searchParams.importUrl) {
+    redirect(
+      `/team/${params.team_slug}/~/engine/import?importUrl=${searchParams.importUrl}`,
+    );
+  }
+
   const authToken = await getAuthToken();
 
   if (!authToken) {

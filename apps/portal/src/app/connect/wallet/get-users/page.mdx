@@ -1,0 +1,70 @@
+import { Callout } from "@doc";
+import { createMetadata, ArticleIconCard } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Get Users",
+		icon: "wallets",
+	},
+	title: "Get Users | thirdweb",
+	description: "Learn how to fetch in-app wallet users for your application.",
+});
+
+# Get Users
+
+Once you have users connecting to your app through in-app wallets, you can fetch all users through our REST API:
+```
+https://in-app-wallet.thirdweb.com/api/v1/users
+```
+
+## Headers
+
+You need to include the following headers:
+
+- `Content-Type`: Must be set to `application/json`
+- `x-secret-key`: Your secret key for authentication
+- `x-ecosystem-id` (optional): Your ecosystem ID
+- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
+
+## Example curl Command
+
+Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
+
+```bash
+curl -X POST 'https://in-app-wallet.thirdweb.com/api/v1/users?offset=200&limit=100' \
+  -H 'x-secret-key: YOUR_SECRET_KEY' \
+  -H 'Content-Type: application/json'
+```
+
+Limit defaults to 100 users per request.
+
+<Callout variant='info' title='Getting ecosystem users'>
+For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner.
+</Callout>
+
+
+## Response Format
+
+A successful API call returns an array of user objects in the following format:
+
+```json
+[
+  {
+    "userId": "9841a5de-b4a6-44b3-ad14-c4b8745782ca",
+    "walletAddress": "0x933F5BC72634c55b3643A6Aa0cD5b65ca4915d39",
+    "createdAt": "2024-11-05T00:55:25.142Z",
+    "authProvider": "google",
+    "authDetails": {
+        "id": "107302390467834615186",
+        "name": "Richard Hendricks",
+        "type": "google",
+        "email": "richard@piedpiper.com",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocKC1D6ezzzaZxxUk4qtK_HCwVwpNamVopazXwklGBwuuHeSf_c=s96-c",
+        "givenName": "Richard",
+        "emailVerified": true
+    },
+    "email": "richard@piedpiper.com",
+  }
+]
+```
+

@@ -1,21 +1,10 @@
-import styled from "@emotion/styled";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../../../core/design-system/index.js";
-import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
+import { fontSize } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Input } from "../../../../components/formElements.js";
-import { Text } from "../../../../components/text.js";
+import { TokenRow } from "../../../../components/token/TokenRow.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { getBuyTokenAmountFontSize } from "../utils.js";
@@ -35,7 +24,6 @@ export function BuyTokenInput(props: {
   freezeAmount?: boolean;
   freezeChainAndToken?: boolean;
 }) {
-  const { name } = useChainName(props.chain);
   const getWidth = () => {
     let chars = props.value.replace(".", "").length;
     const hasDot = props.value.includes(".");
@@ -122,7 +110,13 @@ export function BuyTokenInput(props: {
         </Container>
       </div>
 
-      <Container flex="row" center="both">
+      <Container
+        flex="row"
+        center="both"
+        style={{
+          height: fontSize.xl,
+        }}
+      >
         <FiatValue
           tokenAmount={props.value}
           token={props.token}
@@ -138,70 +132,16 @@ export function BuyTokenInput(props: {
 
           {/* Token / Chain selector */}
           <Container flex="row" center="x">
-            <TokenButton
-              variant="secondary"
-              fullWidth
-              style={{
-                fontSize: fontSize.sm,
-              }}
-              gap="xxs"
-              onClick={props.onSelectToken}
-              disabled={props.freezeChainAndToken}
-            >
-              <Container flex="row" center="y" gap="sm">
-                <TokenIcon
-                  token={props.token}
-                  chain={props.chain}
-                  size="md"
-                  client={props.client}
-                />
-
-                <Container
-                  flex="column"
-                  style={{
-                    gap: "4px",
-                  }}
-                >
-                  {/* Token Symbol */}
-                  <TokenSymbol
-                    token={props.token}
-                    chain={props.chain}
-                    size="sm"
-                  />
-
-                  {/* Network Name */}
-                  {name ? (
-                    <Text size="xs" color="secondaryText">
-                      {name}
-                    </Text>
-                  ) : (
-                    <Skeleton width="90px" height={fontSize.xs} />
-                  )}
-                </Container>
-              </Container>
-
-              <ChevronDownIcon
-                width={iconSize.sm}
-                height={iconSize.sm}
-                style={{
-                  marginLeft: "auto",
-                }}
-              />
-            </TokenButton>
+            <TokenRow
+              token={props.token}
+              chain={props.chain}
+              client={props.client}
+              onSelectToken={props.onSelectToken}
+              freezeChainAndToken={props.freezeChainAndToken}
+            />
           </Container>
         </>
       )}
     </Container>
   );
 }
-
-const TokenButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
-  return {
-    background: theme.colors.tertiaryBg,
-    border: `1px solid ${theme.colors.borderColor}`,
-    justifyContent: "flex-start",
-    transition: "background 0.3s",
-    padding: spacing.sm,
-  };
-});

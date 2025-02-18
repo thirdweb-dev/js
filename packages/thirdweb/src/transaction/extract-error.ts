@@ -1,9 +1,8 @@
 import type { Abi } from "abitype";
-import { type Hex, decodeErrorResult } from "viem";
+import { type Hex, decodeErrorResult, stringify } from "viem";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isHex } from "../utils/encoding/hex.js";
-import { stringify } from "../utils/json.js";
 import { IS_DEV } from "../utils/process.js";
 
 /**
@@ -13,6 +12,18 @@ export async function extractError<abi extends Abi>(args: {
   error: unknown;
   contract?: ThirdwebContract<abi>;
 }) {
+  const { error, contract } = args;
+  const result = await extractErrorResult({ error, contract });
+  if (result) {
+    return new TransactionError(result, contract);
+  }
+  return error;
+}
+
+export async function extractErrorResult<abi extends Abi>(args: {
+  error: unknown;
+  contract?: ThirdwebContract<abi>;
+}): Promise<string | undefined> {
   const { error, contract } = args;
   if (typeof error === "object") {
     // try to parse RPC error
@@ -31,20 +42,11 @@ export async function extractError<abi extends Abi>(args: {
           data: errorObj.data,
           abi,
         });
-        return new TransactionError(
-          `${parsedError.errorName}${
-            parsedError.args ? ` - ${parsedError.args}` : ""
-          }`,
-          contract,
-        );
+        return `${parsedError.errorName}${parsedError.args ? ` - ${parsedError.args}` : ""}`;
       }
-      return new TransactionError(
-        `Execution Reverted: ${stringify(errorObj)}`,
-        contract,
-      );
     }
   }
-  return error;
+  return `Execution Reverted: ${stringify(error)}`;
 }
 
 class TransactionError<abi extends Abi> extends Error {

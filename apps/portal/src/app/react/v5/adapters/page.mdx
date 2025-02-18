@@ -1,3 +1,5 @@
+import { Stack, InstallTabs, Callout, Steps, Step, GithubTemplateCard } from "@doc";
+
 # Adapters
 
 The thirdweb SDK can work side by side with:
@@ -16,7 +18,17 @@ Adapters allow you to use contracts, providers and wallets from these libraries 
 
 ### Using thirdweb in-app wallets with wagmi
 
-You can use in-app and ecosystem wallets in your wagmi application by using the `@thirdweb-dev/wagmi-adapter` package.
+View the demo repo for using thirdweb in-app / smart wallets with wagmi:
+
+<Stack>
+<GithubTemplateCard
+	title="wagmi + thirdweb demo repo"
+	description="A demo repo for using thirdweb in-app / smart wallets with wagmi"
+	href="https://github.com/thirdweb-example/wagmi-inapp-smart-wallets"
+  />
+</Stack>
+
+You can use thirdweb's in-app, ecosystem and smart wallets in your wagmi application by using the `@thirdweb-dev/wagmi-adapter` package.
 
 ```shell
 npm install thirdweb @thirdweb-dev/wagmi-adapter

@@ -62,7 +62,7 @@ export function OnRampTxDetailsTable(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text>Pay</Text>
+        <Text size="sm">Pay</Text>
         <Container
           flex="column"
           gap="xxs"

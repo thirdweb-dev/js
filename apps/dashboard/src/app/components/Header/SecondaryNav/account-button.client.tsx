@@ -14,14 +14,17 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { useEns } from "../../../../components/contract-components/hooks";
 
 export function AccountButton(props: {
   logout: () => void;
   connectButton: React.ReactNode;
-  account?: Pick<Account, "email" | "id" | "image">;
+  account: Pick<Account, "email" | "id" | "image"> | undefined;
   client: ThirdwebClient;
+  accountAddress: string;
 }) {
   const { setTheme, theme } = useTheme();
+  const ensQuery = useEns(props.accountAddress);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -79,6 +82,19 @@ export function AccountButton(props: {
             className="justify-start px-3 text-muted-foreground text-sm hover:text-foreground"
           >
             <Link href="/account">My Account</Link>
+          </Button>
+
+          <Button
+            asChild
+            variant="ghost"
+            className="justify-start px-3 text-muted-foreground text-sm hover:text-foreground"
+          >
+            <Link
+              href={`/${ensQuery.data?.ensName || props.accountAddress}`}
+              target="_blank"
+            >
+              My Wallet
+            </Link>
           </Button>
 
           <Button

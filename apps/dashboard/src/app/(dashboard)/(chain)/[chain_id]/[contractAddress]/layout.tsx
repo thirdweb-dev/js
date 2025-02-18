@@ -1,8 +1,12 @@
+import { getProjects } from "@/api/projects";
+import { getTeams } from "@/api/team";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { localhost } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
+import type { MinimalTeamsAndProjects } from "../../../../../components/contract-components/contract-deploy-form/add-to-project-card";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
 import { shortenIfAddress } from "../../../../../utils/usedapp-external";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
@@ -38,11 +42,16 @@ export default async function Layout(props: {
     notFound();
   }
 
+  const client = getThirdwebClient();
+  const teamsAndProjects = await getTeamsAndProjectsIfLoggedIn();
+
   if (contract.chain.id === localhost.id) {
     return (
       <ContractPageLayoutClient
         chainMetadata={chainMetadata}
         contract={contract}
+        teamsAndProjects={teamsAndProjects}
+        client={client}
       >
         {props.children}
       </ContractPageLayoutClient>
@@ -73,10 +82,41 @@ export default async function Layout(props: {
       sidebarLinks={sidebarLinks}
       dashboardContractMetadata={contractMetadata}
       externalLinks={externalLinks}
+      teamsAndProjects={teamsAndProjects}
+      client={client}
     >
       {props.children}
     </ContractPageLayout>
   );
+}
+
+async function getTeamsAndProjectsIfLoggedIn() {
+  try {
+    const teams = await getTeams();
+
+    if (!teams) {
+      return undefined;
+    }
+
+    const teamsAndProjects: MinimalTeamsAndProjects = await Promise.all(
+      teams.map(async (team) => ({
+        team: {
+          id: team.id,
+          name: team.name,
+          slug: team.slug,
+          image: team.image,
+        },
+        projects: (await getProjects(team.slug)).map((x) => ({
+          id: x.id,
+          name: x.name,
+        })),
+      })),
+    );
+
+    return teamsAndProjects;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function generateMetadata(props: {

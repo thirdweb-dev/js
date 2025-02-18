@@ -1,5 +1,6 @@
 [
   "function updateBatchBaseURI(uint256 _index, string calldata _uri)",
   "function freezeBatchBaseURI(uint256 _index)",
-  "function setMaxTotalSupply(uint256 _maxTotalSupply)"
+  "function setMaxTotalSupply(uint256 _maxTotalSupply)",
+  "function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[] proof, uint256 quantityLimitPerWallet, uint256 pricePerToken, address currency) _allowlistProof) view returns (bool isOverride)"
 ]

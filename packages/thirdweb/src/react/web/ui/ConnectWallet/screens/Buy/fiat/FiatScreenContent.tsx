@@ -157,7 +157,7 @@ export function FiatScreenContent(props: {
       : undefined;
 
   return (
-    <Container flex="column" gap="md" animate="fadein">
+    <Container flex="column" gap="lg" animate="fadein">
       {isOpen && (
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
@@ -198,74 +198,76 @@ export function FiatScreenContent(props: {
         </>
       )}
 
-      <div>
-        <PayWithCreditCard
-          isLoading={fiatQuoteQuery.isLoading}
-          value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
-          client={client}
-          currency={selectedCurrency}
-          onSelectCurrency={showCurrencySelector}
-        />
-        <Container
-          bg="tertiaryBg"
-          flex="row"
-          borderColor="borderColor"
-          style={{
-            paddingLeft: spacing.md,
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderBottom: "none",
-          }}
-        >
-          <Text size="xs" color="secondaryText">
-            Provider
-          </Text>
-          <Button variant="ghost" onClick={showProviders}>
-            <Container flex="row" center="y" gap="xxs" color="secondaryText">
-              <Text size="xs">
-                {preferredProvider
-                  ? `${preferredProvider.charAt(0).toUpperCase() + preferredProvider.slice(1).toLowerCase()}`
-                  : fiatQuoteQuery.data?.provider
-                    ? `${fiatQuoteQuery.data?.provider.charAt(0).toUpperCase() + fiatQuoteQuery.data?.provider.slice(1).toLowerCase()}`
-                    : ""}
-              </Text>
-              <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-            </Container>
-          </Button>
-        </Container>
-        {/* Estimated time + View fees button */}
-        <EstimatedTimeAndFees
-          quoteIsLoading={fiatQuoteQuery.isLoading}
-          estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
-          onViewFees={showFees}
-        />
-        <Spacer y="md" />
-      </div>
-
-      {/* Error message */}
-      {errorMsg && (
+      <Container flex="column" gap="sm">
+        <Text size="sm">Pay with credit card</Text>
         <div>
-          {errorMsg.data?.minimumAmountEth ? (
-            <Text color="danger" size="sm" center multiline>
-              Minimum amount is{" "}
-              {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
-              <TokenSymbol
-                token={toToken}
-                chain={toChain}
-                size="sm"
-                inline
-                color="danger"
-              />
+          <PayWithCreditCard
+            isLoading={fiatQuoteQuery.isLoading}
+            value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
+            client={client}
+            currency={selectedCurrency}
+            onSelectCurrency={showCurrencySelector}
+          />
+          <Container
+            bg="tertiaryBg"
+            flex="row"
+            borderColor="borderColor"
+            style={{
+              paddingLeft: spacing.md,
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderBottom: "none",
+            }}
+          >
+            <Text size="xs" color="secondaryText">
+              Provider
             </Text>
-          ) : (
-            <Text color="danger" size="sm" center multiline>
-              {errorMsg.message || defaultMessage}
-            </Text>
-          )}
+            <Button variant="ghost" onClick={showProviders}>
+              <Container flex="row" center="y" gap="xxs" color="secondaryText">
+                <Text size="xs">
+                  {preferredProvider
+                    ? `${preferredProvider.charAt(0).toUpperCase() + preferredProvider.slice(1).toLowerCase()}`
+                    : fiatQuoteQuery.data?.provider
+                      ? `${fiatQuoteQuery.data?.provider.charAt(0).toUpperCase() + fiatQuoteQuery.data?.provider.slice(1).toLowerCase()}`
+                      : ""}
+                </Text>
+                <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+              </Container>
+            </Button>
+          </Container>
+          {/* Estimated time + View fees button */}
+          <EstimatedTimeAndFees
+            quoteIsLoading={fiatQuoteQuery.isLoading}
+            estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
+            onViewFees={showFees}
+          />
         </div>
-      )}
+
+        {/* Error message */}
+        {errorMsg && (
+          <div>
+            {errorMsg.data?.minimumAmountEth ? (
+              <Text color="danger" size="sm" center multiline>
+                Minimum amount is{" "}
+                {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
+                <TokenSymbol
+                  token={toToken}
+                  chain={toChain}
+                  size="sm"
+                  inline
+                  color="danger"
+                />
+              </Text>
+            ) : (
+              <Text color="danger" size="sm" center multiline>
+                {errorMsg.message || defaultMessage}
+              </Text>
+            )}
+          </div>
+        )}
+      </Container>
 
       {errorMsg?.data?.minimumAmountEth ? (
         <Button

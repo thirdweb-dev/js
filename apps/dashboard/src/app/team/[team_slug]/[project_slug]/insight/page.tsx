@@ -1,123 +1,109 @@
 import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { BoxIcon, PlusIcon } from "lucide-react";
+import {
+  Code2Icon,
+  DatabaseIcon,
+  ExternalLinkIcon,
+  ZapIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
-import { fetchAllBlueprints } from "./utils";
 
-export default async function Page(props: {
-  params: Promise<{ team_slug: string; project_slug: string }>;
-}) {
-  const params = await props.params;
-  const authToken = await getAuthToken();
-
-  if (!authToken) {
-    const { team_slug, project_slug } = await props.params;
-    return redirect(
-      `/login?next=${encodeURIComponent(`/team/${team_slug}/${project_slug}/insight`)}`,
-    );
-  }
-
+export default async function Page() {
   return (
     <div className="flex grow flex-col">
       <div className="border-border border-b py-10">
-        <div className="container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container flex max-w-[1000px] flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-semibold text-2xl tracking-tight sm:text-3xl">
             Insight
           </h1>
-          <ToolTipLabel label="Coming Soon">
-            <Button className="gap-2" disabled>
-              <PlusIcon className="size-4" />
-              Add Blueprint <span className="lg:hidden"> (Coming Soon) </span>
-            </Button>
-          </ToolTipLabel>
         </div>
       </div>
 
-      <div className="container py-8 pb-20">
-        <BlueprintsSection
-          authToken={authToken}
-          layoutPath={`/team/${params.team_slug}/${params.project_slug}/insight`}
-        />
+      <div className="container max-w-[1000px] py-8 pb-20">
+        <BlueprintCard />
       </div>
     </div>
   );
 }
 
-async function BlueprintsSection(params: {
-  authToken: string;
-  layoutPath: string;
-}) {
-  const blueprints = await fetchAllBlueprints(params);
+function BlueprintCard() {
+  const features = [
+    {
+      icon: Code2Icon,
+      title: "Easy-to-Use API",
+      description: "RESTful endpoints for any application",
+    },
+    {
+      icon: DatabaseIcon,
+      title: "Managed Infrastructure",
+      description:
+        "No need to index blockchains yourself or manage infrastructure and RPC costs.",
+    },
+    {
+      icon: ZapIcon,
+      title: "Lightning-Fast Queries",
+      description: "Access any transaction, event or token API data",
+    },
+  ];
 
   return (
-    <div>
-      <h2 className="mb-5 font-semibold text-2xl tracking-tight">
-        Explore Blueprints
-      </h2>
-      <div className="flex flex-col gap-8">
-        {blueprints.map((blueprint) => {
-          const paths = Object.keys(blueprint.openapiJson.paths);
-          return (
-            <div key={blueprint.id}>
-              <h2 className="font-semibold text-lg tracking-tight">
-                {blueprint.name}
-              </h2>
-              <p className="mb-2 text-muted-foreground">
-                {blueprint.description}
-              </p>
+    <div className="rounded-lg border bg-card">
+      {/* header */}
+      <div className="border-b p-4 lg:px-6 lg:py-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-2xl tracking-tight">Blueprints</h2>
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {paths.map((pathName) => {
-                  const pathObj = blueprint.openapiJson.paths[pathName];
-                  if (!pathObj) {
-                    return null;
-                  }
-                  return (
-                    <BlueprintCard
-                      description={pathObj.get?.description}
-                      title={pathObj.get?.summary || pathName}
-                      href={`${params.layoutPath}/${blueprint.id}?path=${pathName}`}
-                      key={pathName}
-                    />
-                  );
-                })}
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="gap-2 bg-background">
+              <Link
+                href="https://portal.thirdweb.com/insight/blueprints"
+                target="_blank"
+              >
+                Docs <ExternalLinkIcon className="size-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 lg:p-6">
+        <p className="mb-2 font-semibold text-xl leading-tight tracking-tight lg:mb-1">
+          Simple endpoints for querying rich blockchain data
+        </p>
+        <p className="text-muted-foreground text-sm">
+          A blueprint is an API that provides access to on-chain data in a
+          user-friendly format. <br /> No need for ABIs, decoding, RPC, or web3
+          knowledge required to fetch blockchain data.
+        </p>
+
+        <div className="h-6" />
+
+        {/* Features */}
+        <div className="flex flex-col gap-6">
+          {features.map((feature) => (
+            <div key={feature.title} className="flex items-start gap-3">
+              <div className="rounded-full border p-2">
+                <feature.icon className="size-4 text-muted-foreground" />
+              </div>
+              <div>
+                <h4 className="font-medium">{feature.title}</h4>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
               </div>
             </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function BlueprintCard(props: {
-  href: string;
-  title: string;
-  description: string | undefined;
-}) {
-  return (
-    <div className="relative flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-5 transition-colors hover:border-active-border">
-      <div className="shrink-0 rounded-xl border p-1">
-        <div className="rounded-lg border bg-muted p-1">
-          <BoxIcon className="size-5 text-muted-foreground" />
+          ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <Link
-          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
-          href={props.href}
-        >
-          <h2 className="font-medium text-base">{props.title}</h2>
-        </Link>
-
-        {props.description && (
-          <p className="line-clamp-1 text-muted-foreground text-sm">
-            {props.description}
-          </p>
-        )}
+      {/* Playground link */}
+      <div className="border-t p-4 lg:p-6">
+        <Button className="w-full gap-2" asChild>
+          <Link href="https://playground.thirdweb.com/insight" target="_blank">
+            Try Insight blueprints in the playground
+            <ExternalLinkIcon className="size-4" />
+          </Link>
+        </Button>
       </div>
     </div>
   );

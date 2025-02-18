@@ -1,39 +1,60 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { Suspense } from "react";
+import { ContractTable } from "../../../../components/contract-components/tables/contract-table";
 import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
-import { DeployedContractsTable } from "./DeployedContractsTable";
 import { GetStartedWithContractsDeploy } from "./GetStartedWithContractsDeploy";
 import { getSortedDeployedContracts } from "./getSortedDeployedContracts";
 
 export function DeployedContractsPage(props: {
-  address: string;
+  teamId: string;
+  projectId: string;
+  authToken: string;
 }) {
   return (
-    <div className="flex grow flex-col">
-      <DeployedContractsPageHeader />
-      <div className="h-8" />
-      <Suspense fallback={<Loading />}>
-        <DeployedContractsPageAsync {...props} />
-      </Suspense>
+    <div className="flex grow flex-col pb-20">
+      <DeployedContractsPageHeader
+        teamId={props.teamId}
+        projectId={props.projectId}
+      />
+      <div className="h-10" />
+      <div className="container flex grow flex-col">
+        <Suspense fallback={<Loading />}>
+          <DeployedContractsPageAsync {...props} />
+        </Suspense>
+      </div>
     </div>
   );
 }
 
 async function DeployedContractsPageAsync(props: {
-  address: string;
+  teamId: string;
+  projectId: string;
+  authToken: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
-    address: props.address,
+    teamId: props.teamId,
+    projectId: props.projectId,
+    authToken: props.authToken,
   });
 
   if (deployedContracts.length === 0) {
-    return <GetStartedWithContractsDeploy />;
+    return (
+      <GetStartedWithContractsDeploy
+        teamId={props.teamId}
+        projectId={props.projectId}
+      />
+    );
   }
 
   return (
     <ClientOnly ssr={<Loading />}>
-      <DeployedContractsTable contracts={deployedContracts} />
+      <ContractTable
+        contracts={deployedContracts}
+        pageSize={10}
+        teamId={props.teamId}
+        projectId={props.projectId}
+      />
     </ClientOnly>
   );
 }

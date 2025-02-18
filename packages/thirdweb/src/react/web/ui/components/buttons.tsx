@@ -93,6 +93,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           border: `1px solid ${theme.colors.borderColor}`,
           "&:hover": {
             borderColor: theme.colors.accentText,
+            transform: "scale(1.01)",
           },
           '&[aria-selected="true"]': {
             borderColor: theme.colors.accentText,
@@ -105,6 +106,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           border: "1px solid transparent",
           "&:hover": {
             borderColor: theme.colors.accentText,
+            transform: "scale(1.01)",
+          },
+        };
+      }
+
+      if (props.variant === "accent") {
+        return {
+          "&:hover": {
+            transform: "scale(1.01)",
           },
         };
       }
@@ -113,6 +123,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         return {
           "&:hover": {
             background: theme.colors.secondaryButtonHoverBg,
+            transform: "scale(1.01)",
           },
         };
       }
@@ -122,6 +133,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           padding: 0,
           "&:hover": {
             color: theme.colors.primaryText,
+            transform: "scale(1.01)",
           },
         };
       }

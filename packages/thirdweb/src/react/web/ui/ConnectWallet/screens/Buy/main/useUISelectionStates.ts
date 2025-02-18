@@ -76,12 +76,9 @@ export function useFromTokenSelectionStates(options: {
   payOptions: PayUIOptions;
   supportedSources: SupportedSourcesInputData[];
 }) {
-  const { payOptions, supportedSources } = options;
+  const { payOptions } = options;
 
-  // --------------------------------------------------------------------------
-  const firstSupportedSource = supportedSources?.length
-    ? supportedSources[0]
-    : undefined;
+  // TODO (pay) - auto select token based on connected wallet balances
 
   // Source token and chain selection ---------------------------------------------------
   const [fromChain_, setFromChain] = useState<Chain>();
@@ -93,12 +90,7 @@ export function useFromTokenSelectionStates(options: {
     (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
     (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain);
 
-  const fromChainFromApi = firstSupportedSource?.chain
-    ? firstSupportedSource.chain
-    : undefined;
-
-  const fromChain =
-    fromChain_ || fromChainDevSpecified || fromChainFromApi || polygon;
+  const fromChain = fromChain_ || fromChainDevSpecified || undefined;
 
   const [fromToken_, setFromToken] = useState<ERC20OrNativeToken>();
 
@@ -108,12 +100,8 @@ export function useFromTokenSelectionStates(options: {
       payOptions.buyWithCrypto?.prefillSource?.token) ||
     (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token);
 
-  // May be updated in the future
-  const fromTokenFromApi = NATIVE_TOKEN;
-
   // supported tokens query in here
-  const fromToken =
-    fromToken_ || fromTokenDevSpecified || fromTokenFromApi || NATIVE_TOKEN;
+  const fromToken = fromToken_ || fromTokenDevSpecified || undefined;
 
   return {
     fromChain,

@@ -2,52 +2,27 @@
 
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { createColumnHelper } from "@tanstack/react-table";
-import { AsyncContractNameCell } from "components/contract-components/tables/cells";
-import { TWTable } from "components/shared/TWTable";
-import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
-import type { BasicContract } from "contract-ui/types/types";
+import { ContractNameCell } from "components/contract-components/tables/cells";
+import { FactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { getChainMetadata } from "thirdweb/chains";
+import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
 
 interface FactoryContractsProps {
-  contracts: BasicContract[];
+  contracts: ProjectContract[];
   isPending: boolean;
   isFetched: boolean;
 }
-
-const columnHelper = createColumnHelper<BasicContract>();
-
-const columns = [
-  columnHelper.accessor((row) => row.address, {
-    header: "Name",
-    cell: (cell) => <AsyncContractNameCell cell={cell.row.original} />,
-  }),
-  columnHelper.accessor("chainId", {
-    header: "Network",
-    cell: (cell) => {
-      return <NetworkName id={cell.getValue()} />;
-    },
-  }),
-  columnHelper.accessor("address", {
-    header: "Contract address",
-    cell: (cell) => (
-      <CopyAddressButton
-        address={cell.getValue()}
-        copyIconPosition="left"
-        variant="ghost"
-        className="-translate-x-2"
-      />
-    ),
-  }),
-  columnHelper.accessor((row) => row, {
-    header: "Accounts",
-    cell: (cell) => {
-      return <AsyncFactoryAccountCell cell={cell.row.original} />;
-    },
-  }),
-];
 
 function NetworkName(props: { id: number }) {
   const chain = useV5DashboardChain(props.id);
@@ -70,16 +45,48 @@ function NetworkName(props: { id: number }) {
 
 export const FactoryContracts: React.FC<FactoryContractsProps> = ({
   contracts,
-  isPending,
-  isFetched,
 }) => {
   return (
-    <TWTable
-      title="account factories"
-      data={contracts}
-      columns={columns}
-      isPending={isPending}
-      isFetched={isFetched}
-    />
+    <TableContainer>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Network</TableHead>
+            <TableHead>Contract address</TableHead>
+            <TableHead>Accounts</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {contracts.map((contract) => (
+            <TableRow key={contract.contractAddress + contract.chainId}>
+              <TableCell>
+                <ContractNameCell
+                  chainId={contract.chainId}
+                  contractAddress={contract.contractAddress}
+                />
+              </TableCell>
+              <TableCell>
+                <NetworkName id={Number(contract.chainId)} />
+              </TableCell>
+              <TableCell>
+                <CopyAddressButton
+                  address={contract.contractAddress}
+                  copyIconPosition="left"
+                  variant="ghost"
+                  className="-translate-x-2"
+                />
+              </TableCell>
+              <TableCell>
+                <FactoryAccountCell
+                  chainId={contract.chainId}
+                  contractAddress={contract.contractAddress}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };

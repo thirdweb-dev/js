@@ -75,6 +75,11 @@ export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
 } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
+export {
+  canClaim,
+  type CanClaimParams,
+  type CanClaimResult,
+} from "../../extensions/erc20/drops/read/canClaim.js";
 
 // WRITE
 export {

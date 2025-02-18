@@ -107,6 +107,11 @@ export {
   type GetClaimConditionsParams,
   isGetClaimConditionsSupported,
 } from "../../extensions/erc1155/drops/read/getClaimConditions.js";
+export {
+  canClaim,
+  type CanClaimParams,
+  type CanClaimResult,
+} from "../../extensions/erc1155/drops/read/canClaim.js";
 
 // WRITE
 export {

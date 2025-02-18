@@ -4,6 +4,7 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type React from "react";
 import { TabPathLinks } from "../../@/components/ui/tabs";
+import { getAuthTokenWalletAddress } from "../api/lib/getAuthToken";
 import { TWAutoConnect } from "../components/autoconnect";
 import { loginRedirect } from "../login/loginRedirect";
 import { AccountHeader } from "./components/AccountHeader";
@@ -12,17 +13,24 @@ import { getValidAccount } from "./settings/getAccount";
 export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
-  const teams = await getTeams();
-  const account = await getValidAccount("/account");
+  const [teams, account, accountAddress] = await Promise.all([
+    getTeams(),
+    getValidAccount("/account"),
+    getAuthTokenWalletAddress(),
+  ]);
 
-  if (!teams) {
+  if (!teams || !accountAddress) {
     loginRedirect("/account");
   }
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <div className="flex grow flex-col">
-        <HeaderAndNav teams={teams} twAccount={account} />
+        <HeaderAndNav
+          teams={teams}
+          twAccount={account}
+          accountAddress={accountAddress}
+        />
         {props.children}
       </div>
       <TWAutoConnect />
@@ -34,6 +42,7 @@ export default async function AccountLayout(props: {
 async function HeaderAndNav(props: {
   teams: Team[];
   twAccount: Account;
+  accountAddress: string;
 }) {
   const teamsAndProjects = await Promise.all(
     props.teams.map(async (team) => ({
@@ -47,6 +56,7 @@ async function HeaderAndNav(props: {
       <AccountHeader
         teamsAndProjects={teamsAndProjects}
         account={props.twAccount}
+        accountAddress={props.accountAddress}
       />
       <TabPathLinks
         tabContainerClassName="px-4 lg:px-6"
@@ -55,10 +65,6 @@ async function HeaderAndNav(props: {
             path: "/account",
             name: "Overview",
             exactMatch: true,
-          },
-          {
-            path: "/account/contracts",
-            name: "Contracts",
           },
           {
             path: "/account/settings",

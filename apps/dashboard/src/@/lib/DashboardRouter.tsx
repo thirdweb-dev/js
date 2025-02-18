@@ -117,7 +117,7 @@ function DashboardRouterTopProgressBarInner() {
   const width = isLoading ? progress : 100;
   return (
     <span
-      className="fixed top-0 block h-[2px] bg-blue-500"
+      className="fixed top-0 block h-[3px] bg-foreground"
       style={{
         opacity: isLoading ? "100" : "0",
         width: `${width}%`,

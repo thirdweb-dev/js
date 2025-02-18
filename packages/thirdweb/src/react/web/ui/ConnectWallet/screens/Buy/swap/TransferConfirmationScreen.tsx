@@ -16,20 +16,18 @@ import type { Address } from "../../../../../../../utils/address.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainSymbol } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
-import { WalletRow } from "../WalletSelectorButton.js";
-import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
+import { SwapSummary } from "./SwapSummary.js";
 
 type TransferConfirmationScreenProps = {
   title: string;
@@ -72,14 +70,13 @@ export function TransferConfirmationScreen(
     | { id: "error"; error: string }
     | { id: "done" }
   >({ id: "idle" });
-  const { symbol } = useChainSymbol(chain);
 
   return (
     <Container p="lg">
       <ModalHeader title={title} onBack={onBack} />
       <Spacer y="xl" />
 
-      {transactionMode && (
+      {transactionMode ? (
         <>
           <StepBar steps={2} currentStep={step === "transfer" ? 1 : 2} />
           <Spacer y="sm" />
@@ -88,52 +85,25 @@ export function TransferConfirmationScreen(
               ? "Step 1 of 2 - Transfer funds"
               : "Step 2 of 2 - Finalize transaction"}
           </Text>
-          <Spacer y="xl" />
+          <Spacer y="md" />
+        </>
+      ) : (
+        <>
+          <Text size="sm">Confirm payment</Text>
+          <Spacer y="md" />
         </>
       )}
 
-      {/* Sender Address */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">From</Text>
-        <WalletRow address={payer.account.address} client={client} />
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-
-      {/* Receiver Address */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">To</Text>
-        <WalletRow address={receiverAddress} client={client} />
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-
-      {/* Token Info */}
-      <TokenInfoRow
-        chainId={chain.id}
+      <SwapSummary
+        sender={payer.account.address}
+        receiver={receiverAddress}
         client={client}
-        label="Amount"
-        tokenAmount={tokenAmount}
-        tokenSymbol={isNativeToken(token) ? symbol || "" : token.symbol}
-        tokenAddress={
-          isNativeToken(token) ? NATIVE_TOKEN_ADDRESS : token.address
-        }
+        fromToken={token}
+        fromChain={chain}
+        toToken={token}
+        toChain={chain}
+        fromAmount={tokenAmount}
+        toAmount={tokenAmount}
       />
 
       <Spacer y="lg" />

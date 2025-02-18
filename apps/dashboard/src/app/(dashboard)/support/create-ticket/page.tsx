@@ -1,3 +1,4 @@
+import { getTeams } from "@/api/team";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,17 +8,16 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 import { CreateTicket } from "./components/create-ticket.client";
 
 export default async function Page() {
-  const authToken = await getAuthToken();
+  const teams = await getTeams();
 
-  if (!authToken) {
-    return redirect(
-      `/login?next=${encodeURIComponent("/support/create-ticket")}`,
-    );
+  const pagePath = "/support/create-ticket";
+
+  if (!teams || teams.length === 0) {
+    loginRedirect(pagePath);
   }
 
   return (
@@ -36,7 +36,12 @@ export default async function Page() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="container max-w-[750px] py-10">
-        <CreateTicket />
+        <CreateTicket
+          teams={teams.map((t) => ({
+            name: t.name,
+            id: t.id,
+          }))}
+        />
       </div>
     </div>
   );
