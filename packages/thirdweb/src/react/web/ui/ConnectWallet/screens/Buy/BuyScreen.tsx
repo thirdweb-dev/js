@@ -558,6 +558,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 supportedSourcesQuery.data &&
                 sourceSupportedTokens && (
                   <TokenSelectorScreen
+                    fiatSupported={props.payOptions.buyWithFiat !== false}
                     client={props.client}
                     sourceTokens={sourceSupportedTokens}
                     sourceSupportedTokens={sourceSupportedTokens}
