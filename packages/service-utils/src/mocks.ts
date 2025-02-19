@@ -27,11 +27,20 @@ export const validProjectResponse: ProjectResponse = {
     },
   ],
   teamId: "1",
-  createdAt: new Date("2024-06-01"),
-  updatedAt: new Date("2024-06-01"),
+  createdAt: new Date("2024-06-01").toISOString(),
+  updatedAt: new Date("2024-06-01").toISOString(),
+  lastAccessedAt: new Date("2024-06-01").toISOString(),
   name: "test-project",
   slug: "test-project",
   image: "https://example.com/image.png",
+  secretKeys: [
+    {
+      hash: "1234567890123456789012345678901234567890123456789012345678901234",
+      masked: "foo...lorem",
+      createdAt: new Date("2024-06-01").toISOString(),
+      updatedAt: new Date("2024-06-01").toISOString(),
+    },
+  ],
 };
 
 export const validTeamResponse: TeamResponse = {
@@ -39,9 +48,10 @@ export const validTeamResponse: TeamResponse = {
   name: "test-team",
   slug: "test-team",
   image: "https://example.com/image.png",
-  createdAt: new Date("2024-06-01"),
-  updatedAt: new Date("2024-06-01"),
+  createdAt: new Date("2024-06-01").toISOString(),
+  updatedAt: new Date("2024-06-01").toISOString(),
   billingPlan: "free",
+  supportPlan: "free",
   billingPlanVersion: 1,
   billingEmail: "test@example.com",
   billingStatus: "noPayment",

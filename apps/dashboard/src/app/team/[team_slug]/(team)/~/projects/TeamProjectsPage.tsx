@@ -24,7 +24,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { LazyCreateAPIKeyDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import {
   ChevronDownIcon,
   EllipsisVerticalIcon,
@@ -167,10 +167,11 @@ export function TeamProjectsPage(props: {
         </div>
       )}
 
-      <LazyCreateAPIKeyDialog
+      <LazyCreateProjectDialog
         open={isCreateProjectDialogOpen}
         onOpenChange={setIsCreateProjectDialogOpen}
         teamSlug={props.team.slug}
+        teamId={props.team.id}
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();

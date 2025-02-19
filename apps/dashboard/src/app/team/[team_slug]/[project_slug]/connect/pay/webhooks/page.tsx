@@ -1,5 +1,5 @@
 import { getProject } from "@/api/projects";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { PayWebhooksPage } from "./components/webhooks.client";
 
 export default async function Page(props: {
@@ -8,13 +8,11 @@ export default async function Page(props: {
     project_slug: string;
   }>;
 }) {
-  const project = await getProject(
-    (await props.params).team_slug,
-    (await props.params).project_slug,
-  );
+  const params = await props.params;
+  const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
-    notFound();
+    redirect(`/team/${params.team_slug}`);
   }
 
   return (

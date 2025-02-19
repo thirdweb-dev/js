@@ -108,7 +108,7 @@ function TeamRow(props: {
       <div className="flex items-center gap-4">
         <GradientAvatar
           className="size-8"
-          src={props.team.image}
+          src={props.team.image || undefined}
           id={props.team.id}
           client={props.client}
         />

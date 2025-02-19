@@ -1,35 +1,9 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
+import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
-type EnabledTeamScope =
-  | "pay"
-  | "storage"
-  | "rpc"
-  | "bundler"
-  | "insight"
-  | "embeddedWallets"
-  | "relayer"
-  | "chainsaw"
-  | "nebula";
-
-export type Team = {
-  id: string;
-  name: string;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string;
-  bannedAt?: string;
-  image?: string;
-  billingPlan: "pro" | "growth" | "free" | "starter";
-  billingStatus: "validPayment" | (string & {}) | null;
-  supportPlan: "pro" | "growth" | "free" | "starter";
-  billingEmail: string | null;
-  growthTrialEligible: false;
-  enabledScopes: EnabledTeamScope[];
-};
-
+export type Team = TeamResponse;
 export async function getTeamBySlug(slug: string) {
   const token = await getAuthToken();
 

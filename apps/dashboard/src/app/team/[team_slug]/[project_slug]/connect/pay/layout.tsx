@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { TabPathLinks } from "@/components/ui/tabs";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function Layout(props: {
   const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
-    notFound();
+    redirect(`/team/${params.team_slug}`);
   }
 
   const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/connect/pay`;

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { accountStub, createApiKeyStub } from "../../../stories/stubs";
+import { projectStub } from "../../../stories/stubs";
 import { mobileViewport } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";
 
@@ -46,8 +46,6 @@ export const FreePlanMobile: Story = {
   },
 };
 
-const apiKeyStub = createApiKeyStub();
-
 function Variants(props: {
   canEditAdvancedFeatures: boolean;
 }) {
@@ -56,11 +54,16 @@ function Variants(props: {
       <div className="flex flex-col gap-10">
         <InAppWalletSettingsUI
           canEditAdvancedFeatures={props.canEditAdvancedFeatures}
-          apiKey={apiKeyStub}
+          project={projectStub("foo", "bar")}
+          teamId="bar"
+          embeddedWalletService={{
+            actions: [],
+            name: "embeddedWallets",
+          }}
+          teamSlug="bar"
           isUpdating={false}
           trackingCategory="foo"
           updateApiKey={() => {}}
-          twAccount={accountStub()}
         />
       </div>
     </div>

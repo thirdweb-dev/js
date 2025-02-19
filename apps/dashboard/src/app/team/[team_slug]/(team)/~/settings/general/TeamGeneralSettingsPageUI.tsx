@@ -156,12 +156,12 @@ function TeamSlugFormControl(props: {
 
 function TeamAvatarFormControl(props: {
   updateTeamImage: (file: File | undefined) => Promise<void>;
-  avatar: string | undefined;
+  avatar: string | null;
   client: ThirdwebClient;
 }) {
   const teamAvatarUrl = resolveSchemeWithErrorHandler({
     client: props.client,
-    uri: props.avatar,
+    uri: props.avatar || undefined,
   });
 
   const [teamAvatar, setTeamAvatar] = useState<File | undefined>();

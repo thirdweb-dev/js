@@ -16,7 +16,7 @@ export default async function Page(props: {
   const team = await getTeamBySlug(params.team_slug);
 
   if (!team) {
-    return redirect("/team");
+    redirect("/team");
   }
 
   return (

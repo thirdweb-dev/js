@@ -45,9 +45,10 @@ export type TeamResponse = {
   slug: string;
   image: string | null;
   billingPlan: "free" | "starter" | "growth" | "pro";
+  supportPlan: "free" | "starter" | "growth" | "pro";
   billingPlanVersion: number;
-  createdAt: Date;
-  updatedAt: Date | null;
+  createdAt: string;
+  updatedAt: string | null;
   billingEmail: string | null;
   billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
   growthTrialEligible: false;
@@ -55,73 +56,88 @@ export type TeamResponse = {
   enabledScopes: ServiceName[];
 };
 
+export type ProjectSecretKey = {
+  hash: string;
+  masked: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ProjectBundlerService = {
+  name: "bundler";
+  actions: never[];
+  allowedChainIds?: number[] | null;
+  allowedContractAddresses?: string[] | null;
+  allowedWallets?: string[] | null;
+  blockedWallets?: string[] | null;
+  bypassWallets?: string[] | null;
+  limits?: {
+    global?: {
+      maxSpend: string;
+      maxSpendUnit: "usd" | "native";
+    } | null;
+  } | null;
+  serverVerifier?: {
+    url: string;
+    headers?: Array<{
+      key: string;
+      value: string;
+    }>;
+  } | null;
+};
+
+export type ProjectEmbeddedWalletsService = {
+  name: "embeddedWallets";
+  actions: never[];
+  redirectUrls?: string[] | null;
+  applicationName?: string | null;
+  applicationImageUrl?: string | null;
+  recoveryShareManagement?: string | null;
+  customAuthentication?: CustomAuthenticationServiceSchema | null;
+  customAuthEndpoint?: CustomAuthEndpointServiceSchema | null;
+};
+
+export type ProjectService =
+  | {
+      name: "pay";
+      actions: never[];
+      payoutAddress: string | null;
+      developerFeeBPS?: number | null;
+    }
+  | {
+      name: "storage";
+      actions: ("read" | "write")[];
+    }
+  | {
+      name: "rpc";
+      actions: never[];
+    }
+  | {
+      name: "insight";
+      actions: never[];
+    }
+  | {
+      name: "nebula";
+      actions: never[];
+    }
+  | ProjectBundlerService
+  | ProjectEmbeddedWalletsService;
+
 export type ProjectResponse = {
   id: string;
   teamId: string;
-  createdAt: Date;
-  updatedAt: Date | null;
+  createdAt: string;
+  updatedAt: string | null;
+  lastAccessedAt: string | null;
   publishableKey: string;
   name: string;
   slug: string;
   image: string | null;
   domains: string[];
   bundleIds: string[];
-  services: (
-    | {
-        name: "pay";
-        actions: never[];
-        payoutAddress: string | null;
-      }
-    | {
-        name: "storage";
-        actions: ("read" | "write")[];
-      }
-    | {
-        name: "rpc";
-        actions: never[];
-      }
-    | {
-        name: "insight";
-        actions: never[];
-      }
-    | {
-        name: "nebula";
-        actions: never[];
-      }
-    | {
-        name: "bundler";
-        actions: never[];
-        allowedChainIds?: number[] | null;
-        allowedContractAddresses?: string[] | null;
-        allowedWallets?: string[] | null;
-        blockedWallets?: string[] | null;
-        bypassWallets?: string[] | null;
-        limits?: {
-          global?: {
-            maxSpend: string;
-            maxSpendUnit: "usd" | "native";
-          } | null;
-        } | null;
-        serverVerifier?: {
-          url: string;
-          headers?: {
-            key: string;
-            value: string;
-          }[];
-        } | null;
-      }
-    | {
-        name: "embeddedWallets";
-        actions: never[];
-        redirectUrls?: string[] | null;
-        applicationName?: string | null;
-        applicationImageUrl?: string | null;
-        recoveryShareManagement?: string | null;
-        customAuthentication?: CustomAuthenticationServiceSchema | null;
-        customAuthEndpoint?: CustomAuthEndpointServiceSchema | null;
-      }
-  )[];
+  services: ProjectService[];
   walletAddresses: string[];
+  secretKeys: ProjectSecretKey[];
 };
 
 type CustomAuthenticationServiceSchema = {

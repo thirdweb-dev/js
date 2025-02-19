@@ -1,7 +1,10 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,33 +20,29 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import {
-  type Account,
-  type ApiKey,
-  type ApiKeyService,
-  type UpdateKeyInput,
-  useUpdateApiKey,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import {
   type ApiKeyEmbeddedWalletsValidationSchema,
   apiKeyEmbeddedWalletsValidationSchema,
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import type React from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
+import type { Team } from "../../../@/api/team";
 
 type InAppWalletSettingsPageProps = {
-  apiKey: Pick<
-    ApiKey,
-    "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
-  >;
   trackingCategory: string;
-  twAccount: Account;
+  project: Project;
+  teamId: string;
+  teamSlug: string;
+  validTeamPlan: Team["billingPlan"];
 };
 
 const TRACKING_CATEGORY = "embedded-wallet";
@@ -55,12 +54,23 @@ type UpdateAPIKeyTrackingData = {
 };
 
 export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
-  const mutation = useUpdateApiKey();
+  const updateProject = useMutation({
+    mutationFn: async (projectValues: Partial<Project>) => {
+      await updateProjectClient(
+        {
+          projectId: props.project.id,
+          teamId: props.teamId,
+        },
+        projectValues,
+      );
+    },
+  });
+
   const { trackingCategory } = props;
   const trackEvent = useTrack();
 
-  function handleAPIKeyUpdate(
-    newValue: UpdateKeyInput,
+  function handleUpdateProject(
+    projectValues: Partial<Project>,
     trackingData: UpdateAPIKeyTrackingData,
   ) {
     trackEvent({
@@ -69,7 +79,7 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
       label: "attempt",
     });
 
-    mutation.mutate(newValue, {
+    updateProject.mutate(projectValues, {
       onSuccess: () => {
         toast.success("In-App Wallet API Key configuration updated");
         trackEvent({
@@ -93,50 +103,88 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   }
 
   return (
-    <InAppWalletSettingsUI
+    <InAppWalletSettingsPageUI
       {...props}
-      canEditAdvancedFeatures={props.twAccount.advancedEnabled}
-      updateApiKey={handleAPIKeyUpdate}
-      isUpdating={mutation.isPending}
+      canEditAdvancedFeatures={props.validTeamPlan !== "free"}
+      updateApiKey={handleUpdateProject}
+      isUpdating={updateProject.isPending}
     />
   );
 }
 
-export const InAppWalletSettingsUI: React.FC<
+const InAppWalletSettingsPageUI: React.FC<
   InAppWalletSettingsPageProps & {
     canEditAdvancedFeatures: boolean;
     updateApiKey: (
-      apiKey: UpdateKeyInput,
+      projectValues: Partial<Project>,
       trackingData: UpdateAPIKeyTrackingData,
     ) => void;
     isUpdating: boolean;
   }
 > = (props) => {
-  const { canEditAdvancedFeatures, apiKey } = props;
-  const services: ApiKeyService[] = apiKey.services || [];
-
-  const serviceIdx = services.findIndex(
-    (srv) => srv.name === "embeddedWallets",
+  const embeddedWalletService = props.project.services.find(
+    (service) => service.name === "embeddedWallets",
   );
-  const config: ApiKeyService | undefined = services[serviceIdx];
+
+  if (!embeddedWalletService) {
+    return (
+      <Alert variant="warning">
+        <CircleAlertIcon className="size-5" />
+        <AlertTitle>In-App wallets service is disabled</AlertTitle>
+        <AlertDescription>
+          Enable In-App wallets service in the{" "}
+          <UnderlineLink
+            href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+          >
+            project settings
+          </UnderlineLink>{" "}
+          to configure settings
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <InAppWalletSettingsUI
+      {...props}
+      embeddedWalletService={embeddedWalletService}
+    />
+  );
+};
+
+export const InAppWalletSettingsUI: React.FC<
+  Omit<InAppWalletSettingsPageProps, "validTeamPlan"> & {
+    canEditAdvancedFeatures: boolean;
+    updateApiKey: (
+      projectValues: Partial<Project>,
+      trackingData: UpdateAPIKeyTrackingData,
+    ) => void;
+    isUpdating: boolean;
+    embeddedWalletService: ProjectEmbeddedWalletsService;
+  }
+> = (props) => {
+  const { canEditAdvancedFeatures } = props;
+  const services = props.project.services;
+
+  const config = props.embeddedWalletService;
 
   const hasCustomBranding =
-    !!config?.applicationImageUrl?.length || !!config?.applicationName?.length;
+    !!config.applicationImageUrl?.length || !!config.applicationName?.length;
 
   const form = useForm<ApiKeyEmbeddedWalletsValidationSchema>({
     resolver: zodResolver(apiKeyEmbeddedWalletsValidationSchema),
     values: {
-      customAuthEndpoint: config?.customAuthEndpoint,
-      customAuthentication: config?.customAuthentication,
+      customAuthEndpoint: config.customAuthEndpoint || undefined,
+      customAuthentication: config.customAuthentication || undefined,
       ...(hasCustomBranding
         ? {
             branding: {
-              applicationName: config.applicationName,
-              applicationImageUrl: config.applicationImageUrl,
+              applicationName: config.applicationName || undefined,
+              applicationImageUrl: config.applicationImageUrl || undefined,
             },
           }
         : undefined),
-      redirectUrls: apiKey.redirectUrls.join("\n"),
+      redirectUrls: (config.redirectUrls || []).join("\n"),
     },
   });
 
@@ -168,29 +216,23 @@ export const InAppWalletSettingsUI: React.FC<
       );
     }
 
-    const { id, name, domains, bundleIds } = apiKey;
+    const newServices = services.map((service) => {
+      if (service.name !== "embeddedWallets") {
+        return service;
+      }
 
-    // FIXME: This must match components/settings/ApiKeys/Edit/index.tsx
-    //        Make it more generic w/o me thinking of values
-    const newServices = [...services];
-
-    if (services[serviceIdx]) {
-      newServices[serviceIdx] = {
-        ...services[serviceIdx],
+      return {
+        ...service,
         customAuthentication,
         customAuthEndpoint,
         applicationImageUrl: branding?.applicationImageUrl,
-        applicationName: branding?.applicationName || apiKey.name,
+        applicationName: branding?.applicationName || props.project.name,
+        redirectUrls: toArrFromList(redirectUrls || "", true),
       };
-    }
+    });
 
     props.updateApiKey(
       {
-        id,
-        name,
-        domains,
-        bundleIds,
-        redirectUrls: toArrFromList(redirectUrls || "", true),
         services: newServices,
       },
       {

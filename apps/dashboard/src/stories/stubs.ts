@@ -1,32 +1,29 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
-import type {
-  Account,
-  ApiKey,
-  ApiKeyService,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type {
   EngineAlert,
   EngineAlertRule,
   EngineNotificationChannel,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 
-function projectStub(id: string, teamId: string) {
+export function projectStub(id: string, teamId: string) {
   const project: Project = {
     bundleIds: [] as string[],
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
     domains: [] as string[],
     id: id,
-    updatedAt: new Date(),
+    updatedAt: new Date().toISOString(),
     teamId: teamId,
-    redirectUrls: [] as string[],
     slug: `project-${id}`,
     name: `Project ${id}`,
     publishableKey: "pb-key",
     lastAccessedAt: null,
-    deletedAt: null,
-    bannedAt: null,
+    image: null,
+    services: [],
+    walletAddresses: [],
+    secretKeys: [],
   };
 
   return project;
@@ -44,6 +41,9 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
     growthTrialEligible: false,
+    billingPlanVersion: 1,
+    canCreatePublicChains: null,
+    image: null,
     enabledScopes: [
       "pay",
       "storage",
@@ -79,51 +79,6 @@ export const teamsAndProjectsStub: Array<{ team: Team; projects: Project[] }> =
       projects: [projectStub("t3p1", "team-3")],
     },
   ];
-
-function generateRandomString(length: number) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters.charAt(randomIndex);
-  }
-
-  return result;
-}
-
-export function createApiKeyStub() {
-  const embeddedWalletService: ApiKeyService = {
-    id: "embeddedWallets",
-    name: "embeddedWallets", // important
-    targetAddresses: [],
-    actions: [],
-  };
-
-  const secretKey = generateRandomString(86);
-
-  const apiKeyStub: ApiKey = {
-    id: "api-key-id-foo",
-    name: "xyz",
-    key: generateRandomString(31),
-    accountId: "account-id-foo",
-    bundleIds: ["bundle-id-foo", "bundle-id-bar"],
-    createdAt: new Date().toISOString(),
-    creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
-    domains: ["example1.com", "example2.com"],
-    secretMasked: `${secretKey.slice(0, 3)}...${secretKey.slice(-4)}`,
-    walletAddresses: ["0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"],
-    redirectUrls: [],
-    revokedAt: "",
-    lastAccessedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    services: [embeddedWalletService],
-    secret: secretKey,
-  };
-
-  return apiKeyStub;
-}
 
 export function createEngineAlertRuleStub(
   id: string,

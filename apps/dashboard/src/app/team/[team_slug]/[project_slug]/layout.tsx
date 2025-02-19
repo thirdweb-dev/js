@@ -1,6 +1,6 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
@@ -27,8 +27,7 @@ export default async function TeamLayout(props: {
   );
 
   if (!team) {
-    // not a valid team, redirect back to 404
-    notFound();
+    redirect("/team");
   }
 
   const teamsAndProjects = await Promise.all(

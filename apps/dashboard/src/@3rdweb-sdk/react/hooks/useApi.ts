@@ -1,21 +1,13 @@
 import { analyticsServerProxy, apiServerProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveAccount } from "thirdweb/react";
 import type { UserOpStats } from "types/analytics";
-import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
+import { accountKeys, authorizedWallets } from "../cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
-
-export const accountStatus = {
-  noCustomer: "noCustomer",
-  noPayment: "noPayment",
-  paymentVerification: "paymentVerification",
-  validPayment: "validPayment",
-  invalidPayment: "invalidPayment",
-  invalidPaymentMethod: "invalidPaymentMethod",
-} as const;
 
 export const accountPlan = {
   free: "free",
@@ -69,109 +61,6 @@ interface UpdateAccountNotificationsInput {
 
 interface ConfirmEmailInput {
   confirmationToken: string;
-}
-
-type ApiKeyRecoverShareManagement = "AWS_MANAGED" | "USER_MANAGED";
-type ApiKeyCustomAuthentication = {
-  jwksUri: string;
-  aud: string;
-};
-type ApiKeyCustomAuthEndpoint = {
-  authEndpoint: string;
-  customHeaders: { key: string; value: string }[];
-};
-
-// MAP to api-server types in PolicyService.ts
-export type ApiKeyServicePolicy = {
-  allowedChainIds?: number[] | null;
-  allowedContractAddresses?: string[] | null;
-  allowedWallets?: string[] | null;
-  blockedWallets?: string[] | null;
-  bypassWallets?: string[] | null;
-  serverVerifier?: {
-    url: string;
-    headers: { key: string; value: string }[] | null;
-  } | null;
-  limits?: ApiKeyServicePolicyLimits | null;
-};
-
-export type ApiKeyServicePolicyLimits = {
-  global?: {
-    // in dollars or ETH
-    maxSpend: string;
-    maxSpendUnit: "usd" | "native";
-  } | null;
-  // ----------------------
-  // TODO implement perUser limits
-  perUserSpend?: {
-    // in dollars or ETH
-    maxSpend: string | null;
-    maxSpendUnit: "usd" | "native";
-    maxSpendPeriod: "day" | "week" | "month";
-  } | null;
-  perUserTransactions?: {
-    maxTransactions: number;
-    maxTransactionsPeriod: "day" | "week" | "month";
-  } | null;
-};
-
-export type ApiKeyService = {
-  id: string;
-  name: string;
-  targetAddresses: string[];
-  actions: string[];
-  // If updating here, need to update validation logic in `validation.ts` as well for recoveryShareManagement
-  // EMBEDDED WALLET
-  recoveryShareManagement?: ApiKeyRecoverShareManagement;
-  customAuthentication?: ApiKeyCustomAuthentication;
-  customAuthEndpoint?: ApiKeyCustomAuthEndpoint;
-  applicationName?: string;
-  applicationImageUrl?: string;
-  // PAY
-  payoutAddress?: string;
-};
-
-export type ApiKey = {
-  id: string;
-  name: string;
-  key: string;
-  secret?: string;
-  secretMasked: string;
-  accountId: string;
-  creatorWalletAddress: string;
-  walletAddresses: string[];
-  domains: string[];
-  bundleIds: string[];
-  redirectUrls: string[];
-  revokedAt: string;
-  lastAccessedAt: string;
-  createdAt: string;
-  updatedAt: string;
-  services?: ApiKeyService[];
-};
-
-interface UpdateKeyServiceInput {
-  name: string;
-  targetAddresses: string[];
-  actions?: string[];
-}
-
-export interface CreateKeyInput {
-  name?: string;
-  domains?: string[];
-  bundleIds?: string[];
-  walletAddresses?: string[];
-  services?: UpdateKeyServiceInput[];
-}
-
-export interface UpdateKeyInput {
-  id: string;
-  name: string;
-  domains: string[];
-  bundleIds: string[];
-  walletAddresses?: string[];
-  services?: UpdateKeyServiceInput[];
-  redirectUrls: string[];
 }
 
 interface UsageStorage {
@@ -461,9 +350,6 @@ export function useUpdateNotifications() {
 }
 
 export function useConfirmEmail() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (input: ConfirmEmailInput) => {
       type Result = {
@@ -491,20 +377,6 @@ export function useConfirmEmail() {
       }
 
       return json.data;
-    },
-    onSuccess: async () => {
-      // invalidate related cache, since could be relinking account
-      return Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: apiKeys.keys(address || ""),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: accountKeys.usage(address || ""),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: accountKeys.me(address || ""),
-        }),
-      ]);
     },
   });
 }
@@ -549,205 +421,106 @@ export function useResendEmailConfirmation() {
   });
 }
 
-export function useCreateApiKey() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+export async function createProjectClient(
+  teamId: string,
+  body: Partial<Project>,
+) {
+  type Response = {
+    result: {
+      project: Project;
+      secret: string;
+    };
+  };
 
-  return useMutation({
-    mutationFn: async (input: CreateKeyInput) => {
-      type Result = {
-        data: ApiKey;
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/keys",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
+  const res = await apiServerProxy<Response>({
+    pathname: `/v1/teams/${teamId}/projects`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: apiKeys.keys(address || ""),
-      });
-    },
+    body: JSON.stringify(body),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  return res.data.result;
 }
 
-export function useUpdateApiKey() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+export async function updateProjectClient(
+  params: {
+    projectId: string;
+    teamId: string;
+  },
+  body: Partial<Project>,
+) {
+  type Response = {
+    result: Project;
+  };
 
-  return useMutation({
-    mutationFn: async (input: UpdateKeyInput) => {
-      type Result = {
-        data: ApiKey;
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: `/v1/keys/${input.id}`,
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
+  const res = await apiServerProxy<Response>({
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: apiKeys.keys(address || ""),
-      });
-    },
+    body: JSON.stringify(body),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  return res.data.result;
 }
 
-export function useRevokeApiKey() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+export async function deleteProjectClient(params: {
+  projectId: string;
+  teamId: string;
+}) {
+  type Response = {
+    result: true;
+  };
 
-  return useMutation({
-    mutationFn: async (id: string) => {
-      type Result = {
-        data: ApiKey;
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: `/v1/keys/${id}/revoke`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
-    },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: apiKeys.keys(address || ""),
-      });
-    },
+  const res = await apiServerProxy<Response>({
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
+    method: "DELETE",
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  return res.data.result;
 }
 
-export const usePolicies = (serviceId?: string) => {
-  return useQuery({
-    queryKey: ["policies", serviceId],
-    queryFn: async () => {
-      if (!serviceId) {
-        throw new Error();
-      }
-
-      type Result = {
-        data: ApiKeyServicePolicy;
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/policies",
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        searchParams: {
-          serviceId,
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-      return json.data;
-    },
-    enabled: !!serviceId,
-  });
+export type RotateSecretKeyAPIReturnType = {
+  data: {
+    secret: string;
+    secretMasked: string;
+    secretHash: string;
+  };
 };
 
-export const useUpdatePolicies = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: {
-      serviceId: string;
-      data: ApiKeyServicePolicy;
-    }) => {
-      type Result = {
-        data: ApiKeyServicePolicy;
-        error?: { message: string };
-      };
-
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/policies",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          serviceId: input.serviceId,
-          data: input.data,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-      return json.data;
-    },
-    onSuccess: (_, variables) => {
-      return queryClient.invalidateQueries({
-        queryKey: ["policies", variables.serviceId],
-      });
+export async function rotateSecretKeyClient(projectId: string) {
+  const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
+    pathname: "/v2/keys/rotate-secret-key",
+    method: "POST",
+    body: JSON.stringify({
+      projectId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
     },
   });
-};
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  return res.data;
+}
 
 export function useRevokeAuthorizedWallet() {
   const address = useActiveAccount()?.address;
