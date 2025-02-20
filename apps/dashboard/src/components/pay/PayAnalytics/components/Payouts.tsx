@@ -2,6 +2,7 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { toUSD } from "../../../../utils/number";
 import { AreaChartLoadingState } from "../../../analytics/area-chart";
 import { usePayVolume } from "../hooks/usePayVolume";
 import {
@@ -144,7 +145,7 @@ function RenderData(props: {
             props.query.isEmpty
               ? "$-"
               : props.query.data
-                ? `$${props.query.data?.totalPayoutsUSD}`
+                ? toUSD(props.query.data.totalPayoutsUSD)
                 : undefined
           }
           skeletonData="$20"

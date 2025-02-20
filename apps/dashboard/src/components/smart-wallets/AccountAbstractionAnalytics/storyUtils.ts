@@ -5,9 +5,11 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
 
   let d = days;
   while (d !== 0) {
-    const successful = Math.floor(Math.random() * 100);
-    const failed = Math.floor(Math.random() * 100);
-    const sponsoredUsd = Math.floor(Math.random() * 100);
+    // don't use Math.floor because real data doesn't not have integer values
+    const successful = Math.random() * 100;
+    const failed = Math.random() * 100;
+    const sponsoredUsd = Math.random() * 100;
+
     stubbedData.push({
       date: new Date(2024, 1, d).toLocaleString(),
       successful,
