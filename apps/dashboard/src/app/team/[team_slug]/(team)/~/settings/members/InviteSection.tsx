@@ -58,9 +58,8 @@ export function InviteSection(props: {
   const teamPlan = getValidTeamPlan(props.team);
   let bottomSection: React.ReactNode = null;
   const maxAllowedInvitesAtOnce = 10;
-  const inviteEnabled =
-    (teamPlan === "starter" || teamPlan === "growth") &&
-    props.userHasEditPermission;
+  // invites are enabled if user has edit permission and team plan is not "free"
+  const inviteEnabled = teamPlan !== "free" && props.userHasEditPermission;
 
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(inviteFormSchema),
@@ -121,13 +120,13 @@ export function InviteSection(props: {
       <div className="flex items-center border-border border-t px-4 py-4 lg:justify-between lg:px-6">
         {teamPlan === "pro" && (
           <p className="text-muted-foreground text-sm">
-            Team invites are not enabled on your plan.{" "}
+            Team members are billed according to your plan.{" "}
             <Link
               href="https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro"
               target="_blank"
               className="text-link-foreground hover:text-foreground"
             >
-              Reach out to sales <ExternalLinkIcon className="inline size-3" />
+              Reach out to sales <ExternalLinkIcon className="inline size-3" />.
             </Link>
           </p>
         )}
