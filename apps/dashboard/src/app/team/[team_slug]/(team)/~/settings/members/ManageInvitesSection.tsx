@@ -39,12 +39,19 @@ export function ManageInvitesSection(props: {
 }) {
   let topSection: React.ReactNode = null;
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [deletedInviteIds, setDeletedInviteIds] = useState<string[]>([]);
   const [role, setRole] = useState<RoleFilterValue>("ALL ROLES");
   const [sortBy, setSortBy] = useState<MemberSortId>("date");
 
   const invitesToShow = useMemo(() => {
     let value = props.teamInvites;
+
+    if (searchTerm) {
+      value = value.filter((inv) =>
+        inv.email.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
 
     value = value.filter((inv) => !deletedInviteIds.includes(inv.id));
 
@@ -68,7 +75,7 @@ export function ManageInvitesSection(props: {
     }
 
     return value;
-  }, [role, props.teamInvites, sortBy, deletedInviteIds]);
+  }, [role, props.teamInvites, sortBy, deletedInviteIds, searchTerm]);
 
   if (!props.userHasEditPermission) {
     topSection = (
@@ -89,6 +96,9 @@ export function ManageInvitesSection(props: {
         setRole={setRole}
         setSortBy={setSortBy}
         sortBy={sortBy}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchPlaceholder="Search Email"
       />
 
       <div className="h-3" />

@@ -20,17 +20,22 @@ export function FiltersSection(props: {
   setRole: (role: RoleFilterValue) => void;
   setSortBy: (sortBy: MemberSortId) => void;
   sortBy: MemberSortId;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+  searchPlaceholder: string;
 }) {
-  const { role, setRole, setSortBy, sortBy } = props;
+  const { role, setRole, setSortBy, sortBy, searchTerm, setSearchTerm } = props;
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
       {/* Search  */}
       <div className="relative grow">
         <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 transform text-muted-foreground" />
         <Input
-          placeholder="Search Team members"
+          placeholder={props.searchPlaceholder}
           className="bg-card pl-9"
           disabled={props.disabled}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 

@@ -36,12 +36,19 @@ export function ManageMembersSection(props: {
 }) {
   let topSection: React.ReactNode = null;
 
+  const [searchTerm, setSearchTerm] = useState("");
   const [deletedMembersIds, setDeletedMembersIds] = useState<string[]>([]);
   const [role, setRole] = useState<RoleFilterValue>("ALL ROLES");
   const [sortBy, setSortBy] = useState<MemberSortId>("date");
 
   const membersToShow = useMemo(() => {
     let value = props.members;
+
+    if (searchTerm) {
+      value = value.filter((m) =>
+        m.account.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
 
     value = value.filter((m) => !deletedMembersIds.includes(m.accountId));
 
@@ -69,7 +76,7 @@ export function ManageMembersSection(props: {
     }
 
     return value;
-  }, [role, props.members, sortBy, deletedMembersIds]);
+  }, [role, props.members, sortBy, deletedMembersIds, searchTerm]);
 
   if (!props.userHasEditPermission) {
     topSection = (
@@ -90,6 +97,9 @@ export function ManageMembersSection(props: {
         setRole={setRole}
         setSortBy={setSortBy}
         sortBy={sortBy}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchPlaceholder="Search Team Members"
       />
 
       <div className="h-3" />
@@ -147,7 +157,7 @@ function MemberRow(props: {
     <div className="flex items-center justify-between gap-3 px-4 py-4">
       <div className="flex items-center gap-3 lg:gap-4">
         <GradientAvatar
-          className="size-6 lg:size-9"
+          className="size-6 border lg:size-9"
           src={props.member.account.image || ""}
           id={props.member.account.creatorWalletAddress}
           client={props.client}
