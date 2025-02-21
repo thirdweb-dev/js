@@ -4,9 +4,11 @@ import { redirectToCheckout } from "@/actions/billing";
 import { getRawAccountAction } from "@/actions/getAccount";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TURNSTILE_SITE_KEY } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -216,36 +218,53 @@ function CustomConnectEmbed(props: {
 }) {
   const { theme } = useTheme();
   const client = useThirdwebClient();
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   return (
-    <ConnectEmbed
-      auth={{
-        getLoginPayload,
-        doLogin: async (params) => {
-          try {
-            await doLogin(params);
-            props.onLogin();
-          } catch (e) {
-            console.error("Failed to login", e);
-            throw e;
-          }
-        },
-        doLogout,
-        isLoggedIn: async (x) => {
-          const isLoggedInResult = await isLoggedIn(x);
-          if (isLoggedInResult) {
-            props.onLogin();
-          }
-          return isLoggedInResult;
-        },
-      }}
-      wallets={wallets}
-      client={client}
-      modalSize="wide"
-      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
-      className="shadow-lg"
-      privacyPolicyUrl="/privacy-policy"
-      termsOfServiceUrl="/terms"
-    />
+    <div className="flex flex-col items-center gap-4">
+      <ConnectEmbed
+        auth={{
+          getLoginPayload,
+          doLogin: async (params) => {
+            try {
+              const result = await doLogin(params, turnstileToken);
+              if (result.error) {
+                console.error("Failed to login", result.error, result.context);
+                throw new Error(result.error);
+              }
+              props.onLogin();
+            } catch (e) {
+              console.error("Failed to login", e);
+              throw e;
+            }
+          },
+          doLogout,
+          isLoggedIn: async (x) => {
+            const isLoggedInResult = await isLoggedIn(x);
+            if (isLoggedInResult) {
+              props.onLogin();
+            }
+            return isLoggedInResult;
+          },
+        }}
+        wallets={wallets}
+        client={client}
+        modalSize="wide"
+        theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+        className="shadow-lg"
+        privacyPolicyUrl="/privacy-policy"
+        termsOfServiceUrl="/terms"
+      />
+      <Turnstile
+        options={{
+          // only show if interaction is required
+          appearance: "interaction-only",
+          // match the theme of the rest of the app
+          theme: theme === "light" ? "light" : "dark",
+        }}
+        siteKey={TURNSTILE_SITE_KEY}
+        onSuccess={(token) => setTurnstileToken(token)}
+      />
+    </div>
   );
 }
