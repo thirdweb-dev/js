@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
+import { CheckIcon, CircleAlertIcon, CircleDollarSignIcon } from "lucide-react";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
 import { remainingDays } from "../../../utils/date-utils";
@@ -104,6 +104,23 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
             {!isCustomPrice && (
               <span className="text-muted-foreground">/ month</span>
+            )}
+
+            {billingPlan === "starter" && (
+              <ToolTipLabel
+                contentClassName="max-w-[320px]"
+                label="We will place a temporary hold of $25 to verify your card, this will be immediately released back to you after verification."
+              >
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground"
+                >
+                  <div>
+                    <CircleAlertIcon className="size-5 shrink-0" />
+                  </div>
+                </Button>
+              </ToolTipLabel>
             )}
           </div>
 
