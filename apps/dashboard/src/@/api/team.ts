@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
@@ -19,6 +19,20 @@ export async function getTeamBySlug(slug: string) {
   if (teamRes.ok) {
     return (await teamRes.json())?.result as Team;
   }
+  return null;
+}
+
+export async function service_getTeamBySlug(slug: string) {
+  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
+    headers: {
+      "x-service-api-key": THIRDWEB_API_SECRET,
+    },
+  });
+
+  if (teamRes.ok) {
+    return (await teamRes.json())?.result as Team;
+  }
+
   return null;
 }
 

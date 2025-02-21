@@ -20,6 +20,7 @@ export function TeamGeneralSettingsPageUI(props: {
   updateTeamImage: (file: File | undefined) => Promise<void>;
   updateTeamField: UpdateTeamField;
   client: ThirdwebClient;
+  leaveTeam: () => Promise<void>;
 }) {
   const hasPermissionToDelete = false; // TODO
   return (
@@ -38,7 +39,7 @@ export function TeamGeneralSettingsPageUI(props: {
         client={props.client}
       />
       <TeamIdCard team={props.team} />
-      <LeaveTeamCard enabled={false} teamName={props.team.name} />
+      <LeaveTeamCard teamName={props.team.name} leaveTeam={props.leaveTeam} />
       <DeleteTeamCard
         enabled={hasPermissionToDelete}
         teamName={props.team.name}
@@ -238,20 +239,15 @@ function TeamIdCard(props: {
 }
 
 export function LeaveTeamCard(props: {
-  enabled: boolean;
   teamName: string;
+  leaveTeam: () => Promise<void>;
 }) {
   const title = "Leave Team";
   const description =
     "Revoke your access to this Team. Any resources you've added to the Team will remain.";
 
-  // TODO
   const leaveTeam = useMutation({
-    mutationFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Deleting team");
-      throw new Error("Not implemented");
-    },
+    mutationFn: props.leaveTeam,
   });
 
   function handleLeave() {
@@ -262,32 +258,18 @@ export function LeaveTeamCard(props: {
     });
   }
 
-  if (props.enabled) {
-    return (
-      <DangerSettingCard
-        title={title}
-        description={description}
-        buttonLabel={title}
-        buttonOnClick={handleLeave}
-        isPending={leaveTeam.isPending}
-        confirmationDialog={{
-          title: `Are you sure you want to leave team "${props.teamName}" ?`,
-          description:
-            "This will revoke your access to this Team. Any resources you've added to the Team will remain.",
-        }}
-      />
-    );
-  }
-
   return (
-    <SettingsCard
-      header={{
-        title,
-        description,
+    <DangerSettingCard
+      title={title}
+      description={description}
+      buttonLabel={title}
+      buttonOnClick={handleLeave}
+      isPending={leaveTeam.isPending}
+      confirmationDialog={{
+        title: `Are you sure you want to leave team "${props.teamName}" ?`,
+        description:
+          "This will revoke your access to this Team. Any resources you've added to the Team will remain.",
       }}
-      bottomText="To leave this Team, ensure at least one more Member has the Owner role."
-      errorText={undefined}
-      noPermissionText={undefined}
     />
   );
 }

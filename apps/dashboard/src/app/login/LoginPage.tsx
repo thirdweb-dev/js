@@ -202,6 +202,7 @@ function PageContent(props: {
           onLogout={() => {
             setScreen({ id: "login" });
           }}
+          skipShowingPlans={props.redirectPath.startsWith("/join/team")}
         />
       </Suspense>
     );

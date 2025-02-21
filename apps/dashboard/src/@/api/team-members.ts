@@ -12,15 +12,16 @@ export type TeamAccountRole =
 
 export type TeamMember = {
   account: {
+    creatorWalletAddress: string;
     name: string;
     email: string | null;
+    image: string | null;
   };
-} & {
-  deletedAt: Date | null;
+  deletedAt: string | null;
   accountId: string;
   teamId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   role: TeamAccountRole;
 };
 
