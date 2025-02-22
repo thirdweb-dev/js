@@ -1,13 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { resolveAddress } from "../../../../extensions/ens/resolve-address.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
+import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { isAddress } from "../../../../utils/address.js";
 import { isValidENSName } from "../../../../utils/ens/isValidENSName.js";
 import { toWei } from "../../../../utils/units.js";
+import { invalidateWalletBalance } from "../../providers/invalidateWalletBalance.js";
 import { useActiveWallet } from "./useActiveWallet.js";
 
 /**
@@ -33,6 +35,7 @@ import { useActiveWallet } from "./useActiveWallet.js";
  */
 export function useSendToken(client: ThirdwebClient) {
   const wallet = useActiveWallet();
+  const queryClient = useQueryClient();
   return useMutation({
     async mutationFn(option: {
       tokenAddress?: string;
@@ -83,7 +86,7 @@ export function useSendToken(client: ThirdwebClient) {
           value: toWei(amount),
         });
 
-        await sendTransaction({
+        return sendTransaction({
           transaction: sendNativeTokenTx,
           account,
         });
@@ -103,11 +106,24 @@ export function useSendToken(client: ThirdwebClient) {
           to,
         });
 
-        await sendTransaction({
+        return sendTransaction({
           transaction: tx,
           account,
         });
       }
+    },
+    onSettled: async (data, error) => {
+      if (error) {
+        return;
+      }
+      if (data?.transactionHash) {
+        await waitForReceipt({
+          transactionHash: data.transactionHash,
+          client,
+          chain: data.chain,
+        });
+      }
+      invalidateWalletBalance(queryClient);
     },
   });
 }

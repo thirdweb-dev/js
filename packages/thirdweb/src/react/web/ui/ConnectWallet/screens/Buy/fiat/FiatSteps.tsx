@@ -7,7 +7,6 @@ import { useMemo } from "react";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
@@ -36,7 +35,7 @@ import {
   type FiatStatusMeta,
   getBuyWithFiatStatusMeta,
 } from "../pay-transactions/statusMeta.js";
-import { getCurrencyMeta } from "./currencies.js";
+import { getCurrencyMeta, getFiatIcon } from "./currencies.js";
 
 export type BuyWithFiatPartialQuote = {
   fromCurrencySymbol: string;
@@ -57,31 +56,6 @@ export type BuyWithFiatPartialQuote = {
     chainId: number;
   };
 };
-
-export function fiatQuoteToPartialQuote(
-  quote: BuyWithFiatQuote,
-): BuyWithFiatPartialQuote {
-  const data: BuyWithFiatPartialQuote = {
-    fromCurrencyAmount: quote.fromCurrencyWithFees.amount,
-    fromCurrencySymbol: quote.fromCurrencyWithFees.currencySymbol,
-    onRampTokenAmount: quote.onRampToken.amount,
-    toTokenAmount: quote.estimatedToAmountMin,
-    onRampToken: {
-      chainId: quote.onRampToken.token.chainId,
-      tokenAddress: quote.onRampToken.token.tokenAddress,
-      name: quote.onRampToken.token.name,
-      symbol: quote.onRampToken.token.symbol,
-    },
-    toToken: {
-      chainId: quote.toToken.chainId,
-      tokenAddress: quote.toToken.tokenAddress,
-      name: quote.toToken.name,
-      symbol: quote.toToken.symbol,
-    },
-  };
-
-  return data;
-}
 
 export function FiatSteps(props: {
   title: string;
@@ -171,7 +145,7 @@ export function FiatSteps(props: {
     </div>
   );
 
-  const fiatIcon = <currency.icon size={iconSize.sm} />;
+  const fiatIcon = getFiatIcon(currency, "sm");
 
   const onRampTokenIcon = (
     <PayTokenIcon
@@ -541,9 +515,11 @@ function PaymentSubStep(props: {
   );
 }
 
-function StepContainer(props: {
+export function StepContainer(props: {
   state?: FiatStatusMeta["progressStatus"];
   children: React.ReactNode;
+  style?: React.CSSProperties;
+  index?: number;
 }) {
   let color: keyof Theme["colors"] = "borderColor";
   let text: string | undefined;
@@ -576,21 +552,22 @@ function StepContainer(props: {
         borderWidth: "1px",
         borderStyle: "solid",
         position: "relative",
+        ...props.style,
       }}
     >
       {props.children}
       <div
         style={{
           position: "absolute",
-          right: spacing.sm,
-          top: spacing.sm,
+          right: spacing.xs,
+          top: spacing.xs,
           display: "flex",
           gap: spacing.xs,
           alignItems: "center",
         }}
       >
         {props.state && text && (
-          <Text size="sm" color={color}>
+          <Text size="xs" color={color}>
             {text}
           </Text>
         )}
