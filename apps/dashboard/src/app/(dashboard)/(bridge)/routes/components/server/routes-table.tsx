@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Route } from "app/(dashboard)/(bridge)/types/route";
 import type { Address } from "thirdweb";
 import { getRoutes } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
@@ -28,7 +27,15 @@ const DEFAULT_PAGE_SIZE = 120;
 const DEFAULT_PAGE = 1;
 
 async function getRoutesToRender(params: SearchParams) {
-  const filters: Partial<Route & { limit: number; offset: number }> = {};
+  const filters: Partial<{
+    limit: number;
+    offset: number;
+    originChainId?: number;
+    originTokenAddress?: Address;
+    destinationChainId?: number;
+    destinationTokenAddress?: Address;
+  }> = {};
+
   if (params.type === "origin" || typeof params.type === "undefined") {
     if (params.query?.startsWith("0x")) {
       filters.originTokenAddress = params.query as Address;
@@ -96,13 +103,13 @@ export async function RoutesData(props: {
               <TableBody>
                 {paginatedRoutes.map((route) => (
                   <RouteListRow
-                    key={`${route.originChainId}:${route.originTokenAddress}-${route.destinationChainId}:${route.destinationTokenAddress}`}
-                    originChainId={route.originChainId}
-                    originTokenAddress={route.originTokenAddress}
-                    originTokenIconUri={route.originTokenIconUri}
-                    destinationChainId={route.destinationChainId}
-                    destinationTokenAddress={route.destinationTokenAddress}
-                    destinationTokenIconUri={route.destinationTokenIconUri}
+                    key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
+                    originChainId={route.originToken.chainId}
+                    originTokenAddress={route.originToken.address}
+                    originTokenIconUri={route.originToken.iconUri}
+                    destinationChainId={route.destinationToken.chainId}
+                    destinationTokenAddress={route.destinationToken.address}
+                    destinationTokenIconUri={route.destinationToken.iconUri}
                   />
                 ))}
               </TableBody>
@@ -112,16 +119,16 @@ export async function RoutesData(props: {
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {paginatedRoutes.map((route) => (
               <li
-                key={`${route.originChainId}:${route.originTokenAddress}-${route.destinationChainId}:${route.destinationTokenAddress}`}
+                key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
                 className="h-full"
               >
                 <RouteListCard
-                  originChainId={route.originChainId}
-                  originTokenAddress={route.originTokenAddress}
-                  originTokenIconUri={route.originTokenIconUri}
-                  destinationChainId={route.destinationChainId}
-                  destinationTokenAddress={route.destinationTokenAddress}
-                  destinationTokenIconUri={route.destinationTokenIconUri}
+                  originChainId={route.originToken.chainId}
+                  originTokenAddress={route.originToken.address}
+                  originTokenIconUri={route.originToken.iconUri}
+                  destinationChainId={route.destinationToken.chainId}
+                  destinationTokenAddress={route.destinationToken.address}
+                  destinationTokenIconUri={route.destinationToken.iconUri}
                 />
               </li>
             ))}

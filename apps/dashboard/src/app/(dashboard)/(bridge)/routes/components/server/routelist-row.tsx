@@ -34,15 +34,15 @@ export async function RouteListRow({
     getChainMetadata(defineChain(destinationChainId)),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
-        uri: originTokenIconUri,
-        client: getThirdwebClient(),
-      })
+          uri: originTokenIconUri,
+          client: getThirdwebClient(),
+        })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
-        uri: destinationTokenIconUri,
-        client: getThirdwebClient(),
-      })
+          uri: destinationTokenIconUri,
+          client: getThirdwebClient(),
+        })
       : undefined,
   ]);
 
@@ -62,10 +62,10 @@ export async function RouteListRow({
                 <img
                   src={resolvedOriginTokenIconUri}
                   alt={originTokenAddress}
-                  className="size-6"
+                  className="size-6 rounded-full bg-muted-foreground"
                 />
               ) : (
-                <div className="size-6 rounded-full bg-white/10" />
+                <div className="size-6 rounded-full bg-muted-foreground" />
               )}
               <CopyTextButton
                 textToCopy={originTokenAddress}
@@ -97,10 +97,10 @@ export async function RouteListRow({
                 <img
                   src={resolvedDestinationTokenIconUri}
                   alt={destinationTokenAddress}
-                  className="size-6"
+                  className="size-6 rounded-full bg-muted-foreground"
                 />
               ) : (
-                <div className="size-6 rounded-full bg-white/10" />
+                <div className="size-6 rounded-full bg-muted-foreground" />
               )}
               <CopyTextButton
                 textToCopy={destinationTokenAddress}
