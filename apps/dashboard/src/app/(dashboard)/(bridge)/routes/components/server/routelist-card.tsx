@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { defineChain } from "thirdweb";
+import { defineChain, getContract } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import { TokenName, TokenProvider } from "thirdweb/react";
+import { name } from "thirdweb/extensions/common";
 
 type RouteListCardProps = {
   originChainId: number;
@@ -24,25 +24,45 @@ export async function RouteListCard({
 }: RouteListCardProps) {
   const [
     originChain,
+    originTokenName,
     destinationChain,
+    destinationTokenName,
     resolvedOriginTokenIconUri,
     resolvedDestinationTokenIconUri,
   ] = await Promise.all([
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(originChainId)),
+    originTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+      ? "ETH"
+      : name({
+        contract: getContract({
+          address: originTokenAddress,
+          chain: defineChain(originChainId),
+          client: getThirdwebClient(),
+        }),
+      }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
+    destinationTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+      ? "ETH"
+      : name({
+        contract: getContract({
+          address: destinationTokenAddress,
+          chain: defineChain(destinationChainId),
+          client: getThirdwebClient(),
+        }),
+      }).catch(() => undefined),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: originTokenIconUri,
-          client: getThirdwebClient(),
-        })
+        uri: originTokenIconUri,
+        client: getThirdwebClient(),
+      })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: destinationTokenIconUri,
-          client: getThirdwebClient(),
-        })
+        uri: destinationTokenIconUri,
+        client: getThirdwebClient(),
+      })
       : undefined,
   ]);
 
@@ -78,14 +98,9 @@ export async function RouteListCard({
             <tbody className="text-sm [&_td>*]:min-h-[25px]">
               <tr>
                 <th className="text-left font-normal text-base">
-                  <TokenProvider
-                    address={originTokenAddress}
-                    // eslint-disable-next-line no-restricted-syntax
-                    chain={defineChain(originChainId)}
-                    client={getThirdwebClient()}
-                  >
-                    <TokenName />
-                  </TokenProvider>
+                  {originTokenName === "ETH"
+                    ? originChain.nativeCurrency.name
+                    : originTokenName}
                 </th>
                 <td className="text-right text-base text-muted-foreground">
                   {originChain.name}
@@ -93,14 +108,9 @@ export async function RouteListCard({
               </tr>
               <tr>
                 <th className="text-left font-normal text-base">
-                  <TokenProvider
-                    address={destinationTokenAddress}
-                    // eslint-disable-next-line no-restricted-syntax
-                    chain={defineChain(destinationChainId)}
-                    client={getThirdwebClient()}
-                  >
-                    <TokenName />
-                  </TokenProvider>
+                  {destinationTokenName === "ETH"
+                    ? destinationChain.nativeCurrency.name
+                    : destinationTokenName}
                 </th>
                 <td className="text-right text-base text-muted-foreground">
                   {destinationChain.name}
