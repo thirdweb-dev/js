@@ -46,9 +46,9 @@ export function AccountTeamsUI(props: {
         </div>
 
         <ToolTipLabel label="Coming Soon">
-          <Button variant="primary" disabled className="gap-2 max-sm:w-full">
+          <Button disabled className="gap-2 max-sm:w-full">
             <PlusIcon className="size-4" />
-            Create a Team
+            Create Team
           </Button>
         </ToolTipLabel>
       </div>
