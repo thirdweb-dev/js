@@ -50,7 +50,7 @@ export async function doLogin(
   if (isVercel()) {
     if (!turnstileToken) {
       return {
-        error: "Missing Turnstile token.",
+        error: "Please complete the captcha.",
       };
     }
 
@@ -120,7 +120,7 @@ export async function doLogin(
     const outcome = await result.json();
     if (!outcome.success) {
       return {
-        error: "Could not validate captcha.",
+        error: "Invalid captcha. Please try again.",
       };
     }
   }
