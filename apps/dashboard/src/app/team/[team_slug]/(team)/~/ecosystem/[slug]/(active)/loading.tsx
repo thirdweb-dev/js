@@ -1,3 +1,7 @@
 "use client";
 
-export { GenericLoadingPage as default } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+
+export default function Loading() {
+  return <GenericLoadingPage className="border-none" />;
+}

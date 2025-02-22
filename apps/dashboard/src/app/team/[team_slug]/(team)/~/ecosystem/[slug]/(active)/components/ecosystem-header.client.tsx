@@ -1,5 +1,6 @@
 "use client";
-import { CopyButton } from "@/components/ui/CopyButton";
+import { Img } from "@/components/blocks/Img";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -12,21 +13,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TabPathLinks } from "@/components/ui/tabs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   AlertTriangleIcon,
   CheckIcon,
   ChevronsUpDown,
+  ExternalLinkIcon,
   PlusCircleIcon,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import type { EcosystemWalletStats } from "types/analytics";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
-import { EcosystemWalletsSummary } from "../analytics/components/Summary";
 import { useEcosystem } from "../hooks/use-ecosystem";
 
 function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
@@ -111,8 +109,6 @@ function EcosystemSelect(props: {
 export function EcosystemHeader(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
-  allTimeStats: EcosystemWalletStats[];
-  monthlyStats: EcosystemWalletStats[];
 }) {
   const { data: fetchedEcosystem } = useEcosystem({
     slug: props.ecosystem.slug,
@@ -135,95 +131,72 @@ export function EcosystemHeader(props: {
   });
 
   return (
-    <div className="flex flex-col gap-8">
-      <EcosystemAlertBanner ecosystem={ecosystem} />
-      <header className="flex flex-col gap-12">
-        <div className="flex flex-col justify-between gap-4 md:grid-cols-4 md:flex-row">
-          <div className="flex items-center gap-4">
-            {!ecosystem.imageUrl ? (
-              <Skeleton className="size-24" />
-            ) : (
-              ecosystemImageLink && (
-                <div className="relative size-24 overflow-hidden rounded-md">
-                  <Image
+    <div className="border-b py-8">
+      <div className="container flex flex-col gap-8">
+        <EcosystemAlertBanner ecosystem={ecosystem} />
+        <header className="flex flex-col gap-12">
+          <div className="flex flex-col justify-between gap-4 md:grid-cols-4 md:flex-row">
+            <div className="flex items-center gap-4">
+              {!ecosystem.imageUrl ? (
+                <Skeleton className="size-24" />
+              ) : (
+                ecosystemImageLink && (
+                  <Img
                     src={ecosystemImageLink}
-                    sizes="100px"
                     alt={ecosystem.name}
-                    fill
-                    unoptimized
-                    className="object-cover object-center"
+                    className="size-24 rounded-full border object-contain object-center"
                   />
-                </div>
-              )
-            )}
-            <div className="flex flex-col gap-2">
-              {!ecosystem.name ? (
-                <Skeleton className="h-12 w-[225px]" />
-              ) : (
-                <h2 className="font-bold text-4xl text-foreground">
-                  {ecosystem.name}
-                </h2>
+                )
               )}
-              {!ecosystem.slug ? (
-                <Skeleton className="h-6 w-[300px]" />
-              ) : (
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-1">
-                    <p className="text-muted-foreground">
-                      ecosystem.{ecosystem.slug}
-                    </p>
-                    <CopyButton text={`ecosystem.${ecosystem.slug}`} />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <a
-                      href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
-                      className="text-link-foreground"
-                      target="_blank"
-                      rel="noreferrer"
+              <div className="flex flex-col gap-2">
+                {!ecosystem.name ? (
+                  <Skeleton className="h-12 w-[225px]" />
+                ) : (
+                  <h2 className="font-semibold text-3xl text-foreground tracking-tight">
+                    {ecosystem.name}
+                  </h2>
+                )}
+                {!ecosystem.slug ? (
+                  <Skeleton className="h-6 w-[300px]" />
+                ) : (
+                  <div>
+                    <CopyTextButton
+                      textToCopy={`ecosystem.${ecosystem.slug}`}
+                      textToShow={`ecosystem.${ecosystem.slug}`}
+                      copyIconPosition="right"
+                      tooltip="Copy Ecosytem slug"
+                      variant="ghost"
+                      className="-translate-x-2 px-2 py-0.5 text-muted-foreground"
+                    />
+
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="ghost"
+                      className="-translate-x-2 h-auto w-auto gap-2 rounded-xl px-2 py-0.5 text-muted-foreground"
                     >
-                      {`${ecosystem.slug}.ecosystem.thirdweb.com`}
-                    </a>
+                      <Link
+                        href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {`${ecosystem.slug}.ecosystem.thirdweb.com`}
+                        <ExternalLinkIcon className="size-3" />
+                      </Link>
+                    </Button>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col justify-between gap-4 md:items-end">
+              <EcosystemSelect
+                ecosystem={ecosystem}
+                ecosystemLayoutPath={props.ecosystemLayoutPath}
+              />
             </div>
           </div>
-          <div className="flex flex-col justify-between gap-4 md:items-end">
-            <EcosystemSelect
-              ecosystem={ecosystem}
-              ecosystemLayoutPath={props.ecosystemLayoutPath}
-            />
-          </div>
-        </div>
-        <EcosystemWalletsSummary
-          allTimeStats={props.allTimeStats}
-          monthlyStats={props.monthlyStats}
-        />
-        <TabPathLinks
-          links={[
-            {
-              name: "Overview",
-              path: `${props.ecosystemLayoutPath}/${ecosystem.slug}`,
-              exactMatch: true,
-            },
-            {
-              name: "Analytics",
-              path: `${props.ecosystemLayoutPath}/${ecosystem.slug}/analytics`,
-              exactMatch: true,
-            },
-            {
-              name: "Configuration",
-              path: `${props.ecosystemLayoutPath}/${ecosystem.slug}/configuration`,
-              exactMatch: true,
-            },
-            {
-              name: "Design (Coming Soon)",
-              path: `${props.ecosystemLayoutPath}/${ecosystem.slug}#`,
-              isDisabled: true,
-            },
-          ]}
-        />
-      </header>
+        </header>
+      </div>
     </div>
   );
 }
