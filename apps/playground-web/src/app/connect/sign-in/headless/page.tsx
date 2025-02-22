@@ -32,6 +32,8 @@ export default function Page() {
         <Modal />
         <div className="h-6" />
         <Hooks />
+        <div className="h-6" />
+        <HooksWithAuth />
       </main>
     </ThirdwebProvider>
   );
@@ -98,6 +100,37 @@ function Hooks() {
       })}>Connect with Metamask</button>
       );
       };`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function HooksWithAuth() {
+  return (
+    <>
+      <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
+        Create custom UI using hooks with SIWE auth
+      </h2>
+
+      <p className="mb-5 max-w-[600px]">
+        Enforce users to sign a message after connecting their wallet to
+        authenticate themselves.
+      </p>
+
+      <CodeExample
+        preview={<ModalPreview enableAuth={true} />}
+        code={`// Using your own UI
+          import { useConnectModal } from "thirdweb/react";
+  
+          function App(){
+            const { connect } = useConnectModal();
+  
+            return (
+            // pass modal configuration options here
+        <button onClick={() => connect({ client, auth: siweAuth })}>Sign in</button>
+        );
+        };`}
         lang="tsx"
       />
     </>

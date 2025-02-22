@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type ConnectButtonProps,
   useActiveAccount,
   useActiveWallet,
   useConnectModal,
@@ -10,14 +11,49 @@ import { shortenAddress } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { Button } from "../ui/button";
 
-export function ModalPreview() {
+const playgroundAuth: ConnectButtonProps["auth"] = {
+  async doLogin() {
+    try {
+      localStorage.setItem("playground-loggedin", "true");
+    } catch {
+      // ignore
+    }
+  },
+  async doLogout() {
+    localStorage.removeItem("playground-loggedin");
+  },
+  async getLoginPayload(params) {
+    return {
+      domain: "",
+      address: params.address,
+      statement: "",
+      version: "",
+      nonce: "",
+      issued_at: "",
+      expiration_time: "",
+      invalid_before: "",
+    };
+  },
+  async isLoggedIn() {
+    try {
+      return !!localStorage.getItem("playground-loggedin");
+    } catch {
+      return false;
+    }
+  },
+};
+
+export function ModalPreview({ enableAuth }: { enableAuth?: boolean }) {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const connectMutation = useConnectModal();
   const { disconnect } = useDisconnect();
 
   const connect = async () => {
-    const wallet = await connectMutation.connect({ client: THIRDWEB_CLIENT });
+    const wallet = await connectMutation.connect({
+      client: THIRDWEB_CLIENT,
+      auth: enableAuth ? playgroundAuth : undefined,
+    });
     return wallet;
   };
 
