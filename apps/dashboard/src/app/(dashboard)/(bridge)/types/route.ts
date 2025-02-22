@@ -1,8 +1,14 @@
 import type { Address } from "thirdweb";
 
 export type Route = {
-  originChainId: number;
-  originTokenAddress: Address;
-  destinationChainId: number;
-  destinationTokenAddress: Address;
+  originToken: {
+    address: Address;
+    chainId: number;
+    iconUri: string;
+  };
+  destinationToken: {
+    address: Address;
+    chainId: number;
+    iconUri: string;
+  };
 };
