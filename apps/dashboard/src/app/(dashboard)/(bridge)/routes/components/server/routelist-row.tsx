@@ -2,7 +2,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { getContract } from "thirdweb";
+import { getContract, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { defineChain, getChainMetadata } from "thirdweb/chains";
 import { symbol } from "thirdweb/extensions/common";
 
@@ -33,7 +33,7 @@ export async function RouteListRow({
   ] = await Promise.all([
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(originChainId)),
-    originTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    originTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : symbol({
         contract: getContract({
@@ -44,7 +44,7 @@ export async function RouteListRow({
       }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
-    destinationTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    destinationTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : symbol({
         contract: getContract({

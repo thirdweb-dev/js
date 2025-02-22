@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { defineChain, getContract } from "thirdweb";
+import { defineChain, getContract, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { name } from "thirdweb/extensions/common";
 
@@ -32,7 +32,7 @@ export async function RouteListCard({
   ] = await Promise.all([
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(originChainId)),
-    originTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    originTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : name({
         contract: getContract({
@@ -43,7 +43,7 @@ export async function RouteListCard({
       }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
-    destinationTokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    destinationTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : name({
         contract: getContract({
