@@ -1,5 +1,7 @@
 "use client";
 import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -18,6 +20,13 @@ import {
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
@@ -43,16 +52,19 @@ import {
   CircleAlertIcon,
   ExternalLinkIcon,
   RefreshCcwIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { RE_BUNDLE_ID } from "utils/regex";
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import { apiServerProxy } from "../../../../../@/actions/proxies";
 import {
   HIDDEN_SERVICES,
   projectDomainsSchema,
@@ -85,15 +97,26 @@ type ProjectSettingPaths = {
   afterDeleteRedirectTo: string;
 };
 
+type TeamWithRole = {
+  role: "MEMBER" | "OWNER";
+  team: Team;
+};
+
 export function ProjectGeneralSettingsPage(props: {
   project: Project;
   teamSlug: string;
+  teamId: string;
   showNebulaSettings: boolean;
+  teamsWithRole: TeamWithRole[];
+  client: ThirdwebClient;
+  isOwnerAccount: boolean;
 }) {
   const router = useDashboardRouter();
 
   return (
     <ProjectGeneralSettingsPageUI
+      isOwnerAccount={props.isOwnerAccount}
+      client={props.client}
       teamSlug={props.teamSlug}
       project={props.project}
       updateProject={async (projectValues) => {
@@ -118,6 +141,28 @@ export function ProjectGeneralSettingsPage(props: {
       rotateSecretKey={async () => {
         return rotateSecretKeyClient(props.project.id);
       }}
+      teamsWithRole={props.teamsWithRole}
+      transferProject={async (newTeam) => {
+        const res = await apiServerProxy({
+          pathname: `/v1/teams/${props.teamId}/projects/${props.project.id}/transfer`,
+          method: "POST",
+          body: JSON.stringify({
+            destinationTeamId: newTeam.id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          console.error(res.error);
+          throw new Error(res.error);
+        }
+
+        // Can't open new project in new team or new team landing pagae because it takes a while for the transfer and it doesn't show up in new team immediately
+        // so the safe option is to just redirect to the current team landing page
+        router.replace(`/team/${props.teamSlug}`);
+      }}
     />
   );
 }
@@ -135,6 +180,10 @@ export function ProjectGeneralSettingsPageUI(props: {
   showNebulaSettings: boolean;
   rotateSecretKey: RotateSecretKey;
   teamSlug: string;
+  teamsWithRole: TeamWithRole[];
+  client: ThirdwebClient;
+  transferProject: (newTeam: Team) => Promise<void>;
+  isOwnerAccount: boolean;
 }) {
   const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
 
@@ -294,6 +343,15 @@ export function ProjectGeneralSettingsPageUI(props: {
             handleSubmit={handleSubmit}
             paths={paths}
             showNebulaSettings={props.showNebulaSettings}
+          />
+
+          <TransferProject
+            isOwnerAccount={props.isOwnerAccount}
+            client={props.client}
+            projectName={project.name}
+            teamsWithRole={props.teamsWithRole}
+            currentTeamId={project.teamId}
+            transferProject={props.transferProject}
           />
 
           <DeleteProject
@@ -1041,5 +1099,132 @@ function SaveNewKeyScreen(props: {
         </Button>
       </div>
     </div>
+  );
+}
+
+function TransferProject(props: {
+  projectName: string;
+  teamsWithRole: { role: "MEMBER" | "OWNER"; team: Team }[];
+  currentTeamId: string;
+  transferProject: (newTeam: Team) => Promise<void>;
+  client: ThirdwebClient;
+  isOwnerAccount: boolean;
+}) {
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
+  const transferProject = useMutation({
+    mutationFn: props.transferProject,
+  });
+
+  const selectedTeamWithRole = props.teamsWithRole.find(
+    ({ team }) => team.id === selectedTeamId,
+  );
+  const hasOwnerRole = selectedTeamWithRole?.role === "OWNER";
+
+  const isDisabled =
+    !selectedTeamWithRole ||
+    !hasOwnerRole ||
+    selectedTeamId === props.currentTeamId ||
+    !props.isOwnerAccount;
+
+  console.log({ selectedTeam: selectedTeamWithRole, isDisabled });
+
+  const handleTransfer = () => {
+    if (!hasOwnerRole) {
+      return;
+    }
+
+    const promise = transferProject.mutateAsync(selectedTeamWithRole.team);
+    toast.promise(promise, {
+      success: "Project transferred successfully",
+      error: "Failed to transfer project",
+    });
+  };
+
+  return (
+    <DangerSettingCard
+      buttonOnClick={handleTransfer}
+      isDisabled={isDisabled}
+      buttonLabel="Transfer project"
+      confirmationDialog={{
+        title: "Transfer project",
+        description: (
+          <>
+            <span className="mb-5 block">
+              Are you sure you want to transfer this project to{" "}
+              <span className="font-semibold">
+                {selectedTeamWithRole?.team.name}
+              </span>{" "}
+              team?
+            </span>
+
+            <span className="mb-3 flex items-center gap-3 rounded-lg border bg-card px-4 py-3 text-warning-text">
+              <TriangleAlertIcon className="size-5 shrink-0" />
+              Current team will lose access to this project and all associated
+              resources
+            </span>
+
+            <span className="flex items-center gap-3 rounded-lg border bg-card px-4 py-3 text-warning-text">
+              <TriangleAlertIcon className="size-5 shrink-0" />
+              Selected team will take over ownership and billing responsibility
+              for this project and all associated resources
+            </span>
+          </>
+        ),
+      }}
+      description={<>Transfer this project to another team</>}
+      isPending={transferProject.isPending}
+      title="Transfer Project"
+    >
+      <div className="flex flex-col gap-4">
+        <div>
+          <Select
+            value={selectedTeamId}
+            onValueChange={setSelectedTeamId}
+            disabled={transferProject.isPending || !props.isOwnerAccount}
+          >
+            <SelectTrigger className="w-auto min-w-[320px]">
+              <SelectValue placeholder="Select a team" />
+            </SelectTrigger>
+            <SelectContent>
+              {props.teamsWithRole
+                // .filter(({ team }) => team.id !== props.currentTeamId)
+                .map(({ team }) => (
+                  <SelectItem key={team.id} value={team.id}>
+                    <div className="flex items-center gap-2 py-1">
+                      <GradientAvatar
+                        src={team.image || ""}
+                        id={team.id}
+                        className="size-5"
+                        client={props.client}
+                      />
+                      {team.name}
+                    </div>
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {!props.isOwnerAccount && (
+          <p className="text-muted-foreground text-sm">
+            You do not have permission to transfer this project, You are not an
+            owner of the current team
+          </p>
+        )}
+
+        {selectedTeamId === props.currentTeamId && (
+          <p className="text-muted-foreground text-sm">
+            Project is already in the selected team
+          </p>
+        )}
+
+        {selectedTeamId && !hasOwnerRole && (
+          <p className="text-muted-foreground text-sm">
+            You do not have permission to transfer this project, You are not an
+            owner of the selected team
+          </p>
+        )}
+      </div>
+    </DangerSettingCard>
   );
 }
