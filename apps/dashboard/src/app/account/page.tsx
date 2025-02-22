@@ -1,6 +1,7 @@
 import { getTeams } from "@/api/team";
-import { getMembers } from "@/api/team-members";
+import { getMemberById } from "@/api/team-members";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { notFound } from "next/navigation";
 import { getAuthToken } from "../api/lib/getAuthToken";
 import { loginRedirect } from "../login/loginRedirect";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
@@ -17,28 +18,20 @@ export default async function Page() {
     loginRedirect("/account");
   }
 
-  const teamsWithRole = (
-    await Promise.all(
-      teams.map(async (team) => {
-        const members = await getMembers(team.slug);
-        if (!members) {
-          return {
-            team,
-            role: "MEMBER" as const,
-          };
-        }
+  const teamsWithRole = await Promise.all(
+    teams.map(async (team) => {
+      const member = await getMemberById(team.slug, account.id);
 
-        const accountMemberInfo = members.find(
-          (m) => m.accountId === account.id,
-        );
+      if (!member) {
+        notFound();
+      }
 
-        return {
-          team,
-          role: accountMemberInfo?.role || "MEMBER",
-        };
-      }),
-    )
-  ).filter((x) => !!x);
+      return {
+        team,
+        role: member.role,
+      };
+    }),
+  );
 
   return (
     <div className="flex grow flex-col">
