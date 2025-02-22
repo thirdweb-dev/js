@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { defineChain, getContract, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, defineChain, getContract } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { name } from "thirdweb/extensions/common";
 
@@ -35,34 +35,34 @@ export async function RouteListCard({
     originTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : name({
-        contract: getContract({
-          address: originTokenAddress,
-          chain: defineChain(originChainId),
-          client: getThirdwebClient(),
-        }),
-      }).catch(() => undefined),
+          contract: getContract({
+            address: originTokenAddress,
+            chain: defineChain(originChainId),
+            client: getThirdwebClient(),
+          }),
+        }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
     destinationTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
       ? "ETH"
       : name({
-        contract: getContract({
-          address: destinationTokenAddress,
-          chain: defineChain(destinationChainId),
-          client: getThirdwebClient(),
-        }),
-      }).catch(() => undefined),
+          contract: getContract({
+            address: destinationTokenAddress,
+            chain: defineChain(destinationChainId),
+            client: getThirdwebClient(),
+          }),
+        }).catch(() => undefined),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
-        uri: originTokenIconUri,
-        client: getThirdwebClient(),
-      })
+          uri: originTokenIconUri,
+          client: getThirdwebClient(),
+        })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
-        uri: destinationTokenIconUri,
-        client: getThirdwebClient(),
-      })
+          uri: destinationTokenIconUri,
+          client: getThirdwebClient(),
+        })
       : undefined,
   ]);
 
