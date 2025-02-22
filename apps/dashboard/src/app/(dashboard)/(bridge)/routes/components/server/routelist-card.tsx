@@ -37,6 +37,7 @@ export async function RouteListCard({
       : name({
           contract: getContract({
             address: originTokenAddress,
+            // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(originChainId),
             client: getThirdwebClient(),
           }),
@@ -48,6 +49,7 @@ export async function RouteListCard({
       : name({
           contract: getContract({
             address: destinationTokenAddress,
+            // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(destinationChainId),
             client: getThirdwebClient(),
           }),
