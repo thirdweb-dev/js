@@ -1,8 +1,11 @@
 import { isBrowser } from "utils/isBrowser";
 
+export function isVercel() {
+  return !!(process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV);
+}
+
 export function getVercelEnv() {
-  const onVercel = process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV;
-  if (!onVercel) {
+  if (!isVercel()) {
     return "development";
   }
   return (process.env.VERCEL_ENV ||

@@ -11,6 +11,7 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
+import { isVercel } from "../../lib/vercel-utils";
 
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
@@ -45,80 +46,83 @@ export async function doLogin(
     throw new Error("API_SERVER_SECRET is not set");
   }
 
-  if (!turnstileToken) {
-    return {
-      error: "Missing Turnstile token.",
-    };
-  }
-
-  // get the request headers
-  const requestHeaders = await headers();
-  if (!requestHeaders) {
-    return {
-      error: "Failed to get request headers. Please try again.",
-    };
-  }
-  // CF header, fallback to req.ip, then X-Forwarded-For
-  const [ip, errors] = (() => {
-    let ip: string | null = null;
-    const errors: string[] = [];
-    try {
-      ip = requestHeaders.get("CF-Connecting-IP") || null;
-    } catch (err) {
-      console.error("failed to get IP address from CF-Connecting-IP", err);
-      errors.push("failed to get IP address from CF-Connecting-IP");
+  // only validate the turnstile token if we are in a vercel environment
+  if (isVercel()) {
+    if (!turnstileToken) {
+      return {
+        error: "Missing Turnstile token.",
+      };
     }
-    if (!ip) {
+
+    // get the request headers
+    const requestHeaders = await headers();
+    if (!requestHeaders) {
+      return {
+        error: "Failed to get request headers. Please try again.",
+      };
+    }
+    // CF header, fallback to req.ip, then X-Forwarded-For
+    const [ip, errors] = (() => {
+      let ip: string | null = null;
+      const errors: string[] = [];
       try {
-        ip = ipAddress(requestHeaders) || null;
+        ip = requestHeaders.get("CF-Connecting-IP") || null;
       } catch (err) {
-        console.error(
-          "failed to get IP address from ipAddress() function",
-          err,
-        );
-        errors.push("failed to get IP address from ipAddress() function");
+        console.error("failed to get IP address from CF-Connecting-IP", err);
+        errors.push("failed to get IP address from CF-Connecting-IP");
       }
-    }
+      if (!ip) {
+        try {
+          ip = ipAddress(requestHeaders) || null;
+        } catch (err) {
+          console.error(
+            "failed to get IP address from ipAddress() function",
+            err,
+          );
+          errors.push("failed to get IP address from ipAddress() function");
+        }
+      }
+      if (!ip) {
+        try {
+          ip = requestHeaders.get("X-Forwarded-For");
+        } catch (err) {
+          console.error("failed to get IP address from X-Forwarded-For", err);
+          errors.push("failed to get IP address from X-Forwarded-For");
+        }
+      }
+      return [ip, errors];
+    })();
+
     if (!ip) {
-      try {
-        ip = requestHeaders.get("X-Forwarded-For");
-      } catch (err) {
-        console.error("failed to get IP address from X-Forwarded-For", err);
-        errors.push("failed to get IP address from X-Forwarded-For");
-      }
+      return {
+        error: "Could not get IP address. Please try again.",
+        context: errors,
+      };
     }
-    return [ip, errors];
-  })();
 
-  if (!ip) {
-    return {
-      error: "Could not get IP address. Please try again.",
-      context: errors,
-    };
-  }
-
-  // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
-  // Validate the token by calling the "/siteverify" API endpoint.
-  const result = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      body: JSON.stringify({
-        secret: process.env.TURNSTILE_SECRET_KEY,
-        response: turnstileToken,
-        remoteip: ip,
-      }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
+    // Validate the token by calling the "/siteverify" API endpoint.
+    const result = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        body: JSON.stringify({
+          secret: process.env.TURNSTILE_SECRET_KEY,
+          response: turnstileToken,
+          remoteip: ip,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    },
-  );
+    );
 
-  const outcome = await result.json();
-  if (!outcome.success) {
-    return {
-      error: "Could not validate captcha.",
-    };
+    const outcome = await result.json();
+    if (!outcome.success) {
+      return {
+        error: "Could not validate captcha.",
+      };
+    }
   }
 
   const cookieStore = await cookies();
