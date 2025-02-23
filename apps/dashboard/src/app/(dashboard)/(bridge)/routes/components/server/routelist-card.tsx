@@ -95,7 +95,6 @@ export async function RouteListCard({
         </CardHeader>
 
         <CardContent className="px-4 pt-0 pb-4">
-          {/* table of `chain id` `native token` `managed support`, header row on left value row on right */}
           <table className="w-full">
             <tbody className="text-sm [&_td>*]:min-h-[25px]">
               <tr>

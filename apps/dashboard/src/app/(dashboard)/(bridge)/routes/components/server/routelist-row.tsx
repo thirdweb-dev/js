@@ -84,18 +84,20 @@ export async function RouteListRow({
             ) : (
               <div className="size-6 rounded-full bg-muted-foreground" />
             )}
-            <CopyTextButton
-              textToCopy={originTokenAddress}
-              textToShow={
-                originTokenSymbol === "ETH"
-                  ? originChain.nativeCurrency.symbol
-                  : originTokenSymbol
-              }
-              tooltip="Copy Token Address"
-              className="relative z-10 text-base"
-              variant="ghost"
-              copyIconPosition="right"
-            />
+            {originTokenSymbol && (
+              <CopyTextButton
+                textToCopy={originTokenAddress}
+                textToShow={
+                  originTokenSymbol === "ETH"
+                    ? originChain.nativeCurrency.symbol
+                    : originTokenSymbol
+                }
+                tooltip="Copy Token Address"
+                className="relative z-10 text-base"
+                variant="ghost"
+                copyIconPosition="right"
+              />
+            )}
           </div>
         </div>
       </TableCell>
@@ -116,18 +118,20 @@ export async function RouteListRow({
             ) : (
               <div className="size-6 rounded-full bg-muted-foreground" />
             )}
-            <CopyTextButton
-              textToCopy={destinationTokenAddress}
-              textToShow={
-                destinationTokenSymbol === "ETH"
-                  ? destinationChain.nativeCurrency.symbol
-                  : destinationTokenSymbol
-              }
-              tooltip="Copy Token Address"
-              className="relative z-10 text-base"
-              variant="ghost"
-              copyIconPosition="right"
-            />
+            {destinationTokenSymbol && (
+              <CopyTextButton
+                textToCopy={destinationTokenAddress}
+                textToShow={
+                  destinationTokenSymbol === "ETH"
+                    ? destinationChain.nativeCurrency.symbol
+                    : destinationTokenSymbol
+                }
+                tooltip="Copy Token Address"
+                className="relative z-10 text-base"
+                variant="ghost"
+                copyIconPosition="right"
+              />
+            )}
           </div>
         </div>
       </TableCell>
