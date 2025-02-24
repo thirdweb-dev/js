@@ -1,15 +1,9 @@
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+});
+
 export const formatTickerNumber = (value: number) => {
-  if (value >= 1000000) {
-    const millions = value / 1000000;
-    // Only show decimal if not a whole number, up to 2 decimals with no trailing zeros
-    return `${millions % 1 === 0 ? millions.toFixed(0) : Number(millions.toFixed(2)).toString()}M`;
-  }
-  if (value >= 1000) {
-    const thousands = value / 1000;
-    // Only show decimal if not a whole number
-    return `${thousands % 1 === 0 ? thousands.toFixed(0) : thousands.toFixed(1)}k`;
-  }
-  return value.toString();
+  return compactNumberFormatter.format(value);
 };
 
 export const formatWalletType = (walletType: string) => {

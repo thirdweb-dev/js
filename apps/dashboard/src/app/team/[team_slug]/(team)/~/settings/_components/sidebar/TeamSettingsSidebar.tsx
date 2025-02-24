@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { Badge } from "@/components/ui/badge";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebClient } from "thirdweb";
 import { SidebarLink } from "./SidebarLink";
@@ -57,14 +57,13 @@ function RenderLinkGroup(props: {
 }) {
   return (
     <>
-      <div className="flex items-center gap-1.5 px-4">
-        <GradientAvatar
-          src={props.titleAvatarIcon.src}
-          className="size-[18px]"
-          id={props.titleAvatarIcon.id}
-          client={props.client}
-        />
-        <p className="text-muted-foreground text-xs">{props.title}</p>
+      <div className="px-2">
+        <Badge
+          variant="outline"
+          className="bg-card font-normal text-muted-foreground"
+        >
+          {props.title}
+        </Badge>
       </div>
 
       <ul className="flex flex-col gap-0.5">

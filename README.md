@@ -1,7 +1,7 @@
 <p align="center">
     <br />
     <a href="https://thirdweb.com">
-        <img src="https://github.com/thirdweb-dev/js/blob/main/legacy_packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+        <img src="https://thirdweb.com/brand/thirdweb-icon.svg" width="200" alt=""/></a>
     <br />
 </p>
 
@@ -31,12 +31,12 @@
 
 ## Library Comparison
 
-|                                           | thirdweb | Wagmi + Viem              | Ethers@6 |
+|                                           | thirdweb | Wagmi + Viem       | Ethers@6 |
 | ----------------------------------------- | -------- | ------------------ | -------- |
 | Type safe contract API                    | ✅       | ✅                 | ✅       |
 | Type safe wallet API                      | ✅       | ✅                 | ✅       |
 | EVM utils                                 | ✅       | ✅                 | ✅       |
-| RPC for any EVM                           | ✅       | ⚠️ public RPC only  | ❌       |
+| RPC for any EVM                           | ✅       | ⚠️ public RPC only | ❌       |
 | Automatic ABI Resolution                  | ✅       | ❌                 | ❌       |
 | IPFS Upload/Download                      | ✅       | ❌                 | ❌       |
 | Embedded wallet (email/ social login)     | ✅       | ⚠️ via 3rd party   | ❌       |

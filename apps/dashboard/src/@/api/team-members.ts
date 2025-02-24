@@ -12,15 +12,16 @@ export type TeamAccountRole =
 
 export type TeamMember = {
   account: {
+    creatorWalletAddress: string;
     name: string;
     email: string | null;
+    image: string | null;
   };
-} & {
-  deletedAt: Date | null;
+  deletedAt: string | null;
   accountId: string;
   teamId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   role: TeamAccountRole;
 };
 
@@ -42,6 +43,29 @@ export async function getMembers(teamSlug: string) {
 
   if (teamsRes.ok) {
     return (await teamsRes.json())?.result as TeamMember[];
+  }
+
+  return undefined;
+}
+
+export async function getMemberById(teamSlug: string, memberId: string) {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return undefined;
+  }
+
+  const res = await fetch(
+    `${API_SERVER_URL}/v1/teams/${teamSlug}/members/${memberId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (res.ok) {
+    return (await res.json())?.result as TeamMember;
   }
 
   return undefined;

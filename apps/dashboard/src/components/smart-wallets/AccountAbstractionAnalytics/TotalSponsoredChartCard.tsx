@@ -24,7 +24,7 @@ import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { UserOpStats } from "types/analytics";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
-import { formatTickerNumber } from "../../../lib/format-utils";
+import { toUSD } from "../../../utils/number";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
@@ -210,13 +210,22 @@ export function TotalSponsoredChartCard(props: {
               }}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${formatTickerNumber(value)}`}
+              tickFormatter={(value) => toUSD(value)}
             />
 
             <ChartTooltip
               cursor={true}
               content={
-                <ChartTooltipContent valueFormatter={(value) => `$${value}`} />
+                <ChartTooltipContent
+                  valueFormatter={(value) => {
+                    // typeguard
+                    if (typeof value !== "number") {
+                      return "";
+                    }
+
+                    return toUSD(value);
+                  }}
+                />
               }
             />
             <ChartLegend content={<ChartLegendContent />} />
