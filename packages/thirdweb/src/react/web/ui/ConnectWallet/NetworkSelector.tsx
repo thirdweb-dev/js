@@ -704,7 +704,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
               {confirming && (
                 <>
                   <Text size="xs" color="accentText">
-                    {locale.confirmInWallet}
+                    {locale.switchingNetwork}
                   </Text>
                   <Spinner size="xs" color="accentText" />
                 </>

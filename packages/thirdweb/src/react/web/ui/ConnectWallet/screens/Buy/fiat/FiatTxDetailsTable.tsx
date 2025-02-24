@@ -14,7 +14,7 @@ import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
 import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
-import { getCurrencyMeta } from "./currencies.js";
+import { getCurrencyMeta, getFiatIcon } from "./currencies.js";
 
 /**
  * Show a table with the details of a "OnRamp" transaction step in the "Buy with Fiat" flow.
@@ -71,7 +71,7 @@ export function OnRampTxDetailsTable(props: {
           }}
         >
           <Container flex="row" gap="xs" center="y">
-            <currencyMeta.icon size={iconSize.sm} />
+            {getFiatIcon(currencyMeta, "sm")}
             <Text color="primaryText">
               {formatNumber(Number(props.fiat.amount), 2)}{" "}
               {props.fiat.currencySymbol}
