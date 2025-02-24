@@ -214,7 +214,6 @@ export function TokenSelector(props: {
             style={{
               paddingTop: 0,
               paddingBottom: spacing.lg,
-              // maxHeight: props.chainSelection ? "300px" : "400px",
             }}
           >
             {!input && (
@@ -284,7 +283,6 @@ export function TokenSelector(props: {
 }
 
 function SelectTokenButton(props: {
-  // token?: TokenInfo;
   token: ERC20OrNativeToken;
   chain: Chain;
   onClick: () => void;
@@ -310,7 +308,7 @@ function SelectTokenButton(props: {
         client={props.client}
       />
 
-      <Container flex="column" gap="xxs">
+      <Container flex="column" gap="4xs">
         {tokenName ? (
           <Text size="sm" color="primaryText">
             {tokenName}

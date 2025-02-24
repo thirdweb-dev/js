@@ -483,7 +483,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           : params.saltForCreate2
         : undefined;
 
-      return await deployContractfromDeployMetadata({
+      const moduleDeployData = modules?.map((m) => ({
+        deployMetadata: m,
+        initializeParams: params.moduleData[m.name],
+      }));
+
+      const coreContractAddress = await deployContractfromDeployMetadata({
         account: activeAccount,
         chain: walletChain,
         client: thirdwebClient,
@@ -491,11 +496,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         initializeParams,
         implementationConstructorParams,
         salt,
-        modules: modules?.map((m) => ({
-          deployMetadata: m,
-          initializeParams: params.moduleData[m.name],
-        })),
+        modules: moduleDeployData,
       });
+
+      return coreContractAddress;
     },
   });
 

@@ -14,8 +14,8 @@ import type { UseFormReturn } from "react-hook-form";
 import type { NFTInput } from "thirdweb/utils";
 
 type AdvancedNFTMetadataFormGroupValues = {
-  customImage?: string;
-  customAnimationUrl?: string;
+  image?: NFTInput["image"];
+  animation_url?: NFTInput["animation_url"];
   background_color?: NFTInput["background_color"];
   external_url?: NFTInput["external_url"];
 };
@@ -56,12 +56,15 @@ export function AdvancedNFTMetadataFormGroup<
 
       <FormField
         control={form.control}
-        name="customImage"
+        name="image"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Image URI</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input
+                {...field}
+                value={typeof field.value === "string" ? field.value : ""}
+              />
             </FormControl>
             <FormDescription>
               If you already have your NFT image pre-uploaded, you can set the
@@ -74,12 +77,15 @@ export function AdvancedNFTMetadataFormGroup<
 
       <FormField
         control={form.control}
-        name="customAnimationUrl"
+        name="animation_url"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Animation URI</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input
+                {...field}
+                value={typeof field.value === "string" ? field.value : ""}
+              />
             </FormControl>
             <FormDescription>
               If you already have your NFT Animation URL pre-uploaded, you can

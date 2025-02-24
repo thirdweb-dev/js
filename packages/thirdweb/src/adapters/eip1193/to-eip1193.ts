@@ -1,11 +1,13 @@
 import type { Account } from "viem/accounts";
 
 import type { Chain } from "../../chains/types.js";
+import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { estimateGas } from "../../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import { hexToNumber, isHex } from "../../utils/encoding/hex.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { EIP1193Provider } from "./types.js";
 
@@ -127,6 +129,22 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
           throw new Error("Unable to connect wallet");
         }
         return [account.address];
+      }
+      if (
+        request.method === "wallet_switchEthereumChain" ||
+        request.method === "wallet_addEthereumChain"
+      ) {
+        const data = request.params[0];
+        const chainIdHex = data.chainId;
+        if (!chainIdHex) {
+          throw new Error("Chain ID is required");
+        }
+        // chainId is hex most likely, convert to number
+        const chainId = isHex(chainIdHex)
+          ? hexToNumber(chainIdHex)
+          : chainIdHex;
+        const chain = getCachedChain(chainId);
+        return wallet.switchChain(chain);
       }
       return rpcClient(request);
     },

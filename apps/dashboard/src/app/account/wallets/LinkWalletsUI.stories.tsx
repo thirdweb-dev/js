@@ -1,4 +1,6 @@
+import type { LinkedWallet } from "@/api/linked-wallets";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Toaster } from "sonner";
 import { ThirdwebProvider } from "thirdweb/react";
 import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { LinkWalletUI } from "./LinkWalletUI";
@@ -31,31 +33,66 @@ export const Mobile: Story = {
   },
 };
 
+const unlinkWalletSuccessStub = async (walletId: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  console.log("unlinkWallet", walletId);
+};
+
+const unlinkWalletFailureStub = async (walletId: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  console.log("unlinkWallet", walletId);
+  throw new Error("Failed to unlink wallet");
+};
+
+const accountWalletsStub: LinkedWallet[] = [
+  {
+    walletAddress: "0x51696930092b42243dee1077c8dd237074fb28d4", // jns.eth
+    createdAt: new Date().toISOString(),
+    id: "1",
+  },
+  {
+    walletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37", // no ens
+    createdAt: new Date(
+      Date.now() - 1000 * 60 * 60 * 24 * 365 * 2,
+    ).toISOString(),
+    id: "2",
+  },
+  {
+    walletAddress: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045", // vitalik.eth
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    id: "3",
+  },
+];
+
 function Variants() {
   return (
     <ThirdwebProvider>
       <div className="container mx-auto flex w-full max-w-[1100px] flex-col gap-10 py-10">
-        <BadgeContainer label="4 wallets">
+        <BadgeContainer label="Unlink wallet success">
           <LinkWalletUI
-            wallets={[
-              "0x51696930092b42243dee1077c8dd237074fb28d4", // jns.eth - ens
-              "0xd8da6bf26964af9d7eed9e03e53415d37aa96045", // vitalik.eth - ens, farcaster, lens
-              "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37", // no ens
-            ]}
+            accountEmail="team@example.com"
+            unlinkWallet={unlinkWalletSuccessStub}
+            wallets={accountWalletsStub}
           />
         </BadgeContainer>
 
-        <BadgeContainer label="1 wallet">
+        <BadgeContainer label="Unlink wallet failure">
           <LinkWalletUI
-            wallets={[
-              "0x51696930092b42243dee1077c8dd237074fb28d4", // jns.eth
-            ]}
+            accountEmail="team@example.com"
+            unlinkWallet={unlinkWalletFailureStub}
+            wallets={accountWalletsStub}
           />
         </BadgeContainer>
 
         <BadgeContainer label="0 wallets">
-          <LinkWalletUI wallets={[]} />
+          <LinkWalletUI
+            wallets={[]}
+            unlinkWallet={unlinkWalletSuccessStub}
+            accountEmail="team@example.com"
+          />
         </BadgeContainer>
+
+        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

@@ -1,6 +1,7 @@
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
+import { toUSD } from "../../../../utils/number";
 import { usePayVolume } from "../hooks/usePayVolume";
 import { FailedToLoad, chartHeight } from "./common";
 
@@ -155,7 +156,7 @@ function RenderData(props: { query: ProcessedQuery }) {
             <SkeletonContainer
               loadedData={
                 queryData
-                  ? `$${queryData?.totalAmount.toLocaleString()}`
+                  ? toUSD(queryData.totalAmount)
                   : props.query.isEmpty
                     ? "NA"
                     : undefined
@@ -187,7 +188,7 @@ function RenderData(props: { query: ProcessedQuery }) {
               label={v.name}
               amount={
                 queryData
-                  ? `$${v.amount.toLocaleString()}`
+                  ? toUSD(v.amount)
                   : props.query.isEmpty
                     ? "$-"
                     : undefined

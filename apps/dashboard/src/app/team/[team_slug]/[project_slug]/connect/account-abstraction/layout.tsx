@@ -1,9 +1,8 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getAbsoluteUrl } from "../../../../../../lib/vercel-utils";
-import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 import { AccountAbstractionLayout } from "./AccountAbstractionPage";
 
 export default async function Page(props: {
@@ -22,22 +21,22 @@ export default async function Page(props: {
   }
 
   if (!project) {
-    redirect("/team");
+    redirect(`/team/${team_slug}`);
   }
 
-  const apiKey = await getAPIKeyForProjectId(project.id);
+  const isBundlerServiceEnabled = !!project.services.find(
+    (s) => s.name === "bundler",
+  );
 
-  if (!apiKey) {
-    notFound();
-  }
+  const hasSmartWalletsWithoutBilling =
+    isBundlerServiceEnabled && team.billingStatus !== "validPayment";
 
   return (
     <AccountAbstractionLayout
       projectSlug={project.slug}
       teamSlug={team_slug}
-      billingStatus={team.billingStatus}
       projectKey={project.publishableKey}
-      apiKeyServices={apiKey.services || []}
+      hasSmartWalletsWithoutBilling={hasSmartWalletsWithoutBilling}
     >
       {props.children}
     </AccountAbstractionLayout>

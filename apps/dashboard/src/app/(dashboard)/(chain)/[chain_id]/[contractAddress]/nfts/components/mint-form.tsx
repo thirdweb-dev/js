@@ -63,8 +63,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   } = useForm<
     NFTMetadataInputLimited & {
       supply: number;
-      customImage: string;
-      customAnimationUrl: string;
     }
   >();
 
@@ -106,6 +104,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   };
 
   const imageUrl = useImageFileOrUrl(watch("image") as File | string);
+  const animationUrlFormValue = watch("animation_url");
+  const imageUrlFormValue = watch("image");
   const mediaFileUrl =
     watch("animation_url") instanceof File
       ? watch("animation_url")
@@ -144,7 +144,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       <form
         className="mt-6 flex flex-col gap-6"
         id={MINT_FORM_ID}
-        onSubmit={handleSubmit(async (data) => {
+        onSubmit={handleSubmit(async ({ supply, ...data }) => {
           if (!address) {
             toast.error("Please connect your wallet to mint.");
             return;
@@ -153,8 +153,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           try {
             const dataWithCustom = {
               ...data,
-              image: data.image || data.customImage,
-              animation_url: data.animation_url || data.customAnimationUrl,
+              image: data.image,
+              animation_url: data.animation_url,
             };
 
             trackEvent({
@@ -169,7 +169,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   contract,
                   to: address,
                   nft,
-                  supply: BigInt(data.supply),
+                  supply: BigInt(supply),
                 });
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
@@ -216,7 +216,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               showUploadButton
               showPreview={true}
               setValue={setFile}
-              className="rounded border border-border transition-all duration-200"
+              className="shrink-0 rounded border border-border transition-all duration-200"
               selectOrUpload="Upload"
               helperText="Media"
             />
@@ -238,7 +238,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               value={imageUrl}
               showUploadButton
               setValue={(file) => setValue("image", file)}
-              className="rounded border border-border transition-all"
+              className="shrink-0 rounded border border-border transition-all"
             />
             <FormHelperText>
               You can optionally upload an image as the cover of your NFT.
@@ -313,26 +313,42 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   </FormErrorMessage>
                 </FormControl>
               )}
-              <FormControl isInvalid={!!errors.customImage}>
+              <FormControl isInvalid={!!errors.image}>
                 <FormLabel>Image URL</FormLabel>
-                <Input max="6" {...register("customImage")} />
+                <Input
+                  value={
+                    typeof imageUrlFormValue === "string"
+                      ? imageUrlFormValue
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setValue("image", e.target.value);
+                  }}
+                />
                 <FormHelperText>
-                  If you already have your NFT image pre-uploaded, you can set
-                  the URL or URI here.
+                  If you already have your NFT image pre-uploaded to a URL, you
+                  can specify it here instead of uploading the asset
                 </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.customImage?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.customAnimationUrl}>
+              <FormControl isInvalid={!!errors.animation_url}>
                 <FormLabel>Animation URL</FormLabel>
-                <Input max="6" {...register("customAnimationUrl")} />
+                <Input
+                  value={
+                    typeof animationUrlFormValue === "string"
+                      ? animationUrlFormValue
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setValue("animation_url", e.target.value);
+                  }}
+                />
                 <FormHelperText>
-                  If you already have your NFT Animation URL pre-uploaded, you
-                  can set the URL or URI here.
+                  If you already have your NFT Animation URL pre-uploaded to a
+                  URL, you can specify it here instead of uploading the asset
                 </FormHelperText>
                 <FormErrorMessage>
-                  {errors?.customAnimationUrl?.message}
+                  {errors?.animation_url?.message}
                 </FormErrorMessage>
               </FormControl>
             </AccordionPanel>

@@ -1,6 +1,9 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Form,
   FormControl,
@@ -9,34 +12,31 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import {
   type ApiKeyPayConfigValidationSchema,
   apiKeyPayConfigValidationSchema,
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
+import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface PayConfigProps {
-  apiKey: Pick<
-    ApiKey,
-    | "services"
-    | "id"
-    | "name"
-    | "domains"
-    | "bundleIds"
-    | "services"
-    | "redirectUrls"
-  >;
+  project: Project;
+  teamId: string;
+  teamSlug: string;
 }
 
 const TRACKING_CATEGORY = "pay";
 
-export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
-  const payService = apiKey.services?.find((service) => service.name === "pay");
+export const PayConfig: React.FC<PayConfigProps> = (props) => {
+  const payService = props.project.services.find(
+    (service) => service.name === "pay",
+  );
 
   const form = useForm<ApiKeyPayConfigValidationSchema>({
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
@@ -47,13 +47,20 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
 
   const trackEvent = useTrack();
 
-  const mutation = useUpdateApiKey();
+  const updateProject = useMutation({
+    mutationFn: async (projectValues: Partial<Project>) => {
+      await updateProjectClient(
+        {
+          projectId: props.project.id,
+          teamId: props.teamId,
+        },
+        projectValues,
+      );
+    },
+  });
 
   const handleSubmit = form.handleSubmit(({ payoutAddress }) => {
-    const services = apiKey.services;
-    if (!services) {
-      throw new Error("Bad state: Missing services");
-    }
+    const services = props.project.services;
 
     const newServices = services.map((service) => {
       if (service.name !== "pay") {
@@ -66,39 +73,53 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
       };
     });
 
-    const formattedValues = {
-      ...apiKey,
-      services: newServices,
-    };
-
-    const mutationPromise = mutation.mutateAsync(formattedValues, {
-      onSuccess: () => {
-        trackEvent({
-          category: TRACKING_CATEGORY,
-          action: "configuration-update",
-          label: "success",
-          data: {
-            payoutAddress,
-          },
-        });
+    updateProject.mutate(
+      {
+        services: newServices,
       },
-      onError: (err) => {
-        trackEvent({
-          category: TRACKING_CATEGORY,
-          action: "configuration-update",
-          label: "error",
-          error: err,
-        });
+      {
+        onSuccess: () => {
+          toast.success("Fee sharing updated");
+          trackEvent({
+            category: TRACKING_CATEGORY,
+            action: "configuration-update",
+            label: "success",
+            data: {
+              payoutAddress,
+            },
+          });
+        },
+        onError: (err) => {
+          toast.error("Failed to update fee sharing");
+          console.error(err);
+          trackEvent({
+            category: TRACKING_CATEGORY,
+            action: "configuration-update",
+            label: "error",
+            error: err,
+          });
+        },
       },
-    });
-
-    toast.promise(mutationPromise, {
-      success: "Changes saved",
-      error: (err) => {
-        return `Failed to save changes: ${err.message}`;
-      },
-    });
+    );
   });
+
+  if (!payService) {
+    return (
+      <Alert variant="warning">
+        <CircleAlertIcon className="size-5" />
+        <AlertTitle>Pay service is disabled</AlertTitle>
+        <AlertDescription>
+          Enable Pay service in{" "}
+          <UnderlineLink
+            href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+          >
+            project settings
+          </UnderlineLink>{" "}
+          to configure settings
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -108,8 +129,8 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
           errorText={form.getFieldState("payoutAddress").error?.message}
           saveButton={{
             type: "submit",
-            disabled: !apiKey.services || !form.formState.isDirty,
-            isPending: mutation.isPending,
+            disabled: !form.formState.isDirty,
+            isPending: updateProject.isPending,
           }}
           noPermissionText={undefined}
         >

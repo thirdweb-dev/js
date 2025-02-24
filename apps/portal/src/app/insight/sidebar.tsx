@@ -4,6 +4,7 @@ import {
   Box,
   Braces,
   Brain,
+  ExternalLink,
   MessageCircleQuestionIcon,
   Rocket,
   StickyNote,
@@ -24,6 +25,11 @@ export const sidebar: SideBar = {
       name: "Use Cases",
       href: `${insightSlug}/use-cases`,
       icon: <StickyNote />,
+    },
+    {
+      name: "Playground",
+      href: "https://playground.thirdweb.com/insight",
+      icon: <ExternalLink />,
     },
     {
       name: "Get Started",

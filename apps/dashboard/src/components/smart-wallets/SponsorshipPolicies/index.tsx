@@ -1,14 +1,7 @@
 "use client";
 
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import {
-  type Account,
-  type ApiKeyService,
-  type ApiKeyServicePolicy,
-  type ApiKeyServicePolicyLimits,
-  usePolicies,
-  useUpdatePolicies,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   Divider,
@@ -21,6 +14,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import type { ProjectBundlerService } from "@thirdweb-dev/service-utils";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -38,12 +33,15 @@ import {
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
-import { GenericLoadingPage } from "../../../@/components/blocks/skeletons/GenericLoadingPage";
+import type { Project } from "../../../@/api/projects";
+import type { Team } from "../../../@/api/team";
 
 type AccountAbstractionSettingsPageProps = {
-  apiKeyServices: ApiKeyService[];
+  bundlerService: ProjectBundlerService;
+  project: Project;
   trackingCategory: string;
-  twAccount: Account;
+  teamId: string;
+  validTeamPlan: Team["billingPlan"];
 };
 
 const aaSettingsFormSchema = z.object({
@@ -98,48 +96,61 @@ const aaSettingsFormSchema = z.object({
 export function AccountAbstractionSettingsPage(
   props: AccountAbstractionSettingsPageProps,
 ) {
-  const { apiKeyServices, trackingCategory } = props;
-  const bundlerServiceId = apiKeyServices?.find(
-    (s) => s.name === "bundler",
-  )?.id;
-  const policiesQuery = usePolicies(bundlerServiceId);
-  const { mutate: updatePolicy, isPending: updatingPolicy } =
-    useUpdatePolicies();
+  const { trackingCategory } = props;
   const trackEvent = useTrack();
+  const updateProject = useMutation({
+    mutationFn: async (projectValues: Partial<Project>) => {
+      await updateProjectClient(
+        {
+          projectId: props.project.id,
+          teamId: props.teamId,
+        },
+        projectValues,
+      );
+    },
+  });
 
-  const policy = policiesQuery.data;
+  const policy = props.bundlerService;
 
   const transformedQueryData = useMemo(
     () => ({
       allowedChainIds:
-        policy?.allowedChainIds && policy?.allowedChainIds?.length > 0
-          ? policy?.allowedChainIds
+        policy.allowedChainIds && policy.allowedChainIds?.length > 0
+          ? policy.allowedChainIds
           : null,
       allowedContractAddresses:
-        policy?.allowedContractAddresses &&
-        policy?.allowedContractAddresses?.length > 0
-          ? joinWithComma(policy?.allowedContractAddresses)
+        policy.allowedContractAddresses &&
+        policy.allowedContractAddresses?.length > 0
+          ? joinWithComma(policy.allowedContractAddresses)
           : null,
       allowedWallets:
-        policy?.allowedWallets && policy?.allowedWallets?.length > 0
-          ? joinWithComma(policy?.allowedWallets)
+        policy.allowedWallets && policy.allowedWallets?.length > 0
+          ? joinWithComma(policy.allowedWallets)
           : null,
       blockedWallets:
-        policy?.blockedWallets && policy?.blockedWallets?.length > 0
-          ? joinWithComma(policy?.blockedWallets)
+        policy.blockedWallets && policy.blockedWallets?.length > 0
+          ? joinWithComma(policy.blockedWallets)
           : null,
       bypassWallets:
-        policy?.bypassWallets && policy?.bypassWallets?.length > 0
-          ? joinWithComma(policy?.bypassWallets)
+        policy.bypassWallets && policy.bypassWallets?.length > 0
+          ? joinWithComma(policy.bypassWallets)
           : null,
-      serverVerifier: policy?.serverVerifier?.url
-        ? { ...policy.serverVerifier, enabled: true }
-        : { enabled: false, url: null, headers: null },
-      globalLimit: policy?.limits?.global ?? null,
+      serverVerifier: policy.serverVerifier?.url
+        ? {
+            url: policy.serverVerifier.url,
+            headers: policy.serverVerifier.headers || null,
+            enabled: true,
+          }
+        : {
+            url: null,
+            headers: null,
+            enabled: false,
+          },
+      globalLimit: policy.limits?.global ?? null,
       allowedOrBlockedWallets:
-        policy?.allowedWallets && policy?.allowedWallets?.length > 0
+        policy.allowedWallets && policy.allowedWallets?.length > 0
           ? "allowed"
-          : policy?.blockedWallets && policy?.blockedWallets?.length > 0
+          : policy.blockedWallets && policy.blockedWallets?.length > 0
             ? "blocked"
             : null,
     }),
@@ -161,10 +172,6 @@ export function AccountAbstractionSettingsPage(
     "Sponsorship rules updated",
     "Failed to update sponsorship rules",
   );
-
-  if (policiesQuery.isPending) {
-    return <GenericLoadingPage />;
-  }
 
   return (
     <Flex flexDir="column" gap={8}>
@@ -193,58 +200,71 @@ export function AccountAbstractionSettingsPage(
         gap={6}
         as="form"
         onSubmit={form.handleSubmit((values) => {
-          if (!bundlerServiceId) {
-            onError("No account abstraction service found for this API key");
-            return;
-          }
-          const limits: ApiKeyServicePolicyLimits | null = values.globalLimit
-            ? {
-                global: {
-                  maxSpend: values.globalLimit.maxSpend,
-                  maxSpendUnit: values.globalLimit.maxSpendUnit,
-                },
-              }
-            : null;
-          const parsedValues: ApiKeyServicePolicy = {
-            allowedContractAddresses:
-              values.allowedContractAddresses !== null
-                ? toArrFromList(values.allowedContractAddresses)
-                : null,
-            allowedChainIds: values.allowedChainIds,
-            allowedWallets:
-              values.allowedOrBlockedWallets === "allowed" &&
-              values.allowedWallets !== null
-                ? toArrFromList(values.allowedWallets)
-                : null,
-            blockedWallets:
-              values.allowedOrBlockedWallets === "blocked" &&
-              values.blockedWallets !== null
-                ? toArrFromList(values.blockedWallets)
-                : null,
-            bypassWallets:
-              values.bypassWallets !== null
-                ? toArrFromList(values.bypassWallets)
-                : null,
-            serverVerifier:
-              values.serverVerifier &&
-              typeof values.serverVerifier.url === "string" &&
-              values.serverVerifier.enabled
-                ? {
-                    headers: values.serverVerifier.headers ?? [],
-                    url: values.serverVerifier.url,
-                  }
-                : null,
-            limits,
-          };
+          const limits: ProjectBundlerService["limits"] | null =
+            values.globalLimit
+              ? {
+                  global: {
+                    maxSpend: values.globalLimit.maxSpend,
+                    maxSpendUnit: values.globalLimit.maxSpendUnit,
+                  },
+                }
+              : null;
+
+          const parsedValues: Omit<ProjectBundlerService, "name" | "actions"> =
+            {
+              allowedContractAddresses:
+                values.allowedContractAddresses !== null
+                  ? toArrFromList(values.allowedContractAddresses)
+                  : null,
+              allowedChainIds: values.allowedChainIds,
+              allowedWallets:
+                values.allowedOrBlockedWallets === "allowed" &&
+                values.allowedWallets !== null
+                  ? toArrFromList(values.allowedWallets)
+                  : null,
+              blockedWallets:
+                values.allowedOrBlockedWallets === "blocked" &&
+                values.blockedWallets !== null
+                  ? toArrFromList(values.blockedWallets)
+                  : null,
+              bypassWallets:
+                values.bypassWallets !== null
+                  ? toArrFromList(values.bypassWallets)
+                  : null,
+              serverVerifier:
+                values.serverVerifier &&
+                typeof values.serverVerifier.url === "string" &&
+                values.serverVerifier.enabled
+                  ? {
+                      headers: values.serverVerifier.headers ?? [],
+                      url: values.serverVerifier.url,
+                    }
+                  : null,
+              limits,
+            };
           trackEvent({
             category: trackingCategory,
             action: "update-sponsorship-rules",
             label: "attempt",
           });
-          updatePolicy(
+
+          const newServices = props.project.services.map((service) => {
+            if (service.name === "bundler") {
+              const bundlerService: ProjectBundlerService = {
+                ...service,
+                actions: [],
+                ...parsedValues,
+              };
+
+              return bundlerService;
+            }
+
+            return service;
+          });
+
+          updateProject.mutate(
             {
-              serviceId: bundlerServiceId,
-              data: parsedValues,
+              services: newServices,
             },
             {
               onSuccess: () => {
@@ -537,10 +557,10 @@ export function AccountAbstractionSettingsPage(
               </div>
 
               <GatedSwitch
-                upgradeRequired={!props.twAccount.advancedEnabled}
+                upgradeRequired={props.validTeamPlan === "free"}
                 checked={
                   form.watch("serverVerifier").enabled &&
-                  props.twAccount.advancedEnabled
+                  props.validTeamPlan !== "free"
                 }
                 onCheckedChange={(checked) => {
                   form.setValue(
@@ -676,7 +696,7 @@ export function AccountAbstractionSettingsPage(
           <Button
             type="submit"
             colorScheme="primary"
-            isLoading={updatingPolicy}
+            isLoading={updateProject.isPending}
           >
             Save changes
           </Button>

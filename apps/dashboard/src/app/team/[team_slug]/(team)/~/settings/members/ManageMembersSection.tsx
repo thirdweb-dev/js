@@ -2,19 +2,28 @@
 
 import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { EllipsisIcon, SearchIcon } from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useMutation } from "@tanstack/react-query";
+import { EllipsisIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { FiltersSection, type MemberSortId } from "./_common";
 
 type RoleFilterValue = "ALL ROLES" | TeamAccountRole;
 
@@ -22,14 +31,27 @@ export function ManageMembersSection(props: {
   team: Team;
   userHasEditPermission: boolean;
   members: TeamMember[];
+  client: ThirdwebClient;
+  deleteMember: (memberId: string) => Promise<void>;
 }) {
   let topSection: React.ReactNode = null;
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [deletedMembersIds, setDeletedMembersIds] = useState<string[]>([]);
   const [role, setRole] = useState<RoleFilterValue>("ALL ROLES");
   const [sortBy, setSortBy] = useState<MemberSortId>("date");
 
   const membersToShow = useMemo(() => {
     let value = props.members;
+
+    if (searchTerm) {
+      value = value.filter((m) =>
+        m.account.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
+
+    value = value.filter((m) => !deletedMembersIds.includes(m.accountId));
+
     if (role !== "ALL ROLES") {
       value = value.filter((m) => m.role === role);
     }
@@ -37,7 +59,8 @@ export function ManageMembersSection(props: {
     switch (sortBy) {
       case "date":
         value = value.sort(
-          (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
         break;
       case "a-z":
@@ -53,7 +76,7 @@ export function ManageMembersSection(props: {
     }
 
     return value;
-  }, [role, props.members, sortBy]);
+  }, [role, props.members, sortBy, deletedMembersIds, searchTerm]);
 
   if (!props.userHasEditPermission) {
     topSection = (
@@ -63,43 +86,10 @@ export function ManageMembersSection(props: {
         </p>
       </div>
     );
-  } else {
-    topSection = (
-      <div className="flex items-center justify-between border-border border-b p-4">
-        <div className="flex items-center gap-3 lg:gap-4">
-          <Checkbox
-            id="select-all"
-            className="border-muted-foreground data-[state=checked]:border-inverted"
-            disabled={
-              !props.userHasEditPermission || membersToShow.length === 0
-            }
-          />
-          <Label
-            htmlFor="select-all"
-            className="cursor-pointer text-muted-foreground"
-          >
-            Select All ({membersToShow.length})
-          </Label>
-        </div>
-
-        <Button
-          size="icon"
-          variant="ghost"
-          className="!h-auto !w-auto p-1.5"
-          disabled={!props.userHasEditPermission || membersToShow.length === 0}
-        >
-          <EllipsisIcon className="size-4 text-muted-foreground" />
-        </Button>
-      </div>
-    );
   }
 
   return (
     <section>
-      <h2 className="font-semibold text-2xl tracking-tight">Team Members</h2>
-
-      <div className="h-3" />
-
       <FiltersSection
         // don't use membersToShow here
         disabled={props.members.length === 0}
@@ -107,9 +97,12 @@ export function ManageMembersSection(props: {
         setRole={setRole}
         setSortBy={setSortBy}
         sortBy={sortBy}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        searchPlaceholder="Search Team Members"
       />
 
-      <div className="h-4" />
+      <div className="h-3" />
 
       {/* Card */}
       <div className="rounded-lg border border-border bg-card">
@@ -127,6 +120,14 @@ export function ManageMembersSection(props: {
                   <MemberRow
                     member={member}
                     userHasEditPermission={props.userHasEditPermission}
+                    client={props.client}
+                    deleteMember={props.deleteMember}
+                    onMemberDeleted={() => {
+                      setDeletedMembersIds([
+                        ...deletedMembersIds,
+                        member.accountId,
+                      ]);
+                    }}
                   />
                 </li>
               );
@@ -148,27 +149,30 @@ export function ManageMembersSection(props: {
 function MemberRow(props: {
   member: TeamMember;
   userHasEditPermission: boolean;
+  client: ThirdwebClient;
+  deleteMember: (memberId: string) => Promise<void>;
+  onMemberDeleted: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between px-4 py-4">
+    <div className="flex items-center justify-between gap-3 px-4 py-4">
       <div className="flex items-center gap-3 lg:gap-4">
-        {/* Checkbox */}
-        <Checkbox
-          id="select-all"
-          className="border-muted-foreground data-[state=checked]:border-inverted"
-          disabled={!props.userHasEditPermission}
+        <GradientAvatar
+          className="size-6 border lg:size-9"
+          src={props.member.account.image || ""}
+          id={props.member.account.creatorWalletAddress}
+          client={props.client}
         />
 
-        {/* PFP */}
-        <div className="size-8 rounded-full border border-border bg-muted lg:size-9" />
+        <div className="flex flex-col gap-0.5">
+          <p className="font-semibold text-sm">
+            {props.member.account.name || props.member.account.email}
+          </p>
 
-        <div>
-          <p className="mb-0.5 font-semibold text-sm">
-            {props.member.account.name}
-          </p>
-          <p className="text-muted-foreground text-sm opacity-70">
-            {props.member.account.email}
-          </p>
+          {props.member.account.name && (
+            <p className="text-muted-foreground text-xs lg:text-sm">
+              {props.member.account.email}
+            </p>
+          )}
         </div>
       </div>
 
@@ -177,119 +181,101 @@ function MemberRow(props: {
           {props.member.role.toLowerCase()}
         </p>
 
-        <Button
-          size="icon"
-          variant="ghost"
-          className="!h-auto !w-auto p-1.5"
-          disabled={!props.userHasEditPermission}
-        >
-          <EllipsisIcon className="size-4 text-muted-foreground" />
-        </Button>
+        {props.userHasEditPermission && (
+          <ManageMemberButton
+            member={props.member}
+            userHasEditPermission={props.userHasEditPermission}
+            deleteMember={props.deleteMember}
+            onMemberDeleted={props.onMemberDeleted}
+          />
+        )}
       </div>
     </div>
   );
 }
 
-function FiltersSection(props: {
-  disabled: boolean;
-  role: RoleFilterValue;
-  setRole: (role: RoleFilterValue) => void;
-  setSortBy: (sortBy: MemberSortId) => void;
-  sortBy: MemberSortId;
+function ManageMemberButton(props: {
+  member: TeamMember;
+  userHasEditPermission: boolean;
+  deleteMember: (memberId: string) => Promise<void>;
+  onMemberDeleted: () => void;
 }) {
-  const { role, setRole, setSortBy, sortBy } = props;
-  return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-      {/* Search  */}
-      <div className="relative grow">
-        <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 transform text-muted-foreground" />
-        <Input
-          placeholder="Search Team members"
-          className="bg-card pl-9"
-          disabled={props.disabled}
-        />
-      </div>
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-      <div className="grid grid-cols-2 items-center gap-3 lg:flex">
-        <RoleSelector disabled={props.disabled} role={role} setRole={setRole} />
-        <SortMembersBy
-          disabled={props.disabled}
-          setSortBy={setSortBy}
-          sortBy={sortBy}
-        />
-      </div>
-    </div>
-  );
-}
-
-type MemberSortId = "date" | "a-z" | "z-a";
-
-function SortMembersBy(props: {
-  disabled?: boolean;
-  setSortBy: (sortBy: MemberSortId) => void;
-  sortBy: MemberSortId;
-}) {
-  const { sortBy, setSortBy } = props;
-  const valueToLabel: Record<MemberSortId, string> = {
-    date: "Date",
-    "a-z": "Name (A-Z)",
-    "z-a": "Name (Z-A)",
-  };
-
-  const sortByIds: MemberSortId[] = ["date", "a-z", "z-a"];
+  const deleteMutation = useMutation({
+    mutationFn: () => props.deleteMember(props.member.accountId),
+  });
 
   return (
-    <Select
-      value={sortBy}
-      onValueChange={(v) => {
-        setSortBy(v as "date" | "a-z" | "z-a");
-      }}
-    >
-      <SelectTrigger
-        className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
-        disabled={props.disabled}
-      >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {sortByIds.map((id) => (
-          <SelectItem key={id} value={id} className="capitalize">
-            {valueToLabel[id]}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="!h-auto !w-auto p-1.5"
+            disabled={!props.userHasEditPermission}
+          >
+            <EllipsisIcon className="size-4 text-muted-foreground" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-40">
+          <DropdownMenuItem
+            className="text-destructive focus:text-destructive"
+            onClick={() => setShowDeleteDialog(true)}
+          >
+            Remove Member
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-function RoleSelector(props: {
-  disabled?: boolean;
-  role: RoleFilterValue;
-  setRole: (role: RoleFilterValue) => void;
-}) {
-  const { role, setRole } = props;
-  const roles: RoleFilterValue[] = ["OWNER", "MEMBER", "ALL ROLES"];
-
-  return (
-    <Select
-      value={role}
-      onValueChange={(v) => {
-        setRole(v as RoleFilterValue);
-      }}
-    >
-      <SelectTrigger
-        className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
-        disabled={props.disabled}
-      >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {roles.map((role) => (
-          <SelectItem key={role} value={role} className="capitalize">
-            {role.toLowerCase()}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent className="overflow-hidden p-0">
+          <DialogHeader className="p-6">
+            <DialogTitle className="text-xl">Remove Member</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to remove{" "}
+              <span
+                className={
+                  props.member.account.name
+                    ? "text-foreground"
+                    : "text-muted-foreground"
+                }
+              >
+                {props.member.account.name || "this member"}
+              </span>{" "}
+              from the team?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-3 border-t bg-card p-6">
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteMutation.isPending}
+              onClick={() => {
+                const promise = deleteMutation.mutateAsync();
+                toast.promise(promise, {
+                  success: "Member deleted successfully",
+                  error: "Failed to delete member",
+                });
+                promise.then(() => {
+                  setShowDeleteDialog(false);
+                  props.onMemberDeleted();
+                });
+              }}
+            >
+              {deleteMutation.isPending && <Spinner className="size-4" />}
+              Remove Member
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

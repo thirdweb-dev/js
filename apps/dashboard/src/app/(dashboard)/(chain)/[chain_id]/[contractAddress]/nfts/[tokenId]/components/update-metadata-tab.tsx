@@ -36,8 +36,8 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
         <Button variant="primary">Update Metadata</Button>
       </SheetTrigger>
       <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
-        <SheetHeader>
-          <SheetTitle className="text-left">Mint NFT</SheetTitle>
+        <SheetHeader className="mb-5">
+          <SheetTitle className="text-left">Update NFT Metadata</SheetTitle>
         </SheetHeader>
         <UpdateNftMetadata
           twAccount={twAccount}

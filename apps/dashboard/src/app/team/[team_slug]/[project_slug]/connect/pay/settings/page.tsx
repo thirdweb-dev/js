@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
-import { notFound } from "next/navigation";
+import { getTeamBySlug } from "@/api/team";
+import { redirect } from "next/navigation";
 import { PayConfig } from "../../../../../../../components/pay/PayConfig";
-import { getAPIKeyForProjectId } from "../../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: Promise<{
@@ -10,17 +10,19 @@ export default async function Page(props: {
   }>;
 }) {
   const { team_slug, project_slug } = await props.params;
-  const project = await getProject(team_slug, project_slug);
+
+  const [project, team] = await Promise.all([
+    getProject(team_slug, project_slug),
+    getTeamBySlug(team_slug),
+  ]);
+
+  if (!team) {
+    redirect("/team");
+  }
 
   if (!project) {
-    notFound();
+    redirect(`/team/${team_slug}`);
   }
 
-  const apiKey = await getAPIKeyForProjectId(project.id);
-
-  if (!apiKey) {
-    notFound();
-  }
-
-  return <PayConfig apiKey={apiKey} />;
+  return <PayConfig project={project} teamId={team.id} teamSlug={team_slug} />;
 }

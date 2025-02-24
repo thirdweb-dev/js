@@ -13,7 +13,11 @@ import {
 } from "../../../utils/any-evm/zksync/constants.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../../utils/bytecode/prefix.js";
-import { type Hex, uint8ArrayToHex } from "../../../utils/encoding/hex.js";
+import {
+  type Hex,
+  isHex,
+  uint8ArrayToHex,
+} from "../../../utils/encoding/hex.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
 import { getContract } from "../../contract.js";
 import { zkDeployContract } from "./zkDeployContract.js";
@@ -89,7 +93,11 @@ export async function zkDeployContractDeterministic(
       abi: parseAbi(singletonFactoryAbi),
     });
 
-    const salt = options?.salt ? keccakId(options.salt) : keccakId("thirdweb");
+    const salt = options?.salt
+      ? isHex(options.salt) && options.salt.length === 66
+        ? options.salt
+        : keccakId(options.salt)
+      : keccakId("thirdweb");
 
     await sendAndConfirmTransaction({
       account: options.account,

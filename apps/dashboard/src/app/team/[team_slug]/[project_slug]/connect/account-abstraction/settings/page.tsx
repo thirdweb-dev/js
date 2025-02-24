@@ -1,36 +1,57 @@
 import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { notFound } from "next/navigation";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CircleAlertIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { AccountAbstractionSettingsPage } from "../../../../../../../components/smart-wallets/SponsorshipPolicies";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
-import { getAPIKeyForProjectId } from "../../../../../../api/lib/getAPIKeys";
+import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const [account, project] = await Promise.all([
-    getValidAccount(),
+  const [project, team] = await Promise.all([
     getProject(team_slug, project_slug),
+    getTeamBySlug(team_slug),
   ]);
 
-  if (!project) {
-    notFound();
+  if (!team) {
+    redirect("/team");
   }
 
-  const apiKey = await getAPIKeyForProjectId(project.id);
+  if (!project) {
+    redirect(`/team/${team_slug}`);
+  }
 
-  if (!apiKey) {
-    notFound();
+  const bundlerService = project.services.find((s) => s.name === "bundler");
+
+  if (!bundlerService) {
+    return (
+      <Alert variant="warning">
+        <CircleAlertIcon className="size-5" />
+        <AlertTitle>Account Abstraction service is disabled</AlertTitle>
+        <AlertDescription>
+          Enable Account Abstraction service in{" "}
+          <UnderlineLink href={`/team/${team_slug}/${project_slug}/settings`}>
+            project settings
+          </UnderlineLink>{" "}
+          to configure the sponsorship rules
+        </AlertDescription>
+      </Alert>
+    );
   }
 
   return (
     <ChakraProviderSetup>
       <AccountAbstractionSettingsPage
-        apiKeyServices={apiKey.services || []}
+        bundlerService={bundlerService}
         trackingCategory="account-abstraction-project-settings"
-        twAccount={account}
+        project={project}
+        teamId={team.id}
+        validTeamPlan={getValidTeamPlan(team)}
       />
     </ChakraProviderSetup>
   );

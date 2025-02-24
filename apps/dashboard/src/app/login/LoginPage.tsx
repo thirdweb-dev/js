@@ -2,11 +2,13 @@
 
 import { redirectToCheckout } from "@/actions/billing";
 import { getRawAccountAction } from "@/actions/getAccount";
-import { ColorModeToggle } from "@/components/color-mode-toggle";
+import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TURNSTILE_SITE_KEY } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -49,38 +51,39 @@ export function LoginAndOnboardingPage(props: {
 }) {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
-      <div className="border-b bg-background">
+      <div className="border-b bg-card">
         <header className="container flex w-full flex-row items-center justify-between px-6 py-4">
           <div className="flex shrink-0 items-center gap-3">
             <ThirdwebMiniLogo className="size-7 md:size-8" />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="https://portal.thirdweb.com/"
-              className="px-2 text-muted-foreground text-sm hover:text-foreground"
-              target="_blank"
-            >
-              Docs
-            </Link>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link
+                href="https://portal.thirdweb.com/"
+                className="px-2 text-muted-foreground text-sm hover:text-foreground"
+                target="_blank"
+              >
+                Docs
+              </Link>
 
-            <Link
-              href="/support"
-              target="_blank"
-              className="px-2 text-muted-foreground text-sm hover:text-foreground"
-            >
-              Support
-            </Link>
+              <Link
+                href="/support"
+                target="_blank"
+                className="px-2 text-muted-foreground text-sm hover:text-foreground"
+              >
+                Support
+              </Link>
 
-            <Link
-              target="_blank"
-              href="https://feedback.thirdweb.com"
-              className="px-2 text-muted-foreground text-sm hover:text-foreground"
-            >
-              Feedback
-            </Link>
-
-            <ColorModeToggle />
+              <Link
+                target="_blank"
+                href="https://feedback.thirdweb.com"
+                className="px-2 text-muted-foreground text-sm hover:text-foreground"
+              >
+                Feedback
+              </Link>
+            </div>
+            <ToggleThemeButton />
           </div>
         </header>
       </div>
@@ -120,12 +123,6 @@ export function LoginAndOnboardingPageContent(props: {
         alt=""
         src="/assets/login/background.svg"
         className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
-      />
-
-      <Aurora
-        color="hsl(var(--foreground)/7%)"
-        pos={{ top: "55%", left: "50%" }}
-        size={{ width: "1400px", height: "1300px" }}
       />
     </div>
   );
@@ -207,6 +204,7 @@ function PageContent(props: {
           onLogout={() => {
             setScreen({ id: "login" });
           }}
+          skipShowingPlans={props.redirectPath.startsWith("/join/team")}
         />
       </Suspense>
     );
@@ -220,58 +218,53 @@ function CustomConnectEmbed(props: {
 }) {
   const { theme } = useTheme();
   const client = useThirdwebClient();
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   return (
-    <ConnectEmbed
-      auth={{
-        getLoginPayload,
-        doLogin: async (params) => {
-          try {
-            await doLogin(params);
-            props.onLogin();
-          } catch (e) {
-            console.error("Failed to login", e);
-            throw e;
-          }
-        },
-        doLogout,
-        isLoggedIn: async (x) => {
-          const isLoggedInResult = await isLoggedIn(x);
-          if (isLoggedInResult) {
-            props.onLogin();
-          }
-          return isLoggedInResult;
-        },
-      }}
-      wallets={wallets}
-      client={client}
-      modalSize="wide"
-      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
-      className="shadow-lg"
-      privacyPolicyUrl="/privacy-policy"
-      termsOfServiceUrl="/terms"
-    />
+    <div className="flex flex-col items-center gap-4">
+      <ConnectEmbed
+        auth={{
+          getLoginPayload,
+          doLogin: async (params) => {
+            try {
+              const result = await doLogin(params, turnstileToken);
+              if (result.error) {
+                console.error("Failed to login", result.error, result.context);
+                throw new Error(result.error);
+              }
+              props.onLogin();
+            } catch (e) {
+              console.error("Failed to login", e);
+              throw e;
+            }
+          },
+          doLogout,
+          isLoggedIn: async (x) => {
+            const isLoggedInResult = await isLoggedIn(x);
+            if (isLoggedInResult) {
+              props.onLogin();
+            }
+            return isLoggedInResult;
+          },
+        }}
+        wallets={wallets}
+        client={client}
+        modalSize="wide"
+        theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+        className="shadow-lg"
+        privacyPolicyUrl="/privacy-policy"
+        termsOfServiceUrl="/terms"
+      />
+      <Turnstile
+        options={{
+          // only show if interaction is required
+          appearance: "interaction-only",
+          // match the theme of the rest of the app
+          theme: theme === "light" ? "light" : "dark",
+        }}
+        siteKey={TURNSTILE_SITE_KEY}
+        onSuccess={(token) => setTurnstileToken(token)}
+      />
+    </div>
   );
 }
-
-type AuroraProps = {
-  size: { width: string; height: string };
-  pos: { top: string; left: string };
-  color: string;
-};
-
-const Aurora: React.FC<AuroraProps> = ({ color, pos, size }) => {
-  return (
-    <div
-      className="pointer-events-none absolute"
-      style={{
-        top: pos.top,
-        left: pos.left,
-        width: size.width,
-        height: size.height,
-        transform: "translate(-50%, -50%)",
-        backgroundImage: `radial-gradient(ellipse at center, ${color}, transparent 60%)`,
-      }}
-    />
-  );
-};

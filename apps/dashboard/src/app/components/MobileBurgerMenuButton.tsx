@@ -79,7 +79,7 @@ export function MobileBurgerMenuButton(
             <ThirdwebMiniLogo className="h-5" />
           </Link>
 
-          <div className="h-5" />
+          <div className="h-6" />
 
           {props.type === "loggedIn" && (
             <>
@@ -194,7 +194,7 @@ export function MobileBurgerMenuButton(
               <Link
                 target="_blank"
                 href="https://feedback.thirdweb.com"
-                className="text-muted-foreground hover:text-foreground "
+                className="text-muted-foreground hover:text-foreground"
               >
                 Feedback
               </Link>
@@ -206,34 +206,31 @@ export function MobileBurgerMenuButton(
             <div className="h-6" />
 
             {/* Theme */}
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-base text-muted-foreground">Theme</p>
-
-              <div className="ml-auto flex items-center gap-1 rounded-lg border px-2 py-0.5">
-                <Button
-                  size="icon"
-                  onClick={() => setTheme("light")}
-                  variant="ghost"
+            <Button
+              variant="ghost"
+              className="flex w-full items-center justify-between gap-2 px-0"
+              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            >
+              <span className="text-base text-muted-foreground">Theme</span>
+              <div className="ml-auto flex items-center gap-2 rounded-lg border px-2 py-1">
+                <Sun
                   className={cn(
-                    "!p-1 !h-auto !w-auto",
-                    theme === "light" ? "opacity-100" : "opacity-30",
+                    "size-4",
+                    theme === "light"
+                      ? "text-foreground"
+                      : "text-muted-foreground",
                   )}
-                >
-                  <Sun className="size-4" />
-                </Button>
-                <Button
-                  size="icon"
-                  onClick={() => setTheme("dark")}
-                  variant="ghost"
+                />
+                <Moon
                   className={cn(
-                    "!p-1 !h-auto !w-auto",
-                    theme === "dark" ? "opacity-100" : "opacity-30",
+                    "size-4",
+                    theme === "dark"
+                      ? "text-foreground"
+                      : "text-muted-foreground",
                   )}
-                >
-                  <Moon className="size-4" />
-                </Button>
+                />
               </div>
-            </div>
+            </Button>
           </div>
         </div>
       )}

@@ -41,7 +41,7 @@ export async function uploadBatchMobile(
             "Request to upload timed out! No upload progress received in 30s",
           ),
         );
-      }, 30000);
+      }, client.config?.storage?.fetch?.requestTimeoutMs ?? 30000);
 
       xhr.upload.addEventListener("progress", (event) => {
         clearTimeout(timer);

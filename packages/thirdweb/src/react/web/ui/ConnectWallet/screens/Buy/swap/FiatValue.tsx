@@ -42,6 +42,8 @@ export function FiatValue(
   }
 
   return cryptoToFiatQuery.data?.result ? (
-    <Text {...props}>${formatNumber(cryptoToFiatQuery.data.result, 2)}</Text>
+    <Text {...props}>
+      ${formatNumber(cryptoToFiatQuery.data.result, 2).toFixed(2)}
+    </Text>
   ) : null;
 }

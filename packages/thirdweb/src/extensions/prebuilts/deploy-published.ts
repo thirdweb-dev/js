@@ -125,7 +125,9 @@ export type DeployContractfromDeployMetadataOptions = {
   account: Account;
   deployMetadata: FetchDeployMetadataResult;
   initializeParams?: Record<string, unknown>;
+  initializeData?: `0x${string}`;
   implementationConstructorParams?: Record<string, unknown>;
+  isCrosschain?: boolean;
   modules?: {
     deployMetadata: FetchDeployMetadataResult;
     initializeParams?: Record<string, unknown>;
@@ -144,7 +146,9 @@ export async function deployContractfromDeployMetadata(
     account,
     chain,
     initializeParams,
+    initializeData,
     deployMetadata,
+    isCrosschain,
     implementationConstructorParams,
     modules,
     salt,
@@ -217,16 +221,28 @@ export async function deployContractfromDeployMetadata(
           version: deployMetadata.version,
         });
 
+      if (isCrosschain) {
+        return deployViaAutoFactory({
+          client,
+          chain,
+          account,
+          cloneFactoryContract,
+          implementationAddress: implementationContract.address,
+          initializeData,
+          salt,
+          isCrosschain,
+        });
+      }
+
       const initializeTransaction = await getInitializeTransaction({
         client,
         chain,
-        deployMetadata: deployMetadata,
+        deployMetadata,
         implementationContract,
         initializeParams: processedInitializeParams,
         account,
         modules,
       });
-
       return deployViaAutoFactory({
         client,
         chain,

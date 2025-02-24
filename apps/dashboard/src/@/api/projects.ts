@@ -1,23 +1,9 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
+import type { ProjectResponse } from "@thirdweb-dev/service-utils";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
-export type Project = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
-  bannedAt: Date | null;
-  domains: string[];
-  bundleIds: string[];
-  redirectUrls: string[];
-  lastAccessedAt: Date | null;
-  slug: string;
-  teamId: string;
-  publishableKey: string;
-  // image: string; // TODO
-};
+export type Project = ProjectResponse;
 
 export async function getProjects(teamSlug: string) {
   const token = await getAuthToken();

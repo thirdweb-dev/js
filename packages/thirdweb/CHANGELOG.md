@@ -1,5 +1,61 @@
 # thirdweb
 
+## 5.88.7
+
+### Patch Changes
+
+- [#6289](https://github.com/thirdweb-dev/js/pull/6289) [`5abbae7`](https://github.com/thirdweb-dev/js/commit/5abbae7368854e1be4f774bd3a7bd48e0dde04f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect buy with fiat disabled in pay embed
+
+## 5.88.6
+
+### Patch Changes
+
+- [#6274](https://github.com/thirdweb-dev/js/pull/6274) [`b182302`](https://github.com/thirdweb-dev/js/commit/b182302f590e75c9881cebd0ca1cc8b1425d50b8) Thanks [@kumaryash90](https://github.com/kumaryash90)! - bytes32 salt for deterministic deployment
+
+- [#6283](https://github.com/thirdweb-dev/js/pull/6283) [`5a08176`](https://github.com/thirdweb-dev/js/commit/5a08176eb0eb6d258d1d521a1e7a44c08145a043) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect supportedTokens override in PayEmbed
+
+- [#6281](https://github.com/thirdweb-dev/js/pull/6281) [`a0f3557`](https://github.com/thirdweb-dev/js/commit/a0f355717ad3c829f3d692183be46a43187eca49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix text wrapping for long balances in token selector
+
+- [#6282](https://github.com/thirdweb-dev/js/pull/6282) [`45ca033`](https://github.com/thirdweb-dev/js/commit/45ca0334bb4e8378fefd683e48aef95e4ce8b886) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Deprecated `viemAdapter.walletClient` in favor of `viemAdapter.wallet` to take wallet instances instead of accounts
+
+  BEFORE:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.walletClient.toViem({
+    account, // Account
+    chain,
+    client,
+  });
+  ```
+
+  AFTER:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.wallet.toViem({
+    wallet, // now pass a connected Wallet instance instead of an account
+    chain,
+    client,
+  });
+  ```
+
+  This allows for full wallet lifecycle management with the viem adapter, including switching chains, adding chains, events and more.
+
+## 5.88.5
+
+### Patch Changes
+
+- [#6269](https://github.com/thirdweb-dev/js/pull/6269) [`0574eac`](https://github.com/thirdweb-dev/js/commit/0574eac02c832c382972fd545df79c36e11796e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable chain switching for toEIP1194 provider
+
+- [#6257](https://github.com/thirdweb-dev/js/pull/6257) [`562c534`](https://github.com/thirdweb-dev/js/commit/562c534d3763ac645618386d8fa9a3b8db3769d9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New PayEmbed UI for token selection
+
+- [#6243](https://github.com/thirdweb-dev/js/pull/6243) [`52cbcd2`](https://github.com/thirdweb-dev/js/commit/52cbcd2d57abf4d69ee417fe98fca815e19f2f34) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix PayEmbed fiat values to 2 decimal places
+
+- [#6262](https://github.com/thirdweb-dev/js/pull/6262) [`b882e29`](https://github.com/thirdweb-dev/js/commit/b882e299353d895724c4e44216ffb47353a9bf7f) Thanks [@MananTank](https://github.com/MananTank)! - Fix ConnectEmbed briefly showing "Sign In" prompt while the login status is not known - show loading indicator instead
+
 ## 5.88.4
 
 ### Patch Changes

@@ -98,7 +98,7 @@ export const MarkdownRenderer: React.FC<{
               href={props.href ?? "#"}
               target="_blank"
               {...cleanedProps(props)}
-              className="mt-4 text-link-foreground hover:text-foreground"
+              className="mt-4 underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
             />
           ),
 

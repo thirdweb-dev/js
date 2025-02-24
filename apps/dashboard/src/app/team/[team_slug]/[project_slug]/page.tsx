@@ -1,6 +1,6 @@
 import { type Project, getProject } from "@/api/projects";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   type DurationId,
@@ -68,7 +68,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
   };
 
   if (!project) {
-    notFound();
+    redirect(`/team/${params.team_slug}`);
   }
 
   const isActive = await isProjectActive({ clientId: project.publishableKey });
