@@ -202,6 +202,19 @@ const MODULAR_CONTRACTS = {
         description: "ERC20 Tokens that only owners can mint.",
       },
     ],
+    // erc20 drop + superchain
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC20",
+        "deployer.thirdweb.eth/TransferableERC20",
+        "deployer.thirdweb.eth/SuperChainInterop",
+      ],
+      {
+        title: "Modular Superchain Token Drop (Alpha)",
+        description: "ERC20 Tokens that others can mint.",
+      },
+    ],
   ],
 } satisfies ExploreCategory;
 
