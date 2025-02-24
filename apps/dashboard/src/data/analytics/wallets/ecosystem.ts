@@ -2,14 +2,36 @@ import type { EcosystemWalletStats } from "types/analytics";
 import { fetchAnalytics } from "../fetch-analytics";
 
 export async function getEcosystemWalletUsage(args: {
+  teamId: string;
   ecosystemSlug: string;
+  ecosystemPartnerId?: string;
+  projectId?: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
 }) {
-  const { ecosystemSlug, from, to, period } = args;
+  const {
+    ecosystemSlug,
+    ecosystemPartnerId,
+    teamId,
+    projectId,
+    from,
+    to,
+    period,
+  } = args;
 
   const searchParams = new URLSearchParams();
+  // required params
+  searchParams.append("ecosystemSlug", ecosystemSlug);
+  searchParams.append("teamId", teamId);
+
+  // optional params
+  if (ecosystemPartnerId) {
+    searchParams.append("ecosystemPartnerId", ecosystemPartnerId);
+  }
+  if (projectId) {
+    searchParams.append("projectId", projectId);
+  }
   if (from) {
     searchParams.append("from", from.toISOString());
   }
@@ -20,7 +42,7 @@ export async function getEcosystemWalletUsage(args: {
     searchParams.append("period", period);
   }
   const res = await fetchAnalytics(
-    `v1/wallets/ecosystem/${ecosystemSlug}?${searchParams.toString()}`,
+    `v2/wallets/connects/${ecosystemSlug}?${searchParams.toString()}`,
     {
       method: "GET",
       headers: {

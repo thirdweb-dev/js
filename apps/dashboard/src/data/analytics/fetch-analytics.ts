@@ -1,9 +1,16 @@
 import "server-only";
+import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
 export async function fetchAnalytics(
   input: string | URL,
   init?: RequestInit,
 ): Promise<Response> {
+  const token = await getAuthToken();
+
+  if (!token) {
+    throw new Error("You are not authorized to perform this action");
+  }
+
   const [pathname, searchParams] = input.toString().split("?");
   if (!pathname) {
     throw new Error("Invalid input, no pathname provided");
@@ -36,8 +43,8 @@ export async function fetchAnalytics(
     ...init,
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${process.env.ANALYTICS_SERVICE_API_KEY}`,
       ...init?.headers,
+      authorization: `Bearer ${token}`,
     },
   });
 }

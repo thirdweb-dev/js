@@ -11,18 +11,18 @@ export type NebulaAnalyticsDataItem = {
 
 export const fetchNebulaAnalytics = unstable_cache(
   async (params: {
-    accountId: string;
+    teamId: string;
     authToken: string;
     from: string;
     to: string;
-    interval: "day" | "week";
+    period: "day" | "week" | "month" | "year" | "all";
   }) => {
     const analyticsEndpoint = process.env.ANALYTICS_SERVICE_URL as string;
-    const url = new URL(`${analyticsEndpoint}/v1/nebula/usage`);
-    url.searchParams.set("accountId", params.accountId);
+    const url = new URL(`${analyticsEndpoint}/v2/nebula/usage`);
+    url.searchParams.set("teamId", params.teamId);
     url.searchParams.set("from", params.from);
     url.searchParams.set("to", params.to);
-    url.searchParams.set("interval", params.interval);
+    url.searchParams.set("period", params.period);
 
     const res = await fetch(url, {
       headers: {

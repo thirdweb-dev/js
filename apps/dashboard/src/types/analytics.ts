@@ -48,3 +48,11 @@ export interface AnalyticsQueryParams {
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
 }
+
+export type AnalyticsQueryParamsV2 = Omit<
+  AnalyticsQueryParams,
+  "clientId" | "accountId"
+> & {
+  teamId: string;
+  projectId?: string;
+};

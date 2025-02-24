@@ -1,6 +1,7 @@
 import { fetchAnalytics } from "data/analytics/fetch-analytics";
 import type {
   AnalyticsQueryParams,
+  AnalyticsQueryParamsV2,
   InAppWalletStats,
   RpcMethodStats,
   TransactionStats,
@@ -9,14 +10,28 @@ import type {
   WalletUserStats,
 } from "types/analytics";
 
-function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
+function buildSearchParams(
+  params: AnalyticsQueryParams | AnalyticsQueryParamsV2,
+): URLSearchParams {
   const searchParams = new URLSearchParams();
-  if (params.clientId) {
+
+  // v1 params
+  if ("clientId" in params && params.clientId) {
     searchParams.append("clientId", params.clientId);
   }
-  if (params.accountId) {
+  if ("accountId" in params && params.accountId) {
     searchParams.append("accountId", params.accountId);
   }
+
+  // v2 params
+  if ("teamId" in params && params.teamId) {
+    searchParams.append("teamId", params.teamId);
+  }
+  if ("projectId" in params && params.projectId) {
+    searchParams.append("projectId", params.projectId);
+  }
+
+  // shared params
   if (params.from) {
     searchParams.append("from", params.from.toISOString());
   }
@@ -30,16 +45,22 @@ function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
 }
 
 export async function getWalletConnections(
-  params: AnalyticsQueryParams,
+  params: AnalyticsQueryParamsV2,
 ): Promise<WalletStats[]> {
   const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(`v1/wallets?${searchParams.toString()}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const res = await fetchAnalytics(
+    `v2/sdk/wallet-connects?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch wallet connections");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch wallet connections, ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return [];
   }
 
@@ -48,11 +69,11 @@ export async function getWalletConnections(
 }
 
 export async function getInAppWalletUsage(
-  params: AnalyticsQueryParams,
+  params: AnalyticsQueryParamsV2,
 ): Promise<InAppWalletStats[]> {
   const searchParams = buildSearchParams(params);
   const res = await fetchAnalytics(
-    `v1/wallets/in-app?${searchParams.toString()}`,
+    `v2/wallet/connects?${searchParams.toString()}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -60,7 +81,10 @@ export async function getInAppWalletUsage(
   );
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch in-app wallet usage");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch in-app wallet usage, ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return [];
   }
 
@@ -90,11 +114,11 @@ export async function getUserOpUsage(
 }
 
 export async function getClientTransactions(
-  params: AnalyticsQueryParams,
+  params: AnalyticsQueryParamsV2,
 ): Promise<TransactionStats[]> {
   const searchParams = buildSearchParams(params);
   const res = await fetchAnalytics(
-    `v1/transactions/client?${searchParams.toString()}`,
+    `v2/sdk/contract-transactions?${searchParams.toString()}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -147,7 +171,10 @@ export async function getWalletUsers(
   );
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch wallet user stats");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch wallet user stats: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return [];
   }
 
@@ -165,7 +192,10 @@ export async function isProjectActive(
   });
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch project active status");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch project active status: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return false;
   }
 
