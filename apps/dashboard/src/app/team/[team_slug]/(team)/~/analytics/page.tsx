@@ -34,9 +34,6 @@ import { Suspense } from "react";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
 
-// revalidate every 5 minutes
-export const maxDuration = 300;
-
 type SearchParams = {
   usersChart?: string;
   from?: string;
@@ -77,6 +74,7 @@ export default async function TeamOverviewPage(props: {
       <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
         <Suspense fallback={<GenericLoadingPage />}>
           <OverviewPageContent
+            teamId={team.id}
             account={account}
             range={range}
             interval={interval}
@@ -89,12 +87,13 @@ export default async function TeamOverviewPage(props: {
 }
 
 async function OverviewPageContent(props: {
+  teamId: string;
   account: Account;
   range: Range;
   interval: "day" | "week";
   searchParams: SearchParams;
 }) {
-  const { account, range, interval, searchParams } = props;
+  const { teamId, account, range, interval, searchParams } = props;
 
   const [
     walletConnections,
@@ -107,7 +106,7 @@ async function OverviewPageContent(props: {
   ] = await Promise.all([
     // Aggregated wallet connections
     getWalletConnections({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",
@@ -121,7 +120,7 @@ async function OverviewPageContent(props: {
     }),
     // In-app wallet usage
     getInAppWalletUsage({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",
@@ -141,13 +140,13 @@ async function OverviewPageContent(props: {
     }),
     // Client transactions
     getClientTransactions({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getClientTransactions({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",

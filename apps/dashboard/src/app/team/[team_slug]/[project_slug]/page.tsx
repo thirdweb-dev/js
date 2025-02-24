@@ -50,8 +50,6 @@ interface PageProps {
   searchParams: Promise<PageSearchParams>;
 }
 
-export const maxDuration = 300;
-
 export default async function ProjectOverviewPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([
     props.params,
@@ -120,7 +118,8 @@ async function ProjectAnalytics(props: {
   ] = await Promise.allSettled([
     // Aggregated wallet connections
     getWalletConnections({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",
@@ -134,7 +133,8 @@ async function ProjectAnalytics(props: {
     }),
     // In-app wallet usage
     getInAppWalletUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",
@@ -202,7 +202,7 @@ async function ProjectAnalytics(props: {
         from={range.from}
         to={range.to}
         period={interval}
-        clientId={project.publishableKey}
+        teamId={project.teamId}
       />
       {userOpUsageTimeSeries.status === "fulfilled" &&
       userOpUsage.status === "fulfilled" &&

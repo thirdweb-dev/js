@@ -1,11 +1,11 @@
 import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
-import type { AnalyticsQueryParams } from "types/analytics";
+import type { AnalyticsQueryParamsV2 } from "types/analytics";
 import { getClientTransactions } from "../../../../../../@/api/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
 export function TransactionsCharts(
-  props: AnalyticsQueryParams & {
+  props: AnalyticsQueryParamsV2 & {
     searchParams: { [key: string]: string | string[] | undefined };
   },
 ) {
@@ -24,7 +24,7 @@ export function TransactionsCharts(
 }
 
 async function TransactionsChartCardAsync(
-  props: AnalyticsQueryParams & {
+  props: AnalyticsQueryParamsV2 & {
     searchParams: { [key: string]: string | string[] | undefined };
   },
 ) {

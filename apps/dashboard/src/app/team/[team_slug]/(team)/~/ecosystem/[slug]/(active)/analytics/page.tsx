@@ -1,5 +1,6 @@
 import type { Range } from "components/analytics/date-range-selector";
 import { redirect } from "next/navigation";
+import { getTeamBySlug } from "../../../../../../../../../@/api/team";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";
@@ -26,15 +27,23 @@ export default async function Page(props: {
     redirect(ecosystemLayoutPath);
   }
 
-  const ecosystem = await fetchEcosystem(params.slug, authToken);
+  const [ecosystem, team] = await Promise.all([
+    fetchEcosystem(params.slug, authToken),
+    getTeamBySlug(params.team_slug),
+  ]);
 
   if (!ecosystem) {
     redirect(ecosystemLayoutPath);
   }
 
+  if (!team) {
+    redirect("/team");
+  }
+
   return (
     <EcosystemAnalyticsPage
       ecosystemSlug={ecosystem.slug}
+      teamId={team.id}
       interval={searchParams.interval || "week"}
       range={searchParams.range}
     />

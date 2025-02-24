@@ -1,5 +1,4 @@
 import { getTeamBySlug } from "@/api/team";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import { NebulaAnalyticsPage } from "../../../[project_slug]/nebula/components/analytics/nebula-analytics-page";
@@ -20,8 +19,7 @@ export default async function Page(props: {
     props.searchParams,
   ]);
 
-  const [account, authToken, team] = await Promise.all([
-    getValidAccount(),
+  const [authToken, team] = await Promise.all([
     getAuthToken(),
     getTeamBySlug(params.team_slug),
   ]);
@@ -35,7 +33,7 @@ export default async function Page(props: {
   if (hasNebulaAccess) {
     return (
       <NebulaAnalyticsPage
-        accountId={account.id}
+        teamId={team.id}
         authToken={authToken}
         searchParams={searchParams}
       />
