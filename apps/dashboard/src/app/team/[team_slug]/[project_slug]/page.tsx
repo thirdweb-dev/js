@@ -57,6 +57,11 @@ export default async function ProjectOverviewPage(props: PageProps) {
   ]);
 
   const project = await getProject(params.team_slug, params.project_slug);
+
+  if (!project) {
+    redirect(`/team/${params.team_slug}`);
+  }
+
   const interval = (searchParams.interval as "day" | "week") ?? "week";
   const rangeType = (searchParams.type as DurationId) || "last-120";
   const range: Range = {
@@ -64,10 +69,6 @@ export default async function ProjectOverviewPage(props: PageProps) {
     to: new Date(searchParams.to ?? getLastNDaysRange("last-120").to),
     type: rangeType,
   };
-
-  if (!project) {
-    redirect(`/team/${params.team_slug}`);
-  }
 
   const isActive = await isProjectActive({ clientId: project.publishableKey });
 
@@ -141,13 +142,15 @@ async function ProjectAnalytics(props: {
     }),
     // User operations usage
     getUserOpUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getUserOpUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",

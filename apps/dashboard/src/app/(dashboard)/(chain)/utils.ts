@@ -72,29 +72,19 @@ import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
 // END TEMPORARY
 
+import {
+  getChainServices,
+  getChains,
+  getGasSponsoredChains,
+} from "@/api/chain";
 import { API_SERVER_URL } from "@/constants/env";
 import type { ChainMetadata } from "thirdweb/chains";
-import { getGasSponsoredChains } from "../../../@/api/chain";
-import type {
-  ChainMetadataWithServices,
-  ChainService,
-  ChainServices,
-} from "./types/chain";
+import type { ChainMetadataWithServices, ChainServices } from "./types/chain";
 
-export async function getChains() {
+export async function getChainsWithServices() {
   const [chains, chainServices] = await Promise.all([
-    fetch(
-      `${API_SERVER_URL}/v1/chains`,
-      // revalidate every 60 minutes
-      { next: { revalidate: 60 * 60 } },
-    ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>,
-    fetch(
-      `${API_SERVER_URL}/v1/chains/services`,
-      // revalidate every 60 minutes
-      { next: { revalidate: 60 * 60 } },
-    ).then((res) => res.json()) as Promise<{
-      data: Record<number, Array<ChainService>>;
-    }>,
+    getChains(),
+    getChainServices(),
   ]);
 
   if (!chains.data.length) {

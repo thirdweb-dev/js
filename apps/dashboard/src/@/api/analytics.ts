@@ -9,6 +9,7 @@ import type {
   WalletStats,
   WalletUserStats,
 } from "types/analytics";
+import { getChains } from "./chain";
 
 function buildSearchParams(
   params: AnalyticsQueryParams | AnalyticsQueryParamsV2,
@@ -93,13 +94,16 @@ export async function getInAppWalletUsage(
 }
 
 export async function getUserOpUsage(
-  params: AnalyticsQueryParams,
+  params: AnalyticsQueryParamsV2,
 ): Promise<UserOpStats[]> {
   const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(`v1/user-ops?${searchParams.toString()}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
+  const res = await fetchAnalytics(
+    `v2/bundler/usage?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
 
   if (res?.status !== 200) {
     const reason = await res?.text();
@@ -111,6 +115,40 @@ export async function getUserOpUsage(
 
   const json = await res.json();
   return json.data as UserOpStats[];
+}
+
+export async function getAggregateUserOpUsage(
+  params: Omit<AnalyticsQueryParamsV2, "period">,
+): Promise<UserOpStats> {
+  const [userOpStats, chains] = await Promise.all([
+    getUserOpUsage({ ...params, period: "all" }),
+    getChains(),
+  ]);
+  // Aggregate stats across wallet types
+  return userOpStats.reduce(
+    (acc, curr) => {
+      // Skip testnets from the aggregated stats
+      if (curr.chainId) {
+        const chain = chains.data.find(
+          (c) => c.chainId.toString() === curr.chainId,
+        );
+        if (chain?.testnet) {
+          return acc;
+        }
+      }
+
+      acc.successful += curr.successful;
+      acc.failed += curr.failed;
+      acc.sponsoredUsd += curr.sponsoredUsd;
+      return acc;
+    },
+    {
+      date: (params.from || new Date()).toISOString(),
+      successful: 0,
+      failed: 0,
+      sponsoredUsd: 0,
+    },
+  );
 }
 
 export async function getClientTransactions(
