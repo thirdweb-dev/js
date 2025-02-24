@@ -138,11 +138,11 @@ export function DataTable({
 
   const addRowMutation = useMutation({
     mutationFn: async (chain: { chainId: number; name: string }) => {
+      // eslint-disable-next-line no-restricted-syntax
       const c = defineChain(chain.chainId);
       const code = await eth_getCode(
         getRpcClient({
           client: getThirdwebClient(),
-          // eslint-disable-next-line no-restricted-syntax
           chain: c,
         }),
         { address: coreContract.address },
