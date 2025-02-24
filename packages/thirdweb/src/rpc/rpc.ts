@@ -218,7 +218,7 @@ export function getRpcClient(
         reject = reject_;
       });
       inflightRequests.set(requestKey, promise);
-      // @ts-expect-error - they *are* definitely assgined within the promise constructor
+      // @ts-expect-error - they *are* definitely assigned within the promise constructor
       pendingBatch.push({ request, resolve, reject, requestKey });
       if (batchSize > 1) {
         // if there is no timeout, set one
