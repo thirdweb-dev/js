@@ -167,6 +167,7 @@ export function extractAuthorizationData(
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
+    teamId: authInput.teamId,
     useWalletAuth,
   };
 }

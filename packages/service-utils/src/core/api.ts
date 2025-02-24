@@ -158,9 +158,15 @@ export async function fetchTeamAndProject(
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
   const { apiUrl, serviceApiKey } = config;
+  const { teamId, clientId } = authData;
 
-  const clientId = authData.clientId;
-  const url = `${apiUrl}/v2/keys/use${clientId ? `?clientId=${clientId}` : ""}`;
+  const url = new URL("/v2/keys/use", apiUrl);
+  if (clientId) {
+    url.searchParams.set("clientId", clientId);
+  }
+  if (teamId) {
+    url.searchParams.set("teamId", teamId);
+  }
   const response = await fetch(url, {
     method: "GET",
     headers: {
