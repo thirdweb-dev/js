@@ -74,7 +74,19 @@ type ChainId =
   | "111557560"
   | "999999999"
   | "11155111"
-  | "421614";
+  | "420120000"
+  | "420120001";
+
+const interopChains = [
+  "84532",
+  "11155420",
+  "919",
+  "111557560",
+  "999999999",
+  "11155111",
+  "420120000",
+  "420120001",
+];
 
 const formSchema = z.object({
   amounts: z.object({
@@ -84,7 +96,8 @@ const formSchema = z.object({
     "111557560": z.string(),
     "999999999": z.string(),
     "11155111": z.string(),
-    "421614": z.string(),
+    "420120000": z.string(),
+    "420120001": z.string(),
   }),
 });
 type FormSchema = z.output<typeof formSchema>;
@@ -182,7 +195,7 @@ export function DataTable({
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    values: {
+    defaultValues: {
       amounts: {
         "84532": "", // Base
         "11155420": "", // OP testnet
@@ -190,7 +203,8 @@ export function DataTable({
         "111557560": "", // Cyber
         "999999999": "", // Zora
         "11155111": "", // Sepolia
-        "421614": "",
+        "420120000": "",
+        "420120001": "",
       },
     },
   });
@@ -284,12 +298,12 @@ export function DataTable({
       accessorKey: "transfer",
       header: "",
       cell: ({ row }) => {
+        const chain = row.getValue("chainId");
         if (
           row.getValue("status") === "DEPLOYED" &&
-          // coreContract.chain.id === 11155111 &&
+          interopChains.includes(String(chain)) &&
           isCrosschain
         ) {
-          // const chain = row.getValue("chainId");
           return (
             <FormField
               disabled={false}
@@ -298,7 +312,7 @@ export function DataTable({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <ToolTipLabel label="Coming soon">
+                    <ToolTipLabel label="Bridge tokens">
                       <div className="flex">
                         <Input
                           className="w-22 rounded-r-none border-r-0"
@@ -315,7 +329,7 @@ export function DataTable({
                           }
                           className="rounded-lg rounded-l-none border border-l-0"
                         >
-                          Transfer
+                          Bridge
                         </Button>
                       </div>
                     </ToolTipLabel>
