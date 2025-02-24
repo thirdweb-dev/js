@@ -70,7 +70,13 @@ export default async function ProjectOverviewPage(props: PageProps) {
     type: rangeType,
   };
 
-  const isActive = await isProjectActive({ clientId: project.publishableKey });
+  const activeStatus = await isProjectActive({
+    teamId: project.teamId,
+    projectId: project.id,
+  });
+
+  // is any analytics data active?
+  const isActive = Object.values(activeStatus).some((v) => !!v);
 
   return (
     <div className="flex grow flex-col">
@@ -127,7 +133,8 @@ async function ProjectAnalytics(props: {
     }),
     // Time series data for wallet users
     getWalletUsers({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: interval,
@@ -227,7 +234,8 @@ async function ProjectAnalytics(props: {
         from={range.from}
         to={range.to}
         period={interval}
-        clientId={project.publishableKey}
+        teamId={project.teamId}
+        projectId={project.id}
       />
     </div>
   );

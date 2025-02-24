@@ -42,17 +42,9 @@ export interface RpcMethodStats {
 }
 
 export interface AnalyticsQueryParams {
-  clientId?: string;
-  accountId?: string;
+  teamId: string;
+  projectId?: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
 }
-
-export type AnalyticsQueryParamsV2 = Omit<
-  AnalyticsQueryParams,
-  "clientId" | "accountId"
-> & {
-  teamId: string;
-  projectId?: string;
-};
