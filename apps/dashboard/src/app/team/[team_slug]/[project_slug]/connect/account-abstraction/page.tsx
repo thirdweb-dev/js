@@ -1,26 +1,57 @@
+import { getUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import {
+  type Range,
+  getLastNDaysRange,
+} from "components/analytics/date-range-selector";
+import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbstractionAnalytics";
 import { redirect } from "next/navigation";
-import { AccountAbstractionAnalytics } from "../../../../../../components/smart-wallets/AccountAbstractionAnalytics";
+import type { SearchParams } from "nuqs/server";
+import { searchParamLoader } from "./search-params";
+
+interface PageParams {
+  team_slug: string;
+  project_slug: string;
+}
 
 export default async function Page(props: {
-  params: Promise<{ team_slug: string; project_slug: string }>;
+  params: Promise<PageParams>;
+  searchParams: Promise<SearchParams>;
   children: React.ReactNode;
 }) {
-  const { team_slug, project_slug } = await props.params;
-
-  const [team, project] = await Promise.all([
-    getTeamBySlug(team_slug),
-    getProject(team_slug, project_slug),
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    searchParamLoader(props.searchParams),
   ]);
 
-  if (!team) {
-    redirect("/team");
-  }
+  const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
-    redirect(`/team/${team_slug}`);
+    redirect(`/team/${params.team_slug}`);
   }
 
-  return <AccountAbstractionAnalytics clientId={project.publishableKey} />;
+  const interval = searchParams.interval ?? "week";
+  const rangeType = searchParams.range || "last-120";
+
+  const range: Range = {
+    from:
+      rangeType === "custom"
+        ? searchParams.from
+        : getLastNDaysRange(rangeType).from,
+    to:
+      rangeType === "custom"
+        ? searchParams.to
+        : getLastNDaysRange(rangeType).to,
+    type: rangeType,
+  };
+
+  const userOpStats = await getUserOpUsage({
+    teamId: project.teamId,
+    projectId: project.id,
+    from: range.from,
+    to: range.to,
+    period: interval,
+  });
+
+  return <AccountAbstractionAnalytics userOpStats={userOpStats} />;
 }

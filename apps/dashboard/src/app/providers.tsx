@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, useTheme } from "next-themes";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect, useMemo } from "react";
 import { Toaster } from "sonner";
 import {
@@ -20,25 +21,27 @@ const queryClient = new QueryClient();
 
 export function AppRouterProviders(props: { children: React.ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SyncChainStores />
-      <ThirdwebProvider>
-        <SyncChainDefinitionsToConnectionManager />
-        <TWAutoConnect />
-        <PosthogIdentifier />
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          enableSystem={false}
-          defaultTheme="dark"
-        >
-          <ToasterSetup />
-          <SanctionedAddressesChecker>
-            {props.children}
-          </SanctionedAddressesChecker>
-        </ThemeProvider>
-      </ThirdwebProvider>
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <SyncChainStores />
+        <ThirdwebProvider>
+          <SyncChainDefinitionsToConnectionManager />
+          <TWAutoConnect />
+          <PosthogIdentifier />
+          <ThemeProvider
+            attribute="class"
+            disableTransitionOnChange
+            enableSystem={false}
+            defaultTheme="dark"
+          >
+            <ToasterSetup />
+            <SanctionedAddressesChecker>
+              {props.children}
+            </SanctionedAddressesChecker>
+          </ThemeProvider>
+        </ThirdwebProvider>
+      </QueryClientProvider>
+    </NuqsAdapter>
   );
 }
 

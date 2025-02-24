@@ -127,13 +127,13 @@ async function OverviewPageContent(props: {
     }),
     // User operations usage
     getUserOpUsage({
-      accountId: account.id,
+      teamId,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getUserOpUsage({
-      accountId: account.id,
+      teamId,
       from: range.from,
       to: range.to,
       period: "all",

@@ -225,17 +225,17 @@ async function AsyncTotalSponsoredChartCard(
     title: string;
   },
 ) {
-  const { accountId, from, to } = props;
+  const { teamId, from, to } = props;
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.all([
     // User operations usage
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "week",
     }),
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "all",

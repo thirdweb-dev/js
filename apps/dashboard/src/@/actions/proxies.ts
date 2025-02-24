@@ -71,15 +71,6 @@ async function proxy<T extends object>(
   };
 }
 
-export async function analyticsServerProxy<T extends object = object>(
-  params: ProxyActionParams,
-) {
-  return proxy<T>(
-    process.env.ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
-    params,
-  );
-}
-
 export async function apiServerProxy<T extends object = object>(
   params: ProxyActionParams,
 ) {
