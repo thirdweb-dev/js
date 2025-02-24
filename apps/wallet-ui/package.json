@@ -40,7 +40,7 @@
     "@types/react-dom": "19.0.3",
     "@typescript-eslint/eslint-plugin": "7.14.1",
     "@typescript-eslint/parser": "7.14.1",
-    "eslint": "8.57.0",
+    "eslint": "9.21.0",
     "eslint-config-biome": "1.9.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "knip": "5.43.6",
