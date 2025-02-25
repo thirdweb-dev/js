@@ -1,6 +1,7 @@
 import "server-only";
 
-import { BRIDGE_URL, DASHBOARD_THIRDWEB_CLIENT_ID } from "@/constants/env";
+import { BRIDGE_URL, DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
+import { getAuthToken } from "app/api/lib/getAuthToken";
 import type { Address } from "thirdweb";
 import type { Route } from "./types/route";
 
@@ -38,8 +39,15 @@ export async function getRoutes({
   if (destinationTokenAddress) {
     url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
   }
+  const token = await getAuthToken();
   const routesResponse = await fetch(url, {
-    headers: { "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID },
+    headers: token
+      ? {
+          authorization: `Bearer ${token}`,
+        }
+      : {
+          "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
+        },
     next: { revalidate: 60 * 60 },
   });
 
