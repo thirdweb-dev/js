@@ -3,23 +3,37 @@
 import { redirectToCheckout } from "@/actions/billing";
 import { getRawAccountAction } from "@/actions/getAccount";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  type Account,
+  resendEmailClient,
+  updateAccountClient,
+  verifyEmailClient,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
-import { ConnectEmbed, useActiveWalletConnectionStatus } from "thirdweb/react";
+import {
+  ConnectEmbed,
+  useActiveAccount,
+  useActiveWalletConnectionStatus,
+} from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { apiServerProxy } from "../../@/actions/proxies";
+import type { Team } from "../../@/api/team";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
+import { useTrack } from "../../hooks/analytics/useTrack";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 import { isOnboardingComplete } from "./onboarding/isOnboardingRequired";
+import { ConnectEmbedSizedLoadingCard } from "./onboarding/onboarding-container";
 
-const LazyOnboardingUI = lazy(
-  () => import("./onboarding/on-boarding-ui.client"),
+const LazyOnboardingUI = lazy(() => import("./onboarding/on-boarding-ui"));
+
+const LazyShowPlansOnboarding = lazy(
+  () => import("./onboarding/ShowPlansOnboarding"),
 );
 
 const wallets = [
@@ -104,7 +118,7 @@ export function LoginAndOnboardingPageContent(props: {
         <ClientOnly
           ssr={
             <div className="flex justify-center">
-              <LoadingCard />
+              <ConnectEmbedSizedLoadingCard />
             </div>
           }
           className="flex justify-center"
@@ -126,18 +140,12 @@ export function LoginAndOnboardingPageContent(props: {
   );
 }
 
-function LoadingCard() {
-  return (
-    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
-      <Spinner className="size-10" />
-    </div>
-  );
-}
-
 function PageContent(props: {
   redirectPath: string;
   account: Account | undefined;
 }) {
+  const accountAddress = useActiveAccount()?.address;
+  const trackEvent = useTrack();
   const [screen, setScreen] = useState<
     | { id: "login" }
     | {
@@ -184,30 +192,95 @@ function PageContent(props: {
   }, [connectionStatus, screen.id]);
 
   if (connectionStatus === "connecting") {
-    return <LoadingCard />;
+    return <ConnectEmbedSizedLoadingCard />;
   }
 
-  if (connectionStatus !== "connected" || screen.id === "login") {
+  if (
+    connectionStatus !== "connected" ||
+    screen.id === "login" ||
+    !accountAddress
+  ) {
     return <CustomConnectEmbed onLogin={onLogin} />;
   }
 
   if (screen.id === "onboarding") {
+    // when Logging in with in-app wallet, emailConfirmedAt is filled directly
+    // skip directly to showing the plans instead of going through the full onboarding flow
+    if (screen.account.emailConfirmedAt) {
+      return (
+        <Suspense fallback={<ConnectEmbedSizedLoadingCard />}>
+          <LazyShowPlansOnboarding
+            accountId={screen.account.id}
+            onComplete={onComplete}
+            redirectPath={props.redirectPath}
+            redirectToCheckout={redirectToCheckout}
+          />
+        </Suspense>
+      );
+    }
+
     return (
-      <Suspense fallback={<LoadingCard />}>
+      <Suspense fallback={<ConnectEmbedSizedLoadingCard />}>
         <LazyOnboardingUI
-          account={screen.account}
           onComplete={onComplete}
           redirectPath={props.redirectPath}
           redirectToCheckout={redirectToCheckout}
-          onLogout={() => {
-            setScreen({ id: "login" });
+          accountAddress={accountAddress}
+          loginOrSignup={async (params) => {
+            await updateAccountClient(params);
+          }}
+          verifyEmail={verifyEmailClient}
+          resendEmailConfirmation={async () => {
+            await resendEmailClient();
+          }}
+          skipOnboarding={() => {
+            updateAccountClient({
+              onboardSkipped: true,
+            });
+          }}
+          trackEvent={trackEvent}
+          requestLinkWallet={async (email) => {
+            await updateAccountClient({
+              email,
+              linkWallet: true,
+            });
+          }}
+          // TODO: set this to true if the account has confirmed email
+          shouldSkipEmailOnboarding={false}
+          sendTeamOnboardingData={async (params) => {
+            const teamsRes = await apiServerProxy<{
+              result: Team[];
+            }>({
+              pathname: "/v1/teams",
+              method: "GET",
+            });
+
+            if (!teamsRes.ok) {
+              throw new Error(teamsRes.error);
+            }
+
+            const team = teamsRes.data.result[0];
+
+            if (!team) {
+              throw new Error("No team found");
+            }
+
+            const teamOnboardRes = await apiServerProxy({
+              pathname: `/v1/teams/${team.id}/onboard`,
+              method: "PUT",
+              body: JSON.stringify(params),
+            });
+
+            if (!teamOnboardRes.ok) {
+              throw new Error(teamOnboardRes.error);
+            }
           }}
         />
       </Suspense>
     );
   }
 
-  return <LoadingCard />;
+  return <ConnectEmbedSizedLoadingCard />;
 }
 
 function CustomConnectEmbed(props: {

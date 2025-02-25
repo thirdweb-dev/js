@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { mobileViewport } from "../../../../stories/utils";
 import { CouponDetailsCardUI } from "./CouponCard";
 
@@ -53,8 +52,6 @@ function Story() {
           isPending: isPending,
         }}
       />
-
-      <Toaster richColors />
     </div>
   );
 }

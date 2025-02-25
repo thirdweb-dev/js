@@ -3,7 +3,7 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub } from "../../../../../../../stories/stubs";
@@ -98,8 +98,6 @@ function Component() {
             twAccount={accountStub()}
           />
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

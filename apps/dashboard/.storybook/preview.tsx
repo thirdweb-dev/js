@@ -7,6 +7,7 @@ import { Inter as interFont } from "next/font/google";
 // biome-ignore lint/style/useImportType: <explanation>
 import React from "react";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 import { Button } from "../src/@/components/ui/button";
 
 const queryClient = new QueryClient();
@@ -79,7 +80,13 @@ function StoryLayout(props: {
         </div>
 
         <div className="flex min-w-0 grow flex-col">{props.children}</div>
+        <ToasterSetup />
       </div>
     </QueryClientProvider>
   );
+}
+
+function ToasterSetup() {
+  const { theme } = useTheme();
+  return <Toaster richColors theme={theme === "light" ? "light" : "dark"} />;
 }

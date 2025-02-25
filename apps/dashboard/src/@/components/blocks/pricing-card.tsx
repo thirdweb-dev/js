@@ -31,7 +31,6 @@ type PricingCardProps = {
   ctaHint?: string;
   highlighted?: boolean;
   current?: boolean;
-  canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
@@ -43,7 +42,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   cta,
   highlighted = false,
   current = false,
-  canTrialGrowth = false,
   activeTrialEndsAt,
   redirectPath,
   redirectToCheckout,
@@ -88,18 +86,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-3xl text-foreground tracking-tight">
-              {isCustomPrice ? (
-                plan.price
-              ) : canTrialGrowth ? (
-                <>
-                  <span className="text-muted-foreground line-through">
-                    ${plan.price}
-                  </span>{" "}
-                  $0
-                </>
-              ) : (
-                `$${plan.price}`
-              )}
+              ${plan.price}
             </span>
 
             {!isCustomPrice && (

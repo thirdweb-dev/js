@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { ThirdwebProvider } from "thirdweb/react";
 import { accountStub, randomLorem } from "../../../../stories/stubs";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
@@ -80,7 +79,6 @@ function Variant(props: {
           CHILDREN
         </div>
       </ChatPageLayout>
-      <Toaster richColors />
     </BadgeContainer>
   );
 }

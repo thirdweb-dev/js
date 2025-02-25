@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import type { NebulaContext } from "../api/chat";
 import ContextFiltersButton from "./ContextFilters";
@@ -65,7 +64,6 @@ function Story() {
         }}
         label="chains + wallet"
       />
-      <Toaster richColors />
     </div>
   );
 }

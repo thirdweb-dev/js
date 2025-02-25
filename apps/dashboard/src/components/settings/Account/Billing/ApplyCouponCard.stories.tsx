@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { type ActiveCouponResponse, ApplyCouponCardUI } from "./CouponCard";
 
@@ -118,7 +117,6 @@ function Story() {
           isPaymentSetup={true}
         />
       </BadgeContainer>
-      <Toaster richColors />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import {
   createEngineAlertRuleStub,
   createEngineAlertStub,
@@ -68,8 +67,6 @@ function Story() {
           onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
-
-      <Toaster richColors />
     </div>
   );
 }

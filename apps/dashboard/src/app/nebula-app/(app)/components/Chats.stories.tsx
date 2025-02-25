@@ -1,6 +1,5 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub, randomLorem } from "../../../../stories/stubs";
 import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
@@ -245,8 +244,6 @@ function Story() {
             ]}
           />
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

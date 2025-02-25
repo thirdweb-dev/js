@@ -2,7 +2,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { BadgeContainer, mobileViewport } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { ModuleCardUI } from "./module-card";
@@ -120,8 +119,6 @@ function Component() {
             </div>
           </ModuleCardUI>
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );
