@@ -1,14 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { newAccountStub, teamStub } from "../../../../stories/stubs";
-import {
-  BadgeContainer,
-  mobileViewport,
-  storybookLog,
-} from "../../../../stories/utils";
+import { storybookLog } from "../../../../stories/utils";
+import { OnboardingLayout } from "../onboarding-layout";
 import { VerifyEmail } from "./VerifyEmail";
 
 const meta = {
-  title: "Onboarding/screens/VerifyEmail",
+  title: "Onboarding/AccountOnboarding/VerifyEmail",
   component: Story,
   parameters: {
     nextjs: {
@@ -20,32 +17,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
-  args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+export const VerifyEmailSuccess: Story = {
+  args: {
+    type: "success",
   },
 };
 
-function Story() {
-  return (
-    <div className="container flex max-w-[800px] flex-col gap-20 py-10">
-      <Variant label="Success" type="success" />
-      <Variant label="Error Generic" type="error" />
-    </div>
-  );
-}
+export const VerifyEmailError: Story = {
+  args: {
+    type: "error",
+  },
+};
 
-function Variant(props: {
-  label: string;
+function Story(props: {
   type: "success" | "error";
 }) {
   return (
-    <BadgeContainer label={props.label}>
+    <OnboardingLayout currentStep={2}>
       <VerifyEmail
         title="Custom Title"
         trackingAction="customAction"
@@ -77,6 +65,6 @@ function Variant(props: {
           storybookLog("trackEvent", params);
         }}
       />
-    </BadgeContainer>
+    </OnboardingLayout>
   );
 }

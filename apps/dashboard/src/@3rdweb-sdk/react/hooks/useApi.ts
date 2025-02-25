@@ -54,14 +54,6 @@ export type Account = {
   // TODO - add image URL
 };
 
-export interface UpdateAccountInput {
-  name?: string;
-  email?: string;
-  linkWallet?: boolean;
-  subscribeToUpdates?: boolean;
-  onboardSkipped?: boolean;
-}
-
 interface UpdateAccountNotificationsInput {
   billing: "email" | "none";
   updates: "email" | "none";
@@ -379,7 +371,15 @@ export function useUserOpUsagePeriod(args: {
   });
 }
 
-export async function updateAccountClient(input: UpdateAccountInput) {
+export type UpdateAccountParams = {
+  name?: string;
+  email?: string;
+  linkWallet?: boolean;
+  subscribeToUpdates?: boolean;
+  onboardSkipped?: boolean;
+};
+
+export async function updateAccountClient(input: UpdateAccountParams) {
   type Result = {
     data: object;
     error?: { message: string };

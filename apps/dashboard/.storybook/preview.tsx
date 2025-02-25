@@ -17,8 +17,30 @@ const fontSans = interFont({
   variable: "--font-sans",
 });
 
+const customViewports = {
+  xs: {
+    // Regular sized phones (iphone 15 / 15 pro)
+    name: "iPhone",
+    styles: {
+      width: "390px",
+      height: "844px",
+    },
+  },
+  sm: {
+    // Larger phones (iphone 15 plus / 15 pro max)
+    name: "iPhone Plus",
+    styles: {
+      width: "430px",
+      height: "932px",
+    },
+  },
+};
+
 const preview: Preview = {
   parameters: {
+    viewport: {
+      viewports: customViewports,
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -58,13 +80,13 @@ function StoryLayout(props: {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen min-w-0 flex-col bg-background text-foreground">
+      <div className="flex min-h-dvh min-w-0 flex-col bg-background text-foreground">
         <div className="flex justify-end gap-2 border-b p-4">
           <Button
             onClick={() => setTheme("dark")}
             size="sm"
             variant={theme === "dark" ? "default" : "outline"}
-            className="h-auto w-auto rounded-full p-2"
+            className="h-auto w-auto shrink-0 rounded-full p-2"
           >
             <MoonIcon className="size-4" />
           </Button>
@@ -73,7 +95,7 @@ function StoryLayout(props: {
             onClick={() => setTheme("light")}
             size="sm"
             variant={theme === "light" ? "default" : "outline"}
-            className="h-auto w-auto rounded-full p-2"
+            className="h-auto w-auto shrink-0 rounded-full p-2"
           >
             <SunIcon className="size-4" />
           </Button>

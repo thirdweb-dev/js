@@ -6,7 +6,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
 import type { TrackingParams } from "../../../hooks/analytics/useTrack";
 import { OnboardingChoosePlan } from "./ChoosePlan";
-import { EmailExists } from "./LinkWalletPrompt/EmailExists";
+import { EmailExists } from "./LinkWalletPrompt/LinkWalletPrompt";
 import { LoginOrSignup } from "./LoginOrSignup/LoginOrSignup";
 import { TeamInfoOnboarding, type TeamOnboardingData } from "./TeamOnboarding";
 import {

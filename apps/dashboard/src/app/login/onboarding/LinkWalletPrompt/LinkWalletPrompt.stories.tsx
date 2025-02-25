@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  mobileViewport,
-  storybookLog,
-} from "../../../../stories/utils";
-import { EmailExists } from "./EmailExists";
+import { storybookLog } from "../../../../stories/utils";
+import { OnboardingLayout } from "../onboarding-layout";
+import { LinkWalletPrompt } from "./LinkWalletPrompt";
 
 const meta = {
-  title: "Onboarding/screens/EmailExists",
+  title: "Onboarding/AccountOnboarding/LinkWalletPrompt",
   component: Story,
   parameters: {
     nextjs: {
@@ -19,33 +16,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
-  args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+export const SendSuccess: Story = {
+  args: {
+    type: "success",
   },
 };
 
-function Story() {
-  return (
-    <div className="container flex max-w-[800px] flex-col gap-20 py-10">
-      <Variant label="Success" type="success" />
-      <Variant label="Error Generic" type="error" />
-    </div>
-  );
-}
+export const SendError: Story = {
+  args: {
+    type: "error",
+  },
+};
 
-function Variant(props: {
-  label: string;
+function Story(props: {
   type: "success" | "error";
 }) {
   return (
-    <BadgeContainer label={props.label}>
-      <EmailExists
+    <OnboardingLayout currentStep={1}>
+      <LinkWalletPrompt
         onLinkWalletRequestSent={() => {
           storybookLog("onLinkWalletRequestSent");
         }}
@@ -65,6 +53,6 @@ function Variant(props: {
         }}
         accountAddress="0x1234567890123456789012345678901234567890"
       />
-    </BadgeContainer>
+    </OnboardingLayout>
   );
 }

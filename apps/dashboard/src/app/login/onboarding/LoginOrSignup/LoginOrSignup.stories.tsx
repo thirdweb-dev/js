@@ -1,14 +1,11 @@
-import type { UpdateAccountInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UpdateAccountParams } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  mobileViewport,
-  storybookLog,
-} from "../../../../stories/utils";
+import { storybookLog } from "../../../../stories/utils";
+import { OnboardingLayout } from "../onboarding-layout";
 import { LoginOrSignup } from "./LoginOrSignup";
 
 const meta = {
-  title: "Onboarding/screens/LoginOrSignup",
+  title: "Onboarding/AccountOnboarding/LoginOrSignup",
   component: Story,
   parameters: {
     nextjs: {
@@ -20,50 +17,44 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
-  args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+export const Success: Story = {
+  args: {
+    type: "success",
   },
 };
 
-function loginOrSignupStug(
-  type: "success" | "error-generic" | "error-email-exists",
-) {
-  return async (data: UpdateAccountInput) => {
+export const EmailExists: Story = {
+  args: {
+    type: "email-exists",
+  },
+};
+
+export const ConfiramtionError: Story = {
+  args: {
+    type: "error",
+  },
+};
+
+function loginOrSignupStug(type: "success" | "error" | "email-exists") {
+  return async (data: UpdateAccountParams) => {
     storybookLog("loginOrSignup", data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    if (type === "error-generic") {
+    if (type === "error") {
       throw new Error("Error Example");
     }
 
-    if (type === "error-email-exists") {
+    if (type === "email-exists") {
       throw new Error("email address already exists");
     }
   };
 }
 
-function Story() {
-  return (
-    <div className="container flex max-w-[800px] flex-col gap-20 py-10">
-      <Variant label="Success" type="success" />
-      <Variant label="Email Exists" type="error-email-exists" />
-      <Variant label="Error Generic" type="error-generic" />
-    </div>
-  );
-}
-
-function Variant(props: {
-  label: string;
-  type: "success" | "error-generic" | "error-email-exists";
+function Story(props: {
+  type: "success" | "error" | "email-exists";
 }) {
   return (
-    <BadgeContainer label={props.label}>
+    <OnboardingLayout currentStep={1}>
       <LoginOrSignup
         onRequestSent={(params) => {
           storybookLog("onRequestSent", params);
@@ -73,6 +64,6 @@ function Variant(props: {
           storybookLog("trackEvent", params);
         }}
       />
-    </BadgeContainer>
+    </OnboardingLayout>
   );
 }

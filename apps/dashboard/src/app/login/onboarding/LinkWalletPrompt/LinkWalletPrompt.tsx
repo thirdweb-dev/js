@@ -4,13 +4,12 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
 import type { TrackingParams } from "../../../../hooks/analytics/useTrack";
-import { TitleAndDescription } from "../Title";
 
-export function EmailExists(props: {
+export function LinkWalletPrompt(props: {
   email: string;
   accountAddress: string;
   onBack: () => void;
@@ -57,37 +56,44 @@ export function EmailExists(props: {
   }
 
   return (
-    <div>
-      <TitleAndDescription
-        heading="Email already in use"
-        description={
-          <>
-            {`We've`} noticed that an account associated with{" "}
+    <div className="rounded-lg border bg-card">
+      <h3 className="border-b px-4 py-6 font-semibold text-xl tracking-tight lg:p-6">
+        Link your wallet
+      </h3>
+
+      <div className="p-4 lg:p-6">
+        <div className="mb-6 space-y-2 text-muted-foreground">
+          <p>
+            An account with{" "}
             <span className="text-foreground">{props.email}</span> already
-            exists.
-            <br /> Would you like to link your wallet{" "}
-            <span className="font-mono text-foreground text-sm">
-              {shortenString(props.accountAddress)}
-            </span>{" "}
-            to the existing account?
-            <div className="h-2" />
+            exists, created with another wallet
+          </p>
+
+          <p>
+            You can link your wallet with this account to access it. <br />{" "}
+            Multiple wallets can be linked to the same account.{" "}
             <TrackedLinkTW
               href="https://portal.thirdweb.com/account/billing/account-info"
               category="account"
               label="learn-wallet-linking"
               target="_blank"
-              className="underline hover:text-foreground"
+              className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
             >
               Learn more about wallet linking
             </TrackedLinkTW>
-            .
-          </>
-        }
-      />
+          </p>
+        </div>
 
-      <div className="h-8" />
+        <p className="text-foreground">
+          Would you like to link your wallet{" "}
+          <span className="font-mono text-sm tracking-tight">
+            ({shortenString(props.accountAddress)})
+          </span>{" "}
+          with this account?
+        </p>
+      </div>
 
-      <div className="flex flex-row gap-3">
+      <div className="flex flex-col-reverse gap-4 border-t px-4 py-6 md:flex-row lg:justify-between lg:p-6">
         <Button
           variant="outline"
           className="gap-2 bg-card"
@@ -95,7 +101,7 @@ export function EmailExists(props: {
           disabled={requestLinkWallet.isPending}
         >
           <ArrowLeftIcon className="size-4" />
-          Use another email
+          Change Email
         </Button>
 
         <Button
@@ -104,8 +110,12 @@ export function EmailExists(props: {
           disabled={requestLinkWallet.isPending}
           className="gap-2"
         >
-          {requestLinkWallet.isPending && <Spinner className="size-4" />}
-          {requestLinkWallet.isPending ? "Linking" : "Yes, link them"}
+          Link wallet and continue
+          {requestLinkWallet.isPending ? (
+            <Spinner className="size-4" />
+          ) : (
+            <ArrowRightIcon className="size-4" />
+          )}
         </Button>
       </div>
     </div>

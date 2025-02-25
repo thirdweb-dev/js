@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { TabButtons } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -81,8 +82,9 @@ export function LoginOrSignup(props: {
   }
 
   return (
-    <div>
+    <div className="flex flex-col rounded-lg border bg-card">
       <TabButtons
+        tabContainerClassName="px-4 lg:px-6 pt-3 pb-0.5"
         tabs={[
           {
             name: "Create account",
@@ -98,8 +100,6 @@ export function LoginOrSignup(props: {
           },
         ]}
       />
-
-      <div className="h-6" />
 
       {tab === "signup" && (
         <SignupForm
@@ -149,60 +149,64 @@ function SignupForm(props: {
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="flex w-full flex-col items-start gap-8 rounded-xl">
-        <div className="flex w-full flex-col gap-4">
-          <FormFieldSetup
-            errorMessage={
-              form.getFieldState("name", form.formState).error?.message
-            }
-            label="Name"
-            htmlFor="name"
-            isRequired={false}
-          >
-            <Input
-              placeholder="Company Inc."
-              className="bg-card"
-              type="text"
-              {...form.register("name")}
-              id="name"
-            />
-          </FormFieldSetup>
+    <form onSubmit={handleSubmit} className="flex w-full grow flex-col">
+      <div className="flex w-full flex-col gap-4 px-4 py-6 lg:p-6">
+        <FormFieldSetup
+          errorMessage={
+            form.getFieldState("name", form.formState).error?.message
+          }
+          label="Name"
+          htmlFor="name"
+          isRequired={false}
+        >
+          <Input
+            placeholder="Company Inc."
+            className="bg-background"
+            type="text"
+            {...form.register("name")}
+            id="name"
+          />
+        </FormFieldSetup>
 
-          <FormFieldSetup
-            isRequired
-            htmlFor="email"
-            errorMessage={
-              form.getFieldState("email", form.formState).error?.message
-            }
-            label="Email"
-          >
-            <Input
-              placeholder="you@company.com"
-              className="bg-card"
-              type="email"
-              {...form.register("email")}
-              id="email"
-            />
-          </FormFieldSetup>
+        <FormFieldSetup
+          isRequired
+          htmlFor="email"
+          errorMessage={
+            form.getFieldState("email", form.formState).error?.message
+          }
+          label="Email"
+        >
+          <Input
+            placeholder="you@company.com"
+            className="bg-background"
+            type="email"
+            {...form.register("email")}
+            id="email"
+          />
+        </FormFieldSetup>
 
-          <CheckboxWithLabel>
-            <Checkbox
-              checked={subscribeToUpdates}
-              onCheckedChange={(v) => setSubscribeToUpdates(!!v)}
-            />
-            Subscribe to new features and key product updates
-          </CheckboxWithLabel>
-        </div>
+        <CheckboxWithLabel>
+          <Checkbox
+            checked={subscribeToUpdates}
+            onCheckedChange={(v) => setSubscribeToUpdates(!!v)}
+          />
+          Subscribe to new features and key product updates
+        </CheckboxWithLabel>
+      </div>
 
+      <div className="mt-8 flex justify-end border-t px-4 py-6 lg:p-6">
         <Button
           type="button"
           onClick={handleSubmit}
           disabled={props.isSubmitting}
-          className="w-full gap-2"
+          className="gap-2 px-6"
         >
-          {props.isSubmitting && <Spinner className="size-4" />}
-          Get Started for Free
+          Get Started
+          {props.isSubmitting ? (
+            <Spinner className="size-4" />
+          ) : (
+            <ArrowRightIcon className="size-4" />
+          )}
         </Button>
       </div>
     </form>
@@ -233,35 +237,39 @@ function LoginForm(props: {
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="flex w-full flex-col items-start gap-8 rounded-xl">
-        <div className="flex w-full flex-col gap-4">
-          <FormFieldSetup
-            isRequired
-            htmlFor="email"
-            errorMessage={
-              form.getFieldState("email", form.formState).error?.message
-            }
-            label="Email"
-          >
-            <Input
-              placeholder="you@company.com"
-              type="email"
-              className="bg-card"
-              {...form.register("email")}
-              id="email"
-            />
-          </FormFieldSetup>
-        </div>
+    <form onSubmit={handleSubmit} className="flex w-full grow flex-col">
+      <div className="flex w-full flex-col gap-4 px-4 py-6 lg:p-6">
+        <FormFieldSetup
+          isRequired
+          htmlFor="email"
+          errorMessage={
+            form.getFieldState("email", form.formState).error?.message
+          }
+          label="Email"
+        >
+          <Input
+            placeholder="you@company.com"
+            type="email"
+            className="bg-card"
+            {...form.register("email")}
+            id="email"
+          />
+        </FormFieldSetup>
+      </div>
 
+      <div className="mt-8 flex justify-end border-t px-4 py-6 lg:p-6">
         <Button
           type="button"
           onClick={handleSubmit}
           disabled={props.isSubmitting}
-          className="w-full gap-2"
+          className="gap-2 px-6"
         >
-          {props.isSubmitting && <Spinner className="size-4" />}
           Login
+          {props.isSubmitting ? (
+            <Spinner className="size-4" />
+          ) : (
+            <ArrowRightIcon className="size-4" />
+          )}
         </Button>
       </div>
     </form>
