@@ -59,7 +59,10 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     const cols: Column<NFT>[] = [
       {
         Header: "Token Id",
-        accessor: (row) => row.id?.toString(),
+        accessor: (row) =>
+          row.id?.toString().length > 8
+            ? `${row.id.toString().slice(0, 4)}...${row.id.toString().slice(-4)}`
+            : row.id?.toString(),
         Cell: (cell: CellProps<NFT, string>) => <p>{cell.value}</p>,
       },
       {

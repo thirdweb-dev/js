@@ -85,6 +85,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
       contract,
       tokenId: BigInt(tokenId || 0),
       includeOwner: true,
+      ignoreTokenIndex: true,
     },
   );
 
@@ -222,7 +223,11 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
                 <GridItem colSpan={8}>
                   <CopyTextButton
                     textToCopy={nft.id?.toString()}
-                    textToShow={nft.id?.toString()}
+                    textToShow={
+                      nft.id?.toString().length > 8
+                        ? `${nft.id.toString().slice(0, 4)}...${nft.id.toString().slice(-4)}`
+                        : nft.id?.toString()
+                    }
                     tooltip="Token ID"
                     copyIconPosition="right"
                   />

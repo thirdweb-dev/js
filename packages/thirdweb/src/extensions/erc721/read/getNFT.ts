@@ -1,3 +1,5 @@
+import { type Abi, toFunctionSelector } from "viem";
+import { resolveContractAbi } from "../../../contract/actions/resolve-abi.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
@@ -6,6 +8,10 @@ import {
   type TokenURIParams,
   tokenURI,
 } from "../__generated__/IERC721A/read/tokenURI.js";
+import {
+  isTokenByIndexSupported,
+  tokenByIndex,
+} from "../__generated__/IERC721Enumerable/read/tokenByIndex.js";
 
 export { isTokenURISupported as isGetNFTSupported } from "../__generated__/IERC721A/read/tokenURI.js";
 
@@ -19,6 +25,10 @@ export type GetNFTParams = Prettify<
      * Whether to include the owner of the NFT.
      */
     includeOwner?: boolean;
+    /**
+     * Whether to check tokenId by index.
+     */
+    ignoreTokenIndex?: boolean;
   }
 >;
 
@@ -39,11 +49,25 @@ export type GetNFTParams = Prettify<
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
+  const abi = await resolveContractAbi<Abi>(options.contract);
+  const selectors = abi
+    .filter((f) => f.type === "function")
+    .map((f) => toFunctionSelector(f));
+  const hasTokenByIndex = isTokenByIndexSupported(selectors);
+
+  let tokenId = options.tokenId;
+  if (!options.ignoreTokenIndex && hasTokenByIndex) {
+    tokenId = await tokenByIndex({
+      contract: options.contract,
+      index: options.tokenId,
+    });
+  }
+
   const [uri, owner] = await Promise.all([
-    tokenURI(options).catch(() => null),
+    tokenURI({ contract: options.contract, tokenId }).catch(() => null),
     options.includeOwner
       ? import("../__generated__/IERC721A/read/ownerOf.js")
-          .then((m) => m.ownerOf(options))
+          .then((m) => m.ownerOf({ contract: options.contract, tokenId }))
           .catch(() => null)
       : null,
   ]);
@@ -51,12 +75,12 @@ export async function getNFT(
   if (!uri?.trim()) {
     return parseNFT(
       {
-        id: options.tokenId,
+        id: tokenId,
         type: "ERC721",
         uri: "",
       },
       {
-        tokenId: options.tokenId,
+        tokenId,
         tokenUri: "",
         type: "ERC721",
         owner,
@@ -67,15 +91,15 @@ export async function getNFT(
   return parseNFT(
     await fetchTokenMetadata({
       client: options.contract.client,
-      tokenId: options.tokenId,
+      tokenId,
       tokenUri: uri,
     }).catch(() => ({
-      id: options.tokenId,
+      id: tokenId,
       type: "ERC721",
       uri,
     })),
     {
-      tokenId: options.tokenId,
+      tokenId: tokenId,
       tokenUri: uri,
       type: "ERC721",
       owner,
