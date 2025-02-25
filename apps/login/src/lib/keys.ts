@@ -1,11 +1,11 @@
 import "server-only";
 
-import { type KeyLike, importPKCS8, importSPKI } from "jose";
+import { type CryptoKey, importPKCS8, importSPKI } from "jose";
 
 const ALGORITHM = "RS256";
 
-let privateKeyPromise: Promise<KeyLike> | null = null;
-let publicKeyPromise: Promise<KeyLike> | null = null;
+let privateKeyPromise: Promise<CryptoKey> | null = null;
+let publicKeyPromise: Promise<CryptoKey> | null = null;
 
 export async function getKeyInfo() {
   // Ensure these are loaded only once and cached
