@@ -1,9 +1,9 @@
 import "server-only";
 
 import { BRIDGE_URL, DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
+import { getAuthToken } from "app/api/lib/getAuthToken";
 import type { Address } from "thirdweb";
 import type { Route } from "./types/route";
-import { getAuthToken } from "app/api/lib/getAuthToken";
 
 export async function getRoutes({
   limit,
