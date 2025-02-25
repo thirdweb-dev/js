@@ -23,6 +23,9 @@ export const DASHBOARD_STORAGE_URL =
 export const API_SERVER_URL =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
+export const BRIDGE_URL =
+  process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST || "https://bridge.thirdweb.com";
+
 /**
  * Faucet stuff
  */

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { getBaseURL, waitForPageLoad } from "./setup";
 
 test.beforeEach(async ({ page, baseURL }) => {

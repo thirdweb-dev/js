@@ -1,6 +1,6 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
-export function getBaseURL(url: string | void) {
+export function getBaseURL(url: string | undefined) {
   if (process.env.ENVIRONMENT_URL) {
     url = process.env.ENVIRONMENT_URL;
   }
