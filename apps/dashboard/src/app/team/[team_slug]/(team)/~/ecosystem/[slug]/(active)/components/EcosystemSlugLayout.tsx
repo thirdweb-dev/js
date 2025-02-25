@@ -1,5 +1,4 @@
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
-import {} from "@/constants/cookie";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";

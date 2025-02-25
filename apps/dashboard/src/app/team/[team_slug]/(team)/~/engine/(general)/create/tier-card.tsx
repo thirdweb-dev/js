@@ -2,6 +2,7 @@
 
 import { redirectToCheckout } from "@/actions/billing";
 import { CheckoutButton } from "@/components/billing";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Spacer } from "@chakra-ui/react";
@@ -9,6 +10,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 interface EngineTierCardConfig {
   name: string;
@@ -56,6 +58,7 @@ export const EngineTierCard = ({
   isPrimaryCta?: boolean;
   ctaText?: string;
 }) => {
+  const [isRoutePending, startRouteTransition] = useState(false);
   const trackEvent = useTrack();
   const params = useParams<{ team_slug: string }>();
   const { name, monthlyPriceUsd } = ENGINE_TIER_CARD_CONFIG[tier];
@@ -126,7 +129,9 @@ export const EngineTierCard = ({
           variant={isPrimaryCta ? "default" : "outline"}
           asChild
         >
-          <Link href="/contact-us">{ctaText ?? defaultCtaText}</Link>
+          <Link href="/contact-us" target="_blank">
+            {ctaText ?? defaultCtaText}
+          </Link>
         </Button>
       ) : (
         <CheckoutButton
@@ -135,9 +140,11 @@ export const EngineTierCard = ({
               ? "product:engine_standard"
               : "product:engine_premium"
           }
+          className="gap-2"
           redirectPath={`/team/${params?.team_slug}/~/engine`}
           teamSlug={params?.team_slug || "~"}
           onClick={() => {
+            startRouteTransition(true);
             trackEvent({
               category: "engine",
               action: "click",
@@ -148,6 +155,7 @@ export const EngineTierCard = ({
           variant={isPrimaryCta ? "default" : "outline"}
           redirectToCheckout={redirectToCheckout}
         >
+          {isRoutePending && <Spinner className="size-4" />}
           {ctaText ?? defaultCtaText}
         </CheckoutButton>
       )}

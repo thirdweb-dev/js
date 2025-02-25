@@ -3,67 +3,89 @@
 import { apiServerProxy } from "@/actions/proxies";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { FormControl } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import {
-  CircleAlertIcon,
-  CloudDownloadIcon,
-  ExternalLinkIcon,
-} from "lucide-react";
+import { CircleAlertIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { FormLabel } from "tw-components";
+import { z } from "zod";
 
-type ImportEngineInput = {
-  name: string;
-  url: string;
-};
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  url: z.string().url("Please enter a valid URL").min(1, "URL is required"),
+});
 
-export const EngineImportPage = (props: {
-  importUrl?: string;
+type ImportEngineParams = z.infer<typeof formSchema>;
+
+async function importEngine(data: ImportEngineParams) {
+  // Instance URLs should end with a /.
+  const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
+
+  const res = await apiServerProxy({
+    pathname: "/v1/engine",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: data.name,
+      url,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+}
+
+export function EngineImportCard(props: {
+  prefillImportUrl: string | undefined;
   teamSlug: string;
-}) => {
-  const { importUrl } = props;
+}) {
   const router = useDashboardRouter();
 
-  const form = useForm<ImportEngineInput>({
-    defaultValues: {
+  return (
+    <EngineImportCardUI
+      prefillImportUrl={props.prefillImportUrl}
+      importEngine={async (params) => {
+        await importEngine(params);
+        router.push(`/team/${props.teamSlug}/~/engine`);
+      }}
+    />
+  );
+}
+
+export function EngineImportCardUI(props: {
+  prefillImportUrl: string | undefined;
+  importEngine: (params: ImportEngineParams) => Promise<void>;
+}) {
+  const form = useForm<ImportEngineParams>({
+    resolver: zodResolver(formSchema),
+    values: {
       name: "",
-      url: importUrl ? decodeURIComponent(importUrl) : undefined,
+      url: props.prefillImportUrl || "",
     },
   });
 
   const importMutation = useMutation({
-    mutationFn: async (data: ImportEngineInput) => {
-      // Instance URLs should end with a /.
-      const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
-
-      const res = await apiServerProxy({
-        pathname: "/v1/engine",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          url,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-    },
+    mutationFn: props.importEngine,
   });
 
-  const onSubmit = async (data: ImportEngineInput) => {
+  const onSubmit = async (data: ImportEngineParams) => {
     try {
       await importMutation.mutateAsync(data);
       toast.success("Engine imported successfully");
-      router.push(`/team/${props.teamSlug}/~/engine`);
     } catch (e) {
       const message = e instanceof Error ? e.message : undefined;
       toast.error(
@@ -76,79 +98,93 @@ export const EngineImportPage = (props: {
   };
 
   return (
-    <div className="mx-auto max-w-[550px]">
-      <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
-        Import Engine Instance
-      </h1>
+    <div className="mx-auto w-full max-w-lg rounded-lg border border-border bg-card">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          {/* Card */}
+          <div className="p-6">
+            <div>
+              <h1 className="mb-1 font-semibold text-xl tracking-tight">
+                Import Engine Instance
+              </h1>
 
-      <div className="h-3" />
-
-      <p className="text-muted-foreground">
-        Import an Engine instance hosted on your infrastructure.
-      </p>
-
-      <div className="h-3" />
-
-      <TrackedLinkTW
-        className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
-        href="https://portal.thirdweb.com/infrastructure/engine/get-started"
-        target="_blank"
-        category="engine"
-        label="clicked-self-host-instructions"
-      >
-        Get help setting up Engine for free
-        <ExternalLinkIcon className="size-4" />
-      </TrackedLinkTW>
-
-      <div className="h-10" />
-
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-6">
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <Input
-              type="text"
-              placeholder="Enter a descriptive label"
-              autoFocus
-              {...form.register("name", {
-                required: "Name is required",
-              })}
-            />
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>URL</FormLabel>
-            <Input
-              type="url"
-              placeholder="Enter your Engine URL"
-              {...form.register("url", {
-                required: "URL is required",
-              })}
-            />
-            <div className="mt-2 flex items-center gap-2">
-              <CircleAlertIcon className="!static size-3 text-warning-foreground" />
               <p className="text-muted-foreground text-sm">
-                Do not import a URL you do not recognize.
+                Import an Engine instance hosted on your infrastructure
               </p>
+
+              <div className="h-4" />
+
+              <TrackedLinkTW
+                className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
+                href="https://portal.thirdweb.com/infrastructure/engine/get-started"
+                target="_blank"
+                category="engine"
+                label="clicked-self-host-instructions"
+              >
+                Get help setting up Engine for free
+                <ExternalLinkIcon className="size-4 text-muted-foreground" />
+              </TrackedLinkTW>
             </div>
-          </FormControl>
-        </div>
 
-        <div className="h-10" />
+            <div className="mt-6 flex flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter a descriptive label"
+                        autoFocus
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <Button
-          type="submit"
-          variant="primary"
-          className="w-full gap-2 text-base"
-        >
-          {importMutation.isPending ? (
-            <Spinner className="size-4" />
-          ) : (
-            <CloudDownloadIcon className="size-4" />
-          )}
-          Import
-        </Button>
-      </form>
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="Enter your Engine URL"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    <div className="mt-3 flex items-center gap-2">
+                      <CircleAlertIcon className="size-3 shrink-0 text-muted-foreground" />
+                      <p className="text-muted-foreground text-sm">
+                        Do not import a URL you do not recognize.
+                      </p>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="h-8" />
+
+          <div className="flex justify-end border-border border-t p-6">
+            <Button type="submit" className="min-w-28 gap-2">
+              {importMutation.isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <DownloadIcon className="size-4" />
+              )}
+              Import
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
-};
+}

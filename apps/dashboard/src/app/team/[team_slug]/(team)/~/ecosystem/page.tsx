@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {} from "@/constants/cookie";
 import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

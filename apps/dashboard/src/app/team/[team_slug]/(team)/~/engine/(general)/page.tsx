@@ -2,10 +2,7 @@ import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { getEngineInstances } from "../_utils/getEngineInstances";
-import {
-  EngineInstancesList,
-  NoEngineInstancesPage,
-} from "./overview/engine-list";
+import { EngineInstancesList } from "./overview/engine-list";
 
 export default async function Page(props: {
   params: Promise<{
@@ -34,11 +31,10 @@ export default async function Page(props: {
 
   const res = await getEngineInstances({ authToken });
 
-  if (!res.data || res.data.length === 0) {
-    return <NoEngineInstancesPage team_slug={params.team_slug} />;
-  }
-
   return (
-    <EngineInstancesList team_slug={params.team_slug} instances={res.data} />
+    <EngineInstancesList
+      team_slug={params.team_slug}
+      instances={res.data || []}
+    />
   );
 }

@@ -230,101 +230,71 @@ export function useEngineUpdateDeployment() {
   });
 }
 
-export function useEngineRemoveFromDashboard() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+export type RemoveEngineFromDashboardIParams = {
+  instanceId: string;
+};
 
-  return useMutation({
-    mutationFn: async (instanceId: string) => {
-      invariant(instanceId, "instance is required");
-
-      const res = await apiServerProxy({
-        pathname: `/v1/engine/${instanceId}`,
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-    },
-
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+export async function removeEngineFromDashboard({
+  instanceId,
+}: RemoveEngineFromDashboardIParams) {
+  const res = await apiServerProxy({
+    pathname: `/v1/engine/${instanceId}`,
+    method: "DELETE",
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
-export interface DeleteCloudHostedInput {
+export type DeleteCloudHostedEngineParams = {
   deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
-}
+};
 
-export function useEngineDeleteCloudHosted() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      deploymentId,
-      reason,
-      feedback,
-    }: DeleteCloudHostedInput) => {
-      const res = await apiServerProxy({
-        pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ reason, feedback }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
+export async function deleteCloudHostedEngine({
+  deploymentId,
+  reason,
+  feedback,
+}: DeleteCloudHostedEngineParams) {
+  const res = await apiServerProxy({
+    pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+    body: JSON.stringify({ reason, feedback }),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
-export interface EditEngineInstanceInput {
+export type EditEngineInstanceParams = {
   instanceId: string;
   name: string;
   url: string;
-}
+};
 
-export function useEngineEditInstance() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ instanceId, name, url }: EditEngineInstanceInput) => {
-      const res = await apiServerProxy({
-        pathname: `/v1/engine/${instanceId}`,
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, url }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
+export async function editEngineInstance({
+  instanceId,
+  name,
+  url,
+}: EditEngineInstanceParams) {
+  const res = await apiServerProxy({
+    pathname: `/v1/engine/${instanceId}`,
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+    body: JSON.stringify({ name, url }),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
 export type Transaction = {

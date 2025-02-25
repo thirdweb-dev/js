@@ -1,5 +1,6 @@
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
+import { CreateEngineLink, ImportEngineLink } from "./_components";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -11,21 +12,44 @@ export default async function Layout(props: {
   const linkPrefix = `/team/${params.team_slug}/~/engine`;
   const sidebarLinks: SidebarLink[] = [
     {
-      label: "Overview",
+      label: "Engine Instances",
       href: `${linkPrefix}`,
       exactMatch: true,
     },
     {
-      label: "Create",
+      label: "Create Engine",
       href: `${linkPrefix}/create`,
     },
     {
-      label: "Import",
+      label: "Import Engine",
       href: `${linkPrefix}/import`,
     },
   ];
 
   return (
-    <SidebarLayout sidebarLinks={sidebarLinks}>{props.children}</SidebarLayout>
+    <div className="flex grow flex-col">
+      {/* header */}
+      <header className="border-border border-b py-10">
+        <div className="container flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+          <h1 className="font-semibold text-3xl tracking-tight">Engines</h1>
+          <div className="flex items-center gap-3">
+            <CreateEngineLink
+              label="Create Engine"
+              engineLinkPrefix={linkPrefix}
+            />
+
+            <ImportEngineLink
+              label="Import Engine"
+              engineLinkPrefix={linkPrefix}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* sidebar layout */}
+      <SidebarLayout sidebarLinks={sidebarLinks}>
+        {props.children}
+      </SidebarLayout>
+    </div>
   );
 }
