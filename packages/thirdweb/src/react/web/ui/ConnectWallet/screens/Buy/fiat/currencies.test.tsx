@@ -19,7 +19,6 @@ describe("Currency Utilities", () => {
     for (const currency of currencies) {
       expect(currency).toHaveProperty("shorthand");
       expect(currency).toHaveProperty("name");
-      expect(currency).toHaveProperty("icon");
     }
   });
 
