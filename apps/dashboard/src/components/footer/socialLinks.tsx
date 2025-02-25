@@ -1,4 +1,3 @@
-import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
@@ -20,12 +19,6 @@ export const SOCIALS: socialLinkInfo[] = [
     link: "https://twitter.com/thirdweb",
     icon: <XIcon className="size-5" />,
     ariaLabel: "Twitter",
-  },
-  {
-    icon: <DiscordIcon className="size-5" />,
-    ariaLabel: "Discord",
-    label: "discord",
-    link: "https://discord.gg/thirdweb",
   },
   {
     link: "https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA",
