@@ -38,7 +38,7 @@ export async function estimateGasCost(
     transaction.chain,
   );
   const gasPrice = fees.maxFeePerGas || fees.gasPrice;
-  if (!gasPrice) {
+  if (gasPrice === undefined) {
     throw new Error(
       `Unable to determine gas price for chain ${transaction.chain.id}`,
     );

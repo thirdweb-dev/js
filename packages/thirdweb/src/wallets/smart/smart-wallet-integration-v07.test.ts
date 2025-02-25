@@ -109,7 +109,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         smartAccount,
         accountContract,
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // pause for a second to prevent race condition
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // pause for a second to prevent race condition
 
       const signature = await smartAccount.signMessage({
         message: "hello world",
