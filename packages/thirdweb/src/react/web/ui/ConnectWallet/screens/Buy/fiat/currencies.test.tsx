@@ -8,7 +8,7 @@ import { currencies, getCurrencyMeta, usdCurrency } from "./currencies.js";
 
 describe("Currency Utilities", () => {
   it("should have correct number of currencies", () => {
-    expect(currencies.length).toBe(5);
+    expect(currencies.length).toBe(7);
   });
 
   it("should have USD as the first currency", () => {

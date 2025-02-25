@@ -2,9 +2,16 @@ import "server-only";
 import type { InAppWalletAuth } from "thirdweb/wallets";
 import type { Permission } from "../../components/permission-card";
 
-export async function getLoginConfig(clientId: string) {
+export async function getLoginConfig(clientId: string): Promise<LoginConfig> {
   if (clientId === "demo") {
     return DEMO_ENVIRONMENT;
+  }
+  // temporary manual config
+  if (clientId === "b24106adfb2ec212e6ec4d3b2e04db9e") {
+    return {
+      ...DEFAULT_CONFIG,
+      sessionKeySignerAddress: "0xb89e32a18350d6df5bf0b89a227E098013C4Fa72",
+    };
   }
   // TODO: implement fetch for config from API server
   return DEFAULT_CONFIG;

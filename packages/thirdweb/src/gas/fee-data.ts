@@ -40,6 +40,8 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   1942999413, // Humanity Testnet
   1952959480, // Lumia Testnet
   994873017, // Lumia Mainnet
+  19011, // Homeverse Mainnet
+  40875, // Homeverse Testnet
 ];
 
 /**
@@ -89,7 +91,7 @@ export async function getGasOverridesForTransaction(
   }
 
   // return as is
-  if (defaultGasOverrides.gasPrice) {
+  if (defaultGasOverrides.gasPrice !== undefined) {
     return defaultGasOverrides;
   }
 

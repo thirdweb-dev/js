@@ -61,6 +61,8 @@ const GAS_FREE_CHAINS = [
   300, // zksync sepolia
   7225878, // Saakuru Mainnet
   247253, // Saakuru Testnet
+  19011, // Homeverse Mainnet
+  40875, // Homeverse Testnet
 ];
 
 function useIsNetworkMismatch(txChainId: number) {
