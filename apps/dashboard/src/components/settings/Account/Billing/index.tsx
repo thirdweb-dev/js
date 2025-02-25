@@ -24,7 +24,8 @@ export const Billing: React.FC<BillingProps> = ({
   subscriptions,
   twAccount,
 }) => {
-  const validPayment = team.billingStatus === "validPayment";
+  const validPayment =
+    team.billingStatus === "validPayment" || team.billingStatus === "pastDue";
   const validPlan = getValidTeamPlan(team);
 
   const planSubscription = subscriptions.find((sub) => sub.type === "PLAN");
