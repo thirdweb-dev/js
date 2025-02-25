@@ -7,7 +7,6 @@ import {
   arbitrumNova,
   base,
   defineChain,
-  sepolia,
   treasure,
 } from "thirdweb/chains";
 import { PayEmbed, getDefaultToken } from "thirdweb/react";
@@ -18,18 +17,7 @@ export function StyledPayEmbedPreview() {
   return (
     <div className="flex flex-col items-center justify-center">
       <StyledConnectButton
-        chains={[
-          base,
-          defineChain(466),
-          arbitrum,
-          treasure,
-          arbitrumNova,
-          sepolia,
-        ]}
-        accountAbstraction={{
-          chain: base,
-          sponsorGas: true,
-        }}
+        chains={[base, defineChain(466), arbitrum, treasure, arbitrumNova]}
         supportedTokens={{
           466: [
             {
@@ -57,23 +45,9 @@ export function StyledPayEmbedPreview() {
             },
           ],
         }}
-        detailsButton={{
-          displayBalanceToken: {
-            466: "0x675C3ce7F43b00045a4Dab954AF36160fb57cB45",
-            8453: getDefaultToken(base, "USDC")?.address ?? "",
-            42161: "0x539bde0d7dbd336b79148aa742883198bbf60342",
-            [arbitrumNova.id]: "0xb5130f4767ab0acc579f25a76e8f9e977cb3f948",
-          },
-        }}
       />
       <div className="h-10" />
       <PayEmbed
-        connectOptions={{
-          accountAbstraction: {
-            chain: base,
-            sponsorGas: true,
-          },
-        }}
         client={THIRDWEB_CLIENT}
         theme={theme === "light" ? "light" : "dark"}
         payOptions={{

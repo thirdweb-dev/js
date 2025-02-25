@@ -134,6 +134,7 @@ import {
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { type SiweAuthOptions, useConnectModal } from "thirdweb/react";
 
+// server actions
 const auth: SiweAuthOptions = {
   isLoggedIn: (address) => isLoggedIn(address),
   doLogin: (params) => login(params),
@@ -151,6 +152,7 @@ export function AuthHook() {
       auth.doLogout();
     } else {
       connect({
+        client: THIRDWEB_CLIENT,
         auth,
       });
     }

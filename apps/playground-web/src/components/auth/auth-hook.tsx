@@ -12,6 +12,7 @@ import {
   useConnectModal,
   useSiweAuth,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "../../lib/client";
 import { Button } from "../ui/button";
 
 const auth: SiweAuthOptions = {
@@ -36,10 +37,8 @@ export function AuthHook() {
       await doLogout();
     } else {
       await connect({
+        client: THIRDWEB_CLIENT,
         auth,
-        onConnect: (wallet) => {
-          console.log("connected to", wallet);
-        },
       });
     }
   };
