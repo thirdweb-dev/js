@@ -5,6 +5,7 @@ import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
+import { BasicAuthHookPreview } from "../../../components/auth/basic-auth-hook";
 import { APIHeader } from "../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
@@ -45,6 +46,12 @@ export default function Page() {
 
         <section className="space-y-8">
           <SmartAccountAuth />
+        </section>
+
+        <div className="h-14" />
+
+        <section className="space-y-8">
+          <BasicAuthHook />
         </section>
       </main>
     </ThirdwebProvider>
@@ -93,6 +100,63 @@ export function AuthButton() {
       }}
     />
   );
+}
+`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function BasicAuthHook() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
+          Auth with your own UI
+        </h2>
+        <p className="max-w-[600px]">
+          Use the `useConnectModal` hook to add authentication to your app with
+          your own UI.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<BasicAuthHookPreview />}
+        code={`"use client";
+
+import {
+  generatePayload,
+  isLoggedIn,
+  login,
+  logout,
+} from "@/app/connect/auth/server/actions/auth";
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import { type SiweAuthOptions, useConnectModal } from "thirdweb/react";
+
+const auth: SiweAuthOptions = {
+  isLoggedIn: (address) => isLoggedIn(address),
+  doLogin: (params) => login(params),
+  getLoginPayload: ({ address }) => generatePayload({ address }),
+  doLogout: () => logout(),
+};
+
+export function AuthHook() {
+  const { connect } = useConnectModal();
+  const wallet = useActiveWallet();
+  const { isLoggedIn } = useSiweAuth(wallet, wallet?.getAccount(), auth);
+
+  const onClick = () => {
+    if (isLoggedIn) {
+      auth.doLogout();
+    } else {
+      connect({
+        auth,
+      });
+    }
+  };
+
+  return <Button type="button" onClick={onClick}>{isLoggedIn ? "Sign out" : "Sign in"}</Button>;
 }
 `}
         lang="tsx"
