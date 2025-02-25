@@ -1,19 +1,24 @@
+import { getInAppWalletUsage } from "@/api/analytics";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";
-import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
 import { subDays } from "date-fns";
 import { TRACKING_CATEGORY } from "../_constants";
 
-export async function InAppWalletsHeader({ clientId }: { clientId: string }) {
+export async function InAppWalletsHeader({
+  teamId,
+  projectId,
+}: { teamId: string; projectId: string }) {
   const allTimeStatsPromise = getInAppWalletUsage({
-    clientId,
+    teamId,
+    projectId,
     from: new Date(2022, 0, 1),
     to: new Date(),
     period: "all",
   });
 
   const monthlyStatsPromise = getInAppWalletUsage({
-    clientId,
+    teamId,
+    projectId,
     from: subDays(new Date(), 30),
     to: new Date(),
     period: "month",
