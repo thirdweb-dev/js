@@ -30,7 +30,9 @@ export default async function Page(props: {
   );
 
   const hasSmartWalletsWithoutBilling =
-    isBundlerServiceEnabled && team.billingStatus !== "validPayment";
+    isBundlerServiceEnabled &&
+    team.billingStatus !== "validPayment" &&
+    team.billingStatus !== "pastDue";
 
   const userOpStats = await getAggregateUserOpUsage({
     teamId: team.id,

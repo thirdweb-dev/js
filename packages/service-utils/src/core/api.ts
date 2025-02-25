@@ -50,7 +50,16 @@ export type TeamResponse = {
   createdAt: string;
   updatedAt: string | null;
   billingEmail: string | null;
-  billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
+  // noPayment = no payment method on file for customer => expected state for new customers without an active subscription
+  // validPayment = payment method on file and valid => good state
+  // invalidPayment = payment method not valid (billing failing repeatedly) => error state
+  // pastDue = payment method on file but has past due payments => warning state
+  billingStatus:
+    | "noPayment"
+    | "validPayment"
+    | "invalidPayment"
+    | "pastDue"
+    | null;
   growthTrialEligible: false;
   canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
