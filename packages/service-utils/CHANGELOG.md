@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.9
+
+### Patch Changes
+
+- [#6329](https://github.com/thirdweb-dev/js/pull/6329) [`1fa36c1`](https://github.com/thirdweb-dev/js/commit/1fa36c1d56758788a8f9053f8929497bacb2b115) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: Allow passing teamId with dashboard auth
+
+- [#6293](https://github.com/thirdweb-dev/js/pull/6293) [`8610b46`](https://github.com/thirdweb-dev/js/commit/8610b467b6d13be9dc902db79d3270132dba6894) Thanks [@MananTank](https://github.com/MananTank)! - Update TeamResponse and ProjectResponse types
+
 ## 0.8.8
 
 ### Patch Changes
