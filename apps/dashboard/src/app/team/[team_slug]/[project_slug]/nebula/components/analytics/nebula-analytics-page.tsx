@@ -14,7 +14,7 @@ export function NebulaAnalyticsPage(props: {
     to: string | undefined | string[];
     interval: string | undefined | string[];
   };
-  accountId: string;
+  teamId: string;
   authToken: string;
 }) {
   return (
@@ -37,7 +37,7 @@ export function NebulaAnalyticsPage(props: {
         >
           <NebulaAnalyticDashboard
             searchParams={props.searchParams}
-            accountId={props.accountId}
+            teamId={props.teamId}
             authToken={props.authToken}
           />
         </ResponsiveSuspense>
@@ -47,7 +47,7 @@ export function NebulaAnalyticsPage(props: {
 }
 
 async function NebulaAnalyticDashboard(props: {
-  accountId: string;
+  teamId: string;
   authToken: string;
   searchParams: {
     from: string | undefined | string[];
@@ -60,11 +60,12 @@ async function NebulaAnalyticDashboard(props: {
   );
 
   const res = await fetchNebulaAnalytics({
-    accountId: props.accountId,
+    teamId: props.teamId,
     authToken: props.authToken,
     from: normalizeTimeISOString(range.from),
     to: normalizeTimeISOString(range.to),
-    interval,
+    // internally renamed
+    period: interval,
   });
 
   if (!res.ok) {

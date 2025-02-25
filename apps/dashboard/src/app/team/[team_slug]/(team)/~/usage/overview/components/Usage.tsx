@@ -92,12 +92,14 @@ export const Usage: React.FC<UsageProps> = ({
   return (
     <div className="flex grow flex-col gap-8">
       <InAppWalletUsersChartCard
+        teamId={team.id}
         accountId={account.id}
         from={currentPeriodStart}
         to={currentPeriodEnd}
       />
 
       <TotalSponsoredCard
+        teamId={team.id}
         accountId={account.id}
         from={currentPeriodStart}
         to={currentPeriodEnd}
@@ -138,6 +140,7 @@ export const Usage: React.FC<UsageProps> = ({
 type ChartCardProps = {
   from: Date;
   to: Date;
+  teamId: string;
   accountId: string;
 };
 
@@ -176,7 +179,7 @@ async function AsyncInAppWalletUsersChartCard(
     period: "day",
     from: props.from,
     to: props.to,
-    accountId: props.accountId,
+    teamId: props.teamId,
   }).catch(() => null);
 
   return (
@@ -222,17 +225,17 @@ async function AsyncTotalSponsoredChartCard(
     title: string;
   },
 ) {
-  const { accountId, from, to } = props;
+  const { teamId, from, to } = props;
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.all([
     // User operations usage
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "week",
     }),
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "all",

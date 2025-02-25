@@ -5,21 +5,18 @@ import {
   getWalletConnections,
   getWalletUsers,
 } from "@/api/analytics";
-import { redirect } from "next/navigation";
-
-import type {
-  InAppWalletStats,
-  WalletStats,
-  WalletUserStats,
-} from "types/analytics";
-
 import {
   type DurationId,
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
-
+import { redirect } from "next/navigation";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
+import type {
+  InAppWalletStats,
+  WalletStats,
+  WalletUserStats,
+} from "types/analytics";
 import { AnalyticsHeader } from "../../../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
 import { EmptyState } from "../../../../components/Analytics/EmptyState";
@@ -27,15 +24,10 @@ import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
 
 import { getTeamBySlug } from "@/api/team";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { getValidAccount } from "app/account/settings/getAccount";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Suspense } from "react";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
-
-// revalidate every 5 minutes
-export const maxDuration = 300;
 
 type SearchParams = {
   usersChart?: string;
@@ -54,7 +46,6 @@ export default async function TeamOverviewPage(props: {
     props.searchParams,
   ]);
 
-  const account = await getValidAccount(`/team/${params.team_slug}`);
   const team = await getTeamBySlug(params.team_slug);
 
   if (!team) {
@@ -77,7 +68,7 @@ export default async function TeamOverviewPage(props: {
       <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
         <Suspense fallback={<GenericLoadingPage />}>
           <OverviewPageContent
-            account={account}
+            teamId={team.id}
             range={range}
             interval={interval}
             searchParams={searchParams}
@@ -89,12 +80,12 @@ export default async function TeamOverviewPage(props: {
 }
 
 async function OverviewPageContent(props: {
-  account: Account;
+  teamId: string;
   range: Range;
   interval: "day" | "week";
   searchParams: SearchParams;
 }) {
-  const { account, range, interval, searchParams } = props;
+  const { teamId, range, interval, searchParams } = props;
 
   const [
     walletConnections,
@@ -107,47 +98,47 @@ async function OverviewPageContent(props: {
   ] = await Promise.all([
     // Aggregated wallet connections
     getWalletConnections({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",
     }),
     // Time series data for wallet users
     getWalletUsers({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     // In-app wallet usage
     getInAppWalletUsage({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",
     }),
     // User operations usage
     getUserOpUsage({
-      accountId: account.id,
+      teamId,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getUserOpUsage({
-      accountId: account.id,
+      teamId,
       from: range.from,
       to: range.to,
       period: "all",
     }),
     // Client transactions
     getClientTransactions({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getClientTransactions({
-      accountId: account.id,
+      teamId: teamId,
       from: range.from,
       to: range.to,
       period: "all",

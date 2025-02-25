@@ -47,3 +47,26 @@ export async function getMembers(teamSlug: string) {
 
   return undefined;
 }
+
+export async function getMemberById(teamSlug: string, memberId: string) {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return undefined;
+  }
+
+  const res = await fetch(
+    `${API_SERVER_URL}/v1/teams/${teamSlug}/members/${memberId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (res.ok) {
+    return (await res.json())?.result as TeamMember;
+  }
+
+  return undefined;
+}

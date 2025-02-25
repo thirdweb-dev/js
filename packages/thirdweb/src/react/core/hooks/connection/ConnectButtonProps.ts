@@ -14,6 +14,7 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
+import type { CurrencyMeta } from "../../../web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
@@ -90,7 +91,7 @@ export type PayUIOptions = Prettify<
       | {
           testMode?: boolean;
           prefillSource?: {
-            currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+            currency?: CurrencyMeta["shorthand"];
           };
           preferredProvider?: FiatProvider;
         }

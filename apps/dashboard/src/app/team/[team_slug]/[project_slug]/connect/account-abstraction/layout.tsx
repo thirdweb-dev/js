@@ -1,3 +1,4 @@
+import { getAggregateUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import type { Metadata } from "next";
@@ -31,8 +32,14 @@ export default async function Page(props: {
   const hasSmartWalletsWithoutBilling =
     isBundlerServiceEnabled && team.billingStatus !== "validPayment";
 
+  const userOpStats = await getAggregateUserOpUsage({
+    teamId: team.id,
+    projectId: project.id,
+  });
+
   return (
     <AccountAbstractionLayout
+      userOpStats={userOpStats}
       projectSlug={project.slug}
       teamSlug={team_slug}
       projectKey={project.publishableKey}

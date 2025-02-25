@@ -1,4 +1,6 @@
 import "server-only";
+import type { ChainMetadata } from "thirdweb/chains";
+import type { ChainService } from "../../app/(dashboard)/(chain)/types/chain";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "../constants/env";
 
 export async function getGasSponsoredChains() {
@@ -31,4 +33,22 @@ export async function getGasSponsoredChains() {
     console.error("Failed to parse gas sponsored chains", e);
     return [];
   }
+}
+
+export function getChains() {
+  return fetch(
+    `${API_SERVER_URL}/v1/chains`,
+    // revalidate every 60 minutes
+    { next: { revalidate: 60 * 60 } },
+  ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>;
+}
+
+export function getChainServices() {
+  return fetch(
+    `${API_SERVER_URL}/v1/chains/services`,
+    // revalidate every 60 minutes
+    { next: { revalidate: 60 * 60 } },
+  ).then((res) => res.json()) as Promise<{
+    data: Record<number, Array<ChainService>>;
+  }>;
 }

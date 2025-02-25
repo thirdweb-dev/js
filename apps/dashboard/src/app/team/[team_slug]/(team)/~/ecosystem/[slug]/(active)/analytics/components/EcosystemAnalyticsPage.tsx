@@ -1,18 +1,20 @@
+import { getEcosystemWalletUsage } from "@/api/analytics";
 import {
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
 import { RangeSelector } from "components/analytics/range-selector";
-import { getEcosystemWalletUsage } from "data/analytics/wallets/ecosystem";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 import { EcosystemWalletsSummary } from "./Summary";
 
 export async function EcosystemAnalyticsPage({
   ecosystemSlug,
+  teamId,
   interval,
   range,
 }: {
   ecosystemSlug: string;
+  teamId: string;
   interval: "day" | "week";
   range?: Range;
 }) {
@@ -22,6 +24,7 @@ export async function EcosystemAnalyticsPage({
 
   const allTimeStatsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
+    teamId,
     from: new Date(2022, 0, 1),
     to: new Date(),
     period: "all",
@@ -29,6 +32,7 @@ export async function EcosystemAnalyticsPage({
 
   const monthlyStatsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
+    teamId,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     to: new Date(),
     period: "month",
@@ -36,6 +40,7 @@ export async function EcosystemAnalyticsPage({
 
   const statsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
+    teamId,
     from: range.from,
     to: range.to,
     period: interval,
