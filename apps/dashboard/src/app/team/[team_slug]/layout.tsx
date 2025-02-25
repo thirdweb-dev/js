@@ -3,6 +3,10 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import { redirect } from "next/navigation";
 import { TWAutoConnect } from "../../components/autoconnect";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
+import {
+  PastDueBanner,
+  ServiceCutOffBanner,
+} from "./(team)/_components/BillingAlertBanners";
 
 export default async function RootTeamLayout(props: {
   children: React.ReactNode;
@@ -17,8 +21,19 @@ export default async function RootTeamLayout(props: {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <div className="flex grow flex-col">{props.children}</div>
+      <div className="flex grow flex-col">
+        {team.billingStatus === "pastDue" && (
+          <PastDueBanner teamSlug={team_slug} />
+        )}
+
+        {team.billingStatus === "invalidPayment" && (
+          <ServiceCutOffBanner teamSlug={team_slug} />
+        )}
+
+        {props.children}
+      </div>
       <TWAutoConnect />
+
       <AppFooter />
       <SaveLastVisitedTeamPage />
     </div>
