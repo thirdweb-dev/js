@@ -30,7 +30,7 @@ export class UsageV2Producer {
     /**
      * A comma-separated list of `host[:port]` Kafka servers.
      */
-    kafkaServers: "development" | "production";
+    kafkaServers: string;
     /**
      * The product where usage is coming from.
      */
