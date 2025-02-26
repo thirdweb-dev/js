@@ -35,12 +35,7 @@ export type StaticPrepareTransactionOptions = {
   };
 };
 
-export type TransactionType =
-  | "legacy"
-  | "eip1559"
-  | "eip2930"
-  | "eip4844"
-  | "eip7702";
+type TransactionType = "legacy" | "eip1559" | "eip2930" | "eip4844" | "eip7702";
 
 export const TransactionTypeMap: Record<TransactionType, number> = {
   legacy: 0,
