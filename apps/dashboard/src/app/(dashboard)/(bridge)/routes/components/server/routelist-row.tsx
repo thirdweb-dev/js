@@ -76,6 +76,7 @@ export async function RouteListRow({
           <div className="flex items-center gap-1">
             {resolvedOriginTokenIconUri ? (
               // For now we're using a normal img tag because the domain for these images is unknown
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
@@ -110,6 +111,7 @@ export async function RouteListRow({
         <div className="flex flex-row items-center gap-4">
           <div className="flex items-center gap-1">
             {resolvedDestinationTokenIconUri ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}

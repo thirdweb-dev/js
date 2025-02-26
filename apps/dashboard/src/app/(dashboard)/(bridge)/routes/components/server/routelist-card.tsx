@@ -74,6 +74,7 @@ export async function RouteListCard({
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
             {resolvedOriginTokenIconUri ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
@@ -83,6 +84,7 @@ export async function RouteListCard({
               <div className="size-8 rounded-full bg-white/10" />
             )}
             {resolvedDestinationTokenIconUri ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}

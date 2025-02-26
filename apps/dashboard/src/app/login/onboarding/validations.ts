@@ -1,4 +1,3 @@
-import { RE_EMAIL } from "utils/regex";
 import { z } from "zod";
 
 const nameValidation = z
@@ -6,12 +5,10 @@ const nameValidation = z
   .min(3, { message: "Must be at least 3 chars" })
   .max(64, { message: "Must be max 64 chars" });
 
-const emailValidation = z.string().refine((str) => RE_EMAIL.test(str), {
-  message: "Email address is not valid",
-});
+export const emailSchema = z.string().email("Invalid email address");
 
 export const accountValidationSchema = z.object({
-  email: emailValidation,
+  email: emailSchema,
   name: nameValidation.or(z.literal("")),
 });
 

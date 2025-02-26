@@ -143,7 +143,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
               }
             : undefined
         }
-        canTrialGrowth={false}
         // upsell growth plan if user is on free plan
         highlighted={validTeamPlan === "free" || validTeamPlan === "starter"}
         teamSlug={team.slug}

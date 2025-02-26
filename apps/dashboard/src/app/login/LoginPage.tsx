@@ -1,7 +1,7 @@
 "use client";
 
-import { redirectToCheckout } from "@/actions/billing";
 import { getRawAccountAction } from "@/actions/getAccount";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { TURNSTILE_SITE_KEY } from "@/constants/env";
@@ -12,16 +12,19 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
-import { ConnectEmbed, useActiveWalletConnectionStatus } from "thirdweb/react";
+import {
+  ConnectEmbed,
+  useActiveAccount,
+  useActiveWalletConnectionStatus,
+} from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
-import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
-import { isOnboardingComplete } from "./onboarding/isOnboardingRequired";
+import { isAccountOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
-const LazyOnboardingUI = lazy(
-  () => import("./onboarding/on-boarding-ui.client"),
+const LazyAccountOnboarding = lazy(
+  () => import("./onboarding/account-onboarding"),
 );
 
 const wallets = [
@@ -96,26 +99,13 @@ export function LoginAndOnboardingPage(props: {
   );
 }
 
-export function LoginAndOnboardingPageContent(props: {
-  account: Account | undefined;
-  redirectPath: string;
+function LoginPageContainer(props: {
+  children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex grow flex-col">
-      <main className="container z-10 flex grow flex-col justify-center gap-6 py-12">
-        <ClientOnly
-          ssr={
-            <div className="flex justify-center">
-              <LoadingCard />
-            </div>
-          }
-          className="flex justify-center"
-        >
-          <PageContent
-            redirectPath={props.redirectPath}
-            account={props.account}
-          />
-        </ClientOnly>
+    <>
+      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
+        {props.children}
       </main>
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -124,22 +114,15 @@ export function LoginAndOnboardingPageContent(props: {
         src="/assets/login/background.svg"
         className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
       />
-    </div>
+    </>
   );
 }
 
-function LoadingCard() {
-  return (
-    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
-      <Spinner className="size-10" />
-    </div>
-  );
-}
-
-function PageContent(props: {
+export function LoginAndOnboardingPageContent(props: {
   redirectPath: string;
   account: Account | undefined;
 }) {
+  const accountAddress = useActiveAccount()?.address;
   const [screen, setScreen] = useState<
     | { id: "login" }
     | {
@@ -167,7 +150,7 @@ function PageContent(props: {
       return;
     }
 
-    if (!isOnboardingComplete(account)) {
+    if (!isAccountOnboardingComplete(account)) {
       setScreen({
         id: "onboarding",
         account,
@@ -185,32 +168,49 @@ function PageContent(props: {
     }
   }, [connectionStatus, screen.id]);
 
-  if (connectionStatus === "connecting") {
-    return <LoadingCard />;
+  if (screen.id === "complete") {
+    return <GenericLoadingPage className="border-none" />;
   }
 
-  if (connectionStatus !== "connected" || screen.id === "login") {
-    return <CustomConnectEmbed onLogin={onLogin} />;
+  if (connectionStatus === "connecting") {
+    return (
+      <LoginPageContainer>
+        <ConnectEmbedSizedLoadingCard />
+      </LoginPageContainer>
+    );
+  }
+
+  if (
+    connectionStatus !== "connected" ||
+    screen.id === "login" ||
+    !accountAddress
+  ) {
+    return (
+      <LoginPageContainer>
+        <CustomConnectEmbed onLogin={onLogin} />
+      </LoginPageContainer>
+    );
   }
 
   if (screen.id === "onboarding") {
     return (
-      <Suspense fallback={<LoadingCard />}>
-        <LazyOnboardingUI
-          account={screen.account}
+      <Suspense fallback={<GenericLoadingPage className="border-none" />}>
+        <LazyAccountOnboarding
           onComplete={onComplete}
-          redirectPath={props.redirectPath}
-          redirectToCheckout={redirectToCheckout}
           onLogout={() => {
             setScreen({ id: "login" });
           }}
-          skipShowingPlans={props.redirectPath.startsWith("/join/team")}
+          accountAddress={accountAddress}
         />
       </Suspense>
     );
   }
 
-  return <LoadingCard />;
+  return (
+    <LoginPageContainer>
+      <CustomConnectEmbed onLogin={onLogin} />
+    </LoginPageContainer>
+  );
 }
 
 function CustomConnectEmbed(props: {
@@ -266,5 +266,23 @@ function CustomConnectEmbed(props: {
         onSuccess={(token) => setTurnstileToken(token)}
       />
     </div>
+  );
+}
+
+function ConnectEmbedSizedCard(props: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
+      {props.children}
+    </div>
+  );
+}
+
+function ConnectEmbedSizedLoadingCard() {
+  return (
+    <ConnectEmbedSizedCard>
+      <Spinner className="size-10" />
+    </ConnectEmbedSizedCard>
   );
 }

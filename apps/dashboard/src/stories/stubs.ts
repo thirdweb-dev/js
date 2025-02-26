@@ -44,6 +44,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     billingPlanVersion: 1,
     canCreatePublicChains: null,
     image: null,
+    isOnboarded: true,
     enabledScopes: [
       "pay",
       "storage",
@@ -266,6 +267,18 @@ export function accountStub(overrides?: Partial<Account>): Account {
   return {
     email: "user@example.com",
     name: "John Doe",
+    id: "foo",
+    isStaff: false,
+    advancedEnabled: false,
+    creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+    ...overrides,
+  };
+}
+
+export function newAccountStub(overrides?: Partial<Account>): Account {
+  return {
+    email: undefined,
+    name: undefined,
     id: "foo",
     isStaff: false,
     advancedEnabled: false,
