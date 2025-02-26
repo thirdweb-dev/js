@@ -85,7 +85,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
       contract,
       tokenId: BigInt(tokenId || 0),
       includeOwner: true,
-      ignoreTokenIndex: true,
+      tokenByIndex: false,
     },
   );
 

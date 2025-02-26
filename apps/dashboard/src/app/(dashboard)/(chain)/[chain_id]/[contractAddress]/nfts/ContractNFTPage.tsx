@@ -42,6 +42,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const isSetSharedMetadataSupported =
     ERC721Ext.isSetSharedMetadataSupported(functionSelectors);
 
+  const isTokenByIndexSupported =
+    ERC721Ext.isTokenByIndexSupported(functionSelectors);
+
   const canRenderNFTTable = (() => {
     if (isErc721) {
       return ERC721Ext.isGetNFTsSupported(functionSelectors);
@@ -101,7 +104,11 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
       </div>
       {canShowSupplyCards && <SupplyCards contract={contract} />}
       {canRenderNFTTable && (
-        <NFTGetAllTable contract={contract} isErc721={isErc721} />
+        <NFTGetAllTable
+          contract={contract}
+          isErc721={isErc721}
+          tokenByIndex={isTokenByIndexSupported}
+        />
       )}
     </div>
   );

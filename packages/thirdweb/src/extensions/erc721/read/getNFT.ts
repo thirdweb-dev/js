@@ -1,5 +1,3 @@
-import { type Abi, toFunctionSelector } from "viem";
-import { resolveContractAbi } from "../../../contract/actions/resolve-abi.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
@@ -8,10 +6,7 @@ import {
   type TokenURIParams,
   tokenURI,
 } from "../__generated__/IERC721A/read/tokenURI.js";
-import {
-  isTokenByIndexSupported,
-  tokenByIndex,
-} from "../__generated__/IERC721Enumerable/read/tokenByIndex.js";
+import { tokenByIndex } from "../__generated__/IERC721Enumerable/read/tokenByIndex.js";
 
 export { isTokenURISupported as isGetNFTSupported } from "../__generated__/IERC721A/read/tokenURI.js";
 
@@ -26,9 +21,12 @@ export type GetNFTParams = Prettify<
      */
     includeOwner?: boolean;
     /**
-     * Whether to check tokenId by index.
+     * Whether to check and fetch tokenID by index, in case of non-sequential IDs.
+     *
+     * It should be set to true if it's an ERC721Enumerable contract, and has `tokenByIndex` function.
+     * In this case, the provided tokenId will be considered as token-index and actual tokenId will be fetched from the contract.
      */
-    ignoreTokenIndex?: boolean;
+    tokenByIndex?: boolean;
   }
 >;
 
@@ -45,22 +43,30 @@ export type GetNFTParams = Prettify<
  *  tokenId: 1n,
  * });
  * ```
+ *
+ * * @example
+ * ```ts
+ * import { getNFT } from "thirdweb/extensions/erc721";
+ *
+ *
+ * const nft = await getNFT({
+ *  contract,
+ *  tokenId: 1n,
+ *  nonSequential: true // use this flag if the contract supports `tokenByIndex` and the above tokenId should be treated as an index.
+ * });
+ * ```
  */
 export async function getNFT(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
-  const abi = await resolveContractAbi<Abi>(options.contract);
-  const selectors = abi
-    .filter((f) => f.type === "function")
-    .map((f) => toFunctionSelector(f));
-  const hasTokenByIndex = isTokenByIndexSupported(selectors);
-
   let tokenId = options.tokenId;
-  if (!options.ignoreTokenIndex && hasTokenByIndex) {
-    tokenId = await tokenByIndex({
-      contract: options.contract,
-      index: options.tokenId,
-    });
+  if (options.tokenByIndex) {
+    try {
+      tokenId = await tokenByIndex({
+        contract: options.contract,
+        index: options.tokenId,
+      });
+    } catch {}
   }
 
   const [uri, owner] = await Promise.all([

@@ -45,10 +45,12 @@ import { useReadContract } from "thirdweb/react";
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
   isErc721: boolean;
+  tokenByIndex: boolean;
 }
 export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   contract,
   isErc721,
+  tokenByIndex,
 }) => {
   // if it's not erc721, it's erc1155
   const isErc1155 = !isErc721;
@@ -158,6 +160,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       start: queryParams.start,
       count: queryParams.count,
       includeOwners: true,
+      tokenByIndex,
     },
   );
 
