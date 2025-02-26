@@ -239,7 +239,7 @@ export async function getWalletUsers(
 ): Promise<WalletUserStats[]> {
   const searchParams = buildSearchParams(params);
   const res = await fetchAnalytics(
-    `v2/wallet-connects/users?${searchParams.toString()}`,
+    `v2/sdk/wallet-connects/users?${searchParams.toString()}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
