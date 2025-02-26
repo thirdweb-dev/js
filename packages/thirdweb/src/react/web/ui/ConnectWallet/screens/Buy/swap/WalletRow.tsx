@@ -16,12 +16,14 @@ import { Skeleton } from "../../../../components/Skeleton.js";
 import { WalletImage } from "../../../../components/WalletImage.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
+import { OutlineWalletIcon } from "../../../icons/OutlineWalletIcon.js";
 
 export function WalletRow(props: {
   client: ThirdwebClient;
   address: string;
   iconSize?: keyof typeof iconSize;
   textSize?: keyof typeof fontSize;
+  label?: string;
 }) {
   const { client, address } = props;
   const connectedWallets = useConnectedWallets();
@@ -51,8 +53,15 @@ export function WalletRow(props: {
             size={iconSize[props.iconSize || "md"]}
             client={props.client}
           />
-        ) : null}
+        ) : (
+          <OutlineWalletIcon size={iconSize[props.iconSize || "md"]} />
+        )}
         <Container flex="column" gap="4xs">
+          {props.label ? (
+            <Text size="xs" color="secondaryText">
+              {props.label}
+            </Text>
+          ) : null}
           <Text size={props.textSize || "xs"} color="primaryText">
             {addressOrENS || shortenAddress(props.address)}
           </Text>

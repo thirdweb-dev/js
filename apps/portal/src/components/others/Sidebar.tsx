@@ -110,6 +110,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
       <Link
         href={link.href}
         onClick={props.onLinkClick}
+        target={link.href.startsWith("http") ? "_blank" : undefined}
         className={clsx(
           "overflow-hidden text-ellipsis py-1.5 font-medium text-base transition-colors duration-300 hover:text-foreground",
           isActive ? "font-medium text-foreground" : "text-muted-foreground",
@@ -127,6 +128,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
   return (
     <Link
       href={link.href}
+      target={link.href.startsWith("http") ? "_blank" : undefined}
       onClick={props.onLinkClick}
       className={clsx(
         "block overflow-hidden text-ellipsis py-1.5 font-medium text-base transition-colors duration-300 hover:text-foreground",

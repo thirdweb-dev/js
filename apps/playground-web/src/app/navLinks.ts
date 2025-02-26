@@ -65,7 +65,7 @@ export const staticSidebarLinks: SidebarLink[] = [
         expanded: false,
         links: [
           {
-            name: "Top up",
+            name: "Fund Wallet",
             href: "/connect/pay",
           },
           {

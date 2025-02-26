@@ -163,6 +163,16 @@ function getDefaultCurrencyBasedOnLocation(): CurrencyMeta["shorthand"] {
       return "CAD";
     }
 
+    // australia
+    if (timeZone.includes("australia")) {
+      return "AUD";
+    }
+
+    // new zealand
+    if (timeZone.includes("new zealand")) {
+      return "NZD";
+    }
+
     return "USD";
   } catch {
     return "USD";

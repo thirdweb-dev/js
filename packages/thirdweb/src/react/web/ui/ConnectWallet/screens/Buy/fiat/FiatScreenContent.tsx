@@ -3,7 +3,6 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { FiatProvider } from "../../../../../../../pay/utils/commonTypes.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import {
@@ -33,9 +32,7 @@ import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
 import type { SelectedScreen } from "../main/types.js";
-import { openOnrampPopup } from "../openOnRamppopup.js";
 import { FiatFees } from "../swap/Fees.js";
-import { addPendingTx } from "../swap/pendingSwapTx.js";
 import type { PayerInfo } from "../types.js";
 import { Providers } from "./Providers.js";
 import type { CurrencyMeta } from "./currencies.js";
@@ -113,25 +110,9 @@ export function FiatScreenContent(props: {
       return;
     }
 
-    const hasTwoSteps = isSwapRequiredPostOnramp(fiatQuoteQuery.data);
-    let openedWindow: Window | null = null;
-
-    if (!hasTwoSteps) {
-      openedWindow = openOnrampPopup(
-        fiatQuoteQuery.data.onRampLink,
-        typeof props.theme === "string" ? props.theme : props.theme.type,
-      );
-
-      addPendingTx({
-        type: "fiat",
-        intentId: fiatQuoteQuery.data.intentId,
-      });
-    }
-
     setScreen({
       id: "fiat-flow",
       quote: fiatQuoteQuery.data,
-      openedWindow,
     });
   }
 

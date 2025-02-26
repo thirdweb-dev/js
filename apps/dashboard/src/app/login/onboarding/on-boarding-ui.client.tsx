@@ -25,6 +25,7 @@ function OnboardingUI(props: {
   // path to redirect from stripe
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
+  skipShowingPlans: boolean;
 }) {
   const { account } = props;
   const [screen, setScreen] = useState<OnboardingScreen>({ id: "onboarding" });
@@ -119,7 +120,12 @@ function OnboardingUI(props: {
               if (account.onboardSkipped) {
                 props.onComplete();
               } else {
-                setScreen({ id: "plan", team: res.team });
+                if (props.skipShowingPlans) {
+                  props.onComplete();
+                  skipOnboarding();
+                } else {
+                  setScreen({ id: "plan", team: res.team });
+                }
               }
             }
           }}
@@ -137,8 +143,8 @@ function OnboardingUI(props: {
           redirectPath={props.redirectPath}
           teamSlug={screen.team.slug}
           skipPlan={async () => {
-            await skipOnboarding().catch(() => {});
             props.onComplete();
+            skipOnboarding();
           }}
           canTrialGrowth={true}
           redirectToCheckout={props.redirectToCheckout}

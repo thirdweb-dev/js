@@ -17,6 +17,7 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
+import { examplePrompts } from "../data/examplePrompts";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
 import { ChatBar } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
@@ -180,6 +181,23 @@ export function ChatPageContent(props: {
           text: "Thinking...",
         },
       ]);
+
+      const lowerCaseMessage = message.toLowerCase();
+      // handle hardcoded replies first
+      const interceptedReply = examplePrompts.find(
+        (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
+      )?.interceptedReply;
+
+      if (interceptedReply) {
+        // slight delay to match other response times
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          { type: "assistant", text: interceptedReply, request_id: undefined },
+        ]);
+
+        return;
+      }
 
       setIsChatStreaming(true);
       setEnableAutoScroll(true);

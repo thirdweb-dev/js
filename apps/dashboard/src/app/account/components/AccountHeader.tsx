@@ -8,7 +8,7 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
-import { LazyCreateAPIKeyDialog } from "../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { LazyCreateProjectDialog } from "../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { doLogout } from "../../login/auth-actions";
 import {
   type AccountHeaderCompProps,
@@ -61,27 +61,26 @@ export function AccountHeader(props: {
       <AccountHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <AccountHeaderMobileUI {...headerProps} className="lg:hidden" />
 
-      <LazyCreateAPIKeyDialog
-        open={createProjectDialogState.isOpen}
-        onOpenChange={() =>
-          setCreateProjectDialogState({
-            isOpen: false,
-          })
-        }
-        onCreateAndComplete={() => {
-          // refresh projects
-          router.refresh();
-        }}
-        teamSlug={
-          createProjectDialogState.isOpen
-            ? createProjectDialogState.team.slug
-            : undefined
-        }
-        enableNebulaServiceByDefault={
-          createProjectDialogState.isOpen &&
-          createProjectDialogState.team.enabledScopes.includes("nebula")
-        }
-      />
+      {createProjectDialogState.isOpen && (
+        <LazyCreateProjectDialog
+          open={true}
+          onOpenChange={() =>
+            setCreateProjectDialogState({
+              isOpen: false,
+            })
+          }
+          onCreateAndComplete={() => {
+            // refresh projects
+            router.refresh();
+          }}
+          teamId={createProjectDialogState.team.id}
+          teamSlug={createProjectDialogState.team.slug}
+          enableNebulaServiceByDefault={
+            createProjectDialogState.isOpen &&
+            createProjectDialogState.team.enabledScopes.includes("nebula")
+          }
+        />
+      )}
     </div>
   );
 }

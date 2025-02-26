@@ -105,7 +105,7 @@ function DashedBgDiv(props: {
     <div
       className={props.className}
       style={{
-        backgroundImage: `linear-gradient(${props.type === "horizontal" ? "90deg" : "180deg"}, hsl(var(--foreground)/20%) 0 30%, transparent 0 100%)`,
+        backgroundImage: `linear-gradient(${props.type === "horizontal" ? "90deg" : "180deg"}, hsl(var(--active-border)) 0 30%, transparent 0 100%)`,
         backgroundRepeat: "repeat",
         backgroundSize: "10px 10px",
         maskImage: `linear-gradient(${

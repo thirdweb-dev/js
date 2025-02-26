@@ -1,6 +1,7 @@
 "use client";
-
-import { apiServerProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -19,18 +20,27 @@ import {
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import type { ApiKey, UpdateKeyInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { RotateSecretKeyAPIReturnType } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  useRevokeApiKey,
-  useUpdateApiKey,
+  deleteProjectClient,
+  rotateSecretKeyClient,
+  updateProjectClient,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import type { ProjectService } from "@thirdweb-dev/service-utils";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import {
   type ServiceName,
@@ -42,58 +52,102 @@ import {
   CircleAlertIcon,
   ExternalLinkIcon,
   RefreshCcwIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { RE_BUNDLE_ID } from "utils/regex";
 import { joinWithComma, toArrFromList } from "utils/string";
+import { validStrList } from "utils/validations";
+import { z } from "zod";
+import { apiServerProxy } from "../../../../../@/actions/proxies";
 import {
   HIDDEN_SERVICES,
-  type ProjectSettingsPageFormSchema,
-  projectSettingsPageFormSchema,
+  projectDomainsSchema,
+  projectNameSchema,
 } from "../../../../../components/settings/ApiKeys/validations";
 
-type EditProjectUIPaths = {
+// TODO: instead of single submit handler, move the submit to each section
+
+const projectSettingsFormSchema = z.object({
+  name: projectNameSchema,
+  domains: projectDomainsSchema,
+  servicesMeta: z.array(
+    z.object({
+      name: z.string(),
+      enabled: z.boolean(),
+      actions: z.array(z.string()),
+    }),
+  ),
+  bundleIds: z.string().refine((str) => validStrList(str, RE_BUNDLE_ID), {
+    message: "Some of the bundle ids are invalid",
+  }),
+});
+
+type ProjectSettingsPageFormSchema = z.infer<typeof projectSettingsFormSchema>;
+
+type ProjectSettingPaths = {
   inAppConfig: string;
   aaConfig: string;
   payConfig: string;
   afterDeleteRedirectTo: string;
 };
 
-type RotateSecretKeyAPIReturnType = {
-  data: {
-    secret: string;
-    secretMasked: string;
-    secretHash: string;
-  };
+type TeamWithRole = {
+  role: "MEMBER" | "OWNER";
+  team: Team;
 };
 
 export function ProjectGeneralSettingsPage(props: {
-  apiKey: ApiKey;
-  paths: EditProjectUIPaths;
-  onKeyUpdated: (() => void) | undefined;
+  project: Project;
+  teamSlug: string;
+  teamId: string;
   showNebulaSettings: boolean;
-  projectId: string;
+  teamsWithRole: TeamWithRole[];
+  client: ThirdwebClient;
+  isOwnerAccount: boolean;
 }) {
-  const updateMutation = useUpdateApiKey();
-  const deleteMutation = useRevokeApiKey();
+  const router = useDashboardRouter();
 
   return (
     <ProjectGeneralSettingsPageUI
-      apiKey={props.apiKey}
-      updateMutation={updateMutation}
-      deleteMutation={deleteMutation}
-      paths={props.paths}
-      onKeyUpdated={props.onKeyUpdated}
+      isOwnerAccount={props.isOwnerAccount}
+      client={props.client}
+      teamSlug={props.teamSlug}
+      project={props.project}
+      updateProject={async (projectValues) => {
+        return updateProjectClient(
+          {
+            projectId: props.project.id,
+            teamId: props.project.teamId,
+          },
+          projectValues,
+        );
+      }}
+      deleteProject={async () => {
+        await deleteProjectClient({
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+        });
+      }}
+      onKeyUpdated={() => {
+        router.refresh();
+      }}
       showNebulaSettings={props.showNebulaSettings}
       rotateSecretKey={async () => {
-        const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
-          pathname: "/v2/keys/rotate-secret-key",
+        return rotateSecretKeyClient(props.project.id);
+      }}
+      teamsWithRole={props.teamsWithRole}
+      transferProject={async (newTeam) => {
+        const res = await apiServerProxy({
+          pathname: `/v1/teams/${props.teamId}/projects/${props.project.id}/transfer`,
           method: "POST",
           body: JSON.stringify({
-            projectId: props.projectId,
+            destinationTeamId: newTeam.id,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -101,146 +155,153 @@ export function ProjectGeneralSettingsPage(props: {
         });
 
         if (!res.ok) {
+          console.error(res.error);
           throw new Error(res.error);
         }
 
-        return res.data;
+        // Can't open new project in new team or new team landing pagae because it takes a while for the transfer and it doesn't show up in new team immediately
+        // so the safe option is to just redirect to the current team landing page
+        router.replace(`/team/${props.teamSlug}`);
       }}
     />
   );
 }
 
-type UpdateMutation = UseMutationResult<
-  unknown,
-  unknown,
-  UpdateKeyInput,
-  unknown
->;
-
-type DeleteMutation = UseMutationResult<unknown, unknown, string, unknown>;
-
-interface EditApiKeyProps {
-  apiKey: ApiKey;
-  updateMutation: UpdateMutation;
-  deleteMutation: DeleteMutation;
-  paths: EditProjectUIPaths;
-  onKeyUpdated: (() => void) | undefined;
-  showNebulaSettings: boolean;
-  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
-}
-
+type UpdateProject = (project: Partial<Project>) => Promise<Project>;
+type DeleteProject = () => Promise<void>;
+type RotateSecretKey = () => Promise<RotateSecretKeyAPIReturnType>;
 type UpdateAPIForm = UseFormReturn<ProjectSettingsPageFormSchema>;
 
-export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
-  props,
-) => {
-  const { apiKey, updateMutation, deleteMutation } = props;
+export function ProjectGeneralSettingsPageUI(props: {
+  project: Project;
+  updateProject: UpdateProject;
+  deleteProject: DeleteProject;
+  onKeyUpdated: (() => void) | undefined;
+  showNebulaSettings: boolean;
+  rotateSecretKey: RotateSecretKey;
+  teamSlug: string;
+  teamsWithRole: TeamWithRole[];
+  client: ThirdwebClient;
+  transferProject: (newTeam: Team) => Promise<void>;
+  isOwnerAccount: boolean;
+}) {
+  const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
+
+  const paths = {
+    aaConfig: `${projectLayout}/connect/account-abstraction/settings`,
+    inAppConfig: `${projectLayout}/connect/in-app-wallets/settings`,
+    payConfig: `${projectLayout}/connect/pay/settings`,
+    afterDeleteRedirectTo: `/team/${props.teamSlug}`,
+  };
+
+  const { project } = props;
   const trackEvent = useTrack();
   const router = useDashboardRouter();
+  const updateProject = useMutation({
+    mutationFn: props.updateProject,
+  });
+
   const form = useForm<ProjectSettingsPageFormSchema>({
-    resolver: zodResolver(projectSettingsPageFormSchema),
+    resolver: zodResolver(projectSettingsFormSchema),
     defaultValues: {
-      name: apiKey.name,
-      domains: joinWithComma(apiKey.domains),
-      bundleIds: joinWithComma(apiKey.bundleIds),
-      redirectUrls: joinWithComma(apiKey.redirectUrls),
-      services: SERVICES.map((srv) => {
-        const existingService = (apiKey.services || []).find(
-          (s) => s.name === srv.name,
+      name: project.name,
+      domains: joinWithComma(project.domains),
+      bundleIds: joinWithComma(project.bundleIds),
+      servicesMeta: SERVICES.map((service) => {
+        const projectService = project.services.find(
+          (projectService) => projectService.name === service.name,
         );
 
         return {
-          name: srv.name,
-          targetAddresses: existingService
-            ? joinWithComma(existingService.targetAddresses)
-            : "",
-          enabled: !!existingService,
-          actions: existingService?.actions || [],
-          recoveryShareManagement: existingService?.recoveryShareManagement,
-          customAuthentication: existingService?.customAuthentication,
-          customAuthEndpoint: existingService?.customAuthEndpoint,
-          applicationName: existingService?.applicationName,
-          applicationImageUrl: existingService?.applicationImageUrl,
+          name: service.name as ServiceName,
+          enabled: !!projectService,
+          actions: projectService?.actions || [],
         };
       }),
     },
   });
 
   const handleSubmit = form.handleSubmit((values) => {
-    const enabledServices = (values.services || []).filter(
-      (srv) => !!srv.enabled,
-    );
+    const services: ProjectService[] = [];
 
-    if (enabledServices.length > 0) {
-      // validate embedded wallets custom auth
-      const embeddedWallets = enabledServices.find(
-        (s) => s.name === "embeddedWallets",
-      );
+    for (const serviceMeta of values.servicesMeta) {
+      if (serviceMeta.enabled) {
+        function getBaseService(): ProjectService {
+          const projectService = project.services.find(
+            (s) => s.name === serviceMeta.name,
+          );
 
-      if (embeddedWallets) {
-        const { customAuthentication, recoveryShareManagement } =
-          embeddedWallets;
+          if (projectService) {
+            return projectService;
+          }
 
-        if (
-          recoveryShareManagement === "USER_MANAGED" &&
-          (!customAuthentication?.aud.length ||
-            !customAuthentication?.jwksUri.length)
-        ) {
-          return toast.error("Custom JSON Web Token configuration is invalid", {
-            description:
-              "To use In-App Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
-          });
+          if (serviceMeta.name === "pay") {
+            return {
+              name: "pay",
+              payoutAddress: null,
+              actions: [],
+            };
+          }
+
+          return {
+            name: serviceMeta.name as Exclude<ProjectService["name"], "pay">,
+            actions: [],
+          };
         }
+
+        const serviceToAdd = getBaseService();
+
+        // add the actions changes to the base service
+        if (serviceMeta.name === "storage") {
+          serviceToAdd.actions = serviceMeta.actions as ("read" | "write")[];
+          services.push(serviceToAdd);
+        }
+
+        services.push(serviceToAdd);
       }
+    }
 
-      const formattedValues = {
-        id: apiKey.id,
-        name: values.name,
-        domains: toArrFromList(values.domains),
-        bundleIds: toArrFromList(values.bundleIds),
-        redirectUrls: toArrFromList(values.redirectUrls, true),
-        services: (values.services || [])
-          .filter((srv) => srv.enabled)
-          // FIXME: Not yet supported, add when it is
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .map(({ recoveryShareManagement, ...srv }) => ({
-            ...srv,
-            targetAddresses: toArrFromList(srv.targetAddresses),
-          })),
-      };
-
-      trackEvent({
-        category: "api-keys",
-        action: "edit",
-        label: "attempt",
-      });
-
-      updateMutation.mutate(formattedValues, {
-        onSuccess: () => {
-          toast.success("Project updated successfully");
-          trackEvent({
-            category: "api-keys",
-            action: "edit",
-            label: "success",
-          });
-
-          props.onKeyUpdated?.();
-        },
-        onError: (err) => {
-          toast.error("Failed to update project");
-          trackEvent({
-            category: "api-keys",
-            action: "edit",
-            label: "error",
-            error: err,
-          });
-        },
-      });
-    } else {
-      toast.error("Service not selected", {
-        description: "Choose at least one service",
+    if (services.length === 0) {
+      return toast.error("No services selected", {
+        description: "Please select at least one service",
       });
     }
+
+    const projectValues: Partial<Project> = {
+      id: project.id,
+      name: values.name,
+      domains: toArrFromList(values.domains),
+      bundleIds: toArrFromList(values.bundleIds),
+      services,
+    };
+
+    trackEvent({
+      category: "api-keys",
+      action: "edit",
+      label: "attempt",
+    });
+
+    updateProject.mutate(projectValues, {
+      onSuccess: () => {
+        toast.success("Project updated successfully");
+        trackEvent({
+          category: "api-keys",
+          action: "edit",
+          label: "success",
+        });
+
+        props.onKeyUpdated?.();
+      },
+      onError: (err) => {
+        toast.error("Failed to update project");
+        trackEvent({
+          category: "api-keys",
+          action: "edit",
+          label: "error",
+          error: err,
+        });
+      },
+    });
   });
 
   return (
@@ -255,56 +316,63 @@ export const ProjectGeneralSettingsPageUI: React.FC<EditApiKeyProps> = (
         <div className="flex flex-col gap-8">
           <ProjectNameSetting
             form={form}
-            updateMutation={updateMutation}
+            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
           />
 
-          <APIKeyDetails
-            apiKey={apiKey}
+          <ProjectKeyDetails
+            project={project}
             rotateSecretKey={props.rotateSecretKey}
           />
 
           <AllowedDomainsSetting
             form={form}
-            updateMutation={updateMutation}
+            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
           />
 
           <AllowedBundleIDsSetting
             form={form}
-            updateMutation={updateMutation}
+            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
           />
 
           <EnabledServicesSetting
             form={form}
-            apiKey={apiKey}
-            updateMutation={updateMutation}
+            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
-            paths={props.paths}
+            paths={paths}
             showNebulaSettings={props.showNebulaSettings}
           />
 
+          <TransferProject
+            isOwnerAccount={props.isOwnerAccount}
+            client={props.client}
+            projectName={project.name}
+            teamsWithRole={props.teamsWithRole}
+            currentTeamId={project.teamId}
+            transferProject={props.transferProject}
+          />
+
           <DeleteProject
-            id={apiKey.id}
-            name={apiKey.name}
-            deleteMutation={deleteMutation}
+            projectName={project.name}
+            deleteProject={props.deleteProject}
             onDeleteSuccessful={() => {
-              router.replace(props.paths.afterDeleteRedirectTo);
+              router.replace(paths.afterDeleteRedirectTo);
             }}
           />
         </div>
       </form>
     </Form>
   );
-};
+}
 
 function ProjectNameSetting(props: {
   form: UpdateAPIForm;
-  updateMutation: UpdateMutation;
+  isUpdatingProject: boolean;
   handleSubmit: () => void;
 }) {
-  const { form, updateMutation, handleSubmit } = props;
+  const { form, handleSubmit } = props;
   const isNameDirty = form.getFieldState("name").isDirty;
 
   return (
@@ -319,7 +387,7 @@ function ProjectNameSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !isNameDirty,
-        isPending: updateMutation.isPending && isNameDirty,
+        isPending: props.isUpdatingProject && isNameDirty,
       }}
       bottomText="Please use 64 characters at maximum"
     >
@@ -336,10 +404,10 @@ function ProjectNameSetting(props: {
 
 function AllowedDomainsSetting(props: {
   form: UpdateAPIForm;
-  updateMutation: UpdateMutation;
+  isUpdatingProject: boolean;
   handleSubmit: () => void;
 }) {
-  const { form, handleSubmit, updateMutation } = props;
+  const { form, handleSubmit } = props;
   const isDomainsDirty = form.getFieldState("domains").isDirty;
 
   const helperText = (
@@ -384,7 +452,7 @@ function AllowedDomainsSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !isDomainsDirty,
-        isPending: updateMutation.isPending && isDomainsDirty,
+        isPending: props.isUpdatingProject && isDomainsDirty,
       }}
       bottomText="This is only applicable for web applications"
     >
@@ -441,17 +509,17 @@ function AllowedDomainsSetting(props: {
 
 function AllowedBundleIDsSetting(props: {
   form: UpdateAPIForm;
-  updateMutation: UpdateMutation;
+  isUpdatingProject: boolean;
   handleSubmit: () => void;
 }) {
-  const { form, handleSubmit, updateMutation } = props;
+  const { form, handleSubmit } = props;
   const isBundleIdsDirty = form.getFieldState("bundleIds").isDirty;
   return (
     <SettingsCard
       saveButton={{
         onClick: handleSubmit,
         disabled: !isBundleIdsDirty,
-        isPending: updateMutation.isPending && isBundleIdsDirty,
+        isPending: props.isUpdatingProject && isBundleIdsDirty,
       }}
       noPermissionText={undefined}
       header={{
@@ -516,21 +584,21 @@ function AllowedBundleIDsSetting(props: {
 
 function EnabledServicesSetting(props: {
   form: UpdateAPIForm;
-  updateMutation: UpdateMutation;
+  isUpdatingProject: boolean;
   handleSubmit: () => void;
-  apiKey: ApiKey;
-  paths: EditApiKeyProps["paths"];
+  paths: ProjectSettingPaths;
   showNebulaSettings: boolean;
 }) {
-  const { form, handleSubmit, updateMutation } = props;
+  const { form, handleSubmit } = props;
 
-  const { fields, update } = useFieldArray({
+  const formFields = useFieldArray({
     control: form.control,
-    name: "services",
+    name: "servicesMeta",
   });
-  const handleAction = (
+
+  const toggleServiceAction = (
     srvIdx: number,
-    srv: FieldArrayWithId<ProjectSettingsPageFormSchema, "services", "id">,
+    srv: FieldArrayWithId<ProjectSettingsPageFormSchema, "servicesMeta", "id">,
     actionName: string,
     checked: boolean,
   ) => {
@@ -538,7 +606,7 @@ function EnabledServicesSetting(props: {
       ? [...(srv.actions || []), actionName]
       : (srv.actions || []).filter((a) => a !== actionName);
 
-    update(srvIdx, {
+    formFields.update(srvIdx, {
       ...srv,
       actions,
     });
@@ -555,19 +623,25 @@ function EnabledServicesSetting(props: {
       saveButton={{
         onClick: handleSubmit,
         disabled: !form.formState.isDirty,
-        isPending: updateMutation.isPending,
+        isPending: props.isUpdatingProject,
       }}
       bottomText=""
     >
       <DynamicHeight>
         <div className="flex flex-col">
-          {fields.map((srv, idx) => {
-            const service = getServiceByName(srv.name as ServiceName);
-            const hidden =
-              (service.name === "nebula" && !props.showNebulaSettings) ||
-              HIDDEN_SERVICES.includes(service.name);
+          {formFields.fields.map((service, idx) => {
+            const serviceDefinition = getServiceByName(
+              service.name as ServiceName,
+            );
 
-            const serviceName = getServiceByName(service.name as ServiceName);
+            const hidden =
+              (serviceDefinition.name === "nebula" &&
+                !props.showNebulaSettings) ||
+              HIDDEN_SERVICES.includes(serviceDefinition.name);
+
+            const serviceName = getServiceByName(
+              serviceDefinition.name as ServiceName,
+            );
             const shouldShow = !hidden && serviceName;
 
             if (!shouldShow) {
@@ -575,25 +649,33 @@ function EnabledServicesSetting(props: {
             }
 
             let configurationLink: string | undefined;
-            if (service.name === "embeddedWallets" && srv.enabled) {
+            if (
+              serviceDefinition.name === "embeddedWallets" &&
+              service.enabled
+            ) {
               configurationLink = props.paths.inAppConfig;
-            } else if (service.name === "bundler" && srv.enabled) {
+            } else if (
+              serviceDefinition.name === "bundler" &&
+              service.enabled
+            ) {
               configurationLink = props.paths.aaConfig;
-            } else if (service.name === "pay") {
+            } else if (serviceDefinition.name === "pay" && service.enabled) {
               configurationLink = props.paths.payConfig;
             }
 
             return (
               <div
-                key={srv.name}
+                key={service.name}
                 className="flex items-start justify-between gap-6 border-border border-t py-5"
               >
                 {/* Left */}
                 <div className="flex flex-col gap-4">
                   <div>
-                    <h4 className="font-semibold text-base">{service.title}</h4>
+                    <h4 className="font-semibold text-base">
+                      {serviceDefinition.title}
+                    </h4>
                     <p className="text-muted-foreground text-sm">
-                      {service.description}
+                      {serviceDefinition.description}
                     </p>
                   </div>
 
@@ -613,36 +695,43 @@ function EnabledServicesSetting(props: {
                     </div>
                   )}
 
-                  {service.actions.length > 0 && (
+                  {serviceDefinition.actions.length > 0 && (
                     <div className="flex gap-4">
-                      {service.actions.map((sa) => (
-                        <ToolTipLabel key={sa.name} label={sa.description}>
-                          <div>
-                            <CheckboxWithLabel>
-                              <Checkbox
-                                checked={srv.actions.includes(sa.name)}
-                                onCheckedChange={(checked) =>
-                                  handleAction(idx, srv, sa.name, !!checked)
-                                }
-                              />
-                              {sa.title}
-                            </CheckboxWithLabel>
-                          </div>
-                        </ToolTipLabel>
-                      ))}
+                      {serviceDefinition.actions.map((sa) => {
+                        return (
+                          <ToolTipLabel key={sa.name} label={sa.description}>
+                            <div>
+                              <CheckboxWithLabel>
+                                <Checkbox
+                                  checked={service.actions.includes(sa.name)}
+                                  onCheckedChange={(checked) =>
+                                    toggleServiceAction(
+                                      idx,
+                                      service,
+                                      sa.name,
+                                      !!checked,
+                                    )
+                                  }
+                                />
+                                {sa.title}
+                              </CheckboxWithLabel>
+                            </div>
+                          </ToolTipLabel>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
 
                 {/* Right */}
                 <Switch
-                  checked={srv.enabled}
-                  onCheckedChange={(v) =>
-                    update(idx, {
-                      ...srv,
+                  checked={service.enabled}
+                  onCheckedChange={(v) => {
+                    return formFields.update(idx, {
+                      ...service,
                       enabled: !!v,
-                    })
-                  }
+                    });
+                  }}
                 />
               </div>
             );
@@ -653,15 +742,19 @@ function EnabledServicesSetting(props: {
   );
 }
 
-function APIKeyDetails({
-  apiKey,
+function ProjectKeyDetails({
+  project,
   rotateSecretKey,
 }: {
-  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
-  apiKey: ApiKey;
+  rotateSecretKey: RotateSecretKey;
+  project: Project;
 }) {
-  const { createdAt, updatedAt, lastAccessedAt } = apiKey;
-  const [secretKeyMasked, setSecretKeyMasked] = useState(apiKey.secretMasked);
+  // currently only showing the first secret key
+  const { createdAt, updatedAt, lastAccessedAt } = project;
+  const [secretKeyMasked, setSecretKeyMasked] = useState(
+    project.secretKeys[0]?.masked,
+  );
+  const clientId = project.publishableKey;
 
   return (
     <div className="flex flex-col gap-6 rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
@@ -672,9 +765,9 @@ function APIKeyDetails({
         </p>
 
         <CopyTextButton
-          textToCopy={apiKey.key}
+          textToCopy={clientId}
           className="!h-auto w-full max-w-[350px] justify-between truncate bg-background px-3 py-3 font-mono"
-          textToShow={apiKey.key}
+          textToShow={clientId}
           copyIconPosition="right"
           tooltip="Copy Client ID"
         />
@@ -706,9 +799,17 @@ function APIKeyDetails({
       )}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <TimeInfo label="Created" date={createdAt} />
-        <TimeInfo label="Last Updated" date={updatedAt} />
-        <TimeInfo label="Last Accessed" date={lastAccessedAt} />
+        <TimeInfo label="Created" date={createdAt} fallbackText="" />
+        <TimeInfo
+          label="Last Updated"
+          date={updatedAt}
+          fallbackText="Not updated"
+        />
+        <TimeInfo
+          label="Last Accessed"
+          date={lastAccessedAt}
+          fallbackText="Not accessed in 30 days"
+        />
       </div>
     </div>
   );
@@ -716,26 +817,31 @@ function APIKeyDetails({
 
 function TimeInfo(props: {
   label: string;
-  date: string | undefined;
+  date: string | null;
+  fallbackText: string;
 }) {
   return (
     <div>
       <p> {props.label}</p>
       <p className="text-muted-foreground text-sm">
-        {props.date ? format(new Date(props.date), "MMMM dd, yyyy") : "Never"}
+        {props.date
+          ? format(new Date(props.date), "MMMM dd, yyyy")
+          : props.fallbackText}
       </p>
     </div>
   );
 }
 
 function DeleteProject(props: {
-  id: string;
-  name: string;
-  deleteMutation: UseMutationResult<unknown, unknown, string, unknown>;
+  projectName: string;
+  deleteProject: DeleteProject;
   onDeleteSuccessful: () => void;
 }) {
-  const { id, name, deleteMutation, onDeleteSuccessful } = props;
   const trackEvent = useTrack();
+
+  const deleteProject = useMutation({
+    mutationFn: props.deleteProject,
+  });
 
   const handleRevoke = () => {
     trackEvent({
@@ -744,10 +850,10 @@ function DeleteProject(props: {
       label: "attempt",
     });
 
-    deleteMutation.mutate(id, {
+    deleteProject.mutate(undefined, {
       onSuccess: () => {
         toast.success("Project deleted successfully");
-        onDeleteSuccessful();
+        props.onDeleteSuccessful();
         trackEvent({
           category: "api-keys",
           action: "revoke",
@@ -775,18 +881,18 @@ function DeleteProject(props: {
       buttonOnClick={() => handleRevoke()}
       buttonLabel="Delete project"
       confirmationDialog={{
-        title: `Delete project "${name}"?`,
+        title: `Delete project "${props.projectName}"?`,
         description: description,
       }}
       description={description}
-      isPending={deleteMutation.isPending}
+      isPending={deleteProject.isPending}
       title="Delete Project"
     />
   );
 }
 
 function RotateSecretKeyButton(props: {
-  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -835,7 +941,7 @@ type RotateSecretKeyScreen =
   | { id: "save-newkey"; secretKey: string };
 
 function RotateSecretKeyModalContent(props: {
-  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  rotateSecretKey: RotateSecretKey;
   closeModal: () => void;
   disableModalClose: () => void;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
@@ -871,7 +977,7 @@ function RotateSecretKeyModalContent(props: {
 }
 
 function RotateSecretKeyInitialScreen(props: {
-  rotateSecretKey: () => Promise<RotateSecretKeyAPIReturnType>;
+  rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
   closeModal: () => void;
 }) {
@@ -993,5 +1099,132 @@ function SaveNewKeyScreen(props: {
         </Button>
       </div>
     </div>
+  );
+}
+
+function TransferProject(props: {
+  projectName: string;
+  teamsWithRole: { role: "MEMBER" | "OWNER"; team: Team }[];
+  currentTeamId: string;
+  transferProject: (newTeam: Team) => Promise<void>;
+  client: ThirdwebClient;
+  isOwnerAccount: boolean;
+}) {
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
+  const transferProject = useMutation({
+    mutationFn: props.transferProject,
+  });
+
+  const selectedTeamWithRole = props.teamsWithRole.find(
+    ({ team }) => team.id === selectedTeamId,
+  );
+  const hasOwnerRole = selectedTeamWithRole?.role === "OWNER";
+
+  const isDisabled =
+    !selectedTeamWithRole ||
+    !hasOwnerRole ||
+    selectedTeamId === props.currentTeamId ||
+    !props.isOwnerAccount;
+
+  console.log({ selectedTeam: selectedTeamWithRole, isDisabled });
+
+  const handleTransfer = () => {
+    if (!hasOwnerRole) {
+      return;
+    }
+
+    const promise = transferProject.mutateAsync(selectedTeamWithRole.team);
+    toast.promise(promise, {
+      success: "Project transferred successfully",
+      error: "Failed to transfer project",
+    });
+  };
+
+  return (
+    <DangerSettingCard
+      buttonOnClick={handleTransfer}
+      isDisabled={isDisabled}
+      buttonLabel="Transfer project"
+      confirmationDialog={{
+        title: "Transfer project",
+        description: (
+          <>
+            <span className="mb-5 block">
+              Are you sure you want to transfer this project to{" "}
+              <span className="font-semibold">
+                {selectedTeamWithRole?.team.name}
+              </span>{" "}
+              team?
+            </span>
+
+            <span className="mb-3 flex items-center gap-3 rounded-lg border bg-card px-4 py-3 text-warning-text">
+              <TriangleAlertIcon className="size-5 shrink-0" />
+              Current team will lose access to this project and all associated
+              resources
+            </span>
+
+            <span className="flex items-center gap-3 rounded-lg border bg-card px-4 py-3 text-warning-text">
+              <TriangleAlertIcon className="size-5 shrink-0" />
+              Selected team will take over ownership and billing responsibility
+              for this project and all associated resources
+            </span>
+          </>
+        ),
+      }}
+      description={<>Transfer this project to another team</>}
+      isPending={transferProject.isPending}
+      title="Transfer Project"
+    >
+      <div className="flex flex-col gap-4">
+        <div>
+          <Select
+            value={selectedTeamId}
+            onValueChange={setSelectedTeamId}
+            disabled={transferProject.isPending || !props.isOwnerAccount}
+          >
+            <SelectTrigger className="w-auto min-w-[320px]">
+              <SelectValue placeholder="Select a team" />
+            </SelectTrigger>
+            <SelectContent>
+              {props.teamsWithRole
+                // .filter(({ team }) => team.id !== props.currentTeamId)
+                .map(({ team }) => (
+                  <SelectItem key={team.id} value={team.id}>
+                    <div className="flex items-center gap-2 py-1">
+                      <GradientAvatar
+                        src={team.image || ""}
+                        id={team.id}
+                        className="size-5"
+                        client={props.client}
+                      />
+                      {team.name}
+                    </div>
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {!props.isOwnerAccount && (
+          <p className="text-muted-foreground text-sm">
+            You do not have permission to transfer this project, You are not an
+            owner of the current team
+          </p>
+        )}
+
+        {selectedTeamId === props.currentTeamId && (
+          <p className="text-muted-foreground text-sm">
+            Project is already in the selected team
+          </p>
+        )}
+
+        {selectedTeamId && !hasOwnerRole && (
+          <p className="text-muted-foreground text-sm">
+            You do not have permission to transfer this project, You are not an
+            owner of the selected team
+          </p>
+        )}
+      </div>
+    </DangerSettingCard>
   );
 }

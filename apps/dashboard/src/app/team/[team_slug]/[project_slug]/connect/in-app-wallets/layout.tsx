@@ -1,7 +1,6 @@
 import { getProject } from "@/api/projects";
-import { getAPIKeyForProjectId } from "app/api/lib/getAPIKeys";
-import { notFound } from "next/navigation";
-import { TabPathLinks } from "../../../../../../@/components/ui/tabs";
+import { TabPathLinks } from "@/components/ui/tabs";
+import { redirect } from "next/navigation";
 import { InAppWalletFooterSection } from "./_components/footer";
 import { InAppWalletsHeader } from "./_components/header";
 import { TRACKING_CATEGORY } from "./_constants";
@@ -13,24 +12,18 @@ export default async function Layout(props: {
   }>;
   children: React.ReactNode;
 }) {
-  const project = await getProject(
-    (await props.params).team_slug,
-    (await props.params).project_slug,
-  );
+  const params = await props.params;
+  const project = await getProject(params.team_slug, params.project_slug);
+
   if (!project) {
-    notFound();
+    redirect(`/team/${params.team_slug}`);
   }
 
-  const apiKey = await getAPIKeyForProjectId(project.id);
-  if (!apiKey) {
-    notFound();
-  }
-
-  const { team_slug, project_slug } = await props.params;
+  const { team_slug, project_slug } = params;
 
   return (
     <div>
-      <InAppWalletsHeader clientId={apiKey.key} />
+      <InAppWalletsHeader teamId={project.teamId} projectId={project.id} />
       <div className="h-8" />
 
       <TabPathLinks

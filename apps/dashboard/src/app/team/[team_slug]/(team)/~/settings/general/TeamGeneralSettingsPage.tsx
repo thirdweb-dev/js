@@ -1,5 +1,6 @@
 "use client";
 
+import { apiServerProxy } from "@/actions/proxies";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ThirdwebClient } from "thirdweb";
@@ -10,6 +11,7 @@ import { updateTeam } from "./updateTeam";
 export function TeamGeneralSettingsPage(props: {
   team: Team;
   client: ThirdwebClient;
+  accountId: string;
 }) {
   const router = useDashboardRouter();
 
@@ -29,6 +31,18 @@ export function TeamGeneralSettingsPage(props: {
         } else {
           router.refresh();
         }
+      }}
+      leaveTeam={async () => {
+        const res = await apiServerProxy({
+          pathname: `/v1/teams/${props.team.id}/members/${props.accountId}`,
+          method: "DELETE",
+        });
+
+        if (!res.ok) {
+          throw new Error(res.error);
+        }
+
+        router.replace("/team");
       }}
       updateTeamImage={async (file) => {
         let uri: string | undefined = undefined;

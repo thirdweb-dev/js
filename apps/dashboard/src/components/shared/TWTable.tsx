@@ -252,10 +252,10 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
       {!tableProps.isPending &&
         tableProps.data.length === 0 &&
         tableProps.isFetched && (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center py-16">
             <div className="flex items-center gap-4 py-4">
               <p className="text-muted-foreground text-sm">
-                No {pluralize(tableProps.title, 0, false)} found.
+                No {pluralize(tableProps.title, 0, false)} found
               </p>
             </div>
           </div>

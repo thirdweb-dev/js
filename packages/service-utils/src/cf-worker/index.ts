@@ -157,6 +157,7 @@ export async function extractAuthorizationData(
     origin,
     bundleId,
     secretKeyHash,
+    teamId: authInput.teamId,
     targetAddress: authInput.targetAddress,
   };
 }

@@ -1,8 +1,14 @@
+const usdCurrencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD", // prefix with $
+  minimumFractionDigits: 0, // don't show decimal places if value is a whole number
+  maximumFractionDigits: 2, // at max 2 decimal places
+  roundingMode: "halfEven", // round to nearest even number, standard practice for financial calculations
+  notation: "compact", // shows 1.2M instead of 1,200,000, 1.2B instead of 1,200,000,000
+});
+
 export const toUSD = (value: number) => {
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: "USD",
-  }).format(value);
+  return usdCurrencyFormatter.format(value);
 };
 
 export const toSize = (value: number | bigint, defaultUnit?: string) => {

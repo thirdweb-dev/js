@@ -15,13 +15,14 @@ export function AccountSettingsPage(props: {
   const router = useDashboardRouter();
   return (
     <div>
-      <div className="border-border border-b py-10">
+      <header className="border-border border-b py-10">
         <div className="container max-w-[950px]">
           <h1 className="font-semibold text-3xl tracking-tight">
             Account Settings
           </h1>
         </div>
-      </div>
+      </header>
+
       <div className="container max-w-[950px] grow pt-8 pb-20">
         <AccountSettingsPageUI
           hideDeleteAccount

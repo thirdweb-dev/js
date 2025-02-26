@@ -42,13 +42,14 @@ async function getProjectsWithAnalytics(
   projects: Project[],
 ): Promise<Array<ProjectWithAnalytics>> {
   return Promise.all(
-    projects.map(async (p) => {
+    projects.map(async (project) => {
       try {
         const today = new Date();
         const thirtyDaysAgo = subDays(today, 30);
 
         const data = await getWalletConnections({
-          clientId: p.publishableKey,
+          teamId: project.teamId,
+          projectId: project.id,
           period: "all",
           from: thirtyDaysAgo,
           to: today,
@@ -60,12 +61,12 @@ async function getProjectsWithAnalytics(
         }
 
         return {
-          ...p,
+          ...project,
           monthlyActiveUsers: uniqueWalletsConnected,
         };
       } catch {
         return {
-          ...p,
+          ...project,
           monthlyActiveUsers: 0,
         };
       }

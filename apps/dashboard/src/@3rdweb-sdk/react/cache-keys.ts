@@ -42,15 +42,6 @@ export const accountKeys = {
     [...accountKeys.wallet(walletAddress), "billing-session"] as const,
 };
 
-export const apiKeys = {
-  all: ["api"] as const,
-  wallet: (walletAddress: string) => [...apiKeys.all, walletAddress] as const,
-  keys: (walletAddress: string) =>
-    [...apiKeys.wallet(walletAddress), "keys"] as const,
-  key: (id: string, walletAddress: string) =>
-    [...apiKeys.keys(walletAddress), id] as const,
-};
-
 export const authorizedWallets = {
   all: ["authorizedWallets"] as const,
   wallet: (walletAddress: string) =>

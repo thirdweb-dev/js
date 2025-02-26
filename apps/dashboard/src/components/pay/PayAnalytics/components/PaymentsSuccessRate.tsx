@@ -9,6 +9,7 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { toUSD } from "../../../../utils/number";
 import { usePayVolume } from "../hooks/usePayVolume";
 import { CardHeading, FailedToLoad } from "./common";
 
@@ -229,7 +230,7 @@ function InfoRow(props: {
           props.isEmpty
             ? "$-"
             : props.amount !== undefined
-              ? `$${props.amount.toLocaleString()}`
+              ? toUSD(props.amount)
               : undefined
         }
         skeletonData="$50"

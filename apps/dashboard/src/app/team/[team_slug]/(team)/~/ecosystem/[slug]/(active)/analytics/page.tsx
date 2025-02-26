@@ -1,7 +1,8 @@
 import type { Range } from "components/analytics/date-range-selector";
-import { fetchApiServer } from "data/analytics/fetch-api-server";
-import { FetchError } from "utils/error";
-import type { Ecosystem } from "../../../types";
+import { redirect } from "next/navigation";
+import { getTeamBySlug } from "../../../../../../../../../@/api/team";
+import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
+import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";
 
 export default async function Page(props: {
@@ -19,28 +20,32 @@ export default async function Page(props: {
     props.searchParams,
   ]);
 
-  const ecosystem = await getEcosystem(params.slug);
+  const ecosystemLayoutPath = `/team/${params.team_slug}/~/ecosystem`;
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    redirect(ecosystemLayoutPath);
+  }
+
+  const [ecosystem, team] = await Promise.all([
+    fetchEcosystem(params.slug, authToken),
+    getTeamBySlug(params.team_slug),
+  ]);
+
+  if (!ecosystem) {
+    redirect(ecosystemLayoutPath);
+  }
+
+  if (!team) {
+    redirect("/team");
+  }
+
   return (
     <EcosystemAnalyticsPage
       ecosystemSlug={ecosystem.slug}
+      teamId={team.id}
       interval={searchParams.interval || "week"}
       range={searchParams.range}
     />
   );
-}
-
-async function getEcosystem(ecosystemSlug: string) {
-  const res = await fetchApiServer(`/v1/ecosystem-wallet/${ecosystemSlug}`);
-
-  if (!res.ok) {
-    const data = await res.json();
-    console.error(data);
-    throw new FetchError(
-      res,
-      data?.message ?? data?.error?.message ?? "Failed to fetch ecosystems",
-    );
-  }
-
-  const data = (await res.json()) as { result: Ecosystem };
-  return data.result;
 }

@@ -6,7 +6,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -17,13 +16,14 @@ export function DangerSettingCard(props: {
   title: string;
   className?: string;
   footerClassName?: string;
-  description: string;
+  description: React.ReactNode;
   buttonLabel: string;
   buttonOnClick: () => void;
+  isDisabled?: boolean;
   isPending: boolean;
   confirmationDialog: {
     title: string;
-    description: string;
+    description: React.ReactNode;
   };
   children?: React.ReactNode;
 }) {
@@ -55,7 +55,7 @@ export function DangerSettingCard(props: {
             <Button
               variant="destructive"
               className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
-              disabled={props.isPending}
+              disabled={props.isDisabled || props.isPending}
             >
               {props.isPending && <Spinner className="size-3" />}
               {props.buttonLabel}
@@ -63,20 +63,22 @@ export function DangerSettingCard(props: {
           </DialogTrigger>
 
           <DialogContent
-            className="z-[10001]"
+            className="z-[10001] overflow-hidden p-0"
             dialogOverlayClassName="z-[10000]"
           >
-            <DialogHeader className="pr-10">
-              <DialogTitle className="leading-snug">
-                {props.confirmationDialog.title}
-              </DialogTitle>
+            <div className="p-6">
+              <DialogHeader className="pr-10">
+                <DialogTitle className="leading-snug">
+                  {props.confirmationDialog.title}
+                </DialogTitle>
 
-              <DialogDescription>
-                {props.confirmationDialog.description}
-              </DialogDescription>
-            </DialogHeader>
+                <DialogDescription>
+                  {props.confirmationDialog.description}
+                </DialogDescription>
+              </DialogHeader>
+            </div>
 
-            <DialogFooter className="mt-4 gap-4 lg:gap-2">
+            <div className="flex justify-end gap-4 border-t bg-card p-6 lg:gap-2">
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
@@ -90,7 +92,7 @@ export function DangerSettingCard(props: {
                 {props.isPending && <Spinner className="size-3" />}
                 {props.buttonLabel}
               </Button>
-            </DialogFooter>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

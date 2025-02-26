@@ -5,7 +5,7 @@ import type {
 } from "../core/usageV2.js";
 
 type UsageV2Options = {
-  environment: "development" | "production";
+  usageBaseUrl: string;
   source: UsageV2Source;
 } & (
   | { serviceKey: string; thirdwebClientId?: never; thirdwebSecretKey?: never }
@@ -34,23 +34,18 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
     : ClientUsageV2Event[],
   options: T,
 ): Promise<void> {
-  const baseUrl =
-    options.environment === "production"
-      ? "https://u.thirdweb.com"
-      : "https://u.thirdweb-dev.com";
-
   // Determine endpoint and auth header based on provided credentials.
   let url: string;
   const headers: HeadersInit = { "Content-Type": "application/json" };
 
   if (options.serviceKey) {
-    url = `${baseUrl}/usage-v2/${options.source}`;
+    url = `${options.usageBaseUrl}/usage-v2/${options.source}`;
     headers["x-service-api-key"] = options.serviceKey;
   } else if (options.thirdwebSecretKey) {
-    url = `${baseUrl}/usage-v2/${options.source}/client`;
+    url = `${options.usageBaseUrl}/usage-v2/${options.source}/client`;
     headers["x-secret-key"] = options.thirdwebSecretKey;
   } else if (options.thirdwebClientId) {
-    url = `${baseUrl}/usage-v2/${options.source}/client`;
+    url = `${options.usageBaseUrl}/usage-v2/${options.source}/client`;
     headers["x-client-id"] = options.thirdwebClientId;
   } else {
     throw new Error("[UsageV2] No authentication method provided.");

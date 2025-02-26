@@ -1,5 +1,21 @@
 # thirdweb
 
+## 5.89.0
+
+### Minor Changes
+
+- [#6335](https://github.com/thirdweb-dev/js/pull/6335) [`1851a8c`](https://github.com/thirdweb-dev/js/commit/1851a8c1da16634596e3e21d302275db2e17c40d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `activeWallet` prop to `PayEmbed` to pre select a wallet in the UI
+
+- [#6323](https://github.com/thirdweb-dev/js/pull/6323) [`15adec4`](https://github.com/thirdweb-dev/js/commit/15adec4fb7b1d8bd5b5c84ff8a14e5fa0bbeb38e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fiat onramp UI revamp in PayEmbed and support multi hop onramp flows
+
+- [#6317](https://github.com/thirdweb-dev/js/pull/6317) [`a19c0c9`](https://github.com/thirdweb-dev/js/commit/a19c0c96ff12394ea970f174ef5ea524f23fdb6c) Thanks [@jcheese1](https://github.com/jcheese1)! - Add SiweOptions in useConnectModal
+
+### Patch Changes
+
+- [#6300](https://github.com/thirdweb-dev/js/pull/6300) [`2cb89cb`](https://github.com/thirdweb-dev/js/commit/2cb89cb3a1392f262471ee25d13e706e1be2a28c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix storage upload timeout
+
+- [#6332](https://github.com/thirdweb-dev/js/pull/6332) [`28df6f7`](https://github.com/thirdweb-dev/js/commit/28df6f7e40f88afe4c91a7cf944a97ae374fb1fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Force pre-eip1559 tx on Homeverse mainnet/testnet
+
 ## 5.88.7
 
 ### Patch Changes

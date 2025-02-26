@@ -1,16 +1,12 @@
 "use client";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import {
-  type ApiKeyService,
-  accountStatus,
-  useUserOpUsageAggregate,
-} from "@3rdweb-sdk/react/hooks/useApi";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CircleAlertIcon } from "lucide-react";
-import { useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
+import type { UserOpStats } from "types/analytics";
 import { AccountAbstractionSummary } from "../../../../../../components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
@@ -21,29 +17,15 @@ export function AccountAbstractionLayout(props: {
   projectSlug: string;
   teamSlug: string;
   projectKey: string;
-  apiKeyServices: ApiKeyService[];
-  billingStatus: "validPayment" | (string & {}) | null;
   children: React.ReactNode;
+  hasSmartWalletsWithoutBilling: boolean;
+  userOpStats: UserOpStats;
 }) {
-  const { apiKeyServices } = props;
-
   const chain = useActiveWalletChain();
-
-  const hasSmartWalletsWithoutBilling = useMemo(() => {
-    return apiKeyServices.find(
-      (s) =>
-        props.billingStatus !== accountStatus.validPayment &&
-        s.name === "bundler",
-    );
-  }, [apiKeyServices, props.billingStatus]);
 
   const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
 
   const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`;
-
-  const aggregateUserOpUsageQuery = useUserOpUsageAggregate({
-    clientId: props.projectKey,
-  });
 
   return (
     <div>
@@ -65,7 +47,7 @@ export function AccountAbstractionLayout(props: {
       </p>
       <div className="h-6" />
       <div className="flex flex-col gap-6">
-        {hasSmartWalletsWithoutBilling ? (
+        {props.hasSmartWalletsWithoutBilling ? (
           <SmartWalletsBillingAlert />
         ) : (
           isOpChain && (
@@ -85,7 +67,7 @@ export function AccountAbstractionLayout(props: {
 
         <div>
           <AccountAbstractionSummary
-            aggregateUserOpUsageQuery={aggregateUserOpUsageQuery.data}
+            aggregateUserOpUsageQuery={props.userOpStats}
           />
 
           <div className="h-12" />

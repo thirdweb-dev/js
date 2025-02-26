@@ -264,6 +264,7 @@ export function ERC1155MintTo() {
         {account && (
           <div className="mt-6 w-full max-w-[400px]">
             {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolveIpfsUrl(image)}
                 alt="NFT Preview"

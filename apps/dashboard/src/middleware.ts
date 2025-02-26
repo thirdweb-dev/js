@@ -33,7 +33,11 @@ export async function middleware(request: NextRequest) {
   const paths = pathname.slice(1).split("/");
 
   // nebula.thirdweb.com -> render page at app/nebula-app
-  if (subdomain === "nebula" && host) {
+  // on vercel preview, the format is nebula---thirdweb-www-git-<branch-name>.thirdweb-preview.com
+  if (
+    subdomain &&
+    (subdomain === "nebula" || subdomain.startsWith("nebula---"))
+  ) {
     const newPaths = ["nebula-app", ...paths];
     return rewrite(request, `/${newPaths.join("/")}`, undefined);
   }

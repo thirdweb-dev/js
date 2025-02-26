@@ -9,5 +9,9 @@
   ],
   "project": ["src/**"],
   "ignoreBinaries": ["only-allow", "biome"],
-  "ignoreDependencies": ["@storybook/blocks", "@thirdweb-dev/service-utils"]
+  "ignoreDependencies": [
+    "@storybook/blocks",
+    "@thirdweb-dev/service-utils",
+    "@types/color"
+  ]
 }

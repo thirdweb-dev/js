@@ -17,6 +17,7 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
       method: "POST",
       headers,
       body: form,
+      requestTimeoutMs: client.config?.storage?.fetch?.requestTimeoutMs,
     },
   );
 

@@ -21,7 +21,7 @@ export default async function Page(props: {
   }
 
   if (!project) {
-    redirect("/team");
+    redirect(`/team/${params.team_slug}`);
   }
 
   return (

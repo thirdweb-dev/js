@@ -8,10 +8,10 @@ export const metadata = createMetadata({
 
 # Build Instructions
 
-## General
+## All Target Platforms
 
-- **Build Settings:** Use `Smaller (faster) Builds` / `Shorter Build Time`.
 - **Player Settings:** Use IL2CPP over Mono when available.
+- **Build Settings:** Use `Smaller (faster) Builds` / `Shorter Build Time` for IL2CPP Code Generation.
 - **Stripping Level:** Set `Managed Stripping Level` to `Minimal` (`Player Settings` > `Other Settings` > `Optimization`). (Generally not a hard requirement unless using WalletConnect as a wallet provider option.)
 - **Strip Engine Code:** Make sure this is turned off.
 
@@ -47,9 +47,19 @@ No action needed for hosted builds.
 ## Mobile
 
 - **EDM4U:** Comes with the package, resolves dependencies at runtime. Use `Force Resolve` from `Assets` > `External Dependency Manager` > `Android Resolver`.
-- **Redirect Schemes:** Set custom schemes matching your bundle ID in `Plugins/AndroidManifest.xml` or equivalent to ensure OAuth redirects.
+- **Redirect Schemes:** Set custom schemes matching your bundle ID in `Plugins/Android/AndroidManifest.xml` or equivalent to ensure OAuth redirects if using social login.
 ```xml
 <!-- Set your bundle id here -->
 <!-- Replace 'com.thirdweb.unitysdk' with your desired scheme -->
 <data android:scheme="com.thirdweb.unitysdk" />
 ```
+
+## Troubleshooting OAuth Redirects
+
+If you notice issues with redirects on mobile, for instance hanging after selecting an account when logging in with Google, you did not setup OAuth properly.
+Best practice is to use a lowercase bundle id that is the same as your Unity project's application identifier, it must be present in the following places:
+- Your `ThirdwebManager` prefab `Bundle ID` field.
+- Your `Plugins/AndroidManifest.xml` scheme field as mentioned above (it doesn't have to be our default `AndroidManifest.xml`, it can be in your custom one, just add the scheme).
+- Your thirdweb dashboard project settings as one of:
+  - `Bundle ID Allowlist` field (those automatically added to allowed redirect URIs).
+  - In-App Wallet Configuration `Allowed redirect URIs` field.
