@@ -34,6 +34,13 @@ export type GetNFTsParams = {
    * @default false
    */
   includeOwners?: boolean;
+  /**
+   * Whether to check and fetch tokenID by index, in case of non-sequential IDs.
+   *
+   * It should be set to true if it's an ERC721Enumerable contract, and has `tokenByIndex` function.
+   * In this case, the provided tokenId will be considered as token-index and actual tokenId will be fetched from the contract.
+   */
+  tokenByIndex?: boolean;
 };
 
 /**

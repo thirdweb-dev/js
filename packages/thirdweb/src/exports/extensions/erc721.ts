@@ -16,6 +16,7 @@ export {
   nextTokenIdToMint,
   isNextTokenIdToMintSupported,
 } from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+export { isTokenByIndexSupported } from "../../extensions/erc721/__generated__/IERC721Enumerable/read/tokenByIndex.js";
 export {
   ownerOf,
   type OwnerOfParams,
