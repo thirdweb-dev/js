@@ -84,6 +84,8 @@ export function LoginForm(props: {
               dismissible: false,
             });
             try {
+              // TODO: allow for an array of chainIds here
+              // should switch chain and add session key for each chainId
               await ensureSessionKey({
                 account: activeAccount,
                 client: thirdwebClient,
