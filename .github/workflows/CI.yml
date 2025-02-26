@@ -20,7 +20,7 @@ env:
 
 jobs:
   optimize_ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     outputs:
       skip: ${{ steps.check_skip.outputs.skip }}
     steps:
@@ -34,7 +34,7 @@ jobs:
   build:
     needs: optimize_ci
     if: needs.optimize_ci.outputs.skip == 'false'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     name: Build Packages
     steps:
       - name: Check out the code
@@ -51,7 +51,7 @@ jobs:
     if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: Lint Packages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
     if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -99,7 +99,7 @@ jobs:
     if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     strategy:
       matrix:
         package_manager: [npm, yarn, pnpm, bun]
@@ -169,7 +169,7 @@ jobs:
     if:  github.event_name == 'pull_request' && needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: "Size"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
