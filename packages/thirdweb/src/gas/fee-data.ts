@@ -169,7 +169,7 @@ async function getDynamicFeeData(
     eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
   ]);
 
-  const baseBlockFee = block?.baseFeePerGas ?? 0n;
+  const baseBlockFee = block?.baseFeePerGas;
 
   const chainId = chain.id;
   // flag chain testnet & flag chain
@@ -187,7 +187,7 @@ async function getDynamicFeeData(
     maxPriorityFeePerGas_ = maxPriorityFeePerGas;
   }
 
-  if (maxPriorityFeePerGas_ == null) {
+  if (maxPriorityFeePerGas_ == null || baseBlockFee == null) {
     // chain does not support eip-1559, return null for both
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
   }
