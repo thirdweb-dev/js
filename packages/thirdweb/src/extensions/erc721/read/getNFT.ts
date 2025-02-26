@@ -52,7 +52,7 @@ export type GetNFTParams = Prettify<
  * const nft = await getNFT({
  *  contract,
  *  tokenId: 1n,
- *  nonSequential: true // use this flag if the contract supports `tokenByIndex` and the above tokenId should be treated as an index.
+ *  tokenByIndex: true // use this flag if the contract supports `tokenByIndex` and the above tokenId should be treated as an index.
  * });
  * ```
  */
