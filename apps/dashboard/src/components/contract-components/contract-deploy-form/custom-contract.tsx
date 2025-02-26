@@ -14,7 +14,12 @@ import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { DEFAULT_FEE_BPS, DEFAULT_FEE_RECIPIENT } from "constants/addresses";
+import {
+  DEFAULT_FEE_BPS,
+  DEFAULT_FEE_BPS_NEW,
+  DEFAULT_FEE_RECIPIENT,
+  THIRDWEB_PUBLISHER_ADDRESS,
+} from "constants/addresses";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -160,6 +165,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const constructorParams =
     metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
+
+  const defaultFeeRecipientFunction = metadata.abi.find(
+    (a) => a.type === "function" && a.name === "DEFAULT_FEE_RECIPIENT",
+  );
+  const hasInbuiltDefaultFeeConfig =
+    defaultFeeRecipientFunction &&
+    metadata.publisher === THIRDWEB_PUBLISHER_ADDRESS;
 
   const [customFactoryNetwork, customFactoryAddress] = Object.entries(
     metadata?.factoryDeploymentData?.customFactoryInput
@@ -457,7 +469,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: DEFAULT_FEE_BPS,
+            platformFeeBps: hasInbuiltDefaultFeeConfig
+              ? DEFAULT_FEE_BPS_NEW
+              : DEFAULT_FEE_BPS,
             platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
@@ -473,8 +487,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         payees,
         shares,
         _contractURI,
-        _platformFeeBps: DEFAULT_FEE_BPS,
-        _platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
+        platformFeeBps: hasInbuiltDefaultFeeConfig
+          ? DEFAULT_FEE_BPS_NEW
+          : DEFAULT_FEE_BPS,
+        platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
