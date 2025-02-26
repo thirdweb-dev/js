@@ -1,4 +1,5 @@
 import "server-only";
+import { polygonAmoy } from "thirdweb/chains";
 import type { InAppWalletAuth } from "thirdweb/wallets";
 import type { Permission } from "../../components/permission-card";
 
@@ -10,6 +11,12 @@ export async function getLoginConfig(clientId: string): Promise<LoginConfig> {
   if (clientId === "b24106adfb2ec212e6ec4d3b2e04db9e") {
     return {
       ...DEFAULT_CONFIG,
+      id: "mode_earn_app",
+      name: "Mode Earn App",
+      logo: "https://www.modemobile.com/",
+      logoLink:
+        "https://cdn.prod.website-files.com/61c25b8fda22538c7d02b8ae/64109452b73a8648ed02afee_mode-logo.svg",
+      chainId: polygonAmoy.id,
       sessionKeySignerAddress: "0xb89e32a18350d6df5bf0b89a227E098013C4Fa72",
     };
   }
