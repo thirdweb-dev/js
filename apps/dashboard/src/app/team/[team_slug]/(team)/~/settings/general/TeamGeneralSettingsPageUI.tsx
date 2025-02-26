@@ -12,6 +12,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { teamSlugRegex } from "./common";
 
 type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
@@ -140,7 +141,7 @@ function TeamSlugFormControl(props: {
             setTeamSlug(value);
             if (value.trim().length === 0) {
               setErrorMessage("Team URL can not be empty");
-            } else if (/[^a-zA-Z0-9-]/.test(value)) {
+            } else if (teamSlugRegex.test(value)) {
               setErrorMessage(
                 "Invalid Team URL. Only letters, numbers and hyphens are allowed",
               );

@@ -63,6 +63,7 @@ export type TeamResponse = {
   growthTrialEligible: false;
   canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
+  isOnboarded: boolean;
 };
 
 export type ProjectSecretKey = {

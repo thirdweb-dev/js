@@ -52,7 +52,7 @@ import {
   useWalletBalance,
 } from "thirdweb/react";
 import { z } from "zod";
-import { isOnboardingComplete } from "../../../../../../login/onboarding/isOnboardingRequired";
+import { isAccountOnboardingComplete } from "../../../../../../login/onboarding/isOnboardingRequired";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -210,7 +210,7 @@ export function FaucetButton({
     );
   }
 
-  if (!isOnboardingComplete(twAccount)) {
+  if (!isAccountOnboardingComplete(twAccount)) {
     return (
       <Button asChild className="w-full">
         <Link

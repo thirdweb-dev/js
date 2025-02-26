@@ -2,20 +2,19 @@
 
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
-import { redirect } from "next/navigation";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 import type { ProductSKU } from "../lib/billing";
 
-export type RedirectCheckoutOptions = {
+export type GetBillingCheckoutUrlOptions = {
   teamSlug: string;
   sku: ProductSKU;
   redirectUrl: string;
   metadata?: Record<string, string>;
 };
 
-export async function redirectToCheckout(
-  options: RedirectCheckoutOptions,
-): Promise<{ status: number }> {
+export async function getBillingCheckoutUrl(
+  options: GetBillingCheckoutUrlOptions,
+): Promise<{ status: number; url?: string }> {
   if (!options.teamSlug) {
     return {
       status: 400,
@@ -49,6 +48,7 @@ export async function redirectToCheckout(
       status: res.status,
     };
   }
+
   const json = await res.json();
   if (!json.result) {
     return {
@@ -56,20 +56,22 @@ export async function redirectToCheckout(
     };
   }
 
-  // redirect to the stripe checkout session
-  redirect(json.result);
+  return {
+    status: 200,
+    url: json.result as string,
+  };
 }
 
-export type RedirectBillingCheckoutAction = typeof redirectToCheckout;
+export type GetBillingCheckoutUrlAction = typeof getBillingCheckoutUrl;
 
-export type BillingPortalOptions = {
+export type GetBillingPortalUrlOptions = {
   teamSlug: string | undefined;
   redirectUrl: string;
 };
 
-export async function redirectToBillingPortal(
-  options: BillingPortalOptions,
-): Promise<{ status: number }> {
+export async function getBillingPortalUrl(
+  options: GetBillingPortalUrlOptions,
+): Promise<{ status: number; url?: string }> {
   if (!options.teamSlug) {
     return {
       status: 400,
@@ -110,8 +112,10 @@ export async function redirectToBillingPortal(
     };
   }
 
-  // redirect to the stripe billing portal
-  redirect(json.result);
+  return {
+    status: 200,
+    url: json.result as string,
+  };
 }
 
-export type BillingBillingPortalAction = typeof redirectToBillingPortal;
+export type GetBillingPortalUrlAction = typeof getBillingPortalUrl;

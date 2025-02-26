@@ -1,7 +1,12 @@
-import type { RedirectBillingCheckoutAction } from "@/actions/billing";
+"use client";
+
+import type { GetBillingCheckoutUrlAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
-import { useMemo } from "react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useMemo, useTransition } from "react";
+import { useStripeRedirectEvent } from "../../../../app/stripe-redirect/stripeRedirectChannel";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
 
 // TODO - move this in app router folder in other pr
@@ -9,7 +14,7 @@ import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/get
 interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
-  redirectToCheckout: RedirectBillingCheckoutAction;
+  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
 }
 
 type CtaLink = {
@@ -19,11 +24,19 @@ type CtaLink = {
 export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
-  redirectToCheckout,
+  getBillingCheckoutUrl,
 }) => {
-  const pagePath = `/team/${team.slug}/~/settings/billing`;
   const validTeamPlan = getValidTeamPlan(team);
+  const [isPending, startTransition] = useTransition();
   const contactUsHref = "/contact-us";
+  const router = useDashboardRouter();
+  useStripeRedirectEvent(() => {
+    setTimeout(() => {
+      startTransition(() => {
+        router.refresh();
+      });
+    }, 1000);
+  });
 
   const starterCta: CtaLink | undefined = useMemo(() => {
     switch (validTeamPlan) {
@@ -101,73 +114,79 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   }, [validTeamPlan]);
 
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-      {/* Starter */}
-      <PricingCard
-        redirectPath={pagePath}
-        billingPlan="starter"
-        current={validTeamPlan === "starter"}
-        cta={
-          starterCta
-            ? {
-                title: starterCta.label,
-                tracking: {
-                  category: "account",
-                  label: "starterPlan",
-                },
-              }
-            : undefined
-        }
-        teamSlug={team.slug}
-        redirectToCheckout={redirectToCheckout}
-      />
+    <div>
+      <h2 className="mb-2 inline-flex items-center gap-3 font-semibold text-2xl tracking-tight">
+        {validTeamPlan === "free" ? "Select a Plan" : "Plans"}{" "}
+        {isPending && <Spinner className="size-5" />}
+      </h2>
+      <p className="text-muted-foreground">
+        Upgrade or downgrade your plan here to better fit your needs.
+      </p>
+      <div className="h-3" />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        {/* Starter */}
+        <PricingCard
+          billingPlan="starter"
+          current={validTeamPlan === "starter"}
+          cta={
+            starterCta
+              ? {
+                  title: starterCta.label,
+                  tracking: {
+                    category: "account",
+                    label: "starterPlan",
+                  },
+                }
+              : undefined
+          }
+          teamSlug={team.slug}
+          getBillingCheckoutUrl={getBillingCheckoutUrl}
+        />
 
-      {/* Growth */}
-      <PricingCard
-        redirectPath={pagePath}
-        billingPlan="growth"
-        activeTrialEndsAt={
-          validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
-        }
-        current={validTeamPlan === "growth"}
-        cta={
-          growthCardCta
-            ? {
-                title: growthCardCta.label,
-                tracking: {
-                  category: "account",
-                  label: "growthPlan",
-                },
-                variant: "default",
-                hint: undefined,
-              }
-            : undefined
-        }
-        canTrialGrowth={false}
-        // upsell growth plan if user is on free plan
-        highlighted={validTeamPlan === "free" || validTeamPlan === "starter"}
-        teamSlug={team.slug}
-        redirectToCheckout={redirectToCheckout}
-      />
+        {/* Growth */}
+        <PricingCard
+          billingPlan="growth"
+          activeTrialEndsAt={
+            validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
+          }
+          current={validTeamPlan === "growth"}
+          cta={
+            growthCardCta
+              ? {
+                  title: growthCardCta.label,
+                  tracking: {
+                    category: "account",
+                    label: "growthPlan",
+                  },
+                  variant: "default",
+                  hint: undefined,
+                }
+              : undefined
+          }
+          // upsell growth plan if user is on free plan
+          highlighted={validTeamPlan === "free" || validTeamPlan === "starter"}
+          teamSlug={team.slug}
+          getBillingCheckoutUrl={getBillingCheckoutUrl}
+        />
 
-      <PricingCard
-        redirectPath={pagePath}
-        billingPlan="pro"
-        teamSlug={team.slug}
-        current={validTeamPlan === "pro"}
-        cta={
-          proCta
-            ? {
-                title: proCta.label,
-                tracking: {
-                  category: "account",
-                  label: "proPlan",
-                },
-              }
-            : undefined
-        }
-        redirectToCheckout={redirectToCheckout}
-      />
+        <PricingCard
+          billingPlan="pro"
+          teamSlug={team.slug}
+          current={validTeamPlan === "pro"}
+          cta={
+            proCta
+              ? {
+                  title: proCta.label,
+                  tracking: {
+                    category: "account",
+                    label: "proPlan",
+                  },
+                }
+              : undefined
+          }
+          getBillingCheckoutUrl={getBillingCheckoutUrl}
+        />
+      </div>
     </div>
   );
 };

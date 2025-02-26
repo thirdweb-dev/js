@@ -43,17 +43,25 @@ const inviteFormSchema = z.object({
 
 type InviteFormValues = z.infer<typeof inviteFormSchema>;
 
+// Note: This component is also used in team onboarding flow and not just in team settings page
+
+export type InviteTeamMembersFn = (
+  params: Array<{
+    email: string;
+    role: TeamAccountRole;
+  }>,
+) => Promise<{
+  results: Array<"fulfilled" | "rejected">;
+}>;
+
 export function InviteSection(props: {
   team: Team;
   userHasEditPermission: boolean;
-  inviteTeamMembers: (
-    params: Array<{
-      email: string;
-      role: TeamAccountRole;
-    }>,
-  ) => Promise<{
-    results: Array<"fulfilled" | "rejected">;
-  }>;
+  inviteTeamMembers: InviteTeamMembersFn;
+  customCTASection?: React.ReactNode;
+  className?: string;
+  onInviteSuccess?: () => void;
+  shouldHideInviteButton?: boolean;
 }) {
   const teamPlan = getValidTeamPlan(props.team);
   let bottomSection: React.ReactNode = null;
@@ -76,7 +84,6 @@ export function InviteSection(props: {
   const sendInvites = useMutation({
     mutationFn: async (data: InviteFormValues) => {
       const res = await props.inviteTeamMembers(data.invites);
-
       return {
         inviteStatuses: res.results,
       };
@@ -97,14 +104,18 @@ export function InviteSection(props: {
           </Link>
         </p>
 
-        <Button variant="outline" size="sm" asChild>
-          <Link
-            href={`/team/${props.team.slug}/~/settings/billing`}
-            className="gap-2"
-          >
-            Upgrade
-          </Link>
-        </Button>
+        {props.customCTASection ? (
+          props.customCTASection
+        ) : (
+          <Button variant="outline" size="sm" asChild>
+            <Link
+              href={`/team/${props.team.slug}/~/settings/billing`}
+              className="gap-2"
+            >
+              Upgrade
+            </Link>
+          </Button>
+        )}
       </div>
     );
   } else if (!props.userHasEditPermission) {
@@ -144,20 +155,28 @@ export function InviteSection(props: {
           </p>
         )}
 
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 max-sm:w-full"
-          type="submit"
-          disabled={sendInvites.isPending}
-        >
-          {sendInvites.isPending ? (
-            <Spinner className="size-4" />
-          ) : (
-            <UserPlus className="size-4" />
+        <div className="flex gap-3">
+          {!props.shouldHideInviteButton && (
+            <Button
+              variant="default"
+              size="sm"
+              className="gap-2 max-sm:w-full"
+              type="submit"
+              disabled={sendInvites.isPending}
+            >
+              {sendInvites.isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <UserPlus className="size-4" />
+              )}
+              {form.watch("invites").length > 1
+                ? "Send Invites"
+                : "Send Invite"}
+            </Button>
           )}
-          {form.watch("invites").length > 1 ? "Send Invites" : "Send Invite"}
-        </Button>
+
+          {props.customCTASection}
+        </div>
       </div>
     );
   }
@@ -190,6 +209,10 @@ export function InviteSection(props: {
           toast.success(
             `Successfully sent ${data.inviteStatuses.length === 1 ? "" : data.inviteStatuses.length} ${inviteOrInvites}`,
           );
+
+          if (props.onInviteSuccess) {
+            props.onInviteSuccess();
+          }
         }
       },
     });
@@ -209,7 +232,12 @@ export function InviteSection(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <section>
-          <div className="rounded-lg border border-border bg-card">
+          <div
+            className={cn(
+              "rounded-lg border border-border bg-card",
+              props.className,
+            )}
+          >
             <div className="border-b px-4 py-4 lg:px-6">
               <h2 className="font-semibold text-lg tracking-tight">Invite</h2>
 

@@ -109,7 +109,7 @@ function Variants() {
       <AccountSettingsPageUI
         defaultTeamSlug="foo"
         defaultTeamName="Foo"
-        redirectToBillingPortal={async () => {
+        getBillingPortalUrl={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           return { status: 200 };
         }}
