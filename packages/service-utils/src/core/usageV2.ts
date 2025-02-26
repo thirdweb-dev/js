@@ -10,7 +10,14 @@ export const USAGE_V2_SOURCES = [
 ] as const;
 export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
 export function getTopicName(source: UsageV2Source) {
-  return `usage_v2.raw_${source}`;
+  switch (source) {
+    // Some sources are sent from clients and are written to an "untrusted" table.
+    case "sdk":
+    case "engine":
+      return `usage_v2.untrusted_raw_${source}`;
+    default:
+      return `usage_v2.raw_${source}`;
+  }
 }
 
 export interface ClientUsageV2Event {
@@ -55,6 +62,10 @@ export interface ClientUsageV2Event {
    * The product version, if available.
    */
   product_version?: string;
+  /**
+   * The event version. Defaults to 1.
+   */
+  version?: number;
   /**
    * An object of arbitrary key-value pairs.
    * Values can be boolean, number, string, Date, or null.

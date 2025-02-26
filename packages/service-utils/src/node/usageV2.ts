@@ -4,7 +4,7 @@ import {
   type UsageV2Source,
   getTopicName,
 } from "../core/usageV2.js";
-import { KafkaProducer, type KafkaProducerSendOptions } from "./kafka.js";
+import { KafkaProducer } from "./kafka.js";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -35,10 +35,6 @@ export class UsageV2Producer {
      * The product where usage is coming from.
      */
     source: UsageV2Source;
-    /**
-     * Whether to compress the events.
-     */
-    shouldCompress?: boolean;
 
     username: string;
     password: string;
@@ -46,7 +42,6 @@ export class UsageV2Producer {
     this.kafkaProducer = new KafkaProducer({
       producerName: config.producerName,
       environment: config.environment,
-      shouldCompress: config.shouldCompress,
       username: config.username,
       password: config.password,
     });
@@ -56,25 +51,25 @@ export class UsageV2Producer {
   /**
    * Send usageV2 events.
    * This method may throw. To call this non-blocking:
+   * ```ts
+   * void usageV2.sendEvents(events).catch((e) => console.error(e))
+   * ```
+   *
    * @param events
    */
-  async sendEvents(
-    events: UsageV2Event[],
-    /**
-     * Reference: https://kafka.js.org/docs/producing#producing-messages
-     */
-    options?: KafkaProducerSendOptions,
-  ): Promise<void> {
+  async sendEvents(events: UsageV2Event[]): Promise<void> {
     const parsedEvents = events.map((event) => ({
       ...event,
+      // Default to a generated UUID.
       id: event.id ?? randomUUID(),
+      // Default to now.
       created_at: event.created_at ?? new Date(),
       // Remove the "team_" prefix, if any.
       team_id: event.team_id.startsWith("team_")
         ? event.team_id.slice(5)
         : event.team_id,
     }));
-    await this.kafkaProducer.send(this.topic, parsedEvents, options);
+    await this.kafkaProducer.send(this.topic, parsedEvents);
   }
 
   /**
