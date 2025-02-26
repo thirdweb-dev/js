@@ -28,9 +28,9 @@ export class UsageV2Producer {
      */
     producerName: string;
     /**
-     * The environment the service is running in.
+     * A comma-separated list of `host[:port]` Kafka servers.
      */
-    environment: "development" | "production";
+    kafkaServers: "development" | "production";
     /**
      * The product where usage is coming from.
      */
@@ -41,7 +41,7 @@ export class UsageV2Producer {
   }) {
     this.kafkaProducer = new KafkaProducer({
       producerName: config.producerName,
-      environment: config.environment,
+      kafkaServers: config.kafkaServers,
       username: config.username,
       password: config.password,
     });
