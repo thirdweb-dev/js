@@ -3,11 +3,6 @@ import {
   type ProducerGlobalConfig,
 } from "@confluentinc/kafka-javascript";
 
-const KAFKA_URL: Record<"development" | "production", string> = {
-  development: "warpstream-dev.thirdweb.xyz:9092",
-  production: "warpstream.thirdweb.xyz:9092",
-} as const;
-
 /**
  * Reference: https://kafka.js.org/docs/producing#producing-messages
  */
@@ -44,9 +39,9 @@ export class KafkaProducer {
      */
     producerName: string;
     /**
-     * The environment the service is running in.
+     * A comma-separated list of `host[:port]` Kafka servers.
      */
-    environment: "development" | "production";
+    kafkaServers: string;
     username: string;
     password: string;
 
@@ -55,11 +50,11 @@ export class KafkaProducer {
      */
     config?: ProducerGlobalConfig;
   }) {
-    const { producerName, environment, username, password, config } = options;
+    const { producerName, kafkaServers, username, password, config } = options;
 
     this.producer = new KafkaJS.Kafka({}).producer({
-      "client.id": `${producerName}-${environment}`,
-      "bootstrap.servers": KAFKA_URL[environment],
+      "client.id": producerName,
+      "bootstrap.servers": kafkaServers,
       "security.protocol": "sasl_ssl",
       "sasl.mechanisms": "PLAIN",
       "sasl.username": username,
