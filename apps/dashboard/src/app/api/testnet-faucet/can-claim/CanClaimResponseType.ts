@@ -7,4 +7,8 @@ export type CanClaimResponseType =
   | {
       canClaim: false;
       type: "unsupported-chain";
+    }
+  | {
+      canClaim: false;
+      type: "paid-plan-required";
     };
