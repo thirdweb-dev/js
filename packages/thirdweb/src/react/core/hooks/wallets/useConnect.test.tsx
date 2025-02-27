@@ -48,7 +48,7 @@ describe("useAddConnectedWallet", () => {
       },
     );
     const { result } = renderHook(() => useConnect(), { wrapper });
-    expect(statusResult.current).toEqual("disconnected");
+    expect(statusResult.current).toEqual("unknown");
     await result.current.connect(async () => wallet);
     expect(statusResult.current).toEqual("connected");
 
@@ -67,7 +67,7 @@ describe("useAddConnectedWallet", () => {
       },
     );
     const { result } = renderHook(() => useConnect(), { wrapper });
-    expect(statusResult.current).toEqual("disconnected");
+    expect(statusResult.current).toEqual("unknown");
     await result.current.connect(async () => wallet);
     expect(statusResult.current).toEqual("connected");
 
@@ -85,7 +85,7 @@ describe("useAddConnectedWallet", () => {
         wrapper,
       },
     );
-    expect(statusResult.current).toEqual("disconnected");
+    expect(statusResult.current).toEqual("unknown");
     const { result } = renderHook(() => useConnect(), { wrapper });
     await result.current.connect(async () => {
       throw new Error("test");
