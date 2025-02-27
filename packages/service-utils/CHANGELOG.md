@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.10
+
+### Patch Changes
+
+- [#6345](https://github.com/thirdweb-dev/js/pull/6345) [`0595c37`](https://github.com/thirdweb-dev/js/commit/0595c37163392e986124ebc376020a3bca6ba1ac) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Use @confluentinc/kafka-javascript
+
+- [#6346](https://github.com/thirdweb-dev/js/pull/6346) [`b60d251`](https://github.com/thirdweb-dev/js/commit/b60d251cd72f72080c3a8d8039bad330a7cda344) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix usageV2 caller
+
+- [#6338](https://github.com/thirdweb-dev/js/pull/6338) [`9f69cc2`](https://github.com/thirdweb-dev/js/commit/9f69cc27aec2dd8e0b68541f7d4addc452d5bc5a) Thanks [@jnsdls](https://github.com/jnsdls)! - add `pastDue` to possible billing status flags
+
 ## 0.8.9
 
 ### Patch Changes
