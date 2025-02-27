@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbopack",
     "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start",
     "format": "biome format ./src --write",
@@ -67,7 +67,7 @@
     "ioredis": "^5.5.0",
     "ipaddr.js": "^2.2.0",
     "lucide-react": "0.476.0",
-    "next": "15.1.7",
+    "next": "15.2.0",
     "next-plausible": "^3.12.4",
     "next-themes": "^0.4.4",
     "nextjs-toploader": "^1.6.12",
@@ -104,8 +104,8 @@
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
     "@chromatic-com/storybook": "3.2.4",
-    "@next/bundle-analyzer": "15.1.7",
-    "@next/eslint-plugin-next": "15.1.7",
+    "@next/bundle-analyzer": "15.2.0",
+    "@next/eslint-plugin-next": "15.2.0",
     "@playwright/test": "1.50.1",
     "@storybook/addon-essentials": "8.6.0",
     "@storybook/addon-interactions": "8.6.0",
