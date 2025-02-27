@@ -1,3 +1,5 @@
+import type { FeeType } from "../gas/fee-data.js";
+
 /**
  * @chain
  */
@@ -26,6 +28,7 @@ export type ChainOptions = {
     increaseZeroByteCount?: boolean;
   };
   faucets?: Array<string>;
+  feeType?: FeeType;
 };
 
 /**

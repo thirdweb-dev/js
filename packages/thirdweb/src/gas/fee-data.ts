@@ -52,11 +52,13 @@ export async function getGasOverridesForTransaction(
   transaction: PreparedTransaction,
 ): Promise<FeeDataParams> {
   // first check for explicit values
-  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice] = await Promise.all([
-    resolvePromisedValue(transaction.maxFeePerGas),
-    resolvePromisedValue(transaction.maxPriorityFeePerGas),
-    resolvePromisedValue(transaction.gasPrice),
-  ]);
+  const [maxFeePerGas, maxPriorityFeePerGas, gasPrice, type] =
+    await Promise.all([
+      resolvePromisedValue(transaction.maxFeePerGas),
+      resolvePromisedValue(transaction.maxPriorityFeePerGas),
+      resolvePromisedValue(transaction.gasPrice),
+      resolvePromisedValue(transaction.type),
+    ]);
 
   // Exit early if the user explicitly provided enough options
   if (maxFeePerGas !== undefined && maxPriorityFeePerGas !== undefined) {
@@ -65,6 +67,7 @@ export async function getGasOverridesForTransaction(
       maxPriorityFeePerGas,
     };
   }
+
   if (typeof gasPrice === "bigint") {
     return { gasPrice };
   }
@@ -73,6 +76,7 @@ export async function getGasOverridesForTransaction(
   const defaultGasOverrides = await getDefaultGasOverrides(
     transaction.client,
     transaction.chain,
+    type === "legacy" ? "legacy" : "eip1559", // 7702, 2930, and eip1559 all qualify as "eip1559" fee type
   );
 
   if (transaction.chain.experimental?.increaseZeroByteCount) {
@@ -103,6 +107,8 @@ export async function getGasOverridesForTransaction(
   };
 }
 
+export type FeeType = "legacy" | "eip1559";
+
 /**
  * Retrieves the default gas overrides for a given client and chain ID.
  * If the fee data contains both maxFeePerGas and maxPriorityFeePerGas, it returns an object with those values.
@@ -115,20 +121,27 @@ export async function getGasOverridesForTransaction(
 export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chain: Chain,
+  feeType?: FeeType,
 ) {
-  // if chain is in the force gas price list, always use gas price
-  if (!FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)) {
-    const feeData = await getDynamicFeeData(client, chain);
-    if (
-      feeData.maxFeePerGas !== null &&
-      feeData.maxPriorityFeePerGas !== null
-    ) {
-      return {
-        maxFeePerGas: feeData.maxFeePerGas,
-        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
-      };
-    }
+  // give priority to the transaction fee type over the chain fee type
+  const resolvedFeeType = feeType ?? chain.feeType;
+  // if chain is configured to force legacy transactions or is in the legacy chain list
+  if (
+    resolvedFeeType === "legacy" ||
+    FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
+  ) {
+    return {
+      gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+    };
   }
+  const feeData = await getDynamicFeeData(client, chain);
+  if (feeData.maxFeePerGas !== null && feeData.maxPriorityFeePerGas !== null) {
+    return {
+      maxFeePerGas: feeData.maxFeePerGas,
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+    };
+  }
+  // TODO: resolvedFeeType here could be "EIP1559", but we could not get EIP1559 fee data. should we throw?
   return {
     gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
   };
@@ -156,7 +169,7 @@ async function getDynamicFeeData(
     eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
   ]);
 
-  const baseBlockFee = block?.baseFeePerGas ?? 0n;
+  const baseBlockFee = block?.baseFeePerGas;
 
   const chainId = chain.id;
   // flag chain testnet & flag chain
@@ -174,7 +187,7 @@ async function getDynamicFeeData(
     maxPriorityFeePerGas_ = maxPriorityFeePerGas;
   }
 
-  if (maxPriorityFeePerGas_ == null) {
+  if (maxPriorityFeePerGas_ == null || baseBlockFee == null) {
     // chain does not support eip-1559, return null for both
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
   }
