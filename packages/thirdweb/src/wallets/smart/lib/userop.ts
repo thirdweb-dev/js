@@ -136,6 +136,7 @@ export async function createUnsignedUserOp(args: {
   adminAddress: string;
   sponsorGas: boolean;
   waitForDeployment?: boolean;
+  forceDeployment?: "force_deploy" | "force_skip_deploy";
   overrides?: SmartWalletOptions["overrides"];
 }): Promise<UserOperationV06 | UserOperationV07> {
   const {
@@ -146,6 +147,7 @@ export async function createUnsignedUserOp(args: {
     overrides,
     sponsorGas,
     waitForDeployment = true,
+    forceDeployment,
   } = args;
   const chain = executeTx.chain;
   const client = executeTx.client;
@@ -161,9 +163,18 @@ export async function createUnsignedUserOp(args: {
     args.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
   );
 
+  const isDeployedOverride = forceDeployment
+    ? {
+        force_deploy: true,
+        force_skip_deploy: false,
+      }[forceDeployment]
+    : undefined;
+
   const [isDeployed, callData, callGasLimit, gasFees, nonce] =
     await Promise.all([
-      isContractDeployed(accountContract),
+      typeof isDeployedOverride === "boolean"
+        ? isDeployedOverride
+        : isContractDeployed(accountContract),
       encode(executeTx),
       resolvePromisedValue(executeTx.gas),
       getGasFees({
@@ -699,6 +710,7 @@ export async function createAndSignUserOp(options: {
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
   waitForDeployment?: boolean;
+  forceDeployment?: "force_deploy" | "force_skip_deploy";
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
@@ -757,6 +769,7 @@ export async function createAndSignUserOp(options: {
     sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
     overrides: config.overrides,
     waitForDeployment: options.waitForDeployment,
+    forceDeployment: options.forceDeployment,
   });
   const signedUserOp = await signUserOp({
     client: options.client,
