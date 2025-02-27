@@ -136,6 +136,7 @@ export async function createUnsignedUserOp(args: {
   adminAddress: string;
   sponsorGas: boolean;
   waitForDeployment?: boolean;
+  isDeployedOverride?: boolean;
   overrides?: SmartWalletOptions["overrides"];
 }): Promise<UserOperationV06 | UserOperationV07> {
   const {
@@ -146,6 +147,7 @@ export async function createUnsignedUserOp(args: {
     overrides,
     sponsorGas,
     waitForDeployment = true,
+    isDeployedOverride,
   } = args;
   const chain = executeTx.chain;
   const client = executeTx.client;
@@ -163,7 +165,11 @@ export async function createUnsignedUserOp(args: {
 
   const [isDeployed, callData, callGasLimit, gasFees, nonce] =
     await Promise.all([
-      isContractDeployed(accountContract),
+      typeof isDeployedOverride === "boolean"
+        ? isDeployedOverride
+        : isContractDeployed(accountContract).then(
+            (isDeployed) => isDeployed || isAccountDeploying(accountContract),
+          ),
       encode(executeTx),
       resolvePromisedValue(executeTx.gas),
       getGasFees({
@@ -299,7 +305,7 @@ async function populateUserOp_v0_7(args: {
 
   let factory: string | undefined;
   let factoryData: Hex;
-  if (isDeployed || isAccountDeploying(accountContract)) {
+  if (isDeployed) {
     factoryData = "0x";
     if (waitForDeployment) {
       // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
@@ -462,7 +468,7 @@ async function populateUserOp_v0_6(args: {
   const { chain, client } = bundlerOptions;
   let initCode: Hex;
 
-  if (isDeployed || isAccountDeploying(accountContract)) {
+  if (isDeployed) {
     initCode = "0x";
     if (waitForDeployment) {
       // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
@@ -699,6 +705,7 @@ export async function createAndSignUserOp(options: {
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
   waitForDeployment?: boolean;
+  isDeployedOverride?: boolean;
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
@@ -757,6 +764,7 @@ export async function createAndSignUserOp(options: {
     sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
     overrides: config.overrides,
     waitForDeployment: options.waitForDeployment,
+    isDeployedOverride: options.isDeployedOverride,
   });
   const signedUserOp = await signUserOp({
     client: options.client,
