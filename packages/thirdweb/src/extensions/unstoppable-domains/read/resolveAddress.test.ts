@@ -19,7 +19,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     });
 
     it("should throw an error with a non-existent domain name", async () => {
-      await expect(() =>
+      await expect(
         resolveAddress({
           name: "thirdwebsdk.thissuredoesnotexist",
           client: TEST_CLIENT,

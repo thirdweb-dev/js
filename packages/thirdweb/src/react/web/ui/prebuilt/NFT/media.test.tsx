@@ -70,7 +70,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   });
 
   it("fetchNftMedia should throw error if failed to resolve nft info", async () => {
-    await expect(() =>
+    await expect(
       fetchNftMedia({
         contract: UNISWAPV3_FACTORY_CONTRACT,
         tokenId: 0n,

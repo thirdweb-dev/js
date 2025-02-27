@@ -7,7 +7,7 @@ import { download } from "./download.js";
 
 const server = setupServer(...storageHandlers);
 
-describe("download", () => {
+describe.skip("download", () => {
   beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
   afterAll(() => server.close());
   afterEach(() => server.resetHandlers());

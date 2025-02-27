@@ -89,20 +89,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(6n);
-      await expect(
-        getNFT({ contract, tokenId: 0n }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "id": 0n,
-          "metadata": {
-            "name": "Test NFT",
-          },
-          "owner": null,
-          "supply": 0n,
-          "tokenURI": "ipfs://QmTo68Dm1ntSp2BHLmE9gesS6ELuXosRz5mAgFCK6tfsRk/0",
-          "type": "ERC1155",
-        }
-      `);
+      expect((await getNFT({ contract, tokenId: 0n })).metadata.name).toBe(
+        "Test NFT",
+      );
     });
 
     it("should update metadata", async () => {

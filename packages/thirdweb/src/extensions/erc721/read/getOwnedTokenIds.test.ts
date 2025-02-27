@@ -22,7 +22,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getOwnedTokenIds", () => {
   it("should throw if tokenOfOwnerByIndex or tokensOfOwner not supported", async () => {
     // We know current Lens contract on Polygon doesn't have this.
     const contract = UNISWAPV3_FACTORY_CONTRACT;
-    await expect(() =>
+    await expect(
       getOwnedTokenIds({ contract, owner: TEST_ACCOUNT_B.address }),
     ).rejects.toThrowError(
       `The contract at ${contract.address} on chain ${contract.chain.id} does not support the tokenOfOwnerByIndex or tokensOfOwner interface`,
