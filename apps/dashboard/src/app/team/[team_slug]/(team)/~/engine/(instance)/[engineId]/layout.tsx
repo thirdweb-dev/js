@@ -1,9 +1,13 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
+import { ChakraProvider } from "@chakra-ui/react";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
@@ -50,24 +54,30 @@ export default async function Layout(props: {
   }
 
   return (
-    <EngineSidebarLayout engineId={params.engineId} teamSlug={params.team_slug}>
-      <EnsureEnginePermission
-        teamSlug={params.team_slug}
-        accountId={account.id}
-        authToken={authToken}
-        engineId={params.engineId}
-        instance={instance}
-      >
-        <div>
-          <EngineInstanceHeader
-            instance={instance}
-            rootPath={engineRootLayoutPath}
+    <ChakraProvider>
+      <div className="flex grow flex-col">
+        <EngineInstanceHeader
+          instance={instance}
+          rootPath={engineRootLayoutPath}
+          teamSlug={params.team_slug}
+        />
+
+        <EngineSidebarLayout
+          engineId={params.engineId}
+          teamSlug={params.team_slug}
+        >
+          <EnsureEnginePermission
             teamSlug={params.team_slug}
-          />
-          {props.children}
-        </div>
-      </EnsureEnginePermission>
-    </EngineSidebarLayout>
+            accountId={account.id}
+            authToken={authToken}
+            engineId={params.engineId}
+            instance={instance}
+          >
+            <div>{props.children}</div>
+          </EnsureEnginePermission>
+        </EngineSidebarLayout>
+      </div>
+    </ChakraProvider>
   );
 }
 
@@ -77,53 +87,47 @@ function EngineInstanceHeader(props: {
   teamSlug: string;
 }) {
   const { instance } = props;
+  const cleanEngineURL = instance.url.endsWith("/")
+    ? instance.url.slice(0, -1)
+    : instance.url;
 
   return (
-    <div>
-      <div className="flex">
-        <Button
-          variant="ghost"
-          className="-translate-x-2 flex h-auto items-center gap-2 px-2 py-1 text-muted-foreground hover:text-foreground"
-        >
-          <Link
-            href={props.rootPath}
-            aria-label="Go Back"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeftIcon className="size-4" /> Back
-          </Link>
-        </Button>
-      </div>
+    <div className="border-b">
+      <div className="container py-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={props.rootPath}>Engines</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      <div className="h-5" />
+        <div className="h-4" />
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h1 className="font-semibold text-3xl tracking-tighter md:text-5xl">
-            {instance.name}
-          </h1>
-
-          <div className="h-1" />
-
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          {/* left */}
+          <div>
+            <h1 className="font-semibold text-3xl tracking-tight">
+              {instance.name}
+            </h1>
             {!instance.name.startsWith("https://") && (
               <CopyTextButton
                 copyIconPosition="right"
-                textToShow={instance.url}
-                textToCopy={instance.url}
+                iconClassName="size-2.5"
+                textToShow={cleanEngineURL}
+                textToCopy={cleanEngineURL}
                 tooltip="Copy Engine URL"
                 variant="ghost"
                 className="-translate-x-2 h-auto px-2 py-1 text-muted-foreground"
               />
             )}
           </div>
-        </div>
-        <EngineVersionBadge instance={instance} teamSlug={props.teamSlug} />
-      </div>
 
-      <div className="h-5" />
-      <Separator />
-      <div className="h-10 " />
+          {/* Right */}
+          <EngineVersionBadge instance={instance} teamSlug={props.teamSlug} />
+        </div>
+      </div>
     </div>
   );
 }

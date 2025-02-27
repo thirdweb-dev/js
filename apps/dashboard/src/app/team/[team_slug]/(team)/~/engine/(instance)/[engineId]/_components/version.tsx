@@ -53,8 +53,12 @@ export const EngineVersionBadge = ({
 
   const serverVersions = publicConfigurationQuery.data.serverVersions;
   const latestVersion = serverVersions[0];
-  const currentVersion = healthQuery.data.engineVersion ?? "N/A";
+  const currentVersion = healthQuery.data.engineVersion;
   const hasNewerVersion = latestVersion?.name !== currentVersion;
+
+  if (!currentVersion) {
+    return null;
+  }
 
   // Hide the change version modal unless owner.
   if (!instance.deploymentId) {

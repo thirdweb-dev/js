@@ -3,7 +3,6 @@
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SecondaryNavLinks } from "../../../components/Header/SecondaryNav/SecondaryNav";
