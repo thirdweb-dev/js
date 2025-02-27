@@ -73,18 +73,18 @@ export async function predictAddress(args: {
   accountSalt?: string;
   accountAddress?: string;
 }): Promise<string> {
+  const {
+    factoryContract,
+    predictAddressOverride: predictAddress,
+    adminAddress,
+    accountSalt,
+    accountAddress,
+  } = args;
+  if (predictAddress) {
+    return predictAddress(factoryContract, adminAddress);
+  }
   return withCache(
     async () => {
-      const {
-        factoryContract,
-        predictAddressOverride: predictAddress,
-        adminAddress,
-        accountSalt,
-        accountAddress,
-      } = args;
-      if (predictAddress) {
-        return predictAddress(factoryContract, adminAddress);
-      }
       if (accountAddress) {
         return accountAddress;
       }
@@ -104,7 +104,7 @@ export async function predictAddress(args: {
       });
     },
     {
-      cacheKey: `${args.factoryContract.address}-${args.adminAddress}-${args.accountSalt}`,
+      cacheKey: `${args.factoryContract.chain.id}-${args.factoryContract.address}-${args.adminAddress}-${args.accountSalt}`,
       cacheTime: 1000 * 60 * 60 * 24, // 1 day
     },
   );
