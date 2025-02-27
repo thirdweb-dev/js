@@ -167,8 +167,9 @@ export async function createUnsignedUserOp(args: {
     await Promise.all([
       typeof isDeployedOverride === "boolean"
         ? isDeployedOverride
-        : isContractDeployed(accountContract) ||
-          isAccountDeploying(accountContract),
+        : isContractDeployed(accountContract).then(
+            (isDeployed) => isDeployed || isAccountDeploying(accountContract),
+          ),
       encode(executeTx),
       resolvePromisedValue(executeTx.gas),
       getGasFees({
