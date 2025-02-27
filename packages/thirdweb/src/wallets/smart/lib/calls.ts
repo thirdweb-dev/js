@@ -83,16 +83,16 @@ export async function predictAddress(args: {
   if (predictAddress) {
     return predictAddress(factoryContract, adminAddress);
   }
+  if (accountAddress) {
+    return accountAddress;
+  }
+  if (!adminAddress) {
+    throw new Error(
+      "Account address is required to predict the smart wallet address.",
+    );
+  }
   return withCache(
     async () => {
-      if (accountAddress) {
-        return accountAddress;
-      }
-      if (!adminAddress) {
-        throw new Error(
-          "Account address is required to predict the smart wallet address.",
-        );
-      }
       const saltHex =
         accountSalt && isHex(accountSalt)
           ? accountSalt
