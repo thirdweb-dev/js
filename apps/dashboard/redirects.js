@@ -343,6 +343,18 @@ async function redirects() {
       destination: "/connect/universal-bridge",
       permanent: false,
     },
+    // redirect /auth to /connect/auth
+    {
+      source: "/auth",
+      destination: "/connect/auth",
+      permanent: false,
+    },
+    // redirect /in-app-wallets to /connect/in-app-wallets
+    {
+      source: "/in-app-wallets",
+      destination: "/connect/in-app-wallets",
+      permanent: false,
+    },
     // PREVIOUS CAMPAIGNS
     {
       source: "/unlimited-wallets",
