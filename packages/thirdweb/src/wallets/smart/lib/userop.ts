@@ -136,7 +136,7 @@ export async function createUnsignedUserOp(args: {
   adminAddress: string;
   sponsorGas: boolean;
   waitForDeployment?: boolean;
-  forceDeployment?: "force_deploy" | "force_skip_deploy";
+  isDeployedOverride?: boolean;
   overrides?: SmartWalletOptions["overrides"];
 }): Promise<UserOperationV06 | UserOperationV07> {
   const {
@@ -147,7 +147,7 @@ export async function createUnsignedUserOp(args: {
     overrides,
     sponsorGas,
     waitForDeployment = true,
-    forceDeployment,
+    isDeployedOverride,
   } = args;
   const chain = executeTx.chain;
   const client = executeTx.client;
@@ -163,18 +163,12 @@ export async function createUnsignedUserOp(args: {
     args.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
   );
 
-  const isDeployedOverride = forceDeployment
-    ? {
-        force_deploy: true,
-        force_skip_deploy: false,
-      }[forceDeployment]
-    : undefined;
-
   const [isDeployed, callData, callGasLimit, gasFees, nonce] =
     await Promise.all([
       typeof isDeployedOverride === "boolean"
         ? isDeployedOverride
-        : isContractDeployed(accountContract),
+        : isContractDeployed(accountContract) ||
+          isAccountDeploying(accountContract),
       encode(executeTx),
       resolvePromisedValue(executeTx.gas),
       getGasFees({
@@ -310,7 +304,7 @@ async function populateUserOp_v0_7(args: {
 
   let factory: string | undefined;
   let factoryData: Hex;
-  if (isDeployed || isAccountDeploying(accountContract)) {
+  if (isDeployed) {
     factoryData = "0x";
     if (waitForDeployment) {
       // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
@@ -473,7 +467,7 @@ async function populateUserOp_v0_6(args: {
   const { chain, client } = bundlerOptions;
   let initCode: Hex;
 
-  if (isDeployed || isAccountDeploying(accountContract)) {
+  if (isDeployed) {
     initCode = "0x";
     if (waitForDeployment) {
       // lock until account is deployed if needed to avoid 'sender already created' errors when sending multiple transactions in parallel
@@ -710,7 +704,7 @@ export async function createAndSignUserOp(options: {
   client: ThirdwebClient;
   smartWalletOptions: SmartWalletOptions;
   waitForDeployment?: boolean;
-  forceDeployment?: "force_deploy" | "force_skip_deploy";
+  isDeployedOverride?: boolean;
 }) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
@@ -769,7 +763,7 @@ export async function createAndSignUserOp(options: {
     sponsorGas: "sponsorGas" in config ? config.sponsorGas : config.gasless,
     overrides: config.overrides,
     waitForDeployment: options.waitForDeployment,
-    forceDeployment: options.forceDeployment,
+    isDeployedOverride: options.isDeployedOverride,
   });
   const signedUserOp = await signUserOp({
     client: options.client,
