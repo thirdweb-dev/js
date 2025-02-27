@@ -45,4 +45,10 @@ module.exports = [
   // -- templates --
   "/templates",
   "/templates/:template_slug",
+  // -- learn --
+  "/learn",
+  "/learn/tutorials",
+  "/learn/guides",
+  "/learn/courses",
+  "/learn/glossary",
 ];
