@@ -1,15 +1,5 @@
 import type { StaticImageData } from "next/image";
 
-export interface SectionProps {
-  name: string;
-  label: string;
-  description: string;
-  icon?: StaticImageData;
-  link?: string;
-  section?: "contracts-v2" | "connect-v2" | "engine-v2";
-  comingSoon?: boolean;
-}
-
 export interface SectionItemProps {
   name: string;
   dashboardName?: string;

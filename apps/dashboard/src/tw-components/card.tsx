@@ -24,7 +24,7 @@ const borderRadiusMap = {
   none: "none",
 };
 
-export interface CardProps extends BoxProps {
+interface CardProps extends BoxProps {
   outlineBorder?: {
     gradient: string;
     width: string;

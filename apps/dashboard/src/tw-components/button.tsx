@@ -155,7 +155,7 @@ interface TrackedIconButtonProps extends IconButtonProps {
   trackingProps?: Record<string, string>;
 }
 
-export const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
+const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
   ({ category, label, trackingProps, ...restButtonProps }, ref) => {
     const trackEvent = useTrack();
     return (

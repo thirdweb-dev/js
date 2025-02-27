@@ -23,5 +23,3 @@ export const ChakraNextImage = chakra(NextImage, {
       "sizes",
     ].includes(prop),
 });
-
-export type ChakraNextImageProps = React.ComponentProps<typeof ChakraNextImage>;

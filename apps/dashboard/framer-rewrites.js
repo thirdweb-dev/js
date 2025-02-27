@@ -11,6 +11,8 @@ module.exports = [
   "/connect/sign-in",
   "/connect/account-abstraction",
   "/connect/universal-bridge",
+  "/connect/auth",
+  "/connect/in-app-wallets",
   // -- nebula
   "/nebula",
   // --insight
