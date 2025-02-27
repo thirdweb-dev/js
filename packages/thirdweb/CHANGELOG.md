@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.89.1
+
+### Patch Changes
+
+- [#6356](https://github.com/thirdweb-dev/js/pull/6356) [`2ba1683`](https://github.com/thirdweb-dev/js/commit/2ba168388a51214f809a4e3ef0b7d78f38d5c57d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Change caching strategy for contract ABI
+
 ## 5.89.0
 
 ### Minor Changes
