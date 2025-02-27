@@ -269,13 +269,6 @@ async function redirects() {
       destination: "/solutions/ecosystem",
       permanent: false,
     },
-    // redirect /storage to portal
-    {
-      source: "/storage",
-      destination:
-        "https://portal.thirdweb.com/infrastructure/storage/overview",
-      permanent: false,
-    },
     // redirect /rpc to portal
     {
       source: "/rpc-edge",
