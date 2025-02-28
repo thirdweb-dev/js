@@ -3,24 +3,30 @@
 import type { RedirectBillingCheckoutAction } from "@/actions/billing";
 import { TextDivider } from "@/components/TextDivider";
 import { PricingCard } from "@/components/blocks/pricing-card";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
-import { TitleAndDescription } from "./Title";
 
-export function OnboardingChoosePlan(props: {
+export function ChooseTeamPlan(props: {
   skipPlan: () => Promise<void>;
-  canTrialGrowth: boolean;
   teamSlug: string;
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
 }) {
   return (
     <div>
-      <TitleAndDescription
-        heading="Choose your Plan"
-        description="Get started for free with our Starter plan or subscribe to Growth plan to unlock higher rate limits and advanced features"
-      />
+      <h3 className="mb-0.5 font-semibold text-2xl text-foreground tracking-tight">
+        Choose a plan
+      </h3>
 
-      <div className="h-4" />
+      <div className="text-muted-foreground text-sm">
+        Start building with the free Starter plan or upgrade to Growth for
+        increased limits and advanced features.{" "}
+        <UnderlineLink href="https://thirdweb.com/pricing" target="_blank">
+          Learn more
+        </UnderlineLink>
+      </div>
+
+      <div className="h-6" />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-5">
         <PricingCard
@@ -48,18 +54,19 @@ export function OnboardingChoosePlan(props: {
             },
             variant: "default",
           }}
-          canTrialGrowth={false}
           highlighted
           redirectPath={props.redirectPath}
           redirectToCheckout={props.redirectToCheckout}
         />
       </div>
 
-      <TextDivider text="OR" className="my-4" />
+      <TextDivider text="OR" className="my-5" />
 
       <Button
         variant="outline"
-        onClick={props.skipPlan}
+        onClick={() => {
+          props.skipPlan();
+        }}
         className="relative h-auto w-full items-center gap-2 rounded-xl bg-card py-2.5"
       >
         <span className="flex flex-col gap-0.5">
@@ -69,6 +76,8 @@ export function OnboardingChoosePlan(props: {
           </span>
         </span>
       </Button>
+
+      <div className="h-6" />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,10 +7,12 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
 import { CheckIcon, CircleAlertIcon, CircleDollarSignIcon } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 import { TEAM_PLANS } from "utils/pricing";
 import { remainingDays } from "../../../utils/date-utils";
 import type { RedirectBillingCheckoutAction } from "../../actions/billing";
 import { CheckoutButton } from "../billing";
+import { Spinner } from "../ui/Spinner/Spinner";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
 
@@ -31,7 +34,6 @@ type PricingCardProps = {
   ctaHint?: string;
   highlighted?: boolean;
   current?: boolean;
-  canTrialGrowth?: boolean;
   activeTrialEndsAt?: string;
   redirectPath: string;
   redirectToCheckout: RedirectBillingCheckoutAction;
@@ -43,11 +45,11 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   cta,
   highlighted = false,
   current = false,
-  canTrialGrowth = false,
   activeTrialEndsAt,
   redirectPath,
   redirectToCheckout,
 }) => {
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
 
@@ -88,18 +90,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-3xl text-foreground tracking-tight">
-              {isCustomPrice ? (
-                plan.price
-              ) : canTrialGrowth ? (
-                <>
-                  <span className="text-muted-foreground line-through">
-                    ${plan.price}
-                  </span>{" "}
-                  $0
-                </>
-              ) : (
-                `$${plan.price}`
-              )}
+              ${plan.price}
             </span>
 
             {!isCustomPrice && (
@@ -154,7 +145,10 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
               redirectPath={redirectPath}
               redirectToCheckout={redirectToCheckout}
+              className="gap-2"
+              onClick={() => setIsRouteLoading(true)}
             >
+              {isRouteLoading && <Spinner className="size-4" />}
               {cta.title}
             </CheckoutButton>
           ) : (
