@@ -189,7 +189,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
   });
 
   it("should throw error if totalSupply and nextTokenIdToMint are not supported", async () => {
-    await expect(() =>
+    await expect(
       getNFTs({ contract: UNISWAPV3_FACTORY_CONTRACT }),
     ).rejects.toThrowError(
       "Contract requires either `nextTokenIdToMint` or `totalSupply` function available to determine the next token ID to mint",

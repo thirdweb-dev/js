@@ -16,7 +16,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("WalletName", () => {
 
   it("fetchWalletName should throw error if failed to get name", async () => {
     // @ts-ignore for test
-    await expect(() => fetchWalletName({ id: "test___" })).rejects.toThrowError(
+    await expect(fetchWalletName({ id: "test___" })).rejects.toThrowError(
       "Wallet with id test___ not found",
     );
   });

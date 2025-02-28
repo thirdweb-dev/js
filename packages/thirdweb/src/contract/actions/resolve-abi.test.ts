@@ -61,7 +61,7 @@ it("should throw error if contract bytecode is 0x", async () => {
     client: TEST_CLIENT,
     chain: FORKED_ETHEREUM_CHAIN,
   });
-  await expect(() =>
-    resolveAbiFromBytecode(wrongContract),
-  ).rejects.toThrowError("Failed to load contract bytecode");
+  await expect(resolveAbiFromBytecode(wrongContract)).rejects.toThrowError(
+    "Failed to load contract bytecode",
+  );
 });

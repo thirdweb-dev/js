@@ -113,7 +113,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("ClaimButton", () => {
       },
     });
     const contract = getContract({ address, chain, client });
-    await expect(() =>
+    await expect(
       getERC20ClaimTo({
         contract,
         account,

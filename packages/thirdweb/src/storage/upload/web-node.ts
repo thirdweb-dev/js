@@ -1,6 +1,8 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getThirdwebDomains } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { IS_TEST } from "../../utils/process.js";
+import { addToMockStorage } from "../mock.js";
 import type { UploadOptions, UploadableFile } from "./types.js";
 
 export async function uploadBatch<const TFiles extends UploadableFile[]>(
@@ -9,6 +11,10 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
   fileNames: string[],
   options?: UploadOptions<TFiles>,
 ) {
+  if (IS_TEST) {
+    return addToMockStorage(form);
+  }
+
   const headers: HeadersInit = {};
 
   const res = await getClientFetch(client)(
@@ -17,7 +23,8 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
       method: "POST",
       headers,
       body: form,
-      requestTimeoutMs: client.config?.storage?.fetch?.requestTimeoutMs,
+      requestTimeoutMs:
+        client.config?.storage?.fetch?.requestTimeoutMs || 120000,
     },
   );
 

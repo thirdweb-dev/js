@@ -32,6 +32,6 @@ describe("fetchTokenMetadata", () => {
       tokenId: 0n,
       tokenUri: invalidBase64Json,
     };
-    await expect(() => fetchTokenMetadata(options)).rejects.toThrowError();
+    await expect(fetchTokenMetadata(options)).rejects.toThrowError();
   });
 });
