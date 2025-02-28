@@ -556,7 +556,7 @@ async function _sendUserOp(args: {
   }
 }
 
-async function getEntrypointFromFactory(
+export async function getEntrypointFromFactory(
   factoryAddress: string,
   client: ThirdwebClient,
   chain: Chain,

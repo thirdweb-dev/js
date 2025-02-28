@@ -16,7 +16,6 @@ import {
 } from "../../exports/extensions/erc4337.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
-import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
@@ -27,6 +26,7 @@ import { hashTypedData } from "../../utils/hashing/hashTypedData.js";
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { estimateUserOpGasCost } from "./lib/bundler.js";
 import { predictSmartAccountAddress } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY_V0_7 } from "./lib/constants.js";
 import {
@@ -85,6 +85,27 @@ describe.sequential(
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
       });
       expect(predictedAddress).toEqual(smartWalletAddress);
+    });
+
+    it("can estimate gas cost", async () => {
+      const gasCost = await estimateUserOpGasCost({
+        transactions: [
+          claimTo({
+            contract,
+            quantity: 1n,
+            to: smartWalletAddress,
+            tokenId: 0n,
+          }),
+        ],
+        adminAccount: personalAccount,
+        client: TEST_CLIENT,
+        smartWalletOptions: {
+          chain,
+          sponsorGas: true,
+          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+        },
+      });
+      expect(gasCost.ether).not.toBe("0");
     });
 
     it("can sign a msg", async () => {
@@ -200,19 +221,6 @@ describe.sequential(
       await confirmContractDeployment({ accountContract });
       const isDeployed = await isContractDeployed(accountContract);
       expect(isDeployed).toEqual(true);
-    });
-
-    it("can estimate a tx", async () => {
-      const estimates = await estimateGasCost({
-        transaction: claimTo({
-          contract,
-          quantity: 1n,
-          to: smartWalletAddress,
-          tokenId: 0n,
-        }),
-        account: smartAccount,
-      });
-      expect(estimates.wei.toString()).not.toBe("0");
     });
 
     it("can execute a batched tx", async () => {
