@@ -19,6 +19,7 @@ type DocLayoutProps = {
   showTableOfContents?: boolean;
   sidebarHeader?: React.ReactNode;
   noIndex?: boolean;
+  noLLM?: boolean;
 };
 
 export function DocLayout(props: DocLayoutProps) {
@@ -43,6 +44,7 @@ export function DocLayout(props: DocLayoutProps) {
       <main
         className="relative flex w-full flex-col overflow-hidden"
         data-noindex={props.noIndex}
+        data-no-llm={props.noLLM}
       >
         <div className="grow xl:mt-6">{props.children}</div>
         <div className="mt-16 xl:mt-20">

@@ -121,60 +121,58 @@ async function RenderCode(props: {
 
   return (
     <div>
-      <pre>
-        {tokens.map((line, i) => {
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
-            <div key={i}>
-              {line.map((token, i) => {
-                const { lightColor, darkColor } = getThemeColors(token);
+      {tokens.map((line, i) => {
+        return (
+          // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
+          <div key={i}>
+            {line.map((token, i) => {
+              const { lightColor, darkColor } = getThemeColors(token);
 
-                const style = {
-                  "--code-light-color": lightColor,
-                  "--code-dark-color": darkColor,
-                } as React.CSSProperties;
+              const style = {
+                "--code-light-color": lightColor,
+                "--code-dark-color": darkColor,
+              } as React.CSSProperties;
 
-                const href = props.tokenLinks?.has(token.content)
-                  ? props.tokenLinks.get(token.content)
-                  : undefined;
+              const href = props.tokenLinks?.has(token.content)
+                ? props.tokenLinks.get(token.content)
+                : undefined;
 
-                if (href) {
-                  return (
-                    <Link
-                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
-                      key={i}
-                      href={href || "#"}
-                      className="group/codelink relative py-0.5"
-                      style={style}
-                    >
-                      {/* Token */}
-                      <span className="relative z-codeToken transition-colors duration-200 group-hover/codelink:text-background">
-                        {token.content}
-                      </span>
-                      {/* Line */}
-                      <span
-                        className={cn(
-                          "absolute right-0 bottom-0 left-0 z-codeTokenHighlight inline-block h-[3px] translate-y-[2px] scale-105",
-                          "rounded-sm bg-current opacity-20",
-                          "transition-all duration-200 group-hover/codelink:h-full group-hover/codelink:translate-y-0 group-hover/codelink:opacity-100",
-                        )}
-                      />
-                    </Link>
-                  );
-                }
-
+              if (href) {
                 return (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
-                  <span key={i} style={style} data-token={token.content}>
-                    {token.content}
-                  </span>
+                  <Link
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
+                    key={i}
+                    href={href || "#"}
+                    className="group/codelink relative py-0.5"
+                    style={style}
+                  >
+                    {/* Token */}
+                    <span className="relative z-codeToken transition-colors duration-200 group-hover/codelink:text-background">
+                      {token.content}
+                    </span>
+                    {/* Line */}
+                    <span
+                      className={cn(
+                        "absolute right-0 bottom-0 left-0 z-codeTokenHighlight inline-block h-[3px] translate-y-[2px] scale-105",
+                        "rounded-sm bg-current opacity-20",
+                        "transition-all duration-200 group-hover/codelink:h-full group-hover/codelink:translate-y-0 group-hover/codelink:opacity-100",
+                      )}
+                    />
+                  </Link>
                 );
-              })}
-              {line.length === 0 && i !== tokens.length - 1 && " "}
-            </div>
-          );
-        })}
-      </pre>
+              }
+
+              return (
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the identity here
+                <span key={i} style={style} data-token={token.content}>
+                  {token.content}
+                </span>
+              );
+            })}
+            {line.length === 0 && i !== tokens.length - 1 && " "}
+          </div>
+        );
+      })}
     </div>
   );
 }
