@@ -49,11 +49,9 @@ const contract = getContract({
   address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
 });
 
-// FIXME: SKIP ALL OF THIS IT IS FLAKY
-describe.skip(
+describe.sequential(
   "SmartWallet 0.7 core tests",
   {
-    retry: 0,
     timeout: 240_000,
   },
   () => {
@@ -103,8 +101,7 @@ describe.skip(
       expect(isValid).toEqual(true);
     });
 
-    // FIXME: flaky test - skipped
-    it.skip("should use ERC-1271 signatures after deployment", async () => {
+    it("should use ERC-1271 signatures after deployment", async () => {
       await deploySmartAccount({
         chain,
         client,
@@ -137,8 +134,7 @@ describe.skip(
       expect(isValid).toEqual(true);
     });
 
-    // FIXME: flaky test - skipped
-    it.skip("should use ERC-1271 typed data signatures after deployment", async () => {
+    it("should use ERC-1271 typed data signatures after deployment", async () => {
       await deploySmartAccount({
         chain,
         client,

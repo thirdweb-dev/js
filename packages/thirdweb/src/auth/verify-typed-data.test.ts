@@ -26,8 +26,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     ).toBe(true);
   });
 
-  // FIXME: flaky test - needs to be fixed
-  test.skip("invalid EOA signature", async () => {
+  test("invalid EOA signature", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
@@ -54,8 +53,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     ).toBe(true);
   });
 
-  // FIXME: flaky test - needs to be fixed
-  test.skip("invalid smart account signature", async () => {
+  test("invalid smart account signature", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,

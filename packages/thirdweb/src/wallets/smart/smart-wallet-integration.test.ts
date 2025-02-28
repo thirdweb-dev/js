@@ -51,7 +51,6 @@ const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet core tests",
   {
-    retry: 0,
     timeout: 240_000,
   },
   () => {

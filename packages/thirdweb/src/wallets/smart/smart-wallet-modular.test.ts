@@ -28,8 +28,7 @@ const client = TEST_CLIENT;
 const DEFAULT_FACTORY_ADDRESS = "0xB1846E893CA01c5Dcdaa40371C1e13f2e0Df5717";
 const DEFAULT_VALIDATOR_ADDRESS = "0x7D3631d823e0De311DC86f580946EeF2eEC81fba";
 
-// FIXME: This test is flaky and needs to be fixed
-describe.skip.sequential(
+describe.sequential(
   "SmartWallet modular tests",
   {
     retry: 0,
