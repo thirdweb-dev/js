@@ -74,17 +74,23 @@ async function getEvents() {
 
 ### Chain IDs
 
-The API supports chain IDs in the following format:
+The API supports chain IDs in the following formats:
 
+- As a subdomain:
 ```typescript
-interface ChainConfig {
-	chainId: number;  // Chain ID of the network you want to query
-}
-
-// Example: Using a specific chain
-const chainId = "{{chainId}}"; // Replace with your desired chain ID
+// Example
 const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
 ```
+
+- As a query parameter (this is useful if you want to query multiple chains):
+```typescript
+// Example for a single chain
+const url = `https://insight.thirdweb.com/v1/events?chain={{chainId}}`;
+// Example for multiple chains
+const url = `https://insight.thirdweb.com/v1/events?chain=1&chain=137`;
+```
+
+We won't duplicate multichain examples for each endpoint, but you can pass multiple chains in the query parameters pretty much everywhere!
 
 ### Base Response Structure
 
@@ -263,6 +269,12 @@ async function safeApiCall() {
 
 ```typescript
 GET https://{{chainId}}.insight.thirdweb.com/v1/events
+```
+
+or
+
+```typescript
+GET https://insight.thirdweb.com/v1/events?chainId={{chainId1}}&chainId={{chainId2}}
 ```
 
 2. **Get Contract Events**
