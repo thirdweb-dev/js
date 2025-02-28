@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { CheckIcon, CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { SearchInput } from "./SearchInput";
 
 export function ProjectSelectorUI(props: {
@@ -17,6 +18,7 @@ export function ProjectSelectorUI(props: {
   currentProject: Project | undefined;
   team: Team;
   createProject: () => void;
+  client: ThirdwebClient;
 }) {
   const { projects, currentProject, team } = props;
   const [searchProjectTerm, setSearchProjectTerm] = useState("");
@@ -60,8 +62,11 @@ export function ProjectSelectorUI(props: {
                   >
                     <Link href={`/team/${team.slug}/${project.slug}`}>
                       <div className="flex items-center gap-2">
-                        {/* TODO - set Image */}
-                        <ProjectAvatar src="" className="size-6" />
+                        <ProjectAvatar
+                          src={project.image || ""}
+                          className="size-6"
+                          client={props.client}
+                        />
                         <span className="truncate"> {project.name}</span>
                       </div>
                       {isSelected && (

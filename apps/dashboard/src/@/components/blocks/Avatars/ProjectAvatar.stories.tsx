@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { BadgeContainer } from "../../../../stories/utils";
+import { getThirdwebClient } from "../../../constants/thirdweb.server";
 import { Button } from "../../ui/button";
 import { ProjectAvatar } from "./ProjectAvatar";
 
@@ -17,17 +18,19 @@ export const Desktop: Story = {
   args: {},
 };
 
+const client = getThirdwebClient();
+
 function Story() {
   return (
     <div className="flex flex-col gap-10 p-10">
       <p> All images below are set with size-6 className </p>
 
       <BadgeContainer label="No Src - Skeleton">
-        <ProjectAvatar src={undefined} className="size-6" />
+        <ProjectAvatar src={undefined} className="size-6" client={client} />
       </BadgeContainer>
 
       <BadgeContainer label="Invalid/Empty Src - BoxIcon Fallback">
-        <ProjectAvatar src={""} className="size-6" />
+        <ProjectAvatar src={""} className="size-6" client={client} />
       </BadgeContainer>
 
       <ToggleTest />
@@ -62,13 +65,14 @@ function ToggleTest() {
       <p> Src+Name is: {data ? "set" : "not set"} </p>
 
       <BadgeContainer label="Valid Src">
-        <ProjectAvatar src={data?.src} className="size-6" />
+        <ProjectAvatar src={data?.src} className="size-6" client={client} />
       </BadgeContainer>
 
       <BadgeContainer label="invalid Src">
         <ProjectAvatar
           src={data ? "invalid-src" : undefined}
           className="size-6"
+          client={client}
         />
       </BadgeContainer>
     </div>

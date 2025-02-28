@@ -29,6 +29,7 @@ import { formatDate } from "date-fns";
 import { PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 
 type SortById = "name" | "createdAt" | "monthlyActiveUsers";
 
@@ -39,6 +40,7 @@ export type ProjectWithAnalytics = Project & {
 export function TeamProjectsPage(props: {
   projects: ProjectWithAnalytics[];
   team: Team;
+  client: ThirdwebClient;
 }) {
   const { projects } = props;
   const [searchTerm, setSearchTerm] = useState("");
@@ -175,6 +177,7 @@ export function TeamProjectsPage(props: {
                         <ProjectAvatar
                           className="size-8 rounded-full"
                           src={project.image || ""}
+                          client={props.client}
                         />
                         <span className="font-medium text-sm">
                           {project.name}

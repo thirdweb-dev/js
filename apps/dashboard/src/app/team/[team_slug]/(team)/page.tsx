@@ -1,8 +1,11 @@
 import { getWalletConnections } from "@/api/analytics";
 import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 import {
   type ProjectWithAnalytics,
   TeamProjectsPage,
@@ -12,7 +15,14 @@ export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const params = await props.params;
-  const team = await getTeamBySlug(params.team_slug);
+  const [team, authToken] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getAuthToken(),
+  ]);
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}`);
+  }
 
   if (!team) {
     redirect("/team");
@@ -32,7 +42,11 @@ export default async function Page(props: {
       </div>
 
       <div className="container flex grow flex-col pt-8 pb-20">
-        <TeamProjectsPage projects={projectsWithTotalWallets} team={team} />
+        <TeamProjectsPage
+          projects={projectsWithTotalWallets}
+          team={team}
+          client={getThirdwebClient(authToken)}
+        />
       </div>
     </div>
   );

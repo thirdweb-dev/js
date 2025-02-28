@@ -75,6 +75,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             focus="team-selection"
             createProject={props.createProject}
             account={props.account}
+            client={props.client}
           />
         </div>
 
@@ -86,8 +87,11 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
                 className="flex flex-row items-center gap-2 font-semibold text-sm"
               >
-                {/* TODO - set project avatar image */}
-                <ProjectAvatar src="" className="size-6" />
+                <ProjectAvatar
+                  src={props.currentProject.image || ""}
+                  className="size-6"
+                  client={props.client}
+                />
                 {props.currentProject.name}
               </Link>
 
@@ -98,6 +102,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 focus="project-selection"
                 createProject={props.createProject}
                 account={props.account}
+                client={props.client}
               />
             </div>
           </>
@@ -181,6 +186,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
                 projects={projects}
                 team={props.currentTeam}
                 createProject={props.createProject}
+                client={props.client}
               />
             </div>
           </>

@@ -20,7 +20,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 
 export type MinimalTeam = Pick<Team, "id" | "name" | "image" | "slug">;
-export type MinimalProject = Pick<Project, "id" | "name">; // TODO: add image when project has image
+export type MinimalProject = Pick<Project, "id" | "name" | "image">;
 
 export type TeamAndProjectSelection = {
   team: MinimalTeam | undefined;
@@ -206,7 +206,11 @@ export function AddToProjectSelector(props: {
                 className="py-2.5"
               >
                 <div className="flex items-center gap-2">
-                  <ProjectAvatar src="" className="size-5" />
+                  <ProjectAvatar
+                    src={project.image || ""}
+                    className="size-5"
+                    client={props.client}
+                  />
                   <span>{project.name}</span>
                 </div>
               </SelectItem>

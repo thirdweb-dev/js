@@ -36,6 +36,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
       projects: (await getProjects(team.slug)).map((x) => ({
         id: x.id,
         name: x.name,
+        image: x.image,
       })),
     })),
   );

@@ -36,6 +36,10 @@ function Story(props: {
   return (
     <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
       <ProjectGeneralSettingsPageUI
+        updateProjectImage={async (file) => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("updateProjectImage", file);
+        }}
         isOwnerAccount={props.isOwnerAccount}
         transferProject={async (newTeam) => {
           await new Promise((resolve) => setTimeout(resolve, 1000));

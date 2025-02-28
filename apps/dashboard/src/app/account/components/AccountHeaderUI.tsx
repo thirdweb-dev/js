@@ -66,6 +66,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
               focus="team-selection"
               createProject={props.createProject}
               account={props.account}
+              client={props.client}
             />
           )}
         </div>

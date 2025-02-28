@@ -109,6 +109,7 @@ async function getTeamsAndProjectsIfLoggedIn() {
         projects: (await getProjects(team.slug)).map((x) => ({
           id: x.id,
           name: x.name,
+          image: x.image,
         })),
       })),
     );
