@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.90.0
+
+### Minor Changes
+
+- [#6370](https://github.com/thirdweb-dev/js/pull/6370) [`5625ff1`](https://github.com/thirdweb-dev/js/commit/5625ff1f8067f434910948f781d98c9847d59ccb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added `estimateUserOpGasCost()` utility function for estimating the total gas cost in wei/ether of user operations
+
+### Patch Changes
+
+- [#6360](https://github.com/thirdweb-dev/js/pull/6360) [`6235fe7`](https://github.com/thirdweb-dev/js/commit/6235fe76d3779d766571871bd84db4fa0eb1d536) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Initialize activeWalletConnectionStatus as 'unknown' instead of 'disconnected'
+
 ## 5.89.1
 
 ### Patch Changes
