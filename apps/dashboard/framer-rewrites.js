@@ -13,6 +13,8 @@ module.exports = [
   "/connect/universal-bridge",
   "/connect/auth",
   "/connect/in-app-wallets",
+  // -- storage
+  "/storage",
   // -- nebula
   "/nebula",
   // --insight
