@@ -10,7 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
 import { cn } from "../../lib/utils";
+import { DynamicHeight } from "../ui/DynamicHeight";
 
 export function DangerSettingCard(props: {
   title: string;
@@ -24,9 +26,14 @@ export function DangerSettingCard(props: {
   confirmationDialog: {
     title: string;
     description: React.ReactNode;
+    children?: React.ReactNode;
+    onClose?: () => void;
   };
   children?: React.ReactNode;
 }) {
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false);
+
   return (
     <div
       className={cn(
@@ -50,7 +57,15 @@ export function DangerSettingCard(props: {
           props.footerClassName,
         )}
       >
-        <Dialog>
+        <Dialog
+          open={isConfirmationDialogOpen}
+          onOpenChange={(v) => {
+            setIsConfirmationDialogOpen(v);
+            if (!v) {
+              props.confirmationDialog.onClose?.();
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button
               variant="destructive"
@@ -66,17 +81,20 @@ export function DangerSettingCard(props: {
             className="z-[10001] overflow-hidden p-0"
             dialogOverlayClassName="z-[10000]"
           >
-            <div className="p-6">
-              <DialogHeader className="pr-10">
-                <DialogTitle className="leading-snug">
-                  {props.confirmationDialog.title}
-                </DialogTitle>
+            <DynamicHeight>
+              <div className="p-6">
+                <DialogHeader className="pr-10">
+                  <DialogTitle className="leading-snug">
+                    {props.confirmationDialog.title}
+                  </DialogTitle>
 
-                <DialogDescription>
-                  {props.confirmationDialog.description}
-                </DialogDescription>
-              </DialogHeader>
-            </div>
+                  <DialogDescription>
+                    {props.confirmationDialog.description}
+                  </DialogDescription>
+                </DialogHeader>
+                {props.confirmationDialog.children}
+              </div>
+            </DynamicHeight>
 
             <div className="flex justify-end gap-4 border-t bg-card p-6 lg:gap-2">
               <DialogClose asChild>
