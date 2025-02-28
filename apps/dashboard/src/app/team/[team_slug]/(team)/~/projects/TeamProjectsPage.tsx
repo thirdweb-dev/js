@@ -6,31 +6,27 @@ import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import {
-  ChevronDownIcon,
-  EllipsisVerticalIcon,
-  PlusIcon,
-  SearchIcon,
-} from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
+import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { formatDate } from "date-fns";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -80,7 +76,7 @@ export function TeamProjectsPage(props: {
     return _projectsToShow;
   }, [searchTerm, sortBy, projects]);
 
-  const pageSize = 8;
+  const pageSize = 10;
   const [page, setPage] = useState(1);
   const paginatedProjects = sortedProjects.slice(
     (page - 1) * pageSize,
@@ -92,78 +88,134 @@ export function TeamProjectsPage(props: {
 
   return (
     <div className="flex grow flex-col">
-      {/* Filters + Add New */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center">
-        <SearchInput
-          value={searchTerm}
-          onValueChange={(v) => {
-            setSearchTerm(v);
-            setPage(1);
-          }}
-        />
-        <div className="flex gap-4">
-          <SelectBy
-            value={sortBy}
-            onChange={(v) => {
-              setSortBy(v);
+      <div className="relative flex flex-col gap-5 rounded-t-lg pb-4 lg:flex-row lg:items-center lg:justify-between lg:border lg:border-b-0 lg:bg-card lg:px-6 lg:py-6">
+        <h2 className="font-semibold text-2xl tracking-tight">Projects</h2>
+
+        {/* Filters + Add New */}
+        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+          <SearchInput
+            value={searchTerm}
+            onValueChange={(v) => {
+              setSearchTerm(v);
               setPage(1);
             }}
           />
-          <AddNewButton
-            createProject={() => setIsCreateProjectDialogOpen(true)}
-            teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
-          />
+          <div className="flex gap-3">
+            <SelectBy
+              value={sortBy}
+              onChange={(v) => {
+                setSortBy(v);
+                setPage(1);
+              }}
+            />
+            <AddNewButton
+              createProject={() => setIsCreateProjectDialogOpen(true)}
+              teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="h-6" />
-
-      {/* Projects */}
+      {/* Projects Table */}
       {paginatedProjects.length === 0 ? (
         <>
           {searchTerm !== "" ? (
-            <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+            <div className="flex min-h-[450px] grow items-center justify-center border border-border bg-card">
               <div className="flex flex-col items-center">
                 <p className="mb-5 text-center">No projects found</p>
               </div>
             </div>
           ) : (
-            <div className="flex min-h-[450px] grow items-center justify-center rounded-lg border border-border">
+            <div className="flex min-h-[450px] grow items-center justify-center rounded-b-lg border border-border bg-card">
               <div className="flex flex-col items-center">
-                <p className="mb-5 text-center">No projects created</p>
+                <p className="mb-5 text-center font-semibold text-lg">
+                  No projects created
+                </p>
                 <Button
-                  className="gap-2"
+                  className="gap-2 bg-background"
                   onClick={() => setIsCreateProjectDialogOpen(true)}
                   variant="outline"
                 >
                   <PlusIcon className="size-4" />
-                  Create a Project
+                  Create Project
                 </Button>
               </div>
             </div>
           )}
         </>
       ) : (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {paginatedProjects.map((project) => {
-            return (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                team_slug={props.team.slug}
-              />
-            );
-          })}
-        </div>
-      )}
+        <div>
+          <TableContainer
+            className={cn(
+              "lg:rounded-t-none",
+              showPagination && "rounded-b-none",
+            )}
+          >
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="max-w-[300px]">Project</TableHead>
+                  <TableHead>Monthly Active Users</TableHead>
+                  <TableHead className="w-[250px]">Client ID</TableHead>
+                  <TableHead>Created</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedProjects.map((project) => (
+                  <TableRow
+                    key={project.id}
+                    linkBox
+                    className="hover:bg-accent/50"
+                  >
+                    <TableCell>
+                      <Link
+                        className="flex items-center gap-3 before:absolute before:inset-0"
+                        href={`/team/${props.team.slug}/${project.slug}`}
+                      >
+                        <ProjectAvatar
+                          className="size-8 rounded-full"
+                          src={project.image || ""}
+                        />
+                        <span className="font-medium text-sm">
+                          {project.name}
+                        </span>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      {project.monthlyActiveUsers === 0 ? (
+                        <span className="text-muted-foreground">No Users</span>
+                      ) : (
+                        project.monthlyActiveUsers
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <CopyTextButton
+                        textToCopy={project.publishableKey}
+                        textToShow={`${project.publishableKey.slice(0, 4)}...${project.publishableKey.slice(-4)}`}
+                        copyIconPosition="right"
+                        tooltip={undefined}
+                        variant="ghost"
+                        className="-translate-x-2 z-10 font-mono text-muted-foreground"
+                      />
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(new Date(project.createdAt), "MMM d, yyyy")}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-      {showPagination && (
-        <div className="py-6">
-          <PaginationButtons
-            activePage={page}
-            onPageClick={setPage}
-            totalPages={totalPages}
-          />
+          {showPagination && (
+            <div className="rounded-b-lg border border-t-0 bg-card p-4">
+              <PaginationButtons
+                activePage={page}
+                onPageClick={setPage}
+                totalPages={totalPages}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -184,64 +236,6 @@ export function TeamProjectsPage(props: {
   );
 }
 
-function ProjectCard(props: {
-  project: ProjectWithAnalytics;
-  team_slug: string;
-}) {
-  const { project, team_slug } = props;
-  return (
-    <div
-      key={project.id}
-      className="relative flex items-center gap-4 rounded-lg border border-border bg-card p-5 transition-colors hover:border-active-border"
-    >
-      {/* TODO - set image */}
-      <ProjectAvatar className="size-10 rounded-full" src="" />
-
-      <div className="flex flex-grow flex-col gap-1">
-        <Link
-          className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0"
-          // remove /connect when we have overview page
-          href={`/team/${team_slug}/${project.slug}`}
-        >
-          <h2 className="font-medium text-base">{project.name}</h2>
-        </Link>
-
-        <p className="flex items-center gap-1 text-muted-foreground text-sm">
-          <span>{project.monthlyActiveUsers}</span>
-          Monthly Active Users
-        </p>
-      </div>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button className="z-10 h-auto w-auto p-2" variant="ghost">
-            <EllipsisVerticalIcon className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[180px] p-1">
-          <CopyTextButton
-            textToCopy={project.publishableKey}
-            textToShow="Copy Client ID"
-            copyIconPosition="right"
-            tooltip={undefined}
-            variant="ghost"
-            className="flex h-10 w-full justify-between gap-3 rounded-md px-4 py-2"
-          />
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3"
-            asChild
-          >
-            <Link href={`/team/${team_slug}/${project.slug}/settings`}>
-              Settings
-            </Link>
-          </Button>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
 function SearchInput(props: {
   value: string;
   onValueChange: (value: string) => void;
@@ -252,7 +246,7 @@ function SearchInput(props: {
         placeholder="Search Projects by name or Client ID"
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="bg-card pl-9"
+        className="bg-background pl-9 lg:w-[400px]"
       />
       <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
@@ -264,28 +258,16 @@ function AddNewButton(props: {
   teamMembersSettingsPath: string;
 }) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="default" className="gap-2">
-          Add New
-          <ChevronDownIcon className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-[220px] p-2" sideOffset={12}>
-        <div className="flex flex-col gap-1">
-          <Button
-            variant="ghost"
-            className="justify-between px-2"
-            onClick={props.createProject}
-          >
-            Project
-          </Button>
-          <Button variant="ghost" className="justify-between px-2" asChild>
-            <Link href={props.teamMembersSettingsPath}>Team Member</Link>
-          </Button>
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button
+      variant="default"
+      className="absolute top-0 right-0 gap-2 lg:static"
+      onClick={props.createProject}
+    >
+      <PlusIcon className="size-4" />
+      <span>
+        <span className="hidden lg:inline">Create</span> Project
+      </span>
+    </Button>
   );
 }
 
@@ -307,11 +289,9 @@ function SelectBy(props: {
         props.onChange(v as SortById);
       }}
     >
-      <SelectTrigger className="min-w-[200px] bg-card capitalize">
+      <SelectTrigger className="min-w-[200px] bg-background capitalize">
         <div className="flex items-center gap-1.5">
-          <span className="!hidden lg:!inline text-muted-foreground">
-            Sort by
-          </span>
+          <span className="text-muted-foreground">Sort by</span>
           {valueToLabel[props.value]}
         </div>
       </SelectTrigger>

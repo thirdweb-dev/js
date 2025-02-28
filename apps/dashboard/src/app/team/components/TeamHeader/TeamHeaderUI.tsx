@@ -10,6 +10,10 @@ import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryN
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
+import {
+  NotificationButtonUI,
+  type NotificationMetadata,
+} from "../NotificationButton/NotificationButton";
 import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButton";
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "./TeamSelectorMobileMenuButton";
@@ -26,6 +30,9 @@ export type TeamHeaderCompProps = {
   createProject: (team: Team) => void;
   client: ThirdwebClient;
   accountAddress: string;
+  getChangelogNotifications: () => Promise<NotificationMetadata[]>;
+  getInboxNotifications: () => Promise<NotificationMetadata[]>;
+  markNotificationAsRead: (id: string) => Promise<void>;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -103,6 +110,9 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
+        getChangelogs={props.getChangelogNotifications}
+        getInboxNotifications={props.getInboxNotifications}
+        markNotificationAsRead={props.markNotificationAsRead}
       />
     </header>
   );
@@ -177,13 +187,21 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
         )}
       </div>
 
-      <MobileBurgerMenuButton
-        type="loggedIn"
-        email={props.account?.email}
-        logout={props.logout}
-        connectButton={props.connectButton}
-        accountAddress={props.accountAddress}
-      />
+      <div className="flex items-center gap-3">
+        <NotificationButtonUI
+          getChangelogs={props.getChangelogNotifications}
+          getInboxNotifications={props.getInboxNotifications}
+          markNotificationAsRead={props.markNotificationAsRead}
+        />
+
+        <MobileBurgerMenuButton
+          type="loggedIn"
+          email={props.account.email}
+          logout={props.logout}
+          connectButton={props.connectButton}
+          accountAddress={props.accountAddress}
+        />
+      </div>
     </header>
   );
 }

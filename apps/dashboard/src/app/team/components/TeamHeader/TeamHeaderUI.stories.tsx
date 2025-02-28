@@ -52,6 +52,11 @@ function Variants(props: {
   if (!team1 || !team2 || !team3 || !team3Project) {
     return <div> failed to get team and project stubs </div>;
   }
+
+  const getChangelogsStub = () => Promise.resolve([]);
+  const getInboxNotificationsStub = () => Promise.resolve([]);
+  const markNotificationAsReadStub = () => Promise.resolve();
+
   return (
     <ThirdwebProvider>
       <div className="flex min-h-dvh flex-col gap-6 bg-background py-10">
@@ -70,6 +75,9 @@ function Variants(props: {
                 id: "1",
               }}
               client={client}
+              getChangelogNotifications={getChangelogsStub}
+              getInboxNotifications={getInboxNotificationsStub}
+              markNotificationAsRead={markNotificationAsReadStub}
             />
           </div>
         </BadgeContainer>
@@ -89,6 +97,9 @@ function Variants(props: {
               connectButton={<ConnectButtonStub />}
               createProject={() => {}}
               client={client}
+              getChangelogNotifications={getChangelogsStub}
+              getInboxNotifications={getInboxNotificationsStub}
+              markNotificationAsRead={markNotificationAsReadStub}
             />
           </div>
         </BadgeContainer>
@@ -108,6 +119,9 @@ function Variants(props: {
               connectButton={<ConnectButtonStub />}
               createProject={() => {}}
               client={client}
+              getChangelogNotifications={getChangelogsStub}
+              getInboxNotifications={getInboxNotificationsStub}
+              markNotificationAsRead={markNotificationAsReadStub}
             />
           </div>
         </BadgeContainer>

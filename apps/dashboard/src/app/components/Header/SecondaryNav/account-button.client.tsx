@@ -33,7 +33,7 @@ export function AccountButton(props: {
         <Button
           size="icon"
           asChild
-          className="size-10 cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2"
+          className="size-10 cursor-pointer rounded-full hover:ring-2 hover:ring-ring hover:ring-offset-1"
           variant="ghost"
         >
           {/* Don't remove the div */}

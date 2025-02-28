@@ -11,6 +11,11 @@ import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateProjectDialog } from "../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { doLogout } from "../../login/auth-actions";
 import {
+  getChangelogNotifications,
+  getInboxNotifications,
+  markNotificationAsRead,
+} from "../../team/components/NotificationButton/fetch-notifications";
+import {
   type AccountHeaderCompProps,
   AccountHeaderDesktopUI,
   AccountHeaderMobileUI,
@@ -54,6 +59,9 @@ export function AccountHeader(props: {
     account: props.account,
     client,
     accountAddress: props.accountAddress,
+    getChangelogNotifications: getChangelogNotifications,
+    getInboxNotifications: getInboxNotifications,
+    markNotificationAsRead: markNotificationAsRead,
   };
 
   return (

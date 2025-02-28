@@ -59,10 +59,10 @@ export function MobileBurgerMenuButton(
       /> */}
       <Button
         variant="outline"
-        className="!h-auto p-1"
+        className="flex size-10 items-center justify-center rounded-full bg-background p-0"
         onClick={() => setIsMenuOpen(true)}
       >
-        <MenuIcon className="size-6 text-muted-foreground" />
+        <MenuIcon className="size-4 text-muted-foreground" />
       </Button>
 
       {isMenuOpen && (

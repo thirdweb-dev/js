@@ -1,7 +1,6 @@
 import { getWalletConnections } from "@/api/analytics";
 import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { Changelog } from "components/dashboard/Changelog";
 import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import {
@@ -23,16 +22,17 @@ export default async function Page(props: {
   const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
 
   return (
-    <div className="container flex grow flex-col gap-12 py-8 lg:flex-row">
-      <div className="flex grow flex-col">
-        <h1 className="mb-4 font-semibold text-2xl tracking-tight">Projects</h1>
-        <TeamProjectsPage projects={projectsWithTotalWallets} team={team} />
+    <div className="flex grow flex-col">
+      <div className="border-border border-b py-10">
+        <div className="container">
+          <h1 className="font-semibold text-3xl tracking-tight">
+            Team Overview
+          </h1>
+        </div>
       </div>
-      <div className="shrink-0 lg:w-[320px]">
-        <h2 className="mb-4 font-semibold text-2xl tracking-tight">
-          Changelog
-        </h2>
-        <Changelog />
+
+      <div className="container flex grow flex-col pt-8 pb-20">
+        <TeamProjectsPage projects={projectsWithTotalWallets} team={team} />
       </div>
     </div>
   );
