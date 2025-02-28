@@ -44,7 +44,7 @@ export async function estimateGasCost(
     );
   }
   let l1Fee: bigint;
-  if (isOpStackChain(transaction.chain)) {
+  if (await isOpStackChain(transaction.chain)) {
     const { estimateL1Fee } = await import("../../gas/estimate-l1-fee.js");
     l1Fee = await estimateL1Fee({
       transaction,

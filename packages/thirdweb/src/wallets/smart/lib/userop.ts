@@ -707,6 +707,32 @@ export async function createAndSignUserOp(options: {
   waitForDeployment?: boolean;
   isDeployedOverride?: boolean;
 }) {
+  const unsignedUserOp = await prepareUserOp({
+    transactions: options.transactions,
+    adminAccount: options.adminAccount,
+    client: options.client,
+    smartWalletOptions: options.smartWalletOptions,
+    waitForDeployment: options.waitForDeployment,
+    isDeployedOverride: options.isDeployedOverride,
+  });
+  const signedUserOp = await signUserOp({
+    client: options.client,
+    chain: options.smartWalletOptions.chain,
+    adminAccount: options.adminAccount,
+    entrypointAddress: options.smartWalletOptions.overrides?.entrypointAddress,
+    userOp: unsignedUserOp,
+  });
+  return signedUserOp;
+}
+
+export async function prepareUserOp(options: {
+  transactions: PreparedTransaction[];
+  adminAccount: Account;
+  client: ThirdwebClient;
+  smartWalletOptions: SmartWalletOptions;
+  waitForDeployment?: boolean;
+  isDeployedOverride?: boolean;
+}) {
   const config = options.smartWalletOptions;
   const factoryContract = getContract({
     address:
@@ -731,6 +757,7 @@ export async function createAndSignUserOp(options: {
   let executeTx: PreparedTransaction;
   if (options.transactions.length === 1) {
     const tx = options.transactions[0] as PreparedTransaction;
+    // for single tx, simulate fully
     const serializedTx = await toSerializableTransaction({
       transaction: tx,
       from: accountAddress,
@@ -741,13 +768,21 @@ export async function createAndSignUserOp(options: {
       executeOverride: config.overrides?.execute,
     });
   } else {
+    // for multiple txs, we can't simulate, just encode
     const serializedTxs = await Promise.all(
-      options.transactions.map((tx) =>
-        toSerializableTransaction({
-          transaction: tx,
-          from: accountAddress,
-        }),
-      ),
+      options.transactions.map(async (tx) => {
+        const [data, to, value] = await Promise.all([
+          encode(tx),
+          resolvePromisedValue(tx.to),
+          resolvePromisedValue(tx.value),
+        ]);
+        return {
+          data,
+          to,
+          value,
+          chainId: tx.chain.id,
+        };
+      }),
     );
     executeTx = prepareBatchExecute({
       accountContract,
@@ -756,7 +791,7 @@ export async function createAndSignUserOp(options: {
     });
   }
 
-  const unsignedUserOp = await createUnsignedUserOp({
+  return createUnsignedUserOp({
     transaction: executeTx,
     factoryContract,
     accountContract,
@@ -766,14 +801,6 @@ export async function createAndSignUserOp(options: {
     waitForDeployment: options.waitForDeployment,
     isDeployedOverride: options.isDeployedOverride,
   });
-  const signedUserOp = await signUserOp({
-    client: options.client,
-    chain: config.chain,
-    adminAccount: options.adminAccount,
-    entrypointAddress: config.overrides?.entrypointAddress,
-    userOp: unsignedUserOp,
-  });
-  return signedUserOp;
 }
 
 async function waitForAccountDeployed(accountContract: ThirdwebContract) {

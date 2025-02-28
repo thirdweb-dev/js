@@ -13,6 +13,7 @@ export {
   bundleUserOp,
   getUserOpGasFees,
   estimateUserOpGas,
+  estimateUserOpGasCost,
 } from "../../wallets/smart/lib/bundler.js";
 
 export {
