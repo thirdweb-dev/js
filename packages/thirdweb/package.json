@@ -190,7 +190,7 @@
     "mipd": "0.0.7",
     "ox": "0.6.9",
     "uqr": "0.1.2",
-    "viem": "2.22.17"
+    "viem": "2.23.5"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
