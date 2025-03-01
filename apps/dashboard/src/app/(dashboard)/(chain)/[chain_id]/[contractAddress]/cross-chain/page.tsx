@@ -113,7 +113,7 @@ export default async function Page(props: {
     const events = await getContractEvents({
       contract: twCloneFactoryContract,
       events: [ProxyDeployedEvent],
-      blockRange: 123456n,
+      blockRange: 500000n,
     });
     const event = events.find(
       (e) =>
