@@ -31,7 +31,8 @@ export interface KafkaProducerSendOptions {
  */
 export class KafkaProducer {
   private producer: KafkaJS.Producer;
-  private isConnected = false;
+  // Use a promise to ensure `connect()` is called at most once.
+  private connectPromise?: Promise<void>;
 
   constructor(options: {
     /**
@@ -68,10 +69,17 @@ export class KafkaProducer {
 
   /**
    * Connects the producer. Can be called explicitly at the start of your service, or will be called automatically when sending messages.
+   *
+   * A cached promise is used so this function is safe to call more than once and concurrently.
    */
   async connect() {
-    await this.producer.connect();
-    this.isConnected = true;
+    if (!this.connectPromise) {
+      this.connectPromise = this.producer.connect().catch((err) => {
+        this.connectPromise = undefined;
+        throw err;
+      });
+    }
+    await this.connectPromise;
   }
 
   /**
@@ -88,9 +96,7 @@ export class KafkaProducer {
     topic: string,
     messages: Record<string, unknown>[],
   ): Promise<void> {
-    if (!this.isConnected) {
-      await this.connect();
-    }
+    await this.connect();
 
     await this.producer.send({
       topic,
