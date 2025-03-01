@@ -77,10 +77,7 @@ export function DangerSettingCard(props: {
             </Button>
           </DialogTrigger>
 
-          <DialogContent
-            className="z-[10001] overflow-hidden p-0"
-            dialogOverlayClassName="z-[10000]"
-          >
+          <DialogContent className="overflow-hidden p-0">
             <DynamicHeight>
               <div className="p-6">
                 <DialogHeader className="pr-10">

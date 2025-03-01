@@ -91,10 +91,7 @@ export function EngineAlertDialogForm(props: {
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-      <DialogContent
-        className="z-[10001] p-0"
-        dialogOverlayClassName="z-[10000]"
-      >
+      <DialogContent className="p-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="p-6">
@@ -120,7 +117,7 @@ export function EngineAlertDialogForm(props: {
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="z-[10001]">
+                          <SelectContent>
                             <SelectGroup>
                               {alertRuleOptions.map((option) => (
                                 <SelectItem
@@ -161,7 +158,7 @@ export function EngineAlertDialogForm(props: {
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Select Notification Type" />
                           </SelectTrigger>
-                          <SelectContent className="z-[10001]">
+                          <SelectContent>
                             <SelectGroup>
                               {Object.entries(
                                 EngineNotificationChannelTypeConfig,

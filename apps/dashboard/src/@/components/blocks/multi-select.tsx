@@ -225,7 +225,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="z-[10001] p-0"
+          className="p-0"
           align="center"
           sideOffset={10}
           onEscapeKeyDown={() => setIsPopoverOpen(false)}

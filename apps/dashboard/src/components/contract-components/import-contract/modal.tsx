@@ -49,10 +49,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         }
       }}
     >
-      <DialogContent
-        dialogOverlayClassName="z-[9000] rounded-lg"
-        className="z-[9001]"
-      >
+      <DialogContent dialogOverlayClassName="rounded-lg">
         <DialogHeader>
           <DialogTitle className="font-semibold text-2xl tracking-tight">
             Import Contract

@@ -49,7 +49,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({
           Create Proposal
         </Button>
       </SheetTrigger>
-      <SheetContent className="z-[10000] w-full sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+      <SheetContent className="w-full sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
         <SheetHeader>
           <SheetTitle>Create new proposal</SheetTitle>
         </SheetHeader>

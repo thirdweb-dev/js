@@ -106,8 +106,7 @@ export const CreateProjectDialogUI = (props: {
       }}
     >
       <DialogContent
-        className="z-[10001] overflow-hidden p-0"
-        dialogOverlayClassName="z-[10000]"
+        className="overflow-hidden p-0"
         dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
       >
         <DynamicHeight>

@@ -70,7 +70,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
           <Flame size={16} /> Burn
         </Button>
       </SheetTrigger>
-      <SheetContent className="z-[10000]">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-left">Burn tokens</SheetTitle>
         </SheetHeader>

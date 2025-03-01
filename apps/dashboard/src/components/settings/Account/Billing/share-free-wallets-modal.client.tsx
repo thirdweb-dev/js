@@ -42,10 +42,7 @@ export function ShareFreeWalletsModal(props: {
 
   return (
     <Dialog open={props.isOpen} onOpenChange={props.onOpenChange}>
-      <DialogContent
-        className="z-[10001] p-0 md:max-w-[380px]"
-        dialogOverlayClassName="z-[10000]"
-      >
+      <DialogContent className="p-0 md:max-w-[380px]">
         <DynamicHeight>
           {screen === "base" && (
             <div className="fade-in-0 animate-in duration-300">
@@ -163,7 +160,7 @@ function SendEmailScreen(props: {
                       <SelectTrigger>
                         <SelectValue placeholder="Select Email App" />
                       </SelectTrigger>
-                      <SelectContent className="z-[10001]">
+                      <SelectContent>
                         <SelectGroup>
                           <SelectItem value="default">
                             Default Email App

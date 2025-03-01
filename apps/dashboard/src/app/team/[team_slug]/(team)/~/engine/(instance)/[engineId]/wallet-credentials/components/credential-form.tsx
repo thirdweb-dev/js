@@ -67,10 +67,7 @@ export const CredentialForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="z-[10001] overflow-hidden p-0"
-        dialogOverlayClassName="z-[10000]"
-      >
+      <DialogContent className="overflow-hidden p-0">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) => {
@@ -114,7 +111,7 @@ export const CredentialForm = ({
                       <SelectTrigger className="bg-card">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="z-[10001]">
+                      <SelectContent>
                         <SelectGroup>
                           {CREDENTIAL_TYPE_OPTIONS.map((option) => (
                             <SelectItem key={option.value} value={option.value}>

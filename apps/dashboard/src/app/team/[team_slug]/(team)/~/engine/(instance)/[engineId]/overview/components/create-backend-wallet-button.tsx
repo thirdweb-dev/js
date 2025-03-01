@@ -129,10 +129,7 @@ export const CreateBackendWalletButton: React.FC<
         Create
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent
-          className="z-[10001] overflow-hidden p-0"
-          dialogOverlayClassName="z-[10000]"
-        >
+        <DialogContent className="overflow-hidden p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="p-6">
@@ -162,7 +159,7 @@ export const CreateBackendWalletButton: React.FC<
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="z-[10001]">
+                      <SelectContent>
                         <SelectGroup>
                           {walletTypeOptions.map((option) => (
                             <SelectItem key={option.key} value={option.key}>
