@@ -1,5 +1,5 @@
 import { Headers, type Request, fetch } from "@cloudflare/workers-types";
-import type { CoreAuthInput } from "src/core/types.js";
+import type { CoreAuthInput } from "../core/types.js";
 import type {
   ClientUsageV2Event,
   UsageV2Event,
