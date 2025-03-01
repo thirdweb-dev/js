@@ -53,6 +53,9 @@ export async function computeCreate2FactoryAddress(
 
   return withCache(
     async () => {
+      if (FACTORIES[chainId.toString()]) {
+        return FACTORIES[chainId.toString()] as string;
+      }
       // special handling for chains with hardcoded gasPrice and gasLimit
       if (CUSTOM_GAS_FOR_CHAIN[chainId]) {
         const enforceEip155 = await isEIP155Enforced(options);
@@ -318,6 +321,11 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
     name: "Ronin",
     gasPrice: 110n * 10n ** 9n,
   },
+};
+
+const FACTORIES: Record<string, string> = {
+  "420120000": COMMON_FACTORY_ADDRESS,
+  "420120001": COMMON_FACTORY_ADDRESS,
 };
 
 const CUSTOM_GAS_BINS = [

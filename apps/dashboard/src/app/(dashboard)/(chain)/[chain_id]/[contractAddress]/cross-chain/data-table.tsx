@@ -1,7 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -33,7 +41,9 @@ import { useForm } from "react-hook-form";
 import {
   defineChain,
   eth_getCode,
+  getContract,
   getRpcClient,
+  prepareContractCall,
   prepareTransaction,
   sendAndConfirmTransaction,
 } from "thirdweb";
@@ -57,6 +67,27 @@ type CrossChain = {
   status: "DEPLOYED" | "NOT_DEPLOYED";
 };
 
+type ChainId =
+  | "84532"
+  | "11155420"
+  | "919"
+  | "111557560"
+  | "999999999"
+  | "11155111"
+  | "420120000"
+  | "420120001";
+
+const interopChains = [
+  "84532",
+  "11155420",
+  "919",
+  "111557560",
+  "999999999",
+  "11155111",
+  "420120000",
+  "420120001",
+];
+
 const formSchema = z.object({
   amounts: z.object({
     "84532": z.string(),
@@ -65,10 +96,14 @@ const formSchema = z.object({
     "111557560": z.string(),
     "999999999": z.string(),
     "11155111": z.string(),
-    "421614": z.string(),
+    "420120000": z.string(),
+    "420120001": z.string(),
   }),
 });
 type FormSchema = z.output<typeof formSchema>;
+
+const positiveIntegerRegex = /^[0-9]\d*$/;
+const superchainBridgeAddress = "0x4200000000000000000000000000000000000028";
 
 export function DataTable({
   data,
@@ -97,13 +132,18 @@ export function DataTable({
     "Failed to deploy contract",
   );
 
+  const isCrosschain = !!modulesMetadata?.find(
+    (m) => m.name === "SuperChainInterop",
+  );
+
   const addRowMutation = useMutation({
     mutationFn: async (chain: { chainId: number; name: string }) => {
+      // eslint-disable-next-line no-restricted-syntax
+      const c = defineChain(chain.chainId);
       const code = await eth_getCode(
         getRpcClient({
           client: getThirdwebClient(),
-          // eslint-disable-next-line no-restricted-syntax
-          chain: defineChain(chain.chainId),
+          chain: c,
         }),
         { address: coreContract.address },
       );
@@ -155,7 +195,7 @@ export function DataTable({
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    values: {
+    defaultValues: {
       amounts: {
         "84532": "", // Base
         "11155420": "", // OP testnet
@@ -163,9 +203,55 @@ export function DataTable({
         "111557560": "", // Cyber
         "999999999": "", // Zora
         "11155111": "", // Sepolia
-        "421614": "",
+        "420120000": "",
+        "420120001": "",
       },
     },
+  });
+
+  const crossChainTransfer = async (chainId: ChainId) => {
+    if (!activeAccount) {
+      throw new Error("Account not connected");
+    }
+    const amount = form.getValues().amounts[chainId];
+    if (!positiveIntegerRegex.test(amount)) {
+      form.setError(`amounts.${chainId}`, { message: "Invalid Amount" });
+      return;
+    }
+
+    const superChainBridge = getContract({
+      address: superchainBridgeAddress,
+      chain: coreContract.chain,
+      client: coreContract.client,
+    });
+
+    const sendErc20Tx = prepareContractCall({
+      contract: superChainBridge,
+      method:
+        "function sendERC20(address _token, address _to, uint256 _amount, uint256 _chainId)",
+      params: [
+        coreContract.address,
+        activeAccount.address,
+        BigInt(amount),
+        BigInt(chainId),
+      ],
+    });
+
+    await sendAndConfirmTransaction({
+      account: activeAccount,
+      transaction: sendErc20Tx,
+    });
+  };
+
+  const crossChainTransferNotifications = useTxNotifications(
+    "Successfully submitted cross chain transfer",
+    "Failed to submit cross chain transfer",
+  );
+
+  const crossChainTransferMutation = useMutation({
+    mutationFn: crossChainTransfer,
+    onSuccess: crossChainTransferNotifications.onSuccess,
+    onError: crossChainTransferNotifications.onError,
   });
 
   const columns: ColumnDef<CrossChain>[] = [
@@ -206,6 +292,54 @@ export function DataTable({
             Deploy
           </Button>
         );
+      },
+    },
+    {
+      accessorKey: "transfer",
+      header: "",
+      cell: ({ row }) => {
+        const chain = row.getValue("chainId");
+        if (
+          row.getValue("status") === "DEPLOYED" &&
+          interopChains.includes(String(chain)) &&
+          isCrosschain
+        ) {
+          return (
+            <FormField
+              disabled={false}
+              control={form.control}
+              name={`amounts.${row.getValue("chainId") as ChainId}`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <ToolTipLabel label="Bridge tokens">
+                      <div className="flex">
+                        <Input
+                          className="w-22 rounded-r-none border-r-0"
+                          placeholder="amount"
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          disabled={false}
+                          onClick={() =>
+                            crossChainTransferMutation.mutate(
+                              row.getValue("chainId"),
+                            )
+                          }
+                          className="rounded-lg rounded-l-none border border-l-0"
+                        >
+                          Bridge
+                        </Button>
+                      </div>
+                    </ToolTipLabel>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          );
+        }
       },
     },
   ];
@@ -268,6 +402,18 @@ export function DataTable({
           crosschainContractAddress = coreContract.address;
         }
       } else {
+        if (modulesMetadata) {
+          for (const m of modulesMetadata) {
+            await getOrDeployInfraForPublishedContract({
+              chain,
+              client,
+              account: activeAccount,
+              contractId: m.name,
+              publisher: m.publisher,
+            });
+          }
+        }
+
         crosschainContractAddress = await deployContractfromDeployMetadata({
           account: activeAccount,
           chain,
@@ -283,17 +429,6 @@ export function DataTable({
           chain,
           client,
         });
-        if (modulesMetadata) {
-          for (const m of modulesMetadata) {
-            await getOrDeployInfraForPublishedContract({
-              chain,
-              client,
-              account: activeAccount,
-              contractId: m.name,
-              publisher: m.publisher,
-            });
-          }
-        }
       }
       deployStatusModal.nextStep();
       deployStatusModal.setViewContractLink(
