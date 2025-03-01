@@ -5,7 +5,6 @@ import type {
   UsageV2Event,
   UsageV2Source,
 } from "../core/usageV2.js";
-import { extractAuthorizationData } from "./index.js";
 
 type UsageV2Options = {
   usageBaseUrl: string;
@@ -29,27 +28,20 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
   options: T,
 ): Promise<void> {
   const { usageBaseUrl, source, authInput, serviceKey } = options;
-  const { clientId, secretKey } = await extractAuthorizationData(authInput);
 
+  // Forward headers from the origin request.
   // Determine endpoint and auth header based on provided credentials.
   let url: string;
-  const headers: HeadersInit = { "Content-Type": "application/json" };
-  const origin = authInput.req.headers.get("Origin");
-  if (origin) {
-    headers["Origin"] = origin;
-  }
-
+  const headers: HeadersInit = {
+    ...authInput.req.headers,
+    "Content-Type": "application/json",
+  };
   if (serviceKey) {
+    // If a service key is provided, call the non-public usage endpoint.
     url = `${usageBaseUrl}/usage-v2/${source}`;
     headers["x-service-api-key"] = serviceKey;
-  } else if (secretKey) {
-    url = `${usageBaseUrl}/usage-v2/${source}/client`;
-    headers["x-secret-key"] = secretKey;
-  } else if (clientId) {
-    url = `${usageBaseUrl}/usage-v2/${source}/client`;
-    headers["x-client-id"] = clientId;
   } else {
-    throw new Error("[UsageV2] No authentication method provided.");
+    url = `${usageBaseUrl}/usage-v2/${source}/client`;
   }
 
   const resp = await fetch(url, {
