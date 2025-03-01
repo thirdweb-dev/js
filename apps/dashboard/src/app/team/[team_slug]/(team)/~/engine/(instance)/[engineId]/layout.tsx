@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProviderSetup } from "../../../../../../../../@/components/ChakraProviderSetup";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
@@ -54,7 +54,7 @@ export default async function Layout(props: {
   }
 
   return (
-    <ChakraProvider>
+    <ChakraProviderSetup>
       <div className="flex grow flex-col">
         <EngineInstanceHeader
           instance={instance}
@@ -77,7 +77,7 @@ export default async function Layout(props: {
           </EnsureEnginePermission>
         </EngineSidebarLayout>
       </div>
-    </ChakraProvider>
+    </ChakraProviderSetup>
   );
 }
 
@@ -92,7 +92,7 @@ function EngineInstanceHeader(props: {
     : instance.url;
 
   return (
-    <div className="border-b">
+    <div className="border-border border-b">
       <div className="container py-6">
         <Breadcrumb>
           <BreadcrumbList>
