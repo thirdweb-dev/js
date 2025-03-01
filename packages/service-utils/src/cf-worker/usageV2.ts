@@ -1,27 +1,21 @@
+import { Headers, type Request, fetch } from "@cloudflare/workers-types";
+import type { CoreAuthInput } from "src/core/types.js";
 import type {
   ClientUsageV2Event,
   UsageV2Event,
   UsageV2Source,
 } from "../core/usageV2.js";
+import { extractAuthorizationData } from "./index.js";
 
 type UsageV2Options = {
   usageBaseUrl: string;
   source: UsageV2Source;
-} & (
-  | { serviceKey: string; thirdwebClientId?: never; thirdwebSecretKey?: never }
-  | { serviceKey?: never; thirdwebClientId: string; thirdwebSecretKey?: never }
-  | { serviceKey?: never; thirdwebClientId?: never; thirdwebSecretKey: string }
-);
+  authInput: CoreAuthInput & { req: Request };
+  serviceKey?: string;
+};
 
 /**
  * Send usageV2 events from either internal services or public clients.
- *
- * Exactly one authentication method must be provided:
- * - serviceKey: for internal services
- * - thirdwebClientId: for public clients (MUST be the user's project)
- * - thirdwebSecretKey: for public clients (MUST be the user's project)
- *
- * NOTE: `team_id` is required if `serviceKey` is provided.
  *
  * This method may throw. To call this non-blocking:
  * ```ts
@@ -34,19 +28,23 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
     : ClientUsageV2Event[],
   options: T,
 ): Promise<void> {
+  const { usageBaseUrl, source, authInput, serviceKey } = options;
+  const { clientId, secretKey } = await extractAuthorizationData(authInput);
+
+  // Forward headers from the origin request.
   // Determine endpoint and auth header based on provided credentials.
   let url: string;
-  const headers: HeadersInit = { "Content-Type": "application/json" };
-
-  if (options.serviceKey) {
-    url = `${options.usageBaseUrl}/usage-v2/${options.source}`;
-    headers["x-service-api-key"] = options.serviceKey;
-  } else if (options.thirdwebSecretKey) {
-    url = `${options.usageBaseUrl}/usage-v2/${options.source}/client`;
-    headers["x-secret-key"] = options.thirdwebSecretKey;
-  } else if (options.thirdwebClientId) {
-    url = `${options.usageBaseUrl}/usage-v2/${options.source}/client`;
-    headers["x-client-id"] = options.thirdwebClientId;
+  const headers = new Headers(authInput.req.headers);
+  headers.set("Content-Type", "application/json");
+  if (serviceKey) {
+    // If a service key is provided, call the non-public usage endpoint.
+    url = `${usageBaseUrl}/usage-v2/${source}`;
+    headers.set("x-service-api-key", serviceKey);
+  } else if (clientId) {
+    url = `${usageBaseUrl}/usage-v2/${source}/client`;
+    headers.set("x-client-id", clientId);
+  } else if (secretKey) {
+    url = `${usageBaseUrl}/usage-v2/${source}/client`;
   } else {
     throw new Error("[UsageV2] No authentication method provided.");
   }
@@ -56,7 +54,6 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
     headers,
     body: JSON.stringify({ events }),
   });
-
   if (!resp.ok) {
     throw new Error(
       `[UsageV2] Unexpected response ${resp.status}: ${await resp.text()}`,
