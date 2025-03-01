@@ -73,6 +73,9 @@ export function BuyTokenInput(props: {
             onChange={(e) => {
               let value = e.target.value;
 
+              // Replace comma with period if it exists
+              value = value.replace(",", ".");
+
               if (value.startsWith(".")) {
                 value = `0${value}`;
               }
