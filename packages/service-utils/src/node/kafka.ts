@@ -111,12 +111,9 @@ export class KafkaProducer {
    * Useful when shutting down the service to flush in-flight events.
    */
   async disconnect() {
-    if (this.isConnected) {
-      try {
-        await this.producer.flush();
-        await this.producer.disconnect();
-      } catch {}
-      this.isConnected = false;
-    }
+    try {
+      await this.producer.flush();
+      await this.producer.disconnect();
+    } catch {}
   }
 }
