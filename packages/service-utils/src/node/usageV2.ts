@@ -6,6 +6,9 @@ import {
 } from "../core/usageV2.js";
 import { KafkaProducer } from "./kafka.js";
 
+const TEAM_ID_PREFIX = "team_";
+const PROJECT_ID_PREFIX = "prj_";
+
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
  * This class is thread-safe so your service should re-use one instance.
@@ -65,9 +68,13 @@ export class UsageV2Producer {
       // Default to now.
       created_at: event.created_at ?? new Date(),
       // Remove the "team_" prefix, if any.
-      team_id: event.team_id.startsWith("team_")
-        ? event.team_id.slice(5)
+      team_id: event.team_id.startsWith(TEAM_ID_PREFIX)
+        ? event.team_id.slice(TEAM_ID_PREFIX.length)
         : event.team_id,
+      // Remove the "prj_" prefix, if any.
+      project_id: event.project_id?.startsWith(PROJECT_ID_PREFIX)
+        ? event.project_id.slice(PROJECT_ID_PREFIX.length)
+        : event.project_id,
     }));
     await this.kafkaProducer.send(this.topic, parsedEvents);
   }
