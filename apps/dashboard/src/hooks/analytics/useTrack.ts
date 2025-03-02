@@ -2,7 +2,7 @@ import { flatten } from "flat";
 import posthog from "posthog-js";
 import { useCallback } from "react";
 
-type TExtendedTrackParams = {
+export type TrackingParams = {
   category: string;
   action: string;
   label?: string;
@@ -11,7 +11,7 @@ type TExtendedTrackParams = {
 };
 
 export function useTrack() {
-  return useCallback((trackingData: TExtendedTrackParams) => {
+  return useCallback((trackingData: TrackingParams) => {
     const { category, action, label, ...restData } = trackingData;
     const catActLab = label
       ? `${category}.${action}.${label}`

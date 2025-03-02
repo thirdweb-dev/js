@@ -44,14 +44,6 @@ export type Account = {
   // TODO - add image URL
 };
 
-interface UpdateAccountInput {
-  name?: string;
-  email?: string;
-  linkWallet?: boolean;
-  subscribeToUpdates?: boolean;
-  onboardSkipped?: boolean;
-}
-
 interface UpdateAccountNotificationsInput {
   billing: "email" | "none";
   updates: "email" | "none";
@@ -140,45 +132,40 @@ export function useAccountCredits() {
   });
 }
 
-export function useUpdateAccount() {
-  const queryClient = useQueryClient();
-  const address = useActiveAccount()?.address;
+type UpdateAccountParams = {
+  name?: string;
+  email?: string;
+  linkWallet?: boolean;
+  subscribeToUpdates?: boolean;
+  onboardSkipped?: boolean;
+};
 
-  return useMutation({
-    mutationFn: async (input: UpdateAccountInput) => {
-      type Result = {
-        data: object;
-        error?: { message: string };
-      };
+export async function updateAccountClient(input: UpdateAccountParams) {
+  type Result = {
+    data: object;
+    error?: { message: string };
+  };
 
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/account",
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
+  const res = await apiServerProxy<Result>({
+    pathname: "/v1/account",
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: accountKeys.me(address || ""),
-      });
-    },
+    body: JSON.stringify(input),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  const json = res.data;
+
+  if (json.error) {
+    throw new Error(json.error.message);
+  }
+
+  return json.data;
 }
 
 export function useUpdateNotifications() {
@@ -221,77 +208,61 @@ export function useUpdateNotifications() {
   });
 }
 
-export function useConfirmEmail() {
-  return useMutation({
-    mutationFn: async (input: ConfirmEmailInput) => {
-      type Result = {
-        error?: { message: string };
-        data: { team: Team; account: Account };
-      };
+export const verifyEmailClient = async (input: ConfirmEmailInput) => {
+  type Result = {
+    error?: { message: string };
+    data: { team: Team; account: Account };
+  };
 
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/account/confirmEmail",
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data;
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
+  const res = await apiServerProxy<Result>({
+    pathname: "/v1/account/confirmEmail",
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify(input),
   });
-}
 
-export function useResendEmailConfirmation() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 
-  return useMutation({
-    mutationFn: async () => {
-      type Result = {
-        error?: { message: string };
-        data: object;
-      };
+  const json = res.data;
 
-      const res = await apiServerProxy<Result>({
-        pathname: "/v1/account/resendEmailConfirmation",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      });
+  if (json.error) {
+    throw new Error(json.error.message);
+  }
 
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
+  return json.data;
+};
 
-      const json = res.data;
+export const resendEmailClient = async () => {
+  type Result = {
+    error?: { message: string };
+    data: object;
+  };
 
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
+  const res = await apiServerProxy<Result>({
+    pathname: "/v1/account/resendEmailConfirmation",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: accountKeys.me(address || ""),
-      });
-    },
+    body: JSON.stringify({}),
   });
-}
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
+
+  const json = res.data;
+
+  if (json.error) {
+    throw new Error(json.error.message);
+  }
+
+  return json.data;
+};
 
 export async function createProjectClient(
   teamId: string,
