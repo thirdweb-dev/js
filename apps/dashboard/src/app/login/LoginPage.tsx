@@ -222,6 +222,16 @@ function CustomConnectEmbed(props: {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      <Turnstile
+        options={{
+          // only show if interaction is required
+          appearance: "interaction-only",
+          // match the theme of the rest of the app
+          theme: theme === "light" ? "light" : "dark",
+        }}
+        siteKey={TURNSTILE_SITE_KEY}
+        onSuccess={(token) => setTurnstileToken(token)}
+      />
       <ConnectEmbed
         auth={{
           getLoginPayload,
@@ -254,16 +264,6 @@ function CustomConnectEmbed(props: {
         className="shadow-lg"
         privacyPolicyUrl="/privacy-policy"
         termsOfServiceUrl="/terms"
-      />
-      <Turnstile
-        options={{
-          // only show if interaction is required
-          appearance: "interaction-only",
-          // match the theme of the rest of the app
-          theme: theme === "light" ? "light" : "dark",
-        }}
-        siteKey={TURNSTILE_SITE_KEY}
-        onSuccess={(token) => setTurnstileToken(token)}
       />
     </div>
   );
