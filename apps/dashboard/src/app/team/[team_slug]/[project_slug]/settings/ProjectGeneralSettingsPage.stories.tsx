@@ -72,9 +72,8 @@ function Story(props: {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           return {
             data: {
-              secret: new Array(86).fill("x").join(""),
-              secretHash: new Array(64).fill("x").join(""),
-              secretMasked: "123...4567",
+              secret: `sk_${new Array(86).fill("x").join("")}`,
+              secretMasked: "sk_123...4567",
             },
           };
         }}
