@@ -49,7 +49,7 @@ const contract = getContract({
   address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
 });
 
-describe.sequential(
+describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet 0.7 core tests",
   {
     timeout: 240_000,
