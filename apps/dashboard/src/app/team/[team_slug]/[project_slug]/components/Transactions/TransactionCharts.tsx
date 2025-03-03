@@ -66,7 +66,7 @@ async function ChainDistributionCard({ data }: { data: TransactionStats[] }) {
 async function ContractDistributionCard({
   data,
 }: { data: TransactionStats[] }) {
-  const reducedData = await Promise.all(
+  const _reducedData = await Promise.all(
     Object.entries(
       data
         .filter((d) => d.contractAddress)
@@ -83,24 +83,35 @@ async function ContractDistributionCard({
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10) // only top ten
       .map(async ([key, value]) => {
-        const [chainId, contractAddress] = key.split(":");
-        // eslint-disable-next-line no-restricted-syntax
-        const chain = defineChain(Number(chainId));
-        const chainMeta = await getChainMetadata(chain).catch(() => undefined);
-        const contractData = await fetchDashboardContractMetadata(
-          getContract({
-            chain,
-            address: contractAddress as string, // we filter above
-            client: getThirdwebClient(),
-          }),
-        ).catch(() => undefined);
-        return {
-          label: `${contractData?.name} (${chainMeta?.slug || chainId})`,
-          link: `/${chainId}/${contractAddress}`,
-          value,
-        };
+        try {
+          const [chainId, contractAddress] = key.split(":");
+          if (Number(chainId) === 0) {
+            return undefined;
+          }
+          // eslint-disable-next-line no-restricted-syntax
+          const chain = defineChain(Number(chainId));
+          const chainMeta = await getChainMetadata(chain).catch(
+            () => undefined,
+          );
+          const contractData = await fetchDashboardContractMetadata(
+            getContract({
+              chain,
+              address: contractAddress as string, // we filter above
+              client: getThirdwebClient(),
+            }),
+          ).catch(() => undefined);
+          return {
+            label: `${contractData?.name} (${chainMeta?.slug || chainId})`,
+            link: `/${chainId}/${contractAddress}`,
+            value,
+          };
+        } catch {
+          return undefined;
+        }
       }),
   );
+
+  const reducedData = _reducedData.filter((d) => !!d);
 
   const aggregateFn = () =>
     new Set(
