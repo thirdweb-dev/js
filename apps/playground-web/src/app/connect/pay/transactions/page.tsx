@@ -113,7 +113,7 @@ function NoFundsPopup() {
 
       <CodeExample
         preview={<PayTransactionButtonPreview />}
-        code={`import { trasnfer } from "thirdweb/extensions/erc1155";
+        code={`import { transfer } from "thirdweb/extensions/erc1155";
           import { TransactionButton, useActiveAccount } from "thirdweb/react";
 
 
