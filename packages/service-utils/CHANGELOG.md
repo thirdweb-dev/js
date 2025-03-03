@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.11
+
+### Patch Changes
+
+- [#6382](https://github.com/thirdweb-dev/js/pull/6382) [`47c9c43`](https://github.com/thirdweb-dev/js/commit/47c9c43a875a81aa357ebf3c741f256c317c5cfd) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] trim project ID prefix
+
+- [#6387](https://github.com/thirdweb-dev/js/pull/6387) [`0c0d837`](https://github.com/thirdweb-dev/js/commit/0c0d837f2355c4aa43c3f1ceef52b450623be76f) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Add connect promise so it only connects once
+
+- [#6384](https://github.com/thirdweb-dev/js/pull/6384) [`25b149d`](https://github.com/thirdweb-dev/js/commit/25b149d3a98f99984792874ecb4e3144d2932a08) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Provide CF req to forward origin header
+
 ## 0.8.10
 
 ### Patch Changes
