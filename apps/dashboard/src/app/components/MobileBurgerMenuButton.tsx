@@ -166,7 +166,7 @@ export function MobileBurgerMenuButton(
             </Link>
 
             <Link
-              href="/"
+              href="/home"
               className="text-base text-muted-foreground hover:text-foreground"
             >
               Home Page

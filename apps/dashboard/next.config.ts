@@ -153,7 +153,7 @@ const baseNextConfig: NextConfig = {
       // re-write /home to / (this is so that logged in users will be able to go to /home and NOT be redirected to the logged in app)
       {
         source: "/home",
-        destination: "/",
+        destination: "https://landing.thirdweb.com",
       },
       ...FRAMER_PATHS.map((path) => ({
         source: path,
