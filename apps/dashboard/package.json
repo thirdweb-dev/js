@@ -76,7 +76,7 @@
     "p-limit": "^6.2.0",
     "papaparse": "^5.5.2",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.225.1",
     "qrcode": "^1.5.3",
     "react": "19.0.0",
     "react-children-utilities": "^2.10.0",
