@@ -85,17 +85,33 @@ export function ChatPageContent(props: {
     NebulaContext | undefined
   >(() => {
     const contextRes = props.session?.context;
-    const value: NebulaContext = {
-      chainIds: contextRes?.chain_ids || null,
-      walletAddress: contextRes?.wallet_address || null,
+    
+    // If we have context from an existing session, use that
+    if (contextRes) {
+      return {
+        chainIds: contextRes.chain_ids || null,
+        walletAddress: contextRes.wallet_address || null,
+      };
+    }
+    
+    // For new sessions, try to get cached chains from localStorage
+    const cachedChains = localStorage.getItem('nebula-cached-chains');
+    const parsedCachedChains = cachedChains ? JSON.parse(cachedChains) : null;
+    
+    return {
+      chainIds: parsedCachedChains || ['1'], // Default to Ethereum if no cache
+      walletAddress: null,
     };
-
-    return value;
   });
 
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
     setHasUserUpdatedContextFilters(true);
+    
+    // Cache the chains when context is updated
+    if (v?.chainIds) {
+      localStorage.setItem('nebula-cached-chains', JSON.stringify(v.chainIds));
+    }
   }, []);
 
   const isNewSession = !props.session;
@@ -118,10 +134,13 @@ export function ChatPageContent(props: {
             walletAddress: null,
           };
 
+      // Only set wallet address from connected wallet
       updatedContextFilters.walletAddress = address || null;
-      updatedContextFilters.chainIds = activeChain
-        ? [activeChain.id.toString()]
-        : [];
+      
+      // Only set chain if we don't already have chains (either from cache or session)
+      if (!updatedContextFilters.chainIds?.length) {
+        updatedContextFilters.chainIds = activeChain ? [activeChain.id.toString()] : ['1'];
+      }
 
       return updatedContextFilters;
     });
