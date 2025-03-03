@@ -10,6 +10,7 @@
 export async function resolvePromisedValue<V>(
   value: V,
 ): Promise<V extends () => Promise<infer R> ? R : V> {
+  // @ts-expect-error - this works fine, but TS doesn't like it since 5.8
   return typeof value === "function" ? await value() : value;
 }
 
