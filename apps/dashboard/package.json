@@ -130,7 +130,7 @@
     "@typescript-eslint/eslint-plugin": "7.14.1",
     "@typescript-eslint/parser": "7.14.1",
     "autoprefixer": "^10.4.19",
-    "checkly": "^4.19.1",
+    "checkly": "^5.0.1",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
