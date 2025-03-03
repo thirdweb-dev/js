@@ -108,7 +108,7 @@
     "@next/bundle-analyzer": "15.2.0",
     "@next/eslint-plugin-next": "15.2.0",
     "@playwright/test": "1.50.1",
-    "@storybook/addon-essentials": "8.6.0",
+    "@storybook/addon-essentials": "8.6.3",
     "@storybook/addon-interactions": "8.6.0",
     "@storybook/addon-links": "8.6.0",
     "@storybook/addon-onboarding": "8.6.0",
