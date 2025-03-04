@@ -1,9 +1,9 @@
 import type {
   ExecutionContext,
   KVNamespace,
+  Request,
   Response,
 } from "@cloudflare/workers-types";
-import type { Request } from "@cloudflare/workers-types";
 import type { CoreServiceConfig, TeamAndProjectResponse } from "../core/api.js";
 import { authorize } from "../core/authorize/index.js";
 import type {
