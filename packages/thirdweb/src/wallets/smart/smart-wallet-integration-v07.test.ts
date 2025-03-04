@@ -200,7 +200,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       });
 
       await expect(tx).rejects.toMatchInlineSnapshot(`
-        [TransactionError: Error - Not authorized
+        [TransactionError: Execution Reverted: {"code":3,"message":"execution reverted: Not authorized"}
 
         contract: ${contract.address}
         chainId: 11155111]

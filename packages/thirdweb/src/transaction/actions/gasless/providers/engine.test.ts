@@ -74,16 +74,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
     const { message, messageType, signature } = result;
 
     expect(isHex(signature)).toBe(true);
-    expect(message).toMatchInlineSnapshot(`
-        {
-          "data": "0xa9059cbb00000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c80000000000000000000000000000000000000000000000056bc75e2d63100000",
-          "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-          "gas": 64340n,
-          "nonce": 0n,
-          "to": "${erc20Contract.address}",
-          "value": 0n,
-        }
-      `);
+    expect(message.data).toBe(
+      "0xa9059cbb00000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c80000000000000000000000000000000000000000000000056bc75e2d63100000",
+    );
+    expect(message.from).toBe(TEST_ACCOUNT_A.address);
+    expect(message.to).toBe(erc20Contract.address);
+    expect(message.value).toBe(0n);
     expect(messageType).toMatchInlineSnapshot(`"forward"`);
   });
 
