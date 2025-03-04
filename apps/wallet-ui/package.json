@@ -42,7 +42,7 @@
     "@typescript-eslint/parser": "7.14.1",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
-    "eslint-plugin-react-compiler": "19.0.0-beta-e1e972c-20250221",
+    "eslint-plugin-react-compiler": "19.0.0-beta-40c6c23-20250301",
     "knip": "5.45.0",
     "postcss": "8.5.3",
     "postcss-load-config": "^6.0.1",
