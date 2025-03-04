@@ -4,10 +4,13 @@ import { isValidEncodedRedirectPath } from "./isValidEncodedRedirectPath";
 
 export default async function Page(props: {
   searchParams: Promise<{
-    next?: string;
+    next: string | string[] | undefined;
+    "in-app-wallet": string | string[] | undefined;
   }>;
 }) {
-  const nextPath = (await props.searchParams).next;
+  const searchParams = await props.searchParams;
+  const nextPath =
+    typeof searchParams.next === "string" ? searchParams.next : undefined;
   const account = await getRawAccount();
 
   // don't redirect away from login page if authToken is already present and onboarding is done
@@ -20,6 +23,10 @@ export default async function Page(props: {
     nextPath && isValidEncodedRedirectPath(nextPath) ? nextPath : "/team";
 
   return (
-    <LoginAndOnboardingPage account={account} redirectPath={redirectPath} />
+    <LoginAndOnboardingPage
+      account={account}
+      redirectPath={redirectPath}
+      loginWithInAppWallet={searchParams["in-app-wallet"] === "true"}
+    />
   );
 }

@@ -53,6 +53,7 @@ export function NebulaLoginPage(props: {
 
       {showPage === "connect" && (
         <LoginAndOnboardingPageContent
+          loginWithInAppWallet={false}
           account={props.account}
           redirectPath={
             message ? `/?prompt=${encodeURIComponent(message)}` : "/"

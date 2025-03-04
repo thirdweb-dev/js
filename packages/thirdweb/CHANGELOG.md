@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.90.1
+
+### Patch Changes
+
+- [#6390](https://github.com/thirdweb-dev/js/pull/6390) [`9799b0a`](https://github.com/thirdweb-dev/js/commit/9799b0aae11a20b89e6081f214c2c33c8dc5f132) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds GPT Protocol to chains that only support legacy transactions
+
+- [#6386](https://github.com/thirdweb-dev/js/pull/6386) [`c3b90a6`](https://github.com/thirdweb-dev/js/commit/c3b90a6f1bebcfab5fe4975a65fdc13bf7a0cf06) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle comma for decimal input in PayEmbed
+
 ## 5.90.0
 
 ### Minor Changes

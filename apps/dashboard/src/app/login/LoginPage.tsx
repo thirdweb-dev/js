@@ -24,7 +24,7 @@ const LazyOnboardingUI = lazy(
   () => import("./onboarding/on-boarding-ui.client"),
 );
 
-const wallets = [
+const loginOptions = [
   inAppWallet({
     auth: {
       options: [
@@ -45,9 +45,27 @@ const wallets = [
   createWallet("io.zerion.wallet"),
 ];
 
+const inAppWalletLoginOptions = [
+  inAppWallet({
+    auth: {
+      options: [
+        "google",
+        "apple",
+        "facebook",
+        "github",
+        "email",
+        "phone",
+        "passkey",
+        "wallet",
+      ],
+    },
+  }),
+];
+
 export function LoginAndOnboardingPage(props: {
   account: Account | undefined;
   redirectPath: string;
+  loginWithInAppWallet: boolean;
 }) {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
@@ -91,6 +109,7 @@ export function LoginAndOnboardingPage(props: {
       <LoginAndOnboardingPageContent
         account={props.account}
         redirectPath={props.redirectPath}
+        loginWithInAppWallet={props.loginWithInAppWallet}
       />
     </div>
   );
@@ -99,6 +118,7 @@ export function LoginAndOnboardingPage(props: {
 export function LoginAndOnboardingPageContent(props: {
   account: Account | undefined;
   redirectPath: string;
+  loginWithInAppWallet: boolean;
 }) {
   return (
     <div className="relative flex grow flex-col">
@@ -114,6 +134,7 @@ export function LoginAndOnboardingPageContent(props: {
           <PageContent
             redirectPath={props.redirectPath}
             account={props.account}
+            loginWithInAppWallet={props.loginWithInAppWallet}
           />
         </ClientOnly>
       </main>
@@ -139,6 +160,7 @@ function LoadingCard() {
 function PageContent(props: {
   redirectPath: string;
   account: Account | undefined;
+  loginWithInAppWallet: boolean;
 }) {
   const [screen, setScreen] = useState<
     | { id: "login" }
@@ -190,7 +212,12 @@ function PageContent(props: {
   }
 
   if (connectionStatus !== "connected" || screen.id === "login") {
-    return <CustomConnectEmbed onLogin={onLogin} />;
+    return (
+      <CustomConnectEmbed
+        onLogin={onLogin}
+        loginWithInAppWallet={props.loginWithInAppWallet}
+      />
+    );
   }
 
   if (screen.id === "onboarding") {
@@ -215,6 +242,7 @@ function PageContent(props: {
 
 function CustomConnectEmbed(props: {
   onLogin: () => void;
+  loginWithInAppWallet: boolean;
 }) {
   const { theme } = useTheme();
   const client = useThirdwebClient();
@@ -222,6 +250,16 @@ function CustomConnectEmbed(props: {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      <Turnstile
+        options={{
+          // only show if interaction is required
+          appearance: "interaction-only",
+          // match the theme of the rest of the app
+          theme: theme === "light" ? "light" : "dark",
+        }}
+        siteKey={TURNSTILE_SITE_KEY}
+        onSuccess={(token) => setTurnstileToken(token)}
+      />
       <ConnectEmbed
         auth={{
           getLoginPayload,
@@ -247,23 +285,15 @@ function CustomConnectEmbed(props: {
             return isLoggedInResult;
           },
         }}
-        wallets={wallets}
+        wallets={
+          props.loginWithInAppWallet ? inAppWalletLoginOptions : loginOptions
+        }
         client={client}
         modalSize="wide"
         theme={getSDKTheme(theme === "light" ? "light" : "dark")}
         className="shadow-lg"
         privacyPolicyUrl="/privacy-policy"
         termsOfServiceUrl="/terms"
-      />
-      <Turnstile
-        options={{
-          // only show if interaction is required
-          appearance: "interaction-only",
-          // match the theme of the rest of the app
-          theme: theme === "light" ? "light" : "dark",
-        }}
-        siteKey={TURNSTILE_SITE_KEY}
-        onSuccess={(token) => setTurnstileToken(token)}
       />
     </div>
   );

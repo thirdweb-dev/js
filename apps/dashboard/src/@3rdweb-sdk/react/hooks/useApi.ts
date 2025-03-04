@@ -371,7 +371,6 @@ export type RotateSecretKeyAPIReturnType = {
   data: {
     secret: string;
     secretMasked: string;
-    secretHash: string;
   };
 };
 
