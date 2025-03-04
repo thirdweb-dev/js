@@ -6,7 +6,7 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     MarketplaceV3: "0x8b0DBCf5b7D01eBB0F24525CE8AB72F16CE4F8C8",
   },
   [324]: {
-    MarketplaceV3: "0xBc02441a36Bb4029Cd191b20243c2e41B862F118",
+    MarketplaceV3: "0x88e7F2bEf0a23073b7Cc2c79D307Dbd9138Fa79c",
   },
   [11124]: {
     MarketplaceV3: "0x2dA4Dd326A6482679547071be21f74685d730504",
@@ -18,7 +18,7 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     MarketplaceV3: "0x9EB0830B0b10010F2a53383517A7D0B75531Bb1b",
   },
   [2741]: {
-    MarketplaceV3: "0x4027561E163a420c4e5Db46E07EBd581CAa8Bb62",
+    MarketplaceV3: "0x4b14569c7B79DBe686Ac3Ba5996131E7EDaB7a93",
   },
 };
 
