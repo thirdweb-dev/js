@@ -1,3 +1,4 @@
+import type { Request } from "@cloudflare/workers-types";
 import type { CoreAuthInput } from "../core/types.js";
 import type {
   ClientUsageV2Event,
@@ -33,7 +34,7 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
   // Forward headers from the origin request.
   // Determine endpoint and auth header based on provided credentials.
   let url: string;
-  const headers = new Headers(authInput.req.headers);
+  const headers = new Headers(Object.fromEntries(authInput.req.headers));
   headers.set("Content-Type", "application/json");
   if (serviceKey) {
     // If a service key is provided, call the non-public usage endpoint.
