@@ -31,9 +31,13 @@ const formSchema = z.object({
     .refine((name) => /^[a-zA-Z0-9 ]*$/.test(name), {
       message: "Name can only contain letters, numbers and spaces",
     }),
-  logo: z.instanceof(File, {
-    message: "Logo is required",
-  }),
+  logo: z
+    .instanceof(File, {
+      message: "Logo is required",
+    })
+    .refine((file) => file.size <= 500 * 1024, {
+      message: "Logo size must be less than 500KB",
+    }),
   permission: z.union([z.literal("PARTNER_WHITELIST"), z.literal("ANYONE")]),
 });
 
@@ -118,8 +122,9 @@ export function CreateEcosystemForm(props: { teamSlug: string }) {
                     accept="image/png, image/jpeg"
                     onUpload={(files) => {
                       if (files[0]) {
-                        form.setValue("logo", files[0]);
-                        form.clearErrors("logo");
+                        form.setValue("logo", files[0], {
+                          shouldValidate: true,
+                        });
                       }
                     }}
                   />
