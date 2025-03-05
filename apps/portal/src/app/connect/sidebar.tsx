@@ -180,10 +180,6 @@ export const sidebar: SideBar = {
               href: `${aAslug}/erc-20-paymaster`,
             },
             {
-              name: "Account Factories",
-              href: `${aAslug}/factories`,
-            },
-            {
               name: "Bundler & Paymaster",
               href: `${aAslug}/infrastructure`,
             },
