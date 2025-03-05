@@ -172,3 +172,10 @@ input:-webkit-autofill:active {
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
+
+/* Remove this when chakra is removed */
+/* Make chakra modals have same z-index as shadcn dialog */
+body {
+  --chakra-zIndices-modal: 50;
+  --chakra-zIndices-overlay: 50;
+}
