@@ -276,7 +276,7 @@ export function OTPLoginUI(props: {
 
             {!isWideModal && <Line />}
 
-            <Container p={isWideModal ? undefined : "lg"}>
+            <Container p={isWideModal ? undefined : "lg"} gap="xs">
               {accountStatus === "error" && (
                 <Text size="sm" center color="danger">
                   {locale.emailLoginScreen.failedToSendCode}
@@ -297,7 +297,7 @@ export function OTPLoginUI(props: {
                 </Container>
               )}
 
-              {accountStatus === "sent" && (
+              {accountStatus !== "sending" && (
                 <LinkButton onClick={sendEmailOrSms} type="button">
                   {locale.emailLoginScreen.resendCode}
                 </LinkButton>
