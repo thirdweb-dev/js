@@ -7,6 +7,7 @@ export const USAGE_V2_SOURCES = [
   "sdk",
   "storage",
   "wallet",
+  "pay",
 ] as const;
 export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
 export function getTopicName(source: UsageV2Source) {
