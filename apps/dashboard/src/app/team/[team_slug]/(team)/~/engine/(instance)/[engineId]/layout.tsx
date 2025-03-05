@@ -33,6 +33,7 @@ export default async function Layout(props: {
   }
 
   const instance = await getEngineInstance({
+    teamIdOrSlug: params.team_slug,
     authToken,
     engineId: params.engineId,
     accountId: account.id,

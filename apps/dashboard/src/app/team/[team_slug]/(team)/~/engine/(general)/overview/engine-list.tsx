@@ -12,6 +12,7 @@ export const EngineInstancesList = (props: {
   return (
     <div className="flex grow flex-col">
       <EngineInstancesTable
+        teamIdOrSlug={props.team_slug}
         instances={props.instances}
         engineLinkPrefix={engineLinkPrefix}
       />
