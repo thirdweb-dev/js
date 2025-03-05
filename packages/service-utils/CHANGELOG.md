@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.12
+
+### Patch Changes
+
+- [#6409](https://github.com/thirdweb-dev/js/pull/6409) [`67354dc`](https://github.com/thirdweb-dev/js/commit/67354dc848bfb00d2296d5e52990321e9d28abb0) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] remove unneeded cloudflare worker types
+
 ## 0.8.11
 
 ### Patch Changes

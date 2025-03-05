@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.90.2
+
+### Patch Changes
+
+- [#6415](https://github.com/thirdweb-dev/js/pull/6415) [`fb446bd`](https://github.com/thirdweb-dev/js/commit/fb446bd0993a0f431fbc67e6142ec20866c4bc65) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - emit onPurchaseSuccess for wallet to wallet transfer flow before execution
+
+- [#6412](https://github.com/thirdweb-dev/js/pull/6412) [`9f1a77f`](https://github.com/thirdweb-dev/js/commit/9f1a77f4c49350018dad0037c4ab675818057264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow resending OTP on failures
+
 ## 5.90.1
 
 ### Patch Changes
