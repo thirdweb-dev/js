@@ -7,8 +7,11 @@ import { IntegrationPermissionsSection } from "../server/integration-permissions
 export function EcosystemPermissionsPage({
   params,
   authToken,
-}: { params: { slug: string }; authToken: string }) {
-  const { data: ecosystem } = useEcosystem({ slug: params.slug });
+}: { params: { slug: string; team_slug: string }; authToken: string }) {
+  const { data: ecosystem } = useEcosystem({
+    slug: params.slug,
+    teamIdOrSlug: params.team_slug,
+  });
 
   return (
     <div className="flex flex-col gap-8">

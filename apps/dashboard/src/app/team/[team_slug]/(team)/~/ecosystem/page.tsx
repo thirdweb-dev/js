@@ -20,10 +20,12 @@ export default async function Page(props: {
     loginRedirect(ecosystemLayoutPath);
   }
 
-  const ecosystems = await fetchEcosystemList(authToken).catch((err) => {
-    console.error("failed to fetch ecosystems", err);
-    return [];
-  });
+  const ecosystems = await fetchEcosystemList(authToken, team_slug).catch(
+    (err) => {
+      console.error("failed to fetch ecosystems", err);
+      return [];
+    },
+  );
   if (ecosystems[0]) {
     redirect(`${ecosystemLayoutPath}/${ecosystems[0].slug}`);
   }
