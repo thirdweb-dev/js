@@ -6,12 +6,18 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { getContract } from "../../../../../../../contract/contract.js";
 import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+import {
+  type GetCurrencyMetadataResult,
+  getCurrencyMetadata,
+} from "../../../../../../../extensions/erc20/read/getCurrencyMetadata.js";
 import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
 import { transfer } from "../../../../../../../extensions/erc20/write/transfer.js";
+import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { getBuyWithCryptoTransfer } from "../../../../../../../pay/buyWithCrypto/getTransfer.js";
 import { sendAndConfirmTransaction } from "../../../../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { TransactionReceipt } from "../../../../../../../transaction/types.js";
 import type { Address } from "../../../../../../../utils/address.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
@@ -42,6 +48,7 @@ type TransferConfirmationScreenProps = {
   tokenAmount: string;
   transactionMode?: boolean;
   payOptions?: PayUIOptions;
+  onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 };
 
 export function TransferConfirmationScreen(
@@ -202,10 +209,33 @@ export function TransferConfirmationScreen(
                       to: receiverAddress,
                       amount: tokenAmount,
                     });
-                await sendAndConfirmTransaction({
-                  account: props.payer.account,
-                  transaction,
-                });
+                const [txResult, tokenMetadata] = await Promise.all([
+                  sendAndConfirmTransaction({
+                    account: props.payer.account,
+                    transaction,
+                  }),
+                  getCurrencyMetadata({
+                    contract: getContract({
+                      address: isNativeToken(token)
+                        ? NATIVE_TOKEN_ADDRESS
+                        : token.address,
+                      chain: chain,
+                      client: client,
+                    }),
+                  }),
+                ]);
+                // its the last step before the transaction, so propagate onPurchaseSuccess here
+                props.onSuccess?.(
+                  transferBuyWithCryptoQuote({
+                    token,
+                    chain,
+                    tokenMetadata,
+                    tokenAmount,
+                    fromAddress: payer.account.address,
+                    toAddress: receiverAddress,
+                    transaction: txResult,
+                  }),
+                );
                 // switch to execute step
                 setStep("execute");
                 setStatus({ id: "idle" });
@@ -298,4 +328,86 @@ export function TransferConfirmationScreen(
       )}
     </Container>
   );
+}
+
+function transferBuyWithCryptoQuote(args: {
+  token: ERC20OrNativeToken;
+  chain: Chain;
+  tokenMetadata: GetCurrencyMetadataResult;
+  tokenAmount: string;
+  fromAddress: string;
+  toAddress: string;
+  transaction: TransactionReceipt;
+}): BuyWithCryptoStatus {
+  const {
+    token,
+    chain,
+    tokenMetadata,
+    tokenAmount,
+    fromAddress,
+    toAddress,
+    transaction,
+  } = args;
+  return {
+    status: "COMPLETED",
+    subStatus: "SUCCESS",
+    swapType: "TRANSFER",
+    quote: {
+      createdAt: new Date().toISOString(),
+      fromToken: {
+        chainId: chain.id,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+        decimals: tokenMetadata.decimals,
+        symbol: tokenMetadata.symbol,
+        name: tokenMetadata.name,
+        priceUSDCents: 0,
+      },
+      toToken: {
+        chainId: chain.id,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+        decimals: tokenMetadata.decimals,
+        symbol: tokenMetadata.symbol,
+        name: tokenMetadata.name,
+        priceUSDCents: 0,
+      },
+      fromAmountWei: toWei(tokenAmount).toString(),
+      fromAmount: tokenAmount,
+      toAmountWei: toWei(tokenAmount).toString(),
+      toAmount: tokenAmount,
+      toAmountMin: tokenAmount,
+      toAmountMinWei: toWei(tokenAmount).toString(),
+      estimated: {
+        feesUSDCents: 0,
+        gasCostUSDCents: 0,
+        slippageBPS: 0,
+        toAmountMinUSDCents: 0,
+        toAmountUSDCents: 0,
+        fromAmountUSDCents: 0,
+        durationSeconds: 0,
+      },
+    },
+    fromAddress,
+    toAddress,
+    source: {
+      transactionHash: transaction.transactionHash,
+      amount: tokenAmount,
+      amountWei: toWei(tokenAmount).toString(),
+      amountUSDCents: 0,
+      completedAt: new Date().toISOString(),
+      token: {
+        chainId: chain.id,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+        decimals: tokenMetadata.decimals,
+        symbol: tokenMetadata.symbol,
+        name: tokenMetadata.name,
+        priceUSDCents: 0,
+      },
+    },
+  };
 }

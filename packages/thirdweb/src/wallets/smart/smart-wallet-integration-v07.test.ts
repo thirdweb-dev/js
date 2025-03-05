@@ -52,6 +52,7 @@ const contract = getContract({
 describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet 0.7 core tests",
   {
+    retry: 0,
     timeout: 240_000,
   },
   () => {

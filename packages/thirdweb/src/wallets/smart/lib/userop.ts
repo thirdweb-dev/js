@@ -321,7 +321,9 @@ async function populateUserOp_v0_7(args: {
         createAccountOverride: overrides?.createAccount,
       }),
     );
-    markAccountDeploying(accountContract);
+    if (waitForDeployment) {
+      markAccountDeploying(accountContract);
+    }
   }
 
   const partialOp: UserOperationV07 = {
@@ -481,7 +483,9 @@ async function populateUserOp_v0_6(args: {
       accountSalt: overrides?.accountSalt,
       createAccountOverride: overrides?.createAccount,
     });
-    markAccountDeploying(accountContract);
+    if (waitForDeployment) {
+      markAccountDeploying(accountContract);
+    }
   }
 
   const partialOp: UserOperationV06 = {

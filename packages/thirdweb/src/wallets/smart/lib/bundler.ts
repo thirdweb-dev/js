@@ -179,6 +179,7 @@ export async function estimateUserOpGasCost(args: {
         client: args.client,
       }),
     ),
+    waitForDeployment: false,
   });
 
   let gasLimit = 0n;
