@@ -115,19 +115,23 @@ async function AsyncYourFactories(props: {
     authToken: props.authToken,
   });
 
-  const client = getThirdwebClient();
+  const client = getThirdwebClient(props.authToken);
 
   const factories = (
     await Promise.all(
       deployedContracts.map(async (c) => {
-        const contract = getContract({
-          // eslint-disable-next-line no-restricted-syntax
-          chain: defineChain(Number(c.chainId)),
-          address: c.contractAddress,
-          client,
-        });
-        const m = await getCompilerMetadata(contract);
-        return m.name.indexOf("AccountFactory") > -1 ? c : null;
+        try {
+          const contract = getContract({
+            // eslint-disable-next-line no-restricted-syntax
+            chain: defineChain(Number(c.chainId)),
+            address: c.contractAddress,
+            client,
+          });
+          const m = await getCompilerMetadata(contract);
+          return m.name.indexOf("AccountFactory") > -1 ? c : null;
+        } catch {
+          return null;
+        }
       }),
     )
   ).filter((f) => f !== null);
