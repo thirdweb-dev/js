@@ -222,6 +222,31 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
+ * ### Override storage for the wallet state
+ *
+ * By default, wallet state is stored in the browser's local storage. You can override this behavior by providing a custom storage object, useful for server side integrations.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * import { AsyncStorage } from "thirdweb/storage";
+ *
+ * const myStorage: AsyncStorage = {
+ *  getItem: async (key) => {
+ *    return customGet(`CUSTOM_STORAGE_KEY${key}`);
+ *  },
+ *  setItem: async (key, value) => {
+ *    return customSet(`CUSTOM_STORAGE_KEY${key}`, value);
+ *  },
+ *  removeItem: async (key) => {
+ *    return customRemove(`CUSTOM_STORAGE_KEY${key}`);
+ *  },
+ * };
+ *
+ * const wallet = inAppWallet({
+ *  storage: myStorage,
+ * });
+ * ```
+ *
  * @returns The created in-app wallet.
  * @wallet
  */
@@ -235,6 +260,7 @@ export function inAppWallet(
       return new InAppWebConnector({
         client,
         passkeyDomain: createOptions?.auth?.passkeyDomain,
+        storage: createOptions?.storage,
       });
     },
   }) as Wallet<"inApp">;

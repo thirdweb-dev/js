@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import { stringify } from "../../../utils/json.js";
+import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account } from "../../interfaces/wallet.js";
 import { getUserStatus } from "../core/actions/get-enclave-user-status.js";
@@ -37,11 +38,11 @@ import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
 import { deleteActiveAccount, socialAuth } from "./auth/native-auth.js";
 import { logoutUser } from "./helpers/auth/logout.js";
 import { ShardedWallet } from "./helpers/wallet/sharded-wallet.js";
-
 type NativeConnectorOptions = {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   passkeyDomain?: string;
+  storage?: AsyncStorage;
 };
 
 export class InAppNativeConnector implements InAppConnector {
@@ -56,7 +57,7 @@ export class InAppNativeConnector implements InAppConnector {
     this.passkeyDomain = options.passkeyDomain;
     this.ecosystem = options.ecosystem;
     this.storage = new ClientScopedStorage({
-      storage: nativeLocalStorage,
+      storage: options.storage ?? nativeLocalStorage,
       clientId: this.client.clientId,
       ecosystem: options.ecosystem,
     });
