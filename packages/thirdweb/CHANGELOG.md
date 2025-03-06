@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.90.3
+
+### Patch Changes
+
+- [#6424](https://github.com/thirdweb-dev/js/pull/6424) [`38ae2d3`](https://github.com/thirdweb-dev/js/commit/38ae2d3c6b7d5052974e8a61333997699230ad45) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getUserOpHash utility function
+
 ## 5.90.2
 
 ### Patch Changes
