@@ -1,5 +1,5 @@
 import { maxUint96 } from "ox/Solidity";
-import { concat, keccak256, toHex } from "viem";
+import { concat } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
@@ -16,9 +16,11 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
+import { type Hex, toHex } from "../../../utils/encoding/hex.js";
 import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 import { isThirdwebUrl } from "../../../utils/fetch.js";
+import { keccak256 } from "../../../utils/hashing/keccak256.js";
+import { stringify } from "../../../utils/json.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../interfaces/wallet.js";
 import type {
@@ -597,6 +599,54 @@ export async function signUserOp(args: {
 }): Promise<UserOperationV06 | UserOperationV07> {
   const { userOp, chain, entrypointAddress, adminAccount } = args;
 
+  const userOpHash = await getUserOpHash({
+    client: args.client,
+    userOp,
+    chain,
+    entrypointAddress,
+  });
+
+  if (adminAccount.signMessage) {
+    const signature = await adminAccount.signMessage({
+      message: {
+        raw: hexToBytes(userOpHash),
+      },
+      originalMessage: stringify(userOp),
+      chainId: chain.id,
+    });
+    return {
+      ...userOp,
+      signature,
+    };
+  }
+  throw new Error("signMessage not implemented in signingAccount");
+}
+
+/**
+ * Get the hash of a user operation.
+ * @param args - The options for getting the user operation hash
+ * @returns - The user operation hash
+ * @example
+ * ```ts
+ * import { getUserOpHash } from "thirdweb/wallets/smart";
+ *
+ * const userOp = await createUnsignedUserOp(...);
+ * const userOpHash = await getUserOpHash({
+ *  client,
+ *  userOp,
+ *  chain,
+ * });
+ * ```
+ * @walletUtils
+ */
+export async function getUserOpHash(args: {
+  client: ThirdwebClient;
+  userOp: UserOperationV06 | UserOperationV07;
+  chain: Chain;
+  entrypointAddress?: string;
+}): Promise<Hex> {
+  const { userOp, chain, entrypointAddress } = args;
+
   const entrypointVersion = getEntryPointVersion(
     entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
   );
@@ -623,19 +673,7 @@ export async function signUserOp(args: {
       userOp: userOp as UserOperationV06,
     });
   }
-
-  if (adminAccount.signMessage) {
-    const signature = await adminAccount.signMessage({
-      message: {
-        raw: hexToBytes(userOpHash),
-      },
-    });
-    return {
-      ...userOp,
-      signature,
-    };
-  }
-  throw new Error("signMessage not implemented in signingAccount");
+  return userOpHash;
 }
 
 async function getAccountInitCode(options: {
