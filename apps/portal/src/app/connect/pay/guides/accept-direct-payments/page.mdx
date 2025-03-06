@@ -3,17 +3,17 @@ import DirectPaymentsFlow from "../../assets/direct-payments-flow.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Pay - Accept Direct Payments",
+		title: "thirdweb Universal Bridge - Accept Direct Payments",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Pay - Accept Direct Payments | thirdweb",
+	title: "thirdweb Universal Bridge - Accept Direct Payments | thirdweb",
 	description:
-		"Combine Pay and Engine to create a smooth point of sale experience on any chain",
+		"Combine Universal Bridge and Engine to create a smooth point of sale experience on any chain",
 });
 
-# Accept Direct Payments with Pay & Engine
+# Accept Direct Payments with Universal Bridge & Engine
 
-Learn how to accept fiat and crypto from your customers with Pay and trigger Engine actions, like minting NFTs or transferring tokens to user wallets.
+Learn how to accept fiat and crypto from your customers with Universal Bridge and trigger Engine actions, like minting NFTs or transferring tokens to user wallets.
 
 ### Requirements
 
@@ -26,11 +26,11 @@ Before jumping in, it's important to understand the full system, from initial pu
 
 <DocImage src={DirectPaymentsFlow} />
 
-1. **User Initiates Purchase:** User sends specified funds (ETH, MATIC, USD, etc.) to your wallet via thirdweb Pay.
+1. **User Initiates Purchase:** User sends specified funds (ETH, MATIC, USD, etc.) to your wallet via thirdweb Universal Bridge.
    - Your wallet can be any business wallet you choose or your Engine backend wallet.
    - Use the `purchaseData` field to pass any item data needed in the webhook.
      E.g., `{ nftId: 1 }`.
-2. **Pay Processes Purchase:** thirdweb Pay processes the transaction and sends a [Purchase Complete webhook](/connect/pay/webhooks#purchase-complete) to your dapp’s server when the transaction is complete.
+2. **Universal Bridge Processes Purchase:** thirdweb Universal Bridge processes the transaction and sends a [Purchase Complete webhook](/connect/pay/webhooks#purchase-complete) to your dapp’s server when the transaction is complete.
 3. **Your Server Calls Engine:** Your server processes the webhook and sends a contract call to the thirdweb Engine backend wallet to perform the item purchase.
 4. **Engine Executes the Transaction:** Engine backend wallet executes the transaction needed to deliver the token(s) to the user’s address.
 5. **(Optional) User Is Notified :** Your server confirms the completed Engine transaction and notifies the user.
@@ -52,11 +52,11 @@ Now, let's get started.
 
     	4. Make a plan to monitor and keep the float wallet topped up to avoid any issues with the service.
     </Step>
-    <Step title="Integrate thirdweb Pay (Client)">
-    	1. [Integrate thirdweb Pay](https://portal.thirdweb.com/connect/pay/build-a-custom-experience) on the client side to enable fiat and crypto payments.
+    <Step title="Integrate thirdweb Universal Bridge (Client)">
+    	1. [Integrate thirdweb Universal Bridge](https://portal.thirdweb.com/connect/pay/build-a-custom-experience) on the client side to enable fiat and crypto payments.
 
 
-    	2. Specify the required parameters for your Pay transaction.
+    	2. Specify the required parameters for your Universal Bridge transaction.
 
     		```ts
     		const quote = await getBuyWithFiatQuote({
@@ -84,9 +84,9 @@ Now, let's get started.
     		|purchaseData|`Object`|Any details you need to pass in order to track your transaction. If this is a secondary sale, you may want to include details like `{ nftId: 1, orderId: 1 }` |
 
 </Step>
-  <Step title="Integrate thirdweb Pay (Server)">
-		1. Log in & create a “Purchase Complete” webhook in your Team > Connect > Pay > Webhooks page.
-		2. The [Pay webhook POST response](/connect/pay/webhooks#purchase-complete) will include the BuyWithCryptoStatus or BuyWithFiatStatus in the body.
+  <Step title="Integrate thirdweb Universal Bridge (Server)">
+		1. Log in & create a “Purchase Complete” webhook in your Team > Connect > Universal Bridge > Webhooks page.
+		2. The [Universal Bridge webhook POST response](/connect/pay/webhooks#purchase-complete) will include the BuyWithCryptoStatus or BuyWithFiatStatus in the body.
 			* This will also include the purchaseData you previously passed (metadata identifying the customer information, etc.).
 			* A request will be sent on every status change.
 		3. Listen for [completed purchase statuses](https://portal.thirdweb.com/connect/pay/build-a-custom-experience#Poll%20for%20Transaction%20Status). Note that if this is a two-step BuyWithFiat transaction (onramp, then swap), you should also listen for `CRYPTO_SWAP_COMPLETED`
