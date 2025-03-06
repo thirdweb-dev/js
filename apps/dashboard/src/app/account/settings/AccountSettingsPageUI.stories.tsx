@@ -143,6 +143,9 @@ function Variants() {
         onAccountDeleted={() => {
           console.log("Account deleted");
         }}
+        cancelSubscriptions={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }}
       />
       <Toaster richColors />
     </div>
