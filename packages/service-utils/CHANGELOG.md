@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.13
+
+### Patch Changes
+
+- [#6416](https://github.com/thirdweb-dev/js/pull/6416) [`44bb003`](https://github.com/thirdweb-dev/js/commit/44bb0034a69334f05cfa14132d56e354536e77ff) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Add "pay" as a usage source
+
 ## 0.8.12
 
 ### Patch Changes
