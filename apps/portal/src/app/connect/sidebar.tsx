@@ -297,15 +297,7 @@ export const sidebar: SideBar = {
           ],
         },
         {
-          name: "Webhooks",
-          href: `${paySlug}/webhooks`,
-        },
-        {
-          name: "Testing Pay",
-          href: `${paySlug}/testing-pay`,
-        },
-        {
-          name: "Guides",
+          name: "Tutorials",
           isCollapsible: true,
 
           links: [
@@ -337,6 +329,14 @@ export const sidebar: SideBar = {
               href: `${paySlug}/customization/send-transaction`,
             },
           ],
+        },
+        {
+          name: "Webhooks",
+          href: `${paySlug}/webhooks`,
+        },
+        {
+          name: "Developer Mode",
+          href: `${paySlug}/testing-pay`,
         },
         {
           name: "FAQs",
