@@ -67,35 +67,12 @@ type CrossChain = {
   status: "DEPLOYED" | "NOT_DEPLOYED";
 };
 
-type ChainId =
-  | "84532"
-  | "11155420"
-  | "919"
-  | "111557560"
-  | "999999999"
-  | "11155111"
-  | "420120000"
-  | "420120001";
+const interopChains = ["420120000", "420120001"];
 
-const interopChains = [
-  "84532",
-  "11155420",
-  "919",
-  "111557560",
-  "999999999",
-  "11155111",
-  "420120000",
-  "420120001",
-];
+type ChainId = "420120000" | "420120001";
 
 const formSchema = z.object({
   amounts: z.object({
-    "84532": z.string(),
-    "11155420": z.string(),
-    "919": z.string(),
-    "111557560": z.string(),
-    "999999999": z.string(),
-    "11155111": z.string(),
     "420120000": z.string(),
     "420120001": z.string(),
   }),
@@ -138,6 +115,9 @@ export function DataTable({
 
   const addRowMutation = useMutation({
     mutationFn: async (chain: { chainId: number; name: string }) => {
+      if (coreContract.chain.id === chain.chainId) {
+        return;
+      }
       // eslint-disable-next-line no-restricted-syntax
       const c = defineChain(chain.chainId);
       const code = await eth_getCode(
@@ -197,12 +177,6 @@ export function DataTable({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amounts: {
-        "84532": "", // Base
-        "11155420": "", // OP testnet
-        "919": "", // Mode Network
-        "111557560": "", // Cyber
-        "999999999": "", // Zora
-        "11155111": "", // Sepolia
         "420120000": "",
         "420120001": "",
       },

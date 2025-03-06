@@ -114,7 +114,7 @@ export async function ContractCard({
       <div className="flex justify-between">
         <div className="flex items-center gap-1.5">
           {/* Audited */}
-          {auditLink && (
+          {auditLink && !isBeta && (
             <>
               <Link
                 target="_blank"
