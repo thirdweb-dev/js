@@ -5,6 +5,7 @@ export {
   createUnsignedUserOp,
   signUserOp,
   createAndSignUserOp,
+  getUserOpHash,
 } from "../../wallets/smart/lib/userop.js";
 
 export {
