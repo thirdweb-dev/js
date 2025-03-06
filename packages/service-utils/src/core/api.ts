@@ -50,7 +50,16 @@ export type TeamResponse = {
   createdAt: string;
   updatedAt: string | null;
   billingEmail: string | null;
-  billingStatus: "noPayment" | "validPayment" | "invalidPayment" | null;
+  // noPayment = no payment method on file for customer => expected state for new customers without an active subscription
+  // validPayment = payment method on file and valid => good state
+  // invalidPayment = payment method not valid (billing failing repeatedly) => error state
+  // pastDue = payment method on file but has past due payments => warning state
+  billingStatus:
+    | "noPayment"
+    | "validPayment"
+    | "invalidPayment"
+    | "pastDue"
+    | null;
   growthTrialEligible: false;
   canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
@@ -158,9 +167,15 @@ export async function fetchTeamAndProject(
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
   const { apiUrl, serviceApiKey } = config;
+  const { teamId, clientId } = authData;
 
-  const clientId = authData.clientId;
-  const url = `${apiUrl}/v2/keys/use${clientId ? `?clientId=${clientId}` : ""}`;
+  const url = new URL("/v2/keys/use", apiUrl);
+  if (clientId) {
+    url.searchParams.set("clientId", clientId);
+  }
+  if (teamId) {
+    url.searchParams.set("teamId", teamId);
+  }
   const response = await fetch(url, {
     method: "GET",
     headers: {

@@ -133,7 +133,7 @@ export function ModuleCard(props: ModuleCardProps) {
         open={isUninstallModalOpen}
         onOpenChange={setIsUninstallModalOpen}
       >
-        <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+        <DialogContent>
           <form
             onSubmit={(e) => {
               e.preventDefault();

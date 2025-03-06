@@ -2,21 +2,24 @@ import {
   type Range,
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
-import { getInAppWalletUsage } from "data/analytics/wallets/in-app";
+import { getInAppWalletUsage } from "../../../@/api/analytics";
 import { RangeSelector } from "../../analytics/range-selector";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
 export async function InAppWalletAnalytics({
-  clientId,
+  teamId,
+  projectId,
   interval,
-  range,
-}: { clientId: string; interval: "day" | "week"; range?: Range }) {
-  if (!range) {
-    range = getLastNDaysRange("last-120");
-  }
-
+  range = getLastNDaysRange("last-120"),
+}: {
+  teamId: string;
+  projectId: string;
+  interval: "day" | "week";
+  range?: Range;
+}) {
   const stats = await getInAppWalletUsage({
-    clientId,
+    teamId,
+    projectId,
     from: range.from,
     to: range.to,
     period: interval,

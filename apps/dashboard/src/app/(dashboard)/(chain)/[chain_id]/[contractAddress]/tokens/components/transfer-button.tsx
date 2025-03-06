@@ -64,7 +64,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
           <SendIcon size={16} /> Transfer
         </Button>
       </SheetTrigger>
-      <SheetContent className="z-[10000]">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-left">Transfer tokens</SheetTitle>
         </SheetHeader>

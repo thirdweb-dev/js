@@ -269,13 +269,6 @@ async function redirects() {
       destination: "/solutions/ecosystem",
       permanent: false,
     },
-    // redirect /storage to portal
-    {
-      source: "/storage",
-      destination:
-        "https://portal.thirdweb.com/infrastructure/storage/overview",
-      permanent: false,
-    },
     // redirect /rpc to portal
     {
       source: "/rpc-edge",
@@ -341,6 +334,18 @@ async function redirects() {
     {
       source: "/connect/pay",
       destination: "/connect/universal-bridge",
+      permanent: false,
+    },
+    // redirect /auth to /connect/auth
+    {
+      source: "/auth",
+      destination: "/connect/auth",
+      permanent: false,
+    },
+    // redirect /in-app-wallets to /connect/in-app-wallets
+    {
+      source: "/in-app-wallets",
+      destination: "/connect/in-app-wallets",
       permanent: false,
     },
     // PREVIOUS CAMPAIGNS

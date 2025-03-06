@@ -217,10 +217,10 @@ export class EnclaveWallet implements IWebWallet {
 
         return { transactionHash };
       },
-      async signMessage({ message }) {
+      async signMessage({ message, originalMessage, chainId }) {
         const messagePayload = (() => {
           if (typeof message === "string") {
-            return { message, isRaw: false };
+            return { message, isRaw: false, originalMessage, chainId };
           }
           return {
             message:
@@ -228,6 +228,8 @@ export class EnclaveWallet implements IWebWallet {
                 ? message.raw
                 : bytesToHex(message.raw),
             isRaw: true,
+            originalMessage,
+            chainId,
           };
         })();
 

@@ -6,7 +6,7 @@ import DocsHeroLight from "./_images/docs-hero-light.png";
 
 export default function Page() {
   return (
-    <main className="container max-w-[900px] grow pb-20">
+    <main className="container max-w-[900px] grow pb-20" data-noindex>
       <Hero />
       <div className="grid grid-cols-1 gap-8">
         <FrontendSection />

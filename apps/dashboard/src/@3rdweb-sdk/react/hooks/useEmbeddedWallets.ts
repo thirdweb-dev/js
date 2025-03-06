@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { THIRDWEB_EWS_API_HOST } from "constants/urls";
 import { useActiveAccount } from "thirdweb/react";
 import type { WalletUser } from "thirdweb/wallets";
@@ -33,7 +28,6 @@ const fetchAccountList = ({
     const json = await res.json();
     return json as {
       users: WalletUser[];
-      totalPages: number;
     };
   };
 };
@@ -57,11 +51,11 @@ export function useEmbeddedWallets(params: {
       clientId,
       pageNumber: page,
     }),
-    placeholderData: keepPreviousData,
     enabled: !!address && !!clientId,
   });
 }
 
+// TODO: fetching list of all users needs to be improved
 export function useAllEmbeddedWallets(params: {
   authToken: string;
 }) {
@@ -70,15 +64,13 @@ export function useAllEmbeddedWallets(params: {
   const address = useActiveAccount()?.address;
 
   return useMutation({
-    mutationFn: async ({
-      clientId,
-      totalPages,
-    }: { clientId: string; totalPages: number }) => {
-      const walletRes = [];
-      for (let page = 1; page <= totalPages; page++) {
-        const res = queryClient.fetchQuery<{
+    mutationFn: async ({ clientId }: { clientId: string }) => {
+      const responses: WalletUser[] = [];
+      let page = 1;
+
+      while (true) {
+        const res = await queryClient.fetchQuery<{
           users: WalletUser[];
-          totalPages: number;
         }>({
           queryKey: embeddedWalletsKeys.embeddedWallets(
             address || "",
@@ -91,9 +83,16 @@ export function useAllEmbeddedWallets(params: {
             pageNumber: page,
           }),
         });
-        walletRes.push(res);
+
+        if (res.users.length === 0) {
+          break;
+        }
+
+        page++;
+        responses.push(...res.users);
       }
-      return (await Promise.all(walletRes)).flatMap((res) => res.users);
+
+      return responses;
     },
   });
 }

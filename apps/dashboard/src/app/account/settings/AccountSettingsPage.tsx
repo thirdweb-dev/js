@@ -1,18 +1,26 @@
 "use client";
 
+import { redirectToBillingPortal } from "@/actions/billing";
 import { confirmEmailWithOTP } from "@/actions/confirmEmail";
+import { apiServerProxy } from "@/actions/proxies";
 import { updateAccount } from "@/actions/updateAccount";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebClient } from "thirdweb";
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import { doLogout } from "../../login/auth-actions";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
 export function AccountSettingsPage(props: {
   account: Account;
   client: ThirdwebClient;
+  defaultTeamSlug: string;
+  defaultTeamName: string;
 }) {
   const router = useDashboardRouter();
+  const activeWallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
   return (
     <div>
       <header className="border-border border-b py-10">
@@ -25,8 +33,32 @@ export function AccountSettingsPage(props: {
 
       <div className="container max-w-[950px] grow pt-8 pb-20">
         <AccountSettingsPageUI
-          hideDeleteAccount
           client={props.client}
+          defaultTeamSlug={props.defaultTeamSlug}
+          defaultTeamName={props.defaultTeamName}
+          onAccountDeleted={async () => {
+            await doLogout();
+            if (activeWallet) {
+              disconnect(activeWallet);
+            }
+            router.replace("/login");
+          }}
+          deleteAccount={async () => {
+            try {
+              const res = await apiServerProxy({
+                method: "DELETE",
+                pathname: "/v1/account",
+              });
+
+              return {
+                status: res.status,
+              };
+            } catch (error) {
+              console.error(error);
+              return { status: 500 };
+            }
+          }}
+          redirectToBillingPortal={redirectToBillingPortal}
           updateAccountAvatar={async (file) => {
             let uri: string | undefined = undefined;
 

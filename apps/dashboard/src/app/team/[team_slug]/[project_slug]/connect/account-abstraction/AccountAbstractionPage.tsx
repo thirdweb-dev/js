@@ -1,11 +1,12 @@
 "use client";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { useUserOpUsageAggregate } from "@3rdweb-sdk/react/hooks/useApi";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CircleAlertIcon } from "lucide-react";
 import { useActiveWalletChain } from "thirdweb/react";
+import type { UserOpStats } from "types/analytics";
 import { AccountAbstractionSummary } from "../../../../../../components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { AAFooterSection } from "./AAFooterSection";
 import { isOpChainId } from "./isOpChain";
@@ -18,16 +19,13 @@ export function AccountAbstractionLayout(props: {
   projectKey: string;
   children: React.ReactNode;
   hasSmartWalletsWithoutBilling: boolean;
+  userOpStats: UserOpStats;
 }) {
   const chain = useActiveWalletChain();
 
   const isOpChain = chain?.id ? isOpChainId(chain.id) : false;
 
   const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`;
-
-  const aggregateUserOpUsageQuery = useUserOpUsageAggregate({
-    clientId: props.projectKey,
-  });
 
   return (
     <div>
@@ -69,7 +67,7 @@ export function AccountAbstractionLayout(props: {
 
         <div>
           <AccountAbstractionSummary
-            aggregateUserOpUsageQuery={aggregateUserOpUsageQuery.data}
+            aggregateUserOpUsageQuery={props.userOpStats}
           />
 
           <div className="h-12" />

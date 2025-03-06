@@ -1,10 +1,8 @@
-import { analyticsServerProxy, apiServerProxy } from "@/actions/proxies";
+import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveAccount } from "thirdweb/react";
-import type { UserOpStats } from "types/analytics";
 import { accountKeys, authorizedWallets } from "../cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
@@ -139,132 +137,6 @@ export function useAccountCredits() {
       return credits;
     },
     enabled: !!address,
-  });
-}
-
-type UserOpUsageQueryResult = (UserOpStats & { chainId?: string })[];
-
-async function getUserOpUsage(args: {
-  clientId: string;
-  from?: Date;
-  to?: Date;
-  period?: "day" | "week" | "month" | "year" | "all";
-}) {
-  const { clientId, from, to, period } = args;
-
-  const searchParams: Record<string, string> = {
-    clientId,
-  };
-
-  if (from) {
-    searchParams.from = from.toISOString();
-  }
-  if (to) {
-    searchParams.to = to.toISOString();
-  }
-  if (period) {
-    searchParams.period = period;
-  }
-
-  const res = await analyticsServerProxy<{ data: UserOpUsageQueryResult }>({
-    pathname: "/v1/user-ops",
-    method: "GET",
-    searchParams: searchParams,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error(res.error);
-  }
-
-  const json = res.data;
-
-  return json.data;
-}
-
-// TODO - remove this hook, fetch this on server
-export function useUserOpUsageAggregate(args: {
-  clientId: string;
-  from?: Date;
-  to?: Date;
-}) {
-  const { clientId, from, to } = args;
-  const address = useActiveAccount()?.address;
-  const chainStore = useAllChainsData();
-
-  return useQuery<UserOpStats>({
-    queryKey: accountKeys.userOpStats(
-      address || "",
-      clientId,
-      from?.toISOString() || "",
-      to?.toISOString() || "",
-      "all",
-    ),
-    queryFn: async () => {
-      const userOpStats = await getUserOpUsage({
-        clientId,
-        from,
-        to,
-        period: "all",
-      });
-
-      // Aggregate stats across wallet types
-      return userOpStats.reduce(
-        (acc, curr) => {
-          // Skip testnets from the aggregated stats
-          if (curr.chainId) {
-            const chain = chainStore.idToChain.get(Number(curr.chainId));
-            if (chain?.testnet) {
-              return acc;
-            }
-          }
-
-          acc.successful += curr.successful;
-          acc.failed += curr.failed;
-          acc.sponsoredUsd += curr.sponsoredUsd;
-          return acc;
-        },
-        {
-          date: (from || new Date()).toISOString(),
-          successful: 0,
-          failed: 0,
-          sponsoredUsd: 0,
-        },
-      );
-    },
-    enabled: !!clientId && !!address,
-  });
-}
-
-// TODO - remove this hook, fetch this on server
-export function useUserOpUsagePeriod(args: {
-  clientId: string;
-  from?: Date;
-  to?: Date;
-  period: "day" | "week" | "month" | "year";
-}) {
-  const { clientId, from, to, period } = args;
-  const address = useActiveAccount()?.address;
-
-  return useQuery({
-    queryKey: accountKeys.userOpStats(
-      address || "",
-      clientId as string,
-      from?.toISOString() || "",
-      to?.toISOString() || "",
-      period,
-    ),
-    queryFn: async () => {
-      return getUserOpUsage({
-        clientId,
-        from,
-        to,
-        period,
-      });
-    },
-    enabled: !!clientId && !!address,
   });
 }
 
@@ -499,7 +371,6 @@ export type RotateSecretKeyAPIReturnType = {
   data: {
     secret: string;
     secretMasked: string;
-    secretHash: string;
   };
 };
 

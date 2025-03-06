@@ -1,4 +1,5 @@
 "use client";
+import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
@@ -31,6 +32,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import type { RotateSecretKeyAPIReturnType } from "@3rdweb-sdk/react/hooks/useApi";
 import {
@@ -46,6 +48,7 @@ import {
   type ServiceName,
   getServiceByName,
 } from "@thirdweb-dev/service-utils";
+import { FileInput } from "components/shared/FileInput";
 import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
@@ -60,11 +63,11 @@ import { type UseFormReturn, useForm } from "react-hook-form";
 import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { upload } from "thirdweb/storage";
 import { RE_BUNDLE_ID } from "utils/regex";
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
-import { apiServerProxy } from "../../../../../@/actions/proxies";
 import {
   HIDDEN_SERVICES,
   projectDomainsSchema,
@@ -119,6 +122,29 @@ export function ProjectGeneralSettingsPage(props: {
       client={props.client}
       teamSlug={props.teamSlug}
       project={props.project}
+      updateProjectImage={async (file) => {
+        let uri: string | undefined = undefined;
+
+        if (file) {
+          // upload to IPFS
+          uri = await upload({
+            client: props.client,
+            files: [file],
+          });
+        }
+
+        await updateProjectClient(
+          {
+            projectId: props.project.id,
+            teamId: props.project.teamId,
+          },
+          {
+            image: uri,
+          },
+        );
+
+        router.refresh();
+      }}
       updateProject={async (projectValues) => {
         return updateProjectClient(
           {
@@ -184,6 +210,7 @@ export function ProjectGeneralSettingsPageUI(props: {
   client: ThirdwebClient;
   transferProject: (newTeam: Team) => Promise<void>;
   isOwnerAccount: boolean;
+  updateProjectImage: (file: File | undefined) => Promise<void>;
 }) {
   const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
 
@@ -320,6 +347,12 @@ export function ProjectGeneralSettingsPageUI(props: {
             handleSubmit={handleSubmit}
           />
 
+          <ProjectImageSetting
+            updateProjectImage={props.updateProjectImage}
+            avatar={project.image || null}
+            client={props.client}
+          />
+
           <ProjectKeyDetails
             project={project}
             rotateSecretKey={props.rotateSecretKey}
@@ -398,6 +431,66 @@ function ProjectNameSetting(props: {
         {...form.register("name")}
         className="max-w-[350px] bg-background"
       />
+    </SettingsCard>
+  );
+}
+
+function ProjectImageSetting(props: {
+  updateProjectImage: (file: File | undefined) => Promise<void>;
+  avatar: string | null;
+  client: ThirdwebClient;
+}) {
+  const projectAvatarUrl = resolveSchemeWithErrorHandler({
+    client: props.client,
+    uri: props.avatar || undefined,
+  });
+
+  const [projectAvatar, setProjectAvatar] = useState<File | undefined>();
+
+  const updateProjectAvatarMutation = useMutation({
+    mutationFn: async (_avatar: File | undefined) => {
+      await props.updateProjectImage(_avatar);
+    },
+  });
+
+  function handleSave() {
+    const promise = updateProjectAvatarMutation.mutateAsync(projectAvatar);
+    toast.promise(promise, {
+      success: "Project avatar updated successfully",
+      error: "Failed to update project avatar",
+    });
+  }
+
+  return (
+    <SettingsCard
+      bottomText="An avatar is optional but strongly recommended."
+      saveButton={{
+        onClick: handleSave,
+        disabled: false,
+        isPending: updateProjectAvatarMutation.isPending,
+      }}
+      noPermissionText={undefined}
+      errorText={undefined}
+    >
+      <div className="flex flex-row gap-4 md:justify-between">
+        <div>
+          <h3 className="font-semibold text-xl tracking-tight">
+            Project Avatar
+          </h3>
+          <p className="mt-1.5 mb-4 text-foreground text-sm leading-relaxed">
+            This is your project's avatar. <br /> Click on the avatar to upload
+            a custom one
+          </p>
+        </div>
+        <FileInput
+          accept={{ "image/*": [] }}
+          value={projectAvatar}
+          setValue={setProjectAvatar}
+          className="w-20 rounded-full lg:w-28"
+          disableHelperText
+          fileUrl={projectAvatarUrl}
+        />
+      </div>
     </SettingsCard>
   );
 }

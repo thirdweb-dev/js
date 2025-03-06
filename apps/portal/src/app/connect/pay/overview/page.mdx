@@ -1,19 +1,20 @@
 import { createMetadata, DocImage, Grid, SDKCard, FeatureCard } from "@doc";
 import PayOverviewImage from "../assets/pay-overview.png";
+import SupportedChains from "../../../_images/supported-chains.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Pay",
+		title: "thirdweb Universal Bridge",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Pay - thirdweb",
+	title: "thirdweb Universal Bridge Docs: Web3 Payments, On-ramping, bridging & swapping",
 	description:
-		"thirdweb Pay - Fast, flexible credit card and crypto point of sale",
+		"Learn everything about thirdweb’s web3 payments solution, Universal Bridge. Technical docs on onramping, bridging + swapping.",
 });
 
 # Overview
 
-Pay allows your users to purchase cryptocurrencies and execute transactions with their credit card or debit card, or with any token via cross-chain routing.
+Universal Bridge allows your users to bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat options or tokens via cross-chain routing.
 
 <DocImage src={PayOverviewImage} />
 
@@ -67,14 +68,30 @@ Pay allows your users to purchase cryptocurrencies and execute transactions with
 
 </div>
 
-### Use Cases
+## Supported Chains
 
-- **Onramp funds directly into any transaction,** perfect for any of the following use cases:
-  - **Games** selling in-game assets onchain.
-  - **DEXes** looking to help users deposit funds.
-  - **Staking apps** onboarding new users to their pools.
-  - **Social apps** looking to add tipping or other paid functionality to their application.
-  - **Non-profits** accepting donations in crypto.
+Universal Bridge is supported on select EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=pay).
+
+<DocImage src={SupportedChains} />
+
+## Fee Sharing
+
+Thirdweb collects a 1% fee per end-user transaction and shares 70% of that fee with you. For example, on a $100 Polygon purchase, a $1.00 fee is charged—of which $0.30 is retained by thirdweb and $0.70 is remitted to you.
+
+Note: Fee sharing applies only to fees from swaps and bridges; fiat purchases are excluded.
+
+To enable fee sharing, simply set a recipient address in your dashboard under Team > Project > Connect > Pay in the thirdweb dashboard.
+
+## Onramp providers
+
+| Provider | Supported Countries                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------- |
+| Transak  | https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5 |
+| Kado     | https://www.kado.money/supported-countries                                                              |
+| Stripe   | https://docs.stripe.com/crypto/onramp                                                                   |
+
+Specify a preferred onramp provider by setting the preferredProvider parameter in ConnectButton, PayEmbed, or Headless Integration. For details, refer to 
+[customization](../pay/customization/connectbutton#preferredProvider) or the [API Reference for preferredProvider](/references/typescript/v5/GetBuyWithFiatQuoteParams).
 
 ## Integration Options
 

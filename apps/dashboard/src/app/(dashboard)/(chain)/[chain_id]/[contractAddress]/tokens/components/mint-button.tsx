@@ -58,7 +58,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
             <PlusIcon size={16} /> Mint
           </Button>
         </SheetTrigger>
-        <SheetContent className="z-[10000]">
+        <SheetContent>
           <SheetHeader>
             <SheetTitle className="text-left">
               Mint additional tokens

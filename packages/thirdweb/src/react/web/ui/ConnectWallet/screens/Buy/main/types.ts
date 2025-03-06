@@ -39,7 +39,6 @@ export type SelectedScreen =
   | {
       id: "fiat-flow";
       quote: BuyWithFiatQuote;
-      openedWindow: Window | null;
     }
   | {
       id: "transfer-flow";

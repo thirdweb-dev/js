@@ -196,7 +196,8 @@ export async function verifyEip1271Signature({
       contract,
     });
     return result === EIP_1271_MAGIC_VALUE;
-  } catch {
+  } catch (err) {
+    console.error("Error verifying EIP-1271 signature", err);
     return false;
   }
 }

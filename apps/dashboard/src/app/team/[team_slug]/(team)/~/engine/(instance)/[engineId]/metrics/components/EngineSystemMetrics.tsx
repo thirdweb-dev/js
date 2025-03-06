@@ -23,7 +23,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   teamSlug,
   authToken,
 }) => {
-  const systemMetricsQuery = useEngineSystemMetrics(instance.id);
+  const systemMetricsQuery = useEngineSystemMetrics(instance.id, teamSlug);
   const queueMetricsQuery = useEngineQueueMetrics({
     authToken,
     instanceUrl: instance.url,
@@ -69,8 +69,10 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
           <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Healthcheck instance={instance} />
           </div>
-          <StatusCodes datapoints={systemMetricsQuery.data.data.statusCodes} />
-          <ErrorRate datapoints={systemMetricsQuery.data.data.errorRate} />
+          <StatusCodes
+            datapoints={systemMetricsQuery.data.result.statusCodes}
+          />
+          <ErrorRate datapoints={systemMetricsQuery.data.result.errorRate} />
         </div>
       </Card>
     );

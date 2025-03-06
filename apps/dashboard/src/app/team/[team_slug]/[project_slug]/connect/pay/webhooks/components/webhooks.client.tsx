@@ -238,7 +238,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+      <DialogContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) =>

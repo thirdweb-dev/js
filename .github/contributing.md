@@ -6,8 +6,6 @@ To get started, read the [How this repo works](#how-this-repo-works) section bel
 
 From there, you can take a look at our [Good First Issues](https://github.com/thirdweb-dev/js/labels/good%20first%20issue) board and find an issue that interests you!
 
-If you have any questions about the issue, feel free to ask on our [Discord server](https://discord.gg/thirdweb) in the `#contributors` channel; where you'll be able to get help from our team and other contributors.
-
 <br />
 
 ## How this repo works
@@ -85,7 +83,10 @@ If your test depends on a downstream network call, you must mock the call using 
 import { setupServer } from "msw/node";
 import { downloadMock, uploadMock } from "../../../test/src/mocks/storage.js";
 
-const server = setupServer(uploadMock("HASH"), downloadMock({ name: "Test NFT" }));
+const server = setupServer(
+  uploadMock("HASH"),
+  downloadMock({ name: "Test NFT" })
+);
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());

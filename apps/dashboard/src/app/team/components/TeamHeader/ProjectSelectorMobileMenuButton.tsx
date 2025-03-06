@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ProjectSelectorUI } from "./ProjectSelectorUI";
 
 type ProjectSelectorMobileMenuButtonProps = {
@@ -14,6 +15,7 @@ type ProjectSelectorMobileMenuButtonProps = {
   projects: Project[];
   team: Team;
   createProject: (team: Team) => void;
+  client: ThirdwebClient;
 };
 
 export function ProjectSelectorMobileMenuButton(
@@ -46,6 +48,7 @@ export function ProjectSelectorMobileMenuButton(
         <DynamicHeight>
           <ProjectSelectorUI
             currentProject={props.currentProject}
+            client={props.client}
             projects={props.projects}
             team={props.team}
             createProject={() => {

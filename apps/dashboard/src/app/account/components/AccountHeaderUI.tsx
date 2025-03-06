@@ -8,6 +8,10 @@ import type { ThirdwebClient } from "thirdweb";
 import { SecondaryNav } from "../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../components/ThirdwebMiniLogo";
+import {
+  NotificationButtonUI,
+  type NotificationMetadata,
+} from "../../team/components/NotificationButton/NotificationButton";
 import { TeamAndProjectSelectorPopoverButton } from "../../team/components/TeamHeader/TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "../../team/components/TeamHeader/TeamSelectorMobileMenuButton";
 
@@ -20,6 +24,9 @@ export type AccountHeaderCompProps = {
   account: Pick<Account, "email" | "id" | "image">;
   client: ThirdwebClient;
   accountAddress: string;
+  getChangelogNotifications: () => Promise<NotificationMetadata[]>;
+  getInboxNotifications: () => Promise<NotificationMetadata[]>;
+  markNotificationAsRead: (id: string) => Promise<void>;
 };
 
 export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
@@ -59,6 +66,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
               focus="team-selection"
               createProject={props.createProject}
               account={props.account}
+              client={props.client}
             />
           )}
         </div>
@@ -70,6 +78,9 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
+        getChangelogs={props.getChangelogNotifications}
+        getInboxNotifications={props.getInboxNotifications}
+        markNotificationAsRead={props.markNotificationAsRead}
       />
     </header>
   );
@@ -111,13 +122,21 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
         </div>
       </div>
 
-      <MobileBurgerMenuButton
-        type="loggedIn"
-        email={props.account?.email}
-        logout={props.logout}
-        connectButton={props.connectButton}
-        accountAddress={props.accountAddress}
-      />
+      <div className="flex items-center gap-3">
+        <NotificationButtonUI
+          getChangelogs={props.getChangelogNotifications}
+          getInboxNotifications={props.getInboxNotifications}
+          markNotificationAsRead={props.markNotificationAsRead}
+        />
+
+        <MobileBurgerMenuButton
+          type="loggedIn"
+          email={props.account?.email}
+          logout={props.logout}
+          connectButton={props.connectButton}
+          accountAddress={props.accountAddress}
+        />
+      </div>
     </header>
   );
 }

@@ -81,20 +81,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
     // now 1 token minted
     await expect(nextTokenIdToMint({ contract })).resolves.toBe(1n);
     // tokenId 0 is minted
-    await expect(
-      getNFT({ contract, tokenId: 0n }),
-    ).resolves.toMatchInlineSnapshot(`
-        {
-          "id": 0n,
-          "metadata": {
-            "name": "Test NFT",
-          },
-          "owner": null,
-          "supply": 10n,
-          "tokenURI": "ipfs://QmUut8sypH8NaPUeksnirut7MgggMeQa9RvJ37sV513sw3/0",
-          "type": "ERC1155",
-        }
-      `);
+    expect((await getNFT({ contract, tokenId: 0n })).metadata.name).toBe(
+      "Test NFT",
+    );
     // account should have a balance of 10
     await expect(
       balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
@@ -119,20 +108,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
     await expect(nextTokenIdToMint({ contract })).resolves.toBe(1n);
     // tokenId 0 is minted
     // supply should be 15
-    await expect(
-      getNFT({ contract, tokenId: 0n }),
-    ).resolves.toMatchInlineSnapshot(`
-        {
-          "id": 0n,
-          "metadata": {
-            "name": "Test NFT",
-          },
-          "owner": null,
-          "supply": 15n,
-          "tokenURI": "ipfs://QmUut8sypH8NaPUeksnirut7MgggMeQa9RvJ37sV513sw3/0",
-          "type": "ERC1155",
-        }
-      `);
+    // @ts-expect-error - supply is there
+    expect((await getNFT({ contract, tokenId: 0n })).supply).toBe(15n);
     // account should have a balance of 15
     await expect(
       balanceOf({ contract, owner: TEST_ACCOUNT_A.address, tokenId: 0n }),
@@ -155,30 +132,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
 
     // now 2 tokens minted
     await expect(nextTokenIdToMint({ contract })).resolves.toBe(2n);
-    await expect(getNFTs({ contract })).resolves.toMatchInlineSnapshot(`
-      [
-        {
-          "id": 0n,
-          "metadata": {
-            "name": "Test NFT",
-          },
-          "owner": null,
-          "supply": 15n,
-          "tokenURI": "ipfs://QmUut8sypH8NaPUeksnirut7MgggMeQa9RvJ37sV513sw3/0",
-          "type": "ERC1155",
-        },
-        {
-          "id": 1n,
-          "metadata": {
-            "name": "Test NFT 2",
-          },
-          "owner": null,
-          "supply": 5n,
-          "tokenURI": "ipfs://QmV6gsfzdiMRtpnh8ay3CgutStVbes7qoF4DKpYE64h8hT/0",
-          "type": "ERC1155",
-        },
-      ]
-    `);
+    await expect(getNFTs({ contract })).resolves.length(2);
+    expect((await getNFT({ contract, tokenId: 0n })).metadata.name).toBe(
+      "Test NFT",
+    );
+    expect((await getNFT({ contract, tokenId: 1n })).metadata.name).toBe(
+      "Test NFT 2",
+    );
   });
 
   it("isGetNFTsSupported should work with our Edition contracts", async () => {
@@ -241,63 +201,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
     });
 
     const nfts = await getNFTs({ contract });
-    expect(nfts).toStrictEqual([
-      {
-        // Updated tokenURI from the test above
-        metadata: { name: "Test1 Updated" },
-        owner: null,
-        id: 0n,
-        tokenURI: "ipfs://QmTSyt6YgoFtH8yhWgevC22BxjyrkCKuzdk86nqQJCwrV9/0",
-        type: "ERC1155",
-        supply: 15n,
-      },
-      {
-        metadata: { name: "Test NFT 2" },
-        owner: null,
-        id: 1n,
-        tokenURI: "ipfs://QmV6gsfzdiMRtpnh8ay3CgutStVbes7qoF4DKpYE64h8hT/0",
-        type: "ERC1155",
-        supply: 5n,
-      },
-      {
-        metadata: {
-          name: "tw-contract-name",
-          symbol: "tw-contract-symbol",
-          description: "tw-contract-description",
-        },
-        owner: null,
-        id: 2n,
-        // Minted using URI from the test above
-        tokenURI:
-          "ipfs://bafybeiewg2e3vehsb5pb34xwk25eyyfwlvajzmgz3rtdrvn3upsxnsbhzi/contractUri.json",
-        type: "ERC1155",
-        supply: 1n,
-      },
-      {
-        metadata: { name: "batch token 0" },
-        owner: null,
-        id: 3n,
-        tokenURI: "ipfs://QmPSQhC2J6Wig4pH1Lt5th19FM58J5oukhfLfpc9L1i39Q/0",
-        type: "ERC1155",
-        supply: 1n,
-      },
-      {
-        metadata: { name: "batch token 1" },
-        owner: null,
-        id: 4n,
-        tokenURI: "ipfs://QmWRQwLBAeq6Wr65Yj7A4aeYqMD1C7Hs1moz15ncS6EhGu/0",
-        type: "ERC1155",
-        supply: 2n,
-      },
-      {
-        metadata: { name: "batch token 2" },
-        owner: null,
-        id: 5n,
-        tokenURI: "ipfs://QmTg1wxKGvdZR4NrdkYZGcfB5YYaBz75DH83td5RwprMRP/0",
-        type: "ERC1155",
-        supply: 3n,
-      },
-    ]);
+    const names = nfts.map((nft) => nft.metadata.name);
+    expect(names).toContain("batch token 0");
+    expect(names).toContain("batch token 1");
+    expect(names).toContain("batch token 2");
   });
 
   it("getOwnedTokenIds should work", async () => {

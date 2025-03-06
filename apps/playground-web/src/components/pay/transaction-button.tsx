@@ -35,7 +35,7 @@ export function PayTransactionPreview() {
   const { theme } = useTheme();
   const { data: nft } = useReadContract(getNFT, {
     contract: nftContract,
-    tokenId: 1n,
+    tokenId: 2n,
   });
 
   return (
@@ -51,7 +51,7 @@ export function PayTransactionPreview() {
             transaction: claimTo({
               contract: nftContract,
               quantity: 1n,
-              tokenId: 1n,
+              tokenId: 2n,
               to: account?.address || "",
             }),
             metadata: nft?.metadata,

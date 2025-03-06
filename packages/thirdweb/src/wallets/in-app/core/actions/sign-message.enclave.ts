@@ -6,13 +6,15 @@ import type { ClientScopedStorage } from "../authentication/client-scoped-storag
 
 export async function signMessage({
   client,
-  payload: { message, isRaw },
+  payload: { message, isRaw, originalMessage, chainId },
   storage,
 }: {
   client: ThirdwebClient;
   payload: {
     message: string;
     isRaw: boolean;
+    originalMessage?: string;
+    chainId?: number;
   };
   storage: ClientScopedStorage;
 }) {
@@ -37,6 +39,8 @@ export async function signMessage({
         messagePayload: {
           message,
           isRaw,
+          originalMessage,
+          chainId,
         },
       }),
     },

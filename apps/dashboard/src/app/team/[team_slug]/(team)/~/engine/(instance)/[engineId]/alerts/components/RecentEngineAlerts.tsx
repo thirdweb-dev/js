@@ -23,10 +23,16 @@ export function RecentEngineAlertsSection(props: {
   alertRules: EngineAlertRule[];
   alertRulesIsLoading: boolean;
   engineId: string;
+  teamIdOrSlug: string;
 }) {
   // TODO - pagination
   // required : return the total number of alerts in response from API
-  const alertsQuery = useEngineAlerts(props.engineId, 100, 0);
+  const alertsQuery = useEngineAlerts(
+    props.engineId,
+    props.teamIdOrSlug,
+    100,
+    0,
+  );
   const alerts = alertsQuery.data ?? [];
 
   return (

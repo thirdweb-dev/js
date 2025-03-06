@@ -235,6 +235,7 @@ export const ConnectModalContent = (props: {
   const signatureScreen = (
     <SignatureScreen
       onDone={onClose}
+      onClose={onClose}
       modalSize={props.size}
       termsOfServiceUrl={props.meta.termsOfServiceUrl}
       privacyPolicyUrl={props.meta.privacyPolicyUrl}

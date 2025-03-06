@@ -2,7 +2,10 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { convertCryptoToFiat } from "../../../pay/convert/cryptoToFiat.js";
-import type { SupportedFiatCurrency } from "../../../pay/convert/type.js";
+import {
+  type SupportedFiatCurrency,
+  getFiatSymbol,
+} from "../../../pay/convert/type.js";
 import { type Address, isAddress } from "../../../utils/address.js";
 import { formatNumber } from "../../../utils/formatNumber.js";
 import { shortenLargeNumber } from "../../../utils/shortenLargeNumber.js";
@@ -110,13 +113,6 @@ export async function loadAccountBalance(props: {
     balance: Number(tokenBalanceData.displayValue),
     symbol: tokenBalanceData.symbol,
   };
-}
-
-function getFiatSymbol(showBalanceInFiat: SupportedFiatCurrency) {
-  switch (showBalanceInFiat) {
-    case "USD":
-      return "$";
-  }
 }
 
 /**

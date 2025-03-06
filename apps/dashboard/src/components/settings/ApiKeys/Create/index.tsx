@@ -106,8 +106,7 @@ export const CreateProjectDialogUI = (props: {
       }}
     >
       <DialogContent
-        className="z-[10001] overflow-hidden p-0"
-        dialogOverlayClassName="z-[10000]"
+        className="overflow-hidden p-0"
         dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
       >
         <DynamicHeight>
@@ -274,7 +273,7 @@ function CreateProjectForm(props: {
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-2xl">Create a Project</DialogTitle>
+            <DialogTitle className="text-2xl">Create Project</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-6">

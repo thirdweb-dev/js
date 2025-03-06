@@ -12,7 +12,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' vercel.live;
   font-src 'self' vercel.live assets.vercel.com framerusercontent.com fonts.gstatic.com;
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com challenges.cloudflare.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com framerusercontent.com events.framer.com challenges.cloudflare.com static.reo.dev;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
@@ -101,9 +101,6 @@ const SENTRY_OPTIONS: SentryBuildOptions = {
   // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
   tunnelRoute: "/err",
 
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
-
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
 
@@ -156,7 +153,7 @@ const baseNextConfig: NextConfig = {
       // re-write /home to / (this is so that logged in users will be able to go to /home and NOT be redirected to the logged in app)
       {
         source: "/home",
-        destination: "/",
+        destination: "https://landing.thirdweb.com",
       },
       ...FRAMER_PATHS.map((path) => ({
         source: path,

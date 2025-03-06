@@ -1,4 +1,6 @@
 import { readFile } from "node:fs/promises";
+import he from "he";
+import { NodeHtmlMarkdown } from "node-html-markdown";
 import {
   CommentNode as X_CommentNode,
   HTMLElement as X_HTMLElement,
@@ -11,11 +13,35 @@ import { getFilesRecursive } from "./getFilesRecursive";
 import { ignoreHeadings } from "./settings";
 import { trimExtraSpace } from "./trimExtraSpace";
 
-export async function extractSearchData(rootDir: string): Promise<PageData[]> {
+type ExtractedContent = {
+  searchData: PageData[];
+  llmContent: string;
+  llmFullContent: string;
+};
+
+const llmsContentHeader = `\
+# thirdweb
+
+> Frontend, Backend, and Onchain tools to build complete web3 apps — on every EVM chain.
+
+## Docs
+`;
+
+const llmsFullContentHeader = `\
+# thirdweb
+
+> Frontend, Backend, and Onchain tools to build complete web3 apps — on every EVM chain.
+`;
+
+export async function extractContent(
+  rootDir: string,
+): Promise<ExtractedContent> {
   const nextOutputDir = `${rootDir}/.next/server/app`;
   const htmlFiles = getFilesRecursive(nextOutputDir, "html");
 
   const pages: PageData[] = [];
+  let llmContent = "";
+  let llmFullContent = "";
 
   const noMainFound: string[] = [];
   const noH1Found: string[] = [];
@@ -26,7 +52,7 @@ export async function extractSearchData(rootDir: string): Promise<PageData[]> {
       const mainEl = parse(htmlContent, {
         comment: false,
         blockTextElements: {
-          pre: false, // parse text inside <pre> elements instead of treating it as text
+          pre: true,
         },
       }).querySelector("main");
 
@@ -37,25 +63,38 @@ export async function extractSearchData(rootDir: string): Promise<PageData[]> {
         return;
       }
 
-      const noIndex = mainEl.getAttribute("data-noindex");
-
-      if (noIndex) {
+      if (mainEl.getAttribute("data-noindex") === "true") {
         return;
       }
 
       const pageTitle = mainEl.querySelector("h1")?.text;
-
       if (!pageTitle) {
         noH1Found.push(
           filePath.split(".next/server/app")[1]?.replace(".html", "") || "",
         );
       }
 
-      pages.push({
-        href: filePath.replace(nextOutputDir, "").replace(".html", ""),
-        title: pageTitle ? trimExtraSpace(pageTitle) : "",
-        sections: getPageSections(mainEl),
-      });
+      // Important: do the search index collection first - we will modify the main element in the next step
+      // Extract search data
+      const pageData = extractPageSearchData(
+        mainEl,
+        filePath,
+        nextOutputDir,
+        pageTitle,
+      );
+      if (pageData) {
+        pages.push(pageData);
+      }
+
+      // Extract LLM content
+      const { links, full } = extractPageLLMContent(
+        mainEl,
+        pageTitle,
+        filePath,
+        nextOutputDir,
+      );
+      llmContent += links ? `${links}\n` : "";
+      llmFullContent += full ? `${full}\n` : "";
     }),
   );
 
@@ -77,13 +116,147 @@ export async function extractSearchData(rootDir: string): Promise<PageData[]> {
     console.warn("\n");
   }
 
-  return pages;
+  return {
+    searchData: pages,
+    llmContent: `${llmsContentHeader}\n${llmContent}`,
+    llmFullContent: `${llmsFullContentHeader}\n${llmFullContent}`,
+  };
 }
 
-function getPageSections(main: X_HTMLElement): PageSectionData[] {
+function extractPageSearchData(
+  main: X_HTMLElement,
+  filePath: string,
+  nextOutputDir: string,
+  pageTitle: string | undefined,
+): PageData | null {
+  if (main.getAttribute("data-noindex") === "true") {
+    return null;
+  }
+
+  return {
+    href: filePath.replace(nextOutputDir, "").replace(".html", ""),
+    title: pageTitle ? trimExtraSpace(pageTitle) : "",
+    sections: getPageSectionsForSearchIndex(main),
+  };
+}
+
+function extractPageLLMContent(
+  main: X_HTMLElement,
+  pageTitle: string | undefined,
+  filePath: string,
+  nextOutputDir: string,
+): { links: string; full: string } {
+  if (
+    main.getAttribute("data-noindex") === "true" ||
+    main.getAttribute("data-no-llm") === "true"
+  ) {
+    return { links: "", full: "" };
+  }
+
+  const htmlToMarkdown = new NodeHtmlMarkdown({
+    keepDataImages: false,
+  });
+
+  let linksContent = "";
+  let fullContent = "";
+
+  const pageUrl = filePath.replace(nextOutputDir, "").replace(".html", "");
+
+  // Get first non-empty paragraph for description
+  const paragraphs = main.querySelectorAll("p");
+  let description = "";
+  for (const p of paragraphs) {
+    // skip noindex or no-llm paragraphs
+    if (
+      p.getAttribute("data-noindex") === "true" ||
+      p.getAttribute("data-no-llm") === "true"
+    ) {
+      continue;
+    }
+
+    description = trimExtraSpace(htmlToMarkdown.translate(p.toString()));
+    if (description) {
+      break;
+    }
+  }
+
+  linksContent += `* [${pageTitle}](${pageUrl}): ${description}`;
+
+  // Remove noindex and no-llm elements
+  const contentElements = main.querySelectorAll("*");
+  for (const element of contentElements) {
+    if (
+      element.getAttribute("data-noindex") === "true" ||
+      element.getAttribute("data-no-llm") === "true"
+    ) {
+      element.remove();
+    }
+  }
+
+  // Shift all heading elements to 1 step down (h1 > h2, h2 > h3, etc.)
+  const headings = main.querySelectorAll("h1, h2, h3, h4, h5, h6");
+  for (const heading of headings) {
+    const headingLevel = Number.parseInt(heading.tagName.replace("H", ""));
+    const newLevel = Math.min(headingLevel + 1, 6);
+    heading.tagName = `H${newLevel}`;
+  }
+
+  // prefix all the relative links with the `https://portal.thirdweb.com`
+  const links = main.querySelectorAll("a");
+  for (const link of links) {
+    const [path, hash] = link.getAttribute("href")?.split("#") || [];
+    if (path?.startsWith("/")) {
+      link.setAttribute(
+        "href",
+        `https://portal.thirdweb.com${path}${hash ? `#${hash}` : ""}`,
+      );
+    }
+  }
+
+  // for code blocks inside pre tags -> make them direct descendants of the pre tag
+  // so they are parsed as blocks by node-html-markdown + add language class
+  const preTags = main.querySelectorAll("pre");
+  for (const preTag of preTags) {
+    const codeBlock = parse(preTag.innerHTML.toString(), {
+      comment: false,
+      blockTextElements: {
+        pre: true,
+      },
+    }).querySelector("code");
+
+    if (codeBlock) {
+      const code = codeBlock
+        .querySelectorAll("div > div > div > div")
+        .map((x) => x.textContent)
+        .join("\n")
+        .trim();
+
+      const lang = codeBlock.getAttribute("lang");
+      codeBlock.textContent = code;
+
+      const newCodePreBlock = parse(
+        `<pre><code class=${lang ? `language-${lang}` : ""}>${he.encode(code)}</code></pre>`,
+      );
+
+      preTag.replaceWith(newCodePreBlock);
+    }
+  }
+
+  // Convert the cleaned HTML to markdown
+  fullContent += `${htmlToMarkdown.translate(main.toString())}`;
+
+  return {
+    links: linksContent,
+    full: fullContent,
+  };
+}
+
+function getPageSectionsForSearchIndex(main: X_HTMLElement): PageSectionData[] {
   const sectionData: PageSectionData[] = [];
 
-  const ignoreTags = new Set(["code", "nav"].map((t) => t.toUpperCase()));
+  const ignoreTags = new Set(
+    ["code", "nav", "pre"].map((t) => t.toUpperCase()),
+  );
 
   function collector(node: X_Node) {
     if (node instanceof X_CommentNode) {
@@ -94,9 +267,7 @@ function getPageSections(main: X_HTMLElement): PageSectionData[] {
         return;
       }
 
-      const noIndexAttribute = node.getAttribute("data-noindex");
-
-      if (noIndexAttribute === "true") {
+      if (node.getAttribute("data-noindex") === "true") {
         return;
       }
 

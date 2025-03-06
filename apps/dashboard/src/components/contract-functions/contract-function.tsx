@@ -285,15 +285,9 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   twAccount,
 }) => {
   // TODO: clean this up
+
   const functionsWithExtension = useMemo(() => {
-    const allFunctions = fnsOrEvents
-      .filter((f) => f.type === "function")
-      .filter(
-        (f) =>
-          f.name !== "setPlatformFeeInfo" &&
-          f.name !== "setFlatPlatformFeeInfo" &&
-          f.name !== "setPlatformFeeType",
-      );
+    const allFunctions = fnsOrEvents.filter((f) => f.type === "function");
     const results: ExtensionFunctions[] = [];
     results.push({
       extension: "",

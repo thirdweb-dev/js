@@ -6,7 +6,10 @@ import { toast } from "sonner";
 import { getContract, sendAndConfirmTransaction } from "thirdweb";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
-import { addSessionKey, isActiveSigner } from "thirdweb/extensions/erc4337";
+import {
+  addSessionKey,
+  shouldUpdateSessionKey,
+} from "thirdweb/extensions/erc4337";
 import {
   ConnectButton,
   ConnectEmbed,
@@ -14,7 +17,6 @@ import {
   useActiveWallet,
   useSiweAuth,
 } from "thirdweb/react";
-import { isContractDeployed } from "thirdweb/utils";
 import { type Account, inAppWallet } from "thirdweb/wallets";
 import { createCode } from "../actions/create-code";
 import {
@@ -84,6 +86,8 @@ export function LoginForm(props: {
               dismissible: false,
             });
             try {
+              // TODO: allow for an array of chainIds here
+              // should switch chain and add session key for each chainId
               await ensureSessionKey({
                 account: activeAccount,
                 client: thirdwebClient,
@@ -161,39 +165,37 @@ async function ensureSessionKey(options: {
     client: options.client,
   });
 
-  // check if already added
-  const accountDeployed = await isContractDeployed(accountContract);
-  if (accountDeployed) {
-    if (
-      await isActiveSigner({
-        contract: accountContract,
-        signer: options.sessionKeySignerAddress,
-      })
-    ) {
-      return {
-        success: true,
-        message: "Session key already added",
-        transaction: null,
-      };
-    }
-  }
-  // if not added, send tx to add the session key
+  const newPermissions = {
+    approvedTargets:
+      typeof options.permissions["contracts:write"] === "boolean"
+        ? ("*" as const)
+        : options.permissions["contracts:write"],
+    permissionEndTimestamp: options.permissions.expiration,
+    nativeTokenLimitPerTransaction: options.permissions["native:spend"],
+  };
 
+  const needsUpdate = await shouldUpdateSessionKey({
+    accountContract,
+    sessionKeyAddress: options.sessionKeySignerAddress,
+    newPermissions,
+  });
+
+  // check if already added
+  if (!needsUpdate) {
+    return {
+      success: true,
+      message: "Session key already added",
+      transaction: null,
+    };
+  }
+  // if not added or needs to be updated, send tx to add the session key
   const tx = await sendAndConfirmTransaction({
     account: options.account,
     transaction: addSessionKey({
       account: options.account,
       contract: accountContract,
       sessionKeyAddress: options.sessionKeySignerAddress,
-      // hard coded for now
-      permissions: {
-        approvedTargets:
-          typeof options.permissions["contracts:write"] === "boolean"
-            ? "*"
-            : options.permissions["contracts:write"],
-        permissionEndTimestamp: options.permissions.expiration,
-        nativeTokenLimitPerTransaction: options.permissions["native:spend"],
-      },
+      permissions: newPermissions,
     }),
   });
 

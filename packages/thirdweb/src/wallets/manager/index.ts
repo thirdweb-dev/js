@@ -15,7 +15,11 @@ import type { SmartWalletOptions } from "../smart/types.js";
 import type { WalletId } from "../wallet-types.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
-export type ConnectionStatus = "connected" | "disconnected" | "connecting";
+export type ConnectionStatus =
+  | "connected"
+  | "disconnected"
+  | "connecting"
+  | "unknown";
 
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const LAST_ACTIVE_EOA_ID = "thirdweb:active-wallet-id";
@@ -47,7 +51,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   const activeAccountStore = createStore<Account | undefined>(undefined);
   const activeWalletChainStore = createStore<Chain | undefined>(undefined);
   const activeWalletConnectionStatusStore =
-    createStore<ConnectionStatus>("disconnected");
+    createStore<ConnectionStatus>("unknown");
 
   const definedChainsStore = createStore<Map<number, Chain>>(new Map());
 

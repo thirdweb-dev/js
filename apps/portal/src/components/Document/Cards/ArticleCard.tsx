@@ -11,6 +11,7 @@ export function ArticleCard(props: {
   const isExternal = props.href.startsWith("http");
   return (
     <Link
+      data-noindex
       href={props.href}
       className="flex cursor-default bg-card"
       target={isExternal ? "_blank" : undefined}
@@ -38,6 +39,7 @@ export function ArticleIconCard(props: {
   const isExternal = props.href.startsWith("http");
   return (
     <Link
+      data-noindex
       href={props.href}
       className={cn(
         "flex items-center gap-4 rounded-lg border bg-card p-4 transition-colors hover:border-active-border",

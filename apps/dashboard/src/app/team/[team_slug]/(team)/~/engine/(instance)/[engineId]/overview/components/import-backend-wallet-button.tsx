@@ -147,10 +147,7 @@ export const ImportBackendWalletButton: React.FC<
       </Button>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent
-          className="z-[10001] p-0"
-          dialogOverlayClassName="z-[10000]"
-        >
+        <DialogContent className="p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="p-6">
@@ -175,7 +172,7 @@ export const ImportBackendWalletButton: React.FC<
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="z-[10001]">
+                        <SelectContent>
                           <SelectGroup>
                             {walletTypeOptions.map((option) => (
                               <SelectItem key={option.key} value={option.key}>

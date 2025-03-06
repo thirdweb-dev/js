@@ -1,9 +1,9 @@
 import type { ThirdwebClient } from "../../client/client.js";
+import type { CurrencyMeta } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { stringify } from "../../utils/json.js";
-import type { FiatProvider } from "../utils/commonTypes.js";
+import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
 import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
-
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
  * @buyCrypto
@@ -40,7 +40,7 @@ export type GetBuyWithFiatQuoteParams = {
   /**
    * Symbol of the fiat currency to buy the token with.
    */
-  fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+  fromCurrencySymbol: CurrencyMeta["shorthand"];
 
   /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
@@ -150,14 +150,7 @@ export type BuyWithFiatQuote = {
   /**
    * Token information for the desired token. (token the user wants to buy)
    */
-  toToken: {
-    symbol?: string | undefined;
-    priceUSDCents?: number | undefined;
-    name?: string | undefined;
-    chainId: number;
-    tokenAddress: string;
-    decimals: number;
-  };
+  toToken: PayTokenInfo;
   /**
    * Address of the wallet to which the tokens will be sent.
    */
@@ -196,35 +189,17 @@ export type BuyWithFiatQuote = {
     amount: string;
     amountWei: string;
     amountUSDCents: number;
-    token: {
-      chainId: number;
-      decimals: number;
-      name: string;
-      priceUSDCents: number;
-      symbol: string;
-      tokenAddress: string;
-    };
+    token: PayTokenInfo;
   };
 
   /**
-   * Gas Token that will be sent to the user's wallet address by the on-ramp provider.
-   *
-   * Only used for ERC20 + Gas on-ramp flow. This will hold the details of the gas token and amount sent for gas.
-   *
-   * In Native Currency case, extra for gas will be added to the output amount of the onramp.
+   * Routing token that will be swapped from the on-ramp token, so that it can be bridged to the destination token.
    */
-  gasToken?: {
+  routingToken?: {
     amount: string;
     amountWei: string;
     amountUSDCents: number;
-    token: {
-      chainId: number;
-      decimals: number;
-      name: string;
-      priceUSDCents: number;
-      symbol: string;
-      tokenAddress: string;
-    };
+    token: PayTokenInfo;
   };
 
   /**
@@ -318,6 +293,7 @@ export async function getBuyWithFiatQuote(
         fromAddress: params.fromAddress,
         toGasAmountWei: params.toGasAmountWei,
         preferredProvider: params.preferredProvider,
+        multiHopSupported: true,
       }),
     });
 

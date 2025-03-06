@@ -39,8 +39,8 @@ import { DirectPaymentModeScreen } from "./DirectPaymentModeScreen.js";
 import { PayTokenIcon } from "./PayTokenIcon.js";
 import { TransactionModeScreen } from "./TransactionModeScreen.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
-import { FiatFlow } from "./fiat/FiatFlow.js";
 import { FiatScreenContent } from "./fiat/FiatScreenContent.js";
+import { OnRampScreen } from "./fiat/OnRampScreen.js";
 import type { SelectedScreen } from "./main/types.js";
 import {
   type PaymentMethods,
@@ -312,8 +312,12 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   }
 
   if (screen.id === "fiat-flow" && payer) {
+    const defaultRecipientAddress = (
+      props.payOptions as Extract<PayUIOptions, { mode: "direct_payment" }>
+    )?.paymentInfo?.sellerAddress;
+    const receiverAddress = defaultRecipientAddress || payer.account.address;
     return (
-      <FiatFlow
+      <OnRampScreen
         title={props.title}
         transactionMode={payOptions.mode === "transaction"}
         quote={screen.quote}
@@ -328,10 +332,10 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           props.payOptions.buyWithFiat?.testMode === true
         }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        openedWindow={screen.openedWindow}
         onDone={onDone}
         isEmbed={props.isEmbed}
         payer={payer}
+        receiverAddress={receiverAddress}
         onSuccess={onFiatSuccess}
       />
     );
@@ -649,6 +653,9 @@ function SelectedTokenInfo(props: {
             }}
             onChange={(e) => {
               let value = e.target.value;
+
+              // Replace comma with period if it exists
+              value = value.replace(",", ".");
 
               if (value.startsWith(".")) {
                 value = `0${value}`;

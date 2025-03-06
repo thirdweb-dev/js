@@ -29,6 +29,7 @@ import { hashTypedData } from "../../utils/hashing/hashTypedData.js";
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { estimateUserOpGasCost } from "./lib/bundler.js";
 import { predictSmartAccountAddress } from "./lib/calls.js";
 import { deploySmartAccount } from "./lib/signing.js";
 import { smartWallet } from "./smart-wallet.js";
@@ -73,6 +74,26 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         chain,
         client,
       });
+    });
+
+    it("can estimate gas cost", async () => {
+      const gasCost = await estimateUserOpGasCost({
+        transactions: [
+          claimTo({
+            contract,
+            quantity: 1n,
+            to: smartWalletAddress,
+            tokenId: 0n,
+          }),
+        ],
+        adminAccount: personalAccount,
+        client: TEST_CLIENT,
+        smartWalletOptions: {
+          chain,
+          sponsorGas: true,
+        },
+      });
+      expect(gasCost.ether).not.toBe("0");
     });
 
     it("can connect", async () => {

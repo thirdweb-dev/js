@@ -77,10 +77,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           }
         }}
       >
-        <DialogContent
-          className="z-[10001] max-w-[480px] gap-0 p-0"
-          dialogOverlayClassName="z-[10000]"
-        >
+        <DialogContent className="max-w-[480px] gap-0 p-0">
           {/* min-w-0 is actually required here  */}
           <div className="flex min-w-0 flex-col gap-6 p-6">
             {/* Header */}

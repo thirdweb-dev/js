@@ -23,7 +23,7 @@ export default async function Layout(props: {
 
   return (
     <div>
-      <InAppWalletsHeader clientId={project.publishableKey} />
+      <InAppWalletsHeader teamId={project.teamId} projectId={project.id} />
       <div className="h-8" />
 
       <TabPathLinks

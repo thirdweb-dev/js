@@ -1,5 +1,4 @@
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
-import {} from "@/constants/cookie";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
@@ -11,7 +10,7 @@ export async function EcosystemLayoutSlug({
   ecosystemLayoutPath,
 }: {
   children: React.ReactNode;
-  params: { slug: string };
+  params: { slug: string; team_slug: string };
   ecosystemLayoutPath: string;
 }) {
   const authToken = await getAuthToken();
@@ -20,7 +19,11 @@ export async function EcosystemLayoutSlug({
     redirect(ecosystemLayoutPath);
   }
 
-  const ecosystem = await fetchEcosystem(params.slug, authToken);
+  const ecosystem = await fetchEcosystem(
+    params.slug,
+    authToken,
+    params.team_slug,
+  );
 
   if (!ecosystem) {
     redirect(ecosystemLayoutPath);
@@ -31,6 +34,7 @@ export async function EcosystemLayoutSlug({
       <EcosystemHeader
         ecosystem={ecosystem}
         ecosystemLayoutPath={ecosystemLayoutPath}
+        teamIdOrSlug={params.team_slug}
       />
 
       <SidebarLayout

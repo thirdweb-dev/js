@@ -9,7 +9,7 @@ const account = TEST_ACCOUNT_B;
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
   it("should throw if passed an non-integer-like value to minVoteQuorumRequiredPercent", async () => {
-    await expect(() =>
+    await expect(
       deployVoteContract({
         account,
         client: TEST_CLIENT,

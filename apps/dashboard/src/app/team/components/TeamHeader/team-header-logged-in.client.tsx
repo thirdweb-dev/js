@@ -11,6 +11,11 @@ import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateProjectDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { doLogout } from "../../../login/auth-actions";
 import {
+  getChangelogNotifications,
+  getInboxNotifications,
+  markNotificationAsRead,
+} from "../NotificationButton/fetch-notifications";
+import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
   TeamHeaderMobileUI,
@@ -58,6 +63,9 @@ export function TeamHeaderLoggedIn(props: {
     },
     client: getThirdwebClient(),
     accountAddress: props.accountAddress,
+    getChangelogNotifications: getChangelogNotifications,
+    getInboxNotifications: getInboxNotifications,
+    markNotificationAsRead: markNotificationAsRead,
   };
 
   return (

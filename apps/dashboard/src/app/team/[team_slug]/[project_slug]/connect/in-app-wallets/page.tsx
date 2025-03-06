@@ -40,7 +40,8 @@ export default async function Page(props: {
 
   return (
     <InAppWalletAnalytics
-      clientId={project.publishableKey}
+      teamId={project.teamId}
+      projectId={project.id}
       interval={interval}
       range={range as Range}
     />

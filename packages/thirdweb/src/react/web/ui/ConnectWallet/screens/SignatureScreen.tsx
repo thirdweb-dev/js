@@ -32,6 +32,7 @@ type Status = "signing" | "failed" | "idle";
 
 export const SignatureScreen: React.FC<{
   onDone: (() => void) | undefined;
+  onClose?: (() => void) | undefined;
   modalSize: "compact" | "wide";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
@@ -42,6 +43,7 @@ export const SignatureScreen: React.FC<{
   const {
     onDone,
     modalSize,
+    onClose,
     termsOfServiceUrl,
     privacyPolicyUrl,
     connectLocale,
@@ -145,6 +147,7 @@ export const SignatureScreen: React.FC<{
               variant="secondary"
               data-testid="disconnect-button"
               onClick={() => {
+                onClose?.();
                 disconnect(wallet);
               }}
               style={{

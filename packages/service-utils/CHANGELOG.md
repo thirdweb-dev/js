@@ -1,5 +1,45 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.13
+
+### Patch Changes
+
+- [#6416](https://github.com/thirdweb-dev/js/pull/6416) [`44bb003`](https://github.com/thirdweb-dev/js/commit/44bb0034a69334f05cfa14132d56e354536e77ff) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Add "pay" as a usage source
+
+## 0.8.12
+
+### Patch Changes
+
+- [#6409](https://github.com/thirdweb-dev/js/pull/6409) [`67354dc`](https://github.com/thirdweb-dev/js/commit/67354dc848bfb00d2296d5e52990321e9d28abb0) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] remove unneeded cloudflare worker types
+
+## 0.8.11
+
+### Patch Changes
+
+- [#6382](https://github.com/thirdweb-dev/js/pull/6382) [`47c9c43`](https://github.com/thirdweb-dev/js/commit/47c9c43a875a81aa357ebf3c741f256c317c5cfd) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] trim project ID prefix
+
+- [#6387](https://github.com/thirdweb-dev/js/pull/6387) [`0c0d837`](https://github.com/thirdweb-dev/js/commit/0c0d837f2355c4aa43c3f1ceef52b450623be76f) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Add connect promise so it only connects once
+
+- [#6384](https://github.com/thirdweb-dev/js/pull/6384) [`25b149d`](https://github.com/thirdweb-dev/js/commit/25b149d3a98f99984792874ecb4e3144d2932a08) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Provide CF req to forward origin header
+
+## 0.8.10
+
+### Patch Changes
+
+- [#6345](https://github.com/thirdweb-dev/js/pull/6345) [`0595c37`](https://github.com/thirdweb-dev/js/commit/0595c37163392e986124ebc376020a3bca6ba1ac) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Use @confluentinc/kafka-javascript
+
+- [#6346](https://github.com/thirdweb-dev/js/pull/6346) [`b60d251`](https://github.com/thirdweb-dev/js/commit/b60d251cd72f72080c3a8d8039bad330a7cda344) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] fix usageV2 caller
+
+- [#6338](https://github.com/thirdweb-dev/js/pull/6338) [`9f69cc2`](https://github.com/thirdweb-dev/js/commit/9f69cc27aec2dd8e0b68541f7d4addc452d5bc5a) Thanks [@jnsdls](https://github.com/jnsdls)! - add `pastDue` to possible billing status flags
+
+## 0.8.9
+
+### Patch Changes
+
+- [#6329](https://github.com/thirdweb-dev/js/pull/6329) [`1fa36c1`](https://github.com/thirdweb-dev/js/commit/1fa36c1d56758788a8f9053f8929497bacb2b115) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: Allow passing teamId with dashboard auth
+
+- [#6293](https://github.com/thirdweb-dev/js/pull/6293) [`8610b46`](https://github.com/thirdweb-dev/js/commit/8610b467b6d13be9dc902db79d3270132dba6894) Thanks [@MananTank](https://github.com/MananTank)! - Update TeamResponse and ProjectResponse types
+
 ## 0.8.8
 
 ### Patch Changes

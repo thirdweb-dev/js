@@ -19,7 +19,10 @@ const walletIdToPHName: Record<string, string> = {
   injected: "Injected",
 };
 
-export const PosthogIdentifier: React.FC = () => {
+export const PosthogIdentifierClient: React.FC<{
+  accountId: string | undefined;
+  accountAddress: string | undefined;
+}> = ({ accountId, accountAddress }) => {
   const client = useThirdwebClient();
   const account = useActiveAccount();
   const chain = useActiveWalletChain();
@@ -43,10 +46,17 @@ export const PosthogIdentifier: React.FC = () => {
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (account?.address) {
-      posthog.identify(account.address);
+    if (accountAddress) {
+      posthog.identify(accountAddress);
     }
-  }, [account?.address]);
+  }, [accountAddress]);
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (accountId) {
+      posthog.identify(accountId);
+    }
+  }, [accountId]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax

@@ -16,7 +16,6 @@ import {
 } from "../../exports/extensions/erc4337.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { setContractURI } from "../../extensions/marketplace/__generated__/IMarketplace/write/setContractURI.js";
-import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
@@ -27,6 +26,7 @@ import { hashTypedData } from "../../utils/hashing/hashTypedData.js";
 import { sleep } from "../../utils/sleep.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { estimateUserOpGasCost } from "./lib/bundler.js";
 import { predictSmartAccountAddress } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY_V0_7 } from "./lib/constants.js";
 import {
@@ -49,7 +49,7 @@ const contract = getContract({
   address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
 });
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet 0.7 core tests",
   {
     retry: 0,
@@ -88,6 +88,27 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(predictedAddress).toEqual(smartWalletAddress);
     });
 
+    it("can estimate gas cost", async () => {
+      const gasCost = await estimateUserOpGasCost({
+        transactions: [
+          claimTo({
+            contract,
+            quantity: 1n,
+            to: smartWalletAddress,
+            tokenId: 0n,
+          }),
+        ],
+        adminAccount: personalAccount,
+        client: TEST_CLIENT,
+        smartWalletOptions: {
+          chain,
+          sponsorGas: true,
+          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+        },
+      });
+      expect(gasCost.ether).not.toBe("0");
+    });
+
     it("can sign a msg", async () => {
       const signature = await smartAccount.signMessage({
         message: "hello world",
@@ -109,7 +130,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         smartAccount,
         accountContract,
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // pause for a second to prevent race condition
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // pause for a second to prevent race condition
 
       const signature = await smartAccount.signMessage({
         message: "hello world",
@@ -180,7 +201,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       await expect(tx).rejects.toMatchInlineSnapshot(`
-        [TransactionError: Error - Not authorized
+        [TransactionError: Execution Reverted: {"code":3,"message":"execution reverted: Not authorized"}
 
         contract: ${contract.address}
         chainId: 11155111]
@@ -201,19 +222,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await confirmContractDeployment({ accountContract });
       const isDeployed = await isContractDeployed(accountContract);
       expect(isDeployed).toEqual(true);
-    });
-
-    it("can estimate a tx", async () => {
-      const estimates = await estimateGasCost({
-        transaction: claimTo({
-          contract,
-          quantity: 1n,
-          to: smartWalletAddress,
-          tokenId: 0n,
-        }),
-        account: smartAccount,
-      });
-      expect(estimates.wei.toString()).not.toBe("0");
     });
 
     it("can execute a batched tx", async () => {

@@ -1,3 +1,4 @@
+import { getTeams } from "@/api/team";
 import {
   DISABLE_FAUCET_CHAIN_IDS,
   THIRDWEB_ACCESS_TOKEN,
@@ -44,6 +45,25 @@ export const GET = async (req: NextRequest) => {
       );
       isFaucetDisabled = disableFaucetChainIds.includes(chainId);
     } catch {}
+  }
+
+  // get the teams for the account
+  const teams = await getTeams();
+  if (!teams) {
+    const res: CanClaimResponseType = {
+      canClaim: false,
+      type: "paid-plan-required",
+    };
+    return NextResponse.json(res);
+  }
+
+  const hasPaidPlan = teams.some((team) => team.billingPlan !== "free");
+  if (!hasPaidPlan) {
+    const res: CanClaimResponseType = {
+      canClaim: false,
+      type: "paid-plan-required",
+    };
+    return NextResponse.json(res);
   }
 
   if (

@@ -12,7 +12,7 @@ import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import type { CurrencyMeta } from "./fiat/currencies.js";
+import { type CurrencyMeta, getFiatIcon } from "./fiat/currencies.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -55,7 +55,7 @@ export function PayWithCreditCard(props: {
         }}
         gap="sm"
       >
-        <props.currency.icon size={iconSize.md} />
+        {getFiatIcon(props.currency, "md")}
         <Container flex="row" center="y" gap="xxs" color="secondaryText">
           <Text color="primaryText">{props.currency.shorthand}</Text>
           <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />

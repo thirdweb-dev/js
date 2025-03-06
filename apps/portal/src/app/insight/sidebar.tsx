@@ -6,6 +6,7 @@ import {
   Brain,
   ExternalLink,
   MessageCircleQuestionIcon,
+  Network,
   Rocket,
   StickyNote,
   Wrench,
@@ -40,6 +41,11 @@ export const sidebar: SideBar = {
       name: "Blueprints",
       href: `${insightSlug}/blueprints`,
       icon: <Album />,
+    },
+    {
+      name: "Multichain Queries",
+      href: `${insightSlug}/multichain-queries`,
+      icon: <Network />,
     },
     {
       name: "Agents & LLMs",

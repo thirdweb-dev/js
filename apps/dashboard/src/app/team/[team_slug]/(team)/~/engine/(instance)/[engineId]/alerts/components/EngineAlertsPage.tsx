@@ -9,8 +9,12 @@ import { RecentEngineAlertsSection } from "./RecentEngineAlerts";
 
 export function EngineAlertsPage(props: {
   instance: EngineInstance;
+  teamIdOrSlug: string;
 }) {
-  const alertRulesQuery = useEngineAlertRules(props.instance.id);
+  const alertRulesQuery = useEngineAlertRules(
+    props.instance.id,
+    props.teamIdOrSlug,
+  );
   const alertRules = alertRulesQuery.data ?? [];
 
   return (
@@ -19,12 +23,14 @@ export function EngineAlertsPage(props: {
         alertRules={alertRules}
         engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
+        teamIdOrSlug={props.teamIdOrSlug}
       />
       <div className="h-8" />
       <RecentEngineAlertsSection
         alertRules={alertRules}
         engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
+        teamIdOrSlug={props.teamIdOrSlug}
       />
     </div>
   );

@@ -73,7 +73,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   });
 
   it("fetchTokenName should throw in the end where all fallback solutions failed to resolve to any name", async () => {
-    await expect(() =>
+    await expect(
       fetchTokenName({
         address: UNISWAPV3_FACTORY_CONTRACT.address,
         client,

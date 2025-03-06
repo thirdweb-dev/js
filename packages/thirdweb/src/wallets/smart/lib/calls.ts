@@ -8,6 +8,7 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { readContract } from "../../../transaction/read-contract.js";
 import { isHex, stringToHex } from "../../../utils/encoding/hex.js";
+import { withCache } from "../../../utils/promise/withCache.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
 import { DEFAULT_ACCOUNT_FACTORY_V0_6 } from "./constants.js";
 
@@ -90,15 +91,23 @@ export async function predictAddress(args: {
       "Account address is required to predict the smart wallet address.",
     );
   }
-  const saltHex =
-    accountSalt && isHex(accountSalt)
-      ? accountSalt
-      : stringToHex(accountSalt ?? "");
-  return readContract({
-    contract: factoryContract,
-    method: "function getAddress(address, bytes) returns (address)",
-    params: [adminAddress, saltHex],
-  });
+  return withCache(
+    async () => {
+      const saltHex =
+        accountSalt && isHex(accountSalt)
+          ? accountSalt
+          : stringToHex(accountSalt ?? "");
+      return readContract({
+        contract: factoryContract,
+        method: "function getAddress(address, bytes) returns (address)",
+        params: [adminAddress, saltHex],
+      });
+    },
+    {
+      cacheKey: `${args.factoryContract.chain.id}-${args.factoryContract.address}-${args.adminAddress}-${args.accountSalt}`,
+      cacheTime: 1000 * 60 * 60 * 24, // 1 day
+    },
+  );
 }
 
 /**

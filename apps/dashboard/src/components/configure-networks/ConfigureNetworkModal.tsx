@@ -21,10 +21,7 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-      <DialogContent
-        className="z-[10001] max-w-[480px] p-0"
-        dialogOverlayClassName="z-[10000]"
-      >
+      <DialogContent className="max-w-[480px] p-0">
         <ConfigureNetworks
           onNetworkAdded={(chain) => {
             addRecentlyUsedChainId(chain.chainId);

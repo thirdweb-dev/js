@@ -5,6 +5,7 @@ export {
   createUnsignedUserOp,
   signUserOp,
   createAndSignUserOp,
+  getUserOpHash,
 } from "../../wallets/smart/lib/userop.js";
 
 export {
@@ -13,6 +14,7 @@ export {
   bundleUserOp,
   getUserOpGasFees,
   estimateUserOpGas,
+  estimateUserOpGasCost,
 } from "../../wallets/smart/lib/bundler.js";
 
 export {

@@ -50,8 +50,6 @@ interface PageProps {
   searchParams: Promise<PageSearchParams>;
 }
 
-export const maxDuration = 300;
-
 export default async function ProjectOverviewPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([
     props.params,
@@ -59,6 +57,11 @@ export default async function ProjectOverviewPage(props: PageProps) {
   ]);
 
   const project = await getProject(params.team_slug, params.project_slug);
+
+  if (!project) {
+    redirect(`/team/${params.team_slug}`);
+  }
+
   const interval = (searchParams.interval as "day" | "week") ?? "week";
   const rangeType = (searchParams.type as DurationId) || "last-120";
   const range: Range = {
@@ -67,11 +70,13 @@ export default async function ProjectOverviewPage(props: PageProps) {
     type: rangeType,
   };
 
-  if (!project) {
-    redirect(`/team/${params.team_slug}`);
-  }
+  const activeStatus = await isProjectActive({
+    teamId: project.teamId,
+    projectId: project.id,
+  });
 
-  const isActive = await isProjectActive({ clientId: project.publishableKey });
+  // is any analytics data active?
+  const isActive = Object.values(activeStatus).some((v) => !!v);
 
   return (
     <div className="flex grow flex-col">
@@ -120,34 +125,39 @@ async function ProjectAnalytics(props: {
   ] = await Promise.allSettled([
     // Aggregated wallet connections
     getWalletConnections({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",
     }),
     // Time series data for wallet users
     getWalletUsers({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     // In-app wallet usage
     getInAppWalletUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",
     }),
     // User operations usage
     getUserOpUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: interval,
     }),
     getUserOpUsage({
-      clientId: project.publishableKey,
+      teamId: project.teamId,
+      projectId: project.id,
       from: range.from,
       to: range.to,
       period: "all",
@@ -202,7 +212,7 @@ async function ProjectAnalytics(props: {
         from={range.from}
         to={range.to}
         period={interval}
-        clientId={project.publishableKey}
+        teamId={project.teamId}
       />
       {userOpUsageTimeSeries.status === "fulfilled" &&
       userOpUsage.status === "fulfilled" &&
@@ -224,7 +234,8 @@ async function ProjectAnalytics(props: {
         from={range.from}
         to={range.to}
         period={interval}
-        clientId={project.publishableKey}
+        teamId={project.teamId}
+        projectId={project.id}
       />
     </div>
   );

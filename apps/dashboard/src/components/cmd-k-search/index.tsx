@@ -190,10 +190,7 @@ export const CmdKSearchModal = (props: {
         }
       }}
     >
-      <DialogContent
-        className="z-[10000001] gap-0 p-0"
-        dialogOverlayClassName="z-[10000000]"
-      >
+      <DialogContent className="gap-0 p-0">
         {/* Title */}
         <DynamicHeight>
           <div className="p-6">

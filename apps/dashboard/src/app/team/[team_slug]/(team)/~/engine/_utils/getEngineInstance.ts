@@ -2,6 +2,7 @@ import { API_SERVER_URL } from "@/constants/env";
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 
 export async function getEngineInstance(params: {
+  teamIdOrSlug: string;
   authToken: string;
   engineId: string;
   accountId: string;
@@ -19,11 +20,14 @@ export async function getEngineInstance(params: {
     return sandboxEngine;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/engine/${params.engineId}`, {
-    headers: {
-      Authorization: `Bearer ${params.authToken}`,
+  const res = await fetch(
+    `${API_SERVER_URL}/v1/teams/${params.teamIdOrSlug}/engine/${params.engineId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${params.authToken}`,
+      },
     },
-  });
+  );
 
   if (!res.ok) {
     const errorMessage = await res.text();
@@ -33,8 +37,8 @@ export async function getEngineInstance(params: {
   }
 
   const json = (await res.json()) as {
-    data: EngineInstance;
+    result: EngineInstance;
   };
 
-  return json.data;
+  return json.result;
 }

@@ -63,13 +63,21 @@ async function getEvents() {
 
 ### Chain IDs
 
+- As a subdomain:
 ```typescript
-type ChainId = number; // Chain ID of the network you want to query (e.g., 1 for Ethereum mainnet)
-
-// Example: Using a specific chain
-const chainId = 1; // Ethereum mainnet
-const baseUrl = `https://${chainId}.insight.thirdweb.com`;
+// Example
+const baseUrl = `https://{{chainId}}.insight.thirdweb.com`;
 ```
+
+- As a query parameter (this is useful if you want to query multiple chains):
+```typescript
+// Example for a single chain
+const url = `https://insight.thirdweb.com/v1/events?chain={{chainId}}`;
+// Example for multiple chains
+const url = `https://insight.thirdweb.com/v1/events?chain=1&chain=137`;
+```
+
+We won't duplicate multichain examples for each endpoint, but you can pass multiple chains in the query parameters pretty much everywhere!
 
 ### Base Response Structure
 

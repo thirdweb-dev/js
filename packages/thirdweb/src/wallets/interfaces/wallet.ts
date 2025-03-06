@@ -182,7 +182,15 @@ export type Account = {
    * const signature = await account.signMessage({ message: 'hello!' });
    * ```
    */
-  signMessage: ({ message }: { message: SignableMessage }) => Promise<Hex>;
+  signMessage: ({
+    message,
+    originalMessage,
+    chainId,
+  }: {
+    message: SignableMessage;
+    originalMessage?: string;
+    chainId?: number;
+  }) => Promise<Hex>;
   /**
    * Sign the given typed data and return the signature
    * @example

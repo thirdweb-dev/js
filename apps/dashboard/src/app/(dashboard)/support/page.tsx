@@ -1,19 +1,11 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import accountIcon from "../../../../public/assets/support/account.svg";
 import contractsIcon from "../../../../public/assets/support/contracts.png";
-import discordIllustration from "../../../../public/assets/support/discord-illustration.png";
 import engineIcon from "../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../public/assets/support/wallets.png";
@@ -193,43 +185,6 @@ export default function SupportPage() {
           ))}
         </div>
       </section>
-      <div className="container">
-        <Card className="flex flex-row items-center justify-between gap-4 border-[#5865F2] bg-[#5865F2]/20">
-          <div className="flex flex-col gap-2">
-            <CardHeader>
-              <CardTitle className="font-bold text-3xl">
-                Discord Community
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-6">
-              <p className="text-balance">
-                Join our Discord community to connect with other thirdweb
-                developers, ask questions, and get help.
-              </p>
-              <Button
-                className="mr-auto flex flex-row gap-2 bg-[#5865F2] text-white hover:bg-[#5865F2]/80"
-                asChild
-              >
-                <Link href="https://discord.gg/thirdweb">
-                  <DiscordIcon className="size-4" />
-                  <span>Join Discord</span>
-                </Link>
-              </Button>
-            </CardContent>
-            <CardFooter>
-              <p className="text-muted-foreground text-sm italic">
-                Please note that our Discord server is managed by our community
-                moderators and does not offer official support.
-              </p>
-            </CardFooter>
-          </div>
-          <Image
-            src={discordIllustration}
-            alt="discord illustration"
-            className="ml-auto hidden max-w-64 object-cover p-6 md:block"
-          />
-        </Card>
-      </div>
     </main>
   );
 }

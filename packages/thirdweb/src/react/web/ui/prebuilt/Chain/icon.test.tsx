@@ -76,7 +76,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainIcon", () => {
   });
 
   it("fetchChainIcon should throw error if failed to resolve chain icon", async () => {
-    await expect(() =>
+    await expect(
       fetchChainIcon({ chain: defineChain(-1), client }),
     ).rejects.toThrowError("Failed to resolve icon for chain");
   });

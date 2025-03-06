@@ -10,6 +10,10 @@ import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryN
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
+import {
+  NotificationButtonUI,
+  type NotificationMetadata,
+} from "../NotificationButton/NotificationButton";
 import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButton";
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "./TeamSelectorMobileMenuButton";
@@ -26,6 +30,9 @@ export type TeamHeaderCompProps = {
   createProject: (team: Team) => void;
   client: ThirdwebClient;
   accountAddress: string;
+  getChangelogNotifications: () => Promise<NotificationMetadata[]>;
+  getInboxNotifications: () => Promise<NotificationMetadata[]>;
+  markNotificationAsRead: (id: string) => Promise<void>;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -68,6 +75,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             focus="team-selection"
             createProject={props.createProject}
             account={props.account}
+            client={props.client}
           />
         </div>
 
@@ -79,8 +87,11 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 href={`/team/${props.currentTeam.slug}/${props.currentProject.slug}`}
                 className="flex flex-row items-center gap-2 font-semibold text-sm"
               >
-                {/* TODO - set project avatar image */}
-                <ProjectAvatar src="" className="size-6" />
+                <ProjectAvatar
+                  src={props.currentProject.image || ""}
+                  className="size-6"
+                  client={props.client}
+                />
                 {props.currentProject.name}
               </Link>
 
@@ -91,6 +102,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 focus="project-selection"
                 createProject={props.createProject}
                 account={props.account}
+                client={props.client}
               />
             </div>
           </>
@@ -103,6 +115,9 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
+        getChangelogs={props.getChangelogNotifications}
+        getInboxNotifications={props.getInboxNotifications}
+        markNotificationAsRead={props.markNotificationAsRead}
       />
     </header>
   );
@@ -171,19 +186,28 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
                 projects={projects}
                 team={props.currentTeam}
                 createProject={props.createProject}
+                client={props.client}
               />
             </div>
           </>
         )}
       </div>
 
-      <MobileBurgerMenuButton
-        type="loggedIn"
-        email={props.account?.email}
-        logout={props.logout}
-        connectButton={props.connectButton}
-        accountAddress={props.accountAddress}
-      />
+      <div className="flex items-center gap-3">
+        <NotificationButtonUI
+          getChangelogs={props.getChangelogNotifications}
+          getInboxNotifications={props.getInboxNotifications}
+          markNotificationAsRead={props.markNotificationAsRead}
+        />
+
+        <MobileBurgerMenuButton
+          type="loggedIn"
+          email={props.account.email}
+          logout={props.logout}
+          connectButton={props.connectButton}
+          accountAddress={props.accountAddress}
+        />
+      </div>
     </header>
   );
 }

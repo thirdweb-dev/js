@@ -53,8 +53,12 @@ export const EngineVersionBadge = ({
 
   const serverVersions = publicConfigurationQuery.data.serverVersions;
   const latestVersion = serverVersions[0];
-  const currentVersion = healthQuery.data.engineVersion ?? "N/A";
+  const currentVersion = healthQuery.data.engineVersion;
   const hasNewerVersion = latestVersion?.name !== currentVersion;
+
+  if (!currentVersion) {
+    return null;
+  }
 
   // Hide the change version modal unless owner.
   if (!instance.deploymentId) {
@@ -128,10 +132,7 @@ const ChangeVersionModal = (props: {
     // Self-hosted modal: prompt to update manually.
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          className="z-[10001] max-w-[400px]"
-          dialogOverlayClassName="z-[10000]"
-        >
+        <DialogContent className="max-w-[400px]">
           <DialogHeader>
             <DialogTitle className="mb-6 pr-4 font-semibold text-2xl tracking-tight">
               Update your self-hosted Engine
@@ -178,10 +179,7 @@ const ChangeVersionModal = (props: {
   // For cloud-hosted, prompt the user to select a version to update to.
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="z-[10001] max-w-[400px]"
-        dialogOverlayClassName="z-[10000]"
-      >
+      <DialogContent className="max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Update Engine version</DialogTitle>
         </DialogHeader>
@@ -194,7 +192,7 @@ const ChangeVersionModal = (props: {
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="z-[10001]">
+            <SelectContent>
               <SelectGroup>
                 {serverVersions.map(({ name, createdAt }, idx) => {
                   const isCurrentVersion = name === currentVersion;

@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider, useTheme } from "next-themes";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect, useMemo } from "react";
 import { Toaster } from "sonner";
 import {
@@ -10,7 +11,6 @@ import {
   useConnectionManager,
 } from "thirdweb/react";
 import { CustomConnectWallet } from "../@3rdweb-sdk/react/components/connect-wallet";
-import { PosthogIdentifier } from "../components/wallets/PosthogIdentifier";
 import { isSanctionedAddress } from "../data/eth-sanctioned-addresses";
 import { useAllChainsData } from "../hooks/chains/allChains";
 import { SyncChainStores } from "../stores/chainStores";
@@ -20,25 +20,26 @@ const queryClient = new QueryClient();
 
 export function AppRouterProviders(props: { children: React.ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SyncChainStores />
-      <ThirdwebProvider>
-        <SyncChainDefinitionsToConnectionManager />
-        <TWAutoConnect />
-        <PosthogIdentifier />
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          enableSystem={false}
-          defaultTheme="dark"
-        >
-          <ToasterSetup />
-          <SanctionedAddressesChecker>
-            {props.children}
-          </SanctionedAddressesChecker>
-        </ThemeProvider>
-      </ThirdwebProvider>
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <SyncChainStores />
+        <ThirdwebProvider>
+          <SyncChainDefinitionsToConnectionManager />
+          <TWAutoConnect />
+          <ThemeProvider
+            attribute="class"
+            disableTransitionOnChange
+            enableSystem={false}
+            defaultTheme="dark"
+          >
+            <ToasterSetup />
+            <SanctionedAddressesChecker>
+              {props.children}
+            </SanctionedAddressesChecker>
+          </ThemeProvider>
+        </ThirdwebProvider>
+      </QueryClientProvider>
+    </NuqsAdapter>
   );
 }
 

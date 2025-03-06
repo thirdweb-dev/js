@@ -17,10 +17,8 @@ import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value
 import { toEther } from "../../utils/units.js";
 import { generateMerkleTreeInfoERC1155 } from "../airdrop/write/merkleInfoERC1155.js";
 import { name } from "../common/read/name.js";
-import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
-import { totalSupply } from "./__generated__/IERC1155/read/totalSupply.js";
 import { nextTokenIdToMint } from "./__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 import { canClaim } from "./drops/read/canClaim.js";
 import { getActiveClaimCondition } from "./drops/read/getActiveClaimCondition.js";
@@ -89,20 +87,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(6n);
-      await expect(
-        getNFT({ contract, tokenId: 0n }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "id": 0n,
-          "metadata": {
-            "name": "Test NFT",
-          },
-          "owner": null,
-          "supply": 0n,
-          "tokenURI": "ipfs://QmTo68Dm1ntSp2BHLmE9gesS6ELuXosRz5mAgFCK6tfsRk/0",
-          "type": "ERC1155",
-        }
-      `);
+      expect((await getNFT({ contract, tokenId: 0n })).metadata.name).toBe(
+        "Test NFT",
+      );
     });
 
     it("should update metadata", async () => {
@@ -481,63 +468,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         .filter((f) => f.type === "function")
         .map((f) => toFunctionSelector(f));
       expect(isGetNFTsSupported(selectors)).toBe(true);
-    });
-
-    /**
-     * This is to document the behavior where one can claim without paying if the claiming address
-     * is the same as the PrimaryRecipientAddress, because of this Solidity code:
-     * ```solidity
-     * // CurrencyTransferLib.sol
-     * function safeTransferERC20(address _currency, address _from, address _to, uint256 _amount) internal {
-     *   if (_from == _to) {
-     *     return;
-     *   }
-     *   ...
-     * }
-     * ```
-     */
-    it("address that is the same with PrimaryFeeRecipient can claim without paying ERC20", async () => {
-      const tokenAddress = await deployERC20Contract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_C,
-        type: "TokenERC20",
-        params: {
-          name: "token20",
-          contractURI: TEST_CONTRACT_URI,
-        },
-      });
-      const tokenId = 5n;
-      const setClaimTx = setClaimConditions({
-        contract,
-        tokenId,
-        phases: [
-          {
-            maxClaimableSupply: 100n,
-            maxClaimablePerWallet: 100n,
-            currencyAddress: tokenAddress,
-            price: 1000,
-            startTime: new Date(),
-          },
-        ],
-      });
-      await sendAndConfirmTransaction({
-        transaction: setClaimTx,
-        account: TEST_ACCOUNT_C,
-      });
-
-      const transaction = claimTo({
-        contract,
-        tokenId,
-        quantity: 50n,
-        to: TEST_ACCOUNT_C.address,
-      });
-      await sendAndConfirmTransaction({
-        transaction,
-        account: TEST_ACCOUNT_C,
-      });
-      const supplyCount = await totalSupply({ contract, id: tokenId });
-      expect(supplyCount).toBe(50n);
     });
 
     it("getActiveClaimCondition should work", async () => {

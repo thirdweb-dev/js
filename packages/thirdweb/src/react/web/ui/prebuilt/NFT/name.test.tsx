@@ -54,7 +54,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
   });
 
   it("fetchNftName should throw error if failed to resolve nft info", async () => {
-    await expect(() =>
+    await expect(
       fetchNftName({
         contract: UNISWAPV3_FACTORY_CONTRACT,
         tokenId: 0n,
