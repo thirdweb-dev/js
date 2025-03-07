@@ -440,7 +440,7 @@ function useOnRampScreenState(props: {
       // retry the quote step
       setSwapTxHash(undefined);
       swapMutation.reset();
-      swapQuoteQuery.refetch();
+      await swapQuoteQuery.refetch();
     }
   }, [
     isDone,
