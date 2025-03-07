@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.90.4
+
+### Patch Changes
+
+- [#6432](https://github.com/thirdweb-dev/js/pull/6432) [`617fe68`](https://github.com/thirdweb-dev/js/commit/617fe68c32888462d09ff335cd7fb2d671e667bf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding storage for inApp and ecosystem wallets
+
 ## 5.90.3
 
 ### Patch Changes
