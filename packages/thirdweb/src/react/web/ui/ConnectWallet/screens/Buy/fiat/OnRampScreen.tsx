@@ -426,6 +426,10 @@ function useOnRampScreenState(props: {
     } else if (swapQuoteQuery.data && !swapTxHash) {
       // Execute swap/bridge
       try {
+        // Pause to handle any free tier rate limit
+        await new Promise((resolve) => setTimeout(resolve, 1_000));
+        // The quote is likely stale, so refetch it
+        await swapQuoteQuery.refetch();
         const result = await swapMutation.mutateAsync({
           quote: swapQuoteQuery.data,
         });
@@ -440,7 +444,7 @@ function useOnRampScreenState(props: {
       // retry the quote step
       setSwapTxHash(undefined);
       swapMutation.reset();
-      swapQuoteQuery.refetch();
+      await swapQuoteQuery.refetch();
     }
   }, [
     isDone,

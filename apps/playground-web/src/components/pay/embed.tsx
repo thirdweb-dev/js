@@ -18,6 +18,10 @@ export function StyledPayEmbedPreview() {
     <div className="flex flex-col items-center justify-center">
       <StyledConnectButton
         chains={[base, defineChain(466), arbitrum, treasure, arbitrumNova]}
+        accountAbstraction={{
+          sponsorGas: true,
+          chain: base,
+        }}
         supportedTokens={{
           466: [
             {
