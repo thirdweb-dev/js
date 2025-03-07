@@ -44,11 +44,10 @@ export const SmartWalletsBillingAlert = ({
           <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
           <AlertDescription>
             <Text as="span" pr={1}>
-              You&apos;ve enabled Account Abstraction for one of your API keys
-              and haven&apos;t added a payment method.
+              You&apos;ve enabled Account Abstraction for one of your API keys.
               <br />
-              To use them on Mainnet,
-            </Text>
+              To enable AA on mainnet chains,
+            </Text>{" "}
             <TrackedLink
               href="/team/~/~/settings/billing"
               category="api_keys"
@@ -57,7 +56,7 @@ export const SmartWalletsBillingAlert = ({
               color="blue.500"
             >
               <Text as="span" color="blue.500">
-                add a payment method.
+                subscribe to a billing plan.
               </Text>
             </TrackedLink>
           </AlertDescription>
