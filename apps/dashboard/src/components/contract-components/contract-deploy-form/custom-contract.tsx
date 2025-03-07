@@ -62,6 +62,7 @@ import {
   getModuleInstallParams,
   showPrimarySaleFieldset,
   showRoyaltyFieldset,
+  showSuperchainBridgeFieldset,
 } from "./modular-contract-default-modules-fieldset";
 import { Param } from "./param";
 import { PlatformFeeFieldset } from "./platform-fee-fieldset";
@@ -294,6 +295,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 // set connected wallet address as default "primarySaleRecipient"
                 else if (showPrimarySaleFieldset(paramNames)) {
                   returnVal.primarySaleRecipient = activeAccount.address;
+                } else if (showSuperchainBridgeFieldset(paramNames)) {
+                  returnVal.superchainBridge =
+                    "0x4200000000000000000000000000000000000028";
                 }
 
                 acc[mod.name] = returnVal;

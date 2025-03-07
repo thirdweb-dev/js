@@ -2,6 +2,7 @@ import { fetchPublishedContractsFromDeploy } from "components/contract-component
 import { notFound } from "next/navigation";
 import {
   type ContractOptions,
+  eth_blockNumber,
   eth_getTransactionByHash,
   eth_getTransactionReceipt,
   getContractEvents,
@@ -110,10 +111,16 @@ export default async function Page(props: {
   let creationBlockNumber: bigint | undefined;
 
   if (twCloneFactoryContract) {
+    const latestBlockNumber = await eth_blockNumber(
+      getRpcClient({
+        client: contract.client,
+        chain: contract.chain,
+      }),
+    );
     const events = await getContractEvents({
       contract: twCloneFactoryContract,
       events: [ProxyDeployedEvent],
-      blockRange: 123456n,
+      blockRange: latestBlockNumber < 2000000n ? latestBlockNumber : 2000000n,
     });
     const event = events.find(
       (e) =>
@@ -165,7 +172,7 @@ export default async function Page(props: {
         }
       }),
     )
-  ).filter((c) => c.status === "DEPLOYED");
+  ).filter((c) => c.chainId !== contract.chain.id);
 
   let coreMetadata: FetchDeployMetadataResult | undefined;
   try {
@@ -260,10 +267,11 @@ export default async function Page(props: {
     <>
       <div>
         <h2 className="mb-1 font-bold text-2xl tracking-tight">
-          Deploy Cross-chain
+          Cross-chain contracts
         </h2>
         <p className="text-muted-foreground">
-          Deterministically deploy your contracts on multiple networks.
+          Deterministically deploy and interact with your contracts on multiple
+          networks.
         </p>
       </div>
       <div className="h-10" />
