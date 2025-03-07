@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.91.0
+
+### Minor Changes
+
+- [#6437](https://github.com/thirdweb-dev/js/pull/6437) [`cbc4e80`](https://github.com/thirdweb-dev/js/commit/cbc4e8033061af98dc88a2de6caa15a30b73d303) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Several onramp embed improvements
+
 ## 5.90.4
 
 ### Patch Changes

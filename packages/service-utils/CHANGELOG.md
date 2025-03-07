@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.14
+
+### Patch Changes
+
+- [#6354](https://github.com/thirdweb-dev/js/pull/6354) [`c653d70`](https://github.com/thirdweb-dev/js/commit/c653d7033d2ac561d6e967ccb2893a0e5e4798be) Thanks [@MananTank](https://github.com/MananTank)! - Update `TeamResponse` type
+
 ## 0.8.13
 
 ### Patch Changes
