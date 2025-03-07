@@ -300,7 +300,6 @@ export function ConnectButton(props: ConnectButtonProps) {
 
   usePreloadWalletProviders({
     wallets,
-    client: props.client,
   });
 
   // Add props.chain and props.chains to defined chains store
