@@ -1,5 +1,6 @@
 import { client, parsers } from "@passwordless-id/webauthn";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { AsyncStorage } from "../../../../../utils/storage/AsyncStorage.js";
 import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import {
   base64ToString,
@@ -83,12 +84,13 @@ export class PasskeyWebClient implements PasskeyClient {
 export async function hasStoredPasskey(
   client: ThirdwebClient,
   ecosystemId?: EcosystemWalletId,
+  storage?: AsyncStorage,
 ) {
-  const storage = new ClientScopedStorage({
-    storage: webLocalStorage, // TODO (passkey) react native variant of this fn
+  const clientStorage = new ClientScopedStorage({
+    storage: storage ?? webLocalStorage, // TODO (passkey) react native variant of this fn
     clientId: client.clientId,
     ecosystem: ecosystemId ? { id: ecosystemId } : undefined,
   });
-  const credId = await storage.getPasskeyCredentialId();
+  const credId = await clientStorage.getPasskeyCredentialId();
   return !!credId;
 }

@@ -2,11 +2,11 @@
 // types for class constructors still a little messy right now.
 
 import type { ThirdwebClient } from "../../../client/client.js";
+import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import type { AuthAndWalletRpcReturnType } from "../core/authentication/types.js";
 import type { Ecosystem } from "../core/wallet/types.js";
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
-// Open to PRs from whoever sees this and knows of a cleaner way to handle things
 type ClientIdConstructorType = {
   /**
    * the clientId of your API Key. You can create an API key by creating a project on thirdweb dashboard.
@@ -29,6 +29,11 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
    * The domain of the passkey to use for authentication
    */
   passkeyDomain?: string;
+
+  /**
+   * The storage to use for storing wallet state
+   */
+  storage?: AsyncStorage;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {

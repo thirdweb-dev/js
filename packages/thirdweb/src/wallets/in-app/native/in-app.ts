@@ -65,6 +65,7 @@ export function inAppWallet(
       return new InAppNativeConnector({
         client,
         passkeyDomain: createOptions?.auth?.passkeyDomain,
+        storage: createOptions?.storage,
       });
     },
   }) as Wallet<"inApp">;

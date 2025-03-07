@@ -73,6 +73,7 @@ export function ecosystemWallet(
       return new InAppWebConnector({
         client,
         ecosystem,
+        storage: createOptions?.storage,
       });
     },
   }) as Wallet<EcosystemWalletId>;
