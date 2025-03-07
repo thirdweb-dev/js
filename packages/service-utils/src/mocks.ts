@@ -58,6 +58,7 @@ export const validTeamResponse: TeamResponse = {
   growthTrialEligible: false,
   canCreatePublicChains: false,
   enabledScopes: ["storage", "rpc", "bundler"],
+  isOnboarded: true,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {

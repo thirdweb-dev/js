@@ -1,6 +1,6 @@
 "use client";
 
-import type { BillingBillingPortalAction } from "@/actions/billing";
+import type { GetBillingPortalUrlAction } from "@/actions/billing";
 import { BillingPortalButton } from "@/components/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
@@ -63,7 +63,7 @@ export function AccountSettingsPageUI(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  redirectToBillingPortal: BillingBillingPortalAction;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
   cancelSubscriptions: () => Promise<void>;
 }) {
   return (
@@ -89,7 +89,7 @@ export function AccountSettingsPageUI(props: {
         onAccountDeleted={props.onAccountDeleted}
         defaultTeamSlug={props.defaultTeamSlug}
         defaultTeamName={props.defaultTeamName}
-        redirectToBillingPortal={props.redirectToBillingPortal}
+        getBillingPortalUrl={props.getBillingPortalUrl}
         cancelSubscriptions={props.cancelSubscriptions}
       />
     </div>
@@ -208,7 +208,7 @@ function DeleteAccountCard(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  redirectToBillingPortal: BillingBillingPortalAction;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
   cancelSubscriptions: () => Promise<void>;
 }) {
   const title = "Delete Account";
@@ -328,11 +328,12 @@ function DeleteAccountCard(props: {
                       account
                     </span>
                     <BillingPortalButton
-                      size="sm"
+                      buttonProps={{
+                        size: "sm",
+                        variant: "default",
+                      }}
                       teamSlug={props.defaultTeamSlug}
-                      variant="default"
-                      redirectPath="/team"
-                      redirectToBillingPortal={props.redirectToBillingPortal}
+                      getBillingPortalUrl={props.getBillingPortalUrl}
                     >
                       Manage Billing
                     </BillingPortalButton>

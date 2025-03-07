@@ -24,6 +24,18 @@ export async function updateTeam(params: {
   });
 
   if (!res.ok) {
-    throw new Error("failed to update team");
+    return {
+      ok: false as const,
+      error: await res.text(),
+    };
   }
+
+  const data = (await res.json()) as {
+    result: Team;
+  };
+
+  return {
+    ok: true as const,
+    data: data.result,
+  };
 }
