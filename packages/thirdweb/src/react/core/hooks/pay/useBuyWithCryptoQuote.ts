@@ -80,7 +80,7 @@ export function useBuyWithCryptoQuote(
   return useQuery({
     ...queryParams,
     queryKey: ["buyWithCryptoQuote", params],
-    refetchInterval: 30_000,
+    refetchInterval: 20_000,
     queryFn: () => {
       if (!params) {
         throw new Error("Swap params are required");
