@@ -23,6 +23,10 @@ const walletProviders: SidebarLink = (() => {
         name: "Private Key Wallet",
         href: `${parentSlug}/private-key`,
       },
+      {
+        name: "Engine Wallet",
+        href: `${parentSlug}/engine-wallet`,
+      },
     ],
   };
 })();
@@ -195,7 +199,7 @@ const transactions: SidebarLink = {
 };
 
 const pay: SidebarLink = {
-  name: "Pay",
+  name: "Payments",
   isCollapsible: false,
   links: [
     {
@@ -286,6 +290,9 @@ export const sidebar: SideBar = {
       ],
     },
     {
+      separator: true,
+    },
+    {
       name: "Core",
       isCollapsible: false,
       links: [
@@ -297,7 +304,14 @@ export const sidebar: SideBar = {
           name: "Storage",
           href: "/dotnet/storage",
         },
+        {
+          name: "Utilities",
+          href: "/dotnet/utils",
+        },
       ],
+    },
+    {
+      separator: true,
     },
     {
       name: "Wallets",
@@ -305,19 +319,35 @@ export const sidebar: SideBar = {
       links: [walletProviders, walletActions],
     },
     {
-      name: "Blockchain API",
+      separator: true,
+    },
+    {
+      name: "Transactions",
+      isCollapsible: false,
+      links: [contracts, transactions],
+    },
+    {
+      separator: true,
+    },
+    {
+      name: "Indexer",
       isCollapsible: false,
       links: [
-        contracts,
-        transactions,
         {
-          name: "Common Utils",
-          href: "/dotnet/utils",
+          name: "Quickstart",
+          href: "/dotnet/insight/quickstart",
+        },
+        {
+          name: "Insight Full Reference",
+          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.Indexer.ThirdwebInsight.html",
         },
       ],
     },
     {
-      name: "Nebula AI",
+      separator: true,
+    },
+    {
+      name: "AI",
       isCollapsible: false,
       links: [
         {
@@ -329,6 +359,9 @@ export const sidebar: SideBar = {
           href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.AI.ThirdwebNebula.html",
         },
       ],
+    },
+    {
+      separator: true,
     },
     pay,
   ],
