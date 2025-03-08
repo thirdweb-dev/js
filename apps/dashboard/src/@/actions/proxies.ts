@@ -5,13 +5,14 @@ import { API_SERVER_URL } from "../constants/env";
 
 type ProxyActionParams = {
   pathname: string;
-  searchParams?: Record<string, string>;
+  searchParams?: Record<string, string | undefined>;
   method: "GET" | "POST" | "PUT" | "DELETE";
   body?: string;
   headers?: Record<string, string>;
+  parseAsText?: boolean;
 };
 
-type ProxyActionResult<T extends object> =
+type ProxyActionResult<T> =
   | {
       status: number;
       ok: true;
@@ -23,7 +24,7 @@ type ProxyActionResult<T extends object> =
       error: string;
     };
 
-async function proxy<T extends object>(
+async function proxy<T>(
   baseUrl: string,
   params: ProxyActionParams,
 ): Promise<ProxyActionResult<T>> {
@@ -34,7 +35,10 @@ async function proxy<T extends object>(
   url.pathname = params.pathname;
   if (params.searchParams) {
     for (const key in params.searchParams) {
-      url.searchParams.append(key, params.searchParams[key] as string);
+      const value = params.searchParams[key];
+      if (value) {
+        url.searchParams.append(key, value);
+      }
     }
   }
 
@@ -67,23 +71,23 @@ async function proxy<T extends object>(
   return {
     status: res.status,
     ok: true,
-    data: await res.json(),
+    data: params.parseAsText ? await res.text() : await res.json(),
   };
 }
 
-export async function apiServerProxy<T extends object = object>(
-  params: ProxyActionParams,
-) {
+export async function apiServerProxy<T>(params: ProxyActionParams) {
   return proxy<T>(API_SERVER_URL, params);
 }
 
-export async function payServerProxy<T extends object = object>(
-  params: ProxyActionParams,
-) {
+export async function payServerProxy<T>(params: ProxyActionParams) {
   return proxy<T>(
     process.env.NEXT_PUBLIC_PAY_URL
       ? `https://${process.env.NEXT_PUBLIC_PAY_URL}`
       : "https://pay.thirdweb-dev.com",
     params,
   );
+}
+
+export async function analyticsServerProxy<T>(params: ProxyActionParams) {
+  return proxy<T>(process.env.ANALYTICS_SERVICE_URL || "", params);
 }

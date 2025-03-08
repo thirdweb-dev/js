@@ -1,7 +1,10 @@
+import { getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
+import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { getAccountUsage } from "./getAccountUsage";
 import { Usage } from "./overview/components/Usage";
 
@@ -11,25 +14,31 @@ export default async function Page(props: {
   }>;
 }) {
   const params = await props.params;
-  const account = await getValidAccount(`/team/${params.team_slug}/~/usage`);
-  const team = await getTeamBySlug(params.team_slug);
+  const [account, team, authToken] = await Promise.all([
+    getValidAccount(`/team/${params.team_slug}/~/usage`),
+    getTeamBySlug(params.team_slug),
+    getAuthToken(),
+  ]);
 
   if (!team) {
     redirect("/team");
   }
 
-  const [accountUsage, subscriptions] = await Promise.all([
+  const [accountUsage, subscriptions, projects] = await Promise.all([
     getAccountUsage(),
     getTeamSubscriptions(team.slug),
+    getProjects(team.slug),
   ]);
 
-  if (!accountUsage || !subscriptions) {
+  if (!accountUsage || !subscriptions || !authToken) {
     return (
       <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
         Something went wrong. Please try again later.
       </div>
     );
   }
+
+  const client = getThirdwebClient(authToken);
 
   return (
     <Usage
@@ -38,6 +47,13 @@ export default async function Page(props: {
       subscriptions={subscriptions}
       account={account}
       team={team}
+      client={client}
+      projects={projects.map((project) => ({
+        id: project.id,
+        name: project.name,
+        image: project.image,
+        slug: project.slug,
+      }))}
     />
   );
 }

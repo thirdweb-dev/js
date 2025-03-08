@@ -8,13 +8,19 @@ import { IntervalSelector } from "components/analytics/interval-selector";
 import { differenceInDays } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { UserOpStats } from "types/analytics";
+import { SponsoredTransactionsTable } from "../../../app/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
 import { searchParams } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/search-params";
 import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
 import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 
 export function AccountAbstractionAnalytics(props: {
   userOpStats: UserOpStats[];
+  teamId: string;
+  teamSlug: string;
+  client: ThirdwebClient;
+  projectId: string;
 }) {
   const [isLoading, startTransition] = useTransition();
 
@@ -97,6 +103,16 @@ export function AccountAbstractionAnalytics(props: {
         <SponsoredTransactionsChartCard
           userOpStats={props.userOpStats}
           isPending={isLoading}
+        />
+
+        <SponsoredTransactionsTable
+          client={props.client}
+          teamId={props.teamId}
+          from={from.toISOString()}
+          to={to.toISOString()}
+          variant="project"
+          projectId={props.projectId}
+          teamSlug={props.teamSlug}
         />
       </div>
     </div>
