@@ -587,10 +587,6 @@ export const sidebar: SideBar = {
                   href: `${extensionsSlug}/general/Ownable`,
                 },
                 {
-                  name: "Permissions",
-                  href: `${extensionsSlug}/general/Permissions`,
-                },
-                {
                   name: "PermissionsEnumerable",
                   href: `${extensionsSlug}/general/PermissionsEnumerable`,
                 },
