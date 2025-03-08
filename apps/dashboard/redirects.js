@@ -354,6 +354,13 @@ async function redirects() {
       destination: "/",
       permanent: false,
     },
+    // pay > universal-bridge redirect
+    {
+      source: "/team/:team_slug/:project_slug/connect/pay/:path*",
+      destination:
+        "/team/:team_slug/:project_slug/connect/universal-bridge/:path*",
+      permanent: false,
+    },
     ...legacyDashboardToTeamRedirects,
   ];
 }

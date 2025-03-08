@@ -45,7 +45,7 @@ export const products = [
     link: "https://portal.thirdweb.com/connect/account-abstraction/overview",
   },
   {
-    name: "Pay",
+    name: "Universal Bridge",
     id: "pay",
     icon: PayIcon,
     description: "Point of sale solution for bridging, onramping & swapping",
