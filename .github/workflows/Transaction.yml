@@ -1,0 +1,27 @@
+name: Automated Transaction
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sendTransaction:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install @thirdweb-dev/sdk dotenv
+
+      - name: Run Transaction Script
+        run: node sendTransaction.js
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          THIRDWEB_SECRET_KEY: ${{ secrets.THIRDWEB_SECRET_KEY }}
