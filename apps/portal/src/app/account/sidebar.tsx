@@ -5,15 +5,23 @@ export const sidebar: SideBar = {
   name: "Account",
   links: [
     {
+      name: "Create Account",
+      href: `${accountSlug}/create-account`,
+    },
+    {
+      name: "Link Accounts",
+      href: `${accountSlug}/link-accounts`,
+    },
+    {
       name: "Billing",
       links: [
         {
-          name: "Account Info",
-          href: `${accountSlug}/billing/account-info`,
-        },
-        {
           name: "Manage Billing",
           href: `${accountSlug}/billing/manage-billing`,
+        },
+        {
+          name: "View Usage",
+          href: `${accountSlug}/billing/view-usage`,
         },
         {
           name: "Credits",
@@ -22,6 +30,10 @@ export const sidebar: SideBar = {
         {
           name: "Upgrade Plan",
           href: `${accountSlug}/billing/upgrade-plan`,
+        },
+        {
+          name: "Manage Team",
+          href: `${accountSlug}/billing/manage-team`,
         },
       ],
     },
@@ -52,11 +64,11 @@ export const sidebar: SideBar = {
           name: "Access Restrictions",
           href: `${accountSlug}/api-keys/access`,
         },
-        {
-          name: "FAQs",
-          href: `${accountSlug}/api-keys/faq`,
-        },
       ],
+    },
+    {
+      name: "FAQs",
+      href: `${accountSlug}/faq`,
     },
   ],
 };

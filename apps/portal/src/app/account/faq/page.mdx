@@ -1,0 +1,134 @@
+import { createMetadata, Details } from "@doc";
+
+export const metadata = createMetadata({
+	title: "thirdweb API Key FAQs",
+	description: "Frequently asked questions about thirdweb API keys",
+	image: {
+		title: "thirdweb API Key FAQs",
+		icon: "thirdweb",
+	},
+});
+
+# FAQs
+
+## Account
+
+<Details summary="How do I get started with thirdweb?"> 
+Learn how to get started in the [Create Account](/account/create-account) guide. 
+</Details>
+
+## API Keys
+
+<Details summary="Is the thirdweb API Key free to use?"> 
+Yes, API Keys are free to create and use within specified limits which are generous for hobby tier and starter projects. For additional usage, you may need to upgrade to a paid plan. Learn more about our [pricing plans](https://thirdweb.com/pricing). 
+</Details>
+
+<Details summary="Can I use thirdweb SDKs without an API key?"> 
+Yes, you can use thirdweb SDKs without an API key to override the default infrastructure. You will need to provide and pass in your own services to the SDKs.
+</Details>
+
+
+<Details summary="How do I get my bundle Id for a Unity Native or mobile application?"> 
+If you are developing a Unity native or mobile application, you will need to obtain a `bundleId` to restrict the Client ID to your application.
+
+- **Unity Native**, use either of the following options:
+  - Log `Utils.GetBundleId()`.
+  - Check the platform-specific options in your Project Settings. It is usually formatted as `com.companyName.productName` based on your top-level Project Settings.
+- **Mobile (React Native)**
+
+  - **Android**
+    - Open the file `<Project>/android/app/build.gradle` and search for the term `applicationId`:
+      ```jsx
+      android {
+          defaultConfig {
+          applicationId "com.example.yourproject"
+          ...
+          }
+        }
+      ```
+  - **iOS**
+    - Open the file `<Project>/ios/<Project>/Info.plist` and search for `CFBundleIdentifier`:
+      ```jsx
+      <key>CFBundleIdentifier</key>
+      <string>com.example.yourproject</string>
+      ```
+  - Programmatically retrieve `bundleId` for iOS or Android
+
+    - Use the `expo-application` package from the `@thirdweb-dev/react-native sdk`
+
+      ```jsx
+      import * as Application from "expo-application";
+
+      const bundleId = Application.applicationId;
+      ```
+</Details>
+
+## Billing
+
+<Details summary="How do I sign up for a thirdweb Pro plan?">
+To subscribe to the thirdweb Pro plan, please [contact Sales](https://thirdweb.com/contact-us) for more details about its features and to receive a quote for the monthly subscription fee.
+</Details>
+
+<Details summary="How do I update my payment method?">
+On your logged in dashboard, navigate to Settings > Billing and next to your selected plan you will see a "Manage Billing" button that will redirect you to the Stripe payment portal to update billing information. See [Manage Billing](/account/billing/manage-billing) for more details.
+</Details>
+
+<Details summary="Where can I see my usage history?">
+On your logged in dashboard, navigate to Usage > Overview to view your usage history.
+</Details>
+
+<Details summary="Is a billing method required for sponsoring transactions on testnet??">
+Billing is not required for sponsoring transactions on testnet.
+</Details>
+
+<Details summary="Can I unpin content in order to stay on the Starter plan?"> 
+Yes, you can unpin content by navigating to Usage > Storage on your dashboard and selecting “Unpin” next to the pinned content you wish to remove.
+</Details>
+
+<Details summary="Does unpinned content count towards my storage limit?"> 
+No, it does not count towards your storage cap.
+</Details>
+
+<Details summary="Can I bring my own IPFS service for my application?"> 
+Yes you can, thirdweb is completely interoperable with any IPFS service. You can use your own IPFS service by providing the IPFS endpoint to the thirdweb SDKs.
+</Details>
+
+<Details summary="Are the pay-as-you-go Storage Pinning costs monthly or one-time?">
+Storage pinning costs are billed monthly.
+</Details>
+
+<Details summary="How are RPCs calculated?"> 
+RPC usage is calculated by requests per second. When your application makes a request to the blockchain, and you use thirdweb's built-in infrastructure it will count as an RPC request. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+<Details summary="How is Storage Pinning calculated?"> 
+Storage pinning usage is calculated by GB per file size. When your application uploads files to IPFS, and you use thirdweb's built-in infrastructure, it will count towards your storage pinning limit. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+<Details summary="How is Storage Gateway calculated?"> 
+Storage gateway usage is calculated by GB per file size. When your application downloads files from IPFS, and you use thirdweb's built-in infrastructure, it will count towards your storage gateway request. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+<Details summary="How is Email Wallet (managed recovery code) calculated?"> 
+Email wallet (with managed recovery code) usage is calculated by monthly active wallets (i.e. active as defined by at least 1 user log-in via email or social within the billing period month).
+</Details>
+
+<Details summary="How are Gasless Payments calculated?"> 
+Gasless is calculated by sponsored network fees. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+<Details summary="How are Paymaster Payments calculated?"> 
+Paymaster usage is calculated by sponsored network fees. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+<Details summary="How are Bundler Payments calculated?"> 
+Bundler usage is calculated by sponsored network fees. See [pricing](https://thirdweb.com/pricing) for more details on the limits per plan.
+</Details>
+
+
+
+
+
+
+
+

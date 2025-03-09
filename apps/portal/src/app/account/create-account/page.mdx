@@ -1,0 +1,85 @@
+import { Callout, createMetadata, Step, Steps, DocImage } from "@doc";
+import LoginScreen from "./assets/login-screen.png";
+import SetupTeam from "./assets/setup-team.png";
+import InviteTeam from "./assets/invite-team.png";
+import AllowedDomains from "./assets/allowed-domains.png";
+import SecretKey from "./assets/secret-key.png";
+
+export const metadata = createMetadata({
+	title: "thirdweb - Create Account",
+	description: "Learn how to create a thirdweb account and set up your first project.",
+	image: {
+		title: "Create Account",
+		icon: "thirdweb",
+	},
+});
+
+# Create Account
+
+Learn how to get started with thirdweb by creating an account and setting up your first project. 
+
+<Steps>
+
+<Step title="Sign-in with wallet">
+
+Start by navigating to the [thirdweb login portal](https://thirdweb.com/login).
+
+Sign-in and connect to thirdweb using any of the following wallet options:
+
+- Email, Social, Passkey or Mobile (In-App) Wallet
+- Externally Owned Account Wallet (ex. MetaMask, Coinbase Wallet, Phantom Wallet, etc.)
+- Multi-signature Wallet (ex. Safe)
+
+<DocImage src={LoginScreen} alt="Sign-in with wallet" />
+
+<Callout variant="info" title="Default Email">
+	For in-app wallet users, the default email used when signing in acts as the
+	account's associated email address. For EOAs, you will be prompted to enter an email address.
+</Callout>
+
+</Step>
+
+<Step title="Setup Team">
+
+Upon signing up, you will be prompted to create your team by entering a team name and avatar. These will be used to identify your team in the dashboard and appear on shared projects. 
+
+<DocImage src={SetupTeam} alt="Setup Team" />
+
+</Step>
+
+<Step title="Invite Team Members">
+Invite team members to collaborate on projects by entering their email addresses. This step does require you to provide billing information so you may opt to do this later. 
+
+<DocImage src={InviteTeam} alt="Invite Team Members" />
+</Step>
+
+<Step title="Create Project">
+
+Create your first thirdweb project by selecting the "Create Project" button. You will be prompted to enter a project name and allowed domains. 
+
+<Callout variant="info" title="Allowed Domains">
+Allowed domains restrict which websites can access your project's API Key and is highly recommended to set up for security purposes.
+</Callout>
+
+<DocImage src={AllowedDomains} alt="Create Project" />
+</Step>
+
+<Step title="Store API Key Credentials">
+
+After creating a project, you will be provided with an Client ID and Secret Key. Store these credentials securely as they are required to access your project's API. [Learn more about API Keys]().
+
+<DocImage src={SecretKey} alt="Secret Key" />
+
+<Callout variant="danger" title="Secret Key">
+Keep your Secret Key confidential—never share it or leave it exposed. It authenticates your project's API requests and cannot be recovered if lost.
+</Callout>
+
+</Step>
+
+<Step title="Begin Building">
+Your API Key is now ready to begin accessing thridweb services such as RPC, Account Abstraction, In-App Wallets, Universal Bridge, Storage, and more. 
+
+You can access the API documentation and other get started resources in the [thirdweb developer portal](https://portal.thirdweb.com).
+</Step>
+
+</Steps>
