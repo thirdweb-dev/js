@@ -111,7 +111,7 @@
     "@storybook/addon-essentials": "8.6.3",
     "@storybook/addon-interactions": "8.6.3",
     "@storybook/addon-links": "8.6.3",
-    "@storybook/addon-onboarding": "8.6.3",
+    "@storybook/addon-onboarding": "8.6.4",
     "@storybook/addon-viewport": "8.6.3",
     "@storybook/blocks": "8.6.3",
     "@storybook/nextjs": "8.6.3",
