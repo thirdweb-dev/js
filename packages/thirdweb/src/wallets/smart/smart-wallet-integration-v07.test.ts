@@ -305,6 +305,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       const newSmartWallet = smartWallet({
         chain,
         gasless: true,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
         overrides: {
           accountSalt: "test",
         },
