@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.91.1
+
+### Patch Changes
+
+- [#6439](https://github.com/thirdweb-dev/js/pull/6439) [`2ae778e`](https://github.com/thirdweb-dev/js/commit/2ae778ed7f49df958b6536c373e7db480148133f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds countdown for email cooldown
+
 ## 5.91.0
 
 ### Minor Changes
