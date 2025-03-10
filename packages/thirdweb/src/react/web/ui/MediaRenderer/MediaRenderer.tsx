@@ -109,7 +109,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         // 3d model
         if (mediaInfo.mimeType.startsWith("model")) {
           console.error(
-            "Encountered an unsupported media type. 3D model support was removed in v5.92.0.",
+            "Encountered an unsupported media type. 3D model support was removed in v5.92.0. To add a 3D model to your app, use @google/model-viewer and use the ModelViewer component.",
           );
         }
 
@@ -210,9 +210,9 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
         padding: 0,
         ...(isHovering
           ? {
-              color: "rgb(53, 56, 64)",
-              boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px",
-            }
+            color: "rgb(53, 56, 64)",
+            boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px",
+          }
           : {}),
       }}
       onClick={onClick}
@@ -305,14 +305,14 @@ const VideoPlayer = /* @__PURE__ */ (() =>
           try {
             videoRef.current.play();
           } catch (err) {
-            console.error("error playing video", err);
+            console.error("Error playing video", err);
           }
         } else {
           try {
             videoRef.current.pause();
             videoRef.current.currentTime = 0;
           } catch (err) {
-            console.error("error pausing video", err);
+            console.error("Error pausing video", err);
           }
         }
       }
