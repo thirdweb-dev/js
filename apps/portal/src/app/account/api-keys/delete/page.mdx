@@ -1,6 +1,7 @@
 import { DocImage, Steps, Step } from "@doc";
-import chooseKeyImage from "../assets/choose-key.png";
 import confirmDeleteImage from "../assets/confirm-delete.png";
+import ProjectOverview from "../assets/project-overview.png";
+import DeleteProject from "./assets/delete-project.png";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
@@ -13,27 +14,30 @@ export const metadata = createMetadata({
 	},
 });
 
-# Delete API Key
+# Delete Or Transfer Project
 
-Deleting an API key will invalidate it, making it no longer usable.
+Deleting a project also removes its associated API key, rendering it invalid and unusable. You may also choose to transfer projects to another team.
 
 <Steps>
 
-<Step title="Go to Dashboard">
-	Go to **[your team's projects page](https://thirdweb.com/team)** on the dashboard.
-</Step>
+<Step title="Select Project">
 
-<Step title='Choose API Key'>
-Choose the API Key you want to delete.
+Select the project you want to delete or transfer from the Overview section of your dashboard.
 
-<DocImage src={chooseKeyImage} />
+<DocImage src={ProjectOverview} alt="Project Overview" />
 
 </Step>
 
-<Step title='Delete Key'>
-To delete an API key, select `Delete key` and confirm your intention to delete the key. The key will then be deleted.
+<Step title="Project Settings">
 
-<DocImage src={confirmDeleteImage} />
+Navigate to the project's settings and locate "Transfer Project" or "Delete Project".
+
+<DocImage src={DeleteProject} alt="Delete Project" />
+
+</Step>
+
+<Step title="Confirm Transfer or Deletion">
+In the UI confirm the transfer or deletion of the project.
 </Step>
 
 </Steps>
