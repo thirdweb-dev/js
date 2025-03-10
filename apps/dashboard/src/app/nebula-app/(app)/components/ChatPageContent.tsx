@@ -100,13 +100,17 @@ export function ChatPageContent(props: {
     setHasUserUpdatedContextFilters(true);
 
     // Cache the chains when context is updated
-    if (v?.chainIds && v.chainIds.length > 0) {
-      localStorage.setItem(
-        NEBULA_LAST_USED_CHAIN_IDS_KEY,
-        JSON.stringify(v.chainIds),
-      );
-    } else {
-      localStorage.removeItem(NEBULA_LAST_USED_CHAIN_IDS_KEY);
+    try {
+      if (v?.chainIds && v.chainIds.length > 0) {
+        localStorage.setItem(
+          NEBULA_LAST_USED_CHAIN_IDS_KEY,
+          JSON.stringify(v.chainIds),
+        );
+      } else {
+        localStorage.removeItem(NEBULA_LAST_USED_CHAIN_IDS_KEY);
+      }
+    } catch {
+      // ignore local storage errors
     }
   }, []);
 
@@ -148,7 +152,7 @@ export function ChatPageContent(props: {
           return updatedContextFilters;
         }
       } catch {
-        // ignore
+        // ignore local storage errors
       }
 
       // if we don't have chains, use the active chain
