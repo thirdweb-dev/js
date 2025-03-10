@@ -210,9 +210,9 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
         padding: 0,
         ...(isHovering
           ? {
-            color: "rgb(53, 56, 64)",
-            boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px",
-          }
+              color: "rgb(53, 56, 64)",
+              boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px",
+            }
           : {}),
       }}
       onClick={onClick}
