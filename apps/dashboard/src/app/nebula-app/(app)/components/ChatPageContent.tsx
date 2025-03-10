@@ -87,19 +87,12 @@ export function ChatPageContent(props: {
     NebulaContext | undefined
   >(() => {
     const contextRes = props.session?.context;
-
-    // If we have context from an existing session, use that
-    if (contextRes) {
-      return {
-        chainIds: contextRes.chain_ids,
-        walletAddress: contextRes.wallet_address,
-      };
-    }
-
-    return {
-      chainIds: null,
-      walletAddress: null,
+    const value: NebulaContext = {
+      chainIds: contextRes?.chain_ids || null,
+      walletAddress: contextRes?.wallet_address || null,
     };
+
+    return value;
   });
 
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
