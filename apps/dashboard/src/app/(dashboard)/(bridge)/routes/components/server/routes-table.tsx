@@ -50,7 +50,7 @@ async function getRoutesToRender(params: SearchParams) {
     }
   }
   // Temporary, will update this after the /routes endpoint
-  filters.limit = 10_000;
+  filters.limit = 50_000;
 
   const routes = await getRoutes(filters);
 
@@ -107,9 +107,13 @@ export async function RoutesData(props: {
                     originChainId={route.originToken.chainId}
                     originTokenAddress={route.originToken.address}
                     originTokenIconUri={route.originToken.iconUri}
+                    originTokenSymbol={route.originToken.symbol}
+                    originTokenName={route.originToken.name}
                     destinationChainId={route.destinationToken.chainId}
                     destinationTokenAddress={route.destinationToken.address}
                     destinationTokenIconUri={route.destinationToken.iconUri}
+                    destinationTokenSymbol={route.destinationToken.symbol}
+                    destinationTokenName={route.destinationToken.name}
                   />
                 ))}
               </TableBody>
@@ -126,9 +130,13 @@ export async function RoutesData(props: {
                   originChainId={route.originToken.chainId}
                   originTokenAddress={route.originToken.address}
                   originTokenIconUri={route.originToken.iconUri}
+                  originTokenSymbol={route.originToken.symbol}
+                  originTokenName={route.originToken.name}
                   destinationChainId={route.destinationToken.chainId}
                   destinationTokenAddress={route.destinationToken.address}
                   destinationTokenIconUri={route.destinationToken.iconUri}
+                  destinationTokenSymbol={route.destinationToken.symbol}
+                  destinationTokenName={route.destinationToken.name}
                 />
               </li>
             ))}

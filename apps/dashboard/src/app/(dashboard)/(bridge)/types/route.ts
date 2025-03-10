@@ -4,11 +4,15 @@ export type Route = {
   originToken: {
     address: Address;
     chainId: number;
-    iconUri: string;
+    iconUri?: string;
+    name: string;
+    symbol: string;
   };
   destinationToken: {
     address: Address;
     chainId: number;
-    iconUri: string;
+    iconUri?: string;
+    name: string;
+    symbol: string;
   };
 };
