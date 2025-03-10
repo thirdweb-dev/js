@@ -100,7 +100,7 @@ export function ChatPageContent(props: {
     setHasUserUpdatedContextFilters(true);
 
     // Cache the chains when context is updated
-    if (v?.chainIds) {
+    if (v?.chainIds && v.chainIds.length > 0) {
       localStorage.setItem(
         NEBULA_LAST_USED_CHAIN_IDS_KEY,
         JSON.stringify(v.chainIds),
