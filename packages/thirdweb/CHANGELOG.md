@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.92.0
+
+### Minor Changes
+
+- [#6443](https://github.com/thirdweb-dev/js/pull/6443) [`f6cbdb7`](https://github.com/thirdweb-dev/js/commit/f6cbdb7e3083c095475dbd33723a1ea19a95a293) Thanks [@gregfromstl](https://github.com/gregfromstl)! - BREAKING: Removes 3D model support in MediaRenderer
+
 ## 5.91.1
 
 ### Patch Changes
