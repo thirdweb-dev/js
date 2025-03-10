@@ -13,7 +13,7 @@
     </a>
 </p>
 
-<p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps.</strong></p>
+<p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
 ## Features
 
