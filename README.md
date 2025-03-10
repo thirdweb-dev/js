@@ -67,3 +67,4 @@ For help or feedback, please [visit our support site](https://thirdweb.com/suppo
 
 If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `security@thirdweb.com`.
 
+
