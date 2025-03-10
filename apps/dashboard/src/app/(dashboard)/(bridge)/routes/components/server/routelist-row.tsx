@@ -2,59 +2,41 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { NATIVE_TOKEN_ADDRESS, getContract } from "thirdweb";
 import { defineChain, getChainMetadata } from "thirdweb/chains";
-import { symbol } from "thirdweb/extensions/common";
 
 type RouteListRowProps = {
   originChainId: number;
   originTokenAddress: string;
-  originTokenIconUri: string | null;
+  originTokenIconUri?: string | null;
+  originTokenSymbol?: string;
+  originTokenName?: string;
   destinationChainId: number;
   destinationTokenAddress: string;
-  destinationTokenIconUri: string | null;
+  destinationTokenIconUri?: string | null;
+  destinationTokenSymbol?: string;
+  destinationTokenName?: string;
 };
 
 export async function RouteListRow({
   originChainId,
   originTokenAddress,
   originTokenIconUri,
+  originTokenSymbol,
   destinationChainId,
   destinationTokenAddress,
   destinationTokenIconUri,
+  destinationTokenSymbol,
 }: RouteListRowProps) {
   const [
     originChain,
-    originTokenSymbol,
     destinationChain,
-    destinationTokenSymbol,
     resolvedOriginTokenIconUri,
     resolvedDestinationTokenIconUri,
   ] = await Promise.all([
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(originChainId)),
-    originTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
-      ? "ETH"
-      : symbol({
-          contract: getContract({
-            address: originTokenAddress,
-            // eslint-disable-next-line no-restricted-syntax
-            chain: defineChain(originChainId),
-            client: getThirdwebClient(),
-          }),
-        }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
-    destinationTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
-      ? "ETH"
-      : symbol({
-          contract: getContract({
-            address: destinationTokenAddress,
-            // eslint-disable-next-line no-restricted-syntax
-            chain: defineChain(destinationChainId),
-            client: getThirdwebClient(),
-          }),
-        }).catch(() => undefined),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: originTokenIconUri,
@@ -80,7 +62,7 @@ export async function RouteListRow({
               <img
                 src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
-                className="size-6 rounded-full bg-muted-foreground"
+                className="size-6 rounded-full border border-muted-foreground"
               />
             ) : (
               <div className="size-6 rounded-full bg-muted-foreground" />
@@ -115,7 +97,7 @@ export async function RouteListRow({
               <img
                 src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}
-                className="size-6 rounded-full bg-muted-foreground"
+                className="size-6 rounded-full border border-muted-foreground"
               />
             ) : (
               <div className="size-6 rounded-full bg-muted-foreground" />

@@ -1,6 +1,6 @@
 "use client";
 
-import type { BillingBillingPortalAction } from "@/actions/billing";
+import type { GetBillingPortalUrlAction } from "@/actions/billing";
 import { BillingPortalButton } from "@/components/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
@@ -38,7 +38,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { EllipsisIcon, ExternalLinkIcon } from "lucide-react";
+import { CircleXIcon, EllipsisIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -63,7 +63,8 @@ export function AccountSettingsPageUI(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  redirectToBillingPortal: BillingBillingPortalAction;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
+  cancelSubscriptions: () => Promise<void>;
 }) {
   return (
     <div className="flex flex-col gap-8">
@@ -88,7 +89,8 @@ export function AccountSettingsPageUI(props: {
         onAccountDeleted={props.onAccountDeleted}
         defaultTeamSlug={props.defaultTeamSlug}
         defaultTeamName={props.defaultTeamName}
-        redirectToBillingPortal={props.redirectToBillingPortal}
+        getBillingPortalUrl={props.getBillingPortalUrl}
+        cancelSubscriptions={props.cancelSubscriptions}
       />
     </div>
   );
@@ -206,7 +208,8 @@ function DeleteAccountCard(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  redirectToBillingPortal: BillingBillingPortalAction;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
+  cancelSubscriptions: () => Promise<void>;
 }) {
   const title = "Delete Account";
   const description = (
@@ -228,6 +231,10 @@ function DeleteAccountCard(props: {
         toast.error("Failed to delete account");
       }
     },
+  });
+
+  const cancelSubscriptions = useMutation({
+    mutationFn: props.cancelSubscriptions,
   });
 
   function handleDelete() {
@@ -264,25 +271,47 @@ function DeleteAccountCard(props: {
                 <Alert variant="destructive">
                   <AlertTitle>Failed to delete account</AlertTitle>
                   <AlertDescription>
-                    <span className="mb-1 block">
-                      Your default team "{props.defaultTeamName}" has active
-                      subscriptions. These subscriptions have to be cancelled
-                      first before deleting account
-                    </span>
-                    <span className="mb-4 block">
-                      Reach out to support to help you cancel them
-                    </span>
-                    <Button
-                      variant="default"
-                      asChild
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <Link href="/support/create-ticket">
-                        Contact Support
-                        <ExternalLinkIcon className="size-4" />
-                      </Link>
-                    </Button>
+                    <div className="mb-4">
+                      <span className="block">
+                        Your default team "{props.defaultTeamName}" has active
+                        subscriptions. These subscriptions have to be cancelled
+                        before deleting account
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col gap-3 lg:flex-row">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => {
+                          const promise = cancelSubscriptions.mutateAsync();
+                          toast.promise(promise, {
+                            success: "Subscriptions cancelled successfully",
+                            error: "Failed to cancel subscriptions",
+                          });
+                        }}
+                      >
+                        {cancelSubscriptions.isPending ? (
+                          <Spinner className="size-4" />
+                        ) : (
+                          <CircleXIcon className="size-4" />
+                        )}
+                        Cancel subscriptions
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        asChild
+                        size="sm"
+                        className="gap-2"
+                      >
+                        <Link href="/support/create-ticket" target="_blank">
+                          Contact Support
+                          <ExternalLinkIcon className="size-4" />
+                        </Link>
+                      </Button>
+                    </div>
                   </AlertDescription>
                 </Alert>
               </div>
@@ -299,11 +328,12 @@ function DeleteAccountCard(props: {
                       account
                     </span>
                     <BillingPortalButton
-                      size="sm"
+                      buttonProps={{
+                        size: "sm",
+                        variant: "default",
+                      }}
                       teamSlug={props.defaultTeamSlug}
-                      variant="default"
-                      redirectPath="/team"
-                      redirectToBillingPortal={props.redirectToBillingPortal}
+                      getBillingPortalUrl={props.getBillingPortalUrl}
                     >
                       Manage Billing
                     </BillingPortalButton>

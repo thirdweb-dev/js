@@ -20,6 +20,7 @@ export async function engineInstancePageHandler(params: {
   }
 
   const instance = await getEngineInstance({
+    teamIdOrSlug: params.teamSlug,
     authToken,
     engineId: params.engineId,
     accountId: account.id,

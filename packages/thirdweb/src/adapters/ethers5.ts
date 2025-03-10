@@ -624,6 +624,9 @@ function alignTxToEthers(
     }
   }
 
+  // biome-ignore lint/performance/noDelete: ethers5 doesn't support authorizationList
+  delete rest.authorizationList;
+
   return {
     ...rest,
     gasLimit: gas,

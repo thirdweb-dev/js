@@ -10,19 +10,19 @@ import GetStartedSend from "../assets/get-started-send.png";
 import GetStartedEmbed from "../assets/get-started-embed.png";
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Pay - Get Started",
+		title: "thirdweb Universal Bridge - Get Started",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Pay - Buy With Fiat - thirdweb",
+	title: "Universal Bridge Implementation Guide — thirdweb docs",
 	description:
-		"Get Started with Pay -  Onchain Purchases Directly From Credit or Debit Card",
+		"Learn how to implement all-in-one web3 payment solution, Universal bridge: the technical step-by-step process",
 });
 
 # Get Started
 
 Learn how to add onramps and crypto purchases to your application. To see which integration is right for you, refer to our [integrations overview](/connect/pay/overview#integration-options).
 
-The following guide uses our React SDK. You can also learn how to integrate Pay with our [Unity SDK](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
+The following guide uses our React SDK. You can also learn how to integrate Universal Bridge with our [Unity SDK](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
 
 ---
 
@@ -66,7 +66,7 @@ Our `ConnectButton` has a number of [customization options](/connect/pay/customi
 
 ---
 
-## Option 2: Embed Pay
+## Option 2: Embed
 
 The `PayEmbed` allows users to onramp and purchase crypto directly from your application interface.
 
@@ -84,7 +84,7 @@ export default function App() {
 }
 ```
 
-The embedded Pay component will be displayed like so in your application interface:
+The embedded component will be displayed like so in your application interface:
 
 <DocImage src={GetStartedEmbed} />
 
@@ -96,7 +96,7 @@ Our `PayEmbed` has a number of [customization options](/connect/pay/customizatio
 
 ## Option 3: Send a Transaction with Pay
 
-Pay is enabled by default for any contract call sent with `sendTransaction`. It will automatically be invoked when a user does not have enough funds to complete the transaction.
+Universal Bridge is enabled by default for any contract call sent with `sendTransaction`. It will automatically be invoked when a user does not have enough funds to complete the transaction.
 
 <Callout variant="info">
 	ℹ️ `sendTransaction` is available in [Connect SDK v5](/typescript/v5) or
@@ -123,10 +123,10 @@ const onClick = () => {
 };
 ```
 
-When a user clicks this button, Pay will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
+When a user clicks this button, Universal Bridge will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
 
 <DocImage src={GetStartedSend} />
 
 Once a user onramps or converts their funds to the required token, the user will be prompted once more to confirm the transaction. The transaction will then execute as expected.
 
-For deeper customization of the Pay transaction modal, you can refer to our [sendTransaction customization guide](/connect/pay/customization/send-transaction).
+For deeper customization of the Universal Bridge transaction modal, you can refer to our [sendTransaction customization guide](/connect/pay/customization/send-transaction).

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ChainListPage(props: {
+export default async function RoutesPage(props: {
   searchParams: Promise<SearchParams>;
 }) {
   const authToken = await getAuthToken();

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect, Suspense, lazy } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   CarbonDocumentAudio,
   CarbonDocumentUnknown,
@@ -23,7 +23,6 @@ import { useResolvedMediaType } from "./useResolvedMediaType.js";
  * - Images
  * - Videos
  * - Audio files
- * - 3D Models
  * - SVGs (for [on-chain NFTs](https://blog.thirdweb.com/guides/how-to-create-on-chain-nfts-with-thirdweb/))
  * - `iframe` and `HTML`
  * - If none of these are appropriate, the fallback is a link to the asset
@@ -31,6 +30,8 @@ import { useResolvedMediaType } from "./useResolvedMediaType.js";
  * The default size of rendered media is 300px x 300px, but this can be changed using the `width` and `height` props.
  *
  * You can use thirdweb CLI to upload any file to IPFS and get the IPFS URI
+ *
+ * Note: This component no longer supports 3D models as of v5.92.0!
  *
  * `npx thirdweb upload <path/to/file>`
  * @example
@@ -107,28 +108,8 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
 
         // 3d model
         if (mediaInfo.mimeType.startsWith("model")) {
-          return (
-            <Suspense
-              fallback={
-                poster ? (
-                  <img
-                    style={mergedStyle}
-                    src={poster}
-                    alt={alt}
-                    ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
-                    className={className}
-                  />
-                ) : null
-              }
-            >
-              <ModelViewer
-                style={mergedStyle}
-                src={mediaInfo.url || ""}
-                poster={poster}
-                alt={alt}
-                className={className}
-              />
-            </Suspense>
+          console.error(
+            "Encountered an unsupported media type. 3D model support was removed in v5.92.0. To add a 3D model to your app, use @google/model-viewer and use the ModelViewer component.",
           );
         }
 
@@ -196,8 +177,6 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
       );
     },
   ))();
-
-const ModelViewer = /* @__PURE__ */ lazy(() => import("./ModelViewer.js"));
 
 interface PlayButtonProps {
   onClick: () => void;
@@ -326,14 +305,14 @@ const VideoPlayer = /* @__PURE__ */ (() =>
           try {
             videoRef.current.play();
           } catch (err) {
-            console.error("error playing video", err);
+            console.error("Error playing video", err);
           }
         } else {
           try {
             videoRef.current.pause();
             videoRef.current.currentTime = 0;
           } catch (err) {
-            console.error("error pausing video", err);
+            console.error("Error pausing video", err);
           }
         }
       }

@@ -6,11 +6,15 @@ import {
 
 interface EngineSystemProps {
   instance: EngineInstance;
+  teamIdOrSlug: string;
 }
 
-export const EngineSystem: React.FC<EngineSystemProps> = ({ instance }) => {
+export const EngineSystem: React.FC<EngineSystemProps> = ({
+  instance,
+  teamIdOrSlug,
+}) => {
   const healthQuery = useEngineSystemHealth(instance.url);
-  const metricsQuery = useEngineSystemMetrics(instance.id);
+  const metricsQuery = useEngineSystemMetrics(instance.id, teamIdOrSlug);
   if (!healthQuery.data) {
     return null;
   }
@@ -21,9 +25,9 @@ export const EngineSystem: React.FC<EngineSystemProps> = ({ instance }) => {
       <br />
       Enabled: {healthQuery.data.features?.join(", ")}
       <br />
-      CPU: {metricsQuery.data?.data?.cpu?.toFixed(2) ?? "..."}%
+      CPU: {metricsQuery.data?.result?.cpu?.toFixed(2) ?? "..."}%
       <br />
-      Memory: {metricsQuery.data?.data?.memory?.toFixed(0) ?? "..."}MB
+      Memory: {metricsQuery.data?.result?.memory?.toFixed(0) ?? "..."}MB
     </p>
   );
 };

@@ -192,6 +192,43 @@ const MODULAR_CONTRACTS = {
   ],
 } satisfies ExploreCategory;
 
+const SUPERCHAIN = {
+  id: "modular-superchain-contracts",
+  name: "Modular Superchain Contracts",
+  displayName: "Modular Superchain Contracts",
+  description: "Modular contracts with OP Superchain support",
+  contracts: [
+    // erc20 token + superchain
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "deployer.thirdweb.eth/MintableERC20",
+        "deployer.thirdweb.eth/TransferableERC20",
+        "deployer.thirdweb.eth/SuperChainInterop",
+      ],
+      {
+        title: "Modular Superchain Token",
+        description: "ERC20 Tokens that only owners can mint.",
+      },
+    ],
+    // erc20 drop + superchain
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "deployer.thirdweb.eth/ClaimableERC20",
+        "deployer.thirdweb.eth/TransferableERC20",
+        "deployer.thirdweb.eth/SuperChainInterop",
+      ],
+      {
+        title: "Modular Superchain Token Drop",
+        description: "ERC20 Tokens that others can mint.",
+      },
+    ],
+  ],
+  showInExplore: true,
+  isBeta: true,
+} satisfies ExploreCategory;
+
 const AIRDROP = {
   id: "airdrop",
   name: "Airdrop",
@@ -281,6 +318,7 @@ const SMART_WALLET = {
 const CATEGORIES: Record<string, ExploreCategory> = {
   [POPULAR.id]: POPULAR,
   [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
+  [SUPERCHAIN.id]: SUPERCHAIN,
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,

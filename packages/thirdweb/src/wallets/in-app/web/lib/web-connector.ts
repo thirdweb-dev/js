@@ -74,6 +74,7 @@ export class InAppWebConnector implements InAppConnector {
     onAuthSuccess,
     ecosystem,
     passkeyDomain,
+    storage,
   }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
@@ -85,7 +86,7 @@ export class InAppWebConnector implements InAppConnector {
     this.ecosystem = ecosystem;
     this.passkeyDomain = passkeyDomain;
     this.storage = new ClientScopedStorage({
-      storage: webLocalStorage,
+      storage: storage ?? webLocalStorage,
       clientId: client.clientId,
       ecosystem: ecosystem,
     });

@@ -28,7 +28,7 @@ export default async function Page(props: {
   }
 
   const [ecosystem, team] = await Promise.all([
-    fetchEcosystem(params.slug, authToken),
+    fetchEcosystem(params.slug, authToken, params.team_slug),
     getTeamBySlug(params.team_slug),
   ]);
 

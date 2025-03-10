@@ -47,7 +47,7 @@ export function Img(props: imgElementProps) {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative shrink-0">
       <img
         {...restProps}
         // avoid setting empty src string to prevent request to the entire page

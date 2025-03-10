@@ -1,5 +1,51 @@
 # thirdweb
 
+## 5.92.1
+
+### Patch Changes
+
+- [#6449](https://github.com/thirdweb-dev/js/pull/6449) [`f655657`](https://github.com/thirdweb-dev/js/commit/f655657fce01606e47f113c3a81f829c94cfadda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix EIP1193 provider adapter filtering out value from transactions
+
+- [#6447](https://github.com/thirdweb-dev/js/pull/6447) [`109f250`](https://github.com/thirdweb-dev/js/commit/109f2500680205eec3df6bac05b61eb70f3b4e58) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ethers5 adapter not handling authorizationList tx prop
+
+## 5.92.0
+
+### Minor Changes
+
+- [#6443](https://github.com/thirdweb-dev/js/pull/6443) [`f6cbdb7`](https://github.com/thirdweb-dev/js/commit/f6cbdb7e3083c095475dbd33723a1ea19a95a293) Thanks [@gregfromstl](https://github.com/gregfromstl)! - BREAKING: Removes 3D model support in MediaRenderer
+
+## 5.91.1
+
+### Patch Changes
+
+- [#6439](https://github.com/thirdweb-dev/js/pull/6439) [`2ae778e`](https://github.com/thirdweb-dev/js/commit/2ae778ed7f49df958b6536c373e7db480148133f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds countdown for email cooldown
+
+## 5.91.0
+
+### Minor Changes
+
+- [#6437](https://github.com/thirdweb-dev/js/pull/6437) [`cbc4e80`](https://github.com/thirdweb-dev/js/commit/cbc4e8033061af98dc88a2de6caa15a30b73d303) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Several onramp embed improvements
+
+## 5.90.4
+
+### Patch Changes
+
+- [#6432](https://github.com/thirdweb-dev/js/pull/6432) [`617fe68`](https://github.com/thirdweb-dev/js/commit/617fe68c32888462d09ff335cd7fb2d671e667bf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding storage for inApp and ecosystem wallets
+
+## 5.90.3
+
+### Patch Changes
+
+- [#6424](https://github.com/thirdweb-dev/js/pull/6424) [`38ae2d3`](https://github.com/thirdweb-dev/js/commit/38ae2d3c6b7d5052974e8a61333997699230ad45) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getUserOpHash utility function
+
+## 5.90.2
+
+### Patch Changes
+
+- [#6415](https://github.com/thirdweb-dev/js/pull/6415) [`fb446bd`](https://github.com/thirdweb-dev/js/commit/fb446bd0993a0f431fbc67e6142ec20866c4bc65) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - emit onPurchaseSuccess for wallet to wallet transfer flow before execution
+
+- [#6412](https://github.com/thirdweb-dev/js/pull/6412) [`9f1a77f`](https://github.com/thirdweb-dev/js/commit/9f1a77f4c49350018dad0037c4ab675818057264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow resending OTP on failures
+
 ## 5.90.1
 
 ### Patch Changes

@@ -62,8 +62,11 @@ function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
 function EcosystemSelect(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
+  teamIdOrSlug: string;
 }) {
-  const { data: ecosystems, isPending } = useEcosystemList();
+  const { data: ecosystems, isPending } = useEcosystemList({
+    teamIdOrSlug: props.teamIdOrSlug,
+  });
 
   return isPending ? (
     <Skeleton className="h-10 w-full md:w-[160px]" />
@@ -109,8 +112,10 @@ function EcosystemSelect(props: {
 export function EcosystemHeader(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
+  teamIdOrSlug: string;
 }) {
   const { data: fetchedEcosystem } = useEcosystem({
+    teamIdOrSlug: props.teamIdOrSlug,
     slug: props.ecosystem.slug,
     refetchInterval:
       props.ecosystem.status === "requested"
@@ -192,6 +197,7 @@ export function EcosystemHeader(props: {
               <EcosystemSelect
                 ecosystem={ecosystem}
                 ecosystemLayoutPath={props.ecosystemLayoutPath}
+                teamIdOrSlug={props.teamIdOrSlug}
               />
             </div>
           </div>

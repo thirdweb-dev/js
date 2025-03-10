@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CircleAlertIcon } from "lucide-react";
 import { useActiveWalletChain } from "thirdweb/react";
@@ -29,21 +29,20 @@ export function AccountAbstractionLayout(props: {
 
   return (
     <div>
-      <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
+      <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:mb-2 lg:text-3xl">
         Account Abstraction
       </h1>
       <p className="text-muted-foreground text-sm">
         Easily integrate Account abstraction (ERC-4337) compliant smart accounts
         into your apps.{" "}
-        <TrackedLinkTW
+        <TrackedUnderlineLink
           target="_blank"
           label="docs-wallets"
           category={TRACKING_CATEGORY}
           href="https://portal.thirdweb.com/wallets/smart-wallet"
-          className="text-link-foreground hover:text-foreground"
         >
           View Documentation
-        </TrackedLinkTW>
+        </TrackedUnderlineLink>
       </p>
       <div className="h-6" />
       <div className="flex flex-col gap-6">

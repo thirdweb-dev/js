@@ -1,59 +1,42 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { NATIVE_TOKEN_ADDRESS, defineChain, getContract } from "thirdweb";
+import { defineChain } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import { name } from "thirdweb/extensions/common";
 
 type RouteListCardProps = {
   originChainId: number;
   originTokenAddress: string;
-  originTokenIconUri: string | null;
+  originTokenIconUri?: string | null;
+  originTokenSymbol: string;
+  originTokenName: string;
   destinationChainId: number;
   destinationTokenAddress: string;
-  destinationTokenIconUri: string | null;
+  destinationTokenIconUri?: string | null;
+  destinationTokenSymbol: string;
+  destinationTokenName: string;
 };
 
 export async function RouteListCard({
   originChainId,
   originTokenAddress,
   originTokenIconUri,
+  originTokenName,
   destinationChainId,
   destinationTokenAddress,
   destinationTokenIconUri,
+  destinationTokenName,
 }: RouteListCardProps) {
   const [
     originChain,
-    originTokenName,
     destinationChain,
-    destinationTokenName,
     resolvedOriginTokenIconUri,
     resolvedDestinationTokenIconUri,
   ] = await Promise.all([
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(originChainId)),
-    originTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
-      ? "ETH"
-      : name({
-          contract: getContract({
-            address: originTokenAddress,
-            // eslint-disable-next-line no-restricted-syntax
-            chain: defineChain(originChainId),
-            client: getThirdwebClient(),
-          }),
-        }).catch(() => undefined),
     // eslint-disable-next-line no-restricted-syntax
     getChainMetadata(defineChain(destinationChainId)),
-    destinationTokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS
-      ? "ETH"
-      : name({
-          contract: getContract({
-            address: destinationTokenAddress,
-            // eslint-disable-next-line no-restricted-syntax
-            chain: defineChain(destinationChainId),
-            client: getThirdwebClient(),
-          }),
-        }).catch(() => undefined),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: originTokenIconUri,
@@ -78,17 +61,17 @@ export async function RouteListCard({
               <img
                 src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
-                className="size-8 rounded-full bg-white"
+                className="size-8 rounded-full border border-muted-foreground"
               />
             ) : (
-              <div className="size-8 rounded-full bg-white/10" />
+              <div className="size-8 rounded-full bg-muted-foreground" />
             )}
             {resolvedDestinationTokenIconUri ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}
-                className="-translate-x-4 size-8 rounded-full bg-white ring-2 ring-card"
+                className="-translate-x-4 size-8 rounded-full border border-muted-foreground ring-2 ring-card"
               />
             ) : (
               <div className="-translate-x-4 size-8 rounded-full bg-muted-foreground ring-2 ring-card" />

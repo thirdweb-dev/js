@@ -109,7 +109,7 @@ function Variants() {
       <AccountSettingsPageUI
         defaultTeamSlug="foo"
         defaultTeamName="Foo"
-        redirectToBillingPortal={async () => {
+        getBillingPortalUrl={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           return { status: 200 };
         }}
@@ -142,6 +142,9 @@ function Variants() {
         deleteAccount={deleteAccountStub}
         onAccountDeleted={() => {
           console.log("Account deleted");
+        }}
+        cancelSubscriptions={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />
       <Toaster richColors />

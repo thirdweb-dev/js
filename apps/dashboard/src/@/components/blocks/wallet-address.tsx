@@ -8,7 +8,7 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useClipboard } from "hooks/useClipboard";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, XIcon } from "lucide-react";
 import { useMemo } from "react";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
@@ -16,6 +16,7 @@ import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { ToolTipLabel } from "../ui/tooltip";
 import { Img } from "./Img";
 
 export function WalletAddress(props: {
@@ -44,7 +45,16 @@ export function WalletAddress(props: {
   const { onCopy, hasCopied } = useClipboard(address, 2000);
 
   if (!isAddress(address)) {
-    return <span>Invalid Address ({address})</span>;
+    return (
+      <ToolTipLabel label={address} hoverable>
+        <span className="flex items-center gap-2 underline-offset-4 hover:underline">
+          <div className="flex size-6 items-center justify-center rounded-full border bg-background">
+            <XIcon className="size-4 text-muted-foreground" />
+          </div>
+          Invalid Address
+        </span>
+      </ToolTipLabel>
+    );
   }
 
   // special case for zero address

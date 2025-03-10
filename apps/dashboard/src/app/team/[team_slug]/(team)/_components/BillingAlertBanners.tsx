@@ -1,6 +1,6 @@
 "use client";
 
-import { redirectToBillingPortal } from "@/actions/billing";
+import { getBillingPortalUrl } from "@/actions/billing";
 import {
   PastDueBannerUI,
   ServiceCutOffBannerUI,
@@ -9,7 +9,7 @@ import {
 export function PastDueBanner(props: { teamSlug: string }) {
   return (
     <PastDueBannerUI
-      redirectToBillingPortal={redirectToBillingPortal}
+      getBillingPortalUrl={getBillingPortalUrl}
       teamSlug={props.teamSlug}
     />
   );
@@ -18,7 +18,7 @@ export function PastDueBanner(props: { teamSlug: string }) {
 export function ServiceCutOffBanner(props: { teamSlug: string }) {
   return (
     <ServiceCutOffBannerUI
-      redirectToBillingPortal={redirectToBillingPortal}
+      getBillingPortalUrl={getBillingPortalUrl}
       teamSlug={props.teamSlug}
     />
   );

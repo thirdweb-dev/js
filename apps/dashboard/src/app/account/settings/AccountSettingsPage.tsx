@@ -1,6 +1,6 @@
 "use client";
 
-import { redirectToBillingPortal } from "@/actions/billing";
+import { getBillingPortalUrl } from "@/actions/billing";
 import { confirmEmailWithOTP } from "@/actions/confirmEmail";
 import { apiServerProxy } from "@/actions/proxies";
 import { updateAccount } from "@/actions/updateAccount";
@@ -36,6 +36,16 @@ export function AccountSettingsPage(props: {
           client={props.client}
           defaultTeamSlug={props.defaultTeamSlug}
           defaultTeamName={props.defaultTeamName}
+          cancelSubscriptions={async () => {
+            const res = await apiServerProxy({
+              method: "DELETE",
+              pathname: `/v1/teams/${props.defaultTeamSlug}/subscriptions`,
+            });
+
+            if (!res.ok) {
+              throw new Error(res.error);
+            }
+          }}
           onAccountDeleted={async () => {
             await doLogout();
             if (activeWallet) {
@@ -58,7 +68,7 @@ export function AccountSettingsPage(props: {
               return { status: 500 };
             }
           }}
-          redirectToBillingPortal={redirectToBillingPortal}
+          getBillingPortalUrl={getBillingPortalUrl}
           updateAccountAvatar={async (file) => {
             let uri: string | undefined = undefined;
 

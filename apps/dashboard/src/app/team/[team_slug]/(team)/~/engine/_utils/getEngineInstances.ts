@@ -3,12 +3,16 @@ import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 
 export async function getEngineInstances(params: {
   authToken: string;
+  teamIdOrSlug: string;
 }) {
-  const res = await fetch(`${API_SERVER_URL}/v1/engine`, {
-    headers: {
-      Authorization: `Bearer ${params.authToken}`,
+  const res = await fetch(
+    `${API_SERVER_URL}/v1/teams/${params.teamIdOrSlug}/engine`,
+    {
+      headers: {
+        Authorization: `Bearer ${params.authToken}`,
+      },
     },
-  });
+  );
 
   if (!res.ok) {
     const errorMessage = await res.text();
@@ -20,12 +24,10 @@ export async function getEngineInstances(params: {
   }
 
   const json = (await res.json()) as {
-    data: {
-      instances: EngineInstance[];
-    };
+    result: EngineInstance[];
   };
 
   return {
-    data: json.data.instances,
+    data: json.result,
   };
 }

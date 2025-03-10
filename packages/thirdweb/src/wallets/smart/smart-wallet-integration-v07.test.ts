@@ -8,8 +8,8 @@ import { parseEventLogs } from "../../event/actions/parse-logs.js";
 import { TEST_WALLET_A } from "~test/addresses.js";
 import { verifyEip1271Signature } from "../../auth/verify-hash.js";
 import { verifyTypedData } from "../../auth/verify-typed-data.js";
+import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
-import { sepolia } from "../../chains/chain-definitions/sepolia.js";
 import {
   addAdmin,
   adminUpdatedEvent,
@@ -41,17 +41,18 @@ let smartWalletAddress: string;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = sepolia;
+const chain = arbitrumSepolia;
 const client = TEST_CLIENT;
 const contract = getContract({
   client,
   chain,
-  address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+  address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
 });
 
 describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet 0.7 core tests",
   {
+    retry: 0,
     timeout: 240_000,
   },
   () => {
@@ -131,6 +132,8 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       });
       await new Promise((resolve) => setTimeout(resolve, 3000)); // pause for a second to prevent race condition
 
+      expect(await isContractDeployed(accountContract)).toEqual(true);
+
       const signature = await smartAccount.signMessage({
         message: "hello world",
       });
@@ -203,7 +206,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         [TransactionError: Error - Not authorized
 
         contract: ${contract.address}
-        chainId: 11155111]
+        chainId: 421614]
       `);
     });
 
@@ -302,6 +305,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       const newSmartWallet = smartWallet({
         chain,
         gasless: true,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
         overrides: {
           accountSalt: "test",
         },

@@ -1,7 +1,7 @@
 import { getTeamBySlug } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { redirect } from "next/navigation";
-import { TWAutoConnect } from "../../components/autoconnect";
+import { isTeamOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 import {
   PastDueBanner,
@@ -19,6 +19,10 @@ export default async function RootTeamLayout(props: {
     redirect("/team");
   }
 
+  if (!isTeamOnboardingComplete(team)) {
+    redirect(`/get-started/team/${team.slug}`);
+  }
+
   return (
     <div className="flex min-h-dvh flex-col">
       <div className="flex grow flex-col">
@@ -32,7 +36,6 @@ export default async function RootTeamLayout(props: {
 
         {props.children}
       </div>
-      <TWAutoConnect />
 
       <AppFooter />
       <SaveLastVisitedTeamPage />

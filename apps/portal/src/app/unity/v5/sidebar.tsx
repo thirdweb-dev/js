@@ -1,5 +1,5 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { CodeIcon, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 
 const sdkSlug = "/unity/v5";
 const walletProvidersSlug = `${sdkSlug}/wallets`;
@@ -24,6 +24,9 @@ export const sidebar: SideBar = {
       icon: <CodeIcon />,
     },
     {
+      separator: true,
+    },
+    {
       name: "Core",
       isCollapsible: false,
       links: [
@@ -38,7 +41,10 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Wallets",
+      separator: true,
+    },
+    {
+      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
@@ -68,7 +74,10 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Blockchain API",
+      separator: true,
+    },
+    {
+      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
         {
@@ -82,25 +91,30 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Pay",
-      isCollapsible: false,
-      links: [
-        {
-          name: ".NET SDK QuickStart",
-          href: "/dotnet/pay/quickstart",
-        },
-      ],
+      separator: true,
     },
     {
-      name: "Nebula AI",
+      name: "Advanced Functionality",
       isCollapsible: false,
       links: [
         {
-          name: ".NET SDK QuickStart",
+          name: "Insight Indexer",
+          href: "/dotnet/insight/quickstart",
+          icon: <ExternalLinkIcon />,
+        },
+        {
+          name: "Nebula AI",
           href: "/dotnet/nebula/quickstart",
+          icon: <ExternalLinkIcon />,
+        },
+        {
+          name: "Payments",
+          href: "/dotnet/pay/quickstart",
+          icon: <ExternalLinkIcon />,
         },
       ],
     },
+
     { separator: true },
     {
       name: "Migrate from v4",

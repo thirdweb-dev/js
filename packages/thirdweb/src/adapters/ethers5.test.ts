@@ -7,6 +7,8 @@ import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { decimals } from "../extensions/erc20/__generated__/IERC20/read/decimals.js";
+import { sendTransaction } from "../transaction/actions/send-transaction.js";
+import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { randomBytesBuffer } from "../utils/random.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import {
@@ -207,6 +209,25 @@ describe("fromEthersSigner", () => {
     const signedTransaction = await account.signTransaction?.(transaction);
 
     expect(signedTransaction).toBe(await wallet.signTransaction(transaction));
+  });
+
+  it("should send a transaction", async () => {
+    const wallet = new ethers5.Wallet(
+      ANVIL_PKEY_A,
+      ethers5.getDefaultProvider(ANVIL_CHAIN.rpc),
+    );
+    const account = await fromEthersSigner(wallet);
+
+    const transaction = prepareTransaction({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      to: TEST_ACCOUNT_B.address,
+      value: 1n,
+    });
+
+    const txResponse = await sendTransaction({ transaction, account });
+
+    expect(txResponse.transactionHash.length).toBe(66);
   });
 
   it("should sign typed data", async () => {

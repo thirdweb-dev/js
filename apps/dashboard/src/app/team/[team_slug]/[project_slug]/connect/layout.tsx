@@ -20,8 +20,8 @@ export default async function Layout(props: {
       href: `/team/${team_slug}/${project_slug}/connect/account-abstraction`,
     },
     {
-      label: "Pay",
-      href: `/team/${team_slug}/${project_slug}/connect/pay`,
+      label: "Universal Bridge",
+      href: `/team/${team_slug}/${project_slug}/connect/universal-bridge`,
     },
     {
       label: "Playground",

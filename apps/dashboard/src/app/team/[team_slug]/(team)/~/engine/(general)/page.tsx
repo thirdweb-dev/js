@@ -29,7 +29,10 @@ export default async function Page(props: {
     loginRedirect(`/team/${params.team_slug}/~/engine`);
   }
 
-  const res = await getEngineInstances({ authToken });
+  const res = await getEngineInstances({
+    authToken,
+    teamIdOrSlug: params.team_slug,
+  });
 
   return (
     <EngineInstancesList

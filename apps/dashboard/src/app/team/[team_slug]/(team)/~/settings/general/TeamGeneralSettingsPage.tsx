@@ -20,10 +20,14 @@ export function TeamGeneralSettingsPage(props: {
       team={props.team}
       client={props.client}
       updateTeamField={async (teamValue) => {
-        await updateTeam({
+        const res = await updateTeam({
           teamId: props.team.id,
           value: teamValue,
         });
+
+        if (!res.ok) {
+          throw new Error(res.error);
+        }
 
         // Current page's slug is updated
         if (teamValue.slug) {
@@ -55,12 +59,16 @@ export function TeamGeneralSettingsPage(props: {
           });
         }
 
-        await updateTeam({
+        const res = await updateTeam({
           teamId: props.team.id,
           value: {
             image: uri,
           },
         });
+
+        if (!res.ok) {
+          throw new Error(res.error);
+        }
 
         router.refresh();
       }}

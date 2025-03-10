@@ -74,6 +74,7 @@ type RemovedEngineFromDashboard = (
 ) => Promise<void>;
 
 export function EngineInstancesTable(props: {
+  teamIdOrSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
 }) {
@@ -81,6 +82,7 @@ export function EngineInstancesTable(props: {
 
   return (
     <EngineInstancesTableUI
+      teamIdOrSlug={props.teamIdOrSlug}
       instances={props.instances}
       engineLinkPrefix={props.engineLinkPrefix}
       deleteCloudHostedEngine={async (params) => {
@@ -100,6 +102,7 @@ export function EngineInstancesTable(props: {
 }
 
 export function EngineInstancesTableUI(props: {
+  teamIdOrSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
   deleteCloudHostedEngine: DeletedCloudHostedEngine;
@@ -124,6 +127,7 @@ export function EngineInstancesTableUI(props: {
             {props.instances.map((instance) => (
               <EngineInstanceRow
                 key={instance.id}
+                teamIdOrSlug={props.teamIdOrSlug}
                 instance={instance}
                 engineLinkPrefix={props.engineLinkPrefix}
                 deleteCloudHostedEngine={props.deleteCloudHostedEngine}
@@ -145,6 +149,7 @@ export function EngineInstancesTableUI(props: {
 }
 
 function EngineInstanceRow(props: {
+  teamIdOrSlug: string;
   instance: EngineInstance;
   engineLinkPrefix: string;
   deleteCloudHostedEngine: DeletedCloudHostedEngine;
@@ -187,6 +192,7 @@ function EngineInstanceRow(props: {
       </TableRow>
 
       <EditModal
+        teamIdOrSlug={props.teamIdOrSlug}
         instance={instance}
         open={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
@@ -194,6 +200,7 @@ function EngineInstanceRow(props: {
       />
 
       <RemoveModal
+        teamIdOrSlug={props.teamIdOrSlug}
         instance={instance}
         onOpenChange={setIsRemoveModalOpen}
         open={isRemoveModalOpen}
@@ -349,6 +356,7 @@ function EngineActionsDropdown(props: {
 
 function EditModal(props: {
   open: boolean;
+  teamIdOrSlug: string;
   onOpenChange: (open: boolean) => void;
   instance: EngineInstance;
   editEngineInstance: EditedEngineInstance;
@@ -357,6 +365,7 @@ function EditModal(props: {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent className="overflow-hidden p-0">
         <EditModalContent
+          teamIdOrSlug={props.teamIdOrSlug}
           instance={props.instance}
           editEngineInstance={props.editEngineInstance}
           closeModal={() => props.onOpenChange(false)}
@@ -372,6 +381,7 @@ const editEngineFormSchema = z.object({
 });
 
 function EditModalContent(props: {
+  teamIdOrSlug: string;
   instance: EngineInstance;
   editEngineInstance: EditedEngineInstance;
   closeModal: () => void;
@@ -396,6 +406,7 @@ function EditModalContent(props: {
         onSubmit={form.handleSubmit((data) =>
           editInstance.mutate(
             {
+              teamIdOrSlug: props.teamIdOrSlug,
               instanceId: props.instance.id,
               name: data.name,
               url: data.url,
@@ -475,6 +486,7 @@ function EditModalContent(props: {
 }
 
 function RemoveModal(props: {
+  teamIdOrSlug: string;
   instance: EngineInstance;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -491,6 +503,7 @@ function RemoveModal(props: {
         (instance.status === "active" && !instance.deploymentId) ? (
           <RemoveEngineFromDashboardModalContent
             instance={instance}
+            teamIdOrSlug={props.teamIdOrSlug}
             close={() => onOpenChange(false)}
             removeEngineFromDashboard={props.removeEngineFromDashboard}
           />
@@ -507,6 +520,7 @@ function RemoveModal(props: {
 }
 
 function RemoveEngineFromDashboardModalContent(props: {
+  teamIdOrSlug: string;
   instance: EngineInstance;
   close: () => void;
   removeEngineFromDashboard: RemovedEngineFromDashboard;
@@ -552,6 +566,7 @@ function RemoveEngineFromDashboardModalContent(props: {
             removeFromDashboard.mutate(
               {
                 instanceId: instance.id,
+                teamIdOrSlug: props.teamIdOrSlug,
               },
               {
                 onSuccess: () => {

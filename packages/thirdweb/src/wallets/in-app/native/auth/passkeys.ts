@@ -3,6 +3,7 @@ import { concat } from "viem";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { toBytes } from "../../../../utils/encoding/to-bytes.js";
 import { keccak256 } from "../../../../utils/hashing/keccak256.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import {
   base64ToString,
@@ -121,13 +122,14 @@ export class PasskeyNativeClient implements PasskeyClient {
 export async function hasStoredPasskey(
   client: ThirdwebClient,
   ecosystemId?: EcosystemWalletId,
+  storage?: AsyncStorage,
 ) {
-  const storage = new ClientScopedStorage({
-    storage: nativeLocalStorage,
+  const clientStorage = new ClientScopedStorage({
+    storage: storage ?? nativeLocalStorage,
     clientId: client.clientId,
     ecosystem: ecosystemId ? { id: ecosystemId } : undefined,
   });
-  const credId = await storage.getPasskeyCredentialId();
+  const credId = await clientStorage.getPasskeyCredentialId();
   return !!credId;
 }
 

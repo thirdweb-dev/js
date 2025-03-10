@@ -1,5 +1,23 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.14
+
+### Patch Changes
+
+- [#6354](https://github.com/thirdweb-dev/js/pull/6354) [`c653d70`](https://github.com/thirdweb-dev/js/commit/c653d7033d2ac561d6e967ccb2893a0e5e4798be) Thanks [@MananTank](https://github.com/MananTank)! - Update `TeamResponse` type
+
+## 0.8.13
+
+### Patch Changes
+
+- [#6416](https://github.com/thirdweb-dev/js/pull/6416) [`44bb003`](https://github.com/thirdweb-dev/js/commit/44bb0034a69334f05cfa14132d56e354536e77ff) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] Add "pay" as a usage source
+
+## 0.8.12
+
+### Patch Changes
+
+- [#6409](https://github.com/thirdweb-dev/js/pull/6409) [`67354dc`](https://github.com/thirdweb-dev/js/commit/67354dc848bfb00d2296d5e52990321e9d28abb0) Thanks [@arcoraven](https://github.com/arcoraven)! - [service-utils] remove unneeded cloudflare worker types
+
 ## 0.8.11
 
 ### Patch Changes

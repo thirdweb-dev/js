@@ -28,12 +28,15 @@ const formSchema = z.object({
 
 type ImportEngineParams = z.infer<typeof formSchema>;
 
-async function importEngine(data: ImportEngineParams) {
+async function importEngine({
+  teamIdOrSlug,
+  ...data
+}: ImportEngineParams & { teamIdOrSlug: string }) {
   // Instance URLs should end with a /.
   const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
 
   const res = await apiServerProxy({
-    pathname: "/v1/engine",
+    pathname: `/v1/teams/${teamIdOrSlug}/engine`,
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -59,7 +62,7 @@ export function EngineImportCard(props: {
     <EngineImportCardUI
       prefillImportUrl={props.prefillImportUrl}
       importEngine={async (params) => {
-        await importEngine(params);
+        await importEngine({ ...params, teamIdOrSlug: props.teamSlug });
         router.push(`/team/${props.teamSlug}/~/engine`);
       }}
     />

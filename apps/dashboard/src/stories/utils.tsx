@@ -34,3 +34,13 @@ export function mobileViewport(
     defaultViewport: key,
   };
 }
+
+export function storybookLog(
+  ...mesages: (string | object | number | boolean)[]
+) {
+  console.debug(
+    "%cStorybook",
+    "color: white; background-color: black; padding: 2px 4px; border-radius: 4px;",
+    ...mesages,
+  );
+}

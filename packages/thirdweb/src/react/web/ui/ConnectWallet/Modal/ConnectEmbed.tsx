@@ -215,7 +215,6 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 
   usePreloadWalletProviders({
     wallets,
-    client: props.client,
   });
 
   const modalSize = useMemo(() => {

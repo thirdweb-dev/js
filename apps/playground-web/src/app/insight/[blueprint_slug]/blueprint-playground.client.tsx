@@ -157,13 +157,7 @@ export function BlueprintPlaygroundUI(props: {
   const defaultValues = useMemo(() => {
     const values: Record<string, string | number> = {};
     for (const param of parameters) {
-      if (param.name === "chain") {
-        values.chain = "1";
-      } else if (
-        param.schema &&
-        "type" in param.schema &&
-        param.schema.default
-      ) {
+      if (param.schema && "type" in param.schema && param.schema.default) {
         values[param.name] = param.schema.default;
       } else {
         values[param.name] = "";

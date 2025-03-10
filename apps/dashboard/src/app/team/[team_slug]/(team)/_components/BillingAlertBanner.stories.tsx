@@ -8,6 +8,9 @@ const meta = {
   title: "Banners/Billing Alerts",
   parameters: {
     layout: "centered",
+    nextjs: {
+      appDirectory: true,
+    },
   },
 } satisfies Meta;
 
@@ -20,12 +23,12 @@ export const PaymentAlerts: Story = {
     <div className="space-y-10">
       <PastDueBannerUI
         teamSlug="foo"
-        redirectToBillingPortal={() => Promise.resolve({ status: 200 })}
+        getBillingPortalUrl={() => Promise.resolve({ status: 200 })}
       />
 
       <ServiceCutOffBannerUI
         teamSlug="foo"
-        redirectToBillingPortal={() => Promise.resolve({ status: 200 })}
+        getBillingPortalUrl={() => Promise.resolve({ status: 200 })}
       />
     </div>
   ),
