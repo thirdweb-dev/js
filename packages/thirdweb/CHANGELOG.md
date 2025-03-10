@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.92.1
+
+### Patch Changes
+
+- [#6449](https://github.com/thirdweb-dev/js/pull/6449) [`f655657`](https://github.com/thirdweb-dev/js/commit/f655657fce01606e47f113c3a81f829c94cfadda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix EIP1193 provider adapter filtering out value from transactions
+
+- [#6447](https://github.com/thirdweb-dev/js/pull/6447) [`109f250`](https://github.com/thirdweb-dev/js/commit/109f2500680205eec3df6bac05b61eb70f3b4e58) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ethers5 adapter not handling authorizationList tx prop
+
 ## 5.92.0
 
 ### Minor Changes
