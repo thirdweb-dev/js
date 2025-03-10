@@ -5,7 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
-import { type Hex, toHex } from "../../../../utils/encoding/hex.js";
+import { type Hex, isHex, toHex } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parse-typed-data.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type {
@@ -141,39 +141,32 @@ export class EnclaveWallet implements IWebWallet {
       const transaction: Record<string, Hex | number | undefined> = {
         to: tx.to ? getAddress(tx.to) : undefined,
         data: tx.data,
-        value: typeof tx.value === "bigint" ? toHex(tx.value) : undefined,
-        gas:
-          typeof tx.gas === "bigint"
-            ? toHex(tx.gas + tx.gas / BigInt(10))
-            : undefined, // Add a 10% buffer to gas
+        value: hexlify(tx.value),
+        gas: hexlify(tx.gas),
         nonce:
-          typeof tx.nonce === "number"
-            ? toHex(tx.nonce)
-            : toHex(
-                await import(
-                  "../../../../rpc/actions/eth_getTransactionCount.js"
-                ).then(({ eth_getTransactionCount }) =>
-                  eth_getTransactionCount(rpcRequest, {
-                    address: getAddress(this.address),
-                    blockTag: "pending",
-                  }),
-                ),
-              ),
+          hexlify(tx.nonce) ||
+          toHex(
+            await import(
+              "../../../../rpc/actions/eth_getTransactionCount.js"
+            ).then(({ eth_getTransactionCount }) =>
+              eth_getTransactionCount(rpcRequest, {
+                address: getAddress(this.address),
+                blockTag: "pending",
+              }),
+            ),
+          ),
         chainId: toHex(tx.chainId),
       };
 
-      if (typeof tx.maxFeePerGas === "bigint") {
-        transaction.maxFeePerGas = toHex(tx.maxFeePerGas);
-        transaction.maxPriorityFeePerGas =
-          typeof tx.maxPriorityFeePerGas === "bigint"
-            ? toHex(tx.maxPriorityFeePerGas)
-            : undefined;
+      if (hexlify(tx.maxFeePerGas)) {
+        transaction.maxFeePerGas = hexlify(tx.maxFeePerGas);
+        transaction.maxPriorityFeePerGas = hexlify(tx.maxPriorityFeePerGas);
         transaction.type = 2;
       } else {
-        transaction.gasPrice =
-          typeof tx.gasPrice === "bigint" ? toHex(tx.gasPrice) : undefined;
+        transaction.gasPrice = hexlify(tx.gasPrice);
         transaction.type = 0;
       }
+
       return signEnclaveTransaction({
         client,
         storage,
@@ -252,4 +245,8 @@ export class EnclaveWallet implements IWebWallet {
       },
     };
   }
+}
+
+function hexlify(value: string | number | bigint | undefined) {
+  return value === undefined || isHex(value) ? value : toHex(value);
 }

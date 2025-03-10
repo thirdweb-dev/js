@@ -5,8 +5,10 @@ import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
+import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
+import { getWalletBalance } from "../../wallets/utils/getWalletBalance.js";
 import { createWalletEmitter } from "../../wallets/wallet-emitter.js";
 import { toProvider } from "./to-eip1193.js";
 
@@ -117,12 +119,33 @@ describe("toProvider", () => {
       to: TEST_WALLET_B,
     });
 
+    const balanceBefore = await getWalletBalance({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      address: mockAccount.address,
+    });
+
     const result = await provider.request({
       method: "eth_sendTransaction",
       params: [tx],
     });
 
     expect(ox__Hex.validate(result)).toBe(true);
+    const receipt = await waitForReceipt({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      transactionHash: result,
+    });
+
+    expect(receipt.status).toBe("success");
+
+    const balanceAfter = await getWalletBalance({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      address: mockAccount.address,
+    });
+
+    expect(balanceAfter.value).toBeLessThan(balanceBefore.value);
   });
 
   test("should handle eth_estimateGas", async () => {
