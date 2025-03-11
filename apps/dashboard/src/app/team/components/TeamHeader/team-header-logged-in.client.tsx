@@ -83,7 +83,7 @@ export function TeamHeaderLoggedIn(props: {
               isOpen: false,
             })
           }
-          onCreateAndComplete={() => {
+          onCreate={() => {
             // refresh projects
             router.refresh();
           }}

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
   BoxIcon,
+  KeyRoundIcon,
   LogOutIcon,
   MailIcon,
   UserIcon,
@@ -93,6 +94,36 @@ export function TeamOnboardingLayout(props: {
       steps={teamOnboardingSteps}
       currentStep={props.currentStep}
       title="Setup your team"
+    >
+      {props.children}
+    </OnboardingLayout>
+  );
+}
+
+const createProjectOnboardingSteps: OnboardingStep[] = [
+  {
+    icon: BoxIcon,
+    title: "Configure Project",
+    description: "Provide project details",
+    number: 1,
+  },
+  {
+    icon: KeyRoundIcon,
+    title: "Save Keys",
+    description: "Securely store secret key",
+    number: 2,
+  },
+];
+
+export function CreateProjectOnboardingLayout(props: {
+  children: React.ReactNode;
+  currentStep: 1 | 2;
+}) {
+  return (
+    <OnboardingLayout
+      steps={createProjectOnboardingSteps}
+      currentStep={props.currentStep}
+      title="Create a project"
     >
       {props.children}
     </OnboardingLayout>

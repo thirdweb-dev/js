@@ -77,7 +77,7 @@ export function AccountHeader(props: {
               isOpen: false,
             })
           }
-          onCreateAndComplete={() => {
+          onCreate={() => {
             // refresh projects
             router.refresh();
           }}
