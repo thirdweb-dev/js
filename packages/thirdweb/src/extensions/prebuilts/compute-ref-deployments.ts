@@ -1,31 +1,24 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
-import type { DynamicParams } from "../../utils/any-evm/deploy-metadata.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import { deployPublishedContract } from "./deploy-published.js";
+import { computePublishedContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
+import type { ImplementationConstructorParam } from "./process-ref-deployments.js";
 
-export type ImplementationConstructorParam = {
-  defaultValue?: string;
-  dynamicValue?: DynamicParams;
-};
-
-type ProcessRefDeploymentsOptions = {
+type ComputeRefDeploymentsOptions = {
   client: ThirdwebClient;
   chain: Chain;
-  account: Account;
   paramValue: string | ImplementationConstructorParam;
 };
 
 /**
- * Processes published contract references in constructor params. Deploys recursively if needed.
+ * Computes addresses for published contract references in constructor params.
  * @returns Param value after processing references.
  * @internal
  */
-export async function processRefDeployments(
-  options: ProcessRefDeploymentsOptions,
+export async function computeRefDeployments(
+  options: ComputeRefDeploymentsOptions,
 ): Promise<string | string[]> {
-  const { client, account, chain, paramValue } = options;
+  const { client, chain, paramValue } = options;
 
   if (typeof paramValue === "object") {
     if (
@@ -49,10 +42,9 @@ export async function processRefDeployments(
             ? contracts[0]?.salt
             : "";
 
-        const addr = await deployPublishedContract({
+        const addr = await computePublishedContractAddress({
           client,
           chain,
-          account,
           contractId: contracts[0]?.contractId,
           publisher: contracts[0]?.publisherAddress,
           version: contracts[0]?.version,
@@ -66,16 +58,15 @@ export async function processRefDeployments(
         if (!contracts || contracts.length === 0) {
           throw new Error("Invalid or empty param value");
         }
-        const addressArray = [];
+        const addressArray: string[] = [];
 
         for (const c of contracts) {
           const salt = c?.salt && c?.salt.length > 0 ? c?.salt : "";
 
           addressArray.push(
-            await deployPublishedContract({
+            await computePublishedContractAddress({
               client,
               chain,
-              account,
               contractId: c.contractId,
               publisher: c.publisherAddress,
               version: c.version,
@@ -94,8 +85,8 @@ export async function processRefDeployments(
         const paramsToEncode = dynamicValue.paramsToEncode[0];
 
         if (paramsToEncode) {
-          const types = [];
-          const values = [];
+          const types: string[] = [];
+          const values: (string | string[])[] = [];
           for (const v of paramsToEncode) {
             types.push(v.type);
 
@@ -103,9 +94,8 @@ export async function processRefDeployments(
               values.push(v.defaultValue);
             } else if (v.dynamicValue) {
               values.push(
-                await processRefDeployments({
+                await computeRefDeployments({
                   client,
-                  account,
                   chain,
                   paramValue: v,
                 }),
@@ -126,15 +116,15 @@ export async function processRefDeployments(
         if (!dynamicValue.paramsToEncode) {
           throw new Error("Invalid or empty param value");
         }
-        const bytesArray = [];
+        const bytesArray: string[] = [];
         const paramArray = dynamicValue.paramsToEncode;
 
         for (const a of paramArray) {
           const paramsToEncode = a;
 
           if (paramsToEncode) {
-            const types = [];
-            const values = [];
+            const types: string[] = [];
+            const values: (string | string[])[] = [];
             for (const v of paramsToEncode) {
               types.push(v.type);
 
@@ -142,9 +132,8 @@ export async function processRefDeployments(
                 values.push(v.defaultValue);
               } else if (v.dynamicValue) {
                 values.push(
-                  await processRefDeployments({
+                  await computeRefDeployments({
                     client,
-                    account,
                     chain,
                     paramValue: v,
                   }),
