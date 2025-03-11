@@ -157,7 +157,7 @@ export function useConnectedWalletDetails(
  * import { useWalletInfo } from "thirdweb/react";
  *
  * const { data: walletInfo } = useWalletInfo("io.metamask");
- * console.log("Walelt name", walletInfo?.name);
+ * console.log("wallet name", walletInfo?.name);
  * ```
  * @wallet
  */
