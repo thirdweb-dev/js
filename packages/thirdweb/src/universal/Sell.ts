@@ -49,7 +49,7 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.sellAmountWei - The amount of the origin token to buy.
++ * @param options.sellAmountWei - The amount of the origin token to sell.
  * @param options.client - Your thirdweb client.
  *
  * @returns A promise that resolves to a non-finalized quote for the requested sell.
