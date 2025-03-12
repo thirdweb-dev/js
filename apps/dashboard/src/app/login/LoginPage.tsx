@@ -19,6 +19,7 @@ import {
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
+import { isVercel } from "../../lib/vercel-utils";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
@@ -246,14 +247,17 @@ function CustomConnectEmbed(props: {
 }) {
   const { theme } = useTheme();
   const client = useThirdwebClient();
-  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>(
+    undefined,
+  );
+  const [alwaysShowTurnstile, setAlwaysShowTurnstile] = useState(false);
 
   return (
     <div className="flex flex-col items-center gap-4">
       <Turnstile
         options={{
           // only show if interaction is required
-          appearance: "interaction-only",
+          appearance: alwaysShowTurnstile ? "always" : "interaction-only",
           // match the theme of the rest of the app
           theme: theme === "light" ? "light" : "dark",
         }}
@@ -265,6 +269,11 @@ function CustomConnectEmbed(props: {
           auth={{
             getLoginPayload,
             doLogin: async (params) => {
+              if (isVercel() && !turnstileToken) {
+                setAlwaysShowTurnstile(true);
+                throw new Error("Please complete the captcha.");
+              }
+
               try {
                 const result = await doLogin(params, turnstileToken);
                 if (result.error) {
