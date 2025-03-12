@@ -1,2 +1,1 @@
-export * as Buy from "../universal/Buy.js";
-export * as Sell from "../universal/Sell.js";
+export * from "../universal/index.js";

@@ -17,7 +17,7 @@ import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
  *   destinationChainId: 10,
  *   destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   buyAmountWei: toWei("0.01"),
- *   client: client,
+ *   client: thirdwebClient,
  * });
  * ```
  *
@@ -131,7 +131,7 @@ export declare namespace quote {
  *   destinationChainId: 10,
  *   destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   buyAmountWei: toWei("0.01"),
- *   client: client,
+ *   client: thirdwebClient,
  * });
  * ```
  *
