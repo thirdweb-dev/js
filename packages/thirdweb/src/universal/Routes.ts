@@ -1,4 +1,4 @@
-import type { Hex as ox__Hex, Address as ox__Address } from "ox";
+import type { Address as ox__Address, Hex as ox__Hex } from "ox";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";

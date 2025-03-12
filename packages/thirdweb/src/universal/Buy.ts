@@ -1,8 +1,8 @@
 import type { Address as ox__Address } from "ox";
-import type { PreparedQuote, Quote } from "./types/Quote.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
+import type { PreparedQuote, Quote } from "./types/Quote.js";
 
 /**
  * Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.

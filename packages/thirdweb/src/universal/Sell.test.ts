@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
-import * as Sell from "./Sell.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
 import { toWei } from "src/utils/units.js";
+import { describe, expect, it } from "vitest";
+import { TEST_CLIENT } from "~test/test-clients.js";
+import * as Sell from "./Sell.js";
 
 describe("Universal.Sell.quote", () => {
   it("should get a valid quote", async () => {
