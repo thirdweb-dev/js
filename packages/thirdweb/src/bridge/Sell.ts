@@ -5,18 +5,18 @@ import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
 
 /**
- * Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
+ * Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
  *
  * @example
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
- * const quote = await Universal.Buy.quote({
+ * const quote = await Bridge.Sell.quote({
  *   originChainId: 1,
  *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   destinationChainId: 10,
  *   destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *   buyAmountWei: toWei("0.01"),
+ *   sellAmountWei: toWei("0.01"),
  *   client: thirdwebClient,
  * });
  * ```
@@ -24,8 +24,8 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  * This will return a quote that might look like:
  * ```typescript
  * {
- *   originAmount: 10000026098875381n,
- *   destinationAmount: 1000000000000000000n,
+ *   originAmount: 1000000000000000000n,
+ *   destinationAmount: 9999979011973735n,
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
  *   estimatedExecutionTimeMs: 1000
@@ -34,25 +34,25 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  *     originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *     destinationChainId: 10,
  *     destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *     buyAmountWei: 1000000000000000000n
+ *     sellAmountWei: 1000000000000000000n
  *   }
  * }
  * ```
  *
- * The quote is an **estimate** for how much you would expect to pay for a specific buy. This quote is not guaranteed and you should use `Buy.prepare` to get a finalized quote with transaction data ready for execution.
+ * The quote is an **estimate** for how much you would expect to receive for a specific sell. This quote is not guaranteed and you should use `Sell.prepare` to get a finalized quote with transaction data ready for execution.
  * So why use `quote`? The quote function is sometimes slightly faster than `prepare`, and can be used before the user connects their wallet.
  *
- * You can access this functions input and output types with `Buy.quote.Options` and `Buy.quote.Result`, respectively.
+ * You can access this functions input and output types with `Sell.quote.Options` and `Sell.quote.Result`, respectively.
  *
  * @param options - The options for the quote.
  * @param options.originChainId - The chain ID of the origin token.
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.buyAmountWei - The amount of the origin token to buy.
++ * @param options.sellAmountWei - The amount of the origin token to sell.
  * @param options.client - Your thirdweb client.
  *
- * @returns A promise that resolves to a non-finalized quote for the requested buy.
+ * @returns A promise that resolves to a non-finalized quote for the requested sell.
  *
  * @throws Will throw an error if there is an issue fetching the quote.
  */
@@ -62,22 +62,22 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     originTokenAddress,
     destinationChainId,
     destinationTokenAddress,
-    buyAmountWei,
+    sellAmountWei,
     client,
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/quote`);
+  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/sell/quote`);
   url.searchParams.set("originChainId", originChainId.toString());
   url.searchParams.set("originTokenAddress", originTokenAddress);
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
-  url.searchParams.set("buyAmountWei", buyAmountWei.toString());
+  url.searchParams.set("sellAmountWei", sellAmountWei.toString());
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code}: ${errorJson.message}`);
+    throw new Error(`${errorJson.code} | ${errorJson.message}`);
   }
 
   const { data }: { data: Quote } = await response.json();
@@ -92,7 +92,7 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
       originTokenAddress,
       destinationChainId,
       destinationTokenAddress,
-      buyAmountWei,
+      sellAmountWei,
     },
   };
 }
@@ -103,7 +103,7 @@ export declare namespace quote {
     originTokenAddress: ox__Address.Address;
     destinationChainId: number;
     destinationTokenAddress: ox__Address.Address;
-    buyAmountWei: bigint;
+    sellAmountWei: bigint;
     client: ThirdwebClient;
   };
 
@@ -113,24 +113,24 @@ export declare namespace quote {
       originTokenAddress: ox__Address.Address;
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
-      buyAmountWei: bigint;
+      sellAmountWei: bigint;
     };
   };
 }
 
 /**
- * Prepares a **finalized** Universal Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
+ * Prepares a **finalized** Universal Bridge quote for the provided sell request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
  *
  * @example
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
- * const quote = await Universal.Buy.prepare({
+ * const quote = await Bridge.Sell.prepare({
  *   originChainId: 1,
  *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   destinationChainId: 10,
  *   destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *   buyAmountWei: toWei("0.01"),
+ *   sellAmountWei: toWei("0.01"),
  *   client: thirdwebClient,
  * });
  * ```
@@ -138,15 +138,15 @@ export declare namespace quote {
  * This will return a quote that might look like:
  * ```typescript
  * {
- *   originAmount: 10000026098875381n,
- *   destinationAmount: 1000000000000000000n,
+ *   originAmount: 1000000000000000000n,
+ *   destinationAmount:  9980000000000000000n,
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
  *   estimatedExecutionTimeMs: 1000
  *   transactions: [
  *     {
  *       to: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *       value: 10000026098875381n,
+ *       value: 9980000000000000000n,
  *       data: "0x",
  *       chainId: 10,
  *       type: "eip1559"
@@ -158,7 +158,7 @@ export declare namespace quote {
  *     originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *     destinationChainId: 10,
  *     destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *     buyAmountWei: 1000000000000000000n
+ *     sellAmountWei: 1000000000000000000n
  *   }
  * }
  * ```
@@ -169,16 +169,16 @@ export declare namespace quote {
  *  - All transactions are assumed to be executed by the `sender` address, regardless of which chain they are on. The final transaction will use the `receiver` as the recipient address.
  *  - If an `expiration` timestamp is provided, all transactions must be executed before that time to guarantee successful execution at the specified price.
  *
- * NOTE: To get the status of each transaction, use `Universal.status` rather than checking for transaction inclusion. This function will ensure full bridge completion on the destination chain.
+ * NOTE: To get the status of each transaction, use `Bridge.status` rather than checking for transaction inclusion. This function will ensure full bridge completion on the destination chain.
  *
- * You can access this functions input and output types with `Buy.prepare.Options` and `Buy.prepare.Result`, respectively.
+ * You can access this functions input and output types with `Sell.prepare.Options` and `Sell.prepare.Result`, respectively.
  *
  * @param options - The options for the quote.
  * @param options.originChainId - The chain ID of the origin token.
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.buyAmountWei - The amount of the origin token to buy.
+ * @param options.sellAmountWei - The amount of the origin token to buy.
  * @param options.sender - The address of the sender.
  * @param options.receiver - The address of the recipient.
  * @param options.client - Your thirdweb client.
@@ -195,26 +195,26 @@ export async function prepare(
     originTokenAddress,
     destinationChainId,
     destinationTokenAddress,
-    buyAmountWei,
+    sellAmountWei,
     sender,
     receiver,
     client,
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/prepare`);
+  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/sell/prepare`);
   url.searchParams.set("originChainId", originChainId.toString());
   url.searchParams.set("originTokenAddress", originTokenAddress);
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
-  url.searchParams.set("buyAmountWei", buyAmountWei.toString());
+  url.searchParams.set("sellAmountWei", sellAmountWei.toString());
   url.searchParams.set("sender", sender);
   url.searchParams.set("receiver", receiver);
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code}: ${errorJson.message}`);
+    throw new Error(`${errorJson.code} | ${errorJson.message}`);
   }
 
   const { data }: { data: PreparedQuote } = await response.json();
@@ -234,7 +234,7 @@ export async function prepare(
       originTokenAddress,
       destinationChainId,
       destinationTokenAddress,
-      buyAmountWei,
+      sellAmountWei,
     },
   };
 }
@@ -245,7 +245,7 @@ export declare namespace prepare {
     originTokenAddress: ox__Address.Address;
     destinationChainId: number;
     destinationTokenAddress: ox__Address.Address;
-    buyAmountWei: bigint;
+    sellAmountWei: bigint;
     sender: ox__Address.Address;
     receiver: ox__Address.Address;
     client: ThirdwebClient;
@@ -257,7 +257,7 @@ export declare namespace prepare {
       originTokenAddress: ox__Address.Address;
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
-      buyAmountWei: bigint;
+      sellAmountWei: bigint;
     };
   };
 }

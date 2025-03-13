@@ -74,7 +74,7 @@ export {
 /**
  * UNIVERSAL BRIDGE
  */
-export * as Universal from "../universal/index.js";
+export * as Bridge from "../bridge/index.js";
 
 /**
  * WALLETS

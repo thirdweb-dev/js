@@ -29,7 +29,7 @@ export type PreparedQuote = Quote & {
    */
   expiration?: number | undefined;
   /**
-+   * A series of [ox](https://oxlib.sh) EIP-1559 transactions that must be executed in sequential order to fulfill the complete route.
+  +   * A series of [ox](https://oxlib.sh) EIP-1559 transactions that must be executed in sequential order to fulfill the complete route.
    */
   transactions: Array<
     ox__TransactionEnvelopeEip1559.TransactionEnvelopeEip1559<

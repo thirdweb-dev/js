@@ -11,9 +11,9 @@ import type { Status } from "./types/Status.js";
  *
  * @example
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
- * const status = await Universal.status({
+ * const status = await Bridge.status({
  *   transactionHash: "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
  *   chainId: 8453,
  *   client: thirdwebClient,

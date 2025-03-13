@@ -11,9 +11,9 @@ import type { Route } from "./types/Route.js";
  *
  * @example
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
- * const routes = await Universal.routes({
+ * const routes = await Bridge.routes({
  *   client: thirdwebClient,
  * });
  * ```
@@ -62,10 +62,10 @@ import type { Route } from "./types/Route.js";
  *
  * You can filter for specific chains or tokens:
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
  * // Get all routes starting from mainnet ETH
- * const routes = await Universal.routes({
+ * const routes = await Bridge.routes({
  *   originChainId: 1,
  *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   client: thirdwebClient,
@@ -74,10 +74,10 @@ import type { Route } from "./types/Route.js";
  *
  * The returned routes will be limited based on the API. You can paginate through the results using the `limit` and `offset` parameters:
  * ```typescript
- * import { Universal } from "thirdweb";
+ * import { Bridge } from "thirdweb";
  *
  * // Get the first 10 routes starting from mainnet ETH
- * const routes = await Universal.routes({
+ * const routes = await Bridge.routes({
  *   originChainId: 1,
  *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *   limit: 10,
@@ -135,7 +135,7 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code}: ${errorJson.message}`);
+    throw new Error(`${errorJson.code} | ${errorJson.message}`);
   }
 
   const { data }: { data: Route[] } = await response.json();
