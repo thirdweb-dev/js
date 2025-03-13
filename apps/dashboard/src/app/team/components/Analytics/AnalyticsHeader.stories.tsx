@@ -39,6 +39,7 @@ function Component() {
           title="Project Overview"
           interval="day"
           range={getLastNDaysRange("last-120")}
+          showRangeSelector={true}
         />
       </BadgeContainer>
     </div>

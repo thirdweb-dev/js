@@ -91,13 +91,11 @@ export function DatePickerWithRange(props: {
                     name: "From",
                     onClick: () => setScreen("from"),
                     isActive: screen === "from",
-                    isEnabled: true,
                   },
                   {
                     name: "To",
                     onClick: () => setScreen("to"),
                     isActive: screen === "to",
-                    isEnabled: true,
                   },
                 ]}
               />

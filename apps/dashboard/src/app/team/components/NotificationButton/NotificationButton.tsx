@@ -153,7 +153,6 @@ export function NotificationButtonInner(props: {
                 />
               ),
               onClick: () => setTab("inbox"),
-              isEnabled: true,
             },
             {
               isActive: tab === "changelogs",
@@ -164,7 +163,6 @@ export function NotificationButtonInner(props: {
                 />
               ),
               onClick: () => setTab("changelogs"),
-              isEnabled: true,
             },
           ]}
         />

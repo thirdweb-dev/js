@@ -227,13 +227,11 @@ function InviteModalContent(props: {
               name: "Starter",
               onClick: () => setPlanToShow("starter"),
               isActive: planToShow === "starter",
-              isEnabled: true,
             },
             {
               name: "Growth",
               onClick: () => setPlanToShow("growth"),
               isActive: planToShow === "growth",
-              isEnabled: true,
             },
           ]}
         />

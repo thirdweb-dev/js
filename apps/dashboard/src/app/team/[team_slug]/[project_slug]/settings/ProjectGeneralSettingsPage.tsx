@@ -984,7 +984,7 @@ function DeleteProject(props: {
   );
 }
 
-function RotateSecretKeyButton(props: {
+export function RotateSecretKeyButton(props: {
   rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
 }) {
