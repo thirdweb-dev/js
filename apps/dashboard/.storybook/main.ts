@@ -27,5 +27,8 @@ const config: StorybookConfig = {
     },
   },
   staticDirs: ["../public"],
+  features: {
+    experimentalRSC: true,
+  },
 };
 export default config;

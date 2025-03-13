@@ -79,7 +79,7 @@ export function TabButtons(props: {
     name: React.ReactNode;
     onClick: () => void;
     isActive: boolean;
-    isEnabled?: boolean;
+    isDisabled?: boolean;
     icon?: React.FC<{ className?: string }>;
   }[];
   tabClassName?: string;
@@ -119,11 +119,11 @@ export function TabButtons(props: {
                   "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
                   !tab.isActive &&
                     "text-muted-foreground hover:text-foreground",
-                  !tab.isEnabled && "cursor-not-allowed opacity-50",
+                  tab.isDisabled && "cursor-not-allowed opacity-50",
                   props.tabClassName,
                   tab.isActive && props.activeTabClassName,
                 )}
-                onClick={tab.isEnabled ? tab.onClick : undefined}
+                onClick={!tab.isDisabled ? tab.onClick : undefined}
               >
                 {tab.icon && (
                   <tab.icon className={cn("size-6", props.tabIconClassName)} />
