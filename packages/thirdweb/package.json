@@ -374,7 +374,7 @@
     "rimraf": "6.0.1",
     "sharp": "^0.33.5",
     "size-limit": "11.2.0",
-    "storybook": "8.6.3",
+    "storybook": "8.6.4",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.2",
