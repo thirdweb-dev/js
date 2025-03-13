@@ -5,7 +5,8 @@ import { status } from "./Status.js";
 describe("Bridge.status", () => {
   it("should handle invalid transaction hash without throwing", async () => {
     const result = await status({
-      transactionHash: "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+      transactionHash:
+        "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
       chainId: 1,
       client: TEST_CLIENT,
     });

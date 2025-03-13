@@ -1,8 +1,8 @@
-import { afterAll, beforeAll, afterEach, describe, expect, it } from "vitest";
-import { TEST_CLIENT } from "~test/test-clients.js";
-import { routes } from "./Routes.js";
 import { http, passthrough } from "msw";
 import { setupServer } from "msw/node";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { TEST_CLIENT } from "~test/test-clients.js";
+import { routes } from "./Routes.js";
 
 const server = setupServer(
   http.get("https://bridge.thirdweb.com/v1/routes", () => {
@@ -102,9 +102,9 @@ describe("Bridge.routes", () => {
           route.originToken.chainId === 1 &&
           route.destinationToken.chainId === 10 &&
           route.originToken.address ===
-          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" &&
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" &&
           route.destinationToken.address ===
-          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       ),
     ).toBe(true);
   });
@@ -154,6 +154,8 @@ describe("Bridge.routes", () => {
         limit: 1000,
         offset: 1000,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: InvalidRoutesRequest | The provided request is invalid.]`);
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[Error: InvalidRoutesRequest | The provided request is invalid.]`,
+    );
   });
 });
