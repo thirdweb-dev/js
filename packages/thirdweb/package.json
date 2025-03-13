@@ -132,63 +132,25 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"]
     }
   },
   "browser": {
@@ -217,7 +179,7 @@
     "@radix-ui/react-focus-scope": "1.1.2",
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/react-tooltip": "1.1.8",
-    "@tanstack/react-query": "5.67.1",
+    "@tanstack/react-query": "5.67.3",
     "@walletconnect/ethereum-provider": "2.17.5",
     "@walletconnect/sign-client": "2.17.5",
     "abitype": "1.0.8",
@@ -225,9 +187,9 @@
     "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
     "mipd": "0.0.7",
-    "ox": "0.6.9",
+    "ox": "0.6.10",
     "uqr": "0.1.2",
-    "viem": "2.23.5"
+    "viem": "2.23.10"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -337,15 +299,15 @@
     "@codspeed/vitest-plugin": "4.0.0",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
     "@mobile-wallet-protocol/client": "0.1.2",
-    "@react-native-async-storage/async-storage": "2.1.1",
+    "@react-native-async-storage/async-storage": "2.1.2",
     "@size-limit/preset-big-lib": "11.2.0",
-    "@storybook/addon-essentials": "8.6.3",
-    "@storybook/addon-interactions": "8.6.3",
-    "@storybook/addon-links": "8.6.3",
-    "@storybook/addon-onboarding": "8.6.3",
-    "@storybook/react": "8.6.3",
-    "@storybook/react-vite": "8.6.3",
-    "@storybook/test": "8.6.3",
+    "@storybook/addon-essentials": "8.6.4",
+    "@storybook/addon-interactions": "8.6.4",
+    "@storybook/addon-links": "8.6.4",
+    "@storybook/addon-onboarding": "8.6.4",
+    "@storybook/react": "8.6.4",
+    "@storybook/react-vite": "8.6.4",
+    "@storybook/test": "8.6.4",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
@@ -353,15 +315,15 @@
     "@types/react": "19.0.10",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "3.0.7",
-    "@vitest/ui": "3.0.7",
+    "@vitest/coverage-v8": "3.0.8",
+    "@vitest/ui": "3.0.8",
     "dotenv-mono": "^1.3.14",
     "ethers5": "npm:ethers@5",
     "ethers6": "npm:ethers@6",
     "expo-linking": "7.0.5",
-    "expo-web-browser": "14.0.1",
+    "expo-web-browser": "14.0.2",
     "happy-dom": "17.1.8",
-    "knip": "5.45.0",
+    "knip": "5.46.0",
     "msw": "2.7.3",
     "prettier": "3.3.3",
     "react": "19.0.0",
@@ -374,11 +336,11 @@
     "rimraf": "6.0.1",
     "sharp": "^0.33.5",
     "size-limit": "11.2.0",
-    "storybook": "8.6.3",
+    "storybook": "8.6.4",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.2",
-    "vite": "6.2.0",
-    "vitest": "3.0.7"
+    "vite": "6.2.1",
+    "vitest": "3.0.8"
   }
 }
