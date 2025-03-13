@@ -138,3 +138,60 @@ Once you execute the query above you will receive a result similar to this:
     ]
 }
 ```
+
+## Multichain Queries
+
+Insight also supports querying multiple chains in a single API call. This is useful when you need to retrieve data across different networks without making separate requests.
+
+```typescript
+const getMultichainTransfers = async () => {
+ try {
+   // Query USDT transfers on Ethereum (1) and Polygon (137)
+   const response = await fetch('https://insight.thirdweb.com/v1/events?chain=1&chain=137&limit=10', {
+    headers: {
+      'x-client-id': <YOUR_THIRDWEB_CLIENT_ID>
+    }
+   });
+   const transfersInfo = await response.json();
+   return transfersInfo
+ } catch (error) {
+   console.error('Error:', error);
+ }
+};
+```
+
+When querying multiple chains, the response includes a `chain_ids` array in the metadata and each item in the data array includes its `chain_id`:
+
+```json
+{
+  "meta": {
+    "chain_ids": [1, 137],
+    "total_items": 10,
+    "limit_per_chain": 5,
+    "page": 0,
+    "limit": 10,
+    "total_pages": 1
+  },
+  "data": [
+    {
+      "chain_id": 1,
+      "block_number": 14705663,
+      // ... other Ethereum event data
+    },
+    {
+      "chain_id": 137,
+      "block_number": 25631042,
+      // ... other Polygon event data
+    }
+    // ... more events from both chains
+  ]
+}
+```
+
+Key points about multichain queries:
+- Use the base URL `https://insight.thirdweb.com` instead of the chain-specific subdomain
+- Add multiple `chain` query parameters (e.g., `chain=1&chain=137`)
+- The response includes a `chain_ids` array and `limit_per_chain` in the metadata
+- Each item in the data array includes its `chain_id` for identification
+
+For more detailed information and advanced use cases, check out our [Multichain Queries](/insight/multichain-queries) documentation.

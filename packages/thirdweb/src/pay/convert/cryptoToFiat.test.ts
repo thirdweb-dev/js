@@ -52,7 +52,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
   });
 
   it("should throw error for testnet chain (because testnets are not supported", async () => {
-    await expect(() =>
+    await expect(
       convertCryptoToFiat({
         chain: sepolia,
         fromTokenAddress: NATIVE_TOKEN_ADDRESS,
@@ -66,7 +66,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
   });
 
   it("should throw error if fromTokenAddress is set to an invalid EVM address", async () => {
-    await expect(() =>
+    await expect(
       convertCryptoToFiat({
         chain: ethereum,
         fromTokenAddress: "haha",
@@ -80,7 +80,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
   });
 
   it("should throw error if fromTokenAddress is set to a wallet address", async () => {
-    await expect(() =>
+    await expect(
       convertCryptoToFiat({
         chain: base,
         fromTokenAddress: TEST_ACCOUNT_A.address,
@@ -99,7 +99,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
       status: 400,
       statusText: "Bad Request",
     });
-    await expect(() =>
+    await expect(
       convertCryptoToFiat({
         chain: base,
         fromTokenAddress: NATIVE_TOKEN_ADDRESS,

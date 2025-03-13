@@ -1,9 +1,8 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
 import { download } from "../../storage/download.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { withCache } from "../../utils/promise/withCache.js";
 import { type ThirdwebContract, getContract } from "../contract.js";
-
-const ABI_RESOLUTION_CACHE = new WeakMap<ThirdwebContract<Abi>, Promise<Abi>>();
 
 /**
  * Resolves the ABI (Application Binary Interface) for a given contract.
@@ -32,31 +31,34 @@ export function resolveContractAbi<abi extends Abi>(
   contract: ThirdwebContract<abi>,
   contractApiBaseUrl = "https://contract.thirdweb.com/abi",
 ): Promise<abi> {
-  if (ABI_RESOLUTION_CACHE.has(contract)) {
-    return ABI_RESOLUTION_CACHE.get(contract) as Promise<abi>;
-  }
+  return withCache(
+    async () => {
+      // if the contract already HAS a user defined we always use that!
+      if (contract.abi) {
+        return contract.abi as abi;
+      }
 
-  const prom = (async () => {
-    // if the contract already HAS a user defined we always use that!
-    if (contract.abi) {
-      return contract.abi as abi;
-    }
+      // for local chains, we need to resolve the composite abi from bytecode
+      if (contract.chain.id === 31337 || contract.chain.id === 1337) {
+        return (await resolveCompositeAbi(contract as ThirdwebContract)) as abi;
+      }
 
-    // for local chains, we need to resolve the composite abi from bytecode
-    if (contract.chain.id === 31337 || contract.chain.id === 1337) {
-      return await resolveCompositeAbi(contract as ThirdwebContract);
-    }
-
-    // try to get it from the api
-    try {
-      return await resolveAbiFromContractApi(contract, contractApiBaseUrl);
-    } catch {
-      // if that fails, try to resolve it from the bytecode
-      return await resolveCompositeAbi(contract as ThirdwebContract);
-    }
-  })();
-  ABI_RESOLUTION_CACHE.set(contract, prom);
-  return prom as Promise<abi>;
+      // try to get it from the api
+      try {
+        return (await resolveAbiFromContractApi(
+          contract,
+          contractApiBaseUrl,
+        )) as abi;
+      } catch {
+        // if that fails, try to resolve it from the bytecode
+        return (await resolveCompositeAbi(contract as ThirdwebContract)) as abi;
+      }
+    },
+    {
+      cacheKey: `${contract.chain.id}-${contract.address}`,
+      cacheTime: 1000 * 60 * 60 * 1, // 1 hour
+    },
+  );
 }
 
 /**

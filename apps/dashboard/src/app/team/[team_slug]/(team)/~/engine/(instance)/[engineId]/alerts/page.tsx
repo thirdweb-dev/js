@@ -9,5 +9,7 @@ export default async function Page(props: EngineInstancePageProps) {
     teamSlug: params.team_slug,
   });
 
-  return <EngineAlertsPage instance={instance} />;
+  return (
+    <EngineAlertsPage instance={instance} teamIdOrSlug={params.team_slug} />
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { redirectToCheckout } from "@/actions/billing";
+import { getBillingCheckoutUrl } from "@/actions/billing";
 import { CheckoutButton } from "@/components/billing";
 import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
@@ -126,7 +126,9 @@ export const EngineTierCard = ({
           variant={isPrimaryCta ? "default" : "outline"}
           asChild
         >
-          <Link href="/contact-us">{ctaText ?? defaultCtaText}</Link>
+          <Link href="/contact-us" target="_blank">
+            {ctaText ?? defaultCtaText}
+          </Link>
         </Button>
       ) : (
         <CheckoutButton
@@ -135,18 +137,19 @@ export const EngineTierCard = ({
               ? "product:engine_standard"
               : "product:engine_premium"
           }
-          redirectPath={`/team/${params?.team_slug}/~/engine`}
           teamSlug={params?.team_slug || "~"}
-          onClick={() => {
-            trackEvent({
-              category: "engine",
-              action: "click",
-              label: "clicked-cloud-hosted",
-              tier,
-            });
+          getBillingCheckoutUrl={getBillingCheckoutUrl}
+          buttonProps={{
+            onClick() {
+              trackEvent({
+                category: "engine",
+                action: "click",
+                label: "clicked-cloud-hosted",
+                tier,
+              });
+            },
+            variant: isPrimaryCta ? "default" : "outline",
           }}
-          variant={isPrimaryCta ? "default" : "outline"}
-          redirectToCheckout={redirectToCheckout}
         >
           {ctaText ?? defaultCtaText}
         </CheckoutButton>

@@ -29,7 +29,7 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
         instanceUrl={instance.url}
         authToken={authToken}
       />
-      <EngineSystem instance={instance} />
+      <EngineSystem instance={instance} teamIdOrSlug={teamSlug} />
     </div>
   );
 };

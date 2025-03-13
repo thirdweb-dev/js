@@ -1,8 +1,6 @@
 import { DocImage, Steps, Step } from "@doc";
-import chooseKeyImage from "../assets/choose-key.png";
-import selectEditImage from "../assets/select-edit.png";
-import allServicesImage from "../assets/all-services.png";
-import smartWalletAPIKeyImage from "../assets/smart-wallet-api-key.png";
+import ProjectOverview from '../assets/project-overview.png';
+import EnabledServices from './assets/enabled-services.png';
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
@@ -15,70 +13,33 @@ export const metadata = createMetadata({
 	},
 });
 
-# Edit enabled services on API Keys
+# Enabled Services
 
-All services on API keys are enabled by default. If you want to disable any services or edit settings for each service:
+
+
+All services on API keys per project are enabled by default. If you want to disable any services or edit settings for each service:
 
 <Steps>
 
-<Step title="Go to Dashboard">
+<Step title="Select Project">
 
-Go to **[your team's projects page](https://thirdweb.com/team)** on the dashboard.
+Select the project you want to edit services for from the Overview section of your dashboard.
 
-</Step>
-
-<Step title="Choose API key">
-
-Choose the API Key from which you want to enable or disable a Service.
-
-<DocImage src={chooseKeyImage} />
+<DocImage src={ProjectOverview} alt="Project Overview" />
 
 </Step>
 
-<Step title="Edit">
-Select `Edit` to enter the editor view.
+<Step title="Project Settings">
 
-<DocImage src={selectEditImage} />
+Navigate to the project's settings and locate "Enabled Services".
+
+<DocImage src={EnabledServices} alt="Enabled Services" />
+
 </Step>
 
-<Step title="Modify services">
-Navigate to the Services section and enable the service and modify any services as needed.
-
-<DocImage src={allServicesImage} />
+<Step title="Modify Services">
+Toggle the specified service you want on or off. Each service is on by default and toggling will turn off access to the service for the project.
 </Step>
 
-<Step title="Save Changes">
-</Step>
 </Steps>
 
-### Services
-
-#### Storage
-
-By default, Storage services are enabled upon creation of the API Key.
-
-Storage provides two sub-settings enabled by default on API Key creation.
-
-- Upload - Enable uploading to Storage
-- Download - Enable downloading from Storage
-
-To disable Upload or Download:
-
-1. Navigate to Settings > API Keys
-2. Toggle the checkboxes in the Services > Storage settings
-
-#### RPC Edge
-
-By default, RPC Edge services are enabled upon creation of the API Key.
-
-To use RPC Edge in your application, see our [RPC Edge QuickStart](/infrastructure/rpc-edge/get-started) article.
-
-#### Account abstraction services
-
-By default, Account abstraction services services are enabled upon creation of the API Key.
-
-To set additional rules on which transactions you want to sponsor, go to your Team > Project > Account Abstraction > Configuration page.
-
-#### In-App Wallets
-
-By default, In-App Wallet services are enabled upon creation of the API Key. You can view your in-app wallet's settings in your Team > Project > Connect > In App Wallets page.

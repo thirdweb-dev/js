@@ -130,6 +130,11 @@ export type PayEmbedProps = {
    */
   hiddenWallets?: WalletId[];
 
+  /**
+   * The wallet that should be pre-selected in the PayEmbed UI.
+   */
+  activeWallet?: Wallet;
+
   style?: React.CSSProperties;
 
   className?: string;
@@ -307,6 +312,12 @@ export function PayEmbed(props: PayEmbedProps) {
       connectionManager.defineChains(props.connectOptions?.chains);
     }
   }, [props.connectOptions?.chains, connectionManager]);
+
+  useEffect(() => {
+    if (props.activeWallet) {
+      connectionManager.setActiveWallet(props.activeWallet);
+    }
+  }, [props.activeWallet, connectionManager]);
 
   let content = null;
   const metadata =

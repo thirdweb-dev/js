@@ -4,6 +4,7 @@ import {
   type GetBuyWithFiatStatusParams,
   getBuyWithFiatStatus,
 } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { WithPickedOnceQueryOptions } from "../types.js";
 
 /**
  * A hook to get a status of a "Buy with Fiat" transaction to determine if the transaction is completed, failed or pending.
@@ -34,7 +35,7 @@ import {
  * @buyCrypto
  */
 export function useBuyWithFiatStatus(
-  params?: GetBuyWithFiatStatusParams,
+  params?: WithPickedOnceQueryOptions<GetBuyWithFiatStatusParams>,
 ): UseQueryResult<BuyWithFiatStatus> {
   return useQuery({
     queryKey: ["useBuyWithFiatStatus", params],
@@ -64,5 +65,6 @@ export function useBuyWithFiatStatus(
     },
     refetchIntervalInBackground: true,
     retry: true,
+    ...params?.queryOptions,
   });
 }

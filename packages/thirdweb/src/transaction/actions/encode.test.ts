@@ -203,7 +203,7 @@ describe("transaction: encode", () => {
       // @ts-ignore Intentionally for the test purpose
       extraCallData: "I'm a cat",
     });
-    await expect(() => getExtraCallDataFromTx(tx)).rejects.toThrowError(
+    await expect(getExtraCallDataFromTx(tx)).rejects.toThrowError(
       "Invalid extra calldata - must be a hex string",
     );
   });

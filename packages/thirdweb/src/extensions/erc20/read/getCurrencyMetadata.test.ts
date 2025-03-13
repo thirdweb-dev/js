@@ -4,7 +4,7 @@ import { getCurrencyMetadata } from "./getCurrencyMetadata.js";
 
 describe("getCurrencyMetadata", () => {
   it("should throw if not a valid ERC20 contract", async () => {
-    await expect(() =>
+    await expect(
       getCurrencyMetadata({ contract: DOODLES_CONTRACT }),
     ).rejects.toThrowError("Invalid currency token");
   });

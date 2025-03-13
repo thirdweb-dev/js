@@ -17,6 +17,7 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
+import { examplePrompts } from "../data/examplePrompts";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
 import { ChatBar } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
@@ -95,6 +96,7 @@ export function ChatPageContent(props: {
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
     setHasUserUpdatedContextFilters(true);
+    saveLastUsedChainIds(v?.chainIds || undefined);
   }, []);
 
   const isNewSession = !props.session;
@@ -117,7 +119,21 @@ export function ChatPageContent(props: {
             walletAddress: null,
           };
 
+      // Only set wallet address from connected wallet
       updatedContextFilters.walletAddress = address || null;
+
+      // if we have last used chains in storage, continue using them
+      try {
+        const lastUsedChainIds = getLastUsedChainIds();
+        if (lastUsedChainIds) {
+          updatedContextFilters.chainIds = lastUsedChainIds;
+          return updatedContextFilters;
+        }
+      } catch {
+        // ignore local storage errors
+      }
+
+      // else - use the active chain
       updatedContextFilters.chainIds = activeChain
         ? [activeChain.id.toString()]
         : [];
@@ -180,6 +196,23 @@ export function ChatPageContent(props: {
           text: "Thinking...",
         },
       ]);
+
+      const lowerCaseMessage = message.toLowerCase();
+      // handle hardcoded replies first
+      const interceptedReply = examplePrompts.find(
+        (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
+      )?.interceptedReply;
+
+      if (interceptedReply) {
+        // slight delay to match other response times
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          { type: "assistant", text: interceptedReply, request_id: undefined },
+        ]);
+
+        return;
+      }
 
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
@@ -474,4 +507,32 @@ function WalletDisconnectedDialog(props: {
       </DialogContent>
     </Dialog>
   );
+}
+
+const NEBULA_LAST_USED_CHAIN_IDS_KEY = "nebula-last-used-chain-ids";
+
+function saveLastUsedChainIds(chainIds: string[] | undefined) {
+  try {
+    if (chainIds && chainIds.length > 0) {
+      localStorage.setItem(
+        NEBULA_LAST_USED_CHAIN_IDS_KEY,
+        JSON.stringify(chainIds),
+      );
+    } else {
+      localStorage.removeItem(NEBULA_LAST_USED_CHAIN_IDS_KEY);
+    }
+  } catch {
+    // ignore local storage errors
+  }
+}
+
+function getLastUsedChainIds(): string[] | null {
+  try {
+    const lastUsedChainIdsStr = localStorage.getItem(
+      NEBULA_LAST_USED_CHAIN_IDS_KEY,
+    );
+    return lastUsedChainIdsStr ? JSON.parse(lastUsedChainIdsStr) : null;
+  } catch {
+    return null;
+  }
 }

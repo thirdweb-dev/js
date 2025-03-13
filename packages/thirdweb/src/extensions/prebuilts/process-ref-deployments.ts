@@ -17,6 +17,11 @@ type ProcessRefDeploymentsOptions = {
   paramValue: string | ImplementationConstructorParam;
 };
 
+/**
+ * Processes published contract references in constructor params. Deploys recursively if needed.
+ * @returns Param value after processing references.
+ * @internal
+ */
 export async function processRefDeployments(
   options: ProcessRefDeploymentsOptions,
 ): Promise<string | string[]> {
@@ -42,7 +47,7 @@ export async function processRefDeployments(
         const salt =
           contracts[0]?.salt && contracts[0]?.salt.length > 0
             ? contracts[0]?.salt
-            : "thirdweb";
+            : "";
 
         const addr = await deployPublishedContract({
           client,
@@ -64,7 +69,7 @@ export async function processRefDeployments(
         const addressArray = [];
 
         for (const c of contracts) {
-          const salt = c?.salt && c?.salt.length > 0 ? c?.salt : "thirdweb";
+          const salt = c?.salt && c?.salt.length > 0 ? c?.salt : "";
 
           addressArray.push(
             await deployPublishedContract({

@@ -269,13 +269,6 @@ async function redirects() {
       destination: "/solutions/ecosystem",
       permanent: false,
     },
-    // redirect /storage to portal
-    {
-      source: "/storage",
-      destination:
-        "https://portal.thirdweb.com/infrastructure/storage/overview",
-      permanent: false,
-    },
     // redirect /rpc to portal
     {
       source: "/rpc-edge",
@@ -343,10 +336,29 @@ async function redirects() {
       destination: "/connect/universal-bridge",
       permanent: false,
     },
+    // redirect /auth to /connect/auth
+    {
+      source: "/auth",
+      destination: "/connect/auth",
+      permanent: false,
+    },
+    // redirect /in-app-wallets to /connect/in-app-wallets
+    {
+      source: "/in-app-wallets",
+      destination: "/connect/in-app-wallets",
+      permanent: false,
+    },
     // PREVIOUS CAMPAIGNS
     {
       source: "/unlimited-wallets",
       destination: "/",
+      permanent: false,
+    },
+    // pay > universal-bridge redirect
+    {
+      source: "/team/:team_slug/:project_slug/connect/pay/:path*",
+      destination:
+        "/team/:team_slug/:project_slug/connect/universal-bridge/:path*",
       permanent: false,
     },
     ...legacyDashboardToTeamRedirects,

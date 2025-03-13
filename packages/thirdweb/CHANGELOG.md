@@ -1,5 +1,135 @@
 # thirdweb
 
+## 5.92.1
+
+### Patch Changes
+
+- [#6449](https://github.com/thirdweb-dev/js/pull/6449) [`f655657`](https://github.com/thirdweb-dev/js/commit/f655657fce01606e47f113c3a81f829c94cfadda) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix EIP1193 provider adapter filtering out value from transactions
+
+- [#6447](https://github.com/thirdweb-dev/js/pull/6447) [`109f250`](https://github.com/thirdweb-dev/js/commit/109f2500680205eec3df6bac05b61eb70f3b4e58) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ethers5 adapter not handling authorizationList tx prop
+
+## 5.92.0
+
+### Minor Changes
+
+- [#6443](https://github.com/thirdweb-dev/js/pull/6443) [`f6cbdb7`](https://github.com/thirdweb-dev/js/commit/f6cbdb7e3083c095475dbd33723a1ea19a95a293) Thanks [@gregfromstl](https://github.com/gregfromstl)! - BREAKING: Removes 3D model support in MediaRenderer
+
+## 5.91.1
+
+### Patch Changes
+
+- [#6439](https://github.com/thirdweb-dev/js/pull/6439) [`2ae778e`](https://github.com/thirdweb-dev/js/commit/2ae778ed7f49df958b6536c373e7db480148133f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds countdown for email cooldown
+
+## 5.91.0
+
+### Minor Changes
+
+- [#6437](https://github.com/thirdweb-dev/js/pull/6437) [`cbc4e80`](https://github.com/thirdweb-dev/js/commit/cbc4e8033061af98dc88a2de6caa15a30b73d303) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Several onramp embed improvements
+
+## 5.90.4
+
+### Patch Changes
+
+- [#6432](https://github.com/thirdweb-dev/js/pull/6432) [`617fe68`](https://github.com/thirdweb-dev/js/commit/617fe68c32888462d09ff335cd7fb2d671e667bf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding storage for inApp and ecosystem wallets
+
+## 5.90.3
+
+### Patch Changes
+
+- [#6424](https://github.com/thirdweb-dev/js/pull/6424) [`38ae2d3`](https://github.com/thirdweb-dev/js/commit/38ae2d3c6b7d5052974e8a61333997699230ad45) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getUserOpHash utility function
+
+## 5.90.2
+
+### Patch Changes
+
+- [#6415](https://github.com/thirdweb-dev/js/pull/6415) [`fb446bd`](https://github.com/thirdweb-dev/js/commit/fb446bd0993a0f431fbc67e6142ec20866c4bc65) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - emit onPurchaseSuccess for wallet to wallet transfer flow before execution
+
+- [#6412](https://github.com/thirdweb-dev/js/pull/6412) [`9f1a77f`](https://github.com/thirdweb-dev/js/commit/9f1a77f4c49350018dad0037c4ab675818057264) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow resending OTP on failures
+
+## 5.90.1
+
+### Patch Changes
+
+- [#6390](https://github.com/thirdweb-dev/js/pull/6390) [`9799b0a`](https://github.com/thirdweb-dev/js/commit/9799b0aae11a20b89e6081f214c2c33c8dc5f132) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds GPT Protocol to chains that only support legacy transactions
+
+- [#6386](https://github.com/thirdweb-dev/js/pull/6386) [`c3b90a6`](https://github.com/thirdweb-dev/js/commit/c3b90a6f1bebcfab5fe4975a65fdc13bf7a0cf06) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle comma for decimal input in PayEmbed
+
+## 5.90.0
+
+### Minor Changes
+
+- [#6370](https://github.com/thirdweb-dev/js/pull/6370) [`5625ff1`](https://github.com/thirdweb-dev/js/commit/5625ff1f8067f434910948f781d98c9847d59ccb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added `estimateUserOpGasCost()` utility function for estimating the total gas cost in wei/ether of user operations
+
+### Patch Changes
+
+- [#6360](https://github.com/thirdweb-dev/js/pull/6360) [`6235fe7`](https://github.com/thirdweb-dev/js/commit/6235fe76d3779d766571871bd84db4fa0eb1d536) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Initialize activeWalletConnectionStatus as 'unknown' instead of 'disconnected'
+
+## 5.89.1
+
+### Patch Changes
+
+- [#6356](https://github.com/thirdweb-dev/js/pull/6356) [`2ba1683`](https://github.com/thirdweb-dev/js/commit/2ba168388a51214f809a4e3ef0b7d78f38d5c57d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Change caching strategy for contract ABI
+
+## 5.89.0
+
+### Minor Changes
+
+- [#6335](https://github.com/thirdweb-dev/js/pull/6335) [`1851a8c`](https://github.com/thirdweb-dev/js/commit/1851a8c1da16634596e3e21d302275db2e17c40d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `activeWallet` prop to `PayEmbed` to pre select a wallet in the UI
+
+- [#6323](https://github.com/thirdweb-dev/js/pull/6323) [`15adec4`](https://github.com/thirdweb-dev/js/commit/15adec4fb7b1d8bd5b5c84ff8a14e5fa0bbeb38e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fiat onramp UI revamp in PayEmbed and support multi hop onramp flows
+
+- [#6317](https://github.com/thirdweb-dev/js/pull/6317) [`a19c0c9`](https://github.com/thirdweb-dev/js/commit/a19c0c96ff12394ea970f174ef5ea524f23fdb6c) Thanks [@jcheese1](https://github.com/jcheese1)! - Add SiweOptions in useConnectModal
+
+### Patch Changes
+
+- [#6300](https://github.com/thirdweb-dev/js/pull/6300) [`2cb89cb`](https://github.com/thirdweb-dev/js/commit/2cb89cb3a1392f262471ee25d13e706e1be2a28c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix storage upload timeout
+
+- [#6332](https://github.com/thirdweb-dev/js/pull/6332) [`28df6f7`](https://github.com/thirdweb-dev/js/commit/28df6f7e40f88afe4c91a7cf944a97ae374fb1fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Force pre-eip1559 tx on Homeverse mainnet/testnet
+
+## 5.88.7
+
+### Patch Changes
+
+- [#6289](https://github.com/thirdweb-dev/js/pull/6289) [`5abbae7`](https://github.com/thirdweb-dev/js/commit/5abbae7368854e1be4f774bd3a7bd48e0dde04f7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect buy with fiat disabled in pay embed
+
+## 5.88.6
+
+### Patch Changes
+
+- [#6274](https://github.com/thirdweb-dev/js/pull/6274) [`b182302`](https://github.com/thirdweb-dev/js/commit/b182302f590e75c9881cebd0ca1cc8b1425d50b8) Thanks [@kumaryash90](https://github.com/kumaryash90)! - bytes32 salt for deterministic deployment
+
+- [#6283](https://github.com/thirdweb-dev/js/pull/6283) [`5a08176`](https://github.com/thirdweb-dev/js/commit/5a08176eb0eb6d258d1d521a1e7a44c08145a043) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect supportedTokens override in PayEmbed
+
+- [#6281](https://github.com/thirdweb-dev/js/pull/6281) [`a0f3557`](https://github.com/thirdweb-dev/js/commit/a0f355717ad3c829f3d692183be46a43187eca49) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix text wrapping for long balances in token selector
+
+- [#6282](https://github.com/thirdweb-dev/js/pull/6282) [`45ca033`](https://github.com/thirdweb-dev/js/commit/45ca0334bb4e8378fefd683e48aef95e4ce8b886) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Deprecated `viemAdapter.walletClient` in favor of `viemAdapter.wallet` to take wallet instances instead of accounts
+
+  BEFORE:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.walletClient.toViem({
+    account, // Account
+    chain,
+    client,
+  });
+  ```
+
+  AFTER:
+
+  ```ts
+  import { viemAdapter } from "thirdweb/adapters/viem";
+
+  const walletClient = viemAdapter.wallet.toViem({
+    wallet, // now pass a connected Wallet instance instead of an account
+    chain,
+    client,
+  });
+  ```
+
+  This allows for full wallet lifecycle management with the viem adapter, including switching chains, adding chains, events and more.
+
 ## 5.88.5
 
 ### Patch Changes

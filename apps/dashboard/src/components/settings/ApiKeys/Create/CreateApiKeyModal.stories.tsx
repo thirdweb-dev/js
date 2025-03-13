@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import type { CreateKeyInput } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster } from "sonner";
-import { CreateAPIKeyDialogUI, type CreateAPIKeyPrefillOptions } from ".";
-import { createApiKeyStub } from "../../../../stories/stubs";
+import { CreateProjectDialogUI, type CreateProjectPrefillOptions } from ".";
+import { projectStub } from "../../../../stories/stubs";
 import { mobileViewport } from "../../../../stories/utils";
 
 const meta = {
@@ -33,24 +31,22 @@ export const Mobile: Story = {
 };
 
 function Story(props: {
-  prefill?: CreateAPIKeyPrefillOptions;
+  prefill?: CreateProjectPrefillOptions;
 }) {
   const [isOpen, setIsOpen] = useState(true);
-  const mutation = useMutation({
-    mutationFn: async (input: CreateKeyInput) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const apiKey = createApiKeyStub();
-      apiKey.name = input.name || apiKey.name;
-      return apiKey;
-    },
-  });
 
   return (
     <div className="flex grow items-center justify-center p-6">
-      <CreateAPIKeyDialogUI
+      <CreateProjectDialogUI
         open={isOpen}
         onOpenChange={setIsOpen}
-        createKeyMutation={mutation}
+        createProject={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return {
+            project: projectStub("foo", "bar"),
+            secret: "123",
+          };
+        }}
         prefill={props.prefill}
         enableNebulaServiceByDefault={false}
         teamSlug="foo"

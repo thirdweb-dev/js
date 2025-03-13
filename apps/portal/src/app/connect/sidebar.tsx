@@ -270,98 +270,77 @@ export const sidebar: SideBar = {
     // Blockchain API
     // TODO Overview page?
     {
-      name: "Onchain Interactions",
+      name: "Universal Bridge",
       isCollapsible: false,
       links: [
-        // Pay
         {
-          name: "Bridge & Swap",
+          name: "Overview",
+          href: `${paySlug}/overview`,
+        },
+        {
+          name: "Get Started",
+          href: `${paySlug}/get-started`,
+          expanded: true,
           links: [
             {
-              name: "Overview",
-              href: `${paySlug}/overview`,
+              name: "ConnectButton",
+              href: `${paySlug}/get-started#option-1-connectbutton`,
             },
             {
-              name: "Get Started",
-              href: `${paySlug}/get-started`,
-              expanded: true,
-              links: [
-                {
-                  name: "ConnectButton",
-                  href: `${paySlug}/get-started#option-1-connectbutton`,
-                },
-                {
-                  name: "Embed Pay",
-                  href: `${paySlug}/get-started#option-2-embed-pay`,
-                },
-                {
-                  name: "Send a Transaction",
-                  href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
-                },
-              ],
+              name: "Embed Pay",
+              href: `${paySlug}/get-started#option-2-embed-pay`,
             },
             {
-              name: "Supported Chains",
-              href: `${paySlug}/supported-chains`,
-            },
-            {
-              name: "Onramp Providers",
-              href: `${paySlug}/onramp-providers`,
-            },
-
-            {
-              name: "Fee Sharing",
-              href: `${paySlug}/fee-sharing`,
-            },
-
-            {
-              name: "Webhooks",
-              href: `${paySlug}/webhooks`,
-            },
-            {
-              name: "Testing Pay",
-              href: `${paySlug}/testing-pay`,
-            },
-            {
-              name: "Guides",
-              isCollapsible: true,
-
-              links: [
-                {
-                  name: "Accept Direct Payments",
-                  href: `${paySlug}/guides/accept-direct-payments`,
-                },
-                {
-                  name: "Build a Custom Experience",
-                  href: `${paySlug}/guides/build-a-custom-experience`,
-                },
-              ],
-            },
-
-            {
-              name: "Customization",
-              isCollapsible: true,
-
-              links: [
-                {
-                  name: "ConnectButton",
-                  href: `${paySlug}/customization/connectbutton`,
-                },
-                {
-                  name: "PayEmbed",
-                  href: `${paySlug}/customization/payembed`,
-                },
-                {
-                  name: "useSendTransaction",
-                  href: `${paySlug}/customization/send-transaction`,
-                },
-              ],
-            },
-            {
-              name: "FAQs",
-              href: `${paySlug}/faqs`,
+              name: "Send a Transaction",
+              href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
             },
           ],
+        },
+        {
+          name: "Tutorials",
+          isCollapsible: true,
+
+          links: [
+            {
+              name: "Accept Direct Payments",
+              href: `${paySlug}/guides/accept-direct-payments`,
+            },
+            {
+              name: "Build a Custom Experience",
+              href: `${paySlug}/guides/build-a-custom-experience`,
+            },
+          ],
+        },
+        {
+          name: "Customization",
+          isCollapsible: true,
+
+          links: [
+            {
+              name: "ConnectButton",
+              href: `${paySlug}/customization/connectbutton`,
+            },
+            {
+              name: "PayEmbed",
+              href: `${paySlug}/customization/payembed`,
+            },
+            {
+              name: "useSendTransaction",
+              href: `${paySlug}/customization/send-transaction`,
+            },
+          ],
+        },
+        {
+          name: "Webhooks",
+          href: `${paySlug}/webhooks`,
+        },
+        {
+          name: "Developer Mode",
+          href: `${paySlug}/testing-pay`,
+        },
+        {
+          name: "FAQs",
+          href: `${paySlug}/faqs`,
         },
       ],
     },

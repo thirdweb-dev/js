@@ -72,14 +72,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
     expect(result.symbol).toBe("$");
   });
 
-  it("`loadAccountBalance` should throw if `chain` is not passed", async () => {
-    await expect(() =>
-      loadAccountBalance({ client: TEST_CLIENT, address: VITALIK_WALLET }),
-    ).rejects.toThrowError("chain is required");
-  });
-
   it("`loadAccountBalance` should throw if `tokenAddress` is mistakenly passed as native token", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
@@ -92,7 +86,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("`loadAccountBalance` should throw if `address` is not a valid evm address", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         // biome-ignore lint/suspicious/noExplicitAny: for the test
@@ -103,7 +97,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("`loadAccountBalance` should throw if `tokenAddress` is passed but is not a valid evm address", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
@@ -133,7 +127,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("`loadAccountBalance` should throw if failed to load tokenBalance (native token)", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
@@ -145,7 +139,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("`loadAccountBalance` should throw if failed to load tokenBalance (erc20 token)", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
@@ -158,7 +152,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("if fetching fiat value then it should throw if failed to resolve (native token)", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,
@@ -171,7 +165,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("AccountBalance component", () => {
   });
 
   it("if fetching fiat value then it should throw if failed to resolve (erc20 token)", async () => {
-    await expect(() =>
+    await expect(
       loadAccountBalance({
         client: TEST_CLIENT,
         address: VITALIK_WALLET,

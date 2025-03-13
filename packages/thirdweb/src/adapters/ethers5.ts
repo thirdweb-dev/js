@@ -9,7 +9,10 @@ import type { ThirdwebClient } from "../client/client.js";
 import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
-import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import {
+  type PreparedTransaction,
+  TransactionTypeMap,
+} from "../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
 import { toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
@@ -483,6 +486,7 @@ export async function toEthersSigner(
 
       const response: ethers5.ethers.providers.TransactionResponse = {
         ...serialized,
+        type: serialized.type ? TransactionTypeMap[serialized.type] : undefined,
         nonce: Number(serialized.nonce ?? 0),
         from: account.address,
         maxFeePerGas: serialized.maxFeePerGas
@@ -619,6 +623,9 @@ function alignTxToEthers(
       break;
     }
   }
+
+  // biome-ignore lint/performance/noDelete: ethers5 doesn't support authorizationList
+  delete rest.authorizationList;
 
   return {
     ...rest,

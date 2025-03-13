@@ -83,6 +83,7 @@ export function ecosystemWallet(
       return new InAppNativeConnector({
         client,
         ecosystem,
+        storage: createOptions?.storage,
         // TODO (enclave): passkeyDomain for ecosystem wallets
       });
     },

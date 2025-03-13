@@ -41,8 +41,6 @@ const uploadMetadataFormSchema = z.object({
   image: fileBufferOrStringSchema.optional(),
   animationUri: fileBufferOrStringSchema.optional(),
   external_url: fileBufferOrStringSchema.optional(),
-  customImage: z.string().optional(),
-  customAnimationUrl: z.string().optional(),
   background_color: z
     .string()
     .refine(

@@ -51,6 +51,7 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
       projects.push({
         id: `project_${i + 1}_${j + 1}`,
         name: `Project ${i + 1}_${j + 1}`,
+        image: `https://picsum.photos/200?random=${i}`,
       });
     }
 

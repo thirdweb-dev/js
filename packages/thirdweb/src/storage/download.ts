@@ -1,6 +1,8 @@
 import { getClientFetch } from "../utils/fetch.js";
 import { type ResolveSchemeOptions, resolveScheme } from "../utils/ipfs.js";
+import { IS_TEST } from "../utils/process.js";
 import type { Prettify } from "../utils/type-utils.js";
+import { getFromMockStorage } from "./mock.js";
 
 export type DownloadOptions = Prettify<
   ResolveSchemeOptions & {
@@ -64,6 +66,21 @@ export type DownloadOptions = Prettify<
  * @storage
  */
 export async function download(options: DownloadOptions) {
+  if (IS_TEST) {
+    const hash = options.uri.split("://")[1];
+    if (!hash) {
+      throw new Error("Invalid hash");
+    }
+    const data = getFromMockStorage(hash);
+    if (data) {
+      return {
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(data),
+      } as Response;
+    }
+  }
+
   let url: string;
   if (options.uri.startsWith("ar://")) {
     const { resolveArweaveScheme } = await import("../utils/arweave.js");

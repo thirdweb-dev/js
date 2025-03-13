@@ -1,14 +1,11 @@
 import styled from "@emotion/styled";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
-import {
-  iconSize,
-  spacing,
-} from "../../../../../../core/design-system/index.js";
+import { spacing } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { type CurrencyMeta, currencies } from "./currencies.js";
+import { type CurrencyMeta, currencies, getFiatIcon } from "./currencies.js";
 
 export function CurrencySelection(props: {
   onSelect: (currency: CurrencyMeta) => void;
@@ -33,7 +30,7 @@ export function CurrencySelection(props: {
               onClick={() => props.onSelect(c)}
               gap="sm"
             >
-              <c.icon size={iconSize.lg} />
+              {getFiatIcon(c, "lg")}
               <Container flex="column" gap="xxs">
                 <Text color="primaryText">{c.shorthand}</Text>
                 <Text size="sm">{c.name}</Text>

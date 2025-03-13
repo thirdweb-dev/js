@@ -60,7 +60,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
           <GemIcon size={16} /> Claim
         </Button>
       </SheetTrigger>
-      <SheetContent className="z-[10000]">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-left">Claim tokens</SheetTitle>
         </SheetHeader>

@@ -174,7 +174,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
         ))}
 
       {showUploadButton || noDisplay ? (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {showUploadButton && (
             <Button
               onClick={open}
@@ -187,12 +187,19 @@ export const FileInput: React.FC<IFileInputProps> = ({
             </Button>
           )}
           {noDisplay && (
-            <Link href={fileUrl} target="_blank" className="no-underline">
-              <Button variant="outline" className="gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              asChild
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Link href={fileUrl} target="_blank" className="no-underline">
                 <EyeIcon className="size-4" />
                 View File
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
         </div>
       ) : null}

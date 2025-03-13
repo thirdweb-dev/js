@@ -62,6 +62,9 @@ function Variants(props: {
                 email: "foo@example.com",
               }}
               client={client}
+              getChangelogNotifications={() => Promise.resolve([])}
+              getInboxNotifications={() => Promise.resolve([])}
+              markNotificationAsRead={() => Promise.resolve()}
             />
           </div>
         </BadgeContainer>

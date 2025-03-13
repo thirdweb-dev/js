@@ -3,13 +3,15 @@ import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
-import { cookies } from "next/headers";
+import { ipAddress } from "@vercel/functions";
+import { cookies, headers } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
   GenerateLoginPayloadParams,
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
+import { isVercel } from "../../lib/vercel-utils";
 
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
@@ -36,9 +38,91 @@ export async function getLoginPayload(
   return (await res.json()).data.payload;
 }
 
-export async function doLogin(payload: VerifyLoginPayloadParams) {
+export async function doLogin(
+  payload: VerifyLoginPayloadParams,
+  turnstileToken: string | undefined,
+) {
   if (!THIRDWEB_API_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
+  }
+
+  // only validate the turnstile token if we are in a vercel environment
+  if (isVercel()) {
+    if (!turnstileToken) {
+      return {
+        error: "Please complete the captcha.",
+      };
+    }
+
+    // get the request headers
+    const requestHeaders = await headers();
+    if (!requestHeaders) {
+      return {
+        error: "Failed to get request headers. Please try again.",
+      };
+    }
+    // CF header, fallback to req.ip, then X-Forwarded-For
+    const [ip, errors] = (() => {
+      let ip: string | null = null;
+      const errors: string[] = [];
+      try {
+        ip = requestHeaders.get("CF-Connecting-IP") || null;
+      } catch (err) {
+        console.error("failed to get IP address from CF-Connecting-IP", err);
+        errors.push("failed to get IP address from CF-Connecting-IP");
+      }
+      if (!ip) {
+        try {
+          ip = ipAddress(requestHeaders) || null;
+        } catch (err) {
+          console.error(
+            "failed to get IP address from ipAddress() function",
+            err,
+          );
+          errors.push("failed to get IP address from ipAddress() function");
+        }
+      }
+      if (!ip) {
+        try {
+          ip = requestHeaders.get("X-Forwarded-For");
+        } catch (err) {
+          console.error("failed to get IP address from X-Forwarded-For", err);
+          errors.push("failed to get IP address from X-Forwarded-For");
+        }
+      }
+      return [ip, errors];
+    })();
+
+    if (!ip) {
+      return {
+        error: "Could not get IP address. Please try again.",
+        context: errors,
+      };
+    }
+
+    // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
+    // Validate the token by calling the "/siteverify" API endpoint.
+    const result = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        body: JSON.stringify({
+          secret: process.env.TURNSTILE_SECRET_KEY,
+          response: turnstileToken,
+          remoteip: ip,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    const outcome = await result.json();
+    if (!outcome.success) {
+      return {
+        error: "Invalid captcha. Please try again.",
+      };
+    }
   }
 
   const cookieStore = await cookies();
@@ -86,7 +170,9 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
         res.statusText,
         response,
       );
-      throw new Error("Failed to login - api call failed");
+      return {
+        error: "Failed to login. Please try again later.",
+      };
     } catch {
       // just log the basics
       console.error(
@@ -95,7 +181,9 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
         res.statusText,
       );
     }
-    throw new Error("Failed to login - api call failed");
+    return {
+      error: "Failed to login. Please try again later.",
+    };
   }
 
   const json = await res.json();
@@ -104,7 +192,9 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
 
   if (!jwt) {
     console.error("Failed to login - invalid json", json);
-    throw new Error("Failed to login - invalid json");
+    return {
+      error: "Failed to login. Please try again later.",
+    };
   }
 
   // set the token cookie
@@ -128,6 +218,10 @@ export async function doLogin(payload: VerifyLoginPayloadParams) {
     // 3 days
     maxAge: 3 * 24 * 60 * 60,
   });
+
+  return {
+    success: true,
+  };
 }
 
 export async function doLogout() {

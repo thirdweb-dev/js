@@ -18,6 +18,7 @@ export type AuthorizationInput = {
   jwt: string | null;
   hashedJWT: string | null;
   targetAddress?: string | string[];
+  teamId?: string;
   // IMPORTANT: this is a stringified boolean! Only pass in true or false here. IK it's not ideal, but it's required to pass it in the headers.
   useWalletAuth?: string | null;
 };
@@ -46,7 +47,7 @@ export async function authorize(
   const cacheKey = authData.secretKeyHash
     ? `key-v2:secret-key:${authData.secretKeyHash}`
     : authData.hashedJWT
-      ? `key-v2:dashboard-jwt:${authData.hashedJWT}`
+      ? `key-v2:dashboard-jwt:${authData.hashedJWT}:${authData.teamId ?? "default"}`
       : authData.clientId
         ? `key-v2:client-id:${authData.clientId}`
         : null;

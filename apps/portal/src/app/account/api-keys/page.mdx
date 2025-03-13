@@ -12,7 +12,9 @@ export const metadata = createMetadata({
 
 # API Keys
 
-API Keys are required to use thirdweb's infrastructure services including [Storage](/infrastructure/storage/overview), [RPC Edge](/infrastructure/rpc-edge/overview), [Account Abstraction infrastructure](/connect/account-abstraction), and [In-App Wallets](/connect/in-app-wallet/overview).
+Each thirdweb project is equipped with an API key to use thirdweb's infrastructure services including [Storage](/infrastructure/storage/overview), [RPC Edge](/infrastructure/rpc-edge/overview), [Account Abstraction infrastructure](/connect/account-abstraction), and [In-App Wallets](/connect/in-app-wallet/overview).
+
+## Services
 
 API Keys allow you to:
 
@@ -25,3 +27,9 @@ API Keys consists of two components:
 
 - **Client ID**- Used to access the enabled thirdweb infrastructure services and identify your application using an app bundle ID (identifier for native apps) or domain (identifier for websites). Client IDs can be restricted to allow only specified domains and app bundle IDs to access the enabled services.
 - **Secret Key**- Used to access the enabled thirdweb infrastructure services by identifying and authenticating your application from a backend. **Sharing or exposing this key to others is unsafe because it grants access to all services.**
+
+## Obtain API Key
+
+To obtain an API Key, follow the Create Project step in the [Create API Key](/account/api-keys/create) guide. 
+
+You can find your API Key in the project settings of your dashboard.

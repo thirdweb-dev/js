@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
-import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
@@ -59,11 +58,6 @@ export function AppFooter(props: AppFooterProps) {
             <Button size="icon" variant="ghost" asChild className="size-9">
               <Link href="https://www.youtube.com/@thirdweb_" target="_blank">
                 <YoutubeIcon className="size-5 text-muted-foreground" />
-              </Link>
-            </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://discord.gg/thirdweb" target="_blank">
-                <DiscordIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">

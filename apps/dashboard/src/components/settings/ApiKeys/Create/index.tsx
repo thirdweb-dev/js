@@ -1,4 +1,3 @@
-import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
@@ -26,14 +25,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import {
-  type ApiKey,
-  type CreateKeyInput,
-  useCreateApiKey,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { createProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { type UseMutationResult, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import type { ProjectService } from "@thirdweb-dev/service-utils";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
@@ -41,53 +37,61 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
-import {
-  type ApiKeyCreateValidationSchema,
-  apiKeyCreateValidationSchema,
-} from "../validations";
+import { z } from "zod";
+import { projectDomainsSchema, projectNameSchema } from "../validations";
 
-export type CreateAPIKeyPrefillOptions = {
+const ALL_PROJECT_SERVICES = SERVICES.filter(
+  (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
+);
+
+export type CreateProjectPrefillOptions = {
   name?: string;
   domains?: string;
 };
 
-export type CreateAPIKeyDialogProps = {
+export type CreateProjectDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreateAndComplete?: () => void;
-  prefill?: CreateAPIKeyPrefillOptions;
+  prefill?: CreateProjectPrefillOptions;
   enableNebulaServiceByDefault: boolean;
-  teamSlug: string | undefined;
+  teamId: string;
+  teamSlug: string;
 };
 
-const CreateAPIKeyDialog = (props: CreateAPIKeyDialogProps) => {
-  const createKeyMutation = useCreateApiKey();
-
+const CreateProjectDialog = (props: CreateProjectDialogProps) => {
   return (
-    <CreateAPIKeyDialogUI createKeyMutation={createKeyMutation} {...props} />
+    <CreateProjectDialogUI
+      createProject={async (params) => {
+        const res = await createProjectClient(props.teamId, params);
+        return {
+          project: res.project,
+          secret: res.secret,
+        };
+      }}
+      {...props}
+    />
   );
 };
 
-export default CreateAPIKeyDialog;
+export default CreateProjectDialog;
 
-export const CreateAPIKeyDialogUI = (props: {
+export const CreateProjectDialogUI = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreateAndComplete?: () => void;
-  createKeyMutation: UseMutationResult<
-    ApiKey,
-    unknown,
-    CreateKeyInput,
-    unknown
-  >;
-  prefill?: CreateAPIKeyPrefillOptions;
+  createProject: (param: Partial<Project>) => Promise<{
+    project: Project;
+    secret: string;
+  }>;
+  prefill?: CreateProjectPrefillOptions;
   enableNebulaServiceByDefault: boolean;
-  teamSlug: string | undefined;
+  teamSlug: string;
 }) => {
   const [screen, setScreen] = useState<
-    { id: "create" } | { id: "api-details"; key: ApiKey }
+    { id: "create" } | { id: "api-details"; project: Project; secret: string }
   >({ id: "create" });
-  const { open, onOpenChange, createKeyMutation } = props;
+  const { open, onOpenChange } = props;
 
   return (
     <Dialog
@@ -102,16 +106,19 @@ export const CreateAPIKeyDialogUI = (props: {
       }}
     >
       <DialogContent
-        className="z-[10001] overflow-hidden p-0"
-        dialogOverlayClassName="z-[10000]"
+        className="overflow-hidden p-0"
         dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
       >
         <DynamicHeight>
           {screen.id === "create" && (
-            <CreateAPIKeyForm
-              createKeyMutation={createKeyMutation}
-              onAPIKeyCreated={(key) => {
-                setScreen({ id: "api-details", key });
+            <CreateProjectForm
+              createProject={props.createProject}
+              onProjectCreated={(params) => {
+                setScreen({
+                  id: "api-details",
+                  project: params.project,
+                  secret: params.secret,
+                });
               }}
               prefill={props.prefill}
               enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
@@ -119,8 +126,9 @@ export const CreateAPIKeyDialogUI = (props: {
           )}
 
           {screen.id === "api-details" && (
-            <APIKeyDetails
-              apiKey={screen.key}
+            <CreatedProjectDetails
+              project={screen.project}
+              secret={screen.secret}
               teamSlug={props.teamSlug}
               onComplete={() => {
                 onOpenChange(false);
@@ -135,24 +143,33 @@ export const CreateAPIKeyDialogUI = (props: {
   );
 };
 
-function CreateAPIKeyForm(props: {
-  createKeyMutation: UseMutationResult<
-    ApiKey,
-    unknown,
-    CreateKeyInput,
-    unknown
-  >;
-  onAPIKeyCreated: (key: ApiKey) => void;
-  prefill?: CreateAPIKeyPrefillOptions;
+const createProjectFormSchema = z.object({
+  name: projectNameSchema,
+  domains: projectDomainsSchema,
+});
+
+type CreateProjectFormSchema = z.infer<typeof createProjectFormSchema>;
+
+function CreateProjectForm(props: {
+  createProject: (param: Partial<Project>) => Promise<{
+    project: Project;
+    secret: string;
+  }>;
+  prefill?: CreateProjectPrefillOptions;
   enableNebulaServiceByDefault: boolean;
+  onProjectCreated: (params: {
+    project: Project;
+    secret: string;
+  }) => void;
 }) {
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
-
-  const { createKeyMutation } = props;
   const trackEvent = useTrack();
+  const createProject = useMutation({
+    mutationFn: props.createProject,
+  });
 
-  const form = useForm<ApiKeyCreateValidationSchema>({
-    resolver: zodResolver(apiKeyCreateValidationSchema),
+  const form = useForm<CreateProjectFormSchema>({
+    resolver: zodResolver(createProjectFormSchema),
     defaultValues: {
       name: props.prefill?.name || "",
       domains: props.prefill?.domains || "",
@@ -164,22 +181,34 @@ function CreateAPIKeyForm(props: {
     domains: string;
   }) {
     const servicesToEnableByDefault = props.enableNebulaServiceByDefault
-      ? SERVICES
-      : SERVICES.filter((srv) => srv.name !== "nebula");
+      ? ALL_PROJECT_SERVICES
+      : ALL_PROJECT_SERVICES.filter((srv) => srv.name !== "nebula");
 
-    const formattedValues = {
+    const formattedValues: Partial<Project> = {
       name: values.name,
       domains: toArrFromList(values.domains),
       // enable all services
-      services: servicesToEnableByDefault.map((srv) => ({
-        name: srv.name,
-        targetAddresses: ["*"],
-        enabled: true,
-        actions: srv.actions.map((sa) => sa.name),
-        recoveryShareManagement: "AWS_MANAGED",
-        customAuthentication: undefined,
-        applicationName: srv.name,
-      })),
+      services: servicesToEnableByDefault.map((srv) => {
+        if (srv.name === "storage") {
+          return {
+            name: srv.name,
+            actions: srv.actions.map((sa) => sa.name),
+          } satisfies ProjectService;
+        }
+
+        if (srv.name === "pay") {
+          return {
+            name: "pay",
+            payoutAddress: null,
+            actions: [],
+          } satisfies ProjectService;
+        }
+
+        return {
+          name: srv.name,
+          actions: [],
+        } satisfies ProjectService;
+      }),
     };
 
     trackEvent({
@@ -188,10 +217,10 @@ function CreateAPIKeyForm(props: {
       label: "attempt",
     });
 
-    createKeyMutation.mutate(formattedValues, {
+    createProject.mutate(formattedValues, {
       onSuccess: (data) => {
+        props.onProjectCreated(data);
         toast.success("Project created successfully");
-        props.onAPIKeyCreated(data);
         trackEvent({
           category: "api-keys",
           action: "create",
@@ -227,7 +256,7 @@ function CreateAPIKeyForm(props: {
     return (
       <DomainsAlert
         type={showAlert}
-        isCreating={props.createKeyMutation.isPending}
+        isCreating={createProject.isPending}
         onProceed={() => {
           handleAPICreation({
             name: form.getValues("name"),
@@ -244,7 +273,7 @@ function CreateAPIKeyForm(props: {
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-2xl">Create a Project</DialogTitle>
+            <DialogTitle className="text-2xl">Create Project</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-6">
@@ -343,12 +372,10 @@ function CreateAPIKeyForm(props: {
           </DialogClose>
           <Button
             type="submit"
-            disabled={props.createKeyMutation.isPending}
+            disabled={createProject.isPending}
             className="min-w-28 gap-2"
           >
-            {props.createKeyMutation.isPending && (
-              <Spinner className="size-4" />
-            )}
+            {createProject.isPending && <Spinner className="size-4" />}
             Create
           </Button>
         </DialogFooter>
@@ -405,44 +432,22 @@ function DomainsAlert(props: {
   );
 }
 
-function APIKeyDetails(props: {
-  apiKey: ApiKey;
+function CreatedProjectDetails(props: {
+  project: Project;
+  secret: string;
   onComplete: () => void;
   teamSlug: string | undefined;
 }) {
-  const { apiKey } = props;
   const [secretStored, setSecretStored] = useState(false);
   const router = useDashboardRouter();
 
-  // get the project.slug for the apiKey to render "View Project" button
-  const projectQuery = useQuery({
-    queryKey: ["project", props.teamSlug, apiKey.id],
-    queryFn: async () => {
-      const res = await apiServerProxy<{
-        result: Project[];
-      }>({
-        method: "GET",
-        pathname: `/v1/teams/${props.teamSlug}/projects`,
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const projects = res.data.result;
-      const project = projects.find((p) => p.publishableKey === apiKey.key);
-      return project || null;
-    },
-    enabled: !!props.teamSlug,
-  });
-
-  const projectSlug = projectQuery.data?.slug;
+  const clientId = props.project.publishableKey;
 
   return (
     <div>
       <div className="p-6">
         <DialogHeader>
-          <DialogTitle className="text-2xl">{props.apiKey.name}</DialogTitle>
+          <DialogTitle className="text-2xl">{props.project.name}</DialogTitle>
         </DialogHeader>
 
         <div className="h-3" />
@@ -454,9 +459,9 @@ function APIKeyDetails(props: {
           </p>
 
           <CopyTextButton
-            textToCopy={apiKey.key}
+            textToCopy={clientId}
             className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
-            textToShow={apiKey.key}
+            textToShow={clientId}
             copyIconPosition="right"
             tooltip="Copy Client ID"
           />
@@ -471,9 +476,9 @@ function APIKeyDetails(props: {
           </p>
 
           <CopyTextButton
-            textToCopy={apiKey.secret || ""}
+            textToCopy={props.secret || ""}
             className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
-            textToShow={apiKey.secret || ""}
+            textToShow={props.secret || ""}
             copyIconPosition="right"
             tooltip="Copy Secret Key"
           />
@@ -515,20 +520,13 @@ function APIKeyDetails(props: {
         {props.teamSlug && (
           <Button
             onClick={() => {
-              if (!projectSlug) {
-                return;
-              }
-              router.push(`/team/${props.teamSlug}/${projectSlug}`);
+              router.push(`/team/${props.teamSlug}/${props.project.slug}`);
             }}
-            disabled={!secretStored || !projectSlug}
+            disabled={!secretStored}
             className="min-w-28 gap-2"
           >
             View Project
-            {projectQuery.isPending ? (
-              <Spinner className="size-4" />
-            ) : (
-              <ExternalLinkIcon className="size-4" />
-            )}
+            <ExternalLinkIcon className="size-4" />
           </Button>
         )}
       </DialogFooter>

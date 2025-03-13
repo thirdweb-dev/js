@@ -6,27 +6,34 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useState } from "react";
 import { cn } from "../../lib/utils";
+import { DynamicHeight } from "../ui/DynamicHeight";
 
 export function DangerSettingCard(props: {
   title: string;
   className?: string;
   footerClassName?: string;
-  description: string;
+  description: React.ReactNode;
   buttonLabel: string;
   buttonOnClick: () => void;
+  isDisabled?: boolean;
   isPending: boolean;
   confirmationDialog: {
     title: string;
-    description: string;
+    description: React.ReactNode;
+    children?: React.ReactNode;
+    onClose?: () => void;
   };
   children?: React.ReactNode;
 }) {
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false);
+
   return (
     <div
       className={cn(
@@ -50,33 +57,43 @@ export function DangerSettingCard(props: {
           props.footerClassName,
         )}
       >
-        <Dialog>
+        <Dialog
+          open={isConfirmationDialogOpen}
+          onOpenChange={(v) => {
+            setIsConfirmationDialogOpen(v);
+            if (!v) {
+              props.confirmationDialog.onClose?.();
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button
               variant="destructive"
               className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
-              disabled={props.isPending}
+              disabled={props.isDisabled || props.isPending}
             >
               {props.isPending && <Spinner className="size-3" />}
               {props.buttonLabel}
             </Button>
           </DialogTrigger>
 
-          <DialogContent
-            className="z-[10001]"
-            dialogOverlayClassName="z-[10000]"
-          >
-            <DialogHeader className="pr-10">
-              <DialogTitle className="leading-snug">
-                {props.confirmationDialog.title}
-              </DialogTitle>
+          <DialogContent className="overflow-hidden p-0">
+            <DynamicHeight>
+              <div className="p-6">
+                <DialogHeader className="pr-10">
+                  <DialogTitle className="leading-snug">
+                    {props.confirmationDialog.title}
+                  </DialogTitle>
 
-              <DialogDescription>
-                {props.confirmationDialog.description}
-              </DialogDescription>
-            </DialogHeader>
+                  <DialogDescription>
+                    {props.confirmationDialog.description}
+                  </DialogDescription>
+                </DialogHeader>
+                {props.confirmationDialog.children}
+              </div>
+            </DynamicHeight>
 
-            <DialogFooter className="mt-4 gap-4 lg:gap-2">
+            <div className="flex justify-end gap-4 border-t bg-card p-6 lg:gap-2">
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
@@ -90,7 +107,7 @@ export function DangerSettingCard(props: {
                 {props.isPending && <Spinner className="size-3" />}
                 {props.buttonLabel}
               </Button>
-            </DialogFooter>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

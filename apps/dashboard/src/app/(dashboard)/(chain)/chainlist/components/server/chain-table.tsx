@@ -12,7 +12,7 @@ import type {
   ChainMetadataWithServices,
   ChainSupportedService,
 } from "../../../types/chain";
-import { getChains } from "../../../utils";
+import { getChainsWithServices } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
 import { ChainListCard } from "../server/chainlist-card";
 import { ChainListRow } from "../server/chainlist-row";
@@ -35,7 +35,7 @@ const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_PAGE = 1;
 
 async function getChainsToRender(params: SearchParams) {
-  const chains = await getChains();
+  const chains = await getChainsWithServices();
 
   // sort the chains
   const sortedChains = chains.sort((a, b) => {

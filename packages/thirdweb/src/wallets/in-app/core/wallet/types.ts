@@ -1,6 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { SupportedSmsCountry } from "../../../../react/web/wallets/in-app/supported-sms-countries.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
 import type {
@@ -87,5 +88,9 @@ export type InAppWalletCreationOptions =
        * Whether to hide the private key export button in the Connect Modal
        */
       hidePrivateKeyExport?: boolean;
+      /**
+       * The storage to use for storing wallet state
+       */
+      storage?: AsyncStorage;
     }
   | undefined;

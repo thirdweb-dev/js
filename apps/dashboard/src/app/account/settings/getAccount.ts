@@ -2,7 +2,7 @@ import { API_SERVER_URL } from "@/constants/env";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
-import { isOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
+import { isAccountOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 
 /**
  * Just get the account object without enforcing onboarding.
@@ -40,7 +40,7 @@ export async function getValidAccount(pagePath?: string) {
   const account = await getRawAccount();
 
   // enforce login & onboarding
-  if (!account || !isOnboardingComplete(account)) {
+  if (!account || !isAccountOnboardingComplete(account)) {
     loginRedirect(pagePath);
   }
 

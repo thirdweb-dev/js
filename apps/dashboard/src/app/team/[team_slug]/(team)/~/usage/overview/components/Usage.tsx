@@ -10,8 +10,10 @@ import { InAppWalletUsersChartCardUI } from "components/embedded-wallets/Analyti
 import { subMonths } from "date-fns";
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { toPercent, toSize } from "utils/number";
 import { TotalSponsoredChartCardUI } from "../../../../_components/TotalSponsoredCard";
+import { SponsoredTransactionsTable } from "./SponsoredTransactionsTable";
 import { UsageCard } from "./UsageCard";
 
 type UsageProps = {
@@ -20,6 +22,13 @@ type UsageProps = {
   subscriptions: TeamSubscription[];
   account: Account;
   team: Team;
+  client: ThirdwebClient;
+  projects: {
+    id: string;
+    name: string;
+    image: string | null;
+    slug: string;
+  }[];
 };
 
 export const Usage: React.FC<UsageProps> = ({
@@ -27,6 +36,8 @@ export const Usage: React.FC<UsageProps> = ({
   subscriptions,
   account,
   team,
+  client,
+  projects,
 }) => {
   // TODO - get this from team instead of account
   const storageMetrics = useMemo(() => {
@@ -92,15 +103,27 @@ export const Usage: React.FC<UsageProps> = ({
   return (
     <div className="flex grow flex-col gap-8">
       <InAppWalletUsersChartCard
+        teamId={team.id}
         accountId={account.id}
         from={currentPeriodStart}
         to={currentPeriodEnd}
       />
 
       <TotalSponsoredCard
+        teamId={team.id}
         accountId={account.id}
         from={currentPeriodStart}
         to={currentPeriodEnd}
+      />
+
+      <SponsoredTransactionsTable
+        client={client}
+        teamSlug={team.slug}
+        teamId={team.id}
+        from={currentPeriodStart.toISOString()}
+        to={currentPeriodEnd.toISOString()}
+        projects={projects}
+        variant="team"
       />
 
       <UsageCard
@@ -138,6 +161,7 @@ export const Usage: React.FC<UsageProps> = ({
 type ChartCardProps = {
   from: Date;
   to: Date;
+  teamId: string;
   accountId: string;
 };
 
@@ -176,7 +200,7 @@ async function AsyncInAppWalletUsersChartCard(
     period: "day",
     from: props.from,
     to: props.to,
-    accountId: props.accountId,
+    teamId: props.teamId,
   }).catch(() => null);
 
   return (
@@ -222,17 +246,17 @@ async function AsyncTotalSponsoredChartCard(
     title: string;
   },
 ) {
-  const { accountId, from, to } = props;
+  const { teamId, from, to } = props;
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.all([
     // User operations usage
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "week",
     }),
     getUserOpUsage({
-      accountId: accountId,
+      teamId,
       from: from,
       to: to,
       period: "all",

@@ -53,6 +53,7 @@ export function OTPLoginUI(props: {
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [error, setError] = useState<string | undefined>();
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
+  const [countdown, setCountdown] = useState(0);
   const ecosystem = isEcosystemWallet(wallet)
     ? {
         id: wallet.id,
@@ -76,6 +77,7 @@ export function OTPLoginUI(props: {
           client: props.client,
         });
         setAccountStatus("sent");
+        setCountdown(60); // Start 60-second countdown
       } else if ("phone" in userInfo) {
         await preAuthenticate({
           ecosystem,
@@ -84,6 +86,7 @@ export function OTPLoginUI(props: {
           client: props.client,
         });
         setAccountStatus("sent");
+        setCountdown(60); // Start 60-second countdown
       } else {
         throw new Error("Invalid userInfo");
       }
@@ -184,6 +187,23 @@ export function OTPLoginUI(props: {
     }
   }, [sendEmailOrSms]);
 
+  // Handle countdown timer
+  useEffect(() => {
+    if (countdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown((current) => {
+        if (current <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdown]);
+
   if (screen === "base") {
     return (
       <Container fullHeight flex="column" animate="fadein">
@@ -276,7 +296,7 @@ export function OTPLoginUI(props: {
 
             {!isWideModal && <Line />}
 
-            <Container p={isWideModal ? undefined : "lg"}>
+            <Container p={isWideModal ? undefined : "lg"} gap="xs">
               {accountStatus === "error" && (
                 <Text size="sm" center color="danger">
                   {locale.emailLoginScreen.failedToSendCode}
@@ -297,9 +317,18 @@ export function OTPLoginUI(props: {
                 </Container>
               )}
 
-              {accountStatus === "sent" && (
-                <LinkButton onClick={sendEmailOrSms} type="button">
-                  {locale.emailLoginScreen.resendCode}
+              {accountStatus !== "sending" && (
+                <LinkButton
+                  onClick={countdown === 0 ? sendEmailOrSms : undefined}
+                  type="button"
+                  style={{
+                    opacity: countdown > 0 ? 0.5 : 1,
+                    cursor: countdown > 0 ? "default" : "pointer",
+                  }}
+                >
+                  {countdown > 0
+                    ? `Resend code in ${countdown} seconds`
+                    : locale.emailLoginScreen.resendCode}
                 </LinkButton>
               )}
             </Container>

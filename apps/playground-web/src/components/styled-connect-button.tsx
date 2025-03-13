@@ -3,6 +3,7 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
+  abstract,
   arbitrumSepolia,
   baseSepolia,
   optimismSepolia,
@@ -26,6 +27,7 @@ export function StyledConnectButton(
         optimismSepolia,
         polygonAmoy,
         arbitrumSepolia,
+        abstract,
       ]}
       wallets={WALLETS}
       supportedNFTs={{

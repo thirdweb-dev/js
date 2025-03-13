@@ -3,22 +3,12 @@ import { EcosystemWalletPricingCard } from "./components/pricing-card";
 
 export async function EcosystemCreatePage(props: { teamSlug: string }) {
   return (
-    <div className="flex w-full flex-col gap-6 md:mx-auto md:max-w-lg lg:max-w-4xl">
-      <header className="flex flex-col gap-1">
-        <h2 className="font-semibold text-3xl text-foreground tracking-tight">
-          Create an Ecosystem
-        </h2>
-        <p className="text-muted-foreground">
-          Create wallets that work across every chain and every app.
-        </p>
-      </header>
-      <main className="grid w-full gap-6 lg:grid-cols-2">
-        <section className="flex items-start">
-          <EcosystemWalletPricingCard />
-        </section>
-        <section className="mb-12 lg:px-4">
+    <div className="flex grow flex-col items-center justify-center">
+      <main className="container max-w-5xl py-20">
+        <div className="flex flex-col rounded-lg border bg-card lg:flex-row">
           <CreateEcosystemForm teamSlug={props.teamSlug} />
-        </section>
+          <EcosystemWalletPricingCard />
+        </div>
       </main>
     </div>
   );

@@ -10,7 +10,13 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["playground-web", "thirdweb-dashboard", "wallet-ui", "portal"],
+  "ignore": [
+    "playground-web",
+    "thirdweb-dashboard",
+    "wallet-ui",
+    "portal",
+    "thirdweb-login"
+  ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
     "onlyUpdatePeerDependentsWhenOutOfRange": true

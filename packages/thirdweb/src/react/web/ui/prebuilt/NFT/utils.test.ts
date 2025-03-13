@@ -86,7 +86,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getNFTInfo", () => {
   });
 
   it("should throw error if failed to load nft info", async () => {
-    await expect(() =>
+    await expect(
       getNFTInfo({ contract: UNISWAPV3_FACTORY_CONTRACT, tokenId: 0n }),
     ).rejects.toThrowError("Failed to load NFT metadata");
   });

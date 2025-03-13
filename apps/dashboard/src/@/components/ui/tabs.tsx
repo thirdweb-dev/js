@@ -76,7 +76,7 @@ export function TabLinks(props: {
 
 export function TabButtons(props: {
   tabs: {
-    name: string;
+    name: React.ReactNode;
     onClick: () => void;
     isActive: boolean;
     isEnabled?: boolean;
@@ -108,10 +108,11 @@ export function TabButtons(props: {
           className={cn("flex", props.tabContainerClassName)}
           ref={containerRef}
         >
-          {props.tabs.map((tab) => {
+          {props.tabs.map((tab, index) => {
             return (
               <Button
-                key={tab.name}
+                // biome-ignore lint/suspicious/noArrayIndexKey: tabs don't change order, so index is stable
+                key={index}
                 variant="ghost"
                 ref={tab.isActive ? activeTabRef : undefined}
                 className={cn(

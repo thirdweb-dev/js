@@ -43,19 +43,23 @@ type CreateAlertMutation = UseMutationResult<
 >;
 
 export function ManageEngineAlertsSection(props: {
+  teamIdOrSlug: string;
   alertRules: EngineAlertRule[];
   alertRulesIsLoading: boolean;
   engineId: string;
 }) {
   const notificationChannelsQuery = useEngineNotificationChannels(
     props.engineId,
+    props.teamIdOrSlug,
   );
   const deleteAlertMutation = useEngineDeleteNotificationChannel(
     props.engineId,
+    props.teamIdOrSlug,
   );
 
   const createAlertMutation = useEngineCreateNotificationChannel(
     props.engineId,
+    props.teamIdOrSlug,
   );
 
   // not passing the mutation to avoid multiple rows sharing the same mutation state, we create the new mutation for each row instead in each component instead

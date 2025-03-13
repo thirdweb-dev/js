@@ -230,101 +230,75 @@ export function useEngineUpdateDeployment() {
   });
 }
 
-export function useEngineRemoveFromDashboard() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
+export type RemoveEngineFromDashboardIParams = {
+  instanceId: string;
+  teamIdOrSlug: string;
+};
 
-  return useMutation({
-    mutationFn: async (instanceId: string) => {
-      invariant(instanceId, "instance is required");
-
-      const res = await apiServerProxy({
-        pathname: `/v1/engine/${instanceId}`,
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-    },
-
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+export async function removeEngineFromDashboard({
+  instanceId,
+  teamIdOrSlug,
+}: RemoveEngineFromDashboardIParams) {
+  const res = await apiServerProxy({
+    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
+    method: "DELETE",
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
-export interface DeleteCloudHostedInput {
+export type DeleteCloudHostedEngineParams = {
   deploymentId: string;
   reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
   feedback: string;
-}
+};
 
-export function useEngineDeleteCloudHosted() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      deploymentId,
-      reason,
-      feedback,
-    }: DeleteCloudHostedInput) => {
-      const res = await apiServerProxy({
-        pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ reason, feedback }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
+export async function deleteCloudHostedEngine({
+  deploymentId,
+  reason,
+  feedback,
+}: DeleteCloudHostedEngineParams) {
+  const res = await apiServerProxy({
+    pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+    body: JSON.stringify({ reason, feedback }),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
-export interface EditEngineInstanceInput {
+export type EditEngineInstanceParams = {
+  teamIdOrSlug: string;
   instanceId: string;
   name: string;
   url: string;
-}
+};
 
-export function useEngineEditInstance() {
-  const address = useActiveAccount()?.address;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ instanceId, name, url }: EditEngineInstanceInput) => {
-      const res = await apiServerProxy({
-        pathname: `/v1/engine/${instanceId}`,
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, url }),
-      });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
+export async function editEngineInstance({
+  teamIdOrSlug,
+  instanceId,
+  name,
+  url,
+}: EditEngineInstanceParams) {
+  const res = await apiServerProxy({
+    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: engineKeys.instances(address || ""),
-      });
-    },
+    body: JSON.stringify({ name, url }),
   });
+
+  if (!res.ok) {
+    throw new Error(res.error);
+  }
 }
 
 export type Transaction = {
@@ -1658,7 +1632,7 @@ export function useEngineSubscriptionsLastBlock(params: {
 
 interface EngineResourceMetrics {
   error: string;
-  data: {
+  result: {
     cpu: number;
     memory: number;
     errorRate: ResultItem[];
@@ -1667,7 +1641,7 @@ interface EngineResourceMetrics {
   };
 }
 
-export function useEngineSystemMetrics(engineId: string) {
+export function useEngineSystemMetrics(engineId: string, teamIdOrSlug: string) {
   const [enabled, setEnabled] = useState(true);
 
   return useQuery({
@@ -1675,7 +1649,7 @@ export function useEngineSystemMetrics(engineId: string) {
     queryFn: async () => {
       const res = await apiServerProxy({
         method: "GET",
-        pathname: `/v1/engine/${engineId}/metrics`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/metrics`,
       });
 
       if (!res.ok) {
@@ -1704,14 +1678,14 @@ export interface EngineAlertRule {
   pausedAt: Date | null;
 }
 
-export function useEngineAlertRules(engineId: string) {
+export function useEngineAlertRules(engineId: string, teamIdOrSlug: string) {
   return useQuery({
     queryKey: engineKeys.alertRules(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineAlertRule[];
       }>({
-        pathname: `/v1/engine/${engineId}/alert-rules`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/alert-rules`,
         method: "GET",
       });
 
@@ -1733,14 +1707,19 @@ export interface EngineAlert {
   endsAt: Date | null;
 }
 
-export function useEngineAlerts(engineId: string, limit: number, offset = 0) {
+export function useEngineAlerts(
+  engineId: string,
+  teamIdOrSlug: string,
+  limit: number,
+  offset = 0,
+) {
   return useQuery({
     queryKey: engineKeys.alerts(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineAlert[];
       }>({
-        pathname: `/v1/engine/${engineId}/alerts`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/alerts`,
         searchParams: {
           limit: `${limit}`,
           offset: `${offset}`,
@@ -1784,14 +1763,17 @@ export type EngineNotificationChannel = {
   subscriptionRoutes: string[];
 };
 
-export function useEngineNotificationChannels(engineId: string) {
+export function useEngineNotificationChannels(
+  engineId: string,
+  teamIdOrSlug: string,
+) {
   return useQuery({
     queryKey: engineKeys.notificationChannels(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineNotificationChannel[];
       }>({
-        pathname: `/v1/engine/${engineId}/notification-channels`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
         method: "GET",
       });
 
@@ -1811,7 +1793,10 @@ export interface CreateNotificationChannelInput {
   value: string;
 }
 
-export function useEngineCreateNotificationChannel(engineId: string) {
+export function useEngineCreateNotificationChannel(
+  engineId: string,
+  teamIdOrSlug: string,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -1819,7 +1804,7 @@ export function useEngineCreateNotificationChannel(engineId: string) {
       const res = await apiServerProxy<{
         data: EngineNotificationChannel;
       }>({
-        pathname: `/v1/engine/${engineId}/notification-channels`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1842,13 +1827,16 @@ export function useEngineCreateNotificationChannel(engineId: string) {
   });
 }
 
-export function useEngineDeleteNotificationChannel(engineId: string) {
+export function useEngineDeleteNotificationChannel(
+  engineId: string,
+  teamIdOrSlug: string,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (notificationChannelId: string) => {
       const res = await apiServerProxy({
-        pathname: `/v1/engine/${engineId}/notification-channels/${notificationChannelId}`,
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels/${notificationChannelId}`,
         method: "DELETE",
       });
 

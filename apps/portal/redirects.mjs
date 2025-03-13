@@ -856,7 +856,6 @@ const infrastructureRedirects = {
   "/engine/features/permissions": "/engine/features/admins",
 
   //storage
-  "/storage": "/infrastructure/storage/overview",
   "/storage/how-storage-works": "/infrastructure/storage/how-storage-works",
   "/storage/upload-to-ipfs":
     "/infrastructure/storage/how-to-use-storage/upload-files-to-ipfs",

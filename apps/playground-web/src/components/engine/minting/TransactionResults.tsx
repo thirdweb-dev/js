@@ -158,6 +158,7 @@ export function ClaimTransactionResults({
                   <TableCell>
                     <span className="flex items-center gap-2">
                       {result.network === "Base Sep" && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src="/BaseSep.png"
                           alt="Base"
@@ -165,6 +166,7 @@ export function ClaimTransactionResults({
                         />
                       )}
                       {result.network === "OP Sep" && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src="/OP.png"
                           alt="Optimism Sep"
@@ -172,6 +174,7 @@ export function ClaimTransactionResults({
                         />
                       )}
                       {result.network === "Ethereum" && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src="/Ethereum.png"
                           alt="Ethereum"

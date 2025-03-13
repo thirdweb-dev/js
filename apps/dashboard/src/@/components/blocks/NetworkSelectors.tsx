@@ -104,6 +104,7 @@ export function SingleNetworkSelector(props: {
   side?: "left" | "right" | "top" | "bottom";
   disableChainId?: boolean;
   align?: "center" | "start" | "end";
+  placeholder?: string;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -180,7 +181,11 @@ export function SingleNetworkSelector(props: {
         props.onChange(Number(chainId));
       }}
       closeOnSelect={true}
-      placeholder={isLoadingChains ? "Loading Chains..." : "Select Chain"}
+      placeholder={
+        isLoadingChains
+          ? "Loading Chains..."
+          : props.placeholder || "Select Chain"
+      }
       overrideSearchFn={searchFn}
       renderOption={renderOption}
       className={props.className}

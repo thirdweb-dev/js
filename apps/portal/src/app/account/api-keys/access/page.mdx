@@ -1,8 +1,8 @@
 import { DocImage, Steps, Step } from "@doc";
-import chooseKeyImage from "../assets/choose-key.png";
 import allowedDomainsImage from "../assets/allowed-domains.png";
-import selectEditImage from "../assets/select-edit.png";
 import { createMetadata } from "@doc";
+import AccessRestrictions from "./assets/access-restrictions.png";
+import ProjectOverview from "../assets/project-overview.png";
 
 export const metadata = createMetadata({
 	title: "Access Restrictions",
@@ -24,32 +24,28 @@ To modify the allowed Domain Id or Bundle Ids:
 
 <Steps>
 
-<Step title="Go to Dashboard">
+<Steps>
 
-Go to **[thirdweb dashboard](https://thirdweb.com/team)**
+<Step title="Select Project">
+
+Select the project you want to set access restrictions on from the Overview section of your dashboard.
+
+<DocImage src={ProjectOverview} alt="Project Overview" />
 
 </Step>
 
-<Step title="Choose API Key">
-Choose the API Key you want to modify restrictions on.
+<Step title="Project Settings">
 
-<DocImage src={chooseKeyImage} />
-</Step>
+Navigate to the project's settings and locate Domain Restrictions and Bundle ID restrictions. Add the domain or bundle id you want to restrict the project on.
 
-<Step title="Edit">
-Select `Edit` to enter editor mode.
+<DocImage src={AccessRestrictions} alt="" />
 
-<DocImage src={selectEditImage} />
-</Step>
-
-<Step title="Edit Domains">
-Enter the allowed domains the "Allowed Domains" field or switch to Bundle IDs to enter allowed Bundle IDs.
-
-<DocImage src={allowedDomainsImage} />
 </Step>
 
 <Step title="Save Changes">
-
+Save your changes to apply the access restrictions.
 </Step>
+
+</Steps>
 
 </Steps>

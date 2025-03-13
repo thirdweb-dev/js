@@ -61,6 +61,8 @@ const GAS_FREE_CHAINS = [
   300, // zksync sepolia
   7225878, // Saakuru Mainnet
   247253, // Saakuru Testnet
+  19011, // Homeverse Mainnet
+  40875, // Homeverse Testnet
 ];
 
 function useIsNetworkMismatch(txChainId: number) {
@@ -212,11 +214,10 @@ export const MismatchButton = forwardRef<
       >
         <DialogContent
           className={cn(
-            "z-[10001] gap-0 p-0",
+            "gap-0 p-0",
             dialog === "no-funds" && "max-w-[480px]",
             dialog === "pay" && "max-w-[360px] border-none bg-transparent",
           )}
-          dialogOverlayClassName="z-[10000]"
           dialogCloseClassName="focus:ring-0"
         >
           <DynamicHeight>

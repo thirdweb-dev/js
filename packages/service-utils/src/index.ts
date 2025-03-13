@@ -6,8 +6,12 @@ export type {
   PolicyResult,
   UserOpData,
   ProjectResponse,
+  ProjectSecretKey,
+  ProjectBundlerService,
+  ProjectService,
   TeamAndProjectResponse,
   TeamResponse,
+  ProjectEmbeddedWalletsService,
 } from "./core/api.js";
 
 export { fetchTeamAndProject } from "./core/api.js";

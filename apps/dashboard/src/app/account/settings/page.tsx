@@ -1,3 +1,4 @@
+import { getDefaultTeam } from "@/api/team";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
@@ -6,14 +7,23 @@ import { getValidAccount } from "./getAccount";
 
 export default async function Page() {
   const pagePath = "/account";
-  const account = await getValidAccount(pagePath);
-  const token = await getAuthToken();
 
-  if (!token) {
+  const [defaultTeam, account, token] = await Promise.all([
+    getDefaultTeam(),
+    getValidAccount(pagePath),
+    getAuthToken(),
+  ]);
+
+  if (!token || !defaultTeam) {
     loginRedirect(pagePath);
   }
 
   return (
-    <AccountSettingsPage account={account} client={getThirdwebClient(token)} />
+    <AccountSettingsPage
+      account={account}
+      client={getThirdwebClient(token)}
+      defaultTeamSlug={defaultTeam.slug}
+      defaultTeamName={defaultTeam.name}
+    />
   );
 }

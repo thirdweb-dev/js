@@ -48,6 +48,9 @@ function Story() {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
         client={getThirdwebClient()}
+        leaveTeam={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }}
       />
       <ComponentVariants />
       <Toaster richColors />
@@ -61,8 +64,12 @@ function ComponentVariants() {
       <div className="mx-auto max-w-[1100px]">
         <h2 className="mb-5 text-3xl"> Component variations </h2>
         <div className="flex flex-col gap-6">
-          <LeaveTeamCard enabled={true} teamName="foo" />
-          <LeaveTeamCard enabled={false} teamName="foo" />
+          <LeaveTeamCard
+            teamName="foo"
+            leaveTeam={async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+            }}
+          />
           <DeleteTeamCard enabled={true} teamName="foo" />
           <DeleteTeamCard enabled={false} teamName="foo" />
         </div>

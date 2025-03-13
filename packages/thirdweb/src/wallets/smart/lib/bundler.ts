@@ -1,27 +1,37 @@
 import { decodeErrorResult } from "viem";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import { postOpRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint_v07/events/PostOpRevertReason.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../../../transaction/serialize-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
+import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import { stringify } from "../../../utils/json.js";
+import { toEther } from "../../../utils/units.js";
+import type { Account } from "../../interfaces/wallet.js";
+import { getEntrypointFromFactory } from "../index.js";
 import {
   type BundlerOptions,
   type EstimationResult,
   type GasPriceResult,
   type PmTransactionData,
+  type SmartWalletOptions,
   type UserOperationReceipt,
   type UserOperationV06,
   type UserOperationV07,
   formatUserOperationReceipt,
 } from "../types.js";
+import { predictSmartAccountAddress } from "./calls.js";
 import {
   ENTRYPOINT_ADDRESS_v0_6,
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
 } from "./constants.js";
+import { prepareUserOp } from "./userop.js";
 import { hexlifyUserOp } from "./utils.js";
 
 /**
@@ -108,6 +118,92 @@ export async function estimateUserOpGas(
       res.paymasterPostOpGasLimit !== undefined
         ? hexToBigInt(res.paymasterPostOpGasLimit)
         : undefined,
+  };
+}
+
+/**
+ * Estimate the gas cost of a user operation.
+ * @param args - The options for estimating the gas cost of a user operation.
+ * @returns The estimated gas cost of the user operation.
+ * @example
+ * ```ts
+ * import { estimateUserOpGasCost } from "thirdweb/wallets/smart";
+ *
+ * const gasCost = await estimateUserOpGasCost({
+ *  transactions,
+ *  adminAccount,
+ *  client,
+ *  smartWalletOptions,
+ * });
+ * ```
+ * @walletUtils
+ */
+export async function estimateUserOpGasCost(args: {
+  transactions: PreparedTransaction[];
+  adminAccount: Account;
+  client: ThirdwebClient;
+  smartWalletOptions: SmartWalletOptions;
+}) {
+  // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
+  if (
+    args.smartWalletOptions.factoryAddress &&
+    !args.smartWalletOptions.overrides?.entrypointAddress
+  ) {
+    const entrypointAddress = await getEntrypointFromFactory(
+      args.smartWalletOptions.factoryAddress,
+      args.client,
+      args.smartWalletOptions.chain,
+    );
+    if (entrypointAddress) {
+      args.smartWalletOptions.overrides = {
+        ...args.smartWalletOptions.overrides,
+        entrypointAddress,
+      };
+    }
+  }
+
+  const userOp = await prepareUserOp({
+    transactions: args.transactions,
+    adminAccount: args.adminAccount,
+    client: args.client,
+    smartWalletOptions: args.smartWalletOptions,
+    isDeployedOverride: await isContractDeployed(
+      getContract({
+        address: await predictSmartAccountAddress({
+          adminAddress: args.adminAccount.address,
+          factoryAddress: args.smartWalletOptions.factoryAddress,
+          chain: args.smartWalletOptions.chain,
+          client: args.client,
+        }),
+        chain: args.smartWalletOptions.chain,
+        client: args.client,
+      }),
+    ),
+    waitForDeployment: false,
+  });
+
+  let gasLimit = 0n;
+  if ("paymasterVerificationGasLimit" in userOp) {
+    // v0.7
+    gasLimit =
+      BigInt(userOp.paymasterVerificationGasLimit ?? 0) +
+      BigInt(userOp.paymasterPostOpGasLimit ?? 0) +
+      BigInt(userOp.verificationGasLimit ?? 0) +
+      BigInt(userOp.preVerificationGas ?? 0) +
+      BigInt(userOp.callGasLimit ?? 0);
+  } else {
+    // v0.6
+    gasLimit =
+      BigInt(userOp.verificationGasLimit ?? 0) +
+      BigInt(userOp.preVerificationGas ?? 0) +
+      BigInt(userOp.callGasLimit ?? 0);
+  }
+
+  const gasCost = gasLimit * (userOp.maxFeePerGas ?? 0n);
+
+  return {
+    ether: toEther(gasCost),
+    wei: gasCost,
   };
 }
 

@@ -4,7 +4,10 @@ import {
   type UsageV2Source,
   getTopicName,
 } from "../core/usageV2.js";
-import { KafkaProducer, type KafkaProducerSendOptions } from "./kafka.js";
+import { KafkaProducer } from "./kafka.js";
+
+const TEAM_ID_PREFIX = "team_";
+const PROJECT_ID_PREFIX = "prj_";
 
 /**
  * Creates a UsageV2Producer which opens a persistent TCP connection.
@@ -28,25 +31,20 @@ export class UsageV2Producer {
      */
     producerName: string;
     /**
-     * The environment the service is running in.
+     * A comma-separated list of `host[:port]` Kafka servers.
      */
-    environment: "development" | "production";
+    kafkaServers: string;
     /**
      * The product where usage is coming from.
      */
     source: UsageV2Source;
-    /**
-     * Whether to compress the events.
-     */
-    shouldCompress?: boolean;
 
     username: string;
     password: string;
   }) {
     this.kafkaProducer = new KafkaProducer({
       producerName: config.producerName,
-      environment: config.environment,
-      shouldCompress: config.shouldCompress,
+      kafkaServers: config.kafkaServers,
       username: config.username,
       password: config.password,
     });
@@ -56,25 +54,29 @@ export class UsageV2Producer {
   /**
    * Send usageV2 events.
    * This method may throw. To call this non-blocking:
+   * ```ts
+   * void usageV2.sendEvents(events).catch((e) => console.error(e))
+   * ```
+   *
    * @param events
    */
-  async sendEvents(
-    events: UsageV2Event[],
-    /**
-     * Reference: https://kafka.js.org/docs/producing#producing-messages
-     */
-    options?: KafkaProducerSendOptions,
-  ): Promise<void> {
+  async sendEvents(events: UsageV2Event[]): Promise<void> {
     const parsedEvents = events.map((event) => ({
       ...event,
+      // Default to a generated UUID.
       id: event.id ?? randomUUID(),
+      // Default to now.
       created_at: event.created_at ?? new Date(),
       // Remove the "team_" prefix, if any.
-      team_id: event.team_id.startsWith("team_")
-        ? event.team_id.slice(5)
+      team_id: event.team_id.startsWith(TEAM_ID_PREFIX)
+        ? event.team_id.slice(TEAM_ID_PREFIX.length)
         : event.team_id,
+      // Remove the "prj_" prefix, if any.
+      project_id: event.project_id?.startsWith(PROJECT_ID_PREFIX)
+        ? event.project_id.slice(PROJECT_ID_PREFIX.length)
+        : event.project_id,
     }));
-    await this.kafkaProducer.send(this.topic, parsedEvents, options);
+    await this.kafkaProducer.send(this.topic, parsedEvents);
   }
 
   /**

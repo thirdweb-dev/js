@@ -15,7 +15,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
         </div>
       }
     >
-      <div data-noindex>{props.children}</div>
+      <div>{props.children}</div>
     </DocLayout>
   );
 }

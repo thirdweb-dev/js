@@ -68,7 +68,10 @@ function Story() {
     },
   });
 
-  const redirectToBillingPortalStub = async () => ({ status: 200 });
+  const getBillingPortalUrlStub = async () => ({
+    status: 200,
+    url: "https://example.com",
+  });
 
   return (
     <div className="container flex max-w-[1130px] flex-col gap-12 lg:p-10">
@@ -76,7 +79,7 @@ function Story() {
         <PlanInfoCard
           team={team}
           subscriptions={zeroUsageOnDemandSubs}
-          redirectToBillingPortal={redirectToBillingPortalStub}
+          getBillingPortalUrl={getBillingPortalUrlStub}
         />
       </BadgeContainer>
 
@@ -84,7 +87,7 @@ function Story() {
         <PlanInfoCard
           team={team}
           subscriptions={trialPlanZeroUsageOnDemandSubs}
-          redirectToBillingPortal={redirectToBillingPortalStub}
+          getBillingPortalUrl={getBillingPortalUrlStub}
         />
       </BadgeContainer>
 
@@ -92,7 +95,7 @@ function Story() {
         <PlanInfoCard
           team={team}
           subscriptions={subsWith1Usage}
-          redirectToBillingPortal={redirectToBillingPortalStub}
+          getBillingPortalUrl={getBillingPortalUrlStub}
         />
       </BadgeContainer>
 
@@ -100,7 +103,7 @@ function Story() {
         <PlanInfoCard
           team={team}
           subscriptions={subsWith4Usage}
-          redirectToBillingPortal={redirectToBillingPortalStub}
+          getBillingPortalUrl={getBillingPortalUrlStub}
         />
       </BadgeContainer>
     </div>

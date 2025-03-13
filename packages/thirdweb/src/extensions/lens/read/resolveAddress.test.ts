@@ -14,7 +14,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("resolve lens address", () => {
   });
 
   it("should throw if passed an invalid lens handle", async () => {
-    await expect(() =>
+    await expect(
       resolveAddress({ client: TEST_CLIENT, name: "vitalik.eth" }),
     ).rejects.toThrowError(
       "Could not fetch the wallet address for lens handle: vitalik.eth",

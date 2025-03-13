@@ -39,7 +39,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  *
  * ### Connect to a restricted ecosystem wallet with your designated partner ID
  *
- * The parnter ID will be provided to you by the ecosystem with which you're integrating.
+ * The partner ID will be provided to you by the ecosystem with which you're integrating.
  *
  * ```ts
  * import { ecosystemWallet } from "thirdweb/wallets";
@@ -73,6 +73,7 @@ export function ecosystemWallet(
       return new InAppWebConnector({
         client,
         ecosystem,
+        storage: createOptions?.storage,
       });
     },
   }) as Wallet<EcosystemWalletId>;

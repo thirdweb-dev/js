@@ -203,7 +203,7 @@ export class IFrameWallet implements IWebWallet {
       };
 
       if (tx.maxFeePerGas) {
-        // ethers (in the iframe) rejects any type 0 trasaction with unknown keys
+        // ethers (in the iframe) rejects any type 0 transaction with unknown keys
         // TODO remove this once iframe is upgraded to v5
         transaction.accessList = tx.accessList;
         transaction.maxFeePerGas = tx.maxFeePerGas;

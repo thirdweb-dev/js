@@ -11,7 +11,7 @@ describe("WalletIcon", () => {
   });
 
   it("should throw error if WalletId is not supported", async () => {
-    await expect(() =>
+    await expect(
       // @ts-ignore For test
       fetchWalletImage({ id: "__undefined__" }),
     ).rejects.toThrowError("Wallet with id __undefined__ not found");

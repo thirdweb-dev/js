@@ -1,78 +1,136 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import type {
-  BillingBillingPortalAction,
-  BillingPortalOptions,
-  RedirectBillingCheckoutAction,
-  RedirectCheckoutOptions,
+  GetBillingCheckoutUrlAction,
+  GetBillingCheckoutUrlOptions,
+  GetBillingPortalUrlAction,
+  GetBillingPortalUrlOptions,
 } from "../actions/billing";
+import { cn } from "../lib/utils";
+import { Spinner } from "./ui/Spinner/Spinner";
 import { Button, type ButtonProps } from "./ui/button";
 
-type CheckoutButtonProps = Omit<RedirectCheckoutOptions, "redirectUrl"> &
-  ButtonProps & {
-    redirectPath: string;
-    redirectToCheckout: RedirectBillingCheckoutAction;
-  };
+type CheckoutButtonProps = Omit<GetBillingCheckoutUrlOptions, "redirectUrl"> & {
+  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
+  buttonProps?: Omit<ButtonProps, "children">;
+  children: React.ReactNode;
+};
 
 export function CheckoutButton({
-  onClick,
   teamSlug,
   sku,
   metadata,
-  redirectPath,
+  getBillingCheckoutUrl,
   children,
-  redirectToCheckout,
-  ...restProps
+  buttonProps,
 }: CheckoutButtonProps) {
+  const getUrlMutation = useMutation({
+    mutationFn: async () => {
+      return getBillingCheckoutUrl({
+        teamSlug,
+        sku,
+        metadata,
+        redirectUrl: getAbsoluteUrl("/stripe-redirect"),
+      });
+    },
+  });
+
+  const errorMessage = "Failed to open checkout page";
+
   return (
     <Button
-      {...restProps}
+      {...buttonProps}
+      className={cn(buttonProps?.className, "gap-2")}
+      disabled={getUrlMutation.isPending || buttonProps?.disabled}
       onClick={async (e) => {
-        onClick?.(e);
-        await redirectToCheckout({
-          teamSlug,
-          sku,
-          metadata,
-          redirectUrl: getRedirectUrl(redirectPath),
+        buttonProps?.onClick?.(e);
+        getUrlMutation.mutate(undefined, {
+          onSuccess: (res) => {
+            if (!res.url) {
+              toast.error(errorMessage);
+              return;
+            }
+
+            const tab = window.open(res.url, "_blank");
+
+            if (!tab) {
+              toast.error(errorMessage);
+              return;
+            }
+          },
+          onError: () => {
+            toast.error(errorMessage);
+          },
         });
       }}
     >
+      {getUrlMutation.isPending && <Spinner className="size-4" />}
       {children}
     </Button>
   );
 }
 
-type BillingPortalButtonProps = Omit<BillingPortalOptions, "redirectUrl"> &
-  ButtonProps & {
-    redirectPath: string;
-    redirectToBillingPortal: BillingBillingPortalAction;
-  };
+type BillingPortalButtonProps = Omit<
+  GetBillingPortalUrlOptions,
+  "redirectUrl"
+> & {
+  getBillingPortalUrl: GetBillingPortalUrlAction;
+  buttonProps?: Omit<ButtonProps, "children">;
+  children: React.ReactNode;
+};
 
 export function BillingPortalButton({
-  onClick,
   teamSlug,
-  redirectPath,
   children,
-  redirectToBillingPortal,
-  ...restProps
+  getBillingPortalUrl,
+  buttonProps,
 }: BillingPortalButtonProps) {
+  const getUrlMutation = useMutation({
+    mutationFn: async () => {
+      return getBillingPortalUrl({
+        teamSlug,
+        redirectUrl: getAbsoluteUrl("/stripe-redirect"),
+      });
+    },
+  });
+
+  const errorMessage = "Failed to open billing portal";
+
   return (
     <Button
-      {...restProps}
+      {...buttonProps}
+      className={cn(buttonProps?.className, "gap-2")}
+      disabled={getUrlMutation.isPending || buttonProps?.disabled}
       onClick={async (e) => {
-        onClick?.(e);
-        await redirectToBillingPortal({
-          teamSlug,
-          redirectUrl: getRedirectUrl(redirectPath),
+        buttonProps?.onClick?.(e);
+        getUrlMutation.mutate(undefined, {
+          onSuccess(res) {
+            if (!res.url) {
+              toast.error(errorMessage);
+              return;
+            }
+
+            const tab = window.open(res.url, "_blank");
+            if (!tab) {
+              toast.error(errorMessage);
+              return;
+            }
+          },
+          onError: () => {
+            toast.error(errorMessage);
+          },
         });
       }}
     >
+      {getUrlMutation.isPending && <Spinner className="size-4" />}
       {children}
     </Button>
   );
 }
 
-function getRedirectUrl(path: string) {
+function getAbsoluteUrl(path: string) {
   const url = new URL(window.location.origin);
   url.pathname = path;
   return url.toString();

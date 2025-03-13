@@ -1,8 +1,7 @@
 import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getProject } from "../../../../../../@/api/projects";
-import { getAPIKeyForProjectId } from "../../../../../api/lib/getAPIKeys";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -13,8 +12,11 @@ export default async function Page(props: {
     interval?: string;
   }>;
 }) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
+  const [searchParams, params] = await Promise.all([
+    props.searchParams,
+    props.params,
+  ]);
+
   const range =
     searchParams.from && searchParams.to
       ? {
@@ -31,18 +33,15 @@ export default async function Page(props: {
     : "week";
 
   const project = await getProject(params.team_slug, params.project_slug);
-  if (!project) {
-    notFound();
-  }
 
-  const apiKey = await getAPIKeyForProjectId(project.id);
-  if (!apiKey) {
-    notFound();
+  if (!project) {
+    redirect(`/team/${params.team_slug}`);
   }
 
   return (
     <InAppWalletAnalytics
-      clientId={apiKey.key}
+      teamId={project.teamId}
+      projectId={project.id}
       interval={interval}
       range={range as Range}
     />

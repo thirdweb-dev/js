@@ -70,11 +70,10 @@ async function HeaderAndNav(props: {
             path: "/account/settings",
             name: "Settings",
           },
-          // TODO - enable these links after they are functional
-          // {
-          //   path: "/account/wallets",
-          //   name: "Wallets",
-          // },
+          {
+            path: "/account/wallets",
+            name: "Linked Wallets",
+          },
           {
             path: "/account/devices",
             name: "Devices",

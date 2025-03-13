@@ -38,7 +38,9 @@ export default defineConfig({
     globalSetup: [join(__dirname, "./globalSetup.ts")],
     testTimeout: 90_000,
     retry: 3,
-    maxConcurrency: 3,
+    maxConcurrency: 1,
+    maxWorkers: 4,
+    minWorkers: 2,
     bail: 1,
     // clear any mocks between any tests
     clearMocks: true,

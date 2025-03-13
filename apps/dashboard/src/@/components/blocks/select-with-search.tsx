@@ -137,7 +137,7 @@ export const SelectWithSearch = React.forwardRef<
         </PopoverTrigger>
 
         <PopoverContent
-          className={cn("z-[10001] p-0", popoverContentClassName)}
+          className={cn("p-0", popoverContentClassName)}
           align={props.align || "center"}
           side={props.side}
           sideOffset={10}

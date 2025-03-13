@@ -5,13 +5,13 @@ interface PlatformFeeFieldsetProps {
   isMarketplace: boolean;
 }
 
-export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = (
-  props,
-) => {
+export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
+  isMarketplace,
+}) => {
   return (
     <Fieldset legend="Platform fees">
       <div className="flex flex-col gap-4 md:flex-row">
-        {props.isMarketplace ? (
+        {isMarketplace ? (
           <p className="mb-3 pt-4 text-muted-foreground text-sm italic">
             A 2.5% platform fee is deducted from each sale to support ongoing
             platform operations and improvements.{" "}

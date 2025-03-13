@@ -18,7 +18,9 @@ export function AnnouncementBanner(props: {
     layoutSegment === "/_not-found" ||
     hasDismissedAnnouncement ||
     layoutSegment === "login" ||
-    layoutSegment === "nebula-app"
+    layoutSegment === "nebula-app" ||
+    layoutSegment === "join" ||
+    layoutSegment === "get-started"
   ) {
     return null;
   }

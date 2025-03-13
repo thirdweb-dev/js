@@ -8,6 +8,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
 import { OrganizeContractsToProjectsBanner } from "../components/notices/AnnouncementBanner";
 import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
+import { PosthogIdentifierServer } from "../components/wallets/PosthogIdentifierServer";
 import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
@@ -79,6 +80,9 @@ export default function RootLayout({
             </Suspense>
             <Suspense fallback={null}>
               <EnsureValidConnectedWalletLoginServer />
+            </Suspense>
+            <Suspense fallback={null}>
+              <PosthogIdentifierServer />
             </Suspense>
           </AppRouterProviders>
           <DashboardRouterTopProgressBar />

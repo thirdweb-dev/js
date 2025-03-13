@@ -1,9 +1,11 @@
 import { getWalletConnections } from "@/api/analytics";
 import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { Changelog } from "components/dashboard/Changelog";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 import {
   type ProjectWithAnalytics,
   TeamProjectsPage,
@@ -13,7 +15,14 @@ export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const params = await props.params;
-  const team = await getTeamBySlug(params.team_slug);
+  const [team, authToken] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getAuthToken(),
+  ]);
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}`);
+  }
 
   if (!team) {
     redirect("/team");
@@ -23,16 +32,21 @@ export default async function Page(props: {
   const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
 
   return (
-    <div className="container flex grow flex-col gap-12 py-8 lg:flex-row">
-      <div className="flex grow flex-col">
-        <h1 className="mb-4 font-semibold text-2xl tracking-tight">Projects</h1>
-        <TeamProjectsPage projects={projectsWithTotalWallets} team={team} />
+    <div className="flex grow flex-col">
+      <div className="border-border border-b py-10">
+        <div className="container">
+          <h1 className="font-semibold text-3xl tracking-tight">
+            Team Overview
+          </h1>
+        </div>
       </div>
-      <div className="shrink-0 lg:w-[320px]">
-        <h2 className="mb-4 font-semibold text-2xl tracking-tight">
-          Changelog
-        </h2>
-        <Changelog />
+
+      <div className="container flex grow flex-col pt-8 pb-20">
+        <TeamProjectsPage
+          projects={projectsWithTotalWallets}
+          team={team}
+          client={getThirdwebClient(authToken)}
+        />
       </div>
     </div>
   );
@@ -42,13 +56,14 @@ async function getProjectsWithAnalytics(
   projects: Project[],
 ): Promise<Array<ProjectWithAnalytics>> {
   return Promise.all(
-    projects.map(async (p) => {
+    projects.map(async (project) => {
       try {
         const today = new Date();
         const thirtyDaysAgo = subDays(today, 30);
 
         const data = await getWalletConnections({
-          clientId: p.publishableKey,
+          teamId: project.teamId,
+          projectId: project.id,
           period: "all",
           from: thirtyDaysAgo,
           to: today,
@@ -60,12 +75,12 @@ async function getProjectsWithAnalytics(
         }
 
         return {
-          ...p,
+          ...project,
           monthlyActiveUsers: uniqueWalletsConnected,
         };
       } catch {
         return {
-          ...p,
+          ...project,
           monthlyActiveUsers: 0,
         };
       }

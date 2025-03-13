@@ -4,7 +4,9 @@ import {
   Box,
   Braces,
   Brain,
+  ExternalLink,
   MessageCircleQuestionIcon,
+  Network,
   Rocket,
   StickyNote,
   Wrench,
@@ -26,6 +28,11 @@ export const sidebar: SideBar = {
       icon: <StickyNote />,
     },
     {
+      name: "Playground",
+      href: "https://playground.thirdweb.com/insight",
+      icon: <ExternalLink />,
+    },
+    {
       name: "Get Started",
       href: `${insightSlug}/get-started`,
       icon: <Rocket />,
@@ -34,6 +41,11 @@ export const sidebar: SideBar = {
       name: "Blueprints",
       href: `${insightSlug}/blueprints`,
       icon: <Album />,
+    },
+    {
+      name: "Multichain Queries",
+      href: `${insightSlug}/multichain-queries`,
+      icon: <Network />,
     },
     {
       name: "Agents & LLMs",

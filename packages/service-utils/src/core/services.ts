@@ -46,8 +46,9 @@ export const SERVICE_DEFINITIONS = {
   },
   pay: {
     name: "pay",
-    title: "Pay",
-    description: "Pay for a blockchain transaction with any currency",
+    title: "Universal Bridge",
+    description:
+      "Bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat or tokens via cross-chain routing",
     // all actions allowed
     actions: [],
   },

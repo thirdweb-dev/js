@@ -77,8 +77,7 @@ export function DeployStatusModal(props: {
     <Dialog open={isModalOpen}>
       <DialogContent
         dialogCloseClassName="hidden"
-        className="z-[10001] gap-0 p-0 md:max-w-[480px]"
-        dialogOverlayClassName="z-[10000]"
+        className="gap-0 p-0 md:max-w-[480px]"
       >
         <div className="flex flex-col gap-6 p-6">
           <DialogHeader>

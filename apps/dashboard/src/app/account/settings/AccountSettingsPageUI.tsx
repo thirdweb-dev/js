@@ -1,8 +1,11 @@
 "use client";
 
+import type { GetBillingPortalUrlAction } from "@/actions/billing";
+import { BillingPortalButton } from "@/components/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,14 +32,14 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { EllipsisIcon } from "lucide-react";
+import { CircleXIcon, EllipsisIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -51,12 +54,17 @@ type MinimalAccount = Pick<
 
 export function AccountSettingsPageUI(props: {
   account: MinimalAccount;
-  hideDeleteAccount?: boolean;
   sendEmail: (email: string) => Promise<void>;
   updateName: (name: string) => Promise<void>;
   updateEmailWithOTP: (otp: string) => Promise<void>;
   updateAccountAvatar: (avatar: File | undefined) => Promise<void>;
   client: ThirdwebClient;
+  deleteAccount: DeleteAccount;
+  onAccountDeleted: () => void;
+  defaultTeamSlug: string;
+  defaultTeamName: string;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
+  cancelSubscriptions: () => Promise<void>;
 }) {
   return (
     <div className="flex flex-col gap-8">
@@ -76,7 +84,14 @@ export function AccountSettingsPageUI(props: {
         updateEmailWithOTP={props.updateEmailWithOTP}
       />
 
-      {!props.hideDeleteAccount && <DeleteAccountCard />}
+      <DeleteAccountCard
+        deleteAccount={props.deleteAccount}
+        onAccountDeleted={props.onAccountDeleted}
+        defaultTeamSlug={props.defaultTeamSlug}
+        defaultTeamName={props.defaultTeamName}
+        getBillingPortalUrl={props.getBillingPortalUrl}
+        cancelSubscriptions={props.cancelSubscriptions}
+      />
     </div>
   );
 }
@@ -182,30 +197,48 @@ function AccountNameFormControl(props: {
   );
 }
 
-function DeleteAccountCard() {
-  const router = useDashboardRouter();
-  const title = "Delete Account";
-  const description =
-    "Permanently remove your Personal Account and all of its contents from the thirdweb platform. This action is not reversible, please continue with caution.";
+type DeleteAccount = () => Promise<{
+  status: number;
+}>;
 
-  // TODO
+// TODO: when user can create multiple teams - the error status messaging needs to be updated
+
+function DeleteAccountCard(props: {
+  deleteAccount: DeleteAccount;
+  onAccountDeleted: () => void;
+  defaultTeamSlug: string;
+  defaultTeamName: string;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
+  cancelSubscriptions: () => Promise<void>;
+}) {
+  const title = "Delete Account";
+  const description = (
+    <>
+      Permanently delete your thirdweb account, the default team "
+      {props.defaultTeamName}" and all associated data
+      <br />
+      This action is not reversible
+    </>
+  );
+
   const deleteAccount = useMutation({
-    mutationFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Deleting account");
-      throw new Error("Not implemented");
-    },
-    onSuccess: () => {
-      router.push("/team");
+    mutationFn: props.deleteAccount,
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        props.onAccountDeleted();
+        toast.success("Account deleted successfully");
+      } else {
+        toast.error("Failed to delete account");
+      }
     },
   });
 
+  const cancelSubscriptions = useMutation({
+    mutationFn: props.cancelSubscriptions,
+  });
+
   function handleDelete() {
-    const promises = deleteAccount.mutateAsync();
-    toast.promise(promises, {
-      success: "Account deleted successfully",
-      error: "Failed to delete account",
-    });
+    deleteAccount.mutate();
   }
 
   return (
@@ -216,9 +249,100 @@ function DeleteAccountCard() {
       buttonOnClick={handleDelete}
       isPending={deleteAccount.isPending}
       confirmationDialog={{
-        title: "Are you sure you want to delete your account?",
-        description:
-          "This action is not reversible and will delete all of your data.",
+        title: "Delete Account",
+        description: (
+          <span className="block space-y-2">
+            <span className="block">
+              Permanently delete your thirdweb account, the default team "
+              {props.defaultTeamName}" and all associated data
+            </span>
+            <span className="block font-medium">
+              This action is not reversible
+            </span>
+          </span>
+        ),
+        onClose: () => {
+          deleteAccount.reset();
+        },
+        children: (
+          <>
+            {deleteAccount.data?.status === 400 && (
+              <div className="mt-4">
+                <Alert variant="destructive">
+                  <AlertTitle>Failed to delete account</AlertTitle>
+                  <AlertDescription>
+                    <div className="mb-4">
+                      <span className="block">
+                        Your default team "{props.defaultTeamName}" has active
+                        subscriptions. These subscriptions have to be cancelled
+                        before deleting account
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col gap-3 lg:flex-row">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => {
+                          const promise = cancelSubscriptions.mutateAsync();
+                          toast.promise(promise, {
+                            success: "Subscriptions cancelled successfully",
+                            error: "Failed to cancel subscriptions",
+                          });
+                        }}
+                      >
+                        {cancelSubscriptions.isPending ? (
+                          <Spinner className="size-4" />
+                        ) : (
+                          <CircleXIcon className="size-4" />
+                        )}
+                        Cancel subscriptions
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        asChild
+                        size="sm"
+                        className="gap-2"
+                      >
+                        <Link href="/support/create-ticket" target="_blank">
+                          Contact Support
+                          <ExternalLinkIcon className="size-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+
+            {deleteAccount.data?.status === 402 && (
+              <div className="mt-4">
+                <Alert variant="destructive">
+                  <AlertTitle>Failed to delete account</AlertTitle>
+                  <AlertDescription>
+                    <span className="mb-4 block">
+                      Your default team "{props.defaultTeamName}" has unpaid
+                      invoices. These invoices have to be paid before deleting
+                      account
+                    </span>
+                    <BillingPortalButton
+                      buttonProps={{
+                        size: "sm",
+                        variant: "default",
+                      }}
+                      teamSlug={props.defaultTeamSlug}
+                      getBillingPortalUrl={props.getBillingPortalUrl}
+                    >
+                      Manage Billing
+                    </BillingPortalButton>
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+          </>
+        ),
       }}
     />
   );

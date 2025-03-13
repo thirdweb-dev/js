@@ -1,4 +1,4 @@
-import type { BillingBillingPortalAction } from "@/actions/billing";
+import type { GetBillingPortalUrlAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { BillingPortalButton } from "@/components/billing";
@@ -14,7 +14,7 @@ import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getVal
 export function PlanInfoCard(props: {
   subscriptions: TeamSubscription[];
   team: Team;
-  redirectToBillingPortal: BillingBillingPortalAction;
+  getBillingPortalUrl: GetBillingPortalUrlAction;
 }) {
   const { subscriptions, team } = props;
   const validPlan = getValidTeamPlan(team);
@@ -36,10 +36,14 @@ export function PlanInfoCard(props: {
     <div className="rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-1">
             <h3 className="font-semibold text-2xl capitalize tracking-tight">
               {validPlan} Plan
             </h3>
+            <p className="text-muted-foreground text-sm">
+              Click on "Manage Billing" to view your invoices, update your
+              payment method, or edit your billing details.
+            </p>
             {trialEndsInFuture && <Badge>Trial</Badge>}
           </div>
           {trialEndsAfterDays > 0 && (
@@ -53,9 +57,11 @@ export function PlanInfoCard(props: {
           {/* manage team billing */}
           <BillingPortalButton
             teamSlug={team.slug}
-            variant="outline"
-            redirectPath={`/team/${team.slug}/~/settings/billing`}
-            redirectToBillingPortal={props.redirectToBillingPortal}
+            buttonProps={{
+              variant: "default",
+              size: "sm",
+            }}
+            getBillingPortalUrl={props.getBillingPortalUrl}
           >
             Manage Billing
           </BillingPortalButton>
@@ -139,9 +145,9 @@ function SubscriptionOverview(props: {
       <div className="flex items-center justify-between gap-6">
         <div>
           {props.title && (
-            <h5 className="font-medium text-lg">{props.title}</h5>
+            <h5 className="font-medium text-base">{props.title}</h5>
           )}
-          <p className="text-muted-foreground text-sm lg:text-base">
+          <p className="text-muted-foreground text-sm">
             {format(
               new Date(props.subscription.currentPeriodStart),
               "MMMM dd yyyy",

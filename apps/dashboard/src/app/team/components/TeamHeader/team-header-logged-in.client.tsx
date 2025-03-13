@@ -8,8 +8,13 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
-import { LazyCreateAPIKeyDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { LazyCreateProjectDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { doLogout } from "../../../login/auth-actions";
+import {
+  getChangelogNotifications,
+  getInboxNotifications,
+  markNotificationAsRead,
+} from "../NotificationButton/fetch-notifications";
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -58,6 +63,9 @@ export function TeamHeaderLoggedIn(props: {
     },
     client: getThirdwebClient(),
     accountAddress: props.accountAddress,
+    getChangelogNotifications: getChangelogNotifications,
+    getInboxNotifications: getInboxNotifications,
+    markNotificationAsRead: markNotificationAsRead,
   };
 
   return (
@@ -65,27 +73,26 @@ export function TeamHeaderLoggedIn(props: {
       <TeamHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <TeamHeaderMobileUI {...headerProps} className="lg:hidden" />
 
-      <LazyCreateAPIKeyDialog
-        open={createProjectDialogState.isOpen}
-        teamSlug={
-          createProjectDialogState.isOpen
-            ? createProjectDialogState.team.slug
-            : undefined
-        }
-        onOpenChange={() =>
-          setCreateProjectDialogState({
-            isOpen: false,
-          })
-        }
-        onCreateAndComplete={() => {
-          // refresh projects
-          router.refresh();
-        }}
-        enableNebulaServiceByDefault={
-          createProjectDialogState.isOpen &&
-          createProjectDialogState.team.enabledScopes.includes("nebula")
-        }
-      />
+      {createProjectDialogState.isOpen && (
+        <LazyCreateProjectDialog
+          open={true}
+          teamSlug={createProjectDialogState.team.slug}
+          teamId={createProjectDialogState.team.id}
+          onOpenChange={() =>
+            setCreateProjectDialogState({
+              isOpen: false,
+            })
+          }
+          onCreateAndComplete={() => {
+            // refresh projects
+            router.refresh();
+          }}
+          enableNebulaServiceByDefault={
+            createProjectDialogState.isOpen &&
+            createProjectDialogState.team.enabledScopes.includes("nebula")
+          }
+        />
+      )}
     </div>
   );
 }

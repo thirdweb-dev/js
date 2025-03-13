@@ -1,0 +1,64 @@
+import { Callout, createMetadata, Step, Steps, DocImage } from "@doc";
+import LinkAccount from "./assets/link-account.png";
+import LinkAccountConfirm from "./assets/link-account-confirm.png";
+import LinkedAccountDash from "./assets/linked-account-dash.png";
+import MyAccountTab from "./assets/my-account-tab.png";
+
+
+export const metadata = createMetadata({
+	title: "thirdweb - Link Accounts",
+	description: "Learn how to link multiple accounts to a single billing profile.",
+	image: {
+		title: "Link Account",
+		icon: "thirdweb",
+	},
+});
+
+# Link Accounts
+
+Learn how to connect additional wallets to your existing email and billing profile to seamlessly access all projects and billing details across multiple accounts.
+
+<Steps>
+
+<Step title="Login with unlinked wallet">
+
+Start by navigating to the [thirdweb login portal](https://thirdweb.com/login) and login with the wallet you want to link to an existing thirdweb account.
+
+</Step>
+
+<Step title="Specify Existing Email">
+
+Upon signing in, navigate to the "I already have an account" tab and you will be prompted to enter the email address associated with your existing thirdweb account.
+
+<DocImage src={LinkAccount} alt="Link Account" />
+
+</Step>
+
+<Step title="Confirm Link">
+You will be prompted to confirm the link between the existing email and the new wallet. Upon email verification, you will be able to access all projects and billing details across both accounts.
+
+<DocImage src={LinkAccountConfirm} alt="Link Account" />
+</Step>
+
+</Steps>
+
+## View Linked Accounts
+
+Learn how to view and unlink all linked accounts to the current email and billing profile.
+
+<Steps>
+<Step title="Navigate to Account Settings">
+Select your profile from the top right navigation. Then select My Account to navigate to your account settings.
+
+<DocImage src={MyAccountTab} alt="My Account Tab" />
+
+</Step>
+
+<Step title="Select Linked Wallets">
+Navigate to the [Linked Wallets](https://thirdweb.com/account/wallets) tab to view all connected wallets. Here you can unlink any wallets that are no longer in use.
+
+<DocImage src={LinkedAccountDash} alt="Linked Account Dashboard" />
+
+</Step>
+
+</Steps>

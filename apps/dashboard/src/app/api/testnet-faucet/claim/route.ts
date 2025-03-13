@@ -1,3 +1,4 @@
+import { getTeams } from "@/api/team";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import {
   API_SERVER_URL,
@@ -48,36 +49,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(
       {
         error: "No wallet connected",
-      },
-      { status: 400 },
-    );
-  }
-
-  // Make sure the connected wallet has a thirdweb account
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authCookie.value}`,
-    },
-  });
-
-  if (accountRes.status !== 200) {
-    // Account not found on this connected address
-    return NextResponse.json(
-      {
-        error: "thirdweb account not found",
-      },
-      { status: 400 },
-    );
-  }
-
-  const account: { data: Account } = await accountRes.json();
-
-  // Make sure the logged-in account has verified its email
-  if (!account.data.email) {
-    return NextResponse.json(
-      {
-        error: "Account owner hasn't verified email",
       },
       { status: 400 },
     );
@@ -147,6 +118,61 @@ export const POST = async (req: NextRequest) => {
         error: "Could not validate captcha.",
       },
       { status: 400 },
+    );
+  }
+
+  // Make sure the connected wallet has a thirdweb account
+  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authCookie.value}`,
+    },
+  });
+
+  if (accountRes.status !== 200) {
+    // Account not found on this connected address
+    return NextResponse.json(
+      {
+        error: "thirdweb account not found",
+      },
+      { status: 400 },
+    );
+  }
+
+  const account: { data: Account } = await accountRes.json();
+
+  // Make sure the logged-in account has verified its email
+  if (!account.data.email) {
+    return NextResponse.json(
+      {
+        error: "Account owner hasn't verified email",
+      },
+      { status: 400 },
+    );
+  }
+
+  // get the teams for the account
+  const teams = await getTeams();
+  if (!teams) {
+    return NextResponse.json(
+      {
+        error: "No teams found for this account.",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+  // check if ANY of the customer's teams has "growth" or "pro" plan
+  const hasPaidPlan = teams.some((team) => team.billingPlan !== "free");
+  if (!hasPaidPlan) {
+    return NextResponse.json(
+      {
+        error: "Free plan cannot claim on this chain.",
+      },
+      {
+        status: 402,
+      },
     );
   }
 

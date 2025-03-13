@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { toUSD } from "../../../../utils/number";
 import {
   type PayTopCustomersData,
   usePayCustomers,
@@ -249,7 +250,7 @@ function getCSVData(data: PayTopCustomersData["customers"]) {
   const header = ["Wallet Address", "Total spend"];
   const rows = data.map((customer) => [
     customer.walletAddress,
-    `$${(customer.totalSpendUSDCents / 100).toLocaleString()}`,
+    toUSD(customer.totalSpendUSDCents / 100),
   ]);
 
   return { header, rows };
