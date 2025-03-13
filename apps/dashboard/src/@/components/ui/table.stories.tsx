@@ -113,7 +113,7 @@ function TableDemo(props: {
           {invoices.map((invoice) => (
             <TableRow
               key={invoice.invoice}
-              linkBox={props.linkBox}
+              // linkBox={props.linkBox}
               className={cn(
                 props.linkBox && "cursor-pointer hover:bg-accent/50",
               )}
@@ -121,9 +121,7 @@ function TableDemo(props: {
               <TableCell className="font-medium">
                 <Link
                   href={`/invoices/${invoice.invoice}`}
-                  className={cn(
-                    props.linkBox && "before:absolute before:inset-0",
-                  )}
+                  className={cn(props.linkBox && "before:inset-0")}
                 >
                   {invoice.invoice}
                 </Link>

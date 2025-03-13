@@ -75,7 +75,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
               href={replaceDeployerAddress(
                 `/${publisherEnsName || cell.row.original.publisher}/${cell.row.original.id}`,
               )}
-              className="whitespace-nowrap text-foreground before:absolute before:inset-0"
+              className="whitespace-nowrap text-foreground"
             >
               {cell.value}
             </Link>
@@ -190,7 +190,7 @@ function ContractTableRow(props: {
   return (
     <>
       <TableRow
-        linkBox
+        // linkBox
         className="cursor-pointer hover:bg-card"
         {...rowProps}
         key={key}

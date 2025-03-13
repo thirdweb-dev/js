@@ -164,7 +164,7 @@ function EngineInstanceRow(props: {
     <>
       <TableRow
         className={instance.status === "active" ? "hover:bg-accent/50" : ""}
-        linkBox
+        // linkBox
       >
         <TableCell>
           <div className="flex items-center justify-between">
@@ -230,7 +230,7 @@ function InstanceNameLink(props: {
       ) : (
         <Link
           href={`${props.engineLinkPrefix}/${props.instance.id}`}
-          className="flex items-center text-foreground before:absolute before:inset-0 before:bg-transparent"
+          className="flex items-center text-foreground"
         >
           {name}
         </Link>

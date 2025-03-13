@@ -151,14 +151,14 @@ export function ContractTableUI(props: {
               return (
                 <TableRow
                   key={contract.id}
-                  linkBox
+                  // linkBox
                   className="cursor-pointer hover:bg-accent/50"
                 >
                   <TableCell>
                     <ContractNameCell
                       chainId={contract.chainId}
                       contractAddress={contract.contractAddress}
-                      linkOverlay
+                      // linkOverlay
                     />
                   </TableCell>
 
