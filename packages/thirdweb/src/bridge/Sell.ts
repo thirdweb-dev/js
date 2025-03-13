@@ -178,7 +178,7 @@ export declare namespace quote {
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.sellAmountWei - The amount of the origin token to buy.
+ * @param options.sellAmountWei - The amount of the origin token to sell.
  * @param options.sender - The address of the sender.
  * @param options.receiver - The address of the recipient.
  * @param options.client - Your thirdweb client.
