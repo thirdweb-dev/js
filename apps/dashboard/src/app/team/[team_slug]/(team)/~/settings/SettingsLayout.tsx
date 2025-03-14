@@ -55,7 +55,7 @@ export function SettingsLayout(props: {
         />
         <div
           className={cn(
-            "flex grow flex-col",
+            "flex max-w-full grow flex-col",
             // if showing full nav on mobile - hide the page content
             showFullNavOnMobile && "max-sm:hidden",
           )}

@@ -3,7 +3,8 @@ import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
 
-export type Team = TeamResponse;
+export type Team = TeamResponse & { stripeCustomerId: string | null };
+
 export async function getTeamBySlug(slug: string) {
   const token = await getAuthToken();
 
