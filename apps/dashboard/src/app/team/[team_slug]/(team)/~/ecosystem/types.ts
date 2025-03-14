@@ -55,4 +55,10 @@ export type Partner = {
   permissions: [PartnerPermission];
   createdAt: string;
   updatedAt: string;
+  accessControl?: {
+    serverVerifier?: {
+      url: string;
+      headers?: { key: string; value: string }[];
+    };
+  };
 };
