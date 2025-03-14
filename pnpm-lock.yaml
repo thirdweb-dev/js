@@ -277,6 +277,9 @@ importers:
       spdx-correct:
         specifier: ^3.2.0
         version: 3.2.0
+      stripe:
+        specifier: 17.7.0
+        version: 17.7.0
       swagger-ui-react:
         specifier: ^5.20.1
         version: 5.20.1(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -13719,6 +13722,10 @@ packages:
   strip-json-comments@5.0.1:
     resolution: {integrity: sha512-0fk9zBqO67Nq5M/m45qHCJxylV/DhBlIOVExqgOMiCCrzrhU6tCibRXNqE3jwJLftzE9SNuZtYbpzcO+i9FiKw==}
     engines: {node: '>=14.16'}
+
+  stripe@17.7.0:
+    resolution: {integrity: sha512-aT2BU9KkizY9SATf14WhhYVv2uOapBWX0OFWF4xvcj1mPaNotlSc2CsxpS4DS46ZueSppmCF5BX1sNYBtwBvfw==}
+    engines: {node: '>=12.*'}
 
   strnum@1.1.2:
     resolution: {integrity: sha512-vrN+B7DBIoTTZjnPNewwhx6cBA/H+IS7rfW68n7XxC1y7uoiGQBxaKzqucGUgavX15dJgiGztLJ8vxuEzwqBdA==}
@@ -33189,6 +33196,11 @@ snapshots:
   strip-json-comments@3.1.1: {}
 
   strip-json-comments@5.0.1: {}
+
+  stripe@17.7.0:
+    dependencies:
+      '@types/node': 22.13.10
+      qs: 6.14.0
 
   strnum@1.1.2: {}
 
