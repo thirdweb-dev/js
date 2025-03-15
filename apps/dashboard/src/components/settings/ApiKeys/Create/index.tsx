@@ -5,14 +5,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import {
   FormControl,
@@ -27,7 +20,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { createProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectService } from "@thirdweb-dev/service-utils";
 import { SERVICES } from "@thirdweb-dev/service-utils";
@@ -52,7 +44,7 @@ export type CreateProjectPrefillOptions = {
 export type CreateProjectDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateAndComplete?: () => void;
+  onCreate?: () => void;
   prefill?: CreateProjectPrefillOptions;
   enableNebulaServiceByDefault: boolean;
   teamId: string;
@@ -79,7 +71,7 @@ export default CreateProjectDialog;
 export const CreateProjectDialogUI = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateAndComplete?: () => void;
+  onCreate?: () => void;
   createProject: (param: Partial<Project>) => Promise<{
     project: Project;
     secret: string;
@@ -88,60 +80,79 @@ export const CreateProjectDialogUI = (props: {
   enableNebulaServiceByDefault: boolean;
   teamSlug: string;
 }) => {
-  const [screen, setScreen] = useState<
-    { id: "create" } | { id: "api-details"; project: Project; secret: string }
-  >({ id: "create" });
-  const { open, onOpenChange } = props;
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(v) => {
-        // Prevent closing the dialog when the API key is created - to make sure user does not accidentally close the dialog without copying the secret key
-        if (screen.id === "api-details") {
-          return;
-        }
-
-        onOpenChange(v);
-      }}
-    >
+    <Dialog open={props.open}>
       <DialogContent
-        className="overflow-hidden p-0"
-        dialogCloseClassName={screen.id === "api-details" ? "hidden" : ""}
+        className="overflow-hidden bg-card p-0"
+        dialogCloseClassName={"hidden"}
+        aria-label="create-project"
       >
+        <DialogTitle className="sr-only">Create Project</DialogTitle>
         <DynamicHeight>
-          {screen.id === "create" && (
-            <CreateProjectForm
-              createProject={props.createProject}
-              onProjectCreated={(params) => {
-                setScreen({
-                  id: "api-details",
-                  project: params.project,
-                  secret: params.secret,
-                });
-              }}
-              prefill={props.prefill}
-              enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
-            />
-          )}
-
-          {screen.id === "api-details" && (
-            <CreatedProjectDetails
-              project={screen.project}
-              secret={screen.secret}
-              teamSlug={props.teamSlug}
-              onComplete={() => {
-                onOpenChange(false);
-                setScreen({ id: "create" });
-                props.onCreateAndComplete?.();
-              }}
-            />
-          )}
+          <CreateProjectDialogUIContent
+            onCreate={props.onCreate}
+            createProject={props.createProject}
+            prefill={props.prefill}
+            enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
+            teamSlug={props.teamSlug}
+            closeModal={() => props.onOpenChange(false)}
+          />
         </DynamicHeight>
       </DialogContent>
     </Dialog>
   );
 };
+
+function CreateProjectDialogUIContent(props: {
+  onCreate?: () => void;
+  createProject: (param: Partial<Project>) => Promise<{
+    project: Project;
+    secret: string;
+  }>;
+  prefill?: CreateProjectPrefillOptions;
+  enableNebulaServiceByDefault: boolean;
+  teamSlug: string;
+  closeModal: () => void;
+}) {
+  const [screen, setScreen] = useState<
+    { id: "create" } | { id: "api-details"; project: Project; secret: string }
+  >({ id: "create" });
+
+  if (screen.id === "create") {
+    return (
+      <CreateProjectForm
+        showTitle={true}
+        closeModal={props.closeModal}
+        createProject={props.createProject}
+        onProjectCreated={(params) => {
+          setScreen({
+            id: "api-details",
+            project: params.project,
+            secret: params.secret,
+          });
+          props.onCreate?.();
+        }}
+        prefill={props.prefill}
+        enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
+      />
+    );
+  }
+
+  if (screen.id === "api-details") {
+    return (
+      <CreatedProjectDetails
+        project={screen.project}
+        secret={screen.secret}
+        teamSlug={props.teamSlug}
+        onComplete={() => {
+          props.closeModal();
+        }}
+      />
+    );
+  }
+
+  return null;
+}
 
 const createProjectFormSchema = z.object({
   name: projectNameSchema,
@@ -150,7 +161,9 @@ const createProjectFormSchema = z.object({
 
 type CreateProjectFormSchema = z.infer<typeof createProjectFormSchema>;
 
-function CreateProjectForm(props: {
+// Note: Do not use any dialog components
+// This is also used in create project onboarding flow
+export function CreateProjectForm(props: {
   createProject: (param: Partial<Project>) => Promise<{
     project: Project;
     secret: string;
@@ -161,6 +174,8 @@ function CreateProjectForm(props: {
     project: Project;
     secret: string;
   }) => void;
+  closeModal: (() => void) | undefined;
+  showTitle: boolean;
 }) {
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
   const trackEvent = useTrack();
@@ -272,9 +287,11 @@ function CreateProjectForm(props: {
     <Form {...form}>
       <form onSubmit={handleSubmit} autoComplete="off">
         <div className="p-6">
-          <DialogHeader className="mb-4">
-            <DialogTitle className="text-2xl">Create Project</DialogTitle>
-          </DialogHeader>
+          {props.showTitle && (
+            <h2 className="mb-3 font-semibold text-xl tracking-tight">
+              Create Project
+            </h2>
+          )}
 
           <div className="flex flex-col gap-6">
             <FormField
@@ -285,7 +302,7 @@ function CreateProjectForm(props: {
                   <FormLabel>Project Name</FormLabel>
                   <FormControl>
                     <Input
-                      className="bg-card"
+                      className="bg-background"
                       placeholder="My Project"
                       {...field}
                     />
@@ -316,7 +333,7 @@ function CreateProjectForm(props: {
                     <FormLabel>Allowed Domains</FormLabel>
                     <FormControl>
                       <Textarea
-                        className="bg-card"
+                        className="bg-background"
                         placeholder="thirdweb.com, *.example.com, localhost:3000"
                         {...field}
                       />
@@ -364,21 +381,26 @@ function CreateProjectForm(props: {
           </div>
         </div>
 
-        <DialogFooter className="flex gap-4 border-border border-t bg-card p-6 md:gap-2">
-          <DialogClose asChild>
-            <Button variant="outline" className="min-w-28 gap-2">
+        <div className="flex justify-end gap-3 border-border border-t bg-card p-6">
+          {props.closeModal && (
+            <Button
+              variant="outline"
+              className="bg-background"
+              onClick={props.closeModal}
+            >
               Cancel
             </Button>
-          </DialogClose>
+          )}
+
           <Button
             type="submit"
             disabled={createProject.isPending}
-            className="min-w-28 gap-2"
+            className="gap-2"
           >
             {createProject.isPending && <Spinner className="size-4" />}
-            Create
+            Create Project
           </Button>
-        </DialogFooter>
+        </div>
       </form>
     </Form>
   );
@@ -393,25 +415,23 @@ function DomainsAlert(props: {
   return (
     <div>
       <div className="mb-4 p-6">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
-            {props.type === "no-domain" && "No Domains Configured"}
-            {props.type === "any-domain" && "Unrestricted Web Access"}
-          </DialogTitle>
-          <DialogDescription>
-            {props.type === "no-domain" &&
-              "This will deny requests from all origins, rendering the key unusable in frontend applications. Proceed only if you intend to use this key in server or native apps environments."}
-            {props.type === "any-domain" &&
-              "Requests from all origins will be authorized. Your key can be used by any website without restriction"}
-          </DialogDescription>
-        </DialogHeader>
+        <h2 className="mb-1 font-semibold text-xl tracking-tight">
+          {props.type === "no-domain" && "No Domains Configured"}
+          {props.type === "any-domain" && "Unrestricted Web Access"}
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          {props.type === "no-domain" &&
+            "This will deny requests from all origins, rendering the key unusable in frontend applications. Proceed only if you intend to use this key in server or native apps environments."}
+          {props.type === "any-domain" &&
+            "Requests from all origins will be authorized. Your key can be used by any website without restriction"}
+        </p>
       </div>
 
-      <DialogFooter className="!justify-between flex gap-4 border-border border-t bg-card p-6">
+      <div className="flex justify-between gap-4 border-border border-t bg-card p-6">
         <Button
           variant="outline"
           onClick={props.onGoBack}
-          className="min-w-28 gap-2"
+          className="min-w-28 gap-2 bg-background"
         >
           <ArrowLeftIcon className="size-4" />
           Update Domains
@@ -427,15 +447,17 @@ function DomainsAlert(props: {
           {props.isCreating && <Spinner className="size-4" />}
           Proceed
         </Button>
-      </DialogFooter>
+      </div>
     </div>
   );
 }
 
-function CreatedProjectDetails(props: {
+// Note: Do not use any dialog components
+// This is also used in create project onboarding flow
+export function CreatedProjectDetails(props: {
   project: Project;
   secret: string;
-  onComplete: () => void;
+  onComplete?: () => void;
   teamSlug: string | undefined;
 }) {
   const [secretStored, setSecretStored] = useState(false);
@@ -446,11 +468,9 @@ function CreatedProjectDetails(props: {
   return (
     <div>
       <div className="p-6">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">{props.project.name}</DialogTitle>
-        </DialogHeader>
-
-        <div className="h-3" />
+        <h2 className="mb-4 font-semibold text-xl tracking-tight">
+          {props.project.name}
+        </h2>
 
         <section>
           <h3>Client ID</h3>
@@ -460,7 +480,7 @@ function CreatedProjectDetails(props: {
 
           <CopyTextButton
             textToCopy={clientId}
-            className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
+            className="!h-auto w-full justify-between truncate bg-background px-3 py-3 font-mono"
             textToShow={clientId}
             copyIconPosition="right"
             tooltip="Copy Client ID"
@@ -477,7 +497,7 @@ function CreatedProjectDetails(props: {
 
           <CopyTextButton
             textToCopy={props.secret || ""}
-            className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
+            className="!h-auto w-full justify-between truncate bg-background px-3 py-3 font-mono"
             textToShow={props.secret || ""}
             copyIconPosition="right"
             tooltip="Copy Secret Key"
@@ -506,16 +526,18 @@ function CreatedProjectDetails(props: {
         </Alert>
       </div>
 
-      <DialogFooter className="flex border-border border-t bg-card p-6">
-        <Button
-          type="button"
-          onClick={props.onComplete}
-          disabled={!secretStored}
-          variant="outline"
-          className="min-w-28 gap-2"
-        >
-          {props.teamSlug ? "Close" : "Complete"}
-        </Button>
+      <div className="flex justify-end gap-4 border-border border-t bg-card p-6">
+        {props.onComplete && (
+          <Button
+            type="button"
+            onClick={props.onComplete}
+            disabled={!secretStored}
+            variant="outline"
+            className="min-w-28 gap-2"
+          >
+            {props.teamSlug ? "Close" : "Complete"}
+          </Button>
+        )}
 
         {props.teamSlug && (
           <Button
@@ -529,7 +551,7 @@ function CreatedProjectDetails(props: {
             <ExternalLinkIcon className="size-4" />
           </Button>
         )}
-      </DialogFooter>
+      </div>
     </div>
   );
 }

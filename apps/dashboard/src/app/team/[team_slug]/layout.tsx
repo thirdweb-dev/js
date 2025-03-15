@@ -1,3 +1,4 @@
+import { getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { redirect } from "next/navigation";
@@ -13,7 +14,10 @@ export default async function RootTeamLayout(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const { team_slug } = await props.params;
-  const team = await getTeamBySlug(team_slug).catch(() => null);
+  const [team, projects] = await Promise.all([
+    getTeamBySlug(team_slug).catch(() => null),
+    getProjects(team_slug),
+  ]);
 
   if (!team) {
     redirect("/team");
@@ -21,6 +25,10 @@ export default async function RootTeamLayout(props: {
 
   if (!isTeamOnboardingComplete(team)) {
     redirect(`/get-started/team/${team.slug}`);
+  }
+
+  if (projects.length === 0) {
+    redirect(`/get-started/team/${team.slug}/create-project`);
   }
 
   return (

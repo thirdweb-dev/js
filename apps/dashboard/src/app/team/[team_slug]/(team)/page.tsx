@@ -6,10 +6,8 @@ import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
-import {
-  type ProjectWithAnalytics,
-  TeamProjectsPage,
-} from "./~/projects/TeamProjectsPage";
+import { TeamProjectsPage } from "./~/projects/TeamProjectsPage";
+import type { ProjectWithAnalytics } from "./~/projects/TeamProjectsTable";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;

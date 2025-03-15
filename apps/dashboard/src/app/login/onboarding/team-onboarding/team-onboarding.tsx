@@ -104,7 +104,7 @@ export function InviteTeamMembers(props: {
     <InviteTeamMembersUI
       trackEvent={trackEvent}
       onComplete={() => {
-        router.replace(`/team/${props.team.slug}`);
+        router.replace(`/get-started/team/${props.team.slug}/create-project`);
       }}
       getTeam={async () => {
         const res = await apiServerProxy<{
