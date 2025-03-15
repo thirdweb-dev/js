@@ -22,6 +22,11 @@ export async function getRawAccount() {
     },
   });
 
+  if (!res.ok) {
+    console.error("Error fetching account", res.status, res.statusText);
+    return undefined;
+  }
+
   const json = await res.json();
 
   if (json.error) {

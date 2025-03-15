@@ -60,5 +60,60 @@ export type Partner = {
       url: string;
       headers?: { key: string; value: string }[];
     };
+    allowedOperations?: AllowedOperations[];
   };
+};
+
+export type AllowedArgument = {
+  offset: number;
+  type: "address" | "uint256" | "bytes32" | "bool" | "string";
+  comparisonOperator: "eq" | "neq" | "gt" | "gte" | "lt" | "lte";
+  value: string;
+};
+
+export type AllowedTransaction = {
+  chainId: number;
+  contractAddress?: string;
+  selector?: string;
+  arguments?: AllowedArgument[];
+  maxValue?: string;
+};
+
+export type AllowedTypedData = {
+  domain: string;
+  verifyingContract?: string;
+  chainId?: number;
+  primaryType?: string;
+};
+
+export type PersonalSignRestriction =
+  | {
+      messageType: "userOp";
+      allowedTransactions?: AllowedTransaction[];
+    }
+  | {
+      messageType: "other";
+      message?: string;
+    };
+
+export type AllowedOperations =
+  | {
+      signMethod: "eth_signTransaction";
+      allowedTransactions?: AllowedTransaction[];
+    }
+  | {
+      signMethod: "eth_signTypedData_v4";
+      allowedTypedData?: AllowedTypedData[];
+    }
+  | {
+      signMethod: "personal_sign";
+      allowedPersonalSigns?: PersonalSignRestriction[];
+    };
+
+export type PartnerAccessControl = {
+  serverVerifier?: {
+    url: string;
+    headers?: { key: string; value: string }[];
+  };
+  allowedOperations?: AllowedOperations[];
 };

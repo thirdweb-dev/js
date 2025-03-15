@@ -1,3 +1,6 @@
+"use client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { useAddPartner } from "../../hooks/use-add-partner";
@@ -5,20 +8,29 @@ import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
 
 export function AddPartnerForm({
   ecosystem,
-  onPartnerAdded,
   authToken,
 }: {
-  authToken: string;
   ecosystem: Ecosystem;
-  onPartnerAdded: () => void;
+  authToken: string;
 }) {
+  const router = useDashboardRouter();
+  const params = useParams();
+  const teamSlug = params.team_slug as string;
+  const ecosystemSlug = params.slug as string;
+
   const { mutateAsync: addPartner, isPending } = useAddPartner(
     {
       authToken,
     },
     {
       onSuccess: () => {
-        onPartnerAdded();
+        toast.success("Partner added successfully", {
+          description: "The partner has been added to your ecosystem.",
+        });
+
+        // Redirect to the redirect page that will take us back to the configuration page
+        const redirectPath = `/team/${teamSlug}/~/ecosystem/${ecosystemSlug}`;
+        router.push(redirectPath);
       },
       onError: (error) => {
         const message =
