@@ -21,7 +21,11 @@ export function EcosystemPermissionsPage({
       />
       <AuthOptionsSection ecosystem={ecosystem} authToken={authToken} />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (
-        <EcosystemPartnersSection ecosystem={ecosystem} authToken={authToken} />
+        <EcosystemPartnersSection
+          teamSlug={params.team_slug}
+          ecosystem={ecosystem}
+          authToken={authToken}
+        />
       )}
     </div>
   );
