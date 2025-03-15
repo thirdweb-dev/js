@@ -72,6 +72,11 @@ export {
 } from "../contract/contract.js";
 
 /**
+ * UNIVERSAL BRIDGE
+ */
+export * as Bridge from "../bridge/index.js";
+
+/**
  * WALLETS
  */
 export {

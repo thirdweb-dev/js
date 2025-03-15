@@ -40,6 +40,11 @@
       "import": "./dist/esm/exports/chains.js",
       "default": "./dist/cjs/exports/chains.js"
     },
+    "./universal": {
+      "types": "./dist/types/exports/universal.d.ts",
+      "import": "./dist/esm/exports/universal.js",
+      "default": "./dist/cjs/exports/universal.js"
+    },
     "./contract": {
       "types": "./dist/types/exports/contract.d.ts",
       "import": "./dist/esm/exports/contract.js",
