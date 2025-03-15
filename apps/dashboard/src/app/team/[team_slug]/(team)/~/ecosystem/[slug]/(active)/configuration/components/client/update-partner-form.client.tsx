@@ -1,4 +1,6 @@
 "use client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { useUpdatePartner } from "../../hooks/use-update-partner";
@@ -7,21 +9,30 @@ import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
 export function UpdatePartnerForm({
   ecosystem,
   partner,
-  onSuccess,
   authToken,
 }: {
   ecosystem: Ecosystem;
   partner: Partner;
-  onSuccess: () => void;
   authToken: string;
 }) {
+  const router = useDashboardRouter();
+  const params = useParams();
+  const teamSlug = params.team_slug as string;
+  const ecosystemSlug = params.slug as string;
+
   const { mutateAsync: updatePartner, isPending } = useUpdatePartner(
     {
       authToken,
     },
     {
       onSuccess: () => {
-        onSuccess();
+        toast.success("Partner updated successfully", {
+          description: "The partner details have been updated.",
+        });
+
+        // Redirect to the redirect page that will take us back to the configuration page
+        const redirectPath = `/team/${teamSlug}/~/ecosystem/${ecosystemSlug}`;
+        router.push(redirectPath);
       },
       onError: (error) => {
         const message =
