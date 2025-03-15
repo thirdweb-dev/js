@@ -52,7 +52,7 @@ export async function RouteListRow({
   ]);
 
   return (
-    <TableRow linkBox className="hover:bg-accent/50">
+    <TableRow className="hover:bg-accent/50">
       <TableCell>
         <div className="flex flex-row items-center gap-4">
           <div className="flex items-center gap-1">

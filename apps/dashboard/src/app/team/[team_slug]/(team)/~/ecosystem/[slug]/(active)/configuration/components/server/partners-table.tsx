@@ -88,7 +88,7 @@ function PartnerRow(props: {
 
   return (
     <TableRow
-      linkBox
+      // linkBox
       className={cn("hover:bg-card", isDeleting && "animate-pulse")}
     >
       <TableCell className="max-w-32 truncate align-center">

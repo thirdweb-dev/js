@@ -54,7 +54,7 @@ export async function DeployableContractTable(
           {deployedContractMetadata.map((metadata, i) => {
             return (
               <TableRow
-                linkBox
+                // linkBox
                 className="cursor-pointer hover:bg-card"
                 // biome-ignore lint/suspicious/noArrayIndexKey: static list
                 key={i}
@@ -69,7 +69,7 @@ export async function DeployableContractTable(
                   <Link
                     target="_blank"
                     href={`/contracts/${context}/${encodeURIComponent(metadata.contractId)}`}
-                    className="text-left text-muted-foreground before:absolute before:inset-0"
+                    className="text-left text-muted-foreground"
                   >
                     {metadata.name}
                   </Link>
