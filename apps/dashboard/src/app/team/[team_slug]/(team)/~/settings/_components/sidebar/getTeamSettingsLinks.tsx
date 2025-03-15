@@ -12,13 +12,18 @@ export function getTeamSettingsLinks(teamSlug: string) {
       group: "team",
     },
     {
-      name: "Members",
-      href: `${prefix}/members`,
+      name: "Billing",
+      href: `${prefix}/billing`,
       group: "team",
     },
     {
-      name: "Billing",
-      href: `${prefix}/billing`,
+      name: "Invoices",
+      href: `${prefix}/invoices`,
+      group: "team",
+    },
+    {
+      name: "Members",
+      href: `${prefix}/members`,
       group: "team",
     },
     {

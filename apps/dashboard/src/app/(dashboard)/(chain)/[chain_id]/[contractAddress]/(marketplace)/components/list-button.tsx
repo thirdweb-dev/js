@@ -71,7 +71,6 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                   name: mode,
                   isActive: mode === listingMode,
                   onClick: () => setListingMode(mode),
-                  isEnabled: true,
                 }))}
                 tabClassName="text-sm gap-2 !text-sm"
                 tabContainerClassName="gap-0.5"

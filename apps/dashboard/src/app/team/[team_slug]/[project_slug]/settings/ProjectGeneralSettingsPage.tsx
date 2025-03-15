@@ -406,7 +406,6 @@ function ProjectNameSetting(props: {
   handleSubmit: () => void;
 }) {
   const { form, handleSubmit } = props;
-  const isNameDirty = form.getFieldState("name").isDirty;
 
   return (
     <SettingsCard
@@ -419,8 +418,8 @@ function ProjectNameSetting(props: {
       errorText={form.getFieldState("name").error?.message}
       saveButton={{
         onClick: handleSubmit,
-        disabled: !isNameDirty,
-        isPending: props.isUpdatingProject && isNameDirty,
+        disabled: false,
+        isPending: props.isUpdatingProject,
       }}
       bottomText="Please use 64 characters at maximum"
     >
@@ -501,7 +500,6 @@ function AllowedDomainsSetting(props: {
   handleSubmit: () => void;
 }) {
   const { form, handleSubmit } = props;
-  const isDomainsDirty = form.getFieldState("domains").isDirty;
 
   const helperText = (
     <ul className="flex list-disc flex-col gap-1.5 py-1 pl-3 text-muted-foreground text-sm [&>li]:pl-1">
@@ -544,8 +542,8 @@ function AllowedDomainsSetting(props: {
       errorText={form.getFieldState("domains", form.formState).error?.message}
       saveButton={{
         onClick: handleSubmit,
-        disabled: !isDomainsDirty,
-        isPending: props.isUpdatingProject && isDomainsDirty,
+        disabled: false,
+        isPending: props.isUpdatingProject,
       }}
       bottomText="This is only applicable for web applications"
     >
@@ -606,13 +604,12 @@ function AllowedBundleIDsSetting(props: {
   handleSubmit: () => void;
 }) {
   const { form, handleSubmit } = props;
-  const isBundleIdsDirty = form.getFieldState("bundleIds").isDirty;
   return (
     <SettingsCard
       saveButton={{
         onClick: handleSubmit,
-        disabled: !isBundleIdsDirty,
-        isPending: props.isUpdatingProject && isBundleIdsDirty,
+        disabled: false,
+        isPending: props.isUpdatingProject,
       }}
       noPermissionText={undefined}
       header={{
@@ -715,7 +712,7 @@ function EnabledServicesSetting(props: {
       errorText={undefined}
       saveButton={{
         onClick: handleSubmit,
-        disabled: !form.formState.isDirty,
+        disabled: false,
         isPending: props.isUpdatingProject,
       }}
       bottomText=""
@@ -984,7 +981,7 @@ function DeleteProject(props: {
   );
 }
 
-function RotateSecretKeyButton(props: {
+export function RotateSecretKeyButton(props: {
   rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
 }) {
@@ -1218,8 +1215,6 @@ function TransferProject(props: {
     !hasOwnerRole ||
     selectedTeamId === props.currentTeamId ||
     !props.isOwnerAccount;
-
-  console.log({ selectedTeam: selectedTeamWithRole, isDisabled });
 
   const handleTransfer = () => {
     if (!hasOwnerRole) {

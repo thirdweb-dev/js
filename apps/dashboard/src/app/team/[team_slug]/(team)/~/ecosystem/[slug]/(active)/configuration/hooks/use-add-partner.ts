@@ -10,6 +10,7 @@ type AddPartnerParams = {
   name: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
+  accessControl?: Partner["accessControl"] | null;
 };
 
 export function useAddPartner(
@@ -41,6 +42,7 @@ export function useAddPartner(
             name: params.name,
             allowlistedDomains: params.allowlistedDomains,
             allowlistedBundleIds: params.allowlistedBundleIds,
+            accessControl: params.accessControl ?? undefined,
             // TODO - remove the requirement for permissions in API endpoint
             permissions: ["FULL_CONTROL_V1"],
           }),

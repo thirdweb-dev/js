@@ -22,7 +22,11 @@ export function usePartners({
         );
       }
 
-      return (await res.json()) as Partner[];
+      const partners = (await res.json()) as Partner[];
+      return partners.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     },
     retry: false,
   });

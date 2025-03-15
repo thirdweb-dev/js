@@ -1,10 +1,11 @@
 "use client";
 
 import type { GetBillingPortalUrlAction } from "@/actions/billing";
-import { BillingPortalButton } from "@/components/billing";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useTransition } from "react";
 import { useStripeRedirectEvent } from "../../../../stripe-redirect/stripeRedirectChannel";
 
@@ -14,7 +15,6 @@ function BillingAlertBanner(props: {
   teamSlug: string;
   variant: "error" | "warning";
   ctaLabel: string;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
 }) {
   const router = useDashboardRouter();
   const [isPending, startTransition] = useTransition();
@@ -44,22 +44,21 @@ function BillingAlertBanner(props: {
 
       <h3 className="font-semibold text-xl tracking-tight">{props.title}</h3>
       <p className="mt-1 mb-4 text-sm">{props.description}</p>
-      <BillingPortalButton
-        buttonProps={{
-          size: "sm",
-          className: cn(
-            "gap-2",
-            props.variant === "warning" &&
-              "border border-yellow-600 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100 dark:hover:bg-yellow-800",
-            props.variant === "error" &&
-              "border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800",
-          ),
-        }}
-        teamSlug={props.teamSlug}
-        getBillingPortalUrl={props.getBillingPortalUrl}
+
+      <Button
+        asChild
+        className={cn(
+          "gap-2",
+          props.variant === "warning" &&
+            "border border-yellow-600 bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:border-yellow-700 dark:bg-yellow-900 dark:text-yellow-100 dark:hover:bg-yellow-800",
+          props.variant === "error" &&
+            "border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800",
+        )}
       >
-        {props.ctaLabel}
-      </BillingPortalButton>
+        <Link href={`/team/${props.teamSlug}/~/settings/invoices`}>
+          {props.ctaLabel}
+        </Link>
+      </Button>
     </div>
   );
 }
@@ -73,7 +72,6 @@ export function PastDueBannerUI(props: {
       ctaLabel="View Invoices"
       variant="warning"
       title="Unpaid Invoices"
-      getBillingPortalUrl={props.getBillingPortalUrl}
       description={
         <>
           You have unpaid invoices. Service may be suspended if not paid
@@ -94,7 +92,6 @@ export function ServiceCutOffBannerUI(props: {
       ctaLabel="Pay Now"
       variant="error"
       title="Service Suspended"
-      getBillingPortalUrl={props.getBillingPortalUrl}
       description={
         <>
           Your service has been suspended due to unpaid invoices. Pay now to

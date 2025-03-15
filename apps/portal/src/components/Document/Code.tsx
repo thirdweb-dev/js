@@ -68,7 +68,7 @@ export async function CodeBlock(props: {
     <div className={cn("group/code relative mb-5", props.containerClassName)}>
       <code
         className={cn(
-          "relative block rounded-lg border bg-card font-mono text-sm leading-relaxed",
+          "relative block whitespace-pre rounded-lg border bg-card font-mono text-sm leading-relaxed",
           props.className,
         )}
         lang={lang}

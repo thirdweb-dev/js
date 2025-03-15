@@ -1,4 +1,6 @@
-import { createMetadata, AAChainList } from "@doc";
+import { createMetadata, DocImage } from "@doc";
+import SupportedChains from "../../../_images/supported-chains.png";
+
 
 export const metadata = createMetadata({
 	image: {
@@ -23,7 +25,8 @@ You can configure your client ID to restrict interactions only with your own con
 
 With a thirdweb API key, you get access to bundler and paymaster infrastructure on the following chains:
 
-<AAChainList />
+[View all supported chains with Account Abstraction](https://thirdweb.com/chainlist?service=account-abstraction).
+<DocImage src={SupportedChains} />
 
 To support a chain not listed, [contact us](https://thirdweb.com/contact-us).
 

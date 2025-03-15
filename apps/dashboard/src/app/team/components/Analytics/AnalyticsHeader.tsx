@@ -5,8 +5,9 @@ export function AnalyticsHeader(props: {
   title: string;
   interval: "day" | "week";
   range: Range;
+  showRangeSelector: boolean;
 }) {
-  const { title, interval, range } = props;
+  const { title, interval, range, showRangeSelector } = props;
 
   return (
     <div className="container flex flex-col items-start gap-3 py-10 md:flex-row md:items-center">
@@ -15,7 +16,7 @@ export function AnalyticsHeader(props: {
           {title}
         </h1>
       </div>
-      <RangeSelector interval={interval} range={range} />
+      {showRangeSelector && <RangeSelector interval={interval} range={range} />}
     </div>
   );
 }

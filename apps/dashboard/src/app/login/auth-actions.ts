@@ -40,7 +40,7 @@ export async function getLoginPayload(
 
 export async function doLogin(
   payload: VerifyLoginPayloadParams,
-  turnstileToken: string,
+  turnstileToken: string | undefined,
 ) {
   if (!THIRDWEB_API_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");

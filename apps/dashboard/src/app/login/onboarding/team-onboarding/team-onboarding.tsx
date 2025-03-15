@@ -1,13 +1,13 @@
 "use client";
 
 import { getBillingCheckoutUrl } from "@/actions/billing";
+import { apiServerProxy } from "@/actions/proxies";
 import { sendTeamInvites } from "@/actions/sendTeamInvite";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
-import { apiServerProxy } from "../../../../@/actions/proxies";
 import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { updateTeam } from "../../../team/[team_slug]/(team)/~/settings/general/updateTeam";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
