@@ -1,3 +1,4 @@
+import { getTeamPaymentMethods } from "@/actions/stripe-actions";
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { redirect } from "next/navigation";
@@ -21,7 +22,10 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const subscriptions = await getTeamSubscriptions(team.slug);
+  const [subscriptions, paymentMethods] = await Promise.all([
+    getTeamSubscriptions(team.slug),
+    getTeamPaymentMethods(team),
+  ]);
 
   if (!subscriptions) {
     return (
@@ -32,6 +36,11 @@ export default async function Page(props: {
   }
 
   return (
-    <Billing team={team} subscriptions={subscriptions} twAccount={account} />
+    <Billing
+      team={team}
+      subscriptions={subscriptions}
+      twAccount={account}
+      paymentMethods={paymentMethods}
+    />
   );
 }
