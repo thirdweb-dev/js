@@ -237,7 +237,6 @@ export const sidebar: SideBar = {
 
     { separator: true },
     // modular contracts
-
     {
       name: "Modular Contract Framework",
       isCollapsible: false,
@@ -265,6 +264,15 @@ export const sidebar: SideBar = {
             {
               name: "Deploy a Modular Contract",
               href: `${modularContractsSlug}/get-started/deploy-modular-contract`,
+            },
+          ],
+        },
+        {
+          name: "Tutorials",
+          links: [
+            {
+              name: "Deploy ERC-20 Core",
+              href: `${modularContractsSlug}/tutorials/deploy-erc20-core`,
             },
           ],
         },
@@ -410,6 +418,15 @@ export const sidebar: SideBar = {
                       href: `${modulesContractsSlug}/erc-1155/misc/sequentialTokenIdERC1155`,
                     },
                   ],
+                },
+              ],
+            },
+            {
+              name: "Cross-Chain",
+              links: [
+                {
+                  name: "Agglayer",
+                  href: `${modulesContractsSlug}/cross-chain/agglayer`,
                 },
               ],
             },
