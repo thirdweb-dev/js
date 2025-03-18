@@ -4,8 +4,16 @@ import {
   generate,
   isValidChainIdAndContractAddress,
 } from "./commands/generate/generate.js";
+import { publishStylus } from "./commands/publish-stylus/publish-stylus.js";
 // skip the first two args?
 const [, , command = "", ...rest] = process.argv;
+
+let secretKey: string | undefined;
+const keyIndex = rest.indexOf("-k");
+if (keyIndex !== -1 && rest.length > keyIndex + 1) {
+  secretKey = rest[keyIndex + 1];
+  rest.splice(keyIndex, 2);
+}
 
 async function main() {
   switch (command) {
@@ -17,6 +25,11 @@ async function main() {
       } else {
         await generate(chainIdPlusContract);
       }
+      break;
+    }
+
+    case "publish-stylus": {
+      await publishStylus(secretKey);
       break;
     }
 
