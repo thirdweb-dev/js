@@ -12,20 +12,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
-import Link from "next/link";
 import { toast } from "sonner";
+import { Link } from "../../../../../../../../../../../tw-components/link";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { usePartners } from "../../../hooks/use-partners";
 import { useDeletePartner } from "../../hooks/use-delete-partner";
-import { UpdatePartnerModal } from "../client/update-partner-modal.client";
 
 export function PartnersTable({
   ecosystem,
   authToken,
-}: { ecosystem: Ecosystem; authToken: string }) {
-  const { partners, isPending } = usePartners({ ecosystem, authToken });
+  teamSlug,
+}: {
+  ecosystem: Ecosystem;
+  authToken: string;
+  teamSlug: string;
+}) {
+  const { partners, isPending } = usePartners({
+    ecosystem,
+    authToken,
+  });
 
   if (isPending) {
     return (
@@ -59,6 +67,7 @@ export function PartnersTable({
               partner={partner}
               ecosystem={ecosystem}
               authToken={authToken}
+              teamSlug={teamSlug}
             />
           ))}
         </TableBody>
@@ -70,8 +79,10 @@ export function PartnersTable({
 function PartnerRow(props: {
   partner: Partner;
   ecosystem: Ecosystem;
+  teamSlug: string;
   authToken: string;
 }) {
+  const router = useDashboardRouter();
   const { mutateAsync: deletePartner, isPending: isDeleting } =
     useDeletePartner(
       {
@@ -117,22 +128,21 @@ function PartnerRow(props: {
 
       <td className="table-cell py-3 align-middle">
         <div className="flex justify-end gap-3 pr-3">
-          <UpdatePartnerModal
-            partner={props.partner}
-            ecosystem={props.ecosystem}
-            authToken={props.authToken}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="text-accent-foreground/50 hover:bg-accent hover:text-accent-foreground"
+            disabled={isDeleting}
+            onClick={() => {
+              router.push(
+                `/team/${props.teamSlug}/~/ecosystem/${props.ecosystem.slug}/configuration/partners/${props.partner.id}/edit`,
+              );
+            }}
           >
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="text-accent-foreground/50 hover:bg-accent hover:text-accent-foreground"
-              disabled={isDeleting}
-            >
-              <Pencil className="size-4" />
-              <span className="sr-only">Edit</span>
-            </Button>
-          </UpdatePartnerModal>
+            <Pencil className="size-4" />
+            <span className="sr-only">Edit</span>
+          </Button>
           <ConfirmationDialog
             title={`Are you sure you want to delete the partner ${props.partner.name}?`}
             description={

@@ -1,7 +1,156 @@
+import { isAddress, isHex } from "thirdweb/utils";
 import z from "zod";
 
 const isDomainRegex =
   /^(?:\*|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*(?:\*(?:\.[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\.[a-z0-9][a-z0-9-]{0,61}[a-z0-9])*)?)|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]|localhost(?::\d{1,5})?)$/;
+
+// Define schemas for the different operation types
+const allowedTransactionSchema = z.object({
+  chainId: z.number().refine(
+    (data) => {
+      if (data !== undefined) {
+        return data > 0;
+      }
+      return true;
+    },
+    {
+      message: "Invalid chain ID",
+    },
+  ),
+  contractAddress: z
+    .string()
+    .optional()
+    .transform((data) => (data?.length === 0 ? undefined : data))
+    .refine(
+      (data) => {
+        if (data) {
+          return isAddress(data);
+        }
+        return true;
+      },
+      {
+        message: "Invalid contract address",
+      },
+    ),
+  selector: z
+    .string()
+    .optional()
+    .transform((data) => (data?.length === 0 ? undefined : data))
+    .refine(
+      (data) => {
+        if (data) {
+          return isHex(data) && data.length === 10; // 0x + 4 bytes for the selector (8 chars)
+        }
+        return true;
+      },
+      {
+        message: "Invalid function selector",
+      },
+    ),
+  maxValue: z
+    .string()
+    .optional()
+    .transform((data) => (data?.length === 0 ? undefined : data))
+    .refine(
+      (data) => {
+        if (data) {
+          return BigInt(data) >= 0;
+        }
+        return true;
+      },
+      {
+        message: "Invalid max value",
+      },
+    ),
+});
+
+const allowedTypedDataSchema = z
+  .object({
+    domain: z.string().refine((data) => data.length > 0, {
+      message: "Domain is required",
+    }),
+    verifyingContract: z
+      .string()
+      .optional()
+      .transform((data) => (data?.length === 0 ? undefined : data))
+      .refine(
+        (data) => {
+          if (data) {
+            return isAddress(data);
+          }
+          return true;
+        },
+        {
+          message: "Invalid verifying contract address",
+        },
+      ),
+    chainId: z
+      .number()
+      .optional()
+      .refine(
+        (data) => {
+          if (data !== undefined) {
+            return data > 0;
+          }
+          return true;
+        },
+        {
+          message: "Invalid chain ID",
+        },
+      ),
+    primaryType: z.string().optional(),
+  })
+  .transform((data) => {
+    return {
+      ...data,
+      verifyingContract:
+        data.verifyingContract && data.verifyingContract.length > 0
+          ? data.verifyingContract
+          : undefined,
+      primaryType:
+        data.primaryType && data.primaryType.length > 0
+          ? data.primaryType
+          : undefined,
+    };
+  });
+
+const personalSignRestrictionSchema = z.discriminatedUnion("messageType", [
+  z.object({
+    messageType: z.literal("userOp"),
+    allowedTransactions: z
+      .array(allowedTransactionSchema)
+      .optional()
+      .transform((data) => (data?.length === 0 ? undefined : data)),
+  }),
+  z.object({
+    messageType: z.literal("other"),
+    message: z.string().optional(),
+  }),
+]);
+
+const allowedOperationsSchema = z.discriminatedUnion("signMethod", [
+  z.object({
+    signMethod: z.literal("eth_signTransaction"),
+    allowedTransactions: z
+      .array(allowedTransactionSchema)
+      .optional()
+      .transform((data) => (data?.length === 0 ? undefined : data)),
+  }),
+  z.object({
+    signMethod: z.literal("eth_signTypedData_v4"),
+    allowedTypedData: z
+      .array(allowedTypedDataSchema)
+      .optional()
+      .transform((data) => (data?.length === 0 ? undefined : data)),
+  }),
+  z.object({
+    signMethod: z.literal("personal_sign"),
+    allowedPersonalSigns: z
+      .array(personalSignRestrictionSchema)
+      .optional()
+      .transform((data) => (data?.length === 0 ? undefined : data)),
+  }),
+]);
 
 export const partnerFormSchema = z
   .object({
@@ -33,6 +182,7 @@ export const partnerFormSchema = z
       ),
     accessControlEnabled: z.boolean().default(false),
     serverVerifierEnabled: z.boolean().default(false),
+    allowedOperationsEnabled: z.boolean().default(false),
     accessControl: z
       .object({
         serverVerifier: z
@@ -48,6 +198,10 @@ export const partnerFormSchema = z
               .optional(),
           })
           .optional(),
+        allowedOperations: z
+          .array(allowedOperationsSchema)
+          .optional()
+          .transform((data) => (data?.length === 0 ? undefined : data)),
       })
       .optional(),
   })
