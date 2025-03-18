@@ -102,7 +102,11 @@ export async function publishStylus(secretKey?: string) {
         devdoc: {},
         userdoc: {},
       },
-      settings: {},
+      settings: {
+        compilationTarget: {
+          "src/main.rs": contractName,
+        },
+      },
       sources: {},
     };
     writeFileSync(abiPath, JSON.stringify(metadata), "utf8");

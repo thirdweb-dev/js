@@ -41,10 +41,9 @@ export function formatCompilerMetadata(
     meta = metadata.source_metadata;
   }
 
-  // TODO: fix
-  // const compilationTarget = meta.settings.compilationTarget;
-  // const targets = Object.keys(compilationTarget);
-  const name = "";
+  const compilationTarget = meta.settings.compilationTarget;
+  const targets = Object.keys(compilationTarget);
+  const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
   const info = {
     title: meta.output.devdoc.title,
     author: meta.output.devdoc.author,
