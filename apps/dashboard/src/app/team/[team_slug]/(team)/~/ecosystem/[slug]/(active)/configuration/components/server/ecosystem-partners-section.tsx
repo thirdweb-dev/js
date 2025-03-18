@@ -3,9 +3,10 @@ import { AddPartnerDialogButton } from "../client/AddPartnerDialogButton";
 import { PartnersTable } from "./partners-table";
 
 export function EcosystemPartnersSection({
+  teamSlug,
   ecosystem,
   authToken,
-}: { ecosystem: Ecosystem; authToken: string }) {
+}: { teamSlug: string; ecosystem: Ecosystem; authToken: string }) {
   return (
     <div className="rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
       <div className="flex flex-col items-start justify-between max-sm:mb-5 lg:flex-row">
@@ -21,10 +22,18 @@ export function EcosystemPartnersSection({
             own app.
           </p>
         </div>
-        <AddPartnerDialogButton ecosystem={ecosystem} authToken={authToken} />
+        <AddPartnerDialogButton
+          teamSlug={teamSlug}
+          ecosystem={ecosystem}
+          authToken={authToken}
+        />
       </div>
 
-      <PartnersTable ecosystem={ecosystem} authToken={authToken} />
+      <PartnersTable
+        ecosystem={ecosystem}
+        authToken={authToken}
+        teamSlug={teamSlug}
+      />
     </div>
   );
 }

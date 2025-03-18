@@ -1,0 +1,86 @@
+import { Step, Steps, DocImage, OpenSourceCard, Callout } from "@doc";
+import RestrictTransfer from './assets/restrict-transfers.png';
+import ApproveFunction from './assets/approve-function.png';
+import AgglayerModule from './assets/agglayer-module.png';
+import GrantMinter from './assets/grant-minter.png';   
+import MintTokens from './assets/mint-tokens.png';
+
+# Agglayer Module Contract
+
+We created a module which leverages Agglayer, an interoperability protocol. This module may be added to any ERC-20 modular contract to construct a cross-chain 
+interoperable smart contract for trustless and secure transfers across any chain. [Learn more about Agglayer.](https://github.com/AggLayer)
+
+<OpenSourceCard title="Agglayer Module Contract" href="https://thirdweb.com/thirdweb.eth/AgglayerCrossChain" />
+
+## Get Started
+
+Learn how to add the Agglayer module to your modular contract and enable cross-chain transfers.
+
+### Prerequisites
+
+- [Deployed ERC-20 Base Contract](/contracts/modular-contracts/tutorials/deploy-erc20-core)
+
+<Steps>
+
+<Step title="Add Agglayer module">
+
+On your deployed contract dashboard, navigate to the Modules section to add the Agglayer module. Paste the following parameters then select Install. 
+1. Publisher: `0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024`
+2. Module Name: `AgglayerCrossChain`
+3. Module Version: `Latest`
+4. Router: `0x2311BFA86Ae27FC10E1ad3f805A2F9d22Fc8a6a1`
+
+<DocImage src={AgglayerModule} alt="Agglayer Module" />
+
+When completed, you will see your module under the installed modules section. 
+
+</Step>
+
+<Step title="Grant minter role">
+Next, navigate to the Explorer tab and locate grantRoles under the Write functions to grant your wallet the minter role then select Execute.
+1. User: `your-wallet-address`
+2. Roles: `1`
+3. Native Token Value: `0`
+<DocImage src={GrantMinter} alt="Grant Minter Role" />
+
+<Callout variant="info" title="Modular Contract Roles">
+Non-admin roles are disabled by default on modular contracts and must be enabled through the contract.
+</Callout>
+</Step>
+
+<Step title="Mint tokens">
+Navigate back to the modules section and mint tokens to your wallet or a recipient's wallet using the mintable module.
+
+<DocImage src={MintTokens} alt="Mint Tokens" />
+</Step>
+
+<Step title="Approve transfers on contract">
+Navigate back to Explorer and find the Approve write function. Paste in the following parameters and select Execute. 
+1. Spender: `your-contract-address`
+2. Amount: `your-desired-amount`
+
+<DocImage src={ApproveFunction} alt="Approve Function" />
+
+<Callout variant="info" title="Modular Contract Approvals">
+This step enables the contract to have approval to transfer user's tokens to the bridge.
+</Callout>
+</Step>
+
+<Step title="Approve transfers on module">
+Navigate back to the modules view and disable Restrict Transfers on the TransferableERC20 module to allow any token holders to transfer tokens. Select Update to confirm.
+
+<DocImage src={RestrictTransfer} alt="Restrict Transfer" />
+</Step>
+
+<Step title="Bridge tokens">
+Navigate back to Explorer and locate the `bridgeTokens` function. Select Execute to confirm the transaction.
+1. Destination Network: `chain-to-send`
+2. Call Address: `your-wallet-address`
+3. Amount: `amount-of-tokens`
+
+
+
+</Step>
+
+</Steps>
+

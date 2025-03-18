@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.92.2
+
+### Patch Changes
+
+- [#5699](https://github.com/thirdweb-dev/js/pull/5699) [`1273cc7`](https://github.com/thirdweb-dev/js/commit/1273cc7b837a9d05f032e2f3cd8afb429abf4edb) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Compute addresses with ref contracts
+
+- [#6490](https://github.com/thirdweb-dev/js/pull/6490) [`9901351`](https://github.com/thirdweb-dev/js/commit/9901351fb23e09c2e02f2b1082e597109964db08) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle serialized bigints for packing userops
+
+- [#6471](https://github.com/thirdweb-dev/js/pull/6471) [`7ed8fc2`](https://github.com/thirdweb-dev/js/commit/7ed8fc2c43ef7ff8281c8737a4f080d9840b447e) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 5.92.1
 
 ### Patch Changes

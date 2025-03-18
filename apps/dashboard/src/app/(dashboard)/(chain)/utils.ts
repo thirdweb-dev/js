@@ -10,6 +10,8 @@ import ancient8Banner from "./temp-assets/ancient8-banner.png";
 import assetChainBanner from "./temp-assets/assetChainBanner.png";
 import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 
+import hemiSepoliaBanner from "./temp-assets/HemiBanner.png";
+import hemiSepoliaCTA from "./temp-assets/HemiCTA.png";
 import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
 import appchainCTA from "./temp-assets/appchainCTA.png";
@@ -450,6 +452,18 @@ const chainMetaRecord = {
       title: "Build on the blockchain for AI",
       buttonLink: "https://www.gptprotocol.com/",
       buttonText: "Learn more",
+    },
+  },
+  //HemiSepolia
+  743111: {
+    headerImgUrl: hemiSepoliaBanner.src,
+    about:
+      "The Hemi Network is a modular Layer-2 protocol for superior scaling, security, and interoperability, powered by Bitcoin and Ethereum.",
+    cta: {
+      backgroundImageUrl: hemiSepoliaCTA.src,
+      title: "One Network, Powered by Bitcoin and Ethereum",
+      buttonLink: "https://hemi.xyz/",
+      buttonText: "Learn More",
     },
   },
   //Hashfire
