@@ -16,7 +16,7 @@ Instantiate a `Engine` with a given private key. This wallet is capable of signi
 
 ```csharp
 // EngineWallet is compatible with IThirdwebWallet and can be used with any SDK method/extension
-var engineWallet = await EngineWallet.Create(
+var engineWallet = EngineWallet.Create(
     client: client,
     engineUrl: Environment.GetEnvironmentVariable("ENGINE_URL"),
     authToken: Environment.GetEnvironmentVariable("ENGINE_ACCESS_TOKEN"),

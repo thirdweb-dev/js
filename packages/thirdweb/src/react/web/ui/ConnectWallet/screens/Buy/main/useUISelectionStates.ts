@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type {
@@ -40,6 +40,18 @@ export function useToTokenSelectionStates(options: {
   const initialTokenAmount = prefillBuy?.amount || "";
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
+
+  useEffect(() => {
+    if (prefillBuy?.amount) {
+      setTokenAmount(prefillBuy.amount);
+    }
+    if (prefillBuy?.chain) {
+      setToChain(prefillBuy.chain);
+    }
+    if (prefillBuy?.token) {
+      setToToken(prefillBuy.token);
+    }
+  }, [prefillBuy?.amount, prefillBuy?.chain, prefillBuy?.token]);
 
   // Destination chain and token selection -----------------------------------
   const [toChain, setToChain] = useState<Chain>(

@@ -7,21 +7,19 @@ import { ColorInput } from "./ColorInput";
 import type { ConnectPlaygroundOptions } from "./types";
 
 export function ColorFormGroup(props: {
-  connectOptions: ConnectPlaygroundOptions;
-  setConnectOptions: React.Dispatch<
-    React.SetStateAction<ConnectPlaygroundOptions>
-  >;
+  theme: ConnectPlaygroundOptions["theme"];
+  onChange: (value: ConnectPlaygroundOptions["theme"]) => void;
 }) {
   const [search, setSearch] = useState("");
-  const { connectOptions, setConnectOptions } = props;
+  const { theme, onChange } = props;
 
   const themeObj =
-    connectOptions.theme.type === "dark"
+    theme.type === "dark"
       ? darkTheme({
-          colors: connectOptions.theme.darkColorOverrides,
+          colors: theme.darkColorOverrides,
         })
       : lightTheme({
-          colors: connectOptions.theme.lightColorOverrides,
+          colors: theme.lightColorOverrides,
         });
 
   const colorSectionsToShow = colorSections
@@ -72,23 +70,19 @@ export function ColorFormGroup(props: {
                           className="size-10"
                           value={themeObj.colors[color.colorId]}
                           onChange={(value) => {
-                            setConnectOptions((v) => {
-                              const overridesKey =
-                                v.theme.type === "dark"
-                                  ? "darkColorOverrides"
-                                  : "lightColorOverrides";
+                            const overridesKey =
+                              theme.type === "dark"
+                                ? "darkColorOverrides"
+                                : "lightColorOverrides";
 
-                              return {
-                                ...v,
-                                theme: {
-                                  ...v.theme,
-                                  [overridesKey]: {
-                                    ...v.theme[overridesKey],
-                                    [color.colorId]: value,
-                                  },
-                                },
-                              };
-                            });
+                            const newTheme = {
+                              ...theme,
+                              [overridesKey]: {
+                                ...theme[overridesKey],
+                                [color.colorId]: value,
+                              },
+                            };
+                            onChange(newTheme);
                           }}
                         />
                         <div>
