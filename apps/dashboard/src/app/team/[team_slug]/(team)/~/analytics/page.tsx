@@ -63,7 +63,12 @@ export default async function TeamOverviewPage(props: {
   return (
     <div className="flex grow flex-col">
       <div className="border-b">
-        <AnalyticsHeader title="Analytics" interval={interval} range={range} />
+        <AnalyticsHeader
+          title="Analytics"
+          interval={interval}
+          range={range}
+          showRangeSelector={true}
+        />
       </div>
       <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
         <Suspense fallback={<GenericLoadingPage />}>

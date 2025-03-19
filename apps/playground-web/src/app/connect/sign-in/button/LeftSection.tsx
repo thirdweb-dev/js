@@ -201,8 +201,13 @@ export function LeftSection(props: {
 
         {/* Colors */}
         <ColorFormGroup
-          connectOptions={connectOptions}
-          setConnectOptions={setConnectOptions}
+          theme={connectOptions.theme}
+          onChange={(newTheme) => {
+            setConnectOptions((v) => ({
+              ...v,
+              theme: newTheme,
+            }));
+          }}
         />
       </CollapsibleSection>
 

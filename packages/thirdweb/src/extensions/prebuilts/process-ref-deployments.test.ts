@@ -3,6 +3,7 @@ import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { getContract } from "../../contract/contract.js";
+import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
 import { readContract } from "../../transaction/read-contract.js";
 import { getInstalledModules } from "../modules/__generated__/IModularCore/read/getInstalledModules.js";
 import { deployPublishedContract } from "./deploy-published.js";
@@ -29,7 +30,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "MultiSig",
         version: "0.0.4",
-        salt: "tw",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       dummyContractAddress = await deployPublishedContract({
@@ -37,8 +38,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "ContractWithBytes",
-        version: "0.0.1",
-        salt: "tw",
+        version: "0.0.2",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       mintfeeManagerModuleAddress = await deployPublishedContract({
@@ -47,7 +48,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "MintFeeManagerModule",
         version: "0.0.1",
-        salt: "tw",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       mintfeeManagerCoreAddress = await deployPublishedContract({
@@ -55,8 +56,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "MintFeeManagerCore",
-        version: "0.0.25",
-        salt: "tw",
+        version: "0.0.26",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       claimableModuleAddress = await deployPublishedContract({
@@ -64,18 +65,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "ClaimableERC721",
-        version: "0.0.13",
-        salt: "tw",
+        version: "0.0.14",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
-
       wethAddress = await deployPublishedContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "WETH9",
         version: "0.0.1",
-        salt: "thirdweb",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       forwarderAddress = await deployPublishedContract({
@@ -84,7 +84,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         contractId: "Forwarder",
         version: "0.0.1",
-        salt: "thirdweb",
+        salt: "",
         publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       multiwrapAddress = await deployPublishedContract({
@@ -191,6 +191,68 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
       expect(fetchedWethAddress.toLowerCase()).to.eq(wethAddress);
       expect(isTrustedForwarder).to.be.true;
+    });
+
+    it("should correctly compute addresses for deployed contracts with refs", async () => {
+      const [
+        multisigAddressComputed,
+        dummyContractAddressComputed,
+        mintfeeManagerModuleAddressComputed,
+        mintfeeManagerCoreAddressComputed,
+        claimableModuleAddressComputed,
+      ] = await Promise.all([
+        getDeployedInfraContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          contractId: "MultiSig",
+          version: "0.0.4",
+          publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
+        }),
+        getDeployedInfraContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          contractId: "ContractWithBytes",
+          version: "0.0.2",
+          publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
+        }),
+        getDeployedInfraContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          contractId: "MintFeeManagerModule",
+          version: "0.0.1",
+          publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
+        }),
+        getDeployedInfraContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          contractId: "MintFeeManagerCore",
+          version: "0.0.26",
+          publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
+        }),
+        getDeployedInfraContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          contractId: "ClaimableERC721",
+          version: "0.0.14",
+          publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
+        }),
+      ]);
+
+      expect(multisigAddressComputed?.address.toLowerCase()).to.eq(
+        multisigAddress,
+      );
+      expect(dummyContractAddressComputed?.address.toLowerCase()).to.eq(
+        dummyContractAddress,
+      );
+      expect(mintfeeManagerModuleAddressComputed?.address.toLowerCase()).to.eq(
+        mintfeeManagerModuleAddress,
+      );
+      expect(mintfeeManagerCoreAddressComputed?.address.toLowerCase()).to.eq(
+        mintfeeManagerCoreAddress,
+      );
+      expect(claimableModuleAddressComputed?.address.toLowerCase()).to.eq(
+        claimableModuleAddress,
+      );
     });
   },
 );

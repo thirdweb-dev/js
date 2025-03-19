@@ -9,6 +9,7 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { differenceInDays, isAfter } from "date-fns";
 import { format } from "date-fns/format";
 import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
 
 export function PlanInfoCard(props: {
@@ -53,7 +54,14 @@ export function PlanInfoCard(props: {
           )}
         </div>
 
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row items-center gap-2">
+          {/* go to invoices page */}
+          <Button asChild variant="outline">
+            <Link href={`/team/${team.slug}/~/settings/invoices`}>
+              View Invoices
+            </Link>
+          </Button>
+
           {/* manage team billing */}
           <BillingPortalButton
             teamSlug={team.slug}

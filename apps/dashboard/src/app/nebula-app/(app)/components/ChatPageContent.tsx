@@ -96,6 +96,7 @@ export function ChatPageContent(props: {
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
     setHasUserUpdatedContextFilters(true);
+    saveLastUsedChainIds(v?.chainIds || undefined);
   }, []);
 
   const isNewSession = !props.session;
@@ -118,7 +119,21 @@ export function ChatPageContent(props: {
             walletAddress: null,
           };
 
+      // Only set wallet address from connected wallet
       updatedContextFilters.walletAddress = address || null;
+
+      // if we have last used chains in storage, continue using them
+      try {
+        const lastUsedChainIds = getLastUsedChainIds();
+        if (lastUsedChainIds) {
+          updatedContextFilters.chainIds = lastUsedChainIds;
+          return updatedContextFilters;
+        }
+      } catch {
+        // ignore local storage errors
+      }
+
+      // else - use the active chain
       updatedContextFilters.chainIds = activeChain
         ? [activeChain.id.toString()]
         : [];
@@ -492,4 +507,32 @@ function WalletDisconnectedDialog(props: {
       </DialogContent>
     </Dialog>
   );
+}
+
+const NEBULA_LAST_USED_CHAIN_IDS_KEY = "nebula-last-used-chain-ids";
+
+function saveLastUsedChainIds(chainIds: string[] | undefined) {
+  try {
+    if (chainIds && chainIds.length > 0) {
+      localStorage.setItem(
+        NEBULA_LAST_USED_CHAIN_IDS_KEY,
+        JSON.stringify(chainIds),
+      );
+    } else {
+      localStorage.removeItem(NEBULA_LAST_USED_CHAIN_IDS_KEY);
+    }
+  } catch {
+    // ignore local storage errors
+  }
+}
+
+function getLastUsedChainIds(): string[] | null {
+  try {
+    const lastUsedChainIdsStr = localStorage.getItem(
+      NEBULA_LAST_USED_CHAIN_IDS_KEY,
+    );
+    return lastUsedChainIdsStr ? JSON.parse(lastUsedChainIdsStr) : null;
+  } catch {
+    return null;
+  }
 }

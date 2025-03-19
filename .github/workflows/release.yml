@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
           # Do not use the GITHUB_TOKEN by default
@@ -36,7 +36,7 @@ jobs:
 
       - name: Create release Pull Request or publish to NPM
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@06245a4e0a36c064a573d4150030f5ec548e4fcc #v1.4.0
         with:
           publish: pnpm release
           version: pnpm version-packages

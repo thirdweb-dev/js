@@ -43,25 +43,21 @@ function Story() {
               name: "60 Days",
               onClick: () => setTab("60-day"),
               isActive: tab === "60-day",
-              isEnabled: true,
             },
             {
               name: "30 Days",
               onClick: () => setTab("30-day"),
               isActive: tab === "30-day",
-              isEnabled: true,
             },
             {
               name: "7 Days",
               onClick: () => setTab("7-day"),
               isActive: tab === "7-day",
-              isEnabled: true,
             },
             {
               name: "Pending",
               onClick: () => setTab("pending"),
               isActive: tab === "pending",
-              isEnabled: true,
             },
           ]}
         />

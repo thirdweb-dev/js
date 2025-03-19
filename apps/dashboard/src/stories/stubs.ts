@@ -55,6 +55,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       "relayer",
       "chainsaw",
     ],
+    stripeCustomerId: "cus_1234567890",
   };
 
   return team;

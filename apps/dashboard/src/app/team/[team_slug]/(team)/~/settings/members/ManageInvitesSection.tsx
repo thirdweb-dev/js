@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { BASE_URL } from "@/constants/env";
 import { useMutation } from "@tanstack/react-query";
 import { formatDate } from "date-fns";
 import { EllipsisIcon, MailIcon } from "lucide-react";
@@ -117,6 +118,7 @@ export function ManageInvitesSection(props: {
                   className="border-border border-b last:border-b-0"
                 >
                   <InviteRow
+                    teamSlug={props.team.slug}
                     invite={invite}
                     client={props.client}
                     userHasEditPermission={props.userHasEditPermission}
@@ -143,6 +145,7 @@ export function ManageInvitesSection(props: {
 }
 
 function InviteRow(props: {
+  teamSlug: string;
   invite: TeamInvite;
   userHasEditPermission: boolean;
   client: ThirdwebClient;
@@ -198,6 +201,7 @@ function InviteRow(props: {
         {/* Options */}
         {props.userHasEditPermission && (
           <ManageInviteButton
+            teamSlug={props.teamSlug}
             invite={props.invite}
             userHasEditPermission={props.userHasEditPermission}
             deleteInvite={props.deleteInvite}
@@ -210,6 +214,7 @@ function InviteRow(props: {
 }
 
 function ManageInviteButton(props: {
+  teamSlug: string;
   invite: TeamInvite;
   userHasEditPermission: boolean;
   deleteInvite: (inviteId: string) => Promise<void>;
@@ -235,6 +240,18 @@ function ManageInviteButton(props: {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
+          {props.invite.status === "pending" && (
+            <DropdownMenuItem
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${BASE_URL}/join/team/${props.teamSlug}/${props.invite.id}`,
+                );
+                toast.success("Invite link copied to clipboard");
+              }}
+            >
+              Copy Invite Link
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"
             onClick={() => setShowDeleteDialog(true)}

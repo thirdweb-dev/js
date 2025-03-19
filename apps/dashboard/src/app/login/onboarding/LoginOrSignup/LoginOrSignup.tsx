@@ -89,13 +89,11 @@ export function LoginOrSignup(props: {
             name: "Create account",
             onClick: () => setTab("signup"),
             isActive: tab === "signup",
-            isEnabled: true,
           },
           {
             name: "I already have an account",
             onClick: () => setTab("login"),
             isActive: tab === "login",
-            isEnabled: true,
           },
         ]}
       />

@@ -11,6 +11,12 @@ type UpdatePartnerParams = {
   name: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
+  accessControl?: {
+    serverVerifier?: {
+      url: string;
+      headers?: { key: string; value: string }[];
+    } | null;
+  } | null;
 };
 
 export function useUpdatePartner(
@@ -42,6 +48,7 @@ export function useUpdatePartner(
             name: params.name,
             allowlistedDomains: params.allowlistedDomains,
             allowlistedBundleIds: params.allowlistedBundleIds,
+            accessControl: params.accessControl,
           }),
         },
       );

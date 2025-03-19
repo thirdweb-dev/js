@@ -100,7 +100,6 @@ const DeployOptions = (props: {
           key,
           name: value.title,
           isActive: activeTab === key,
-          isEnabled: true,
           onClick: () => setActiveTab(key as TabId),
         }))}
         tabClassName="font-medium"

@@ -55,4 +55,57 @@ export type Partner = {
   permissions: [PartnerPermission];
   createdAt: string;
   updatedAt: string;
+  accessControl?: {
+    serverVerifier?: {
+      url: string;
+      headers?: { key: string; value: string }[];
+    };
+    allowedOperations?: AllowedOperations[];
+  };
 };
+
+type AllowedArgument = {
+  offset: number;
+  type: "address" | "uint256" | "bytes32" | "bool" | "string";
+  comparisonOperator: "eq" | "neq" | "gt" | "gte" | "lt" | "lte";
+  value: string;
+};
+
+type AllowedTransaction = {
+  chainId: number;
+  contractAddress?: string;
+  selector?: string;
+  arguments?: AllowedArgument[];
+  maxValue?: string;
+};
+
+type AllowedTypedData = {
+  domain: string;
+  verifyingContract?: string;
+  chainId?: number;
+  primaryType?: string;
+};
+
+type PersonalSignRestriction =
+  | {
+      messageType: "userOp";
+      allowedTransactions?: AllowedTransaction[];
+    }
+  | {
+      messageType: "other";
+      message?: string;
+    };
+
+type AllowedOperations =
+  | {
+      signMethod: "eth_signTransaction";
+      allowedTransactions?: AllowedTransaction[];
+    }
+  | {
+      signMethod: "eth_signTypedData_v4";
+      allowedTypedData?: AllowedTypedData[];
+    }
+  | {
+      signMethod: "personal_sign";
+      allowedPersonalSigns?: PersonalSignRestriction[];
+    };

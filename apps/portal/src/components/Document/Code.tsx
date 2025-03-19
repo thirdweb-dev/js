@@ -4,7 +4,6 @@ import "server-only";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import * as parserBabel from "prettier/plugins/babel";
-import * as estree from "prettier/plugins/estree";
 // prettier
 import { format } from "prettier/standalone";
 import {
@@ -54,9 +53,10 @@ export async function CodeBlock(props: {
   // format code
   if (jsOrTsLangs.has(lang)) {
     try {
+      const estreePlugin = await import("prettier/plugins/estree");
       code = await format(code, {
         parser: "babel-ts",
-        plugins: [parserBabel, estree],
+        plugins: [parserBabel, estreePlugin.default],
         printWidth: 70,
       });
     } catch (_e) {
@@ -68,7 +68,7 @@ export async function CodeBlock(props: {
     <div className={cn("group/code relative mb-5", props.containerClassName)}>
       <code
         className={cn(
-          "relative block rounded-lg border bg-card font-mono text-sm leading-relaxed",
+          "relative block whitespace-pre rounded-lg border bg-card font-mono text-sm leading-relaxed",
           props.className,
         )}
         lang={lang}

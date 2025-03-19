@@ -25,24 +25,6 @@ export const staticSidebarLinks: SidebarLink[] = [
         ],
       },
       {
-        name: "Account Abstraction",
-        expanded: false,
-        links: [
-          {
-            name: "Connect",
-            href: "/connect/account-abstraction/connect",
-          },
-          {
-            name: "Sponsor Gas",
-            href: "/connect/account-abstraction/sponsor",
-          },
-          {
-            name: "Native AA (zkSync)",
-            href: "/connect/account-abstraction/native-aa",
-          },
-        ],
-      },
-      {
         name: "In-App Wallet",
         expanded: false,
         links: [
@@ -61,12 +43,34 @@ export const staticSidebarLinks: SidebarLink[] = [
         ],
       },
       {
-        name: "Pay",
+        name: "Account Abstraction",
         expanded: false,
         links: [
           {
-            name: "Fund Wallet",
+            name: "Connect",
+            href: "/connect/account-abstraction/connect",
+          },
+          {
+            name: "Sponsor Gas",
+            href: "/connect/account-abstraction/sponsor",
+          },
+          {
+            name: "Native AA (zkSync)",
+            href: "/connect/account-abstraction/native-aa",
+          },
+        ],
+      },
+      {
+        name: "Universal Bridge",
+        expanded: false,
+        links: [
+          {
+            name: "UI Component",
             href: "/connect/pay",
+          },
+          {
+            name: "Fund Wallet",
+            href: "/connect/pay/fund-wallet",
           },
           {
             name: "Commerce",

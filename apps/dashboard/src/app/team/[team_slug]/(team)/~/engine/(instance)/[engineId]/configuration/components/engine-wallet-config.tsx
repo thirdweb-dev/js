@@ -86,7 +86,6 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
           key,
           name,
           isActive: activeTab === key,
-          isEnabled: true,
           onClick: () => setActiveTab(key),
           icon:
             (key === "aws-kms" && !isAwsKmsConfigured) ||

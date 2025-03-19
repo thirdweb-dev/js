@@ -31,8 +31,8 @@ import {
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
 import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
-import { EmptyState } from "../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
+import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 import { TransactionsCharts } from "./components/Transactions";
 
@@ -85,11 +85,13 @@ export default async function ProjectOverviewPage(props: PageProps) {
           title={project.name}
           interval={interval}
           range={range}
+          showRangeSelector={isActive}
         />
       </div>
+
       {!isActive ? (
-        <div className="container p-6">
-          <EmptyState />
+        <div className="container py-8 pb-20">
+          <ProjectFTUX project={project} teamSlug={params.team_slug} />
         </div>
       ) : (
         <div className="container flex grow flex-col py-6">

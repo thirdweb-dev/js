@@ -96,7 +96,6 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
             onClick: () => setEnvironment(env.environment),
             isActive: activeEnvironment === env.environment,
             name: env.title,
-            isEnabled: true,
           }))}
           tabClassName="text-sm gap-2 !text-sm"
           tabIconClassName="size-4"

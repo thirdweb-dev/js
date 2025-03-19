@@ -62,13 +62,11 @@ export function TeamMembersSettingsPage(props: {
             isActive: manageTab === "members",
             name: "Team Members",
             onClick: () => setManageTab("members"),
-            isEnabled: true,
           },
           {
             isActive: manageTab === "invites",
             name: "Pending Invites",
             onClick: () => setManageTab("invites"),
-            isEnabled: true,
           },
         ]}
       />
