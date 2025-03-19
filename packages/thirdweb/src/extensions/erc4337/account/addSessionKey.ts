@@ -97,6 +97,13 @@ export function isAddSessionKeySupported(availableSelectors: string[]) {
  * @param currentPermissions - The current permissions of the session key.
  * @param newPermissions - The new permissions to set for the session key.
  * @returns A boolean indicating if the session key should be updated.
+ * @extension ERC4337
+ * @example
+ * ```ts
+ * import { shouldUpdateSessionKey } from "thirdweb/extensions/erc4337";
+ *
+ * const shouldUpdate = await shouldUpdateSessionKey({ accountContract, sessionKeyAddress, newPermissions });
+ * ```
  */
 export async function shouldUpdateSessionKey(args: {
   accountContract: ThirdwebContract;
