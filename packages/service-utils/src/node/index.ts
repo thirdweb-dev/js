@@ -76,15 +76,10 @@ export function extractAuthorizationData(
 ): AuthorizationInput {
   let requestUrl: URL;
 
-  try {
-    requestUrl = new URL(
-      authInput.req.url || "",
-      `http://${getHeader(authInput.req.headers, "host")}`,
-    );
-  } catch (error) {
-    console.log("** Node URL Error **", error);
-    throw error;
-  }
+  requestUrl = new URL(
+    authInput.req.url || "",
+    `http://${getHeader(authInput.req.headers, "host")}`,
+  );
 
   const headers = authInput.req.headers;
   const secretKey = getHeader(headers, "x-secret-key");
