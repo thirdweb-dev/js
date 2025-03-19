@@ -1,5 +1,8 @@
+import type { Abi, AbiFunction } from "abitype";
+import { toFunctionSelector, toFunctionSignature } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import { getDeployedCreate2Factory } from "../../contract/deployment/utils/create-2-factory.js";
 import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
 import { getDeployedInfraContractFromMetadata } from "../../contract/deployment/utils/infra.js";
@@ -18,6 +21,15 @@ type DeployTransactionType =
   | "module"
   | "extension"
   | "proxy";
+
+/**
+ * @internal
+ */
+export type DynamicContractExtension = {
+  extensionName: string;
+  extensionVersion: string;
+  publisherAddress: string;
+};
 
 /**
  * @internal
@@ -226,6 +238,7 @@ export async function getAllDefaultConstructorParamsForImplementation(args: {
   chain: Chain;
   client: ThirdwebClient;
   contractId: string;
+  defaultExtensions?: DynamicContractExtension[];
 }) {
   const { chain, client } = args;
   const isZkSync = await isZkSyncChain(chain);
@@ -251,8 +264,81 @@ export async function getAllDefaultConstructorParamsForImplementation(args: {
       contractId: "WETH9",
     }),
   ]);
+
+  const defaultExtensionInput = args.defaultExtensions
+    ? await generateExtensionInput({
+        defaultExtensions: args.defaultExtensions,
+        chain,
+        client,
+        forwarder,
+        nativeTokenWrapper: weth,
+      })
+    : [];
+
   return {
     trustedForwarder: forwarder,
     nativeTokenWrapper: weth,
+    extensions: defaultExtensionInput,
   };
+}
+
+async function generateExtensionInput(args: {
+  defaultExtensions: DynamicContractExtension[];
+  chain: Chain;
+  client: ThirdwebClient;
+  forwarder: string;
+  nativeTokenWrapper: string;
+}) {
+  const { defaultExtensions, chain, client, forwarder, nativeTokenWrapper } =
+    args;
+
+  const deployedExtensions = await Promise.all(
+    defaultExtensions.map((e) =>
+      getDeployedInfraContract({
+        chain,
+        client,
+        contractId: e.extensionName,
+        publisher: e.publisherAddress,
+        version: e.extensionVersion || "latest",
+        constructorParams: { forwarder, nativeTokenWrapper },
+      }).then((c) => ({
+        name: e.extensionName,
+        metadataURI: "",
+        implementation: c,
+      })),
+    ),
+  );
+
+  const extensionInput = await Promise.all(
+    deployedExtensions.map(async (e) => {
+      if (!e.implementation) {
+        throw new Error("Extension not deployed");
+      }
+      return resolveContractAbi(e.implementation)
+        .then(generateExtensionFunctionsFromAbi)
+        .then((c) => ({
+          metadata: {
+            ...e,
+            implementation: e.implementation?.address,
+          },
+          functions: c,
+        }));
+    }),
+  );
+
+  return extensionInput;
+}
+
+export function generateExtensionFunctionsFromAbi(abi: Abi): Array<{
+  functionSelector: string;
+  functionSignature: string;
+}> {
+  const functions = abi.filter(
+    (item) => item.type === "function" && !item.name.startsWith("_"),
+  ) as AbiFunction[];
+
+  return functions.map((fn) => ({
+    functionSelector: toFunctionSelector(fn),
+    functionSignature: toFunctionSignature(fn),
+  }));
 }

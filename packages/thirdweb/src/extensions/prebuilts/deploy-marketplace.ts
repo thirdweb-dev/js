@@ -1,10 +1,4 @@
-import type {
-  Abi,
-  AbiFunction,
-  AbiParametersToPrimitiveTypes,
-  Address,
-} from "abitype";
-import { toFunctionSelector, toFunctionSignature } from "viem";
+import type { AbiParametersToPrimitiveTypes, Address } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -19,6 +13,7 @@ import { getRoyaltyEngineV1ByChainId } from "../../utils/royalty-engine.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initMarketplace } from "./__generated__/Marketplace/write/initialize.js";
+import { generateExtensionFunctionsFromAbi } from "./get-required-transactions.js";
 
 export type MarketplaceContractParams = {
   name: string;
@@ -197,22 +192,6 @@ async function getInitializeTransaction(options: {
     platformFeeRecipient: params.platformFeeRecipient || accountAddress,
     trustedForwarders: params.trustedForwarders || [],
   });
-}
-
-// helperFns
-
-function generateExtensionFunctionsFromAbi(abi: Abi): Array<{
-  functionSelector: string;
-  functionSignature: string;
-}> {
-  const functions = abi.filter(
-    (item) => item.type === "function" && !item.name.startsWith("_"),
-  ) as AbiFunction[];
-
-  return functions.map((fn) => ({
-    functionSelector: toFunctionSelector(fn),
-    functionSignature: toFunctionSignature(fn),
-  }));
 }
 
 // let's just ... put this down here

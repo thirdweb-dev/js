@@ -142,7 +142,11 @@ export async function getOrDeployInfraForPublishedContract(
       version,
     });
   }
-  return { cloneFactoryContract, implementationContract };
+
+  return {
+    cloneFactoryContract,
+    implementationContract,
+  };
 }
 
 /**
