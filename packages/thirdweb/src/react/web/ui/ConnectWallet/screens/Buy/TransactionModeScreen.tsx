@@ -6,7 +6,11 @@ import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
-import { fontSize, spacing } from "../../../../../core/design-system/index.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainMetadata } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
@@ -26,6 +30,7 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
+import { OutlineWalletIcon } from "../../icons/OutlineWalletIcon.js";
 import { formatTokenBalance } from "../formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
@@ -93,6 +98,38 @@ export function TransactionModeScreen(props: {
 
   if (transactionCostAndDataLoading || chainDataLoading) {
     return <LoadingScreen />;
+  }
+
+  if (!activeAccount) {
+    return (
+      <Container
+        style={{
+          minHeight: "350px",
+        }}
+        fullHeight
+        flex="row"
+        center="both"
+      >
+        <Container animate="fadein">
+          <Spacer y="xxl" />
+          <Container flex="row" center="x">
+            <OutlineWalletIcon size={iconSize["3xl"]} />
+          </Container>
+          <Spacer y="lg" />
+          <Text center color="primaryText" size="md">
+            Please connect a wallet to continue
+          </Text>
+          <Spacer y="xl" />
+          <Container flex="row" center="x" style={{ width: "100%" }}>
+            <ConnectButton
+              client={client}
+              theme={theme}
+              {...props.connectOptions}
+            />
+          </Container>
+        </Container>
+      </Container>
+    );
   }
 
   if (transactionCostAndDataError || chainDataError) {
