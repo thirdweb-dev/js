@@ -73,10 +73,6 @@ export async function estimateGas(
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
     return cache.get(txWithFrom)!;
   }
-  // Saga Mainnet has a fixed gas limit for all transactions
-  if (options.transaction.chain.id === 5464) {
-    return 20000000n;
-  }
   const { account } = options;
   const promise = (async () => {
     const predefinedGas = await resolvePromisedValue(options.transaction.gas);
