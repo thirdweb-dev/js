@@ -63,6 +63,7 @@ const GAS_FREE_CHAINS = [
   247253, // Saakuru Testnet
   19011, // Homeverse Mainnet
   40875, // Homeverse Testnet
+  5464, // Saga Mainnet
 ];
 
 function useIsNetworkMismatch(txChainId: number) {
