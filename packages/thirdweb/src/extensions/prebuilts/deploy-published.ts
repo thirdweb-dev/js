@@ -16,7 +16,11 @@ import {
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
-import type { Hex } from "../../utils/encoding/hex.js";
+import {
+  type Hex,
+  numberToHex,
+  stringToHex,
+} from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
 import {
@@ -194,6 +198,7 @@ export async function deployContractfromDeployMetadata(
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
         salt,
+        metadataUri: deployMetadata.metadataUri,
       });
     }
     case "autoFactory": {
@@ -311,9 +316,20 @@ async function directDeploy(options: {
   compilerMetadata: CompilerMetadata;
   contractParams?: Record<string, unknown>;
   salt?: string;
+  metadataUri?: string;
 }): Promise<string> {
   const { account, client, chain, compilerMetadata, contractParams, salt } =
     options;
+
+  let extraData: string | undefined;
+  if (options.metadataUri) {
+    const uriHex = stringToHex(options.metadataUri).replace("0x", "");
+    const lengthHex = numberToHex(uriHex.length / 2, { size: 1 }).replace(
+      "0x",
+      "",
+    );
+    extraData = uriHex.concat(lengthHex);
+  }
 
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
@@ -330,6 +346,7 @@ async function directDeploy(options: {
     abi: compilerMetadata.abi,
     constructorParams: contractParams,
     salt,
+    extraData,
   });
 }
 

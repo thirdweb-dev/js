@@ -40,6 +40,7 @@ export function formatCompilerMetadata(
   if ("source_metadata" in metadata) {
     meta = metadata.source_metadata;
   }
+
   const compilationTarget = meta.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];

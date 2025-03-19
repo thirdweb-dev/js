@@ -221,10 +221,13 @@
     "@walletconnect/ethereum-provider": "2.17.5",
     "@walletconnect/sign-client": "2.17.5",
     "abitype": "1.0.8",
+    "chalk": "^5.4.1",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
     "mipd": "0.0.7",
+    "open": "^10.1.0",
+    "ora": "^8.2.0",
     "ox": "0.6.10",
     "uqr": "0.1.2",
     "viem": "2.23.10"
