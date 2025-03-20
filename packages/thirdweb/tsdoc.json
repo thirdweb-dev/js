@@ -58,6 +58,10 @@
       "syntaxKind": "block"
     },
     {
+      "tagName": "@bridge",
+      "syntaxKind": "block"
+    },
+    {
       "tagName": "@storage",
       "syntaxKind": "block"
     },
@@ -112,6 +116,7 @@
     "@walletConnection": true,
     "@walletUtils": true,
     "@buyCrypto": true,
+    "@bridge": true,
     "@storage": true,
     "@auth": true,
     "@utils": true,
