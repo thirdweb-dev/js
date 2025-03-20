@@ -15,7 +15,9 @@ import type { EIP1193Provider } from "./types.js";
  * Options for creating an EIP-1193 provider adapter.
  */
 export type FromEip1193AdapterOptions = {
-  provider: EIP1193Provider | (() => Promise<EIP1193Provider>);
+  provider:
+    | EIP1193Provider
+    | ((params?: { chainId?: number }) => Promise<EIP1193Provider>);
   walletId?: WalletId;
 };
 
@@ -63,13 +65,11 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
   let account: Account | undefined = undefined;
   let chain: Chain | undefined = undefined;
   let provider: EIP1193Provider | undefined = undefined;
-  const getProvider = async () => {
-    if (!provider) {
-      provider =
-        typeof options.provider === "function"
-          ? await options.provider()
-          : options.provider;
-    }
+  const getProvider = async (params?: { chainId?: number }) => {
+    provider =
+      typeof options.provider === "function"
+        ? await options.provider(params)
+        : options.provider;
     return provider;
   };
 
@@ -118,7 +118,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
         await connectEip1193Wallet({
           id,
-          provider: await getProvider(),
+          provider: await getProvider({ chainId: connectOptions.chain?.id }),
           client: connectOptions.client,
           chain: connectOptions.chain,
           emitter,
@@ -141,7 +141,7 @@ export function fromProvider(options: FromEip1193AdapterOptions): Wallet {
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
         await autoConnectEip1193Wallet({
           id,
-          provider: await getProvider(),
+          provider: await getProvider({ chainId: connectOptions.chain?.id }),
           emitter,
           chain: connectOptions.chain,
           client: connectOptions.client,
