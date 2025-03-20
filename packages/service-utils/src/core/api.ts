@@ -105,6 +105,8 @@ export type ProjectEmbeddedWalletsService = {
   recoveryShareManagement?: string | null;
   customAuthentication?: CustomAuthenticationServiceSchema | null;
   customAuthEndpoint?: CustomAuthEndpointServiceSchema | null;
+  // list of 2-letter country ISOs that are enabled for SMS for this project
+  smsEnabledCountryISOs?: string[] | null;
 };
 
 export type ProjectService =

@@ -64,6 +64,14 @@ function Variants(props: {
           isUpdating={false}
           trackingCategory="foo"
           updateApiKey={() => {}}
+          smsCountryTiers={{
+            // scaffold some countries to play around with the UI
+            tier1: ["US", "CA"],
+            tier2: ["GB", "AU", "NZ"],
+            tier3: ["FR", "DE", "ES", "IT"],
+            tier4: ["JP", "KR", "MX", "RU"],
+            tier5: ["BR", "AR", "CO", "CL", "PE", "VE", "SA"],
+          }}
         />
       </div>
     </div>
