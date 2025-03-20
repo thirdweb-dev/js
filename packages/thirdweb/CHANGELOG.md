@@ -1,5 +1,197 @@
 # thirdweb
 
+## 5.93.0
+
+### Minor Changes
+
+- [#6464](https://github.com/thirdweb-dev/js/pull/6464) [`654f879`](https://github.com/thirdweb-dev/js/commit/654f8795b45f6a14f5e4808e71f2d6143ef46171) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds a new `Bridge` module to the thirdweb SDK to access the Universal Bridge.
+
+  ## Features
+
+  ### Buy & Sell Operations
+
+  The Bridge module makes it easy to buy and sell tokens across chains:
+
+  - `Bridge.Buy` - For specifying the destination amount you want to receive
+  - `Bridge.Sell` - For specifying the origin amount you want to send
+
+  Each operation provides two functions:
+
+  1. `quote` - Get an estimate without connecting a wallet
+  2. `prepare` - Get a finalized quote with transaction data
+
+  #### Buy Example
+
+  ```typescript
+  import { Bridge, toWei, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+
+  // First, get a quote to see approximately how much you'll pay
+  const buyQuote = await Bridge.Buy.quote({
+    originChainId: 1, // Ethereum
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 10, // Optimism
+    destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+    buyAmountWei: toWei("0.01"), // I want to receive 0.01 ETH on Optimism
+    client: thirdwebClient,
+  });
+
+  console.log(
+    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`,
+  );
+
+  // When ready to execute, prepare the transaction
+  const preparedBuy = await Bridge.Buy.prepare({
+    originChainId: 1,
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 10,
+    destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+    buyAmountWei: toWei("0.01"),
+    sender: "0x...", // Your wallet address
+    receiver: "0x...", // Recipient address (can be the same as sender)
+    client: thirdwebClient,
+  });
+
+  // The prepared quote contains the transactions you need to execute
+  console.log(`Transactions to execute: ${preparedBuy.transactions.length}`);
+  ```
+
+  #### Sell Example
+
+  ```typescript
+  import { Bridge, toWei } from "thirdweb";
+
+  // First, get a quote to see approximately how much you'll receive
+  const sellQuote = await Bridge.Sell.quote({
+    originChainId: 1, // Ethereum
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 10, // Optimism
+    destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+    sellAmountWei: toWei("0.01"), // I want to sell 0.01 ETH from Ethereum
+    client: thirdwebClient,
+  });
+
+  console.log(
+    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`,
+  );
+
+  // When ready to execute, prepare the transaction
+  const preparedSell = await Bridge.Sell.prepare({
+    originChainId: 1,
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 10,
+    destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+    sellAmountWei: toWei("0.01"),
+    sender: "0x...", // Your wallet address
+    receiver: "0x...", // Recipient address (can be the same as sender)
+    client: thirdwebClient,
+  });
+
+  // Execute the transactions in sequence
+  for (const tx of preparedSell.transactions) {
+    // Send the transaction using your wallet
+    // Wait for it to be mined
+  }
+  ```
+
+  ### Bridge Routes
+
+  You can discover available bridge routes using the `routes` function:
+
+  ```typescript
+  import { Bridge, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+
+  // Get all available routes
+  const allRoutes = await Bridge.routes({
+    client: thirdwebClient,
+  });
+
+  // Filter routes for a specific token or chain
+  const filteredRoutes = await Bridge.routes({
+    originChainId: 1, // From Ethereum
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 10, // To Optimism
+    client: thirdwebClient,
+  });
+
+  // Paginate through routes
+  const paginatedRoutes = await Bridge.routes({
+    limit: 10,
+    offset: 0,
+    client: thirdwebClient,
+  });
+  ```
+
+  ### Bridge Transaction Status
+
+  After executing bridge transactions, you can check their status:
+
+  ```typescript
+  import { Bridge } from "thirdweb";
+
+  // Check the status of a bridge transaction
+  const bridgeStatus = await Bridge.status({
+    transactionHash:
+      "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+    chainId: 8453, // The chain ID where the transaction was initiated
+    client: thirdwebClient,
+  });
+
+  // The status will be one of: "COMPLETED", "PENDING", "FAILED", or "NOT_FOUND"
+  if (bridgeStatus.status === "completed") {
+    console.log(`
+      Bridge completed!
+      Sent: ${bridgeStatus.originAmount} wei on chain ${bridgeStatus.originChainId}
+      Received: ${bridgeStatus.destinationAmount} wei on chain ${bridgeStatus.destinationChainId}
+    `);
+  } else if (bridgeStatus.status === "pending") {
+    console.log("Bridge transaction is still pending...");
+  } else {
+    console.log("Bridge transaction failed");
+  }
+  ```
+
+  ## Error Handling
+
+  The Bridge module provides consistent error handling with descriptive error messages:
+
+  ```typescript
+  try {
+    await Bridge.Buy.quote({
+      // ...params
+    });
+  } catch (error) {
+    // Errors will have the format: "ErrorCode | Error message details"
+    console.error(error.message); // e.g. "AmountTooHigh | The provided amount is too high for the requested route."
+  }
+  ```
+
+  ## Types
+
+  The Bridge module exports the following TypeScript types:
+
+  - `Route` - Describes a bridge route between chains and tokens
+  - `Status` - Represents the status of a bridge transaction
+  - `Quote` - Contains quote information for a bridge transaction
+  - `PreparedQuote` - Extends Quote with transaction data
+
+  ## Integration
+
+  The Bridge module is accessible as a top-level export:
+
+  ```typescript
+  import { Bridge } from "thirdweb";
+  ```
+
+  Use `Bridge.Buy`, `Bridge.Sell`, `Bridge.routes`, and `Bridge.status` to access the corresponding functionality.
+
+### Patch Changes
+
+- [#6503](https://github.com/thirdweb-dev/js/pull/6503) [`47f8cd6`](https://github.com/thirdweb-dev/js/commit/47f8cd6d8d855bd01c4512098d7d4f0fbb44677e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - UI cleanup for multistep swaps in PayEmbed
+
+- [#6506](https://github.com/thirdweb-dev/js/pull/6506) [`d854021`](https://github.com/thirdweb-dev/js/commit/d8540216f1da8be67aee55f5583f9a019caf18c1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass along chainId to internal 1193 provider when connecting
+
+- [#6505](https://github.com/thirdweb-dev/js/pull/6505) [`7890145`](https://github.com/thirdweb-dev/js/commit/78901457cfb282f33cc7fb78895ea9c225e455bd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix requireApproval option not enforced for wallet connection
+
 ## 5.92.3
 
 ### Patch Changes
