@@ -1,0 +1,32 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "In-App Wallet FAQs",
+	description: "Frequently asked questions about thirdweb's In-App Wallet",
+	image: {
+		title: "FAQs for thirdweb In-App Wallet",
+		icon: "wallets",
+	},
+});
+
+# In-App Wallet FAQs
+
+### How do users connect to their in-app wallet in a third-party app?
+
+Users can access it by doing a manual connection via wallet connect. They will then have to use the connect button or embed and select manage wallet -> connect an App.
+
+### How is pricing calculated for in-app wallets?
+
+In-app wallets are billed based on "monthly active wallets". An active wallet is defined as a wallet where a user logs in during the billing period. In-app wallets are completely free up to 1,000 monthly active wallets, and $0.02 per wallet after that.
+
+### What security measures should users take when connecting their in-app wallet?
+
+Users should always verify they are connecting to legitimate websites by checking the URL carefully. Never connect to unverified or suspicious websites. The connection process should only be initiated through the official WalletConnect interface or trusted dApp integrations.
+
+### Can developers integrate both in-app wallets and external wallets in the same application?
+
+Yes, developers can build a unified experience that supports both in-app wallets and external wallets (like MetaMask) using the same code base. The SDK provides a wallet signer that handles how all wallet types interact with signatures and smart contracts consistently, though the initial connection flow will differ by wallet type.
+
+### What blockchain networks are supported for in-app wallet connections?
+
+In-app wallets are fully EVM (Ethereum Virtual Machine) compatible and support all EVM chains. This includes major networks like Ethereum Mainnet, Polygon, Optimism, Base, and other EVM-compatible blockchains. 

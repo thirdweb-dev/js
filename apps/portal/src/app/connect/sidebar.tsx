@@ -76,6 +76,10 @@ export const sidebar: SideBar = {
               href: `${walletSlug}/sign-in-methods/guest`,
             },
             {
+              name: "FAQ",
+              href: `${walletSlug}/in-app-wallet/faq`,
+            },
+            {
               name: "Custom Authentication",
               links: [
                 {
@@ -129,6 +133,10 @@ export const sidebar: SideBar = {
             {
               name: "Register with WalletConnect",
               href: `${walletSlug}/ecosystem/register-walletconnect`,
+            },
+            {
+              name: "FAQ",
+              href: `${walletSlug}/ecosystem/faq`,
             },
           ],
         },
