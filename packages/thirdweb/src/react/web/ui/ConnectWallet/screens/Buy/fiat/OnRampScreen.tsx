@@ -90,9 +90,6 @@ export function OnRampScreen(props: {
     isAutoMode,
   });
   const firstStepChainId = state.steps[0]?.step.token.chainId;
-  const currentStepIndex = state.steps.findIndex(
-    (step) => step.status === "pending" || step.status === "actionRequired",
-  );
   return (
     <Container p="lg">
       <ModalHeader title={props.title} onBack={props.onBack} />
@@ -131,9 +128,7 @@ export function OnRampScreen(props: {
                 index={index}
               />
             </StepContainer>
-            {index < state.steps.length - 1 && (
-              <StepConnectorArrow active={index === currentStepIndex} />
-            )}
+            {index < state.steps.length - 1 && <StepConnectorArrow />}
           </Container>
         ))}
       </Container>
