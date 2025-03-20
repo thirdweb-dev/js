@@ -10,16 +10,16 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Get started with thirdweb Wallets",
+		title: "Get started with Connect",
 		icon: "wallets",
 	},
-	title: "Get started with thirdweb Wallet",
-	description: "Get started with thirdweb Wallet",
+	title: "Get started with Connect",
+	description: "Get started with Connect",
 });
 
-# Get Started with thirdweb Wallet
+# Get Started with Connect
 
-thirdweb Wallet offers multiple ways to integrate wallet functionality in your application:
+Connect offers multiple ways to integrate wallet functionality in your application:
 
 1. **External Wallets** - Connect to existing wallets like MetaMask, Coinbase Wallet, etc.
 2. **In-App Wallets** - Create wallets with social/email login.
@@ -31,11 +31,11 @@ These methods can be used independently or together in the same application to p
 
 To use wallet features in your applications, you will need a client ID. Generate one for free at [your thirdweb dashboard](https://thirdweb.com/create-api-key).
 
-This client ID will be used to authenticate your application with thirdweb's services.
-
 <Callout variant="info">
   Keep your client ID safe. You can generate different client IDs for development and production environments.
 </Callout>
+
+Your client ID authenticates your application with thirdweb's services and provides access to infrastructure like RPC endpoints, IPFS gateways, and wallet services.
 
 ## Live Playground
 
@@ -73,16 +73,22 @@ Before diving into the implementation, check out our playground to see all the v
     pnpm add thirdweb
     ```
 
-    ### Setup the Client
+    ### Set up the Client
 
     First, create a client instance to connect with thirdweb services:
 
     ```typescript
     import { createThirdwebClient } from "thirdweb";
 
+    // For client-side applications:
     const client = createThirdwebClient({
       clientId: "YOUR_CLIENT_ID", // Get from your thirdweb dashboard
     });
+
+    // For server-side scripts (Never expose secret keys in client code):
+    // const client = createThirdwebClient({
+    //   secretKey: process.env.THIRDWEB_SECRET_KEY,
+    // });
     ```
 
     ### Connect External Wallets
@@ -92,7 +98,7 @@ Before diving into the implementation, check out our playground to see all the v
     ```typescript
     import { createThirdwebClient, walletConnect } from "thirdweb";
 
-    // Create the client
+    // Create the client (do this once and reuse it)
     const client = createThirdwebClient({
       clientId: "YOUR_CLIENT_ID",
     });
@@ -103,9 +109,19 @@ Before diving into the implementation, check out our playground to see all the v
     });
 
     // Connect the wallet
-    const walletInstance = wallet.connect();
+    const walletInstance = await wallet.connect();
     const address = await walletInstance.getAddress();
     console.log("Connected to:", address);
+    
+    // Read wallet balance
+    import { getWalletBalance, ethereum } from "thirdweb";
+    
+    const balance = await getWalletBalance({
+      client,
+      chain: ethereum,
+      address: walletInstance.getAddress(),
+    });
+    console.log(`Balance: ${balance.displayValue} ${balance.symbol}`);
     ```
 
     ### Setup In-App Wallet
@@ -115,7 +131,7 @@ Before diving into the implementation, check out our playground to see all the v
     ```typescript
     import { createThirdwebClient, embeddedWallet } from "thirdweb";
 
-    // Create the client
+    // Create the client (do this once and reuse it)
     const client = createThirdwebClient({
       clientId: "YOUR_CLIENT_ID",
     });
@@ -144,7 +160,7 @@ Before diving into the implementation, check out our playground to see all the v
     ```typescript
     import { createThirdwebClient, ecosystemWallet } from "thirdweb";
 
-    // Create the client
+    // Create the client (do this once and reuse it)
     const client = createThirdwebClient({
       clientId: "YOUR_CLIENT_ID",
     });
@@ -176,16 +192,31 @@ Before diving into the implementation, check out our playground to see all the v
     pnpm add thirdweb
     ```
 
+    ### Create a Client
+
+    First, create a client file (e.g., `thirdwebClient.ts`) for reuse throughout your app:
+
+    ```typescript
+    // thirdwebClient.ts
+    import { createThirdwebClient } from "thirdweb";
+    
+    export const client = createThirdwebClient({
+      clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
+    });
+    ```
+    
     ### Setup the Provider
 
     Wrap your application with the ThirdwebProvider:
 
     ```tsx
+    // app.tsx / _app.tsx
     import { ThirdwebProvider } from "thirdweb/react";
+    import { client } from "./thirdwebClient";
 
     function App() {
       return (
-        <ThirdwebProvider clientId="YOUR_CLIENT_ID">
+        <ThirdwebProvider>
           <YourApp />
         </ThirdwebProvider>
       );
@@ -198,43 +229,58 @@ Before diving into the implementation, check out our playground to see all the v
 
     ```tsx
     import { ConnectButton } from "thirdweb/react";
+    import { client } from "./thirdwebClient";
 
     function YourApp() {
       return (
         <div>
           <h1>My dApp</h1>
-          <ConnectButton />
+          <ConnectButton client={client} />
         </div>
       );
     }
     ```
+
+    The ConnectButton automatically handles 500+ wallets, including MetaMask, WalletConnect, Coinbase Wallet, and all supported in-app wallets.
 
     ### Connection Hooks
 
     For more customized implementations, use the connection hooks:
 
     ```tsx
-    import { useConnect, useDisconnect, useWallet } from "thirdweb/react";
+    import { useConnect, useDisconnect, useActiveAccount, useWalletBalance } from "thirdweb/react";
+    import { client } from "./thirdwebClient";
+    import { ethereum } from "thirdweb/chains";
 
-    function CustomConnectButton() {
-      const connect = useConnect();
-      const disconnect = useDisconnect();
-      const wallet = useWallet();
+    function CustomWalletUI() {
+      const { connect } = useConnect();
+      const { disconnect } = useDisconnect();
+      const activeAccount = useActiveAccount();
+      
+      // Get wallet balance (only when connected)
+      const { data: balance, isLoading } = useWalletBalance({
+        client,
+        chain: ethereum,
+        address: activeAccount?.address,
+      });
 
       return (
         <div>
-          {wallet ? (
+          {activeAccount ? (
             <div>
-              <p>Connected: {wallet.getAddress()}</p>
+              <p>Connected: {activeAccount.address}</p>
+              {isLoading ? (
+                <p>Loading balance...</p>
+              ) : (
+                <p>Balance: {balance?.displayValue} {balance?.symbol}</p>
+              )}
               <button onClick={() => disconnect()}>Disconnect</button>
             </div>
           ) : (
             <button 
-              onClick={() => connect({ 
-                connector: "metamask" // Or "coinbase", "walletConnect", etc.
-              })}
+              onClick={() => connect({ connector: "metamask" })}
             >
-              Connect Wallet
+              Connect MetaMask
             </button>
           )}
         </div>
@@ -248,9 +294,13 @@ Before diving into the implementation, check out our playground to see all the v
 
     ```tsx
     import { useEmbeddedWallet } from "thirdweb/react";
+    import { useState } from "react";
+    import { client } from "./thirdwebClient";
 
     function EmailLoginButton() {
-      const embeddedWallet = useEmbeddedWallet();
+      const embeddedWallet = useEmbeddedWallet({
+        client,
+      });
       const [email, setEmail] = useState("");
 
       const handleLogin = async () => {
@@ -292,16 +342,39 @@ Before diving into the implementation, check out our playground to see all the v
     pnpm add thirdweb
     ```
 
+    <Callout variant="warning">
+      You cannot use Expo Go with thirdweb because native modules are required.
+      Use an Expo development build (`npx expo prebuild`) or React Native CLI app.
+    </Callout>
+
+    ### Create a Client
+
+    Create a client file for reuse throughout your app:
+
+    ```typescript
+    // thirdwebClient.ts
+    import { createThirdwebClient } from "thirdweb";
+    
+    export const client = createThirdwebClient({
+      clientId: "YOUR_CLIENT_ID", // Configure in your app's env or constants
+    });
+    ```
+
+    <Callout variant="info">
+      When creating your client ID on the thirdweb dashboard, allowlist your mobile app's bundle ID (e.g., com.yourcompany.app) for security.
+    </Callout>
+
     ### Setup the Provider
 
     Wrap your application with the ThirdwebProvider:
 
     ```tsx
-    import { ThirdwebProvider } from "thirdweb/react-native";
+    import { ThirdwebProvider } from "thirdweb/react";
+    import { client } from "./thirdwebClient";
 
     function App() {
       return (
-        <ThirdwebProvider clientId="YOUR_CLIENT_ID">
+        <ThirdwebProvider>
           <YourApp />
         </ThirdwebProvider>
       );
@@ -313,13 +386,15 @@ Before diving into the implementation, check out our playground to see all the v
     Use the pre-built ConnectButton for a complete wallet connection UI:
 
     ```tsx
-    import { ConnectButton } from "thirdweb/react-native";
+    import { ConnectButton } from "thirdweb/react";
+    import { client } from "./thirdwebClient";
+    import { View, Text } from "react-native";
 
     function YourApp() {
       return (
         <View>
           <Text>My Mobile dApp</Text>
-          <ConnectButton />
+          <ConnectButton client={client} />
         </View>
       );
     }
@@ -330,12 +405,15 @@ Before diving into the implementation, check out our playground to see all the v
     Enable email or social login for mobile:
 
     ```tsx
-    import { useEmbeddedWallet } from "thirdweb/react-native";
+    import { useEmbeddedWallet } from "thirdweb/react";
     import { useState } from "react";
     import { View, TextInput, Button, Alert } from "react-native";
+    import { client } from "./thirdwebClient";
 
     function EmailLoginButton() {
-      const embeddedWallet = useEmbeddedWallet();
+      const embeddedWallet = useEmbeddedWallet({
+        client,
+      });
       const [email, setEmail] = useState("");
 
       const handleLogin = async () => {
@@ -367,8 +445,16 @@ Before diving into the implementation, check out our playground to see all the v
   <TabsContent value="unity">
     ### Installation
 
-    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity-sdk/releases)
+    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity-sdk/releases) (.unitypackage file)
     2. Import the package into your Unity project via Assets > Import Package > Custom Package
+
+    ### Configure Client ID
+
+    After importing the SDK:
+
+    1. Go to Project Settings > Thirdweb 
+    2. Enter your Client ID from the thirdweb dashboard
+    3. Allowlist your game's Bundle ID on the thirdweb dashboard for security
 
     ### Initialize the SDK
 
@@ -387,6 +473,7 @@ Before diving into the implementation, check out our playground to see all the v
 
         void Start()
         {
+            // Client ID is set in Project Settings > Thirdweb
             sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
             connectButton.onClick.AddListener(ConnectWallet);
         }
@@ -394,8 +481,9 @@ Before diving into the implementation, check out our playground to see all the v
         public async void ConnectWallet()
         {
             try {
+                // Connect with an external wallet like Coinbase Wallet
                 string address = await sdk.wallet.Connect(new WalletConnection() {
-                    provider = WalletProvider.CoinbaseWallet, // Or other providers
+                    provider = WalletProvider.CoinbaseWallet,
                     chainId = 1 // Ethereum Mainnet
                 });
                 
@@ -432,6 +520,10 @@ Before diving into the implementation, check out our playground to see all the v
             });
             
             walletAddressText.text = "Connected: " + address;
+            
+            // Read wallet balance
+            var balance = await sdk.wallet.GetBalance();
+            Debug.Log($"Balance: {balance.DisplayValue} {balance.Symbol}");
         }
         catch (System.Exception e) {
             Debug.LogError("Error connecting wallet: " + e.Message);
@@ -443,7 +535,7 @@ Before diving into the implementation, check out our playground to see all the v
   <TabsContent value="dotnet">
     ### Installation
 
-    Install the thirdweb .NET SDK:
+    Install the thirdweb .NET SDK using NuGet:
 
     ```bash
     dotnet add package Thirdweb
@@ -456,11 +548,17 @@ Before diving into the implementation, check out our playground to see all the v
     ```csharp
     using Thirdweb;
 
-    // Initialize the SDK
+    // For client-side applications:
     var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
     {
-        ClientId = "YOUR_CLIENT_ID"
+        ClientId = "YOUR_CLIENT_ID" // From thirdweb dashboard
     });
+
+    // For server-side applications:
+    // var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
+    // {
+    //     SecretKey = Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY")
+    // });
     ```
 
     ### Connect External Wallets
@@ -469,12 +567,16 @@ Before diving into the implementation, check out our playground to see all the v
 
     ```csharp
     // For server-side applications or wallet management
-    var privateKey = "YOUR_PRIVATE_KEY"; // Be careful with private keys
+    var privateKey = Environment.GetEnvironmentVariable("WALLET_PRIVATE_KEY"); // Never hardcode
     var wallet = new PrivateKeyWallet(privateKey);
     
     await sdk.SetWallet(wallet);
     var address = await sdk.Wallet.GetAddress();
     Console.WriteLine($"Connected wallet address: {address}");
+    
+    // Read wallet balance
+    var balance = await sdk.Wallet.GetBalance();
+    Console.WriteLine($"Balance: {balance.DisplayValue} {balance.Symbol}");
     ```
 
     ### Using In-App Wallets
@@ -495,19 +597,43 @@ Before diving into the implementation, check out our playground to see all the v
     // Authenticate and get the wallet address
     await wallet.Authenticate();
     var address = await sdk.Wallet.GetAddress();
+    Console.WriteLine($"Connected with embedded wallet: {address}");
+    ```
+
+    ### Reading Contract Data
+
+    Interact with smart contracts:
+
+    ```csharp
+    // Get a contract instance
+    var contract = await ThirdwebContract.Create(
+        client: sdk.Client, 
+        address: "0x...", 
+        chain: Chain.Ethereum
+    );
+
+    // Read a value from the contract
+    var name = await contract.Read<string>("name");
+    Console.WriteLine($"Contract name: {name}");
     ```
   </TabsContent>
 
   <TabsContent value="unreal">
     ### Installation
 
-    1. Download the latest [thirdweb Unreal Engine SDK](https://github.com/thirdweb-dev/unreal-sdk/releases)
+    1. Download the thirdweb Unreal Engine plugin from the [Unreal Engine Marketplace](https://www.unrealengine.com/marketplace/en-US/product/thirdweb)
     2. Add the plugin to your Unreal project
     3. Enable the plugin in your project settings
 
-    ### Initialize the SDK
+    ### Configure Client ID
 
-    Create a new Blueprint or C++ class to manage wallet connections:
+    1. Go to Edit > Project Settings > Thirdweb
+    2. Enter your Client ID from the thirdweb dashboard
+    3. Enter your Bundle ID (must match what was allowlisted on the thirdweb dashboard)
+
+    ### Initialize the SDK (C++)
+
+    Create a new class to manage wallet connections:
 
     ```cpp
     #include "ThirdwebManager.h"
@@ -519,8 +645,8 @@ Before diving into the implementation, check out our playground to see all the v
         // Get the Thirdweb subsystem
         UThirdwebSubsystem* ThirdwebSubsystem = GEngine->GetEngineSubsystem<UThirdwebSubsystem>();
         
-        // Initialize with your client ID
-        ThirdwebSubsystem->Initialize("YOUR_CLIENT_ID", "ethereum");
+        // Initialize with your client ID (configured in project settings)
+        ThirdwebSubsystem->Initialize("ethereum");
     }
 
     void AMyGameController::ConnectWallet()
@@ -529,10 +655,11 @@ Before diving into the implementation, check out our playground to see all the v
         
         // Configure wallet connection
         FWalletConnection WalletOptions;
-        WalletOptions.Provider = EWalletProvider::MetaMask;
+        WalletOptions.Provider = EWalletProvider::EmbeddedWallet;
+        WalletOptions.Email = "user@example.com";
         WalletOptions.ChainId = 1; // Ethereum Mainnet
         
-        // Connect wallet
+        // Connect wallet asynchronously
         ThirdwebSubsystem->ConnectWallet(WalletOptions, FOnWalletConnected::CreateUObject(this, &AMyGameController::OnWalletConnected));
     }
 
@@ -541,24 +668,51 @@ Before diving into the implementation, check out our playground to see all the v
         if (Error.IsEmpty())
         {
             UE_LOG(LogTemp, Display, TEXT("Wallet connected: %s"), *Address);
+            
+            // Get balance
+            UThirdwebSubsystem* ThirdwebSubsystem = GEngine->GetEngineSubsystem<UThirdwebSubsystem>();
+            ThirdwebSubsystem->GetWalletBalance(FOnWalletBalanceReceived::CreateUObject(this, &AMyGameController::OnBalanceReceived));
         }
         else
         {
             UE_LOG(LogTemp, Error, TEXT("Failed to connect wallet: %s"), *Error);
         }
     }
+
+    void AMyGameController::OnBalanceReceived(const FString& Balance, const FString& Symbol)
+    {
+        UE_LOG(LogTemp, Display, TEXT("Balance: %s %s"), *Balance, *Symbol);
+    }
     ```
 
-    ### UI Integration
+    ### Using Blueprints
 
-    Create a widget blueprint with buttons to trigger wallet connections:
+    Alternatively, use Blueprint nodes provided by the Thirdweb plugin:
 
-    1. Create a new Widget Blueprint
-    2. Add a button for connecting wallets
-    3. Bind the button's OnClicked event to your ConnectWallet function
-    4. Add text elements to display the connected wallet address
+    1. Create a new Blueprint class
+    2. Add a component for user interface (like widget blueprint)
+    3. Use the Thirdweb nodes found in the node palette
+    4. Connect nodes for wallet login, balance checking, etc.
   </TabsContent>
 </Tabs>
+
+## Performance Considerations
+
+Optimize your wallet implementation:
+
+1. **Create Client Once**
+   - Initialize the thirdweb client once and reuse it
+   - Avoid recreating the client for each operation
+
+2. **Caching**
+   - Use built-in React query capabilities
+   - Avoid polling or constant refetching
+   - Implement proper state management
+
+3. **Lazy Loading**
+   - The SDK loads wallet connectors on demand
+   - Modularity reduces bundle size
+   - Only import what you need
 
 ## Next Steps
 
