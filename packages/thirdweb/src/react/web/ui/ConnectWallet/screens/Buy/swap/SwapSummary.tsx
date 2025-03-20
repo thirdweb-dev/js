@@ -64,7 +64,7 @@ export function SwapSummary(props: {
         />
       </Container>
       {/* Connector Icon */}
-      <StepConnectorArrow active={false} />
+      <StepConnectorArrow />
       {/* Buy */}
       <Container
         flex="column"
