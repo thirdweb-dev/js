@@ -109,6 +109,7 @@ export const apiKeyEmbeddedWalletsValidationSchema = z.object({
     }),
   ]),
   redirectUrls: redirectUriSchema,
+  smsEnabledCountryISOs: z.array(z.string()),
 });
 
 export const apiKeyPayConfigValidationSchema = z.object({

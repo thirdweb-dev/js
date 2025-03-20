@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.92.2",
+  "version": "5.92.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -333,7 +333,7 @@
     "@aws-sdk/client-lambda": "3.592.0",
     "@aws-sdk/credential-providers": "3.592.0",
     "@biomejs/biome": "1.9.4",
-    "@chromatic-com/storybook": "3.2.5",
+    "@chromatic-com/storybook": "3.2.6",
     "@codspeed/vitest-plugin": "4.0.0",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
     "@mobile-wallet-protocol/client": "0.1.2",
@@ -363,7 +363,7 @@
     "happy-dom": "17.1.8",
     "knip": "5.46.0",
     "msw": "2.7.3",
-    "prettier": "3.3.3",
+    "prettier": "3.5.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.76.6",

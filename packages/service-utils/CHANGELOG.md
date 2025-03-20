@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.16
+
+### Patch Changes
+
+- [#6502](https://github.com/thirdweb-dev/js/pull/6502) [`f81fd46`](https://github.com/thirdweb-dev/js/commit/f81fd46e9cd1fa11e5fd966e90fe86e574355eda) Thanks [@jnsdls](https://github.com/jnsdls)! - expose project.services.iaw.smsEnabledCountryISOs from api response
+
 ## 0.8.15
 
 ### Patch Changes

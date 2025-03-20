@@ -1,4 +1,5 @@
 import { getProject } from "@/api/projects";
+import { getSMSCountryTiers } from "@/api/sms";
 import { getTeamBySlug } from "@/api/team";
 import { redirect } from "next/navigation";
 import { InAppWalletSettingsPage } from "../../../../../../../components/embedded-wallets/Configure";
@@ -9,9 +10,10 @@ export default async function Page(props: {
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const [team, project] = await Promise.all([
+  const [team, project, smsCountryTiers] = await Promise.all([
     getTeamBySlug(team_slug),
     getProject(team_slug, project_slug),
+    getSMSCountryTiers(),
   ]);
 
   if (!team) {
@@ -29,6 +31,7 @@ export default async function Page(props: {
       trackingCategory="in-app-wallet-project-settings"
       teamSlug={team_slug}
       validTeamPlan={getValidTeamPlan(team)}
+      smsCountryTiers={smsCountryTiers}
     />
   );
 }
