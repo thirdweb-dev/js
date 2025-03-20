@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.92.3
+
+### Patch Changes
+
+- [#6496](https://github.com/thirdweb-dev/js/pull/6496) [`b5fb5dd`](https://github.com/thirdweb-dev/js/commit/b5fb5dd0cc90c3f54f0d1ede2965731dde43587b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support account overrides in engineAccount()
+
+- [#6498](https://github.com/thirdweb-dev/js/pull/6498) [`8b036dc`](https://github.com/thirdweb-dev/js/commit/8b036dcfa7df9b3caafa44bc18439d65f3111834) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add Saga in gas free chains definitions
+
 ## 5.92.2
 
 ### Patch Changes
