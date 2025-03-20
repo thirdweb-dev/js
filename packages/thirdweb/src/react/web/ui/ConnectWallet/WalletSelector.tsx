@@ -183,6 +183,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         props.selectWallet(localWalletConfig);
       }}
       data-test="continue-as-guest-button"
+      disabled={props.meta.requireApproval && !approvedTOS}
     >
       {props.connectLocale.continueAsGuest}
     </Button>
@@ -227,6 +228,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     <WalletTypeRowButton
       client={props.client}
       icon={OutlineWalletIcon}
+      disabled={props.meta.requireApproval && !approvedTOS}
       onClick={() => {
         setIsWalletGroupExpanded(true);
       }}
