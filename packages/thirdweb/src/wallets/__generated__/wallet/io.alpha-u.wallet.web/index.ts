@@ -10,7 +10,7 @@ export const wallet = {
     browser: null,
     ios: "https://apps.apple.com/jp/app/%CE%B1u-wallet/id6444401106",
     android: "https://play.google.com/store/apps/details?id=com.kddi.wallet",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: "nothing",

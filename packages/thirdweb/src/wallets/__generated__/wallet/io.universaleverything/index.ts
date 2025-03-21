@@ -9,7 +9,8 @@ export const wallet = {
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/universalprofiles/id6702018631",
-    android: null,
+    android:
+      "https://play.google.com/store/apps/details?id=io.universaleverything.universalprofiles",
     mac: null,
     windows: null,
     linux: null,

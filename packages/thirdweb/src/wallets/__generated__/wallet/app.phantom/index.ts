@@ -5,7 +5,7 @@ export const wallet = {
   id: "app.phantom",
   name: "Phantom",
   homepage: "https://phantom.app/",
-  image_id: "c38443bb-b3c1-4697-e569-408de3fcc100",
+  image_id: "b6ec7b81-bb4f-427d-e290-7631e6e50d00",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/phantom-crypto-wallet/id1598432977",
@@ -22,11 +22,14 @@ export const wallet = {
   },
   rdns: "app.phantom",
   mobile: {
-    native: "phantom://",
+    native: null,
     universal: null,
   },
   desktop: {
     native: null,
     universal: null,
+  },
+  deepLink: {
+    mobile: "https://phantom.app/ul/browse/",
   },
 } as const;

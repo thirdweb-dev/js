@@ -13,19 +13,20 @@ export const wallet = {
     mac: "https://status.app/help/getting-started",
     windows: "https://status.app/help/getting-started",
     linux: "https://status.app/help/getting-started",
-    chrome: null,
+    chrome:
+      "https://chromewebstore.google.com/detail/kahehnbpamjplefhpkhafinaodkkenpg",
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "app.status",
   mobile: {
     native: "status-app://",
     universal: "https://status.app",
   },
   desktop: {
-    native: null,
+    native: "status-app://",
     universal: null,
   },
 } as const;

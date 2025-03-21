@@ -156,13 +156,15 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  if (
+  const shouldDeeplink =
     walletInfo.data.deepLink &&
     !isInstalled &&
-    (wallet as Wallet<DeepLinkSupportedWalletIds>).getConfig()
-      ?.preferDeepLink &&
-    isMobile()
-  ) {
+    isMobile() &&
+    ((wallet as Wallet<DeepLinkSupportedWalletIds>).getConfig()
+      ?.preferDeepLink ||
+      wallet.id === "app.phantom"); // always deeplink phantom on mobile, does not support remote connection
+
+  if (walletInfo.data.deepLink?.mobile && shouldDeeplink) {
     return (
       <DeepLinkConnectUI
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}

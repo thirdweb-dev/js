@@ -25,6 +25,8 @@ export const DeepLinkConnectUI = (props: {
   onBack?: () => void;
   client: ThirdwebClient;
 }) => {
+  const link = encodeURIComponent(window.location.toString());
+  const deeplink = `${props.deepLinkPrefix}${link}?ref=${link}`;
   return (
     <Container animate="fadein">
       <Container p="lg">
@@ -38,14 +40,7 @@ export const DeepLinkConnectUI = (props: {
       </Container>
 
       <Container p="lg">
-        <ButtonLink
-          fullWidth
-          variant="accent"
-          href={`${props.deepLinkPrefix}${window.location
-            .toString()
-            .replace("https://", "")}`}
-          gap="xs"
-        >
+        <ButtonLink fullWidth variant="accent" href={deeplink} gap="xs">
           Continue in {props.walletInfo.name}
           <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
         </ButtonLink>

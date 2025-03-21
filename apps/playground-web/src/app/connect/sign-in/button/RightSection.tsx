@@ -158,7 +158,6 @@ export function RightSection(props: {
       <div
         className={cn(
           "relative flex min-h-[300px] grow justify-center rounded-lg",
-          previewTab === "modal" && "scale-75 lg:scale-100",
           previewTab !== "code" && "items-center",
         )}
       >
