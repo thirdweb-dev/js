@@ -3,7 +3,6 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
 import {
   fontSize,
@@ -19,7 +18,7 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { formatSeconds } from "../swap/formatSeconds.js";
+import { WalletRow } from "../swap/WalletRow.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";
 
@@ -174,7 +173,6 @@ export function SwapTxDetailsTable(
     destinationTxHash,
     isPartialSuccess,
     gotToken,
-    estimatedDuration,
   } = uiData;
 
   const fromChainId = fromToken.chainId;
@@ -222,6 +220,17 @@ export function SwapTxDetailsTable(
 
   return (
     <div>
+      {/* Pay */}
+      <TokenInfoRow
+        chainId={fromToken.chainId}
+        client={client}
+        label="Paid"
+        tokenAmount={fromToken.amount}
+        tokenSymbol={fromToken.symbol || ""}
+        tokenAddress={fromToken.address}
+      />
+
+      {lineSpacer}
       {isPartialSuccess && gotToken ? (
         // Expected + Got
         <>
@@ -252,42 +261,25 @@ export function SwapTxDetailsTable(
         <TokenInfoRow
           chainId={toToken.chainId}
           client={client}
-          label="Receive"
+          label="Received"
           tokenAmount={toToken.amount}
           tokenSymbol={toToken.symbol || ""}
           tokenAddress={toToken.address}
         />
       )}
 
-      {lineSpacer}
-
-      {/* Pay */}
-      <TokenInfoRow
-        chainId={fromToken.chainId}
-        client={client}
-        label="Pay"
-        tokenAmount={fromToken.amount}
-        tokenSymbol={fromToken.symbol || ""}
-        tokenAddress={fromToken.address}
-      />
-
-      {lineSpacer}
-
-      {/* Duration */}
-      <Container
-        flex="row"
-        center="y"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text> Time </Text>
-        <Container flex="row" gap="xs" center="y">
-          <Text color="primaryText">
-            ~{formatSeconds(estimatedDuration || 0)}
-          </Text>
+      <>
+        {lineSpacer}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
+          <Text size="sm">Recipient</Text>
+          <WalletRow address={uiData.toAddress} iconSize="sm" client={client} />
         </Container>
-      </Container>
+      </>
 
       {/* Status */}
       {statusMeta && showStatusRow && (
@@ -295,40 +287,28 @@ export function SwapTxDetailsTable(
           {lineSpacer}
           <Container
             flex="row"
-            center="y"
             style={{
               justifyContent: "space-between",
             }}
           >
-            <Text>Status</Text>
-            <Container flex="row" gap="xs" center="y">
-              <Text color={statusMeta.color}>{statusMeta.status}</Text>
-            </Container>
-          </Container>
-        </>
-      )}
-
-      {uiData.fromAddress.toLowerCase() !== uiData.toAddress.toLowerCase() && (
-        <>
-          {lineSpacer}
-          <Container
-            flex="row"
-            center="y"
-            style={{
-              justifyContent: "space-between",
-            }}
-          >
-            <Text>Send to</Text>
-            <Container flex="row" gap="xs" center="y">
-              <Text color="primaryText" size="sm">
-                {shortenAddress(uiData.toAddress)}
+            <Text size="sm">Status</Text>
+            <Container
+              flex="column"
+              gap="3xs"
+              center="y"
+              style={{
+                alignItems: "flex-end",
+              }}
+            >
+              <Text color={statusMeta.color} size="sm">
+                {statusMeta.status}
               </Text>
             </Container>
           </Container>
         </>
       )}
 
-      {lineSpacer}
+      <Spacer y="lg" />
 
       {/* source chain Tx hash link */}
       {fromChainExplorers.explorers?.[0]?.url && sourceTxHash && (

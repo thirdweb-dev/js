@@ -31,7 +31,7 @@ export function TokenInfoRow(props: {
       <Text size="sm">{props.label}</Text>
       <Container
         flex="column"
-        gap="xxs"
+        gap="3xs"
         style={{
           alignItems: "flex-end",
         }}
@@ -45,11 +45,11 @@ export function TokenInfoRow(props: {
             }}
             client={props.client}
           />
-          <Text color="primaryText">
+          <Text color="primaryText" size="sm">
             {formatNumber(Number(props.tokenAmount), 6)} {props.tokenSymbol}
           </Text>
         </Container>
-        <Text size="sm">{name}</Text>
+        <Text size="xs">{name}</Text>
       </Container>
     </Container>
   );

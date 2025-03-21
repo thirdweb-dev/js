@@ -1,6 +1,6 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
@@ -32,6 +32,7 @@ export function SwapStatusScreen(props: {
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 }) {
   const { onSuccess } = props;
+  const [showDetails, setShowDetails] = useState(false);
 
   const swapStatus = useBuyWithCryptoStatus({
     client: props.client,
@@ -82,7 +83,6 @@ export function SwapStatusScreen(props: {
       <SwapTxDetailsTable
         status={swapStatus.data}
         type="status"
-        hideStatusRow={true}
         client={props.client}
       />
     ) : props.quote ? (
@@ -92,6 +92,21 @@ export function SwapStatusScreen(props: {
         client={props.client}
       />
     ) : null;
+
+  if (showDetails) {
+    return (
+      <Container animate="fadein">
+        <Container p="lg">
+          <ModalHeader
+            title={"Transaction Details"}
+            onBack={() => setShowDetails(false)}
+          />
+          <Spacer y="xl" />
+          {swapDetails}
+        </Container>
+      </Container>
+    );
+  }
 
   return (
     <Container animate="fadein">
@@ -114,7 +129,13 @@ export function SwapStatusScreen(props: {
             </Container>
 
             <Spacer y="xl" />
-            {swapDetails}
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => setShowDetails(true)}
+            >
+              View transaction details
+            </Button>
             <Spacer y="sm" />
             <Button variant="accent" fullWidth onClick={props.onDone}>
               {props.transactionMode ? "Continue Transaction" : "Done"}
@@ -140,7 +161,6 @@ export function SwapStatusScreen(props: {
                 </Text>
               </Container>
               <Spacer y="xl" />
-              {swapDetails}
             </>
           )}
 
@@ -162,15 +182,20 @@ export function SwapStatusScreen(props: {
                 </Text>
               </Container>
 
-              <Spacer y="md" />
+              <Spacer y="xl" />
+              <Button
+                variant="outline"
+                fullWidth
+                onClick={() => setShowDetails(true)}
+              >
+                View transaction details
+              </Button>
+
+              <Spacer y="sm" />
 
               <Button variant="accent" fullWidth onClick={props.onTryAgain}>
                 Try Again
               </Button>
-
-              <Spacer y="xl" />
-
-              {swapDetails}
             </Container>
           </>
         )}
@@ -193,9 +218,12 @@ export function SwapStatusScreen(props: {
               <Text color="primaryText" size="lg">
                 Buy Pending
               </Text>
+              <Spacer y="sm" />
+              <Text color="secondaryText" size="sm">
+                This may take a minute to complete
+              </Text>
             </Container>
-            <Spacer y="xxl" />
-            {swapDetails}
+            <Spacer y="xl" />
           </>
         )}
       </Container>
