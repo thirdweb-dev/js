@@ -23,7 +23,7 @@ export const wallet = {
   rdns: "xyz.ctrl",
   mobile: {
     native: "ctrl-mobile://",
-    universal: null,
+    universal: "https://ctrl.xyz/deeplink/wallet",
   },
   desktop: {
     native: null,

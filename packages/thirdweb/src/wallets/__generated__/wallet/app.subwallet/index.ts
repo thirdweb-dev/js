@@ -18,7 +18,7 @@ export const wallet = {
       "https://chrome.google.com/webstore/detail/subwallet-polkadot-wallet/onhogfjeacnfoofkfgppdlbmlmnplgbn",
     firefox: "https://addons.mozilla.org/en-US/firefox/addon/subwallet/",
     safari: null,
-    edge: "https://chrome.google.com/webstore/detail/subwallet-polkadot-wallet/onhogfjeacnfoofkfgppdlbmlmnplgbn",
+    edge: null,
     opera: null,
   },
   rdns: "app.subwallet",
@@ -27,7 +27,7 @@ export const wallet = {
     universal: "https://mobile.subwallet.app/",
   },
   desktop: {
-    native: null,
+    native: "subwallet://",
     universal: null,
   },
 } as const;

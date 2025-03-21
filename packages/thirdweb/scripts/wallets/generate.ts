@@ -38,6 +38,9 @@ const deepLinkSupportedWalletsRecord: Record<
   "io.metamask": {
     mobile: "https://metamask.app.link/dapp/",
   },
+  "app.phantom": {
+    mobile: "https://phantom.app/ul/browse/",
+  },
 };
 
 type Wallet = {

@@ -5,13 +5,13 @@ export const wallet = {
   id: "io.fizen",
   name: "Fizen Wallet",
   homepage: "https://fizen.io",
-  image_id: "4beaa3f0-c807-4de0-dae3-c1b677fc9600",
+  image_id: "1160bfa2-b669-42ba-b224-13edcd40c700",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/fizen-wallet/id1621269508",
     android:
       "https://play.google.com/store/apps/details?id=com.fizen.io.wallet",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,

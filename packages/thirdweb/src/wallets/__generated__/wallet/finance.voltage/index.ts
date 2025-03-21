@@ -3,12 +3,12 @@
 
 export const wallet = {
   id: "finance.voltage",
-  name: "Volt: DeFi",
-  homepage: "https://voltage.finance/app",
-  image_id: "51d783cb-0686-4ffa-e661-edca0c380000",
+  name: "Volt Wallet",
+  homepage: "https://voltage.finance",
+  image_id: "ffddf01a-337f-45c1-61c9-f6d3dd3d3c00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/volt-defi/id6444159237",
+    ios: "https://apps.apple.com/us/app/volt-wallet/id6444159237",
     android:
       "https://play.google.com/store/apps/details?id=finance.voltage.app",
     mac: null,

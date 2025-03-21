@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.tomi",
   name: "tomi Wallet",
   homepage: "https://tomi.com/wallet",
-  image_id: "ebc78bed-8771-4745-0fbd-f846cc107100",
+  image_id: "e0592a0e-1909-4a73-7955-2dbf9caac200",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/tomipay-digital-payment-system/id1643501440",
