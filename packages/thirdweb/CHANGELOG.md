@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.93.1
+
+### Patch Changes
+
+- [#6509](https://github.com/thirdweb-dev/js/pull/6509) [`7476b79`](https://github.com/thirdweb-dev/js/commit/7476b7927d6615fda54bd5e9f5604d2b5a5757c6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve swap status UI in PayEmbed
+
+- [#6507](https://github.com/thirdweb-dev/js/pull/6507) [`ccb6416`](https://github.com/thirdweb-dev/js/commit/ccb641698e8000d9b20e22a9688a459a2ea6a8a6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Force redirect to phantom app on mobile
+
 ## 5.93.0
 
 ### Minor Changes

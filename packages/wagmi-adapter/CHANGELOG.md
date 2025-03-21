@@ -1,5 +1,7 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.36
+
 ## 0.2.35
 
 ## 0.2.34
