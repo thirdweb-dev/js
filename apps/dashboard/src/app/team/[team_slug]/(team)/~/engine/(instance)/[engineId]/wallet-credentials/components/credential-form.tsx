@@ -79,7 +79,7 @@ export const CredentialForm = ({
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>
                   <TrackedLinkTW
-                    href="https://portal.thirdweb.com/infrastructure/engine/features/wallet-credentials"
+                    href="https://portal.thirdweb.com/engine/features/wallet-credentials"
                     target="_blank"
                     label="learn-more"
                     category="engine"

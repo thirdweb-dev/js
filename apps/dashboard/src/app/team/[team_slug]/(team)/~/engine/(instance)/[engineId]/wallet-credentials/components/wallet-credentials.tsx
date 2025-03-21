@@ -65,7 +65,7 @@ export const WalletCredentialsSection: React.FC<WalletCredentialsProps> = ({
           <p className="text-muted-foreground text-sm leading-relaxed">
             Manage your wallet credentials for different providers.{" "}
             <Link
-              href="https://portal.thirdweb.com/infrastructure/engine/features/wallet-credentials"
+              href="https://portal.thirdweb.com/engine/features/wallet-credentials"
               target="_blank"
             >
               Learn more about wallet credentials.
