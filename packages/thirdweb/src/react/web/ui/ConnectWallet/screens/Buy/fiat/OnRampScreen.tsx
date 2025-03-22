@@ -634,6 +634,19 @@ function useSwapMutation(props: {
       amount: string;
     }) => {
       const { fromToken, toToken, amount } = input;
+      const wallet = props.payer.wallet;
+
+      // in case the wallet is not on the same chain as the fromToken, switch to it
+      if (wallet.getChain()?.id !== fromToken.chainId) {
+        await wallet.switchChain(getCachedChain(fromToken.chainId));
+      }
+
+      const account = wallet.getAccount();
+
+      if (!account) {
+        throw new Error("Payer wallet has no account");
+      }
+
       // always get a fresh quote before executing
       const quote = await getBuyWithCryptoQuote({
         fromChainId: fromToken.chainId,
@@ -641,12 +654,12 @@ function useSwapMutation(props: {
         toAmount: amount,
         toChainId: toToken.chainId,
         toTokenAddress: toToken.tokenAddress,
-        fromAddress: props.payer.account.address,
-        toAddress: props.payer.account.address,
+        fromAddress: account.address,
+        toAddress: account.address,
         client: props.client,
       });
 
-      const canBatch = props.payer.account.sendBatchTransaction;
+      const canBatch = account.sendBatchTransaction;
       const tokenContract = getContract({
         client: props.client,
         address: quote.swapDetails.fromToken.tokenAddress,
@@ -656,14 +669,14 @@ function useSwapMutation(props: {
         quote.approvalData &&
         (await allowance({
           contract: tokenContract,
-          owner: props.payer.account.address,
+          owner: account.address,
           spender: quote.approvalData.spenderAddress,
         })) < BigInt(quote.approvalData.amountWei);
       if (approveTxRequired && quote.approvalData && !canBatch) {
         trackPayEvent({
           event: "prompt_swap_approval",
           client: props.client,
-          walletAddress: props.payer.account.address,
+          walletAddress: account.address,
           walletType: props.payer.wallet.id,
           fromToken: quote.swapDetails.fromToken.tokenAddress,
           fromAmount: quote.swapDetails.fromAmountWei,
@@ -680,7 +693,7 @@ function useSwapMutation(props: {
         });
 
         const tx = await sendTransaction({
-          account: props.payer.account,
+          account,
           transaction,
         });
 
@@ -689,7 +702,7 @@ function useSwapMutation(props: {
         trackPayEvent({
           event: "swap_approval_success",
           client: props.client,
-          walletAddress: props.payer.account.address,
+          walletAddress: account.address,
           walletType: props.payer.wallet.id,
           fromToken: quote.swapDetails.fromToken.tokenAddress,
           fromAmount: quote.swapDetails.fromAmountWei,
@@ -703,7 +716,7 @@ function useSwapMutation(props: {
       trackPayEvent({
         event: "prompt_swap_execution",
         client: props.client,
-        walletAddress: props.payer.account.address,
+        walletAddress: account.address,
         walletType: props.payer.wallet.id,
         fromToken: quote.swapDetails.fromToken.tokenAddress,
         fromAmount: quote.swapDetails.fromAmountWei,
@@ -723,12 +736,12 @@ function useSwapMutation(props: {
         });
 
         _swapTx = await sendBatchTransaction({
-          account: props.payer.account,
+          account,
           transactions: [approveTx, tx],
         });
       } else {
         _swapTx = await sendTransaction({
-          account: props.payer.account,
+          account,
           transaction: tx,
         });
       }
@@ -738,7 +751,7 @@ function useSwapMutation(props: {
       trackPayEvent({
         event: "swap_execution_success",
         client: props.client,
-        walletAddress: props.payer.account.address,
+        walletAddress: account.address,
         walletType: props.payer.wallet.id,
         fromToken: quote.swapDetails.fromToken.tokenAddress,
         fromAmount: quote.swapDetails.fromAmountWei,

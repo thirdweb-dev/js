@@ -264,11 +264,12 @@ async function createSmartAccount(
         executeOverride: options.overrides?.execute,
       });
 
+      const chain = getCachedChain(transaction.chainId);
       const result = await _sendUserOp({
         executeTx,
         options: {
           ...options,
-          chain: getCachedChain(transaction.chainId),
+          chain,
           accountContract,
           overrides: {
             ...options.overrides,
@@ -278,7 +279,7 @@ async function createSmartAccount(
       });
       trackTransaction({
         client: options.client,
-        chainId: options.chain.id,
+        chainId: chain.id,
         transactionHash: result.transactionHash,
         walletAddress: options.accountContract.address,
         walletType: "smart",
@@ -292,17 +293,25 @@ async function createSmartAccount(
         transactions,
         executeBatchOverride: options.overrides?.executeBatch,
       });
+      if (transactions.length === 0) {
+        throw new Error("No transactions to send");
+      }
+      const firstTx = transactions[0];
+      if (!firstTx) {
+        throw new Error("No transactions to send");
+      }
+      const chain = getCachedChain(firstTx.chainId);
       const result = await _sendUserOp({
         executeTx,
         options: {
           ...options,
-          chain: getCachedChain(transactions[0]?.chainId ?? options.chain.id),
+          chain,
           accountContract,
         },
       });
       trackTransaction({
         client: options.client,
-        chainId: options.chain.id,
+        chainId: chain.id,
         transactionHash: result.transactionHash,
         walletAddress: options.accountContract.address,
         walletType: "smart",

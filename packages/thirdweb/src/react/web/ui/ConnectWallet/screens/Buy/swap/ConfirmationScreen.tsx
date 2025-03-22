@@ -160,6 +160,19 @@ export function SwapConfirmationScreen(props: {
             fullWidth
             disabled={status === "pending"}
             onClick={async () => {
+              const wallet = props.payer.wallet;
+
+              // in case the wallet is not on the same chain as the fromToken, switch to it
+              if (wallet.getChain()?.id !== props.fromChain.id) {
+                await wallet.switchChain(props.fromChain);
+              }
+
+              const account = wallet.getAccount();
+
+              if (!account) {
+                throw new Error("Payer wallet has no account");
+              }
+
               if (step === "approval" && props.quote.approvalData) {
                 try {
                   setStatus("pending");
@@ -167,8 +180,8 @@ export function SwapConfirmationScreen(props: {
                   trackPayEvent({
                     event: "prompt_swap_approval",
                     client: props.client,
-                    walletAddress: props.payer.account.address,
-                    walletType: props.payer.wallet.id,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
                     fromAmount: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
@@ -188,7 +201,7 @@ export function SwapConfirmationScreen(props: {
                   });
 
                   const tx = await sendTransaction({
-                    account: props.payer.account,
+                    account: account,
                     transaction,
                   });
 
@@ -197,8 +210,8 @@ export function SwapConfirmationScreen(props: {
                   trackPayEvent({
                     event: "swap_approval_success",
                     client: props.client,
-                    walletAddress: props.payer.account.address,
-                    walletType: props.payer.wallet.id,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
                     fromAmount: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
@@ -221,8 +234,8 @@ export function SwapConfirmationScreen(props: {
                   trackPayEvent({
                     event: "prompt_swap_execution",
                     client: props.client,
-                    walletAddress: props.payer.account.address,
-                    walletType: props.payer.wallet.id,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
                     fromAmount: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
@@ -233,7 +246,7 @@ export function SwapConfirmationScreen(props: {
                   const tx = props.quote.transactionRequest;
                   let _swapTx: WaitForReceiptOptions;
                   // check if we can batch approval and swap
-                  const canBatch = props.payer.account.sendBatchTransaction;
+                  const canBatch = account.sendBatchTransaction;
                   if (
                     canBatch &&
                     props.quote.approvalData &&
@@ -250,12 +263,12 @@ export function SwapConfirmationScreen(props: {
                     });
 
                     _swapTx = await sendBatchTransaction({
-                      account: props.payer.account,
+                      account: account,
                       transactions: [approveTx, tx],
                     });
                   } else {
                     _swapTx = await sendTransaction({
-                      account: props.payer.account,
+                      account: account,
                       transaction: tx,
                     });
                   }
@@ -263,8 +276,8 @@ export function SwapConfirmationScreen(props: {
                   trackPayEvent({
                     event: "swap_execution_success",
                     client: props.client,
-                    walletAddress: props.payer.account.address,
-                    walletType: props.payer.wallet.id,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
                     fromAmount: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
