@@ -6,7 +6,7 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { getContract } from "../../../../../../../contract/contract.js";
 import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { getBuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import {
@@ -17,6 +17,7 @@ import {
   type OnRampStep,
   getOnRampSteps,
 } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
+import type { PayTokenInfo } from "../../../../../../../pay/utils/commonTypes.js";
 import { sendBatchTransaction } from "../../../../../../../transaction/actions/send-batch-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
@@ -28,7 +29,6 @@ import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
 import { isSmartWallet } from "../../../../../../../wallets/smart/is-smart-wallet.js";
 import { spacing } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
@@ -319,20 +319,6 @@ function useOnRampScreenState(props: {
   // Get quote for current swap/bridge step if needed
   const previousStep = onRampSteps[currentStepIndex - 1];
   const currentStep = onRampSteps[currentStepIndex];
-  const swapQuoteQuery = useBuyWithCryptoQuote(
-    previousStep && currentStep
-      ? {
-          fromChainId: previousStep.token.chainId,
-          fromTokenAddress: previousStep.token.tokenAddress,
-          toAmount: currentStep.amount,
-          toChainId: currentStep.token.chainId,
-          toTokenAddress: currentStep.token.tokenAddress,
-          fromAddress: props.payer.account.address,
-          toAddress: props.payer.account.address,
-          client: props.client,
-        }
-      : undefined,
-  );
 
   // Handle swap execution
   const swapMutation = useSwapMutation({
@@ -375,9 +361,9 @@ function useOnRampScreenState(props: {
       status = "completed";
     } else if (index === currentStepIndex) {
       // Current step - could be swap or bridge
-      if (swapQuoteQuery.isLoading || swapMutation.isPending) {
+      if (swapMutation.isPending) {
         status = "pending";
-      } else if (swapQuoteQuery.error || swapMutation.error) {
+      } else if (swapMutation.error) {
         status = "failed";
       } else if (swapTxHash) {
         status = swapStatus;
@@ -418,11 +404,13 @@ function useOnRampScreenState(props: {
         type: "fiat",
         intentId: props.quote.intentId,
       });
-    } else if (swapQuoteQuery.data && !swapTxHash) {
+    } else if (previousStep && currentStep && !swapTxHash) {
       // Execute swap/bridge
       try {
         const result = await swapMutation.mutateAsync({
-          quote: swapQuoteQuery.data,
+          fromToken: previousStep.token,
+          toToken: currentStep.token,
+          amount: currentStep.amount,
         });
         setSwapTxHash({
           hash: result.transactionHash,
@@ -435,23 +423,22 @@ function useOnRampScreenState(props: {
       // retry the quote step
       setSwapTxHash(undefined);
       swapMutation.reset();
-      await swapQuoteQuery.refetch();
     }
   }, [
     isDone,
     currentStepIndex,
-    swapQuoteQuery.data,
     swapTxHash,
     props.quote,
     props.onDone,
     swapMutation,
     props.theme,
     isFailed,
-    swapQuoteQuery.refetch,
     swapMutation.reset,
     props.client,
     props.payer.account.address,
     props.payer.wallet.id,
+    currentStep,
+    previousStep,
   ]);
 
   // Auto-progress effect
@@ -467,7 +454,6 @@ function useOnRampScreenState(props: {
       !isFailed &&
       currentStepIndex > 0 &&
       currentStepIndex < onRampSteps.length &&
-      swapQuoteQuery.data &&
       !swapTxHash
     ) {
       handleContinue();
@@ -475,7 +461,6 @@ function useOnRampScreenState(props: {
   }, [
     props.isAutoMode,
     currentStepIndex,
-    swapQuoteQuery.data,
     swapTxHash,
     onRampSteps.length,
     handleContinue,
@@ -643,8 +628,24 @@ function useSwapMutation(props: {
 }) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { quote: BuyWithCryptoQuote }) => {
-      const { quote } = input;
+    mutationFn: async (input: {
+      fromToken: PayTokenInfo;
+      toToken: PayTokenInfo;
+      amount: string;
+    }) => {
+      const { fromToken, toToken, amount } = input;
+      // always get a fresh quote before executing
+      const quote = await getBuyWithCryptoQuote({
+        fromChainId: fromToken.chainId,
+        fromTokenAddress: fromToken.tokenAddress,
+        toAmount: amount,
+        toChainId: toToken.chainId,
+        toTokenAddress: toToken.tokenAddress,
+        fromAddress: props.payer.account.address,
+        toAddress: props.payer.account.address,
+        client: props.client,
+      });
+
       const canBatch = props.payer.account.sendBatchTransaction;
       const tokenContract = getContract({
         client: props.client,

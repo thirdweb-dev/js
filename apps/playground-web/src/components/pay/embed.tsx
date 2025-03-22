@@ -18,6 +18,10 @@ export function StyledPayEmbedPreview() {
     <div className="flex flex-col items-center justify-center">
       <StyledConnectButton
         chains={[base, defineChain(466), arbitrum, treasure, arbitrumNova]}
+        accountAbstraction={{
+          sponsorGas: true,
+          chain: base,
+        }}
         supportedTokens={{
           466: [
             {
@@ -50,6 +54,12 @@ export function StyledPayEmbedPreview() {
       <PayEmbed
         client={THIRDWEB_CLIENT}
         theme={theme === "light" ? "light" : "dark"}
+        connectOptions={{
+          accountAbstraction: {
+            sponsorGas: true,
+            chain: base,
+          },
+        }}
         payOptions={{
           mode: "fund_wallet",
           metadata: {
