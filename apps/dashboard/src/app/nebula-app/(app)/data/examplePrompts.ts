@@ -22,7 +22,7 @@ Send native and ERC-20 currencies
 
 ### Deploy
 Deploy published contracts
-- Deploy a Token ERC20 Contract
+- Deploy a Token ERC20 Contract with name "Hello World" and description "My Hello Contract" on Ethereum.
 - Deploy a Split contract with two recipients.
 - Deploy an ERC1155 Contract named 'Hello World' with description 'Hello badges on Ethereum'
 
@@ -30,7 +30,7 @@ Deploy published contracts
 Retrieve information about smart contracts.
 - What ERC standards are implemented by contract address 0x59325733eb952a92e069C87F0A6168b29E80627f on Ethereum?
 - What functions can I use to mint more of my contract's NFTs?
-- What is the total supply of NFTs for my contract?
+- What is the total supply of NFTs on 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e?
 
 ### Interact
 Query wallet balances, addresses, and token holdings.
