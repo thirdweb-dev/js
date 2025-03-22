@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.3
+
+### Patch Changes
+
+- [#6518](https://github.com/thirdweb-dev/js/pull/6518) [`744491f`](https://github.com/thirdweb-dev/js/commit/744491f85307444f227c14381629cdf27987ee62) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle wallet chain mismatch on post onramp flow
+
 ## 5.93.2
 
 ### Patch Changes
