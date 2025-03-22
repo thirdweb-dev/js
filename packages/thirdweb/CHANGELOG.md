@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.2
+
+### Patch Changes
+
+- [#6515](https://github.com/thirdweb-dev/js/pull/6515) [`c407bd1`](https://github.com/thirdweb-dev/js/commit/c407bd10c7b16f56c2a08cfdb2ed7e56a1c75f52) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always fetch fresh quotes before post onramp step in PayEmbed
+
 ## 5.93.1
 
 ### Patch Changes
