@@ -180,7 +180,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     }
                   : {})}
                 className={tableProps.bodyRowClassName}
-                linkBox={tableProps.bodyRowLinkBox}
+                // linkBox={tableProps.bodyRowLinkBox}
               >
                 {row.getVisibleCells().map((cell) => {
                   return (

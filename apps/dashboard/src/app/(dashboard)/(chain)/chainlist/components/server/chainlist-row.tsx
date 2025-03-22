@@ -39,17 +39,14 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <TableRow linkBox className="hover:bg-accent/50">
+    <TableRow className="hover:bg-accent/50">
       {/* Name */}
       <TableCell>
         <div className="flex w-[370px] flex-row items-center gap-4">
           <div className="flex items-center gap-2">
             {favoriteButton && <div className="mr-6"> {favoriteButton} </div>}
             <ChainIcon iconUrl={iconUrl} className="size-6" />
-            <Link
-              href={`/${chainSlug}`}
-              className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
-            >
+            <Link href={`/${chainSlug}`} className="group static">
               {chainName}
             </Link>
 

@@ -166,12 +166,12 @@ export function TeamProjectsPage(props: {
                 {paginatedProjects.map((project) => (
                   <TableRow
                     key={project.id}
-                    linkBox
+                    // linkBox
                     className="hover:bg-accent/50"
                   >
                     <TableCell>
                       <Link
-                        className="flex items-center gap-3 before:absolute before:inset-0"
+                        className="flex items-center gap-3"
                         href={`/team/${props.team.slug}/${project.slug}`}
                       >
                         <ProjectAvatar

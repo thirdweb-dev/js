@@ -17,7 +17,7 @@ import { usePublishedContractsFromDeploy } from "../hooks";
 export const ContractNameCell = memo(function ContractNameCell(props: {
   chainId: string;
   contractAddress: string;
-  linkOverlay?: boolean;
+  // linkOverlay?: boolean;
 }) {
   const chainSlug = useChainSlug(Number(props.chainId));
   const chain = useV5DashboardChain(Number(props.chainId));
@@ -44,7 +44,7 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
             passHref
             className={cn(
               "text-foreground",
-              props.linkOverlay && "before:absolute before:inset-0",
+              // props.linkOverlay && "before:absolute before:inset-0",
             )}
           >
             {v || shortenIfAddress(props.contractAddress)}
