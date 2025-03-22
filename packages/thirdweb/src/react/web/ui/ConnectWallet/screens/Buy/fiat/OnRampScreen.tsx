@@ -421,6 +421,7 @@ function useOnRampScreenState(props: {
     } else if (swapQuoteQuery.data && !swapTxHash) {
       // Execute swap/bridge
       try {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         const result = await swapMutation.mutateAsync({
           quote: swapQuoteQuery.data,
         });
