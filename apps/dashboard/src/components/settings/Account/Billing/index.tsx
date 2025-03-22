@@ -2,26 +2,29 @@ import { getBillingCheckoutUrl, getBillingPortalUrl } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { ExtendedPaymentMethod } from "@/lib/payment-methods";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";
+import { PaymentMethodsClient } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/payment-methods/payment-methods.client";
 import { CouponSection } from "./CouponCard";
 import { CreditsInfoCard } from "./PlanCard";
 import { BillingPricing } from "./Pricing";
-
 // TODO - move this in app router folder in other pr
 
 interface BillingProps {
   team: Team;
   subscriptions: TeamSubscription[];
   twAccount: Account;
+  paymentMethods: ExtendedPaymentMethod[];
 }
 
 export const Billing: React.FC<BillingProps> = ({
   team,
   subscriptions,
   twAccount,
+  paymentMethods,
 }) => {
   const validPayment =
     team.billingStatus === "validPayment" || team.billingStatus === "pastDue";
@@ -65,6 +68,12 @@ export const Billing: React.FC<BillingProps> = ({
         team={team}
         trialPeriodEndedAt={planSubscription?.trialEnd ?? undefined}
         getBillingCheckoutUrl={getBillingCheckoutUrl}
+      />
+
+      <PaymentMethodsClient
+        team={team}
+        paymentMethods={paymentMethods}
+        isEmpty={paymentMethods.length === 0}
       />
 
       <CreditsInfoCard twAccount={twAccount} />
