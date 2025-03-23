@@ -59,7 +59,7 @@
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "eslint": "8.57.0",
-    "eslint-config-next": "15.2.2",
+    "eslint-config-next": "15.2.3",
     "eslint-plugin-react-compiler": "19.0.0-beta-40c6c23-20250301",
     "postcss": "8.5.3",
     "tailwindcss": "3.4.17",
