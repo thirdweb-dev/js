@@ -22,6 +22,10 @@ export type CoreServiceConfig = {
   serviceApiKey: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
+  /**
+   * The number of times to retry the auth request. Default = 3.
+   */
+  retryCount?: number;
 };
 
 export type TeamAndProjectResponse = {
@@ -179,23 +183,46 @@ export async function fetchTeamAndProject(
   if (teamId) {
     url.searchParams.set("teamId", teamId);
   }
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      ...(authData.secretKey ? { "x-secret-key": authData.secretKey } : {}),
-      ...(authData.jwt ? { Authorization: `Bearer ${authData.jwt}` } : {}),
-      "x-service-api-key": serviceApiKey,
-      "content-type": "application/json",
-    },
-  });
 
-  let text = "";
-  try {
-    text = await response.text();
-    return JSON.parse(text);
-  } catch {
-    throw new Error(
-      `Error fetching key metadata from API: ${response.status} - ${text}`,
-    );
+  const retryCount = config.retryCount ?? 3;
+  let error: unknown | undefined;
+  for (let i = 0; i < retryCount; i++) {
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          ...(authData.secretKey ? { "x-secret-key": authData.secretKey } : {}),
+          ...(authData.jwt ? { Authorization: `Bearer ${authData.jwt}` } : {}),
+          "x-service-api-key": serviceApiKey,
+          "content-type": "application/json",
+        },
+      });
+
+      let text = "";
+      try {
+        text = await response.text();
+        return JSON.parse(text);
+      } catch {
+        throw new Error(
+          `Error fetching key metadata from API: ${response.status} - ${text}`,
+        );
+      }
+    } catch (err: unknown) {
+      error = err;
+      if (i < retryCount - 1) {
+        // Add a single retry with a delay between 20ms and 400ms.
+        await sleepRandomMs(20, 400);
+      }
+    }
   }
+  throw error;
+}
+
+/**
+ * Sleeps for a random amount of time between min and max, in milliseconds.
+ */
+function sleepRandomMs(min: number, max: number) {
+  return new Promise((resolve) =>
+    setTimeout(resolve, Math.random() * (max - min) + min),
+  );
 }
