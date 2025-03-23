@@ -210,8 +210,8 @@ export async function fetchTeamAndProject(
     } catch (err: unknown) {
       error = err;
       if (i < retryCount - 1) {
-        // Add a single retry with a delay between 50ms and 250ms.
-        await sleepRandomMs(50, 250);
+        // Add a single retry with a delay between 20ms and 400ms.
+        await sleepRandomMs(20, 400);
       }
     }
   }
