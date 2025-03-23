@@ -132,6 +132,10 @@ export type ProjectService =
       name: "nebula";
       actions: never[];
     }
+  | {
+      name: "engineCloud";
+      actions: never[];
+    }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;
 
