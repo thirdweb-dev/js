@@ -10,24 +10,21 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Get started with thirdweb Wallets",
+		title: "Get started with wallets",
 		icon: "wallets",
 	},
 	title: "Get started with wallets",
 	description: "Get started with wallets",
 });
 
-# Get Started with thirdweb Wallet
+# Get Started with wallets
 
-There are 4 types of wallets you can integrate into your app with thirdweb:
+There are 4 types of wallets you can integrate into your app with thirdweb: 
 
-- **External Wallets** - Connect to existing [web3](#) wallets like MetaMask, Coinbase Wallet, etc.
-
-- **In-App Wallets** - Create [embedded, branded and customizable](#) wallets for your [app, or game](#).
-
-- **Ecosystem Wallets** - Create a branded and customizable wallet offering users a unified identity across your entire ecosystem of apps or games.
-
-- **Smart wallets** - leverage account abstraction to unlock complex functionality such as [gasless & signless transactions](#).
+- **External Wallets** - Connect to existing web3 wallets like MetaMask, Coinbase Wallet, etc.
+- **In-App Wallets** - Create embedded, branded and customizable wallets for your app, or game.
+- [**Ecosystem Wallets**](/connect/wallet/ecosystem/set-up) - Create a branded and customizable wallet offering users a unified identity across your entire ecosystem of apps or games.
+- [**Smart Wallets (Account Abstraction)**](/connect/account-abstraction/get-started) - leverage account abstraction to unlock complex functionality such as gasless & signless transactions.
 
 These methods can be used independently or together in the same application to provide the best experience for your users.
 
@@ -159,7 +156,7 @@ Before diving into the implementation, check out our playground to see all the v
 
     ### Setup Ecosystem Wallet
 
-    Create shareable wallets across multiple applications:
+    Create a single unified identity for your users with our branded, customizable wallets built for supporting multiple apps and games within an entire ecosystem.
 
     ```typescript
     import { createThirdwebClient, ecosystemWallet } from "thirdweb";
