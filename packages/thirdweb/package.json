@@ -137,66 +137,26 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ],
-      "bridge": [
-        "./dist/types/exports/bridge.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"],
+      "bridge": ["./dist/types/exports/bridge.d.ts"]
     }
   },
   "browser": {
@@ -241,7 +201,7 @@
     "@aws-sdk/client-lambda": "^3",
     "@aws-sdk/credential-providers": "^3",
     "@coinbase/wallet-mobile-sdk": "^1",
-    "@mobile-wallet-protocol/client": "0.1.1",
+    "@mobile-wallet-protocol/client": "^1",
     "@react-native-async-storage/async-storage": "^1 || ^2",
     "ethers": "^5 || ^6",
     "expo-linking": "^6",
@@ -344,7 +304,7 @@
     "@chromatic-com/storybook": "3.2.6",
     "@codspeed/vitest-plugin": "4.0.0",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
-    "@mobile-wallet-protocol/client": "0.1.2",
+    "@mobile-wallet-protocol/client": "1.0.0",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@size-limit/preset-big-lib": "11.2.0",
     "@storybook/addon-essentials": "8.6.4",
@@ -374,7 +334,7 @@
     "prettier": "3.5.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.76.6",
+    "react-native": "0.78.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.1.0",
     "react-native-quick-crypto": "0.7.8",
