@@ -125,4 +125,4 @@ export type ApiKeyPayConfigValidationSchema = z.infer<
 >;
 
 // FIXME: Remove
-export const HIDDEN_SERVICES = ["relayer", "chainsaw"];
+export const HIDDEN_SERVICES = ["relayer", "chainsaw", "engineCloud"];
