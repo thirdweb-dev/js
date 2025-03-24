@@ -28,7 +28,7 @@
 		"src/*"
 	],
 	"devDependencies": {
-		"@wagmi/core": "2.16.5",
+		"@wagmi/core": "2.16.7",
 		"rimraf": "6.0.1",
 		"thirdweb": "workspace:*"
 	},
