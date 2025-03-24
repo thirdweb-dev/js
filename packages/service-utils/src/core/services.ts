@@ -74,14 +74,6 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
-  engineCloud: {
-    name: "engineCloud",
-    title: "Server wallets",
-    description:
-      "Server wallets with high transaction throughput and low latency",
-    // all actions allowed
-    actions: [],
-  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(
