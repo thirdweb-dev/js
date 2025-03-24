@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.17
+
+### Patch Changes
+
+- [#6526](https://github.com/thirdweb-dev/js/pull/6526) [`21389bb`](https://github.com/thirdweb-dev/js/commit/21389bbef6918a72df3ca1822ea7e5f697931c39) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add engineCloud service
+
 ## 0.8.16
 
 ### Patch Changes
