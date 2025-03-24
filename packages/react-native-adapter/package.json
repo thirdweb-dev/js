@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native-adapter",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -23,7 +23,10 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/*", "src/*"],
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
   "dependencies": {
     "@aws-sdk/client-kms": "3.592.0",
     "@aws-sdk/client-lambda": "3.592.0",
