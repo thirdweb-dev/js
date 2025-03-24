@@ -61,28 +61,6 @@ export const staticSidebarLinks: SidebarLink[] = [
         ],
       },
       {
-        name: "Universal Bridge",
-        expanded: false,
-        links: [
-          {
-            name: "UI Component",
-            href: "/connect/pay",
-          },
-          {
-            name: "Fund Wallet",
-            href: "/connect/pay/fund-wallet",
-          },
-          {
-            name: "Commerce",
-            href: "/connect/pay/commerce",
-          },
-          {
-            name: "Transactions",
-            href: "/connect/pay/transactions",
-          },
-        ],
-      },
-      {
         name: "Auth",
         href: "/connect/auth",
       },
@@ -123,6 +101,34 @@ export const staticSidebarLinks: SidebarLink[] = [
     ],
   },
 ];
+
+const universalBridgeSidebarLinks: SidebarLink = {
+  name: "Universal Bridge",
+  isCollapsible: false,
+  expanded: false,
+  links: [
+    {
+      name: "UI Component",
+      href: "/connect/pay",
+    },
+    {
+      name: "Fund Wallet",
+      href: "/connect/pay/fund-wallet",
+    },
+    {
+      name: "Commerce",
+      href: "/connect/pay/commerce",
+    },
+    {
+      name: "Transactions",
+      href: "/connect/pay/transactions",
+    },
+    {
+      name: "Backend API",
+      href: "https://bridge.thirdweb.com/reference",
+    },
+  ],
+};
 
 const engineSidebarLinks: SidebarLink = {
   name: "Engine",
@@ -167,13 +173,14 @@ export async function getSidebarLinks() {
 
   const sidebarLinks: SidebarLink[] = [
     ...staticSidebarLinks,
+    universalBridgeSidebarLinks,
+    engineSidebarLinks,
     {
       name: "Insight",
       isCollapsible: false,
       expanded: false,
       links: insightLinks,
     },
-    engineSidebarLinks,
   ];
 
   return sidebarLinks;
