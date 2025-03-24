@@ -85,7 +85,7 @@ function BackendSection() {
         />
         <ArticleCardIndex
           href="/nebula"
-          title="Nebula"
+          title="AI"
           description="API interface for LLMs"
         />
       </div>

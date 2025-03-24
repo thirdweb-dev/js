@@ -1,0 +1,32 @@
+# Claude Desktop
+
+
+Learn how to add the MCP server to Claude Desktop:
+
+1. Install the MCP: `pipx install thirdweb-mcp`
+
+2. Create or edit the Claude Desktop configuration file at:
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   - Linux: `~/.config/Claude/claude_desktop_config.json`
+
+3. Add the following configuration:
+
+   ```json
+   {
+     "mcpServers": {
+       "thirdweb-mcp": {
+         "command": "thirdweb-mcp",
+         "args": [], // add `--chain-id` optionally
+         "env": {
+           "THIRDWEB_SECRET_KEY": "your thirdweb secret key from dashboard",
+           "THIRDWEB_ENGINE_URL": "(OPTIONAL) your engine url",
+           "THIRDWEB_ENGINE_AUTH_JWT": "(OPTIONAL) your engine auth jwt",
+           "THIRDWEB_ENGINE_BACKEND_WALLET_ADDRESS": "(OPTIONAL) your engine backend wallet address",           
+         },
+       }
+     }
+   }
+   ```
+
+4. Restart Claude Desktop for the changes to take effect.
