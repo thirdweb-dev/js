@@ -17,11 +17,6 @@ export async function getCoinbaseMobileProvider(
       mobileProvider = (await initSmartWalletProvider(
         options,
       )) as unknown as ProviderInterface;
-      const ExpoLinking = await import("expo-linking");
-      const { handleResponse } = await import("@mobile-wallet-protocol/client");
-      ExpoLinking.addEventListener("url", ({ url }) => {
-        handleResponse(url);
-      });
     } else {
       // otherwise, use the coinbase app provider
       // TODO: remove this path once the new @mobile-wallet-protocol/client supports it
@@ -55,10 +50,10 @@ async function initSmartWalletProvider(
   }
   const sdk = new EIP1193Provider({
     metadata: {
-      appName: options?.appMetadata?.name || "thirdweb powered app",
-      appChainIds: options?.chains?.map((c) => c.id),
-      appDeeplinkUrl,
-      appLogoUrl: options?.appMetadata?.logoUrl,
+      name: options?.appMetadata?.name || "thirdweb powered app",
+      chainIds: options?.chains?.map((c) => c.id),
+      customScheme: appDeeplinkUrl,
+      logoUrl: options?.appMetadata?.logoUrl,
     },
     wallet: Wallets.CoinbaseSmartWallet, // TODO support both smart and EOA once the SDK supports it
   });
