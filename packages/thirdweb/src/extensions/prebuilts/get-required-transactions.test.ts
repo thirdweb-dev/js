@@ -64,6 +64,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(results.length).toBe(7);
     });
 
+    it("should count transactions for a dynamic contract", async () => {
+      const deployMetadata = await fetchPublishedContractMetadata({
+        client: TEST_CLIENT,
+        contractId: "EvolvingNFT",
+      });
+      const results = await getRequiredTransactions({
+        client: TEST_CLIENT,
+        chain: CLEAN_ANVIL_CHAIN,
+        deployMetadata,
+      });
+
+      expect(results.length).toBe(8);
+    });
+
     it("should return default constructor params for zksync chains", async () => {
       const params = await getAllDefaultConstructorParamsForImplementation({
         chain: defineChain(300),

@@ -473,9 +473,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: hasInbuiltDefaultFeeConfig
-              ? DEFAULT_FEE_BPS_NEW
-              : DEFAULT_FEE_BPS,
+            platformFeeBps: DEFAULT_FEE_BPS_NEW,
             platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
