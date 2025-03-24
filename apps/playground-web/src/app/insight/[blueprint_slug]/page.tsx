@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { redirect } from "next/navigation";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
+import { isProd } from "../../../lib/env";
 import { fetchBlueprintSpec } from "../utils";
 import { BlueprintPlayground } from "./blueprint-playground.client";
 
@@ -25,6 +26,9 @@ export default async function Page(props: {
   if (!searchParams.path) {
     redirect("/insight");
   }
+
+  const thirdwebDomain = !isProd ? "thirdweb-dev" : "thirdweb";
+  const domain = `https://insight.${thirdwebDomain}.com`;
 
   const [blueprintSpec] = await Promise.all([
     fetchBlueprintSpec({
@@ -58,6 +62,7 @@ export default async function Page(props: {
         clientId={THIRDWEB_CLIENT.clientId}
         path={searchParams.path}
         supportedChainIds={supportedChainIds}
+        domain={domain}
       />
     </div>
   );

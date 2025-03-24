@@ -39,7 +39,7 @@ export type PublishContractParams = {
  *   metadata,
  * });
  * ```
- * @extension thirdweb
+ * @extension THIRDWEB
  */
 export function publishContract(
   options: BaseTransactionOptions<PublishContractParams>,

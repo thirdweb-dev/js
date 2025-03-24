@@ -256,6 +256,7 @@ export type PayEmbedProps = {
  *     buyWithFiat: false,
  *   }}
  *  />
+ * ```
  *
  * ### Customize the UI
  *

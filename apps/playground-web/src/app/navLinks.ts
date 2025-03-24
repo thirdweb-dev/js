@@ -125,7 +125,7 @@ const universalBridgeSidebarLinks: SidebarLink = {
     },
     {
       name: "Backend API",
-      href: "https://bridge.thirdweb.com/reference",
+      href: "/connect/pay/backend",
     },
   ],
 };
