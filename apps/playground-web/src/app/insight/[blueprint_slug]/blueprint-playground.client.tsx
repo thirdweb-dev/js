@@ -35,7 +35,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
-import { isProd } from "../../../lib/env";
 import type { BlueprintParameter, BlueprintPathMetadata } from "../utils";
 
 export function BlueprintPlayground(props: {
@@ -44,6 +43,7 @@ export function BlueprintPlayground(props: {
   clientId: string;
   path: string;
   supportedChainIds: number[];
+  domain: string;
 }) {
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
@@ -56,6 +56,9 @@ export function BlueprintPlayground(props: {
       try {
         const res = await fetch(url, {
           signal: controller.signal,
+          headers: {
+            "x-client-id": props.clientId,
+          },
         });
         return {
           status: res.status,
@@ -78,8 +81,6 @@ export function BlueprintPlayground(props: {
     },
   });
 
-  const thirdwebDomain = !isProd ? "thirdweb-dev" : "thirdweb";
-
   return (
     <BlueprintPlaygroundUI
       backLink={props.backLink}
@@ -98,7 +99,7 @@ export function BlueprintPlayground(props: {
           abortController.abort();
         }
       }}
-      domain={`https://insight.${thirdwebDomain}.com`}
+      domain={props.domain}
       path={props.path}
       supportedChainIds={props.supportedChainIds}
     />
