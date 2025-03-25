@@ -152,7 +152,7 @@ export const sidebar: SideBar = {
             },
           ],
         },
-      ]
+      ],
     },
     {
       name: "MCP Server",
@@ -174,10 +174,10 @@ export const sidebar: SideBar = {
             {
               name: "MCP Server",
               href: "/nebula/mcp-server/integrations/mcp-server",
-            }
-          ]
-        }
-      ]
+            },
+          ],
+        },
+      ],
     },
     {
       name: "Tools",
@@ -196,10 +196,9 @@ export const sidebar: SideBar = {
               name: "Examples",
               href: "/nebula/tools/python-sdk/examples",
             },
-          ]
-        }
-
-      ]
+          ],
+        },
+      ],
     },
     {
       separator: true,
