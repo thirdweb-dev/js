@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { status } from "./Status.js";
 
-describe("Bridge.status", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   it("should handle successful status", async () => {
     const result = await status({
       transactionHash:
