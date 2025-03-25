@@ -137,66 +137,26 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ],
-      "bridge": [
-        "./dist/types/exports/bridge.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"],
+      "bridge": ["./dist/types/exports/bridge.d.ts"]
     }
   },
   "browser": {
@@ -226,8 +186,8 @@
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/react-tooltip": "1.1.8",
     "@tanstack/react-query": "5.67.3",
-    "@walletconnect/ethereum-provider": "2.17.5",
-    "@walletconnect/sign-client": "2.17.5",
+    "@walletconnect/ethereum-provider": "2.19.1",
+    "@walletconnect/sign-client": "2.19.1",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
@@ -342,7 +302,7 @@
     "@aws-sdk/credential-providers": "3.592.0",
     "@biomejs/biome": "1.9.4",
     "@chromatic-com/storybook": "3.2.6",
-    "@codspeed/vitest-plugin": "4.0.0",
+    "@codspeed/vitest-plugin": "4.0.1",
     "@coinbase/wallet-mobile-sdk": "1.1.2",
     "@mobile-wallet-protocol/client": "1.0.0",
     "@react-native-async-storage/async-storage": "2.1.2",
@@ -361,8 +321,8 @@
     "@types/react": "19.0.10",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "3.0.8",
-    "@vitest/ui": "3.0.8",
+    "@vitest/coverage-v8": "3.0.9",
+    "@vitest/ui": "3.0.9",
     "dotenv-mono": "^1.3.14",
     "ethers5": "npm:ethers@5",
     "ethers6": "npm:ethers@6",
@@ -387,6 +347,6 @@
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.2",
     "vite": "6.2.1",
-    "vitest": "3.0.8"
+    "vitest": "3.0.9"
   }
 }

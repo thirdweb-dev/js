@@ -26,12 +26,8 @@
   },
   "typesVersions": {
     "*": {
-      "node": [
-        "./dist/types/node/index.d.ts"
-      ],
-      "cf-worker": [
-        "./dist/types/cf-worker/index.d.ts"
-      ]
+      "node": ["./dist/types/node/index.d.ts"],
+      "cf-worker": ["./dist/types/cf-worker/index.d.ts"]
     }
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/pay",
@@ -40,9 +36,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "sideEffects": false,
   "dependencies": {
     "@confluentinc/kafka-javascript": "^1.2.0",
@@ -53,7 +47,7 @@
     "@cloudflare/workers-types": "4.20250312.0",
     "@types/node": "22.13.10",
     "typescript": "5.8.2",
-    "vitest": "3.0.8"
+    "vitest": "3.0.9"
   },
   "scripts": {
     "format": "biome format ./src --write",
