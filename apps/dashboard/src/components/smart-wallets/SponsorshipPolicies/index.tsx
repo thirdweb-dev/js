@@ -112,24 +112,31 @@ export function AccountAbstractionSettingsPage(
 
   const policy = props.bundlerService;
 
-  const transformedQueryData = useMemo(
-    () => ({
+  const transformedQueryData = useMemo(() => {
+    const allowedContractAddresses = policy.allowedContractAddresses?.filter(
+      (x) => x !== "",
+    );
+
+    const allowedWallets = policy.allowedWallets?.filter((x) => x !== "");
+    const blockedWallets = policy.blockedWallets?.filter((x) => x !== "");
+
+    // there is a bug in API server that makes `allowedChainIds` an array with `0` if we set it to null
+    const allowedChainIds = policy.allowedChainIds?.filter((x) => x !== 0);
+
+    return {
       allowedChainIds:
-        policy.allowedChainIds && policy.allowedChainIds?.length > 0
-          ? policy.allowedChainIds
-          : null,
+        allowedChainIds && allowedChainIds?.length > 0 ? allowedChainIds : null,
       allowedContractAddresses:
-        policy.allowedContractAddresses &&
-        policy.allowedContractAddresses?.length > 0
-          ? joinWithComma(policy.allowedContractAddresses)
+        allowedContractAddresses && allowedContractAddresses.length > 0
+          ? joinWithComma(allowedContractAddresses)
           : null,
       allowedWallets:
-        policy.allowedWallets && policy.allowedWallets?.length > 0
-          ? joinWithComma(policy.allowedWallets)
+        allowedWallets && allowedWallets?.length > 0
+          ? joinWithComma(allowedWallets)
           : null,
       blockedWallets:
-        policy.blockedWallets && policy.blockedWallets?.length > 0
-          ? joinWithComma(policy.blockedWallets)
+        blockedWallets && blockedWallets?.length > 0
+          ? joinWithComma(blockedWallets)
           : null,
       bypassWallets:
         policy.bypassWallets && policy.bypassWallets?.length > 0
@@ -148,14 +155,13 @@ export function AccountAbstractionSettingsPage(
           },
       globalLimit: policy.limits?.global ?? null,
       allowedOrBlockedWallets:
-        policy.allowedWallets && policy.allowedWallets?.length > 0
+        allowedWallets && allowedWallets?.length > 0
           ? "allowed"
-          : policy.blockedWallets && policy.blockedWallets?.length > 0
+          : blockedWallets && blockedWallets?.length > 0
             ? "blocked"
             : null,
-    }),
-    [policy],
-  );
+    };
+  }, [policy]);
 
   const form = useForm<z.infer<typeof aaSettingsFormSchema>>({
     resolver: zodResolver(aaSettingsFormSchema),
@@ -212,11 +218,12 @@ export function AccountAbstractionSettingsPage(
 
           const parsedValues: Omit<ProjectBundlerService, "name" | "actions"> =
             {
-              allowedContractAddresses:
-                values.allowedContractAddresses !== null
-                  ? toArrFromList(values.allowedContractAddresses)
-                  : null,
-              allowedChainIds: values.allowedChainIds,
+              allowedContractAddresses: values.allowedContractAddresses
+                ? toArrFromList(values.allowedContractAddresses)
+                : null,
+
+              // don't set null - `updateProject` API adds chainId 0 to the list if its null and makes it `[0]`
+              allowedChainIds: values.allowedChainIds || [],
               allowedWallets:
                 values.allowedOrBlockedWallets === "allowed" &&
                 values.allowedWallets !== null
