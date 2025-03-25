@@ -44,7 +44,7 @@ function BuyMerch() {
           Commerce
         </h2>
         <p className="max-w-[600px]">
-          Take paymets from Fiat or Crypto directly to your seller wallet.
+          Take payments from Fiat or Crypto directly to your seller wallet.
           <br />
           Get notified for every sale through webhooks, which lets you trigger
           any action you want like shipping physical goods, activating services
