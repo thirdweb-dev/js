@@ -44,10 +44,16 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
+import {
+  LAST_USED_PROJECT_ID,
+  LAST_USED_TEAM_ID,
+} from "../../../app/team/[team_slug]/[project_slug]/components/SaveLastUsedProject";
 import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import {
   AddToProjectCardUI,
+  type MinimalProject,
+  type MinimalTeam,
   type MinimalTeamsAndProjects,
 } from "./add-to-project-card";
 import { Fieldset } from "./common";
@@ -151,9 +157,42 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const thirdwebClient = useThirdwebClient(jwt);
 
   const [isImportEnabled, setIsImportEnabled] = useState(true);
-  const [importSelection, setImportSelection] = useState({
-    team: teamsAndProjects[0]?.team,
-    project: teamsAndProjects[0]?.projects[0],
+
+  const [importSelection, setImportSelection] = useState<{
+    team: MinimalTeam | undefined;
+    project: MinimalProject | undefined;
+  }>(() => {
+    const defaultSelection = {
+      team: teamsAndProjects[0]?.team,
+      project: teamsAndProjects[0]?.projects[0],
+    };
+
+    try {
+      const lastUsedTeamSlug = localStorage.getItem(LAST_USED_TEAM_ID);
+      const lastUsedProjectSlug = localStorage.getItem(LAST_USED_PROJECT_ID);
+
+      if (!lastUsedTeamSlug || !lastUsedProjectSlug) {
+        return defaultSelection;
+      }
+
+      const teamWithProjects = teamsAndProjects.find(
+        (t) => t.team.id === lastUsedTeamSlug,
+      );
+      const project = teamWithProjects?.projects.find(
+        (p) => p.id === lastUsedProjectSlug,
+      );
+
+      if (teamWithProjects && project) {
+        return {
+          team: teamWithProjects.team,
+          project,
+        };
+      }
+    } catch {
+      // ignore localStorage errors
+    }
+
+    return defaultSelection;
   });
 
   const activeAccount = useActiveAccount();
