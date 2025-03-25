@@ -172,8 +172,8 @@ export const sidebar: SideBar = {
               href: "/nebula/mcp-server/integrations/claude-desktop",
             },
             {
-              name: "MCP Server",
-              href: "/nebula/mcp-server/integrations/mcp-server",
+              name: "MCP Clients",
+              href: "/nebula/mcp-server/integrations/mcp-clients",
             },
           ],
         },
@@ -185,7 +185,6 @@ export const sidebar: SideBar = {
       links: [
         {
           name: "Python SDK",
-          href: "/nebula/tools/python-sdk",
           icon: <Code />,
           links: [
             {
@@ -194,7 +193,7 @@ export const sidebar: SideBar = {
             },
             {
               name: "Examples",
-              href: "/nebula/tools/python-sdk/examples",
+              href: "https://github.com/thirdweb-dev/ai/tree/main/python/examples",
             },
           ],
         },
