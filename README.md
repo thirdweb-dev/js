@@ -8,7 +8,10 @@
 <h1 align="center"><a href='https://thirdweb.com/'>thirdweb</a> TypeScript SDK</h1>
 
 <p align="center">
-    <a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml">
+   <a href="https://github.com/thirdweb-dev/js/actions/workflows/codeql-analysis.yml">
+        <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/codeql-analysis.yml/badge.svg"/>    
+      </a>    
+   <a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml">
         <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml/badge.svg"/>
     </a>
 </p>
