@@ -75,6 +75,11 @@ export function TeamProjectsPage(props: {
       );
     }
 
+    // @TODO: HACK hide Engine projects from the list.
+    _projectsToShow = _projectsToShow.filter(
+      (project) => !project.name.startsWith("Cloud-hosted Engine ("),
+    );
+
     return _projectsToShow;
   }, [searchTerm, sortBy, projects]);
 
