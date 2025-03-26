@@ -382,7 +382,7 @@ async function generateExtensionInput(args: {
 }
 
 export function generateExtensionFunctionsFromAbi(abi: Abi): Array<{
-  functionSelector: string;
+  functionSelector: `0x${string}`;
   functionSignature: string;
 }> {
   const functions = abi.filter(
