@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.93.5
+
+### Patch Changes
+
+- [#6550](https://github.com/thirdweb-dev/js/pull/6550) [`3c120a7`](https://github.com/thirdweb-dev/js/commit/3c120a7584aa22e4c77a000bd000b1f89048382e) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Functions to manage extensions on a dynamic contract
+
+- [#6545](https://github.com/thirdweb-dev/js/pull/6545) [`c549d59`](https://github.com/thirdweb-dev/js/commit/c549d5934e2771cb7f41bb3a87ce1ad85b7678cd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies
+
+- [#6562](https://github.com/thirdweb-dev/js/pull/6562) [`e5026a1`](https://github.com/thirdweb-dev/js/commit/e5026a10ab38bf2061bb61e3ec540a1fe26994db) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Account for bigint values in engine wallet typed data
+
 ## 5.93.4
 
 ### Patch Changes
