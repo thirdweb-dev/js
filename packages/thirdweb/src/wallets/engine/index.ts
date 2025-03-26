@@ -1,7 +1,7 @@
-import { stringify } from "../../utils/json.js";
 import type { Chain } from "../../chains/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { toHex } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 /**
