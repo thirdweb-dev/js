@@ -112,7 +112,7 @@ const universalBridgeSidebarLinks: SidebarLink = {
       href: "/connect/pay",
     },
     {
-      name: "Fund Wallet",
+      name: "Buy Crypto",
       href: "/connect/pay/fund-wallet",
     },
     {

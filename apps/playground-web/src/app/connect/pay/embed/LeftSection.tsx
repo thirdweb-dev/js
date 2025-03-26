@@ -105,8 +105,8 @@ export function LeftSection(props: {
             <CustomRadioGroup
               id="pay-mode"
               options={[
-                { value: "fund_wallet", label: "Fund Wallet" },
-                { value: "direct_payment", label: "Direct Payment" },
+                { value: "fund_wallet", label: "Buy Crypto" },
+                { value: "direct_payment", label: "Purchase" },
                 { value: "transaction", label: "Transaction" },
               ]}
               onValueChange={(value) => {

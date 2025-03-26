@@ -74,7 +74,7 @@ export function RightSection(props: {
               ? "Transaction"
               : props.options.payOptions.mode === "direct_payment"
                 ? "Purchase"
-                : "Fund Wallet"),
+                : "Buy Crypto"),
           image:
             props.options.payOptions.image ||
             `https://placehold.co/600x400/${

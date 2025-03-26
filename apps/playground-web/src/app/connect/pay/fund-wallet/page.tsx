@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Fund wallets | thirdweb Universal Bridge",
+  title: "Buy Crypto | thirdweb Universal Bridge",
   description:
     "The easiest way for users to fund their wallets. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
 };
@@ -41,7 +41,7 @@ function StyledPayEmbed() {
     <>
       <div className="space-y-2">
         <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Fund Wallet
+          Buy Crypto
         </h2>
         <p className="max-w-[600px]">
           Inline component that allows users to buy any currency.
