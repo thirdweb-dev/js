@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.18
+
+### Patch Changes
+
+- [#6557](https://github.com/thirdweb-dev/js/pull/6557) [`cff2481`](https://github.com/thirdweb-dev/js/commit/cff2481c06e2cdafec85da9d82df81641878957f) Thanks [@arcoraven](https://github.com/arcoraven)! - fix: changeset for optional req
+
 ## 0.8.17
 
 ### Patch Changes
