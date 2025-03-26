@@ -13,6 +13,7 @@ import {
   type FetchDeployMetadataResult,
   fetchBytecodeFromCompilerMetadata,
 } from "./deploy-metadata.js";
+import { encodeExtraDataWithUri } from "./encode-extra-data-with-uri.js";
 import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
 /**
@@ -81,6 +82,9 @@ export async function computeDeploymentInfoFromMetadata(args: {
     }),
     constructorParams: processedConstructorParams,
     salt: args.salt,
+    extraDataWithUri: encodeExtraDataWithUri({
+      metadataUri: contractMetadata.metadataUri,
+    }),
   });
 }
 
@@ -91,8 +95,9 @@ export async function computeDeploymentInfoFromBytecode(args: {
   bytecode: Hex;
   constructorParams?: Record<string, unknown>;
   salt?: string;
+  extraDataWithUri?: string;
 }) {
-  const { client, chain, constructorParams, salt } = args;
+  const { client, chain, constructorParams, salt, extraDataWithUri } = args;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
     client,
     chain,
@@ -110,9 +115,13 @@ export async function computeDeploymentInfoFromBytecode(args: {
     encodedArgs,
     salt,
   });
+
+  const initCalldata = extraDataWithUri
+    ? (initBytecodeWithsalt.concat(extraDataWithUri) as `0x${string}`)
+    : initBytecodeWithsalt;
   return {
     bytecode,
-    initBytecodeWithsalt,
+    initCalldata,
     encodedArgs,
     create2FactoryAddress,
     salt,

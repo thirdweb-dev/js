@@ -100,7 +100,7 @@ export function prepareInfraContractDeployTransactionFromMetadata(options: {
     data: async () => {
       const infraContractInfo =
         await computeDeploymentInfoFromMetadata(options);
-      return infraContractInfo.initBytecodeWithsalt;
+      return infraContractInfo.initCalldata;
     },
   });
 }

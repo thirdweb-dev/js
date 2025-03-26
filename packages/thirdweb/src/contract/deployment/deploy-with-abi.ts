@@ -24,7 +24,7 @@ export type PrepareDirectDeployTransactionOptions = Prettify<
     abi: Abi;
     bytecode: Hex;
     constructorParams?: Record<string, unknown>;
-    extraData?: string;
+    extraDataWithUri?: string;
   }
 >;
 
@@ -71,7 +71,7 @@ export function prepareDirectDeployTransaction(
         constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
         normalizeFunctionParams(constructorAbi, options.constructorParams),
       ),
-      `0x${options.extraData}`,
+      `0x${options.extraDataWithUri}`,
     ]),
   });
 }
@@ -123,7 +123,7 @@ export async function deployContract(
   options: PrepareDirectDeployTransactionOptions & {
     account: Account;
     salt?: string;
-    extraData?: string;
+    extraDataWithUri?: string;
   },
 ) {
   if (await isZkSyncChain(options.chain)) {
@@ -163,11 +163,7 @@ export async function deployContract(
         chain: options.chain,
         client: options.client,
         to: info.create2FactoryAddress,
-        data: options.extraData
-          ? (info.initBytecodeWithsalt.concat(
-              options.extraData,
-            ) as `0x${string}`)
-          : info.initBytecodeWithsalt,
+        data: info.initCalldata,
       }),
     });
     return address;

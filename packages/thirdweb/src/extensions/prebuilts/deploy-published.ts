@@ -16,11 +16,8 @@ import {
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
-import {
-  type Hex,
-  numberToHex,
-  stringToHex,
-} from "../../utils/encoding/hex.js";
+import { encodeExtraDataWithUri } from "../../utils/any-evm/encode-extra-data-with-uri.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
 import {
@@ -321,16 +318,6 @@ async function directDeploy(options: {
   const { account, client, chain, compilerMetadata, contractParams, salt } =
     options;
 
-  let extraData: string | undefined;
-  if (options.metadataUri) {
-    const uriHex = stringToHex(options.metadataUri).replace("0x", "");
-    const lengthHex = numberToHex(uriHex.length / 2, { size: 1 }).replace(
-      "0x",
-      "",
-    );
-    extraData = uriHex.concat(lengthHex);
-  }
-
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
   );
@@ -346,7 +333,11 @@ async function directDeploy(options: {
     abi: compilerMetadata.abi,
     constructorParams: contractParams,
     salt,
-    extraData,
+    extraDataWithUri: options.metadataUri
+      ? encodeExtraDataWithUri({
+          metadataUri: options.metadataUri,
+        })
+      : undefined,
   });
 }
 

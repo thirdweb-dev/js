@@ -1,11 +1,9 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
-import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionByHash.js";
-import { getRpcClient } from "../../rpc/rpc.js";
 import { download } from "../../storage/download.js";
-import { hexToString } from "../../utils/encoding/hex.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import { type ThirdwebContract, getContract } from "../contract.js";
+import { extractUriFromCalldata } from "./extract-uri-from-calldata.js";
 
 /**
  * Resolves the ABI (Application Binary Interface) for a given contract.
@@ -47,47 +45,22 @@ export function resolveContractAbi<abi extends Abi>(
       }
 
       try {
-        const res = await fetch(
-          `https://contract.thirdweb-dev.com/creation/${contract.chain.id}/${contract.address}`,
-        );
-        const creationData = await res.json();
-
-        if (creationData.status === "1" && creationData.result[0]?.txHash) {
-          const rpcClient = getRpcClient({
+        // try to get it from the api
+        return (await resolveAbiFromContractApi(
+          contract,
+          contractApiBaseUrl,
+        )) as abi;
+      } catch {
+        try {
+          // try to get it from creation calldata
+          const metadata = await extractUriFromCalldata({
             client: contract.client,
             chain: contract.chain,
+            contractAddress: contract.address,
           });
-          const creationTx = await eth_getTransactionByHash(rpcClient, {
-            hash: creationData.result[0]?.txHash,
-          });
-
-          const initCode = creationTx.input;
-          const lengthHex = initCode.slice(-2);
-          const dataLength = Number.parseInt(lengthHex, 16) * 2;
-          const encodedIpfsHex = initCode.slice(-dataLength - 2, -2);
-          const uri = hexToString(`0x${encodedIpfsHex}`);
-
-          const res = await download({
-            client: contract.client,
-            uri,
-          });
-          const metadata = await res.json();
 
           return metadata.output.abi as abi;
-        } else {
-          return (await resolveCompositeAbi(
-            contract as ThirdwebContract,
-          )) as abi;
-        }
-      } catch {
-        // try to get it from the api
-        try {
-          return (await resolveAbiFromContractApi(
-            contract,
-            contractApiBaseUrl,
-          )) as abi;
         } catch {
-          // console.debug(e);
           // if that fails, try to resolve it from the bytecode
           return (await resolveCompositeAbi(
             contract as ThirdwebContract,
