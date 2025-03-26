@@ -21,7 +21,7 @@ export function ContractAnalyticsPageClient(props: {
     return <ErrorPage />;
   }
 
-  if (!metadataQuery.data.isAnalyticsSupported) {
+  if (!metadataQuery.data.isInsightSupported) {
     return <RedirectToContractOverview contract={props.contract} />;
   }
 

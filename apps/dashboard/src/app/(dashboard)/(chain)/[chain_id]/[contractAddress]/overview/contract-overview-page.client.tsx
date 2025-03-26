@@ -34,7 +34,7 @@ export function ContractOverviewPageClient(props: {
         contractPageMetadata.isPermissionsEnumerableSupported
       }
       chainSlug={chainMetadata.slug}
-      isAnalyticsSupported={contractPageMetadata.isAnalyticsSupported}
+      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
       functionSelectors={contractPageMetadata.functionSelectors}
       // TODO - create a fully client rendered version of publishedBy and ContractCard and plug it here
       publishedBy={undefined}

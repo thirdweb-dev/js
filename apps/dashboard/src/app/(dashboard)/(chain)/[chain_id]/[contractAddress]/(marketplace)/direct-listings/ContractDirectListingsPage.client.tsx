@@ -29,6 +29,7 @@ export function ContractDirectListingsPageClient(props: {
     <ContractDirectListingsPage
       contract={props.contract}
       twAccount={props.twAccount}
+      isInsightSupported={metadataQuery.data.isInsightSupported}
     />
   );
 }

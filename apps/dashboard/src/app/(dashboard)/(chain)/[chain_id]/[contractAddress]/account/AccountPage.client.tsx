@@ -32,6 +32,7 @@ export function AccountPageClient(props: {
       contract={props.contract}
       chainMetadata={props.chainMetadata}
       twAccount={props.twAccount}
+      isInsightSupported={metadataQuery.data.isInsightSupported}
     />
   );
 }

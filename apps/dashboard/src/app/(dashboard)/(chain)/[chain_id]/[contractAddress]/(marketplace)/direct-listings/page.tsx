@@ -29,15 +29,18 @@ export default async function Page(props: {
     );
   }
 
-  const { isDirectListingSupported } = await getContractPageMetadata(
-    info.contract,
-  );
+  const { isDirectListingSupported, isInsightSupported } =
+    await getContractPageMetadata(info.contract);
 
   if (!isDirectListingSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
   return (
-    <ContractDirectListingsPage contract={info.contract} twAccount={account} />
+    <ContractDirectListingsPage
+      contract={info.contract}
+      twAccount={account}
+      isInsightSupported={isInsightSupported}
+    />
   );
 }

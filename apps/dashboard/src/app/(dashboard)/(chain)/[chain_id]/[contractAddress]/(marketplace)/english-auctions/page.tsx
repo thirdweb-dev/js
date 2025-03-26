@@ -30,9 +30,8 @@ export default async function Page(props: {
     );
   }
 
-  const { isEnglishAuctionSupported } = await getContractPageMetadata(
-    info.contract,
-  );
+  const { isEnglishAuctionSupported, isInsightSupported } =
+    await getContractPageMetadata(info.contract);
 
   if (!isEnglishAuctionSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -42,6 +41,7 @@ export default async function Page(props: {
     <ContractEnglishAuctionsPage
       contract={info.contract}
       twAccount={twAccount}
+      isInsightSupported={isInsightSupported}
     />
   );
 }

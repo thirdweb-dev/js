@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 export function useWalletNFTs(params: {
   chainId: number;
   walletAddress?: string;
+  isInsightSupported: boolean;
 }) {
   return useQuery({
     queryKey: ["walletNfts", params.chainId, params.walletAddress],
@@ -13,6 +14,7 @@ export function useWalletNFTs(params: {
       return getWalletNFTs({
         chainId: params.chainId,
         owner: params.walletAddress,
+        isInsightSupported: params.isInsightSupported,
       });
     },
     enabled: !!params.walletAddress,

@@ -21,7 +21,7 @@ import {
 } from "./detectedFeatures/permissions";
 import { supportedERCs } from "./detectedFeatures/supportedERCs";
 import { type EmbedTypeToShow, getEmbedTypeToShow } from "./getEmbedTypeToShow";
-import { isAnalyticsSupportedForChain } from "./isAnalyticsSupportedForChain";
+import { isInsightSupportedForChain } from "./isAnalyticsSupportedForChain";
 
 export type ContractPageMetadata = {
   supportedERCs: {
@@ -36,7 +36,7 @@ export type ContractPageMetadata = {
   isPermissionsEnumerableSupported: boolean;
   isModularCore: boolean;
   embedType: EmbedTypeToShow;
-  isAnalyticsSupported: boolean;
+  isInsightSupported: boolean;
   isSplitSupported: boolean;
   isERC721ClaimConditionsSupported: boolean;
   isERC20ClaimConditionsSupported: boolean;
@@ -47,7 +47,7 @@ export type ContractPageMetadata = {
 };
 
 export async function getContractPageMetadata(contract: ThirdwebContract) {
-  return getContractPageMetadataSetup(contract, isAnalyticsSupportedForChain);
+  return getContractPageMetadataSetup(contract, isInsightSupportedForChain);
 }
 
 export async function getContractPageMetadataSetup(
@@ -56,7 +56,7 @@ export async function getContractPageMetadataSetup(
 ): Promise<ContractPageMetadata> {
   const [
     functionSelectorsResult,
-    isAnalyticsSupportedResult,
+    isInsightSupportedResult,
     contractTypeResult,
   ] = await Promise.allSettled([
     resolveFunctionSelectors(contract),
@@ -69,9 +69,9 @@ export async function getContractPageMetadataSetup(
       ? functionSelectorsResult.value
       : [];
 
-  const isAnalyticsSupported =
-    isAnalyticsSupportedResult.status === "fulfilled"
-      ? isAnalyticsSupportedResult.value
+  const isInsightSupported =
+    isInsightSupportedResult.status === "fulfilled"
+      ? isInsightSupportedResult.value
       : true;
 
   const contractType =
@@ -86,7 +86,7 @@ export async function getContractPageMetadataSetup(
       isPermissionsEnumerableSupported(functionSelectors),
     isModularCore: isModularCoreContract(functionSelectors),
     embedType: getEmbedTypeToShow(functionSelectors),
-    isAnalyticsSupported: isAnalyticsSupported,
+    isInsightSupported: isInsightSupported,
     isSplitSupported: contractType === "Split",
     isVoteContract: contractType === "VoteERC20",
     isERC721ClaimConditionsSupported:

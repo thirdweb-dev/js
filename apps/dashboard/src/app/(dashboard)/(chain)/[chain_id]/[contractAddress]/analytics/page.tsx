@@ -34,9 +34,9 @@ export default async function Page(props: {
     );
   }
 
-  const { isAnalyticsSupported } = await getContractPageMetadata(info.contract);
+  const { isInsightSupported } = await getContractPageMetadata(info.contract);
 
-  if (!isAnalyticsSupported) {
+  if (!isInsightSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
