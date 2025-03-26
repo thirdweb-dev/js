@@ -4,14 +4,22 @@ import { eth_getTransactionByHash } from "../../rpc/actions/eth_getTransactionBy
 import { getRpcClient } from "../../rpc/rpc.js";
 import { download } from "../../storage/download.js";
 import { decodeUriFromCalldata } from "../../utils/any-evm/decode-uri-from-calldata.js";
+import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
+import { getContract } from "../contract.js";
 
 export async function extractUriFromCalldata(options: {
   client: ThirdwebClient;
   chain: Chain;
   contractAddress: `0x${string}`;
 }) {
+  const contract = getContract({
+    client: options.client,
+    chain: options.chain,
+    address: options.contractAddress,
+  });
+  const impl = await resolveImplementation(contract);
   const res = await fetch(
-    `https://contract.thirdweb-dev.com/creation/${options.chain.id}/${options.contractAddress}`,
+    `https://contract.thirdweb-dev.com/creation/${options.chain.id}/${impl}`,
   );
   const creationData = await res.json();
 
