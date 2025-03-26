@@ -6,7 +6,7 @@ import ora from "ora";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
 
-export const THIRDWEB_URL = "https://thirdweb.com";
+const THIRDWEB_URL = "https://thirdweb.com";
 
 export async function publishStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
@@ -150,7 +150,7 @@ export async function publishStylus(secretKey?: string) {
     spinner.succeed(`Upload complete:, ${url}`);
 
     await open(url);
-  } catch (error: any) {
+  } catch (error) {
     spinner.fail(`Error: ${error}`);
     process.exit(1);
   }
@@ -158,13 +158,13 @@ export async function publishStylus(secretKey?: string) {
 
 function extractContractNameFromExportAbi(abiRawOutput: string): string | null {
   const match = abiRawOutput.match(/<stdin>:(I[A-Za-z0-9_]+)/);
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1].replace(/^I/, "");
   }
   return null;
 }
 
-export function getUrl(hash: string, command: string) {
+function getUrl(hash: string, command: string) {
   const url = new URL(
     `${THIRDWEB_URL}
       /contracts/${command}/
