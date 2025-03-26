@@ -1,4 +1,5 @@
 import type { Abi, AbiConstructor } from "abitype";
+import { encodePacked } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
@@ -95,7 +96,7 @@ export async function computeDeploymentInfoFromBytecode(args: {
   bytecode: Hex;
   constructorParams?: Record<string, unknown>;
   salt?: string;
-  extraDataWithUri?: string;
+  extraDataWithUri?: Hex;
 }) {
   const { client, chain, constructorParams, salt, extraDataWithUri } = args;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
@@ -117,7 +118,7 @@ export async function computeDeploymentInfoFromBytecode(args: {
   });
 
   const initCalldata = extraDataWithUri
-    ? (initBytecodeWithsalt.concat(extraDataWithUri) as `0x${string}`)
+    ? encodePacked(["bytes", "bytes"], [initBytecodeWithsalt, extraDataWithUri])
     : initBytecodeWithsalt;
   return {
     bytecode,
@@ -125,5 +126,6 @@ export async function computeDeploymentInfoFromBytecode(args: {
     encodedArgs,
     create2FactoryAddress,
     salt,
+    extraDataWithUri,
   };
 }

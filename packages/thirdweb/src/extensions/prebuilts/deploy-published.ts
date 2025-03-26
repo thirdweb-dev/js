@@ -322,6 +322,7 @@ export async function deployContractfromDeployMetadata(
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
         salt,
+        metadataUri: deployMetadata.metadataUri,
       });
     }
     default:

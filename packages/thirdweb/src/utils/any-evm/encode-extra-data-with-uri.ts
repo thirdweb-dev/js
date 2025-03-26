@@ -1,13 +1,13 @@
+import { encodePacked } from "ox/AbiParameters";
 import { numberToHex, stringToHex } from "../encoding/hex.js";
 
 export function encodeExtraDataWithUri(options: {
   metadataUri: string;
-}): string {
-  const uriHex = stringToHex(options.metadataUri).replace("0x", "");
-  const lengthHex = numberToHex(uriHex.length / 2, { size: 1 }).replace(
-    "0x",
-    "",
-  );
+}) {
+  const uriHex = stringToHex(options.metadataUri);
+  const lengthHex = numberToHex(uriHex.replace("0x", "").length / 2, {
+    size: 1,
+  });
 
-  return uriHex.concat(lengthHex);
+  return encodePacked(["bytes", "bytes"], [uriHex, lengthHex]);
 }

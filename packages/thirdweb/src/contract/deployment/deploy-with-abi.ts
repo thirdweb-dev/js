@@ -123,7 +123,7 @@ export async function deployContract(
   options: PrepareDirectDeployTransactionOptions & {
     account: Account;
     salt?: string;
-    extraDataWithUri?: string;
+    extraDataWithUri?: Hex;
   },
 ) {
   if (await isZkSyncChain(options.chain)) {
@@ -146,6 +146,7 @@ export async function deployContract(
       encodedArgs: info.encodedArgs,
       create2FactoryAddress: info.create2FactoryAddress,
       salt: options.salt,
+      extraDataWithUri: options.extraDataWithUri,
     });
     const isDeployed = await isContractDeployed(
       getContract({
