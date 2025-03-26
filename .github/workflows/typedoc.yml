@@ -28,23 +28,3 @@ jobs:
 
       - name: Run TypeDoc
         run: pnpm typedoc
-
-      - name: Update Gist
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          github-token: ${{ secrets.GIST_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const content = fs.readFileSync('./packages/thirdweb/typedoc/parsed.json', 'utf8');
-            const gistId = '678fe1f331a01270bb002fee660f285d';
-            
-            await github.rest.gists.update({
-              gist_id: gistId,
-              files: {
-                'data.json': {
-                  content: content
-                }
-              }
-            });
-          
-            console.log(`Permalink: https://gist.githubusercontent.com/raw/${gistId}/data.json`);
