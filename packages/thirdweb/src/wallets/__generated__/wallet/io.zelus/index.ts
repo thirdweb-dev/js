@@ -3,11 +3,11 @@
 
 export const wallet = {
   id: "io.zelus",
-  name: "Zelus",
+  name: "Zelus Wallet",
   homepage: "https://zelus.io",
-  image_id: "aeba2105-6c84-4642-f441-b3f5817ac400",
+  image_id: "a173eba6-05b4-43f4-0df6-400563637b00",
   app: {
-    browser: null,
+    browser: "https://rollingloud.bridge.zelus.io",
     ios: "https://apps.apple.com/us/app/zelus/id1588430343",
     android: "https://play.google.com/store/apps/details?id=com.zelus.wallet",
     mac: null,

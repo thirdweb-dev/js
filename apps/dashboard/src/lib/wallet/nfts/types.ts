@@ -27,7 +27,7 @@ import {
 } from "thirdweb/chains";
 
 // Cannot use BigInt for the values here because it will result in error: "fail to serialize bigint"
-// when the data is being sent from server to client (when we fetch the owned NFTs from simplehash/alchemy/moralis)
+// when the data is being sent from server to client (when we fetch the owned NFTs from insight/alchemy/moralis)
 export type WalletNFT = Omit<NFT, "id" | "supply"> & {
   id: string;
   contractAddress: string;

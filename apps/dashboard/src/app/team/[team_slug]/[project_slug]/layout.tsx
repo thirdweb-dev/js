@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
+import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
 import { ProjectTabs } from "./tabs";
 
 export default async function TeamLayout(props: {
@@ -61,6 +62,7 @@ export default async function TeamLayout(props: {
         />
       </div>
       <div className="flex grow flex-col">{props.children}</div>
+      <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </div>
   );
 }

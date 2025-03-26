@@ -41,7 +41,10 @@ import { z } from "zod";
 import { projectDomainsSchema, projectNameSchema } from "../validations";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
-  (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
+  (srv) =>
+    srv.name !== "relayer" &&
+    srv.name !== "chainsaw" &&
+    srv.name !== "engineCloud", // TODO enable once API server is out
 );
 
 export type CreateProjectPrefillOptions = {

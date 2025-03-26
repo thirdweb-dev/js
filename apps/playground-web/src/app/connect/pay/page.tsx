@@ -1,23 +1,25 @@
-import { APIHeader } from "@/components/blocks/APIHeader";
-import { CodeExample } from "@/components/code/code-example";
-import { StyledPayEmbedPreview } from "@/components/pay/embed";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
+import { APIHeader } from "../../../components/blocks/APIHeader";
+import PayEmbedPlayground from "./embed/page";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
+  title:
+    "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Universal Bridge",
   description:
-    "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
+    "The easiest way for users to transact in your app. Onramp users, pay with any token and generate revenue for each user transaction. Integrate for free.",
 };
 
-export default function Page() {
+export default function Page(props: {
+  searchParams: Promise<{ tab: string }>;
+}) {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
+      <div className="">
         <APIHeader
-          title="The easiest way for users to fund their wallets"
+          title="Universal Bridge UI component"
           description={
             <>
               Onramp users with credit card &amp; cross-chain crypto payments —
@@ -28,53 +30,8 @@ export default function Page() {
           heroLink="/pay.png"
         />
 
-        <section className="space-y-8">
-          <StyledPayEmbed />
-        </section>
-      </main>
-    </ThirdwebProvider>
-  );
-}
-
-function StyledPayEmbed() {
-  return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Fund Wallet
-        </h2>
-        <p className="max-w-[600px]">
-          Inline component that allows users to buy any currency.
-          <br />
-          Customize theme, currency, amounts, payment methods and more.
-        </p>
+        <PayEmbedPlayground searchParams={props.searchParams} />
       </div>
-
-      <CodeExample
-        preview={<StyledPayEmbedPreview />}
-        code={`
-        import { PayEmbed } from "thirdweb/react";
-
-        function App() {
-          return (
-            <PayEmbed
-              client={client}
-              payOptions={{
-                mode: "fund_wallet",
-                metadata: {
-                  name: "Get funds",
-                },
-                prefillBuy: {
-                  chain: base,
-                  amount: "0.01",
-                },
-                // ... theme, currency, amounts, payment methods, etc.
-              }}
-          />
-        );
-        };`}
-        lang="tsx"
-      />
-    </>
+    </ThirdwebProvider>
   );
 }

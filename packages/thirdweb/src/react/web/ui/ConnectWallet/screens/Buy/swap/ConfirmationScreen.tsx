@@ -142,95 +142,55 @@ export function SwapConfirmationScreen(props: {
       )}
 
       {props.payer.chain.id !== props.fromChain.id ? (
-        <SwitchNetworkButton
-          fullWidth
-          variant="accent"
-          switchChain={async () => {
-            await props.payer.wallet.switchChain(props.fromChain);
-          }}
-        />
+        <>
+          <Spacer y="xs" />
+          <SwitchNetworkButton
+            fullWidth
+            variant="accent"
+            switchChain={async () => {
+              await props.payer.wallet.switchChain(props.fromChain);
+            }}
+          />
+        </>
       ) : (
-        <Button
-          variant="accent"
-          fullWidth
-          disabled={status === "pending"}
-          onClick={async () => {
-            if (step === "approval" && props.quote.approvalData) {
-              try {
-                setStatus("pending");
+        <>
+          <Spacer y="xs" />
+          <Button
+            variant="accent"
+            fullWidth
+            disabled={status === "pending"}
+            onClick={async () => {
+              const wallet = props.payer.wallet;
 
-                trackPayEvent({
-                  event: "prompt_swap_approval",
-                  client: props.client,
-                  walletAddress: props.payer.account.address,
-                  walletType: props.payer.wallet.id,
-                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                  fromAmount: props.quote.swapDetails.fromAmountWei,
-                  toToken: props.quote.swapDetails.toToken.tokenAddress,
-                  toAmount: props.quote.swapDetails.toAmountWei,
-                  chainId: props.quote.swapDetails.fromToken.chainId,
-                  dstChainId: props.quote.swapDetails.toToken.chainId,
-                });
-
-                const transaction = approve({
-                  contract: getContract({
-                    client: props.client,
-                    address: props.quote.swapDetails.fromToken.tokenAddress,
-                    chain: props.fromChain,
-                  }),
-                  spender: props.quote.approvalData.spenderAddress,
-                  amountWei: BigInt(props.quote.approvalData.amountWei),
-                });
-
-                const tx = await sendTransaction({
-                  account: props.payer.account,
-                  transaction,
-                });
-
-                await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
-
-                trackPayEvent({
-                  event: "swap_approval_success",
-                  client: props.client,
-                  walletAddress: props.payer.account.address,
-                  walletType: props.payer.wallet.id,
-                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                  fromAmount: props.quote.swapDetails.fromAmountWei,
-                  toToken: props.quote.swapDetails.toToken.tokenAddress,
-                  toAmount: props.quote.swapDetails.toAmountWei,
-                  chainId: props.quote.swapDetails.fromToken.chainId,
-                  dstChainId: props.quote.swapDetails.toToken.chainId,
-                });
-
-                setStep("swap");
-                setStatus("idle");
-              } catch (e) {
-                console.error(e);
-                setStatus("error");
+              // in case the wallet is not on the same chain as the fromToken, switch to it
+              if (wallet.getChain()?.id !== props.fromChain.id) {
+                await wallet.switchChain(props.fromChain);
               }
-            }
 
-            if (step === "swap") {
-              setStatus("pending");
-              try {
-                trackPayEvent({
-                  event: "prompt_swap_execution",
-                  client: props.client,
-                  walletAddress: props.payer.account.address,
-                  walletType: props.payer.wallet.id,
-                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                  fromAmount: props.quote.swapDetails.fromAmountWei,
-                  toToken: props.quote.swapDetails.toToken.tokenAddress,
-                  toAmount: props.quote.swapDetails.toAmountWei,
-                  chainId: props.quote.swapDetails.fromToken.chainId,
-                  dstChainId: props.quote.swapDetails.toToken.chainId,
-                });
-                const tx = props.quote.transactionRequest;
-                let _swapTx: WaitForReceiptOptions;
-                // check if we can batch approval and swap
-                const canBatch = props.payer.account.sendBatchTransaction;
-                if (canBatch && props.quote.approvalData && approveTxRequired) {
-                  const approveTx = approve({
+              const account = wallet.getAccount();
+
+              if (!account) {
+                throw new Error("Payer wallet has no account");
+              }
+
+              if (step === "approval" && props.quote.approvalData) {
+                try {
+                  setStatus("pending");
+
+                  trackPayEvent({
+                    event: "prompt_swap_approval",
+                    client: props.client,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
+                    toAmount: props.quote.swapDetails.toAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    dstChainId: props.quote.swapDetails.toToken.chainId,
+                  });
+
+                  const transaction = approve({
                     contract: getContract({
                       client: props.client,
                       address: props.quote.swapDetails.fromToken.tokenAddress,
@@ -240,57 +200,119 @@ export function SwapConfirmationScreen(props: {
                     amountWei: BigInt(props.quote.approvalData.amountWei),
                   });
 
-                  _swapTx = await sendBatchTransaction({
-                    account: props.payer.account,
-                    transactions: [approveTx, tx],
+                  const tx = await sendTransaction({
+                    account: account,
+                    transaction,
                   });
-                } else {
-                  _swapTx = await sendTransaction({
-                    account: props.payer.account,
-                    transaction: tx,
+
+                  await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
+
+                  trackPayEvent({
+                    event: "swap_approval_success",
+                    client: props.client,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
+                    toAmount: props.quote.swapDetails.toAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    dstChainId: props.quote.swapDetails.toToken.chainId,
                   });
+
+                  setStep("swap");
+                  setStatus("idle");
+                } catch (e) {
+                  console.error(e);
+                  setStatus("error");
                 }
-
-                await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
-
-                trackPayEvent({
-                  event: "swap_execution_success",
-                  client: props.client,
-                  walletAddress: props.payer.account.address,
-                  walletType: props.payer.wallet.id,
-                  fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                  fromAmount: props.quote.swapDetails.fromAmountWei,
-                  toToken: props.quote.swapDetails.toToken.tokenAddress,
-                  toAmount: props.quote.swapDetails.toAmountWei,
-                  chainId: props.quote.swapDetails.fromToken.chainId,
-                  dstChainId: props.quote.swapDetails.toToken.chainId,
-                });
-
-                // do not add pending tx if the swap is part of fiat flow
-                if (!props.isFiatFlow) {
-                  addPendingTx({
-                    type: "swap",
-                    txHash: _swapTx.transactionHash,
-                    chainId: _swapTx.chain.id,
-                  });
-                }
-
-                props.setSwapTxHash(_swapTx.transactionHash);
-              } catch (e) {
-                console.error(e);
-                setStatus("error");
               }
-            }
-          }}
-          gap="xs"
-        >
-          {step === "approval" &&
-            (status === "pending" ? "Approving" : "Approve")}
-          {step === "swap" && (status === "pending" ? "Confirming" : "Confirm")}
-          {status === "pending" && (
-            <Spinner size="sm" color="accentButtonText" />
-          )}
-        </Button>
+
+              if (step === "swap") {
+                setStatus("pending");
+                try {
+                  trackPayEvent({
+                    event: "prompt_swap_execution",
+                    client: props.client,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
+                    toAmount: props.quote.swapDetails.toAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    dstChainId: props.quote.swapDetails.toToken.chainId,
+                  });
+                  const tx = props.quote.transactionRequest;
+                  let _swapTx: WaitForReceiptOptions;
+                  // check if we can batch approval and swap
+                  const canBatch = account.sendBatchTransaction;
+                  if (
+                    canBatch &&
+                    props.quote.approvalData &&
+                    approveTxRequired
+                  ) {
+                    const approveTx = approve({
+                      contract: getContract({
+                        client: props.client,
+                        address: props.quote.swapDetails.fromToken.tokenAddress,
+                        chain: props.fromChain,
+                      }),
+                      spender: props.quote.approvalData.spenderAddress,
+                      amountWei: BigInt(props.quote.approvalData.amountWei),
+                    });
+
+                    _swapTx = await sendBatchTransaction({
+                      account: account,
+                      transactions: [approveTx, tx],
+                    });
+                  } else {
+                    _swapTx = await sendTransaction({
+                      account: account,
+                      transaction: tx,
+                    });
+                  }
+
+                  trackPayEvent({
+                    event: "swap_execution_success",
+                    client: props.client,
+                    walletAddress: account.address,
+                    walletType: wallet.id,
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
+                    toAmount: props.quote.swapDetails.toAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    dstChainId: props.quote.swapDetails.toToken.chainId,
+                  });
+
+                  // do not add pending tx if the swap is part of fiat flow
+                  if (!props.isFiatFlow) {
+                    addPendingTx({
+                      type: "swap",
+                      txHash: _swapTx.transactionHash,
+                      chainId: _swapTx.chain.id,
+                    });
+                  }
+
+                  props.setSwapTxHash(_swapTx.transactionHash);
+                } catch (e) {
+                  console.error(e);
+                  setStatus("error");
+                }
+              }
+            }}
+            gap="xs"
+          >
+            {step === "approval" &&
+              (status === "pending" ? "Approving" : "Approve")}
+            {step === "swap" &&
+              (status === "pending" ? "Confirming" : "Confirm")}
+            {status === "pending" && (
+              <Spinner size="sm" color="accentButtonText" />
+            )}
+          </Button>
+        </>
       )}
     </Container>
   );

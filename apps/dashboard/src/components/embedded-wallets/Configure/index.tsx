@@ -1,6 +1,7 @@
 "use client";
 
 import type { Project } from "@/api/projects";
+import type { SMSCountryTiers } from "@/api/sms";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
@@ -36,6 +37,7 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 import type { Team } from "../../../@/api/team";
+import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {
   trackingCategory: string;
@@ -43,6 +45,7 @@ type InAppWalletSettingsPageProps = {
   teamId: string;
   teamSlug: string;
   validTeamPlan: Team["billingPlan"];
+  smsCountryTiers: SMSCountryTiers;
 };
 
 const TRACKING_CATEGORY = "embedded-wallet";
@@ -108,6 +111,7 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
       canEditAdvancedFeatures={props.validTeamPlan !== "free"}
       updateApiKey={handleUpdateProject}
       isUpdating={updateProject.isPending}
+      smsCountryTiers={props.smsCountryTiers}
     />
   );
 }
@@ -120,6 +124,7 @@ const InAppWalletSettingsPageUI: React.FC<
       trackingData: UpdateAPIKeyTrackingData,
     ) => void;
     isUpdating: boolean;
+    smsCountryTiers: SMSCountryTiers;
   }
 > = (props) => {
   const embeddedWalletService = props.project.services.find(
@@ -185,6 +190,11 @@ export const InAppWalletSettingsUI: React.FC<
           }
         : undefined),
       redirectUrls: (config.redirectUrls || []).join("\n"),
+      smsEnabledCountryISOs: config.smsEnabledCountryISOs
+        ? config.smsEnabledCountryISOs
+        : canEditAdvancedFeatures
+          ? ["US", "CA"]
+          : [],
     },
   });
 
@@ -228,6 +238,7 @@ export const InAppWalletSettingsUI: React.FC<
         applicationImageUrl: branding?.applicationImageUrl,
         applicationName: branding?.applicationName || props.project.name,
         redirectUrls: toArrFromList(redirectUrls || "", true),
+        smsEnabledCountryISOs: values.smsEnabledCountryISOs,
       };
     });
 
@@ -256,6 +267,8 @@ export const InAppWalletSettingsUI: React.FC<
           canEditAdvancedFeatures={canEditAdvancedFeatures}
         />
 
+        <NativeAppsFieldset form={form} />
+
         {/* Authentication */}
         <Fieldset legend="Authentication">
           <JSONWebTokenFields
@@ -269,9 +282,15 @@ export const InAppWalletSettingsUI: React.FC<
             form={form}
             canEditAdvancedFeatures={canEditAdvancedFeatures}
           />
-        </Fieldset>
 
-        <NativeAppsFieldset form={form} />
+          <div className="h-5" />
+
+          <SMSCountryFields
+            form={form}
+            canEditAdvancedFeatures={canEditAdvancedFeatures}
+            smsCountryTiers={props.smsCountryTiers}
+          />
+        </Fieldset>
 
         <div className="flex justify-end">
           <Button type="submit" variant="primary" className="gap-2">
@@ -361,6 +380,61 @@ function BrandingFieldset(props: {
         />
       </AdvancedConfigurationContainer>
     </Fieldset>
+  );
+}
+
+function SMSCountryFields(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  canEditAdvancedFeatures: boolean;
+  smsCountryTiers: SMSCountryTiers;
+}) {
+  return (
+    <div>
+      <SwitchContainer
+        switchId="sms-switch"
+        title="SMS"
+        description="Optionally allow users in selected countries to login via SMS OTP."
+      >
+        <GatedSwitch
+          id="sms-switch"
+          trackingLabel="sms"
+          checked={
+            !!props.form.watch("smsEnabledCountryISOs").length &&
+            props.canEditAdvancedFeatures
+          }
+          upgradeRequired={!props.canEditAdvancedFeatures}
+          onCheckedChange={(checked) =>
+            props.form.setValue(
+              "smsEnabledCountryISOs",
+              checked
+                ? // by default, enable US and CA only
+                  ["US", "CA"]
+                : [],
+            )
+          }
+        />
+      </SwitchContainer>
+
+      <AdvancedConfigurationContainer
+        className="grid grid-cols-1"
+        show={
+          props.canEditAdvancedFeatures &&
+          !!props.form.watch("smsEnabledCountryISOs").length
+        }
+      >
+        <FormField
+          control={props.form.control}
+          name="smsEnabledCountryISOs"
+          render={({ field }) => (
+            <CountrySelector
+              countryTiers={props.smsCountryTiers}
+              selected={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+      </AdvancedConfigurationContainer>
+    </div>
   );
 }
 

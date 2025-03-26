@@ -21,7 +21,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
-import { useSimplehashSupport } from "lib/wallet/nfts/simpleHash";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
@@ -87,6 +86,7 @@ type CreateListingsFormProps = {
   mode: "automatic" | "manual";
   type?: "direct-listings" | "english-auctions";
   twAccount: Account | undefined;
+  isInsightSupported: boolean;
 };
 
 const auctionTimes = [
@@ -106,16 +106,17 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   setOpen,
   twAccount,
   mode,
+  isInsightSupported,
 }) => {
   const trackEvent = useTrack();
   const chainId = contract.chain.id;
   const { idToChain } = useAllChainsData();
   const network = idToChain.get(chainId);
   const [isFormLoading, setIsFormLoading] = useState(false);
-  const simplehashQuery = useSimplehashSupport(contract.chain.id);
+
   const isSupportedChain =
     chainId &&
-    (!!simplehashQuery.data ||
+    (isInsightSupported ||
       isAlchemySupported(chainId) ||
       isMoralisSupported(chainId));
 
@@ -124,7 +125,9 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
     chainId,
     walletAddress: account?.address,
+    isInsightSupported,
   });
+
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const listingNotifications = useTxNotifications(
     "NFT listed Successfully",

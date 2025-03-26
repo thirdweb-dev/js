@@ -3,15 +3,15 @@
 
 export const wallet = {
   id: "network.trustkeys",
-  name: "TK Finance",
-  homepage: "https://trustkeys.network/",
-  image_id: "c4066f68-2247-49bf-ac8a-a677bfa81800",
+  name: "TrustKeys Web3 SocialFi",
+  homepage: "https://trustkeys.network",
+  image_id: "35644c6b-c6f3-4e45-b68b-e888c21afd00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/vn/app/tk-finance/id1601968967",
+    ios: "https://apps.apple.com/vn/app/trustkeys-web3-socialfi/id1601968967",
     android:
       "https://play.google.com/store/apps/details?id=com.trustkeysnetwork",
-    mac: null,
+    mac: "",
     windows: null,
     linux: null,
     chrome: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "tk://",
-    universal: "https://trustkeys.network",
+    native: "TKwc://",
+    universal: "https://trustkeys.network/",
   },
   desktop: {
     native: null,

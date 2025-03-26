@@ -8,7 +8,7 @@ export const wallet = {
   image_id: "bb347024-46c1-4be1-dd1f-98e6c51f8600",
   app: {
     browser: null,
-    ios: null,
+    ios: "https://apps.apple.com/app/opz-crypto-btc-wallet/id6463236757",
     android: "https://play.google.com/store/apps/details?id=com.opz.dev&pli=1",
     mac: null,
     windows: null,

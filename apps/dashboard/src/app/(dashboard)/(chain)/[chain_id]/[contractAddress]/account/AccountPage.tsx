@@ -12,12 +12,14 @@ interface AccountPageProps {
   contract: ThirdwebContract;
   chainMetadata: ChainMetadata;
   twAccount: Account | undefined;
+  isInsightSupported: boolean;
 }
 
 export const AccountPage: React.FC<AccountPageProps> = ({
   contract,
   chainMetadata,
   twAccount,
+  isInsightSupported,
 }) => {
   const symbol = chainMetadata.nativeCurrency.symbol || "Native Token";
 
@@ -43,7 +45,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
       <div className="flex flex-row items-center justify-between">
         <Heading size="title.sm">NFTs owned</Heading>
       </div>
-      <NftsOwned contract={contract} />
+      <NftsOwned contract={contract} isInsightSupported={isInsightSupported} />
     </div>
   );
 };

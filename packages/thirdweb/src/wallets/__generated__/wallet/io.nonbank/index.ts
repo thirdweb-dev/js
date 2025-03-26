@@ -22,7 +22,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "nonbank://",
-    universal: null,
+    universal: "https://id.nonbank.io/wc",
   },
   desktop: {
     native: null,

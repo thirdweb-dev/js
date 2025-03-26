@@ -44,7 +44,7 @@ export default async function Page(props: {
         contractPageMetadata.isPermissionsEnumerableSupported
       }
       chainSlug={chainMetadata.slug}
-      isAnalyticsSupported={contractPageMetadata.isAnalyticsSupported}
+      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
       functionSelectors={contractPageMetadata.functionSelectors}
       publishedBy={
         <ErrorBoundary fallback={null}>

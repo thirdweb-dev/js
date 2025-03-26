@@ -1,6 +1,7 @@
 import type { Chain } from "../../chains/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { toHex } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 
 /**
@@ -19,6 +20,20 @@ export type EngineAccountOptions = {
    * The backend wallet to use for sending transactions inside engine.
    */
   walletAddress: string;
+  overrides?: {
+    /**
+     * The address of the smart account to act on behalf of. Requires your backend wallet to be a valid signer on that smart account.
+     */
+    accountAddress?: string;
+    /**
+     * The address of the smart account factory to use for creating smart accounts.
+     */
+    accountFactoryAddress?: string;
+    /**
+     * The salt to use for creating the smart account.
+     */
+    accountSalt?: string;
+  };
   /**
    * The chain to use for signing messages and typed data (smart backend wallet only).
    */
@@ -55,7 +70,7 @@ export type EngineAccountOptions = {
  * ```
  */
 export function engineAccount(options: EngineAccountOptions): Account {
-  const { engineUrl, authToken, walletAddress, chain } = options;
+  const { engineUrl, authToken, walletAddress, chain, overrides } = options;
 
   // these are shared across all methods
   const headers: HeadersInit = {
@@ -63,6 +78,16 @@ export function engineAccount(options: EngineAccountOptions): Account {
     Authorization: `Bearer ${authToken}`,
     "Content-Type": "application/json",
   };
+
+  if (overrides?.accountAddress) {
+    headers["x-account-address"] = overrides.accountAddress;
+  }
+  if (overrides?.accountFactoryAddress) {
+    headers["x-account-factory-address"] = overrides.accountFactoryAddress;
+  }
+  if (overrides?.accountSalt) {
+    headers["x-account-salt"] = overrides.accountSalt;
+  }
 
   return {
     address: walletAddress,
@@ -84,7 +109,7 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify(engineData),
+        body: stringify(engineData),
       });
       if (!engineRes.ok) {
         const body = await engineRes.text();
@@ -154,7 +179,7 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify({
+        body: stringify({
           message: engineMessage,
           isBytes,
           chainId: chain?.id,
@@ -177,16 +202,18 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify({
+        body: stringify({
           domain: _typedData.domain,
           types: _typedData.types,
           value: _typedData.message,
+          primaryType: _typedData.primaryType,
+          chainId: chain?.id,
         }),
       });
       if (!engineRes.ok) {
-        engineRes.body?.cancel();
+        const body = await engineRes.text();
         throw new Error(
-          `Engine request failed with status ${engineRes.status}`,
+          `Engine request failed with status ${engineRes.status} - ${body}`,
         );
       }
       const engineJson = (await engineRes.json()) as {

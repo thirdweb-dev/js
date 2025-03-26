@@ -206,6 +206,29 @@ export async function deployContractfromDeployMetadata(
         import("../../contract/deployment/deploy-via-autofactory.js"),
         import("../../contract/deployment/utils/bootstrap.js"),
       ]);
+
+      if (
+        deployMetadata.routerType === "dynamic" &&
+        deployMetadata.defaultExtensions
+      ) {
+        for (const e of deployMetadata.defaultExtensions) {
+          await getOrDeployInfraForPublishedContract({
+            chain,
+            client,
+            account,
+            contractId: e.extensionName,
+            version: e.extensionVersion || "latest",
+            publisher: e.publisherAddress,
+            constructorParams:
+              await getAllDefaultConstructorParamsForImplementation({
+                chain,
+                client,
+                contractId: e.extensionName,
+              }),
+          });
+        }
+      }
+
       const { cloneFactoryContract, implementationContract } =
         await getOrDeployInfraForPublishedContract({
           chain,
@@ -218,6 +241,7 @@ export async function deployContractfromDeployMetadata(
               chain,
               client,
               contractId: deployMetadata.name,
+              defaultExtensions: deployMetadata.defaultExtensions,
             })),
           publisher: deployMetadata.publisher,
           version: deployMetadata.version,

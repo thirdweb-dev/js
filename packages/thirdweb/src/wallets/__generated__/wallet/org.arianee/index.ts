@@ -5,11 +5,12 @@ export const wallet = {
   id: "org.arianee",
   name: "Arianee Wallet",
   homepage: "https://arianee.org",
-  image_id: "ace938a9-c906-4b9e-f683-b85f1ab72800",
+  image_id: "13b7fe36-909a-4c83-4f06-5740829a3900",
   app: {
     browser: null,
     ios: "https://apps.apple.com/fr/app/arianee-wallet/id1435782507",
-    android: "https://play.google.com/store/apps/details?id=com.arianee.wallet",
+    android:
+      "https://play.google.com/store/apps/details?id=com.arianee.wallet&hl=ln&gl=US",
     mac: null,
     windows: null,
     linux: null,
@@ -22,7 +23,7 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "com.arianee.wallet://",
-    universal: "https://arianee.net",
+    universal: "https://i.arian.ee",
   },
   desktop: {
     native: null,

@@ -109,6 +109,7 @@ export const apiKeyEmbeddedWalletsValidationSchema = z.object({
     }),
   ]),
   redirectUrls: redirectUriSchema,
+  smsEnabledCountryISOs: z.array(z.string()),
 });
 
 export const apiKeyPayConfigValidationSchema = z.object({
@@ -124,4 +125,4 @@ export type ApiKeyPayConfigValidationSchema = z.infer<
 >;
 
 // FIXME: Remove
-export const HIDDEN_SERVICES = ["relayer", "chainsaw"];
+export const HIDDEN_SERVICES = ["relayer", "chainsaw", "engineCloud"];

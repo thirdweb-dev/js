@@ -8,17 +8,19 @@ import { DirectListingsTable } from "./components/table";
 interface ContractDirectListingsPageProps {
   contract: ThirdwebContract;
   twAccount: Account | undefined;
+  isInsightSupported: boolean;
 }
 
 export const ContractDirectListingsPage: React.FC<
   ContractDirectListingsPageProps
-> = ({ contract, twAccount }) => {
+> = ({ contract, twAccount, isInsightSupported }) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
         <p className="text-lg">Contract Listings</p>
         <div className="flex flex-row gap-4">
           <CreateListingButton
+            isInsightSupported={isInsightSupported}
             contract={contract}
             type="direct-listings"
             createText="Create Direct Listing"

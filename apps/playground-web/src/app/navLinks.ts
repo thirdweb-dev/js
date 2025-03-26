@@ -25,24 +25,6 @@ export const staticSidebarLinks: SidebarLink[] = [
         ],
       },
       {
-        name: "Account Abstraction",
-        expanded: false,
-        links: [
-          {
-            name: "Connect",
-            href: "/connect/account-abstraction/connect",
-          },
-          {
-            name: "Sponsor Gas",
-            href: "/connect/account-abstraction/sponsor",
-          },
-          {
-            name: "Native AA (zkSync)",
-            href: "/connect/account-abstraction/native-aa",
-          },
-        ],
-      },
-      {
         name: "In-App Wallet",
         expanded: false,
         links: [
@@ -61,20 +43,20 @@ export const staticSidebarLinks: SidebarLink[] = [
         ],
       },
       {
-        name: "Pay",
+        name: "Account Abstraction",
         expanded: false,
         links: [
           {
-            name: "Fund Wallet",
-            href: "/connect/pay",
+            name: "Connect",
+            href: "/connect/account-abstraction/connect",
           },
           {
-            name: "Commerce",
-            href: "/connect/pay/commerce",
+            name: "Sponsor Gas",
+            href: "/connect/account-abstraction/sponsor",
           },
           {
-            name: "Transactions",
-            href: "/connect/pay/transactions",
+            name: "Native AA (zkSync)",
+            href: "/connect/account-abstraction/native-aa",
           },
         ],
       },
@@ -120,6 +102,34 @@ export const staticSidebarLinks: SidebarLink[] = [
   },
 ];
 
+const universalBridgeSidebarLinks: SidebarLink = {
+  name: "Universal Bridge",
+  isCollapsible: false,
+  expanded: false,
+  links: [
+    {
+      name: "UI Component",
+      href: "/connect/pay",
+    },
+    {
+      name: "Buy Crypto",
+      href: "/connect/pay/fund-wallet",
+    },
+    {
+      name: "Commerce",
+      href: "/connect/pay/commerce",
+    },
+    {
+      name: "Transactions",
+      href: "/connect/pay/transactions",
+    },
+    {
+      name: "Backend API",
+      href: "/connect/pay/backend",
+    },
+  ],
+};
+
 const engineSidebarLinks: SidebarLink = {
   name: "Engine",
   isCollapsible: false,
@@ -163,13 +173,14 @@ export async function getSidebarLinks() {
 
   const sidebarLinks: SidebarLink[] = [
     ...staticSidebarLinks,
+    universalBridgeSidebarLinks,
+    engineSidebarLinks,
     {
       name: "Insight",
       isCollapsible: false,
       expanded: false,
       links: insightLinks,
     },
-    engineSidebarLinks,
   ];
 
   return sidebarLinks;

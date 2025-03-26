@@ -6,14 +6,16 @@ export const wallet = {
   name: "Core",
   homepage:
     "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
-  image_id: "core.svg",
+  image_id: "aec2da5c-8867-4a53-8f3d-4d547a30b400",
   app: {
-    browser: null,
+    browser:
+      "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
     ios: "https://apps.apple.com/us/app/core-crypto-wallet-nfts/id6443685999",
     android:
       "https://play.google.com/store/apps/details?id=com.avaxwallet&hl=en_US&gl=US",
     mac: null,
-    windows: null,
+    windows:
+      "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
     linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/core-crypto-wallet-nft-ex/agoakfejjabomempkjlepdflaleeobhb",
@@ -24,11 +26,12 @@ export const wallet = {
   },
   rdns: "app.core.extension",
   mobile: {
-    native: null,
-    universal: null,
+    native: "core://",
+    universal: "https://core.app",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "core://",
+    universal:
+      "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
   },
 } as const;

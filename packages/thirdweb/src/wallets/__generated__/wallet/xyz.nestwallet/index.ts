@@ -5,7 +5,7 @@ export const wallet = {
   id: "xyz.nestwallet",
   name: "Nest Wallet",
   homepage: "https://nestwallet.xyz",
-  image_id: "f8240c0b-97dd-4853-6a58-d10dadb2e800",
+  image_id: "9f471f97-0b62-4af9-6198-fc9c4bd58000",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/nest-wallet/id6451122334",
