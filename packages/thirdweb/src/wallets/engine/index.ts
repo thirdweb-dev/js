@@ -1,3 +1,4 @@
+import { stringify } from "../../utils/json.js";
 import type { Chain } from "../../chains/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { toHex } from "../../utils/encoding/hex.js";
@@ -108,7 +109,7 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify(engineData),
+        body: stringify(engineData),
       });
       if (!engineRes.ok) {
         const body = await engineRes.text();
@@ -178,7 +179,7 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify({
+        body: stringify({
           message: engineMessage,
           isBytes,
           chainId: chain?.id,
@@ -201,7 +202,7 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const engineRes = await fetch(ENGINE_URL, {
         method: "POST",
         headers,
-        body: JSON.stringify({
+        body: stringify({
           domain: _typedData.domain,
           types: _typedData.types,
           value: _typedData.message,
