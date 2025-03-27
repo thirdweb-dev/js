@@ -139,9 +139,8 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
               Fee Sharing
             </h3>
             <p className="mt-1.5 mb-4 text-foreground text-sm">
-              thirdweb collects a 1% fee per end user transaction through{" "}
-              <strong>Buy With Crypto</strong>. We share 70% of this fee with
-              you.{" "}
+              thirdweb collects a 0.3% protocol fee on swap transactions. You
+              may set your own developer fee in addition to this fee.
               <Link
                 href="https://portal.thirdweb.com/connect/pay/fee-sharing"
                 target="_blank"
