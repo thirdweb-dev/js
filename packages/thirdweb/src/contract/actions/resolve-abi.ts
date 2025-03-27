@@ -3,7 +3,6 @@ import { download } from "../../storage/download.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import { type ThirdwebContract, getContract } from "../contract.js";
-import { extractUriFromCalldata } from "./extract-uri-from-calldata.js";
 
 /**
  * Resolves the ABI (Application Binary Interface) for a given contract.
@@ -44,28 +43,15 @@ export function resolveContractAbi<abi extends Abi>(
         return (await resolveCompositeAbi(contract as ThirdwebContract)) as abi;
       }
 
+      // try to get it from the api
       try {
-        // try to get it from the api
         return (await resolveAbiFromContractApi(
           contract,
           contractApiBaseUrl,
         )) as abi;
       } catch {
-        try {
-          // try to get it from creation calldata
-          const metadata = await extractUriFromCalldata({
-            client: contract.client,
-            chain: contract.chain,
-            contractAddress: contract.address,
-          });
-
-          return metadata.output.abi as abi;
-        } catch {
-          // if that fails, try to resolve it from the bytecode
-          return (await resolveCompositeAbi(
-            contract as ThirdwebContract,
-          )) as abi;
-        }
+        // if that fails, try to resolve it from the bytecode
+        return (await resolveCompositeAbi(contract as ThirdwebContract)) as abi;
       }
     },
     {

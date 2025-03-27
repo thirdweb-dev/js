@@ -1,6 +1,5 @@
 import type { ThirdwebContract } from "../contract.js";
 import { formatCompilerMetadata } from "./compiler-metadata.js";
-import { extractUriFromCalldata } from "./extract-uri-from-calldata.js";
 
 /**
  * Down the compiled metadata from thirdweb contract api and format it
@@ -22,7 +21,6 @@ import { extractUriFromCalldata } from "./extract-uri-from-calldata.js";
  */
 export async function getCompilerMetadata(contract: ThirdwebContract) {
   const { address, chain } = contract;
-
   const response = await fetch(
     `https://contract.thirdweb.com/metadata/${chain.id}/${address}`,
     {
@@ -33,17 +31,6 @@ export async function getCompilerMetadata(contract: ThirdwebContract) {
     },
   );
   if (!response.ok) {
-    // try to get it from creation calldata
-    try {
-      const metadata = await extractUriFromCalldata({
-        client: contract.client,
-        chain: contract.chain,
-        contractAddress: contract.address,
-      });
-
-      return formatCompilerMetadata(metadata);
-    } catch {}
-
     const errorMsg = await response.json();
     throw new Error(
       errorMsg.message || errorMsg.error || "Failed to get compiler metadata",
