@@ -346,6 +346,7 @@ async function directDeploy(options: {
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
   );
+  const isStylus = options.compilerMetadata.metadata.language === "rust";
   return deployContract({
     account,
     client,
@@ -358,12 +359,13 @@ async function directDeploy(options: {
     abi: compilerMetadata.abi,
     constructorParams: contractParams,
     salt,
-    extraDataWithUri: options.metadataUri
-      ? encodeExtraDataWithUri({
-          metadataUri: options.metadataUri,
-        })
-      : undefined,
-    isStylus: options.compilerMetadata.metadata.language === "rust",
+    extraDataWithUri:
+      isStylus && options.metadataUri
+        ? encodeExtraDataWithUri({
+            metadataUri: options.metadataUri,
+          })
+        : undefined,
+    isStylus,
   });
 }
 

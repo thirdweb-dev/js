@@ -72,6 +72,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
     }
   }
 
+  const isStylus = contractMetadata.metadata.language === "rust";
   return computeDeploymentInfoFromBytecode({
     client: args.client,
     chain: args.chain,
@@ -83,9 +84,11 @@ export async function computeDeploymentInfoFromMetadata(args: {
     }),
     constructorParams: processedConstructorParams,
     salt: args.salt,
-    extraDataWithUri: encodeExtraDataWithUri({
-      metadataUri: contractMetadata.metadataUri,
-    }),
+    extraDataWithUri: isStylus
+      ? encodeExtraDataWithUri({
+          metadataUri: contractMetadata.metadataUri,
+        })
+      : undefined,
   });
 }
 
