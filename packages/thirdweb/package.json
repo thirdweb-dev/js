@@ -137,26 +137,66 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
-      "auth": ["./dist/types/exports/auth.d.ts"],
-      "chains": ["./dist/types/exports/chains.d.ts"],
-      "contract": ["./dist/types/exports/contract.d.ts"],
-      "deploys": ["./dist/types/exports/deploys.d.ts"],
-      "event": ["./dist/types/exports/event.d.ts"],
-      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
-      "pay": ["./dist/types/exports/pay.d.ts"],
-      "react": ["./dist/types/exports/react.d.ts"],
-      "react-native": ["./dist/types/exports/react-native.d.ts"],
-      "rpc": ["./dist/types/exports/rpc.d.ts"],
-      "storage": ["./dist/types/exports/storage.d.ts"],
-      "transaction": ["./dist/types/exports/transaction.d.ts"],
-      "utils": ["./dist/types/exports/utils.d.ts"],
-      "wallets": ["./dist/types/exports/wallets.d.ts"],
-      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modules": ["./dist/types/exports/modules.d.ts"],
-      "social": ["./dist/types/exports/social.d.ts"],
-      "ai": ["./dist/types/exports/ai.d.ts"],
-      "bridge": ["./dist/types/exports/bridge.d.ts"]
+      "adapters/*": [
+        "./dist/types/exports/adapters/*.d.ts"
+      ],
+      "auth": [
+        "./dist/types/exports/auth.d.ts"
+      ],
+      "chains": [
+        "./dist/types/exports/chains.d.ts"
+      ],
+      "contract": [
+        "./dist/types/exports/contract.d.ts"
+      ],
+      "deploys": [
+        "./dist/types/exports/deploys.d.ts"
+      ],
+      "event": [
+        "./dist/types/exports/event.d.ts"
+      ],
+      "extensions/*": [
+        "./dist/types/exports/extensions/*.d.ts"
+      ],
+      "pay": [
+        "./dist/types/exports/pay.d.ts"
+      ],
+      "react": [
+        "./dist/types/exports/react.d.ts"
+      ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
+      "rpc": [
+        "./dist/types/exports/rpc.d.ts"
+      ],
+      "storage": [
+        "./dist/types/exports/storage.d.ts"
+      ],
+      "transaction": [
+        "./dist/types/exports/transaction.d.ts"
+      ],
+      "utils": [
+        "./dist/types/exports/utils.d.ts"
+      ],
+      "wallets": [
+        "./dist/types/exports/wallets.d.ts"
+      ],
+      "wallets/*": [
+        "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "modules": [
+        "./dist/types/exports/modules.d.ts"
+      ],
+      "social": [
+        "./dist/types/exports/social.d.ts"
+      ],
+      "ai": [
+        "./dist/types/exports/ai.d.ts"
+      ],
+      "bridge": [
+        "./dist/types/exports/bridge.d.ts"
+      ]
     }
   },
   "browser": {
@@ -196,6 +236,7 @@
     "open": "^10.1.0",
     "ora": "^8.2.0",
     "ox": "0.6.10",
+    "prompts": "^2.4.2",
     "uqr": "0.1.2",
     "viem": "2.23.10"
   },
@@ -320,6 +361,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/cross-spawn": "^6.0.6",
+    "@types/prompts": "^2.4.9",
     "@types/react": "19.0.10",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.3.4",

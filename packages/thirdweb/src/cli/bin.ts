@@ -5,6 +5,8 @@ import {
   isValidChainIdAndContractAddress,
 } from "./commands/generate/generate.js";
 import { deployStylus, publishStylus } from "./commands/stylus/builder.js";
+import { createStylusProject } from "./commands/stylus/create.js";
+
 // skip the first two args?
 const [, , command = "", ...rest] = process.argv;
 
@@ -35,6 +37,11 @@ async function main() {
 
     case "deploy-stylus": {
       await deployStylus(secretKey);
+      break;
+    }
+
+    case "create-stylus": {
+      await createStylusProject();
       break;
     }
 
