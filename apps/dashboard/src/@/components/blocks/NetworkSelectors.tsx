@@ -18,17 +18,39 @@ export function MultiNetworkSelector(props: {
   onChange: (chainIds: number[]) => void;
   disableChainId?: boolean;
   className?: string;
+  priorityChains?: number[];
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
   const options = useMemo(() => {
-    return allChains.map((chain) => {
+    let sortedChains = allChains;
+
+    if (props.priorityChains) {
+      const priorityChainsSet = new Set();
+      for (const chainId of props.priorityChains || []) {
+        priorityChainsSet.add(chainId);
+      }
+
+      const priorityChains = (props.priorityChains || [])
+        .map((chainId) => {
+          return idToChain.get(chainId);
+        })
+        .filter((v) => !!v);
+
+      const otherChains = allChains.filter(
+        (chain) => !priorityChainsSet.has(chain.chainId),
+      );
+
+      sortedChains = [...priorityChains, ...otherChains];
+    }
+
+    return sortedChains.map((chain) => {
       return {
         label: cleanChainName(chain.name),
         value: String(chain.chainId),
       };
     });
-  }, [allChains]);
+  }, [allChains, props.priorityChains, idToChain]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {
