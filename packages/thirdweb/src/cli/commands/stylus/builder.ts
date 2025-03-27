@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import open from "open";
-import ora from "ora";
+import ora, { type Ora } from "ora";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
 
@@ -10,7 +10,23 @@ const THIRDWEB_URL = "https://thirdweb.com";
 
 export async function publishStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
+  const uri = await buildStylus(spinner, secretKey);
 
+  const url = getUrl(uri, "publish").toString();
+  spinner.succeed(`Upload complete, navigate to ${url}`);
+  await open(url);
+}
+
+export async function deployStylus(secretKey?: string) {
+  const spinner = ora("Checking if this is a Stylus project...").start();
+  const uri = await buildStylus(spinner, secretKey);
+
+  const url = getUrl(uri, "deploy").toString();
+  spinner.succeed(`Upload complete, navigate to ${url}`);
+  await open(url);
+}
+
+async function buildStylus(spinner: Ora, secretKey?: string) {
   if (!secretKey) {
     spinner.fail("Error: Secret key is required.");
     process.exit(1);
@@ -122,7 +138,7 @@ export async function publishStylus(secretKey?: string) {
     });
     console.log(bytecodeUri);
 
-    const publishUri = await upload({
+    const uri = await upload({
       client,
       files: [
         {
@@ -143,11 +159,9 @@ export async function publishStylus(secretKey?: string) {
         },
       ],
     });
+    spinner.succeed("Upload complete");
 
-    const url = getUrl(publishUri, "publish").toString();
-    spinner.succeed(`Upload complete: ${url}`);
-
-    await open(url);
+    return uri;
   } catch (error) {
     spinner.fail(`Error: ${error}`);
     process.exit(1);
