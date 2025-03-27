@@ -1,7 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeamNebulaWaitList, getTeams } from "@/api/team";
+import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
+import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
@@ -42,6 +44,7 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="flex h-full grow flex-col">
+      <AnnouncementBanner />
       <div className="bg-card">
         <TeamHeaderLoggedIn
           currentTeam={team}
@@ -92,6 +95,7 @@ export default async function TeamLayout(props: {
       </div>
 
       <main className="flex grow flex-col">{props.children}</main>
+      <AppFooter />
     </div>
   );
 }

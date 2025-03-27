@@ -1,5 +1,4 @@
 import { getTeamBySlug } from "@/api/team";
-import { AppFooter } from "@/components/blocks/app-footer";
 import { redirect } from "next/navigation";
 import { isTeamOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
@@ -37,7 +36,6 @@ export default async function RootTeamLayout(props: {
         {props.children}
       </div>
 
-      <AppFooter />
       <SaveLastVisitedTeamPage />
     </div>
   );

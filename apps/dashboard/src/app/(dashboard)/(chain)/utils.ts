@@ -47,6 +47,8 @@ import metalBanner from "./temp-assets/metalBanner.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
 
 import plumeCTA from "./temp-assets/plumeCTA.png";
+import reactiveBanner from "./temp-assets/reactiveBanner.jpg";
+import reactiveCTA from "./temp-assets/reactiveCTA.jpg";
 import rivalzBanner from "./temp-assets/rivalzBanner.png";
 import rivalzCTA from "./temp-assets/rivalzCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
@@ -572,6 +574,18 @@ const chainMetaRecord = {
       backgroundImageUrl: rivalzCTA.src,
       title: "Empower the Age of AI Agents with Rivalz",
       buttonLink: "https://rivalz.ai/download",
+      buttonText: "Learn More",
+    },
+  },
+  //Reactive Mainnet
+  1597: {
+    headerImgUrl: reactiveBanner.src,
+    about:
+      "Web3’s first IFTTT infrastructure. Automate multi-chain workflows with event-driven logic – execute actions without compromising decentralization.",
+    cta: {
+      backgroundImageUrl: reactiveCTA.src,
+      title: "Turn Smart Contracts Reactive",
+      buttonLink: "https://dev.reactive.network",
       buttonText: "Learn More",
     },
   },

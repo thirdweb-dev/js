@@ -36,11 +36,17 @@ export function getSlugToDocMap(doc: TransformedDoc) {
           const extensionBlockTag = v.signatures
             ?.find((s) =>
               s.blockTags?.some(
-                (tag) => tag.tag === "@extension" || tag.tag === "@modules",
+                (tag) =>
+                  tag.tag === "@extension" ||
+                  tag.tag === "@modules" ||
+                  tag.tag === "@bridge",
               ),
             )
             ?.blockTags?.find(
-              (tag) => tag.tag === "@extension" || tag.tag === "@modules",
+              (tag) =>
+                tag.tag === "@extension" ||
+                tag.tag === "@modules" ||
+                tag.tag === "@bridge",
             );
 
           if (extensionBlockTag) {

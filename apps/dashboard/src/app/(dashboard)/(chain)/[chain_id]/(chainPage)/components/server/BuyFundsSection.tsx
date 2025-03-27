@@ -28,7 +28,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
           <div className="h-6" />
 
           <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
-            Buy Funds on {sanitizedChainName} using thirdweb Pay
+            Buy Funds on {sanitizedChainName} using Universal Bridge
           </h2>
 
           <div className="h-2" />
@@ -50,8 +50,9 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
           <Link
             href="https://portal.thirdweb.com/connect/pay/overview"
             className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
+            target="_blank"
           >
-            Learn more about thirdweb Pay
+            Learn more about Universal Bridge
             <ExternalLinkIcon className="size-3" />
           </Link>
         </div>

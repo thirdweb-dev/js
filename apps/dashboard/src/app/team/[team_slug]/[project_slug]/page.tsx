@@ -29,12 +29,13 @@ import {
   getChainMetadata,
 } from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
-import { AnalyticsHeader } from "../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 import { TransactionsCharts } from "./components/Transactions";
+
+import { RangeSelector } from "components/analytics/range-selector";
 
 interface PageParams {
   team_slug: string;
@@ -80,8 +81,8 @@ export default async function ProjectOverviewPage(props: PageProps) {
 
   return (
     <div className="flex grow flex-col">
-      <div className="w-full border-border border-b">
-        <AnalyticsHeader
+      <div className="w-full">
+        <Header
           title={project.name}
           interval={interval}
           range={range}
@@ -90,11 +91,11 @@ export default async function ProjectOverviewPage(props: PageProps) {
       </div>
 
       {!isActive ? (
-        <div className="container py-8 pb-20">
+        <div className="pt-6">
           <ProjectFTUX project={project} teamSlug={params.team_slug} />
         </div>
       ) : (
-        <div className="container flex grow flex-col py-6">
+        <div className="flex grow flex-col pt-6">
           <Suspense fallback={<GenericLoadingPage />}>
             <ProjectAnalytics
               project={project}
@@ -189,7 +190,7 @@ async function ProjectAnalytics(props: {
           link="https://portal.thirdweb.com/connect/quickstart"
         />
       )}
-      <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {walletConnections.status === "fulfilled" &&
         walletConnections.value.length > 0 ? (
           <WalletDistributionCard data={walletConnections.value} />
@@ -459,5 +460,25 @@ async function TotalSponsoredCard({
           : undefined
       }
     />
+  );
+}
+
+export function Header(props: {
+  title: string;
+  interval: "day" | "week";
+  range: Range;
+  showRangeSelector: boolean;
+}) {
+  const { title, interval, range, showRangeSelector } = props;
+
+  return (
+    <div className="flex flex-col items-start gap-3 md:flex-row md:items-center">
+      <div className="flex-1">
+        <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
+          {title}
+        </h1>
+      </div>
+      {showRangeSelector && <RangeSelector interval={interval} range={range} />}
+    </div>
   );
 }

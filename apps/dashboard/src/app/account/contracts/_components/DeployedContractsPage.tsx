@@ -12,13 +12,12 @@ export function DeployedContractsPage(props: {
   authToken: string;
 }) {
   return (
-    <div className="flex grow flex-col pb-20">
+    <div className="flex grow flex-col">
       <DeployedContractsPageHeader
         teamId={props.teamId}
         projectId={props.projectId}
       />
-      <div className="h-10" />
-      <div className="container flex grow flex-col">
+      <div className="flex grow flex-col">
         <Suspense fallback={<Loading />}>
           <DeployedContractsPageAsync {...props} />
         </Suspense>
