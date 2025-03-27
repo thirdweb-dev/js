@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import type React from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import {
   CarbonDocumentAudio,
   CarbonDocumentUnknown,
@@ -49,134 +50,132 @@ import { useResolvedMediaType } from "./useResolvedMediaType.js";
  * @param props - Refer to [`MediaRendererProps`](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps) to see the available props.
  */
 export const MediaRenderer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLMediaElement, MediaRendererProps>(
-    function Media_Renderer(
-      {
-        src,
-        poster,
-        alt,
-        gatewayUrl,
-        requireInteraction = false,
-        width = "300px",
-        height = "300px",
-        style,
-        mimeType,
-        client,
-        controls,
-        className,
-      },
-      ref,
-    ) {
-      const mergedStyle: React.CSSProperties = {
-        objectFit: "contain",
-        ...style,
-      };
-
-      const { mediaInfo, isFetched: mediaInfoIsFetched } = useResolvedMediaType(
-        client,
-        src ?? undefined,
-        mimeType,
-        gatewayUrl,
-      );
-
-      const { mediaInfo: possiblePosterSrc } = useResolvedMediaType(
-        client,
-        poster ?? undefined,
-        undefined,
-        gatewayUrl,
-      );
-
-      if (!mediaInfoIsFetched || !src) {
-        return <div style={style} />;
-      }
-
-      if (mediaInfo.mimeType) {
-        // html content
-        if (mediaInfo.mimeType.startsWith("text/html")) {
-          return (
-            <IframePlayer
-              style={mergedStyle}
-              src={mediaInfo.url}
-              poster={possiblePosterSrc.url}
-              ref={ref as unknown as React.ForwardedRef<HTMLIFrameElement>}
-              requireInteraction={requireInteraction}
-              className={className}
-              alt={alt}
-            />
-          );
-        }
-
-        // 3d model
-        if (mediaInfo.mimeType.startsWith("model")) {
-          console.error(
-            "Encountered an unsupported media type. 3D model support was removed in v5.92.0. To add a 3D model to your app, use @google/model-viewer and use the ModelViewer component.",
-          );
-        }
-
-        //  video
-        if (mediaInfo.mimeType.startsWith("video")) {
-          return (
-            <VideoPlayer
-              style={mergedStyle}
-              src={mediaInfo.url}
-              ref={ref as unknown as React.ForwardedRef<HTMLVideoElement>}
-              poster={
-                possiblePosterSrc.mimeType?.startsWith("image/")
-                  ? possiblePosterSrc.url
-                  : undefined
-              }
-              requireInteraction={requireInteraction}
-              className={className}
-              controls={controls}
-            />
-          );
-        }
-
-        // audio
-        if (mediaInfo.mimeType.startsWith("audio")) {
-          return (
-            <AudioPlayer
-              style={mergedStyle}
-              src={mediaInfo.url}
-              poster={possiblePosterSrc.url}
-              alt={alt}
-              ref={ref as unknown as React.ForwardedRef<HTMLAudioElement>}
-              className={className}
-              height={height}
-              width={width}
-              controls={controls}
-            />
-          );
-        }
-
-        // image
-        if (mediaInfo.mimeType.startsWith("image/")) {
-          return (
-            <ImageRenderer
-              style={mergedStyle}
-              src={mediaInfo.url}
-              alt={alt}
-              ref={ref as unknown as React.ForwardedRef<HTMLImageElement>}
-              className={className}
-              height={height}
-              width={width}
-            />
-          );
-        }
-      }
-
-      // unknown mime types or no mime type
-      return (
-        <LinkPlayer
-          style={mergedStyle}
-          src={mediaInfo.url}
-          alt={alt}
-          ref={ref as unknown as React.Ref<HTMLAnchorElement>}
-          className={className}
-        />
-      );
+  forwardRef<HTMLMediaElement, MediaRendererProps>(function Media_Renderer(
+    {
+      src,
+      poster,
+      alt,
+      gatewayUrl,
+      requireInteraction = false,
+      width = "300px",
+      height = "300px",
+      style,
+      mimeType,
+      client,
+      controls,
+      className,
     },
-  ))();
+    ref,
+  ) {
+    const mergedStyle: React.CSSProperties = {
+      objectFit: "contain",
+      ...style,
+    };
+
+    const { mediaInfo, isFetched: mediaInfoIsFetched } = useResolvedMediaType(
+      client,
+      src ?? undefined,
+      mimeType,
+      gatewayUrl,
+    );
+
+    const { mediaInfo: possiblePosterSrc } = useResolvedMediaType(
+      client,
+      poster ?? undefined,
+      undefined,
+      gatewayUrl,
+    );
+
+    if (!mediaInfoIsFetched || !src) {
+      return <div style={style} />;
+    }
+
+    if (mediaInfo.mimeType) {
+      // html content
+      if (mediaInfo.mimeType.startsWith("text/html")) {
+        return (
+          <IframePlayer
+            style={mergedStyle}
+            src={mediaInfo.url}
+            poster={possiblePosterSrc.url}
+            ref={ref as unknown as React.ForwardedRef<HTMLIFrameElement>}
+            requireInteraction={requireInteraction}
+            className={className}
+            alt={alt}
+          />
+        );
+      }
+
+      // 3d model
+      if (mediaInfo.mimeType.startsWith("model")) {
+        console.error(
+          "Encountered an unsupported media type. 3D model support was removed in v5.92.0. To add a 3D model to your app, use @google/model-viewer and use the ModelViewer component.",
+        );
+      }
+
+      //  video
+      if (mediaInfo.mimeType.startsWith("video")) {
+        return (
+          <VideoPlayer
+            style={mergedStyle}
+            src={mediaInfo.url}
+            ref={ref as unknown as React.ForwardedRef<HTMLVideoElement>}
+            poster={
+              possiblePosterSrc.mimeType?.startsWith("image/")
+                ? possiblePosterSrc.url
+                : undefined
+            }
+            requireInteraction={requireInteraction}
+            className={className}
+            controls={controls}
+          />
+        );
+      }
+
+      // audio
+      if (mediaInfo.mimeType.startsWith("audio")) {
+        return (
+          <AudioPlayer
+            style={mergedStyle}
+            src={mediaInfo.url}
+            poster={possiblePosterSrc.url}
+            alt={alt}
+            ref={ref as unknown as React.ForwardedRef<HTMLAudioElement>}
+            className={className}
+            height={height}
+            width={width}
+            controls={controls}
+          />
+        );
+      }
+
+      // image
+      if (mediaInfo.mimeType.startsWith("image/")) {
+        return (
+          <ImageRenderer
+            style={mergedStyle}
+            src={mediaInfo.url}
+            alt={alt}
+            ref={ref as unknown as React.ForwardedRef<HTMLImageElement>}
+            className={className}
+            height={height}
+            width={width}
+          />
+        );
+      }
+    }
+
+    // unknown mime types or no mime type
+    return (
+      <LinkPlayer
+        style={mergedStyle}
+        src={mediaInfo.url}
+        alt={alt}
+        ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+        className={className}
+      />
+    );
+  }))();
 
 interface PlayButtonProps {
   onClick: () => void;
@@ -227,7 +226,7 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
 };
 
 const ImageRenderer = /* @__PURE__ */ (() =>
-  React.forwardRef<
+  forwardRef<
     HTMLImageElement,
     Pick<
       MediaRendererProps,
@@ -266,7 +265,7 @@ const ImageRenderer = /* @__PURE__ */ (() =>
   }))();
 
 const VideoPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<
+  forwardRef<
     HTMLVideoElement,
     Pick<
       MediaRendererProps,
@@ -393,7 +392,7 @@ const VideoPlayer = /* @__PURE__ */ (() =>
   }))();
 
 const AudioPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<
+  forwardRef<
     HTMLAudioElement,
     Pick<
       MediaRendererProps,
@@ -504,7 +503,7 @@ const AudioPlayer = /* @__PURE__ */ (() =>
  * @internal Exported for tests
  */
 export const IframePlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<
+  forwardRef<
     HTMLIFrameElement,
     Omit<
       MediaRendererProps,
@@ -574,7 +573,7 @@ export const IframePlayer = /* @__PURE__ */ (() =>
  * @internal Exported for tests
  */
 export const LinkPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<
+  forwardRef<
     HTMLAnchorElement,
     Pick<MediaRendererProps, "src" | "alt" | "style" | "className">
   >(function Link_Player({ src, alt, style, className }, ref) {

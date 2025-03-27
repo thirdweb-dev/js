@@ -62,9 +62,9 @@ export default function RootLayout({
           <StickyTopContainer>
             {/* Note: Please change id as well when changing text or href so that new banner is shown to user even if user dismissed the older one  */}
             <Banner
-              id="nebula-alpha"
-              text="Introducing Nebula - the most powerful AI to interact with the blockchain. Join the waitlist."
-              href="https://thirdweb.com/nebula"
+              id="ub-launch"
+              text="Let users pay with whatever they have without leaving your app"
+              href="https://thirdweb.com/connect/universal-bridge"
             />
             <Header />
           </StickyTopContainer>
