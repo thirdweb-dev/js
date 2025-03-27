@@ -13,7 +13,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
@@ -32,7 +32,6 @@ export function ChatPageContent(props: {
   initialPrompt: string | undefined;
 }) {
   const address = useActiveAccount()?.address;
-  const activeChain = useActiveWalletChain();
   const client = useThirdwebClient(props.authToken);
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
@@ -133,14 +132,9 @@ export function ChatPageContent(props: {
         // ignore local storage errors
       }
 
-      // else - use the active chain
-      updatedContextFilters.chainIds = activeChain
-        ? [activeChain.id.toString()]
-        : [];
-
       return updatedContextFilters;
     });
-  }, [address, isNewSession, hasUserUpdatedContextFilters, activeChain]);
+  }, [address, isNewSession, hasUserUpdatedContextFilters]);
 
   const [sessionId, _setSessionId] = useState<string | undefined>(
     props.session?.id,
