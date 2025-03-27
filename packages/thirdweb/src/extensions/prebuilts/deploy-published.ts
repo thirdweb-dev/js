@@ -363,6 +363,7 @@ async function directDeploy(options: {
           metadataUri: options.metadataUri,
         })
       : undefined,
+    isStylus: options.compilerMetadata.metadata.language === "rust",
   });
 }
 

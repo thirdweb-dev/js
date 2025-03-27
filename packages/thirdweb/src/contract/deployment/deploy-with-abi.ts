@@ -1,5 +1,7 @@
 import type { Abi, AbiConstructor } from "abitype";
+import { activateStylusContract } from "../../extensions/stylus/write/activateStylusContract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
@@ -124,6 +126,7 @@ export async function deployContract(
     account: Account;
     salt?: string;
     extraDataWithUri?: Hex;
+    isStylus?: boolean;
   },
 ) {
   if (await isZkSyncChain(options.chain)) {
@@ -138,10 +141,11 @@ export async function deployContract(
     });
   }
 
+  let address: string | null | undefined;
   if (options.salt !== undefined) {
     // Deploy with CREATE2 if salt is provided
     const info = await computeDeploymentInfoFromBytecode(options);
-    const address = computeDeploymentAddress({
+    address = computeDeploymentAddress({
       bytecode: options.bytecode,
       encodedArgs: info.encodedArgs,
       create2FactoryAddress: info.create2FactoryAddress,
@@ -167,18 +171,32 @@ export async function deployContract(
         data: info.initCalldata,
       }),
     });
-    return address;
+  } else {
+    const deployTx = prepareDirectDeployTransaction(options);
+    const receipt = await sendAndConfirmTransaction({
+      account: options.account,
+      transaction: deployTx,
+    });
+    address = receipt.contractAddress;
+    if (!address) {
+      throw new Error(
+        `Could not find deployed contract address in transaction: ${receipt.transactionHash}`,
+      );
+    }
   }
 
-  const deployTx = prepareDirectDeployTransaction(options);
-  const receipt = await sendAndConfirmTransaction({
-    account: options.account,
-    transaction: deployTx,
-  });
-  if (!receipt.contractAddress) {
-    throw new Error(
-      `Could not find deployed contract address in transaction: ${receipt.transactionHash}`,
-    );
+  if (options.isStylus) {
+    const activationTransaction = activateStylusContract({
+      chain: options.chain,
+      client: options.client,
+      contractAddress: address,
+    });
+
+    await sendTransaction({
+      transaction: activationTransaction,
+      account: options.account,
+    });
   }
-  return receipt.contractAddress;
+
+  return address;
 }
