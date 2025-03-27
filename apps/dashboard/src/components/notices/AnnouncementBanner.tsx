@@ -56,9 +56,9 @@ export function AnnouncementBanner(props: {
 export function OrganizeContractsToProjectsBanner() {
   return (
     <AnnouncementBanner
-      href="https://blog.thirdweb.com/organize-contracts/"
-      label="Your contracts are now organized into projects. Learn more"
-      trackingLabel="organize-contracts-to-projects"
+      href="https://playground.thirdweb.com/connect/pay"
+      label="Let users pay with whatever they have without leaving your app"
+      trackingLabel="ub-launch"
     />
   );
 }
