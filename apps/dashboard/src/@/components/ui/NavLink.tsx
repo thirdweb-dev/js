@@ -15,6 +15,7 @@ export type NavButtonProps = {
     action: string;
     label: string;
   };
+  onClick?: () => void;
 };
 
 export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
@@ -30,7 +31,9 @@ export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
       href={props.href}
       className={cn(props.className, isActive && props.activeClassName)}
       target={props.href.startsWith("http") ? "_blank" : undefined}
+      prefetch={false}
       onClick={() => {
+        props.onClick?.();
         if (props.tracking) {
           track({
             category: props.tracking.category,

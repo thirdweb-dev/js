@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "../global.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -6,7 +6,6 @@ import PlausibleProvider from "next-plausible";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
-import { OrganizeContractsToProjectsBanner } from "../components/notices/AnnouncementBanner";
 import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
 import { PosthogIdentifierServer } from "../components/wallets/PosthogIdentifierServer";
 import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
@@ -72,7 +71,6 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <OrganizeContractsToProjectsBanner />
           <AppRouterProviders>
             {children}
             <Suspense fallback={null}>

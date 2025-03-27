@@ -10,15 +10,11 @@ import Link from "next/link";
 export default async function Page() {
   return (
     <div className="flex grow flex-col">
-      <div className="border-border border-b py-10">
-        <div className="container flex max-w-[1000px] flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-            Insight
-          </h1>
-        </div>
-      </div>
+      <h1 className="mb-6 font-semibold text-2xl tracking-tight sm:text-3xl">
+        Insight
+      </h1>
 
-      <div className="container max-w-[1000px] py-8 pb-20">
+      <div className="pb-20">
         <BlueprintCard />
       </div>
     </div>
