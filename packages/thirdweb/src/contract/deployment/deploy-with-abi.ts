@@ -71,7 +71,7 @@ export function prepareDirectDeployTransaction(
         constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
         normalizeFunctionParams(constructorAbi, options.constructorParams),
       ),
-      `0x${options.extraDataWithUri}`,
+      (options.extraDataWithUri as `0x${string}`) || "0x",
     ]),
   });
 }
