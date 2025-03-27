@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react";
-import "@/styles/globals.css";
+import "../src/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
