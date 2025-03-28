@@ -260,16 +260,20 @@ export async function getOrDeployInfraContractFromMetadata(
 
   const isStylus = options.contractMetadata.metadata.language === "rust";
   if (isStylus) {
-    const activationTransaction = activateStylusContract({
-      chain: options.chain,
-      client: options.client,
-      contractAddress: deployedInfraContract.address,
-    });
+    try {
+      const activationTransaction = await activateStylusContract({
+        chain: options.chain,
+        client: options.client,
+        contractAddress: deployedInfraContract.address,
+      });
 
-    await sendTransaction({
-      transaction: activationTransaction,
-      account: options.account,
-    });
+      await sendTransaction({
+        transaction: activationTransaction,
+        account: options.account,
+      });
+    } catch {
+      console.error("Error: Contract could not be activated.");
+    }
   }
 
   return deployedInfraContract;

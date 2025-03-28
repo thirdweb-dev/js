@@ -22,7 +22,14 @@ const FN_INPUTS = [
     name: "program",
   },
 ] as const;
-const FN_OUTPUTS = [] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint16",
+  },
+  {
+    type: "uint256",
+  },
+] as const;
 
 /**
  * Checks if the `activateProgram` method is supported by the given contract.
