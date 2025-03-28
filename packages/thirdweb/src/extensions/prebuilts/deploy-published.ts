@@ -16,6 +16,7 @@ import {
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
+import { encodeExtraDataWithUri } from "../../utils/any-evm/encode-extra-data-with-uri.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
@@ -194,6 +195,7 @@ export async function deployContractfromDeployMetadata(
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
         salt,
+        metadataUri: deployMetadata.metadataUri,
       });
     }
     case "autoFactory": {
@@ -320,6 +322,7 @@ export async function deployContractfromDeployMetadata(
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
         salt,
+        metadataUri: deployMetadata.metadataUri,
       });
     }
     default:
@@ -335,6 +338,7 @@ async function directDeploy(options: {
   compilerMetadata: CompilerMetadata;
   contractParams?: Record<string, unknown>;
   salt?: string;
+  metadataUri?: string;
 }): Promise<string> {
   const { account, client, chain, compilerMetadata, contractParams, salt } =
     options;
@@ -342,6 +346,7 @@ async function directDeploy(options: {
   const { deployContract } = await import(
     "../../contract/deployment/deploy-with-abi.js"
   );
+  const isStylus = options.compilerMetadata.metadata.language === "rust";
   return deployContract({
     account,
     client,
@@ -354,6 +359,13 @@ async function directDeploy(options: {
     abi: compilerMetadata.abi,
     constructorParams: contractParams,
     salt,
+    extraDataWithUri:
+      isStylus && options.metadataUri
+        ? encodeExtraDataWithUri({
+            metadataUri: options.metadataUri,
+          })
+        : undefined,
+    isStylus,
   });
 }
 

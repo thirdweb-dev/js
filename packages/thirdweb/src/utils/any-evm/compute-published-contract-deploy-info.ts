@@ -1,4 +1,5 @@
 import type { Abi, AbiConstructor } from "abitype";
+import { encodePacked } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
@@ -13,6 +14,7 @@ import {
   type FetchDeployMetadataResult,
   fetchBytecodeFromCompilerMetadata,
 } from "./deploy-metadata.js";
+import { encodeExtraDataWithUri } from "./encode-extra-data-with-uri.js";
 import { getInitBytecodeWithSalt } from "./get-init-bytecode-with-salt.js";
 
 /**
@@ -70,6 +72,7 @@ export async function computeDeploymentInfoFromMetadata(args: {
     }
   }
 
+  const isStylus = contractMetadata.metadata.language === "rust";
   return computeDeploymentInfoFromBytecode({
     client: args.client,
     chain: args.chain,
@@ -81,6 +84,11 @@ export async function computeDeploymentInfoFromMetadata(args: {
     }),
     constructorParams: processedConstructorParams,
     salt: args.salt,
+    extraDataWithUri: isStylus
+      ? encodeExtraDataWithUri({
+          metadataUri: contractMetadata.metadataUri,
+        })
+      : undefined,
   });
 }
 
@@ -91,8 +99,9 @@ export async function computeDeploymentInfoFromBytecode(args: {
   bytecode: Hex;
   constructorParams?: Record<string, unknown>;
   salt?: string;
+  extraDataWithUri?: Hex;
 }) {
-  const { client, chain, constructorParams, salt } = args;
+  const { client, chain, constructorParams, salt, extraDataWithUri } = args;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
     client,
     chain,
@@ -110,11 +119,16 @@ export async function computeDeploymentInfoFromBytecode(args: {
     encodedArgs,
     salt,
   });
+
+  const initCalldata = extraDataWithUri
+    ? encodePacked(["bytes", "bytes"], [initBytecodeWithsalt, extraDataWithUri])
+    : initBytecodeWithsalt;
   return {
     bytecode,
-    initBytecodeWithsalt,
+    initCalldata,
     encodedArgs,
     create2FactoryAddress,
     salt,
+    extraDataWithUri,
   };
 }

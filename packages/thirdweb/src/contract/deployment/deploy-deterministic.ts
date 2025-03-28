@@ -52,7 +52,7 @@ export function prepareDeterministicDeployTransaction(
     data: async () => {
       const infraContractInfo =
         await computeDeploymentInfoFromContractId(options);
-      return infraContractInfo.initBytecodeWithsalt;
+      return infraContractInfo.initCalldata;
     },
   });
 }
