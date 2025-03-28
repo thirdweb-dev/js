@@ -1,0 +1,68 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Insight Webhooks | thirdweb Infrastructure",
+	description: "Managing Insight webhooks",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Managing Webhooks
+
+For most up to date technical spec refer to https://insight-api.thirdweb.com/reference#tag/webhooks.
+
+## List Webhooks
+`GET /v1/webhooks`
+
+Retrieve all webhooks for your project or get details for a specific webhook by ID.
+
+## Create Webhook
+`POST /v1/webhooks`
+
+Creates a new webhook subscription.  
+It may take up to a minute to start working.
+
+### Verifying the created webhook
+- The webhook starts in a suspended state
+- An OTP (One-Time Password) is sent to your webhook URL for verification
+- You must verify the webhook within 15 minutes using the OTP
+- Once verified, it may take up to a minute for the webhook to become fully active
+- You can request a new OTP if you can't retrieve the initial OTP
+
+## Update Webhook
+`PATCH /v1/webhooks/:webhook_id`
+
+You can modify the URL or filters of a webhook. Additionally you can enable and disable the webhook.  
+Changes may take up to a minute to take effect.
+
+### Updating webhook URL
+- If you update the webhook URL, you'll need to verify it again with a new OTP
+- Other fields can be updated without requiring re-verification
+
+## Delete Webhook
+`DELETE /v1/webhooks/:webhook_id`
+
+Permanently removes a webhook subscription. This action cannot be undone.
+
+## Verify Webhook
+`POST /v1/webhooks/:webhook_id/verify`
+
+Activates a webhook using the OTP code that was sent to your webhook URL. Required for:
+- New webhook creation
+- After updating a webhook URL
+
+## Resend OTP
+`POST /v1/webhooks/:webhook_id/resend-otp`
+
+Request a new OTP code if the original expires or is lost:
+- Invalidates the previous OTP
+- New OTP expires after 15 minutes
+- Only works for webhooks pending verification
+
+## Test Webhook
+`POST /v1/webhooks/test`
+
+Sends a sample payload signed with a test secret ('test123').  
+Useful for testing your receiver endpoint before creating actual webhooks. 

@@ -1,0 +1,202 @@
+import { createMetadata } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+export const metadata = createMetadata({
+	title: "Insight Webhooks | thirdweb Infrastructure",
+	description: "Payload",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Webhook Payload
+
+## Payload Format
+```typescript
+{
+  topic: string,                      // topic of the data
+  timestamp: string,                  // timestamp of when the payload was sent in seconds
+  data: [
+    {
+      data: object,                   // data of the event or transaction
+      status: "new" | "reverted",
+      type: "event" | "transaction",
+      id: string                      // unique id of the data
+    }
+  ]
+}
+```
+
+Example Response:
+
+<Tabs defaultValue="events">
+
+<TabsList>
+	<TabsTrigger value="events">Events</TabsTrigger>
+	<TabsTrigger value="transactions">Transactions</TabsTrigger>
+</TabsList>
+
+<TabsContent value='events'>
+```json
+{
+  "timestamp": 1743164112,
+  "topic": "v1.events",
+  "data": [
+    {
+      "data": {
+        "chain_id": "1",
+        "block_number": 22140383,
+        "block_hash": "0x85bd4045d947c34b6b568fc84c7550c0efa741f71c834bbb3d3950e9da27842e",
+        "block_timestamp": 1743104207,
+        "transaction_hash": "0x460ced3718d0e09145eae8b63fd985dc366adfc4523c791116f24dc051e8363a",
+        "transaction_index": 93,
+        "log_index": 230,
+        "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "data": "0x000000000000000000000000000000000000000000000000009440c61e928cca",
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000d360131b77ead72f1f23fb185b4896fe01dc8cb5",
+          "0x00000000000000000000000085cd07ea01423b1e937929b44e4ad8c40bbb5e71"
+        ],
+        "decoded": {
+          "name": "Transfer",
+          "indexed_params": {
+            "from": "0xd360131b77ead72f1f23fb185b4896fe01dc8cb5",
+            "to": "0x85cd07ea01423b1e937929b44e4ad8c40bbb5e71"
+          },
+          "non_indexed_params": {
+            "amount": "41729516213800138"
+          }
+        }
+      },
+      "status": "new",
+      "type": "event",
+      "id": "76b81da4ec46486f0a6e325596f506cad13ebd629520aded104efcaa37a419d5"
+    }
+  ]
+}
+```
+</TabsContent>
+
+<TabsContent value='transactions'>
+```json
+{
+  "timestamp": 1743165030,
+  "topic": "v1.transactions",
+  "data": [
+    {
+      "data": {
+        "chain_id": "1",
+        "hash": "0xceba210be88785cac0884127cb42d370bcde8248e11e490af0deeb6ded2bb421",
+        "nonce": 5,
+        "block_hash": "0x86cfe1e32fb3e5091bc2533b78d1503a4539936f50ff5a33b09df639f1572fdd",
+        "block_number": 22145183,
+        "block_timestamp": 1743162179,
+        "transaction_index": 62,
+        "from_address": "0xcd1785a6a49748948059d3c27d8f55ad0ef94c8c",
+        "to_address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "value": "0",
+        "gas": 50000,
+        "gas_price": "2000000000",
+        "data": "0xa9059cbb00000000000000000000000028c6c06298d514db089934071355e5743bf21d60000000000000000000000000000000000000000000000024ac7a2466fe6d4000",
+        "function_selector": "0xa9059cbb",
+        "max_fee_per_gas": "2000000000",
+        "max_priority_fee_per_gas": "2000000000",
+        "transaction_type": 2,
+        "r": "93121701149456501424579980283392650303695688563543540003926043202730906996706",
+        "s": "5712073776861917154895012394334633911928305143620822626852008432451821415527",
+        "v": "1",
+        "access_list_json": "[]",
+        "contract_address": null,
+        "gas_used": 35318,
+        "cumulative_gas_used": 9124496,
+        "effective_gas_price": "2000000000",
+        "blob_gas_used": 0,
+        "blob_gas_price": "0",
+        "logs_bloom": "0x40000000000000000000000000000000000000000020000000000000000000000000000000000000000001000000001000008000000000000000000000000000000000000000000000000008100000000000000000000000000000000000000008000000000000000000000000000000000000000000000002000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "status": 1,
+        "decoded": {
+          "name": "transfer",
+          "inputs": {
+            "dst": "0x28c6c06298d514db089934071355e5743bf21d60",
+            "rawAmount": "676511072800000000000"
+          }
+        }
+      },
+      "status": "new",
+      "type": "transaction",
+      "id": "e922999aff6625e1e26e6eca478b2c6ece33a5b8cf3a3c8bde96c00da8d2acc0"
+    }
+  ]
+}
+```
+</TabsContent>
+</Tabs>
+
+## Headers
+Each webhook request includes:
+- `x-webhook-id` - ID of the webhook configuration to know which one triggered the send  
+- `x-webhook-signature` - hash of the payload signed with the webhook's secret. Used to validate the payload  
+
+## Signature Verification (highly recommended)
+
+To verify that the request is from thirdweb webhooks it is highly recommended to verify the payload.
+Each webhook has a `webhook_secret` which is used to sign the raw payload and is then attached to the headers.  
+
+To verify the webhook:
+```typescript
+const generateSignature = (
+  rawBody: string,
+  secret: string,
+): string => {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
+};
+ 
+const isValidSignature = (
+  rawBody: string,
+  signature: string,
+  secret: string,
+): boolean => {
+  const expectedSignature = generateSignature(
+    body,
+    secret,
+  );
+  return crypto.timingSafeEqual(
+    Buffer.from(expectedSignature),
+    Buffer.from(signature),
+  );
+};
+
+// extract the signature from request headers
+const signature = req.headers['x-signature'];
+// get the raw body of the request
+const rawBody = req.rawBody;
+
+const isValid = isValidSignature(rawBody, signature, secret);
+```
+
+**You need to use the raw request body when verifying webhooks, as the cryptographic signature is sensitive to even the slightest changes. You should watch out for frameworks that parse the request as JSON and then stringify it because this too will break the signature verification.**
+
+## Payload Age
+
+You can optionally also verify the age of the payload.  
+After you have verified the signature, you can be sure the timestamp in the payload is correct and apply any time limit you wish.
+
+```typescript
+export const isExpired = (
+  timestamp: string,
+  expirationInSeconds: number,
+): boolean => {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return currentTime - parseInt(timestamp) > expirationInSeconds;
+};
+```
+
+## Reorged Data
+If a blockchain reorganization occurs:
+- You'll receive an event with `status: "reverted"` instead of `status: "new"`
+- You should handle this by reverting any actions taken for the original event
