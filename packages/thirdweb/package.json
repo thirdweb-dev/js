@@ -351,7 +351,7 @@
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.2",
-    "vite": "6.2.1",
+    "vite": "6.2.3",
     "vitest": "3.0.9"
   }
 }
