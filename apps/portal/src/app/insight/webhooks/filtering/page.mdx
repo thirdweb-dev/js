@@ -1,0 +1,112 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Insight Webhooks | thirdweb Infrastructure",
+	description: "Filtering",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Filtering
+
+## Webhook Topics
+
+### `v1.events`
+
+Subscribes to blockchain log events.
+
+### `v1.transactions`
+
+Subscribes to blockchain transactions.
+
+## Webhook Filters
+
+You can filter webhook notifications based on specific criteria.  
+Each webhook must have either a events filter or a transcations filter (or both).
+
+### Event Filters
+```typescript
+{
+  "v1.events": {
+    chain_ids: string[],          // Filter by specific chains
+    addresses: string[],          // Filter by contract addresses
+    signatures: {                 // Filter by event signatures
+      sig_hash: string,          // Event signature hash
+      abi?: string,             // Optional ABI for data decoding
+      params?: Record<string, any> // Filter on decoded parameters
+    }[]
+  }
+}
+```
+
+### Transaction Filters
+```typescript
+{
+  "v1.transactions": {
+    chain_ids: string[],          // Filter by specific chains
+    from_addresses: string[],     // Filter by sender addresses
+    to_addresses: string[],       // Filter by recipient addresses
+    signatures: {                 // Filter by function signatures
+      sig_hash: string,          // Function signature hash
+      abi?: string,             // Optional ABI for data decoding
+      params?: string[]         // Filter on decoded parameters
+    }[]
+  }
+}
+```
+
+### ABIs
+
+You can specify partial ABIs to have decoded data sent in the webhook payload. For this you also need to give the `sig_hash` of the event or function call.
+
+The following example will filter for `Transfer` events on Ethereum for the contract `0x1f9840a85d5af5bf1d1762f925bdaddc4201f984`
+```typescript
+{
+  ...
+  filters: {
+    "v1.events": {
+      chain_ids: ["1"],
+      addresses: ["0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"],
+      signatures: [
+        {
+          sig_hash:
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          abi: '{"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Transfer","type":"event"}',
+        },
+      ],
+    },
+  },
+  ...
+}
+```
+
+And this example will filter for `Approve` function calls on Ethereum for the contract `0x1f9840a85d5af5bf1d1762f925bdaddc4201f984`
+```typescript
+{
+  ...
+  filters: {
+    "v1.transactions": {
+      chain_ids: ["1"],
+      addresses: ["0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"],
+      signatures: [
+        {
+          sig_hash: "0x095ea7b3",
+          abi: '{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"rawAmount","type":"uint256"}],"name":"approve","type":"function"}',
+        },
+      ],
+    },
+  },
+  ...
+}
+```
+
+### Params
+
+`params` on the `signatures` object will allow you to filter based on the decoded data. Only strict equality is supported at the moment.
+
+### Notes
+- You can specify ABIs to receive decoded event/transaction data
+- Parameter filtering supports equality matching only
+- At least one filter criteria must be specified

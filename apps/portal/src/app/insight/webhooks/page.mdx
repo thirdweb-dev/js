@@ -1,0 +1,33 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Insight Webhooks | thirdweb Infrastructure",
+	description: "Getting started with Insight webhooks",
+  image: {
+    title: "Insight",
+    icon: "insight",
+  },
+});
+
+# Webhooks
+
+Webhooks allow you to receive notifications when specific blockchain events or transactions occur. This enables you to automate workflows and keep your applications in sync with on-chain activity.
+
+## About Webhooks
+
+### Data Delivery
+Webhook events are collected and delivered in batches for optimal performance and reliability. This makes webhooks ideal for:
+- Tracking when specific blockchain events occur
+- Aggregating on-chain data
+- Building analytics and monitoring systems
+- Triggering downstream processes
+
+### Delivery Guarantees
+Events are guaranteed to be delivered *at least once*.  
+Your application should implement idempotency and deduplication logic using the unique event ID in the payload.  
+Events may occasionally be delivered out of order.
+
+### Performance Requirements
+- Your receiving endpoint must respond within 3 seconds
+- If your endpoint consistently fails to respond in time, the webhook will be automatically suspended
+- We recommend implementing a queue system if you need to perform time-consuming operations
