@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.6
+
+### Patch Changes
+
+- [#6569](https://github.com/thirdweb-dev/js/pull/6569) [`2d4c5ff`](https://github.com/thirdweb-dev/js/commit/2d4c5ff07c5c84d3705a35a01990d598939e2e44) Thanks [@MananTank](https://github.com/MananTank)! - Fix "Cannot read properties of undefined (reading 'forwardRef')" error in certain bundler setups
+
 ## 5.93.5
 
 ### Patch Changes
