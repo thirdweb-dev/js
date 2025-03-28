@@ -74,7 +74,6 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     });
 
     const abiContent = abiResult.stdout.trim();
-    console.log(abiContent);
 
     if (!abiContent) {
       spinner.fail("Failed to generate ABI.");
@@ -136,7 +135,6 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       client,
       files: [initcode],
     });
-    console.log(bytecodeUri);
 
     const uri = await upload({
       client,
