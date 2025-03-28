@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import open from "open";
 import ora, { type Ora } from "ora";
+import { parse } from "toml";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
 
@@ -47,9 +48,12 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     }
 
     const cargoToml = readFileSync(cargoTomlPath, "utf8");
-    if (!cargoToml.includes("[dependencies.stylus-sdk]")) {
-      //   spinner.fail("Error: Not a Stylus project. Missing stylus-sdk dependency.");
-      //   process.exit(1);
+    const parsedCargoToml = parse(cargoToml);
+    if (!parsedCargoToml.dependencies?.["stylus-sdk"]) {
+      spinner.fail(
+        "Error: Not a Stylus project. Missing stylus-sdk dependency.",
+      );
+      process.exit(1);
     }
 
     spinner.succeed("Stylus project detected.");
