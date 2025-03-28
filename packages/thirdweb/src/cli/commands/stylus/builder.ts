@@ -63,8 +63,12 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     const initcodeResult = spawnSync("cargo", ["stylus", "get-initcode"], {
       encoding: "utf-8",
     });
-    const initcode = extractBytecode(initcodeResult.stdout);
+    if (initcodeResult.status !== 0) {
+      spinner.fail("Failed to generate initcode.");
+      process.exit(1);
+    }
 
+    const initcode = extractBytecode(initcodeResult.stdout);
     if (!initcode) {
       spinner.fail("Failed to generate initcode.");
       process.exit(1);
@@ -76,9 +80,12 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     const abiResult = spawnSync("cargo", ["stylus", "export-abi", "--json"], {
       encoding: "utf-8",
     });
+    if (abiResult.status !== 0) {
+      spinner.fail("Failed to generate ABI.");
+      process.exit(1);
+    }
 
     const abiContent = abiResult.stdout.trim();
-
     if (!abiContent) {
       spinner.fail("Failed to generate ABI.");
       process.exit(1);
@@ -121,7 +128,6 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       },
       sources: {},
     };
-    spinner.succeed("ABI cleaned and saved.");
     spinner.succeed("Stylus contract exported successfully.");
 
     // Step 5: Upload to IPFS
