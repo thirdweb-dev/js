@@ -583,10 +583,10 @@ function useSwapStatus(props: {
       uiStatus = "completed";
       break;
     case "FAILED":
-    case "NOT_FOUND":
       uiStatus = "failed";
       break;
     case "PENDING":
+    case "NOT_FOUND":
       uiStatus = "pending";
       break;
     case "NONE":
