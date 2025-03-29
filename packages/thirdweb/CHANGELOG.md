@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.93.7
+
+### Patch Changes
+
+- [#6578](https://github.com/thirdweb-dev/js/pull/6578) [`2a1f4be`](https://github.com/thirdweb-dev/js/commit/2a1f4be48b41d406e86203a4fc00d8bc687cb795) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix bug with PayEmbed incorrectly showing failed state
+
+- [#6580](https://github.com/thirdweb-dev/js/pull/6580) [`c3d0ea0`](https://github.com/thirdweb-dev/js/commit/c3d0ea005959d5b65c5af3f2043a93f62207e770) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - respect supportedTokens prop in PayEmbed
+
+- [#6495](https://github.com/thirdweb-dev/js/pull/6495) [`b49c191`](https://github.com/thirdweb-dev/js/commit/b49c1913553b0d0cc73ab74359db21896a8bcb1f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support Stylus contracts in CLI and SDK
+
 ## 5.93.6
 
 ### Patch Changes
