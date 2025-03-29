@@ -110,9 +110,14 @@ export async function deployPublishedContract(
     chain,
     deployMetadata,
     client,
-    initializeParams: contractParams || deployMetadata.constructorParams,
-    implementationConstructorParams:
-      implementationConstructorParams || deployMetadata.implConstructorParams,
+    initializeParams: {
+      ...deployMetadata.constructorParams,
+      ...contractParams,
+    },
+    implementationConstructorParams: {
+      ...deployMetadata.implConstructorParams,
+      ...implementationConstructorParams,
+    },
     salt,
   });
 }
