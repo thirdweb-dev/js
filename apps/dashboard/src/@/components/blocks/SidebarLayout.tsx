@@ -59,7 +59,10 @@ export function FullWidthSidebarLayout(props: {
   const { contentSidebarLinks, children, footerSidebarLinks } = props;
   return (
     <div
-      className={cn("flex w-full flex-1 overflow-y-hidden", props.className)}
+      className={cn(
+        "relative flex w-full flex-1 overflow-y-hidden",
+        props.className,
+      )}
     >
       {/* left - sidebar */}
       <Sidebar collapsible="icon" side="left">
