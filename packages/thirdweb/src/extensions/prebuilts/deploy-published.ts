@@ -240,14 +240,15 @@ export async function deployContractfromDeployMetadata(
           client,
           account,
           contractId: deployMetadata.name,
-          constructorParams:
-            processedImplParams ||
-            (await getAllDefaultConstructorParamsForImplementation({
+          constructorParams: {
+            ...(await getAllDefaultConstructorParamsForImplementation({
               chain,
               client,
               contractId: deployMetadata.name,
               defaultExtensions: deployMetadata.defaultExtensions,
             })),
+            ...processedImplParams,
+          },
           publisher: deployMetadata.publisher,
           version: deployMetadata.version,
         });
