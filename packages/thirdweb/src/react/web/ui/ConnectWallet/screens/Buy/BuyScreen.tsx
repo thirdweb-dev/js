@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
@@ -112,10 +113,21 @@ export default function BuyScreen(props: BuyScreenProps) {
     return <LoadingScreen />;
   }
 
+  const supportedDestinations = props.supportedTokens
+    ? Object.entries(props.supportedTokens).map(([chainId, tokens]) => ({
+        chain: getCachedChain(Number.parseInt(chainId)),
+        tokens: tokens.map((t) => ({
+          ...t,
+          buyWithCryptoEnabled: true,
+          buyWithFiatEnabled: true,
+        })),
+      }))
+    : supportedDestinationsQuery.data;
+
   return (
     <BuyScreenContent
       {...props}
-      supportedDestinations={supportedDestinationsQuery.data}
+      supportedDestinations={supportedDestinations}
     />
   );
 }
