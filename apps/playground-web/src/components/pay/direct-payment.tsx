@@ -15,7 +15,7 @@ export function BuyMerchPreview() {
         payOptions={{
           mode: "direct_payment",
           paymentInfo: {
-            amount: "2",
+            amount: "0.25",
             chain: base,
             token: getDefaultToken(base, "USDC"),
             sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
