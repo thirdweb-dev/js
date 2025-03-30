@@ -1,5 +1,5 @@
 ---
-"thirdweb": major
+"thirdweb": patch
 ---
 
-added ru_RU locale to SmartWallet component
+Added ru_RU locale to thirdweb package

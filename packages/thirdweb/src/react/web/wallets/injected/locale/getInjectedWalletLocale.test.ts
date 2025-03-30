@@ -5,6 +5,7 @@ import de from "./de.js";
 import en from "./en.js";
 import es from "./es.js";
 import fr from "./fr.js";
+import ru from "./ru.js";
 import { getInjectedWalletLocale } from "./getInjectedWalletLocale.js";
 import ja from "./ja.js";
 import kr from "./kr.js";
@@ -19,6 +20,7 @@ const locales: { locale: LocaleId; content: object }[] = [
   { locale: "de_DE", content: de },
   { locale: "ko_KR", content: kr },
   { locale: "fr_FR", content: fr },
+  { locale: "ru_RU", content: ru },
   { locale: "pt_BR", content: br },
 ];
 
