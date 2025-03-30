@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.8
+
+### Patch Changes
+
+- [#6584](https://github.com/thirdweb-dev/js/pull/6584) [`3d7c009`](https://github.com/thirdweb-dev/js/commit/3d7c009d72af4a0f84405d916301e0660600c191) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix CLI secret key handling
+
 ## 5.93.7
 
 ### Patch Changes
