@@ -14,7 +14,6 @@ let secretKey: string | undefined;
 const keyIndex = rest.indexOf("-k");
 if (keyIndex !== -1 && rest.length > keyIndex + 1) {
   secretKey = rest[keyIndex + 1];
-  rest.splice(keyIndex, 2);
 }
 
 async function main() {
