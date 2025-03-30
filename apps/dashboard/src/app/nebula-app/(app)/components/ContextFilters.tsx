@@ -199,6 +199,17 @@ export function ContextFiltersForm(props: {
                     onChange={(values) => {
                       form.setValue("chainIds", values.join(","));
                     }}
+                    priorityChains={[
+                      1, // ethereum
+                      56, // bnb smart chain mainnet (bsc)
+                      42161, // arbitrum one mainnet
+                      8453, // base mainnet
+                      43114, // avalanche mainnet
+                      146, // sonic
+                      137, // polygon
+                      80094, // berachain mainnet
+                      10, // optimism
+                    ]}
                   />
                 </FormControl>
                 <FormMessage />

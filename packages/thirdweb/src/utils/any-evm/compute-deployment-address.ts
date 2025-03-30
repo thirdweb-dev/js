@@ -11,6 +11,7 @@ type ComputeDeploymentAddressOptions = {
   encodedArgs: Hex;
   create2FactoryAddress: string;
   salt?: string;
+  extraDataWithUri?: Hex;
 };
 
 /**
@@ -40,10 +41,12 @@ export function computeDeploymentAddress(
     : getSaltHash(bytecode);
 
   // 1. create init bytecode hash with contract's bytecode and encoded args
-  const initBytecode = encodePacked(
-    ["bytes", "bytes"],
-    [bytecode, options.encodedArgs],
-  );
+  const initBytecode = options.extraDataWithUri
+    ? encodePacked(
+        ["bytes", "bytes", "bytes"],
+        [bytecode, options.encodedArgs, options.extraDataWithUri],
+      )
+    : encodePacked(["bytes", "bytes"], [bytecode, options.encodedArgs]);
 
   // 2. abi-encode pack the deployer address, salt, and bytecode hash
   const deployInfoPacked = encodePacked(

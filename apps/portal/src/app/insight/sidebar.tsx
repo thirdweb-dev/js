@@ -9,6 +9,7 @@ import {
   Network,
   Rocket,
   StickyNote,
+  Webhook,
   Wrench,
 } from "lucide-react";
 
@@ -55,6 +56,33 @@ export const sidebar: SideBar = {
         {
           name: "llms.txt",
           href: `${insightSlug}/agents-and-llms/llmstxt`,
+        },
+      ],
+    },
+    {
+      name: "Webhooks",
+      href: `${insightSlug}/webhooks`,
+      icon: <Webhook />,
+      links: [
+        {
+          name: "Getting Started",
+          href: `${insightSlug}/webhooks`,
+        },
+        {
+          name: "Managing Webhooks",
+          href: `${insightSlug}/webhooks/managing-webhooks`,
+        },
+        {
+          name: "Filtering",
+          href: `${insightSlug}/webhooks/filtering`,
+        },
+        {
+          name: "Payload",
+          href: `${insightSlug}/webhooks/payload`,
+        },
+        {
+          name: "API Reference",
+          href: "https://insight-api.thirdweb.com/reference#tag/webhooks",
         },
       ],
     },

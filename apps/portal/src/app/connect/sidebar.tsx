@@ -314,8 +314,12 @@ export const sidebar: SideBar = {
               href: `${paySlug}/guides/accept-direct-payments`,
             },
             {
-              name: "Build a Custom Experience",
+              name: "Build a Custom Onramp Experience",
               href: `${paySlug}/guides/build-a-custom-experience`,
+            },
+            {
+              name: "Cross-Chain Swapping",
+              href: `${paySlug}/guides/cross-chain-swapping`,
             },
           ],
         },

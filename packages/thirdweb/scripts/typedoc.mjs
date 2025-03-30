@@ -10,6 +10,9 @@ const app = await Application.bootstrapWithPlugins({
     "src/adapters/eip1193/index.ts",
     "src/wallets/smart/presets/index.ts",
     "src/ai/index.ts",
+    "src/bridge/index.ts",
+    "src/bridge/Buy.ts",
+    "src/bridge/Sell.ts",
   ],
   exclude: [
     "src/exports/*.native.ts",

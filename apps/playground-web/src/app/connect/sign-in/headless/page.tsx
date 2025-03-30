@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase,
   title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
   description:
-    "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seemlessly integrate account abstraction and SIWE auth.",
+    "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
 };
 
 export default function Page() {

@@ -8,11 +8,12 @@ import { EnglishAuctionsTable } from "./components/table";
 interface ContractEnglishAuctionsProps {
   contract: ThirdwebContract;
   twAccount: Account | undefined;
+  isInsightSupported: boolean;
 }
 
 export const ContractEnglishAuctionsPage: React.FC<
   ContractEnglishAuctionsProps
-> = ({ contract, twAccount }) => {
+> = ({ contract, twAccount, isInsightSupported }) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
@@ -23,6 +24,7 @@ export const ContractEnglishAuctionsPage: React.FC<
             type="english-auctions"
             createText="Create English Auction"
             twAccount={twAccount}
+            isInsightSupported={isInsightSupported}
           />
         </div>
       </div>

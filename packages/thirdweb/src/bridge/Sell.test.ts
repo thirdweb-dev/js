@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import * as Sell from "./Sell.js";
 
-describe("Bridge.Sell.quote", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.quote", () => {
   it("should get a valid quote", async () => {
     const quote = await Sell.quote({
       originChainId: 1,

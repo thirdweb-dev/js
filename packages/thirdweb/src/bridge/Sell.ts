@@ -55,7 +55,7 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  * @returns A promise that resolves to a non-finalized quote for the requested sell.
  *
  * @throws Will throw an error if there is an issue fetching the quote.
- * @bridge
+ * @bridge Sell
  * @beta
  */
 export async function quote(options: quote.Options): Promise<quote.Result> {
@@ -188,7 +188,7 @@ export declare namespace quote {
  * @returns A promise that resolves to a non-finalized quote for the requested buy.
  *
  * @throws Will throw an error if there is an issue fetching the quote.
- * @bridge
+ * @bridge Sell
  * @beta
  */
 export async function prepare(

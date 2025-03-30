@@ -29,6 +29,7 @@ export function ContractEnglishAuctionsPageClient(props: {
     <ContractEnglishAuctionsPage
       contract={props.contract}
       twAccount={props.twAccount}
+      isInsightSupported={metadataQuery.data.isInsightSupported}
     />
   );
 }

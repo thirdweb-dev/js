@@ -1,6 +1,7 @@
 import { createMetadata, DocImage, Grid, SDKCard, FeatureCard } from "@doc";
 import PayOverviewImage from "../assets/pay-overview.png";
 import SupportedChains from "../../../_images/supported-chains.png";
+import {Rocket, ArrowLeftRight, Wallet, Pencil, ShieldCheck, PiggyBank, Globe, Component} from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
@@ -14,7 +15,7 @@ export const metadata = createMetadata({
 
 # Overview
 
-Universal Bridge allows your users to bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat options or tokens via cross-chain routing.
+Universal Bridge allows your users to bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat options or tokens via cross-chain routing. It enables users to purchase or complete in-app transactions with any token they hold.
 
 <DocImage src={PayOverviewImage} />
 
@@ -24,46 +25,46 @@ Universal Bridge allows your users to bridge, swap, and purchase cryptocurrencie
 	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
 >
 	<FeatureCard
-		title="Earn money"
-		description="Receive 70% of fees on each crypto-to-crypto transaction"
-		iconUrl="/icons/feature-cards/earn-money.svg"
+		title="Avoid chargeback & liability"
+		description="Automatic screening for sanctioned wallets and regions to ensure application safety."
+		iconUrl={<Rocket />}
 	/>
 
     <FeatureCard
-    	title="Onboard users"
-    	description="Fiat on-ramps to enable purchases with traditional payment methods"
-    		iconUrl="/icons/feature-cards/onboard-users.svg"
+    	title="Global Coverage"
+    	description="Bridging support in over 160+ countries to reach a truly global audience."
+    		iconUrl={<Globe/>}
     />
     	    <FeatureCard
-    	title="Enable in-app purchases"
-    	description="Purchase crypto without leaving the application"
-    		iconUrl="/icons/feature-cards/in-app-purchase.svg"
+    	title="Earn revenue"
+    	description="Monetize your application and earn swap fees on each transaction."
+    		iconUrl={<PiggyBank />}
     />
     		<FeatureCard
-    	title="Chain Coverage"
-    	description="Support purchases on over 20+ widely used EVM chains"
-    	iconUrl="/icons/feature-cards/chain-coverage.svg"
+    	title="Transact Securely"
+    	description="Strict one-time approvals ensuring funds are not at risk of exploits."
+    	iconUrl={<ShieldCheck />}
     />
     	<FeatureCard
-    	title="Liquidity Aggregation"
-    	description="Ensure every transaction is possible"
-    	iconUrl="/icons/feature-cards/liquidity-aggregation.svg"
+    	title="Easy-to-integrate Components"
+    	description="Easily integrate components for buying funds, e-commerce checkouts, and more."
+    	iconUrl={<Component />}
     />
 
     <FeatureCard
-    	title="Global Coverage"
-    	description="Support for over 130+ countries"
-    		iconUrl="/icons/feature-cards/global-coverage.svg"
+    	title="Customizable Flows"
+    	description="Create your own customized headless flows using the Universal Bridge SDK or API."
+    		iconUrl={<Pencil/>}
     />
         <FeatureCard
-    	title="Integration Options"
-    	description="Use pre-built modals or customize the transaction experience"
-    		iconUrl="/icons/feature-cards/integration-options.svg"
+    	title="Flexible Wallet Payments"
+    	description="Enable payments with any wallet that has funds not just the one connected."
+    		iconUrl= {<Wallet />}
     />
         <FeatureCard
-    	title="Secure"
-    	description="Strict one-time approvals mean user funds are not at risk of smart contract allowance exploits"
-    		iconUrl="/icons/feature-cards/security.svg"
+    	title="Multi-hop Routing"
+    	description="Handle multiple swaps at once within one session for a seamless swap experience."
+    		iconUrl={<ArrowLeftRight />}
     />
 
 </div>
@@ -74,30 +75,20 @@ Universal Bridge is supported on select EVM compatible chains. To view the full 
 
 <DocImage src={SupportedChains} />
 
-## Fee Sharing
-
-Thirdweb collects a 1% fee per end-user transaction and shares 70% of that fee with you. For example, on a $100 Polygon purchase, a $1.00 fee is charged—of which $0.30 is retained by thirdweb and $0.70 is remitted to you.
-
-Note: Fee sharing applies only to fees from swaps and bridges; fiat purchases are excluded.
-
-To enable fee sharing, simply set a recipient address in your dashboard under Team > Project > Connect > Universal Bridge in the thirdweb dashboard.
-
-## Onramp providers
+## Onramp Providers
 
 | Provider | Supported Countries                                                                                     |
 | -------- | ------------------------------------------------------------------------------------------------------- |
 | Transak  | https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5 |
 | Kado     | https://www.kado.money/supported-countries                                                              |
 | Stripe   | https://docs.stripe.com/crypto/onramp                                                                   |
-
-Specify a preferred onramp provider by setting the preferredProvider parameter in ConnectButton, PayEmbed, or Headless Integration. For details, refer to 
-[customization](../pay/customization/connectbutton#preferredProvider) or the [API Reference for preferredProvider](/references/typescript/v5/GetBuyWithFiatQuoteParams).
+| Coinbase | https://docs.cdp.coinbase.com/onramp/docs/payment-methods/ |
 
 ## Integration Options
 
 | OPTION                                                                                              | BEST FOR                                                                                                                                  |
 | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [ConnectButton](/connect/pay/get-started#option-1-connectbutton)                                    | Developers who want out-of-the-box support complete with wallet and social login.                                                         |
-| [PayEmbed](/connect/pay/get-started#option-2-embed-pay)                                             | Developers who want onramp and crypto purchase experiences directly in their application.                                                 |
-| [Transaction Flow (sendTransaction)](/connect/pay/get-started#option-3-send-a-transaction-with-pay) | Developers who want users to onramp or purchase crypto directly into a transaction. Great for minting and NFT purchase flows.             |
-| [Custom Universal Bridge Experience](/connect/pay/build-a-custom-experience)                                     | Developers who want full customization over every step of the onramp process, from displaying quotes to polling for transaction statuses. |
+| [Buy Crypto](https://playground.thirdweb.com/connect/pay/)                                 | Developers who want onramp and crypto purchase experiences directly in their application.                                                 |
+| [Transactions](https://playground.thirdweb.com/connect/pay/transactions) | Developers who want users to onramp or purchase crypto directly into a transaction. Great for minting and NFT purchase flows.             |
+| [In-App Purchases](https://playground.thirdweb.com/connect/pay/commerce)                        | Developers who want to take payments from Fiat or Crypto directly to a seller wallet |
+| [Headless](https://playground.thirdweb.com/connect/pay/backend)                        | Developers who prefer a headless customized flow using APIs. |

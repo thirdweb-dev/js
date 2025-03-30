@@ -19,30 +19,7 @@ export function MobileSidebar(props: {
   triggerClassName?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
-
-  const activeLink = useMemo(() => {
-    function isActive(link: SidebarBaseLink) {
-      if (link.exactMatch) {
-        return link.href === pathname;
-      }
-      return pathname?.startsWith(link.href);
-    }
-
-    for (const link of props.links) {
-      if ("group" in link) {
-        for (const subLink of link.links) {
-          if (isActive(subLink)) {
-            return subLink;
-          }
-        }
-      } else {
-        if (isActive(link)) {
-          return link;
-        }
-      }
-    }
-  }, [props.links, pathname]);
+  const activeLink = useActiveSidebarLink(props.links);
 
   const defaultTrigger = (
     <Button
@@ -74,4 +51,33 @@ export function MobileSidebar(props: {
       </DialogContent>
     </Dialog>
   );
+}
+
+export function useActiveSidebarLink(links: SidebarLink[]) {
+  const pathname = usePathname();
+
+  const activeLink = useMemo(() => {
+    function isActive(link: SidebarBaseLink) {
+      if (link.exactMatch) {
+        return link.href === pathname;
+      }
+      return pathname?.startsWith(link.href);
+    }
+
+    for (const link of links) {
+      if ("group" in link) {
+        for (const subLink of link.links) {
+          if (isActive(subLink)) {
+            return subLink;
+          }
+        }
+      } else if ("href" in link) {
+        if (isActive(link)) {
+          return link;
+        }
+      }
+    }
+  }, [links, pathname]);
+
+  return activeLink;
 }

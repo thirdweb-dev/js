@@ -1,10 +1,13 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
+import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
-import { ProjectTabs } from "./tabs";
+import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
+import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -46,21 +49,26 @@ export default async function TeamLayout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const layoutPath = `/team/${params.team_slug}/${params.project_slug}`;
+
   return (
-    <div className="flex grow flex-col">
-      <div className="bg-card">
-        <TeamHeaderLoggedIn
-          currentProject={project}
-          currentTeam={team}
-          teamsAndProjects={teamsAndProjects}
-          account={account}
-          accountAddress={accountAddress}
-        />
-        <ProjectTabs
-          layoutPath={`/team/${params.team_slug}/${params.project_slug}`}
-        />
+    <SidebarProvider>
+      <div className="flex h-dvh min-w-0 grow flex-col">
+        <div className="sticky top-0 z-10 border-border border-b bg-card">
+          <AnnouncementBanner />
+          <TeamHeaderLoggedIn
+            currentProject={project}
+            currentTeam={team}
+            teamsAndProjects={teamsAndProjects}
+            account={account}
+            accountAddress={accountAddress}
+          />
+        </div>
+        <ProjectSidebarLayout layoutPath={layoutPath}>
+          {props.children}
+        </ProjectSidebarLayout>
       </div>
-      <div className="flex grow flex-col">{props.children}</div>
-    </div>
+      <SaveLastUsedProject projectId={project.id} teamId={team.id} />
+    </SidebarProvider>
   );
 }

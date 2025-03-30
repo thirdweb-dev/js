@@ -35,6 +35,7 @@ const tagsToGroup = {
   "@extension": "Extensions",
   "@rpc": "RPC",
   "@transaction": "Transactions",
+  "@bridge": "Universal Bridge",
   "@buyCrypto": "Buy Crypto",
   "@utils": "Utils",
   "@chain": "Chain",
@@ -60,6 +61,7 @@ const sidebarGroupOrder: TagKey[] = [
   "@account",
   "@contract",
   "@transaction",
+  "@bridge",
   "@nebula",
   "@social",
   "@auth",
@@ -165,6 +167,11 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
       return tag === "@modules";
     });
 
+    const bridge = docs.filter((d) => {
+      const [tag] = getCustomTag(d) || [];
+      return tag === "@bridge";
+    });
+
     // sort extensions into their own groups
     if (extensions.length) {
       const extensionGroups = extensions.reduce(
@@ -245,9 +252,68 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
       }
     }
 
+    if (bridge.length) {
+      const bridgeGroups = bridge.reduce(
+        (acc, d) => {
+          const [, moduleName] = getCustomTag(d) || [];
+          if (moduleName) {
+            if (!acc[moduleName]) {
+              acc[moduleName] = [];
+            }
+            acc[moduleName]?.push(d);
+          }
+          return acc;
+        },
+        {} as Record<string, SomeDoc[]>,
+      );
+      const bridgeLinkGroups: {
+        name: string;
+        href: string;
+        links?: { name: string; href?: string }[];
+      }[] = Object.entries(bridgeGroups)
+        .filter(([namespaceName]) => namespaceName.toLowerCase() !== "common")
+        .map(([namespaceName, docs]) => {
+          const links = docs.map((d) => ({
+            name: d.name,
+            href: getLink(`${path}/${namespaceName.toLowerCase()}/${d.name}`),
+          }));
+          return {
+            name: namespaceName,
+            href: "",
+            links,
+          };
+        });
+
+      // Add the top-level functions
+      for (const group of Object.entries(bridgeGroups).filter(
+        ([namespaceName]) => namespaceName.toLowerCase() === "common",
+      )) {
+        const docs = group[1];
+        for (const doc of docs) {
+          bridgeLinkGroups.push({
+            name: doc.name,
+            href: getLink(`${path}/${doc.name}`),
+          });
+        }
+      }
+
+      if (!linkGroups.find((group) => group.name === name)) {
+        linkGroups.push({
+          name: name,
+          href: getLink(`${path}/${key}`),
+          links: [{ name: "Universal Bridge", links: bridgeLinkGroups }],
+          isCollapsible: false,
+        });
+      } else {
+        linkGroups
+          .find((group) => group.name === name)
+          ?.links.push({ name: "Universal Bridge", links: bridgeLinkGroups });
+      }
+    }
+
     const nonExtensions = docs.filter((d) => {
       const [tag] = getCustomTag(d) || [];
-      return tag !== "@extension" && tag !== "@modules";
+      return tag !== "@extension" && tag !== "@modules" && tag !== "@bridge";
     });
 
     // sort into groups

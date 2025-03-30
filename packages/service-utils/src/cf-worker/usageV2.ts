@@ -10,7 +10,7 @@ import { extractAuthorizationData } from "./index.js";
 type UsageV2Options = {
   usageBaseUrl: string;
   source: UsageV2Source;
-  authInput: CoreAuthInput & { req: Request };
+  authInput: CoreAuthInput & { req?: Request };
   serviceKey?: string;
 };
 
@@ -29,12 +29,25 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
   options: T,
 ): Promise<void> {
   const { usageBaseUrl, source, authInput, serviceKey } = options;
-  const { clientId, secretKey } = await extractAuthorizationData(authInput);
 
-  // Forward headers from the origin request.
+  // Extract clientId and secretKey from the request, if provided.
+  let clientId = authInput.clientId ?? null;
+  let secretKey: string | null = null;
+  if (authInput.req) {
+    const authData = await extractAuthorizationData({
+      ...authInput,
+      req: authInput.req,
+    });
+    clientId = authData.clientId;
+    secretKey = authData.secretKey;
+  }
+
+  // Forward headers from the origin request, if provided.
   // Determine endpoint and auth header based on provided credentials.
   let url: string;
-  const headers = new Headers(Object.fromEntries(authInput.req.headers));
+  const headers = authInput.req
+    ? new Headers(Object.fromEntries(authInput.req.headers))
+    : new Headers();
   headers.set("Content-Type", "application/json");
   if (serviceKey) {
     // If a service key is provided, call the non-public usage endpoint.

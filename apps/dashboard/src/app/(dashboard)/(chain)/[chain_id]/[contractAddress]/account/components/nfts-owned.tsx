@@ -6,12 +6,17 @@ import { NFTCards } from "../../_components/NFTCards";
 
 interface NftsOwnedProps {
   contract: ThirdwebContract;
+  isInsightSupported: boolean;
 }
 
-export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
+export const NftsOwned: React.FC<NftsOwnedProps> = ({
+  contract,
+  isInsightSupported,
+}) => {
   const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
     chainId: contract.chain.id,
     walletAddress: contract.address,
+    isInsightSupported: isInsightSupported,
   });
 
   const nfts = walletNFTs?.result || [];

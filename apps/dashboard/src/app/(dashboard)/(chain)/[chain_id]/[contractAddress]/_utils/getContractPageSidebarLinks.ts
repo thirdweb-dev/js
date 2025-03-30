@@ -47,7 +47,7 @@ export function getContractPageSidebarLinks(data: {
     {
       label: "Analytics",
       href: `${layoutPrefix}/analytics`,
-      hide: !data.metadata.isAnalyticsSupported,
+      hide: !data.metadata.isInsightSupported,
       exactMatch: true,
     },
     {

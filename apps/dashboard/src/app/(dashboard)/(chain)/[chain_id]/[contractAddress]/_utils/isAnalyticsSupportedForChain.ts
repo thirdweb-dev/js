@@ -4,7 +4,7 @@ import { getVercelEnv } from "lib/vercel-utils";
 const thirdwebDomain =
   getVercelEnv() !== "production" ? "thirdweb-dev" : "thirdweb";
 
-export async function isAnalyticsSupportedForChain(
+export async function isInsightSupportedForChain(
   chainId: number,
 ): Promise<boolean> {
   try {

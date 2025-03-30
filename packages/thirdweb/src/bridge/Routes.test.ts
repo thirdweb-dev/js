@@ -10,7 +10,7 @@ const server = setupServer(
   }),
 );
 
-describe("Bridge.routes", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Bridge.routes", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());

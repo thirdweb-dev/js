@@ -10,20 +10,21 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Get started with Connect",
+		title: "Get started with wallets",
 		icon: "wallets",
 	},
-	title: "Get started with Connect",
-	description: "Get started with Connect",
+	title: "Get started with wallets",
+	description: "Get started with wallets",
 });
 
-# Get Started with Connect
+# Get Started with wallets
 
-Connect offers multiple ways to integrate wallet functionality in your application:
+There are 4 types of wallets you can integrate into your app with thirdweb: 
 
-1. **External Wallets** - Connect to existing wallets like MetaMask, Coinbase Wallet, etc.
-2. **In-App Wallets** - Create wallets with social/email login.
-3. **Ecosystem Wallets** - Create wallets with social/email login that is shareable across various applications.
+- **External Wallets** - Connect to existing web3 wallets like MetaMask, Coinbase Wallet, etc.
+- **In-App Wallets** - Create embedded, branded and customizable wallets for your app, or game.
+- [**Ecosystem Wallets**](/connect/wallet/ecosystem/set-up) - Create a branded and customizable wallet offering users a unified identity across your entire ecosystem of apps or games.
+- [**Smart Wallets (Account Abstraction)**](/connect/account-abstraction/get-started) - leverage account abstraction to unlock complex functionality such as gasless & signless transactions.
 
 These methods can be used independently or together in the same application to provide the best experience for your users.
 
@@ -155,7 +156,7 @@ Before diving into the implementation, check out our playground to see all the v
 
     ### Setup Ecosystem Wallet
 
-    Create shareable wallets across multiple applications:
+    Create a single unified identity for your users with our branded, customizable wallets built for supporting multiple apps and games within an entire ecosystem.
 
     ```typescript
     import { createThirdwebClient, ecosystemWallet } from "thirdweb";
@@ -695,24 +696,6 @@ Before diving into the implementation, check out our playground to see all the v
     4. Connect nodes for wallet login, balance checking, etc.
   </TabsContent>
 </Tabs>
-
-## Performance Considerations
-
-Optimize your wallet implementation:
-
-1. **Create Client Once**
-   - Initialize the thirdweb client once and reuse it
-   - Avoid recreating the client for each operation
-
-2. **Caching**
-   - Use built-in React query capabilities
-   - Avoid polling or constant refetching
-   - Implement proper state management
-
-3. **Lazy Loading**
-   - The SDK loads wallet connectors on demand
-   - Modularity reduces bundle size
-   - Only import what you need
 
 ## Next Steps
 

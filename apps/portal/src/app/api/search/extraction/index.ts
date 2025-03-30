@@ -155,6 +155,8 @@ function extractPageLLMContent(
 
   const htmlToMarkdown = new NodeHtmlMarkdown({
     keepDataImages: false,
+    ignore: ["button"],
+    maxConsecutiveNewlines: 2,
   });
 
   let linksContent = "";
@@ -167,10 +169,7 @@ function extractPageLLMContent(
   let description = "";
   for (const p of paragraphs) {
     // skip noindex or no-llm paragraphs
-    if (
-      p.getAttribute("data-noindex") === "true" ||
-      p.getAttribute("data-no-llm") === "true"
-    ) {
+    if (p.closest("[data-noindex]") || p.closest("[data-no-llm]")) {
       continue;
     }
 
@@ -180,7 +179,7 @@ function extractPageLLMContent(
     }
   }
 
-  linksContent += `* [${pageTitle}](${pageUrl}): ${description}`;
+  linksContent += `* [${pageTitle}](${pageUrl}): ${description || `Reference for ${pageTitle}`}`;
 
   // Remove noindex and no-llm elements
   const contentElements = main.querySelectorAll("*");
@@ -204,12 +203,18 @@ function extractPageLLMContent(
   // prefix all the relative links with the `https://portal.thirdweb.com`
   const links = main.querySelectorAll("a");
   for (const link of links) {
-    const [path, hash] = link.getAttribute("href")?.split("#") || [];
-    if (path?.startsWith("/")) {
-      link.setAttribute(
-        "href",
-        `https://portal.thirdweb.com${path}${hash ? `#${hash}` : ""}`,
-      );
+    const href = link.getAttribute("href");
+    if (href?.startsWith("/")) {
+      link.setAttribute("href", `https://portal.thirdweb.com${href}`);
+    }
+  }
+
+  // prefix all relative image links with the `https://portal.thirdweb.com`
+  const images = main.querySelectorAll("img");
+  for (const image of images) {
+    const src = image.getAttribute("src");
+    if (src?.startsWith("/")) {
+      image.setAttribute("src", `https://portal.thirdweb.com${src}`);
     }
   }
 

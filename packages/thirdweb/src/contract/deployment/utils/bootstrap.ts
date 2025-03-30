@@ -1,4 +1,6 @@
+import { activateStylusContract } from "../../../extensions/stylus/write/activateStylusContract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import {
   type FetchDeployMetadataResult,
   fetchBytecodeFromCompilerMetadata,
@@ -142,7 +144,11 @@ export async function getOrDeployInfraForPublishedContract(
       version,
     });
   }
-  return { cloneFactoryContract, implementationContract };
+
+  return {
+    cloneFactoryContract,
+    implementationContract,
+  };
 }
 
 /**
@@ -251,5 +257,24 @@ export async function getOrDeployInfraContractFromMetadata(
   if (!deployedInfraContract) {
     throw new Error(`Failed to deploy ${options.contractMetadata.name}`);
   }
+
+  const isStylus = options.contractMetadata.metadata.language === "rust";
+  if (isStylus) {
+    try {
+      const activationTransaction = await activateStylusContract({
+        chain: options.chain,
+        client: options.client,
+        contractAddress: deployedInfraContract.address,
+      });
+
+      await sendTransaction({
+        transaction: activationTransaction,
+        account: options.account,
+      });
+    } catch {
+      console.error("Error: Contract could not be activated.");
+    }
+  }
+
   return deployedInfraContract;
 }

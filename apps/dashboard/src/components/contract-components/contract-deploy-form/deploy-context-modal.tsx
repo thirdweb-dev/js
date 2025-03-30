@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { CircleCheck, CircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
+import { useActiveWallet } from "thirdweb/react";
 
 export type DeployModalStep = {
   type: "deploy" | "setNFTMetadata";
@@ -79,9 +80,9 @@ export function DeployStatusModal(props: {
         dialogCloseClassName="hidden"
         className="gap-0 p-0 md:max-w-[480px]"
       >
-        <div className="flex flex-col gap-6 p-6">
+        <div className="flex flex-col gap-5 p-6">
           <DialogHeader>
-            <DialogTitle className="font-semibold text-2xl tracking-tight">
+            <DialogTitle className="font-semibold text-xl tracking-tight">
               Deploy Status
             </DialogTitle>
           </DialogHeader>
@@ -125,7 +126,10 @@ type DeployModalStepProps = {
 
 function RenderDeployModalStep(props: DeployModalStepProps) {
   const { isActive, hasCompleted } = props;
-  const { title, description } = getStepInfo(props.step);
+  const wallet = useActiveWallet();
+  const requiresSignature = wallet?.id !== "inApp";
+
+  const { title, description } = getStepInfo(props.step, requiresSignature);
   return (
     <div className="rounded-lg border border-border bg-card">
       <div
@@ -158,13 +162,16 @@ type TitleAndDesc = {
   description: React.ReactNode;
 };
 
-function getStepInfo(step: DeployModalStep): TitleAndDesc {
+function getStepInfo(
+  step: DeployModalStep,
+  requiresSignature: boolean,
+): TitleAndDesc {
   switch (step.type) {
     case "deploy": {
       return {
         title: "Deploying contract",
         description:
-          step.signatureCount > 0
+          step.signatureCount > 0 && requiresSignature
             ? `Your wallet will prompt you to sign ${
                 step.signatureCount === 1 ? "the" : step.signatureCount || 1
               } transaction${step.signatureCount > 1 ? "s" : ""}.`
@@ -177,7 +184,7 @@ function getStepInfo(step: DeployModalStep): TitleAndDesc {
         title: "Setting NFT metadata",
         description: (
           <>
-            {step.signatureCount > 0
+            {step.signatureCount > 0 && requiresSignature
               ? "Your wallet will prompt you to sign the transaction. "
               : "This may take a few seconds."}
           </>

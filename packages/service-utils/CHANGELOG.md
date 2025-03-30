@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.18
+
+### Patch Changes
+
+- [#6557](https://github.com/thirdweb-dev/js/pull/6557) [`cff2481`](https://github.com/thirdweb-dev/js/commit/cff2481c06e2cdafec85da9d82df81641878957f) Thanks [@arcoraven](https://github.com/arcoraven)! - fix: changeset for optional req
+
+## 0.8.17
+
+### Patch Changes
+
+- [#6526](https://github.com/thirdweb-dev/js/pull/6526) [`21389bb`](https://github.com/thirdweb-dev/js/commit/21389bbef6918a72df3ca1822ea7e5f697931c39) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add engineCloud service
+
 ## 0.8.16
 
 ### Patch Changes

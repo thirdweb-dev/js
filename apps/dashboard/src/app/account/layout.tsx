@@ -4,6 +4,7 @@ import { AppFooter } from "@/components/blocks/app-footer";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type React from "react";
 import { TabPathLinks } from "../../@/components/ui/tabs";
+import { AnnouncementBanner } from "../../components/notices/AnnouncementBanner";
 import { getAuthTokenWalletAddress } from "../api/lib/getAuthToken";
 import { TWAutoConnect } from "../components/autoconnect";
 import { loginRedirect } from "../login/loginRedirect";
@@ -53,6 +54,7 @@ async function HeaderAndNav(props: {
 
   return (
     <div className="bg-card">
+      <AnnouncementBanner />
       <AccountHeader
         teamsAndProjects={teamsAndProjects}
         account={props.twAccount}

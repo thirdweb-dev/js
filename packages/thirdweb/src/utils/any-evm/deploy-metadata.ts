@@ -253,7 +253,7 @@ export type ExtendedMetadata = {
   >;
   compositeAbi?: Abi;
   compilers?: Record<
-    "solc" | "zksolc",
+    "solc" | "zksolc" | "stylus",
     {
       evmVersion: string;
       compilerVersion: string;

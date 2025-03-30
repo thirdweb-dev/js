@@ -13,7 +13,6 @@ import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
-import { useSimplehashSupport } from "lib/wallet/nfts/simpleHash";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -25,6 +24,7 @@ interface CreateListingButtonProps {
   createText?: string;
   type?: "direct-listings" | "english-auctions";
   twAccount: Account | undefined;
+  isInsightSupported: boolean;
 }
 
 const LISTING_MODES = ["Select NFT", "Manual"] as const;
@@ -34,6 +34,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   type,
   contract,
   twAccount,
+  isInsightSupported,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
@@ -41,13 +42,12 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   const [listingMode, setListingMode] =
     useState<(typeof LISTING_MODES)[number]>("Select NFT");
 
-  const simplehashQuery = useSimplehashSupport(contract.chain.id);
-
   const isSupportedChain =
     contract.chain.id &&
-    (simplehashQuery.data ||
+    (isInsightSupported ||
       isAlchemySupported(contract.chain.id) ||
       isMoralisSupported(contract.chain.id));
+
   return (
     <ListerOnly contract={contract}>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -83,6 +83,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                   actionText={createText}
                   setOpen={setOpen}
                   mode={listingMode === "Select NFT" ? "automatic" : "manual"}
+                  isInsightSupported={isInsightSupported}
                 />
               </div>
             </>
@@ -95,6 +96,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                 actionText={createText}
                 setOpen={setOpen}
                 mode="manual"
+                isInsightSupported={isInsightSupported}
               />
             </div>
           )}

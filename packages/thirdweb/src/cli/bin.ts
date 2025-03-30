@@ -4,8 +4,18 @@ import {
   generate,
   isValidChainIdAndContractAddress,
 } from "./commands/generate/generate.js";
+import { deployStylus, publishStylus } from "./commands/stylus/builder.js";
+import { createStylusProject } from "./commands/stylus/create.js";
+
 // skip the first two args?
 const [, , command = "", ...rest] = process.argv;
+
+let secretKey: string | undefined;
+const keyIndex = rest.indexOf("-k");
+if (keyIndex !== -1 && rest.length > keyIndex + 1) {
+  secretKey = rest[keyIndex + 1];
+  rest.splice(keyIndex, 2);
+}
 
 async function main() {
   switch (command) {
@@ -17,6 +27,21 @@ async function main() {
       } else {
         await generate(chainIdPlusContract);
       }
+      break;
+    }
+
+    case "publish-stylus": {
+      await publishStylus(secretKey);
+      break;
+    }
+
+    case "deploy-stylus": {
+      await deployStylus(secretKey);
+      break;
+    }
+
+    case "create-stylus": {
+      await createStylusProject();
       break;
     }
 

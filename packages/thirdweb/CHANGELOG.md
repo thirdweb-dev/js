@@ -1,5 +1,37 @@
 # thirdweb
 
+## 5.93.7
+
+### Patch Changes
+
+- [#6578](https://github.com/thirdweb-dev/js/pull/6578) [`2a1f4be`](https://github.com/thirdweb-dev/js/commit/2a1f4be48b41d406e86203a4fc00d8bc687cb795) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix bug with PayEmbed incorrectly showing failed state
+
+- [#6580](https://github.com/thirdweb-dev/js/pull/6580) [`c3d0ea0`](https://github.com/thirdweb-dev/js/commit/c3d0ea005959d5b65c5af3f2043a93f62207e770) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - respect supportedTokens prop in PayEmbed
+
+- [#6495](https://github.com/thirdweb-dev/js/pull/6495) [`b49c191`](https://github.com/thirdweb-dev/js/commit/b49c1913553b0d0cc73ab74359db21896a8bcb1f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support Stylus contracts in CLI and SDK
+
+## 5.93.6
+
+### Patch Changes
+
+- [#6569](https://github.com/thirdweb-dev/js/pull/6569) [`2d4c5ff`](https://github.com/thirdweb-dev/js/commit/2d4c5ff07c5c84d3705a35a01990d598939e2e44) Thanks [@MananTank](https://github.com/MananTank)! - Fix "Cannot read properties of undefined (reading 'forwardRef')" error in certain bundler setups
+
+## 5.93.5
+
+### Patch Changes
+
+- [#6550](https://github.com/thirdweb-dev/js/pull/6550) [`3c120a7`](https://github.com/thirdweb-dev/js/commit/3c120a7584aa22e4c77a000bd000b1f89048382e) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Functions to manage extensions on a dynamic contract
+
+- [#6545](https://github.com/thirdweb-dev/js/pull/6545) [`c549d59`](https://github.com/thirdweb-dev/js/commit/c549d5934e2771cb7f41bb3a87ce1ad85b7678cd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies
+
+- [#6562](https://github.com/thirdweb-dev/js/pull/6562) [`e5026a1`](https://github.com/thirdweb-dev/js/commit/e5026a10ab38bf2061bb61e3ec540a1fe26994db) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Account for bigint values in engine wallet typed data
+
+## 5.93.4
+
+### Patch Changes
+
+- [#6527](https://github.com/thirdweb-dev/js/pull/6527) [`4f51201`](https://github.com/thirdweb-dev/js/commit/4f51201249713cdac28bf7d6062cdf67a4e89144) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies
+
 ## 5.93.3
 
 ### Patch Changes

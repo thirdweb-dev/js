@@ -1,10 +1,4 @@
-import type {
-  Abi,
-  AbiFunction,
-  AbiParametersToPrimitiveTypes,
-  Address,
-} from "abitype";
-import { toFunctionSelector, toFunctionSignature } from "viem";
+import type { AbiParametersToPrimitiveTypes, Address } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
@@ -19,6 +13,19 @@ import { getRoyaltyEngineV1ByChainId } from "../../utils/royalty-engine.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initMarketplace } from "./__generated__/Marketplace/write/initialize.js";
+import { generateExtensionFunctionsFromAbi } from "./get-required-transactions.js";
+
+type Extension = {
+  metadata: {
+    name: string;
+    metadataURI: string;
+    implementation: `0x${string}`;
+  };
+  functions: {
+    functionSelector: string;
+    functionSignature: string;
+  }[];
+};
 
 export type MarketplaceContractParams = {
   name: string;
@@ -74,41 +81,72 @@ export async function deployMarketplaceContract(
     account,
     contractId: "WETH9",
   });
-  const direct = await getOrDeployInfraForPublishedContract({
-    chain,
-    client,
-    account,
-    contractId: "DirectListingsLogic",
-    constructorParams: { _nativeTokenWrapper: WETH.address },
-  });
 
-  const english = await getOrDeployInfraForPublishedContract({
-    chain,
-    client,
-    account,
-    contractId: "EnglishAuctionsLogic",
-    constructorParams: { _nativeTokenWrapper: WETH.address },
-  });
+  let extensions: Extension[] = [];
 
-  const offers = await getOrDeployInfraForPublishedContract({
-    chain,
-    client,
-    account,
-    contractId: "OffersLogic",
-  });
+  if (options.version !== "6.0.0") {
+    const direct = await getOrDeployInfraForPublishedContract({
+      chain,
+      client,
+      account,
+      contractId: "DirectListingsLogic",
+      constructorParams: { _nativeTokenWrapper: WETH.address },
+    });
 
-  const [directFunctions, englishFunctions, offersFunctions] =
-    await Promise.all([
-      resolveContractAbi(direct.implementationContract).then(
-        generateExtensionFunctionsFromAbi,
-      ),
-      resolveContractAbi(english.implementationContract).then(
-        generateExtensionFunctionsFromAbi,
-      ),
-      resolveContractAbi(offers.implementationContract).then(
-        generateExtensionFunctionsFromAbi,
-      ),
-    ]);
+    const english = await getOrDeployInfraForPublishedContract({
+      chain,
+      client,
+      account,
+      contractId: "EnglishAuctionsLogic",
+      constructorParams: { _nativeTokenWrapper: WETH.address },
+    });
+
+    const offers = await getOrDeployInfraForPublishedContract({
+      chain,
+      client,
+      account,
+      contractId: "OffersLogic",
+    });
+
+    const [directFunctions, englishFunctions, offersFunctions] =
+      await Promise.all([
+        resolveContractAbi(direct.implementationContract).then(
+          generateExtensionFunctionsFromAbi,
+        ),
+        resolveContractAbi(english.implementationContract).then(
+          generateExtensionFunctionsFromAbi,
+        ),
+        resolveContractAbi(offers.implementationContract).then(
+          generateExtensionFunctionsFromAbi,
+        ),
+      ]);
+    extensions = [
+      {
+        metadata: {
+          name: "Direct Listings",
+          metadataURI: "",
+          implementation: direct.implementationContract.address,
+        },
+        functions: directFunctions,
+      },
+      {
+        metadata: {
+          name: "English Auctions",
+          metadataURI: "",
+          implementation: english.implementationContract.address,
+        },
+        functions: englishFunctions,
+      },
+      {
+        metadata: {
+          name: "Offers",
+          metadataURI: "",
+          implementation: offers.implementationContract.address,
+        },
+        functions: offersFunctions,
+      },
+    ];
+  }
 
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
@@ -118,32 +156,7 @@ export async function deployMarketplaceContract(
       contractId: "MarketplaceV3",
       constructorParams: {
         _marketplaceV3Params: {
-          extensions: [
-            {
-              metadata: {
-                name: "Direct Listings",
-                metadataURI: "",
-                implementation: direct.implementationContract.address,
-              },
-              functions: directFunctions,
-            },
-            {
-              metadata: {
-                name: "English Auctions",
-                metadataURI: "",
-                implementation: english.implementationContract.address,
-              },
-              functions: englishFunctions,
-            },
-            {
-              metadata: {
-                name: "Offers",
-                metadataURI: "",
-                implementation: offers.implementationContract.address,
-              },
-              functions: offersFunctions,
-            },
-          ],
+          extensions,
           royaltyEngineAddress: getRoyaltyEngineV1ByChainId(chain.id),
           nativeTokenWrapper: WETH.address,
         } as MarketplaceConstructorParams[number],
@@ -197,22 +210,6 @@ async function getInitializeTransaction(options: {
     platformFeeRecipient: params.platformFeeRecipient || accountAddress,
     trustedForwarders: params.trustedForwarders || [],
   });
-}
-
-// helperFns
-
-function generateExtensionFunctionsFromAbi(abi: Abi): Array<{
-  functionSelector: string;
-  functionSignature: string;
-}> {
-  const functions = abi.filter(
-    (item) => item.type === "function" && !item.name.startsWith("_"),
-  ) as AbiFunction[];
-
-  return functions.map((fn) => ({
-    functionSelector: toFunctionSelector(fn),
-    functionSignature: toFunctionSignature(fn),
-  }));
 }
 
 // let's just ... put this down here

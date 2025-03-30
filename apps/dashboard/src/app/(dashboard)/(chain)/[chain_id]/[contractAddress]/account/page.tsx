@@ -33,7 +33,8 @@ export default async function Page(props: {
     );
   }
 
-  const { isAccount } = await getContractPageMetadata(contract);
+  const { isAccount, isInsightSupported } =
+    await getContractPageMetadata(contract);
 
   if (!isAccount) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -44,6 +45,7 @@ export default async function Page(props: {
       contract={contract}
       chainMetadata={chainMetadata}
       twAccount={account}
+      isInsightSupported={isInsightSupported}
     />
   );
 }
