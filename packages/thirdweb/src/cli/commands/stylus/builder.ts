@@ -29,7 +29,9 @@ export async function deployStylus(secretKey?: string) {
 
 async function buildStylus(spinner: Ora, secretKey?: string) {
   if (!secretKey) {
-    spinner.fail("Error: Secret key is required.");
+    spinner.fail(
+      "Error: Secret key is required. Please pass it via the -k parameter.",
+    );
     process.exit(1);
   }
 
