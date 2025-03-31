@@ -8,8 +8,10 @@ import NextTopLoader from "nextjs-toploader";
 import { Suspense } from "react";
 import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
 import { PosthogIdentifierServer } from "../components/wallets/PosthogIdentifierServer";
+import { PHProvider } from "../lib/posthog/Posthog";
+import { PosthogHeadSetup } from "../lib/posthog/PosthogHeadSetup";
+import { PostHogPageView } from "../lib/posthog/PosthogPageView";
 import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
-import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
 
 const fontSans = Inter({
@@ -63,8 +65,10 @@ export default function RootLayout({
           customDomain="https://pl.thirdweb.com"
           selfHosted
         />
+        <PosthogHeadSetup />
       </head>
-      <PostHogProvider>
+      <PHProvider>
+        <PostHogPageView />
         <body
           className={cn(
             "bg-background font-sans antialiased",
@@ -91,7 +95,7 @@ export default function RootLayout({
             showSpinner={false}
           />
         </body>
-      </PostHogProvider>
+      </PHProvider>
     </html>
   );
 }
