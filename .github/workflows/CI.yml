@@ -60,7 +60,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Setup Biome
-        uses: biomejs/setup-biome@c016c38f26f2c4a6eb3662679143614a254263fd # v2.3.0
+        uses: biomejs/setup-biome@f382a98e582959e6aaac8e5f8b17b31749018780 # v2.5.0
         with:
           version: latest  
 
