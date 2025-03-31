@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@abstract-foundation/agw-client": "^1.4.2",
+    "@abstract-foundation/agw-client": "^1.6.2",
     "@abstract-foundation/agw-react": "^1.5.4",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.3",
