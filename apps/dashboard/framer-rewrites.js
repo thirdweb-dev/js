@@ -53,6 +53,7 @@ module.exports = [
   "/learn/guides/:guide_slug",
   "/learn/courses",
   "/learn/glossary",
+  "/learn/glossary/:glossary_slug",
   // -- faucets --
   "/faucets",
 ];
