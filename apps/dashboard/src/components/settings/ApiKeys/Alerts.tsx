@@ -1,81 +1,22 @@
-"use client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { CircleAlertIcon } from "lucide-react";
 
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  IconButton,
-} from "@chakra-ui/react";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { XIcon } from "lucide-react";
-import { Text, TrackedLink } from "tw-components";
-
-export const SmartWalletsBillingAlert = ({
-  dismissible = false,
-}: {
-  dismissible?: boolean;
-}) => {
-  const [dismissed, setDismissed] = useLocalStorage(
-    "dismissed-smart-wallets-billing-alert",
-    false,
-    true,
-  );
-
-  if (dismissible && dismissed) {
-    return true;
-  }
-
+export const SmartWalletsBillingAlert = () => {
   return (
-    <Alert
-      status="warning"
-      borderRadius="md"
-      as={Flex}
-      alignItems="start"
-      justifyContent="space-between"
-      mb={4}
-      variant="left-accent"
-      bg="backgroundCardHighlight"
-    >
-      <div className="flex flex-row">
-        <AlertIcon boxSize={4} mt={1} ml={1} />
-        <Flex flexDir="column" gap={1} pl={1}>
-          <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
-          <AlertDescription>
-            <Text as="span" pr={1}>
-              You&apos;ve enabled Account Abstraction for one of your API keys.
-              <br />
-              To enable AA on mainnet chains,
-            </Text>{" "}
-            <TrackedLink
-              href="/team/~/~/settings/billing"
-              category="api_keys"
-              label="smart_wallets_missing_billing"
-              fontWeight="medium"
-              color="blue.500"
-            >
-              <Text as="span" color="blue.500">
-                subscribe to a billing plan.
-              </Text>
-            </TrackedLink>
-          </AlertDescription>
-        </Flex>
-      </div>
-
-      {dismissible && (
-        <IconButton
-          size="xs"
-          aria-label="Close notice"
-          icon={<XIcon className="size-4" />}
-          colorScheme="blackAlpha"
-          color="white"
-          variant="ghost"
-          opacity={0.6}
-          _hover={{ opacity: 1 }}
-          onClick={() => setDismissed(true)}
-        />
-      )}
+    <Alert variant="warning">
+      <CircleAlertIcon className="size-5" />
+      <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
+      <AlertDescription>
+        To enable AA on mainnet chains,{" "}
+        <TrackedUnderlineLink
+          href="/team/~/~/settings/billing"
+          category="api_keys"
+          label="smart_wallets_missing_billing"
+        >
+          subscribe to a billing plan.
+        </TrackedUnderlineLink>
+      </AlertDescription>
     </Alert>
   );
 };

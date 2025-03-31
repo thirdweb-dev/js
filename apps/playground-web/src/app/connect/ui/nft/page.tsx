@@ -32,7 +32,7 @@ export default function Page() {
               their perfect user interface.
             </>
           }
-          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#nfts"
+          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#nfts?utm_source=playground"
           heroLink="/headless-ui-header.png"
         />
         <section className="space-y-8">

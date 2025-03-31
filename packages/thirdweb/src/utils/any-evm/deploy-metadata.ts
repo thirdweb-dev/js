@@ -96,7 +96,7 @@ export async function fetchBytecodeFromCompilerMetadata(options: {
       return deployBytecode;
     },
     {
-      cacheKey: `bytecode:${compilerMetadata.name}:${chain.id}`,
+      cacheKey: `bytecode:${compilerMetadata.name}:${compilerMetadata.publisher}:${compilerMetadata.version}:${chain.id}`,
       cacheTime: 24 * 60 * 60 * 1000,
     },
   );

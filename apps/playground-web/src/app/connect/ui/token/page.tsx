@@ -33,7 +33,7 @@ export default function Page() {
               other crypto applications.
             </>
           }
-          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#tokens"
+          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#tokens?utm_source=playground"
           heroLink="/headless-ui-header.png"
         />
         <section className="space-y-8">

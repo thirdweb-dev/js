@@ -24,7 +24,7 @@ export default function Page() {
               chain.
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect/pay/get-started"
+          docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
           heroLink="/pay.png"
         />
 

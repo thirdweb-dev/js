@@ -11,7 +11,7 @@ export default function Layout(props: {
         description={
           <>HTTP API to bridge, swap and onramp to and from any currency</>
         }
-        docsLink="https://portal.thirdweb.com/connect/pay/overview"
+        docsLink="https://portal.thirdweb.com/connect/pay/overview?utm_source=playground"
         heroLink="/ub.png"
       />
 

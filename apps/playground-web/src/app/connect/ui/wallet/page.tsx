@@ -31,7 +31,7 @@ export default function Page() {
               design.
             </>
           }
-          docsLink="https://portal.thirdweb.com/react/v5/connecting-wallets/ui-components"
+          docsLink="https://portal.thirdweb.com/react/v5/connecting-wallets/ui-components?utm_source=playground"
           heroLink="/headless-ui-header.png"
         />
         <section className="space-y-8">

@@ -11,7 +11,7 @@ export default function Layout(props: {
         description={
           <>Simple & customizable endpoints for querying rich blockchain data</>
         }
-        docsLink="https://portal.thirdweb.com/insight"
+        docsLink="https://portal.thirdweb.com/insight?utm_source=playground"
         heroLink="/insight-hero.avif"
       />
 

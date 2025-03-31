@@ -1,7 +1,7 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import posthog from "posthog-js";
+import { usePostHog } from "posthog-js/react";
 import { useEffect } from "react";
 import {
   useActiveAccount,
@@ -32,48 +32,49 @@ export const PosthogIdentifierClient: React.FC<{
     client,
   });
   const wallet = useActiveWallet();
+  const posthog = usePostHog();
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (wallet) {
+    if (wallet && posthog && posthog.__loaded) {
       const connector = walletIdToPHName[wallet.id] || wallet.id;
       posthog.register({ connector });
       posthog.capture("wallet_connected", { connector });
     }
-  }, [wallet]);
+  }, [wallet, posthog]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (accountAddress) {
+    if (accountAddress && posthog && posthog.__loaded) {
       posthog.identify(accountAddress);
     }
-  }, [accountAddress]);
+  }, [accountAddress, posthog]);
 
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (accountId) {
+    if (accountId && posthog && posthog.__loaded) {
       posthog.identify(accountId);
     }
-  }, [accountId]);
+  }, [accountId, posthog]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (chain?.id) {
+    if (chain?.id && posthog && posthog.__loaded) {
       posthog.unregister("network");
       posthog.register({ chain_id: chain?.id, ecosystem: "evm" });
     }
-  }, [chain?.id]);
+  }, [chain?.id, posthog]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (balance?.data?.displayValue) {
+    if (balance?.data?.displayValue && posthog && posthog.__loaded) {
       posthog.register({ balance: balance.data.displayValue });
     }
-  }, [balance]);
+  }, [balance, posthog]);
 
   return null;
 };

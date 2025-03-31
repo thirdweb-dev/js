@@ -28,7 +28,7 @@ export default function Page() {
               them to create an additional account.
             </>
           }
-          docsLink="https://portal.thirdweb.com/typescript/v5/auth"
+          docsLink="https://portal.thirdweb.com/typescript/v5/auth?utm_source=playground"
           heroLink="/auth.png"
         />
 

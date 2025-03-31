@@ -74,9 +74,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
         contractId: "WETH9",
-        version: "0.0.1",
         salt: "",
-        publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
       });
       forwarderAddress = await deployPublishedContract({
         client: TEST_CLIENT,

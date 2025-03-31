@@ -248,7 +248,7 @@ export function ERC1155MintTo() {
               <p className="max-w-[600px]">
                 thirdweb Engine Playground{" "}
                 <a
-                  href="https://thirdweb.com/base-sepolia-testnet/0x8CD193648f5D4E8CD9fD0f8d3865052790A680f6/nfts"
+                  href="https://thirdweb.com/base-sepolia-testnet/0x8CD193648f5D4E8CD9fD0f8d3865052790A680f6/nfts?utm_source=playground"
                   target="_blank"
                   className="text-blue-500"
                   rel="noreferrer"

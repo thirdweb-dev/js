@@ -26,7 +26,7 @@ export default function Page() {
               that fits your brand.
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
+          docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
           heroLink="/connectors.png"
         />
         <Modal />
