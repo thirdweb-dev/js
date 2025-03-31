@@ -28,7 +28,7 @@ export default function Page() {
               full wallet programmability.
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview"
+          docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
           heroLink="/account-abstraction.png"
         />
 

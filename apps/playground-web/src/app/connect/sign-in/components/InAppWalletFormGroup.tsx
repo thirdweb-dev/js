@@ -39,7 +39,7 @@ export function InAppWalletFormGroup(props: {
         <Link
           target="_blank"
           className="group flex items-center gap-2"
-          href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
+          href="https://portal.thirdweb.com/connect/in-app-wallet/overview?utm_source=playground"
         >
           <h2 className="font-semibold tracking-tight">In-App Wallet</h2>
           <ExternalLinkIcon className="mt-[-2px] size-4 text-muted-foreground group-hover:text-foreground" />

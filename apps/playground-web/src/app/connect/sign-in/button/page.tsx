@@ -71,7 +71,7 @@ export default function Page(props: {
               Ethereum)
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
+          docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
           heroLink="/connectors.png"
         />
 

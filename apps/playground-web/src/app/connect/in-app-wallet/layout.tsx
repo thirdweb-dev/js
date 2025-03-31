@@ -20,7 +20,7 @@ export default function Page(props: { children: React.ReactNode }) {
             and smart account integration.
           </>
         }
-        docsLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
+        docsLink="https://portal.thirdweb.com/connect/in-app-wallet/overview?utm_source=playground"
         heroLink="/in-app-wallet.png"
       />
 

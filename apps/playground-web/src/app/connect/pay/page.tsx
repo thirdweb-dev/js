@@ -26,7 +26,7 @@ export default function Page(props: {
               and generate revenue for each user transaction.
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect/pay/get-started"
+          docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
           heroLink="/pay.png"
         />
 

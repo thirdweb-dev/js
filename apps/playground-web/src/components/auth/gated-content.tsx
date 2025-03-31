@@ -82,7 +82,7 @@ export async function GatedContentPreview() {
         <br />
         Mint a free commemorative NFT{" "}
         <a
-          href="https://thirdweb.com/arbitrum/0xE7d6D628163de95D1c72c343ee852539B51f35Dc/nfts/0"
+          href="https://thirdweb.com/arbitrum/0xE7d6D628163de95D1c72c343ee852539B51f35Dc/nfts/0?utm_source=playground"
           rel="noreferrer"
           target="_blank"
           className="font-bold text-yellow-400 underline"

@@ -14,7 +14,7 @@ export default async function Page() {
         user-friendly format. <br /> There is no need for ABIs, decoding, RPC,
         or web3 knowledge to fetch blockchain data.{" "}
         <Link
-          href="https://portal.thirdweb.com/insight/blueprints"
+          href="https://portal.thirdweb.com/insight/blueprints?utm_source=playground"
           target="_blank"
           className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:decoration-solid"
         >

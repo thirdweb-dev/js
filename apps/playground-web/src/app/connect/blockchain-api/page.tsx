@@ -28,7 +28,7 @@ export default function Page() {
               contract on any EVM chain through our RPC Edge endpoints.
             </>
           }
-          docsLink="https://portal.thirdweb.com/typescript/v5"
+          docsLink="https://portal.thirdweb.com/typescript/v5?utm_source=playground"
           heroLink="/blockchain-api.png"
         />
 

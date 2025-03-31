@@ -219,7 +219,7 @@ export function LeftSection(props: {
               after connecting wallet
             </span>
             <Link
-              href="https://portal.thirdweb.com/connect/auth"
+              href="https://portal.thirdweb.com/connect/auth?utm_source=playground"
               target="_blank"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
@@ -248,7 +248,7 @@ export function LeftSection(props: {
             </p>
 
             <Link
-              href="https://portal.thirdweb.com/connect/account-abstraction/overview"
+              href="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
               target="_blank"
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >

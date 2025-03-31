@@ -24,7 +24,7 @@ export default function Page() {
               as soon as they sign into your app.
             </>
           }
-          docsLink="https://portal.thirdweb.com/connect" // TODO: update this once we have Social API docs
+          docsLink="https://portal.thirdweb.com/connect?utm_source=playground" // TODO: update this once we have Social API docs
           heroLink="/in-app-wallet.png"
         />
 

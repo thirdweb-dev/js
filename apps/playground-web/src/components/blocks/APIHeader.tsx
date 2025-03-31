@@ -32,7 +32,10 @@ export function APIHeader(props: {
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
-            <Link target="_blank" href="https://thirdweb.com/contact-us">
+            <Link
+              target="_blank"
+              href="https://thirdweb.com/contact-us?utm_source=playground"
+            >
               Book a Demo
             </Link>
           </Button>
