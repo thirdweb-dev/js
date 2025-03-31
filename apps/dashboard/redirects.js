@@ -361,6 +361,19 @@ async function redirects() {
         "/team/:team_slug/:project_slug/connect/universal-bridge/:path*",
       permanent: false,
     },
+
+    // all /learn/tutorials (and sub-routes) -> /learn/guides
+    {
+      source: "/learn/tutorials/:path*",
+      destination: "/learn/guides/:path*",
+      permanent: false,
+    },
+    {
+      source: "/learn/tutorials",
+      destination: "/learn/guides",
+      permanent: false,
+    },
+
     ...legacyDashboardToTeamRedirects,
   ];
 }

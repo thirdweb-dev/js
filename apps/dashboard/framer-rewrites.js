@@ -49,8 +49,6 @@ module.exports = [
   "/templates/:template_slug",
   // -- learn --
   "/learn",
-  "/learn/tutorials",
-  "/learn/tutorials/:tutorial_slug",
   "/learn/guides",
   "/learn/guides/:guide_slug",
   "/learn/courses",
