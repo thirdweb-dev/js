@@ -94,6 +94,7 @@ export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
           }
           // otherwise determine the wrapped native token address for the chain
 
+          // TODO: auto wrap native tokens if the currency is a native token address
           // TODO: add known wrapped native token addresses for each chain on the chain config
 
           const { getDeployedInfraContract } = await import(
@@ -127,6 +128,14 @@ export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
           quantity: options.quantity ?? 1n,
           tokenId: options.tokenId,
           totalPrice: normalizedPrice,
+        },
+        overrides: {
+          erc20Value: isNativeTokenAddress(currency)
+            ? undefined
+            : {
+                tokenAddress: currency,
+                amountWei: normalizedPrice,
+              },
         },
       };
     },

@@ -6,9 +6,9 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AlertCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { PlanInfoCard } from "../../../../app/team/[team_slug]/(team)/~/settings/billing/components/PlanInfoCard";
-import { CouponSection } from "./CouponCard";
 import { CreditsInfoCard } from "./PlanCard";
 import { BillingPricing } from "./Pricing";
+import { Coupons } from "./SubscriptionCoupons/Coupons";
 
 // TODO - move this in app router folder in other pr
 
@@ -68,7 +68,7 @@ export const Billing: React.FC<BillingProps> = ({
       />
 
       <CreditsInfoCard twAccount={twAccount} />
-      <CouponSection teamId={team.id} isPaymentSetup={validPayment} />
+      <Coupons teamId={team.id} isPaymentSetup={validPayment} />
     </div>
   );
 };
