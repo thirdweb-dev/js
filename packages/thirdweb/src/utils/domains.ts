@@ -34,6 +34,11 @@ type DomainOverrides = {
    * @default "c.thirdweb.com"
    */
   analytics?: string;
+  /**
+   * The base URL for the insight server.
+   * @default "insight.thirdweb.com"
+   */
+  insight?: string;
 };
 
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
@@ -43,7 +48,7 @@ const DEFAULT_PAY_URL = "pay.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 const DEFAULT_BUNDLER_URL = "bundler.thirdweb.com";
 const DEFAULT_ANALYTICS_URL = "c.thirdweb.com";
-
+const DEFAULT_INSIGHT_URL = "insight.thirdweb.com";
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   rpc: DEFAULT_RPC_URL,
   inAppWallet: DEFAULT_IN_APP_WALLET_URL,
@@ -52,6 +57,7 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
   storage: DEFAULT_STORAGE_URL,
   bundler: DEFAULT_BUNDLER_URL,
   analytics: DEFAULT_ANALYTICS_URL,
+  insight: DEFAULT_INSIGHT_URL,
 };
 
 /**
@@ -66,6 +72,7 @@ export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
     storage: DomainOverrides.storage ?? DEFAULT_STORAGE_URL,
     bundler: DomainOverrides.bundler ?? DEFAULT_BUNDLER_URL,
     analytics: DomainOverrides.analytics ?? DEFAULT_ANALYTICS_URL,
+    insight: DomainOverrides.insight ?? DEFAULT_INSIGHT_URL,
   };
 };
 

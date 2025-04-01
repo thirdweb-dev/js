@@ -160,6 +160,10 @@ export function BlueprintPlaygroundUI(props: {
     for (const param of parameters) {
       if (param.schema && "type" in param.schema && param.schema.default) {
         values[param.name] = param.schema.default;
+      } else if (param.name === "filter_block_timestamp_gte") {
+        values[param.name] = Math.floor(
+          (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
+        );
       } else {
         values[param.name] = "";
       }
