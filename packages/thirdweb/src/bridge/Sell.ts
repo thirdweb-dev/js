@@ -149,7 +149,6 @@ export declare namespace quote {
  *     {
  *       id: "0x...",
  *       action: "approval",
- *       id: "0x",
  *       to: "0x...",
  *       data: "0x...",
  *       chainId: 10,
