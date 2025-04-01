@@ -35,7 +35,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Buy.quote", () => {
   });
 });
 
-describe("Bridge.Buy.prepare", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Buy.prepare", () => {
   it("should get a valid prepared quote", async () => {
     const quote = await Buy.prepare({
       originChainId: 1,

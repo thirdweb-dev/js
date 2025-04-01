@@ -15,6 +15,7 @@ describe("Thirdweb Domains", () => {
     storage: "storage.thirdweb.com",
     bundler: "bundler.thirdweb.com",
     analytics: "c.thirdweb.com",
+    insight: "insight.thirdweb.com",
   };
 
   beforeEach(() => {

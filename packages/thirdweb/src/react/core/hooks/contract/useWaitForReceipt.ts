@@ -17,7 +17,9 @@ import {
  * @transaction
  */
 export function useWaitForReceipt(
-  options: WaitForReceiptOptions | undefined,
+  options:
+    | (WaitForReceiptOptions & { queryOptions?: { enabled?: boolean } })
+    | undefined,
 ): UseQueryResult<TransactionReceipt> {
   return useQuery({
     queryKey: [
@@ -32,7 +34,8 @@ export function useWaitForReceipt(
       }
       return waitForReceipt(options);
     },
-    enabled: !!options?.transactionHash,
+    enabled:
+      !!options?.transactionHash && (options?.queryOptions?.enabled ?? true),
     retry: false,
   });
 }
