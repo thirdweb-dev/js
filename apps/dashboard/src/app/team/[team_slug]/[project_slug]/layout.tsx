@@ -1,5 +1,5 @@
 import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { getTeamNebulaWaitList, getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
 import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
@@ -9,7 +9,7 @@ import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logg
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
 
-export default async function TeamLayout(props: {
+export default async function ProjectLayout(props: {
   children: React.ReactNode;
   breadcrumbNav: React.ReactNode;
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -49,6 +49,9 @@ export default async function TeamLayout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const isOnNebulaWaitList = (await getTeamNebulaWaitList(team.slug))
+    ?.onWaitlist;
+
   const layoutPath = `/team/${params.team_slug}/${params.project_slug}`;
 
   return (
@@ -64,7 +67,10 @@ export default async function TeamLayout(props: {
             accountAddress={accountAddress}
           />
         </div>
-        <ProjectSidebarLayout layoutPath={layoutPath}>
+        <ProjectSidebarLayout
+          layoutPath={layoutPath}
+          showNebula={!!isOnNebulaWaitList}
+        >
           {props.children}
         </ProjectSidebarLayout>
       </div>

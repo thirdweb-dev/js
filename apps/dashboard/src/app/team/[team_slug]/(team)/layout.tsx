@@ -1,5 +1,5 @@
 import { getProjects } from "@/api/projects";
-import { getTeamNebulaWaitList, getTeams } from "@/api/team";
+import { getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
@@ -39,9 +39,6 @@ export default async function TeamLayout(props: {
     })),
   );
 
-  const isOnNebulaWaitList = (await getTeamNebulaWaitList(team.slug))
-    ?.onWaitlist;
-
   return (
     <div className="flex h-full grow flex-col">
       <AnnouncementBanner />
@@ -74,14 +71,6 @@ export default async function TeamLayout(props: {
               path: `/team/${params.team_slug}/~/ecosystem`,
               name: "Ecosystems",
             },
-            ...(isOnNebulaWaitList
-              ? [
-                  {
-                    path: `/team/${params.team_slug}/~/nebula`,
-                    name: "Nebula",
-                  },
-                ]
-              : []),
             {
               path: `/team/${params.team_slug}/~/usage`,
               name: "Usage",

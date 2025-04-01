@@ -46,7 +46,7 @@ function UnexpectedErrorPage(props: {
   message: string;
 }) {
   return (
-    <div className="container flex grow flex-col py-10">
+    <div className="flex grow flex-col py-10">
       <div className="flex min-h-[300px] grow flex-col items-center justify-center rounded-lg border">
         <div className="flex flex-col items-center gap-4">
           <span className="text-destructive-text">{props.message}</span>

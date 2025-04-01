@@ -19,11 +19,12 @@ export function NebulaAnalyticsPage(props: {
   };
   teamId: string;
   authToken: string;
+  projectId: string;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
       <header className="border-b">
-        <div className="container flex flex-col items-start gap-4 py-10 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col items-start gap-4 pt-2 pb-6 md:flex-row md:items-center md:justify-between lg:pt-4 lg:pb-10">
           <h1 className="font-semibold text-3xl tracking-tight">Nebula</h1>
 
           <div className="flex gap-3">
@@ -44,7 +45,7 @@ export function NebulaAnalyticsPage(props: {
         </div>
       </header>
 
-      <div className="container pt-8 pb-20">
+      <div className="pt-8">
         <div className="mb-4 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <h2 className="font-semibold text-2xl tracking-tight">Analytics</h2>
           <NebulaAnalyticsFilter />
@@ -56,6 +57,7 @@ export function NebulaAnalyticsPage(props: {
           <NebulaAnalyticDashboard
             searchParams={props.searchParams}
             teamId={props.teamId}
+            projectId={props.projectId}
             authToken={props.authToken}
           />
         </ResponsiveSuspense>
@@ -67,6 +69,7 @@ export function NebulaAnalyticsPage(props: {
 async function NebulaAnalyticDashboard(props: {
   teamId: string;
   authToken: string;
+  projectId: string;
   searchParams: {
     from: string | undefined | string[];
     to: string | undefined | string[];
@@ -80,6 +83,7 @@ async function NebulaAnalyticDashboard(props: {
   const res = await fetchNebulaAnalytics({
     teamId: props.teamId,
     authToken: props.authToken,
+    projectId: props.projectId,
     from: normalizeTimeISOString(range.from),
     to: normalizeTimeISOString(range.to),
     // internally renamed

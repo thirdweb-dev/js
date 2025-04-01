@@ -22,7 +22,7 @@ export function NebulaAnalyticsFilter() {
   });
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="no-scrollbar flex items-center gap-3 overflow-auto">
       <DateRangeSelector
         range={range}
         popoverAlign="end"
