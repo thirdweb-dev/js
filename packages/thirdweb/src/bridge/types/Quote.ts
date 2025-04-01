@@ -1,6 +1,6 @@
 import type {
-  TransactionEnvelopeEip1559 as ox__TransactionEnvelopeEip1559,
   Hex as ox__Hex,
+  TransactionEnvelopeEip1559 as ox__TransactionEnvelopeEip1559,
 } from "ox";
 
 export type Quote = {
