@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
+import { defineChain } from "../chains/utils.js";
 
 /**
  * Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
@@ -240,6 +241,8 @@ export async function prepare(
     transactions: data.transactions.map((transaction) => ({
       ...transaction,
       value: transaction.value ? BigInt(transaction.value) : undefined,
+      client,
+      chain: defineChain(transaction.chainId),
     })),
     expiration: data.expiration,
     intent: {

@@ -2,6 +2,8 @@ import type {
   Hex as ox__Hex,
   TransactionEnvelopeEip1559 as ox__TransactionEnvelopeEip1559,
 } from "ox";
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 
 export type Quote = {
   /**
@@ -49,6 +51,8 @@ export type PreparedQuote = Quote & {
        * The transaction ID, used for tracking purposes.
        */
       id: ox__Hex.Hex;
+      client: ThirdwebClient;
+      chain: Chain;
     }
   >;
 };
