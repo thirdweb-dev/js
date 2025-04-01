@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Address } from "thirdweb";
+import { checksumAddress } from "thirdweb/utils";
 import { getRoutes } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
 import { RouteListCard } from "../server/routelist-card";
@@ -34,27 +35,82 @@ async function getRoutesToRender(params: SearchParams) {
     originTokenAddress?: Address;
     destinationChainId?: number;
     destinationTokenAddress?: Address;
+    originTextQuery?: string;
+    destinationTextQuery?: string;
   }> = {};
 
   if (params.type === "origin" || typeof params.type === "undefined") {
     if (params.query?.startsWith("0x")) {
       filters.originTokenAddress = params.query as Address;
-    } else if (params.query) {
+    } else if (Number.isInteger(Number(params.query))) {
       filters.originChainId = Number(params.query);
+    } else if (params.query) {
+      filters.originTextQuery = params.query;
     }
   } else if (params.type === "destination") {
     if (params.query?.startsWith("0x")) {
       filters.destinationTokenAddress = params.query as Address;
-    } else if (params.query) {
+    } else if (Number.isInteger(Number(params.query))) {
       filters.destinationChainId = Number(params.query);
+    } else if (params.query) {
+      filters.destinationTextQuery = params.query;
     }
   }
   // Temporary, will update this after the /routes endpoint
-  filters.limit = 50_000;
-
-  const routes = await getRoutes(filters);
+  let routes = await getRoutes({ limit: 100_000 });
 
   const totalCount = routes.length;
+
+  if (filters.originChainId) {
+    routes = routes.filter(
+      (route) => route.originToken.chainId === filters.originChainId,
+    );
+  }
+  if (filters.originTokenAddress) {
+    const originTokenAddress = filters.originTokenAddress;
+    routes = routes.filter(
+      (route) =>
+        checksumAddress(route.originToken.address) ===
+        checksumAddress(originTokenAddress),
+    );
+  }
+  if (filters.destinationChainId) {
+    routes = routes.filter(
+      (route) => route.destinationToken.chainId === filters.destinationChainId,
+    );
+  }
+  if (filters.destinationTokenAddress) {
+    const destinationTokenAddress = filters.destinationTokenAddress;
+    routes = routes.filter(
+      (route) =>
+        checksumAddress(route.destinationToken.address) ===
+        checksumAddress(destinationTokenAddress),
+    );
+  }
+
+  if (filters.originTextQuery) {
+    const originTextQuery = filters.originTextQuery.toLowerCase();
+    routes = routes.filter((route) => {
+      return (
+        route.originToken.name.toLowerCase().includes(originTextQuery) ||
+        route.originToken.symbol.toLowerCase().includes(originTextQuery)
+      );
+    });
+  }
+
+  if (filters.destinationTextQuery) {
+    const destinationTextQuery = filters.destinationTextQuery.toLowerCase();
+    routes = routes.filter((route) => {
+      return (
+        route.destinationToken.name
+          .toLowerCase()
+          .includes(destinationTextQuery) ||
+        route.destinationToken.symbol
+          .toLowerCase()
+          .includes(destinationTextQuery)
+      );
+    });
+  }
 
   return {
     routesToRender: routes,
@@ -154,13 +210,21 @@ export async function RoutesData(props: {
         out of{" "}
         {filteredCount !== totalCount ? (
           <>
-            <span className="text-accent-foreground">{filteredCount}</span>{" "}
+            <span className="text-accent-foreground">
+              {filteredCount.toLocaleString()}
+            </span>{" "}
             routes that match filters. (Total:{" "}
-            <span className="text-accent-foreground">{totalCount}</span>)
+            <span className="text-accent-foreground">
+              {totalCount.toLocaleString()}
+            </span>
+            )
           </>
         ) : (
           <>
-            <span className="text-accent-foreground">{totalCount}</span> routes.
+            <span className="text-accent-foreground">
+              {totalCount.toLocaleString()}
+            </span>{" "}
+            routes.
           </>
         )}
       </p>
