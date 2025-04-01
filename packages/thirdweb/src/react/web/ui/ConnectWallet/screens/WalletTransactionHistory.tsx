@@ -1,12 +1,17 @@
 "use client";
 import styled from "@emotion/styled";
 import { CheckIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useSyncExternalStore } from "react";
+import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";
 import { getCachedChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getTransactionStore } from "../../../../../transaction/transaction-store.js";
+import {
+  type StoredTransaction,
+  getPastTransactions,
+  getTransactionStore,
+} from "../../../../../transaction/transaction-store.js";
 import { shortenHex } from "../../../../../utils/address.js";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { formatExplorerTxUrl } from "../../../../../utils/url.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
@@ -38,8 +43,20 @@ export function WalletTransactionHistory(props: {
     transactionStore.subscribe,
     transactionStore.getValue,
   );
-  const transactions = [...reverseChronologicalTransactions].reverse();
-
+  const historicalTxQuery = useQuery({
+    queryKey: ["transactions", props.address, activeChain],
+    queryFn: () =>
+      getPastTransactions({
+        walletAddress: props.address,
+        chain: activeChain || ethereum,
+        client: props.client,
+      }),
+    enabled: !!activeChain,
+  });
+  const transactions = [
+    ...[...reverseChronologicalTransactions].reverse(),
+    ...(historicalTxQuery.data || []),
+  ];
   return (
     <Container
       scrollY
@@ -52,7 +69,22 @@ export function WalletTransactionHistory(props: {
       }}
     >
       <Container flex="column" gap="xs" expand>
-        {transactions.length === 0 ? (
+        {historicalTxQuery.isLoading && (
+          <Container
+            flex="column"
+            gap="md"
+            center="both"
+            color="secondaryText"
+            style={{
+              flex: "1",
+              minHeight: "250px",
+            }}
+          >
+            <Spinner color={"secondaryText"} size={"md"} />
+            <Text>Loading recent transactions...</Text>
+          </Container>
+        )}
+        {!historicalTxQuery.isLoading && transactions.length === 0 ? (
           <Container
             flex="column"
             gap="md"
@@ -79,8 +111,7 @@ export function WalletTransactionHistory(props: {
                   key={tx.transactionHash}
                   explorerUrl={chainExplorers.explorers[0]?.url}
                   client={props.client}
-                  hash={tx.transactionHash}
-                  chainId={tx.chainId}
+                  tx={tx}
                 />
               );
             })}
@@ -92,21 +123,24 @@ export function WalletTransactionHistory(props: {
 }
 
 function TransactionButton(props: {
-  hash: string;
+  tx: StoredTransaction;
   client: ThirdwebClient;
-  chainId: number;
   explorerUrl?: string;
 }) {
   const {
-    data: receipt,
+    data: fetchedReceipt,
     isLoading,
     error,
   } = useWaitForReceipt({
-    transactionHash: props.hash as Hex,
-    chain: getCachedChain(props.chainId),
+    transactionHash: props.tx.transactionHash,
+    chain: getCachedChain(props.tx.chainId),
     client: props.client,
+    queryOptions: {
+      enabled: props.tx.receipt === undefined,
+    },
   });
-  const chainIconQuery = useChainIconUrl(getCachedChain(props.chainId));
+  const chainIconQuery = useChainIconUrl(getCachedChain(props.tx.chainId));
+  const receipt = props.tx.receipt ?? fetchedReceipt;
 
   const content = (
     <TxButton
@@ -148,8 +182,8 @@ function TransactionButton(props: {
           >
             <Text size="sm" color="primaryText">
               {receipt?.to
-                ? `Interacted with ${shortenHex(receipt.to, 4)}`
-                : `Hash: ${shortenHex(props.hash, 4)}`}
+                ? `Interacted with ${shortenHex(receipt?.to, 4)}`
+                : `Hash: ${shortenHex(props.tx.transactionHash, 4)}`}
             </Text>
           </Container>
 
@@ -165,7 +199,7 @@ function TransactionButton(props: {
             }}
           >
             <ChainName
-              chain={getCachedChain(props.chainId)}
+              chain={getCachedChain(props.tx.chainId)}
               size="xs"
               client={props.client}
             />
@@ -193,7 +227,7 @@ function TransactionButton(props: {
   if (props.explorerUrl) {
     return (
       <a
-        href={formatExplorerTxUrl(props.explorerUrl, props.hash)}
+        href={formatExplorerTxUrl(props.explorerUrl, props.tx.transactionHash)}
         target="_blank"
         rel="noreferrer"
       >
