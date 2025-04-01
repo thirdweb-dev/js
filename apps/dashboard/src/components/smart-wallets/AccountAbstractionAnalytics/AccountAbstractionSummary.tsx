@@ -6,7 +6,7 @@ export function AccountAbstractionSummary(props: {
   aggregateUserOpUsageQuery?: UserOpStats;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-4 lg:gap-6">
+    <div className="grid grid-cols-2 gap-4">
       <Stat
         label="Mainnet Sponsored Transactions"
         value={props.aggregateUserOpUsageQuery?.successful || 0}

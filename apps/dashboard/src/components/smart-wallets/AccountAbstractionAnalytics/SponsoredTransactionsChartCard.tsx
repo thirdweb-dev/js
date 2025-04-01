@@ -22,7 +22,7 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { UserOpStats } from "types/analytics";
 import { formatTickerNumber } from "../../../lib/format-utils";
 
@@ -112,11 +112,11 @@ export function SponsoredTransactionsChartCard(props: {
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
-      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
+      <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
         Sponsored Transactions
       </h3>
       <p className="mb-3 text-muted-foreground text-sm">
-        Total number of sponsored transactions.
+        Total number of sponsored transactions
       </p>
 
       <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
@@ -139,7 +139,7 @@ export function SponsoredTransactionsChartCard(props: {
       </div>
 
       {/* Chart */}
-      <ChartContainer config={chartConfig} className="h-[400px] w-full">
+      <ChartContainer config={chartConfig} className="h-[300px] w-full">
         {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ||
@@ -162,18 +162,6 @@ export function SponsoredTransactionsChartCard(props: {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-            />
-
-            <YAxis
-              dataKey={(data) => {
-                return Object.entries(data)
-                  .filter(([key]) => key !== "time")
-                  .map(([, value]) => value)
-                  .reduce((acc, current) => Number(acc) + Number(current), 0);
-              }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => formatTickerNumber(value)}
             />
 
             <ChartTooltip
@@ -208,7 +196,7 @@ export function SponsoredTransactionsChartCard(props: {
 export function EmptyAccountAbstractionChartContent() {
   return (
     <div className="flex flex-col items-center justify-center">
-      <span className="mb-6 text-lg">
+      <span className="mb-6 text-center text-lg">
         Send your first sponsored transaction
       </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">

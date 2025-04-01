@@ -1,12 +1,15 @@
+import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../login/loginRedirect";
-import { NebulaAnalyticsPage } from "../../../[project_slug]/nebula/components/analytics/nebula-analytics-page";
-import { NebulaWaitListPage } from "../../../[project_slug]/nebula/components/nebula-waitlist-page";
+import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../../login/loginRedirect";
+import { NebulaAnalyticsPage } from "./components/analytics/nebula-analytics-page";
+import { NebulaWaitListPage } from "./components/nebula-waitlist-page";
 
 export default async function Page(props: {
   params: Promise<{
     team_slug: string;
+    project_slug: string;
   }>;
   searchParams: Promise<{
     from: string | undefined | string[];
@@ -19,13 +22,22 @@ export default async function Page(props: {
     props.searchParams,
   ]);
 
-  const [authToken, team] = await Promise.all([
+  const [authToken, team, project] = await Promise.all([
     getAuthToken(),
     getTeamBySlug(params.team_slug),
+    getProject(params.team_slug, params.project_slug),
   ]);
 
-  if (!team || !authToken) {
-    loginRedirect(`/team/${params.team_slug}/~/nebula`);
+  if (!team) {
+    redirect("/team");
+  }
+
+  if (!project) {
+    redirect(`/team/${params.team_slug}`);
+  }
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/nebula`);
   }
 
   const hasNebulaAccess = team.enabledScopes.includes("nebula");
@@ -36,6 +48,7 @@ export default async function Page(props: {
         teamId={team.id}
         authToken={authToken}
         searchParams={searchParams}
+        projectId={project.id}
       />
     );
   }

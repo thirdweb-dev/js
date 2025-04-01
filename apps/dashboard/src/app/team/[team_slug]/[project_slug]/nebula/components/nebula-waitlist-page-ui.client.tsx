@@ -13,8 +13,8 @@ export function NebulaWaitListPageUI(props: {
     <div className={cn("flex grow flex-col", props.className)}>
       {/* Header */}
       {!props.hideHeader && (
-        <div className="border-b py-10">
-          <div className="container flex items-center justify-between">
+        <div className="border-b pt-4 pb-10">
+          <div className="flex items-center justify-between">
             <h1 className="font-semibold text-3xl tracking-tight"> Nebula </h1>
             <Button asChild variant="outline">
               <Link href="/contact-us" target="_blank">
@@ -25,7 +25,7 @@ export function NebulaWaitListPageUI(props: {
         </div>
       )}
 
-      <div className="container flex grow flex-col overflow-hidden py-32">
+      <div className="flex grow flex-col overflow-hidden py-32">
         <CenteredCard
           title="You're on the waitlist"
           description="You should receive access to Nebula soon!"

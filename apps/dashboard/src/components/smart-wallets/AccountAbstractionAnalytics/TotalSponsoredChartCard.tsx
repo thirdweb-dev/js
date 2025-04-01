@@ -21,7 +21,7 @@ import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { UserOpStats } from "types/analytics";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { toUSD } from "../../../utils/number";
@@ -111,11 +111,11 @@ export function TotalSponsoredChartCard(props: {
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
-      <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
+      <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
         Gas Sponsored
       </h3>
       <p className="mb-3 text-muted-foreground text-sm">
-        The total amount of gas sponsored in USD.
+        The total amount of gas sponsored in USD
       </p>
 
       <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
@@ -139,10 +139,7 @@ export function TotalSponsoredChartCard(props: {
       </div>
 
       {/* Chart */}
-      <ChartContainer
-        config={chartConfig}
-        className="h-[250px] w-full md:h-[350px]"
-      >
+      <ChartContainer config={chartConfig} className="h-[300px] w-full">
         {props.isPending ? (
           <LoadingChartState />
         ) : chartData.length === 0 ||
@@ -199,18 +196,6 @@ export function TotalSponsoredChartCard(props: {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-            />
-
-            <YAxis
-              dataKey={(data) => {
-                return Object.entries(data)
-                  .filter(([key]) => key !== "time")
-                  .map(([, value]) => value)
-                  .reduce((acc, current) => Number(acc) + Number(current), 0);
-              }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => toUSD(value)}
             />
 
             <ChartTooltip
