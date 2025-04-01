@@ -5,7 +5,6 @@ import { BillingPortalButton } from "@/components/billing";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { differenceInDays, isAfter } from "date-fns";
 import { format } from "date-fns/format";
 import { CircleAlertIcon } from "lucide-react";
@@ -37,7 +36,7 @@ export function PlanInfoCard(props: {
     <div className="rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div>
-          <div className="flex flex-col items-start gap-1">
+          <div className="flex flex-col items-start gap-0.5">
             <h3 className="font-semibold text-2xl capitalize tracking-tight">
               {validPlan} Plan
             </h3>
@@ -56,6 +55,7 @@ export function PlanInfoCard(props: {
 
         <div className="flex flex-row items-center gap-2">
           {/* go to invoices page */}
+
           <Button asChild variant="outline">
             <Link href={`/team/${team.slug}/~/settings/invoices`}>
               View Invoices
@@ -73,20 +73,6 @@ export function PlanInfoCard(props: {
           >
             Manage Billing
           </BillingPortalButton>
-
-          {isActualFreePlan && (
-            <Button asChild variant="outline">
-              <TrackedLinkTW
-                category="account"
-                href="/pricing"
-                label="pricing-plans"
-                target="_blank"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
-              >
-                View Pricing
-              </TrackedLinkTW>
-            </Button>
-          )}
         </div>
       </div>
 

@@ -88,10 +88,10 @@ export async function TotalSponsoredChartCardUI({
     const filteredData = timeSeriesData.filter((d) => d.mainnet > 0);
     return (
       <div className={cn("rounded-lg border p-4 lg:p-6", className)}>
-        <h3 className="mb-1 font-semibold text-xl tracking-tight">
+        <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
           {title || "Total Sponsored"}
         </h3>
-        <p className="text-muted-foreground"> {description}</p>
+        <p className="text-muted-foreground text-sm"> {description}</p>
         <BarChart
           isCurrency
           chartConfig={chartConfig}

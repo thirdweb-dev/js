@@ -27,7 +27,7 @@ export function InAppWalletsSummary(props: {
   );
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:gap-6">
+    <div className="grid grid-cols-2 gap-4">
       <Stat
         label="Total Users"
         value={allTimeStats?.uniqueWalletsConnected || 0}

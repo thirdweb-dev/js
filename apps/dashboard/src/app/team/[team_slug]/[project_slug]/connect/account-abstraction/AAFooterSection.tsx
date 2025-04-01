@@ -34,12 +34,12 @@ function FooterCard(props: {
   trackingCategory: string;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-4 lg:p-6">
-      <h3 className="mb-5 font-semibold text-lg tracking-tight lg:text-xl">
+    <div className="rounded-lg border border-border bg-card p-4">
+      <h3 className="mb-4 border-border border-b pt-1 pb-4 font-semibold text-lg leading-none tracking-tight">
         {props.title}
       </h3>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         {props.links.map((link) => (
           <TrackedLinkTW
             key={link.href}

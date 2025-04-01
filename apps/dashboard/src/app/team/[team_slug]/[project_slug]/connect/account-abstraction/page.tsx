@@ -1,5 +1,6 @@
-import { getUserOpUsage } from "@/api/analytics";
+import { getAggregateUserOpUsage, getUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   type Range,
@@ -31,7 +32,14 @@ export default async function Page(props: {
     notFound();
   }
 
-  const project = await getProject(params.team_slug, params.project_slug);
+  const [team, project] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getProject(params.team_slug, params.project_slug),
+  ]);
+
+  if (!team) {
+    redirect("/team");
+  }
 
   if (!project) {
     redirect(`/team/${params.team_slug}`);
@@ -52,13 +60,23 @@ export default async function Page(props: {
     type: rangeType,
   };
 
-  const userOpStats = await getUserOpUsage({
+  const userOpStatsPromise = getUserOpUsage({
     teamId: project.teamId,
     projectId: project.id,
     from: range.from,
     to: range.to,
     period: interval,
   });
+
+  const aggregateUserOpStatsPromise = getAggregateUserOpUsage({
+    teamId: team.id,
+    projectId: project.id,
+  });
+
+  const [userOpStats, aggregateUserOpStats] = await Promise.all([
+    userOpStatsPromise,
+    aggregateUserOpStatsPromise,
+  ]);
 
   return (
     <AccountAbstractionAnalytics
@@ -67,6 +85,7 @@ export default async function Page(props: {
       teamId={project.teamId}
       projectId={project.id}
       teamSlug={params.team_slug}
+      aggregateUserOpStats={aggregateUserOpStats}
     />
   );
 }

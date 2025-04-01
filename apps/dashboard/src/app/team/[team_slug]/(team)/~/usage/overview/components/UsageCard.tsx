@@ -23,13 +23,13 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   totalUsage,
 }) => {
   return (
-    <div className="relative flex min-h-[190px] flex-col rounded-lg border border-border bg-card p-4 lg:p-6">
-      <h3 className="mb-1 font-semibold text-xl tracking-tight">{name}</h3>
-      <p className="text-muted-foreground"> {description}</p>
+    <div className="relative flex flex-col rounded-lg border border-border bg-card p-4 lg:p-6">
+      <h3 className="mb-0.5 font-semibold text-xl tracking-tight">{name}</h3>
+      <p className="text-muted-foreground text-sm"> {description}</p>
 
       <div className="h-6" />
 
-      <div className="mt-auto flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1 text-sm">
         {title && <p className="text-foreground">{title}</p>}
 
         {total !== undefined && (

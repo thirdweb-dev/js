@@ -73,7 +73,7 @@ export function SponsoredTransactionsTableUI(
     <div className="overflow-hidden rounded-lg border bg-card">
       {/* header */}
       <div className="flex flex-col justify-between gap-3 border-b px-4 py-4 lg:flex-row lg:items-center lg:px-6">
-        <h2 className="font-semibold text-lg">Sponsored Transactions</h2>
+        <h2 className="font-semibold text-xl">Sponsored Transactions</h2>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           {/* Filters */}
           <div className="flex gap-2">

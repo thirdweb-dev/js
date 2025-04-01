@@ -115,10 +115,10 @@ export function InAppWalletUsersChartCardUI(props: {
 
   return (
     <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
-      <h3 className="mb-1 font-semibold text-xl tracking-tight">
+      <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
         {props.title}
       </h3>
-      <p className="mb-3 text-muted-foreground">{props.description}</p>
+      <p className="mb-3 text-muted-foreground text-sm">{props.description}</p>
 
       <ExportToCSVButton
         className="top-6 right-6 mb-4 w-full bg-background md:absolute md:mb-0 md:flex md:w-auto"
