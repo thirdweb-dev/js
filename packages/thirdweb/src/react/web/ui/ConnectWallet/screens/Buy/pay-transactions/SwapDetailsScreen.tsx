@@ -101,9 +101,7 @@ export function SwapTxDetailsTable(
 ) {
   let uiData: SwapTxDetailsData;
   let showStatusRow = true;
-  let isTransfer = false;
   if (props.type === "status") {
-    isTransfer = props.status.swapType === "TRANSFER";
     const status = props.status;
     if (props.hideStatusRow) {
       showStatusRow = false;
@@ -190,33 +188,6 @@ export function SwapTxDetailsTable(
       <Spacer y="md" />
     </>
   );
-
-  if (isTransfer) {
-    return (
-      <div>
-        {/* source chain Tx hash link */}
-        {fromChainExplorers.explorers?.[0]?.url && sourceTxHash && (
-          <ButtonLink
-            fullWidth
-            variant="outline"
-            href={formatExplorerTxUrl(
-              fromChainExplorers.explorers[0]?.url,
-              sourceTxHash,
-            )}
-            target="_blank"
-            gap="xs"
-            style={{
-              fontSize: fontSize.sm,
-              padding: spacing.sm,
-            }}
-          >
-            View on {fromChainName.name} Explorer
-            <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-          </ButtonLink>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div>
