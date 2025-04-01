@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { status } from "./Status.js";
+import { defineChain } from "../chains/utils.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   it("should handle successful status", async () => {
@@ -34,5 +35,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
         ],
       }
     `);
+  });
+
+  it("should handle successfull status with chain", async () => {
+    const result = await status({
+      transactionHash:
+        "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+      chain: defineChain(8453),
+      client: TEST_CLIENT,
+    });
+
+    expect(result).toBeDefined();
+    expect(result.status).toBe("COMPLETED");
   });
 });
