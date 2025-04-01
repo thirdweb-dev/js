@@ -334,7 +334,10 @@ export function TransactionModeScreen(props: {
           variant="accent"
           fullWidth
           onClick={() => {
-            let totalCostWei = transactionCostAndData.transactionValueWei;
+            let totalCostWei = insufficientFunds
+              ? transactionCostAndData.transactionValueWei -
+                (balanceQuery.data?.value || 0n)
+              : transactionCostAndData.transactionValueWei;
             if (
               transactionCostAndData.token.address === NATIVE_TOKEN_ADDRESS &&
               !sponsoredTransactionsEnabled
