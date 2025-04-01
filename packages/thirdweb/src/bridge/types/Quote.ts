@@ -42,7 +42,7 @@ export type PreparedQuote = Quote & {
       "eip1559"
     > & {
       /**
-       * The action this transaction performs. This can be "approve", "transfer", "buy", or "sell".
+       * The action this transaction performs. This can be "approval", "transfer", "buy", or "sell".
        */
       action: "approval" | "transfer" | "buy" | "sell";
       /**
