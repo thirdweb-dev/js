@@ -147,9 +147,20 @@ export declare namespace quote {
  *   estimatedExecutionTimeMs: 1000
  *   transactions: [
  *     {
- *       to: NATIVE_TOKEN_ADDRESS,
+ *       id: "0x...",
+ *       action: "approval",
+ *       id: "0x",
+ *       to: "0x...",
+ *       data: "0x...",
+ *       chainId: 10,
+ *       type: "eip1559"
+ *     },
+ *     {
+ *       id: "0x...",
+ *       action: "sell",
+ *       to: "0x...",
  *       value: 9980000000000000000n,
- *       data: "0x",
+ *       data: "0x...",
  *       chainId: 10,
  *       type: "eip1559"
  *     }
@@ -167,11 +178,11 @@ export declare namespace quote {
  *
  * ## Sending the transactions
  * The `transactions` array is a series of [ox](https://oxlib.sh) EIP-1559 transactions that must be executed one after the other in order to fulfill the complete route. There are a few things to keep in mind when executing these transactions:
- *  - Approvals and other preparation transactions are not included in the transactions array.
+ *  - Approvals will have the `approval` action specified. You can perform approvals with `sendAndConfirmTransaction`, then proceed to the next transaction.
  *  - All transactions are assumed to be executed by the `sender` address, regardless of which chain they are on. The final transaction will use the `receiver` as the recipient address.
  *  - If an `expiration` timestamp is provided, all transactions must be executed before that time to guarantee successful execution at the specified price.
  *
- * NOTE: To get the status of each transaction, use `Bridge.status` rather than checking for transaction inclusion. This function will ensure full bridge completion on the destination chain.
+ * NOTE: To get the status of each non-approval transaction, use `Bridge.status` rather than checking for transaction inclusion. This function will ensure full bridge completion on the destination chain.
  *
  * You can access this functions input and output types with `Sell.prepare.Options` and `Sell.prepare.Result`, respectively.
  *

@@ -1,4 +1,7 @@
-import type { TransactionEnvelopeEip1559 as ox__TransactionEnvelopeEip1559 } from "ox";
+import type {
+  TransactionEnvelopeEip1559 as ox__TransactionEnvelopeEip1559,
+  Hex as ox__Hex,
+} from "ox";
 
 export type Quote = {
   /**
@@ -37,6 +40,15 @@ export type PreparedQuote = Quote & {
       bigint,
       number,
       "eip1559"
-    >
+    > & {
+      /**
+       * The action this transaction performs. This can be "approve", "transfer", "buy", or "sell".
+       */
+      action: "approval" | "transfer" | "buy" | "sell";
+      /**
+       * The transaction ID, used for tracking purposes.
+       */
+      id: ox__Hex.Hex;
+    }
   >;
 };
