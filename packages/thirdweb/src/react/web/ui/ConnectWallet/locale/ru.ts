@@ -29,12 +29,12 @@ const connectLocaleRu: ConnectLocale = {
   guestWalletWarning:
     "Это временный гостевой кошелек. Создайте резервную копию, если не хотите потерять к нему доступ",
   switchTo: "Переключиться на", // Используется в "Switch to <Wallet-Name>>"
-  connectedToSmartWallet: "Умный аккаунт",
+  connectedToSmartWallet: "Смарт-аккаунт",
   confirmInWallet: "Подтвердить в кошельке",
-  disconnectWallet: "Отключить кошелек",
+  disconnectWallet: "Отсоединить кошелек",
   copyAddress: "Скопировать адрес",
   personalWallet: "Личный кошелек",
-  smartWallet: "Умный кошелек",
+  smartWallet: "Смарт-кошелек",
   or: "ИЛИ",
   goBackButton: "Назад",
   passkeys: {
@@ -42,7 +42,7 @@ const connectLocaleRu: ConnectLocale = {
     linkPasskey: "Привязать ключ доступа",
   },
   welcomeScreen: {
-    defaultTitle: "Ваш вход в децентрализованный мир",
+    defaultTitle: "Ваш портал в мир децентрализации",
     defaultSubtitle: "Подключите кошелек, чтобы начать",
   },
   agreement: {
@@ -53,11 +53,11 @@ const connectLocaleRu: ConnectLocale = {
   },
   networkSelector: {
     title: "Выбрать сеть",
-    mainnets: "Основные сети",
-    testnets: "Тестовые сети",
+    mainnets: "Основные сети (мейннетс)",
+    testnets: "Тестовые сети (тестнетс)",
     allNetworks: "Все",
-    addCustomNetwork: "Добавить пользовательскую сеть",
-    inputPlaceholder: "Поиск сети или ID цепочки",
+    addCustomNetwork: "Добавить кастомную сеть",
+    inputPlaceholder: "Поиск сети или Chain ID",
     categoryLabel: {
       recentlyUsed: "Недавно использованные",
       popular: "Популярные",
@@ -79,7 +79,7 @@ const connectLocaleRu: ConnectLocale = {
     successMessage: "Транзакция успешно выполнена",
     invalidAddress: "Недействительный адрес",
     noTokensFound: "Токены не найдены",
-    searchToken: "Поиск или вставка адреса токена",
+    searchToken: "Найти или вставить адрес токена",
     transactionFailed: "Транзакция не удалась",
     transactionRejected: "Транзакция отклонена",
     insufficientFunds: "Недостаточно средств",
@@ -89,9 +89,9 @@ const connectLocaleRu: ConnectLocale = {
   signatureScreen: {
     instructionScreen: {
       title: "Войти",
-      instruction: "Пожалуйста, подпишите запрос сообщения в вашем кошельке, чтобы продолжить",
+      instruction: "Пожалуйста, подпишите сообщение в кошельке, чтобы продолжить",
       signInButton: "Войти",
-      disconnectWallet: "Отключить кошелек",
+      disconnectWallet: "Отсоединить кошелек",
     },
     signingScreen: {
       title: "Вход",
@@ -113,7 +113,7 @@ const connectLocaleRu: ConnectLocale = {
   },
   viewFunds: {
     title: "Просмотр средств",
-    viewNFTs: "Просмотр NFT",
+    viewNFTs: "Просмотр NFTs",
     viewTokens: "Просмотр токенов",
     viewAssets: "Просмотр активов",
   },

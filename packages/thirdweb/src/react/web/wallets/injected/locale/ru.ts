@@ -14,9 +14,9 @@ const injectedWalletLocaleRu = (wallet: string): InjectedWalletLocale => ({
     instruction: `Отсканируйте QR-код, чтобы скачать приложение ${wallet}`,
   },
   scanScreen: {
-    instruction: `Отсканируйте QR-код с помощью приложения ${wallet} для подключения`,
+    instruction: `Для подключения отсканируйте QR-код с помощью приложения ${wallet}`,
   },
-  getStartedLink: `Нет ${wallet}?`,
+  getStartedLink: `Ещё нет ${wallet}?`,
   download: {
     chrome: "Скачать расширение для Chrome",
     android: "Скачать в Google Play",
