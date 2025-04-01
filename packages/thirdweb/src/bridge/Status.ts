@@ -1,9 +1,9 @@
 import type { Hex as ox__Hex } from "ox";
+import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { Status } from "./types/Status.js";
-import type { Chain } from "../chains/types.js";
 
 /**
  * Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
@@ -157,15 +157,15 @@ export async function status(options: status.Options): Promise<status.Result> {
 export declare namespace status {
   type Options =
     | {
-      transactionHash: ox__Hex.Hex;
-      chainId: number;
-      client: ThirdwebClient;
-    }
+        transactionHash: ox__Hex.Hex;
+        chainId: number;
+        client: ThirdwebClient;
+      }
     | {
-      transactionHash: ox__Hex.Hex;
-      chain: Chain;
-      client: ThirdwebClient;
-    };
+        transactionHash: ox__Hex.Hex;
+        chain: Chain;
+        client: ThirdwebClient;
+      };
 
   type Result = Status;
 }
