@@ -625,7 +625,7 @@ function SelectedTokenInfo(props: {
   disabled?: boolean;
 }) {
   const getWidth = () => {
-    const amount = formatNumber(Number(props.tokenAmount), 5).toString();
+    const amount = formatNumber(Number(props.tokenAmount), 6).toString();
     let chars = amount.replace(".", "").length;
     const hasDot = amount.includes(".");
     if (hasDot) {

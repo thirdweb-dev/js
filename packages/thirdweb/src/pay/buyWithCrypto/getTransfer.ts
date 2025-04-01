@@ -155,7 +155,6 @@ export async function getBuyWithCryptoTransfer(
         data: data.transactionRequest.data as Hash,
         to: data.transactionRequest.to as Address,
         value: BigInt(data.transactionRequest.value),
-        gas: BigInt(data.transactionRequest.gasLimit),
       },
       approvalData: data.approval,
       fromAddress: data.fromAddress,
