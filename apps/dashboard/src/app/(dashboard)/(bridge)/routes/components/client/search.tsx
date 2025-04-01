@@ -47,7 +47,7 @@ export const SearchInput: React.FC = () => {
     <div className="group relative w-full">
       <SearchIcon className="-translate-y-1/2 absolute top-[50%] left-3 size-4 text-muted-foreground" />
       <Input
-        placeholder="Search by token address or chain ID"
+        placeholder="Search with anything!"
         className="h-10 rounded-lg bg-card py-2 pl-9 lg:min-w-[300px]"
         defaultValue={searchParams?.get("query") || ""}
         onChange={(e) => handleSearch(e.target.value)}
