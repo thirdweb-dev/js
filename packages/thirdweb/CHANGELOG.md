@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.93.9
+
+### Patch Changes
+
+- [#6593](https://github.com/thirdweb-dev/js/pull/6593) [`0dcde07`](https://github.com/thirdweb-dev/js/commit/0dcde077f5cf9b514b66c6768e26f42be9f904b4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix bytecode caching
+
+- [#6588](https://github.com/thirdweb-dev/js/pull/6588) [`cd9ea69`](https://github.com/thirdweb-dev/js/commit/cd9ea69c13c51525c71e274e05a09ad69d054b8c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add erc20Value for makeOffer extension function
+
 ## 5.93.8
 
 ### Patch Changes
