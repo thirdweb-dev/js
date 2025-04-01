@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Link from "next/link";
 import { getBridgePaths } from "./utils";
@@ -7,27 +8,39 @@ export default async function Page() {
     const paths = await getBridgePaths();
     return (
       <div className="pb-20">
-        <h2 className="mb-2 font-semibold text-2xl tracking-tight">
-          Universal Bridge REST API
-        </h2>
-        <p className="mb-5 text-muted-foreground">
-          Directly interact with the Universal Bridge API from your backend,
-          using standard REST api.
-        </p>
+        <div className="flex flex-col justify-between py-6 md:flex-row md:gap-8">
+          <div>
+            <h2 className="mb-2 font-semibold text-2xl tracking-tight">
+              Universal Bridge REST API
+            </h2>
+            <p className="mb-5 text-muted-foreground">
+              Directly interact with the Universal Bridge API from your backend,
+              using standard REST APIs.
+            </p>
+          </div>
+
+          <Link href="https://bridge.thirdweb.com/reference" target="_blank">
+            <Button className="max-md:w-full">View all endpoints</Button>
+          </Link>
+        </div>
 
         <div className="flex flex-col gap-8">
           <BlueprintSection
-            title="Available endpoints"
-            blueprints={paths.map(([pathName, pathObj]) => {
-              if (!pathObj) {
-                throw new Error(`Path not found: ${pathName}`);
-              }
-              return {
-                name: pathName,
-                description: pathObj.get?.description || "",
-                link: `/connect/pay/backend/reference?route=${pathName}`,
-              };
-            })}
+            title="Available GET endpoints"
+            blueprints={paths
+              .filter(
+                ([_pathName, pathObj]) => typeof pathObj?.get !== "undefined",
+              )
+              .map(([pathName, pathObj]) => {
+                if (!pathObj) {
+                  throw new Error(`Path not found: ${pathName}`);
+                }
+                return {
+                  name: pathName,
+                  description: pathObj.get?.description || "",
+                  link: `/connect/pay/backend/reference?route=${pathName}`,
+                };
+              })}
           />
         </div>
       </div>
