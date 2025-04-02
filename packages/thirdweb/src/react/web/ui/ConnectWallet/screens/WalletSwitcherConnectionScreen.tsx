@@ -5,6 +5,7 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
 import { ConnectModalContent } from "../Modal/ConnectModalContent.js";
 import { useSetupScreen } from "../Modal/screen.js";
@@ -34,6 +35,7 @@ export type WalletSwitcherConnectionScreenProps = {
 export function WalletSwitcherConnectionScreen(
   props: WalletSwitcherConnectionScreenProps,
 ) {
+  const walletChain = useActiveWalletChain();
   const connectedWallets = useConnectedWallets();
   const wallets =
     props.wallets ||
@@ -52,7 +54,7 @@ export function WalletSwitcherConnectionScreen(
     <ConnectModalContent
       accountAbstraction={props.accountAbstraction}
       auth={undefined}
-      chain={props.chain}
+      chain={props.chain || walletChain}
       chains={props.chains}
       client={props.client}
       connectLocale={props.connectLocale}
