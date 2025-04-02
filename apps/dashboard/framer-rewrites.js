@@ -56,4 +56,6 @@ module.exports = [
   "/learn/glossary/:glossary_slug",
   // -- faucets --
   "/faucets",
+  // -- brand kit --
+  "/brand-kit",
 ];
