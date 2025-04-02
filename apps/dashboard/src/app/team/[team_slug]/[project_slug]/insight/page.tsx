@@ -1,106 +1,54 @@
-import { Button } from "@/components/ui/button";
-import {
-  Code2Icon,
-  DatabaseIcon,
-  ExternalLinkIcon,
-  ZapIcon,
-} from "lucide-react";
-import Link from "next/link";
+import { isProjectActive } from "@/api/analytics";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
+import { notFound } from "next/navigation";
+import { BlueprintCard } from "./blueprint-card";
+import { InsightFTUX } from "./insight-ftux";
 
-export default async function Page() {
+export default async function Page(props: {
+  params: Promise<{
+    team_slug: string;
+    project_slug: string;
+  }>;
+}) {
+  const params = await props.params;
+
+  const [team, project] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getProject(params.team_slug, params.project_slug),
+  ]);
+
+  if (!team || !project) {
+    notFound();
+  }
+
+  const activeResponse = await isProjectActive({
+    teamId: team.id,
+    projectId: project.id,
+  });
+
+  const showFTUX = !activeResponse.insight;
+
   return (
     <div className="flex grow flex-col">
-      <h1 className="mb-6 font-semibold text-2xl tracking-tight sm:text-3xl">
-        Insight
-      </h1>
-
-      <div className="pb-20">
-        <BlueprintCard />
-      </div>
-    </div>
-  );
-}
-
-function BlueprintCard() {
-  const features = [
-    {
-      icon: Code2Icon,
-      title: "Easy-to-Use API",
-      description: "RESTful endpoints for any application",
-    },
-    {
-      icon: DatabaseIcon,
-      title: "Managed Infrastructure",
-      description:
-        "No need to index blockchains yourself or manage infrastructure and RPC costs.",
-    },
-    {
-      icon: ZapIcon,
-      title: "Lightning-Fast Queries",
-      description: "Access any transaction, event or token API data",
-    },
-  ];
-
-  return (
-    <div className="rounded-lg border bg-card">
       {/* header */}
-      <div className="border-b p-4 lg:px-6 lg:py-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-2xl tracking-tight">Blueprints</h2>
-
-          <div className="flex items-center gap-2">
-            <Button asChild variant="outline" className="gap-2 bg-background">
-              <Link
-                href="https://portal.thirdweb.com/insight/blueprints"
-                target="_blank"
-              >
-                Docs <ExternalLinkIcon className="size-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-4 lg:p-6">
-        <p className="mb-2 font-semibold text-xl leading-tight tracking-tight lg:mb-1">
-          Simple endpoints for querying rich blockchain data
+      <div>
+        <h1 className="mb-0.5 font-semibold text-3xl tracking-tight">
+          Insight
+        </h1>
+        <p className="text-muted-foreground">
+          APIs to retrieve blockchain data from any EVM chain, enrich it with
+          metadata, and transform it using custom logic
         </p>
-        <p className="text-muted-foreground text-sm">
-          A blueprint is an API that provides access to on-chain data in a
-          user-friendly format. <br /> No need for ABIs, decoding, RPC, or web3
-          knowledge required to fetch blockchain data.
-        </p>
-
-        <div className="h-6" />
-
-        {/* Features */}
-        <div className="flex flex-col gap-6">
-          {features.map((feature) => (
-            <div key={feature.title} className="flex items-start gap-3">
-              <div className="rounded-full border p-2">
-                <feature.icon className="size-4 text-muted-foreground" />
-              </div>
-              <div>
-                <h4 className="font-medium">{feature.title}</h4>
-                <p className="text-muted-foreground text-sm">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* Playground link */}
-      <div className="border-t p-4 lg:p-6">
-        <Button className="w-full gap-2" asChild>
-          <Link href="https://playground.thirdweb.com/insight" target="_blank">
-            Try Insight blueprints in the playground
-            <ExternalLinkIcon className="size-4" />
-          </Link>
-        </Button>
-      </div>
+      <div className="h-6" />
+
+      {showFTUX ? (
+        <InsightFTUX clientId={project.publishableKey} />
+      ) : (
+        <BlueprintCard />
+      )}
     </div>
   );
 }

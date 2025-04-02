@@ -270,9 +270,10 @@ type ActiveStatus = {
   ecosystemWallet: boolean;
 };
 
-export async function isProjectActive(
-  params: AnalyticsQueryParams,
-): Promise<ActiveStatus> {
+export async function isProjectActive(params: {
+  teamId: string;
+  projectId: string;
+}): Promise<ActiveStatus> {
   const searchParams = buildSearchParams(params);
   const res = await fetchAnalytics(
     `v2/active-usage?${searchParams.toString()}`,

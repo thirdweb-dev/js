@@ -62,7 +62,7 @@ function IntegrateAPIKeySection({
           <div>
             <h3>Client ID</h3>
             <p className="mb-2 text-muted-foreground text-sm">
-              Identifies your application.
+              Identifies your application
             </p>
 
             <CopyTextButton
