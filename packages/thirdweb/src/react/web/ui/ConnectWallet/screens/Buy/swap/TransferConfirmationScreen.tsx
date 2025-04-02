@@ -1,4 +1,5 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
@@ -78,6 +79,48 @@ export function TransferConfirmationScreen(
     | { id: "done" }
   >({ id: "idle" });
 
+  const transferQuery = useQuery({
+    queryKey: [
+      "transfer",
+      isNativeToken(token) ? NATIVE_TOKEN_ADDRESS : token.address,
+      tokenAmount,
+      receiverAddress,
+      payer.account.address,
+      payOptions?.purchaseData,
+    ],
+    queryFn: async () => {
+      const transferResponse = await getBuyWithCryptoTransfer({
+        client,
+        fromAddress: payer.account.address,
+        toAddress: receiverAddress,
+        chainId: chain.id,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+        amount: tokenAmount,
+        purchaseData: payOptions?.purchaseData,
+      });
+      return transferResponse;
+    },
+    refetchInterval: 30 * 1000,
+  });
+
+  if (transferQuery.isLoading) {
+    return (
+      <Container p="lg">
+        <ModalHeader title={title} onBack={onBack} />
+        <Container flex="column" center="both" style={{ minHeight: "300px" }}>
+          <Spacer y="xl" />
+          <Spinner size="xl" color="secondaryText" />
+          <Spacer y="xl" />
+        </Container>
+      </Container>
+    );
+  }
+
+  const transferFromAmountWithFees =
+    transferQuery.data?.paymentToken.amount || tokenAmount;
+
   return (
     <Container p="lg">
       <ModalHeader title={title} onBack={onBack} />
@@ -109,7 +152,7 @@ export function TransferConfirmationScreen(
         fromChain={chain}
         toToken={token}
         toChain={chain}
-        fromAmount={tokenAmount}
+        fromAmount={transactionMode ? tokenAmount : transferFromAmountWithFees}
         toAmount={tokenAmount}
       />
 
@@ -230,7 +273,9 @@ export function TransferConfirmationScreen(
                     token,
                     chain,
                     tokenMetadata,
-                    tokenAmount,
+                    tokenAmount: transactionMode
+                      ? tokenAmount
+                      : transferFromAmountWithFees,
                     fromAddress: payer.account.address,
                     toAddress: receiverAddress,
                     transaction: txResult,
@@ -240,17 +285,11 @@ export function TransferConfirmationScreen(
                 setStep("execute");
                 setStatus({ id: "idle" });
               } else {
-                const transferResponse = await getBuyWithCryptoTransfer({
-                  client,
-                  fromAddress: payer.account.address,
-                  toAddress: receiverAddress,
-                  chainId: chain.id,
-                  tokenAddress: isNativeToken(token)
-                    ? NATIVE_TOKEN_ADDRESS
-                    : token.address,
-                  amount: tokenAmount,
-                  purchaseData: payOptions?.purchaseData,
-                });
+                const transferResponse = transferQuery.data;
+
+                if (!transferResponse) {
+                  throw new Error("Transfer data not found");
+                }
 
                 if (transferResponse.approvalData) {
                   // check allowance

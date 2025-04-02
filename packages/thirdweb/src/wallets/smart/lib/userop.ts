@@ -23,6 +23,7 @@ import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { stringify } from "../../../utils/json.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../interfaces/wallet.js";
+import { getEntrypointFromFactory } from "../index.js";
 import type {
   BundlerOptions,
   PaymasterResult,
@@ -749,6 +750,23 @@ export async function createAndSignUserOp(options: {
   waitForDeployment?: boolean;
   isDeployedOverride?: boolean;
 }) {
+  // if factory is passed, but no entrypoint, try to resolve entrypoint from factory
+  if (
+    options.smartWalletOptions.factoryAddress &&
+    !options.smartWalletOptions.overrides?.entrypointAddress
+  ) {
+    const entrypointAddress = await getEntrypointFromFactory(
+      options.smartWalletOptions.factoryAddress,
+      options.client,
+      options.smartWalletOptions.chain,
+    );
+    if (entrypointAddress) {
+      options.smartWalletOptions.overrides = {
+        ...options.smartWalletOptions.overrides,
+        entrypointAddress,
+      };
+    }
+  }
   const unsignedUserOp = await prepareUserOp({
     transactions: options.transactions,
     adminAccount: options.adminAccount,

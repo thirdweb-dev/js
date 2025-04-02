@@ -33,6 +33,7 @@ import {
   confirmContractDeployment,
   deploySmartAccount,
 } from "./lib/signing.js";
+import { createAndSignUserOp } from "./lib/userop.js";
 import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
@@ -362,6 +363,26 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
 
       isDeployed = await isContractDeployed(newSmartAccountContract);
       expect(isDeployed).toEqual(true);
+    });
+
+    it("can prep a 0.7 userop", async () => {
+      const tx = prepareTransaction({
+        client,
+        chain,
+        to: smartAccount.address,
+        value: 0n,
+      });
+      const uo = await createAndSignUserOp({
+        transactions: [tx],
+        adminAccount: personalAccount,
+        client: TEST_CLIENT,
+        smartWalletOptions: {
+          chain,
+          sponsorGas: true,
+          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+        },
+      });
+      expect(uo.callData.length).toBeGreaterThan(0);
     });
   },
 );

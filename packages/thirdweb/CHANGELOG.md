@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.93.11
+
+### Patch Changes
+
+- [#6615](https://github.com/thirdweb-dev/js/pull/6615) [`f618c53`](https://github.com/thirdweb-dev/js/commit/f618c5308cc252b18bde1e1a8aa69c39d34d0da2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - handle entrypoint resolution inside createAndSignUserOp
+
+- [#6618](https://github.com/thirdweb-dev/js/pull/6618) [`62c8e7c`](https://github.com/thirdweb-dev/js/commit/62c8e7c0c411a1b59101bd4aa12d80561adde57e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show correct transfer from amount for transfer flow in PayEmbed
+
+## 5.93.10
+
+### Patch Changes
+
+- [#6605](https://github.com/thirdweb-dev/js/pull/6605) [`38e089a`](https://github.com/thirdweb-dev/js/commit/38e089a5f3d94a0bd18dc053b10b31ec7d727128) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Only onramp for the amount required for transaction flows in PayEmbed
+
+- [#6607](https://github.com/thirdweb-dev/js/pull/6607) [`a9b7633`](https://github.com/thirdweb-dev/js/commit/a9b7633d053241c778fac0bd3aac3287d7f4478f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show past transactions in transactions modal screen
+
+- [#6612](https://github.com/thirdweb-dev/js/pull/6612) [`9cf1376`](https://github.com/thirdweb-dev/js/commit/9cf137660a4c0d2c13ad96a279349be010768275) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Remove custom config for Ronin
+
 ## 5.93.9
 
 ### Patch Changes
