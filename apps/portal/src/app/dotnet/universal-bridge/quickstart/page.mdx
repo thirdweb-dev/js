@@ -1,0 +1,130 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebBridge | Thirdweb .NET SDK",
+	description:
+		"Instantiate Universal Bridge to use any asset on any chain.",
+});
+
+# Universal Bridge .NET Integration
+We've built Universal Bridge to allow your users to use any asset on any chain, and it's ready for you to try.
+
+This integration simplifies onchain asset trading, and we've added extensions in .NET to integrate with any `IThirdwebWallet` nicely.
+
+## Core APIs
+
+The design is akin to letting us know what your intent is.
+- Buy: "I want to buy x USDC on y Chain using z Token"
+- Sell: "I want to sell x USDC on y Chain for z Token"
+- Transfer: "Just transfer all my money to vitalik"
+
+We will return the transactions needed to achieve whatever you desire.
+You may then handle execution yourself or use our extensions.
+
+### Instantiation
+```csharp
+using Thirdweb.Bridge;
+
+// Create a ThirdwebBridge instance
+var bridge = await ThirdwebBridge.Create(client);
+```
+
+### Buy - Get a quote for buying a specific amount of tokens
+```csharp
+var buyQuote = await bridge.Buy_Quote(
+    originChainId: 1,
+    originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC on Ethereum
+    destinationChainId: 324,
+    destinationTokenAddress: Constants.NATIVE_TOKEN_ADDRESS, // ETH on zkSync
+    buyAmountWei: BigInteger.Parse("0.1".ToWei())
+);
+Console.WriteLine($"Buy quote: {JsonConvert.SerializeObject(buyQuote, Formatting.Indented)}");
+```
+
+### Buy - Get an executable set of transactions (alongside a quote) for buying a specific amount of tokens
+```csharp
+var preparedBuy = await bridge.Buy_Prepare(
+    originChainId: 1,
+    originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC on Ethereum
+    destinationChainId: 324,
+    destinationTokenAddress: Constants.NATIVE_TOKEN_ADDRESS, // ETH on zkSync
+    buyAmountWei: BigInteger.Parse("0.1".ToWei()),
+    sender: await Utils.GetAddressFromENS(client, "vitalik.eth"),
+    receiver: await myWallet.GetAddress()
+);
+Console.WriteLine($"Prepared Buy contains {preparedBuy.Transactions.Count} transaction(s)!");
+```
+
+### Sell - Get a quote for selling a specific amount of tokens
+```csharp
+var sellQuote = await bridge.Sell_Quote(
+    originChainId: 324,
+    originTokenAddress: Constants.NATIVE_TOKEN_ADDRESS, // ETH on zkSync
+    destinationChainId: 1,
+    destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC on Ethereum
+    sellAmountWei: BigInteger.Parse("0.1".ToWei())
+);
+Console.WriteLine($"Sell quote: {JsonConvert.SerializeObject(sellQuote, Formatting.Indented)}");
+```
+
+### Sell - Get an executable set of transactions (alongside a quote) for selling a specific amount of tokens
+```csharp
+var preparedSell = await bridge.Sell_Prepare(
+    originChainId: 324,
+    originTokenAddress: Constants.NATIVE_TOKEN_ADDRESS, // ETH on zkSync
+    destinationChainId: 1,
+    destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC on Ethereum
+    sellAmountWei: BigInteger.Parse("0.1".ToWei()),
+    sender: await Utils.GetAddressFromENS(client, "vitalik.eth"),
+    receiver: await myWallet.GetAddress()
+);
+Console.WriteLine($"Prepared Sell contains {preparedSell.Transactions.Count} transaction(s)!");
+```
+
+### Transfer - Get an executable transaction for transferring a specific amount of tokens
+_Why not just transfer with the SDK? Stay tuned for webhooks, think direct payments!_
+```csharp
+var preparedTransfer = await bridge.Transfer_Prepare(
+    chainId: 137,
+    tokenAddress: Constants.NATIVE_TOKEN_ADDRESS, // ETH on zkSync
+    transferAmountWei: BigInteger.Parse("0.1".ToWei()),
+    sender: await Utils.GetAddressFromENS(client, "vitalik.eth"),
+    receiver: await myWallet.GetAddress()
+);
+Console.WriteLine($"Prepared Transfer: {JsonConvert.SerializeObject(preparedTransfer, Formatting.Indented)}");
+```
+
+## Manual Execution
+_This is not production code, we're just showcasing some of the APIs that would help you execute and poll status here._
+```csharp
+// You may use our extensions to execute yourself...
+var myTx = await preparedTransfer.Transactions[0].ToThirdwebTransaction(myWallet);
+var myHash = await ThirdwebTransaction.Send(myTx);
+
+// ...and poll for the status...
+var status = await bridge.Status(transactionHash: myHash, chainId: 1);
+var isComplete = status.StatusType == StatusType.COMPLETED;
+Console.WriteLine($"Status: {JsonConvert.SerializeObject(status, Formatting.Indented)}");
+
+// Or use our Execute extensions directly to handle everything for you!
+```
+
+## Managed Execution
+The SDK comes with some extensions that simplify the use of `ThirdwebBridge`.
+
+```csharp
+// Execute a prepared Buy
+var buyResult = await bridge.Execute(myWallet, preparedBuy);
+var buyHashes = buyResult.Select(receipt => receipt.TransactionHash).ToList();
+Console.WriteLine($"Buy hashes: {JsonConvert.SerializeObject(buyHashes, Formatting.Indented)}");
+
+// Execute a prepared Sell
+var sellResult = await bridge.Execute(myWallet, preparedSell);
+var sellHashes = sellResult.Select(receipt => receipt.TransactionHash).ToList();
+Console.WriteLine($"Sell hashes: {JsonConvert.SerializeObject(sellHashes, Formatting.Indented)}");
+
+// Execute a prepared Transfer
+var transferResult = await bridge.Execute(myWallet, preparedTransfer);
+var transferHashes = transferResult.Select(receipt => receipt.TransactionHash).ToList();
+Console.WriteLine($"Transfer hashes: {JsonConvert.SerializeObject(transferHashes, Formatting.Indented)}");
+```

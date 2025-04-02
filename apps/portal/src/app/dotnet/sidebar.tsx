@@ -198,59 +198,6 @@ const transactions: SidebarLink = {
   ],
 };
 
-const pay: SidebarLink = {
-  name: "Payments",
-  isCollapsible: false,
-  links: [
-    {
-      name: "Quickstart",
-      href: "/dotnet/pay/quickstart",
-    },
-    {
-      name: "Buy With Fiat",
-      links: [
-        {
-          name: "Get Buy With Fiat Quote",
-          href: "/dotnet/pay/getbuywithfiatquote",
-        },
-        {
-          name: "Buy With Fiat",
-          href: "/dotnet/pay/buywithfiat",
-        },
-        {
-          name: "Get Buy With Fiat Status",
-          href: "/dotnet/pay/getbuywithfiatstatus",
-        },
-        {
-          name: "Get Buy With Fiat Currencies",
-          href: "/dotnet/pay/getbuywithfiatcurrencies",
-        },
-      ],
-    },
-    {
-      name: "Buy With Crypto",
-      links: [
-        {
-          name: "Get Buy With Crypto Quote",
-          href: "/dotnet/pay/getbuywithcryptoquote",
-        },
-        {
-          name: "Buy With Crypto",
-          href: "/dotnet/pay/buywithcrypto",
-        },
-        {
-          name: "Get Buy With Crypto Status",
-          href: "/dotnet/pay/getbuywithcryptostatus",
-        },
-      ],
-    },
-    {
-      name: "Get Buy History",
-      href: "/dotnet/pay/getbuyhistory",
-    },
-  ],
-};
-
 export const sidebar: SideBar = {
   name: ".NET SDK",
   links: [
@@ -330,6 +277,23 @@ export const sidebar: SideBar = {
       separator: true,
     },
     {
+      name: "Bridge",
+      isCollapsible: false,
+      links: [
+        {
+          name: "Quickstart",
+          href: "/dotnet/universal-bridge/quickstart",
+        },
+        {
+          name: "Universal Bridge Full Reference",
+          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.Bridge.ThirdwebBridge.html",
+        },
+      ],
+    },
+    {
+      separator: true,
+    },
+    {
       name: "Indexer",
       isCollapsible: false,
       links: [
@@ -363,6 +327,5 @@ export const sidebar: SideBar = {
     {
       separator: true,
     },
-    pay,
   ],
 };
