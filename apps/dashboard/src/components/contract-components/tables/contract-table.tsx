@@ -22,7 +22,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
-import { EllipsisVerticalIcon, XIcon } from "lucide-react";
+import { EllipsisVerticalIcon, ExternalLinkIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import React from "react";
 import { toast } from "sonner";
@@ -202,8 +203,16 @@ export function ContractTableUI(props: {
         </Table>
 
         {contracts.length === 0 && (
-          <div className="flex h-[200px] items-center justify-center text-muted-foreground">
-            No Contracts
+          <div className="flex h-[350px] items-center justify-center text-muted-foreground">
+            <div className="text-center">
+              <p className="mb-3">No contracts added to project</p>
+              <Button variant="outline" asChild className="bg-background">
+                <Link href="/explore" target="_blank">
+                  Discover Contracts
+                  <ExternalLinkIcon className="ml-2 size-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         )}
       </TableContainer>

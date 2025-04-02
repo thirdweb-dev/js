@@ -3,7 +3,7 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { Suspense } from "react";
 import { ContractTable } from "../../../../components/contract-components/tables/contract-table";
 import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
-import { GetStartedWithContractsDeploy } from "./GetStartedWithContractsDeploy";
+import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
 import { getSortedDeployedContracts } from "./getSortedDeployedContracts";
 
 export function DeployedContractsPage(props: {
@@ -21,6 +21,11 @@ export function DeployedContractsPage(props: {
         <Suspense fallback={<Loading />}>
           <DeployedContractsPageAsync {...props} />
         </Suspense>
+        <div className="h-8" />
+        <DeployViaCLIOrImportCard
+          teamId={props.teamId}
+          projectId={props.projectId}
+        />
       </div>
     </div>
   );
@@ -36,15 +41,6 @@ async function DeployedContractsPageAsync(props: {
     projectId: props.projectId,
     authToken: props.authToken,
   });
-
-  if (deployedContracts.length === 0) {
-    return (
-      <GetStartedWithContractsDeploy
-        teamId={props.teamId}
-        projectId={props.projectId}
-      />
-    );
-  }
 
   return (
     <ClientOnly ssr={<Loading />}>

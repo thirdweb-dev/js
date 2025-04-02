@@ -23,7 +23,7 @@ export function DeployedContractsPageHeader(props: {
         projectId={props.projectId}
       />
 
-      <div className="flex flex-col gap-3 pb-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 pt-2 pb-8 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="font-semibold text-3xl tracking-tight">Contracts</h1>
         </div>
