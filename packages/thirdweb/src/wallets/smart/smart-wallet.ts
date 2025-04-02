@@ -234,7 +234,8 @@ export function smartWallet(
       // set the states
       account = connectedAccount;
       chain = connectedChain;
-      emitter.emit("chainChanged", newChain);
+      emitter.emit("accountChanged", connectedAccount);
+      emitter.emit("chainChanged", connectedChain);
     },
   };
 }
