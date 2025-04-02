@@ -1,4 +1,5 @@
 import type { Hex as ox__Hex } from "ox";
+import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
@@ -100,7 +101,8 @@ import type { Status } from "./types/Status.js";
  * @beta
  */
 export async function status(options: status.Options): Promise<status.Result> {
-  const { transactionHash, chainId, client } = options;
+  const { transactionHash, client } = options;
+  const chainId = "chainId" in options ? options.chainId : options.chain.id;
 
   const clientFetch = getClientFetch(client);
   const url = new URL(`${UNIVERSAL_BRIDGE_URL}/status`);
@@ -153,11 +155,17 @@ export async function status(options: status.Options): Promise<status.Result> {
 }
 
 export declare namespace status {
-  type Options = {
-    transactionHash: ox__Hex.Hex;
-    chainId: number;
-    client: ThirdwebClient;
-  };
+  type Options =
+    | {
+        transactionHash: ox__Hex.Hex;
+        chainId: number;
+        client: ThirdwebClient;
+      }
+    | {
+        transactionHash: ox__Hex.Hex;
+        chain: Chain;
+        client: ThirdwebClient;
+      };
 
   type Result = Status;
 }
