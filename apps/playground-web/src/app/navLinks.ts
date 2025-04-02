@@ -1,5 +1,5 @@
 import type { SidebarLink } from "../components/ui/sidebar";
-import { fetchAllBlueprints } from "./insight/utils";
+import { insightBlueprints } from "./insight/insightBlueprints";
 
 export const staticSidebarLinks: SidebarLink[] = [
   {
@@ -150,22 +150,15 @@ const engineSidebarLinks: SidebarLink = {
   ],
 };
 
-export async function getSidebarLinks() {
-  const insightBlueprints = await fetchAllBlueprints();
-
+export function getSidebarLinks() {
   const insightLinks: SidebarLink[] = insightBlueprints.map((blueprint) => {
-    const paths = Object.keys(blueprint.openapiJson.paths);
     return {
       name: blueprint.name,
       expanded: false,
-      links: paths.map((pathName) => {
-        const pathObj = blueprint.openapiJson.paths[pathName];
-        if (!pathObj) {
-          throw new Error(`Path not found: ${pathName}`);
-        }
+      links: blueprint.paths.map((pathInfo) => {
         return {
-          name: pathObj.get?.summary || pathName,
-          href: `/insight/${blueprint.id}?path=${pathName}`,
+          name: pathInfo.name,
+          href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
         };
       }),
     };

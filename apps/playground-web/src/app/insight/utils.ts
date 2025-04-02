@@ -1,47 +1,38 @@
-import "server-only";
+// Note: This file is also used in the update-insight-blueprints script
+// Do not use Next.js/Vercel specific APIs or envs here
 
 import type { OpenAPIV3 } from "openapi-types";
-import { isProd } from "../../lib/env";
-
-type BlueprintListItem = {
-  id: string;
-  name: string;
-  description: string;
-  slug: string;
-};
-
-const thirdwebDomain = !isProd ? "thirdweb-dev" : "thirdweb";
-
-async function fetchBlueprintList() {
-  const res = await fetch(
-    `https://insight.${thirdwebDomain}.com/v1/blueprints`,
-  );
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Failed to fetch blueprints: ${text}`);
-  }
-
-  const json = (await res.json()) as { data: BlueprintListItem[] };
-
-  return json.data;
-}
 
 export type BlueprintParameter = OpenAPIV3.ParameterObject;
 export type BlueprintPathMetadata = OpenAPIV3.PathItemObject;
 
-type BlueprintSpec = {
+export type BlueprintListItem = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export type BlueprintSpec = {
   id: string;
   name: string;
   description: string;
   openapiJson: OpenAPIV3.Document;
 };
 
+export type MinimalBlueprintSpec = {
+  id: string;
+  name: string;
+  paths: {
+    name: string;
+    path: string;
+  }[];
+};
+
 export async function fetchBlueprintSpec(params: {
   blueprintId: string;
 }) {
   const res = await fetch(
-    `https://insight.${thirdwebDomain}.com/v1/blueprints/${params.blueprintId}`,
+    `https://insight.thirdweb.com/v1/blueprints/${params.blueprintId}`,
   );
 
   if (!res.ok) {
@@ -52,25 +43,4 @@ export async function fetchBlueprintSpec(params: {
   const json = (await res.json()) as { data: BlueprintSpec };
 
   return json.data;
-}
-
-export async function fetchAllBlueprints() {
-  try {
-    // fetch list
-    const blueprintSpecs = await fetchBlueprintList();
-
-    // fetch all blueprints
-    const blueprints = await Promise.all(
-      blueprintSpecs.map((spec) =>
-        fetchBlueprintSpec({
-          blueprintId: spec.id,
-        }),
-      ),
-    );
-
-    return blueprints;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
 }

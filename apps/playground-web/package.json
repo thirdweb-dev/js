@@ -11,7 +11,8 @@
     "lint": "eslint ./src",
     "prefix": "biome check ./src --fix",
     "fix": "eslint ./src --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "update-insight-blueprints": "bun scripts/updateInsightBlueprints.ts"
   },
   "dependencies": {
     "@abstract-foundation/agw-client": "^1.6.2",

@@ -1,11 +1,8 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import {} from "lucide-react";
 import Link from "next/link";
-import { fetchAllBlueprints } from "./utils";
+import { insightBlueprints } from "./insightBlueprints";
 
-export default async function Page() {
-  const blueprints = await fetchAllBlueprints();
-
+export default function Page() {
   return (
     <div className="pb-20">
       <h2 className="mb-2 font-semibold text-2xl tracking-tight">Blueprints</h2>
@@ -23,22 +20,15 @@ export default async function Page() {
       </p>
 
       <div className="flex flex-col gap-8">
-        {blueprints.map((blueprint) => {
-          const paths = Object.keys(blueprint.openapiJson.paths);
-
+        {insightBlueprints.map((blueprint) => {
           return (
             <BlueprintSection
               key={blueprint.id}
-              blueprintId={blueprint.id}
               title={blueprint.name}
-              blueprints={paths.map((pathName) => {
-                const pathObj = blueprint.openapiJson.paths[pathName];
-                if (!pathObj) {
-                  throw new Error(`Path not found: ${pathName}`);
-                }
+              blueprints={blueprint.paths.map((pathInfo) => {
                 return {
-                  name: pathObj.get?.summary || "Unknown",
-                  link: `/insight/${blueprint.id}?path=${pathName}`,
+                  name: pathInfo.name,
+                  link: `/insight/${blueprint.id}?path=${pathInfo.path}`,
                 };
               })}
             />
@@ -51,7 +41,6 @@ export default async function Page() {
 
 function BlueprintSection(props: {
   title: string;
-  blueprintId: string;
   blueprints: { name: string; link: string }[];
 }) {
   return (
