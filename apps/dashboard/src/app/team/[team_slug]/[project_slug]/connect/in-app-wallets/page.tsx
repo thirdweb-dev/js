@@ -1,7 +1,8 @@
+import { getProject } from "@/api/projects";
 import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
 import { redirect } from "next/navigation";
-import { getProject } from "../../../../../../@/api/projects";
+import { InAppWalletsSummary } from "../../../../../../components/embedded-wallets/Analytics/Summary";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -39,11 +40,15 @@ export default async function Page(props: {
   }
 
   return (
-    <InAppWalletAnalytics
-      teamId={project.teamId}
-      projectId={project.id}
-      interval={interval}
-      range={range as Range}
-    />
+    <div>
+      <InAppWalletsSummary teamId={project.teamId} projectId={project.id} />
+      <div className="h-10" />
+      <InAppWalletAnalytics
+        teamId={project.teamId}
+        projectId={project.id}
+        interval={interval}
+        range={range as Range}
+      />
+    </div>
   );
 }

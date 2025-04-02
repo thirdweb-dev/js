@@ -12,7 +12,6 @@ import type { ThirdwebClient } from "thirdweb";
 import type { UserOpStats } from "types/analytics";
 import { SponsoredTransactionsTable } from "../../../app/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
 import { searchParams } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/search-params";
-import { AccountAbstractionSummary } from "./AccountAbstractionSummary";
 import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
 import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 
@@ -22,7 +21,6 @@ export function AccountAbstractionAnalytics(props: {
   teamSlug: string;
   client: ThirdwebClient;
   projectId: string;
-  aggregateUserOpStats: UserOpStats;
 }) {
   const [isLoading, startTransition] = useTransition();
 
@@ -67,12 +65,6 @@ export function AccountAbstractionAnalytics(props: {
 
   return (
     <div>
-      <AccountAbstractionSummary
-        aggregateUserOpUsageQuery={props.aggregateUserOpStats}
-      />
-
-      <div className="h-10" />
-
       <div className="flex justify-end gap-3">
         <DateRangeSelector
           range={range}

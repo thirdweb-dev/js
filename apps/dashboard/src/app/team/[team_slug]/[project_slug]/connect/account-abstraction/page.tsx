@@ -1,4 +1,4 @@
-import { getAggregateUserOpUsage, getUserOpUsage } from "@/api/analytics";
+import { getUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
@@ -9,6 +9,7 @@ import {
 import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbstractionAnalytics";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { AccountAbstractionSummary } from "../../../../../../components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { searchParamLoader } from "./search-params";
 
@@ -60,7 +61,7 @@ export default async function Page(props: {
     type: rangeType,
   };
 
-  const userOpStatsPromise = getUserOpUsage({
+  const userOpStats = await getUserOpUsage({
     teamId: project.teamId,
     projectId: project.id,
     from: range.from,
@@ -68,24 +69,21 @@ export default async function Page(props: {
     period: interval,
   });
 
-  const aggregateUserOpStatsPromise = getAggregateUserOpUsage({
-    teamId: team.id,
-    projectId: project.id,
-  });
-
-  const [userOpStats, aggregateUserOpStats] = await Promise.all([
-    userOpStatsPromise,
-    aggregateUserOpStatsPromise,
-  ]);
-
   return (
-    <AccountAbstractionAnalytics
-      userOpStats={userOpStats}
-      client={getThirdwebClient(authToken)}
-      teamId={project.teamId}
-      projectId={project.id}
-      teamSlug={params.team_slug}
-      aggregateUserOpStats={aggregateUserOpStats}
-    />
+    <div>
+      <AccountAbstractionSummary
+        teamId={project.teamId}
+        projectId={project.id}
+      />
+
+      <div className="h-10" />
+      <AccountAbstractionAnalytics
+        userOpStats={userOpStats}
+        client={getThirdwebClient(authToken)}
+        teamId={project.teamId}
+        projectId={project.id}
+        teamSlug={params.team_slug}
+      />
+    </div>
   );
 }
