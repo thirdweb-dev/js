@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.93.11
+
+### Patch Changes
+
+- [#6615](https://github.com/thirdweb-dev/js/pull/6615) [`f618c53`](https://github.com/thirdweb-dev/js/commit/f618c5308cc252b18bde1e1a8aa69c39d34d0da2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - handle entrypoint resolution inside createAndSignUserOp
+
+- [#6618](https://github.com/thirdweb-dev/js/pull/6618) [`62c8e7c`](https://github.com/thirdweb-dev/js/commit/62c8e7c0c411a1b59101bd4aa12d80561adde57e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show correct transfer from amount for transfer flow in PayEmbed
+
 ## 5.93.10
 
 ### Patch Changes
