@@ -5,10 +5,10 @@ import de from "./de.js";
 import en from "./en.js";
 import es from "./es.js";
 import fr from "./fr.js";
-import ru from "./ru.js";
 import { getInjectedWalletLocale } from "./getInjectedWalletLocale.js";
 import ja from "./ja.js";
 import kr from "./kr.js";
+import ru from "./ru.js";
 import tl from "./tl.js";
 import vi from "./vi.js";
 

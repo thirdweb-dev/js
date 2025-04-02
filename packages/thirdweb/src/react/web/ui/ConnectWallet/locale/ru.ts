@@ -68,7 +68,8 @@ const connectLocaleRu: ConnectLocale = {
   },
   receiveFundsScreen: {
     title: "Получить средства",
-    instruction: "Скопируйте адрес кошелька, чтобы отправить средства на этот кошелек",
+    instruction:
+      "Скопируйте адрес кошелька, чтобы отправить средства на этот кошелек",
   },
   sendFundsScreen: {
     title: "Отправить средства",
@@ -89,7 +90,8 @@ const connectLocaleRu: ConnectLocale = {
   signatureScreen: {
     instructionScreen: {
       title: "Войти",
-      instruction: "Пожалуйста, подпишите сообщение в кошельке, чтобы продолжить",
+      instruction:
+        "Пожалуйста, подпишите сообщение в кошельке, чтобы продолжить",
       signInButton: "Войти",
       disconnectWallet: "Отсоединить кошелек",
     },
