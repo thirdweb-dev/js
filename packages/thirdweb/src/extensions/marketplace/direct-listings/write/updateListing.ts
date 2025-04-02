@@ -120,25 +120,25 @@ export function updateListing(
       }
 
       // validate the timestamps
-      let startTimestamp = BigInt(
-        Math.floor(
-          (mergedOptions.startTimestamp ?? new Date()).getTime() / 1000,
-        ),
-      );
-      const endTimestamp = BigInt(
-        Math.floor(
-          (
-            mergedOptions.endTimestamp ??
-            new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000)
-          ).getTime() / 1000,
-        ),
-      );
+      let startTimestamp = mergedOptions.startTimestamp
+        ? BigInt(Math.floor(mergedOptions.startTimestamp.getTime() / 1000))
+        : mergedOptions.startTimeInSeconds;
 
-      if (startTimestamp <= lastestBlock.timestamp) {
+      const endTimestamp = mergedOptions.endTimestamp
+        ? BigInt(Math.floor(mergedOptions.endTimestamp.getTime() / 1000))
+        : mergedOptions.endTimeInSeconds;
+
+      if (
+        startTimestamp !== mergedOptions.startTimeInSeconds &&
+        startTimestamp <= lastestBlock.timestamp
+      ) {
         // set the start time to the next block if it is in the past
         startTimestamp = lastestBlock.timestamp + 1n;
       }
-      if (startTimestamp >= endTimestamp) {
+      if (
+        startTimestamp !== mergedOptions.startTimeInSeconds &&
+        startTimestamp >= endTimestamp
+      ) {
         throw new Error("Start time must be before end time.");
       }
 

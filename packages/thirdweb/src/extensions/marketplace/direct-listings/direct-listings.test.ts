@@ -34,6 +34,7 @@ import { getListing } from "./read/getListing.js";
 import { isListingValid } from "./utils.js";
 import { buyFromListing } from "./write/buyFromListing.js";
 import { createListing } from "./write/createListing.js";
+import { updateListing } from "./write/updateListing.js";
 
 const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
@@ -302,6 +303,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(listingEvent1155.args.listingCreator).toBe(TEST_ACCOUNT_C.address);
     expect(listingEvent1155.args.assetContract).toBe(erc1155Contract.address);
 
+    await sendAndConfirmTransaction({
+      transaction: updateListing({
+        listingId: listingEvent1155.args.listingId,
+        contract: marketplaceContract,
+        assetContractAddress: erc1155Contract.address,
+        tokenId: 0n,
+        pricePerToken: "0.05",
+        quantity: 1n,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+
     const [
       listings1155After,
       validListings1155,
@@ -341,10 +354,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(secondListing.currencyValuePerToken).toMatchInlineSnapshot(`
       {
         "decimals": 18,
-        "displayValue": "0.01",
+        "displayValue": "0.05",
         "name": "Anvil Ether",
         "symbol": "ETH",
-        "value": 10000000000000000n,
+        "value": 50000000000000000n,
       }
     `);
     expect(secondListing.asset.metadata.name).toBe("erc1155 #0");
