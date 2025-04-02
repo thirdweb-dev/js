@@ -13,7 +13,7 @@ export function DeployViaCLIOrImportCard(props: {
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
-    <div className="rounded-lg border bg-card p-6">
+    <div className="rounded-lg border bg-card p-4 lg:p-6">
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => {
@@ -26,14 +26,18 @@ export function DeployViaCLIOrImportCard(props: {
       <h2 className="mb-0.5 font-semibold text-lg">
         Already have a smart contract?
       </h2>
-      <p className="max-w-2xl text-muted-foreground">
+      <p className="max-w-2xl text-muted-foreground text-sm lg:text-base">
         Import an already deployed contract or deploy a contract from source
         code to easily manage permissions, upload assets, and interact with
         contract functions
       </p>
 
-      <div className="mt-6 flex gap-3">
-        <Button variant="outline" className="gap-2 lg:px-20" asChild>
+      <div className="mt-6 flex flex-col gap-3 lg:flex-row">
+        <Button
+          variant="outline"
+          className="gap-2 bg-background lg:px-10"
+          asChild
+        >
           <Link
             href="https://portal.thirdweb.com/contracts/deploy/overview"
             target="_blank"
@@ -44,7 +48,7 @@ export function DeployViaCLIOrImportCard(props: {
         </Button>
         <Button
           variant="outline"
-          className="gap-2 lg:px-6"
+          className="gap-2 bg-background"
           onClick={() => setImportModalOpen(true)}
         >
           <DownloadIcon className="size-4" />

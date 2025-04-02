@@ -1,6 +1,4 @@
 "use client";
-
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import { TabButtons } from "@/components/ui/tabs";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
@@ -9,7 +7,6 @@ import { useState } from "react";
 
 export function WaitingForIntegrationCard(props: {
   title: string;
-  clientId: string;
   codeTabs: {
     code: React.ReactNode;
     label: string;
@@ -18,7 +15,9 @@ export function WaitingForIntegrationCard(props: {
     label: string;
     href: string;
     trackingLabel: string;
+    category: string;
   }[];
+  children?: React.ReactNode;
 }) {
   const [selectedTab, setSelectedTab] = useState(props.codeTabs[0]?.label);
   return (
@@ -28,24 +27,7 @@ export function WaitingForIntegrationCard(props: {
       </div>
 
       <div className="px-4 py-6 lg:p-6">
-        {/* Client ID */}
-        <div className="flex w-full flex-col">
-          <h3 className="font-medium">Client ID</h3>
-          <p className="mb-2 text-muted-foreground text-sm">
-            Identifies your application
-          </p>
-
-          <CopyTextButton
-            textToCopy={props.clientId}
-            className="!h-auto w-full max-w-[400px] justify-between truncate bg-background px-3 py-3 font-mono"
-            textToShow={props.clientId}
-            copyIconPosition="right"
-            tooltip="Copy Client ID"
-          />
-        </div>
-
-        <div className="h-4" />
-
+        {props.children}
         {/* Code */}
         <div>
           <TabButtons
@@ -70,7 +52,7 @@ export function WaitingForIntegrationCard(props: {
                 key={cta.label}
                 target="_blank"
                 className="gap-2"
-                category="insight-ftux"
+                category={cta.category}
                 label={cta.trackingLabel}
               >
                 {cta.label}

@@ -29,7 +29,7 @@ export function IntegrateAPIKeyCodeTabs(props: {
           isActive: tab === key,
         }))}
       />
-      <div className="h-3" />
+      <div className="h-2" />
       {props.tabs[tab]}
     </div>
   );

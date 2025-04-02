@@ -1,5 +1,6 @@
 import { CodeServer } from "@/components/ui/code/code.server";
 import { isProd } from "@/constants/env";
+import { ClientIDSection } from "../components/ProjectFTUX/ClientIDSection";
 import { WaitingForIntegrationCard } from "../components/WaitingForIntegrationCard/WaitingForIntegrationCard";
 
 export function InsightFTUX(props: {
@@ -8,7 +9,6 @@ export function InsightFTUX(props: {
   return (
     <WaitingForIntegrationCard
       title="Integrate Insight"
-      clientId={props.clientId}
       codeTabs={[
         {
           label: "JavaScript",
@@ -46,14 +46,19 @@ export function InsightFTUX(props: {
           label: "Try on Playground",
           href: "https://playground.thirdweb.com/insight",
           trackingLabel: "playground",
+          category: "insight-ftux",
         },
         {
           label: "View Docs",
           href: "https://portal.thirdweb.com/insight",
           trackingLabel: "docs",
+          category: "insight-ftux",
         },
       ]}
-    />
+    >
+      <ClientIDSection clientId={props.clientId} />
+      <div className="h-4" />
+    </WaitingForIntegrationCard>
   );
 }
 

@@ -1,5 +1,4 @@
 import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeServer } from "@/components/ui/code/code.server";
@@ -19,6 +18,7 @@ import { TypeScriptIcon } from "../../../../../../components/icons/brand-icons/T
 import { UnityIcon } from "../../../../../../components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "../../../../../../components/icons/brand-icons/UnrealIcon";
 import { NebulaIcon } from "../../../../../nebula-app/(app)/icons/NebulaIcon";
+import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";
 
@@ -59,21 +59,7 @@ function IntegrateAPIKeySection({
 
       <div className="rounded-lg border border-border bg-card p-4">
         <div className="flex flex-col gap-6 ">
-          <div>
-            <h3>Client ID</h3>
-            <p className="mb-2 text-muted-foreground text-sm">
-              Identifies your application
-            </p>
-
-            <CopyTextButton
-              textToCopy={clientId}
-              className="!h-auto w-full max-w-[350px] justify-between truncate bg-background px-3 py-3 font-mono"
-              textToShow={clientId}
-              copyIconPosition="right"
-              tooltip="Copy Client ID"
-            />
-          </div>
-
+          <ClientIDSection clientId={clientId} />
           {secretKeyMasked && (
             <SecretKeySection
               secretKeyMasked={secretKeyMasked}

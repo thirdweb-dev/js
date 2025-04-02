@@ -1,3 +1,4 @@
+import { isProjectActive } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { redirect } from "next/navigation";
@@ -5,6 +6,7 @@ import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
 import { NebulaAnalyticsPage } from "./components/analytics/nebula-analytics-page";
 import { NebulaWaitListPage } from "./components/nebula-waitlist-page";
+import { NebulaFTUX } from "./nebula-ftux";
 
 export default async function Page(props: {
   params: Promise<{
@@ -42,7 +44,26 @@ export default async function Page(props: {
 
   const hasNebulaAccess = team.enabledScopes.includes("nebula");
 
+  const activeResponse = await isProjectActive({
+    teamId: team.id,
+    projectId: project.id,
+  });
+
+  const showFTUX = !activeResponse.nebula;
+
   if (hasNebulaAccess) {
+    if (showFTUX) {
+      return (
+        <div>
+          <h1 className="mb-5 font-semibold text-3xl tracking-tight">Nebula</h1>
+          <NebulaFTUX
+            secretKeyMasked={project.secretKeys[0]?.masked || ""}
+            projectId={project.id}
+          />
+        </div>
+      );
+    }
+
     return (
       <NebulaAnalyticsPage
         teamId={team.id}
