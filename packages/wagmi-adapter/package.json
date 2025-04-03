@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wagmi-adapter",
-  "version": "0.2.47",
+  "version": "0.2.48",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"

@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.93.13
+
+### Patch Changes
+
+- [#6632](https://github.com/thirdweb-dev/js/pull/6632) [`e9649a2`](https://github.com/thirdweb-dev/js/commit/e9649a2b530c07b133221771c0e8179ef581997d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies
+
+- [#6640](https://github.com/thirdweb-dev/js/pull/6640) [`93f225b`](https://github.com/thirdweb-dev/js/commit/93f225b8a3caf7e1f59a578907108a44bc919ae1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ethers6 provider override
+
 ## 5.93.12
 
 ### Patch Changes
