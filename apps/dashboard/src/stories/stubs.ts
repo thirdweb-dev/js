@@ -56,6 +56,39 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       "chainsaw",
     ],
     stripeCustomerId: "cus_1234567890",
+    capabilities: {
+      rpc: {
+        enabled: true,
+        rateLimit: 1000,
+      },
+      storage: {
+        enabled: true,
+        download: {
+          rateLimit: 1000,
+        },
+        upload: {
+          rateLimit: 1000,
+        },
+      },
+      bundler: {
+        enabled: true,
+        rateLimit: 1000,
+        mainnetEnabled: true,
+      },
+      insight: {
+        enabled: true,
+        rateLimit: 1000,
+      },
+      embeddedWallets: {
+        enabled: true,
+        customAuth: true,
+        customBranding: true,
+      },
+      nebula: {
+        enabled: true,
+        rateLimit: 1000,
+      },
+    },
   };
 
   return team;

@@ -43,6 +43,41 @@ export type ApiResponse = {
   };
 };
 
+// needs to be kept in sync with the capabilities from the backend
+type TeamCapabilities = {
+  rpc: {
+    enabled: boolean;
+    rateLimit: number;
+  };
+  insight: {
+    enabled: boolean;
+    rateLimit: number;
+  };
+  storage: {
+    enabled: boolean;
+    download: {
+      rateLimit: number;
+    };
+    upload: {
+      rateLimit: number;
+    };
+  };
+  nebula: {
+    enabled: boolean;
+    rateLimit: number;
+  };
+  bundler: {
+    enabled: boolean;
+    mainnetEnabled: boolean;
+    rateLimit: number;
+  };
+  embeddedWallets: {
+    enabled: boolean;
+    customAuth: boolean;
+    customBranding: boolean;
+  };
+};
+
 export type TeamResponse = {
   id: string;
   name: string;
@@ -68,6 +103,7 @@ export type TeamResponse = {
   canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
   isOnboarded: boolean;
+  capabilities: TeamCapabilities;
 };
 
 export type ProjectSecretKey = {

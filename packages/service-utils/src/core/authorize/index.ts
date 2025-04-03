@@ -1,6 +1,7 @@
 import {
   type CoreServiceConfig,
   type TeamAndProjectResponse,
+  type TeamResponse,
   fetchTeamAndProject,
 } from "../api.js";
 import { authorizeClient } from "./client.js";
@@ -129,6 +130,21 @@ export async function authorize(
       errorCode: "INVALID_KEY",
     };
   }
+  // check if the service is maybe disabled for the team (usually due to a billing issue / exceeding the free plan limit)
+  if (
+    !isServiceEnabledForTeam(
+      serviceConfig.serviceScope,
+      teamAndProjectResponse.team.capabilities,
+    )
+  ) {
+    return {
+      authorized: false,
+      status: 403,
+      errorMessage:
+        "You currently do not have access to this service. Please check if your subscription includes this service and is active.",
+      errorCode: "SERVICE_TEMPORARILY_DISABLED",
+    };
+  }
   // now we can validate the key itself
   const clientAuth = authorizeClient(authData, teamAndProjectResponse);
 
@@ -160,4 +176,27 @@ export async function authorize(
     project: teamAndProjectResponse.project,
     authMethod: clientAuth.authMethod,
   };
+}
+
+function isServiceEnabledForTeam(
+  scope: CoreServiceConfig["serviceScope"],
+  teamCapabilities: TeamResponse["capabilities"],
+): boolean {
+  switch (scope) {
+    case "rpc":
+      return teamCapabilities.rpc.enabled;
+    case "bundler":
+      return teamCapabilities.bundler.enabled;
+    case "storage":
+      return teamCapabilities.storage.enabled;
+    case "insight":
+      return teamCapabilities.insight.enabled;
+    case "nebula":
+      return teamCapabilities.nebula.enabled;
+    case "embeddedWallets":
+      return teamCapabilities.embeddedWallets.enabled;
+    default:
+      // always return true for any legacy / un-named services
+      return true;
+  }
 }
