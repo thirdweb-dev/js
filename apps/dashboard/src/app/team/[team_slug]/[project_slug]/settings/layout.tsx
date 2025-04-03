@@ -7,10 +7,14 @@ export default async function Layout(props: {
 }) {
   return (
     <div className="flex grow flex-col">
-      <h1 className="font-semibold text-3xl tracking-tight">
-        Project Settings
-      </h1>
-      <div className="py-6">{props.children}</div>
+      <div className="border-b py-10">
+        <div className="container max-w-7xl">
+          <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
+            Project Settings
+          </h1>
+        </div>
+      </div>
+      <div className="container max-w-7xl pt-6 pb-20">{props.children}</div>
     </div>
   );
 }
