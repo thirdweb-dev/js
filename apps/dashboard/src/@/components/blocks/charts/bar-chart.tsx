@@ -32,6 +32,7 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
     description?: string;
     titleClassName?: string;
   };
+  customHeader?: React.ReactNode;
   // chart config
   config: TConfig;
   data: Array<Record<keyof TConfig, number> & { time: number | string | Date }>;
@@ -41,7 +42,9 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   chartClassName?: string;
   isPending: boolean;
   toolTipLabelFormatter?: (label: string, payload: unknown) => React.ReactNode;
+  toolTipValueFormatter?: (value: unknown) => React.ReactNode;
   hideLabel?: boolean;
+  emptyChartState?: React.ReactElement;
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -65,12 +68,14 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
         </CardHeader>
       )}
 
+      {props.customHeader && props.customHeader}
+
       <CardContent className={cn(!props.header && "pt-6")}>
         <ChartContainer config={props.config} className={props.chartClassName}>
           {props.isPending ? (
             <LoadingChartState />
           ) : props.data.length === 0 ? (
-            <EmptyChartState />
+            <EmptyChartState>{props.emptyChartState}</EmptyChartState>
           ) : (
             <BarChart accessibilityLayer data={props.data}>
               <CartesianGrid vertical={false} />
@@ -88,6 +93,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                       props.hideLabel !== undefined ? props.hideLabel : true
                     }
                     labelFormatter={props.toolTipLabelFormatter}
+                    valueFormatter={props.toolTipValueFormatter}
                   />
                 }
               />
@@ -96,25 +102,15 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                   content={<ChartLegendContent className="pt-5" />}
                 />
               )}
-              {configKeys.map((key, idx) => (
+              {configKeys.map((key) => (
                 <Bar
                   key={key}
                   dataKey={key}
                   // if stacked then they should all be the same stackId
                   // if grouped then they should all be unique stackId (so the key works great)
                   stackId={variant === "stacked" ? "a" : key}
-                  fill={`var(--color-${key})`}
-                  // if stacked then we need to figure out the radius based on the index in the array
-                  // if grouped then we can just use the same radius for all
-                  radius={
-                    variant === "stacked"
-                      ? idx === 0
-                        ? [0, 0, 4, 4]
-                        : idx === configKeys.length - 1
-                          ? [4, 4, 0, 0]
-                          : [0, 0, 0, 0]
-                      : [4, 4, 4, 4]
-                  }
+                  fill={props.config[key]?.color}
+                  radius={[4, 4, 4, 4]}
                   strokeWidth={1}
                   className="stroke-background"
                 />

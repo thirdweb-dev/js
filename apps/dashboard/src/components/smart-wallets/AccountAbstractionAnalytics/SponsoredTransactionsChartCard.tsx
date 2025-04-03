@@ -1,28 +1,17 @@
 "use client";
 
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  EmptyChartState,
-  LoadingChartState,
-} from "components/analytics/empty-chart-state";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import type { ChartConfig } from "@/components/ui/chart";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
-import { format } from "date-fns";
+import { formatDate } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { UserOpStats } from "types/analytics";
 import { formatTickerNumber } from "../../../lib/format-utils";
 
@@ -48,22 +37,20 @@ export function SponsoredTransactionsChartCard(props: {
       const { chainId } = stat;
       const chain = chainsStore.idToChain.get(Number(chainId));
 
+      const chainName = chain?.name || chainId || "Unknown";
       // if no data for current day - create new entry
       if (!chartData) {
         _chartDataMap.set(stat.date, {
-          time: format(new Date(stat.date), "MMM dd"),
-          [chain?.name || chainId || "Unknown"]: stat.successful,
+          time: stat.date,
+          [chainName]: stat.successful,
         } as ChartData);
       } else {
-        chartData[chain?.name || chainId || "Unknown"] =
-          (chartData[chain?.name || chainId || "Unknown"] || 0) +
-          stat.successful;
+        chartData[chainName] = (chartData[chainName] || 0) + stat.successful;
       }
 
       chainIdToVolumeMap.set(
-        chain?.name || chainId || "Unknown",
-        stat.successful +
-          (chainIdToVolumeMap.get(chain?.name || chainId || "Unknown") || 0),
+        chainName,
+        stat.successful + (chainIdToVolumeMap.get(chainName) || 0),
       );
     }
 
@@ -84,9 +71,9 @@ export function SponsoredTransactionsChartCard(props: {
       }
     }
 
-    chainsToShow.forEach((walletType, i) => {
-      _chartConfig[walletType] = {
-        label: chainsToShow[i],
+    chainsToShow.forEach((chainName, i) => {
+      _chartConfig[chainName] = {
+        label: chainName,
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
       };
     });
@@ -111,91 +98,58 @@ export function SponsoredTransactionsChartCard(props: {
     chartData.every((data) => data.transactions === 0);
 
   return (
-    <div className="relative w-full rounded-lg border border-border bg-card p-4 md:p-6">
-      <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
-        Sponsored Transactions
-      </h3>
-      <p className="mb-3 text-muted-foreground text-sm">
-        Total number of sponsored transactions
-      </p>
+    <ThirdwebBarChart
+      customHeader={
+        <div className="relative px-6 pt-6">
+          <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
+            Sponsored Transactions
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            Total number of sponsored transactions
+          </p>
 
-      <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
-        <ExportToCSVButton
-          className="bg-background"
-          fileName="Sponsored Transactions"
-          disabled={disableActions}
-          getData={async () => {
-            const header = ["Date", ...uniqueChainIds];
-            const rows = chartData.map((data) => {
-              const { time, ...rest } = data;
-              return [
-                time,
-                ...uniqueChainIds.map((w) => (rest[w] || 0).toString()),
-              ];
-            });
-            return { header, rows };
-          }}
-        />
-      </div>
-
-      {/* Chart */}
-      <ChartContainer config={chartConfig} className="h-[300px] w-full">
-        {props.isPending ? (
-          <LoadingChartState />
-        ) : chartData.length === 0 ||
-          chartData.every((data) => data.transactions === 0) ? (
-          <EmptyChartState>
-            <EmptyAccountAbstractionChartContent />
-          </EmptyChartState>
-        ) : (
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              top: 20,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-
-            <XAxis
-              dataKey="time"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
+          <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
+            <ExportToCSVButton
+              className="bg-background"
+              fileName="Sponsored Transactions"
+              disabled={disableActions}
+              getData={async () => {
+                const header = ["Date", ...uniqueChainIds];
+                const rows = chartData.map((data) => {
+                  const { time, ...rest } = data;
+                  return [
+                    time,
+                    ...uniqueChainIds.map((w) => (rest[w] || 0).toString()),
+                  ];
+                });
+                return { header, rows };
+              }}
             />
-
-            <ChartTooltip
-              cursor={true}
-              content={
-                <ChartTooltipContent
-                  valueFormatter={(value) => formatTickerNumber(Number(value))}
-                />
-              }
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            {uniqueChainIds.map((chainId) => {
-              return (
-                <Bar
-                  key={chainId}
-                  dataKey={chainId}
-                  fill={chartConfig[chainId]?.color}
-                  radius={4}
-                  stackId="a"
-                  strokeWidth={1}
-                  className="stroke-background"
-                />
-              );
-            })}
-          </BarChart>
-        )}
-      </ChartContainer>
-    </div>
+          </div>
+        </div>
+      }
+      config={chartConfig}
+      data={chartData}
+      isPending={props.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[3]"
+      showLegend
+      hideLabel={false}
+      toolTipLabelFormatter={(_v, item) => {
+        if (Array.isArray(item)) {
+          const time = item[0].payload.time as number;
+          return formatDate(new Date(time), "MMM d, yyyy");
+        }
+        return undefined;
+      }}
+      toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
+      emptyChartState={<EmptyAccountAbstractionChartContent />}
+    />
   );
 }
 
 export function EmptyAccountAbstractionChartContent() {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center px-4">
       <span className="mb-6 text-center text-lg">
         Send your first sponsored transaction
       </span>

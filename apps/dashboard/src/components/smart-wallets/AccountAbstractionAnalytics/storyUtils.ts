@@ -11,7 +11,7 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
     const sponsoredUsd = Math.random() * 100;
 
     stubbedData.push({
-      date: new Date(2024, 1, d).toLocaleString(),
+      date: new Date(2024, 11, d).toLocaleString(),
       successful,
       failed,
       sponsoredUsd,

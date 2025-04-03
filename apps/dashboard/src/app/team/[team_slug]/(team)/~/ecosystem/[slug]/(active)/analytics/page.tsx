@@ -1,4 +1,3 @@
-import type { Range } from "components/analytics/date-range-selector";
 import { redirect } from "next/navigation";
 import { getTeamBySlug } from "../../../../../../../../../@/api/team";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
@@ -12,7 +11,8 @@ export default async function Page(props: {
   }>;
   searchParams: Promise<{
     interval?: "day" | "week";
-    range?: Range;
+    from?: string;
+    to?: string;
   }>;
 }) {
   const [params, searchParams] = await Promise.all([
@@ -45,7 +45,15 @@ export default async function Page(props: {
       ecosystemSlug={ecosystem.slug}
       teamId={team.id}
       interval={searchParams.interval || "week"}
-      range={searchParams.range}
+      range={
+        searchParams.from && searchParams.to
+          ? {
+              from: new Date(searchParams.from),
+              to: new Date(searchParams.to),
+              type: "custom",
+            }
+          : undefined
+      }
     />
   );
 }

@@ -42,6 +42,13 @@ function Component() {
         />
       </BadgeContainer>
 
+      <BadgeContainer label="120 days">
+        <TotalSponsoredChartCard
+          userOpStats={createUserOpStatsStub(120)}
+          isPending={false}
+        />
+      </BadgeContainer>
+
       <BadgeContainer label="10 days">
         <TotalSponsoredChartCard
           userOpStats={createUserOpStatsStub(10)}
