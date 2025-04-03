@@ -20,16 +20,17 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
    * @internal
    */
   async function fetchWithHeaders(
-    url: string,
+    url: string | Request,
     init?: Omit<RequestInit, "signal"> & { requestTimeoutMs?: number },
   ): Promise<Response> {
     const { requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT, ...restInit } =
       init || {};
 
     let headers = restInit.headers ? new Headers(restInit.headers) : undefined;
+    const urlString = typeof url === "string" ? url : url.url;
 
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
-    if (isThirdwebUrl(url)) {
+    if (isThirdwebUrl(urlString)) {
       if (!headers) {
         headers = new Headers();
       }
@@ -49,9 +50,9 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
       if (
         authToken &&
-        !isPayUrl(url) &&
-        !isInAppWalletUrl(url) &&
-        !isBundlerUrl(url)
+        !isPayUrl(urlString) &&
+        !isInAppWalletUrl(urlString) &&
+        !isBundlerUrl(urlString)
       ) {
         headers.set("authorization", `Bearer ${authToken}`);
       } else if (secretKey) {

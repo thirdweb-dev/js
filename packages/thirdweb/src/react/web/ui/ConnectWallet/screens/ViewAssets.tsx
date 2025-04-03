@@ -82,7 +82,7 @@ export function ViewAssets(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={connectLocale.viewFunds.title}
+          title={connectLocale.viewFunds.viewAssets}
           onBack={props.onBack}
         />
       </Container>

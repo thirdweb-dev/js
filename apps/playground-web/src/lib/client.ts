@@ -9,6 +9,7 @@ setThirdwebDomains({
   bundler: process.env.NEXT_PUBLIC_BUNDLER_URL,
   pay: process.env.NEXT_PUBLIC_PAY_URL,
   analytics: process.env.NEXT_PUBLIC_ANALYTICS_URL,
+  insight: process.env.NEXT_PUBLIC_INSIGHT_URL,
 });
 
 const isDev =
