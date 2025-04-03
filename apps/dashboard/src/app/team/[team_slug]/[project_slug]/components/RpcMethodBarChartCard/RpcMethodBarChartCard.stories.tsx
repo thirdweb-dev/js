@@ -1,28 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { BadgeContainer } from "stories/utils";
 import type { RpcMethodStats } from "types/analytics";
 import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";
 
 const meta = {
   title: "Analytics/RpcMethodBarChartCard",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   parameters: {
     viewport: { defaultViewport: "desktop" },
-  },
-};
-
-export const Mobile: Story = {
-  parameters: {
-    viewport: mobileViewport("iphone14"),
   },
 };
 
@@ -74,7 +65,7 @@ const commonMethods = [
 
 function Component() {
   return (
-    <div className="container space-y-8 py-8">
+    <div className="container max-w-6xl space-y-10 py-10">
       <BadgeContainer label="Lot of RPC methods - show 10 at max, combines rest in 'Other'">
         <RpcMethodBarChartCardUI
           rawData={generateTimeSeriesData(30, commonMethods)}

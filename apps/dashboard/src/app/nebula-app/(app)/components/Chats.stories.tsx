@@ -1,9 +1,8 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub, randomLorem } from "../../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import { type ChatMessage, Chats } from "./Chats";
 
 const meta = {
@@ -19,15 +18,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const markdownExample = `\
@@ -245,8 +237,6 @@ function Story() {
             ]}
           />
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

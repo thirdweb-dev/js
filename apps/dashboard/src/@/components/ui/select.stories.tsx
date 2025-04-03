@@ -13,9 +13,6 @@ import { BadgeContainer } from "../../../stories/utils";
 const meta = {
   title: "Shadcn/Select",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;

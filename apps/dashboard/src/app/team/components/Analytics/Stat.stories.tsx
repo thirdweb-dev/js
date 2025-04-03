@@ -6,7 +6,6 @@ const meta = {
   title: "Analytics/Stat",
   component: Component,
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },

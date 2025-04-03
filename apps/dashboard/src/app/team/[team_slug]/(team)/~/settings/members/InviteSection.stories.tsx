@@ -1,11 +1,9 @@
 import type { TeamAccountRole } from "@/api/team-members";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { teamStub } from "../../../../../../../stories/stubs";
-import { mobileViewport } from "../../../../../../../stories/utils";
 import { InviteSection } from "./InviteSection";
 
 const meta = {
@@ -21,15 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const TEAM_CONFIGS = [
@@ -89,7 +80,7 @@ function Story() {
     showPermissionControls && hasEditPermission === "true";
 
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+    <div className="container max-w-6xl py-10">
       <div className="mb-8 flex flex-col gap-6">
         <div>
           <h3 className="mb-3 font-medium">Team Type</h3>
@@ -166,8 +157,6 @@ function Story() {
           inviteTeamMembers={INVITE_HANDLERS[inviteResult]}
         />
       </div>
-
-      <Toaster richColors />
     </div>
   );
 }

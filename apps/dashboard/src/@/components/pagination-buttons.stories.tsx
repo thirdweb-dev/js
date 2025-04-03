@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer, mobileViewport } from "../../stories/utils";
+import { BadgeContainer } from "../../stories/utils";
 import { PaginationButtons } from "./pagination-buttons";
 
 const meta = {
@@ -16,15 +16,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {

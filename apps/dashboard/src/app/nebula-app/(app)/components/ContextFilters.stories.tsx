@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import type { NebulaContext } from "../api/chat";
 import ContextFiltersButton from "./ContextFilters";
 
@@ -18,20 +17,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
   return (
-    <div className="container flex max-w-[1000px] flex-col gap-8 py-10 lg:p-10">
+    <div className="container flex max-w-6xl flex-col gap-8 py-10">
       <Variant contextFilters={undefined} label="No Filters Set" />
 
       <Variant
@@ -65,7 +57,6 @@ function Story() {
         }}
         label="chains + wallet"
       />
-      <Toaster richColors />
     </div>
   );
 }

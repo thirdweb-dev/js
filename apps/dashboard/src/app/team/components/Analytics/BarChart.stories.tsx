@@ -5,9 +5,6 @@ import { BarChart } from "./BarChart";
 const meta = {
   title: "Analytics/BarChart",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;

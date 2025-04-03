@@ -5,9 +5,6 @@ import { PieChart } from "./PieChart";
 const meta = {
   title: "Analytics/PieChart",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;

@@ -1,13 +1,9 @@
 import type { TeamInvite } from "@/api/team-invites";
 import type { TeamAccountRole } from "@/api/team-members";
-import { Toaster } from "@/components/ui/sonner";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
-import {
-  BadgeContainer,
-  mobileViewport,
-} from "../../../../../../../stories/utils";
+import { BadgeContainer } from "../../../../../../../stories/utils";
 import { ManageInvitesSection } from "./ManageInvitesSection";
 
 const meta = {
@@ -23,15 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const freeTeam = teamStub("foo", "free");
@@ -74,7 +63,7 @@ const deleteInviteStub = async (inviteId: string) => {
 
 function Story() {
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+    <div className="container max-w-6xl py-10">
       <div className="flex flex-col gap-10">
         <BadgeContainer label="Has permission">
           <ManageInvitesSection
@@ -96,8 +85,6 @@ function Story() {
           />
         </BadgeContainer>
       </div>
-
-      <Toaster richColors />
     </div>
   );
 }

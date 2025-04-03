@@ -1,6 +1,5 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { projectStub, teamStub } from "../../../../../stories/stubs";
 import { ProjectGeneralSettingsPageUI } from "./ProjectGeneralSettingsPage";
 
@@ -83,8 +82,6 @@ function Story(props: {
         }}
         showNebulaSettings={false}
       />
-
-      <Toaster richColors />
     </div>
   );
 }

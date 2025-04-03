@@ -1,6 +1,5 @@
 import type { LinkedWallet } from "@/api/linked-wallets";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { ThirdwebProvider } from "thirdweb/react";
 import { BadgeContainer, mobileViewport } from "../../../stories/utils";
 import { LinkWalletUI } from "./LinkWalletUI";
@@ -91,8 +90,6 @@ function Variants() {
             accountEmail="team@example.com"
           />
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

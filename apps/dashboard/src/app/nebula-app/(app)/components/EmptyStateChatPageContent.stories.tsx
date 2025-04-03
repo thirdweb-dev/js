@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mobileViewport } from "../../../../stories/utils";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 const meta = {
@@ -15,15 +14,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Default: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {

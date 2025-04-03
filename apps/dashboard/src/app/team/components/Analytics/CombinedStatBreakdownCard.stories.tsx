@@ -1,34 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "stories/utils";
 import { CombinedStatBreakdownCard } from "./CombinedStatBreakdownCard";
 
 const meta = {
   title: "Analytics/CombinedStatBreakdownCard",
-  component: Component,
-  parameters: {
-    layout: "centered",
-  },
-} satisfies Meta<typeof Component>;
+  component: CombinedStatBreakdownCard,
+  decorators: [
+    (Story) => (
+      <div className="container max-w-6xl py-10">
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof CombinedStatBreakdownCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const Desktop: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
-};
-
-export const Mobile: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-    viewport: mobileViewport("iphone14"),
-  },
-};
 
 const breakdownConfig = {
   chains: {
@@ -96,27 +82,30 @@ const breakdownConfig = {
   },
 };
 
-function Component() {
-  return (
-    <div className="max-w-[1000px] space-y-8 py-8 md:container">
-      <BadgeContainer label="Chains View">
-        <CombinedStatBreakdownCard
-          title="Network Activity"
-          config={breakdownConfig}
-          activeKey="chains"
-          queryKey="chart"
-          isCurrency
-        />
-      </BadgeContainer>
+export const ChainsView: Story = {
+  args: {
+    title: "Network Activity",
+    config: breakdownConfig,
+    activeKey: "chains",
+    queryKey: "chart",
+  },
+};
 
-      <BadgeContainer label="Browsers View">
-        <CombinedStatBreakdownCard
-          title="Network Activity"
-          config={breakdownConfig}
-          activeKey="browsers"
-          queryKey="chart"
-        />
-      </BadgeContainer>
-    </div>
-  );
-}
+export const BrowsersView: Story = {
+  args: {
+    title: "Network Activity",
+    config: breakdownConfig,
+    activeKey: "browsers",
+    queryKey: "chart",
+  },
+};
+
+export const ChainsViewIsCurrency: Story = {
+  args: {
+    title: "Network Activity",
+    config: breakdownConfig,
+    activeKey: "chains",
+    queryKey: "chart",
+    isCurrency: true,
+  },
+};

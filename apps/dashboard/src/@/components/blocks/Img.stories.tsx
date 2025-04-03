@@ -9,13 +9,12 @@ import { Img } from "./Img";
 const meta = {
   title: "blocks/Img",
   component: Story,
-  parameters: {},
 } satisfies Meta<typeof Story>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
 };
 

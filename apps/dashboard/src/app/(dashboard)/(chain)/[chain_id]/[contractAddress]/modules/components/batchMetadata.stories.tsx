@@ -3,14 +3,11 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Toaster, toast } from "sonner";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { toast } from "sonner";
+import { BadgeContainer } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import {
-  ErrorProvider,
-  type TransactionError,
-} from "../../../../../../../contexts/error-handler";
+import type { TransactionError } from "../../../../../../../contexts/error-handler";
 import { accountStub } from "../../../../../../../stories/stubs";
 import {
   BatchMetadataModuleUI,
@@ -21,7 +18,6 @@ const meta = {
   title: "Modules/BatchMetadata",
   component: Component,
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },
@@ -31,15 +27,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Component() {
@@ -80,38 +69,35 @@ function Component() {
 
   return (
     <ThirdwebProvider>
-      <ErrorProvider>
-        <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
-          <div>
-            <ConnectButton client={getThirdwebClient()} />
-          </div>
-
-          <div className="flex items-center gap-5">
-            <CheckboxWithLabel
-              value={isOwner}
-              onChange={setIsOwner}
-              id="isOwner"
-              label="Is Owner"
-            />
-          </div>
-
-          <BadgeContainer label="Default">
-            <BatchMetadataModuleUI
-              twAccount={accountStub()}
-              contractInfo={contractInfo}
-              moduleAddress="0x0000000000000000000000000000000000000000"
-              uploadMetadata={uploadMetadataStub}
-              uninstallButton={{
-                onClick: async () => removeMutation.mutateAsync(),
-                isPending: removeMutation.isPending,
-              }}
-              isOwnerAccount={isOwner}
-              contractChainId={1}
-            />
-          </BadgeContainer>
-          <Toaster richColors />
+      <div className="container flex max-w-6xl flex-col gap-10 py-10">
+        <div>
+          <ConnectButton client={getThirdwebClient()} />
         </div>
-      </ErrorProvider>
+
+        <div className="flex items-center gap-5">
+          <CheckboxWithLabel
+            value={isOwner}
+            onChange={setIsOwner}
+            id="isOwner"
+            label="Is Owner"
+          />
+        </div>
+
+        <BadgeContainer label="Default">
+          <BatchMetadataModuleUI
+            twAccount={accountStub()}
+            contractInfo={contractInfo}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            uploadMetadata={uploadMetadataStub}
+            uninstallButton={{
+              onClick: async () => removeMutation.mutateAsync(),
+              isPending: removeMutation.isPending,
+            }}
+            isOwnerAccount={isOwner}
+            contractChainId={1}
+          />
+        </BadgeContainer>
+      </div>
     </ThirdwebProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import {
   AddToProjectCardUI,
   type MinimalProject,
@@ -23,15 +23,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function teamsAndProjectsStub(teamCount: number, projectCount: number) {
@@ -63,7 +56,7 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
 
 function Story() {
   return (
-    <div className="container flex max-w-[1000px] flex-col gap-8 py-10">
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <Variant label="1 Team, 0 Projects" teamCount={1} projectCount={0} />
       <Variant label="1 Team, 1 Project" teamCount={1} projectCount={1} />
       <Variant label="1 Team, 5 Projects" teamCount={1} projectCount={5} />

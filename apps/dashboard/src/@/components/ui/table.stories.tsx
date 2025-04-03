@@ -10,35 +10,25 @@ import {
 } from "@/components/ui/table";
 import type { Meta, StoryObj } from "@storybook/react";
 import Link from "next/link";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import { cn } from "../../lib/utils";
 import { Badge } from "./badge";
 
 const meta = {
   title: "Shadcn/Table",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Component() {
   return (
-    <div className="flex min-w-0 flex-col gap-6 px-4 py-6 lg:mx-auto lg:max-w-[1000px]">
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="Normal">
         <TableDemo />
       </BadgeContainer>

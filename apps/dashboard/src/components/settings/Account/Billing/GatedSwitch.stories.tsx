@@ -6,9 +6,6 @@ import { GatedSwitch } from "./GatedSwitch";
 const meta = {
   title: "Billing/GatedSwitch",
   component: Variants,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Variants>;
 
 export default meta;

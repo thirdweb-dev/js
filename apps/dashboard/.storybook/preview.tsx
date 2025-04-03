@@ -81,23 +81,18 @@ function StoryLayout(props: {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-dvh min-w-0 flex-col bg-background text-foreground">
-        <div className="flex justify-end gap-2 border-b p-4">
+        <div className="fixed right-0 bottom-0 z-50 flex justify-end gap-2 p-4">
           <Button
-            onClick={() => setTheme("dark")}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             size="sm"
-            variant={theme === "dark" ? "default" : "outline"}
+            variant="outline"
             className="h-auto w-auto shrink-0 rounded-full p-2"
           >
-            <MoonIcon className="size-4" />
-          </Button>
-
-          <Button
-            onClick={() => setTheme("light")}
-            size="sm"
-            variant={theme === "light" ? "default" : "outline"}
-            className="h-auto w-auto shrink-0 rounded-full p-2"
-          >
-            <SunIcon className="size-4" />
+            {theme === "dark" ? (
+              <MoonIcon className="size-4" />
+            ) : (
+              <SunIcon className="size-4" />
+            )}
           </Button>
         </div>
 

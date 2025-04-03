@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import { type CodeEnvironment, CodeSegment } from "./code-segment.client";
 
 const meta = {
@@ -24,15 +24,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 type Mode = "default" | "no-tabs" | "only-tabs";

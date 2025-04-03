@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../stories/stubs";
 import { storybookLog } from "../../../../stories/utils";
@@ -59,7 +58,6 @@ function Story(props: {
           return teamStub("foo", "free");
         }}
       />
-      <Toaster richColors />
     </TeamOnboardingLayout>
   );
 }

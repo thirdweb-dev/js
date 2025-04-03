@@ -7,9 +7,6 @@ import {
 const meta = {
   title: "headers/components/NotificationButton",
   component: NotificationButtonInner,
-  parameters: {
-    layout: "centered",
-  },
   decorators: [
     (Story) => (
       <div className="flex justify-end px-6 py-4">

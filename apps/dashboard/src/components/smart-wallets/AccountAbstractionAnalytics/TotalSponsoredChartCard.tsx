@@ -111,7 +111,7 @@ export function TotalSponsoredChartCard(props: {
             The total amount of gas sponsored in USD
           </p>
 
-          <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
+          <div className="top-6 right-6 mt-4 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:my-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
               fileName="Gas Sponsored"
@@ -153,7 +153,7 @@ export function TotalSponsoredChartCard(props: {
 
         return toUSD(value);
       }}
-      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      chartClassName="aspect-[1] lg:aspect-[3.5]"
     />
   );
 }

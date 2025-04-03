@@ -8,13 +8,12 @@ import { GradientAvatar } from "./GradientAvatar";
 const meta = {
   title: "blocks/Avatars/GradientAvatar",
   component: Story,
-  parameters: {},
 } satisfies Meta<typeof Story>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
 };
 
@@ -22,14 +21,14 @@ const client = getThirdwebClient();
 
 function Story() {
   return (
-    <div className="flex flex-col gap-10 p-10">
-      <p> All images below are set with size-6 className </p>
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
+      <p> All images below are set with size-20 className </p>
 
       <BadgeContainer label="No Src, No id - Skeleton">
         <GradientAvatar
           id={undefined}
           src={undefined}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -38,7 +37,7 @@ function Story() {
         <GradientAvatar
           id={"foo"}
           src={undefined}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -47,7 +46,7 @@ function Story() {
         <GradientAvatar
           id={"foo"}
           src={""}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -56,7 +55,7 @@ function Story() {
         <GradientAvatar
           id={"bar"}
           src={""}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -65,7 +64,7 @@ function Story() {
         <GradientAvatar
           src="invalid-src"
           id={undefined}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -74,7 +73,7 @@ function Story() {
         <GradientAvatar
           src="https://picsum.photos/200/300"
           id={undefined}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -83,7 +82,7 @@ function Story() {
         <GradientAvatar
           src="ipfs://QmZbeJYEs7kCJHyQxjxU2SJUtjSAr4m87wzJFJUyWomKdj/Smily.svg"
           id={undefined}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
@@ -123,14 +122,14 @@ function ToggleTest() {
         <GradientAvatar
           src={data?.src}
           id={data?.id}
-          className="size-6"
+          className="size-20"
           client={client}
         />
       </BadgeContainer>
 
       <BadgeContainer label="invalid Src">
         <GradientAvatar
-          className="size-6"
+          className="size-20"
           src={data ? "invalid-src" : undefined}
           id={undefined}
           client={client}

@@ -13,9 +13,6 @@ import {
 const meta = {
   title: "Usage/SponsoredTransactionsTable",
   component: Variant,
-  parameters: {
-    layout: "centered",
-  },
   decorators: [
     (Story) => (
       <div className="container max-w-[1154px] py-10">

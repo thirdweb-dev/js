@@ -1,34 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import {} from "stories/utils";
 import { CombinedBarChartCard } from "./CombinedBarChartCard";
 
 const meta = {
   title: "Analytics/CombinedBarChartCard",
-  component: Component,
-  parameters: {
-    layout: "centered",
-  },
-} satisfies Meta<typeof Component>;
+  component: CombinedBarChartCard,
+  decorators: [
+    (Story) => (
+      <div className="container max-w-6xl py-10">
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof CombinedBarChartCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const Desktop: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
-};
-
-export const Mobile: Story = {
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-    viewport: mobileViewport("iphone14"),
-  },
-};
 
 const chartConfig = {
   dailyUsers: {
@@ -45,7 +32,7 @@ const chartConfig = {
   },
 };
 
-const generateTimeSeriesData = (days: number) => {
+function generateTimeSeriesData(days: number) {
   const data = [];
   const today = new Date();
 
@@ -76,30 +63,34 @@ const generateTimeSeriesData = (days: number) => {
   }
 
   return data;
+}
+
+export const UserActivity: Story = {
+  args: {
+    title: "User Activity",
+    chartConfig,
+    data: generateTimeSeriesData(30),
+    activeChart: "dailyUsers",
+    queryKey: "dailyUsers",
+  },
 };
 
-function Component() {
-  return (
-    <div className="max-w-[1000px] space-y-8 py-8 md:container">
-      <BadgeContainer label="Daily Users View">
-        <CombinedBarChartCard
-          title="User Activity"
-          chartConfig={chartConfig}
-          data={generateTimeSeriesData(30)}
-          activeChart="dailyUsers"
-          queryKey="dailyUsers"
-        />
-      </BadgeContainer>
+export const MonthlyUsers: Story = {
+  args: {
+    title: "Monthly Users",
+    chartConfig,
+    data: generateTimeSeriesData(30),
+    activeChart: "monthlyUsers",
+    queryKey: "monthlyUsers",
+  },
+};
 
-      <BadgeContainer label="Monthly Users View">
-        <CombinedBarChartCard
-          title="User Activity"
-          chartConfig={chartConfig}
-          data={generateTimeSeriesData(30)}
-          activeChart="monthlyUsers"
-          queryKey="monthlyUsers"
-        />
-      </BadgeContainer>
-    </div>
-  );
-}
+export const AnnualUsers: Story = {
+  args: {
+    title: "Annual Users",
+    chartConfig,
+    data: generateTimeSeriesData(30),
+    activeChart: "annualUsers",
+    queryKey: "annualUsers",
+  },
+};

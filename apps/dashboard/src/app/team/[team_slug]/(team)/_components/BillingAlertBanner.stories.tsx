@@ -7,7 +7,6 @@ import {
 const meta = {
   title: "Banners/Billing Alerts",
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },

@@ -4,16 +4,15 @@ import type {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
-import { Toaster } from "sonner";
 import {
   createEngineAlertRuleStub,
   createEngineNotificationChannelStub,
 } from "stories/stubs";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { BadgeContainer } from "stories/utils";
 import { ManageEngineAlertsSectionUI } from "./ManageEngineAlerts";
 
 const meta = {
-  title: "Engine/Alerts/Manage Alerts",
+  title: "Engine/Alerts/ManageAlerts",
   component: Story,
   parameters: {
     nextjs: {
@@ -25,15 +24,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
@@ -63,7 +55,7 @@ function Story() {
   }
 
   return (
-    <div className="container flex max-w-[1154px] flex-col gap-14 py-6">
+    <div className="container flex max-w-6xl flex-col gap-14 py-6">
       <BadgeContainer label="2 Alerts">
         <ManageEngineAlertsSectionUI
           isLoading={false}
@@ -125,7 +117,6 @@ function Story() {
           deleteAlert={deleteAlert}
         />
       </BadgeContainer>
-      <Toaster richColors />
     </div>
   );
 }

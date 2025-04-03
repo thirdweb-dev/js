@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { addDays } from "date-fns";
 import { teamStub, teamSubscriptionsStub } from "stories/stubs";
-import {
-  BadgeContainer,
-  mobileViewport,
-} from "../../../../../../../../stories/utils";
+import { BadgeContainer } from "../../../../../../../../stories/utils";
 import { PlanInfoCard } from "./PlanInfoCard";
 
 const meta = {
@@ -20,15 +17,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
@@ -74,7 +64,7 @@ function Story() {
   });
 
   return (
-    <div className="container flex max-w-[1130px] flex-col gap-12 lg:p-10">
+    <div className="container flex max-w-6xl flex-col gap-12 py-10">
       <BadgeContainer label="On-demand Subscriptions with 0 usage">
         <PlanInfoCard
           team={team}

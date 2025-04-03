@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import { MultiNetworkSelector } from "./NetworkSelectors";
 
 const meta = {
@@ -16,20 +16,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
   return (
-    <div className="container flex max-w-[1000px] flex-col gap-8 lg:p-10">
+    <div className="container flex max-w-6xl flex-col gap-8 py-10">
       <Variant label="No Chains selected by default" selectedChainIds={[]} />
       <Variant
         label="Polygon, Ethereum selected by default"

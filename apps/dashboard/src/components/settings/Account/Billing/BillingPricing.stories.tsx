@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import { BillingPricing } from "./Pricing";
 
 const meta = {
@@ -16,15 +16,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
@@ -34,7 +27,7 @@ function Story() {
   });
 
   return (
-    <div className="container flex max-w-[1132px] flex-col gap-12 py-10">
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="Free">
         <BillingPricing
           team={teamStub("foo", "free")}

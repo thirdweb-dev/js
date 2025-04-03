@@ -4,9 +4,6 @@ import { EngineImportCardUI } from "./EngineImportPage";
 const meta: Meta<typeof EngineImportCardUI> = {
   title: "Engine/general/import",
   component: EngineImportCardUI,
-  parameters: {
-    layout: "centered",
-  },
   decorators: [
     (Story) => (
       <div className="py-10">

@@ -1,27 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { BadgeContainer } from "stories/utils";
 import { StatBreakdown } from "./StatBreakdown";
 
 const meta = {
   title: "Analytics/StatBreakdown",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   parameters: {
     viewport: { defaultViewport: "desktop" },
-  },
-};
-
-export const Mobile: Story = {
-  parameters: {
-    viewport: mobileViewport("iphone14"),
   },
 };
 
@@ -86,7 +77,7 @@ const withIconsData = [
 
 function Component() {
   return (
-    <div className="container max-w-[600px] space-y-8 py-8">
+    <div className="container max-w-[600px] space-y-10 py-10">
       <BadgeContainer label="Basic">
         <StatBreakdown data={baseData} />
       </BadgeContainer>

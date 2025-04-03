@@ -1,95 +1,55 @@
-import { TabButtons } from "@/components/ui/tabs";
 import type { Meta, StoryObj } from "@storybook/react";
 import { subDays } from "date-fns";
-import { useState } from "react";
-import { mobileViewport } from "../../../../../../../stories/utils";
 import type { NebulaAnalyticsDataItem } from "./fetch-nebula-analytics";
 import { NebulaAnalyticsDashboardUI } from "./nebula-analytics-ui";
 
 const meta = {
   title: "Nebula/Analytics",
-  component: Story,
+  component: NebulaAnalyticsDashboardUI,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
-} satisfies Meta<typeof Story>;
+  decorators: [
+    (Story) => (
+      <div className="container max-w-6xl py-10">
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof NebulaAnalyticsDashboardUI>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
-  args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+export const SixtyDays: Story = {
+  args: {
+    data: generateRandomNebulaAnalyticsData(60),
+    isPending: false,
   },
 };
 
-type VariantTab = "30-day" | "7-day" | "pending" | "60-day";
+export const ThirtyDays: Story = {
+  args: {
+    data: generateRandomNebulaAnalyticsData(30),
+    isPending: false,
+  },
+};
 
-function Story() {
-  const [tab, setTab] = useState<VariantTab>("60-day");
-  return (
-    <div className="container flex flex-col gap-8 py-10">
-      <div>
-        <TabButtons
-          tabs={[
-            {
-              name: "60 Days",
-              onClick: () => setTab("60-day"),
-              isActive: tab === "60-day",
-            },
-            {
-              name: "30 Days",
-              onClick: () => setTab("30-day"),
-              isActive: tab === "30-day",
-            },
-            {
-              name: "7 Days",
-              onClick: () => setTab("7-day"),
-              isActive: tab === "7-day",
-            },
-            {
-              name: "Pending",
-              onClick: () => setTab("pending"),
-              isActive: tab === "pending",
-            },
-          ]}
-        />
-      </div>
+export const SevenDays: Story = {
+  args: {
+    data: generateRandomNebulaAnalyticsData(7),
+    isPending: false,
+  },
+};
 
-      {tab === "60-day" && (
-        <NebulaAnalyticsDashboardUI
-          data={generateRandomNebulaAnalyticsData(60)}
-          isPending={false}
-        />
-      )}
-
-      {tab === "30-day" && (
-        <NebulaAnalyticsDashboardUI
-          data={generateRandomNebulaAnalyticsData(30)}
-          isPending={false}
-        />
-      )}
-
-      {tab === "7-day" && (
-        <NebulaAnalyticsDashboardUI
-          data={generateRandomNebulaAnalyticsData(7)}
-          isPending={false}
-        />
-      )}
-
-      {tab === "pending" && (
-        <NebulaAnalyticsDashboardUI data={[]} isPending={true} />
-      )}
-    </div>
-  );
-}
+export const Pending: Story = {
+  args: {
+    data: [],
+    isPending: true,
+  },
+};
 
 function generateRandomNebulaAnalyticsData(
   days: number,

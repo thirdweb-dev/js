@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import { SelectWithSearch } from "./select-with-search";
 
 const meta = {
@@ -16,15 +16,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function createList(len: number) {
@@ -36,7 +29,7 @@ function createList(len: number) {
 
 function Story() {
   return (
-    <div className="mx-auto flex w-full max-w-[600px] flex-col gap-6 px-4 py-6">
+    <div className="container flex max-w-6xl flex-col gap-6 py-10">
       <VariantTest storyLabel="5 items" listLen={5} />
       <VariantTest storyLabel="5000 items" listLen={5000} />
       <VariantTest

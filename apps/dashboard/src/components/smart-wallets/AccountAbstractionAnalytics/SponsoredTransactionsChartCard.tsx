@@ -108,7 +108,7 @@ export function SponsoredTransactionsChartCard(props: {
             Total number of sponsored transactions
           </p>
 
-          <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
+          <div className="top-6 right-6 mt-4 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:my-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
               fileName="Sponsored Transactions"
@@ -131,7 +131,7 @@ export function SponsoredTransactionsChartCard(props: {
       config={chartConfig}
       data={chartData}
       isPending={props.isPending}
-      chartClassName="aspect-[1.5] lg:aspect-[3]"
+      chartClassName="aspect-[1] lg:aspect-[3]"
       showLegend
       hideLabel={false}
       toolTipLabelFormatter={(_v, item) => {

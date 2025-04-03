@@ -14,7 +14,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
 };
 
@@ -22,7 +22,7 @@ const client = getThirdwebClient();
 
 function Story() {
   return (
-    <div className="flex flex-col gap-10 p-10">
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <p> All images below are set with size-6 className </p>
 
       <BadgeContainer label="No Src - Skeleton">

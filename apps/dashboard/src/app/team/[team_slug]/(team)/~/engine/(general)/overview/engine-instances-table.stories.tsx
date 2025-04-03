@@ -1,13 +1,11 @@
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Toaster } from "sonner";
 import { EngineInstancesTableUI } from "./engine-instances-table";
 
 const meta: Meta<typeof Story> = {
   title: "Engine/general/instances",
   component: Story,
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },
@@ -16,7 +14,6 @@ const meta: Meta<typeof Story> = {
     (StoryInstance) => (
       <div className="container max-w-[1154px] py-10">
         <StoryInstance />
-        <Toaster richColors />
       </div>
     ),
   ],

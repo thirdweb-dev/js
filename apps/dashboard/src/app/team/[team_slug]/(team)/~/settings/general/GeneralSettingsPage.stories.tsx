@@ -1,8 +1,6 @@
-import { Toaster } from "@/components/ui/sonner";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
-import { mobileViewport } from "../../../../../../../stories/utils";
 import {
   DeleteTeamCard,
   LeaveTeamCard,
@@ -22,22 +20,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const testTeam = teamStub("foo", "free");
 
 function Story() {
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
+    <div className="container max-w-6xl py-10">
       <TeamGeneralSettingsPageUI
         team={testTeam}
         updateTeamImage={async () => {
@@ -53,7 +44,6 @@ function Story() {
         }}
       />
       <ComponentVariants />
-      <Toaster richColors />
     </div>
   );
 }

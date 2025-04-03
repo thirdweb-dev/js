@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { differenceInDays, isAfter } from "date-fns";
 import { format } from "date-fns/format";
+import { InfoIcon } from "lucide-react";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
@@ -37,17 +38,20 @@ export function PlanInfoCard(props: {
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div>
           <div className="flex flex-col items-start gap-0.5">
-            <h3 className="font-semibold text-2xl capitalize tracking-tight">
-              {validPlan} Plan
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-2xl capitalize tracking-tight">
+                {validPlan} Plan
+              </h3>
+              {trialEndsInFuture && <Badge variant="warning">Trial</Badge>}
+            </div>
             <p className="text-muted-foreground text-sm">
               Click on "Manage Billing" to view your invoices, update your
               payment method, or edit your billing details.
             </p>
-            {trialEndsInFuture && <Badge>Trial</Badge>}
           </div>
           {trialEndsAfterDays > 0 && (
-            <p className="text-muted-foreground text-sm">
+            <p className="mt-4 flex items-center gap-1 text-foreground text-sm">
+              <InfoIcon className="size-3" />
               Your trial ends in {trialEndsAfterDays} days
             </p>
           )}

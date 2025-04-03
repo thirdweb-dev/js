@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mobileViewport } from "../../../stories/utils";
 import { MarkdownRenderer } from "./markdown-renderer";
 
 const meta = {
@@ -15,7 +14,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Default: Story = {
   args: {},
 };
 
@@ -28,13 +27,6 @@ export const DisableCodeHighlight: Story = {
 export const SkipHTML: Story = {
   args: {
     skipHtml: true,
-  },
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
   },
 };
 

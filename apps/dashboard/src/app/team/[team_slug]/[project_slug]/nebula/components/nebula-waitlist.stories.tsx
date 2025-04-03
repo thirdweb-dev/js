@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mobileViewport } from "stories/utils";
 import { NebulaWaitListPageUI } from "./nebula-waitlist-page-ui.client";
 
 const meta = {
@@ -15,16 +14,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {
     inWaitlist: false,
-  },
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
   },
 };
 

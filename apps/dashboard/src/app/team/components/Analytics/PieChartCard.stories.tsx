@@ -1,27 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react/*";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { BadgeContainer } from "stories/utils";
 import { PieChartCard } from "./PieChartCard";
 
 const meta = {
   title: "Analytics/PieChartCard",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   parameters: {
     viewport: { defaultViewport: "desktop" },
-  },
-};
-
-export const Mobile: Story = {
-  parameters: {
-    viewport: mobileViewport("iphone14"),
   },
 };
 
@@ -51,7 +42,7 @@ const manyItemsChartData = [
 
 function Component() {
   return (
-    <div className="container max-w-lg space-y-8 py-8">
+    <div className="container max-w-lg space-y-8 py-10">
       <BadgeContainer label="Few Items">
         <PieChartCard title="Browser Distribution" data={baseChartData} />
       </BadgeContainer>

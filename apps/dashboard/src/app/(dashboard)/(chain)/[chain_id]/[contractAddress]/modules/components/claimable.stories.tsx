@@ -11,8 +11,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { subDays } from "date-fns";
 import { useState } from "react";
-import { Toaster, toast } from "sonner";
-import { mobileViewport } from "stories/utils";
+import { toast } from "sonner";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
@@ -29,7 +28,6 @@ const meta = {
   title: "Modules/Claimable",
   component: Component,
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },
@@ -39,15 +37,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
@@ -67,7 +58,7 @@ const claimCondition = {
 
 function Component() {
   const [isOwner, setIsOwner] = useState(true);
-  const [name, setName] = useState("ClaimableERC721");
+  const [name, setName] = useState("MintableERC721");
   const [isClaimConditionLoading, setIsClaimConditionLoading] = useState(false);
   const [isPrimarySaleRecipientLoading, setIsPrimarySaleRecipientLoading] =
     useState(false);
@@ -110,7 +101,7 @@ function Component() {
 
   return (
     <ThirdwebProvider>
-      <div className="container flex max-w-[1150px] flex-col gap-10 py-10">
+      <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <div>
           <ConnectButton client={getThirdwebClient()} />
         </div>
@@ -196,8 +187,6 @@ function Component() {
           isValidTokenId={true}
           noClaimConditionSet={noClaimConditionSet}
         />
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

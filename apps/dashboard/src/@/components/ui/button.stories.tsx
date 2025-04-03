@@ -6,9 +6,6 @@ import { BadgeContainer } from "../../../stories/utils";
 const meta = {
   title: "Shadcn/Buttons",
   component: Component,
-  parameters: {
-    layout: "centered",
-  },
 } satisfies Meta<typeof Component>;
 
 export default meta;

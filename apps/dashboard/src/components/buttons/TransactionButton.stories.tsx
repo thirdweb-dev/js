@@ -15,7 +15,6 @@ import { StarIcon } from "lucide-react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub } from "../../stories/stubs";
-import { mobileViewport } from "../../stories/utils";
 import { BadgeContainer } from "../../stories/utils";
 import { TransactionButton } from "./TransactionButton";
 
@@ -32,15 +31,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
@@ -49,7 +41,7 @@ function Story() {
 
   return (
     <ThirdwebProvider>
-      <div className="container flex max-w-[900px] flex-col gap-10 py-14">
+      <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <FormFieldSetup
           htmlFor="chain-id"
           label="Transaction Chain Id"

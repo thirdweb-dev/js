@@ -10,7 +10,6 @@ import {
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { mobileViewport } from "../../../stories/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
@@ -147,7 +146,6 @@ function Variants() {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />
-      <Toaster richColors />
     </div>
   );
 }

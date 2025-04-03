@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import { ChatBar } from "./ChatBar";
 
 const meta = {
@@ -15,20 +15,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story() {
   return (
-    <div className="container flex max-w-[800px] flex-col gap-14 py-10">
+    <div className="container flex max-w-6xl flex-col gap-14 py-10">
       <BadgeContainer label="Not Streaming">
         <ChatBar
           abortChatStream={() => {}}

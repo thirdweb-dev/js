@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import { BadgeContainer } from "../../../stories/utils";
 import { ContractTableUI } from "./contract-table";
 
 const meta = {
@@ -17,15 +17,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const popularPolygonNFTs: ProjectContract[] = [
@@ -60,7 +53,7 @@ function Story() {
 
   return (
     <ThirdwebProvider>
-      <div className="container flex flex-col gap-12 py-10">
+      <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <BadgeContainer label="0 Contracts">
           <ContractTableUI
             contracts={[]}

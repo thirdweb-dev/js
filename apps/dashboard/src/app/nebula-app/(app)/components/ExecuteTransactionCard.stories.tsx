@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub } from "../../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import {
   ExecuteTransactionCardLayout,
   type TxStatus,
@@ -22,15 +22,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 const client = getThirdwebClient();

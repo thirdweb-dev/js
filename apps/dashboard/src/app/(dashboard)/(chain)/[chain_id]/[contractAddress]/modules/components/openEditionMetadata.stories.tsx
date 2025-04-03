@@ -3,8 +3,8 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Toaster, toast } from "sonner";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import { toast } from "sonner";
+import { BadgeContainer } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { accountStub } from "../../../../../../../stories/stubs";
 import {
@@ -16,7 +16,6 @@ const meta = {
   title: "Modules/OpenEditionMetadata",
   component: Component,
   parameters: {
-    layout: "centered",
     nextjs: {
       appDirectory: true,
     },
@@ -26,15 +25,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Component() {
@@ -98,8 +90,6 @@ function Component() {
             twAccount={accountStub()}
           />
         </BadgeContainer>
-
-        <Toaster richColors />
       </div>
     </ThirdwebProvider>
   );

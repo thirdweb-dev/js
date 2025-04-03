@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Toaster } from "sonner";
 import { CreateProjectDialogUI, type CreateProjectPrefillOptions } from ".";
 import { projectStub } from "../../../../stories/stubs";
-import { mobileViewport } from "../../../../stories/utils";
 
 const meta = {
   title: "Project/Create Project Modal",
@@ -19,15 +17,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Desktop: Story = {
+export const Variants: Story = {
   args: {},
-};
-
-export const Mobile: Story = {
-  args: {},
-  parameters: {
-    viewport: mobileViewport("iphone14"),
-  },
 };
 
 function Story(props: {
@@ -36,7 +27,7 @@ function Story(props: {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <div className="flex grow items-center justify-center p-6">
+    <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <CreateProjectDialogUI
         open={isOpen}
         onOpenChange={setIsOpen}
@@ -60,8 +51,6 @@ function Story(props: {
       >
         Open
       </Button>
-
-      <Toaster richColors />
     </div>
   );
 }
