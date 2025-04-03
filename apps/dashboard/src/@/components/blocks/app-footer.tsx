@@ -12,17 +12,23 @@ import Link from "next/link";
 
 type AppFooterProps = {
   className?: string;
+  containerClassName?: string;
 };
 
 export function AppFooter(props: AppFooterProps) {
   return (
     <footer
       className={cn(
-        "w-full border-border border-t bg-card py-6 md:py-8",
+        "w-full border-border border-t py-6 md:py-8",
         props.className,
       )}
     >
-      <div className="container flex flex-col gap-4 md:gap-6">
+      <div
+        className={cn(
+          "container flex flex-col gap-4 md:gap-6",
+          props.containerClassName,
+        )}
+      >
         {/* top row */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-row items-center gap-3">

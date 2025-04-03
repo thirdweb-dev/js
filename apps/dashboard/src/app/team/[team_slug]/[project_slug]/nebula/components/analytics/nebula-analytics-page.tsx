@@ -24,7 +24,7 @@ export function NebulaAnalyticsPage(props: {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
       <header className="border-b">
-        <div className="flex flex-col items-start gap-4 pt-2 pb-6 md:flex-row md:items-center md:justify-between lg:pt-4 lg:pb-10">
+        <div className="container flex max-w-7xl flex-col items-start gap-4 py-10 md:flex-row md:items-center md:justify-between">
           <h1 className="font-semibold text-3xl tracking-tight">Nebula</h1>
 
           <div className="flex gap-3">
@@ -45,7 +45,7 @@ export function NebulaAnalyticsPage(props: {
         </div>
       </header>
 
-      <div className="pt-8">
+      <div className="container max-w-7xl pt-8">
         <div className="mb-4 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <h2 className="font-semibold text-2xl tracking-tight">Analytics</h2>
           <NebulaAnalyticsFilter />

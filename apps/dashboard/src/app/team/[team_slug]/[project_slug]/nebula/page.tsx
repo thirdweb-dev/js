@@ -54,12 +54,19 @@ export default async function Page(props: {
   if (hasNebulaAccess) {
     if (showFTUX) {
       return (
-        <div>
-          <h1 className="mb-5 font-semibold text-3xl tracking-tight">Nebula</h1>
-          <NebulaFTUX
-            secretKeyMasked={project.secretKeys[0]?.masked || ""}
-            projectId={project.id}
-          />
+        <div className="flex grow flex-col">
+          <div className="border-b py-10">
+            <div className="container max-w-7xl">
+              <h1 className="font-semibold text-3xl tracking-tight">Nebula</h1>
+            </div>
+          </div>
+
+          <div className="container mt-6 max-w-7xl">
+            <NebulaFTUX
+              secretKeyMasked={project.secretKeys[0]?.masked || ""}
+              projectId={project.id}
+            />
+          </div>
         </div>
       );
     }

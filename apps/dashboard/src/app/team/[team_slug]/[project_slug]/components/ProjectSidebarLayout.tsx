@@ -1,6 +1,5 @@
 "use client";
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
-import { AppFooter } from "@/components/blocks/app-footer";
 import {
   BookTextIcon,
   BoxIcon,
@@ -29,7 +28,6 @@ export function ProjectSidebarLayout(props: {
 
   return (
     <FullWidthSidebarLayout
-      footer={<AppFooter />}
       contentSidebarLinks={[
         {
           href: layoutPath,

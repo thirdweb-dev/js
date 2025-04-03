@@ -20,6 +20,7 @@ export function TabLinks(props: {
   className?: string;
   tabContainerClassName?: string;
   shadowColor?: string;
+  scrollableClassName?: string;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLAnchorElement>();
@@ -30,7 +31,7 @@ export function TabLinks(props: {
       <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
 
       <ScrollShadow
-        scrollableClassName="pb-[8px] relative"
+        scrollableClassName={cn("pb-[8px] relative", props.scrollableClassName)}
         shadowColor={props.shadowColor}
       >
         <div
@@ -159,9 +160,11 @@ function useUnderline<El extends HTMLElement>() {
         const containerRect = containerRef.current.getBoundingClientRect();
         const lineEl = lineRef.current;
         const rect = activeTabEl.getBoundingClientRect();
+        const containerPaddingLeft =
+          containerRect.left - containerRef.current.offsetLeft;
         lineEl.style.width = `${rect.width}px`;
         lineEl.style.transform = `translateX(${
-          rect.left - containerRect.left
+          rect.left - containerPaddingLeft
         }px)`;
         setTimeout(() => {
           lineEl.style.transition = "transform 0.3s, width 0.3s";
@@ -205,6 +208,7 @@ export function TabPathLinks(props: {
   className?: string;
   tabContainerClassName?: string;
   shadowColor?: string;
+  scrollableClassName?: string;
 }) {
   const pathname = usePathname() || "";
   const { links, ...restProps } = props;

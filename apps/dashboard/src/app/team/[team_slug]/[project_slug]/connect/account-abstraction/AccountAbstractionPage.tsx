@@ -10,7 +10,7 @@ import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ArrowRightIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
-import { AAFooterSection } from "./AAFooterSection";
+import { AAFooter } from "./AAFooterSection";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
@@ -25,57 +25,71 @@ export function AccountAbstractionLayout(props: {
   const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`;
 
   return (
-    <div>
-      <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
-        Account Abstraction
-      </h1>
-      <p className="text-muted-foreground text-sm">
-        Integrate ERC-4337 compliant smart accounts for gasless sponsorships and
-        more. <br className="lg:hidden" />
-        <TrackedUnderlineLink
-          target="_blank"
-          label="docs-wallets"
-          category={TRACKING_CATEGORY}
-          href="https://portal.thirdweb.com/wallets/smart-wallet"
-        >
-          Learn more about Account Abstraction
-        </TrackedUnderlineLink>
-      </p>
-
-      <div className="h-6" />
-
-      <div className="flex flex-col gap-6">
-        {props.hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
-        <GasCreditAlert teamSlug={props.teamSlug} projectId={props.projectId} />
-
-        <div>
-          <TabPathLinks
-            links={[
-              {
-                name: "Analytics",
-                path: `${smartWalletsLayoutSlug}`,
-                exactMatch: true,
-              },
-              {
-                name: "Account Factories",
-                path: `${smartWalletsLayoutSlug}/factories`,
-              },
-              {
-                name: "Sponsorship Rules",
-                path: `${smartWalletsLayoutSlug}/settings`,
-              },
-            ]}
+    <div className="flex grow flex-col">
+      {/* top */}
+      <div className="pt-4 lg:pt-6">
+        {/* header */}
+        <div className="container flex max-w-7xl flex-col gap-4">
+          <div>
+            <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
+              Account Abstraction
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Integrate ERC-4337 compliant smart accounts for gasless
+              sponsorships and more. <br className="lg:hidden" />
+              <TrackedUnderlineLink
+                target="_blank"
+                label="docs-wallets"
+                category={TRACKING_CATEGORY}
+                href="https://portal.thirdweb.com/wallets/smart-wallet"
+              >
+                Learn more about Account Abstraction
+              </TrackedUnderlineLink>
+            </p>
+          </div>
+          {props.hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
+          <GasCreditAlert
+            teamSlug={props.teamSlug}
+            projectId={props.projectId}
           />
-
-          <div className="h-6" />
-
-          {props.children}
         </div>
+
+        <div className="h-4" />
+
+        {/* Nav */}
+        <TabPathLinks
+          scrollableClassName="container max-w-7xl"
+          links={[
+            {
+              name: "Analytics",
+              path: `${smartWalletsLayoutSlug}`,
+              exactMatch: true,
+            },
+            {
+              name: "Account Factories",
+              path: `${smartWalletsLayoutSlug}/factories`,
+            },
+            {
+              name: "Sponsorship Rules",
+              path: `${smartWalletsLayoutSlug}/settings`,
+            },
+          ]}
+        />
       </div>
 
-      <div className="h-14" />
+      {/* content */}
+      <div className="h-6" />
+      <div className="container flex max-w-7xl grow flex-col gap-6">
+        <div>{props.children}</div>
+      </div>
+      <div className="h-20" />
 
-      <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
+      {/* footer */}
+      <div className="border-border border-t">
+        <div className="container max-w-7xl">
+          <AAFooter />
+        </div>
+      </div>
     </div>
   );
 }

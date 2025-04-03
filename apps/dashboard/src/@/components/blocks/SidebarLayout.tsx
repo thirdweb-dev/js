@@ -17,6 +17,7 @@ import { NavLink } from "../ui/NavLink";
 import { Separator } from "../ui/separator";
 import { MobileSidebar, useActiveSidebarLink } from "./MobileSidebar";
 import { CustomSidebar, type SidebarLink } from "./Sidebar";
+import { AppFooter } from "./app-footer";
 
 export function SidebarLayout(props: {
   sidebarLinks: SidebarLink[];
@@ -54,7 +55,6 @@ export function FullWidthSidebarLayout(props: {
   footerSidebarLinks?: SidebarLink[];
   children: React.ReactNode;
   className?: string;
-  footer?: React.ReactNode;
 }) {
   const { contentSidebarLinks, children, footerSidebarLinks } = props;
   return (
@@ -65,7 +65,7 @@ export function FullWidthSidebarLayout(props: {
       )}
     >
       {/* left - sidebar */}
-      <Sidebar collapsible="icon" side="left">
+      <Sidebar collapsible="icon" side="left" className="pt-2">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
@@ -95,10 +95,10 @@ export function FullWidthSidebarLayout(props: {
           links={[...contentSidebarLinks, ...(footerSidebarLinks || [])]}
         />
 
-        <main className="container z-0 flex min-w-0 max-w-[1280px] grow flex-col pb-20 max-sm:w-full lg:pt-6">
+        <main className="z-0 flex min-w-0 grow flex-col max-sm:w-full">
           {children}
         </main>
-        {props.footer}
+        <AppFooter containerClassName="max-w-7xl" />
       </div>
     </div>
   );
@@ -156,7 +156,7 @@ function MobileSidebarTrigger(props: { links: SidebarLink[] }) {
   const activeLink = useActiveSidebarLink(props.links);
 
   return (
-    <div className="mb-4 flex items-center gap-3 border-b px-4 py-4 lg:hidden">
+    <div className="flex items-center gap-3 border-b px-4 py-4 lg:hidden">
       <SidebarTrigger className="size-4" />
       <Separator orientation="vertical" className="h-4" />
       {activeLink && <span className="text-sm">{activeLink.label}</span>}

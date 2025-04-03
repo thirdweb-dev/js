@@ -1,9 +1,8 @@
 import { getProject } from "@/api/projects";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
-import { InAppWalletFooterSection } from "./_components/footer";
+import { InAppWalletsFooter } from "./_components/footer";
 import { InAppWalletsHeader } from "./_components/header";
-import { TRACKING_CATEGORY } from "./_constants";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -22,32 +21,48 @@ export default async function Layout(props: {
   const { team_slug, project_slug } = params;
 
   return (
-    <div>
-      <InAppWalletsHeader />
-      <TabPathLinks
-        links={[
-          {
-            name: "Analytics",
-            path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
-            exactMatch: true,
-          },
-          {
-            name: "Users",
-            path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/users`,
-            exactMatch: true,
-          },
-          {
-            name: "Settings",
-            path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/settings`,
-            exactMatch: true,
-          },
-        ]}
-      />
+    <div className="flex grow flex-col">
+      {/* header */}
+      <div className="pt-4 lg:pt-6">
+        <div className="container max-w-7xl">
+          <InAppWalletsHeader />
+        </div>
+        <div className="h-3" />
+        <TabPathLinks
+          scrollableClassName="container max-w-7xl"
+          links={[
+            {
+              name: "Analytics",
+              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
+              exactMatch: true,
+            },
+            {
+              name: "Users",
+              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/users`,
+              exactMatch: true,
+            },
+            {
+              name: "Settings",
+              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/settings`,
+              exactMatch: true,
+            },
+          ]}
+        />
+      </div>
 
-      <div className="h-8" />
-      {props.children}
-      <div className="h-8" />
-      <InAppWalletFooterSection trackingCategory={TRACKING_CATEGORY} />
+      {/* content */}
+      <div className="container flex max-w-7xl grow flex-col">
+        <div className="h-6" />
+        {props.children}
+        <div className="h-20" />
+      </div>
+
+      {/* footer */}
+      <div className="border-t">
+        <div className="container max-w-7xl">
+          <InAppWalletsFooter />
+        </div>
+      </div>
     </div>
   );
 }

@@ -76,26 +76,29 @@ export default async function ProjectOverviewPage(props: PageProps) {
     projectId: project.id,
   });
 
-  // is any analytics data active?
   const isActive = Object.values(activeStatus).some((v) => !!v);
 
   return (
     <div className="flex grow flex-col">
-      <div className="w-full">
-        <Header
-          title={project.name}
-          interval={interval}
-          range={range}
-          showRangeSelector={isActive}
-        />
+      <div className="w-full border-b py-10">
+        <div className="container max-w-7xl">
+          <Header
+            title={project.name}
+            interval={interval}
+            range={range}
+            showRangeSelector={isActive}
+          />
+        </div>
       </div>
 
+      <div className="h-6" />
+
       {!isActive ? (
-        <div className="pt-6">
+        <div className="container max-w-7xl">
           <ProjectFTUX project={project} teamSlug={params.team_slug} />
         </div>
       ) : (
-        <div className="flex grow flex-col pt-6">
+        <div className="container flex max-w-7xl grow flex-col">
           <Suspense fallback={<GenericLoadingPage />}>
             <ProjectAnalytics
               project={project}
@@ -106,6 +109,8 @@ export default async function ProjectOverviewPage(props: PageProps) {
           </Suspense>
         </div>
       )}
+
+      <div className="h-20" />
     </div>
   );
 }

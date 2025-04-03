@@ -17,7 +17,8 @@ export function DeployedContractsPage(props: {
         teamId={props.teamId}
         projectId={props.projectId}
       />
-      <div className="flex grow flex-col">
+      <div className="h-6" />
+      <div className="container flex max-w-7xl grow flex-col">
         <Suspense fallback={<Loading />}>
           <DeployedContractsPageAsync {...props} />
         </Suspense>

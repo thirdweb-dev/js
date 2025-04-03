@@ -13,7 +13,7 @@ export function DeployedContractsPageHeader(props: {
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
-    <div>
+    <div className="border-b">
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => {
@@ -23,9 +23,11 @@ export function DeployedContractsPageHeader(props: {
         projectId={props.projectId}
       />
 
-      <div className="flex flex-col gap-3 pt-2 pb-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="container flex max-w-7xl flex-col gap-3 py-10 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="font-semibold text-3xl tracking-tight">Contracts</h1>
+          <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
+            Contracts
+          </h1>
         </div>
         <div className="flex gap-3 [&>*]:grow">
           <Button
