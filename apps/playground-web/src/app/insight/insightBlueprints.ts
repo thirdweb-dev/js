@@ -12,15 +12,15 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       },
       {
         name: "Get contract transactions",
-        path: "/v1/transactions/:contractAddress",
+        path: "/v1/transactions/{contractAddress}",
       },
       {
         name: "Get contract transactions with specific signature",
-        path: "/v1/transactions/:contractAddress/:signature",
+        path: "/v1/transactions/{contractAddress}/{signature}",
       },
       {
         name: "Get wallet transactions",
-        path: "/v1/wallets/:wallet_address/transactions",
+        path: "/v1/wallets/{wallet_address}/transactions",
       },
     ],
   },
@@ -34,11 +34,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       },
       {
         name: "Get contract events",
-        path: "/v1/events/:contractAddress",
+        path: "/v1/events/{contractAddress}",
       },
       {
         name: "Get contract events with specific signature",
-        path: "/v1/events/:contractAddress/:signature",
+        path: "/v1/events/{contractAddress}/{signature}",
       },
     ],
   },
@@ -48,11 +48,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     paths: [
       {
         name: "Get token transfers by transaction",
-        path: "/v1/tokens/transfers/transaction/:transaction_hash",
+        path: "/v1/tokens/transfers/transaction/{transaction_hash}",
       },
       {
         name: "Get token transfers by contract",
-        path: "/v1/tokens/transfers/:contract_address",
+        path: "/v1/tokens/transfers/{contract_address}",
       },
       {
         name: "Get token transfers by wallet address",
@@ -60,15 +60,15 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       },
       {
         name: "Get ERC-20 balances by address",
-        path: "/v1/tokens/erc20/:ownerAddress",
+        path: "/v1/tokens/erc20/{ownerAddress}",
       },
       {
         name: "Get ERC-721 balances by address",
-        path: "/v1/tokens/erc721/:ownerAddress",
+        path: "/v1/tokens/erc721/{ownerAddress}",
       },
       {
         name: "Get ERC-1155 balances by address",
-        path: "/v1/tokens/erc1155/:ownerAddress",
+        path: "/v1/tokens/erc1155/{ownerAddress}",
       },
       {
         name: "Get supported tokens for price data",
@@ -86,7 +86,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     paths: [
       {
         name: "Resolve",
-        path: "/v1/resolve/:input",
+        path: "/v1/resolve/{input}",
       },
     ],
   },
@@ -106,11 +106,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     paths: [
       {
         name: "Get contract ABI​",
-        path: "/v1/contracts/abi/:contractAddress",
+        path: "/v1/contracts/abi/{contractAddress}",
       },
       {
         name: "Get contract metadata​",
-        path: "/v1/contracts/metadata/:contractAddress",
+        path: "/v1/contracts/metadata/{contractAddress}",
       },
     ],
   },
@@ -120,7 +120,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     paths: [
       {
         name: "Unknown",
-        path: "/v1/decode/:contractAddress",
+        path: "/v1/decode/{contractAddress}",
       },
     ],
   },
@@ -134,11 +134,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       },
       {
         name: "Get NFT owners by contract",
-        path: "/v1/nfts/owners/:contract_address",
+        path: "/v1/nfts/owners/{contract_address}",
       },
       {
         name: "Get NFT owners by token",
-        path: "/v1/nfts/owners/:contract_address/:token_id",
+        path: "/v1/nfts/owners/{contract_address}/{token_id}",
       },
       {
         name: "Get NFT transfers by owner",
@@ -146,31 +146,31 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       },
       {
         name: "Get NFT transfers by transaction",
-        path: "/v1/nfts/transfers/transaction/:transaction_hash",
+        path: "/v1/nfts/transfers/transaction/{transaction_hash}",
       },
       {
         name: "Get NFT transfers by contract",
-        path: "/v1/nfts/transfers/:contract_address",
+        path: "/v1/nfts/transfers/{contract_address}",
       },
       {
         name: "Get NFTs by contract",
-        path: "/v1/nfts/:contract_address",
+        path: "/v1/nfts/{contract_address}",
       },
       {
         name: "Get NFT transfers by token",
-        path: "/v1/nfts/transfers/:contract_address/:token_id",
+        path: "/v1/nfts/transfers/{contract_address}/{token_id}",
       },
       {
         name: "Get NFT by token",
-        path: "/v1/nfts/:contract_address/:token_id",
+        path: "/v1/nfts/{contract_address}/{token_id}",
       },
       {
         name: "Force refresh collection metadata",
-        path: "/v1/nfts/metadata/refresh/:contract_address",
+        path: "/v1/nfts/metadata/refresh/{contract_address}",
       },
       {
         name: "Force refresh token metadata",
-        path: "/v1/nfts/metadata/refresh/:contract_address/:token_id",
+        path: "/v1/nfts/metadata/refresh/{contract_address}/{token_id}",
       },
     ],
   },
@@ -180,7 +180,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     paths: [
       {
         name: "Get wallet transactions",
-        path: "/v1/wallets/:wallet_address/transactions",
+        path: "/v1/wallets/{wallet_address}/transactions",
       },
     ],
   },
