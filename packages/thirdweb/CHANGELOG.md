@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.93.12
+
+### Patch Changes
+
+- [#6613](https://github.com/thirdweb-dev/js/pull/6613) [`5788cbd`](https://github.com/thirdweb-dev/js/commit/5788cbdbad3a637eddeb2add692d751bfbb3197a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds transaction `action` fields to Bridge responses. This includes and necessary approval transactions.n
+
+- [#6621](https://github.com/thirdweb-dev/js/pull/6621) [`6a0704a`](https://github.com/thirdweb-dev/js/commit/6a0704a19b2b6ba77a19be661eb645b029106f8a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Connect to current wallet chain when connecting other wallets in PayEmbed
+
+- [#6626](https://github.com/thirdweb-dev/js/pull/6626) [`3f21445`](https://github.com/thirdweb-dev/js/commit/3f2144536992f97ad79fc8a13cac0a57a1c6d246) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Emit accountChanged event when smart wallets switch chains
+
+- [#6628](https://github.com/thirdweb-dev/js/pull/6628) [`95a8753`](https://github.com/thirdweb-dev/js/commit/95a87530e3500dbcd86ddd4da78b0bcea52e7ebf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix updateListing date handling
+
+- [#6520](https://github.com/thirdweb-dev/js/pull/6520) [`d6373b2`](https://github.com/thirdweb-dev/js/commit/d6373b2c67d4d2813b441f8f690a612648986de5) Thanks [@denpiligrim](https://github.com/denpiligrim)! - Added ru_RU locale to thirdweb package
+
 ## 5.93.11
 
 ### Patch Changes
