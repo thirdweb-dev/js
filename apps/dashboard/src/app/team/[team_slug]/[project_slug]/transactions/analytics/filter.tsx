@@ -1,19 +1,19 @@
 "use client";
 
 import { normalizeTimeISOString } from "@/lib/time";
-import { DateRangeSelector } from "components/analytics/date-range-selector";
-import { IntervalSelector } from "components/analytics/interval-selector";
-import { getNebulaFiltersFromSearchParams } from "lib/time";
 import {
   useResponsiveSearchParams,
   useSetResponsiveSearchParams,
 } from "responsive-rsc";
+import { DateRangeSelector } from "../../../../../../components/analytics/date-range-selector";
+import { IntervalSelector } from "../../../../../../components/analytics/interval-selector";
+import { getTxAnalyticsFiltersFromSearchParams } from "./getTransactionAnalyticsFilter";
 
-export function NebulaAnalyticsFilter() {
+export function TransactionAnalyticsFilter() {
   const responsiveSearchParams = useResponsiveSearchParams();
   const setResponsiveSearchParams = useSetResponsiveSearchParams();
 
-  const { range, interval } = getNebulaFiltersFromSearchParams({
+  const { range, interval } = getTxAnalyticsFiltersFromSearchParams({
     from: responsiveSearchParams.from,
     to: responsiveSearchParams.to,
     interval: responsiveSearchParams.interval,

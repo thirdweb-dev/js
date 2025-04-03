@@ -13,13 +13,18 @@ import { formatDate } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import type { UserOpStats } from "types/analytics";
-import { formatTickerNumber } from "../../../lib/format-utils";
+import { formatTickerNumber } from "../../../../../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string;
 };
 
-export function SponsoredTransactionsChartCard(props: {
+// TODO: write a story for this component when its finalized
+
+// This is copy of SponsoredTransactionsChartCard component
+// TODO - update the name of the component to something more relevant
+export function TransactionsChartCardUI(props: {
+  // TODO - update this
   userOpStats: UserOpStats[];
   isPending: boolean;
 }) {
@@ -27,6 +32,7 @@ export function SponsoredTransactionsChartCard(props: {
   const topChainsToShow = 10;
   const chainsStore = useAllChainsData();
 
+  // TODO - update this if we need to change it
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
     const _chartDataMap: Map<string, ChartData> = new Map();
@@ -102,13 +108,13 @@ export function SponsoredTransactionsChartCard(props: {
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
-            Sponsored Transactions
+            Lorem Ipsum
           </h3>
           <p className="text-muted-foreground text-sm">
-            Total number of sponsored transactions
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </p>
 
-          <div className="top-6 right-6 mt-4 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:my-0 md:flex">
+          <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
               fileName="Sponsored Transactions"
@@ -131,7 +137,7 @@ export function SponsoredTransactionsChartCard(props: {
       config={chartConfig}
       data={chartData}
       isPending={props.isPending}
-      chartClassName="aspect-[1] lg:aspect-[3]"
+      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
       showLegend
       hideLabel={false}
       toolTipLabelFormatter={(_v, item) => {
@@ -142,43 +148,49 @@ export function SponsoredTransactionsChartCard(props: {
         return undefined;
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
-      emptyChartState={<EmptyAccountAbstractionChartContent />}
+      emptyChartState={<EmptyChartContent />}
     />
   );
 }
 
-export function EmptyAccountAbstractionChartContent() {
+// TODO - update the title and doc links
+function EmptyChartContent() {
   return (
     <div className="flex flex-col items-center justify-center px-4">
-      <span className="mb-6 text-center text-lg">
-        Send your first sponsored transaction
-      </span>
+      {/* TODO - update this */}
+      <span className="mb-6 text-center text-lg">Foo BAR</span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/typescript/v5/account-abstraction/batching-transactions"
           label="TypeScript"
           icon={TypeScriptIcon}
         />
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/react/v5/account-abstraction/batching-transactions"
           label="React"
           icon={ReactIcon}
         />
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
           label="React Native"
           icon={ReactIcon}
         />
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/unity/v5/wallets/account-abstraction"
           label="Unity"
           icon={UnityIcon}
         />
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/unreal-engine/blueprints/smart-wallet"
           label="Unreal Engine"
           icon={UnrealIcon}
         />
+        {/* TODO - replace this */}
         <DocLink
           link="https://portal.thirdweb.com/dotnet/wallets/providers/account-abstraction"
           label=".NET"
