@@ -14,7 +14,7 @@ export const products = [
     id: "contracts",
     icon: ContractIcon,
     description: "Pre-built contracts & deployment tools",
-    link: "https://thirdweb.com/contracts",
+    link: "https://thirdweb.com/explore",
   },
   {
     name: "Connect SDK",
