@@ -50,6 +50,15 @@ function Component() {
         />
       </BadgeContainer>
 
+      <BadgeContainer label="120 days">
+        <InAppWalletUsersChartCardUI
+          inAppWalletStats={createInAppWalletStatsStub(120)}
+          isPending={false}
+          title={title}
+          description={description}
+        />
+      </BadgeContainer>
+
       <BadgeContainer label="10 days">
         <InAppWalletUsersChartCardUI
           inAppWalletStats={createInAppWalletStatsStub(10)}
@@ -117,7 +126,7 @@ function createInAppWalletStatsStub(days: number): InAppWalletStats[] {
   while (d !== 0) {
     const uniqueWallets = Math.floor(Math.random() * 100);
     stubbedData.push({
-      date: new Date(2024, 1, d).toLocaleString(),
+      date: new Date(2024, 11, d).toLocaleString(),
       uniqueWalletsConnected: uniqueWallets,
       authenticationMethod: pickRandomAuthMethod(),
     });

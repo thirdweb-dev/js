@@ -17,7 +17,7 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
-import { format } from "date-fns";
+import { formatDate } from "date-fns";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { InAppWalletStats } from "types/analytics";
@@ -49,7 +49,7 @@ export function InAppWalletUsersChartCardUI(props: {
       // if no data for current day - create new entry
       if (!chartData && stat.uniqueWalletsConnected > 0) {
         _chartDataMap.set(stat.date, {
-          time: format(new Date(stat.date), "MMM dd"),
+          time: stat.date,
           [authenticationMethod || defaultLabel]: stat.uniqueWalletsConnected,
         } as ChartData);
       } else if (chartData) {
@@ -196,6 +196,7 @@ export function InAppWalletUsersChartCardUI(props: {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+              tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
             />
 
             <YAxis
