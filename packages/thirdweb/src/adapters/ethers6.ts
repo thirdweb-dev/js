@@ -374,12 +374,10 @@ export function toEthersSigner(
 ): ethers6.Signer {
   class ThirdwebAdapterSigner extends ethers.AbstractSigner<ethers6.JsonRpcProvider> {
     private address: string;
-    override provider: ethers6.ethers.JsonRpcProvider;
 
     constructor(provider: ethers6.JsonRpcProvider, address: string) {
       super(provider);
       this.address = address;
-      this.provider = provider;
     }
 
     override async getAddress(): Promise<string> {
