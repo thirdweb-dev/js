@@ -6,8 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { normalizeTime } from "@/lib/time";
 import { differenceInCalendarDays, format, subDays } from "date-fns";
-import { normalizeTime } from "../../lib/time";
 
 export function DateRangeSelector(props: {
   range: Range;
