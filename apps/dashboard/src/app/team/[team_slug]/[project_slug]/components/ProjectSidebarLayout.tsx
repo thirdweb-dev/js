@@ -1,6 +1,7 @@
 "use client";
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import {
+  ArrowRightLeftIcon,
   BookTextIcon,
   BoxIcon,
   HomeIcon,
@@ -70,6 +71,12 @@ export function ProjectSidebarLayout(props: {
           label: "Insight",
           icon: InsightIcon,
           tracking: tracking("insight"),
+        },
+        {
+          href: `${layoutPath}/transactions`,
+          label: "Transactions",
+          icon: ArrowRightLeftIcon,
+          tracking: tracking("transactions"),
         },
       ]}
       footerSidebarLinks={[
