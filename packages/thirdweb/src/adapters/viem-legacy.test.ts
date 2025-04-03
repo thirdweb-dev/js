@@ -153,7 +153,7 @@ describe("walletClient.toViem", () => {
       [UnknownRpcError: An unknown RPC error occurred.
 
       Details: Can't switch chains because only an account was passed to 'viemAdapter.walletClient.toViem()', please pass a connected wallet instance instead.
-      Version: viem@2.24.2]
+      Version: viem@2.24.3]
     `);
   });
 });
