@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.14
+
+### Patch Changes
+
+- [#6643](https://github.com/thirdweb-dev/js/pull/6643) [`04d2bc7`](https://github.com/thirdweb-dev/js/commit/04d2bc72e8993e883d1b79a78972b52291b8e27b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Deploy config
+
 ## 5.93.13
 
 ### Patch Changes

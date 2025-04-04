@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.8.19
+
+### Patch Changes
+
+- [#6641](https://github.com/thirdweb-dev/js/pull/6641) [`169ae22`](https://github.com/thirdweb-dev/js/commit/169ae22a86787af674cf20ac4e8d1e4a06c84d77) Thanks [@jnsdls](https://github.com/jnsdls)! - add team capabilities
+
 ## 0.8.18
 
 ### Patch Changes
