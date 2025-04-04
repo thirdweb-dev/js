@@ -85,12 +85,14 @@ export async function deployMarketplaceContract(
   let extensions: Extension[] = [];
 
   if (options.version !== "6.0.0") {
+    const isFeeExempt = chain.id === 232 || chain.id === 37111;
     const direct = await getOrDeployInfraForPublishedContract({
       chain,
       client,
       account,
       contractId: "DirectListingsLogic",
       constructorParams: { _nativeTokenWrapper: WETH.address },
+      version: isFeeExempt ? "0.1.2" : "latest",
     });
 
     const english = await getOrDeployInfraForPublishedContract({
@@ -99,6 +101,7 @@ export async function deployMarketplaceContract(
       account,
       contractId: "EnglishAuctionsLogic",
       constructorParams: { _nativeTokenWrapper: WETH.address },
+      version: isFeeExempt ? "0.0.11" : "latest",
     });
 
     const offers = await getOrDeployInfraForPublishedContract({
@@ -106,6 +109,7 @@ export async function deployMarketplaceContract(
       client,
       account,
       contractId: "OffersLogic",
+      version: isFeeExempt ? "0.0.8" : "latest",
     });
 
     const [directFunctions, englishFunctions, offersFunctions] =
