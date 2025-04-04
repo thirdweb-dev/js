@@ -775,7 +775,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 />
               )}
 
-              {hasPlatformFee && !isFeeExempt && (
+              {hasPlatformFee && (
                 <PlatformFeeFieldset
                   form={form}
                   isMarketplace={isMarketplace}
