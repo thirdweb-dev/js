@@ -213,6 +213,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     defaultFeeRecipientFunction &&
     metadata.publisher === THIRDWEB_PUBLISHER_ADDRESS;
 
+  const isFeeExempt = walletChain?.id === 232 || walletChain?.id === 37111;
+
   const [customFactoryNetwork, customFactoryAddress] = Object.entries(
     metadata?.factoryDeploymentData?.customFactoryInput
       ?.customFactoryAddresses || {},
@@ -512,8 +514,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: DEFAULT_FEE_BPS_NEW,
-            platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
+            platformFeeBps:
+              metadata.version === "7.0.0" && isFeeExempt
+                ? Number(params.deployParams._platformFeeBps)
+                : DEFAULT_FEE_BPS_NEW,
+            platformFeeRecipient:
+              metadata.version === "7.0.0" && isFeeExempt
+                ? (params.deployParams._platformFeeRecipient as string)
+                : DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
@@ -530,8 +538,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         _contractURI,
         platformFeeBps: hasInbuiltDefaultFeeConfig
           ? DEFAULT_FEE_BPS_NEW
-          : DEFAULT_FEE_BPS,
-        platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
+          : isFeeExempt
+            ? Number(params.deployParams._platformFeeBps)
+            : DEFAULT_FEE_BPS,
+        platformFeeRecipient:
+          !hasInbuiltDefaultFeeConfig && isFeeExempt
+            ? (params.deployParams._platformFeeRecipient as string)
+            : DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
@@ -766,7 +779,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               )}
 
               {hasPlatformFee && (
-                <PlatformFeeFieldset isMarketplace={isMarketplace} />
+                <PlatformFeeFieldset
+                  form={form}
+                  isMarketplace={isMarketplace}
+                  disabled={
+                    hasInbuiltDefaultFeeConfig ||
+                    (isMarketplace && metadata.version !== "7.0.0") ||
+                    !isFeeExempt
+                  }
+                />
               )}
 
               {isSplit && <SplitFieldset form={form} />}
