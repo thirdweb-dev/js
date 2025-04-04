@@ -344,11 +344,11 @@ const chainMetaRecord = {
   },
   //COTI Mainnet
   2632500: {
-    headerImgUrl: creatorBanner.src,
+    headerImgUrl: cotiBanner.src,
     about:
       "COTI is the fastest, lightest privacy layer in Web3, powered by the breakthrough cryptographic protocol Garbled Circuits. Build with privacy. Scale with speed.",
     cta: {
-      backgroundImageUrl: creatorCTA.src,
+      backgroundImageUrl: cotiCTA.src,
       title: "The Fastest, Lightest Privacy Layer in Web3",
       buttonLink: "https://thirdweb.com/coti",
       buttonText: "Learn More",
@@ -356,11 +356,11 @@ const chainMetaRecord = {
   },
   //COTI Testnet
   7082400: {
-    headerImgUrl: creatorBanner.src,
+    headerImgUrl: cotiBanner.src,
     about:
       "COTI is the fastest, lightest privacy layer in Web3, powered by the breakthrough cryptographic protocol Garbled Circuits. Build with privacy. Scale with speed.",
     cta: {
-      backgroundImageUrl: creatorCTA.src,
+      backgroundImageUrl: cotiCTA.src,
       title: "The Fastest, Lightest Privacy Layer in Web3",
       buttonLink: "https://thirdweb.com/coti",
       buttonText: "Learn More",
