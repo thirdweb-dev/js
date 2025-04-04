@@ -799,7 +799,7 @@ function openAPIV3ParamToZodFormSchema(
 
         if (itemSchema) {
           return isRequired
-            ? z.array(itemSchema)
+            ? z.array(itemSchema).min(1, { message: "Required" })
             : z.array(itemSchema).optional();
         }
       }
