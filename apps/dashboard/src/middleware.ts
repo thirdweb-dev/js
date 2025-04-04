@@ -20,7 +20,7 @@ export const config = {
      * - assets/
      * - sitemap.xml, sitemap-0.xml, robots.txt, favicon.ico, some favicon images
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|assets|robots.txt|\\.xml|\\.png).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|assets|robots.txt|sitemap.xml|sitemap-0.xml|favicon-16x16.png|favicon-32x32.png|apple-touch-icon.png|android-chrome-192x192.png|android-chrome-512x512.png).*)",
   ],
 };
 
