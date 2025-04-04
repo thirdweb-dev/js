@@ -1,5 +1,0 @@
----
-"thirdweb": patch
----
-
-Deploy config
