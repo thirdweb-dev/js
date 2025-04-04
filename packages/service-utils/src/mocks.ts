@@ -59,6 +59,40 @@ export const validTeamResponse: TeamResponse = {
   canCreatePublicChains: false,
   enabledScopes: ["storage", "rpc", "bundler"],
   isOnboarded: true,
+  capabilities: {
+    rpc: {
+      enabled: true,
+      rateLimit: 1000,
+    },
+    insight: {
+      enabled: true,
+      rateLimit: 1000,
+    },
+    storage: {
+      enabled: true,
+      download: {
+        rateLimit: 1000,
+      },
+      upload: {
+        totalFileSizeBytesLimit: 1_000_000_000,
+        rateLimit: 1000,
+      },
+    },
+    nebula: {
+      enabled: true,
+      rateLimit: 1000,
+    },
+    bundler: {
+      enabled: true,
+      mainnetEnabled: true,
+      rateLimit: 1000,
+    },
+    embeddedWallets: {
+      enabled: true,
+      customAuth: true,
+      customBranding: true,
+    },
+  },
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {
