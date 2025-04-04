@@ -74,6 +74,7 @@ export const validTeamResponse: TeamResponse = {
         rateLimit: 1000,
       },
       upload: {
+        totalFileSizeBytesLimit: 1_000_000_000,
         rateLimit: 1000,
       },
     },
