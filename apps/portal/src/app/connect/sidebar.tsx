@@ -220,6 +220,88 @@ export const sidebar: SideBar = {
       ],
     },
     { separator: true },
+    {
+      name: "Universal Bridge",
+      isCollapsible: false,
+      links: [
+        {
+          name: "Overview",
+          href: `${paySlug}/overview`,
+        },
+        {
+          name: "Supported Routes",
+          href: "https://thirdweb.com/routes",
+        },
+        {
+          name: "Get Started",
+          href: `${paySlug}/get-started`,
+          expanded: true,
+          links: [
+            {
+              name: "ConnectButton",
+              href: `${paySlug}/get-started#option-1-connectbutton`,
+            },
+            {
+              name: "Embed Pay",
+              href: `${paySlug}/get-started#option-2-embed-pay`,
+            },
+            {
+              name: "Send a Transaction",
+              href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
+            },
+          ],
+        },
+        {
+          name: "Tutorials",
+          isCollapsible: true,
+
+          links: [
+            {
+              name: "Accept Direct Payments",
+              href: `${paySlug}/guides/accept-direct-payments`,
+            },
+            {
+              name: "Build a Custom Onramp Experience",
+              href: `${paySlug}/guides/build-a-custom-experience`,
+            },
+            {
+              name: "Cross-Chain Swapping",
+              href: `${paySlug}/guides/cross-chain-swapping`,
+            },
+          ],
+        },
+        {
+          name: "Customization",
+          isCollapsible: true,
+          links: [
+            {
+              name: "ConnectButton",
+              href: `${paySlug}/customization/connectbutton`,
+            },
+            {
+              name: "PayEmbed",
+              href: `${paySlug}/customization/payembed`,
+            },
+            {
+              name: "useSendTransaction",
+              href: `${paySlug}/customization/send-transaction`,
+            },
+          ],
+        },
+        {
+          name: "Webhooks",
+          href: `${paySlug}/webhooks`,
+        },
+        {
+          name: "Developer Mode",
+          href: `${paySlug}/testing-pay`,
+        },
+        {
+          name: "FAQs",
+          href: `${paySlug}/faqs`,
+        },
+      ],
+    },
     // User identity
     {
       name: "User Identity",
@@ -277,86 +359,6 @@ export const sidebar: SideBar = {
     { separator: true },
     // Blockchain API
     // TODO Overview page?
-    {
-      name: "Universal Bridge",
-      isCollapsible: false,
-      links: [
-        {
-          name: "Overview",
-          href: `${paySlug}/overview`,
-        },
-        {
-          name: "Get Started",
-          href: `${paySlug}/get-started`,
-          expanded: true,
-          links: [
-            {
-              name: "ConnectButton",
-              href: `${paySlug}/get-started#option-1-connectbutton`,
-            },
-            {
-              name: "Embed Pay",
-              href: `${paySlug}/get-started#option-2-embed-pay`,
-            },
-            {
-              name: "Send a Transaction",
-              href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
-            },
-          ],
-        },
-        {
-          name: "Tutorials",
-          isCollapsible: true,
-
-          links: [
-            {
-              name: "Accept Direct Payments",
-              href: `${paySlug}/guides/accept-direct-payments`,
-            },
-            {
-              name: "Build a Custom Onramp Experience",
-              href: `${paySlug}/guides/build-a-custom-experience`,
-            },
-            {
-              name: "Cross-Chain Swapping",
-              href: `${paySlug}/guides/cross-chain-swapping`,
-            },
-          ],
-        },
-        {
-          name: "Customization",
-          isCollapsible: true,
-
-          links: [
-            {
-              name: "ConnectButton",
-              href: `${paySlug}/customization/connectbutton`,
-            },
-            {
-              name: "PayEmbed",
-              href: `${paySlug}/customization/payembed`,
-            },
-            {
-              name: "useSendTransaction",
-              href: `${paySlug}/customization/send-transaction`,
-            },
-          ],
-        },
-        {
-          name: "Webhooks",
-          href: `${paySlug}/webhooks`,
-        },
-        {
-          name: "Developer Mode",
-          href: `${paySlug}/testing-pay`,
-        },
-        {
-          name: "FAQs",
-          href: `${paySlug}/faqs`,
-        },
-      ],
-    },
-    { separator: true },
     {
       name: "API References",
       isCollapsible: false,

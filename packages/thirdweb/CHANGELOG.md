@@ -148,7 +148,7 @@
   });
 
   console.log(
-    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`,
+    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`
   );
 
   // When ready to execute, prepare the transaction
@@ -183,7 +183,7 @@
   });
 
   console.log(
-    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`,
+    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`
   );
 
   // When ready to execute, prepare the transaction
@@ -3105,7 +3105,7 @@
 
   const example1 = parseAbiParams(
     ["address", "uint256"],
-    ["0x.....", "1200000"],
+    ["0x.....", "1200000"]
   ); // result: ["0x......", 1200000n]
   ```
 
@@ -3140,7 +3140,7 @@
 
   You can now configure the PayEmbed component to build 3 different flows:
 
-  - Fund wallets: Inline component that allows users to buy any currency. (default)
+  - Buy Crypto: Inline component that allows users to buy any currency. (default)
 
   ```tsx
   <PayEmbed
