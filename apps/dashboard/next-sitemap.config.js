@@ -1,7 +1,9 @@
 // @ts-check
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { XMLParser } = require("fast-xml-parser");
 
 /**
- *
+ * @returns {Promise<Array<{chainId: number, name: string, slug: string}>>}
  */
 async function fetchChainsFromApi() {
   const res = await fetch("https://api.thirdweb.com/v1/chains", {
@@ -82,16 +84,20 @@ module.exports = {
     };
   },
   additionalPaths: async (config) => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const FRAMER_PATHS = require("./framer-rewrites");
-    const allChains = await fetchChainsFromApi();
+    const [framerUrls, allChains] = await Promise.all([
+      getFramerXML(),
+      fetchChainsFromApi(),
+    ]);
+
     return [
-      ...FRAMER_PATHS.map((path) => ({
-        loc: path,
-        changefreq: config.changefreq,
-        priority: config.priority,
-        lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
-      })),
+      ...framerUrls.map((url) => {
+        return {
+          loc: url.loc,
+          changefreq: config.changefreq,
+          priority: config.priority,
+          lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+        };
+      }),
       ...allChains.map((chain) => {
         return {
           loc: `/${chain.slug}`,
@@ -135,4 +141,20 @@ async function createSearchRecordSitemaps(config) {
   );
   // filter out any failed requests
   return chainsForLines.filter(Boolean);
+}
+
+async function getFramerXML() {
+  const framerSiteMapText = await fetch(
+    "https://landing.thirdweb.com/sitemap.xml",
+  ).then((res) => res.text());
+
+  const parser = new XMLParser();
+  const xmlObject = parser.parse(framerSiteMapText);
+
+  /**
+   * @type {Array<{loc: string}>}
+   */
+  const urls = xmlObject.urlset.url;
+
+  return urls;
 }
