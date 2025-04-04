@@ -1,6 +1,4 @@
 "use client";
-
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { CodeClient, CodeLoading } from "@/components/code/code.client";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -35,6 +33,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
+import { MultiNetworkSelector } from "../../../components/blocks/NetworkSelectors";
 import type { BlueprintParameter, BlueprintPathMetadata } from "../utils";
 
 export function BlueprintPlayground(props: {
@@ -156,7 +155,7 @@ export function BlueprintPlaygroundUI(props: {
   }, [parameters]);
 
   const defaultValues = useMemo(() => {
-    const values: Record<string, string | number> = {};
+    const values: Record<string, string | number | string[] | number[]> = {};
     for (const param of parameters) {
       if (param.schema && "type" in param.schema && param.schema.default) {
         values[param.name] = param.schema.default;
@@ -164,6 +163,8 @@ export function BlueprintPlaygroundUI(props: {
         values[param.name] = Math.floor(
           (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
         );
+      } else if (param.name === "chain") {
+        values[param.name] = [];
       } else {
         values[param.name] = "";
       }
@@ -407,7 +408,7 @@ function RequestConfigSection(props: {
 }
 
 type ParametersForm = UseFormReturn<{
-  [x: string]: string | number;
+  [x: string]: string | number | string[] | number[];
 }>;
 
 function ParameterSection(props: {
@@ -485,13 +486,15 @@ function ParameterSection(props: {
                     </div>
                     <div className="relative">
                       {param.name === "chain" ? (
-                        <SingleNetworkSelector
-                          chainId={
-                            field.value ? Number(field.value) : undefined
+                        <MultiNetworkSelector
+                          selectedBadgeClassName="bg-background"
+                          selectedChainIds={
+                            props.form.watch("chain") as number[]
                           }
-                          onChange={(chainId) => {
-                            field.onChange({
-                              target: { value: chainId.toString() },
+                          onChange={(chainIds) => {
+                            props.form.setValue("chain", chainIds, {
+                              shouldValidate: true,
+                              shouldDirty: true,
                             });
                           }}
                           className="rounded-none border-0 border-t lg:border-none"
@@ -502,11 +505,14 @@ function ParameterSection(props: {
                               : undefined
                           }
                         />
-                      ) : (
+                      ) : !Array.isArray(field.value) ? (
                         <>
                           <ParameterInput
                             param={param}
-                            field={field}
+                            field={{
+                              ...field,
+                              value: field.value,
+                            }}
                             showTip={showTip}
                             hasError={hasError}
                             placeholder={placeholder}
@@ -549,7 +555,7 @@ function ParameterSection(props: {
                             </ToolTipLabel>
                           )}
                         </>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   <FormMessage className="mt-0 border-destructive-text border-t px-3 py-2" />
@@ -780,6 +786,26 @@ function openAPIV3ParamToZodFormSchema(
       return isRequired ? booleanSchema : booleanSchema.optional();
     }
 
+    case "array": {
+      if ("type" in schema.items) {
+        let itemSchema: z.ZodTypeAny | undefined = undefined;
+        if (schema.items.type === "number") {
+          itemSchema = z.number();
+        } else if (schema.items.type === "integer") {
+          itemSchema = z.number().int();
+        } else if (schema.items.type === "string") {
+          itemSchema = z.string();
+        }
+
+        if (itemSchema) {
+          return isRequired
+            ? z.array(itemSchema)
+            : z.array(itemSchema).optional();
+        }
+      }
+      break;
+    }
+
     // everything else - just accept it as a string;
     default: {
       const stringSchema = z.string();
@@ -840,7 +866,13 @@ function createBlueprintUrl(options: {
   for (const parameter of queryParams) {
     const value = values[parameter.name];
     if (value) {
-      searchParams.append(parameter.name, value);
+      if (Array.isArray(value)) {
+        for (const v of value) {
+          searchParams.append(parameter.name, v);
+        }
+      } else {
+        searchParams.append(parameter.name, value);
+      }
     }
   }
 
