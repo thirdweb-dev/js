@@ -16,6 +16,8 @@ import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
 import appchainCTA from "./temp-assets/appchainCTA.png";
 import baseBanner from "./temp-assets/base-banner.jpeg";
+import cotiBanner from "./temp-assets/COTI_Banner.jpg";
+import cotiCTA from "./temp-assets/COTI_CTA.jpg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
@@ -337,6 +339,30 @@ const chainMetaRecord = {
       backgroundImageUrl: creatorCTA.src,
       title: "From Builders to Builders, From Idea to Creation ⚡",
       buttonLink: "https://www.creatorchain.io/",
+      buttonText: "Learn More",
+    },
+  },
+  //COTI Mainnet
+  2632500: {
+    headerImgUrl: creatorBanner.src,
+    about:
+      "COTI is the fastest, lightest privacy layer in Web3, powered by the breakthrough cryptographic protocol Garbled Circuits. Build with privacy. Scale with speed.",
+    cta: {
+      backgroundImageUrl: creatorCTA.src,
+      title: "The Fastest, Lightest Privacy Layer in Web3",
+      buttonLink: "https://thirdweb.com/coti",
+      buttonText: "Learn More",
+    },
+  },
+  //COTI Testnet
+  7082400: {
+    headerImgUrl: creatorBanner.src,
+    about:
+      "COTI is the fastest, lightest privacy layer in Web3, powered by the breakthrough cryptographic protocol Garbled Circuits. Build with privacy. Scale with speed.",
+    cta: {
+      backgroundImageUrl: creatorCTA.src,
+      title: "The Fastest, Lightest Privacy Layer in Web3",
+      buttonLink: "https://thirdweb.com/coti",
       buttonText: "Learn More",
     },
   },
