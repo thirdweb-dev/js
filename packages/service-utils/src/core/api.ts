@@ -43,7 +43,10 @@ export type ApiResponse = {
   };
 };
 
-// needs to be kept in sync with the capabilities from the backend
+/**
+ * Stores service-specific capabilities.
+ * This type should match the schema from API server.
+ */
 type TeamCapabilities = {
   rpc: {
     enabled: boolean;
@@ -59,6 +62,7 @@ type TeamCapabilities = {
       rateLimit: number;
     };
     upload: {
+      totalFileSizeBytesLimit: number;
       rateLimit: number;
     };
   };
