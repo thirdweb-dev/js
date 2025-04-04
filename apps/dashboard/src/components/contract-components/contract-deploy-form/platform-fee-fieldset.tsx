@@ -8,18 +8,18 @@ import type { CustomContractDeploymentForm } from "./custom-contract";
 interface PlatformFeeFieldsetProps {
   form: CustomContractDeploymentForm;
   isMarketplace: boolean;
-  isFeeExempt: boolean;
+  disabled: boolean;
 }
 
 export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
   form,
   isMarketplace,
-  isFeeExempt,
+  disabled,
 }) => {
   return (
     <Fieldset legend="Platform fees">
       <div className="flex flex-col gap-4 md:flex-row">
-        {isFeeExempt ? (
+        {!disabled ? (
           <>
             <FormFieldSetup
               className="grow"

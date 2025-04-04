@@ -514,12 +514,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps: isFeeExempt
-              ? Number(params.deployParams._platformFeeBps)
-              : DEFAULT_FEE_BPS_NEW,
-            platformFeeRecipient: isFeeExempt
-              ? (params.deployParams._platformFeeRecipient as string)
-              : DEFAULT_FEE_RECIPIENT,
+            platformFeeBps:
+              metadata.version === "7.0.0" && isFeeExempt
+                ? Number(params.deployParams._platformFeeBps)
+                : DEFAULT_FEE_BPS_NEW,
+            platformFeeRecipient:
+              metadata.version === "7.0.0" && isFeeExempt
+                ? (params.deployParams._platformFeeRecipient as string)
+                : DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
@@ -539,9 +541,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           : isFeeExempt
             ? Number(params.deployParams._platformFeeBps)
             : DEFAULT_FEE_BPS,
-        platformFeeRecipient: isFeeExempt
-          ? (params.deployParams._platformFeeRecipient as string)
-          : DEFAULT_FEE_RECIPIENT,
+        platformFeeRecipient:
+          !hasInbuiltDefaultFeeConfig && isFeeExempt
+            ? (params.deployParams._platformFeeRecipient as string)
+            : DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
@@ -779,7 +782,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 <PlatformFeeFieldset
                   form={form}
                   isMarketplace={isMarketplace}
-                  isFeeExempt={isFeeExempt}
+                  disabled={
+                    hasInbuiltDefaultFeeConfig ||
+                    (isMarketplace && metadata.version !== "7.0.0") ||
+                    !isFeeExempt
+                  }
                 />
               )}
 
