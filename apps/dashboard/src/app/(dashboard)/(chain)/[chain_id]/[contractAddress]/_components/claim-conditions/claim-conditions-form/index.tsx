@@ -226,7 +226,10 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       ? { type: "erc20", decimals: tokenDecimals.data }
       : isErc721
         ? { type: "erc721" }
-        : { type: "erc1155", tokenId: BigInt(tokenId || 0) }),
+        : {
+            type: "erc1155",
+            tokenId: BigInt(tokenId || 0),
+          }),
   });
 
   const transformedQueryData = useMemo(() => {
@@ -370,6 +373,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       const tx = setClaimPhasesTx(
         {
           contract,
+          isSinglePhase: !isMultiPhase,
           ...(isErc20
             ? { type: "erc20", decimals: tokenDecimals.data }
             : isErc721
@@ -635,6 +639,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   isErc20={isErc20}
                   contract={contract}
                   tokenId={tokenId}
+                  isMultiphase={isMultiPhase}
                 />
               )}
             </div>

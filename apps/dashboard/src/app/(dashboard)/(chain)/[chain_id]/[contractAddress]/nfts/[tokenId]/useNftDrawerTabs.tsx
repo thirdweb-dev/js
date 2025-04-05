@@ -68,13 +68,16 @@ export function useNFTDrawerTabs({
     const hasERC1155ClaimConditions = (() => {
       return [
         // reads
-        ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectors),
         ERC1155Ext.isGetClaimConditionsSupported(functionSelectors),
         ERC1155Ext.isGetActiveClaimConditionSupported(functionSelectors),
         // writes
         ERC1155Ext.isSetClaimConditionsSupported(functionSelectors),
         ERC1155Ext.isResetClaimEligibilitySupported(functionSelectors),
       ].every(Boolean);
+    })();
+
+    const isERC1155Multiphase = (() => {
+      return ERC1155Ext.isGetClaimConditionByIdSupported(functionSelectors);
     })();
 
     const isBurnable = (() => {
@@ -130,6 +133,7 @@ export function useNFTDrawerTabs({
               tokenId={tokenId}
               isColumn
               twAccount={twAccount}
+              isMultiphase={isERC1155Multiphase}
             />
           ),
         },

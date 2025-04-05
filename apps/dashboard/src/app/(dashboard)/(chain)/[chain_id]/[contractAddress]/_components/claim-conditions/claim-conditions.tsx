@@ -10,6 +10,7 @@ interface ClaimConditionsProps {
   isColumn?: true;
   isERC20: boolean;
   twAccount: Account | undefined;
+  isMultiphase: boolean;
 }
 export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   contract,
@@ -17,6 +18,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isColumn,
   isERC20,
   twAccount,
+  isMultiphase,
 }) => {
   return (
     <div className="flex w-full flex-col gap-6">
@@ -37,8 +39,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
         contract={contract}
         tokenId={tokenId}
         isColumn={isColumn}
-        // always multi phase!
-        isMultiPhase={true}
+        isMultiPhase={isMultiphase}
       />
     </div>
   );

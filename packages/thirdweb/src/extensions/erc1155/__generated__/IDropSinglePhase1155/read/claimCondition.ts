@@ -22,42 +22,36 @@ const FN_INPUTS = [
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
-    name: "condition",
-    components: [
-      {
-        type: "uint256",
-        name: "startTimestamp",
-      },
-      {
-        type: "uint256",
-        name: "maxClaimableSupply",
-      },
-      {
-        type: "uint256",
-        name: "supplyClaimed",
-      },
-      {
-        type: "uint256",
-        name: "quantityLimitPerWallet",
-      },
-      {
-        type: "bytes32",
-        name: "merkleRoot",
-      },
-      {
-        type: "uint256",
-        name: "pricePerToken",
-      },
-      {
-        type: "address",
-        name: "currency",
-      },
-      {
-        type: "string",
-        name: "metadata",
-      },
-    ],
+    type: "uint256",
+    name: "startTimestamp",
+  },
+  {
+    type: "uint256",
+    name: "maxClaimableSupply",
+  },
+  {
+    type: "uint256",
+    name: "supplyClaimed",
+  },
+  {
+    type: "uint256",
+    name: "quantityLimitPerWallet",
+  },
+  {
+    type: "bytes32",
+    name: "merkleRoot",
+  },
+  {
+    type: "uint256",
+    name: "pricePerToken",
+  },
+  {
+    type: "address",
+    name: "currency",
+  },
+  {
+    type: "string",
+    name: "metadata",
   },
 ] as const;
 
@@ -130,7 +124,7 @@ export function encodeClaimCondition(options: ClaimConditionParams) {
  * ```
  */
 export function decodeClaimConditionResult(result: Hex) {
-  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+  return decodeAbiParameters(FN_OUTPUTS, result);
 }
 
 /**

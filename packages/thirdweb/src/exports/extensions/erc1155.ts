@@ -112,6 +112,7 @@ export {
   type CanClaimParams,
   type CanClaimResult,
 } from "../../extensions/erc1155/drops/read/canClaim.js";
+export { claimCondition } from "../../extensions/erc1155/__generated__/IDropSinglePhase1155/read/claimCondition.js";
 
 // WRITE
 export {
