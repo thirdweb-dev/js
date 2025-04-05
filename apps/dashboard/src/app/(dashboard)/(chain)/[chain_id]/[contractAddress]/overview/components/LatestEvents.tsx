@@ -1,192 +1,145 @@
 "use client";
 
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type InternalTransaction,
   useActivity,
 } from "@3rdweb-sdk/react/hooks/useActivity";
-import {
-  Box,
-  ButtonGroup,
-  Flex,
-  List,
-  SimpleGrid,
-  Spinner,
-  Tooltip,
-} from "@chakra-ui/react";
-import { useClipboard } from "hooks/useClipboard";
-import { CopyIcon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import type { ThirdwebContract } from "thirdweb";
-import {
-  Button,
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-  TrackedLink,
-  type TrackedLinkProps,
-} from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 
-interface LatestEventsProps {
-  trackingCategory: TrackedLinkProps["category"];
+export function LatestEvents(props: {
+  trackingCategory: string;
   contract: ThirdwebContract;
   chainSlug: string;
-}
-
-export const LatestEvents: React.FC<LatestEventsProps> = ({
-  contract,
-  trackingCategory,
-  chainSlug,
-}) => {
-  const [autoUpdate] = useState(true);
-  const eventsHref = `/${chainSlug}/${contract.address}/events`;
-  const allEvents = useActivity(contract, autoUpdate);
+}) {
+  const autoUpdate = true;
+  const allEvents = useActivity(props.contract, autoUpdate);
 
   return (
-    <Flex gap={6} flexDirection="column">
-      <Flex align="center" justify="space-between" w="full">
-        <h2 className="font-semibold text-2xl tracking-tight">Latest Events</h2>
-        <TrackedLink
-          category={trackingCategory}
-          label="view_all_events"
-          color="blue.400"
-          _light={{
-            color: "blue.600",
-          }}
-          gap={4}
-          href={eventsHref}
-        >
-          View all -&gt;
-        </TrackedLink>
-      </Flex>
-      <Card p={0} overflow="hidden">
-        <SimpleGrid
-          gap={2}
-          columns={9}
-          borderBottomWidth="1px"
-          borderColor="borderColor"
-          padding={4}
-          bg="blackAlpha.50"
-          _dark={{ bg: "whiteAlpha.50" }}
-        >
-          <Heading gridColumn="span 3" size="label.md">
-            Transaction Hash
-          </Heading>
-          <Heading gridColumn="span 6" size="label.md">
-            Events
-          </Heading>
-        </SimpleGrid>
-
-        <List overflow="auto">
-          {allEvents.length === 0 ? (
-            <div className="flex items-center justify-center py-4">
-              <Flex align="center" gap={2}>
-                {autoUpdate && <Spinner size="sm" speed="0.69s" />}
-                <Text size="body.md" fontStyle="italic">
-                  {autoUpdate ? "listening for events" : "no events to show"}
-                </Text>
-              </Flex>
-            </div>
-          ) : null}
-          <div>
-            {allEvents?.slice(0, 3).map((e) => (
-              <EventsFeedItem
-                key={e.transactionHash}
-                transaction={e}
-                contractAddress={contract.address}
-                chainSlug={chainSlug}
-              />
-            ))}
-          </div>
-        </List>
-      </Card>
-    </Flex>
+    <LatestEventsUI
+      allEvents={allEvents}
+      autoUpdate={autoUpdate}
+      eventsHref={`/${props.chainSlug}/${props.contract.address}/events`}
+      trackingCategory={props.trackingCategory}
+    />
   );
-};
-
-interface EventsFeedItemProps {
-  transaction: InternalTransaction;
-  contractAddress: string;
-  chainSlug: string;
 }
 
-const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
-  transaction,
-  contractAddress,
-  chainSlug,
-}) => {
-  const { onCopy } = useClipboard(transaction.transactionHash);
-  const eventsHref = `/${chainSlug}/${contractAddress}/events`;
+export function LatestEventsUI(props: {
+  allEvents: Pick<InternalTransaction, "transactionHash" | "events">[];
+  autoUpdate: boolean;
+  eventsHref: string;
+  trackingCategory: string;
+}) {
+  const { allEvents, autoUpdate, eventsHref } = props;
 
   return (
-    <div>
-      <SimpleGrid
-        columns={9}
-        gap={2}
-        as="li"
-        borderBottomWidth="1px"
-        borderColor="borderColor"
-        padding={4}
-        overflow="hidden"
-        alignItems="center"
-        _last={{ borderBottomWidth: 0 }}
-      >
-        <Box gridColumn="span 3">
-          <div className="flex flex-row items-center gap-3">
-            <Tooltip
-              p={0}
-              bg="transparent"
-              boxShadow="none"
-              label={
-                <Card py={2} px={4} bgColor="backgroundHighlight">
-                  <Text size="label.sm">
-                    Copy transaction hash to clipboard
-                  </Text>
-                </Card>
-              }
+    <div className="rounded-lg border bg-card">
+      {/* header */}
+      <div className="flex w-full items-center justify-between border-b px-6 py-4">
+        <div className="flex items-center gap-3">
+          <h2 className="font-semibold text-xl tracking-tight">
+            Latest Events
+          </h2>
+          {autoUpdate && (
+            <Badge
+              variant="outline"
+              className="hidden gap-2 bg-background text-sm lg:flex"
             >
-              <Button
-                size="sm"
-                bg="transparent"
-                onClick={() => {
-                  onCopy();
-                  toast.info("Transaction hash copied.");
-                }}
-              >
-                <CopyIcon className="size-3" />
-              </Button>
-            </Tooltip>
-            <Text fontFamily="mono" noOfLines={1}>
-              {shortenString(transaction.transactionHash)}
-            </Text>
-          </div>
-        </Box>
-
-        <ButtonGroup
-          size="sm"
-          variant="outline"
-          gridColumn="span 6"
-          flexWrap="wrap"
-          gap={2}
-          spacing={0}
-        >
-          {transaction.events.slice(0, 2).map((e, idx) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-            <LinkButton key={idx} href={`${eventsHref}?event=${e.eventName}`}>
-              <Text color="whiteBg" fontWeight="600" isTruncated>
-                {e.eventName}
-              </Text>
-            </LinkButton>
-          ))}
-          {transaction.events.length > 2 && (
-            <Button as="span" pointerEvents="none">
-              + {transaction.events.length - 2}
-            </Button>
+              <span className="!pointer-events-auto relative flex size-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-primary" />
+              </span>
+              Live
+            </Badge>
           )}
-        </ButtonGroup>
-      </SimpleGrid>
+        </div>
+        <Button asChild variant="outline" size="sm" className="bg-background">
+          <TrackedLinkTW
+            category={props.trackingCategory}
+            label="view_all_events"
+            href={eventsHref}
+            className="flex items-center gap-2 text-muted-foreground text-sm"
+          >
+            View all <ArrowRightIcon className="size-4" />
+          </TrackedLinkTW>
+        </Button>
+      </div>
+
+      {/* table */}
+      <TableContainer className="w-full border-none">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-52">Transaction Hash</TableHead>
+              <TableHead>Events</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {allEvents.slice(0, 3).map((transaction) => (
+              <TableRow key={transaction.transactionHash}>
+                <TableCell>
+                  <CopyTextButton
+                    textToShow={shortenString(transaction.transactionHash)}
+                    textToCopy={transaction.transactionHash}
+                    tooltip="Copy transaction hash"
+                    copyIconPosition="left"
+                    variant="ghost"
+                    className="-translate-x-2 font-mono"
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="flex w-max flex-wrap gap-2">
+                    {transaction.events.map((e) => (
+                      <Button
+                        key={e.logIndex + e.address + e.eventName}
+                        variant="outline"
+                        size="sm"
+                        className="h-auto rounded-full py-1"
+                        asChild
+                      >
+                        <Link href={`${eventsHref}?event=${e.eventName}`}>
+                          {e.eventName}
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {allEvents.length === 0 && (
+        <div className="flex h-48 items-center justify-center text-sm">
+          {autoUpdate ? (
+            <div className="flex items-center gap-2">
+              <Spinner className="size-4" />
+              <p>Listening for events</p>
+            </div>
+          ) : (
+            <p>No events found</p>
+          )}
+        </div>
+      )}
     </div>
   );
-};
+}

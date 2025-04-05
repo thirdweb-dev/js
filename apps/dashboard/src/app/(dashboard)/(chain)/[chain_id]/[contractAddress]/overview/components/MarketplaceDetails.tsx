@@ -183,8 +183,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   chainSlug,
 }) => {
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="font-semibold text-2xl tracking-tight">Listings</h2>
+    <div className="flex flex-col gap-10">
       <ListingStatsV3
         contract={contract}
         hasDirectListings={hasDirectListings}
