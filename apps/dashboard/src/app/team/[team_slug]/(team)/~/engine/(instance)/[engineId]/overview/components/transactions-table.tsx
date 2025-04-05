@@ -33,6 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { normalizeTime } from "@/lib/time";
 import {
   type Transaction,
   useEngineTransactions,
@@ -52,7 +53,6 @@ import Link from "next/link";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { toTokens } from "thirdweb";
 import { FormLabel, LinkButton, Text } from "tw-components";
-import { normalizeTime } from "../../../../../../../../../../lib/time";
 import { TransactionTimeline } from "./transaction-timeline";
 
 export type EngineStatus =
