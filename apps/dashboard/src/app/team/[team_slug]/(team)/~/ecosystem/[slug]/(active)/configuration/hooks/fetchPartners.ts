@@ -6,13 +6,16 @@ import type { Ecosystem, Partner } from "../../../../types";
 export async function fetchPartners({
   ecosystem,
   authToken,
+  teamId,
 }: {
   ecosystem: Ecosystem;
   authToken: string;
+  teamId: string;
 }): Promise<Partner[]> {
   const res = await fetch(`${ecosystem.url}/${ecosystem.id}/partners`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
+      "x-thirdweb-team-id": teamId,
     },
     next: {
       revalidate: 0,

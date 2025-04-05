@@ -1,4 +1,6 @@
 import {} from "@/components/ui/breadcrumb";
+import { notFound } from "next/navigation";
+import { getTeamBySlug } from "../../../../../../../../../../@/api/team";
 import { getAuthToken } from "../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
 import { AddPartnerForm } from "../components/client/add-partner-form.client";
@@ -10,10 +12,17 @@ export default async function AddPartnerPage({
   params: Promise<{ slug: string; team_slug: string }>;
 }) {
   const { slug, team_slug } = await params;
-  const authToken = await getAuthToken();
+  const [authToken, team] = await Promise.all([
+    getAuthToken(),
+    getTeamBySlug(team_slug),
+  ]);
 
   if (!authToken) {
     loginRedirect(`/team/${team_slug}/~/ecosystem/${slug}`);
+  }
+
+  if (!team) {
+    notFound();
   }
 
   const teamSlug = team_slug;
@@ -32,7 +41,11 @@ export default async function AddPartnerPage({
           <h1 className="mb-6 font-semibold text-2xl tracking-tight">
             Add New Partner
           </h1>
-          <AddPartnerForm ecosystem={ecosystem} authToken={authToken} />
+          <AddPartnerForm
+            ecosystem={ecosystem}
+            authToken={authToken}
+            teamId={team.id}
+          />
         </div>
       </div>
     );

@@ -4,8 +4,9 @@ export async function fetchPartnerDetails(args: {
   authToken: string;
   ecosystem: Ecosystem;
   partnerId: string;
+  teamId: string;
 }): Promise<Partner> {
-  const { authToken, ecosystem, partnerId } = args;
+  const { authToken, ecosystem, partnerId, teamId } = args;
 
   try {
     const response = await fetch(
@@ -14,6 +15,7 @@ export async function fetchPartnerDetails(args: {
         method: "GET",
         headers: {
           Authorization: `Bearer ${authToken}`,
+          "x-thirdweb-team-id": teamId,
         },
       },
     );

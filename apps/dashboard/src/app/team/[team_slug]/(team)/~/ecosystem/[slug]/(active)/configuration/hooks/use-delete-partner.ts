@@ -13,13 +13,14 @@ type DeletePartnerParams = {
 export function useDeletePartner(
   params: {
     authToken: string;
+    teamId: string;
   },
   options?: Omit<
     UseMutationOptions<boolean, unknown, DeletePartnerParams>,
     "mutationFn"
   >,
 ) {
-  const { authToken } = params;
+  const { authToken, teamId } = params;
   const { onSuccess, ...queryOptions } = options || {};
   const queryClient = useQueryClient();
 
@@ -33,6 +34,7 @@ export function useDeletePartner(
         {
           method: "DELETE",
           headers: {
+            "x-thirdweb-team-id": teamId,
             Authorization: `Bearer ${authToken}`,
           },
         },

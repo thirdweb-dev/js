@@ -25,14 +25,17 @@ export function PartnersTable({
   ecosystem,
   authToken,
   teamSlug,
+  teamId,
 }: {
   ecosystem: Ecosystem;
   authToken: string;
   teamSlug: string;
+  teamId: string;
 }) {
   const { partners, isPending } = usePartners({
     ecosystem,
     authToken,
+    teamId,
   });
 
   if (isPending) {
@@ -68,6 +71,7 @@ export function PartnersTable({
               ecosystem={ecosystem}
               authToken={authToken}
               teamSlug={teamSlug}
+              teamId={teamId}
             />
           ))}
         </TableBody>
@@ -81,12 +85,14 @@ function PartnerRow(props: {
   ecosystem: Ecosystem;
   teamSlug: string;
   authToken: string;
+  teamId: string;
 }) {
   const router = useDashboardRouter();
   const { mutateAsync: deletePartner, isPending: isDeleting } =
     useDeletePartner(
       {
         authToken: props.authToken,
+        teamId: props.teamId,
       },
       {
         onError: (error) => {

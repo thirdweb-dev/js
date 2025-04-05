@@ -7,11 +7,16 @@ import {
 export function AuthOptionsSection({
   ecosystem,
   authToken,
-}: { ecosystem?: Ecosystem; authToken: string }) {
+  teamId,
+}: { ecosystem?: Ecosystem; authToken: string; teamId: string }) {
   return (
     <section className="flex flex-col gap-4 md:gap-8">
       {ecosystem ? (
-        <AuthOptionsForm ecosystem={ecosystem} authToken={authToken} />
+        <AuthOptionsForm
+          ecosystem={ecosystem}
+          authToken={authToken}
+          teamId={teamId}
+        />
       ) : (
         <AuthOptionsFormSkeleton />
       )}
