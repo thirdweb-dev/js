@@ -1,6 +1,6 @@
 "use client";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import { Skeleton, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
   type AnalyticsQueryParams,
@@ -14,9 +14,9 @@ import {
   useTotalContractTransactionAnalytics,
   useTotalContractUniqueWallets,
 } from "data/analytics/hooks";
-import { Suspense, useMemo, useState } from "react";
+import { formatDate } from "date-fns";
+import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { Card } from "tw-components";
 import {
   DateRangeSelector,
   type Range,
@@ -121,6 +121,15 @@ type ChartProps = {
   startDate: Date;
   endDate: Date;
 };
+
+function toolTipLabelFormatter(_v: string, item: unknown) {
+  if (Array.isArray(item)) {
+    const time = item[0].payload.time as number;
+    return formatDate(new Date(time), "MMM d, yyyy");
+  }
+  return undefined;
+}
+
 function UniqueWalletsChart(props: ChartProps) {
   const analyticsQuery = useContractUniqueWalletAnalytics(props);
 
@@ -128,6 +137,7 @@ function UniqueWalletsChart(props: ChartProps) {
     <ThirdwebBarChart
       header={{
         title: "Unique Wallets",
+        titleClassName: "mb-0.5 text-xl",
         description:
           "The number of unique wallet addresses that have sent a transaction to this contract.",
       }}
@@ -140,6 +150,8 @@ function UniqueWalletsChart(props: ChartProps) {
         },
       }}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
 }
@@ -156,6 +168,7 @@ function TotalTransactionsChart(props: ChartProps) {
     <ThirdwebBarChart
       header={{
         title: "Total Transactions",
+        titleClassName: "mb-0.5 text-xl",
         description:
           "The number of transactions that have been sent to this contract.",
       }}
@@ -168,6 +181,8 @@ function TotalTransactionsChart(props: ChartProps) {
         },
       }}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
 }
@@ -179,6 +194,7 @@ function TotalEventsChart(props: ChartProps) {
     <ThirdwebBarChart
       header={{
         title: "Total Events",
+        titleClassName: "mb-0.5 text-xl",
         description:
           "The number of on-chain events that have been emitted from this contract.",
       }}
@@ -191,6 +207,8 @@ function TotalEventsChart(props: ChartProps) {
         },
       }}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
 }
@@ -227,6 +245,7 @@ function FunctionBreakdownChart(
     <ThirdwebBarChart
       header={{
         title: "Function Breakdown",
+        titleClassName: "mb-0.5 text-xl",
         description:
           "The breakdown of calls to each write function from transactions.",
       }}
@@ -247,6 +266,8 @@ function FunctionBreakdownChart(
       )}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       showLegend
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
 }
@@ -283,6 +304,7 @@ function EventBreakdownChart(
     <ThirdwebBarChart
       header={{
         title: "Event Breakdown",
+        titleClassName: "mb-0.5 text-xl",
         description: "The breakdown of events emitted by this contract.",
       }}
       data={mappedQueryData || []}
@@ -302,6 +324,8 @@ function EventBreakdownChart(
       )}
       chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       showLegend
+      hideLabel={false}
+      toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
 }
@@ -320,25 +344,12 @@ const AnalyticsStat: React.FC<AnalyticsStatProps> = ({
   useTotal,
 }) => {
   return (
-    <Suspense fallback={<AnalyticsSkeleton label={label} />}>
-      <AnalyticsData
-        chainId={chainId}
-        contractAddress={contractAddress}
-        useTotal={useTotal}
-        label={label}
-      />
-    </Suspense>
-  );
-};
-
-const AnalyticsSkeleton: React.FC<{ label: string }> = ({ label }) => {
-  return (
-    <Card as={Stat} className="bg-card">
-      <StatLabel mb={{ base: 1, md: 0 }}>{label}</StatLabel>
-      <Skeleton isLoaded={false}>
-        <StatNumber>{0}</StatNumber>
-      </Skeleton>
-    </Card>
+    <AnalyticsData
+      chainId={chainId}
+      contractAddress={contractAddress}
+      useTotal={useTotal}
+      label={label}
+    />
   );
 };
 
@@ -355,20 +366,23 @@ const AnalyticsData: React.FC<AnalyticsStatProps> = ({
     chainId,
   });
 
-  const data = useMemo(() => {
-    if (!totalQuery.data) {
-      return 0;
-    }
-
-    return totalQuery.data.count;
-  }, [totalQuery.data]);
-
-  return (
-    <Card as={Stat} className="bg-card">
-      <StatLabel mb={{ base: 1, md: 0 }}>{label}</StatLabel>
-      <Skeleton isLoaded={totalQuery.isFetched}>
-        <StatNumber>{data.toLocaleString()}</StatNumber>
-      </Skeleton>
-    </Card>
-  );
+  return <AnalyticsStatUI label={label} data={totalQuery.data?.count} />;
 };
+
+function AnalyticsStatUI(props: {
+  label: string;
+  data: number | undefined;
+}) {
+  return (
+    <dl className="rounded-lg border bg-card p-4">
+      <dt className="font-semibold">{props.label}</dt>
+      <SkeletonContainer
+        skeletonData={10000}
+        loadedData={props.data}
+        render={(v) => {
+          return <dd className="font-normal text-xl">{v.toLocaleString()}</dd>;
+        }}
+      />
+    </dl>
+  );
+}

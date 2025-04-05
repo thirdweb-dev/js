@@ -198,4 +198,5 @@ input:-webkit-autofill:active {
 body {
   --chakra-zIndices-modal: 50;
   --chakra-zIndices-overlay: 50;
+  --chakra-colors-chakra-border-color: hsl(var(--border));
 }
