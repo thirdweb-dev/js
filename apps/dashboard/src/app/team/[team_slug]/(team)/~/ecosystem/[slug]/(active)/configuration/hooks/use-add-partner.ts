@@ -16,13 +16,14 @@ type AddPartnerParams = {
 export function useAddPartner(
   params: {
     authToken: string;
+    teamId: string;
   },
   options?: Omit<
     UseMutationOptions<Partner, unknown, AddPartnerParams>,
     "mutationFn"
   >,
 ) {
-  const { authToken } = params;
+  const { authToken, teamId } = params;
   const { onSuccess, ...queryOptions } = options || {};
   const queryClient = useQueryClient();
 
@@ -37,6 +38,7 @@ export function useAddPartner(
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
+            "x-thirdweb-team-id": teamId,
           },
           body: JSON.stringify({
             name: params.name,

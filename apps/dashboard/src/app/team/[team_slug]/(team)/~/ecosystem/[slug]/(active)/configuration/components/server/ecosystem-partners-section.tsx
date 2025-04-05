@@ -6,7 +6,13 @@ export function EcosystemPartnersSection({
   teamSlug,
   ecosystem,
   authToken,
-}: { teamSlug: string; ecosystem: Ecosystem; authToken: string }) {
+  teamId,
+}: {
+  teamSlug: string;
+  ecosystem: Ecosystem;
+  authToken: string;
+  teamId: string;
+}) {
   return (
     <div className="rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
       <div className="flex flex-col items-start justify-between max-sm:mb-5 lg:flex-row">
@@ -33,6 +39,7 @@ export function EcosystemPartnersSection({
         ecosystem={ecosystem}
         authToken={authToken}
         teamSlug={teamSlug}
+        teamId={teamId}
       />
     </div>
   );

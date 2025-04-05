@@ -52,7 +52,8 @@ type AuthOptionsFormData = {
 export function AuthOptionsForm({
   ecosystem,
   authToken,
-}: { ecosystem: Ecosystem; authToken: string }) {
+  teamId,
+}: { ecosystem: Ecosystem; authToken: string; teamId: string }) {
   const form = useForm<AuthOptionsFormData>({
     defaultValues: {
       authOptions: ecosystem.authOptions || [],
@@ -147,6 +148,7 @@ export function AuthOptionsForm({
   const { mutateAsync: updateEcosystem, isPending } = useUpdateEcosystem(
     {
       authToken,
+      teamId,
     },
     {
       onError: (error) => {

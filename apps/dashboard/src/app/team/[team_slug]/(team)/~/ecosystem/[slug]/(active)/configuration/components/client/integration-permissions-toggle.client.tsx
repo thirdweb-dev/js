@@ -12,7 +12,8 @@ import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 export function IntegrationPermissionsToggle({
   ecosystem,
   authToken,
-}: { ecosystem: Ecosystem; authToken: string }) {
+  teamId,
+}: { ecosystem: Ecosystem; authToken: string; teamId: string }) {
   const [messageToConfirm, setMessageToConfirm] = useState<
     | {
         title: string;
@@ -28,6 +29,7 @@ export function IntegrationPermissionsToggle({
   } = useUpdateEcosystem(
     {
       authToken,
+      teamId,
     },
     {
       onError: (error) => {
