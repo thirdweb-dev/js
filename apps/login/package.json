@@ -27,23 +27,23 @@
     "lucide-react": "0.483.0",
     "next": "15.2.4",
     "next-themes": "^0.4.6",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "server-only": "^0.0.1",
-    "sonner": "2.0.1",
+    "sonner": "2.0.3",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "workspace:*"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.0",
-    "@types/node": "22.13.10",
-    "@types/react": "19.0.10",
-    "@types/react-dom": "19.0.4",
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "22.14.0",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.1",
     "eslint": "9.22.0",
     "eslint-config-next": "15.2.4",
     "postcss": "8.5.3",
     "tailwindcss": "3.4.17",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   }
 }
