@@ -61,6 +61,7 @@ With this property, all connected wallets will be automatically converted to sma
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 
 const client = createThirdwebClient({
@@ -86,6 +87,7 @@ You can also make it so *only* in-app wallets get converted to smart accounts, b
 
 ```tsx
 import { createThirdwebClient } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 
 const client = createThirdwebClient({
