@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { totalAuctions, totalListings } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
-import { StatCard } from "./stat-card";
+import { Stat } from "./stat-card";
 
 const TotalListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   contract,
@@ -19,7 +19,7 @@ const TotalListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   );
 
   return (
-    <StatCard
+    <Stat
       value={combinedListingCount.toString()}
       label="Total Listings"
       isPending={
@@ -37,7 +37,7 @@ const DirectListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   });
 
   return (
-    <StatCard
+    <Stat
       value={(directListingsQuery.data || 0n).toString()}
       isPending={directListingsQuery.isPending}
       label="Direct Listings"
@@ -53,7 +53,7 @@ const EnglishAuctionsStat: React.FC<{ contract: ThirdwebContract }> = ({
   });
 
   return (
-    <StatCard
+    <Stat
       value={(englishAuctionsQuery.data || 0n).toString()}
       isPending={englishAuctionsQuery.isPending}
       label="English Auctions"
@@ -73,12 +73,17 @@ export const ListingStatsV3: React.FC<ListingStatsV3Props> = ({
   hasEnglishAuctions,
 }) => {
   return (
-    <div className="flex flex-row gap-3 md:gap-6 [&>*]:grow">
-      {hasDirectListings && hasEnglishAuctions && contract && (
-        <TotalListingsStat contract={contract} />
-      )}
-      {hasDirectListings && <DirectListingsStat contract={contract} />}
-      {hasEnglishAuctions && <EnglishAuctionsStat contract={contract} />}
+    <div className="rounded-lg border bg-card">
+      <h2 className="border-b px-6 py-5 font-semibold text-xl tracking-tight">
+        Listing Details
+      </h2>
+      <div className="flex flex-col gap-4 p-6 lg:flex-row [&>*]:grow">
+        {hasDirectListings && hasEnglishAuctions && contract && (
+          <TotalListingsStat contract={contract} />
+        )}
+        {hasDirectListings && <DirectListingsStat contract={contract} />}
+        {hasEnglishAuctions && <EnglishAuctionsStat contract={contract} />}
+      </div>
     </div>
   );
 };

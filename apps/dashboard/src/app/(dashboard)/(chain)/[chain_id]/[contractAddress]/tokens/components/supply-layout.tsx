@@ -1,60 +1,46 @@
-import {
-  Skeleton,
-  Stat,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react";
 import type { GetBalanceResult } from "thirdweb/extensions/erc20";
-import { Card } from "tw-components";
+import { Stat } from "../../overview/components/stat-card";
 
-interface TokenSupplyLayoutProps {
-  isTokenSupplySuccess: boolean;
+export function TokenDetailsCardUI(props: {
   tokenSupply: GetBalanceResult | undefined;
-  isOwnedBalanceSuccess: boolean;
-  address: string | undefined;
+  isWalletConnected: boolean;
   ownedBalance: GetBalanceResult | undefined;
-}
-
-export const TokenSupplyLayout: React.FC<TokenSupplyLayoutProps> = ({
-  isTokenSupplySuccess,
-  tokenSupply,
-  isOwnedBalanceSuccess,
-  address,
-  ownedBalance,
-}) => {
+}) {
+  const { tokenSupply, isWalletConnected, ownedBalance } = props;
   return (
-    <div className="flex flex-row gap-3 md:gap-6">
-      <Card as={Stat}>
-        <StatLabel mb={{ base: 1, md: 0 }}>Total Supply</StatLabel>
-        <Skeleton isLoaded={isTokenSupplySuccess}>
-          <StatNumber>
-            {tokenSupply?.displayValue} {tokenSupply?.symbol}
-          </StatNumber>
-        </Skeleton>
-      </Card>
-      <Card as={Stat}>
-        <StatLabel mb={{ base: 1, md: 0 }}>Owned by you</StatLabel>
-        <Skeleton isLoaded={isOwnedBalanceSuccess || !address}>
-          <StatNumber>
-            {address ? (
-              <>
-                {ownedBalance?.displayValue} {ownedBalance?.symbol}
-              </>
-            ) : (
-              <StatHelpText as="span">
-                Connect your wallet to see your balance
-              </StatHelpText>
-            )}
-          </StatNumber>
-        </Skeleton>
-      </Card>
-      <Card as={Stat}>
-        <StatLabel mb={{ base: 1, md: 0 }}>Decimals</StatLabel>
-        <Skeleton isLoaded={isTokenSupplySuccess}>
-          <StatNumber>{tokenSupply?.decimals}</StatNumber>
-        </Skeleton>
-      </Card>
+    <div className="rounded-lg border bg-card">
+      <h2 className="border-b p-6 py-5 font-semibold text-xl tracking-tight">
+        Token Details
+      </h2>
+      <div className="flex flex-col gap-5 p-6 lg:flex-row">
+        <Stat
+          label="Total Supply"
+          isPending={!tokenSupply}
+          value={
+            tokenSupply
+              ? `${tokenSupply.displayValue} ${tokenSupply.symbol}`
+              : ""
+          }
+        />
+
+        {isWalletConnected && (
+          <Stat
+            label="Owned by you"
+            isPending={!ownedBalance}
+            value={
+              ownedBalance
+                ? `${ownedBalance?.displayValue} ${ownedBalance?.symbol}`
+                : ""
+            }
+          />
+        )}
+
+        <Stat
+          label="Decimals"
+          isPending={!tokenSupply}
+          value={tokenSupply ? tokenSupply?.decimals.toString() : ""}
+        />
+      </div>
     </div>
   );
-};
+}
