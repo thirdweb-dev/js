@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.15
+
+### Patch Changes
+
+- [#6655](https://github.com/thirdweb-dev/js/pull/6655) [`59be4ea`](https://github.com/thirdweb-dev/js/commit/59be4ea2fbf29019fedfd91b7841e47684859b5c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Single phase functionality for erc1155
+
 ## 5.93.14
 
 ### Patch Changes
@@ -148,7 +154,7 @@
   });
 
   console.log(
-    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`
+    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`,
   );
 
   // When ready to execute, prepare the transaction
@@ -183,7 +189,7 @@
   });
 
   console.log(
-    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`
+    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`,
   );
 
   // When ready to execute, prepare the transaction
@@ -3105,7 +3111,7 @@
 
   const example1 = parseAbiParams(
     ["address", "uint256"],
-    ["0x.....", "1200000"]
+    ["0x.....", "1200000"],
   ); // result: ["0x......", 1200000n]
   ```
 
