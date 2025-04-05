@@ -6,6 +6,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableHeader,
   TableRow,
@@ -26,7 +27,6 @@ export function BillingHistory(props: {
   invoices: Stripe.Invoice[];
   hasMore: boolean;
 }) {
-  console.log(props.invoices.map((i) => i.id));
   const [isLoading, startTransition] = useTransition();
   const [cursor, setCursor] = useQueryState(
     "cursor",
@@ -55,24 +55,13 @@ export function BillingHistory(props: {
   const getStatusBadge = (invoice: Stripe.Invoice) => {
     switch (invoice.status) {
       case "paid":
-        return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-            Paid
-          </Badge>
-        );
+        return <Badge variant="success">Paid</Badge>;
       case "open":
       // we treate "uncollectible" as unpaid
       case "uncollectible": {
         // if the invoice due date is in the past, we want to display it as past due
         if (invoice.due_date && invoice.due_date < Date.now()) {
-          return (
-            <Badge
-              variant="outline"
-              className="border-red-200 bg-red-50 text-red-800"
-            >
-              Past Due
-            </Badge>
-          );
+          return <Badge variant="destructive">Past Due</Badge>;
         }
         return <Badge variant="outline">Open</Badge>;
       }
@@ -96,9 +85,11 @@ export function BillingHistory(props: {
     );
   }
 
+  const showPagination = props.hasMore || cursor;
+
   return (
     <div>
-      <div className="overflow-x-auto">
+      <TableContainer className="rounded-none border-x-0 border-b-0">
         <Table>
           <TableHeader>
             <TableRow>
@@ -130,7 +121,7 @@ export function BillingHistory(props: {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <CreditCard className="mr-2 h-4 w-4" />
+                            <CreditCard className="mr-2 h-4 w-4 text-muted-foreground" />
                             Pay Now
                           </a>
                         </Button>
@@ -143,7 +134,7 @@ export function BillingHistory(props: {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <Download className="mr-2 h-4 w-4" />
+                          <Download className="mr-2 h-4 w-4 text-muted-foreground" />
                           PDF
                         </a>
                       </Button>
@@ -154,47 +145,47 @@ export function BillingHistory(props: {
             ))}
           </TableBody>
         </Table>
-      </div>
+      </TableContainer>
 
-      {/* Pagination Controls */}
-      <hr className="my-4" />
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            // use browser history to go back
-            // this is KINDA hacky but it works (as long as the user doesn't send the URL to someone else...)
-            window.history.back();
-          }}
-          disabled={isLoading || !cursor}
-        >
-          {isLoading ? (
-            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          ) : (
-            <ChevronLeftIcon className="mr-2 h-4 w-4" />
-          )}
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            const lastInvoice = props.invoices[props.invoices.length - 1];
-            if (lastInvoice && props.hasMore) {
-              setCursor(lastInvoice.id);
-            }
-          }}
-          disabled={!props.hasMore || isLoading}
-        >
-          Next
-          {isLoading && props.hasMore ? (
-            <div className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          ) : (
-            <ChevronRight className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      </div>
+      {showPagination && (
+        <div className="flex items-center justify-between border-t p-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              // use browser history to go back
+              // this is KINDA hacky but it works (as long as the user doesn't send the URL to someone else...)
+              window.history.back();
+            }}
+            disabled={isLoading || !cursor}
+          >
+            {isLoading ? (
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            ) : (
+              <ChevronLeftIcon className="mr-2 h-4 w-4" />
+            )}
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const lastInvoice = props.invoices[props.invoices.length - 1];
+              if (lastInvoice && props.hasMore) {
+                setCursor(lastInvoice.id);
+              }
+            }}
+            disabled={!props.hasMore || isLoading}
+          >
+            Next
+            {isLoading && props.hasMore ? (
+              <div className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            ) : (
+              <ChevronRight className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

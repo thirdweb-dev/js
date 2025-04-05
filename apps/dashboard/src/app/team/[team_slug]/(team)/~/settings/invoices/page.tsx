@@ -1,12 +1,5 @@
 import { getTeamInvoices } from "@/actions/stripe-actions";
 import { getTeamBySlug } from "@/api/team";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
@@ -41,16 +34,16 @@ export default async function Page(props: {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Invoice History</CardTitle>
-        <CardDescription className="mt-2">
+    <div className="overflow-hidden rounded-lg border bg-card">
+      <div className="p-6">
+        <h2 className="font-semibold text-2xl leading-none tracking-tight">
+          Invoice History
+        </h2>
+        <p className="mt-1 text-muted-foreground text-sm">
           View your past invoices and payment history
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <BillingHistory invoices={invoices.data} hasMore={invoices.has_more} />
-      </CardContent>
-    </Card>
+        </p>
+      </div>
+      <BillingHistory invoices={invoices.data} hasMore={invoices.has_more} />
+    </div>
   );
 }
