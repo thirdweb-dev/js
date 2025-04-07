@@ -75,7 +75,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         ) : (
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             {data?.name && (
-              <h1 className="line-clamp-2 font-semibold text-2xl tracking-tight lg:text-3xl">
+              <h1 className="line-clamp-2 font-bold text-2xl tracking-tight lg:text-3xl">
                 {data.name}
               </h1>
             )}
