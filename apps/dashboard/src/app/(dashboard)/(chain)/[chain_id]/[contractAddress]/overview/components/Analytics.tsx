@@ -12,19 +12,16 @@ import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-interface AnalyticsOverviewProps {
-  chainId: number;
-  contractAddress: string;
-  trackingCategory: string;
-  chainSlug: string;
+function getDayKey(date: Date) {
+  return date.toISOString().split("T")[0];
 }
 
-export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
-  chainId,
-  contractAddress,
-  trackingCategory,
-  chainSlug,
-}) => {
+export function ContractAnalyticsOverviewCard(props: {
+  contractAddress: string;
+  chainId: number;
+  trackingCategory: string;
+  chainSlug: string;
+}) {
   const trackEvent = useTrack();
   const [startDate] = useState(
     (() => {
@@ -35,55 +32,27 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
   );
   const [endDate] = useState(new Date());
 
-  return (
-    <div className="relative">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h2 className="font-semibold text-2xl tracking-tight">Analytics</h2>
-        <Button
-          asChild
-          className="gap-1"
-          size="sm"
-          variant="outline"
-          onClick={() => {
-            trackEvent({
-              category: trackingCategory,
-              action: "click",
-              label: "view_all_analytics",
-            });
-          }}
-        >
-          <Link href={`/${chainSlug}/${contractAddress}/analytics`}>
-            <span>View All</span>
-            <ArrowRightIcon className="size-4" />
-          </Link>
-        </Button>
-      </div>
+  const wallets = useContractUniqueWalletAnalytics({
+    chainId: props.chainId,
+    contractAddress: props.contractAddress,
+    startDate,
+    endDate,
+  });
 
-      <OverviewAnalytics
-        chainId={chainId}
-        contractAddress={contractAddress}
-        endDate={endDate}
-        startDate={startDate}
-      />
-    </div>
-  );
-};
+  const transactions = useContractTransactionAnalytics({
+    chainId: props.chainId,
+    contractAddress: props.contractAddress,
+    startDate,
+    endDate,
+  });
 
-type ChartProps = {
-  contractAddress: string;
-  chainId: number;
-  startDate: Date;
-  endDate: Date;
-};
+  const events = useContractEventAnalytics({
+    chainId: props.chainId,
+    contractAddress: props.contractAddress,
+    startDate,
+    endDate,
+  });
 
-function getDayKey(date: Date) {
-  return date.toISOString().split("T")[0];
-}
-
-function OverviewAnalytics(props: ChartProps) {
-  const wallets = useContractUniqueWalletAnalytics(props);
-  const transactions = useContractTransactionAnalytics(props);
-  const events = useContractEventAnalytics(props);
   const isPending =
     wallets.isPending || transactions.isPending || events.isPending;
 
@@ -135,7 +104,32 @@ function OverviewAnalytics(props: ChartProps) {
       data={mergedData || []}
       isPending={isPending}
       showLegend
-      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      chartClassName="aspect-[1.5] lg:aspect-[3]"
+      customHeader={
+        <div className="flex items-center justify-between gap-4 border-b p-6 py-4">
+          <h2 className="font-semibold text-xl tracking-tight">Analytics</h2>
+          <Button
+            asChild
+            className="gap-2 bg-background text-muted-foreground"
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              trackEvent({
+                category: props.trackingCategory,
+                action: "click",
+                label: "view_all_analytics",
+              });
+            }}
+          >
+            <Link
+              href={`/${props.chainSlug}/${props.contractAddress}/analytics`}
+            >
+              <span>View All</span>
+              <ArrowRightIcon className="size-4" />
+            </Link>
+          </Button>
+        </div>
+      }
     />
   );
 }

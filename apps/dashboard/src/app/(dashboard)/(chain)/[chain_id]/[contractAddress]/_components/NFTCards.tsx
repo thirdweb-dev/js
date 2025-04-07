@@ -1,14 +1,7 @@
-import {
-  Flex,
-  GridItem,
-  SimpleGrid,
-  Skeleton,
-  SkeletonText,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMemo } from "react";
 import { type NFT, ZERO_ADDRESS } from "thirdweb";
-import { Card, TrackedLink, type TrackedLinkProps } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 type NFTWithContract = NFT & { contractAddress: string; chainId: number };
@@ -20,7 +13,8 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
   tokenURI: `1-0x123-${idx}`,
   metadata: {
     name: "Loading...",
-    description: "lorem ipsum loading sit amet",
+    description:
+      "lorem ipsum loading sit amet consectetur adipisicing elit. Quisquam, quos.",
     id: BigInt(idx || 0),
     uri: `1-0x123-${idx}`,
   },
@@ -31,7 +25,7 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
 
 interface NFTCardsProps {
   nfts: Array<NFTWithContract>;
-  trackingCategory: TrackedLinkProps["category"];
+  trackingCategory: string;
   isPending: boolean;
   allNfts?: boolean;
 }
@@ -42,61 +36,82 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
   isPending,
   allNfts,
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   const dummyData = useMemo(() => {
     return Array.from({
-      length: allNfts ? nfts.length : isMobile ? 2 : 3,
+      length: allNfts ? nfts.length : 3,
     }).map((_, idx) => dummyMetadata(idx));
-  }, [nfts.length, isMobile, allNfts]);
+  }, [nfts.length, allNfts]);
 
   return (
-    <SimpleGrid
-      gap={{ base: 3, md: 6 }}
-      columns={allNfts ? { base: 2, md: 4 } : { base: 2, md: 3 }}
-    >
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       {(isPending ? dummyData : nfts).map((token) => {
         const tokenId = token.id.toString();
 
         return (
-          <GridItem
+          <div
             key={`${token.chainId}_${token.contractAddress}_${tokenId}`}
-            as={TrackedLink}
-            category={trackingCategory}
-            href={`/${token.chainId}/${token.contractAddress}/nfts/${tokenId}`}
-            _hover={{ opacity: 0.75, textDecoration: "none" }}
+            className="hover:-translate-y-0.5 relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg bg-background duration-200 hover:scale-[1.01]"
           >
-            <Card p={0} h="full">
-              <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-                <Skeleton isLoaded={!isPending}>
-                  <NFTMediaWithEmptyState
-                    metadata={token.metadata}
-                    requireInteraction
-                    width="100%"
-                    height="100%"
-                  />
-                </Skeleton>
-              </div>
-              <Flex p={4} pb={3} gap={1} direction="column">
-                <Skeleton w={!isPending ? "100%" : "50%"} isLoaded={!isPending}>
-                  <h2 className="font-semibold tracking-tight">
-                    {token.metadata.name}
-                  </h2>
-                </Skeleton>
-                <SkeletonText isLoaded={!isPending}>
-                  <p className="line-clamp-3 text-muted-foreground text-sm">
-                    {token.metadata.description ? (
-                      token.metadata.description
-                    ) : (
-                      <i>No description</i>
-                    )}
-                  </p>
-                </SkeletonText>
-              </Flex>
-            </Card>
-          </GridItem>
+            {/* border */}
+            <div className="absolute inset-0 rounded-lg border border-border" />
+
+            {/* image */}
+            <div className="relative aspect-square w-full overflow-hidden">
+              <SkeletonContainer
+                skeletonData={token.metadata}
+                loadedData={isPending ? undefined : token.metadata}
+                className="h-full w-full rounded-lg"
+                render={(v) => {
+                  return (
+                    <NFTMediaWithEmptyState
+                      metadata={v}
+                      requireInteraction
+                      width="100%"
+                      height="100%"
+                    />
+                  );
+                }}
+              />
+            </div>
+
+            <div className="p-4">
+              {/* title */}
+              <SkeletonContainer
+                skeletonData={token.metadata}
+                loadedData={isPending ? undefined : token.metadata}
+                className="mb-2"
+                render={(v) => {
+                  return (
+                    <h2 className="font-semibold tracking-tight">
+                      <TrackedLinkTW
+                        category={trackingCategory}
+                        label="view_nft"
+                        href={`/${token.chainId}/${token.contractAddress}/nfts/${tokenId}`}
+                        className="before:absolute before:inset-0"
+                      >
+                        {v.name}
+                      </TrackedLinkTW>
+                    </h2>
+                  );
+                }}
+              />
+
+              {/* Description */}
+              <SkeletonContainer
+                skeletonData={token.metadata}
+                loadedData={isPending ? undefined : token.metadata}
+                render={(v) => {
+                  return (
+                    <p className="line-clamp-3 text-muted-foreground text-sm">
+                      {v.description ? v.description : <i>No description</i>}
+                    </p>
+                  );
+                }}
+              />
+            </div>
+          </div>
         );
       })}
-    </SimpleGrid>
+    </div>
   );
 };

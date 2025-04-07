@@ -8,13 +8,15 @@ import {
   totalSupply,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { TokenSupplyLayout } from "./supply-layout";
+import { TokenDetailsCardUI } from "./supply-layout";
 
 interface TokenBalancesProps {
   contract: ThirdwebContract;
 }
 
-export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
+export const TokenDetailsCard: React.FC<TokenBalancesProps> = ({
+  contract,
+}) => {
   const address = useActiveAccount()?.address;
 
   const tokenBalanceQuery = useReadContract(getBalance, {
@@ -35,13 +37,7 @@ export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
       tokenMetadataQuery.data === undefined ||
       tokenSupplyQuery.data === undefined
     ) {
-      return {
-        value: 0n,
-        displayValue: "0.0",
-        symbol: "LOA",
-        decimals: 18,
-        name: "Loading...",
-      };
+      return undefined;
     }
 
     return {
@@ -55,13 +51,9 @@ export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
   }, [tokenMetadataQuery.data, tokenSupplyQuery.data]);
 
   return (
-    <TokenSupplyLayout
-      isTokenSupplySuccess={
-        tokenSupplyQuery.isSuccess && tokenMetadataQuery.isSuccess
-      }
+    <TokenDetailsCardUI
+      isWalletConnected={!!address}
       tokenSupply={tokenSupply}
-      isOwnedBalanceSuccess={tokenBalanceQuery.isSuccess}
-      address={address}
       ownedBalance={tokenBalanceQuery.data}
     />
   );

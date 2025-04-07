@@ -6,7 +6,7 @@ import { TokenAirdropButton } from "./components/airdrop-button";
 import { TokenBurnButton } from "./components/burn-button";
 import { TokenClaimButton } from "./components/claim-button";
 import { TokenMintButton } from "./components/mint-button";
-import { TokenSupply } from "./components/supply";
+import { TokenDetailsCard } from "./components/supply";
 import { TokenTransferButton } from "./components/transfer-button";
 
 interface ContractTokenPageProps {
@@ -49,7 +49,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <Heading size="title.sm">Contract Tokens</Heading>
+        <h2 className="font-semibold text-2xl tracking-tight">Tokens</h2>
         <div className="flex flex-col gap-3 md:flex-row">
           {isClaimToSupported && (
             <TokenClaimButton contract={contract} twAccount={twAccount} />
@@ -63,7 +63,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
         </div>
       </div>
 
-      <TokenSupply contract={contract} />
+      <TokenDetailsCard contract={contract} />
     </div>
   );
 };

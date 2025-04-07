@@ -58,7 +58,7 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
 
 Link.displayName = "Link";
 
-export interface TrackedLinkProps extends LinkProps {
+interface TrackedLinkProps extends LinkProps {
   category: string;
   label?: string;
   trackingProps?: Record<string, string>;

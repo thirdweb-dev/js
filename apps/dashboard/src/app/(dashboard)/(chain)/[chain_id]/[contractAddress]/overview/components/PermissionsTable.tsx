@@ -1,36 +1,34 @@
 "use client";
 
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { Box, Flex, List, SimpleGrid, Tag } from "@chakra-ui/react";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getAllRoleMembers } from "contract-ui/hooks/permissions";
-import { useClipboard } from "hooks/useClipboard";
-import { CopyIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
-import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
-import { Button } from "tw-components/button";
-import { Card } from "tw-components/card";
-import { Heading } from "tw-components/heading";
-import { TrackedLink, type TrackedLinkProps } from "tw-components/link";
-import { Text } from "tw-components/text";
-import { shortenIfAddress } from "utils/usedapp-external";
 
-interface PermissionsTableProps {
+export function PermissionsTable(props: {
   contract: ThirdwebContract;
-  trackingCategory: TrackedLinkProps["category"];
+  trackingCategory: string;
   chainSlug: string;
-}
-
-export const PermissionsTable: React.FC<PermissionsTableProps> = ({
-  contract,
-  trackingCategory,
-  chainSlug,
-}) => {
+}) {
   const allRoleMembers = useReadContract(getAllRoleMembers, {
-    contract,
+    contract: props.contract,
   });
-  const permissionsHref = `/${chainSlug}/${contract.address}/permissions`;
+
   const members = useMemo(() => {
     return (
       Object.entries(allRoleMembers.data || {}).reduce(
@@ -52,128 +50,82 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
   }, [allRoleMembers.data]);
 
   return (
-    <Flex gap={6} flexDirection="column">
-      <Flex align="center" justify="space-between" w="full">
-        <h2 className="font-semibold text-2xl tracking-tight">Permissions</h2>
-        <TrackedLink
-          category={trackingCategory}
-          label="view_all_permissions"
-          color="blue.400"
-          _light={{
-            color: "blue.600",
-          }}
-          gap={4}
-          href={permissionsHref}
-        >
-          View all -&gt;
-        </TrackedLink>
-      </Flex>
-      {contract && (
-        <Card p={0} overflow="hidden">
-          <SimpleGrid
-            gap={2}
-            columns={9}
-            borderBottomWidth="1px"
-            borderColor="borderColor"
-            padding={4}
-            bg="blackAlpha.50"
-            _dark={{ bg: "whiteAlpha.50" }}
-          >
-            <Heading gridColumn="span 3" size="label.md">
-              Member
-            </Heading>
-            <Heading gridColumn="span 6" size="label.md">
-              Roles
-            </Heading>
-          </SimpleGrid>
-
-          <List overflow="auto">
-            {members.length === 0 && (
-              <div className="flex items-center justify-center py-4">
-                <Flex align="center" gap={2}>
-                  <Text size="body.md" fontStyle="italic">
-                    {allRoleMembers.isPending
-                      ? "loading permissions"
-                      : "no permissions found"}
-                  </Text>
-                </Flex>
-              </div>
-            )}
-            <div>
-              {members.map((e) => (
-                <PermissionsItem key={e.member} data={e} />
-              ))}
-            </div>
-          </List>
-        </Card>
-      )}
-    </Flex>
+    <PermissionsTableUI
+      members={members}
+      isPending={allRoleMembers.isPending}
+      viewMoreLink={`/${props.chainSlug}/${props.contract.address}/permissions`}
+      trackingCategory={props.trackingCategory}
+    />
   );
-};
-
-interface PermissionsItemProps {
-  data: { member: string; roles: string[] };
 }
 
-const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
-  const { onCopy } = useClipboard(data.member);
-
+export function PermissionsTableUI(props: {
+  viewMoreLink: string;
+  trackingCategory: string;
+  members: { member: string; roles: string[] }[];
+  isPending: boolean;
+}) {
   return (
-    <div>
-      <SimpleGrid
-        columns={9}
-        gap={2}
-        as="li"
-        borderBottomWidth="1px"
-        borderColor="borderColor"
-        padding={4}
-        overflow="hidden"
-        alignItems="center"
-        _last={{ borderBottomWidth: 0 }}
-      >
-        <Box gridColumn="span 2">
-          <div className="flex flex-row items-center gap-3">
-            <ToolTipLabel label="Copy address to clipboard">
-              <Button
-                size="sm"
-                bg="transparent"
-                onClick={() => {
-                  onCopy();
-                  toast.info("Address copied.");
-                }}
-              >
-                <CopyIcon className="size-3" />
-              </Button>
-            </ToolTipLabel>
-            <Text fontFamily="mono" noOfLines={1}>
-              {shortenIfAddress(data.member)}
-            </Text>
-          </div>
-        </Box>
+    <div className="rounded-lg border bg-card">
+      {/* header */}
+      <div className="flex w-full items-center justify-between border-b px-6 py-4">
+        <h2 className="font-semibold text-xl tracking-tight">Permissions</h2>
+        <Button asChild variant="outline" size="sm" className="bg-background">
+          <TrackedLinkTW
+            category={props.trackingCategory}
+            label="view_all_permissions"
+            href={props.viewMoreLink}
+            className="flex items-center gap-2 text-muted-foreground text-sm"
+          >
+            View all <ArrowRightIcon className="size-4" />
+          </TrackedLinkTW>
+        </Button>
+      </div>
 
-        <Box gridColumn="span 1" />
+      {/* table */}
+      <TableContainer className="w-full border-none">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Member</TableHead>
+              <TableHead>Roles</TableHead>
+            </TableRow>
+          </TableHeader>
 
-        <Flex gridColumn="span 6" flexWrap="wrap" gap={2}>
-          {data.roles.slice(0, 3).map((role) => (
-            <Tag key={role}>
-              <Text size="body.md" fontWeight="medium">
-                {role}
-              </Text>
-            </Tag>
-          ))}
-          {data.roles.length > 3 && (
-            <Tag
-              border="2px solid"
-              borderColor="var(--badge-bg)"
-              bg="transparent"
-            >
-              <Text size="body.md" fontWeight="medium">
-                + {data.roles.length - 3}
-              </Text>
-            </Tag>
+          <TableBody>
+            {props.members.map((data) => (
+              <TableRow key={data.member}>
+                <TableCell>
+                  <WalletAddress address={data.member} />
+                </TableCell>
+                <TableCell>
+                  <div className="flex w-max flex-wrap gap-2">
+                    {data.roles.map((role) => (
+                      <Badge
+                        variant="outline"
+                        key={role}
+                        className="bg-background py-1 font-normal text-sm capitalize"
+                      >
+                        {role}
+                      </Badge>
+                    ))}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {props.members.length === 0 && (
+        <div className="flex h-48 items-center justify-center text-sm">
+          {props.isPending ? (
+            <Spinner className="size-8" />
+          ) : (
+            <p>No Permissions</p>
           )}
-        </Flex>
-      </SimpleGrid>
+        </div>
+      )}
     </div>
   );
-};
+}

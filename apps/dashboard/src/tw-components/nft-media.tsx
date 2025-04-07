@@ -18,6 +18,8 @@ export const NFTMediaWithEmptyState: React.FC<{
   controls?: boolean;
 }> = (props) => {
   const client = useThirdwebClient();
+
+  // No media
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
       <div

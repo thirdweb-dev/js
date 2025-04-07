@@ -1,79 +1,41 @@
-"use client";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { ReactIcon } from "../../../../../../../components/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "../../../../../../../components/icons/brand-icons/TypeScriptIcon";
 
-import {
-  Flex,
-  GridItem,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import { ChakraNextImage as Image } from "components/Image";
-import { PRODUCTS } from "components/product-pages/common/nav/data";
-import { Card } from "tw-components/card";
-import { TrackedLink, type TrackedLinkProps } from "tw-components/link";
-import { Text } from "tw-components/text";
-
-const RENDERED_PRODUCTS = ["sdk", "storage", "ui-components", "auth"];
-
-interface BuildYourAppProps {
-  trackingCategory: TrackedLinkProps["category"];
+export function BuildYourApp(props: {
+  trackingCategory: string;
   contractAddress: string;
   chainSlug: string;
-}
-
-export const BuildYourApp: React.FC<BuildYourAppProps> = ({
-  trackingCategory,
-  contractAddress,
-  chainSlug,
-}) => {
+}) {
   return (
-    <Card
-      px={{ base: 4, md: 8 }}
-      py={{ base: 6, md: 8 }}
-      as={LinkBox}
-      transition="all 0.2s"
-      _hover={{ borderColor: "whiteAlpha.300" }}
-    >
-      <SimpleGrid {...{ columns: { base: 1, md: 2 } }} gap={8}>
-        <GridItem as={Flex} direction="column" gap={4}>
-          <h2 className="font-semibold text-2xl tracking-tight">
-            Build your app
-          </h2>
-          <Text size="body.md">
-            <LinkOverlay
-              as={TrackedLink}
-              category={trackingCategory}
-              label="build_your_app"
-              href={`/${chainSlug}/${contractAddress}/code`}
-              color="blue.500"
-            >
-              Learn more
-            </LinkOverlay>{" "}
-            about how you can use thirdweb tools to build apps on top of this
-            contract.
-          </Text>
-        </GridItem>
-        <GridItem as={Flex} align="center" justify="end" gap={3}>
-          {RENDERED_PRODUCTS.map((p) => {
-            const product = PRODUCTS.find((item) => item.label === p);
-            return (
-              product?.icon && (
-                <Flex
-                  key={product.name}
-                  rounded="full"
-                  bg="#0E0E10"
-                  align="center"
-                  justify="center"
-                  w={14}
-                  h={14}
-                >
-                  <Image boxSize={7} src={product.icon} alt={product.name} />
-                </Flex>
-              )
-            );
-          })}
-        </GridItem>
-      </SimpleGrid>
-    </Card>
+    <div className="relative flex flex-col justify-between gap-4 rounded-lg border bg-card p-6 hover:border-active-border lg:flex-row">
+      {/* left */}
+      <div className="max-w-sm">
+        <h2 className="mb-2 font-semibold text-xl leading-none tracking-tight">
+          Build your app
+        </h2>
+        <TrackedLinkTW
+          category={props.trackingCategory}
+          label="build_your_app"
+          href={`/${props.chainSlug}/${props.contractAddress}/code`}
+          className="block text-balance text-muted-foreground text-sm before:absolute before:inset-0"
+        >
+          Learn more about how you can use thirdweb tools to build apps on top
+          of this contract
+        </TrackedLinkTW>{" "}
+      </div>
+
+      {/* right */}
+      <div className="flex items-center justify-end gap-3">
+        {[TypeScriptIcon, ReactIcon].map((Icon, i) => {
+          return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <div key={i} className="rounded-full border bg-background p-3">
+              <Icon className="size-5 text-muted-foreground" />
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
-};
+}
