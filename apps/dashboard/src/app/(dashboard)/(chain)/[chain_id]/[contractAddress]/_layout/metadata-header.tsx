@@ -66,7 +66,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         </div>
       )}
 
-      <div className="flex grow flex-col gap-4">
+      <div className="flex grow flex-col gap-3">
         {/* Title */}
         {!data ? (
           <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
