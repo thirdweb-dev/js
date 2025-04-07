@@ -89,7 +89,7 @@ function AddToProjectButton(props: {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="gap-2" variant="outline">
+        <Button className="gap-2 bg-card" variant="outline">
           <PlusIcon className="size-4" />
           Add To Project
         </Button>

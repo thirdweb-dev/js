@@ -17,7 +17,9 @@ export const ContractDirectListingsPage: React.FC<
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
-        <p className="text-lg">Contract Listings</p>
+        <h2 className="font-semibold text-2xl tracking-tight">
+          Direct Listings
+        </h2>
         <div className="flex flex-row gap-4">
           <CreateListingButton
             isInsightSupported={isInsightSupported}

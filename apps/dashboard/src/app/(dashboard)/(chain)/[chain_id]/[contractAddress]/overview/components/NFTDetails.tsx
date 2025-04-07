@@ -42,7 +42,7 @@ export function NFTDetails({
     <div className="rounded-lg border bg-card">
       {/* header */}
       <div className="flex items-center justify-between border-b px-6 py-4">
-        <h2 className="font-semibold text-xl tracking-tight">NFT Details</h2>
+        <h2 className="font-semibold text-xl tracking-tight">NFTs</h2>
         <Button variant="outline" asChild className="bg-background" size="sm">
           <TrackedLinkTW
             category={trackingCategory}

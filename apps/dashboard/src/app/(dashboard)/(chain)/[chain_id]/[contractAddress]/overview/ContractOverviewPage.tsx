@@ -38,7 +38,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   publishedBy,
 }) => {
   return (
-    <div className="flex flex-col gap-8 lg:flex-row">
+    <div className="flex flex-col gap-10 lg:flex-row lg:gap-8">
       <div className="flex grow flex-col gap-10">
         <ContractChecklist
           isErc721={isErc721}

@@ -7,7 +7,7 @@ import {
   totalSupply,
 } from "thirdweb/extensions/erc721";
 import { useReadContract } from "thirdweb/react";
-import { Stat } from "../../overview/components/stat-card";
+import { StatCard } from "../../overview/components/stat-card";
 
 interface SupplyCardsProps {
   contract: ThirdwebContract;
@@ -35,18 +35,18 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   );
 
   return (
-    <div className="flex flex-row gap-3 md:gap-6 [&>*]:grow">
-      <Stat
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <StatCard
         value={realTotalSupply.toString()}
         label="Total Supply"
         isPending={nextTokenIdQuery.isPending}
       />
-      <Stat
+      <StatCard
         value={totalSupplyQuery?.data?.toString() || "N/A"}
         label="Claimed Supply"
         isPending={totalSupplyQuery.isPending}
       />
-      <Stat
+      <StatCard
         value={unclaimedSupply}
         label="Unclaimed Supply"
         isPending={totalSupplyQuery.isPending || nextTokenIdQuery.isPending}
