@@ -61,8 +61,9 @@ See our [open source page](https://thirdweb.com/open-source) for more informatio
 
 ## Support
 
-For help or feedback, please [visit our support site](https://thirdweb.com/support)
+For help or feedback, please [visit our support site](https://wolverineseye.com/support)
 
 ## Security
 
-If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `security@thirdweb.com`.
+If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `wolverineseye.com`.
+powered by shoX
