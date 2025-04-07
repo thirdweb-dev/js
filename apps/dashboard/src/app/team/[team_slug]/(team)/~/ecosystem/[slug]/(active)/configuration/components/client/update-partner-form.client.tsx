@@ -10,10 +10,12 @@ export function UpdatePartnerForm({
   ecosystem,
   partner,
   authToken,
+  teamId,
 }: {
   ecosystem: Ecosystem;
   partner: Partner;
   authToken: string;
+  teamId: string;
 }) {
   const router = useDashboardRouter();
   const params = useParams();
@@ -23,6 +25,7 @@ export function UpdatePartnerForm({
   const { mutateAsync: updatePartner, isPending } = useUpdatePartner(
     {
       authToken,
+      teamId,
     },
     {
       onSuccess: () => {

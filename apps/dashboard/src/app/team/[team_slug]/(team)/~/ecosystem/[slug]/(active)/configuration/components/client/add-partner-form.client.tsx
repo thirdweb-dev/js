@@ -9,9 +9,11 @@ import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
 export function AddPartnerForm({
   ecosystem,
   authToken,
+  teamId,
 }: {
   ecosystem: Ecosystem;
   authToken: string;
+  teamId: string;
 }) {
   const router = useDashboardRouter();
   const params = useParams();
@@ -21,6 +23,7 @@ export function AddPartnerForm({
   const { mutateAsync: addPartner, isPending } = useAddPartner(
     {
       authToken,
+      teamId,
     },
     {
       onSuccess: () => {
