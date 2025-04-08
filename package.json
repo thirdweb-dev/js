@@ -22,7 +22,7 @@
     "playground:build": "turbo run build --filter=./apps/playground-web",
     "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb --filter=./packages/insight",
     "portal:build": "turbo run build --filter=./apps/portal",
-    "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb --filter=./packages/insight",
+    "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/vault-sdk",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
     "build": "turbo run build --filter=./packages/*",
     "build:release": "turbo run build --filter=./packages/* --force",
