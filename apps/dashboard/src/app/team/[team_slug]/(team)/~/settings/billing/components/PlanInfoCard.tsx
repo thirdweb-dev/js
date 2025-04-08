@@ -156,7 +156,7 @@ export function PlanInfoCardUI(props: {
       </div>
 
       {props.team.billingPlan !== "free" && (
-        <div className="flex flex-col items-center justify-between gap-4 border-t p-4 lg:flex-row lg:p-6">
+        <div className="flex flex-col gap-4 border-t p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
           <p className="text-muted-foreground text-sm">
             <span>
               Adjust your plan here to avoid unnecessary charges.{" "}

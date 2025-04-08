@@ -120,6 +120,9 @@ const PRO_CONTACT_US_URL =
 function ProPlanCancelPlanSheetContent() {
   return (
     <div>
+      <h2 className="mb-1 font-semibold text-2xl tracking-tight">
+        Cancel Plan
+      </h2>
       <p className="mb-5 text-muted-foreground text-sm">
         Please contact us to cancel your Pro plan
       </p>
