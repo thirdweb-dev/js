@@ -1,74 +1,64 @@
-import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Accordion,
-  AccordionButton,
-  AccordionIcon,
+  AccordionContent,
   AccordionItem,
-  AccordionPanel,
-} from "@chakra-ui/react";
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { CodeClient } from "@/components/ui/code/code.client";
 import type { Abi } from "abitype";
 import type { SourceFile } from "../types";
 
-interface SourcesAccordionProps {
-  sources: SourceFile[];
-  abi?: Abi;
-}
-
-export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
+export function SourcesAccordion({
   sources,
   abi,
-}) => {
+}: { sources: SourceFile[]; abi?: Abi }) {
+  console.log({ sources });
   return (
-    <Accordion allowMultiple defaultIndex={[]}>
-      {/* ABI Accordion is put at the top for better UX */}
+    <Accordion type="multiple" className="w-full">
       {abi && (
-        <AccordionItem
-          gap={4}
-          flexDirection="column"
-          borderColor="borderColor"
-          _first={{ borderTopWidth: 0 }}
-          _last={{ borderBottomWidth: 0 }}
-        >
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton justifyContent="space-between" py={2}>
-                <p className="font-semibold">ABI</p>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                {isExpanded && (
-                  <CodeClient code={JSON.stringify(abi, null, 2)} lang="json" />
-                )}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
+        <SourceAccordionItem
+          filename="ABI"
+          code={JSON.stringify(abi, null, 2)}
+          accordionId="abi"
+          lang="json"
+        />
       )}
+
       {sources.map((signature, i) => (
-        <AccordionItem
-          gap={4}
-          flexDirection="column"
-          // biome-ignore lint/suspicious/noArrayIndexKey: static list
-          key={i}
-          borderColor="borderColor"
-          _first={{ borderTopWidth: 0 }}
-          _last={{ borderBottomWidth: 0 }}
-        >
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton justifyContent="space-between" py={2}>
-                <p className="font-semibold">{signature.filename}</p>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                {isExpanded && (
-                  <CodeClient code={signature.source.trim()} lang="solidity" />
-                )}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
+        <SourceAccordionItem
+          key={signature.filename}
+          filename={signature.filename || "Unknown"}
+          code={signature.source.trim()}
+          accordionId={`acc-${i}`}
+          lang="solidity"
+        />
       ))}
     </Accordion>
   );
-};
+}
+
+function SourceAccordionItem(props: {
+  filename: string;
+  code: string;
+  accordionId: string;
+  lang: "solidity" | "json";
+}) {
+  return (
+    <AccordionItem
+      value={props.accordionId}
+      className="first:border-t-0 last:border-b-0"
+    >
+      <AccordionTrigger className="flex justify-between px-4 py-3 font-mono text-sm">
+        {props.filename}
+      </AccordionTrigger>
+      <AccordionContent className="border-t p-0">
+        <CodeClient
+          code={props.code}
+          lang={props.lang}
+          scrollableClassName="max-h-[600px]"
+          className="rounded-none border-none"
+        />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
