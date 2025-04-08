@@ -1,12 +1,12 @@
 import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import type { Wallet } from "./wallet-table/types.js";
+import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
 export default async function TransactionsServerWalletsPage() {
   const vaultClient = await createVaultClient({
     baseUrl: THIRDWEB_VAULT_URL,
   });
-
-  console.log(vaultClient);
 
   const eoas = await listEoas({
     client: vaultClient,
@@ -15,14 +15,13 @@ export default async function TransactionsServerWalletsPage() {
         adminKey:
           "sa_adm_UHST_NIWG_AR5B_VLWM_LBLS_OQFT_793e1701-9a96-4625-9f53-35a8c41d7068",
       },
-      options: {
-        page: 1,
-        pageSize: 10,
-      },
+      options: {},
     },
-  }).catch((e) => console.log(e));
+  });
 
-  console.log(eoas);
+  if (!eoas.success) {
+    return <div>Error: {eoas.error.message}</div>;
+  }
 
-  return <div>Server Wallets {JSON.stringify(eoas, null, 4)}</div>;
+  return <ServerWalletsTable wallets={eoas.data.items as Wallet[]} />;
 }
