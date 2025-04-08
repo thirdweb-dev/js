@@ -145,6 +145,9 @@ importers:
       '@thirdweb-dev/service-utils':
         specifier: workspace:*
         version: link:../../packages/service-utils
+      '@thirdweb-dev/vault-sdk':
+        specifier: workspace:*
+        version: link:../../packages/vault-sdk
       '@vercel/functions':
         specifier: 2.0.0
         version: 2.0.0(@aws-sdk/credential-provider-web-identity@3.782.0)
@@ -1294,6 +1297,31 @@ importers:
       vitest:
         specifier: 3.1.1
         version: 3.1.1(@types/debug@4.1.12)(@types/node@22.14.0)(@vitest/ui@3.1.1)(happy-dom@17.4.4)(jiti@2.4.2)(lightningcss@1.29.3)(msw@2.7.4(@types/node@22.14.0)(typescript@5.8.3))(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1)
+
+  packages/vault-sdk:
+    dependencies:
+      '@noble/ciphers':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@noble/curves':
+        specifier: 1.8.1
+        version: 1.8.1
+      '@noble/hashes':
+        specifier: 1.7.1
+        version: 1.7.1
+      abitype:
+        specifier: 1.0.8
+        version: 1.0.8(typescript@5.8.3)(zod@3.24.2)
+      ky:
+        specifier: ^1.8.0
+        version: 1.8.0
+      typescript:
+        specifier: '>=5.0.4'
+        version: 5.8.3
+    devDependencies:
+      rimraf:
+        specifier: 6.0.1
+        version: 6.0.1
 
   packages/wagmi-adapter:
     dependencies:
@@ -10505,6 +10533,10 @@ packages:
     peerDependencies:
       '@types/node': '>=18'
       typescript: '>=5.0.4'
+
+  ky@1.8.0:
+    resolution: {integrity: sha512-DoKGmG27nT8t/1F9gV8vNzggJ3mLAyD49J8tTMWHeZvS8qLc7GlyTieicYtFzvDznMe/q2u38peOjkWc5/pjvw==}
+    engines: {node: '>=18'}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -28508,6 +28540,8 @@ snapshots:
       typescript: 5.8.3
       zod: 3.24.2
       zod-validation-error: 3.4.0(zod@3.24.2)
+
+  ky@1.8.0: {}
 
   language-subtag-registry@0.3.23: {}
 

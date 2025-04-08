@@ -4,6 +4,9 @@ export const DASHBOARD_THIRDWEB_CLIENT_ID =
 export const DASHBOARD_THIRDWEB_SECRET_KEY =
   process.env.DASHBOARD_SECRET_KEY || "";
 
+export const THIRDWEB_VAULT_URL =
+  process.env.NEXT_PUBLIC_THIRDWEB_VAULT_URL || "";
+
 export const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
 
 export const IPFS_GATEWAY_URL =
