@@ -68,7 +68,7 @@ export const SettingsPrimarySale = ({
   );
 
   return (
-    <Card p={0} position="relative">
+    <Card p={0} position="relative" overflow="hidden">
       <SettingDetectedState type="primarySale" detectedState={detectedState} />
       <Flex
         as="form"

@@ -143,7 +143,7 @@ export const SettingsMetadata = ({
   );
 
   return (
-    <Card p={0} position="relative">
+    <Card p={0} position="relative" overflow="hidden">
       <SettingDetectedState type="metadata" detectedState={detectedState} />
       <Flex
         as="form"
