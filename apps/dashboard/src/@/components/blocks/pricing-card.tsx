@@ -3,33 +3,35 @@ import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { CheckIcon, CircleAlertIcon, CircleDollarSignIcon } from "lucide-react";
+import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
+import { useTrack } from "../../../hooks/analytics/useTrack";
 import { remainingDays } from "../../../utils/date-utils";
 import type { GetBillingCheckoutUrlAction } from "../../actions/billing";
+import type { ProductSKU } from "../../lib/billing";
 import { CheckoutButton } from "../billing";
 
-type ButtonProps = React.ComponentProps<typeof Button>;
-
-const PRO_CONTACT_US_URL =
-  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
+type PricingCardCta = {
+  hint?: string;
+  title: string;
+  onClick?: () => void;
+} & (
+  | {
+      type: "link";
+      href: string;
+    }
+  | {
+      type: "checkout";
+    }
+);
 
 type PricingCardProps = {
   teamSlug: string;
-  billingPlan: Exclude<Team["billingPlan"], "free">;
-  cta?: {
-    hint?: string;
-    title: string;
-    tracking: {
-      category: string;
-      label?: string;
-    };
-    variant?: ButtonProps["variant"];
-    onClick?: () => void;
-  };
+  billingPlan: keyof typeof TEAM_PLANS;
+  cta?: PricingCardCta;
   ctaHint?: string;
   highlighted?: boolean;
   current?: boolean;
@@ -49,13 +51,23 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
 
+  const trackEvent = useTrack();
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
+
+  const handleCTAClick = () => {
+    cta?.onClick?.();
+    trackEvent({
+      category: "account",
+      label: `${billingPlan}Plan`,
+      action: "click",
+    });
+  };
 
   return (
     <div
       className={cn(
-        "z-10 flex w-full flex-col gap-6 rounded-xl border border-border bg-card p-4 md:p-6",
+        "z-10 flex w-full flex-col gap-4 rounded-xl border border-border bg-card p-4",
         current && "border-blue-500",
         highlighted && "border-active-border",
       )}
@@ -71,13 +83,13 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       <div className="flex flex-col gap-5">
         {/* Title + Desc */}
         <div>
-          <div className="mb-2 flex flex-row items-center gap-2">
+          <div className="mb-1 flex flex-row items-center gap-3">
             <h3 className="font-semibold text-2xl capitalize tracking-tight">
               {plan.title}
             </h3>
             {current && <Badge className="capitalize">Current plan</Badge>}
           </div>
-          <p className="max-w-[320px] text-muted-foreground">
+          <p className="max-w-[320px] text-muted-foreground text-sm">
             {plan.description}
           </p>
         </div>
@@ -85,29 +97,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         {/* Price */}
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-3xl text-foreground tracking-tight">
+            <span className="font-semibold text-2xl text-foreground tracking-tight">
               ${plan.price}
             </span>
 
             {!isCustomPrice && (
               <span className="text-muted-foreground">/ month</span>
-            )}
-
-            {billingPlan === "starter" && (
-              <ToolTipLabel
-                contentClassName="max-w-[320px]"
-                label="We will place a temporary hold of $25 to verify your card, this will be immediately released back to you after verification."
-              >
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="h-auto w-auto p-1 text-muted-foreground hover:text-foreground"
-                >
-                  <div>
-                    <CircleAlertIcon className="size-5 shrink-0" />
-                  </div>
-                </Button>
-              </ToolTipLabel>
             )}
           </div>
 
@@ -124,7 +119,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       <div className="flex grow flex-col items-start gap-2 text-foreground">
         {plan.subTitle && (
-          <p className="font-medium text-foreground">{plan.subTitle}</p>
+          <p className="font-medium text-foreground text-sm">{plan.subTitle}</p>
         )}
 
         {plan.features.map((f) => (
@@ -134,29 +129,30 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       {cta && (
         <div className="flex flex-col gap-3">
-          {billingPlan !== "pro" ? (
+          {billingPlanToSkuMap[billingPlan] && cta.type === "checkout" && (
             <CheckoutButton
               buttonProps={{
-                variant: cta.variant || "outline",
-                className: "gap-2",
-                onClick: cta.onClick,
+                variant: highlighted ? "default" : "outline",
+                className: highlighted ? undefined : "bg-background",
+                onClick: handleCTAClick,
               }}
               teamSlug={teamSlug}
-              sku={billingPlan === "starter" ? "plan:starter" : "plan:growth"}
+              sku={billingPlanToSkuMap[billingPlan]}
               getBillingCheckoutUrl={getBillingCheckoutUrl}
             >
               {cta.title}
             </CheckoutButton>
-          ) : (
-            <Button variant={cta.variant || "outline"} asChild>
-              <TrackedLinkTW
-                href={PRO_CONTACT_US_URL}
-                label={cta.tracking?.label}
-                category={cta.tracking?.category}
-                target="_blank"
-              >
+          )}
+
+          {cta.type === "link" && (
+            <Button
+              variant={highlighted ? "default" : "outline"}
+              className={highlighted ? undefined : "bg-background"}
+              asChild
+            >
+              <Link href={cta.href} target="_blank" onClick={handleCTAClick}>
                 {cta.title}
-              </TrackedLinkTW>
+              </Link>
             </Button>
           )}
 
@@ -170,6 +166,19 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     </div>
   );
 };
+
+const billingPlanToSkuMap: Record<Team["billingPlan"], ProductSKU | undefined> =
+  {
+    starter: "plan:starter",
+    growth: "plan:growth",
+    accelerate: "plan:accelerate",
+    scale: "plan:scale",
+    // we can't render checkout buttons for these plans:
+    pro: undefined,
+    free: undefined,
+    growth_legacy: undefined,
+    starter_legacy: undefined,
+  };
 
 type FeatureItemProps = {
   text: string | string[];

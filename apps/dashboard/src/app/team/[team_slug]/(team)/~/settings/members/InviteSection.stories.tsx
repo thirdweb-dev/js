@@ -27,6 +27,12 @@ const TEAM_CONFIGS = [
   { id: "free", label: "Free Team", team: teamStub("foo", "free") },
   { id: "starter", label: "Starter Team", team: teamStub("foo", "starter") },
   { id: "growth", label: "Growth Team", team: teamStub("bazz", "growth") },
+  {
+    id: "accelerate",
+    label: "Accelerate Team",
+    team: teamStub("baz", "accelerate"),
+  },
+  { id: "scale", label: "Scale Team", team: teamStub("qux", "scale") },
   { id: "pro", label: "Pro Team", team: teamStub("bar", "pro") },
 ] as const;
 

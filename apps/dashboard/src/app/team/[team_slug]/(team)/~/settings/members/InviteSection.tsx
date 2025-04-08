@@ -129,7 +129,7 @@ export function InviteSection(props: {
   } else {
     bottomSection = (
       <div className="flex items-center border-border border-t px-4 py-4 lg:justify-between lg:px-6">
-        {teamPlan === "pro" && (
+        {teamPlan === "pro" ? (
           <p className="text-muted-foreground text-sm">
             Team members are billed according to your plan.{" "}
             <Link
@@ -140,9 +140,7 @@ export function InviteSection(props: {
               Reach out to sales <ExternalLinkIcon className="inline size-3" />.
             </Link>
           </p>
-        )}
-
-        {(teamPlan === "starter" || teamPlan === "growth") && (
+        ) : (
           <p className="text-muted-foreground text-sm">
             Team members are billed according to your plan.{" "}
             <Link

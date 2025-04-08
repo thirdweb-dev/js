@@ -1,8 +1,9 @@
+import type { Team } from "@/api/team";
 import type { Meta, StoryObj } from "@storybook/react";
 import { addDays } from "date-fns";
 import { teamStub, teamSubscriptionsStub } from "stories/stubs";
 import { BadgeContainer } from "../../../../../../../../stories/utils";
-import { PlanInfoCard } from "./PlanInfoCard";
+import { PlanInfoCardUI } from "./PlanInfoCard";
 
 const meta = {
   title: "Billing/PlanInfoCard",
@@ -17,12 +18,58 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Variants: Story = {
-  args: {},
+export const Free: Story = {
+  args: {
+    plan: "free",
+  },
 };
 
-function Story() {
-  const team = teamStub("foo", "growth");
+export const StarterLegacy: Story = {
+  args: {
+    plan: "starter_legacy",
+  },
+};
+
+export const Starter: Story = {
+  args: {
+    plan: "starter",
+  },
+};
+
+export const GrowthLegacy: Story = {
+  args: {
+    plan: "growth_legacy",
+  },
+};
+
+export const Growth: Story = {
+  args: {
+    plan: "growth",
+  },
+};
+
+export const Accelerate: Story = {
+  args: {
+    plan: "accelerate",
+  },
+};
+
+export const Scale: Story = {
+  args: {
+    plan: "scale",
+  },
+};
+
+export const Pro: Story = {
+  args: {
+    plan: "pro",
+  },
+};
+
+function Story(props: {
+  plan: Team["billingPlan"];
+}) {
+  const team = teamStub("foo", props.plan);
   const zeroUsageOnDemandSubs = teamSubscriptionsStub("plan:growth");
   const trialPlanZeroUsageOnDemandSubs = teamSubscriptionsStub("plan:growth", {
     trialEnd: addDays(new Date(), 7).toISOString(),
@@ -63,37 +110,65 @@ function Story() {
     url: "https://example.com",
   });
 
+  const getBillingCheckoutUrlStub = async () => ({
+    status: 200,
+    url: "https://example.com",
+  });
+
+  const cancelPlanStub = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return;
+  };
+
+  const teamTeamStub = async () =>
+    ({
+      ...team,
+      billingPlan: "free",
+    }) satisfies Team;
+
   return (
     <div className="container flex max-w-6xl flex-col gap-12 py-10">
       <BadgeContainer label="On-demand Subscriptions with 0 usage">
-        <PlanInfoCard
+        <PlanInfoCardUI
           team={team}
           subscriptions={zeroUsageOnDemandSubs}
           getBillingPortalUrl={getBillingPortalUrlStub}
+          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
+          cancelPlan={cancelPlanStub}
+          getTeam={teamTeamStub}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Trial Plan - On-demand Subscriptions with 0 usage">
-        <PlanInfoCard
+        <PlanInfoCardUI
           team={team}
           subscriptions={trialPlanZeroUsageOnDemandSubs}
           getBillingPortalUrl={getBillingPortalUrlStub}
+          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
+          cancelPlan={cancelPlanStub}
+          getTeam={teamTeamStub}
         />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 1 usage">
-        <PlanInfoCard
+        <PlanInfoCardUI
           team={team}
           subscriptions={subsWith1Usage}
           getBillingPortalUrl={getBillingPortalUrlStub}
+          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
+          cancelPlan={cancelPlanStub}
+          getTeam={teamTeamStub}
         />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 4 usage">
-        <PlanInfoCard
+        <PlanInfoCardUI
           team={team}
           subscriptions={subsWith4Usage}
           getBillingPortalUrl={getBillingPortalUrlStub}
+          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
+          cancelPlan={cancelPlanStub}
+          getTeam={teamTeamStub}
         />
       </BadgeContainer>
     </div>

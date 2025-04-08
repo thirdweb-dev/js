@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type { Team } from "../../../../@/api/team";
 import { teamStub } from "../../../../stories/stubs";
 import { storybookLog } from "../../../../stories/utils";
 import { TeamOnboardingLayout } from "../onboarding-layout";
@@ -36,8 +37,26 @@ export const GrowthPlan: Story = {
   },
 };
 
+export const AcceleratePlan: Story = {
+  args: {
+    plan: "accelerate",
+  },
+};
+
+export const ScalePlan: Story = {
+  args: {
+    plan: "scale",
+  },
+};
+
+export const ProPlan: Story = {
+  args: {
+    plan: "pro",
+  },
+};
+
 function Story(props: {
-  plan: "free" | "growth" | "starter";
+  plan: Team["billingPlan"];
 }) {
   return (
     <TeamOnboardingLayout currentStep={2}>

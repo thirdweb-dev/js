@@ -1,9 +1,13 @@
 import type { Team } from "../@/api/team";
 
-type NonFreeTeamPlan = Exclude<Team["billingPlan"], "free">;
+type SelectivePlans = Exclude<
+  Team["billingPlan"],
+  // we will never show cards for these plans - so exclude it
+  "pro" | "growth_legacy" | "free" | "starter_legacy"
+>;
 
 export const TEAM_PLANS: Record<
-  NonFreeTeamPlan,
+  SelectivePlans,
   {
     title: string;
     price: string | number;
@@ -14,49 +18,62 @@ export const TEAM_PLANS: Record<
   }
 > = {
   starter: {
+    price: 5,
     title: "Starter",
-    price: 0,
     subTitle: null,
     trialPeriodDays: 0,
     description: "Ideal for hobbyists who require basic features.",
     features: [
-      ["1,000 monthly active wallets", "then $0.02/wallet"],
-      "Web, Mobile & Gaming SDKs",
-      "Contract & Wallet APIs",
-      "Audited smart contracts",
+      "$25 Usage Credits",
       "Community Support",
-      "Blockchain infra (RPC, IPFS)",
+      "Web, Mobile & Gaming SDKs",
+      "Contract and Wallet APIs",
+      "Audited smart contracts",
+      "Blockchain Infra (RPC, IPFS)",
     ],
   },
   growth: {
-    price: 99,
+    price: 75,
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
     trialPeriodDays: 0,
-    description: "Ideal for scaling, production-grade applications.",
+    description: "Ideal for scalable production-grade apps.",
     features: [
-      ["10,000 monthly active wallets", "then $0.02/wallet"],
-      "Production grade infrastructure",
-      "Prioritized support",
-      "Custom branding",
-      "User analytics",
-      "Third party auth support",
-      "Advanced paymaster rules",
+      "$100 Usage Credits",
+      "Email support",
+      "SMS Onboarding",
+      "Account abstraction",
+      "30d User Analytics",
+      "Gas grant for transactions",
     ],
   },
-  pro: {
-    price: "Custom",
-    title: "Pro",
+  accelerate: {
+    price: 250,
+    title: "Accelerate",
     subTitle: "Everything in Growth, plus:",
     trialPeriodDays: 0,
-    description:
-      "Ideal for teams that require more customization, SLAs, and support.",
+    description: "For funded startups and mid-size businesses.",
     features: [
-      "Custom rate limits for APIs & Infra",
-      "Dedicated support channel",
-      "Guaranteed support response time",
-      "Direct access to solutions & engineering teams",
-      "Enterprise grade SLAs",
+      "$250 Usage Credits",
+      "Custom Wallet Branding & Auth",
+      "Dedicated Engine Server",
+      "24hr Guaranteed Support",
+      "90d User Analytics",
+    ],
+  },
+  scale: {
+    price: 500,
+    title: "Scale",
+    description: "For large organizations with custom needs.",
+    subTitle: "Everything in Accelerate, plus:",
+    trialPeriodDays: 0,
+    features: [
+      "$400 Usage Credits",
+      "12hr Guaranteed Response",
+      "Slack Channel Support",
+      "Whitelabel Infra Support",
+      "Ultra-high Rate Limits",
+      "Ecosystem Wallets",
     ],
   },
 };
