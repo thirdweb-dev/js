@@ -20,6 +20,7 @@ import {
   DEFAULT_FEE_RECIPIENT,
   THIRDWEB_PUBLISHER_ADDRESS,
 } from "constants/addresses";
+import { ZERO_FEE_CHAINS } from "constants/fee-config";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -79,6 +80,7 @@ import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 
 interface CustomContractFormProps {
   metadata: FetchDeployMetadataResult;
+  metadataNoFee: FetchDeployMetadataResult | null;
   jwt: string;
   modules?: FetchDeployMetadataResult[];
   teamsAndProjects: MinimalTeamsAndProjects;
@@ -150,6 +152,7 @@ function rewriteTwPublisher(publisher: string | undefined) {
 
 export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
+  metadataNoFee,
   modules,
   jwt,
   teamsAndProjects,
@@ -213,7 +216,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     defaultFeeRecipientFunction &&
     metadata.publisher === THIRDWEB_PUBLISHER_ADDRESS;
 
-  const isFeeExempt = walletChain?.id === 232 || walletChain?.id === 37111;
+  const isFeeExempt =
+    walletChain?.id && ZERO_FEE_CHAINS.includes(walletChain.id);
 
   const [customFactoryNetwork, customFactoryAddress] = Object.entries(
     metadata?.factoryDeploymentData?.customFactoryInput
@@ -514,19 +518,17 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
-            platformFeeBps:
-              metadata.version === "7.0.0" && isFeeExempt
-                ? Number(params.deployParams._platformFeeBps)
-                : DEFAULT_FEE_BPS_NEW,
-            platformFeeRecipient:
-              metadata.version === "7.0.0" && isFeeExempt
-                ? (params.deployParams._platformFeeRecipient as string)
-                : DEFAULT_FEE_RECIPIENT,
+            platformFeeBps: isFeeExempt
+              ? Number(params.deployParams._platformFeeBps)
+              : DEFAULT_FEE_BPS_NEW,
+            platformFeeRecipient: isFeeExempt
+              ? (params.deployParams._platformFeeRecipient as string)
+              : DEFAULT_FEE_RECIPIENT,
             trustedForwarders: params.deployParams._trustedForwarders
               ? JSON.parse(params.deployParams._trustedForwarders as string)
               : undefined,
           },
-          version: metadata.version,
+          version: isFeeExempt ? "7.0.0" : metadata.version,
         });
       }
 
@@ -536,15 +538,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         payees,
         shares,
         _contractURI,
-        platformFeeBps: hasInbuiltDefaultFeeConfig
-          ? DEFAULT_FEE_BPS_NEW
-          : isFeeExempt
-            ? Number(params.deployParams._platformFeeBps)
+        platformFeeBps: isFeeExempt
+          ? Number(params.deployParams._platformFeeBps)
+          : hasInbuiltDefaultFeeConfig
+            ? DEFAULT_FEE_BPS_NEW
             : DEFAULT_FEE_BPS,
-        platformFeeRecipient:
-          !hasInbuiltDefaultFeeConfig && isFeeExempt
-            ? (params.deployParams._platformFeeRecipient as string)
-            : DEFAULT_FEE_RECIPIENT,
+        platformFeeRecipient: isFeeExempt
+          ? (params.deployParams._platformFeeRecipient as string)
+          : DEFAULT_FEE_RECIPIENT,
       };
 
       const salt = params.deployDeterministic
@@ -562,7 +563,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         account: activeAccount,
         chain: walletChain,
         client: thirdwebClient,
-        deployMetadata: metadata,
+        deployMetadata: isFeeExempt && metadataNoFee ? metadataNoFee : metadata,
         initializeParams,
         implementationConstructorParams,
         salt,
@@ -782,11 +783,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 <PlatformFeeFieldset
                   form={form}
                   isMarketplace={isMarketplace}
-                  disabled={
-                    hasInbuiltDefaultFeeConfig ||
-                    (isMarketplace && metadata.version !== "7.0.0") ||
-                    !isFeeExempt
-                  }
+                  disabled={!isFeeExempt}
                 />
               )}
 
