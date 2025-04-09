@@ -13,7 +13,7 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
-import CreateServerWallet from "../components/create-server-wallet";
+import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
 
 export function ServerWalletsTableUI({

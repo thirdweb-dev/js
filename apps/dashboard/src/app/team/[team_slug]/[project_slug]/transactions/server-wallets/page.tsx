@@ -1,7 +1,9 @@
 import { getProject } from "@/api/projects";
 import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
-import type { Wallet } from "./wallet-table/types.js";
+import { KeyManagement } from "./components/key-management";
+import { TryItOut } from "./components/try-it-out";
+import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
 export default async function TransactionsServerWalletsPage(props: {
@@ -21,6 +23,7 @@ export default async function TransactionsServerWalletsPage(props: {
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
+  const maskedAdminKey = projectEngineCloudService?.maskedAdminKey;
 
   const eoas = managementAccessToken
     ? await listEoas({
@@ -43,12 +46,20 @@ export default async function TransactionsServerWalletsPage(props: {
       {eoas.error ? (
         <div>Error: {eoas.error.message}</div>
       ) : (
-        <ServerWalletsTable
-          wallets={eoas.data.items as Wallet[]}
-          projectId={project.id}
-          teamId={project.teamId}
-          managementAccessToken={managementAccessToken ?? undefined}
-        />
+        <div className="flex flex-col gap-8">
+          <ServerWalletsTable
+            wallets={eoas.data.items as Wallet[]}
+            projectId={project.id}
+            teamId={project.teamId}
+            managementAccessToken={managementAccessToken ?? undefined}
+          />
+          <KeyManagement
+            maskedAdminKey={maskedAdminKey ?? undefined}
+            projectId={project.id}
+            teamId={project.teamId}
+          />
+          <TryItOut />
+        </div>
       )}
     </>
   );

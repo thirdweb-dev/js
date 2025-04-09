@@ -16,7 +16,7 @@ export function TryItOut() {
             </p>
           </div>
         </div>
-        <Button variant={"primary"}>View API reference</Button>
+        <Button variant={"secondary"}>View API reference</Button>
       </div>
       <div>
         <CodeServer
@@ -28,25 +28,29 @@ export function TryItOut() {
     </div>
   );
 }
+
 const typescriptCodeExample = () => `\
-const response = fetch("${THIRDWEB_ENGINE_CLOUD_URL}/account/send-transaction", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "x-secret-key": <your-project-secret-key>,
-  },
-  body: JSON.stringify({
-    "executionOptions": {
-        "type": "AA",
-        "signerAddress": <your-server-wallet-address>
-    },
-    "transactionParams": [
-      {
-        "to": "0xeb0effdfb4dc5b3d5d3ac6ce29f3ed213e95d675",
-        "value": "0"
-      }
-    ],
-    "vaultAccessToken": <your-wallet-access-token>,
-    "chainId": "84532"
-  }),
-});`;
+const response = fetch(
+    "${THIRDWEB_ENGINE_CLOUD_URL}/account/send-transaction", 
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-secret-key": <your-project-secret-key>,
+        },
+        body: JSON.stringify({
+            "executionOptions": {
+                "type": "AA",
+                "signerAddress": <your-server-wallet-address>
+            },
+            "transactionParams": [
+            {
+                "to": "0xeb0effdfb4dc5b3d5d3ac6ce29f3ed213e95d675",
+                "value": "0"
+            }
+            ],
+            "vaultAccessToken": <your-wallet-access-token>,
+            "chainId": "84532"
+        }),
+    }
+);`;
