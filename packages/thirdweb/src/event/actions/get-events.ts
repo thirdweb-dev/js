@@ -11,6 +11,7 @@ import type {
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from "abitype";
+import { formatLog } from "viem";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
@@ -21,6 +22,8 @@ import {
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { type PreparedEvent, prepareEvent } from "../prepare-event.js";
 import { isAbiEvent } from "../utils.js";
@@ -48,6 +51,14 @@ export type GetContractEventsResult<
   abiEvents extends PreparedEvent<AbiEvent>[],
   TStrict extends boolean,
 > = ParseEventLogsResult<abiEvents, TStrict>;
+
+type InsightEvent = {
+  data: {
+    address: string;
+    data: `0x${string}`;
+    topics: [`0x${string}`, ...`0x${string}`[]] | [];
+  }[];
+};
 
 /**
  * Retrieves events from a contract based on the provided options.
@@ -109,6 +120,28 @@ export async function getContractEvents<
   const { contract, events, blockRange, ...restParams } = options;
 
   const rpcRequest = getRpcClient(contract);
+
+  try {
+    if (events) {
+      const sig = `${events[0]?.abiEvent.name}(${events[0]?.abiEvent.inputs.map((i) => i.type).join(",")})`;
+      const url = new URL(
+        `https://${getThirdwebDomains().insight}/v1/events/${contract.address}/${sig}`,
+      );
+      url.searchParams.set("limit", "10");
+      url.searchParams.set("chain", contract.chain.id.toString());
+      const clientFetch = getClientFetch(contract.client);
+      const result = await clientFetch(url.toString());
+      const eventInfo = (await result.json()) as InsightEvent;
+      const cleanedEventInfo = eventInfo.data.map((e) => formatLog(e));
+
+      return parseEventLogs({
+        logs: cleanedEventInfo,
+        events,
+      });
+    }
+  } catch (error) {
+    console.debug(error);
+  }
 
   if (
     restParams.blockHash &&
