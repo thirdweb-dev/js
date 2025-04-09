@@ -1,7 +1,9 @@
 "use client";
+import { WalletAvatar } from "@/components/blocks/wallet-address";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {} from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CodeClient } from "@/components/ui/code/code.client";
 import {
   Dialog,
   DialogContent,
@@ -10,20 +12,26 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { WalletAddress } from "../../../../../../../@/components/blocks/wallet-address";
-import { CodeClient } from "../../../../../../../@/components/ui/code/code.client";
+import { shortenAddress } from "thirdweb/utils";
+import { useDashboardRouter } from "../../../../../../../@/lib/DashboardRouter";
 import type { Wallet } from "../wallet-table/types";
 
 export default function SendDummyTx(props: {
   authToken: string;
   wallet: Wallet;
+  team_slug: string;
+  project_slug: string;
 }) {
+  const router = useDashboardRouter();
+  const thirdwebClient = useThirdwebClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [accessToken, setAccessToken] = useState("");
+  const [projectSecretKey, setProjectSecretKey] = useState("");
   const sendDummyTxMutation = useMutation({
     mutationFn: async (args: {
       walletAddress: string;
@@ -35,7 +43,7 @@ export default function SendDummyTx(props: {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${props.authToken}`,
+            "x-secret-key": projectSecretKey,
           },
           body: JSON.stringify({
             executionOptions: {
@@ -70,7 +78,10 @@ export default function SendDummyTx(props: {
     <>
       <Button
         variant={"primary"}
-        onClick={() => setModalOpen(true)}
+        onClick={() => {
+          setModalOpen(true);
+          sendDummyTxMutation.reset();
+        }}
         disabled={isLoading}
         className="flex flex-row items-center gap-2"
       >
@@ -96,18 +107,12 @@ export default function SendDummyTx(props: {
                 <div className="space-y-4">
                   <div>
                     <h3 className="mb-2 font-medium text-sm">
-                      Transaction Status
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {sendDummyTxMutation.data.status}
-                    </p>
-                    <h3 className="mb-2 font-medium text-sm">
                       Transaction Result
                     </h3>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 ">
                       <CodeClient
                         lang="json"
-                        className="bg-background"
+                        className="max-h-[350px] max-w-[470px] overflow-auto bg-background"
                         code={JSON.stringify(sendDummyTxMutation.data, null, 2)}
                       />
                     </div>
@@ -116,8 +121,16 @@ export default function SendDummyTx(props: {
               </div>
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                <Button onClick={handleCloseModal} variant={"primary"}>
-                  Close
+                <Button
+                  onClick={() => {
+                    handleCloseModal();
+                    router.push(
+                      `/team/${props.team_slug}/${props.project_slug}/transactions`,
+                    );
+                  }}
+                  variant={"primary"}
+                >
+                  View in Analytics
                 </Button>
               </div>
             </div>
@@ -126,14 +139,27 @@ export default function SendDummyTx(props: {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col items-start gap-2">
                   <h3 className="mb-2 font-medium text-md">Sending from</h3>
-                  <WalletAddress
-                    address={props.wallet.address}
-                    className="pointer-events-none"
-                  />
+                  <div className="flex flex-row items-center gap-2">
+                    <WalletAvatar
+                      address={props.wallet.address}
+                      profiles={[]}
+                      thirdwebClient={thirdwebClient}
+                    />
+                    <span className="cursor-pointer font-mono text-sm">
+                      {shortenAddress(props.wallet.address)}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-sm text-warning-text">
-                  This action requries a wallet access token.
+                  This action requries a project secret key and a wallet access
+                  token.
                 </p>
+                <Input
+                  type="password"
+                  placeholder="Enter your project secret key"
+                  value={projectSecretKey}
+                  onChange={(e) => setProjectSecretKey(e.target.value)}
+                />
                 <Input
                   type="password"
                   placeholder="Enter your wallet access token"

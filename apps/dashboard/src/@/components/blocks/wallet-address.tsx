@@ -166,7 +166,7 @@ export function WalletAddress(props: {
   );
 }
 
-function WalletAvatar(props: {
+export function WalletAvatar(props: {
   address: string;
   profiles: SocialProfile[];
   thirdwebClient: ThirdwebClient;
