@@ -1,7 +1,10 @@
 "use client";
+import type { Project } from "@/api/projects";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +15,6 @@ import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import { useMutation } from "@tanstack/react-query";
 import {
   createAccessToken,
@@ -23,12 +25,9 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
-import { CheckboxWithLabel } from "../../../../../../../@/components/ui/checkbox";
 
 export default function CreateServerWallet(props: {
-  projectId: string;
-  teamId: string;
+  project: Project;
   managementAccessToken: string | undefined;
 }) {
   const router = useDashboardRouter();
@@ -48,8 +47,8 @@ export default function CreateServerWallet(props: {
         request: {
           options: {
             metadata: {
-              projectId: props.projectId,
-              teamId: props.teamId,
+              projectId: props.project.id,
+              teamId: props.project.teamId,
               purpose: "Thirdweb Project Server Wallet Service Account",
             },
           },
@@ -74,13 +73,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -97,13 +96,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -116,8 +115,8 @@ export default function CreateServerWallet(props: {
               },
             ],
             metadata: {
-              projectId: props.projectId,
-              teamId: props.teamId,
+              projectId: props.project.id,
+              teamId: props.project.teamId,
               purpose: "Thirdweb Project Server Wallet Access Token",
             },
           },
@@ -141,13 +140,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -164,13 +163,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -187,13 +186,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -211,13 +210,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -234,13 +233,13 @@ export default function CreateServerWallet(props: {
                   {
                     key: "projectId",
                     rule: {
-                      pattern: props.projectId,
+                      pattern: props.project.id,
                     },
                   },
                   {
                     key: "teamId",
                     rule: {
-                      pattern: props.teamId,
+                      pattern: props.project.teamId,
                     },
                   },
                   {
@@ -253,8 +252,8 @@ export default function CreateServerWallet(props: {
               },
             ],
             metadata: {
-              projectId: props.projectId,
-              teamId: props.teamId,
+              projectId: props.project.id,
+              teamId: props.project.teamId,
               purpose: "Thirdweb Project Server Wallet Access Token",
             },
           },
@@ -276,11 +275,12 @@ export default function CreateServerWallet(props: {
       // store the management access token in the project
       await updateProjectClient(
         {
-          projectId: props.projectId,
-          teamId: props.teamId,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
         },
         {
           services: [
+            ...props.project.services,
             {
               name: "engineCloud",
               managementAccessToken: managementAccessTokenRes.data.accessToken,
@@ -317,8 +317,8 @@ export default function CreateServerWallet(props: {
         request: {
           options: {
             metadata: {
-              projectId: props.projectId,
-              teamId: props.teamId,
+              projectId: props.project.id,
+              teamId: props.project.teamId,
               type: "server-wallet",
             },
           },
@@ -343,16 +343,17 @@ export default function CreateServerWallet(props: {
   });
 
   const handleCreateServerWallet = async () => {
-    if (!props.managementAccessToken) {
-      const initResult = await initialiseProjectWithVaultMutation.mutateAsync();
-      await createEoaMutation.mutateAsync({
-        managementAccessToken: initResult.managementAccessToken.accessToken,
-      });
-    } else {
-      await createEoaMutation.mutateAsync({
-        managementAccessToken: props.managementAccessToken,
-      });
-    }
+    // FIXME uncomment this
+    // if (!props.managementAccessToken) {
+    const initResult = await initialiseProjectWithVaultMutation.mutateAsync();
+    await createEoaMutation.mutateAsync({
+      managementAccessToken: initResult.managementAccessToken.accessToken,
+    });
+    // } else {
+    // await createEoaMutation.mutateAsync({
+    // managementAccessToken: props.managementAccessToken,
+    // });
+    // }
   };
 
   const handleCloseModal = () => {

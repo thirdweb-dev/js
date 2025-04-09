@@ -56,8 +56,7 @@ export default async function TransactionsServerWalletsPage(props: {
         <div className="flex flex-col gap-8">
           <ServerWalletsTable
             wallets={eoas.data.items as Wallet[]}
-            projectId={project.id}
-            teamId={project.teamId}
+            project={project}
             managementAccessToken={managementAccessToken ?? undefined}
           />
           <KeyManagement

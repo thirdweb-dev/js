@@ -15,16 +15,14 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
-
+import type { Project } from "@/api/projects";
 export function ServerWalletsTableUI({
   wallets,
-  projectId,
-  teamId,
+  project,
   managementAccessToken,
 }: {
   wallets: Wallet[];
-  projectId: string;
-  teamId: string;
+  project: Project;
   managementAccessToken: string | undefined;
 }) {
   return (
@@ -41,8 +39,7 @@ export function ServerWalletsTableUI({
           </div>
         </div>
         <CreateServerWallet
-          projectId={projectId}
-          teamId={teamId}
+          project={project}
           managementAccessToken={managementAccessToken}
         />
       </div>
