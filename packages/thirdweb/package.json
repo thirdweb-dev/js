@@ -199,7 +199,7 @@
     "prompts": "2.4.2",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.24.3"
+    "viem": "2.26.2"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
