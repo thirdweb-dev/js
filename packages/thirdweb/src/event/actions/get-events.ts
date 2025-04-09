@@ -140,6 +140,7 @@ export async function getContractEvents<
       });
     }
   } catch (error) {
+    //biome-ignore lint/suspicious/noConsole: Todo
     console.debug(error);
   }
 
