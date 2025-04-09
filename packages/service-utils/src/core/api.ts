@@ -189,6 +189,8 @@ export type ProjectService =
   | {
       name: "engineCloud";
       actions: never[];
+      maskedAdminKey?: string | null;
+      managementAccessToken?: string | null;
     }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;
