@@ -1,11 +1,7 @@
 "use client";
-
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { CheckboxWithLabel } from "@/components/ui/checkbox";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +12,7 @@ import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
+import { Checkbox } from "@radix-ui/react-checkbox";
 import { useMutation } from "@tanstack/react-query";
 import {
   createAccessToken,
@@ -26,6 +23,8 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
+import { CheckboxWithLabel } from "../../../../../../../@/components/ui/checkbox";
 
 export default function CreateServerWallet(props: {
   projectId: string;
@@ -385,10 +384,19 @@ export default function CreateServerWallet(props: {
           dialogCloseClassName={cn(!keysConfirmed && "hidden")}
         >
           {initialiseProjectWithVaultMutation.isPending ? (
-            <div className="flex flex-col items-center justify-center gap-4 p-10">
-              <Spinner className="size-8" />
-              <DialogTitle>Generating your wallet management keys</DialogTitle>
-            </div>
+            <>
+              <DialogHeader className="p-6">
+                <DialogTitle>
+                  Generating your wallet management keys
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col items-center justify-center gap-4 p-10">
+                <Spinner className="size-8" />
+                <p className="text-muted-foreground text-xs">
+                  This may take a few seconds.
+                </p>
+              </div>
+            </>
           ) : initialiseProjectWithVaultMutation.data ? (
             <div>
               <DialogHeader className="p-6">
@@ -396,18 +404,10 @@ export default function CreateServerWallet(props: {
               </DialogHeader>
 
               <div className="space-y-6 p-6 pt-0">
-                <Alert variant="destructive">
-                  <AlertTitle>Secure your keys</AlertTitle>
-                  <AlertDescription>
-                    These keys will not be displayed again. Store them securely
-                    as they provide access to your server wallets.
-                  </AlertDescription>
-                </Alert>
-
                 <div className="space-y-4">
                   <div>
                     <h3 className="mb-2 font-medium text-sm">Admin Key</h3>
-                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data.serviceAccount
@@ -422,15 +422,14 @@ export default function CreateServerWallet(props: {
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
-                        This key is used to create or modify your server
-                        wallets. Save it in a secure location.
+                        This key is used to create or revoke your access tokens.
                       </p>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="mb-2 font-medium text-sm">Rotation Code</h3>
-                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data.serviceAccount
@@ -446,7 +445,7 @@ export default function CreateServerWallet(props: {
                       />
                       <p className="text-muted-foreground text-xs">
                         This code is used to rotate your admin key in case you
-                        loose it. Save it in a secure location.
+                        loose it.
                       </p>
                     </div>
                   </div>
@@ -455,7 +454,7 @@ export default function CreateServerWallet(props: {
                     <h3 className="mb-2 font-medium text-sm">
                       Wallet Access Token
                     </h3>
-                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2 ">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data
@@ -477,18 +476,29 @@ export default function CreateServerWallet(props: {
                     </div>
                   </div>
                 </div>
+                <Alert variant="destructive">
+                  <AlertTitle>Secure your keys</AlertTitle>
+                  <AlertDescription>
+                    These keys will not be displayed again. Store them securely
+                    as they provide access to your server wallets.
+                  </AlertDescription>
+                  <div className="h-4" />
+                  <CheckboxWithLabel className="text-foreground">
+                    <Checkbox
+                      checked={keysConfirmed}
+                      onCheckedChange={(v) => setKeysConfirmed(!!v)}
+                    />
+                    I confirm that I've securely stored these keys
+                  </CheckboxWithLabel>
+                </Alert>
               </div>
 
-              <div className="flex justify-end gap-3 border-t bg-card p-6">
-                <CheckboxWithLabel className="text-foreground">
-                  <Checkbox
-                    checked={keysConfirmed}
-                    onCheckedChange={(v) => setKeysConfirmed(!!v)}
-                  />
-                  I confirm that I've securely stored these keys
-                </CheckboxWithLabel>
-
-                <Button onClick={handleCloseModal} disabled={!keysConfirmed}>
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button
+                  onClick={handleCloseModal}
+                  disabled={!keysConfirmed}
+                  variant={"primary"}
+                >
                   Close
                 </Button>
               </div>
@@ -501,5 +511,5 @@ export default function CreateServerWallet(props: {
 }
 
 function maskSecret(secret: string) {
-  return `${secret.substring(0, 13)}...${secret.substring(secret.length - 4)}`;
+  return `${secret.substring(0, 11)}...${secret.substring(secret.length - 5)}`;
 }
