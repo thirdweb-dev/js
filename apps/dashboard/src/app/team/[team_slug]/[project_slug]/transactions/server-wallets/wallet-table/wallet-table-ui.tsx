@@ -13,20 +13,38 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
+import CreateServerWallet from "../components/create-server-wallet";
 import type { Wallet } from "./types";
 
-export function ServerWalletsTableUI({ wallets }: { wallets: Wallet[] }) {
+export function ServerWalletsTableUI({
+  wallets,
+  projectId,
+  teamId,
+  managementAccessToken,
+}: {
+  wallets: Wallet[];
+  projectId: string;
+  teamId: string;
+  managementAccessToken: string | undefined;
+}) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
-      <div className="flex flex-col gap-4 rounded-lg rounded-b-none px-6 py-6 lg:flex-row lg:justify-between">
-        <div>
-          <h2 className="font-semibold text-xl tracking-tight">
-            Server Wallets
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Create and manage server wallets for you project
-          </p>
+      <div className="flex flex-row items-center gap-4 px-6 py-6">
+        <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between">
+          <div>
+            <h2 className="font-semibold text-xl tracking-tight">
+              Server Wallets
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Create and manage server wallets for you project
+            </p>
+          </div>
         </div>
+        <CreateServerWallet
+          projectId={projectId}
+          teamId={teamId}
+          managementAccessToken={managementAccessToken}
+        />
       </div>
 
       <TableContainer className="rounded-none border-x-0">
