@@ -1,8 +1,20 @@
 "use client";
 
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CheckboxWithLabel } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -12,6 +24,7 @@ import {
   createVaultClient,
 } from "@thirdweb-dev/vault-sdk";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function CreateServerWallet(props: {
@@ -20,9 +33,13 @@ export default function CreateServerWallet(props: {
   managementAccessToken: string | undefined;
 }) {
   const router = useDashboardRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [keysConfirmed, setKeysConfirmed] = useState(false);
 
   const initialiseProjectWithVaultMutation = useMutation({
     mutationFn: async () => {
+      setModalOpen(true);
+
       const vaultClient = await createVaultClient({
         baseUrl: THIRDWEB_VAULT_URL,
       });
@@ -257,11 +274,8 @@ export default function CreateServerWallet(props: {
         throw new Error("Failed to create access token");
       }
 
-      console.log(JSON.stringify(userAccessTokenRes.data, null, 2));
-      console.log(JSON.stringify(serviceAccount.data, null, 2));
-      console.log(JSON.stringify(managementAccessTokenRes.data, null, 2));
-
-      const apiServerResult = await updateProjectClient(
+      // store the management access token in the project
+      await updateProjectClient(
         {
           projectId: props.projectId,
           teamId: props.teamId,
@@ -278,13 +292,6 @@ export default function CreateServerWallet(props: {
         },
       );
 
-      console.log(apiServerResult);
-
-      // todo: show modal with credentials here
-      // This should display:
-      // - Service Account Admin Key
-      // - Service Account Rotation Code
-      // - "Project Level" Access Token: this allows all EOA operations for this service account, scoped to type, teamId and projectId by metadata
       return {
         serviceAccount: serviceAccount.data,
         userAccessToken: userAccessTokenRes.data,
@@ -293,6 +300,7 @@ export default function CreateServerWallet(props: {
     },
     onError: (error) => {
       toast.error(error.message);
+      setModalOpen(false);
     },
   });
 
@@ -337,62 +345,144 @@ export default function CreateServerWallet(props: {
     },
   });
 
+  const handleCreateServerWallet = async () => {
+    if (!props.managementAccessToken) {
+      const initResult = await initialiseProjectWithVaultMutation.mutateAsync();
+      await createEoaMutation.mutateAsync({
+        managementAccessToken: initResult.managementAccessToken.accessToken,
+      });
+    } else {
+      await createEoaMutation.mutateAsync({
+        managementAccessToken: props.managementAccessToken,
+      });
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (!keysConfirmed) {
+      return;
+    }
+    setModalOpen(false);
+    setKeysConfirmed(false);
+  };
+
+  const isLoading =
+    initialiseProjectWithVaultMutation.isPending || createEoaMutation.isPending;
+
   return (
     <>
       <Button
         variant={"primary"}
-        onClick={async () => {
-          if (!props.managementAccessToken) {
-            const initResult =
-              await initialiseProjectWithVaultMutation.mutateAsync();
-            await createEoaMutation.mutateAsync({
-              managementAccessToken:
-                initResult.managementAccessToken.accessToken,
-            });
-          } else {
-            await createEoaMutation.mutateAsync({
-              managementAccessToken: props.managementAccessToken,
-            });
-          }
-        }}
-        disabled={initialiseProjectWithVaultMutation.isPending}
+        onClick={handleCreateServerWallet}
+        disabled={isLoading}
+        className="flex flex-row items-center gap-2"
       >
-        {initialiseProjectWithVaultMutation.isPending && (
-          <Loader2 className="animate-spin" />
-        )}
+        {isLoading && <Loader2 className="animate-spin" />}
         Create Server Wallet
       </Button>
-      {initialiseProjectWithVaultMutation.data ? (
-        <div>
-          Success! <h1>Admin Key</h1>
-          <p>
-            {initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}
-          </p>
-          <h1>Rotation Code</h1>
-          <p>
-            {
-              initialiseProjectWithVaultMutation.data.serviceAccount
-                .rotationCode
-            }
-          </p>
-          <h1>Access Token</h1>
-          <p>
-            {
-              initialiseProjectWithVaultMutation.data.userAccessToken
-                .accessToken
-            }
-          </p>
-          <h1>Management Access Token</h1>
-          <p>
-            {
-              initialiseProjectWithVaultMutation.data.managementAccessToken
-                .accessToken
-            }
-          </p>
-        </div>
-      ) : (
-        <></>
-      )}
+
+      <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
+        <DialogContent
+          className="overflow-hidden p-0"
+          dialogCloseClassName={cn(!keysConfirmed && "hidden")}
+        >
+          {initialiseProjectWithVaultMutation.isPending ? (
+            <div className="flex flex-col items-center justify-center gap-4 p-10">
+              <Spinner className="size-8" />
+              <DialogTitle>Generating your wallet management keys</DialogTitle>
+            </div>
+          ) : initialiseProjectWithVaultMutation.data ? (
+            <div>
+              <DialogHeader className="p-6">
+                <DialogTitle>Wallet Management Keys</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6 p-6 pt-0">
+                <Alert variant="destructive">
+                  <AlertTitle>Secure your keys</AlertTitle>
+                  <AlertDescription>
+                    These keys cannot be recovered. Store them securely as they
+                    provide access to your wallet.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="mb-2 font-medium text-sm">Admin Key</h3>
+                    <div className="rounded-lg border bg-card p-3">
+                      <CopyTextButton
+                        textToCopy={
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .adminKey
+                        }
+                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        textToShow={maskSecret(
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .adminKey,
+                        )}
+                        copyIconPosition="right"
+                        tooltip="Copy Admin Key"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="mb-2 font-medium text-sm">Rotation Code</h3>
+                    <div className="rounded-lg border bg-card p-3">
+                      <CopyTextButton
+                        textToCopy={
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .rotationCode
+                        }
+                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        textToShow={maskSecret(
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .rotationCode,
+                        )}
+                        copyIconPosition="right"
+                        tooltip="Copy Rotation Code"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="mb-2 font-medium text-sm">Access Token</h3>
+                    <div className="rounded-lg border bg-card p-3">
+                      <CopyTextButton
+                        textToCopy={
+                          initialiseProjectWithVaultMutation.data
+                            .userAccessToken.accessToken
+                        }
+                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        textToShow={maskSecret(
+                          initialiseProjectWithVaultMutation.data
+                            .userAccessToken.accessToken,
+                        )}
+                        copyIconPosition="right"
+                        tooltip="Copy Access Token"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 border-t bg-card p-6">
+                <CheckboxWithLabel className="text-foreground">
+                  <Checkbox
+                    checked={keysConfirmed}
+                    onCheckedChange={(v) => setKeysConfirmed(!!v)}
+                  />
+                  I confirm that I've securely stored these keys
+                </CheckboxWithLabel>
+
+                <Button onClick={handleCloseModal} disabled={!keysConfirmed}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
