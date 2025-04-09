@@ -85,8 +85,9 @@ function TeamNameFormControl(props: {
     >
       <Input
         value={teamName}
+        maxLength={maxTeamNameLength}
         onChange={(e) => {
-          setTeamName(e.target.value.slice(0, maxTeamNameLength));
+          setTeamName(e.target.value);
         }}
         className="md:w-[450px]"
       />
