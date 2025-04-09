@@ -145,8 +145,6 @@ async function sendRequest<P extends Payload>({
     client.publicKey,
   );
 
-  console.log(client);
-
   const vaultApi = ky.create({
     prefixUrl: client.baseUrl,
     headers: {
@@ -155,24 +153,13 @@ async function sendRequest<P extends Payload>({
     throwHttpErrors: false,
   });
 
-  console.log(
-    "Encrypted payload for operation ",
-    request.operation,
-    encryptedPayload,
-  );
-
   const res = await vaultApi
     .post("api/v1/enclave", {
       json: encryptedPayload,
     })
-    .json<EncryptedPayload | UnencryptedErrorResponse>()
-    .catch((e) => {
-      console.log("Error from vault: ", e);
-      throw e;
-    });
+    .json<EncryptedPayload | UnencryptedErrorResponse>();
 
   if (isErrorResponse(res)) {
-    console.log("Error response from vault: ", res);
     return {
       success: false,
       data: null,
@@ -180,14 +167,11 @@ async function sendRequest<P extends Payload>({
     } as Prettify<P["output"]>;
   }
 
-  console.log("Encrypted response:", res);
-
   const decryptedResponse = decryptFromEnclave(
     res,
     ephemeralPrivateKey,
   ) as Prettify<P["output"]>;
 
-  console.log("Decrypted response from vault: ", decryptedResponse);
   return decryptedResponse;
 }
 
