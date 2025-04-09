@@ -452,7 +452,9 @@ export default function CreateServerWallet(props: {
                   </div>
 
                   <div>
-                    <h3 className="mb-2 font-medium text-sm">Access Token</h3>
+                    <h3 className="mb-2 font-medium text-sm">
+                      Wallet Access Token
+                    </h3>
                     <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
                       <CopyTextButton
                         textToCopy={
@@ -465,7 +467,7 @@ export default function CreateServerWallet(props: {
                             .userAccessToken.accessToken,
                         )}
                         copyIconPosition="right"
-                        tooltip="Copy Access Token"
+                        tooltip="Copy Wallet Access Token"
                       />
                       <p className="text-muted-foreground text-xs">
                         This access token is used to send transactions to the
