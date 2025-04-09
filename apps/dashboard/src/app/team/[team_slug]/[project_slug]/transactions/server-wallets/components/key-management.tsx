@@ -1,4 +1,4 @@
-import CreateAccessToken from "./create-access-token";
+import CreateAccessToken from "./create-access-token.client";
 
 export function KeyManagement({
   maskedAdminKey,
