@@ -1,22 +1,20 @@
+import type { Project } from "@/api/projects";
 import type { Wallet } from "./types";
 import { ServerWalletsTableUI } from "./wallet-table-ui.client";
 
 export function ServerWalletsTable({
   wallets,
-  projectId,
-  teamId,
+  project,
   managementAccessToken,
 }: {
   wallets: Wallet[];
-  projectId: string;
-  teamId: string;
+  project: Project;
   managementAccessToken: string | undefined;
 }) {
   return (
     <ServerWalletsTableUI
       wallets={wallets}
-      projectId={projectId}
-      teamId={teamId}
+      project={project}
       managementAccessToken={managementAccessToken}
     />
   );
