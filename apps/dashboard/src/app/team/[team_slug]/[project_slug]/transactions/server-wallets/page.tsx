@@ -1,6 +1,8 @@
 import { getProject } from "@/api/projects";
 import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { notFound } from "next/navigation";
+import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { KeyManagement } from "./components/key-management";
 import { TryItOut } from "./components/try-it-out";
 import type { Wallet } from "./wallet-table/types";
@@ -15,9 +17,16 @@ export default async function TransactionsServerWalletsPage(props: {
 
   const { team_slug, project_slug } = await props.params;
 
-  const project = await getProject(team_slug, project_slug);
+  const [authToken, project] = await Promise.all([
+    getAuthToken(),
+    getProject(team_slug, project_slug),
+  ]);
 
-  const projectEngineCloudService = project?.services.find(
+  if (!project || !authToken) {
+    notFound();
+  }
+
+  const projectEngineCloudService = project.services.find(
     (service) => service.name === "engineCloud",
   );
 
@@ -37,9 +46,7 @@ export default async function TransactionsServerWalletsPage(props: {
       })
     : { data: { items: [] }, error: null, success: true };
 
-  if (!project) {
-    return <div>Error: Project not found</div>;
-  }
+  const wallet = eoas.data?.items[0] as Wallet | undefined;
 
   return (
     <>
@@ -58,7 +65,7 @@ export default async function TransactionsServerWalletsPage(props: {
             projectId={project.id}
             teamId={project.teamId}
           />
-          <TryItOut />
+          <TryItOut authToken={authToken} wallet={wallet} />
         </div>
       )}
     </>
