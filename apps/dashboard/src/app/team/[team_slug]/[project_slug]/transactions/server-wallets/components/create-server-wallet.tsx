@@ -334,8 +334,6 @@ export default function CreateServerWallet(props: {
         throw new Error("Failed to create eoa");
       }
 
-      console.log(JSON.stringify(eoa.data, null, 2));
-
       router.refresh();
 
       return eoa;
@@ -401,15 +399,15 @@ export default function CreateServerWallet(props: {
                 <Alert variant="destructive">
                   <AlertTitle>Secure your keys</AlertTitle>
                   <AlertDescription>
-                    These keys cannot be recovered. Store them securely as they
-                    provide access to your wallet.
+                    These keys will not be displayed again. Store them securely
+                    as they provide access to your server wallets.
                   </AlertDescription>
                 </Alert>
 
                 <div className="space-y-4">
                   <div>
                     <h3 className="mb-2 font-medium text-sm">Admin Key</h3>
-                    <div className="rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data.serviceAccount
@@ -423,12 +421,16 @@ export default function CreateServerWallet(props: {
                         copyIconPosition="right"
                         tooltip="Copy Admin Key"
                       />
+                      <p className="text-muted-foreground text-xs">
+                        This key is used to create or modify your server
+                        wallets. Save it in a secure location.
+                      </p>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="mb-2 font-medium text-sm">Rotation Code</h3>
-                    <div className="rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data.serviceAccount
@@ -442,12 +444,16 @@ export default function CreateServerWallet(props: {
                         copyIconPosition="right"
                         tooltip="Copy Rotation Code"
                       />
+                      <p className="text-muted-foreground text-xs">
+                        This code is used to rotate your admin key in case you
+                        loose it. Save it in a secure location.
+                      </p>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="mb-2 font-medium text-sm">Access Token</h3>
-                    <div className="rounded-lg border bg-card p-3">
+                    <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
                       <CopyTextButton
                         textToCopy={
                           initialiseProjectWithVaultMutation.data
@@ -461,6 +467,11 @@ export default function CreateServerWallet(props: {
                         copyIconPosition="right"
                         tooltip="Copy Access Token"
                       />
+                      <p className="text-muted-foreground text-xs">
+                        This access token is used to send transactions to the
+                        blockchain from your backend. Can be revoked and
+                        recreated with your admin key.
+                      </p>
                     </div>
                   </div>
                 </div>
