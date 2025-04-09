@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { useStripeRedirectEvent } from "../../../../app/stripe-redirect/stripeRedirectChannel";
 import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
+import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 
 // this is used to determine whether to show "Upgrade" or "Downgrade" label based on tier level
 const planToTierRecord: Record<Team["billingPlan"], number> = {
@@ -29,9 +30,6 @@ interface BillingPricingProps {
   trialPeriodEndedAt: string | undefined;
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
 }
-
-const PRO_CONTACT_US_URL =
-  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
 
 type CtaLink =
   | {

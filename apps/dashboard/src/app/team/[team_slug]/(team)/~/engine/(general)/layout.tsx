@@ -1,6 +1,6 @@
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
-import { CreateEngineLink, ImportEngineLink } from "./_components";
+import { ImportEngineLink } from "./_components";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -17,10 +17,6 @@ export default async function Layout(props: {
       exactMatch: true,
     },
     {
-      label: "Create Engine",
-      href: `${linkPrefix}/create`,
-    },
-    {
       label: "Import Engine",
       href: `${linkPrefix}/import`,
     },
@@ -33,11 +29,6 @@ export default async function Layout(props: {
         <div className="container flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
           <h1 className="font-semibold text-3xl tracking-tight">Engines</h1>
           <div className="flex items-center gap-3">
-            <CreateEngineLink
-              label="Create Engine"
-              engineLinkPrefix={linkPrefix}
-            />
-
             <ImportEngineLink
               label="Import Engine"
               engineLinkPrefix={linkPrefix}
