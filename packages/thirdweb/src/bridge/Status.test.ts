@@ -7,7 +7,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   it("should handle successful status", async () => {
     const result = await status({
       transactionHash:
-        "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+        "0x7bedc4693e899fe81a22dac11301e77a12a6e772834bba5b698baf3ebcf86f7a",
       chainId: 8453,
       client: TEST_CLIENT,
     });
@@ -16,21 +16,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
     expect(result.status).toBe("COMPLETED");
     expect(result).toMatchInlineSnapshot(`
       {
-        "destinationAmount": 188625148000000n,
-        "destinationChainId": 2741,
-        "destinationTokenAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        "originAmount": 200000000000000n,
+        "destinationAmount": 500000n,
+        "destinationChainId": 466,
+        "destinationTokenAddress": "0x675C3ce7F43b00045a4Dab954AF36160fb57cB45",
+        "originAmount": 524750n,
         "originChainId": 8453,
-        "originTokenAddress": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        "originTokenAddress": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
         "status": "COMPLETED",
         "transactions": [
           {
             "chainId": 8453,
-            "transactionHash": "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+            "transactionHash": "0x7bedc4693e899fe81a22dac11301e77a12a6e772834bba5b698baf3ebcf86f7a",
           },
           {
-            "chainId": 2741,
-            "transactionHash": "0xa70a82f42330f54be95a542e1fcfe6ed2dd9f07fb8c82ae67afb4342319f7433",
+            "chainId": 466,
+            "transactionHash": "0xb0de713fbe44b7939b3c9cfa02c0233ea659d1163cc4462462e12eef57bc17f1",
           },
         ],
       }
@@ -40,7 +40,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   it("should handle successfull status with chain", async () => {
     const result = await status({
       transactionHash:
-        "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
+        "0x7bedc4693e899fe81a22dac11301e77a12a6e772834bba5b698baf3ebcf86f7a",
       chain: defineChain(8453),
       client: TEST_CLIENT,
     });

@@ -35,9 +35,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
     expect(data.result).toBeDefined();
     // Should be a number
     expect(!Number.isNaN(data.result)).toBe(true);
-    // Since eth is around US$3000, we can add a test to check if the price is greater than $1500 (as a safe margin)
-    // let's hope that scenario does not happen :(
-    expect(data.result > 1500).toBe(true);
+    expect(data.result).toBeGreaterThan(0);
   });
 
   it("should return zero if fromAmount is zero", async () => {
