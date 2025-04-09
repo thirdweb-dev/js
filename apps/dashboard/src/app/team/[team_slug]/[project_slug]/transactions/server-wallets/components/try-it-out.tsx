@@ -4,7 +4,12 @@ import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../../@/constants/env"
 import type { Wallet } from "../wallet-table/types";
 import SendDummyTx from "./send-dummy-tx.client";
 
-export function TryItOut(props: { authToken: string; wallet?: Wallet }) {
+export function TryItOut(props: {
+  authToken: string;
+  wallet?: Wallet;
+  team_slug: string;
+  project_slug: string;
+}) {
   return (
     <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card p-6">
       <div className="flex flex-row items-center gap-4">
@@ -29,7 +34,12 @@ export function TryItOut(props: { authToken: string; wallet?: Wallet }) {
         <div className="flex flex-row justify-end gap-4">
           <Button variant={"secondary"}>View API reference</Button>
           {props.wallet && (
-            <SendDummyTx authToken={props.authToken} wallet={props.wallet} />
+            <SendDummyTx
+              authToken={props.authToken}
+              wallet={props.wallet}
+              team_slug={props.team_slug}
+              project_slug={props.project_slug}
+            />
           )}
         </div>
       </div>

@@ -64,7 +64,12 @@ export default async function TransactionsServerWalletsPage(props: {
             projectId={project.id}
             teamId={project.teamId}
           />
-          <TryItOut authToken={authToken} wallet={wallet} />
+          <TryItOut
+            authToken={authToken}
+            wallet={wallet}
+            team_slug={team_slug}
+            project_slug={project_slug}
+          />
         </div>
       )}
     </>
