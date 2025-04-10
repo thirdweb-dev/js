@@ -6,18 +6,17 @@ import zeroGCTA from "./temp-assets/0gCTA.png";
 import zeroGBanner from "./temp-assets/0gLabsBanner.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
-import ancient8Banner from "./temp-assets/ancient8-banner.png";
-import assetChainBanner from "./temp-assets/assetChainBanner.png";
-import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
-
+import cotiBanner from "./temp-assets/COTI_Banner.jpg";
+import cotiCTA from "./temp-assets/COTI_CTA.jpg";
 import hemiSepoliaBanner from "./temp-assets/HemiBanner.png";
 import hemiSepoliaCTA from "./temp-assets/HemiCTA.png";
+import ancient8Banner from "./temp-assets/ancient8-banner.png";
 import appChainBanner from "./temp-assets/appChainBanner.jpg";
 // TEMPORARY
 import appchainCTA from "./temp-assets/appchainCTA.png";
+import assetChainBanner from "./temp-assets/assetChainBanner.png";
+import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 import baseBanner from "./temp-assets/base-banner.jpeg";
-import cotiBanner from "./temp-assets/COTI_Banner.jpg";
-import cotiCTA from "./temp-assets/COTI_CTA.jpg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
