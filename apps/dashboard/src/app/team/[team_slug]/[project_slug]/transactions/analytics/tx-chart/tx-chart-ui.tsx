@@ -12,7 +12,7 @@ import { DocLink } from "components/shared/DocLink";
 import { formatDate } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
-import type { UserOpStats } from "types/analytics";
+import type { TransactionStats } from "types/analytics";
 import { formatTickerNumber } from "../../../../../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
@@ -25,7 +25,7 @@ type ChartData = Record<string, number> & {
 // TODO - update the name of the component to something more relevant
 export function TransactionsChartCardUI(props: {
   // TODO - update this
-  userOpStats: UserOpStats[];
+  userOpStats: TransactionStats[];
   isPending: boolean;
 }) {
   const { userOpStats } = props;
@@ -43,20 +43,20 @@ export function TransactionsChartCardUI(props: {
       const { chainId } = stat;
       const chain = chainsStore.idToChain.get(Number(chainId));
 
-      const chainName = chain?.name || chainId || "Unknown";
+      const chainName = chain?.name || chainId.toString() || "Unknown";
       // if no data for current day - create new entry
       if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: stat.date,
-          [chainName]: stat.successful,
+          [chainName]: stat.count,
         } as ChartData);
       } else {
-        chartData[chainName] = (chartData[chainName] || 0) + stat.successful;
+        chartData[chainName] = (chartData[chainName] || 0) + stat.count;
       }
 
       chainIdToVolumeMap.set(
         chainName,
-        stat.successful + (chainIdToVolumeMap.get(chainName) || 0),
+        stat.count + (chainIdToVolumeMap.get(chainName) || 0),
       );
     }
 
@@ -108,10 +108,10 @@ export function TransactionsChartCardUI(props: {
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
-            Lorem Ipsum
+            Daily Transactions
           </h3>
           <p className="text-muted-foreground text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Amount of daily transactions by chain.
           </p>
 
           <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
