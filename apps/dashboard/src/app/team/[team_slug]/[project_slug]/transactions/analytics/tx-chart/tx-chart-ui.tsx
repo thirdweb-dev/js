@@ -2,18 +2,14 @@
 
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { Button } from "@/components/ui/button";
 import type { ChartConfig } from "@/components/ui/chart";
-import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
-import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
-import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
-import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
-import { DocLink } from "components/shared/DocLink";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { formatDate } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
+import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
 import type { TransactionStats } from "types/analytics";
-import { formatTickerNumber } from "../../../../../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
   time: string;
@@ -27,6 +23,8 @@ export function TransactionsChartCardUI(props: {
   // TODO - update this
   userOpStats: TransactionStats[];
   isPending: boolean;
+  project_slug: string;
+  team_slug: string;
 }) {
   const { userOpStats } = props;
   const topChainsToShow = 10;
@@ -148,54 +146,39 @@ export function TransactionsChartCardUI(props: {
         return undefined;
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
-      emptyChartState={<EmptyChartContent />}
+      emptyChartState={
+        <EmptyChartContent
+          project_slug={props.project_slug}
+          team_slug={props.team_slug}
+        />
+      }
     />
   );
 }
 
 // TODO - update the title and doc links
-function EmptyChartContent() {
+function EmptyChartContent(props: {
+  project_slug: string;
+  team_slug: string;
+}) {
+  const router = useDashboardRouter();
   return (
     <div className="flex flex-col items-center justify-center px-4">
       {/* TODO - update this */}
-      <span className="mb-6 text-center text-lg">Foo BAR</span>
+      <span className="mb-6 text-center text-lg">
+        Create a server wallet and send your first transaction to get started
+      </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/batching-transactions"
-          label="TypeScript"
-          icon={TypeScriptIcon}
-        />
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/react/v5/account-abstraction/batching-transactions"
-          label="React"
-          icon={ReactIcon}
-        />
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
-          label="React Native"
-          icon={ReactIcon}
-        />
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/unity/v5/wallets/account-abstraction"
-          label="Unity"
-          icon={UnityIcon}
-        />
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/unreal-engine/blueprints/smart-wallet"
-          label="Unreal Engine"
-          icon={UnrealIcon}
-        />
-        {/* TODO - replace this */}
-        <DocLink
-          link="https://portal.thirdweb.com/dotnet/wallets/providers/account-abstraction"
-          label=".NET"
-          icon={DotNetIcon}
-        />
+        <Button
+          variant="primary"
+          onClick={() => {
+            router.push(
+              `/team/${props.team_slug}/${props.project_slug}/transactions/server-wallets`,
+            );
+          }}
+        >
+          Create a server wallet
+        </Button>
       </div>
     </div>
   );

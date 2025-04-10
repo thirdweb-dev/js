@@ -11,6 +11,8 @@ export function TransactionsAnalyticsPageContent(props: {
   };
   teamId: string;
   clientId: string;
+  project_slug: string;
+  team_slug: string;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -24,6 +26,8 @@ export function TransactionsAnalyticsPageContent(props: {
             searchParams={props.searchParams}
             teamId={props.teamId}
             clientId={props.clientId}
+            project_slug={props.project_slug}
+            team_slug={props.team_slug}
           />
           <TransactionsTable teamId={props.teamId} clientId={props.clientId} />
         </div>
