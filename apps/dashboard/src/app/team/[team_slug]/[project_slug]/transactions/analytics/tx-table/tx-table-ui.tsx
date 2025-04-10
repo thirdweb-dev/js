@@ -35,133 +35,33 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
-// Copied from Engine overview page
-
-type Transaction = {
-  queueId?: string | null;
-  chainId?: string | null;
-  fromAddress?: string | null;
-  // toAddress?: string | null;
-  // data?: string | null;
-  // extension?: string | null;
-  // value?: string | null;
-  // nonce?: number | null;
-  // gasLimit?: string | null;
-  // gasPrice?: string | null;
-  // maxFeePerGas?: string | null;
-  // maxPriorityFeePerGas?: string | null;
-  // effectiveGasPrice?: string | null;
-  // transactionType?: number | null;
-  transactionHash?: string | null;
-  queuedAt?: string | null;
-  // processedAt?: string | null;
-  // sentAt?: string | null;
-  minedAt?: string | null;
-  // cancelledAt?: string | null;
-  // deployedContractAddress?: string | null;
-  // deployedContractType?: string | null;
-  errorMessage?: string | null;
-  // sentAtBlockNumber?: number | null;
-  blockNumber?: number | null;
-  status?: string | null;
-  // retryCount: number;
-  // retryGasValues?: boolean | null;
-  // retryMaxFeePerGas?: string | null;
-  // retryMaxPriorityFeePerGas?: string | null;
-  // signerAddress?: string | null;
-  // accountAddress?: string | null;
-  // target?: string | null;
-  // sender?: string | null;
-  // initCode?: string | null;
-  // callData?: string | null;
-  // callGasLimit?: string | null;
-  // verificationGasLimit?: string | null;
-  // preVerificationGas?: string | null;
-  // paymasterAndData?: string | null;
-  // userOpHash?: string | null;
-  // functionName?: string | null;
-  // functionArgs?: string | null;
-};
-
-type TransactionResponse = {
-  transactions: Transaction[];
-  totalCount: number;
-};
-
-type EngineStatus =
-  | "errored"
-  | "mined"
-  | "cancelled"
-  | "sent"
-  | "retried"
-  | "processed"
-  | "queued"
-  | "user-op-sent";
-
-const statusDetails: Record<
-  EngineStatus,
-  {
-    name: string;
-    type: "success" | "destructive" | "warning";
-  }
-> = {
-  mined: {
-    name: "Mined",
-    type: "success",
-  },
-  errored: {
-    name: "Failed",
-    type: "destructive",
-  },
-  cancelled: {
-    name: "Cancelled",
-    type: "destructive",
-  },
-  queued: {
-    name: "Queued",
-    type: "warning",
-  },
-  processed: {
-    name: "Processed",
-    type: "warning",
-  },
-  sent: {
-    name: "Sent",
-    type: "warning",
-  },
-  "user-op-sent": {
-    name: "User Op Sent",
-    type: "warning",
-  },
-  retried: {
-    name: "Retried",
-    type: "success",
-  },
-};
+import type {
+  Transaction,
+  TransactionsResponse,
+  TransactionStatus,
+} from "./types";
 
 // TODO - add Status selector dropdown here
 export function TransactionsTableUI(props: {
-  getData: (params: {
-    page: number;
-    status: EngineStatus | undefined;
-  }) => Promise<TransactionResponse>;
+  getData: (params: { page: number }) => Promise<TransactionsResponse>;
 }) {
   const [autoUpdate, setAutoUpdate] = useState(true);
+  const [status, setStatus] = useState<TransactionStatus | undefined>(
+    undefined,
+  );
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState<EngineStatus | undefined>(undefined);
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", page, status],
-    queryFn: () => props.getData({ page, status }),
+    queryKey: ["transactions", page],
+    queryFn: () => props.getData({ page }),
     refetchInterval: autoUpdate ? 4_000 : false,
     placeholderData: keepPreviousData,
   });
 
   const transactions = transactionsQuery.data?.transactions ?? [];
 
-  const totalCount = transactionsQuery.data?.totalCount ?? 0;
+  const totalCount = transactionsQuery.data?.pagination.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / pageSize);
   const showPagination = totalCount > pageSize;
 
@@ -225,13 +125,13 @@ export function TransactionsTableUI(props: {
               <>
                 {transactions.map((tx) => (
                   <TableRow
-                    key={`${tx.queueId}${tx.chainId}${tx.blockNumber}`}
+                    key={`${tx.id}${tx.chainId}`}
                     className="cursor-pointer hover:bg-accent/50"
                   >
                     {/* Queue ID */}
                     <TableCell className="font-medium">
                       <CopyAddressButton
-                        address={tx.queueId ? tx.queueId : ""}
+                        address={tx.id ? tx.id : ""}
                         copyIconPosition="left"
                         variant="ghost"
                         className="text-muted-foreground"
@@ -250,11 +150,7 @@ export function TransactionsTableUI(props: {
 
                     {/* From Address */}
                     <TableCell>
-                      {tx.fromAddress ? (
-                        <WalletAddress address={tx.fromAddress} />
-                      ) : (
-                        "N/A"
-                      )}
+                      {tx.from ? <WalletAddress address={tx.from} /> : "N/A"}
                     </TableCell>
 
                     {/* Tx Hash */}
@@ -293,11 +189,30 @@ export function TransactionsTableUI(props: {
   );
 }
 
+const statusDetails = {
+  QUEUED: {
+    name: "Queued",
+    type: "warning",
+  },
+  SUBMITTED: {
+    name: "Submitted",
+    type: "warning",
+  },
+  CONFIRMED: {
+    name: "Confirmed",
+    type: "success",
+  },
+  REVERTED: {
+    name: "Reverted",
+    type: "destructive",
+  },
+} as const;
+
 function StatusSelector(props: {
-  status: EngineStatus | undefined;
-  setStatus: (value: EngineStatus | undefined) => void;
+  status: TransactionStatus | undefined;
+  setStatus: (value: TransactionStatus | undefined) => void;
 }) {
-  const statuses = Object.keys(statusDetails) as EngineStatus[];
+  const statuses = Object.keys(statusDetails) as TransactionStatus[];
 
   return (
     <Select
@@ -306,7 +221,7 @@ function StatusSelector(props: {
         if (v === "all") {
           props.setStatus(undefined);
         } else {
-          props.setStatus(v as EngineStatus);
+          props.setStatus(v as TransactionStatus);
         }
       }}
     >
@@ -383,20 +298,27 @@ function TxChainCell(props: { chainId: string | undefined }) {
   );
 }
 
-function TxStatusCell(props: {
-  transaction: Transaction;
-}) {
+function TxStatusCell(props: { transaction: Transaction }) {
   const { transaction } = props;
-  const { errorMessage, minedAt } = transaction;
-  const status = (transaction.status as EngineStatus) ?? null;
+  const { errorMessage } = transaction;
+  const minedAt = transaction.confirmedAt;
+  const status =
+    (transaction.executionResult?.status as TransactionStatus) ?? null;
+
+  const onchainStatus =
+    transaction.executionResult &&
+    "onchainStatus" in transaction.executionResult
+      ? transaction.executionResult.onchainStatus
+      : null;
+
   if (!status) {
     return null;
   }
 
   const tooltip =
-    status === "errored"
+    onchainStatus !== "REVERTED"
       ? errorMessage
-      : (status === "mined" || status === "retried") && minedAt
+      : status === "CONFIRMED" && minedAt
         ? `Completed ${format(new Date(minedAt), "PP pp")}`
         : undefined;
 
@@ -456,7 +378,7 @@ function TxHashCell(props: { transaction: Transaction }) {
 }
 
 function TxQueuedAtCell(props: { transaction: Transaction }) {
-  const value = props.transaction.queuedAt;
+  const value = props.transaction.createdAt;
   if (!value) {
     return;
   }
