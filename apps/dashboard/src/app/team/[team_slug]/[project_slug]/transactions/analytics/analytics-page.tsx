@@ -20,7 +20,11 @@ export function TransactionsAnalyticsPageContent(props: {
         </div>
         <div className="h-6" />
         <div className="flex grow flex-col gap-6">
-          <TransactionsChartCard searchParams={props.searchParams} />
+          <TransactionsChartCard
+            searchParams={props.searchParams}
+            teamId={props.teamId}
+            clientId={props.clientId}
+          />
           <TransactionsTable teamId={props.teamId} clientId={props.clientId} />
         </div>
       </div>
