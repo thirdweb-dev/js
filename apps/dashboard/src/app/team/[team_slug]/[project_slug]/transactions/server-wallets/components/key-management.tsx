@@ -5,7 +5,7 @@ export function KeyManagement({
   projectId,
   teamId,
 }: { maskedAdminKey?: string; projectId: string; teamId: string }) {
-  return (
+  return maskedAdminKey ? (
     <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card p-6">
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between">
@@ -26,5 +26,5 @@ export function KeyManagement({
         <p className="text-muted-foreground text-sm">{maskedAdminKey}</p>
       </div>
     </div>
-  );
+  ) : null;
 }
