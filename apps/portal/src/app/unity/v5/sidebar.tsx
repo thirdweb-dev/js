@@ -108,8 +108,8 @@ export const sidebar: SideBar = {
           icon: <ExternalLinkIcon />,
         },
         {
-          name: "Payments",
-          href: "/dotnet/pay/quickstart",
+          name: "Universal Bridge",
+          href: "/dotnet/universal-bridge/quickstart",
           icon: <ExternalLinkIcon />,
         },
       ],
