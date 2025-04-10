@@ -343,17 +343,16 @@ export default function CreateServerWallet(props: {
   });
 
   const handleCreateServerWallet = async () => {
-    // FIXME uncomment this
-    // if (!props.managementAccessToken) {
-    const initResult = await initialiseProjectWithVaultMutation.mutateAsync();
-    await createEoaMutation.mutateAsync({
-      managementAccessToken: initResult.managementAccessToken.accessToken,
-    });
-    // } else {
-    // await createEoaMutation.mutateAsync({
-    // managementAccessToken: props.managementAccessToken,
-    // });
-    // }
+    if (!props.managementAccessToken) {
+      const initResult = await initialiseProjectWithVaultMutation.mutateAsync();
+      await createEoaMutation.mutateAsync({
+        managementAccessToken: initResult.managementAccessToken.accessToken,
+      });
+    } else {
+      await createEoaMutation.mutateAsync({
+        managementAccessToken: props.managementAccessToken,
+      });
+    }
   };
 
   const handleCloseModal = () => {
