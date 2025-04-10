@@ -259,6 +259,7 @@ export async function getBuyWithCryptoQuote(
         data: data.transactionRequest.data as Hash,
         to: data.transactionRequest.to,
         value: BigInt(data.transactionRequest.value),
+        extraGas: 50000n, // extra gas buffer
       },
       approvalData,
       swapDetails: {
