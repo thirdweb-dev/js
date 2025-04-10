@@ -8,6 +8,7 @@ import type { Ecosystem } from "../wallet/types.js";
 export type GetUserResult = {
   userId: string;
   walletAddress: string;
+  smartAccountAddress?: string;
   email?: string;
   phone?: string;
   createdAt: string;
@@ -100,6 +101,7 @@ export async function getUser({
   const data = (await res.json()) as {
     userId: string;
     walletAddress: string;
+    smartAccountAddress?: string;
     email?: string;
     phone?: string;
     createdAt: string;
@@ -110,6 +112,7 @@ export async function getUser({
     data.map((item) => ({
       userId: item.userId,
       walletAddress: item.walletAddress,
+      smartAccountAddress: item.smartAccountAddress,
       email: item.email,
       phone: item.phone,
       createdAt: item.createdAt,
