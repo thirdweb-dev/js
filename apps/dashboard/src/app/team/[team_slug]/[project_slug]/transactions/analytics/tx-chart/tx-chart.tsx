@@ -109,6 +109,11 @@ async function getTransactionsChart({
   );
 
   if (!response.ok) {
+    if (response.status === 401) {
+      return [];
+    }
+
+    // TODO - need to handle this error state, like we do with the connect charts
     throw new Error(
       `Error fetching transactions chart data: ${response.status} ${response.statusText}`,
     );
