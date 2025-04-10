@@ -47,8 +47,9 @@ export default async function TransactionsAnalyticsPage(props: {
         searchParams={searchParams}
         teamId={project.teamId}
         clientId={project.publishableKey}
+        project_slug={params.project_slug}
+        team_slug={params.team_slug}
       />
     </div>
   );
 }
-
