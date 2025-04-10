@@ -83,7 +83,7 @@ export function getLastNDaysRange(id: DurationId) {
     throw new Error("Invalid duration id");
   }
 
-  const todayDate = new Date();
+  const todayDate = new Date(Date.now() + 1000 * 60 * 60 * 24); // add 1 day to avoid timezone issues
 
   const value: Range = {
     type: id,

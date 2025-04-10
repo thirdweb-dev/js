@@ -1,6 +1,11 @@
 import { differenceInDays } from "date-fns";
 import { ResponsiveSuspense } from "responsive-rsc";
-import type { UserOpStats } from "../../../../../../../types/analytics";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../../@/constants/env";
+import type {
+  TransactionStats,
+  UserOpStats,
+} from "../../../../../../../types/analytics";
+import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { getTxAnalyticsFiltersFromSearchParams } from "../getTransactionAnalyticsFilter";
 import { TransactionsChartCardUI } from "./tx-chart-ui";
 
@@ -8,10 +13,16 @@ async function AsyncTransactionsChartCard(props: {
   from: string;
   to: string;
   interval: "day" | "week";
+  teamId: string;
+  clientId: string;
 }) {
-  // TODO - remove stub, implement it
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  const data = getTransactionChartStub(props.from, props.to, props.interval);
+  const data = await getTransactionsChart({
+    teamId: props.teamId,
+    clientId: props.clientId,
+    from: props.from,
+    to: props.to,
+    interval: props.interval,
+  });
 
   return <TransactionsChartCardUI isPending={false} userOpStats={data} />;
 }
@@ -22,6 +33,8 @@ export function TransactionsChartCard(props: {
     to?: string | undefined | string[];
     interval?: string | undefined | string[];
   };
+  teamId: string;
+  clientId: string;
 }) {
   const { range, interval } = getTxAnalyticsFiltersFromSearchParams(
     props.searchParams,
@@ -37,6 +50,8 @@ export function TransactionsChartCard(props: {
         from={range.from.toISOString()}
         to={range.to.toISOString()}
         interval={interval}
+        teamId={props.teamId}
+        clientId={props.clientId}
       />
     </ResponsiveSuspense>
   );
@@ -75,4 +90,69 @@ function getTransactionChartStub(
   }
 
   return stub;
+}
+
+async function getTransactionsChart({
+  teamId,
+  clientId,
+  from,
+  to,
+  interval,
+}: {
+  teamId: string;
+  clientId: string;
+  from: string;
+  to: string;
+  interval: "day" | "week";
+}): Promise<TransactionStats[]> {
+  const authToken = await getAuthToken();
+
+  const filters = {
+    startDate: from,
+    endDate: to,
+    resolution: interval,
+  };
+
+  const response = await fetch(
+    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-team-id": teamId,
+        "x-client-id": clientId,
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(filters),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Error fetching transactions chart data: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  type TransactionsChartResponse = {
+    result: {
+      analytics: Array<{
+        timeBucket: string;
+        chainId: string;
+        count: number;
+      }>;
+      metadata: {
+        resolution: string;
+        startDate: string;
+        endDate: string;
+      };
+    };
+  };
+
+  const data = (await response.json()) as TransactionsChartResponse;
+
+  return data.result.analytics.map((stat) => ({
+    date: stat.timeBucket,
+    chainId: Number(stat.chainId),
+    count: stat.count,
+  }));
 }
