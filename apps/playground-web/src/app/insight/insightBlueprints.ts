@@ -3,6 +3,24 @@ import type { MinimalBlueprintSpec } from "./utils";
 
 export const insightBlueprints: MinimalBlueprintSpec[] = [
   {
+    id: "events",
+    name: "Events",
+    paths: [
+      {
+        name: "Get events",
+        path: "/v1/events",
+      },
+      {
+        name: "Get contract events",
+        path: "/v1/events/{contractAddress}",
+      },
+      {
+        name: "Get contract events with specific signature",
+        path: "/v1/events/{contractAddress}/{signature}",
+      },
+    ],
+  },
+  {
     id: "transactions",
     name: "Transactions",
     paths: [
@@ -18,27 +36,15 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
         name: "Get contract transactions with specific signature",
         path: "/v1/transactions/{contractAddress}/{signature}",
       },
-      {
-        name: "Get wallet transactions",
-        path: "/v1/wallets/{wallet_address}/transactions",
-      },
     ],
   },
   {
-    id: "events",
-    name: "Events",
+    id: "blocks",
+    name: "Blocks",
     paths: [
       {
-        name: "Get events",
-        path: "/v1/events",
-      },
-      {
-        name: "Get contract events",
-        path: "/v1/events/{contractAddress}",
-      },
-      {
-        name: "Get contract events with specific signature",
-        path: "/v1/events/{contractAddress}/{signature}",
+        name: "Get blocks",
+        path: "/v1/blocks",
       },
     ],
   },
@@ -81,50 +87,6 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       {
         name: "Token lookup",
         path: "/v1/tokens/lookup",
-      },
-    ],
-  },
-  {
-    id: "resolve",
-    name: "Resolve",
-    paths: [
-      {
-        name: "Resolve",
-        path: "/v1/resolve/{input}",
-      },
-    ],
-  },
-  {
-    id: "blocks",
-    name: "Blocks",
-    paths: [
-      {
-        name: "Get blocks",
-        path: "/v1/blocks",
-      },
-    ],
-  },
-  {
-    id: "contracts",
-    name: "Contracts",
-    paths: [
-      {
-        name: "Get contract ABI​",
-        path: "/v1/contracts/abi/{contractAddress}",
-      },
-      {
-        name: "Get contract metadata​",
-        path: "/v1/contracts/metadata/{contractAddress}",
-      },
-    ],
-  },
-  {
-    id: "decode",
-    name: "Decode",
-    paths: [
-      {
-        name: "Unknown",
-        path: "/v1/decode/{contractAddress}",
       },
     ],
   },
@@ -189,6 +151,40 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       {
         name: "Get wallet transactions",
         path: "/v1/wallets/{wallet_address}/transactions",
+      },
+    ],
+  },
+  {
+    id: "contracts",
+    name: "Contracts",
+    paths: [
+      {
+        name: "Get contract ABI​",
+        path: "/v1/contracts/abi/{contractAddress}",
+      },
+      {
+        name: "Get contract metadata​",
+        path: "/v1/contracts/metadata/{contractAddress}",
+      },
+    ],
+  },
+  {
+    id: "decode",
+    name: "Decode",
+    paths: [
+      {
+        name: "Decode logs and transactions​",
+        path: "/v1/decode/{contractAddress}",
+      },
+    ],
+  },
+  {
+    id: "resolve",
+    name: "Resolve",
+    paths: [
+      {
+        name: "Resolve",
+        path: "/v1/resolve/{input}",
       },
     ],
   },
