@@ -43,7 +43,12 @@ export default async function TransactionsAnalyticsPage(props: {
         projectId={project.id}
       />
       <div className="h-10" />
-      <TransactionsAnalyticsPageContent searchParams={searchParams} />
+      <TransactionsAnalyticsPageContent
+        searchParams={searchParams}
+        teamId={project.teamId}
+        clientId={project.publishableKey}
+      />
     </div>
   );
 }
+
