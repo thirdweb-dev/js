@@ -9,6 +9,8 @@ export function TransactionsAnalyticsPageContent(props: {
     to?: string | undefined | string[];
     interval?: string | undefined | string[];
   };
+  teamId: string;
+  clientId: string;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -19,7 +21,7 @@ export function TransactionsAnalyticsPageContent(props: {
         <div className="h-6" />
         <div className="flex grow flex-col gap-6">
           <TransactionsChartCard searchParams={props.searchParams} />
-          <TransactionsTable />
+          <TransactionsTable teamId={props.teamId} clientId={props.clientId} />
         </div>
       </div>
     </ResponsiveSearchParamsProvider>
