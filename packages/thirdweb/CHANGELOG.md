@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.17
+
+### Patch Changes
+
+- [#6693](https://github.com/thirdweb-dev/js/pull/6693) [`c1d6bb7`](https://github.com/thirdweb-dev/js/commit/c1d6bb784812a8a2d5524ecf9fa70cb1132542fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Extra gas buffer for quote and transfer transactions
+
 ## 5.93.16
 
 ### Patch Changes
