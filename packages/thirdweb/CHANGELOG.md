@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.93.16
+
+### Patch Changes
+
+- [#6690](https://github.com/thirdweb-dev/js/pull/6690) [`0a798c5`](https://github.com/thirdweb-dev/js/commit/0a798c58b3a8c6788713c6ccdc8a1cae13246302) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add smartAccountAddress to getUser result
+
 ## 5.93.15
 
 ### Patch Changes
