@@ -36,6 +36,7 @@ export function ClaimConditionsClient(props: {
       contract={props.contract}
       isERC20={supportedERCs.isERC20}
       twAccount={props.twAccount}
+      isMultiphase={true}
     />
   );
 }

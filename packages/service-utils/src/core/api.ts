@@ -82,13 +82,23 @@ type TeamCapabilities = {
   };
 };
 
+type TeamPlan =
+  | "free"
+  | "starter"
+  | "starter_legacy"
+  | "growth_legacy"
+  | "growth"
+  | "accelerate"
+  | "scale"
+  | "pro";
+
 export type TeamResponse = {
   id: string;
   name: string;
   slug: string;
   image: string | null;
-  billingPlan: "free" | "starter" | "growth" | "pro";
-  supportPlan: "free" | "starter" | "growth" | "pro";
+  billingPlan: TeamPlan;
+  supportPlan: TeamPlan;
   billingPlanVersion: number;
   createdAt: string;
   updatedAt: string | null;

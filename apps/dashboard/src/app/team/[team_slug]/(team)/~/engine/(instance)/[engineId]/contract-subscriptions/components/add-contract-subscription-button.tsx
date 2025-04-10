@@ -184,8 +184,7 @@ const ModalBodyInputContract = ({
   form,
   setModalState,
 }: {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
+  form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
 }) => {
   return (
@@ -278,8 +277,7 @@ const ModalBodyInputData = ({
   form,
   setModalState,
 }: {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
+  form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
 }) => {
   const processEventLogsDisclosure = useDisclosure({
@@ -466,8 +464,8 @@ const FilterSelector = ({
   setFilter,
 }: {
   abiItemType: "function" | "event";
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
+
+  form: UseFormReturn<AddContractSubscriptionForm>;
   filter: string[];
   setFilter: (value: string[]) => void;
 }) => {

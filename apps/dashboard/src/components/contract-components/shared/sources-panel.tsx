@@ -1,5 +1,5 @@
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import type { Abi } from "abitype";
-import { Link, Text } from "tw-components";
 import type { SourceFile } from "../types";
 import { SourcesAccordion } from "./sources-accordion";
 
@@ -15,16 +15,15 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
         {sources && sources?.length > 0 ? (
           <SourcesAccordion sources={sources} abi={abi} />
         ) : (
-          <Text>
+          <p className="text-muted-foreground text-sm">
             Contract source code not available. Try deploying with{" "}
-            <Link
+            <UnderlineLink
               href="https://portal.thirdweb.com/contracts/deploy/overview"
-              isExternal
-              color="primary.500"
+              target="_blank"
             >
               thirdweb CLI v0.5+
-            </Link>
-          </Text>
+            </UnderlineLink>
+          </p>
         )}
       </div>
     </div>

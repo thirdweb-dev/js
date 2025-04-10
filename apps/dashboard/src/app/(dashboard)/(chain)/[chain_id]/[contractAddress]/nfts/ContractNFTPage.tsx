@@ -60,7 +60,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <h2 className="font-semibold text-2xl tracking-tight">Contract NFTs</h2>
+        <h2 className="font-semibold text-2xl tracking-tight">NFTs</h2>
         <div className="grid grid-cols-2 gap-2 md:flex">
           {isRevealable && (
             <NFTRevealButton contract={contract} twAccount={twAccount} />

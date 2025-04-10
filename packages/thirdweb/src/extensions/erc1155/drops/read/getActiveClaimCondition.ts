@@ -9,6 +9,10 @@ import {
   getClaimConditionById,
   isGetClaimConditionByIdSupported,
 } from "../../__generated__/IDrop1155/read/getClaimConditionById.js";
+import {
+  claimCondition,
+  isClaimConditionSupported,
+} from "../../__generated__/IDropSinglePhase1155/read/claimCondition.js";
 
 export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
 /**
@@ -26,12 +30,43 @@ export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
 export async function getActiveClaimCondition(
   options: BaseTransactionOptions<GetActiveClaimConditionParams>,
 ): Promise<ClaimCondition> {
-  try {
+  const getActiveClaimConditionMultiPhase = async () => {
     const conditionId = await getActiveClaimConditionId(options);
     return getClaimConditionById({ ...options, conditionId });
-  } catch {
-    throw new Error("Claim condition not found");
+  };
+
+  const getActiveClaimConditionSinglePhase = async () => {
+    const [
+      startTimestamp,
+      maxClaimableSupply,
+      supplyClaimed,
+      quantityLimitPerWallet,
+      merkleRoot,
+      pricePerToken,
+      currency,
+      metadata,
+    ] = await claimCondition({ ...options, tokenId: options.tokenId });
+    return {
+      startTimestamp,
+      maxClaimableSupply,
+      supplyClaimed,
+      quantityLimitPerWallet,
+      merkleRoot,
+      pricePerToken,
+      currency,
+      metadata,
+    };
+  };
+  const results = await Promise.allSettled([
+    getActiveClaimConditionMultiPhase(),
+    getActiveClaimConditionSinglePhase(),
+  ]);
+
+  const condition = results.find((result) => result.status === "fulfilled");
+  if (condition?.status === "fulfilled") {
+    return condition.value;
   }
+  throw new Error("Claim condition not found");
 }
 
 /**
@@ -49,9 +84,10 @@ export async function getActiveClaimCondition(
 export function isGetActiveClaimConditionSupported(
   availableSelectors: string[],
 ) {
-  // if multi phase is supported, return true
   return (
-    isGetActiveClaimConditionIdSupported(availableSelectors) &&
-    isGetClaimConditionByIdSupported(availableSelectors)
+    // check multi-phase
+    (isGetActiveClaimConditionIdSupported(availableSelectors) &&
+      isGetClaimConditionByIdSupported(availableSelectors)) ||
+    isClaimConditionSupported(availableSelectors) // check single phase
   );
 }

@@ -3,6 +3,7 @@ import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
 } from "components/contract-components/fetch-contracts-with-versions";
+import { ZERO_FEE_VERSIONS } from "constants/fee-config";
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
@@ -46,6 +47,10 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     publishedContractVersions.find((v) => v.version === props.version) ||
     publishedContractVersions[0];
 
+  const publishedContractNoFee = publishedContractVersions.find(
+    (v) => v.version === ZERO_FEE_VERSIONS[v.name],
+  );
+
   if (!publishedContract) {
     return null;
   }
@@ -53,22 +58,30 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
   const moduleUris = modules
     .filter((m) => m !== null && m !== undefined)
     .map((m) => m.publishMetadataUri);
-  const [contractMetadata, ...fetchedModules] = await Promise.all([
-    fetchDeployMetadata({
-      client,
-      // force `ipfs://` prefix
-      uri: publishedContract.publishMetadataUri.startsWith("ipfs://")
-        ? publishedContract.publishMetadataUri
-        : `ipfs://${publishedContract.publishMetadataUri}`,
-    }).catch(() => null),
-    ...(moduleUris || []).map((uri) =>
+  const [contractMetadata, contractMetadataNoFee, ...fetchedModules] =
+    await Promise.all([
       fetchDeployMetadata({
         client,
         // force `ipfs://` prefix
-        uri: uri.startsWith("ipfs://") ? uri : `ipfs://${uri}`,
+        uri: publishedContract.publishMetadataUri.startsWith("ipfs://")
+          ? publishedContract.publishMetadataUri
+          : `ipfs://${publishedContract.publishMetadataUri}`,
       }).catch(() => null),
-    ),
-  ]);
+      fetchDeployMetadata({
+        client,
+        // force `ipfs://` prefix
+        uri: publishedContractNoFee?.publishMetadataUri.startsWith("ipfs://")
+          ? publishedContractNoFee.publishMetadataUri
+          : `ipfs://${publishedContractNoFee?.publishMetadataUri}`,
+      }).catch(() => null),
+      ...(moduleUris || []).map((uri) =>
+        fetchDeployMetadata({
+          client,
+          // force `ipfs://` prefix
+          uri: uri.startsWith("ipfs://") ? uri : `ipfs://${uri}`,
+        }).catch(() => null),
+      ),
+    ]);
 
   return (
     <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8 pb-20">
@@ -79,6 +92,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       />
       <DeployFormForUri
         contractMetadata={contractMetadata}
+        contractMetadataNoFee={contractMetadataNoFee}
         modules={fetchedModules.filter((m) => m !== null)}
         pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
       />

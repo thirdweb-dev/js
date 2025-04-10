@@ -50,15 +50,6 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
   const cc: ClaimCondition = await (async () => {
     if (options.type === "erc1155") {
       // lazy-load the getActiveClaimCondition function
-      if (options.singlePhaseDrop) {
-        const { claimCondition } = await import(
-          "../../../extensions/erc1155/__generated__/IDropSinglePhase1155/read/claimCondition.js"
-        );
-        return await claimCondition({
-          contract: options.contract,
-          tokenId: options.tokenId,
-        });
-      }
       const { getActiveClaimCondition } = await import(
         "../../../extensions/erc1155/drops/read/getActiveClaimCondition.js"
       );

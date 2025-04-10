@@ -35,7 +35,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   );
 
   return (
-    <div className="flex flex-row gap-3 md:gap-6 [&>*]:grow">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <StatCard
         value={realTotalSupply.toString()}
         label="Total Supply"

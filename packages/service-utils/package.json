@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.8.18",
+  "version": "0.8.19",
   "type": "module",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -50,10 +50,10 @@
     "zod": "3.24.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250312.0",
-    "@types/node": "22.13.10",
-    "typescript": "5.8.2",
-    "vitest": "3.0.9"
+    "@cloudflare/workers-types": "4.20250405.0",
+    "@types/node": "22.14.0",
+    "typescript": "5.8.3",
+    "vitest": "3.1.1"
   },
   "scripts": {
     "format": "biome format ./src --write",

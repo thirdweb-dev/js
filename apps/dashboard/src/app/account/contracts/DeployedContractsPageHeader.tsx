@@ -1,16 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { DownloadIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import { useTrack } from "../../../hooks/analytics/useTrack";
 
 export function DeployedContractsPageHeader(props: {
   teamId: string;
   projectId: string;
 }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const trackEvent = useTrack();
 
   return (
     <div className="border-b">
@@ -33,16 +35,28 @@ export function DeployedContractsPageHeader(props: {
           <Button
             className="gap-2 bg-card"
             variant="outline"
-            onClick={() => setImportModalOpen(true)}
+            onClick={() => {
+              trackEvent({
+                action: "click",
+                category: "contracts",
+                label: "import-contract",
+              });
+              setImportModalOpen(true);
+            }}
           >
             <DownloadIcon className="size-4" />
             Import contract
           </Button>
           <Button asChild className="gap-2">
-            <Link href="/explore">
+            <TrackedLinkTW
+              href="/explore"
+              category="contracts"
+              label="deploy-contract"
+              target="_blank"
+            >
               <PlusIcon className="size-4" />
               Deploy contract
-            </Link>
+            </TrackedLinkTW>
           </Button>
         </div>
       </div>

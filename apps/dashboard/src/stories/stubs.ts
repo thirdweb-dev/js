@@ -107,12 +107,32 @@ export const teamsAndProjectsStub: Array<{ team: Team; projects: Project[] }> =
       ],
     },
     {
-      team: teamStub("2", "growth"),
+      team: teamStub("2", "starter"),
       projects: [projectStub("t2p1", "team-2"), projectStub("t2p2", "team-2")],
     },
     {
-      team: teamStub("3", "pro"),
-      projects: [projectStub("t3p1", "team-3")],
+      team: teamStub("3", "starter_legacy"),
+      projects: [projectStub("t3p1", "team-3"), projectStub("t2p2", "team-2")],
+    },
+    {
+      team: teamStub("3", "growth"),
+      projects: [projectStub("t3p1", "team-3"), projectStub("t2p2", "team-2")],
+    },
+    {
+      team: teamStub("4", "growth_legacy"),
+      projects: [projectStub("t4p1", "team-4")],
+    },
+    {
+      team: teamStub("5", "accelerate"),
+      projects: [projectStub("t5p1", "team-5")],
+    },
+    {
+      team: teamStub("6", "scale"),
+      projects: [projectStub("t6p1", "team-6")],
+    },
+    {
+      team: teamStub("7", "pro"),
+      projects: [projectStub("t7p1", "team-7")],
     },
   ];
 

@@ -8,10 +8,11 @@ import type { Ecosystem } from "../../../../types";
 export function useUpdateEcosystem(
   params: {
     authToken: string;
+    teamId: string;
   },
   options?: Omit<UseMutationOptions<boolean, unknown, Ecosystem>, "mutationFn">,
 ) {
-  const { authToken } = params;
+  const { authToken, teamId } = params;
   const { onSuccess, ...queryOptions } = options || {};
   const queryClient = useQueryClient();
 
@@ -22,6 +23,7 @@ export function useUpdateEcosystem(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "x-thirdweb-team-id": teamId,
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify(params),

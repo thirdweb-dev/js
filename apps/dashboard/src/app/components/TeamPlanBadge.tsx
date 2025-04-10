@@ -1,6 +1,34 @@
 import type { Team } from "@/api/team";
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+
+const teamPlanToBadgeVariant: Record<
+  Team["billingPlan"],
+  BadgeProps["variant"]
+> = {
+  // gray
+  free: "secondary",
+  starter: "secondary",
+  // yellow
+  starter_legacy: "warning",
+  growth_legacy: "warning",
+  // green
+  accelerate: "success",
+  growth: "success",
+  scale: "success",
+  // blue
+  pro: "default",
+};
+
+function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
+  if (plan === "growth_legacy") {
+    return "Growth - Legacy";
+  }
+  if (plan === "starter_legacy") {
+    return "Starter - Legacy";
+  }
+  return plan;
+}
 
 export function TeamPlanBadge(props: {
   plan: Team["billingPlan"];
@@ -8,16 +36,10 @@ export function TeamPlanBadge(props: {
 }) {
   return (
     <Badge
-      variant={
-        props.plan === "free" || props.plan === "starter"
-          ? "secondary"
-          : props.plan === "growth"
-            ? "success"
-            : "default"
-      }
+      variant={teamPlanToBadgeVariant[props.plan]}
       className={cn("px-1.5 capitalize", props.className)}
     >
-      {props.plan}
+      {getTeamPlanBadgeLabel(props.plan)}
     </Badge>
   );
 }

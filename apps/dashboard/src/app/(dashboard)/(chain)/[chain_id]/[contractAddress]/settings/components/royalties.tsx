@@ -89,7 +89,7 @@ export const SettingsRoyalties = ({
   );
 
   return (
-    <Card p={0} position="relative">
+    <Card p={0} position="relative" overflow="hidden">
       <SettingDetectedState type="royalties" detectedState={detectedState} />
       <Flex
         as="form"

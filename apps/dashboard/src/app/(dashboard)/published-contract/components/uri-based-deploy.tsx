@@ -8,12 +8,13 @@ import { loginRedirect } from "../../../login/loginRedirect";
 
 type DeployFormForUriProps = {
   contractMetadata: FetchDeployMetadataResult | null;
+  contractMetadataNoFee: FetchDeployMetadataResult | null;
   modules: FetchDeployMetadataResult[] | null;
   pathname: string;
 };
 
 export async function DeployFormForUri(props: DeployFormForUriProps) {
-  const { contractMetadata, modules, pathname } = props;
+  const { contractMetadata, contractMetadataNoFee, modules, pathname } = props;
 
   if (!contractMetadata) {
     return <div>Could not fetch metadata</div>;
@@ -46,6 +47,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     <ChakraProviderSetup>
       <CustomContractForm
         metadata={contractMetadata}
+        metadataNoFee={contractMetadataNoFee}
         modules={modules?.filter((m) => m !== null)}
         jwt={authToken}
         teamsAndProjects={teamsAndProjects}

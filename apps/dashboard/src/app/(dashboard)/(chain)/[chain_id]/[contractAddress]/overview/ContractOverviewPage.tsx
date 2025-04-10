@@ -1,12 +1,12 @@
 import type { ThirdwebContract } from "thirdweb";
-import { AnalyticsOverview } from "./components/Analytics";
+import { TokenDetailsCard } from "../tokens/components/supply";
+import { ContractAnalyticsOverviewCard } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
 import { ContractChecklist } from "./components/ContractChecklist";
 import { LatestEvents } from "./components/LatestEvents";
 import { MarketplaceDetails } from "./components/MarketplaceDetails";
 import { NFTDetails } from "./components/NFTDetails";
 import { PermissionsTable } from "./components/PermissionsTable";
-import { TokenDetails } from "./components/TokenDetails";
 
 interface ContractOverviewPageProps {
   contract: ThirdwebContract;
@@ -38,8 +38,8 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   publishedBy,
 }) => {
   return (
-    <div className="flex flex-col gap-8 lg:flex-row">
-      <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-10 lg:flex-row lg:gap-8">
+      <div className="flex grow flex-col gap-10">
         <ContractChecklist
           isErc721={isErc721}
           isErc1155={isErc1155}
@@ -50,7 +50,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         />
 
         {isAnalyticsSupported && (
-          <AnalyticsOverview
+          <ContractAnalyticsOverviewCard
             contractAddress={contract.address}
             chainId={contract.chain.id}
             trackingCategory={TRACKING_CATEGORY}
@@ -77,7 +77,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           />
         )}
 
-        {isErc20 && <TokenDetails contract={contract} />}
+        {isErc20 && <TokenDetailsCard contract={contract} />}
 
         <LatestEvents
           contract={contract}

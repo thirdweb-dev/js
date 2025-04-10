@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
+import { ToolTipLabel } from "./tooltip";
 
 export type TabLink = {
   name: string;
@@ -82,6 +83,7 @@ export function TabButtons(props: {
     isActive: boolean;
     isDisabled?: boolean;
     icon?: React.FC<{ className?: string }>;
+    toolTip?: string;
   }[];
   tabClassName?: string;
   activeTabClassName?: string;
@@ -111,26 +113,31 @@ export function TabButtons(props: {
         >
           {props.tabs.map((tab, index) => {
             return (
-              <Button
-                // biome-ignore lint/suspicious/noArrayIndexKey: tabs don't change order, so index is stable
-                key={index}
-                variant="ghost"
-                ref={tab.isActive ? activeTabRef : undefined}
-                className={cn(
-                  "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
-                  !tab.isActive &&
-                    "text-muted-foreground hover:text-foreground",
-                  tab.isDisabled && "cursor-not-allowed opacity-50",
-                  props.tabClassName,
-                  tab.isActive && props.activeTabClassName,
-                )}
-                onClick={!tab.isDisabled ? tab.onClick : undefined}
+              <ToolTipLabel
+                key={typeof tab.name === "string" ? tab.name : index}
+                label={tab.toolTip}
               >
-                {tab.icon && (
-                  <tab.icon className={cn("size-6", props.tabIconClassName)} />
-                )}
-                {tab.name}
-              </Button>
+                <Button
+                  variant="ghost"
+                  ref={tab.isActive ? activeTabRef : undefined}
+                  className={cn(
+                    "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
+                    !tab.isActive &&
+                      "text-muted-foreground hover:text-foreground",
+                    tab.isDisabled && "cursor-not-allowed opacity-50",
+                    props.tabClassName,
+                    tab.isActive && props.activeTabClassName,
+                  )}
+                  onClick={!tab.isDisabled ? tab.onClick : undefined}
+                >
+                  {tab.icon && (
+                    <tab.icon
+                      className={cn("size-6", props.tabIconClassName)}
+                    />
+                  )}
+                  {tab.name}
+                </Button>
+              </ToolTipLabel>
             );
           })}
         </div>

@@ -1,15 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { ImportModal } from "../../../../components/contract-components/import-contract/modal";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 
 export function DeployViaCLIOrImportCard(props: {
   teamId: string;
   projectId: string;
 }) {
+  const trackEvent = useTrack();
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
@@ -38,18 +40,27 @@ export function DeployViaCLIOrImportCard(props: {
           className="gap-2 bg-background lg:px-10"
           asChild
         >
-          <Link
+          <TrackedLinkTW
             href="https://portal.thirdweb.com/contracts/deploy/overview"
             target="_blank"
+            category="contracts-banner"
+            label="deploy-via-cli"
           >
             Deploy via CLI
             <ArrowUpRightIcon className="size-4" />
-          </Link>
+          </TrackedLinkTW>
         </Button>
         <Button
           variant="outline"
           className="gap-2 bg-background"
-          onClick={() => setImportModalOpen(true)}
+          onClick={() => {
+            setImportModalOpen(true);
+            trackEvent({
+              category: "contracts-banner",
+              action: "click",
+              label: "import-contract",
+            });
+          }}
         >
           <DownloadIcon className="size-4" />
           Import Contract

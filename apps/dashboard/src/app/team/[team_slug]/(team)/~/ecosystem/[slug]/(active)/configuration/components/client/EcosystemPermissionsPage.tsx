@@ -7,7 +7,12 @@ import { IntegrationPermissionsSection } from "../server/integration-permissions
 export function EcosystemPermissionsPage({
   params,
   authToken,
-}: { params: { slug: string; team_slug: string }; authToken: string }) {
+  teamId,
+}: {
+  params: { slug: string; team_slug: string };
+  authToken: string;
+  teamId: string;
+}) {
   const { data: ecosystem } = useEcosystem({
     slug: params.slug,
     teamIdOrSlug: params.team_slug,
@@ -18,13 +23,19 @@ export function EcosystemPermissionsPage({
       <IntegrationPermissionsSection
         ecosystem={ecosystem}
         authToken={authToken}
+        teamId={teamId}
       />
-      <AuthOptionsSection ecosystem={ecosystem} authToken={authToken} />
+      <AuthOptionsSection
+        ecosystem={ecosystem}
+        authToken={authToken}
+        teamId={teamId}
+      />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (
         <EcosystemPartnersSection
           teamSlug={params.team_slug}
           ecosystem={ecosystem}
           authToken={authToken}
+          teamId={teamId}
         />
       )}
     </div>

@@ -41,6 +41,7 @@ export default async function Page(props: {
       contract={contract}
       isERC20={supportedERCs.isERC20}
       twAccount={account}
+      isMultiphase={true}
     />
   );
 }

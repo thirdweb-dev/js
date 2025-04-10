@@ -126,7 +126,7 @@ export async function getClaimPhasesInLegacyFormat(
 type PhaseInput = z.input<typeof LegacyClaimConditionInputSchema>;
 
 export function setClaimPhasesTx(
-  baseOptions: BaseTransactionOptions<Options>,
+  baseOptions: BaseTransactionOptions<Options> & { isSinglePhase?: boolean },
   rawPhases: PhaseInput[],
 ) {
   const phases = rawPhases.map((phase) => {
@@ -172,6 +172,7 @@ export function setClaimPhasesTx(
         contract: baseOptions.contract,
         phases,
         tokenId: baseOptions.tokenId,
+        singlePhaseDrop: baseOptions.isSinglePhase,
       });
   }
 }

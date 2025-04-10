@@ -33,6 +33,7 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
       />
       <DeployFormForUri
         contractMetadata={metadata}
+        contractMetadataNoFee={metadata}
         modules={null}
         pathname={`/contracts/deploy/${params.compiler_uri}`}
       />

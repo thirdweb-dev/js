@@ -1,71 +1,85 @@
-import { Badge } from "@/components/ui/badge";
-import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import type { Team } from "@/api/team";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Box,
-  Flex,
-  SimpleGrid,
-} from "@chakra-ui/react";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Button, Card, Heading, Text } from "tw-components";
-import type { Team } from "../../@/api/team";
+import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
+import { useState } from "react";
+import { TeamPlanBadge } from "../../app/components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../app/team/components/TeamHeader/getValidTeamPlan";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { PlanCard } from "./PlanCard";
 
 export type CreditsRecord = {
-  title: string;
+  plan: Team["billingPlan"];
   upTo?: true;
   credits: string;
-  color: string;
   features?: string[];
-  ctaTitle?: string;
-  ctaHref?: string;
+};
+
+const tier2Credits: Omit<CreditsRecord, "plan"> = {
+  upTo: true,
+  credits: "$2,500",
+  features: [
+    "10k monthly active wallets",
+    "User analytics",
+    "Custom Auth",
+    "Custom Branding",
+  ],
+};
+
+const tier1Credits: Omit<CreditsRecord, "plan"> = {
+  upTo: true,
+  credits: "$250",
 };
 
 export const PlanToCreditsRecord: Record<Team["billingPlan"], CreditsRecord> = {
   free: {
-    title: "Free",
-    upTo: true,
-    credits: "$250",
-    color: "#3b394b",
+    plan: "free",
+    ...tier1Credits,
   },
   starter: {
-    title: "Starter",
-    upTo: true,
-    credits: "$250",
-    color: "#3b394b",
+    plan: "starter",
+    ...tier1Credits,
+  },
+  starter_legacy: {
+    plan: "starter_legacy",
+    ...tier1Credits,
   },
   growth: {
-    title: "Growth",
-    upTo: true,
-    credits: "$2,500",
-    color: "#28622A",
-    features: [
-      "10k monthly active wallets",
-      "User analytics",
-      "Custom Auth",
-      "Custom Branding",
-    ],
-    ctaTitle: "Upgrade for $99",
-    ctaHref: "/team/~/~/settings/billing",
+    plan: "growth",
+    ...tier1Credits,
+  },
+  growth_legacy: {
+    plan: "growth_legacy",
+    ...tier2Credits,
+  },
+  accelerate: {
+    plan: "accelerate",
+    ...tier2Credits,
+  },
+  scale: {
+    plan: "scale",
+    ...tier2Credits,
   },
   pro: {
-    title: "Pro",
+    plan: "pro",
+    upTo: true,
     credits: "$3,000+",
-    color: "#282B6F",
     features: [
       "Custom rate limits for APIs & Infra",
       "Enterprise grade SLAs",
       "Dedicated support",
     ],
-    ctaTitle: "Contact Us",
-    ctaHref: "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro",
   },
 };
 
@@ -77,129 +91,143 @@ export function ApplyForOpCredits(props: {
   const validTeamPlan = getValidTeamPlan(team);
   const hasValidPaymentMethod = validTeamPlan !== "free";
 
-  const [page, setPage] = useState<"eligible" | "form">("eligible");
-
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${team.id}`,
     false,
   );
-
-  const trackEvent = useTrack();
-
-  // TODO: find better way to track impressions
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    trackEvent({
-      category: "op-sponsorship",
-      action: "modal",
-      label: "view-modal",
-    });
-  }, [trackEvent]);
 
   const isStarterPlan = validTeamPlan === "starter";
   const isProPlan = validTeamPlan === "pro";
   const creditsRecord = PlanToCreditsRecord[validTeamPlan];
 
   return (
-    <>
-      {page === "eligible" ? (
-        <>
-          <Flex flexDir="column" gap={4}>
-            <Card position="relative">
-              <Box position="absolute">
-                <Badge
-                  className="rounded-full px-3 font-bold text-white capitalize"
-                  style={{
-                    backgroundColor: creditsRecord.color,
-                  }}
-                >
-                  {creditsRecord.title}
-                </Badge>
-              </Box>
-              <Flex alignItems="center" gap={2} flexDir="column">
-                <Text textAlign="center" color="faded">
-                  {creditsRecord.upTo && "Up to"}
-                </Text>
-                <Heading color="bgBlack" size="title.lg" fontWeight="extrabold">
-                  {creditsRecord.credits}
-                </Heading>
-                <Text letterSpacing="wider" fontWeight="bold" color="faded">
-                  GAS CREDITS
-                </Text>
-              </Flex>
-            </Card>
-            <Flex gap={4} flexDir="column">
-              {!hasValidPaymentMethod && (
-                <Alert
-                  status="info"
-                  borderRadius="lg"
-                  backgroundColor="backgroundBody"
-                  borderLeftColor="blue.500"
-                  borderLeftWidth={4}
-                  as={Flex}
-                  gap={1}
-                >
-                  <AlertIcon />
-                  <Flex flexDir="column">
-                    <AlertDescription as={Text}>
-                      You need to add a payment method to be able to claim
-                      credits. This is to prevent abuse, you will not be
-                      charged.{" "}
-                      <Link
-                        className="text-link-foreground hover:text-foreground"
-                        href={`/team/${props.team.slug}/~/settings/billing`}
-                      >
-                        Upgrade to Starter plan to get started
-                      </Link>
-                      .
-                    </AlertDescription>
-                  </Flex>
-                </Alert>
+    <div>
+      <div>
+        {/* credits info */}
+        <div className="rounded-lg border bg-card">
+          <div className="relative flex justify-between px-6 py-4">
+            <h2 className="font-semibold text-lg capitalize tracking-tight">
+              {creditsRecord.upTo && "Up to"} {creditsRecord.credits} Gas
+              Credits
+            </h2>
+            <TeamPlanBadge
+              className="absolute top-5 right-6"
+              plan={creditsRecord.plan}
+            />
+          </div>
+
+          {/* alert */}
+          {!hasValidPaymentMethod && (
+            <div className="px-6 pb-6">
+              <Alert variant="warning" className="bg-background">
+                <CircleAlertIcon className="size-5" />
+                <AlertTitle>Payment method required</AlertTitle>
+                <AlertDescription>
+                  You need to add a payment method to be able to claim credits.{" "}
+                  <br /> This is to prevent abuse, you will not be charged.{" "}
+                  <UnderlineLink
+                    href={`/team/${props.team.slug}/~/settings/billing`}
+                  >
+                    Upgrade plan to get started
+                  </UnderlineLink>
+                  .
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
+
+          <div className="flex justify-end border-t p-4">
+            <ApplyOpCreditsButton
+              hasAppliedForOpGrant={hasAppliedForOpGrant}
+              hasValidPaymentMethod={hasValidPaymentMethod}
+              validTeamPlan={validTeamPlan}
+              account={account}
+            />
+          </div>
+        </div>
+
+        {!isProPlan && (
+          <div>
+            <p className="my-6 text-center text-muted-foreground text-sm tracking-wide">
+              Or upgrade and get access to more credits
+            </p>
+            <div className="flex flex-col gap-6">
+              {isStarterPlan && (
+                <PlanCard
+                  creditsRecord={PlanToCreditsRecord[accountPlan.growth]}
+                  teamSlug={team.slug}
+                />
               )}
-              <Button
-                colorScheme="primary"
-                onClick={() => setPage("form")}
-                w="full"
-                isDisabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
-              >
-                {hasAppliedForOpGrant ? "Already applied" : "Apply Now"}
-              </Button>
-            </Flex>
-            {!isProPlan && (
-              <>
-                <Text textAlign="center" fontWeight="bold" letterSpacing="wide">
-                  Or upgrade and get access to more credits:
-                </Text>
-                <SimpleGrid
-                  columns={{ base: 1, md: isStarterPlan ? 2 : 1 }}
-                  gap={4}
-                >
-                  {isStarterPlan && (
-                    <PlanCard
-                      creditsRecord={PlanToCreditsRecord[accountPlan.growth]}
-                    />
-                  )}
-                  <PlanCard
-                    creditsRecord={PlanToCreditsRecord[accountPlan.pro]}
-                  />
-                </SimpleGrid>
-              </>
-            )}
-          </Flex>
-          <Text mt={6} textAlign="center" color="faded">
-            We are open to distributing more than the upper limit for each tier
-            if you make a strong case about how it will be utilized.
-          </Text>
-        </>
-      ) : (
+              <PlanCard
+                creditsRecord={PlanToCreditsRecord[accountPlan.pro]}
+                teamSlug={team.slug}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <p className="mt-6 text-center text-muted-foreground text-sm">
+        We are open to distributing more than the upper limit for each tier if
+        you make a strong case about how it will be utilized.
+      </p>
+    </div>
+  );
+}
+
+function ApplyOpCreditsButton(props: {
+  hasAppliedForOpGrant: boolean;
+  hasValidPaymentMethod: boolean;
+  validTeamPlan: Team["billingPlan"];
+  account: Account;
+}) {
+  const trackEvent = useTrack();
+  const {
+    hasAppliedForOpGrant,
+    hasValidPaymentMethod,
+    validTeamPlan,
+    account,
+  } = props;
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger asChild>
+        <Button
+          disabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
+          className="gap-2"
+          size="sm"
+          onClick={() => {
+            trackEvent({
+              category: "op-sponsorship",
+              action: "modal",
+              label: "view-form",
+            });
+          }}
+        >
+          {hasAppliedForOpGrant ? (
+            "Already applied"
+          ) : (
+            <>
+              Apply Now
+              <ArrowRightIcon className="size-4" />
+            </>
+          )}
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="!max-w-2xl overflow-auto">
+        <SheetHeader>
+          <SheetTitle>Apply for OP credits</SheetTitle>
+        </SheetHeader>
+        <div className="h-5" />
         <ApplyForOpCreditsForm
           onClose={() => {
-            setPage("eligible");
+            setIsOpen(false);
           }}
           plan={validTeamPlan}
           account={account}
         />
-      )}
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }

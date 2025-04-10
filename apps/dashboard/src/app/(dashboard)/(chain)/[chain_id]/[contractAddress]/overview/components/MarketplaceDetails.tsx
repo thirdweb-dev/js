@@ -2,8 +2,10 @@
 
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -79,28 +81,37 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   }
 
   return (
-    <>
-      <div className="flex w-full items-center justify-between">
-        <h2 className="font-semibold text-2xl tracking-tight">
-          Direct Listing
+    <div className="rounded-lg border bg-card">
+      <div className="flex w-full items-center justify-between border-b px-6 py-4">
+        <h2 className="font-semibold text-xl tracking-tight">
+          Direct Listings
         </h2>
-        <TrackedLinkTW
-          category={trackingCategory}
-          label="view_all_direct_listings"
-          className="text-link-foreground hover:text-foreground"
-          href={directListingsHref}
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="gap-2 bg-background text-muted-foreground"
         >
-          View all -&gt;
-        </TrackedLinkTW>
+          <TrackedLinkTW
+            category={trackingCategory}
+            label="view_all_direct_listings"
+            href={directListingsHref}
+          >
+            View all <ArrowRightIcon className="size-4" />
+          </TrackedLinkTW>
+        </Button>
       </div>
-      <ListingCards
-        listings={listings}
-        isPending={listingsQuery.isPending}
-        trackingCategory={trackingCategory}
-        chainSlug={chainSlug}
-        contractAddress={contract.address}
-      />
-    </>
+
+      <div className="p-6">
+        <ListingCards
+          listings={listings}
+          isPending={listingsQuery.isPending}
+          trackingCategory={trackingCategory}
+          chainSlug={chainSlug}
+          contractAddress={contract.address}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -142,28 +153,36 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   }
 
   return (
-    <>
-      <div className="flex w-full items-center justify-between">
-        <h2 className="font-semibold text-2xl tracking-tight">
+    <div className="rounded-lg border bg-card">
+      <div className="flex w-full items-center justify-between border-b px-6 py-4">
+        <h2 className="font-semibold text-xl tracking-tight">
           English Auctions
         </h2>
-        <TrackedLinkTW
-          category={trackingCategory}
-          label="view_all_english_auctions"
-          className="text-link-foreground hover:text-foreground"
-          href={englishAuctionsHref}
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="gap-2 bg-background text-muted-foreground"
         >
-          View all -&gt;
-        </TrackedLinkTW>
+          <TrackedLinkTW
+            category={trackingCategory}
+            label="view_all_english_auctions"
+            href={englishAuctionsHref}
+          >
+            View all <ArrowRightIcon className="size-4" />
+          </TrackedLinkTW>
+        </Button>
       </div>
-      <ListingCards
-        listings={auctions}
-        isPending={auctionsQuery.isPending}
-        trackingCategory={trackingCategory}
-        chainSlug={chainSlug}
-        contractAddress={contract.address}
-      />
-    </>
+      <div className="p-6">
+        <ListingCards
+          listings={auctions}
+          isPending={auctionsQuery.isPending}
+          trackingCategory={trackingCategory}
+          chainSlug={chainSlug}
+          contractAddress={contract.address}
+        />
+      </div>
+    </div>
   );
 };
 
@@ -183,8 +202,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   chainSlug,
 }) => {
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="font-semibold text-2xl tracking-tight">Listings</h2>
+    <div className="flex flex-col gap-10">
       <ListingStatsV3
         contract={contract}
         hasDirectListings={hasDirectListings}
@@ -262,12 +280,16 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   const englishAuctionsHref = `/${chainSlug}/${contractAddress}/english-auctions`;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 max-sm:[&>*:nth-child(n+3)]:hidden">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 ">
       {listings.map((listing, index) => (
         <div
-          className="relative rounded-lg border border-border bg-card transition-colors hover:border-active-border"
+          className="group hover:-translate-y-0.5 relative flex h-full cursor-pointer flex-col rounded-lg bg-background duration-200 hover:scale-[1.01]"
           key={`${listing.creatorAddress}-${index}`}
         >
+          {/* border */}
+          <div className="absolute inset-0 rounded-lg border border-border" />
+
+          {/* image */}
           <div className="relative aspect-square w-full overflow-hidden rounded-lg">
             {/* Image */}
             <SkeletonContainer
@@ -324,21 +346,23 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               />
             )}
 
+            {/* seller */}
             <SkeletonContainer
               loadedData={isPending ? undefined : listing.creatorAddress}
               skeletonData={listing.creatorAddress}
-              className="mt-4"
+              className="mt-4 border-t pt-4"
               render={(v) => (
                 <div>
-                  <p className="text-muted-foreground text-sm">Seller</p>
+                  <p className="text-muted-foreground text-xs">Seller</p>
                   <WalletAddress
-                    className="relative z-[1] self-start"
+                    className="relative z-[1] self-start text-xs"
                     address={v}
                   />
                 </div>
               )}
             />
 
+            {/* price */}
             {!isPending && (
               <Badge
                 variant="outline"

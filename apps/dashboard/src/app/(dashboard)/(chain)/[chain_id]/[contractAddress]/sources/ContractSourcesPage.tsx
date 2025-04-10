@@ -1,41 +1,36 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
-import {
-  Divider,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
-import { CircleCheckIcon, CircleXIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  CircleCheckIcon,
+  CircleXIcon,
+  RefreshCcwIcon,
+  ShieldCheckIcon,
+} from "lucide-react";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
-import { Heading } from "tw-components";
 
-interface ContractSourcesPageProps {
-  contract: ThirdwebContract;
-}
-
-interface VerificationResult {
+type VerificationResult = {
   explorerUrl: string;
   success: boolean;
   alreadyVerified: boolean;
   error?: string;
-}
+};
 
 export async function verifyContract(contract: ThirdwebContract) {
   try {
@@ -63,111 +58,80 @@ export async function verifyContract(contract: ThirdwebContract) {
   }
 }
 
-interface ConnectorModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+function VerifyContractModalContent({
+  contract,
+}: {
   contract: ThirdwebContract;
-}
-
-const VerifyContractModal: React.FC<
-  ConnectorModalProps & { resetSignal: number }
-> = ({ isOpen, onClose, contract, resetSignal }) => {
+}) {
   const verifyQuery = useQuery({
-    queryKey: [
-      "verify-contract",
-      contract.chain.id,
-      contract.address,
-      resetSignal,
-    ],
+    queryKey: ["verify-contract", contract.chain.id, contract.address],
     queryFn: () => verifyContract(contract),
-    enabled: isOpen,
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent
-        className="!bg-background rounded-lg border border-border"
-        pb={2}
-        mx={{ base: 4, md: 0 }}
-      >
-        <ModalHeader>
-          <Flex gap={2} align="center">
-            <Heading size="subtitle.md">Contract Verification</Heading>
-            <Badge>beta</Badge>
-          </Flex>
-        </ModalHeader>
-        <ModalCloseButton mt={2} />
-        <Divider mb={4} />
-        <ModalBody py={4}>
-          <Flex flexDir="column">
-            {verifyQuery.isPending && (
-              <Flex gap={2} align="center">
-                <Spinner color="purple.500" size="sm" />
-                <Heading size="label.md">Verifying...</Heading>
-              </Flex>
-            )}
-            {verifyQuery?.error ? (
-              <Flex gap={2} align="center">
-                <CircleXIcon className="size-4 text-red-600" />
-                <Heading size="label.md">
-                  {verifyQuery?.error.toString()}
-                </Heading>
-              </Flex>
-            ) : null}
+    <div className="flex flex-col p-6">
+      {verifyQuery.isPending && (
+        <div className="flex min-h-24 items-center justify-center">
+          <div className="flex items-center gap-2">
+            <Spinner className="size-4" />
+            <p className="font-medium text-sm">Verifying</p>
+          </div>
+        </div>
+      )}
 
-            {verifyQuery.data?.results
-              ? verifyQuery.data?.results.map(
-                  (result: VerificationResult, index: number) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    <Flex key={index} gap={2} align="center" mb={4}>
-                      {result.success && (
-                        <>
-                          <CircleCheckIcon className="size-4 text-green-600" />
-                          {result.alreadyVerified && (
-                            <Heading size="label.md">
-                              {result.explorerUrl}: Already verified
-                            </Heading>
-                          )}
-                          {!result.alreadyVerified && (
-                            <Heading size="label.md">
-                              {result.explorerUrl}: Verification successful
-                            </Heading>
-                          )}
-                        </>
-                      )}
-                      {!result.success && (
-                        <>
-                          <CircleXIcon className="size-4 text-red-600" />
-                          <Heading size="label.md">
-                            {`${result.explorerUrl}: Verification failed`}
-                          </Heading>
-                        </>
-                      )}
-                    </Flex>
-                  ),
-                )
-              : null}
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+      {verifyQuery?.error ? (
+        <div className="flex min-h-24 items-center justify-center">
+          <div className="flex items-center gap-2">
+            <CircleXIcon className="size-4 text-red-600" />
+            <p className="font-medium text-sm">
+              {verifyQuery?.error.toString()}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {verifyQuery.data?.results ? (
+        <div className="flex flex-col gap-2">
+          {verifyQuery.data.results.map(
+            (result: VerificationResult, index: number) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <div key={index} className="flex items-center gap-2">
+                {result.success && (
+                  <>
+                    <CircleCheckIcon className="size-4 text-green-600" />
+                    {result.alreadyVerified && (
+                      <p className="font-medium text-sm">
+                        {result.explorerUrl}: Already verified
+                      </p>
+                    )}
+                    {!result.alreadyVerified && (
+                      <p className="font-medium text-sm">
+                        {result.explorerUrl}: Verification successful
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {!result.success && (
+                  <>
+                    <CircleXIcon className="size-4 text-red-600" />
+                    <p className="font-medium text-sm">
+                      {`${result.explorerUrl}: Verification failed`}
+                    </p>
+                  </>
+                )}
+              </div>
+            ),
+          )}
+        </div>
+      ) : null}
+    </div>
   );
-};
+}
 
-export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
+export function ContractSourcesPage({
   contract,
-}) => {
-  const [resetSignal, setResetSignal] = useState(0);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const handleClose = () => {
-    onClose();
-    // Increment to reset the query in the child component
-    setResetSignal((prev: number) => prev + 1);
-  };
-
+}: { contract: ThirdwebContract }) {
   const contractSourcesQuery = useContractSources(contract);
   const abiQuery = useResolveContractAbi(contract);
 
@@ -187,44 +151,49 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
       .reverse();
   }, [contractSourcesQuery.data]);
 
-  if (!contractSourcesQuery || contractSourcesQuery?.isPending) {
-    return (
-      <Flex direction="row" align="center" gap={2}>
-        <Spinner color="purple.500" size="xs" />
-        <Heading size="title.sm">Loading...</Heading>
-      </Flex>
-    );
+  if (!contractSourcesQuery || contractSourcesQuery.isPending) {
+    return <GenericLoadingPage />;
   }
 
   return (
-    <>
-      <VerifyContractModal
-        isOpen={isOpen}
-        onClose={() => handleClose()}
-        contract={contract}
-        resetSignal={resetSignal}
-      />
-
-      <Flex direction="column" gap={8}>
-        <Flex direction="row" alignItems="center" gap={2}>
-          <Heading size="title.sm" flex={1}>
-            Sources
-          </Heading>
+    <div>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 className="font-semibold text-2xl tracking-tight">Sources</h2>
+          <p className="text-muted-foreground text-sm">
+            View ABI and source code for the contract
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
           <RefreshContractMetadataButton
             chainId={contract.chain.id}
             contractAddress={contract.address}
           />
-          <Button variant="primary" onClick={onOpen}>
-            Verify contract
-          </Button>
-        </Flex>
-        <Card>
-          <SourcesPanel sources={sources} abi={abiQuery.data} />
-        </Card>
-      </Flex>
-    </>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="gap-2" size="sm">
+                <ShieldCheckIcon className="size-4" />
+                Verify contract
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="gap-0 overflow-hidden p-0">
+              <DialogHeader className="border-b p-6">
+                <DialogTitle>Verify Contract</DialogTitle>
+              </DialogHeader>
+              <VerifyContractModalContent contract={contract} />
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      <div className="h-4" />
+      <div className="rounded-lg border bg-card">
+        <SourcesPanel sources={sources} abi={abiQuery.data} />
+      </div>
+    </div>
   );
-};
+}
 
 function RefreshContractMetadataButton(props: {
   chainId: number;
@@ -270,14 +239,19 @@ function RefreshContractMetadataButton(props: {
       onClick={() => {
         toast.promise(contractCacheMutation.mutateAsync(), {
           duration: 5000,
-          loading: "Refreshing contract data...",
-          success: () => "Contract data refreshed!",
+          success: () => "Contract refreshed successfully",
           error: (e) => e?.message || "Failed to refresh contract data.",
         });
       }}
-      className="w-[182px]"
+      size="sm"
+      className="gap-2 bg-card"
     >
-      {contractCacheMutation.isPending ? <Spinner /> : "Refresh Contract Data"}
+      {contractCacheMutation.isPending ? (
+        <Spinner className="size-4" />
+      ) : (
+        <RefreshCcwIcon className="size-4" />
+      )}
+      Refresh Contract <span className="max-sm:hidden"> Data </span>
     </Button>
   );
 }

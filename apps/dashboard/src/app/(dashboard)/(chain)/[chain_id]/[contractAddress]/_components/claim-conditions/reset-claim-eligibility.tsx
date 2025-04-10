@@ -18,6 +18,7 @@ interface ResetClaimEligibilityProps {
   contract: ThirdwebContract;
   tokenId?: string;
   twAccount: Account | undefined;
+  isMultiphase: boolean;
 }
 
 export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
@@ -25,6 +26,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   tokenId,
   isErc20,
   twAccount,
+  isMultiphase,
 }) => {
   const trackEvent = useTrack();
 
@@ -55,6 +57,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
           return ERC1155Ext.resetClaimEligibility({
             contract,
             tokenId: BigInt(tokenId),
+            singlePhaseDrop: !isMultiphase,
           });
         }
         // assume erc 721

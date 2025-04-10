@@ -1,14 +1,16 @@
+import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
+import { Flex, FormControl } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
-import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { Button, FormHelperText, FormLabel } from "tw-components";
-import type { Team } from "../../@/api/team";
+import { FormHelperText, FormLabel } from "tw-components";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
 import { applyOpSponsorship } from "./applyOpSponsorship";
 
@@ -46,7 +48,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       firstname: "",
       lastname: "",
       thirdweb_account_id: account?.id || "",
-      plan_type: PlanToCreditsRecord[plan].title,
+      plan_type: PlanToCreditsRecord[plan].plan,
       email: account?.email || "",
       company: "",
       website: "",
@@ -69,16 +71,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
     "We have received your application and will notify you if you are selected.",
     "Something went wrong, please try again.",
   );
-
-  // TODO: find better way to track impressions
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    trackEvent({
-      category: "op-sponsorship",
-      action: "modal",
-      label: "view-form",
-    });
-  }, [trackEvent]);
 
   return (
     <Flex
@@ -136,11 +128,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       })}
     >
       <Flex flexDir="column" gap={4}>
-        <ChakraNextImage
-          src={require("../../../public/assets/dashboard/op-sponsorship-form.png")}
-          alt=""
-          w="full"
-        />
         <Flex gap={4}>
           <FormControl gap={6} isRequired>
             <FormLabel>First Name</FormLabel>
@@ -151,10 +138,12 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
             <Input {...form.register("lastname", { required: true })} />
           </FormControl>
         </Flex>
+
         <FormControl gap={6} isRequired>
           <FormLabel>Company Name</FormLabel>
           <Input {...form.register("company", { required: true })} />
         </FormControl>
+
         <FormControl gap={6} isRequired>
           <FormLabel>Company Website</FormLabel>
           <Input type="url" {...form.register("website", { required: true })} />
@@ -242,10 +231,9 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       </Flex>
       <div className="flex flex-row">
         <Button
-          w="full"
+          className="w-full"
           type="submit"
-          colorScheme="primary"
-          isDisabled={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting}
         >
           {form.formState.isSubmitting ? "Applying..." : "Apply now"}
         </Button>

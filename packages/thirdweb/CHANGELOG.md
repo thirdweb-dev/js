@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.93.15
+
+### Patch Changes
+
+- [#6655](https://github.com/thirdweb-dev/js/pull/6655) [`59be4ea`](https://github.com/thirdweb-dev/js/commit/59be4ea2fbf29019fedfd91b7841e47684859b5c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Single phase functionality for erc1155
+
+- [#6686](https://github.com/thirdweb-dev/js/pull/6686) [`e10c1e6`](https://github.com/thirdweb-dev/js/commit/e10c1e696e585b1a95a389cb0603238b731b815e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass through desired chain when signing in with wallet for ecosystems
+
+## 5.93.14
+
+### Patch Changes
+
+- [#6643](https://github.com/thirdweb-dev/js/pull/6643) [`04d2bc7`](https://github.com/thirdweb-dev/js/commit/04d2bc72e8993e883d1b79a78972b52291b8e27b) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Deploy config
+
 ## 5.93.13
 
 ### Patch Changes
@@ -3134,7 +3148,7 @@
 
   You can now configure the PayEmbed component to build 3 different flows:
 
-  - Fund wallets: Inline component that allows users to buy any currency. (default)
+  - Buy Crypto: Inline component that allows users to buy any currency. (default)
 
   ```tsx
   <PayEmbed

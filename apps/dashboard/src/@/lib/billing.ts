@@ -3,6 +3,8 @@ export type ProductSKU =
   | "plan:starter"
   | "plan:growth"
   | "plan:custom"
+  | "plan:accelerate"
+  | "plan:scale"
   | "product:ecosystem_wallets"
   | "product:engine_standard"
   | "product:engine_premium"

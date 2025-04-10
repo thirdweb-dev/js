@@ -1,7 +1,7 @@
-import { Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
-import { ExternalLinkIcon, Grid2x2XIcon } from "lucide-react";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { Grid2x2XIcon } from "lucide-react";
 
 const settingTypeMap = {
   metadata: {
@@ -26,15 +26,13 @@ const settingTypeMap = {
   },
 } as const;
 
-interface SettingDetectedStateProps {
-  type: keyof typeof settingTypeMap;
-  detectedState: ExtensionDetectedState;
-}
-
-export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
+export function SettingDetectedState({
   type,
   detectedState,
-}) => {
+}: {
+  type: keyof typeof settingTypeMap;
+  detectedState: ExtensionDetectedState;
+}) {
   if (detectedState === "enabled") {
     return null;
   }
@@ -42,45 +40,32 @@ export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
   const metadata = settingTypeMap[type];
 
   return (
-    <SimpleGrid
-      position="absolute"
-      top={0}
-      left={0}
-      bottom={0}
-      right={0}
-      zIndex={1}
-      placeItems="center"
-      px={{ base: 6, md: 0 }}
-      borderRadius="md"
-      className="bg-background"
-    >
+    <div className="absolute inset-0 z-10 grid place-items-center bg-card p-6">
       {detectedState === "loading" ? (
-        <Spinner size="sm" />
+        <Spinner className="size-4" />
       ) : (
-        <Flex flexDir="column" gap={3}>
-          <Flex align="center" gap={2}>
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-2 flex size-10 items-center justify-center rounded-full border bg-background">
             <Grid2x2XIcon className="size-4 text-red-500" />
-            <Heading size="subtitle.md">Missing extension</Heading>
-          </Flex>
-          <Text>
-            This contract does not implement the required extension for{" "}
-            <strong>{metadata.name}</strong>.
-          </Text>
-          <TrackedLink
-            category="contract-settings"
-            label="metadata-extension"
-            href={metadata.portalLink}
-            isExternal
-            display="flex"
-            flexDir="row"
-            alignItems="center"
-            gap={2}
-          >
-            Learn how to enable this extension
-            <ExternalLinkIcon className="size-4" />
-          </TrackedLink>
-        </Flex>
+          </div>
+          <div>
+            <h3 className="mb-2 font-semibold text-lg">Missing extension</h3>
+            <p className="mb-0.5 text-muted-foreground text-sm">
+              This contract does not implement the required extension for{" "}
+              <span className="text-foreground">{metadata.name}</span>
+            </p>
+            <TrackedUnderlineLink
+              category="contract-settings"
+              label="metadata-extension"
+              href={metadata.portalLink}
+              target="_blank"
+              className="text-muted-foreground text-sm"
+            >
+              Learn how to enable this extension
+            </TrackedUnderlineLink>
+          </div>
+        </div>
       )}
-    </SimpleGrid>
+    </div>
   );
-};
+}

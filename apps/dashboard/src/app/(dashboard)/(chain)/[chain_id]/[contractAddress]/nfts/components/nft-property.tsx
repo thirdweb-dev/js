@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/card";
-
 interface NftPropertyProps {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   property: any;
@@ -7,17 +5,17 @@ interface NftPropertyProps {
 
 export const NftProperty: React.FC<NftPropertyProps> = ({ property }) => {
   return (
-    <Card className="flex flex-col gap-2 p-3">
+    <div className="rounded-lg border bg-card p-3 text-sm">
       {property?.trait_type && (
-        <p className="text-center text-link-foreground text-sm leading-[1.2]">
+        <p className="mb-0.5 text-muted-foreground text-sm">
           {property?.trait_type}
         </p>
       )}
-      <p className="text-center text-muted-foreground text-sm">
+      <p className="text-foreground text-sm">
         {typeof property?.value === "object"
           ? JSON.stringify(property?.value || {})
           : property?.value}
       </p>
-    </Card>
+    </div>
   );
 };

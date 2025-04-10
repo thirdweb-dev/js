@@ -7,12 +7,12 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
@@ -74,15 +74,15 @@ export function InviteTeamMembersUI(props: {
 
   return (
     <div className="relative flex grow flex-col">
-      <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
-        <DialogContent className="lg:max-w-[750px]">
+      <Sheet open={showPlanModal} onOpenChange={setShowPlanModal}>
+        <SheetContent className="!max-w-[1300px] w-full overflow-auto">
           <InviteModalContent
             teamSlug={props.team.slug}
             getBillingCheckoutUrl={props.getBillingCheckoutUrl}
             trackEvent={props.trackEvent}
           />
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       <InviteSection
         inviteTeamMembers={props.inviteTeamMembers}
@@ -147,14 +147,17 @@ function InviteModalContent(props: {
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   trackEvent: (params: TrackingParams) => void;
 }) {
-  const [planToShow, setPlanToShow] = useState<"starter" | "growth">("starter");
+  const [planToShow, setPlanToShow] = useState<
+    "starter" | "growth" | "accelerate" | "scale"
+  >("growth");
 
   const starterPlan = (
     <PricingCard
       billingPlan="starter"
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get Started for free",
+        title: "Get Started",
+        type: "checkout",
         onClick() {
           props.trackEvent({
             category: "teamOnboarding",
@@ -162,10 +165,6 @@ function InviteModalContent(props: {
             label: "attempt",
             plan: "starter",
           });
-        },
-        tracking: {
-          category: "account",
-          label: "starterPlan",
         },
       }}
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
@@ -177,11 +176,8 @@ function InviteModalContent(props: {
       billingPlan="growth"
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get Started with Growth",
-        tracking: {
-          category: "account",
-          label: "growthPlan",
-        },
+        title: "Get Started",
+        type: "checkout",
         onClick() {
           props.trackEvent({
             category: "teamOnboarding",
@@ -190,33 +186,75 @@ function InviteModalContent(props: {
             plan: "growth",
           });
         },
-        variant: "default",
       }}
       highlighted
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
     />
   );
 
+  const acceleratePlan = (
+    <PricingCard
+      billingPlan="accelerate"
+      teamSlug={props.teamSlug}
+      cta={{
+        title: "Get started",
+        type: "checkout",
+        onClick() {
+          props.trackEvent({
+            category: "teamOnboarding",
+            action: "upgradePlan",
+            label: "attempt",
+            plan: "accelerate",
+          });
+        },
+      }}
+      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+    />
+  );
+
+  const scalePlan = (
+    <PricingCard
+      billingPlan="scale"
+      teamSlug={props.teamSlug}
+      cta={{
+        title: "Get started",
+        type: "checkout",
+        onClick() {
+          props.trackEvent({
+            category: "teamOnboarding",
+            action: "upgradePlan",
+            label: "attempt",
+            plan: "scale",
+          });
+        },
+      }}
+      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+    />
+  );
+
   return (
     <div>
-      <DialogHeader>
-        <DialogTitle className="text-xl">Choose a plan</DialogTitle>
-
-        <DialogDescription className="leading-relaxed">
+      <SheetHeader className="space-y-0.5">
+        <SheetTitle className="text-left text-2xl tracking-tight">
+          Choose a plan
+        </SheetTitle>
+        <SheetDescription className="text-left leading-relaxed">
           Get started with the free Starter plan or upgrade to Growth plan for
           increased limits and advanced features.{" "}
           <UnderlineLink href="https://thirdweb.com/pricing" target="_blank">
             Learn more about pricing
           </UnderlineLink>
-        </DialogDescription>
-      </DialogHeader>
+        </SheetDescription>
+      </SheetHeader>
 
-      <div className="h-6" />
+      <div className="h-5" />
 
       {/* Desktop */}
-      <div className="hidden grid-cols-1 gap-6 md:grid-cols-2 md:gap-4 lg:grid">
+      <div className="hidden grid-cols-1 gap-6 md:grid-cols-4 md:gap-4 lg:grid">
         {starterPlan}
         {growthPlan}
+        {acceleratePlan}
+        {scalePlan}
       </div>
 
       {/* Mobile */}
@@ -233,11 +271,23 @@ function InviteModalContent(props: {
               onClick: () => setPlanToShow("growth"),
               isActive: planToShow === "growth",
             },
+            {
+              name: "Accelerate",
+              onClick: () => setPlanToShow("accelerate"),
+              isActive: planToShow === "accelerate",
+            },
+            {
+              name: "Scale",
+              onClick: () => setPlanToShow("scale"),
+              isActive: planToShow === "scale",
+            },
           ]}
         />
         <div className="h-4" />
         {planToShow === "starter" && starterPlan}
         {planToShow === "growth" && growthPlan}
+        {planToShow === "accelerate" && acceleratePlan}
+        {planToShow === "scale" && scalePlan}
       </div>
     </div>
   );

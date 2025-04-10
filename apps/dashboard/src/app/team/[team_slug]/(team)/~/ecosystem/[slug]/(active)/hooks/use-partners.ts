@@ -5,11 +5,12 @@ import { fetchPartners } from "../configuration/hooks/fetchPartners";
 export function usePartners({
   ecosystem,
   authToken,
-}: { ecosystem: Ecosystem; authToken: string }) {
+  teamId,
+}: { ecosystem: Ecosystem; authToken: string; teamId: string }) {
   const partnersQuery = useQuery({
     queryKey: ["ecosystem", ecosystem.id, "partners"],
     queryFn: async () => {
-      return fetchPartners({ ecosystem, authToken });
+      return fetchPartners({ ecosystem, authToken, teamId });
     },
     retry: false,
   });

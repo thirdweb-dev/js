@@ -1,4 +1,6 @@
 import {} from "@/components/ui/breadcrumb";
+import { notFound } from "next/navigation";
+import { getTeamBySlug } from "../../../../../../../../../../../../@/api/team";
 import { getAuthToken } from "../../../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";
@@ -11,10 +13,17 @@ export default async function EditPartnerPage({
   params: Promise<{ slug: string; team_slug: string; partner_id: string }>;
 }) {
   const { slug, team_slug, partner_id } = await params;
-  const authToken = await getAuthToken();
+  const [authToken, team] = await Promise.all([
+    getAuthToken(),
+    getTeamBySlug(team_slug),
+  ]);
 
   if (!authToken) {
     loginRedirect(`/team/${team_slug}/~/ecosystem/${slug}/configuration`);
+  }
+
+  if (!team) {
+    notFound();
   }
 
   const teamSlug = team_slug;
@@ -29,18 +38,12 @@ export default async function EditPartnerPage({
     });
 
     try {
-      // TODO re-enable this once IAW service is re deployed
       const partner = await fetchPartnerDetails({
         ecosystem,
         partnerId,
         authToken,
+        teamId: team.id,
       });
-      //   const partners = await fetchPartners({
-      //     ecosystem,
-      //     authToken,
-      //   });
-
-      //   const partner = partners.find((p) => p.id === partnerId);
 
       if (!partner) {
         return (
@@ -65,6 +68,7 @@ export default async function EditPartnerPage({
               ecosystem={ecosystem}
               partner={partner}
               authToken={authToken}
+              teamId={team.id}
             />
           </div>
         </div>

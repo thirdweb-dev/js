@@ -36,33 +36,34 @@ export function ContractPageLayout(props: {
 
   return (
     <ChakraProviderSetup>
-      <SidebarLayout sidebarLinks={sidebarLinks}>
-        <div className="border-border border-b pb-8">
-          <div className="flex flex-col gap-4 ">
-            <div className="flex flex-col justify-between gap-4 md:flex-row">
-              <ContractMetadata
-                contract={contract}
-                chain={chainMetadata}
-                contractMetadata={dashboardContractMetadata}
-                externalLinks={externalLinks}
-              />
-              <PrimaryDashboardButton
-                contractAddress={contract.address}
-                chain={contract.chain}
-                contractInfo={{
-                  chain: chainMetadata,
-                  chainSlug: chainMetadata.slug,
-                  contractAddress: contract.address,
-                }}
-                teamsAndProjects={teamsAndProjects}
-                client={client}
-              />
-            </div>
-            <DeprecatedAlert chain={chainMetadata} />
+      <div className="border-border border-b py-8">
+        <div className="container flex flex-col gap-4">
+          <div className="flex flex-col justify-between gap-4 md:flex-row">
+            <ContractMetadata
+              contract={contract}
+              chain={chainMetadata}
+              contractMetadata={dashboardContractMetadata}
+              externalLinks={externalLinks}
+            />
+            <PrimaryDashboardButton
+              contractAddress={contract.address}
+              chain={contract.chain}
+              contractInfo={{
+                chain: chainMetadata,
+                chainSlug: chainMetadata.slug,
+                contractAddress: contract.address,
+              }}
+              teamsAndProjects={teamsAndProjects}
+              client={client}
+            />
           </div>
+          <DeprecatedAlert chain={chainMetadata} />
         </div>
-        <div className="h-8" />
-        <div className="pb-10">{props.children}</div>
+      </div>
+
+      <SidebarLayout sidebarLinks={sidebarLinks}>
+        {props.children}
+        <div className="h-20" />
       </SidebarLayout>
     </ChakraProviderSetup>
   );

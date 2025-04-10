@@ -18,6 +18,8 @@ export const NFTMediaWithEmptyState: React.FC<{
   controls?: boolean;
 }> = (props) => {
   const client = useThirdwebClient();
+
+  // No media
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
       <div
@@ -55,7 +57,7 @@ export const NFTMediaWithEmptyState: React.FC<{
         poster={props.metadata.image}
         requireInteraction={props.requireInteraction}
         controls={props.controls}
-        className="h-full w-full"
+        className="[&>div]:!bg-accent [&_a]:!text-muted-foreground [&_a]:!no-underline [&_svg]:!size-6 [&_svg]:!text-muted-foreground aspect-square h-full w-full"
       />
     </div>
   );

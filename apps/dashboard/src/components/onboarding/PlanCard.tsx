@@ -1,56 +1,45 @@
-import { Badge } from "@/components/ui/badge";
-import { Flex, ListItem, UnorderedList } from "@chakra-ui/react";
-import { Card, Heading, LinkButton, Text } from "tw-components";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { TeamPlanBadge } from "../../app/components/TeamPlanBadge";
 import type { CreditsRecord } from "./ApplyForOpCreditsModal";
 
-interface PlanCardProps {
+type PlanCardProps = {
   creditsRecord: CreditsRecord;
-}
-
-export const PlanCard: React.FC<PlanCardProps> = ({ creditsRecord }) => {
-  return (
-    <Card as={Flex} justifyContent="space-between" flexDir="column" gap={2}>
-      <Flex flexDir="column" gap={2}>
-        <div>
-          <Badge
-            className="font-bold text-white capitalize"
-            style={{
-              backgroundColor: creditsRecord.color,
-            }}
-          >
-            {creditsRecord.title}
-          </Badge>
-        </div>
-        <Flex flexDir="column" gap={1}>
-          <Text color="faded">{creditsRecord.upTo ? "Up to" : "\u00A0"}</Text>
-          <Heading color="bgBlack" size="title.md" fontWeight="extrabold">
-            {creditsRecord.credits}
-          </Heading>
-          <Text letterSpacing="wider" fontWeight="bold" color="faded">
-            GAS CREDITS
-          </Text>
-        </Flex>
-        {creditsRecord.features && (
-          <UnorderedList>
-            {creditsRecord.features.map((feature) => (
-              <Text as={ListItem} key={feature} color="faded">
-                {feature}
-              </Text>
-            ))}
-          </UnorderedList>
-        )}
-      </Flex>
-      {creditsRecord.ctaTitle && creditsRecord.ctaHref && (
-        <LinkButton
-          href={creditsRecord.ctaHref}
-          colorScheme="blue"
-          size="sm"
-          variant="outline"
-          isExternal
-        >
-          {creditsRecord.ctaTitle}
-        </LinkButton>
-      )}
-    </Card>
-  );
+  teamSlug: string;
 };
+
+export function PlanCard({ creditsRecord, teamSlug }: PlanCardProps) {
+  return (
+    <div className="relative rounded-lg border bg-card">
+      <div className="flex items-center justify-between border-b px-6 py-4">
+        <h2 className="font-semibold text-foreground text-lg tracking-tight">
+          {creditsRecord.upTo || "Up To"} {creditsRecord.credits} Gas Credits
+        </h2>
+        <TeamPlanBadge plan={creditsRecord.plan} />
+      </div>
+
+      <div className="flex flex-col gap-2 px-6 py-4">
+        {creditsRecord.features && (
+          <ul className="list-disc space-y-1 pl-4 text-muted-foreground text-sm">
+            {creditsRecord.features.map((feature) => (
+              <li key={feature} className="text-muted-foreground">
+                {feature}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="flex justify-end border-t px-6 py-4">
+        <Button
+          asChild
+          className="gap-2 bg-background"
+          variant="outline"
+          size="sm"
+        >
+          <Link href={`/team/${teamSlug}/~/settings/billing`}>Upgrade</Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
