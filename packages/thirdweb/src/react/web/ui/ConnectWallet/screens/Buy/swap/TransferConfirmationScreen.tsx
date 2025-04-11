@@ -99,6 +99,10 @@ export function TransferConfirmationScreen(
           : token.address,
         amount: tokenAmount,
         purchaseData: payOptions?.purchaseData,
+        feePayer:
+          payOptions?.mode === "direct_payment"
+            ? payOptions.paymentInfo.feePayer
+            : undefined,
       });
       return transferResponse;
     },
