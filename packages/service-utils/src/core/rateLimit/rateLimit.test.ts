@@ -5,7 +5,7 @@ import { rateLimit } from "./index.js";
 const mockRedis = {
   get: vi.fn(),
   expire: vi.fn(),
-  incrBy: vi.fn(),
+  incrby: vi.fn(),
 };
 
 describe("rateLimit", () => {
@@ -14,7 +14,7 @@ describe("rateLimit", () => {
     vi.clearAllMocks();
     mockRedis.get.mockReset();
     mockRedis.expire.mockReset();
-    mockRedis.incrBy.mockReset();
+    mockRedis.incrby.mockReset();
   });
 
   afterEach(() => {
@@ -52,7 +52,7 @@ describe("rateLimit", () => {
       rateLimit: 50,
     });
 
-    expect(mockRedis.incrBy).toHaveBeenCalledTimes(1);
+    expect(mockRedis.incrby).toHaveBeenCalledTimes(1);
   });
 
   it("should rate limit if exceeded hard limit", async () => {
@@ -74,7 +74,7 @@ describe("rateLimit", () => {
       errorCode: "RATE_LIMIT_EXCEEDED",
     });
 
-    expect(mockRedis.incrBy).not.toHaveBeenCalled();
+    expect(mockRedis.incrby).not.toHaveBeenCalled();
   });
 
   it("expires on the first incr request only", async () => {
@@ -92,7 +92,7 @@ describe("rateLimit", () => {
       requestCount: 2,
       rateLimit: 50,
     });
-    expect(mockRedis.incrBy).toHaveBeenCalled();
+    expect(mockRedis.incrby).toHaveBeenCalled();
   });
 
   it("enforces rate limit if sampled (hit)", async () => {
@@ -169,7 +169,7 @@ describe("rateLimit", () => {
       requestCount: 1,
       rateLimit: 50,
     });
-    expect(mockRedis.incrBy).toHaveBeenCalledWith(expect.any(String), 1);
+    expect(mockRedis.incrby).toHaveBeenCalledWith(expect.any(String), 1);
   });
 
   it("should handle null response from redis", async () => {
@@ -216,7 +216,7 @@ describe("rateLimit", () => {
     mockRedis.get.mockResolvedValue("0");
 
     // Mock redis.set to have 100ms delay
-    mockRedis.incrBy.mockImplementation(
+    mockRedis.incrby.mockImplementation(
       () =>
         new Promise((resolve) => {
           setTimeout(() => resolve(1), 100);
@@ -256,13 +256,13 @@ describe("rateLimit", () => {
     }
 
     // Redis set should be called 3 times
-    expect(mockRedis.incrBy).toHaveBeenCalledTimes(3);
+    expect(mockRedis.incrby).toHaveBeenCalledTimes(3);
   });
 
   it("should handle custom increment values", async () => {
     // Mock initial state
     mockRedis.get.mockResolvedValue("5");
-    mockRedis.incrBy.mockResolvedValue(10);
+    mockRedis.incrby.mockResolvedValue(10);
 
     const result = await rateLimit({
       team: validTeamResponse,
@@ -279,7 +279,7 @@ describe("rateLimit", () => {
     });
 
     // Verify redis was called with correct increment
-    expect(mockRedis.incrBy).toHaveBeenCalledWith(
+    expect(mockRedis.incrby).toHaveBeenCalledWith(
       expect.stringContaining("rate-limit"),
       5,
     );
