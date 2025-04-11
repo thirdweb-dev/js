@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.94.0
+
+### Minor Changes
+
+- [#6695](https://github.com/thirdweb-dev/js/pull/6695) [`86070fa`](https://github.com/thirdweb-dev/js/commit/86070fa3093c0a1dec6357c1cf1cfe333cb6a465) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add feePayer option for direct_payment mode of PayEmbed
+
+  For direct payments via the PayEmbed, you can now specify the payer of the protocol fee for direct transfers. Can be "sender" or "receiver", defaults to "sender".
+
+  ```ts
+  <PayEmbed
+          client={THIRDWEB_CLIENT}
+          payOptions={{
+            mode: "direct_payment",
+            paymentInfo: {
+              amount: "2",
+              chain: base,
+              token: getDefaultToken(base, "USDC"),
+              sellerAddress: "0x...",
+              feePayer: "receiver", // <-- transfer fee paid by the receiver
+            },
+            metadata: {
+              name: "Black Hoodie (Size L)",
+              image: "/drip-hoodie.png",
+            },
+          }}
+        />
+  ```
+
 ## 5.93.17
 
 ### Patch Changes
