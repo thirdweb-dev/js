@@ -48,7 +48,6 @@ export function LatestEventsUI(props: {
   trackingCategory: string;
 }) {
   const { allEvents, autoUpdate, eventsHref } = props;
-
   return (
     <div className="rounded-lg border bg-card">
       {/* header */}
@@ -93,37 +92,50 @@ export function LatestEventsUI(props: {
           </TableHeader>
 
           <TableBody>
-            {allEvents.slice(0, 3).map((transaction) => (
-              <TableRow key={transaction.transactionHash}>
-                <TableCell>
-                  <CopyTextButton
-                    textToShow={shortenString(transaction.transactionHash)}
-                    textToCopy={transaction.transactionHash}
-                    tooltip="Copy transaction hash"
-                    copyIconPosition="left"
-                    variant="ghost"
-                    className="-translate-x-2 font-mono"
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="flex w-max flex-wrap gap-2">
-                    {transaction.events.map((e) => (
-                      <Button
-                        key={e.logIndex + e.address + e.eventName}
-                        variant="outline"
-                        size="sm"
-                        className="h-auto rounded-full py-1"
-                        asChild
-                      >
-                        <Link href={`${eventsHref}?event=${e.eventName}`}>
-                          {e.eventName}
-                        </Link>
-                      </Button>
-                    ))}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {allEvents.slice(0, 3).map((transaction) => {
+              return (
+                <TableRow key={transaction.transactionHash}>
+                  <TableCell>
+                    <CopyTextButton
+                      textToShow={shortenString(transaction.transactionHash)}
+                      textToCopy={transaction.transactionHash}
+                      tooltip="Copy transaction hash"
+                      copyIconPosition="left"
+                      variant="ghost"
+                      className="-translate-x-2 font-mono"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex w-max flex-wrap gap-2">
+                      {transaction.events.slice(0, 3).map((e) => (
+                        <Button
+                          key={e.logIndex + e.address + e.eventName}
+                          variant="outline"
+                          size="sm"
+                          className="h-auto rounded-full py-1"
+                          asChild
+                        >
+                          <Link href={`${eventsHref}?event=${e.eventName}`}>
+                            {e.eventName}
+                          </Link>
+                        </Button>
+                      ))}
+
+                      {transaction.events.length > 3 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-auto rounded-full py-1 hover:bg-transparent"
+                          asChild
+                        >
+                          <div>+ {transaction.events.length - 3}</div>
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
