@@ -1,7 +1,7 @@
 "use server";
 
 import { getAuthToken } from "../../app/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { API_SERVER_URL, THIRDWEB_ENGINE_CLOUD_URL } from "../constants/env";
 
 type ProxyActionParams = {
   pathname: string;
@@ -77,6 +77,10 @@ async function proxy<T>(
 
 export async function apiServerProxy<T>(params: ProxyActionParams) {
   return proxy<T>(API_SERVER_URL, params);
+}
+
+export async function engineCloudProxy<T>(params: ProxyActionParams) {
+  return proxy<T>(THIRDWEB_ENGINE_CLOUD_URL, params);
 }
 
 export async function payServerProxy<T>(params: ProxyActionParams) {

@@ -6,8 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { normalizeTime } from "@/lib/time";
 import { differenceInCalendarDays, format, subDays } from "date-fns";
-import { normalizeTime } from "../../lib/time";
 
 export function DateRangeSelector(props: {
   range: Range;
@@ -83,7 +83,7 @@ export function getLastNDaysRange(id: DurationId) {
     throw new Error("Invalid duration id");
   }
 
-  const todayDate = new Date();
+  const todayDate = new Date(Date.now() + 1000 * 60 * 60 * 24); // add 1 day to avoid timezone issues
 
   const value: Range = {
     type: id,
