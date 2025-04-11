@@ -59,6 +59,11 @@ export type GetBuyWithCryptoTransferParams = {
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
   purchaseData?: object;
+
+  /**
+   * For direct transfers, specify who will pay for the transfer fee. Can be "sender" or "receiver".
+   */
+  feePayer?: "sender" | "receiver";
 };
 
 /**
@@ -135,6 +140,7 @@ export async function getBuyWithCryptoTransfer(
         tokenAddress: params.tokenAddress,
         amount: params.amount,
         purchaseData: params.purchaseData,
+        feePayer: params.feePayer,
       }),
     });
 
