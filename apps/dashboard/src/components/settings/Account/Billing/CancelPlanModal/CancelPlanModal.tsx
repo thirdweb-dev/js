@@ -35,6 +35,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { PRO_CONTACT_US_URL } from "../../../../../constants/pro";
 import { pollWithTimeout } from "../../../../../utils/pollWithTimeout";
 
 const cancelPlanFormSchema = z
@@ -113,9 +114,6 @@ export function CancelPlanButton(props: {
     </Sheet>
   );
 }
-
-const PRO_CONTACT_US_URL =
-  "https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro";
 
 function ProPlanCancelPlanSheetContent() {
   return (

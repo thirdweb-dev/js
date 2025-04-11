@@ -39,6 +39,10 @@ export type PaymentInfo = {
    * If not provided, the native token will be used.
    */
   token?: TokenInfo;
+  /**
+   * For direct transfers, specify who will pay the transfer fee. Can be "sender" or "receiver".
+   */
+  feePayer?: "sender" | "receiver";
 } & (
   | {
       /**

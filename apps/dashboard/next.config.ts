@@ -203,7 +203,6 @@ function getConfig(): NextConfig {
                   type: "memory",
                 });
               }
-              config.externals.push("pino-pretty");
               config.module = {
                 ...config.module,
                 exprContextCritical: false,

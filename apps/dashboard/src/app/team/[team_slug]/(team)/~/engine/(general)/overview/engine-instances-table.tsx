@@ -1,4 +1,8 @@
+"use client";
+
+import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +41,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import {
   type DeleteCloudHostedEngineParams,
   type EditEngineInstanceParams,
@@ -57,11 +62,14 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { MoreHorizontalIcon } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { EngineIcon } from "../../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
+import { PRO_CONTACT_US_URL } from "../../../../../../../../constants/pro";
 
 type DeletedCloudHostedEngine = (
   params: DeleteCloudHostedEngineParams,
@@ -74,17 +82,19 @@ type RemovedEngineFromDashboard = (
 ) => Promise<void>;
 
 export function EngineInstancesTable(props: {
-  teamIdOrSlug: string;
+  teamSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const router = useDashboardRouter();
 
   return (
     <EngineInstancesTableUI
-      teamIdOrSlug={props.teamIdOrSlug}
+      teamPlan={props.teamPlan}
       instances={props.instances}
       engineLinkPrefix={props.engineLinkPrefix}
+      teamSlug={props.teamSlug}
       deleteCloudHostedEngine={async (params) => {
         await deleteCloudHostedEngine(params);
         router.refresh();
@@ -102,12 +112,13 @@ export function EngineInstancesTable(props: {
 }
 
 export function EngineInstancesTableUI(props: {
-  teamIdOrSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
   deleteCloudHostedEngine: DeletedCloudHostedEngine;
   editEngineInstance: EditedEngineInstance;
   removeEngineFromDashboard: RemovedEngineFromDashboard;
+  teamPlan: Team["billingPlan"];
+  teamSlug: string;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -115,35 +126,33 @@ export function EngineInstancesTableUI(props: {
         Engine Instances
       </h2>
 
-      <TableContainer>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Engine Instance</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {props.instances.map((instance) => (
-              <EngineInstanceRow
-                key={instance.id}
-                teamIdOrSlug={props.teamIdOrSlug}
-                instance={instance}
-                engineLinkPrefix={props.engineLinkPrefix}
-                deleteCloudHostedEngine={props.deleteCloudHostedEngine}
-                editEngineInstance={props.editEngineInstance}
-                removeEngineFromDashboard={props.removeEngineFromDashboard}
-              />
-            ))}
-          </TableBody>
-        </Table>
-
-        {props.instances.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <p className="text-muted-foreground">No engine instances found.</p>
-          </div>
-        )}
-      </TableContainer>
+      {props.instances.length === 0 ? (
+        <EmptyEngineState teamPlan={props.teamPlan} teamSlug={props.teamSlug} />
+      ) : (
+        <TableContainer>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Engine Instance</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {props.instances.map((instance) => (
+                <EngineInstanceRow
+                  key={instance.id}
+                  teamIdOrSlug={props.teamSlug}
+                  instance={instance}
+                  engineLinkPrefix={props.engineLinkPrefix}
+                  deleteCloudHostedEngine={props.deleteCloudHostedEngine}
+                  editEngineInstance={props.editEngineInstance}
+                  removeEngineFromDashboard={props.removeEngineFromDashboard}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </div>
   );
 }
@@ -334,21 +343,24 @@ function EngineActionsDropdown(props: {
           Edit
         </DropdownMenuItem>
 
-        <DropdownMenuItem
-          className="gap-2 text-destructive"
-          disabled={!canDelete}
-          onClick={() => {
-            trackEvent({
-              category: "engine",
-              action: "remove",
-              label: "open-modal",
-            });
-            props.onRemove(props.instance);
-          }}
-        >
-          <Trash2Icon className="size-4" />
-          Delete
-        </DropdownMenuItem>
+        {/* plan engine is not removable */}
+        {!props.instance.isPlanEngine && (
+          <DropdownMenuItem
+            className="gap-2 text-destructive"
+            disabled={!canDelete}
+            onClick={() => {
+              trackEvent({
+                category: "engine",
+                action: "remove",
+                label: "open-modal",
+              });
+              props.onRemove(props.instance);
+            }}
+          >
+            <Trash2Icon className="size-4" />
+            Delete
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -447,24 +459,27 @@ function EditModalContent(props: {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="url"
-                    placeholder="Enter your Engine URL"
-                    className="bg-card"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* cloud hosted engine url is not editable */}
+          {!props.instance.isCloudHosted && (
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="url"
+                      placeholder="Enter your Engine URL"
+                      className="bg-card"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
         <div className="mt-4 flex justify-end gap-3 border-t bg-card p-6">
@@ -784,6 +799,137 @@ function DeleteEngineSubscriptionModalContent(props: {
           </div>
         </form>
       </Form>
+    </div>
+  );
+}
+
+function EmptyEngineState(props: {
+  teamPlan: Team["billingPlan"];
+  teamSlug: string;
+}) {
+  const [selectedTab, setSelectedTab] = useState<
+    "self-hosted" | "cloud-hosted"
+  >("cloud-hosted");
+
+  return (
+    <div className="flex flex-col items-center justify-center rounded-lg border bg-card px-4 py-12 lg:px-6">
+      <div className="mb-4 rounded-full border bg-card p-2">
+        <EngineIcon className="size-6 text-muted-foreground" />
+      </div>
+
+      <h2 className="mb-1 font-semibold text-xl">No Engine instances found</h2>
+      <p className="mb-6 max-w-lg text-center text-muted-foreground text-sm">
+        Get started with one of the options below to add your first engine
+        instance.
+      </p>
+
+      {props.teamPlan !== "accelerate" && props.teamPlan !== "scale" && (
+        <>
+          <div className="w-full max-w-md">
+            <div className="mx-auto max-w-sm">
+              <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
+                  onClick={() => setSelectedTab("cloud-hosted")}
+                >
+                  Cloud-hosted
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(selectedTab === "self-hosted" && "bg-accent")}
+                  onClick={() => setSelectedTab("self-hosted")}
+                >
+                  Self-hosted
+                </Button>
+              </div>
+            </div>
+
+            <div className="h-5" />
+
+            {selectedTab === "self-hosted" && (
+              <div className="flex flex-col text-center">
+                <h3 className="mb-0.5 font-semibold text-base">
+                  Self-Hosted Engine
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  Add engine instance running on your own infrastructure.
+                </p>
+                <div className="h-4" />
+                <div className="mt-auto">
+                  <Button
+                    className="w-full gap-2"
+                    variant="default"
+                    size="sm"
+                    asChild
+                  >
+                    <Link href={`/team/${props.teamSlug}/~/engine/import`}>
+                      Import self-hosted Engine
+                      <ArrowRight size={16} />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {selectedTab === "cloud-hosted" && (
+              <div className="flex flex-col text-center">
+                <h3 className="mb-0.5 font-semibold text-base">
+                  Cloud-Hosted Engine
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {props.teamPlan !== "pro" ? (
+                    <>
+                      Upgrade your team plan to Accelerate or Scale to get a
+                      fully managed cloud-hosted engine instance.{" "}
+                      <UnderlineLink href="/pricing" target="_blank">
+                        View pricing
+                      </UnderlineLink>
+                    </>
+                  ) : (
+                    <>
+                      Contact us to add a cloud-hosted engine instance to your
+                      team
+                    </>
+                  )}
+                </p>
+                <div className="h-4" />
+                <div className="mt-auto">
+                  {props.teamPlan !== "pro" ? (
+                    <Button className="w-full gap-2" size="sm" asChild>
+                      <Link href={`/team/${props.teamSlug}/~/settings/billing`}>
+                        Upgrade Plan
+                        <ArrowRight size={16} />
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button className="w-full gap-2" size="sm" asChild>
+                      <Link href={PRO_CONTACT_US_URL} target="_blank">
+                        Contact Us
+                        <ArrowRight size={16} />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 text-center text-muted-foreground text-sm">
+            Need help getting started? <br className="lg:hidden" />
+            <Link
+              href="https://portal.thirdweb.com/engine"
+              target="_blank"
+              className="text-foreground hover:underline"
+            >
+              View documentation
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 }

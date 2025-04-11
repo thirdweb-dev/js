@@ -1,4 +1,5 @@
 import { Suspense, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
@@ -21,6 +22,7 @@ import type { InAppWalletLocale } from "../shared/locale/types.js";
 
 export function WalletAuth(props: {
   wallet: Wallet<"inApp" | EcosystemWalletId>;
+  chain: Chain | undefined;
   client: ThirdwebClient;
   done: () => void;
   size: "compact" | "wide";
@@ -60,6 +62,7 @@ export function WalletAuth(props: {
 
   async function login(walletToLink: Wallet) {
     setStatus("loading");
+    setError(undefined);
     walletToConnect.current = walletToLink;
     try {
       if (props.isLinking) {
@@ -67,23 +70,21 @@ export function WalletAuth(props: {
           client: props.client,
           strategy: "wallet",
           wallet: walletToLink,
-          chain: wallet.getChain() || defineChain(1),
+          chain: props.chain || wallet.getChain() || defineChain(1),
           ecosystem,
-        }).catch((e) => {
-          setError(e.message);
-          throw e;
         });
       } else {
         await wallet.connect({
           client: props.client,
           strategy: "wallet",
           wallet: walletToLink,
-          chain: walletToLink.getChain() || defineChain(1),
+          chain: props.chain || walletToLink.getChain() || defineChain(1),
         });
       }
       addConnectedWallet(walletToLink);
       done();
-    } catch {
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unknown error");
       setStatus("error");
     }
   }

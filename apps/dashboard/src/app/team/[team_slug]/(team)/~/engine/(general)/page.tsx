@@ -1,3 +1,4 @@
+import { getTeamBySlug } from "@/api/team";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
@@ -23,10 +24,17 @@ export default async function Page(props: {
     );
   }
 
-  const authToken = await getAuthToken();
+  const [authToken, team] = await Promise.all([
+    getAuthToken(),
+    getTeamBySlug(params.team_slug),
+  ]);
 
   if (!authToken) {
     loginRedirect(`/team/${params.team_slug}/~/engine`);
+  }
+
+  if (!team) {
+    redirect("/team");
   }
 
   const res = await getEngineInstances({
@@ -38,6 +46,7 @@ export default async function Page(props: {
     <EngineInstancesList
       team_slug={params.team_slug}
       instances={res.data || []}
+      teamPlan={team.billingPlan}
     />
   );
 }

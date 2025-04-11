@@ -15,6 +15,8 @@ export async function getEngineInstance(params: {
       status: "active",
       lastAccessedAt: new Date().toISOString(),
       accountId: params.accountId,
+      isCloudHosted: false,
+      isPlanEngine: false,
     };
 
     return sandboxEngine;

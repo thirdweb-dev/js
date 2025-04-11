@@ -15,8 +15,6 @@ import invariant from "tiny-invariant";
 import type { EngineStatus } from "../../../app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
 
-export type EngineTier = "STARTER" | "PREMIUM" | "ENTERPRISE";
-
 // Engine instances
 export type EngineInstance = {
   id: string;
@@ -24,6 +22,8 @@ export type EngineInstance = {
   name: string;
   url: string;
   lastAccessedAt: string;
+  isCloudHosted: boolean;
+  isPlanEngine: boolean;
   status:
     | "active"
     | "pending"

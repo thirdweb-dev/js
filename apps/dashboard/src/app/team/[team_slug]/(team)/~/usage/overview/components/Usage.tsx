@@ -11,7 +11,6 @@ import { subMonths } from "date-fns";
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { toPercent, toSize } from "utils/number";
 import { TotalSponsoredChartCardUI } from "../../../../_components/TotalSponsoredCard";
 import { SponsoredTransactionsTable } from "./SponsoredTransactionsTable";
 import { UsageCard } from "./UsageCard";
@@ -31,6 +30,11 @@ type UsageProps = {
   }[];
 };
 
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 0,
+  notation: "compact",
+});
+
 export const Usage: React.FC<UsageProps> = ({
   usage: usageData,
   subscriptions,
@@ -39,23 +43,6 @@ export const Usage: React.FC<UsageProps> = ({
   client,
   projects,
 }) => {
-  // TODO - get this from team instead of account
-  const storageMetrics = useMemo(() => {
-    if (!usageData) {
-      return {};
-    }
-
-    const consumedBytes = usageData.usage.storage.sumFileSizeBytes;
-    const limitBytes = usageData.limits.storage;
-    const percent = toPercent(consumedBytes, limitBytes);
-
-    return {
-      total: `${toSize(Math.min(consumedBytes, limitBytes), "MB")} of ${toSize(limitBytes)} included storage used`,
-      progress: percent,
-      totalUsage: `Total Usage: ${toSize(consumedBytes, "MB")}`,
-    };
-  }, [usageData]);
-
   // TODO - get this from team instead of account
   const rpcMetrics = useMemo(() => {
     if (!usageData) {
@@ -66,7 +53,8 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited Requests",
       total: (
         <span className="text-muted-foreground">
-          {usageData.rateLimits.rpc} Requests Per Second
+          {compactNumberFormatter.format(usageData.rateLimits.rpc)} Requests Per
+          Second
         </span>
       ),
     };
@@ -81,7 +69,8 @@ export const Usage: React.FC<UsageProps> = ({
       title: "Unlimited Requests",
       total: (
         <span className="text-muted-foreground">
-          {usageData.rateLimits.storage} Requests Per Second
+          {compactNumberFormatter.format(usageData.rateLimits.storage)} Requests
+          Per Second
         </span>
       ),
     };
@@ -99,6 +88,8 @@ export const Usage: React.FC<UsageProps> = ({
   const currentPeriodEnd = usageSub?.currentPeriodEnd
     ? new Date(usageSub.currentPeriodEnd)
     : new Date();
+
+  const storageUsage = team.capabilities.storage.upload;
 
   return (
     <div className="flex grow flex-col gap-8">
@@ -139,7 +130,15 @@ export const Usage: React.FC<UsageProps> = ({
       />
 
       <UsageCard
-        {...storageMetrics}
+        title={`${formatStorageBytes(storageUsage.totalFileSizeBytesLimit)} Storage`}
+        total={
+          storageUsage.rateLimit > 10_000 ? undefined : (
+            <p className="text-muted-foreground">
+              {compactNumberFormatter.format(storageUsage.rateLimit)} Requests
+              Per Second
+            </p>
+          )
+        }
         name="Storage Pinning"
         description="Amount of IPFS Storage pinning allowed in your plan"
       >
@@ -273,4 +272,30 @@ async function AsyncTotalSponsoredChartCard(
       title={props.title}
     />
   );
+}
+
+function formatStorageBytes(bytes: number) {
+  const ONE_KB = 1024;
+  const ONE_MB = ONE_KB * 1024;
+  const ONE_GB = ONE_MB * 1024;
+
+  if (bytes < ONE_KB) {
+    return `${bytes} bytes`;
+  }
+
+  if (bytes < ONE_MB) {
+    return `${compactNumberFormatter.format(bytes / ONE_KB)} KB`;
+  }
+
+  if (bytes < ONE_GB) {
+    return `${compactNumberFormatter.format(bytes / ONE_MB)} MB`;
+  }
+
+  const gbs = bytes / ONE_GB;
+
+  if (gbs > 1000) {
+    return "Unlimited";
+  }
+
+  return `${compactNumberFormatter.format(gbs)} GB`;
 }

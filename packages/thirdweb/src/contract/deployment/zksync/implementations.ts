@@ -20,6 +20,9 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   [2741]: {
     MarketplaceV3: "0x4b14569c7B79DBe686Ac3Ba5996131E7EDaB7a93",
   },
+  [232]: {
+    MarketplaceV3: "0x9742f5ac11958cFAd151eBF0Fc31302fA409036E",
+  },
 };
 
 export const ZKSYNC_WETH: Record<number, string> = {
@@ -29,4 +32,5 @@ export const ZKSYNC_WETH: Record<number, string> = {
   [37111]: "0xaA91D645D7a6C1aeaa5988e0547267B77d33fe16",
   [555271]: "0xb0b8b267d44c64BA6dD1Daf442949887c85199f6",
   [2741]: "0x3439153EB7AF838Ad19d56E1571FBD09333C2809",
+  [232]: "0xE5ecd226b3032910CEaa43ba92EE8232f8237553",
 };

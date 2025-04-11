@@ -78,6 +78,7 @@
     "papaparse": "^5.5.2",
     "pluralize": "^8.0.0",
     "posthog-js": "1.67.1",
+    "prettier": "3.5.3",
     "qrcode": "^1.5.3",
     "react": "19.1.0",
     "react-children-utilities": "^2.10.0",

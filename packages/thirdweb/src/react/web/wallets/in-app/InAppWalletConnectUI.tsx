@@ -113,6 +113,7 @@ function InAppWalletConnectUI(props: {
         wallet={props.wallet}
         client={props.client}
         size={props.size}
+        chain={props.chain}
         done={done}
         onBack={goBackToMain || (() => setSelectionData({}))}
         locale={props.connectLocale}

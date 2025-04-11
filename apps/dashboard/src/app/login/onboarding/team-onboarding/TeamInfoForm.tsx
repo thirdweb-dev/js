@@ -155,6 +155,8 @@ export function TeamInfoFormUI(props: {
     });
   }
 
+  const maxTeamNameLength = 32;
+
   return (
     <div className="rounded-lg border bg-card ">
       <Form {...form}>
@@ -199,6 +201,7 @@ export function TeamInfoFormUI(props: {
                       placeholder="Company Inc."
                       autoComplete="off"
                       {...field}
+                      maxLength={maxTeamNameLength}
                     />
                   </FormControl>
                   <FormDescription>

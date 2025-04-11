@@ -1,5 +1,53 @@
 # thirdweb
 
+## 5.94.0
+
+### Minor Changes
+
+- [#6695](https://github.com/thirdweb-dev/js/pull/6695) [`86070fa`](https://github.com/thirdweb-dev/js/commit/86070fa3093c0a1dec6357c1cf1cfe333cb6a465) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add feePayer option for direct_payment mode of PayEmbed
+
+  For direct payments via the PayEmbed, you can now specify the payer of the protocol fee for direct transfers. Can be "sender" or "receiver", defaults to "sender".
+
+  ```ts
+  <PayEmbed
+          client={THIRDWEB_CLIENT}
+          payOptions={{
+            mode: "direct_payment",
+            paymentInfo: {
+              amount: "2",
+              chain: base,
+              token: getDefaultToken(base, "USDC"),
+              sellerAddress: "0x...",
+              feePayer: "receiver", // <-- transfer fee paid by the receiver
+            },
+            metadata: {
+              name: "Black Hoodie (Size L)",
+              image: "/drip-hoodie.png",
+            },
+          }}
+        />
+  ```
+
+## 5.93.17
+
+### Patch Changes
+
+- [#6693](https://github.com/thirdweb-dev/js/pull/6693) [`c1d6bb7`](https://github.com/thirdweb-dev/js/commit/c1d6bb784812a8a2d5524ecf9fa70cb1132542fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Extra gas buffer for quote and transfer transactions
+
+## 5.93.16
+
+### Patch Changes
+
+- [#6690](https://github.com/thirdweb-dev/js/pull/6690) [`0a798c5`](https://github.com/thirdweb-dev/js/commit/0a798c58b3a8c6788713c6ccdc8a1cae13246302) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add smartAccountAddress to getUser result
+
+## 5.93.15
+
+### Patch Changes
+
+- [#6655](https://github.com/thirdweb-dev/js/pull/6655) [`59be4ea`](https://github.com/thirdweb-dev/js/commit/59be4ea2fbf29019fedfd91b7841e47684859b5c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Single phase functionality for erc1155
+
+- [#6686](https://github.com/thirdweb-dev/js/pull/6686) [`e10c1e6`](https://github.com/thirdweb-dev/js/commit/e10c1e696e585b1a95a389cb0603238b731b815e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Pass through desired chain when signing in with wallet for ecosystems
+
 ## 5.93.14
 
 ### Patch Changes
@@ -148,7 +196,7 @@
   });
 
   console.log(
-    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`
+    `To get ${buyQuote.destinationAmount} wei on destination chain, you need to pay ${buyQuote.originAmount} wei`,
   );
 
   // When ready to execute, prepare the transaction
@@ -183,7 +231,7 @@
   });
 
   console.log(
-    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`
+    `If you send ${sellQuote.originAmount} wei, you'll receive approximately ${sellQuote.destinationAmount} wei`,
   );
 
   // When ready to execute, prepare the transaction
@@ -3105,7 +3153,7 @@
 
   const example1 = parseAbiParams(
     ["address", "uint256"],
-    ["0x.....", "1200000"]
+    ["0x.....", "1200000"],
   ); // result: ["0x......", 1200000n]
   ```
 

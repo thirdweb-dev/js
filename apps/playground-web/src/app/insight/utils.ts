@@ -9,7 +9,15 @@ export type BlueprintPathMetadata = OpenAPIV3.PathItemObject;
 export type BlueprintListItem = {
   id: string;
   name: string;
+  description: string;
   slug: string;
+  openapiJson: OpenAPIV3.Document;
+  openapiUrl: string;
+  paths: {
+    name: string;
+    path: string;
+    method: string;
+  }[];
 };
 
 export type BlueprintSpec = {

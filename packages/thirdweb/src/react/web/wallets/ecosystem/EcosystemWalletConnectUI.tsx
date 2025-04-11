@@ -121,6 +121,7 @@ function EcosystemWalletConnectUI(props: {
     return (
       <WalletAuth
         meta={props.meta}
+        chain={props.chain}
         inAppLocale={locale}
         walletConnect={props.walletConnect}
         wallet={props.wallet}
