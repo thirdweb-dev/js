@@ -7,7 +7,7 @@ const RATE_LIMIT_WINDOW_SECONDS = 10;
 type IRedis = {
   get: (key: string) => Promise<string | null>;
   expire(key: string, seconds: number): Promise<number>;
-  incrBy(key: string, value: number): Promise<number>;
+  incrby(key: string, value: number): Promise<number>;
 };
 
 export async function rateLimit(args: {
@@ -83,7 +83,7 @@ export async function rateLimit(args: {
   // do not await this, it just needs to execute at all
   (async () =>
     //  always incrementBy the amount specified for the key
-    await redis.incrBy(key, increment).then(async () => {
+    await redis.incrby(key, increment).then(async () => {
       // if the initial request count was 0, set the key to expire in the future
       if (requestCount === 0) {
         await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS);
