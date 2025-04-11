@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.1
+
+### Patch Changes
+
+- [#6704](https://github.com/thirdweb-dev/js/pull/6704) [`3ab31c8`](https://github.com/thirdweb-dev/js/commit/3ab31c82104ceb2f6c11998555953e886f13d380) Thanks [@jnsdls](https://github.com/jnsdls)! - fix incrby
+
 ## 0.9.0
 
 ### Minor Changes
