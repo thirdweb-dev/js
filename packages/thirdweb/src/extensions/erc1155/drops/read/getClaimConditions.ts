@@ -20,10 +20,36 @@ export type GetClaimConditionsParams = {
  * ```
  */
 export async function getClaimConditions(
-  options: BaseTransactionOptions<GetClaimConditionsParams>,
+  options: BaseTransactionOptions<GetClaimConditionsParams> & {
+    singlePhaseDrop?: boolean;
+  },
 ): Promise<ClaimCondition[]> {
-  const [multi, single] = await Promise.allSettled([
-    (async () => {
+  try {
+    if (options.singlePhaseDrop) {
+      return SinglePhase.claimCondition(options).then(
+        ([
+          startTimestamp,
+          maxClaimableSupply,
+          supplyClaimed,
+          quantityLimitPerWallet,
+          merkleRoot,
+          pricePerToken,
+          currency,
+          metadata,
+        ]) => [
+          {
+            startTimestamp,
+            maxClaimableSupply,
+            supplyClaimed,
+            quantityLimitPerWallet,
+            merkleRoot,
+            pricePerToken,
+            currency,
+            metadata,
+          },
+        ],
+      );
+    } else {
       const [startId, count] = await MultiPhase.claimCondition(options);
 
       const conditionPromises: Array<
@@ -38,37 +64,10 @@ export async function getClaimConditions(
         );
       }
       return Promise.all(conditionPromises);
-    })(),
-    SinglePhase.claimCondition(options).then(
-      ([
-        startTimestamp,
-        maxClaimableSupply,
-        supplyClaimed,
-        quantityLimitPerWallet,
-        merkleRoot,
-        pricePerToken,
-        currency,
-        metadata,
-      ]) => ({
-        startTimestamp,
-        maxClaimableSupply,
-        supplyClaimed,
-        quantityLimitPerWallet,
-        merkleRoot,
-        pricePerToken,
-        currency,
-        metadata,
-      }),
-    ),
-  ]);
-  if (multi.status === "fulfilled") {
-    return multi.value;
+    }
+  } catch {
+    throw new Error("Claim condition not found");
   }
-  if (single.status === "fulfilled") {
-    return [single.value];
-  }
-
-  throw new Error("Claim condition not found");
 }
 
 /**

@@ -222,6 +222,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
   const claimConditionsQuery = useReadContract(getClaimPhasesInLegacyFormat, {
     contract,
+    isMultiPhase,
     ...(isErc20
       ? { type: "erc20", decimals: tokenDecimals.data }
       : isErc721
