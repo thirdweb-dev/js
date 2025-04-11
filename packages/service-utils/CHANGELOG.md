@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.0
+
+### Minor Changes
+
+- [#6702](https://github.com/thirdweb-dev/js/pull/6702) [`d036b87`](https://github.com/thirdweb-dev/js/commit/d036b87ae163dd80f58224e4b507e6f4ac01ce62) Thanks [@jnsdls](https://github.com/jnsdls)! - update rateLimit function
+
 ## 0.8.19
 
 ### Patch Changes
