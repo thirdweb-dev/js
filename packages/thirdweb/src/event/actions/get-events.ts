@@ -233,15 +233,14 @@ async function getLogsFromInsight(options: {
   }
 
   try {
-    const baseUrl = new URL("https://insight.thirdweb-dev.com/v1/events"); // TODO: change to prod
-    let path = "";
+    let baseUrl = "https://insight.thirdweb-dev.com/v1/events"; // TODO: change to prod
     if (params.address) {
-      path += `/${params.address}`;
+      baseUrl += `/${params.address}`;
       if (signature) {
-        path += `/${signature}`;
+        baseUrl += `/${signature}`;
       }
     }
-    const url = new URL(path, baseUrl);
+    const url = new URL(baseUrl);
 
     url.searchParams.set("chain", chain.id.toString());
     url.searchParams.set("limit", "500"); // this is max limit on insight
