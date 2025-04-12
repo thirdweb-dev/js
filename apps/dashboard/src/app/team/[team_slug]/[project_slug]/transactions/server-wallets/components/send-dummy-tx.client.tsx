@@ -38,7 +38,7 @@ export default function SendDummyTx(props: {
       accessToken: string;
     }) => {
       const response = await fetch(
-        `${THIRDWEB_ENGINE_CLOUD_URL}/account/send-transaction`,
+        `${THIRDWEB_ENGINE_CLOUD_URL}/write/contract`,
         {
           method: "POST",
           headers: {
@@ -52,8 +52,9 @@ export default function SendDummyTx(props: {
             },
             transactionParams: [
               {
-                to: "0xeb0effdfb4dc5b3d5d3ac6ce29f3ed213e95d675",
-                value: "0",
+                contractAddress: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+                method: "approve",
+                params: [args.walletAddress, "0"],
               },
             ],
             vaultAccessToken: args.accessToken,

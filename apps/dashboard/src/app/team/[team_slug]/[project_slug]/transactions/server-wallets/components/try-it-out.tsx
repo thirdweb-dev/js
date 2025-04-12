@@ -32,7 +32,15 @@ export function TryItOut(props: {
         />
         <div className="h-4" />
         <div className="flex flex-row justify-end gap-4">
-          <Button variant={"secondary"}>View API reference</Button>
+          <Button variant={"secondary"} asChild>
+            <a
+              href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View API reference
+            </a>
+          </Button>
           {props.wallet && (
             <SendDummyTx
               authToken={props.authToken}
@@ -49,7 +57,7 @@ export function TryItOut(props: {
 
 const sendTransactionExample = () => `\
 const response = fetch(
-    "${THIRDWEB_ENGINE_CLOUD_URL}/account/send-transaction", 
+    "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract",
     {
         method: "POST",
         headers: {
@@ -62,10 +70,11 @@ const response = fetch(
                 "signerAddress": "<your-server-wallet-address>"
             },
             "transactionParams": [
-            {
-                "to": "0xeb0effdfb4dc5b3d5d3ac6ce29f3ed213e95d675",
-                "value": "0"
-            }
+              {
+                "contractAddress": "0x...",
+                "method": "approve",
+                "params": ["0x...", "0"],
+              },
             ],
             "vaultAccessToken": "<your-wallet-access-token>",
             "chainId": "84532"
