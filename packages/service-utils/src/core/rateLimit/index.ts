@@ -5,8 +5,9 @@ const RATE_LIMIT_WINDOW_SECONDS = 10;
 
 // Redis interface compatible with ioredis (Node) and upstash (Cloudflare Workers).
 type IRedis = {
-  incr: (key: string) => Promise<number>;
-  expire: (key: string, ttlSeconds: number) => Promise<0 | 1>;
+  get: (key: string) => Promise<string | null>;
+  expire(key: string, seconds: number): Promise<number>;
+  incrby(key: string, value: number): Promise<number>;
 };
 
 export async function rateLimit(args: {
@@ -20,8 +21,20 @@ export async function rateLimit(args: {
    * @default 1.0
    */
   sampleRate?: number;
+  /**
+   * The number of requests to increment by.
+   * @default 1
+   */
+  increment?: number;
 }): Promise<RateLimitResult> {
-  const { team, limitPerSecond, serviceConfig, redis, sampleRate = 1.0 } = args;
+  const {
+    team,
+    limitPerSecond,
+    serviceConfig,
+    redis,
+    sampleRate = 1.0,
+    increment = 1,
+  } = args;
 
   const shouldSampleRequest = Math.random() < sampleRate;
   if (!shouldSampleRequest) {
@@ -49,12 +62,8 @@ export async function rateLimit(args: {
     RATE_LIMIT_WINDOW_SECONDS;
   const key = `rate-limit:${serviceScope}:${team.id}:${timestampWindow}`;
 
-  // Increment and get the current request count in this window.
-  const requestCount = await redis.incr(key);
-  if (requestCount === 1) {
-    // For the first increment, set an expiration to clean up this key.
-    await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS);
-  }
+  // first read the request count from redis
+  const requestCount = Number((await redis.get(key).catch(() => "0")) || "0");
 
   // Get the limit for this window accounting for the sample rate.
   const limitPerWindow =
@@ -71,9 +80,21 @@ export async function rateLimit(args: {
     };
   }
 
+  // do not await this, it just needs to execute at all
+  (async () =>
+    //  always incrementBy the amount specified for the key
+    await redis.incrby(key, increment).then(async () => {
+      // if the initial request count was 0, set the key to expire in the future
+      if (requestCount === 0) {
+        await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS);
+      }
+    }))().catch(() => {
+    console.error("Error incrementing rate limit key", key);
+  });
+
   return {
     rateLimited: false,
-    requestCount,
+    requestCount: requestCount + increment,
     rateLimit: limitPerWindow,
   };
 }

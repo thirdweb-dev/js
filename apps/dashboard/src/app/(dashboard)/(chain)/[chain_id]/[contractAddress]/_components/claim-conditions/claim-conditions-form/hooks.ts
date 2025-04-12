@@ -55,7 +55,7 @@ type Options =
     };
 
 export async function getClaimPhasesInLegacyFormat(
-  options: BaseTransactionOptions<Options>,
+  options: BaseTransactionOptions<Options> & { isMultiPhase: boolean },
 ): Promise<CombinedClaimCondition[]> {
   const conditions = await (async () => {
     switch (options.type) {
@@ -64,7 +64,10 @@ export async function getClaimPhasesInLegacyFormat(
       case "erc721":
         return ERC721Ext.getClaimConditions(options);
       case "erc1155":
-        return ERC1155Ext.getClaimConditions(options);
+        return ERC1155Ext.getClaimConditions({
+          ...options,
+          singlePhaseDrop: !options.isMultiPhase,
+        });
     }
   })();
 

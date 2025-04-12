@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.1
+
+### Patch Changes
+
+- [#6704](https://github.com/thirdweb-dev/js/pull/6704) [`3ab31c8`](https://github.com/thirdweb-dev/js/commit/3ab31c82104ceb2f6c11998555953e886f13d380) Thanks [@jnsdls](https://github.com/jnsdls)! - fix incrby
+
+## 0.9.0
+
+### Minor Changes
+
+- [#6702](https://github.com/thirdweb-dev/js/pull/6702) [`d036b87`](https://github.com/thirdweb-dev/js/commit/d036b87ae163dd80f58224e4b507e6f4ac01ce62) Thanks [@jnsdls](https://github.com/jnsdls)! - update rateLimit function
+
 ## 0.8.19
 
 ### Patch Changes
