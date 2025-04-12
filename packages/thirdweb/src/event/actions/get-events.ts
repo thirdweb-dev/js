@@ -11,7 +11,10 @@ import type {
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from "abitype";
-import { formatLog } from "viem";
+import { type Log, formatLog } from "viem";
+import type { Chain } from "../../chains/types.js";
+import { getChainServices } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
@@ -22,7 +25,7 @@ import {
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
-import { getThirdwebDomains } from "../../utils/domains.js";
+import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { type PreparedEvent, prepareEvent } from "../prepare-event.js";
@@ -52,13 +55,9 @@ export type GetContractEventsResult<
   TStrict extends boolean,
 > = ParseEventLogsResult<abiEvents, TStrict>;
 
-type InsightEvent = {
-  data: {
-    address: string;
-    data: `0x${string}`;
-    topics: [`0x${string}`, ...`0x${string}`[]] | [];
-  }[];
-};
+export type GetLogsParamsExtra = {
+  signature?: string;
+} & GetLogsParams;
 
 /**
  * Retrieves events from a contract based on the provided options.
@@ -121,29 +120,6 @@ export async function getContractEvents<
 
   const rpcRequest = getRpcClient(contract);
 
-  try {
-    if (events) {
-      const sig = `${events[0]?.abiEvent.name}(${events[0]?.abiEvent.inputs.map((i) => i.type).join(",")})`;
-      const url = new URL(
-        `https://${getThirdwebDomains().insight}/v1/events/${contract.address}/${sig}`,
-      );
-      url.searchParams.set("limit", "10");
-      url.searchParams.set("chain", contract.chain.id.toString());
-      const clientFetch = getClientFetch(contract.client);
-      const result = await clientFetch(url.toString());
-      const eventInfo = (await result.json()) as InsightEvent;
-      const cleanedEventInfo = eventInfo.data.map((e) => formatLog(e));
-
-      return parseEventLogs({
-        logs: cleanedEventInfo,
-        events,
-      });
-    }
-  } catch (error) {
-    //biome-ignore lint/suspicious/noConsole: Todo
-    console.debug(error);
-  }
-
   if (
     restParams.blockHash &&
     (blockRange || restParams.fromBlock || restParams.toBlock)
@@ -198,20 +174,38 @@ export async function getContractEvents<
     }
   }
 
-  const logsParams: GetLogsParams[] =
+  const logsParams: GetLogsParamsExtra[] =
     events && events.length > 0
       ? // if we have events passed in then we use those
         events.map((e) => ({
           ...restParams,
           address: getAddress(contract.address),
           topics: e.topics,
+          signature: `${e?.abiEvent.name}(${e?.abiEvent.inputs.map((i) => i.type).join(",")})`,
         }))
       : // otherwise we want "all" events (aka not pass any topics at all)
         [{ ...restParams, address: getAddress(contract.address) }];
 
-  const logs = await Promise.all(
-    logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
-  );
+  let logs: Log[][] = [];
+
+  // try fetching from insight if available
+  try {
+    logs = await Promise.all(
+      logsParams.map((p) =>
+        getLogsFromInsight({
+          params: p,
+          chain: contract.chain,
+          client: contract.client,
+        }),
+      ),
+    );
+  } catch {
+    // fetch from rpc
+    logs = await Promise.all(
+      logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
+    );
+  }
+
   const flattenLogs = logs
     .flat()
     .sort((a, b) => Number((a.blockNumber ?? 0n) - (b.blockNumber ?? 0n)));
@@ -219,4 +213,91 @@ export async function getContractEvents<
     logs: flattenLogs,
     events: resolvedEvents,
   });
+}
+
+async function getLogsFromInsight(options: {
+  params: GetLogsParamsExtra;
+  chain: Chain;
+  client: ThirdwebClient;
+  signature?: string;
+}): Promise<Log[]> {
+  const { params, chain, client } = options;
+
+  const chainServices = await getChainServices(chain);
+  const insightEnabled = chainServices.some(
+    (c) => c.service === "insight" && c.enabled,
+  );
+
+  if (!insightEnabled) {
+    throw new Error(`Insight is not available for chainId ${chain.id}`);
+  }
+
+  try {
+    const baseUrl = new URL("https://insight.thirdweb-dev.com/v1/events"); // TODO: change to prod
+    let path = "";
+    if (params.address) {
+      path += `/${params.address}`;
+      if (params.signature) {
+        path += `/${params.signature}`;
+      }
+    }
+    const url = new URL(path, baseUrl);
+
+    url.searchParams.set("chain", chain.id.toString());
+    url.searchParams.set("limit", "500"); // this is max limit on insight
+
+    if (params.blockHash) {
+      url.searchParams.set("filter_block_hash", params.blockHash);
+    } else {
+      if (params.fromBlock) {
+        const fromBlock =
+          typeof params.fromBlock === "bigint"
+            ? numberToHex(params.fromBlock)
+            : params.fromBlock;
+
+        url.searchParams.set("filter_block_number_gte", fromBlock);
+      }
+      if (params.toBlock) {
+        const toBlock =
+          typeof params.toBlock === "bigint"
+            ? numberToHex(params.toBlock)
+            : params.toBlock;
+
+        url.searchParams.set("filter_block_number_lte", toBlock);
+      }
+    }
+
+    const clientFetch = getClientFetch(client);
+    const result = await clientFetch(url.toString());
+    const fetchedEventData = (await result.json()) as {
+      data: {
+        chain_id: number;
+        block_number: number;
+        block_hash: string;
+        block_timestamp: string;
+        transaction_hash: string;
+        transaction_index: number;
+        log_index: number;
+        address: string;
+        data: string;
+        topics: string[];
+      }[];
+    };
+    const cleanedEventData = fetchedEventData.data.map((tx) => ({
+      chainId: tx.chain_id,
+      blockNumber: numberToHex(tx.block_number),
+      blockHash: tx.block_hash as Hex,
+      blockTimestamp: tx.block_timestamp,
+      transactionHash: tx.transaction_hash as Hex,
+      transactionIndex: numberToHex(tx.transaction_index),
+      logIndex: numberToHex(tx.log_index),
+      address: tx.address,
+      data: tx.data as Hex,
+      topics: tx.topics as [`0x${string}`, ...`0x${string}`[]] | [] | undefined,
+    }));
+
+    return cleanedEventData.map((e) => formatLog(e));
+  } catch {
+    throw new Error("Error fetching events from insight");
+  }
 }
