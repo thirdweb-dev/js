@@ -55,7 +55,7 @@ export type GetContractEventsResult<
   TStrict extends boolean,
 > = ParseEventLogsResult<abiEvents, TStrict>;
 
-export type GetLogsParamsExtra = {
+type GetLogsParamsExtra = {
   signature?: string;
 } & GetLogsParams;
 
