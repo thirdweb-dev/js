@@ -38,13 +38,16 @@ export default async function Page(props: {
     chain_id: string;
   }>;
 }) {
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
+
   const ProxyDeployedEvent = prepareEvent({
     signature:
       "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
+    filters: {
+      proxy: params.contractAddress.toLowerCase(),
+    },
   });
-
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();
@@ -113,12 +116,6 @@ export default async function Page(props: {
     const events = await getContractEvents({
       contract: twCloneFactoryContract,
       events: [ProxyDeployedEvent],
-      insightTopicFilters: [
-        {
-          topic: params.contractAddress as `0x${string}`,
-          index: 2,
-        },
-      ],
     });
     const event = events.find(
       (e) =>
@@ -206,7 +203,6 @@ export default async function Page(props: {
       const events = await getContractEvents({
         contract: contract,
         events: [moduleEvent],
-        blockRange: 123456n,
       });
 
       const filteredEvents = events.filter(

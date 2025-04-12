@@ -57,13 +57,7 @@ export type GetContractEventsResult<
 
 export type GetLogsParamsExtra = {
   signature?: string;
-  insightTopicFilters?: InsightTopicFilter[];
 } & GetLogsParams;
-
-export type InsightTopicFilter = {
-  topic: Hex;
-  index: 1 | 2 | 3;
-};
 
 /**
  * Retrieves events from a contract based on the provided options.
@@ -120,9 +114,7 @@ export async function getContractEvents<
   >[],
   const TStrict extends boolean = true,
 >(
-  options: GetContractEventsOptions<abi, abiEvents, TStrict> & {
-    insightTopicFilters?: InsightTopicFilter[];
-  },
+  options: GetContractEventsOptions<abi, abiEvents, TStrict>,
 ): Promise<GetContractEventsResult<abiEvents, TStrict>> {
   const { contract, events, blockRange, ...restParams } = options;
 
@@ -190,7 +182,6 @@ export async function getContractEvents<
           address: getAddress(contract.address),
           topics: e.topics,
           signature: `${e?.abiEvent.name}(${e?.abiEvent.inputs.map((i) => i.type).join(",")})`,
-          insightTopicFilters: options.insightTopicFilters,
         }))
       : // otherwise we want "all" events (aka not pass any topics at all)
         [{ ...restParams, address: getAddress(contract.address) }];
@@ -229,9 +220,8 @@ async function getLogsFromInsight(options: {
   chain: Chain;
   client: ThirdwebClient;
   signature?: string;
-  insightTopicFilters?: InsightTopicFilter[];
 }): Promise<Log[]> {
-  const { params, chain, client, signature, insightTopicFilters } = options;
+  const { params, chain, client, signature } = options;
 
   const chainServices = await getChainServices(chain);
   const insightEnabled = chainServices.some(
@@ -277,12 +267,12 @@ async function getLogsFromInsight(options: {
       }
     }
 
-    if (insightTopicFilters) {
-      for (const topicFilter of insightTopicFilters) {
-        url.searchParams.set(
-          `filter_topic_${topicFilter.index}`,
-          topicFilter.topic,
-        );
+    if (params.topics) {
+      const args = params.topics.slice(1);
+      for (const [i, a] of args.entries()) {
+        if (a) {
+          url.searchParams.set(`filter_topic_${i + 1}`, a as Hex);
+        }
       }
     }
 
