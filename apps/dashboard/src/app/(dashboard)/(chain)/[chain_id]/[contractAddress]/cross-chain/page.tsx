@@ -2,7 +2,6 @@ import { fetchPublishedContractsFromDeploy } from "components/contract-component
 import { notFound } from "next/navigation";
 import {
   type ContractOptions,
-  eth_blockNumber,
   eth_getTransactionByHash,
   eth_getTransactionReceipt,
   getContractEvents,
@@ -111,16 +110,15 @@ export default async function Page(props: {
   let creationBlockNumber: bigint | undefined;
 
   if (twCloneFactoryContract) {
-    const latestBlockNumber = await eth_blockNumber(
-      getRpcClient({
-        client: contract.client,
-        chain: contract.chain,
-      }),
-    );
     const events = await getContractEvents({
       contract: twCloneFactoryContract,
       events: [ProxyDeployedEvent],
-      blockRange: latestBlockNumber < 100000n ? latestBlockNumber : 100000n,
+      insightTopicFilters: [
+        {
+          topic: params.contractAddress as `0x${string}`,
+          index: 2,
+        },
+      ],
     });
     const event = events.find(
       (e) =>
