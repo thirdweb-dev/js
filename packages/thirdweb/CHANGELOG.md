@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.94.1
+
+### Patch Changes
+
+- [#6707](https://github.com/thirdweb-dev/js/pull/6707) [`fa0d114`](https://github.com/thirdweb-dev/js/commit/fa0d1141da8a903a1cc5333553ce430091819a9a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add retry logic to predictAccountAddress
+
 ## 5.94.0
 
 ### Minor Changes
