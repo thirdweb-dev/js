@@ -97,11 +97,35 @@ export async function predictAddress(args: {
         accountSalt && isHex(accountSalt)
           ? accountSalt
           : stringToHex(accountSalt ?? "");
-      return readContract({
-        contract: factoryContract,
-        method: "function getAddress(address, bytes) returns (address)",
-        params: [adminAddress, saltHex],
-      });
+      let result: string | undefined;
+      let retries = 0;
+      const maxRetries = 3;
+
+      while (retries <= maxRetries) {
+        try {
+          result = await readContract({
+            contract: factoryContract,
+            method: "function getAddress(address, bytes) returns (address)",
+            params: [adminAddress, saltHex],
+          });
+          break;
+        } catch (error) {
+          if (retries === maxRetries) {
+            throw error;
+          }
+
+          // Exponential backoff: 2^(retries + 1) * 100ms (200ms, 400ms, 800ms)
+          const delay = 2 ** (retries + 1) * 100;
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          retries++;
+        }
+      }
+      if (!result) {
+        throw new Error(
+          `No smart account address found for admin address ${adminAddress} and salt ${accountSalt}`,
+        );
+      }
+      return result;
     },
     {
       cacheKey: `${args.factoryContract.chain.id}-${args.factoryContract.address}-${args.adminAddress}-${args.accountSalt}`,
