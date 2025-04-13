@@ -63,6 +63,9 @@ export async function connectEip1193Wallet({
       });
     } catch (e) {
       console.error(e);
+      if (extractErrorMessage(e)?.toLowerCase()?.includes("rejected")) {
+        throw e;
+      }
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
     attempts++;
@@ -374,4 +377,17 @@ async function switchChain(provider: EIP1193Provider, chain: Chain) {
       ],
     });
   }
+}
+
+function extractErrorMessage(e: unknown) {
+  if (e instanceof Error) {
+    return e.message;
+  }
+  if (typeof e === "string") {
+    return e;
+  }
+  if (typeof e === "object" && e !== null) {
+    return JSON.stringify(e);
+  }
+  return String(e);
 }
