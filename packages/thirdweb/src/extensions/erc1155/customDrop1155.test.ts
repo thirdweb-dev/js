@@ -99,6 +99,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const condition = await getClaimConditions({
         contract,
         tokenId: 0n,
+        singlePhaseDrop: true,
       });
       expect(condition.length).to.eq(1);
       expect(condition[0]?.maxClaimableSupply).to.eq(10n);
