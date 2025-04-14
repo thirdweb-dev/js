@@ -54,7 +54,7 @@ export function WalletsSelection(props: {
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border bg-muted">
+    <section className="overflow-hidden rounded-xl border bg-card">
       {/* heading */}
       <div className="flex items-center justify-between gap-4 p-4">
         <h2 className="font-semibold text-base"> Other Wallets </h2>

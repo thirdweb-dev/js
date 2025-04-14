@@ -125,7 +125,7 @@ function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
   return parameters;
 }
 
-export function BlueprintPlaygroundUI(props: {
+function BlueprintPlaygroundUI(props: {
   backLink: string;
   isPending: boolean;
   onRun: (url: string) => void;
@@ -194,7 +194,7 @@ export function BlueprintPlaygroundUI(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex grow flex-col">
-          <div className="flex grow flex-col pb-20">
+          <div className="flex grow flex-col">
             <div className="flex grow flex-col overflow-hidden rounded-xl border bg-card">
               <PlaygroundHeader
                 domain={props.domain}

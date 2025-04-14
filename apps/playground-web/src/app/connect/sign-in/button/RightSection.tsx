@@ -222,7 +222,7 @@ export function RightSection(props: {
 /**
  * @internal
  */
-export function getWallets(connectOptions: ConnectPlaygroundOptions) {
+function getWallets(connectOptions: ConnectPlaygroundOptions) {
   const wallets = [
     ...connectOptions.walletIds.map((id) => {
       if (id === "xyz.abs") {
@@ -272,7 +272,7 @@ function TabButtons(props: {
 }) {
   return (
     <div>
-      <div className="flex justify-start gap-1 rounded-lg border bg-muted p-2 shadow-md md:inline-flex">
+      <div className="flex justify-start gap-1 rounded-lg border bg-card p-2 shadow-md md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
             key={tab.name}

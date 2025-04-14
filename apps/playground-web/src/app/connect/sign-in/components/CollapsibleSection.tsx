@@ -19,10 +19,10 @@ export function CollapsibleSection(props: {
         </span>
       }
       triggerContainerClassName={cn(
-        "rounded-2xl !px-5 !py-3 text-muted-foreground hover:text-foreground bg-muted  border hover:bg-accent transition-colors",
+        "rounded-2xl !px-5 !py-3 text-muted-foreground hover:text-foreground bg-card  border hover:bg-accent transition-colors",
         props.triggerContainerClassName,
       )}
-      activeTriggerClassName="bg-secondary text-foreground "
+      activeTriggerClassName="bg-card text-foreground "
       defaultOpen={props.defaultOpen}
       containerClassName="border-none"
     >

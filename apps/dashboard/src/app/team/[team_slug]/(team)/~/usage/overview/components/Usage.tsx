@@ -1,6 +1,8 @@
 import { getInAppWalletUsage, getUserOpUsage } from "@/api/analytics";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
+import type { RPCUsageDataItem } from "@/api/usage/rpc";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { Button } from "@/components/ui/button";
 import type {
   Account,
@@ -28,6 +30,7 @@ type UsageProps = {
     image: string | null;
     slug: string;
   }[];
+  rpcUsage: RPCUsageDataItem[];
 };
 
 const compactNumberFormatter = new Intl.NumberFormat("en-US", {
@@ -42,24 +45,8 @@ export const Usage: React.FC<UsageProps> = ({
   team,
   client,
   projects,
+  rpcUsage,
 }) => {
-  // TODO - get this from team instead of account
-  const rpcMetrics = useMemo(() => {
-    if (!usageData) {
-      return {};
-    }
-
-    return {
-      title: "Unlimited Requests",
-      total: (
-        <span className="text-muted-foreground">
-          {compactNumberFormatter.format(usageData.rateLimits.rpc)} Requests Per
-          Second
-        </span>
-      ),
-    };
-  }, [usageData]);
-
   const gatewayMetrics = useMemo(() => {
     if (!usageData) {
       return {};
@@ -91,6 +78,37 @@ export const Usage: React.FC<UsageProps> = ({
 
   const storageUsage = team.capabilities.storage.upload;
 
+  const rpcUsageData = useMemo(() => {
+    const mappedRPCUsage = rpcUsage.reduce(
+      (acc, curr) => {
+        switch (curr.usageType) {
+          case "rate-limit":
+            acc[curr.date] = {
+              ...(acc[curr.date] || {}),
+              "rate-limit":
+                (acc[curr.date]?.["rate-limit"] || 0) + Number(curr.count),
+              included: acc[curr.date]?.included || 0,
+            };
+            break;
+          default:
+            acc[curr.date] = {
+              ...(acc[curr.date] || {}),
+              "rate-limit": acc[curr.date]?.["rate-limit"] || 0,
+              included: (acc[curr.date]?.included || 0) + Number(curr.count),
+            };
+            break;
+        }
+        return acc;
+      },
+      {} as Record<string, { included: number; "rate-limit": number }>,
+    );
+
+    return Object.entries(mappedRPCUsage).map(([date, usage]) => ({
+      time: new Date(date).getTime(),
+      ...usage,
+    }));
+  }, [rpcUsage]);
+
   return (
     <div className="flex grow flex-col gap-8">
       <InAppWalletUsersChartCard
@@ -117,10 +135,26 @@ export const Usage: React.FC<UsageProps> = ({
         variant="team"
       />
 
-      <UsageCard
-        {...rpcMetrics}
-        name="RPC"
-        description="Amount of RPC requests allowed per second in your plan"
+      <ThirdwebBarChart
+        header={{
+          title: "RPC Requests",
+          description: `Your plan allows for ${usageData.rateLimits.rpc} requests per second`,
+          titleClassName: "text-xl mb-0.5",
+        }}
+        data={rpcUsageData}
+        isPending={false}
+        variant="stacked"
+        config={{
+          included: {
+            label: "RPC Requests",
+            color: "hsl(var(--chart-1))",
+          },
+          "rate-limit": {
+            label: "Rate Limited Requests",
+            color: "hsl(var(--chart-3))",
+          },
+        }}
+        chartClassName="aspect-[1.5] lg:aspect-[4]"
       />
 
       <UsageCard

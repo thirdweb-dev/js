@@ -1,7 +1,7 @@
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
-import { APIHeader } from "../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../components/blocks/APIHeader";
 import PayEmbedPlayground from "./embed/page";
 
 export const metadata: Metadata = {
@@ -17,21 +17,18 @@ export default function Page(props: {
 }) {
   return (
     <ThirdwebProvider>
-      <div className="">
-        <APIHeader
-          title="Universal Bridge UI component"
-          description={
-            <>
-              Onramp users with credit card &amp; cross-chain crypto payments —
-              and generate revenue for each user transaction.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
-          heroLink="/pay.png"
-        />
-
+      <PageLayout
+        title="Universal Bridge UI component"
+        description={
+          <>
+            Onramp users with credit card &amp; cross-chain crypto payments —
+            and generate revenue for each user transaction.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
+      >
         <PayEmbedPlayground searchParams={props.searchParams} />
-      </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }

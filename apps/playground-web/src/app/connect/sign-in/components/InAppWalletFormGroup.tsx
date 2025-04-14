@@ -34,7 +34,7 @@ export function InAppWalletFormGroup(props: {
   const { connectOptions, setConnectOptions } = props;
 
   return (
-    <div className="rounded-xl border bg-muted">
+    <div className="rounded-xl border bg-card">
       <div className="flex items-center justify-between gap-2 p-4">
         <Link
           target="_blank"

@@ -29,7 +29,7 @@ export function ReadContractRawPreview() {
   });
 
   return (
-    <div className="rounded-2xl border bg-secondary shadow-xl">
+    <div className="rounded-2xl border bg-card shadow-xl">
       <MediaRenderer client={THIRDWEB_CLIENT} src={encodeUriData(data ?? "")} />
     </div>
   );

@@ -7,10 +7,10 @@ export default async function Page() {
   try {
     const paths = await getBridgePaths();
     return (
-      <div className="pb-20">
-        <div className="flex flex-col justify-between py-6 md:flex-row md:gap-8">
+      <div className="container pb-20">
+        <div className="flex flex-col justify-between md:flex-row md:gap-8">
           <div>
-            <h2 className="mb-2 font-semibold text-2xl tracking-tight">
+            <h2 className="mb-1 font-semibold text-2xl tracking-tight">
               Universal Bridge REST API
             </h2>
             <p className="mb-5 text-muted-foreground">
@@ -20,7 +20,9 @@ export default async function Page() {
           </div>
 
           <Link href="https://bridge.thirdweb.com/reference" target="_blank">
-            <Button className="max-md:w-full">View all endpoints</Button>
+            <Button className="max-md:w-full" variant="outline">
+              View all endpoints
+            </Button>
           </Link>
         </div>
 
@@ -75,7 +77,7 @@ function BlueprintSection(props: {
                     className="before:absolute before:inset-0"
                   >
                     <div className="flex flex-col">
-                      <p className="font-semibold text-md">{item.name}</p>
+                      <p className="font-semibold text-base">{item.name}</p>
                       <p className="text-muted-foreground text-sm">
                         {item.description}
                       </p>

@@ -6,7 +6,7 @@ import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { BasicAuthHookPreview } from "../../../components/auth/basic-auth-hook";
-import { APIHeader } from "../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -18,61 +18,37 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Auth"
-          description={
-            <>
-              Authenticate users to your backend using only their wallet. This
-              is a secure and easy way to authenticate users without requiring
-              them to create an additional account.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/typescript/v5/auth?utm_source=playground"
-          heroLink="/auth.png"
-        />
-
-        <section className="space-y-8">
+      <PageLayout
+        title="Auth"
+        description={
+          <>
+            Authenticate users to your backend using only their wallet. This is
+            a secure and easy way to authenticate users without requiring them
+            to create an additional account.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/typescript/v5/auth?utm_source=playground"
+      >
+        <div className="flex flex-col gap-14">
           <BasicAuth />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <GatedContent />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <SmartAccountAuth />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <BasicAuthHook />
-        </section>
-      </main>
+        </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
 function BasicAuth() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Basic Auth
-        </h2>
-        <p className="max-w-[600px]">
-          Add authentication to your app with a single component.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<BasicAuthPreview />}
-        code={`"use client";
+    <CodeExample
+      header={{
+        title: "Basic Auth",
+        description: "Add authentication to your app with a single component.",
+      }}
+      preview={<BasicAuthPreview />}
+      code={`"use client";
 
 import {
   generatePayload,
@@ -102,28 +78,21 @@ export function AuthButton() {
   );
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function BasicAuthHook() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Auth with your own UI
-        </h2>
-        <p className="max-w-[600px]">
-          Use the `useConnectModal` hook to add authentication to your app with
-          your own UI.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<BasicAuthHookPreview />}
-        code={`"use client";
+    <CodeExample
+      header={{
+        title: "Auth with your own UI",
+        description:
+          "Use the `useConnectModal` hook to add authentication to your app with your own UI.",
+      }}
+      preview={<BasicAuthHookPreview />}
+      code={`"use client";
 
 import {
   generatePayload,
@@ -161,28 +130,21 @@ export function AuthHook() {
   return <Button type="button" onClick={onClick}>{isLoggedIn ? "Sign out" : "Sign in"}</Button>;
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function GatedContent() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Gating content with Auth
-        </h2>
-        <p className="max-w-[600px]">
-          Protect your page with thirdweb Auth. Deliver exclusive content to
-          users who qualify.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<GatedContentPreview />}
-        code={`import { THIRDWEB_CLIENT } from "@/lib/client";
+    <CodeExample
+      header={{
+        title: "Gating content with Auth",
+        description:
+          "Protect your page with thirdweb Auth. Deliver exclusive content to users who qualify.",
+      }}
+      preview={<GatedContentPreview />}
+      code={`import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
 import { getAuthResult } from "@/app/connect/auth/server/actions/auth";
 import { hasEnoughBalance } from "...";
@@ -216,27 +178,20 @@ export async function GatedContentPreview() {
     </div>
   );
 }`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function SmartAccountAuth() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Smart Account Auth
-        </h2>
-        <p className="max-w-[600px]">
-          Use smart accounts with Sign in with Ethereum (SIWE)
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<SmartAccountAuthPreview />}
-        code={`"use client";
+    <CodeExample
+      header={{
+        title: "Smart Account Auth",
+        description: "Use smart accounts with Sign in with Ethereum (SIWE)",
+      }}
+      preview={<SmartAccountAuthPreview />}
+      code={`"use client";
 
 import {
   generatePayload,
@@ -271,8 +226,7 @@ export function AuthButton() {
   );
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }

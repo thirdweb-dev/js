@@ -1,6 +1,4 @@
 "use client";
-
-import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
@@ -12,7 +10,6 @@ import {
   lightTheme,
   useActiveAccount,
 } from "thirdweb/react";
-import { type WalletId, createWallet } from "thirdweb/wallets";
 import { Button } from "../../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { cn } from "../../../../lib/utils";
@@ -178,22 +175,6 @@ export function RightSection(props: {
   );
 }
 
-/**
- * @internal
- */
-export function getWallets(walletIds: WalletId[]) {
-  const wallets = [
-    ...walletIds.map((id) => {
-      if (id === "xyz.abs") {
-        return abstractWallet();
-      }
-      return createWallet(id);
-    }),
-  ];
-
-  return wallets;
-}
-
 function BackgroundPattern() {
   const color = "hsl(var(--foreground)/15%)";
   return (
@@ -218,7 +199,7 @@ function TabButtons(props: {
 }) {
   return (
     <div>
-      <div className="flex justify-start gap-1 rounded-lg border bg-muted p-2 shadow-md md:inline-flex">
+      <div className="flex justify-start gap-1 rounded-lg border bg-card p-2 shadow-md md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
             key={tab.name}

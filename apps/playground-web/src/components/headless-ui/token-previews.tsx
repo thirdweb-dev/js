@@ -62,27 +62,3 @@ export function TokenSymbolBasicPreview() {
     </TokenProvider>
   );
 }
-
-export function TokenCardPreview() {
-  return (
-    <TokenProvider
-      address={USDC_ADDRESS}
-      client={THIRDWEB_CLIENT}
-      chain={ethereum}
-    >
-      <div className="flex flex-row items-center gap-2 rounded-lg border bg-slate-950 px-4 py-1">
-        <TokenIcon className="h-10 w-10" iconResolver="/usdc.svg" />
-        <div className="flex flex-col">
-          <TokenName
-            className="font-bold"
-            loadingComponent={<span>Loading...</span>}
-          />
-          <TokenSymbol
-            className="text-gray-500"
-            loadingComponent={<span>Loading...</span>}
-          />
-        </div>
-      </div>
-    </TokenProvider>
-  );
-}

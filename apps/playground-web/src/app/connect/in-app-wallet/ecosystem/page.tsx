@@ -1,39 +1,50 @@
 import { CodeExample } from "@/components/code/code-example";
+import type { Metadata } from "next";
+import { PageLayout } from "../../../../components/blocks/APIHeader";
 import { EcosystemConnectEmbed } from "../../../../components/in-app-wallet/ecosystem";
 import { Profiles } from "../../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../../components/thirdweb-provider";
+import { metadataBase } from "../../../../lib/constants";
+
+export const metadata: Metadata = {
+  metadataBase,
+  title: "Build your own Ecosystem | thirdweb",
+  description:
+    "Build a public or permissioned ecosystem by allowing third party apps and games to connect to the same accounts.",
+};
 
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <section className="space-y-6">
-        <AnyAuth />
-      </section>
-      <section className="space-y-8">
+      <PageLayout
+        title="Build your own Ecosystem"
+        description={
+          <>
+            Build a public or permissioned ecosystem by allowing third party
+            apps and games to connect to the same accounts.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/wallet/ecosystem/set-up?utm_source=playground"
+      >
+        <ConnectEmbedExample />
+        <div className="h-14" />
         <Profiles />
-      </section>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function AnyAuth() {
+function ConnectEmbedExample() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Build your own Ecosystem
-        </h2>
-        <p className="max-w-[600px]">
-          Build a public or permissioned ecosystem by allowing third party apps
-          and games to connect to the same accounts.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<EcosystemConnectEmbed />}
-        code={`import { ecosystemWallet } from "thirdweb/wallets";
+    <CodeExample
+      header={{
+        title: "Connect Embed",
+        description:
+          "Connect to your ecosystem with a prebuilt UI. All settings are controlled in your dashboard.",
+      }}
+      preview={<EcosystemConnectEmbed />}
+      code={`import { ecosystemWallet } from "thirdweb/wallets";
         import { ConnectEmbed } from "thirdweb/react";
-
 
         const wallets = [
           // all settings are controlled in your dashboard
@@ -45,8 +56,7 @@ function AnyAuth() {
           return (
 <ConnectEmbed client={client} wallets={wallets} />);
 };`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }

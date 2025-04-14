@@ -16,9 +16,7 @@ export function CodeGen(props: {
           code={getCode(props.options)}
           lang="tsx"
           loader={<CodeLoading />}
-          // Need to add max-h in both places - TODO figure out a better way
-          className="xl:h-[calc(100vh-100px)]"
-          scrollableClassName="xl:h-[calc(100vh-100px)]"
+          className="grow"
         />
       </Suspense>
     </div>

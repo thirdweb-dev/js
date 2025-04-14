@@ -7,7 +7,7 @@ import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
-import { APIHeader } from "../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -19,67 +19,39 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Blockchain API"
-          description={
-            <>
-              Performant, reliable and type safe API to read write to any
-              contract on any EVM chain through our RPC Edge endpoints.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/typescript/v5?utm_source=playground"
-          heroLink="/blockchain-api.png"
-        />
-
-        <section className="space-y-8">
+      <PageLayout
+        title="Blockchain API"
+        description={
+          <>
+            Performant, reliable and type safe API to read write to any contract
+            on any EVM chain through our RPC Edge endpoints.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/typescript/v5?utm_source=playground"
+      >
+        <div className="flex flex-col gap-14">
           <ReadContractRaw />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <ReadContractExtension />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <WriteContractExtension />
-        </section>
-
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <WriteContractRaw />
-        </section>
 
-        <div className="h-14" />
-
-        <section className="space-y-8">
           <WatchEvent />
-        </section>
-      </main>
+        </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
 function ReadContractRaw() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Query blockchain data
-        </h2>
-        <p className="max-w-[600px]">
-          Read data from any contract or wallet. Type safe functions and hooks
-          without needing full ABIs.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<ReadContractRawPreview />}
-        code={`import { getContract } from "thirdweb";
+    <CodeExample
+      header={{
+        title: "Query blockchain data",
+        description:
+          "Read data from any contract or wallet. Type safe functions and hooks without needing full ABIs.",
+      }}
+      preview={<ReadContractRawPreview />}
+      code={`import { getContract } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
@@ -105,28 +77,21 @@ function App() {
   );
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function ReadContractExtension() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Prebuilt read extensions
-        </h2>
-        <p className="max-w-[600px]">
-          Extensions let you do more with less code. High level functions with
-          simple API that do pre and post processing for all common standards.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<ReadContractExtensionPreview />}
-        code={`import { getContract } from "thirdweb";
+    <CodeExample
+      header={{
+        title: "Prebuilt read extensions",
+        description:
+          "Extensions let you do more with less code. High level functions with simple API that do pre and post processing for all common standards.",
+      }}
+      preview={<ReadContractExtensionPreview />}
+      code={`import { getContract } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
@@ -150,28 +115,21 @@ function App() {
   );
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function WriteContractExtension() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Prebuilt write extensions
-        </h2>
-        <p className="max-w-[600px]">
-          Extensions let you do more with less code. High level functions with
-          simple API that do pre and post processing for all common standards.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<WriteContractExtensionPreview />}
-        code={`import { getContract } from "thirdweb";
+    <CodeExample
+      header={{
+        title: "Prebuilt write extensions",
+        description:
+          "Extensions let you do more with less code. High level functions with simple API that do pre and post processing for all common standards.",
+      }}
+      preview={<WriteContractExtensionPreview />}
+      code={`import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc20";
 
@@ -195,28 +153,21 @@ function App() {
   </TransactionButton>
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function WriteContractRaw() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Write data to blockchain
-        </h2>
-        <p className="max-w-[600px]">
-          Send transactions with the connected wallet. Type safe functions and
-          hooks to send contracts call or raw transaction.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<WriteContractRawPreview />}
-        code={`import { getContract, prepareContractCall, toUnits } from "thirdweb";
+    <CodeExample
+      header={{
+        title: "Write data to blockchain",
+        description:
+          "Send transactions with the connected wallet. Type safe functions and hooks to send contracts call or raw transaction.",
+      }}
+      preview={<WriteContractRawPreview />}
+      code={`import { getContract, prepareContractCall, toUnits } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 
 const tw_coin = getContract({
@@ -245,28 +196,21 @@ function App() {
   </TransactionButton>
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
 function WatchEvent() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Listen to blockchain events
-        </h2>
-        <p className="max-w-[600px]">
-          Subscribe to any contract event. Auto polling hooks and functions with
-          type safe event extensions for all common standards.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<WatchEventPreview />}
-        code={`import { useContractEvents } from "thirdweb/react";
+    <CodeExample
+      header={{
+        title: "Listen to blockchain events",
+        description:
+          "Subscribe to any contract event. Auto polling hooks and functions with type safe event extensions for all common standards.",
+      }}
+      preview={<WatchEventPreview />}
+      code={`import { useContractEvents } from "thirdweb/react";
 import { getContract } from "thirdweb";
 import { base } from "thirdweb/chains";
 import { transferEvent } from "thirdweb/extensions/erc20";
@@ -291,8 +235,7 @@ function App() {
   });
 }
 `}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }

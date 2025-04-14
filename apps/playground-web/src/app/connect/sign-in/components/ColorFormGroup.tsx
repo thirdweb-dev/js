@@ -32,7 +32,7 @@ export function ColorFormGroup(props: {
     .filter((colorSection) => colorSection.colors.length > 0);
 
   return (
-    <section className="flex flex-col rounded-lg border bg-muted">
+    <section className="flex flex-col rounded-lg border bg-card">
       {/* heading */}
       <div className="flex items-center justify-between gap-4 border-b p-4">
         <h2 className="font-semibold text-base"> Colors </h2>
@@ -63,7 +63,7 @@ export function ColorFormGroup(props: {
                     return (
                       // biome-ignore lint/a11y/noLabelWithoutControl: input is inside the label, so no need to add id
                       <label
-                        className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-secondary"
+                        className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-accent"
                         key={color.colorId}
                       >
                         <ColorInput

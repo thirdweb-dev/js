@@ -1,21 +1,15 @@
 import { CodeExample } from "../code/code-example";
 import { ChainIconPreview, ChainNamePreview } from "./chain-previews";
 
-export function ChainIconBasic() {
+export function ChainIconExample() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          ChainIcon
-        </h2>
-        <p className="max-w-[600px] text-lg">
-          Show the native icon of a network
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<ChainIconPreview />}
-        code={`import { ChainProvider, ChainIcon } from "thirdweb/react";
+    <CodeExample
+      header={{
+        title: "ChainIcon",
+        description: "Show the native icon of a network",
+      }}
+      preview={<ChainIconPreview />}
+      code={`import { ChainProvider, ChainIcon } from "thirdweb/react";
 
 function App() {
   return (
@@ -28,25 +22,20 @@ function App() {
     </ChainProvider>
   )
 }`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
-export function ChainNameBasic() {
+export function ChainNameExample() {
   return (
-    <>
-      <div className="mt-8 space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          ChainName
-        </h2>
-        <p className="max-w-[600px] text-lg">Show the name of the chain</p>
-      </div>
-
-      <CodeExample
-        preview={<ChainNamePreview />}
-        code={`import { ChainProvider, ChainName } from "thirdweb/react";
+    <CodeExample
+      header={{
+        title: "ChainName",
+        description: "Show the name of the chain",
+      }}
+      preview={<ChainNamePreview />}
+      code={`import { ChainProvider, ChainName } from "thirdweb/react";
 
 function App() {
   return (
@@ -55,8 +44,7 @@ function App() {
     </ChainProvider>
   )
 }`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }

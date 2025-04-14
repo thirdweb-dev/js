@@ -1,21 +1,19 @@
 import type React from "react";
-import { APIHeader } from "../../components/blocks/APIHeader";
+import { PageLayout } from "../../components/blocks/APIHeader";
 
 export default function Layout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <APIHeader
-        title="Insight"
-        description={
-          <>Simple & customizable endpoints for querying rich blockchain data</>
-        }
-        docsLink="https://portal.thirdweb.com/insight?utm_source=playground"
-        heroLink="/insight-hero.avif"
-      />
-
+    <PageLayout
+      title="Insight"
+      description={
+        <>Simple & customizable endpoints for querying rich blockchain data</>
+      }
+      docsLink="https://portal.thirdweb.com/insight?utm_source=playground"
+      containerClassName="pb-16"
+    >
       {props.children}
-    </div>
+    </PageLayout>
   );
 }
