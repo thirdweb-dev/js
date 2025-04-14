@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getTeamBySlug } from "../../../../../../../../../@/api/team";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
+import { fetchPartners } from "../configuration/hooks/fetchPartners";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";
 
 export default async function Page(props: {
@@ -40,11 +41,18 @@ export default async function Page(props: {
     redirect("/team");
   }
 
+  const partners = await fetchPartners({
+    ecosystem,
+    authToken,
+    teamId: team.id,
+  });
+
   return (
     <EcosystemAnalyticsPage
       ecosystemSlug={ecosystem.slug}
       teamId={team.id}
       interval={searchParams.interval || "week"}
+      partners={partners}
       range={
         searchParams.from && searchParams.to
           ? {

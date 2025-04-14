@@ -18,7 +18,9 @@ export interface InAppWalletStats {
   uniqueWalletsConnected: number;
 }
 
-export interface EcosystemWalletStats extends InAppWalletStats {}
+export interface EcosystemWalletStats extends InAppWalletStats {
+  ecosystemPartnerId: string;
+}
 
 export interface UserOpStats {
   date: string;

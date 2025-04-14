@@ -4,6 +4,7 @@ import {
   getLastNDaysRange,
 } from "components/analytics/date-range-selector";
 import { RangeSelector } from "components/analytics/range-selector";
+import type { Partner } from "../../../../types";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 import { EcosystemWalletsSummary } from "./Summary";
 
@@ -12,11 +13,13 @@ export async function EcosystemAnalyticsPage({
   teamId,
   interval,
   range,
+  partners,
 }: {
   ecosystemSlug: string;
   teamId: string;
   interval: "day" | "week";
   range?: Range;
+  partners: Partner[];
 }) {
   if (!range) {
     range = getLastNDaysRange("last-120");
@@ -69,6 +72,14 @@ export async function EcosystemAnalyticsPage({
         <EcosystemWalletUsersChartCard
           ecosystemWalletStats={stats || []}
           isPending={false}
+          groupBy="authenticationMethod"
+          partners={partners}
+        />
+        <EcosystemWalletUsersChartCard
+          ecosystemWalletStats={stats || []}
+          isPending={false}
+          groupBy="ecosystemPartnerId"
+          partners={partners}
         />
       </div>
     </div>

@@ -23,7 +23,7 @@ function getStripe() {
 
 export async function getTeamInvoices(
   team: Team,
-  options?: { cursor?: string },
+  options?: { cursor?: string; status?: "open" },
 ) {
   try {
     const customerId = team.stripeCustomerId;
@@ -37,6 +37,8 @@ export async function getTeamInvoices(
       customer: customerId,
       limit: 10,
       starting_after: options?.cursor,
+      // Only return open invoices if the status is open
+      status: options?.status,
     });
 
     return invoices;

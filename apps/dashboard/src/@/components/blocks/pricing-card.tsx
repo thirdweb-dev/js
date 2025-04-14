@@ -30,6 +30,7 @@ type PricingCardCta = {
 
 type PricingCardProps = {
   teamSlug: string;
+  billingStatus: Team["billingStatus"];
   billingPlan: keyof typeof TEAM_PLANS;
   cta?: PricingCardCta;
   ctaHint?: string;
@@ -41,6 +42,7 @@ type PricingCardProps = {
 
 export const PricingCard: React.FC<PricingCardProps> = ({
   teamSlug,
+  billingStatus,
   billingPlan,
   cta,
   highlighted = false,
@@ -131,6 +133,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <div className="flex flex-col gap-3">
           {billingPlanToSkuMap[billingPlan] && cta.type === "checkout" && (
             <CheckoutButton
+              billingStatus={billingStatus}
               buttonProps={{
                 variant: highlighted ? "default" : "outline",
                 className: highlighted ? undefined : "bg-background",
