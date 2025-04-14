@@ -13,10 +13,7 @@ import {
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useBuyWithFiatQuote } from "../../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { PREFERRED_FIAT_PROVIDER_STORAGE_KEY } from "../../../../../../core/utils/storage.js";
-import {
-  defaultMessage,
-  getErrorMessage,
-} from "../../../../../utils/errors.js";
+import { getErrorMessage } from "../../../../../utils/errors.js";
 import {
   Drawer,
   DrawerOverlay,
@@ -180,7 +177,7 @@ export function FiatScreenContent(props: {
       )}
 
       <Container flex="column" gap="sm">
-        <Text size="sm">Pay with credit card</Text>
+        <Text size="sm">Pay with a debit card</Text>
         <div>
           <PayWithCreditCard
             isLoading={fiatQuoteQuery.isLoading}
@@ -242,9 +239,14 @@ export function FiatScreenContent(props: {
                 />
               </Text>
             ) : (
-              <Text color="danger" size="sm" center multiline>
-                {errorMsg.message || defaultMessage}
-              </Text>
+              <div>
+                <Text color="danger" size="xs" center multiline>
+                  {errorMsg.title}
+                </Text>
+                <Text size="xs" center multiline>
+                  {errorMsg.message}
+                </Text>
+              </div>
             )}
           </div>
         )}
