@@ -77,6 +77,7 @@ export function InviteTeamMembersUI(props: {
       <Sheet open={showPlanModal} onOpenChange={setShowPlanModal}>
         <SheetContent className="!max-w-[1300px] w-full overflow-auto">
           <InviteModalContent
+            billingStatus={props.team.billingStatus}
             teamSlug={props.team.slug}
             getBillingCheckoutUrl={props.getBillingCheckoutUrl}
             trackEvent={props.trackEvent}
@@ -144,6 +145,7 @@ export function InviteTeamMembersUI(props: {
 
 function InviteModalContent(props: {
   teamSlug: string;
+  billingStatus: Team["billingStatus"];
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   trackEvent: (params: TrackingParams) => void;
 }) {
@@ -154,6 +156,7 @@ function InviteModalContent(props: {
   const starterPlan = (
     <PricingCard
       billingPlan="starter"
+      billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
         title: "Get Started",
@@ -174,6 +177,7 @@ function InviteModalContent(props: {
   const growthPlan = (
     <PricingCard
       billingPlan="growth"
+      billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
         title: "Get Started",
@@ -195,6 +199,7 @@ function InviteModalContent(props: {
   const acceleratePlan = (
     <PricingCard
       billingPlan="accelerate"
+      billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
         title: "Get started",
@@ -215,6 +220,7 @@ function InviteModalContent(props: {
   const scalePlan = (
     <PricingCard
       billingPlan="scale"
+      billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
         title: "Get started",

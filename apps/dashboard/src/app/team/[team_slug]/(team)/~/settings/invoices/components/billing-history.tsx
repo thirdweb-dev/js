@@ -25,6 +25,7 @@ import { searchParams } from "../search-params";
 
 export function BillingHistory(props: {
   invoices: Stripe.Invoice[];
+  status: "all" | "past_due" | "open";
   hasMore: boolean;
 }) {
   const [isLoading, startTransition] = useTransition();
@@ -74,6 +75,14 @@ export function BillingHistory(props: {
   };
 
   if (props.invoices.length === 0) {
+    if (props.status === "open") {
+      return (
+        <div className="py-6 text-center">
+          <Receipt className="mx-auto h-12 w-12 text-muted-foreground" />
+          <h3 className="mt-2 font-medium text-lg">No open invoices</h3>
+        </div>
+      );
+    }
     return (
       <div className="py-6 text-center">
         <Receipt className="mx-auto h-12 w-12 text-muted-foreground" />

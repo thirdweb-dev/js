@@ -91,6 +91,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         {/* Starter */}
         <PricingCard
           billingPlan="starter"
+          billingStatus={team.billingStatus}
           current={validTeamPlan === "starter"}
           cta={
             starterCta?.type === "checkout"
@@ -114,6 +115,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         {/* Growth */}
         <PricingCard
           billingPlan="growth"
+          billingStatus={team.billingStatus}
           activeTrialEndsAt={
             validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
           }
@@ -140,6 +142,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         {/* Accelerate */}
         <PricingCard
           billingPlan="accelerate"
+          billingStatus={team.billingStatus}
           teamSlug={team.slug}
           current={validTeamPlan === "accelerate"}
           cta={
@@ -163,6 +166,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         {/* Scale */}
         <PricingCard
           billingPlan="scale"
+          billingStatus={team.billingStatus}
           teamSlug={team.slug}
           current={validTeamPlan === "scale"}
           cta={

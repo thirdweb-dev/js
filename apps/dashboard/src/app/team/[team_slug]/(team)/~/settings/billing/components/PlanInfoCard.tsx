@@ -119,6 +119,8 @@ export function PlanInfoCardUI(props: {
             </Button>
 
             <CancelPlanButton
+              teamSlug={props.team.slug}
+              billingStatus={props.team.billingStatus}
               cancelPlan={props.cancelPlan}
               currentPlan={props.team.billingPlan}
               getTeam={props.getTeam}

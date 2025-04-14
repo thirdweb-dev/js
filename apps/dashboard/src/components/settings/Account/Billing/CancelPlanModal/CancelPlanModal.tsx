@@ -83,8 +83,10 @@ const cancelReasons: Array<{
 ];
 
 export function CancelPlanButton(props: {
+  teamSlug: string;
   cancelPlan: CancelPlan;
   currentPlan: Team["billingPlan"];
+  billingStatus: Team["billingStatus"];
   getTeam: () => Promise<Team>;
 }) {
   return (
@@ -102,7 +104,9 @@ export function CancelPlanButton(props: {
           </SheetTitle>
         </SheetHeader>
 
-        {props.currentPlan === "pro" ? (
+        {props.billingStatus === "invalidPayment" ? (
+          <UnpaidInvoicesWarning teamSlug={props.teamSlug} />
+        ) : props.currentPlan === "pro" ? (
           <ProPlanCancelPlanSheetContent />
         ) : (
           <CancelPlanSheetContent
@@ -112,6 +116,28 @@ export function CancelPlanButton(props: {
         )}
       </SheetContent>
     </Sheet>
+  );
+}
+
+function UnpaidInvoicesWarning({ teamSlug }: { teamSlug: string }) {
+  return (
+    <div>
+      <h2 className="mb-1 font-semibold text-2xl tracking-tight">
+        Cancel Plan
+      </h2>
+      <p className="mb-5 text-muted-foreground text-sm">
+        You have unpaid invoices. Please pay them before cancelling your plan.
+      </p>
+
+      <Button variant="outline" asChild className="w-full gap-2 bg-card">
+        <Link
+          href={`/team/${teamSlug}/~/settings/invoices?status=open`}
+          target="_blank"
+        >
+          See Invoices
+        </Link>
+      </Button>
+    </div>
   );
 }
 
