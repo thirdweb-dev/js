@@ -11,7 +11,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
 
   return (
     <section>
-      <SectionTitle title="Buy Funds" />
+      <SectionTitle title="Bridge" />
       <div className="flex justify-center rounded-lg border border-border bg-card px-4 py-10">
         <div className="flex max-w-[520px] flex-col items-center ">
           <div className="flex items-center">
@@ -28,21 +28,21 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
           <div className="h-6" />
 
           <h2 className="px-4 text-center font-semibold text-lg tracking-tight">
-            Buy Funds on {sanitizedChainName} using Universal Bridge
+            Bridge Funds to {sanitizedChainName}
           </h2>
 
           <div className="h-2" />
 
           <p className="max-w-[520px] px-4 text-center text-muted-foreground text-sm">
-            Instantly onramp, bridge & swap into {sanitizedChainName} with any
-            token.
+            Get {props.chain.nativeCurrency.symbol} on {sanitizedChainName} with
+            fiat or any token on another chain.
           </p>
 
           <div className="h-8" />
 
           <PayModalButton
             chainId={props.chain.chainId}
-            label={`Buy Funds on ${sanitizedChainName}`}
+            label={`Bridge to ${sanitizedChainName}`}
           />
 
           <div className="h-4" />
