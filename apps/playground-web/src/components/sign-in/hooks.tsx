@@ -29,18 +29,18 @@ export function HooksPreview() {
 
   return (
     <div className="flex flex-col">
-      {account && wallet ? (
+      {account ? (
         <>
-          <p className="py-4">Connected as {shortenAddress(account.address)}</p>
-          <Button variant="outline" onClick={() => disconnect(wallet)}>
-            Disconnect
-          </Button>
+          <p className="py-4">Connected: {shortenAddress(account.address)}</p>
+          {wallet && (
+            <Button variant="outline" onClick={() => disconnect(wallet)}>
+              Disconnect
+            </Button>
+          )}
         </>
       ) : (
         <Button variant="default" onClick={connect}>
-          {connectMutation.isConnecting
-            ? "Connecting..."
-            : "Connect with Metamask"}
+          {connectMutation.isConnecting ? "Connecting..." : "Connect MetaMask"}
         </Button>
       )}
     </div>

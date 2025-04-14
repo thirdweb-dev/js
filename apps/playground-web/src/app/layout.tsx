@@ -68,7 +68,7 @@ export default async function RootLayout({
           <div className="flex flex-col lg:h-dvh lg:flex-row">
             <AppSidebar links={sidebarLinks} />
             <div className="flex grow flex-col lg:overflow-auto">
-              <div className="container relative grow px-4 md:px-6">
+              <div className="relative grow">
                 <Providers>{children}</Providers>
               </div>
             </div>

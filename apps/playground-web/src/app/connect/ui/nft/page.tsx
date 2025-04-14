@@ -1,10 +1,9 @@
-import { APIHeader } from "@/components/blocks/APIHeader";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import {
-  NftCardDemo,
+  NftCardExample,
   NftDescriptionBasic,
-  NftMediaBasic,
-  NftMediaOverride,
-  NftNameBasic,
+  NftMediaExample,
+  NftNameExample,
 } from "@/components/headless-ui/nft-examples";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
@@ -20,37 +19,20 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="NFT Components"
-          description={
-            <>
-              Elevate your NFT applications with our React headless UI
-              components, engineered for seamless digital asset transactions.
-              These customizable, zero-styling components simplify NFT
-              interactions while giving developers complete freedom to craft
-              their perfect user interface.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/react/v5/components/onchain#nfts?utm_source=playground"
-          heroLink="/headless-ui-header.png"
-        />
-        <section className="space-y-8">
-          <NftMediaBasic />
-        </section>
-        <section className="space-y-8">
-          <NftMediaOverride />
-        </section>
-        <section className="space-y-8">
-          <NftNameBasic />
-        </section>
-        <section className="space-y-8">
+      <PageLayout
+        title="NFT Components"
+        description={
+          <>Headless UI components for rendering NFT Media and metadata</>
+        }
+        docsLink="https://portal.thirdweb.com/react/v5/components/onchain#nfts?utm_source=playground"
+      >
+        <div className="space-y-14">
+          <NftMediaExample />
+          <NftNameExample />
           <NftDescriptionBasic />
-        </section>
-        <section className="space-y-8">
-          <NftCardDemo />
-        </section>
-      </main>
+          <NftCardExample />
+        </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }

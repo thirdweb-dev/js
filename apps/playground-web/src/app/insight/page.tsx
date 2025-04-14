@@ -4,7 +4,7 @@ import { insightBlueprints } from "./insightBlueprints";
 
 export default function Page() {
   return (
-    <div className="pb-20">
+    <div>
       <h2 className="mb-2 font-semibold text-2xl tracking-tight">Blueprints</h2>
       <p className="mb-5 text-muted-foreground">
         A blueprint is an API that provides access to on-chain data in a

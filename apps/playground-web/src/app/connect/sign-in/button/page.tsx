@@ -2,7 +2,7 @@
 
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { use, useState } from "react";
-import { APIHeader } from "../../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../../components/blocks/APIHeader";
 import type { ConnectPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
@@ -59,22 +59,18 @@ export default function Page(props: {
 
   return (
     <ThirdwebProvider>
-      <div className="">
-        <APIHeader
-          title="Connect Button"
-          description={
-            <>
-              A fully featured wallet connection component that allows to
-              Connect to 500+ external wallets, connect via email, phone number,
-              passkey or social logins, Convert any wallet to a ERC4337 smart
-              wallet for gasless transactions and provides SIWE (Sign In With
-              Ethereum)
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
-          heroLink="/connectors.png"
-        />
-
+      <PageLayout
+        title="ConnectButton"
+        description={
+          <>
+            A fully featured wallet connection component that allows to Connect
+            to 500+ external wallets, connect via email, phone number, passkey
+            or social logins, Convert any wallet to a ERC4337 smart wallet for
+            gasless transactions and provides SIWE (Sign In With Ethereum)
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+      >
         <div className="relative flex flex-col-reverse gap-6 xl:min-h-[900px] xl:flex-row xl:gap-6">
           <div className="grow border-b pb-10 xl:mb-0 xl:border-r xl:border-b-0 xl:pr-6">
             <LeftSection
@@ -88,7 +84,7 @@ export default function Page(props: {
             connectOptions={connectOptions}
           />
         </div>
-      </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }

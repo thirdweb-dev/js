@@ -5,21 +5,15 @@ import {
   WalletNameFormatPreview,
 } from "./wallet-previews";
 
-export function WalletIconBasic() {
+export function WalletIconExample() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          WalletIcon
-        </h2>
-        <p className="max-w-[600px] text-lg">
-          Show the icon of a crypto wallet
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<WalletIconBasicPreview />}
-        code={`import { WalletProvider, WalletIcon } from "thirdweb/react";
+    <CodeExample
+      header={{
+        title: "WalletIcon",
+        description: "Show the icon of a crypto wallet",
+      }}
+      preview={<WalletIconBasicPreview />}
+      code={`import { WalletProvider, WalletIcon } from "thirdweb/react";
 
 function App() {
   return (
@@ -31,25 +25,19 @@ function App() {
     </WalletProvider>
   )
 }`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }
 
-export function WalletNameBasic() {
+export function WalletNameExample() {
   return (
-    <>
-      <div className="mt-8 space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          WalletName
-        </h2>
-        <p className="max-w-[600px] text-lg">
-          Show the name of a crypto wallet
-        </p>
-      </div>
-
+    <div>
       <CodeExample
+        header={{
+          title: "WalletName",
+          description: "Show the name of a crypto wallet",
+        }}
         preview={<WalletNameBasicPreview />}
         code={`import { WalletProvider, WalletName } from "thirdweb/react";
 
@@ -62,18 +50,10 @@ function App() {
 }`}
         lang="tsx"
       />
-    </>
-  );
-}
 
-export function WalletNameFormat() {
-  return (
-    <>
-      <div className="mt-8 space-y-2">
-        <p className="max-w-[600px] text-lg">
-          Transform the wallet name using the <b>formatFn</b> prop.
-        </p>
-      </div>
+      <p className="my-4 text-muted-foreground text-sm">
+        Transform the wallet name using the formatFn prop.
+      </p>
 
       <CodeExample
         preview={<WalletNameFormatPreview />}
@@ -91,6 +71,6 @@ function App() {
 }`}
         lang="tsx"
       />
-    </>
+    </div>
   );
 }

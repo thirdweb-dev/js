@@ -22,13 +22,7 @@ export function CustomRadioGroup<T extends string>(props: {
     >
       {props.options.map((option) => {
         return (
-          <div
-            key={option.value}
-            className={cn(
-              "flex items-center space-x-2",
-              props.value !== option.value && "opacity-50",
-            )}
-          >
+          <div key={option.value} className={cn("flex items-center space-x-2")}>
             <RadioGroupItem value={option.value} id={option.value} />
             <Label htmlFor={option.value} className="cursor-pointer">
               {option.label}

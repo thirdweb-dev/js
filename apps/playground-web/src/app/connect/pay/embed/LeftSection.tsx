@@ -16,6 +16,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { defineChain } from "thirdweb/chains";
 import { Switch } from "../../../../components/ui/switch";
+import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../sign-in/components/ColorFormGroup";
 import type { PayEmbedPlaygroundOptions } from "../components/types";
@@ -136,6 +137,7 @@ export function LeftSection(props: {
                     <Input
                       id="buy-token-amount"
                       placeholder="0.01"
+                      className="bg-card"
                       value={payOptions.buyTokenAmount || ""}
                       onChange={(e) =>
                         setOptions((v) => ({
@@ -156,6 +158,7 @@ export function LeftSection(props: {
                       id="fund-wallet-chain-id"
                       type="number"
                       placeholder="1 (Ethereum)"
+                      className="bg-card"
                       value={payOptions.buyTokenChain?.id || ""}
                       onChange={(e) => {
                         const chainId = Number.parseInt(e.target.value);
@@ -182,28 +185,28 @@ export function LeftSection(props: {
                         <Label htmlFor="token-name">Token Name</Label>
                         <Input
                           id="token-name"
-                          placeholder="Name"
+                          placeholder="My Token"
                           value={tokenName}
                           onChange={(e) => setTokenName(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenName
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting && !tokenName && "border-red-500",
+                          )}
                         />
                       </div>
                       <div className="flex flex-1 flex-col gap-2">
                         <Label htmlFor="token-symbol">Token Symbol</Label>
                         <Input
                           id="token-symbol"
-                          placeholder="Symbol"
+                          placeholder="XYZ"
                           value={tokenSymbol}
                           onChange={(e) => setTokenSymbol(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenSymbol
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting &&
+                              !tokenSymbol &&
+                              "border-red-500",
+                          )}
                         />
                       </div>
                     </div>
@@ -215,11 +218,12 @@ export function LeftSection(props: {
                           placeholder="0x..."
                           value={tokenAddress}
                           onChange={(e) => setTokenAddress(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenAddress
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting &&
+                              !tokenAddress &&
+                              "border-red-500",
+                          )}
                         />
                       </div>
                       <div className="flex flex-1 flex-col gap-2">
@@ -231,6 +235,7 @@ export function LeftSection(props: {
                           placeholder="https://..."
                           value={tokenIcon}
                           onChange={(e) => setTokenIcon(e.target.value)}
+                          className="bg-card"
                         />
                       </div>
                     </div>
@@ -252,7 +257,8 @@ export function LeftSection(props: {
                   <Label htmlFor="seller-address">Seller Address</Label>
                   <Input
                     id="seller-address"
-                    placeholder="0x0000..."
+                    placeholder="0x..."
+                    className="bg-card"
                     value={payOptions.sellerAddress || ""}
                     onChange={(e) =>
                       setOptions((v) => ({
@@ -272,6 +278,7 @@ export function LeftSection(props: {
                     <Input
                       id="payment-amount"
                       placeholder="0.01"
+                      className="bg-card"
                       value={payOptions.buyTokenAmount || ""}
                       onChange={(e) =>
                         setOptions((v) => ({
@@ -292,6 +299,7 @@ export function LeftSection(props: {
                       id="direct-payment-chain-id"
                       type="number"
                       placeholder="1 (Ethereum)"
+                      className="bg-card"
                       value={payOptions.buyTokenChain?.id || ""}
                       onChange={(e) => {
                         const chainId = Number.parseInt(e.target.value);
@@ -321,11 +329,10 @@ export function LeftSection(props: {
                           placeholder="Name"
                           value={tokenName}
                           onChange={(e) => setTokenName(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenName
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting && !tokenName && "border-red-500",
+                          )}
                         />
                       </div>
                       <div className="flex flex-1 flex-col gap-2">
@@ -335,11 +342,12 @@ export function LeftSection(props: {
                           placeholder="Symbol"
                           value={tokenSymbol}
                           onChange={(e) => setTokenSymbol(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenSymbol
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting &&
+                              !tokenSymbol &&
+                              "border-red-500",
+                          )}
                         />
                       </div>
                     </div>
@@ -351,11 +359,12 @@ export function LeftSection(props: {
                           placeholder="0x..."
                           value={tokenAddress}
                           onChange={(e) => setTokenAddress(e.target.value)}
-                          className={
-                            needsHighlighting && !tokenAddress
-                              ? "border-red-500"
-                              : ""
-                          }
+                          className={cn(
+                            "bg-card",
+                            needsHighlighting &&
+                              !tokenAddress &&
+                              "border-red-500",
+                          )}
                         />
                       </div>
                       <div className="flex flex-1 flex-col gap-2">
@@ -367,6 +376,7 @@ export function LeftSection(props: {
                           placeholder="https://..."
                           value={tokenIcon}
                           onChange={(e) => setTokenIcon(e.target.value)}
+                          className="bg-card"
                         />
                       </div>
                     </div>
@@ -414,9 +424,7 @@ export function LeftSection(props: {
                     }))
                   }
                 />
-                <Label htmlFor="buy-with-crypto" className="text-xs">
-                  Buy with Crypto
-                </Label>
+                <Label htmlFor="buy-with-crypto">Buy with Crypto</Label>
               </div>
               <div className="flex flex-1 items-center space-x-2">
                 <Checkbox
@@ -432,9 +440,7 @@ export function LeftSection(props: {
                     }))
                   }
                 />
-                <Label htmlFor="buy-with-fiat" className="text-xs">
-                  Buy with Fiat
-                </Label>
+                <Label htmlFor="buy-with-fiat">Buy with Fiat</Label>
               </div>
             </div>
           </div>
@@ -456,6 +462,7 @@ export function LeftSection(props: {
               <Input
                 id="modal-title"
                 placeholder="Product name"
+                className="bg-card"
                 value={options.payOptions.title}
                 onChange={(e) =>
                   setOptions((v) => ({
@@ -475,6 +482,7 @@ export function LeftSection(props: {
               <Input
                 id="modal-title"
                 placeholder="https://..."
+                className="bg-card"
                 value={options.payOptions.image}
                 onChange={(e) =>
                   setOptions((v) => ({

@@ -36,11 +36,15 @@ export default async function Page(props: {
 
   const title = pathMetadata.summary || "";
   return (
-    <div>
+    <div className="container pb-8">
       <Breadcrumbs />
-      <h1 className="mt-3 mb-6 font-semibold text-2xl tracking-tight lg:text-3xl">
-        {title}
-      </h1>
+      <div className="h-3" />
+      {title && (
+        <h1 className="mb-6 font-semibold text-2xl tracking-tight lg:text-3xl">
+          {title}
+        </h1>
+      )}
+
       <BlueprintPlayground
         key={params.route}
         metadata={pathMetadata}

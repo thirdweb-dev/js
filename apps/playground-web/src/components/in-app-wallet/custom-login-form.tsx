@@ -1,9 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useState } from "react";
 import { useActiveAccount, useConnect } from "thirdweb/react";
 import { inAppWallet, preAuthenticate } from "thirdweb/wallets";
+import { Label } from "../ui/label";
 import { InAppConnectEmbed } from "./connect-button";
 
 export function CustomLoginForm() {
@@ -58,35 +61,31 @@ export function CustomLoginForm() {
 
   if (screen === "login") {
     return (
-      <div className="flex w-full flex-col space-y-4">
-        <label htmlFor="email" className="font-medium text-sm">
-          Email Address
-        </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter your email"
-          required
-        />
-        <button
+      <div className="flex w-full max-w-xl flex-col space-y-4 p-6">
+        <div>
+          <Label htmlFor="email" className="mb-2 block">
+            Email Address
+          </Label>
+          <Input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <Button
           type="submit"
           onClick={() => sendEmailVerificationCode(email)}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors enabled:hover:bg-blue-600"
           disabled={isConnecting || !email}
         >
           {isConnecting ? "Submitting..." : "Submit"}
-        </button>
+        </Button>
         <p className="text-center text-sm text-white">Or</p>
-        <button
-          type="button"
-          onClick={loginWithGoogle}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors enabled:hover:bg-blue-600"
-        >
+        <Button type="button" onClick={loginWithGoogle}>
           Login with Google
-        </button>
+        </Button>
         {error && <p className="max-w-[300px] text-red-500">{error.message}</p>}
       </div>
     );
@@ -94,27 +93,27 @@ export function CustomLoginForm() {
 
   if (screen === "verify") {
     return (
-      <div className="flex flex-col space-y-2">
-        <label htmlFor="verification-code" className="font-medium text-sm">
-          Verification Code
-        </label>
-        <input
-          type="text"
-          id="verification-code"
-          value={verificationCode}
-          onChange={(e) => setVerificationCode(e.target.value)}
-          className="rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter the code you received"
-          required
-        />
-        <button
+      <div className="flex w-full max-w-xl flex-col space-y-4 p-6">
+        <div>
+          <Label htmlFor="verification-code" className="mb-2 block">
+            Verification Code
+          </Label>
+          <Input
+            type="text"
+            id="verification-code"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            placeholder="Enter the code you received"
+            required
+          />
+        </div>
+        <Button
           type="submit"
           onClick={() => loginWithEmail(email, verificationCode)}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors enabled:hover:bg-blue-600"
           disabled={isConnecting || !verificationCode}
         >
           {isConnecting ? "Submitting..." : "Submit"}
-        </button>
+        </Button>
         {error && <p className="max-w-[300px] text-red-500">{error.message}</p>}
       </div>
     );

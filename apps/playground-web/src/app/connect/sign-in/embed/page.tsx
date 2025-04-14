@@ -3,7 +3,7 @@ import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
-import { APIHeader } from "../../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -15,22 +15,19 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Sign in"
-          description={
-            <>
-              Create a login experience tailor-made for your app. Add your
-              wallets of choice, enable web2 sign-in options and create a modal
-              that fits your brand.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
-          heroLink="/connectors.png"
-        />
-
+      <PageLayout
+        title="ConnectEmbed"
+        description={
+          <>
+            Create a login experience tailor-made for your app. Add your wallets
+            of choice, enable web2 sign-in options and create a modal that fits
+            your brand.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+      >
         <EmbedComponent />
-      </main>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
@@ -38,29 +35,18 @@ export default function Page() {
 function EmbedComponent() {
   return (
     <>
-      <div className="mb-4">
-        <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
-          Embed Component
-        </h2>
-        <p className="max-w-[700px] text-muted-foreground">
-          Inline component to connect to various wallets.
-          <br />
-          Use this to create your own full screen login page.
-        </p>
-      </div>
-
       <CodeExample
         preview={<StyledConnectEmbed />}
         code={`import { createThirdwebClient } from "thirdweb";
 import { ConnectEmbed } from "thirdweb/react";
 
-const THIRDWEB_CLIENT = createThirdwebClient({
+const thirdwebClient = createThirdwebClient({
 clientId: "<YOUR_CLIENT_ID>"
 });
 
 function App(){
 return (
-<ConnectEmbed client={THIRDWEB_CLIENT} />
+<ConnectEmbed client={thirdwebClient} />
 );
 };`}
         lang="tsx"

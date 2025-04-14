@@ -5,7 +5,7 @@ import {
   ConnectSmartAccountCustomPreview,
   ConnectSmartAccountPreview,
 } from "../../../../components/account-abstraction/connect-smart-account";
-import { APIHeader } from "../../../../components/blocks/APIHeader";
+import { PageLayout } from "../../../../components/blocks/APIHeader";
 import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
@@ -18,24 +18,19 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Account Abstraction"
-          description={
-            <>
-              Let users connect to their smart accounts with any wallet and
-              unlock gas sponsorship, batched transactions, session keys and
-              full wallet programmability.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
-          heroLink="/account-abstraction.png"
-        />
-
-        <section className="space-y-8">
-          <ConnectSmartAccount />
-        </section>
-      </main>
+      <PageLayout
+        title="Connect smart accounts"
+        description={
+          <>
+            Let users connect to their smart accounts with any wallet and unlock
+            gas sponsorship, batched transactions, session keys and full wallet
+            programmability.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
+      >
+        <ConnectSmartAccount />
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
@@ -43,17 +38,14 @@ export default function Page() {
 function ConnectSmartAccount() {
   return (
     <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Connect smart accounts
-        </h2>
-        <p className="max-w-[600px]">
-          Enable smart accounts on the UI components or build your own UI.
-        </p>
-      </div>
       <CodeExample
+        header={{
+          title: "Using prebuilt UI component",
+          description:
+            "Use the prebuilt UI components to connect to smart accounts",
+        }}
         preview={<ConnectSmartAccountPreview />}
-        code={`// Using UI components
+        code={`\
   import { ConnectButton } from "thirdweb/react";
 
   function App(){
@@ -65,9 +57,15 @@ accountAbstraction={{ chain, sponsorGas: true }} />
 };`}
         lang="tsx"
       />
+
+      <div className="h-14" />
       <CodeExample
+        header={{
+          title: "Build custom UI",
+          description: "Build your own UI to connect to smart accounts",
+        }}
         preview={<ConnectSmartAccountCustomPreview />}
-        code={`// Using your own UI
+        code={`\
   import { useConnect } from "thirdweb/react";
   import { createWallet } from "thirdweb/wallets";
 

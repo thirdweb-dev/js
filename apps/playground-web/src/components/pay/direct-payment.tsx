@@ -2,13 +2,10 @@
 import { base } from "thirdweb/chains";
 import { PayEmbed, getDefaultToken } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { StyledConnectButton } from "../styled-connect-button";
 
 export function BuyMerchPreview() {
   return (
     <>
-      <StyledConnectButton />
-      <div className="h-10" />
       <PayEmbed
         client={THIRDWEB_CLIENT}
         theme="light"
@@ -27,7 +24,6 @@ export function BuyMerchPreview() {
           },
         }}
       />
-      <div className="h-10" />
     </>
   );
 }

@@ -20,7 +20,7 @@ export async function getCodeHtml(code: string, lang: BundledLanguage) {
     ? await format(code, {
         parser: "babel-ts",
         plugins: [parserBabel, estreePlugin.default],
-        printWidth: 60,
+        printWidth: 80,
       }).catch(() => {
         return code;
       })

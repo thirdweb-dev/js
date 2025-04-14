@@ -1,4 +1,4 @@
-import { APIHeader } from "@/components/blocks/APIHeader";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { HooksPreview } from "@/components/sign-in/hooks";
 import ThirdwebProvider from "@/components/thirdweb-provider";
@@ -16,90 +16,107 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Sign in"
-          description={
-            <>
-              Create a login experience tailor-made for your app. Add your
-              wallets of choice, enable web2 sign-in options and create a modal
-              that fits your brand.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
-          heroLink="/connectors.png"
-        />
-        <Modal />
-        <div className="h-6" />
-        <Hooks />
-      </main>
+      <PageLayout
+        title="Headless"
+        description={
+          <>
+            Create a login experience tailor-made for your app. Add your wallets
+            of choice, enable web2 sign-in options and create a modal that fits
+            your brand.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+      >
+        <div className="flex flex-col gap-14">
+          <BuildCustomUISection />
+          <OpenConnectModalSection />
+        </div>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function Modal() {
+function OpenConnectModalSection() {
   return (
     <>
-      <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
-        Open the connect modal from anywhere
-      </h2>
-
-      <p className="mb-5 max-w-[600px]">
-        You can open the connect modal from anywhere in your app.
-      </p>
-
       <CodeExample
+        header={{
+          title: "Open prebuilt connect modal using a hook",
+        }}
         preview={<ModalPreview />}
-        code={`// Using your own UI
-        import { useConnectModal } from "thirdweb/react";
+        code={`\
+import { useConnectModal } from "thirdweb/react";
 
-        function App(){
-          const { connect } = useConnectModal();
+function App() {
+  const { connect, isConnecting } = useConnectModal();
 
-          return (
-          // pass modal configuration options here
-      <button onClick={() => connect({ client })}>Sign in</button>
-      );
-      };`}
+  return (
+    <button
+      onClick={async () => {
+        // pass modal configuration options to the connect function
+        const wallet = await connect({ client });
+        console.log("connected", wallet);
+      }}
+    >
+      Sign in
+    </button>
+  );
+}`}
         lang="tsx"
       />
     </>
   );
 }
 
-function Hooks() {
+function BuildCustomUISection() {
   return (
-    <>
-      <h2 className="mb-2 font-semibold text-2xl tracking-tight sm:text-3xl">
-        Create custom UI using hooks
-      </h2>
+    <CodeExample
+      lang="tsx"
+      header={{
+        title: "Create custom UI using hooks",
+        description:
+          "Full control over your UI using react hooks. Wallet state management is all handled for you.",
+      }}
+      preview={<HooksPreview />}
+      code={`\
+import { useConnect } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
+import { shortenAddress } from "thirdweb/utils";
 
-      <p className="mb-5 max-w-[600px]">
-        Full control over your UI using react hooks.
-        <br />
-        Wallet state management is all handled for you.
-      </p>
+function App() {
+  const account = useActiveAccount();
+  const wallet = useActiveWallet();
+  const { connect, isConnecting, error } = useConnect();
+  const { disconnect } = useDisconnect();
 
-      <CodeExample
-        preview={<HooksPreview />}
-        code={`// Using your own UI
-        import { useConnect } from "thirdweb/react";
-        import { createWallet } from "thirdweb/wallets";
+  if (account) {
+    return (
+      <div>
+        <p>Connected: {shortenAddress(account.address)} </p>
+        {wallet && (
+          <button onClick={() => disconnect(wallet)}>
+            Disconnect
+          </button>
+        )}
+      </div>
+    );
+  }
 
-        function App(){
-          const { connect } = useConnect();
-
-          return (
-      <button onClick={() => connect(async () => {
-        // 500+ wallets supported with id autocomplete
-        const wallet = createWallet("io.metamask");
-        await wallet.connect({ client });
-        return wallet;
-      })}>Connect with Metamask</button>
-      );
-      };`}
-        lang="tsx"
-      />
-    </>
+  return (
+    <button
+      onClick={() =>
+        connect(async () => {
+          // 500+ wallets supported with id autocomplete
+          const wallet = createWallet("io.metamask");
+          await wallet.connect({ client });
+          return wallet;
+        })
+      }
+    >
+      Connect MetaMask
+    </button>
+  );
+}`}
+    />
   );
 }

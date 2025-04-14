@@ -1,4 +1,4 @@
-import { APIHeader } from "@/components/blocks/APIHeader";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { BuyMerchPreview } from "@/components/pay/direct-payment";
 import ThirdwebProvider from "@/components/thirdweb-provider";
@@ -15,46 +15,38 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <main className="container px-0 pb-20">
-        <APIHeader
-          title="Commerce payments with fiat or crypto"
-          description={
-            <>
-              Let your users pay for any service with fiat or crypto on any
-              chain.
-            </>
-          }
-          docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
-          heroLink="/pay.png"
-        />
-
-        <section className="space-y-8">
-          <BuyMerch />
-        </section>
-      </main>
+      <PageLayout
+        title="Commerce payments with fiat or crypto"
+        description={
+          <>
+            Let your users pay for any service with fiat or crypto on any chain.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
+      >
+        <BuyMerch />
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
 function BuyMerch() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Commerce
-        </h2>
-        <p className="max-w-[600px]">
-          Take payments from Fiat or Crypto directly to your seller wallet.
-          <br />
-          Get notified for every sale through webhooks, which lets you trigger
-          any action you want like shipping physical goods, activating services
-          or doing onchain actions.
-        </p>
-      </div>
-
-      <CodeExample
-        preview={<BuyMerchPreview />}
-        code={`import { PayEmbed, getDefaultToken } from "thirdweb/react";
+    <CodeExample
+      header={{
+        title: "Commerce",
+        description: (
+          <>
+            Take payments from Fiat or Crypto directly to your seller wallet.
+            <br />
+            Get notified for every sale through webhooks, which lets you trigger
+            any action you want like shipping physical goods, activating
+            services or doing onchain actions.
+          </>
+        ),
+      }}
+      preview={<BuyMerchPreview />}
+      code={`import { PayEmbed, getDefaultToken } from "thirdweb/react";
           import { base } from "thirdweb/chains";
 
         function App() {
@@ -78,8 +70,7 @@ function BuyMerch() {
             />
           );
         };`}
-        lang="tsx"
-      />
-    </>
+      lang="tsx"
+    />
   );
 }

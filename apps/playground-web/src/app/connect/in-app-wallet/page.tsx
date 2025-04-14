@@ -1,44 +1,53 @@
 import { CodeExample } from "@/components/code/code-example";
 import { CustomLoginForm } from "@/components/in-app-wallet/custom-login-form";
+import type { Metadata } from "next";
+import { PageLayout } from "../../../components/blocks/APIHeader";
 import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
 import { Profiles } from "../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../components/thirdweb-provider";
+import { metadataBase } from "../../../lib/constants";
+
+export const metadata: Metadata = {
+  metadataBase,
+  title: "Any Auth | thirdweb in-app wallet",
+  description:
+    "Let users sign up with their email, phone number, social media accounts or directly with a wallet",
+};
 
 export default function Page() {
   return (
     <ThirdwebProvider>
-      <section className="space-y-8">
-        <AnyAuth />
-      </section>
-      <section className="mt-8 space-y-8">
+      <PageLayout
+        title="Onboard users to web3 with any auth method"
+        description={
+          <>
+            Use any of the built-in auth methods or bring your own.
+            <br />
+            Supports custom auth endpoints to integrate with your existing user
+            base.
+          </>
+        }
+        docsLink="https://portal.thirdweb.com/connect/in-app-wallet/overview?utm_source=playground"
+      >
+        <UIIntegration />
+        <div className="h-14" />
         <Profiles />
-      </section>
+      </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function AnyAuth() {
+function UIIntegration() {
   return (
-    <>
-      <div className="space-y-2">
-        <h2 className="font-semibold text-2xl tracking-tight sm:text-3xl">
-          Any Auth Method
-        </h2>
-        <p className="max-w-[600px]">
-          Use any of the built-in auth methods or bring your own.
-          <br />
-          Supports custom auth endpoints to integrate with your existing user
-          base.
-        </p>
-      </div>
-      <div className="space-y-2">
-        <h3 className="mb-3 font-medium text-lg">Prebuilt UI</h3>
-        <p className="max-w-[600px]">
-          Instant out of the box authentication with a prebuilt UI.
-        </p>
-        <CodeExample
-          preview={<InAppConnectEmbed />}
-          code={`import { inAppWallet } from "thirdweb/wallets";
+    <div>
+      <CodeExample
+        header={{
+          title: "Prebuilt UI",
+          description:
+            "Instant out of the box authentication with a prebuilt UI.",
+        }}
+        preview={<InAppConnectEmbed />}
+        code={`import { inAppWallet } from "thirdweb/wallets";
         import { ConnectEmbed } from "thirdweb/react";
 
         const wallets = [
@@ -70,18 +79,19 @@ function AnyAuth() {
           return (
 <ConnectEmbed client={client} wallets={wallets} />);
 };`}
-          lang="tsx"
-        />
-      </div>
-      <div className="space-y-2">
-        <h3 className="mb-3 font-medium text-lg">Custom UI</h3>
-        <p className="max-w-[600px]">
-          Customize the login UI and integrate with your existing user base. No
-          limits on customizations and auth methods.
-        </p>
-        <CodeExample
-          preview={<CustomLoginForm />}
-          code={`import { useState } from "react";
+        lang="tsx"
+      />
+
+      <div className="h-14" />
+
+      <CodeExample
+        header={{
+          title: "Custom UI",
+          description:
+            "Customize the login UI and integrate with your existing user base. No limits on customizations and auth methods.",
+        }}
+        preview={<CustomLoginForm />}
+        code={`import { useState } from "react";
 import { useConnect } from "thirdweb/react";
 import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
 
@@ -122,11 +132,12 @@ export function CustomLoginUi() {
       return wallet;
     });
   };
+
+  return <div> .... </div>
 }
 `}
-          lang="tsx"
-        />
-      </div>
-    </>
+        lang="tsx"
+      />
+    </div>
   );
 }

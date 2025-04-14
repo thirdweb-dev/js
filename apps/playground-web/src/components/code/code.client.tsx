@@ -7,7 +7,7 @@ import { getCodeHtml } from "./getCodeHtml";
 // Use CodeClient where the code changes based user input
 // Using RSC in that scenario feels too slow and unnecessary keep hitting the server
 
-export type CodeProps = {
+type CodeProps = {
   code: string;
   lang: BundledLanguage;
   loader: React.ReactNode;
@@ -18,7 +18,7 @@ export type CodeProps = {
 
 export function CodeLoading() {
   return (
-    <div className="flex h-[300px] items-center justify-center xl:h-[calc(100vh-100px)]">
+    <div className="flex min-h-[300px] grow items-center justify-center">
       <LoadingDots />
     </div>
   );
@@ -53,4 +53,5 @@ export const CodeClient: React.FC<CodeProps> = ({
   );
 };
 
+/** @alias */
 export default CodeClient;

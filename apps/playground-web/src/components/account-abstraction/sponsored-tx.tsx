@@ -15,11 +15,11 @@ import { shortenHex } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { WALLETS } from "../../lib/constants";
 
-export const chain = baseSepolia;
-export const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
-export const editionDropTokenId = 1n;
+const chain = baseSepolia;
+const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
+const editionDropTokenId = 1n;
 
-export const editionDropContract = getContract({
+const editionDropContract = getContract({
   address: editionDropAddress,
   chain,
   client: THIRDWEB_CLIENT,

@@ -10,14 +10,18 @@ import {
   treasure,
 } from "thirdweb/chains";
 import { PayEmbed, getDefaultToken } from "thirdweb/react";
-import { StyledConnectButton } from "../styled-connect-button";
+
 export function StyledPayEmbedPreview() {
   const { theme } = useTheme();
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <StyledConnectButton
-        chains={[base, defineChain(466), arbitrum, treasure, arbitrumNova]}
+      <PayEmbed
+        client={THIRDWEB_CLIENT}
+        theme={theme === "light" ? "light" : "dark"}
+        connectOptions={{
+          chains: [base, defineChain(466), arbitrum, treasure, arbitrumNova],
+        }}
         supportedTokens={{
           466: [
             {
@@ -45,11 +49,6 @@ export function StyledPayEmbedPreview() {
             },
           ],
         }}
-      />
-      <div className="h-10" />
-      <PayEmbed
-        client={THIRDWEB_CLIENT}
-        theme={theme === "light" ? "light" : "dark"}
         payOptions={{
           mode: "fund_wallet",
           metadata: {

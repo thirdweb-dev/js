@@ -1,7 +1,7 @@
 import type { SidebarLink } from "../components/ui/sidebar";
 import { insightBlueprints } from "./insight/insightBlueprints";
 
-export const staticSidebarLinks: SidebarLink[] = [
+const staticSidebarLinks: SidebarLink[] = [
   {
     name: "Connect",
     isCollapsible: false,
@@ -140,7 +140,7 @@ const engineSidebarLinks: SidebarLink = {
       href: "/engine/airdrop",
     },
     {
-      name: "Minting",
+      name: "Mint NFTs",
       href: "/engine/minting",
     },
     {

@@ -6,7 +6,7 @@ import type { PayEmbedPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
 
-// NOTE: Only set the values that are actually the default values used by Connect component
+// NOTE: Only set the values that are actually the default values used by PayEmbed component
 const defaultConnectOptions: PayEmbedPlaygroundOptions = {
   theme: {
     type: "dark",
