@@ -10,6 +10,7 @@ import { formatDate } from "date-fns";
 import { useMemo } from "react";
 import type { EcosystemWalletStats } from "types/analytics";
 import { formatTickerNumber } from "../../../../../../../../../../lib/format-utils";
+import type { Partner } from "../../../../types";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
@@ -19,8 +20,10 @@ const defaultLabel = "Unknown Auth";
 export function EcosystemWalletUsersChartCard(props: {
   ecosystemWalletStats: EcosystemWalletStats[];
   isPending: boolean;
+  groupBy: "ecosystemPartnerId" | "authenticationMethod";
+  partners?: Partner[];
 }) {
-  const { ecosystemWalletStats } = props;
+  const { ecosystemWalletStats, groupBy, partners } = props;
 
   const topChainsToShow = 10;
 
@@ -31,25 +34,40 @@ export function EcosystemWalletUsersChartCard(props: {
     // for each stat, add it in _chartDataMap
     for (const stat of ecosystemWalletStats) {
       const chartData = _chartDataMap.get(stat.date);
-      const { authenticationMethod } = stat;
+      const { authenticationMethod, ecosystemPartnerId } = stat;
 
       // if no data for current day - create new entry
       if (!chartData) {
         _chartDataMap.set(stat.date, {
           time: stat.date,
-          [authenticationMethod || defaultLabel]: stat.uniqueWalletsConnected,
+          [groupBy === "ecosystemPartnerId"
+            ? ecosystemPartnerId
+            : authenticationMethod || defaultLabel]:
+            stat.uniqueWalletsConnected,
         } as ChartData);
       } else if (chartData) {
-        chartData[authenticationMethod || defaultLabel] =
-          (chartData[authenticationMethod || defaultLabel] || 0) +
-          stat.uniqueWalletsConnected;
+        chartData[
+          groupBy === "ecosystemPartnerId"
+            ? ecosystemPartnerId
+            : authenticationMethod || defaultLabel
+        ] =
+          (chartData[
+            groupBy === "ecosystemPartnerId"
+              ? ecosystemPartnerId
+              : authenticationMethod || defaultLabel
+          ] || 0) + stat.uniqueWalletsConnected;
       }
 
       authMethodToVolumeMap.set(
-        authenticationMethod || defaultLabel,
+        groupBy === "ecosystemPartnerId"
+          ? ecosystemPartnerId
+          : authenticationMethod || defaultLabel,
         stat.uniqueWalletsConnected +
-          (authMethodToVolumeMap.get(authenticationMethod || defaultLabel) ||
-            0),
+          (authMethodToVolumeMap.get(
+            groupBy === "ecosystemPartnerId"
+              ? ecosystemPartnerId
+              : authenticationMethod || defaultLabel,
+          ) || 0),
       );
     }
 
@@ -72,7 +90,12 @@ export function EcosystemWalletUsersChartCard(props: {
 
     authMethodsToShow.forEach((walletType, i) => {
       _chartConfig[walletType] = {
-        label: authMethodsToShow[i],
+        label:
+          groupBy === "ecosystemPartnerId"
+            ? partners?.find((p) => p.id === walletType)?.name ||
+              authMethodsToShow[i] ||
+              "none"
+            : authMethodsToShow[i],
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
       };
     });
@@ -92,7 +115,7 @@ export function EcosystemWalletUsersChartCard(props: {
       ),
       chartConfig: _chartConfig,
     };
-  }, [ecosystemWalletStats]);
+  }, [ecosystemWalletStats, groupBy, partners]);
 
   const uniqueAuthMethods = Object.keys(chartConfig);
   const disableActions =
@@ -108,7 +131,8 @@ export function EcosystemWalletUsersChartCard(props: {
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
-            Unique Users
+            Unique Users by{" "}
+            {groupBy === "ecosystemPartnerId" ? "Partner" : "Auth Method"}
           </h3>
           <p className="mb-3 text-muted-foreground text-sm">
             The total number of active users in your ecosystem for each period.

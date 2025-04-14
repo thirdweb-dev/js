@@ -53,6 +53,7 @@ function ecosystemWalletStatsStub(
         date: formattedDate,
         authenticationMethod: authMethod || "MetaMask",
         uniqueWalletsConnected: Math.floor(Math.random() * 1000) + 1,
+        ecosystemPartnerId: "123",
       });
     }
   }
@@ -65,6 +66,7 @@ export const EmptyData: Story = {
   args: {
     ecosystemWalletStats: [],
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -73,6 +75,7 @@ export const Loading: Story = {
   args: {
     ecosystemWalletStats: [],
     isPending: true,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -81,6 +84,7 @@ export const ThirtyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(30),
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -89,6 +93,7 @@ export const SixtyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(60),
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -97,6 +102,7 @@ export const OneHundredTwentyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(120),
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -114,6 +120,7 @@ export const ManyAuthMethods: Story = {
       }));
     })(),
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
 
@@ -125,5 +132,6 @@ export const ZeroValues: Story = {
       uniqueWalletsConnected: 0,
     })),
     isPending: false,
+    groupBy: "authenticationMethod",
   },
 };
