@@ -72,8 +72,8 @@ const pulseAnimation = keyframes`
 const PulsingDot = /* @__PURE__ */ StyledDiv(() => {
   return {
     background: "currentColor",
-    width: "9px",
-    height: "9px",
+    width: "10px",
+    height: "10px",
     borderRadius: "50%",
     '&[data-active="true"]': {
       animation: `${pulseAnimation} 1s infinite`,

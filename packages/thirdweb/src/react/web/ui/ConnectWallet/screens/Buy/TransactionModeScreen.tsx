@@ -186,9 +186,14 @@ export function TransactionModeScreen(props: {
         ) : activeAccount ? (
           <Container flex="column" gap="sm">
             {insufficientFunds && (
-              <Text size="sm" color="danger" style={{ textAlign: "center" }}>
-                Insufficient funds
-              </Text>
+              <div>
+                <Text color="danger" size="xs" center multiline>
+                  Insufficient Funds
+                </Text>
+                <Text size="xs" center multiline>
+                  Select another token or pay with a debit card.
+                </Text>
+              </div>
             )}
             <Container
               flex="row"

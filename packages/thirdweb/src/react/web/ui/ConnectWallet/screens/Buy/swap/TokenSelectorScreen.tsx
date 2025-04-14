@@ -276,7 +276,7 @@ export function TokenSelectorScreen(props: {
               >
                 <CardStackIcon width={iconSize.md} height={iconSize.md} />
                 <Text size="sm" color="primaryText">
-                  Pay with credit card
+                  Pay with a debit card
                 </Text>
               </Container>
             </Button>
@@ -362,7 +362,7 @@ function WalletRowWithBalances(props: {
         ) : (
           <Container style={{ padding: spacing.sm }}>
             <Text size="sm" color="secondaryText">
-              Insufficient funds
+              Insufficient Funds
             </Text>
           </Container>
         )}

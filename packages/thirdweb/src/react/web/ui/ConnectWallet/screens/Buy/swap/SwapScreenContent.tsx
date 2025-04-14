@@ -12,10 +12,7 @@ import type { Account } from "../../../../../../../wallets/interfaces/wallet.js"
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
-import {
-  defaultMessage,
-  getErrorMessage,
-} from "../../../../../utils/errors.js";
+import { getErrorMessage } from "../../../../../utils/errors.js";
 import type { PayEmbedConnectOptions } from "../../../../PayEmbed.js";
 import {
   Drawer,
@@ -301,9 +298,14 @@ export function SwapScreenContent(props: {
                 />
               </Text>
             ) : (
-              <Text color="danger" size="xs" center multiline>
-                {errorMsg.message || defaultMessage}
-              </Text>
+              <div>
+                <Text color="danger" size="xs" center multiline>
+                  {errorMsg.title}
+                </Text>
+                <Text size="xs" center multiline>
+                  {errorMsg.message}
+                </Text>
+              </div>
             )}
           </div>
         )}
@@ -311,7 +313,10 @@ export function SwapScreenContent(props: {
         {!errorMsg && isNotEnoughBalance && (
           <div>
             <Text color="danger" size="xs" center multiline>
-              Insufficient funds
+              Insufficient Funds
+            </Text>
+            <Text size="xs" center multiline>
+              Select another token or pay with a debit card.
             </Text>
           </div>
         )}

@@ -1,5 +1,4 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -13,7 +12,6 @@ import {
   waitForReceipt,
 } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
@@ -25,6 +23,7 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
+import { ErrorText } from "./ErrorText.js";
 import { SwapSummary } from "./SwapSummary.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
@@ -59,12 +58,45 @@ export function SwapConfirmationScreen(props: {
   const initialStep = needsApprovalStep ? "approval" : "swap";
 
   const [step, setStep] = useState<"approval" | "swap">(initialStep);
+  const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
   >("idle");
 
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
+
+  const uiErrorMessage = useMemo(() => {
+    if (step === "approval" && status === "error" && error) {
+      if (error.toLowerCase().includes("user rejected")) {
+        return {
+          title: "Failed to Approve",
+          message: "Your wallet rejected the approval request.",
+        };
+      }
+      return {
+        title: "Failed to Approve",
+        message:
+          "Your wallet failed to approve the transaction for an unknown reason. Please try again or contact support.",
+      };
+    }
+
+    if (step === "swap" && status === "error" && error) {
+      if (error.toLowerCase().includes("user rejected")) {
+        return {
+          title: "Failed to Confirm",
+          message: "Your wallet rejected the confirmation request.",
+        };
+      }
+      return {
+        title: "Failed to Confirm",
+        message:
+          "Your wallet failed to confirm the transaction for an unknown reason. Please try again or contact support.",
+      };
+    }
+
+    return undefined;
+  }, [error, step, status]);
 
   return (
     <Container p="lg">
@@ -128,15 +160,12 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      {status === "error" && (
+      {uiErrorMessage && (
         <>
-          <Container flex="row" gap="xs" center="both" color="danger">
-            <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-            <Text color="danger" size="sm">
-              {step === "approval" ? "Failed to Approve" : "Failed to Confirm"}
-            </Text>
-          </Container>
-
+          <ErrorText
+            title={uiErrorMessage.title}
+            message={uiErrorMessage.message}
+          />
           <Spacer y="md" />
         </>
       )}
@@ -224,6 +253,7 @@ export function SwapConfirmationScreen(props: {
                   setStatus("idle");
                 } catch (e) {
                   console.error(e);
+                  setError((e as Error).message);
                   setStatus("error");
                 }
               }

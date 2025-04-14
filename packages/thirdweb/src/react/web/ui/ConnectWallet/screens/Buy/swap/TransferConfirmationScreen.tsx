@@ -1,6 +1,6 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -34,6 +34,7 @@ import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
+import { ErrorText } from "./ErrorText.js";
 import { SwapSummary } from "./SwapSummary.js";
 
 type TransferConfirmationScreenProps = {
@@ -108,6 +109,42 @@ export function TransferConfirmationScreen(
     },
     refetchInterval: 30 * 1000,
   });
+
+  const uiErrorMessage = useMemo(() => {
+    if (step === "approve" && status.id === "error" && status.error) {
+      if (status.error.toLowerCase().includes("user rejected")) {
+        return {
+          title: "Failed to Approve",
+          message: "Your wallet rejected the approval request.",
+        };
+      }
+      return {
+        title: "Failed to Approve",
+        message:
+          "Your wallet failed to approve the transaction for an unknown reason. Please try again or contact support.",
+      };
+    }
+
+    if (
+      (step === "transfer" || step === "execute") &&
+      status.id === "error" &&
+      status.error
+    ) {
+      if (status.error.toLowerCase().includes("user rejected")) {
+        return {
+          title: "Failed to Confirm",
+          message: "Your wallet rejected the confirmation request.",
+        };
+      }
+      return {
+        title: "Failed to Confirm",
+        message:
+          "Your wallet failed to confirm the transaction for an unknown reason. Please try again or contact support.",
+      };
+    }
+
+    return undefined;
+  }, [step, status]);
 
   if (transferQuery.isLoading) {
     return (
@@ -190,15 +227,12 @@ export function TransferConfirmationScreen(
         </>
       )}
 
-      {status.id === "error" && (
+      {uiErrorMessage && (
         <>
-          <Container flex="row" gap="xs" center="both" color="danger">
-            <Text color="danger" size="sm" style={{ textAlign: "center" }}>
-              {step === "transfer"
-                ? `${status.error || "Failed to Transfer"}`
-                : "Failed to Execute"}
-            </Text>
-          </Container>
+          <ErrorText
+            title={uiErrorMessage.title}
+            message={uiErrorMessage.message}
+          />
           <Spacer y="md" />
         </>
       )}
