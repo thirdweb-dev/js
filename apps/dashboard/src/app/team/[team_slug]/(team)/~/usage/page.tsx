@@ -1,10 +1,13 @@
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
+import { fetchRPCUsage } from "@/api/usage/rpc";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { normalizeTimeISOString } from "lib/time";
 import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../../../login/loginRedirect";
 import { getAccountUsage } from "./getAccountUsage";
 import { Usage } from "./overview/components/Usage";
 
@@ -24,13 +27,28 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const [accountUsage, subscriptions, projects] = await Promise.all([
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}/~/usage`);
+  }
+
+  const [accountUsage, subscriptions, projects, rpcUsage] = await Promise.all([
     getAccountUsage(),
     getTeamSubscriptions(team.slug),
     getProjects(team.slug),
+    fetchRPCUsage({
+      authToken,
+      period: "day",
+      // 7 days ago
+      from: normalizeTimeISOString(
+        new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+      ),
+      // now
+      to: normalizeTimeISOString(new Date()),
+      teamId: team.id,
+    }),
   ]);
 
-  if (!accountUsage || !subscriptions || !authToken) {
+  if (!accountUsage || !subscriptions) {
     return (
       <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
         Something went wrong. Please try again later.
@@ -48,6 +66,7 @@ export default async function Page(props: {
       account={account}
       team={team}
       client={client}
+      rpcUsage={rpcUsage.ok ? rpcUsage.data : []}
       projects={projects.map((project) => ({
         id: project.id,
         name: project.name,
