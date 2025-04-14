@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.94.2
+
+### Patch Changes
+
+- [#6716](https://github.com/thirdweb-dev/js/pull/6716) [`0ea8987`](https://github.com/thirdweb-dev/js/commit/0ea898712b316f47c247d2c6f24d48f94d9e2586) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Miscellaneous PayEmbed error improvements:
+
+  - Adds title and message to PayEmbed errors
+  - Prevents propagating raw errors to the user when in purchase or transaction mode
+  - Fixes bubble alignment on pulsing animation
+
+- [#6712](https://github.com/thirdweb-dev/js/pull/6712) [`e574114`](https://github.com/thirdweb-dev/js/commit/e5741141883b279f8385629288551906f982ffd5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dont retry on user connection rejection in eip1193 connector
+
 ## 5.94.1
 
 ### Patch Changes
