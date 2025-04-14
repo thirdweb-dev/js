@@ -40,7 +40,7 @@ export default async function TransactionsAnalyticsPage(props: {
     <div className="flex grow flex-col">
       <TransactionAnalyticsSummary
         teamId={project.teamId}
-        projectId={project.id}
+        clientId={project.publishableKey}
       />
       <div className="h-10" />
       <TransactionsAnalyticsPageContent
