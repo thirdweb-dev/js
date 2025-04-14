@@ -23,9 +23,9 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
+import { ErrorText } from "./ErrorText.js";
 import { SwapSummary } from "./SwapSummary.js";
 import { addPendingTx } from "./pendingSwapTx.js";
-import { ErrorText } from "./ErrorText.js";
 
 /**
  * @internal
@@ -66,7 +66,7 @@ export function SwapConfirmationScreen(props: {
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
 
-  const uiErrorMessgae = useMemo(() => {
+  const uiErrorMessage = useMemo(() => {
     if (step === "approval" && status === "error" && error) {
       if (error.toLowerCase().includes("user rejected")) {
         return {
@@ -160,11 +160,11 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      {uiErrorMessgae && (
+      {uiErrorMessage && (
         <>
           <ErrorText
-            title={uiErrorMessgae.title}
-            message={uiErrorMessgae.message}
+            title={uiErrorMessage.title}
+            message={uiErrorMessage.message}
           />
           <Spacer y="md" />
         </>

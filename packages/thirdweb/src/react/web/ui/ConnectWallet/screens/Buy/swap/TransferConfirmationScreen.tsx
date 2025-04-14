@@ -34,8 +34,8 @@ import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
 import { ConnectorLine } from "./ConfirmationScreen.js";
-import { SwapSummary } from "./SwapSummary.js";
 import { ErrorText } from "./ErrorText.js";
+import { SwapSummary } from "./SwapSummary.js";
 
 type TransferConfirmationScreenProps = {
   title: string;
@@ -110,7 +110,7 @@ export function TransferConfirmationScreen(
     refetchInterval: 30 * 1000,
   });
 
-  const uiErrorMessgae = useMemo(() => {
+  const uiErrorMessage = useMemo(() => {
     if (step === "approve" && status.id === "error" && status.error) {
       if (status.error.toLowerCase().includes("user rejected")) {
         return {
@@ -227,11 +227,11 @@ export function TransferConfirmationScreen(
         </>
       )}
 
-      {uiErrorMessgae && (
+      {uiErrorMessage && (
         <>
           <ErrorText
-            title={uiErrorMessgae.title}
-            message={uiErrorMessgae.message}
+            title={uiErrorMessage.title}
+            message={uiErrorMessage.message}
           />
           <Spacer y="md" />
         </>
