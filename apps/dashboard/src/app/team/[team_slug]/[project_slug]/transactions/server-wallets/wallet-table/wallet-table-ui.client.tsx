@@ -1,5 +1,6 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   Table,
@@ -11,11 +12,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
+import {
+  DEFAULT_ACCOUNT_FACTORY_V0_7,
+  predictSmartAccountAddress,
+} from "thirdweb/wallets/smart";
+import { Spinner } from "../../../../../../../@/components/ui/Spinner/Spinner";
+import { getThirdwebClient } from "../../../../../../../@/constants/thirdweb.server";
+import { useV5DashboardChain } from "../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
-import type { Project } from "@/api/projects";
 export function ServerWalletsTableUI({
   wallets,
   project,
@@ -48,7 +56,8 @@ export function ServerWalletsTableUI({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Address</TableHead>
+              <TableHead>Signer</TableHead>
+              <TableHead>Smart Account</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Updated At</TableHead>
             </TableRow>
@@ -67,6 +76,9 @@ export function ServerWalletsTableUI({
                     <WalletAddress address={wallet.address} />
                   </TableCell>
                   <TableCell>
+                    <SmartAccountCell wallet={wallet} />
+                  </TableCell>
+                  <TableCell>
                     <WalletDateCell date={wallet.createdAt} />
                   </TableCell>
                   <TableCell>
@@ -78,6 +90,34 @@ export function ServerWalletsTableUI({
           </TableBody>
         </Table>
       </TableContainer>
+    </div>
+  );
+}
+
+function SmartAccountCell({ wallet }: { wallet: Wallet }) {
+  const chainId = 1; // TODO: add chain switcher for balance + smart account address
+  const chain = useV5DashboardChain(chainId);
+
+  const smartAccountAddressQuery = useQuery({
+    queryKey: ["smart-account-address", wallet.address],
+    queryFn: async () => {
+      const smartAccountAddress = await predictSmartAccountAddress({
+        client: getThirdwebClient(),
+        adminAddress: wallet.address,
+        chain,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
+      });
+      return smartAccountAddress;
+    },
+  });
+
+  return (
+    <div>
+      {smartAccountAddressQuery.data ? (
+        <WalletAddress address={smartAccountAddressQuery.data} />
+      ) : (
+        <Spinner className="h-4 w-4" />
+      )}
     </div>
   );
 }
