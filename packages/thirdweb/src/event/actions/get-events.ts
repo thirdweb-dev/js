@@ -25,6 +25,7 @@ import {
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -40,6 +41,7 @@ export type GetContractEventsOptionsDirect<
   contract: ThirdwebContract<abi>;
   events?: abiEvents;
   strict?: TStrict;
+  useIndexer?: boolean;
 };
 
 export type GetContractEventsOptions<
@@ -116,7 +118,13 @@ export async function getContractEvents<
 >(
   options: GetContractEventsOptions<abi, abiEvents, TStrict>,
 ): Promise<GetContractEventsResult<abiEvents, TStrict>> {
-  const { contract, events, blockRange, ...restParams } = options;
+  const {
+    contract,
+    events,
+    blockRange,
+    useIndexer = true,
+    ...restParams
+  } = options;
 
   const rpcRequest = getRpcClient(contract);
 
@@ -189,17 +197,24 @@ export async function getContractEvents<
   let logs: Log[][] = [];
 
   // try fetching from insight if available
-  try {
-    logs = await Promise.all(
-      logsParams.map((p) =>
-        getLogsFromInsight({
-          params: p,
-          chain: contract.chain,
-          client: contract.client,
-        }),
-      ),
-    );
-  } catch {
+  if (useIndexer) {
+    try {
+      logs = await Promise.all(
+        logsParams.map((p) =>
+          getLogsFromInsight({
+            params: p,
+            chain: contract.chain,
+            client: contract.client,
+          }),
+        ),
+      );
+    } catch {
+      // fetch from rpc
+      logs = await Promise.all(
+        logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
+      );
+    }
+  } else {
     // fetch from rpc
     logs = await Promise.all(
       logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
@@ -233,7 +248,7 @@ async function getLogsFromInsight(options: {
   }
 
   try {
-    let baseUrl = "https://insight.thirdweb-dev.com/v1/events"; // TODO: change to prod
+    let baseUrl = `https://${getThirdwebDomains().insight}/v1/events`;
     if (params.address) {
       baseUrl += `/${params.address}`;
       if (signature) {
