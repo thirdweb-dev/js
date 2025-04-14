@@ -346,7 +346,7 @@ export async function getEcosystemWalletUsage(args: {
     searchParams.append("period", period);
   }
   const res = await fetchAnalytics(
-    `v2/wallets/connects/${ecosystemSlug}?${searchParams.toString()}`,
+    `v2/wallet/connects?${searchParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -356,7 +356,10 @@ export async function getEcosystemWalletUsage(args: {
   );
 
   if (res?.status !== 200) {
-    console.error("Failed to fetch ecosystem wallet stats");
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch ecosystem wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
     return null;
   }
 
