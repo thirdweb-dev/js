@@ -84,7 +84,7 @@ export default async function RPCUsage(props: {
           <CardContent>
             <div className="flex items-center justify-between">
               <div className="font-bold text-2xl capitalize">
-                {currentRateLimit} RPS
+                {currentRateLimit.toLocaleString()} RPS
               </div>
               <TeamPlanBadge plan={currentPlan} />
             </div>

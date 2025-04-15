@@ -35,7 +35,6 @@ export function RateGraph(props: {
         },
       }}
       data={props.data
-        .slice(1, -1)
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
           time: v.date,

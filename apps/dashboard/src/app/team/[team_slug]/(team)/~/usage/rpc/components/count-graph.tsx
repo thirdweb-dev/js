@@ -13,6 +13,7 @@ export function CountGraph(props: {
     rateLimitedCount: number;
   }[];
 }) {
+  const hasAnyRateLimited = props.data.some((v) => v.rateLimitedCount > 0);
   return (
     <ThirdwebAreaChart
       chartClassName="aspect-[1.5] lg:aspect-[4]"
@@ -20,17 +21,26 @@ export function CountGraph(props: {
         title: "Requests Over Time",
         description: "Requests over the last 24 hours. All times in UTC.",
       }}
-      config={{
-        includedCount: {
-          label: "Successful Requests",
-          color: "hsl(var(--chart-1))",
-        },
-        rateLimitedCount: {
-          label: "Rate Limited Requests",
-          color: "hsl(var(--chart-4))",
-        },
-      }}
-      showLegend
+      config={
+        hasAnyRateLimited
+          ? {
+              includedCount: {
+                label: "Successful Requests",
+                color: "hsl(var(--chart-1))",
+              },
+              rateLimitedCount: {
+                label: "Rate Limited Requests",
+                color: "hsl(var(--chart-4))",
+              },
+            }
+          : {
+              includedCount: {
+                label: "Successful Requests",
+                color: "hsl(var(--chart-1))",
+              },
+            }
+      }
+      showLegend={hasAnyRateLimited}
       yAxis
       xAxis={{
         sameDay: true,
@@ -39,13 +49,13 @@ export function CountGraph(props: {
       toolTipLabelFormatter={(label) => {
         return formatDate(new Date(label), "MMM dd, HH:mm");
       }}
+      // @ts-expect-error - sending MORE data than expected is ok
       data={props.data
-        .slice(1, -1)
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
           time: v.date,
-          includedCount: v.includedCount + v.overageCount,
-          rateLimitedCount: v.rateLimitedCount,
+          includedCount: Number(v.includedCount) + Number(v.overageCount),
+          rateLimitedCount: Number(v.rateLimitedCount),
         }))}
       isPending={false}
     />
