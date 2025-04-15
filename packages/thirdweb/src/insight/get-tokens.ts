@@ -29,7 +29,7 @@ export async function getOwnedTokens(args: {
   client: ThirdwebClient;
   chains: Chain[];
   ownerAddress: string;
-  queryOptions?: Omit<GetV1TokensErc20ByOwnerAddressData["query"], "chain">;
+  queryOptions?: GetV1TokensErc20ByOwnerAddressData["query"];
 }): Promise<OwnedToken[]> {
   const {
     client,
@@ -51,13 +51,16 @@ export async function getOwnedTokens(args: {
       ownerAddress: ownerAddress,
     },
     query: {
-      ...queryOptions,
       chain: chains.map((chain) => chain.id),
+      ...queryOptions,
     },
   });
 
-  if (!result.data || result.error) {
-    throw new Error(result.error ? stringify(result.error) : "Unknown error");
+  if (result.error) {
+    throw new Error(
+      `${result.response.status} ${result.response.statusText} - ${result.error ? stringify(result.error) : "Unknown error"}`,
+    );
   }
-  return result.data.data;
+
+  return result.data?.data ?? [];
 }

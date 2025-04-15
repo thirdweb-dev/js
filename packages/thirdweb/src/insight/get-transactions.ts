@@ -3,6 +3,7 @@ import {
   type GetV1WalletsByWalletAddressTransactionsResponse,
   getV1WalletsByWalletAddressTransactions,
 } from "@thirdweb-dev/insight";
+import { stringify } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebDomains } from "../utils/domains.js";
@@ -30,10 +31,7 @@ export async function getTransactions(args: {
   client: ThirdwebClient;
   walletAddress: string;
   chains: Chain[];
-  queryOptions?: Omit<
-    GetV1WalletsByWalletAddressTransactionsData["query"],
-    "chain"
-  >;
+  queryOptions?: GetV1WalletsByWalletAddressTransactionsData["query"];
 }): Promise<Transaction[]> {
   const threeMonthsAgoInSeconds = Math.floor(
     (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
@@ -52,15 +50,17 @@ export async function getTransactions(args: {
     baseUrl: `https://${getThirdwebDomains().insight}`,
     fetch: getClientFetch(client),
     query: {
-      ...queryOptions,
       chain: chains.map((chain) => chain.id),
+      ...queryOptions,
     },
     path: {
       wallet_address: walletAddress,
     },
   });
   if (result.error) {
-    throw new Error(result.error.error);
+    throw new Error(
+      `${result.response.status} ${result.response.statusText} - ${result.error ? stringify(result.error) : "Unknown error"}`,
+    );
   }
   return result.data.data || [];
 }
