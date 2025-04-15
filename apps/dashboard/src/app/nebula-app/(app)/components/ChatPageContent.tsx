@@ -132,15 +132,17 @@ export function ChatPageContent(props: {
         updatedContextFilters.walletAddress = address;
       }
 
-      // if we have last used chains in storage, continue using them
-      try {
-        const lastUsedChainIds = getLastUsedChainIds();
-        if (lastUsedChainIds) {
-          updatedContextFilters.chainIds = lastUsedChainIds;
-          return updatedContextFilters;
+      if (updatedContextFilters.chainIds?.length === 0) {
+        // if we have last used chains in storage, continue using them
+        try {
+          const lastUsedChainIds = getLastUsedChainIds();
+          if (lastUsedChainIds) {
+            updatedContextFilters.chainIds = lastUsedChainIds;
+            return updatedContextFilters;
+          }
+        } catch {
+          // ignore local storage errors
         }
-      } catch {
-        // ignore local storage errors
       }
 
       return updatedContextFilters;
