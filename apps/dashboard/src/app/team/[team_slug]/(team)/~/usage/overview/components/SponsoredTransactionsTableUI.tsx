@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistance } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
@@ -317,7 +317,7 @@ function ChainCell(props: { chainId: string }) {
 
   return (
     <div className="relative flex w-max items-center gap-2">
-      <ChainIcon ipfsSrc={chain?.icon?.url} className="size-6" />
+      <ChainIconClient ipfsSrc={chain?.icon?.url} className="size-6" />
       <Link
         target="_blank"
         href={`/${chain ? chain.slug : props.chainId}`}

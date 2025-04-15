@@ -38,7 +38,7 @@ import {
   useEngineTransactions,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format, formatDate } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -373,7 +373,7 @@ function TxChainCell(props: { chainId: string | undefined }) {
 
   return (
     <div className="flex items-center gap-2">
-      <ChainIcon className="size-5" ipfsSrc={chain.icon?.url} />
+      <ChainIconClient className="size-5" ipfsSrc={chain.icon?.url} />
       <div className="max-w-[150px] truncate">
         {chain.name ?? `Chain ID: ${chainId}`}
       </div>
@@ -622,7 +622,7 @@ const TransactionDetailsDrawer = ({
           <div>
             <FormLabel>Chain</FormLabel>
             <div className="flex items-center gap-2">
-              <ChainIcon className="size-5" ipfsSrc={chain?.icon?.url} />
+              <ChainIconClient className="size-5" ipfsSrc={chain?.icon?.url} />
               <span>{chain?.name}</span>
             </div>
           </div>

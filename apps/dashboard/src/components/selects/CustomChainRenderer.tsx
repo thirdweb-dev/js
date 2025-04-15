@@ -1,7 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
 import { SettingsIcon } from "lucide-react";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
@@ -49,7 +49,7 @@ export const CustomChainRenderer = ({
             }
           }}
         >
-          <ChainIcon ipfsSrc={chain.icon?.url} className="size-8" />
+          <ChainIconClient ipfsSrc={chain.icon?.url} className="size-8" />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <p

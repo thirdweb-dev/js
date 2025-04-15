@@ -34,7 +34,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -582,7 +582,10 @@ const SendFundsModal = ({
             <FormControl>
               <FormLabel>Chain</FormLabel>
               <Flex align="center" gap={2}>
-                <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
+                <ChainIconClient
+                  className="size-3"
+                  ipfsSrc={chain?.icon?.url}
+                />
                 <Text>{chain?.name}</Text>
               </Flex>
             </FormControl>

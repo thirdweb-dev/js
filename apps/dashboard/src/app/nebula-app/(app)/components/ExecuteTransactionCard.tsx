@@ -1,7 +1,8 @@
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { CodeClient } from "@/components/ui/code/code.client";
+import { cn } from "@/lib/utils";
 import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   ArrowRightLeftIcon,
@@ -15,10 +16,12 @@ import { useState } from "react";
 import {
   type ThirdwebClient,
   prepareTransaction,
+  toEther,
   waitForReceipt,
 } from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { TransactionButton } from "../../../../components/buttons/TransactionButton";
+import { ChainIconClient } from "../../../../components/icons/ChainIcon";
 import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 import { getSDKTheme } from "../../../components/sdk-component-theme";
@@ -76,29 +79,157 @@ export function ExecuteTransactionCardLayout(props: {
     },
   });
   const chain = useV5DashboardChain(txData.chainId);
-  const isTransactionSent =
-    props.status.type === "confirming" || props.status.type === "confirmed";
   const trackEvent = useTrack();
+  const account = useActiveAccount();
 
   const explorer = chain.blockExplorers?.[0]?.url;
+
+  const isTransactionPending =
+    props.status.type === "sending" || props.status.type === "confirming";
 
   return (
     <div>
       <div className="rounded-xl border bg-card">
-        <div className="flex flex-col gap-4 p-4 pb-6">
-          <h3 className="font-semibold text-foreground text-lg tracking-tight">
-            Transaction
-          </h3>
+        {/* header */}
+        <h3 className="border-b p-4 py-4 font-semibold text-foreground text-lg tracking-tight lg:px-6 lg:text-xl">
+          Transaction
+        </h3>
 
-          <CodeClient code={JSON.stringify(txData, null, 2)} lang="json" />
+        {/* content */}
+        <div className="px-4 text-sm lg:px-6 [&>*]:h-12 [&>*]:border-b lg:[&>*]:h-14">
+          {/* From */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-muted-foreground">From</span>
+            {account ? (
+              <WalletAddress
+                address={account.address}
+                className="h-auto py-0"
+                iconClassName="size-5"
+              />
+            ) : (
+              <span className="text-muted-foreground">Your Wallet</span>
+            )}
+          </div>
+
+          {/* To */}
+          {txData.to && (
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-muted-foreground">To</span>
+
+              <WalletAddress
+                address={txData.to}
+                className="h-auto py-0"
+                iconClassName="size-5"
+              />
+            </div>
+          )}
+
+          {/* Value */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-muted-foreground">Value</span>
+            {toEther(BigInt(txData.value))} {chain.nativeCurrency?.symbol}
+          </div>
+
+          {/* Network */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-muted-foreground">Network</span>
+            <div className="flex items-center gap-2">
+              <ChainIconClient
+                className="size-5 rounded-full"
+                src={chain.icon?.url}
+              />
+              <span className="text-foreground">
+                {chain.name || `Chain ID: ${txData.chainId}`}
+              </span>
+            </div>
+          </div>
+
+          {/* Status */}
+          {props.status.type !== "idle" && (
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-muted-foreground">Status</span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "flex items-center gap-2 font-medium",
+                    props.status.type === "sending" && "text-blue-500",
+                    props.status.type === "confirming" && "text-yellow-500",
+                    props.status.type === "confirmed" && "text-green-500",
+                    props.status.type === "failed" && "text-red-500",
+                  )}
+                >
+                  {/* icon */}
+                  {(props.status.type === "sending" ||
+                    props.status.type === "confirming") && (
+                    <Spinner className="size-4" />
+                  )}
+
+                  {props.status.type === "confirmed" && (
+                    <CircleCheckIcon className="size-4" />
+                  )}
+
+                  {props.status.type === "failed" && (
+                    <CircleXIcon className="size-4" />
+                  )}
+
+                  {/* text */}
+                  <span>
+                    {props.status.type === "sending" && "Sending Transaction"}
+                    {props.status.type === "confirming" &&
+                      "Waiting for Confirmation"}
+                    {props.status.type === "confirmed" &&
+                      "Transaction Confirmed"}
+                    {props.status.type === "failed" && "Transaction Failed"}
+                  </span>
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Transaction Hash */}
+          {"txHash" in props.status && props.status.txHash && (
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-muted-foreground">Transaction Hash</span>
+              <div className="flex justify-end gap-2.5">
+                {explorer ? (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1.5 font-mono"
+                  >
+                    <Link
+                      href={`${explorer}/tx/${props.status.txHash}`}
+                      target="_blank"
+                    >
+                      {`${props.status.txHash.slice(0, 6)}...${props.status.txHash.slice(-4)}`}
+                      <ExternalLinkIcon className="size-3" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <CopyTextButton
+                    textToCopy={props.status.txHash}
+                    textToShow={`${props.status.txHash.slice(0, 6)}...${props.status.txHash.slice(-4)}`}
+                    variant="ghost"
+                    className="font-mono"
+                    copyIconPosition="right"
+                    tooltip="Copy Transaction Hash"
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="flex items-center justify-end border-t p-4">
+        {/* footer */}
+        <div className="flex items-center justify-end px-4 py-6 lg:px-6">
           <TransactionButton
             isPending={sendTransaction.isPending}
             transactionCount={undefined}
             txChainID={txData.chainId}
             variant="default"
+            disabled={isTransactionPending}
+            size="sm"
             onClick={async () => {
               trackEvent({
                 category: "nebula",
@@ -164,72 +295,6 @@ export function ExecuteTransactionCardLayout(props: {
           </TransactionButton>
         </div>
       </div>
-
-      {/* Tx Status */}
-      {props.status.type !== "idle" && (
-        <div className="mt-5 rounded-lg border bg-card">
-          <div className="flex flex-col gap-1.5 p-4">
-            {props.status.type === "sending" && (
-              <div className="flex items-center gap-2 text-link-foreground">
-                <Spinner className="size-4" />
-                <p> Sending Transaction </p>
-              </div>
-            )}
-
-            {isTransactionSent && (
-              <div className="flex items-center gap-2 text-success-text">
-                <CircleCheckIcon className="size-4" />
-                <p> Transaction Sent </p>
-              </div>
-            )}
-
-            {props.status.type === "confirming" && (
-              <div className="flex items-center gap-2 text-link-foreground">
-                <Spinner className="size-4" />
-                <p> Confirming Transaction </p>
-              </div>
-            )}
-
-            {props.status.type === "confirmed" && (
-              <div className="flex items-center gap-2 text-success-text">
-                <CircleCheckIcon className="size-4" />
-                <p> Transaction Confirmed </p>
-              </div>
-            )}
-
-            {props.status.type === "failed" && (
-              <div className="flex items-center gap-2 text-destructive-text">
-                <CircleXIcon className="size-4" />
-                <p> Transaction Failed </p>
-              </div>
-            )}
-          </div>
-
-          {"txHash" in props.status && props.status.txHash && (
-            <div className="flex justify-end gap-2.5 border-t p-4">
-              {explorer && (
-                <Button asChild variant="outline" size="sm" className="gap-2 ">
-                  <Link
-                    href={`${explorer}/tx/${props.status.txHash}`}
-                    target="_blank"
-                  >
-                    View on Explorer
-                    <ExternalLinkIcon className="size-3" />
-                  </Link>
-                </Button>
-              )}
-              <CopyTextButton
-                textToCopy={props.status.txHash}
-                className=""
-                textToShow="Transaction Hash"
-                variant="outline"
-                copyIconPosition="right"
-                tooltip="Copy Transaction Hash"
-              />
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

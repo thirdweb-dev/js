@@ -23,6 +23,7 @@ export function WalletAddress(props: {
   address: string | undefined;
   shortenAddress?: boolean;
   className?: string;
+  iconClassName?: string;
 }) {
   const thirdwebClient = useThirdwebClient();
   // default back to zero address if no address provided
@@ -78,6 +79,7 @@ export function WalletAddress(props: {
               address={address}
               profiles={profiles.data || []}
               thirdwebClient={thirdwebClient}
+              iconClassName={props.iconClassName}
             />
           )}
           <span className="cursor-pointer font-mono">
@@ -168,6 +170,7 @@ function WalletAvatar(props: {
   address: string;
   profiles: SocialProfile[];
   thirdwebClient: ThirdwebClient;
+  iconClassName?: string;
 }) {
   const avatar = useMemo(() => {
     return props.profiles.find(
@@ -186,11 +189,20 @@ function WalletAvatar(props: {
     : undefined;
 
   return (
-    <div className="size-6 overflow-hidden rounded-full">
+    <div
+      className={cn("size-6 overflow-hidden rounded-full", props.iconClassName)}
+    >
       {resolvedAvatarSrc ? (
-        <Img src={resolvedAvatarSrc} className="size-6 object-cover" />
+        <Img
+          src={resolvedAvatarSrc}
+          className={cn("size-6 object-cover", props.iconClassName)}
+        />
       ) : (
-        <Blobbie address={props.address} size={24} />
+        <Blobbie
+          address={props.address}
+          size={24}
+          className={props.iconClassName}
+        />
       )}
     </div>
   );

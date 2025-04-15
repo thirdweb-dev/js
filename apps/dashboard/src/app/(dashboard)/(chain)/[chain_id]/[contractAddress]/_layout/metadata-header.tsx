@@ -3,7 +3,7 @@
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Button } from "@/components/ui/button";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -85,7 +85,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 href={`/${chain.slug}`}
                 className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
               >
-                <ChainIcon ipfsSrc={chain.icon?.url} className="size-4" />
+                <ChainIconClient ipfsSrc={chain.icon?.url} className="size-4" />
                 {cleanedChainName && (
                   <span className="text-xs">{cleanedChainName}</span>
                 )}

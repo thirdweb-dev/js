@@ -71,9 +71,9 @@ function Variant(props: {
         twAccount={accountStub()}
         txData={{
           chainId: 1,
-          to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
+          to: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675", // thirdweb.eth
           data: "0x",
-          value: "0x16345785d8a0000",
+          value: "0x16345785d8a0000", // 0.1 eth
         }}
       />
     </BadgeContainer>

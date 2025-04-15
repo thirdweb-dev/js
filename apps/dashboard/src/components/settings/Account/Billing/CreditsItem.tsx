@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { Account, BillingCredit } from "@3rdweb-sdk/react/hooks/useApi";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
@@ -49,7 +49,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
         <div className="relative">
           <div className="absolute top-0 right-0">
             {isOpCredit ? (
-              <ChainIcon
+              <ChainIconClient
                 ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
                 "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
                 className="size-6"

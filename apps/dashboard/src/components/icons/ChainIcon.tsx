@@ -12,7 +12,7 @@ type ChainIconProps = ImageProps & {
   ipfsSrc?: string;
 };
 
-export const ChainIcon = ({ ipfsSrc, ...restProps }: ChainIconProps) => {
+export const ChainIconClient = ({ ipfsSrc, ...restProps }: ChainIconProps) => {
   const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc) : fallbackChainIcon;
 
   return (

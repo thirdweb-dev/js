@@ -23,7 +23,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -71,7 +71,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
+            <ChainIconClient className="size-3" ipfsSrc={chain?.icon?.url} />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -404,7 +404,7 @@ const RemoveModal = ({
             <FormControl>
               <FormLabel>Chain</FormLabel>
               <Flex align="center" gap={2}>
-                <ChainIcon
+                <ChainIconClient
                   className="size-3"
                   ipfsSrc={
                     idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url

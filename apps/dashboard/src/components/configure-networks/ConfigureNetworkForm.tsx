@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useStore } from "@/lib/reactive";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { getDashboardChainRpc } from "lib/rpc";
 import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -369,7 +369,10 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             label="Icon"
           >
             <div className="flex items-center gap-1">
-              <ChainIcon className="size-5" ipfsSrc={form.watch("icon")} />
+              <ChainIconClient
+                className="size-5"
+                ipfsSrc={form.watch("icon")}
+              />
               <IconUpload
                 onUpload={(uri) => {
                   form.setValue("icon", uri, { shouldDirty: true });

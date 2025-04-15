@@ -21,7 +21,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { type TrendingContract, fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
@@ -322,7 +322,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
         isActive && "bg-muted",
       )}
     >
-      <ChainIcon
+      <ChainIconClient
         className="size-6 shrink-0"
         ipfsSrc={result.chainMetadata?.icon?.url}
       />

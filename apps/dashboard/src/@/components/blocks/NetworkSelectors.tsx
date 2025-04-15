@@ -4,7 +4,7 @@ import { MultiSelect } from "@/components/blocks/multi-select";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
 import { useCallback, useMemo } from "react";
-import { ChainIcon } from "../../../components/icons/ChainIcon";
+import { ChainIconClient } from "../../../components/icons/ChainIcon";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 
 function cleanChainName(chainName: string) {
@@ -77,7 +77,7 @@ export function MultiNetworkSelector(props: {
       return (
         <div className="flex justify-between gap-4">
           <span className="flex grow gap-2 truncate text-left">
-            <ChainIcon
+            <ChainIconClient
               className="size-5"
               ipfsSrc={chain.icon?.url}
               loading="lazy"
@@ -172,7 +172,7 @@ export function SingleNetworkSelector(props: {
       return (
         <div className="flex justify-between gap-4">
           <span className="flex grow gap-2 truncate text-left">
-            <ChainIcon
+            <ChainIconClient
               className="size-5"
               ipfsSrc={chain.icon?.url}
               loading="lazy"

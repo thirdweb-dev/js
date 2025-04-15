@@ -5,7 +5,7 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
 import { cn } from "@/lib/utils";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ChevronDownIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -199,7 +199,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           });
         }}
       >
-        <ChainIcon ipfsSrc={chain?.icon?.url} className="size-5" />
+        <ChainIconClient ipfsSrc={chain?.icon?.url} className="size-5" />
         {chain?.name || "Select Network"}
 
         <ChevronDownIcon className="ml-auto size-4" />

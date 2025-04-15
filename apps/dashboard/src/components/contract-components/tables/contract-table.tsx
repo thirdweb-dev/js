@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useMutation } from "@tanstack/react-query";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
 import { EllipsisVerticalIcon, ExternalLinkIcon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -263,7 +263,7 @@ const ChainNameCell = React.memo(function ChainNameCell(props: {
     `Unknown Network (#${props.chainId})`;
   return (
     <div className="flex items-center gap-2">
-      <ChainIcon className="size-5" ipfsSrc={data?.icon?.url} />
+      <ChainIconClient className="size-5" ipfsSrc={data?.icon?.url} />
       <SkeletonContainer
         loadedData={data ? cleanedChainName : undefined}
         skeletonData={`Chain ID ${props.chainId}`}

@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -81,7 +81,7 @@ export const ContractSubscriptionTable: React.FC<
         const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
+            <ChainIconClient className="size-3" ipfsSrc={chain?.icon?.url} />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -399,7 +399,10 @@ const RemoveModal = ({
               <FormControl>
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>
-                  <ChainIcon className="size-3" ipfsSrc={chain?.icon?.url} />
+                  <ChainIconClient
+                    className="size-3"
+                    ipfsSrc={chain?.icon?.url}
+                  />
                   <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>
               </FormControl>

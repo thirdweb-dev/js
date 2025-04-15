@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChainIcon } from "components/icons/ChainIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { useMemo } from "react";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 
@@ -67,7 +67,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
       >
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
-            <ChainIcon ipfsSrc={undefined} className="size-5" />
+            <ChainIconClient ipfsSrc={undefined} className="size-5" />
             All Networks
           </div>
         </SelectItem>
@@ -75,7 +75,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         {chains.map((chain) => (
           <SelectItem key={chain.chainId} value={String(chain.chainId)}>
             <div className="flex items-center gap-2 py-1">
-              <ChainIcon ipfsSrc={chain.icon?.url} className="size-5" />
+              <ChainIconClient ipfsSrc={chain.icon?.url} className="size-5" />
               {useCleanChainName ? cleanChainName(chain.name) : chain.name}
             </div>
           </SelectItem>
