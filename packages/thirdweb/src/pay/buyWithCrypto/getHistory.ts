@@ -79,8 +79,10 @@ export async function getBuyWithCryptoHistory(
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
-      response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.text().catch(() => null);
+      throw new Error(
+        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+      );
     }
 
     const data: BuyWithCryptoHistoryData = (await response.json()).result;

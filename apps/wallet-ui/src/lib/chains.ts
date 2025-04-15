@@ -9,8 +9,10 @@ export async function getChains() {
   );
 
   if (!response.ok) {
-    response.body?.cancel();
-    throw new Error("Failed to fetch chains");
+    const error = await response.text().catch(() => null);
+    throw new Error(
+      `Failed to fetch chains: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+    );
   }
 
   return (await response.json()).data as ChainMetadata[];

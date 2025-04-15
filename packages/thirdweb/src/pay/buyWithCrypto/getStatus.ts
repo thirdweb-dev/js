@@ -142,8 +142,10 @@ export async function getBuyWithCryptoStatus(
 
     // Assuming the response directly matches the BuyWithCryptoStatus interface
     if (!response.ok) {
-      response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.text().catch(() => null);
+      throw new Error(
+        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+      );
     }
 
     const data: BuyWithCryptoStatus = (await response.json()).result;
