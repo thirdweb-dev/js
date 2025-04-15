@@ -1,4 +1,5 @@
 import type { Abi } from "abitype";
+import { isGetAllExtensionsSupported } from "src/extensions/dynamic-contracts/__generated__/IExtensionManager/write/getAllExtensions.js";
 import { encodePacked, keccak256, toFunctionSelector } from "viem/utils";
 import { polygon } from "../../../chains/chain-definitions/polygon.js";
 import type { ThirdwebClient } from "../../../client/client.js";
@@ -79,8 +80,14 @@ export function publishContract(
         compositeAbi: options.metadata.compositeAbi,
         constructorParams: options.metadata.constructorParams,
         implConstructorParams: options.metadata.implConstructorParams,
-        defaultExtensions: options.metadata.defaultExtensions,
-        defaultModules: options.metadata.defaultModules,
+        defaultExtensions:
+          routerType === "dynamic"
+            ? options.metadata.defaultExtensions
+            : undefined,
+        defaultModules:
+          routerType === "modular"
+            ? options.metadata.defaultModules
+            : undefined,
         deployType: options.metadata.deployType,
         description: options.metadata.description,
         displayName: options.metadata.displayName,
@@ -131,6 +138,7 @@ function getRouterType(abi: Abi) {
     .filter((f) => f.type === "function")
     .map((f) => toFunctionSelector(f));
   const isModule = isGetInstalledModulesSupported(fnSelectors);
-  // TODO add dynamic detection
-  return isModule ? "modular" : "none";
+  const isDynamic = isGetAllExtensionsSupported(fnSelectors);
+
+  return isModule ? "modular" : isDynamic ? "dynamic" : "none";
 }
