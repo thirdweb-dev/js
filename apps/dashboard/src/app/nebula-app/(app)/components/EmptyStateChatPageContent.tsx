@@ -8,6 +8,7 @@ import { ChatBar } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
   sendMessage: (message: string) => void;
+  prefillMessage: string | undefined;
 }) {
   return (
     <div className="py-10 lg:py-16">
@@ -33,6 +34,7 @@ export function EmptyStateChatPageContent(props: {
             abortChatStream={() => {
               // the page will switch so, no need to handle abort here
             }}
+            prefillMessage={props.prefillMessage}
           />
           <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">

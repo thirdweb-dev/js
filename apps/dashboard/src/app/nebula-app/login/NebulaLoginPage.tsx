@@ -11,11 +11,38 @@ import { LoginAndOnboardingPageContent } from "../../login/LoginPage";
 
 export function NebulaLoginPage(props: {
   account: Account | undefined;
+  params: {
+    chain: string | string[] | undefined;
+    q: string | undefined;
+    wallet: string | undefined;
+  };
 }) {
-  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [message, setMessage] = useState<string | undefined>(props.params.q);
   const [showPage, setShowPage] = useState<"connect" | "welcome">(
     props.account ? "connect" : "welcome",
   );
+
+  const redirectPathObj = {
+    chain: props.params.chain,
+    q: message, // don't use props.params.q, because message may be updated by user
+    wallet: props.params.wallet,
+  };
+
+  const redirectPathParams = Object.entries(redirectPathObj)
+    .map(([key, value]) => {
+      if (!value) {
+        return "";
+      }
+
+      if (Array.isArray(value)) {
+        return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
+      }
+
+      return `${key}=${encodeURIComponent(value)}`;
+    })
+    .filter((v) => v !== "")
+    .join("&");
+
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
       {/* nav */}
@@ -55,15 +82,14 @@ export function NebulaLoginPage(props: {
         <LoginAndOnboardingPageContent
           loginWithInAppWallet={false}
           account={props.account}
-          redirectPath={
-            message ? `/?prompt=${encodeURIComponent(message)}` : "/"
-          }
+          redirectPath={`/?${redirectPathParams}`}
         />
       )}
 
       {showPage === "welcome" && (
         <div className="container relative flex max-w-[800px] grow flex-col justify-center overflow-hidden rounded-lg pb-6">
           <EmptyStateChatPageContent
+            prefillMessage={message}
             sendMessage={(msg) => {
               setMessage(msg);
               setShowPage("connect");

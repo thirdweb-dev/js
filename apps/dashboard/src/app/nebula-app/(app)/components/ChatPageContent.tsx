@@ -29,7 +29,13 @@ export function ChatPageContent(props: {
   authToken: string;
   type: "landing" | "new-chat";
   account: Account;
-  initialPrompt: string | undefined;
+  initialParams:
+    | {
+        q: string | undefined;
+        chainIds: number[];
+        wallet: string | undefined;
+      }
+    | undefined;
 }) {
   const address = useActiveAccount()?.address;
   const client = useThirdwebClient(props.authToken);
@@ -85,8 +91,12 @@ export function ChatPageContent(props: {
   >(() => {
     const contextRes = props.session?.context;
     const value: NebulaContext = {
-      chainIds: contextRes?.chain_ids || null,
-      walletAddress: contextRes?.wallet_address || null,
+      chainIds:
+        contextRes?.chain_ids ||
+        props.initialParams?.chainIds.map((x) => x.toString()) ||
+        [],
+      walletAddress:
+        contextRes?.wallet_address || props.initialParams?.wallet || null,
     };
 
     return value;
@@ -118,8 +128,9 @@ export function ChatPageContent(props: {
             walletAddress: null,
           };
 
-      // Only set wallet address from connected wallet
-      updatedContextFilters.walletAddress = address || null;
+      if (!updatedContextFilters.walletAddress && address) {
+        updatedContextFilters.walletAddress = address;
+      }
 
       // if we have last used chains in storage, continue using them
       try {
@@ -176,10 +187,6 @@ export function ChatPageContent(props: {
 
   const handleSendMessage = useCallback(
     async (message: string) => {
-      if (!address) {
-        setShowConnectModal(true);
-        return;
-      }
       setUserHasSubmittedMessage(true);
       setMessages((prev) => [
         ...prev,
@@ -355,14 +362,7 @@ export function ChatPageContent(props: {
         setEnableAutoScroll(false);
       }
     },
-    [
-      sessionId,
-      contextFilters,
-      props.authToken,
-      messages.length,
-      initSession,
-      address,
-    ],
+    [sessionId, contextFilters, props.authToken, messages.length, initSession],
   );
 
   const hasDoneAutoPrompt = useRef(false);
@@ -370,16 +370,19 @@ export function ChatPageContent(props: {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (
-      props.initialPrompt &&
+      props.initialParams?.q &&
       messages.length === 0 &&
       !hasDoneAutoPrompt.current
     ) {
       hasDoneAutoPrompt.current = true;
-      handleSendMessage(props.initialPrompt);
+      handleSendMessage(props.initialParams.q);
     }
-  }, [props.initialPrompt, messages.length, handleSendMessage]);
+  }, [props.initialParams?.q, messages.length, handleSendMessage]);
 
-  const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
+  const showEmptyState =
+    !userHasSubmittedMessage &&
+    messages.length === 0 &&
+    !props.initialParams?.q;
 
   const handleUpdateContextFilters = async (
     values: NebulaContext | undefined,
@@ -412,7 +415,10 @@ export function ChatPageContent(props: {
         <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
-              <EmptyStateChatPageContent sendMessage={handleSendMessage} />
+              <EmptyStateChatPageContent
+                sendMessage={handleSendMessage}
+                prefillMessage={props.initialParams?.q}
+              />
             </div>
           ) : (
             <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
@@ -430,6 +436,7 @@ export function ChatPageContent(props: {
 
               <div className="container max-w-[800px]">
                 <ChatBar
+                  prefillMessage={undefined}
                   sendMessage={handleSendMessage}
                   isChatStreaming={isChatStreaming}
                   abortChatStream={() => {

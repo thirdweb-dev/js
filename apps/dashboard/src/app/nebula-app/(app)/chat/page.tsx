@@ -17,7 +17,7 @@ export default async function Page() {
       session={undefined}
       type="new-chat"
       account={account}
-      initialPrompt={undefined}
+      initialParams={undefined}
     />
   );
 }

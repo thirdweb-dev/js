@@ -15,13 +15,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    prefillMessage: undefined,
+  },
 };
 
-function Story() {
+export const PrefilledMessage: Story = {
+  args: {
+    prefillMessage: "This is a prefilled message",
+  },
+};
+
+function Story(props: {
+  prefillMessage: string | undefined;
+}) {
   return (
     <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
-      <EmptyStateChatPageContent sendMessage={() => {}} />
+      <EmptyStateChatPageContent
+        sendMessage={() => {}}
+        prefillMessage={props.prefillMessage}
+      />
     </div>
   );
 }

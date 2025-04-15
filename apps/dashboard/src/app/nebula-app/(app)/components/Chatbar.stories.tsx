@@ -27,6 +27,7 @@ function Story() {
           abortChatStream={() => {}}
           isChatStreaming={false}
           sendMessage={() => {}}
+          prefillMessage={undefined}
         />
       </BadgeContainer>
 
@@ -35,6 +36,16 @@ function Story() {
           abortChatStream={() => {}}
           isChatStreaming={true}
           sendMessage={() => {}}
+          prefillMessage={undefined}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="Prefilled Message">
+        <ChatBar
+          abortChatStream={() => {}}
+          isChatStreaming={false}
+          sendMessage={() => {}}
+          prefillMessage="This is a prefilled message"
         />
       </BadgeContainer>
     </div>

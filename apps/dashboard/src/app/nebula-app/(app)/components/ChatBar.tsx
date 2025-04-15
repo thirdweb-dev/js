@@ -10,8 +10,9 @@ export function ChatBar(props: {
   sendMessage: (message: string) => void;
   isChatStreaming: boolean;
   abortChatStream: () => void;
+  prefillMessage: string | undefined;
 }) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(props.prefillMessage || "");
 
   return (
     <div className="rounded-2xl border border-border bg-card p-2">

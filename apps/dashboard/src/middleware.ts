@@ -32,14 +32,29 @@ export async function middleware(request: NextRequest) {
   const subdomain = host?.split(".")[0];
   const paths = pathname.slice(1).split("/");
 
+  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const authCookie = activeAccount
+    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
+    : null;
+
   // nebula.thirdweb.com -> render page at app/nebula-app
   // on vercel preview, the format is nebula---thirdweb-www-git-<branch-name>.thirdweb-preview.com
   if (
     subdomain &&
     (subdomain === "nebula" || subdomain.startsWith("nebula---"))
   ) {
+    // preserve search params when redirecting to /login page
+    if (!authCookie && paths[0] !== "login") {
+      return redirect(request, "/login", {
+        searchParams: request.nextUrl.searchParams.toString(),
+      });
+    }
+
     const newPaths = ["nebula-app", ...paths];
-    return rewrite(request, `/${newPaths.join("/")}`, undefined);
+
+    return rewrite(request, `/${newPaths.join("/")}`, {
+      searchParams: request.nextUrl.searchParams.toString(),
+    });
   }
 
   // requesting page at app/nebula-app on thirdweb.com -> redirect to nebula.thirdweb.com
@@ -53,10 +68,6 @@ export async function middleware(request: NextRequest) {
   }
 
   let cookiesToSet: Record<string, string> | undefined = undefined;
-  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  const authCookie = activeAccount
-    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
-    : null;
 
   // utm collection
   // if user is already signed in - don't bother capturing utm params
