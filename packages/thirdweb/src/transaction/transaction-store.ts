@@ -1,9 +1,8 @@
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getTransactions } from "../insight/get-transactions.js";
 import { type Store, createStore } from "../reactive/store.js";
-import { getThirdwebDomains } from "../utils/domains.js";
 import type { Hex } from "../utils/encoding/hex.js";
-import { getClientFetch } from "../utils/fetch.js";
 
 export type StoredTransaction = {
   transactionHash: Hex;
@@ -76,26 +75,16 @@ export async function getPastTransactions(options: {
   const oneMonthsAgoInSeconds = Math.floor(
     (Date.now() - 1 * 30 * 24 * 60 * 60 * 1000) / 1000,
   );
-  const url = new URL(
-    `https://${getThirdwebDomains().insight}/v1/wallets/${walletAddress}/transactions`,
-  );
-  url.searchParams.set("limit", "10");
-  url.searchParams.set("chain", chain.id.toString());
-  url.searchParams.set(
-    "filter_block_timestamp_gte",
-    oneMonthsAgoInSeconds.toString(),
-  );
-  const clientFetch = getClientFetch(client);
-  const result = await clientFetch(url.toString());
-  const json = (await result.json()) as {
-    data: {
-      chain_id: number;
-      hash: string;
-      status: number;
-      to_address: string;
-    }[];
-  };
-  return json.data.map((tx) => ({
+  const result = await getTransactions({
+    client,
+    walletAddress,
+    chains: [chain],
+    queryOptions: {
+      filter_block_timestamp_gte: oneMonthsAgoInSeconds,
+      limit: 20,
+    },
+  });
+  return result.map((tx) => ({
     transactionHash: tx.hash as Hex,
     chainId: tx.chain_id,
     receipt: {

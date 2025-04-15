@@ -176,11 +176,11 @@ export function TokenSelectorScreen(props: {
     enabled: !!props.sourceSupportedTokens && !!chainInfo.data,
   });
 
-  if (walletsAndBalances.isLoading || !walletsAndBalances.data) {
+  if (walletsAndBalances.isLoading || chainInfo.isLoading) {
     return <LoadingScreen />;
   }
 
-  const filteredWallets = Array.from(walletsAndBalances.data.entries() || [])
+  const filteredWallets = Array.from(walletsAndBalances.data?.entries() || [])
     .filter(([w]) => !props.hiddenWallets?.includes(w.id))
     .filter(([, balances]) => {
       const hasEnoughBalance = balances.some((b) => b.balance.value > 0);

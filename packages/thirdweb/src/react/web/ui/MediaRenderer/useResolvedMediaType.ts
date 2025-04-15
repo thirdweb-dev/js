@@ -42,7 +42,10 @@ export function useResolvedMediaType(
   });
 
   return {
-    mediaInfo: { url: resolvedUrl, mimeType: resolvedMimeType.data },
+    mediaInfo: {
+      url: resolvedUrl,
+      mimeType: resolvedMimeType.data || "image/", // default to image if no mime type is found
+    },
     isFetched: resolvedMimeType.isFetched || !!mimeType,
   };
 }

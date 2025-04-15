@@ -100,6 +100,10 @@
     {
       "tagName": "@nebula",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@insight",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -127,6 +131,7 @@
     "@nft": true,
     "@account": true,
     "@beta": true,
-    "@nebula": true
+    "@nebula": true,
+    "@insight": true
   }
 }

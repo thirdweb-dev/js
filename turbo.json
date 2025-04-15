@@ -101,6 +101,7 @@
       "dependsOn": ["^build"]
     },
     "lint": {
+      "dependsOn": ["^build"],
       "cache": false,
       "outputs": []
     },
