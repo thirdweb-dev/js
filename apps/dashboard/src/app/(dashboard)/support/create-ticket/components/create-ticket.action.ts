@@ -15,7 +15,11 @@ const UNTHREAD_API_KEY = process.env.UNTHREAD_API_KEY || "";
 
 const planToCustomerId = {
   free: process.env.UNTHREAD_FREE_TIER_ID as string,
+  // treat starter as free
+  starter: process.env.UNTHREAD_FREE_TIER_ID as string,
   growth: process.env.UNTHREAD_GROWTH_TIER_ID as string,
+  accelerate: process.env.UNTHREAD_ACCELERATE_TIER_ID as string,
+  scale: process.env.UNTHREAD_SCALE_TIER_ID as string,
   pro: process.env.UNTHREAD_PRO_TIER_ID as string,
 } as const;
 
@@ -99,7 +103,8 @@ export async function createTicketAction(
   }
 
   const customerId = isValidPlan(team.supportPlan)
-    ? planToCustomerId[team.supportPlan]
+    ? // fall back to "free" tier
+      planToCustomerId[team.supportPlan] || planToCustomerId.free
     : // fallback to "free" tier
       planToCustomerId.free;
 
