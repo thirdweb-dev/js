@@ -47,8 +47,67 @@ export const fetchRPCUsage = unstable_cache(
       data: resData.data as RPCUsageDataItem[],
     };
   },
-  ["nebula-analytics"],
+  ["rpc-usage"],
   {
     revalidate: 60 * 60, // 1 hour
+  },
+);
+
+type Last24HoursRPCUsageApiResponse = {
+  peakRate: {
+    date: string;
+    peakRPS: number;
+  };
+  averageRate: {
+    date: string;
+    averageRate: number;
+    includedCount: number;
+    rateLimitedCount: number;
+    overageCount: number;
+  }[];
+  totalCounts: {
+    includedCount: number;
+    rateLimitedCount: number;
+    overageCount: number;
+  };
+};
+
+export const getLast24HoursRPCUsage = unstable_cache(
+  async (params: {
+    teamId: string;
+    projectId?: string;
+    authToken: string;
+  }) => {
+    const analyticsEndpoint = process.env.ANALYTICS_SERVICE_URL as string;
+    const url = new URL(`${analyticsEndpoint}/v2/rpc/24-hours`);
+    url.searchParams.set("teamId", params.teamId);
+    if (params.projectId) {
+      url.searchParams.set("projectId", params.projectId);
+    }
+
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${params.authToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.text();
+      return {
+        ok: false as const,
+        error: error,
+      };
+    }
+
+    const resData = await res.json();
+
+    return {
+      ok: true as const,
+      data: resData.data as Last24HoursRPCUsageApiResponse,
+    };
+  },
+  ["rpc-usage-last-24-hours"],
+  {
+    revalidate: 60, // 1 minute
   },
 );

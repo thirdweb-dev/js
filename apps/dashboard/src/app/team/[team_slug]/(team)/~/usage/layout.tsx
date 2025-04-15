@@ -24,6 +24,11 @@ export default async function Layout(props: {
             label: "Overview",
           },
           {
+            href: `/team/${params.team_slug}/~/usage/rpc`,
+            exactMatch: true,
+            label: "RPC",
+          },
+          {
             href: `/team/${params.team_slug}/~/usage/storage`,
             exactMatch: true,
             label: "Storage",

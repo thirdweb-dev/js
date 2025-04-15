@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/chart";
 import { formatDate } from "date-fns";
 import { useMemo } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   EmptyChartState,
   LoadingChartState,
@@ -30,11 +31,17 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
     description?: string;
     titleClassName?: string;
   };
+  footer?: React.ReactNode;
   customHeader?: React.ReactNode;
   // chart config
   config: TConfig;
   data: Array<Record<keyof TConfig, number> & { time: number | string | Date }>;
   showLegend?: boolean;
+  maxLimit?: number;
+  yAxis?: boolean;
+  xAxis?: {
+    sameDay?: boolean;
+  };
 
   // chart className
   chartClassName?: string;
@@ -70,17 +77,33 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
           ) : props.data.length === 0 ? (
             <EmptyChartState />
           ) : (
-            <AreaChart accessibilityLayer data={props.data}>
+            <AreaChart
+              accessibilityLayer
+              data={
+                props.maxLimit
+                  ? props.data.map((d) => ({
+                      ...d,
+                      maxLimit: props.maxLimit,
+                    }))
+                  : props.data
+              }
+            >
               <CartesianGrid vertical={false} />
+              {props.yAxis && <YAxis tickLine={false} axisLine={false} />}
               <XAxis
                 dataKey="time"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={20}
-                tickFormatter={(value) => formatDate(new Date(value), "MMM dd")}
+                tickFormatter={(value) =>
+                  formatDate(
+                    new Date(value),
+                    props.xAxis?.sameDay ? "MMM dd, HH:mm" : "MMM dd",
+                  )
+                }
               />
               <ChartTooltip
-                cursor={false}
+                cursor={true}
                 content={
                   <ChartTooltipContent
                     hideLabel={
@@ -124,6 +147,16 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                   stackId="a"
                 />
               ))}
+              {props.maxLimit && (
+                <Area
+                  type="monotone"
+                  dataKey="maxLimit"
+                  stroke="#ef4444"
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  fill="none"
+                />
+              )}
 
               {props.showLegend && (
                 <ChartLegend
@@ -134,6 +167,9 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
           )}
         </ChartContainer>
       </CardContent>
+      {props.footer && (
+        <CardFooter className="w-full">{props.footer}</CardFooter>
+      )}
     </Card>
   );
 }
