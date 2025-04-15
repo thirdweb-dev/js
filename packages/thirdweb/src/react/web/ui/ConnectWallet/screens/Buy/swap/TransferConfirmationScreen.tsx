@@ -112,7 +112,11 @@ export function TransferConfirmationScreen(
 
   const uiErrorMessage = useMemo(() => {
     if (step === "approve" && status.id === "error" && status.error) {
-      if (status.error.toLowerCase().includes("user rejected")) {
+      if (
+        status.error.toLowerCase().includes("user rejected") ||
+        status.error.toLowerCase().includes("user closed modal") ||
+        status.error.toLowerCase().includes("user denied")
+      ) {
         return {
           title: "Failed to Approve",
           message: "Your wallet rejected the approval request.",

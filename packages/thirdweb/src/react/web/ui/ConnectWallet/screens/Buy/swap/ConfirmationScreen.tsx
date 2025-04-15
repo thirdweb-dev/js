@@ -68,7 +68,11 @@ export function SwapConfirmationScreen(props: {
 
   const uiErrorMessage = useMemo(() => {
     if (step === "approval" && status === "error" && error) {
-      if (error.toLowerCase().includes("user rejected")) {
+      if (
+        error.toLowerCase().includes("user rejected") ||
+        error.toLowerCase().includes("user closed modal") ||
+        error.toLowerCase().includes("user denied")
+      ) {
         return {
           title: "Failed to Approve",
           message: "Your wallet rejected the approval request.",
@@ -82,7 +86,11 @@ export function SwapConfirmationScreen(props: {
     }
 
     if (step === "swap" && status === "error" && error) {
-      if (error.toLowerCase().includes("user rejected")) {
+      if (
+        error.toLowerCase().includes("user rejected") ||
+        error.toLowerCase().includes("user closed modal") ||
+        error.toLowerCase().includes("user denied")
+      ) {
         return {
           title: "Failed to Confirm",
           message: "Your wallet rejected the confirmation request.",

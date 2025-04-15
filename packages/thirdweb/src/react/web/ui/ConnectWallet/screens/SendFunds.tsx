@@ -145,7 +145,11 @@ export function SendFundsForm(props: {
       return locale.transactionFailed;
     }
 
-    if (message.includes("user rejected")) {
+    if (
+      message.includes("user rejected") ||
+      message.includes("user closed modal") ||
+      message.includes("user denied")
+    ) {
       return locale.transactionRejected;
     }
 
