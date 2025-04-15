@@ -1,6 +1,8 @@
+import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0x4a00cc48" as const;
@@ -53,7 +55,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllExtensionsSupported } from "thirdweb/extensions/dynamic-contracts";
- *
  * const supported = isGetAllExtensionsSupported(["0x..."]);
  * ```
  */
@@ -65,24 +66,39 @@ export function isGetAllExtensionsSupported(availableSelectors: string[]) {
 }
 
 /**
- * Prepares a transaction to call the "getAllExtensions" function on the contract.
- * @param options - The options for the "getAllExtensions" function.
- * @returns A prepared transaction object.
+ * Decodes the result of the getAllExtensions function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension DYNAMIC-CONTRACTS
  * @example
  * ```ts
- * import { sendTransaction } from "thirdweb";
- * import { getAllExtensions } from "thirdweb/extensions/dynamic-contracts";
- *
- * const transaction = getAllExtensions();
- *
- * // Send the transaction
- * await sendTransaction({ transaction, account });
+ * import { decodeGetAllExtensionsResult } from "thirdweb/extensions/dynamic-contracts";
+ * const result = decodeGetAllExtensionsResultResult("...");
  * ```
  */
-export function getAllExtensions(options: BaseTransactionOptions) {
-  return prepareContractCall({
+export function decodeGetAllExtensionsResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
+
+/**
+ * Calls the "getAllExtensions" function on the contract.
+ * @param options - The options for the getAllExtensions function.
+ * @returns The parsed result of the function call.
+ * @extension DYNAMIC-CONTRACTS
+ * @example
+ * ```ts
+ * import { getAllExtensions } from "thirdweb/extensions/dynamic-contracts";
+ *
+ * const result = await getAllExtensions({
+ *  contract,
+ * });
+ *
+ * ```
+ */
+export async function getAllExtensions(options: BaseTransactionOptions) {
+  return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    params: [],
   });
 }

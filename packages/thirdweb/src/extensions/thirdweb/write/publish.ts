@@ -5,7 +5,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { getContract } from "../../../contract/contract.js";
 import { CONTRACT_PUBLISHER_ADDRESS } from "../../../contract/deployment/publisher.js";
-import { isGetAllExtensionsSupported } from "../../../extensions/dynamic-contracts/__generated__/IExtensionManager/write/getAllExtensions.js";
+import { isGetAllExtensionsSupported } from "../../../extensions/dynamic-contracts/__generated__/IExtensionManager/read/getAllExtensions.js";
 import { download } from "../../../storage/download.js";
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";

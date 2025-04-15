@@ -1,5 +1,5 @@
 [
   "function addExtension(((string name, string metadataURI, address implementation) metadata, (bytes4 functionSelector, string functionSignature)[] functions) extension)",
   "function removeExtension(string extensionName)",
-  "function getAllExtensions() returns (((string name, string metadataURI, address implementation) metadata, (bytes4 functionSelector, string functionSignature)[] functions)[])"
+  "function getAllExtensions() view returns (((string name, string metadataURI, address implementation) metadata, (bytes4 functionSelector, string functionSignature)[] functions)[])"
 ]
