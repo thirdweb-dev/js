@@ -77,6 +77,11 @@ export {
 export * as Bridge from "../bridge/index.js";
 
 /**
+ * INSIGHT
+ */
+export * as Insight from "../insight/index.js";
+
+/**
  * WALLETS
  */
 export {

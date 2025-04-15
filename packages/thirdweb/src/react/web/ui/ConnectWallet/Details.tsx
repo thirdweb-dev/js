@@ -703,11 +703,7 @@ export function DetailsModal(props: {
               }}
             >
               <CoinsIcon size={iconSize.md} />
-              <Text color="primaryText">
-                {props.supportedNFTs
-                  ? locale.viewFunds.viewAssets
-                  : locale.viewFunds.title}
-              </Text>
+              <Text color="primaryText">{locale.viewFunds.viewAssets}</Text>
             </MenuButton>
           )}
 
@@ -841,34 +837,20 @@ export function DetailsModal(props: {
       />
     );
   } else if (screen === "view-assets") {
-    if (props.supportedNFTs) {
-      content = (
-        <ViewAssets
-          supportedTokens={props.supportedTokens}
-          supportedNFTs={props.supportedNFTs}
-          onBack={() => {
-            setScreen("main");
-          }}
-          theme={props.theme}
-          setScreen={setScreen}
-          client={client}
-          connectLocale={locale}
-          assetTabs={props.detailsModal?.assetTabs}
-        />
-      );
-    } else {
-      // Always show tokens (has the native token at least)
-      content = (
-        <ViewTokens
-          supportedTokens={props.supportedTokens}
-          onBack={() => {
-            setScreen("main");
-          }}
-          client={client}
-          connectLocale={locale}
-        />
-      );
-    }
+    content = (
+      <ViewAssets
+        supportedTokens={props.supportedTokens}
+        supportedNFTs={props.supportedNFTs}
+        onBack={() => {
+          setScreen("main");
+        }}
+        theme={props.theme}
+        setScreen={setScreen}
+        client={client}
+        connectLocale={locale}
+        assetTabs={props.detailsModal?.assetTabs}
+      />
+    );
   } else if (screen === "view-nfts") {
     content = (
       <ViewNFTs

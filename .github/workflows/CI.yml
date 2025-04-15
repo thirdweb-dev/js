@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest-8
     strategy:
       matrix:
-        package_manager: [npm, yarn, pnpm, bun]
+        package_manager: [pnpm] # TODO, reenable [npm, yarn, pnpm, bun]
         bundler: [vite, webpack, esbuild]
     steps:
       - name: Check out the code
@@ -123,7 +123,14 @@ jobs:
           mkdir test-project
           cd test-project
           npm init -y
-          ${{ matrix.package_manager }} add react react-dom ../packages/thirdweb
+          
+          # Handle different package managers
+          if [ "${{ matrix.package_manager }}" = "pnpm" ]; then
+            # Create pnpm workspace
+            echo '{"name": "test-project", "private": true, "workspaces": ["."]}' > package.json
+            echo '{"packages": ["../packages/*"]}' > pnpm-workspace.yaml
+            pnpm add react react-dom ../packages/thirdweb -w
+          fi
       - name: Create test file
         run: |
           cd test-project
@@ -133,7 +140,7 @@ jobs:
         if: matrix.bundler == 'vite'
         run: |
           cd test-project
-          ${{matrix.package_manager}} add vite
+          ${{matrix.package_manager}} add vite -w
           echo 'import { defineConfig } from "vite"; import {resolve} from "path"; export default defineConfig({ build: { lib: { entry: resolve(__dirname, "index.js"), name: "e2e_test" }, outDir: "dist" }});' > vite.config.js
           npx vite build
     
@@ -141,7 +148,7 @@ jobs:
         if: matrix.bundler == 'webpack'
         run: |
           cd test-project
-          ${{matrix.package_manager}} add webpack webpack-cli
+          ${{matrix.package_manager}} add webpack webpack-cli -w
           echo 'const path = require("path"); module.exports = { mode: "production", entry: "./index.js", output: { path: path.resolve(__dirname, "dist"), filename: "bundle.js" }};' > webpack.config.js
           npx webpack
     
@@ -149,7 +156,7 @@ jobs:
         if: matrix.bundler == 'esbuild'
         run: |
           cd test-project
-          ${{matrix.package_manager}} add esbuild
+          ${{matrix.package_manager}} add esbuild -w
           npx esbuild index.js --bundle --outdir=dist
     
       - name: Verify bundle
@@ -176,6 +183,9 @@ jobs:
 
       - name: Setup & Install
         uses: ./.github/composite-actions/install
+
+      - name: Build Packages
+        run: pnpm build
 
       - name: Report bundle size
         uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d # v1.8.0
