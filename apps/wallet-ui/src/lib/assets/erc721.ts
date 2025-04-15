@@ -60,8 +60,10 @@ export async function getErc721Tokens({
   );
 
   if (!response.ok) {
-    response.body?.cancel();
-    console.error("Failed to fetch NFTs");
+    const error = await response.text().catch(() => null);
+    console.error(
+      `Failed to fetch NFTs: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+    );
     return {
       nextCursor: undefined,
       tokens: [],

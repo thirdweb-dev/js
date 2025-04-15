@@ -157,7 +157,6 @@ export async function relayOpenZeppelinTransaction(
   });
 
   if (!response.ok) {
-    response.body?.cancel();
     throw new Error(`Failed to send transaction: ${await response.text()}`);
   }
   const json = await response.json();

@@ -78,8 +78,10 @@ export async function getBuyWithFiatHistory(
 
     // Assuming the response directly matches the BuyWithFiatStatus response interface
     if (!response.ok) {
-      response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.text().catch(() => null);
+      throw new Error(
+        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+      );
     }
 
     const data: BuyWithFiatHistoryData = (await response.json()).result;

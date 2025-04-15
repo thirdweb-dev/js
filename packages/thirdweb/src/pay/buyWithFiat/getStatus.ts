@@ -188,8 +188,10 @@ export async function getBuyWithFiatStatus(
     const response = await getClientFetch(params.client)(url);
 
     if (!response.ok) {
-      response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.text().catch(() => null);
+      throw new Error(
+        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+      );
     }
 
     return (await response.json()).result;

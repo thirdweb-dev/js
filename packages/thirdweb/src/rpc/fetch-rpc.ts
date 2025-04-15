@@ -72,9 +72,9 @@ export async function fetchRpc(
   });
 
   if (!response.ok) {
-    response.body?.cancel();
+    const error = await response.text().catch(() => null);
     throw new Error(
-      `RPC request failed with status ${response.status} - ${response.statusText}`,
+      `RPC request failed with status ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
     );
   }
 
@@ -116,8 +116,10 @@ export async function fetchSingleRpc(
   });
 
   if (!response.ok) {
-    response.body?.cancel();
-    throw new Error(`RPC request failed with status ${response.status}`);
+    const error = await response.text().catch(() => null);
+    throw new Error(
+      `RPC request failed with status ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
+    );
   }
   if (response.headers.get("Content-Type")?.startsWith("application/json")) {
     return await response.json();
