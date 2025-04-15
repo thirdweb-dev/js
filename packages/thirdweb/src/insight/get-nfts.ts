@@ -29,7 +29,7 @@ export async function getOwnedNFTs(args: {
   client: ThirdwebClient;
   chains: Chain[];
   ownerAddress: string;
-  queryOptions?: Omit<GetV1NftsBalanceByOwnerAddressData["query"], "chain">;
+  queryOptions?: GetV1NftsBalanceByOwnerAddressData["query"];
 }): Promise<OwnedNFT[]> {
   const {
     client,
@@ -50,13 +50,16 @@ export async function getOwnedNFTs(args: {
       ownerAddress: ownerAddress,
     },
     query: {
-      ...queryOptions,
       chain: chains.map((chain) => chain.id),
+      ...queryOptions,
     },
   });
 
-  if (!result.data || result.error) {
-    throw new Error(result.error ? stringify(result.error) : "Unknown error");
+  if (result.error) {
+    throw new Error(
+      `${result.response.status} ${result.response.statusText} - ${result.error ? stringify(result.error) : "Unknown error"}`,
+    );
   }
-  return result.data.data;
+
+  return result.data?.data ?? [];
 }

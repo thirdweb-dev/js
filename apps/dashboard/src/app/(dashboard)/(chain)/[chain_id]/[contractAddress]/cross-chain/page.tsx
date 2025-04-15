@@ -2,7 +2,6 @@ import { fetchPublishedContractsFromDeploy } from "components/contract-component
 import { notFound } from "next/navigation";
 import {
   type ContractOptions,
-  eth_blockNumber,
   eth_getTransactionByHash,
   eth_getTransactionReceipt,
   getContractEvents,
@@ -39,13 +38,16 @@ export default async function Page(props: {
     chain_id: string;
   }>;
 }) {
+  const params = await props.params;
+  const info = await getContractPageParamsInfo(params);
+
   const ProxyDeployedEvent = prepareEvent({
     signature:
       "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
+    filters: {
+      proxy: params.contractAddress.toLowerCase(),
+    },
   });
-
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
 
   if (!info) {
     notFound();
@@ -111,16 +113,9 @@ export default async function Page(props: {
   let creationBlockNumber: bigint | undefined;
 
   if (twCloneFactoryContract) {
-    const latestBlockNumber = await eth_blockNumber(
-      getRpcClient({
-        client: contract.client,
-        chain: contract.chain,
-      }),
-    );
     const events = await getContractEvents({
       contract: twCloneFactoryContract,
       events: [ProxyDeployedEvent],
-      blockRange: latestBlockNumber < 100000n ? latestBlockNumber : 100000n,
     });
     const event = events.find(
       (e) =>
@@ -208,7 +203,6 @@ export default async function Page(props: {
       const events = await getContractEvents({
         contract: contract,
         events: [moduleEvent],
-        blockRange: 123456n,
       });
 
       const filteredEvents = events.filter(

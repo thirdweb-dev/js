@@ -7,6 +7,7 @@ import type {
   Chain,
   ChainMetadata,
   ChainOptions,
+  ChainService,
   LegacyChain,
 } from "./types.js";
 
@@ -317,6 +318,66 @@ export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
     {
       cacheKey: `chain:${chainId}`,
       cacheTime: 5 * 60 * 1000, // 5 minutes
+    },
+  );
+}
+
+type FetchChainServiceResponse =
+  | {
+      data: {
+        services: ChainService[];
+      };
+      error?: never;
+    }
+  | {
+      data?: never;
+      error: unknown;
+    };
+
+/**
+ * Retrieves a list of services available on a given chain
+ * @param chain - The chain object containing the chain ID.
+ * @returns A Promise that resolves to chain services.
+ * @throws If there is an error fetching the chain services.
+ * @example
+ * ```ts
+ * const chain = defineChain({ id: 1 });
+ * const chainServices = await getChainServices(chain);
+ * console.log(chainServices);
+ * ```
+ * @chain
+ */
+export function getChainServices(chain: Chain): Promise<ChainService[]> {
+  const chainId = chain.id;
+  return withCache(
+    async () => {
+      try {
+        const res = await fetch(
+          `https://api.thirdweb.com/v1/chains/${chainId}/services`,
+        );
+        if (!res.ok) {
+          res.body?.cancel();
+          throw new Error(`Failed to fetch services for chainId ${chainId}`);
+        }
+
+        const response = (await res.json()) as FetchChainServiceResponse;
+        if (response.error) {
+          throw new Error(`Failed to fetch services for chainId ${chainId}`);
+        }
+        if (!response.data) {
+          throw new Error(`Failed to fetch services for chainId ${chainId}`);
+        }
+
+        const services = response.data.services;
+
+        return services;
+      } catch {
+        throw new Error(`Failed to fetch services for chainId ${chainId}`);
+      }
+    },
+    {
+      cacheKey: `chain:${chainId}:services`,
+      cacheTime: 24 * 60 * 60 * 1000, // 1 day
     },
   );
 }
