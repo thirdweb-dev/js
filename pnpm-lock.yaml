@@ -704,8 +704,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       flexsearch:
-        specifier: ^0.7.43
-        version: 0.7.43
+        specifier: ^0.8.157
+        version: 0.8.157
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
@@ -9282,8 +9282,8 @@ packages:
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
 
-  flexsearch@0.7.43:
-    resolution: {integrity: sha512-c5o/+Um8aqCSOXGcZoqZOm+NqtVwNsvVpWv6lfmSclU954O3wvQKxxK8zj74fPaSJbXpSLTs4PRhh+wnoCXnKg==}
+  flexsearch@0.8.157:
+    resolution: {integrity: sha512-dome4uFqI5PiXb4oMvmqXV1y072xfmGeVH7gRxLe+dEiT7hNE3zx/+6Wm5012i4MSgL3LFfkz/+Asv4JtUpivQ==}
 
   flow-enums-runtime@0.0.6:
     resolution: {integrity: sha512-3PYnM29RFXwvAN6Pc/scUfkI7RwhQ/xqyLUyPNlXUp9S40zI8nup9tUSrTLSVnWGBN38FNiGWbwZOB6uR4OGdw==}
@@ -22788,7 +22788,7 @@ snapshots:
 
   '@types/flexsearch@0.7.42':
     dependencies:
-      flexsearch: 0.7.43
+      flexsearch: 0.8.157
 
   '@types/graceful-fs@4.1.9':
     dependencies:
@@ -27145,7 +27145,7 @@ snapshots:
 
   flatted@3.3.3: {}
 
-  flexsearch@0.7.43: {}
+  flexsearch@0.8.157: {}
 
   flow-enums-runtime@0.0.6: {}
 
