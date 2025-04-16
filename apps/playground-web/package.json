@@ -15,7 +15,7 @@
     "update-insight-blueprints": "bun scripts/updateInsightBlueprints.ts"
   },
   "dependencies": {
-    "@abstract-foundation/agw-react": "^1.5.4",
+    "@abstract-foundation/agw-react": "^1.6.4",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-checkbox": "^1.1.5",
     "@radix-ui/react-label": "^2.1.3",
