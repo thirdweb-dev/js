@@ -37,15 +37,6 @@ export default async function Layout(props: {
     loginRedirect();
   }
 
-  const teamWithNebulaAccess = teams.find((team) =>
-    team.enabledScopes.includes("nebula"),
-  );
-
-  // if none of them teams have nebula access, request access on first team, and show waitlist page
-  if (!teamWithNebulaAccess) {
-    return <NebulaWaitlistPage account={account} team={firstTeam} />;
-  }
-
   const sessions = await getSessions({
     authToken,
   }).catch(() => []);
