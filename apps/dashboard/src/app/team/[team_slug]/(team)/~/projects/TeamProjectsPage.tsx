@@ -119,6 +119,9 @@ export function TeamProjectsPage(props: {
               createProject={() => setIsCreateProjectDialogOpen(true)}
               teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
             />
+            <Link href={`/team/${props.team.slug}/~/settings/members`}>
+              <ShareButton />
+            </Link>
           </div>
         </div>
       </div>
@@ -274,6 +277,21 @@ function AddNewButton(props: {
       <PlusIcon className="size-4" />
       <span>
         <span className="hidden lg:inline">Create</span> Project
+      </span>
+    </Button>
+  );
+}
+
+function ShareButton() {
+  return (
+    <Button
+      variant="default"
+      className="absolute top-0 right-0 gap-2 lg:static"
+      //onClick={props.createProject}
+    >
+      <PlusIcon className="size-4" />
+      <span>
+        <span className="hidden lg:inline">Share</span> Project
       </span>
     </Button>
   );

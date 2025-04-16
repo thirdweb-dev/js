@@ -32,6 +32,11 @@ export function getTeamSettingsLinks(teamSlug: string) {
       group: "team",
     },
     {
+      name: "Referral",
+      href: `${prefix}/referral`,
+      group: "account",
+    },
+    {
       name: "My Notifications",
       href: `${prefix}/notifications`,
       group: "account",
