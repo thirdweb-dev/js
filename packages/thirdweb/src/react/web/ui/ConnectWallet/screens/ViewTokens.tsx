@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getOwnedTokens } from "../../../../../insight/get-tokens.js";
-import { toTokens } from "../../../../../utils/units.js";
 import { fontSize } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
@@ -94,8 +93,7 @@ export function ViewTokensContent(props: {
       return result.filter(
         (token) =>
           !defaultTokens[activeChain.id]?.some(
-            (t) =>
-              t.address.toLowerCase() === token.token_address.toLowerCase(),
+            (t) => t.address.toLowerCase() === token.tokenAddress.toLowerCase(),
           ),
       );
     },
@@ -139,22 +137,14 @@ export function ViewTokensContent(props: {
         return (
           <TokenInfo
             token={{
-              address: token.token_address,
+              address: token.tokenAddress,
               name: token.name ?? "",
               symbol: token.symbol ?? "",
             }}
-            key={token.token_address}
+            key={token.tokenAddress}
             chain={activeChain}
             client={props.client}
-            balanceData={{
-              symbol: token.symbol ?? "",
-              name: token.name ?? "",
-              decimals: token.decimals ?? 18,
-              displayValue: toTokens(
-                BigInt(token.balance),
-                token.decimals ?? 18,
-              ),
-            }}
+            balanceData={token}
           />
         );
       })}

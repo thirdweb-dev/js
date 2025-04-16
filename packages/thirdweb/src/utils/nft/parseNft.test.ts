@@ -21,6 +21,8 @@ describe("parseNft", () => {
       tokenId: 0n,
       tokenUri: "ipfs://",
       type: "ERC721",
+      tokenAddress: "0x1234567890123456789012345678901234567890",
+      chainId: 1,
     };
     const result = parseNFT(base, option);
     const expectedResult: NFT = {
@@ -29,6 +31,8 @@ describe("parseNft", () => {
       id: option.tokenId,
       tokenURI: option.tokenUri,
       type: option.type,
+      tokenAddress: option.tokenAddress,
+      chainId: option.chainId,
     };
     expect(result).toMatchObject(expectedResult);
   });
@@ -39,6 +43,8 @@ describe("parseNft", () => {
       tokenUri: "ipfs://",
       type: "ERC1155",
       supply: 10n,
+      tokenAddress: "0x1234567890123456789012345678901234567890",
+      chainId: 1,
     };
     const expectedResult: NFT = {
       metadata: base,
@@ -47,6 +53,8 @@ describe("parseNft", () => {
       tokenURI: option.tokenUri,
       type: option.type,
       supply: option.supply,
+      tokenAddress: option.tokenAddress,
+      chainId: option.chainId,
     };
     const result = parseNFT(base, option);
     expect(result).toMatchObject(expectedResult);

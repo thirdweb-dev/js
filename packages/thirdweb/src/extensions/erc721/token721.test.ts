@@ -108,6 +108,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
           tokenUri: "",
           type: "ERC721",
           owner: null,
+          tokenAddress: token721Contract.address,
+          chainId: token721Contract.chain.id,
         },
       ),
     );

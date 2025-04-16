@@ -32,15 +32,11 @@ export async function getSocialProfiles(args: {
     `${getThirdwebBaseUrl("social")}/v1/profiles/${address}`,
   );
 
-  if (response.status !== 200) {
-    try {
-      const errorBody = await response.json();
-      throw new Error(`Failed to fetch profile: ${errorBody.message}`);
-    } catch {
-      throw new Error(
-        `Failed to fetch profile: ${response.status}\n${await response.text()}`,
-      );
-    }
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => "Unknown error");
+    throw new Error(
+      `Failed to fetch profile: ${response.status} ${response.statusText} - ${errorBody}`,
+    );
   }
 
   return (await response.json()).data as SocialProfile[];

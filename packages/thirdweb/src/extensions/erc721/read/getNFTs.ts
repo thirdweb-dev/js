@@ -1,3 +1,4 @@
+import { getContractNFTs } from "../../../insight/index.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { min } from "../../../utils/bigint.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
@@ -41,6 +42,11 @@ export type GetNFTsParams = {
    * In this case, the provided tokenId will be considered as token-index and actual tokenId will be fetched from the contract.
    */
   tokenByIndex?: boolean;
+  /**
+   * Whether to use the insight API to fetch the NFTs.
+   * @default true
+   */
+  useIndexer?: boolean;
 };
 
 /**
@@ -60,6 +66,59 @@ export type GetNFTsParams = {
  * ```
  */
 export async function getNFTs(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getNFTsFromInsight(options);
+    } catch {
+      return await getNFTsFromRPC(options);
+    }
+  }
+  return await getNFTsFromRPC(options);
+}
+
+/**
+ * Checks if the `getNFTs` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `getNFTs` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isGetNFTsSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isGetNFTsSupported(["0x..."]);
+ * ```
+ */
+export function isGetNFTsSupported(availableSelectors: string[]) {
+  return (
+    isGetNFTSupported(availableSelectors) &&
+    (isTotalSupplySupported(availableSelectors) ||
+      isNextTokenIdToMintSupported(availableSelectors))
+  );
+}
+
+async function getNFTsFromInsight(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
+  const { contract, start, count = Number(DEFAULT_QUERY_ALL_COUNT) } = options;
+
+  const result = await getContractNFTs({
+    client: contract.client,
+    chains: [contract.chain],
+    contractAddress: contract.address,
+    includeOwners: options.includeOwners ?? false,
+    queryOptions: {
+      limit: count,
+      page: start ? Math.floor(start / count) : undefined,
+    },
+  });
+
+  return result;
+}
+
+async function getNFTsFromRPC(
   options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT[]> {
   const [startTokenId_, maxSupply] = await Promise.allSettled([
@@ -104,24 +163,4 @@ export async function getNFTs(
   }
 
   return await Promise.all(promises);
-}
-
-/**
- * Checks if the `getNFTs` method is supported by the given contract.
- * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `getNFTs` method is supported.
- * @extension ERC721
- * @example
- * ```ts
- * import { isGetNFTsSupported } from "thirdweb/extensions/erc721";
- *
- * const supported = isGetNFTsSupported(["0x..."]);
- * ```
- */
-export function isGetNFTsSupported(availableSelectors: string[]) {
-  return (
-    isGetNFTSupported(availableSelectors) &&
-    (isTotalSupplySupported(availableSelectors) ||
-      isNextTokenIdToMintSupported(availableSelectors))
-  );
 }

@@ -29,7 +29,6 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
   );
 
   if (!res.ok) {
-    res.body?.cancel();
     if (res.status === 401) {
       throw new Error(
         "Unauthorized - You don't have permission to use this service.",

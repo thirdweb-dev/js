@@ -58,6 +58,8 @@ export async function getNFT(
       type: "ERC1155",
       owner: null,
       supply,
+      tokenAddress: options.contract.address,
+      chainId: options.contract.chain.id,
     },
   );
 }

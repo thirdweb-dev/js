@@ -6,12 +6,13 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainIconUrl } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../../../core/utils/walletIcon.js";
+import { CoinsIcon } from "../ConnectWallet/icons/CoinsIcon.js";
 import {
   type NativeToken,
   isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
 import { Img } from "./Img.js";
-
+import { Container } from "./basic.js";
 /**
  * @internal
  */
@@ -38,13 +39,21 @@ export function TokenIcon(props: {
     return props.token.icon;
   }, [props.token, chainIconQuery.url]);
 
-  return (
+  return tokenImage ? (
     <Img
-      src={tokenImage || ""}
+      src={tokenImage}
       width={iconSize[props.size]}
       height={iconSize[props.size]}
       fallbackImage={genericTokenIcon}
       client={props.client}
     />
+  ) : (
+    <Container
+      center="both"
+      style={{ width: iconSize[props.size], height: iconSize[props.size] }}
+      color="secondaryText"
+    >
+      <CoinsIcon size={iconSize[props.size]} />
+    </Container>
   );
 }

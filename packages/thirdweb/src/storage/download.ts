@@ -99,8 +99,10 @@ export async function download(options: DownloadOptions) {
   });
 
   if (!res.ok) {
-    res.body?.cancel();
-    throw new Error(`Failed to download file: ${res.statusText}`);
+    const error = await res.text();
+    throw new Error(
+      `Failed to download file: ${res.status} ${res.statusText} ${error || ""}`,
+    );
   }
   return res;
 }

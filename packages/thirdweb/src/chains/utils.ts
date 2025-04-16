@@ -296,8 +296,9 @@ export function getChainMetadata(chain: Chain): Promise<ChainMetadata> {
           `https://api.thirdweb.com/v1/chains/${chainId}`,
         );
         if (!res.ok) {
-          res.body?.cancel();
-          throw new Error(`Failed to fetch chain data for chainId ${chainId}`);
+          throw new Error(
+            `Failed to fetch chain data for chainId ${chainId}. ${res.status} ${res.statusText}`,
+          );
         }
 
         const response = (await res.json()) as FetchChainResponse;
@@ -356,8 +357,9 @@ export function getChainServices(chain: Chain): Promise<ChainService[]> {
           `https://api.thirdweb.com/v1/chains/${chainId}/services`,
         );
         if (!res.ok) {
-          res.body?.cancel();
-          throw new Error(`Failed to fetch services for chainId ${chainId}`);
+          throw new Error(
+            `Failed to fetch services for chainId ${chainId}. ${res.status} ${res.statusText}`,
+          );
         }
 
         const response = (await res.json()) as FetchChainServiceResponse;

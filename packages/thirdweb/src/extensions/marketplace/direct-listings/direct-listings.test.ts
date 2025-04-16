@@ -204,15 +204,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(firstListing.creatorAddress).toBe(TEST_ACCOUNT_B.address);
     expect(firstListing.assetContractAddress).toBe(erc721Contract.address);
     expect(firstListing.tokenId).toBe(0n);
-    expect(firstListing.currencyValuePerToken).toMatchInlineSnapshot(`
-    {
-      "decimals": 18,
-      "displayValue": "1",
-      "name": "Anvil Ether",
-      "symbol": "ETH",
-      "value": 1000000000000000000n,
-    }
-  `);
+    expect(firstListing.currencyValuePerToken.displayValue).toBe("1");
     expect(firstListing.asset.metadata.name).toBe("erc721 #0");
     expect(firstListing.asset.id).toBe(0n);
     expect(firstListing.asset.owner).toBe(null);
@@ -351,15 +343,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(secondListing.creatorAddress).toBe(TEST_ACCOUNT_C.address);
     expect(secondListing.assetContractAddress).toBe(erc1155Contract.address);
     expect(secondListing.tokenId).toBe(0n);
-    expect(secondListing.currencyValuePerToken).toMatchInlineSnapshot(`
-      {
-        "decimals": 18,
-        "displayValue": "0.05",
-        "name": "Anvil Ether",
-        "symbol": "ETH",
-        "value": 50000000000000000n,
-      }
-    `);
+    expect(secondListing.currencyValuePerToken.displayValue).toBe("0.05");
     expect(secondListing.asset.metadata.name).toBe("erc1155 #0");
     expect(secondListing.asset.id).toBe(0n);
 

@@ -21,6 +21,7 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
   owner: `0x_fake_${idx}`,
   type: "ERC721",
   supply: 1n,
+  tokenAddress: ZERO_ADDRESS,
 });
 
 interface NFTCardsProps {

@@ -7,8 +7,8 @@ import {
   tokenURI,
 } from "../__generated__/IERC721A/read/tokenURI.js";
 import { tokenByIndex } from "../__generated__/IERC721Enumerable/read/tokenByIndex.js";
-
 export { isTokenURISupported as isGetNFTSupported } from "../__generated__/IERC721A/read/tokenURI.js";
+import { getNFT as getNFTInsight } from "../../../insight/index.js";
 
 /**
  * Parameters for getting an NFT.
@@ -27,6 +27,11 @@ export type GetNFTParams = Prettify<
      * In this case, the provided tokenId will be considered as token-index and actual tokenId will be fetched from the contract.
      */
     tokenByIndex?: boolean;
+    /**
+     * Whether to use the insight API to fetch the NFT.
+     * @default true
+     */
+    useIndexer?: boolean;
   }
 >;
 
@@ -57,6 +62,51 @@ export type GetNFTParams = Prettify<
  * ```
  */
 export async function getNFT(
+  options: BaseTransactionOptions<GetNFTParams>,
+): Promise<NFT> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getNFTFromInsight(options);
+    } catch {
+      return await getNFTFromRPC(options);
+    }
+  }
+  return await getNFTFromRPC(options);
+}
+
+async function getNFTFromInsight(
+  options: BaseTransactionOptions<GetNFTParams>,
+): Promise<NFT> {
+  const tokenId = options.tokenId;
+  const nft = await getNFTInsight({
+    client: options.contract.client,
+    chain: options.contract.chain,
+    contractAddress: options.contract.address,
+    tokenId: options.tokenId,
+    includeOwners: options.includeOwner,
+  });
+  if (!nft) {
+    return parseNFT(
+      {
+        id: tokenId,
+        type: "ERC721",
+        uri: "",
+      },
+      {
+        tokenId,
+        tokenUri: "",
+        type: "ERC721",
+        owner: null,
+        tokenAddress: options.contract.address,
+        chainId: options.contract.chain.id,
+      },
+    );
+  }
+  return nft;
+}
+
+async function getNFTFromRPC(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
   let tokenId = options.tokenId;
@@ -90,6 +140,8 @@ export async function getNFT(
         tokenUri: "",
         type: "ERC721",
         owner,
+        tokenAddress: options.contract.address,
+        chainId: options.contract.chain.id,
       },
     );
   }
@@ -109,6 +161,8 @@ export async function getNFT(
       tokenUri: uri,
       type: "ERC721",
       owner,
+      tokenAddress: options.contract.address,
+      chainId: options.contract.chain.id,
     },
   );
 }

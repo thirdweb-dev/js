@@ -7,7 +7,7 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
-import type { ThirdwebContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import {
   type DirectListing,
   type EnglishAuction,
@@ -237,6 +237,8 @@ const dummyMetadata: (idx: number) => ListingData = (idx) => ({
     supply: BigInt(1),
     tokenURI: "",
     type: "ERC721",
+    tokenAddress: ZERO_ADDRESS,
+    chainId: 1,
   },
   currencyValuePerToken: {
     decimals: 18,
@@ -244,6 +246,8 @@ const dummyMetadata: (idx: number) => ListingData = (idx) => ({
     name: "Ether",
     symbol: "ETH",
     value: 0n,
+    tokenAddress: ZERO_ADDRESS,
+    chainId: 1,
   },
   creatorAddress: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
   type: "direct-listing",
@@ -253,6 +257,8 @@ const dummyMetadata: (idx: number) => ListingData = (idx) => ({
     value: 0n,
     displayValue: "0.0",
     decimals: 18,
+    tokenAddress: ZERO_ADDRESS,
+    chainId: 1,
   },
 });
 
