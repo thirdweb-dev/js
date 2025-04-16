@@ -15,8 +15,8 @@ export function EmptyStateChatPageContent(props: {
       <div className="relative py-10">
         <FancyBorders />
         <div className="flex justify-center">
-          <div className="rounded-lg border p-1">
-            <div className="rounded border bg-muted p-1.5">
+          <div className="rounded-full border p-1">
+            <div className="rounded-full border bg-card p-2">
               <NebulaIcon className="size-7 text-muted-foreground" />
             </div>
           </div>
