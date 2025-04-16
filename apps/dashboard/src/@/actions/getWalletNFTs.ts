@@ -81,6 +81,7 @@ export async function getWalletNFTs(params: {
       const result = await transformMoralisResponseToNFT(
         await parsedResponse,
         owner,
+        chainId,
       );
 
       return { result };
@@ -194,6 +195,8 @@ async function getWalletNFTsFromInsight(params: {
       tokenURI: nft.metadata_url,
       type: nft.token_type === "erc721" ? "ERC721" : "ERC1155",
       supply: nft.balance,
+      tokenAddress: nft.contract.address,
+      chainId: nft.contract.chain_id,
     };
 
     return walletNFT;

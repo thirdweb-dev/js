@@ -41,12 +41,14 @@ export async function unpin(options: UnpinOptions) {
   );
 
   if (!res.ok) {
-    res.body?.cancel();
     if (res.status === 401) {
       throw new Error(
         "Unauthorized - You don't have permission to use this service.",
       );
     }
-    throw new Error(`Failed to unpin file - ${res.status} - ${res.statusText}`);
+    const error = await res.text();
+    throw new Error(
+      `Failed to unpin file - ${res.status} - ${res.statusText} ${error || ""}`,
+    );
   }
 }

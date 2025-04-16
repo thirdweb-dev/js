@@ -130,53 +130,12 @@ export function ViewNFTsContent(props: {
       });
 
       return result
-        .filter((nft) => !!nft.name && !!nft.image_url)
+        .filter((nft) => !!nft.metadata.name && !!nft.metadata.image)
         .map((nft) => {
-          let parsedNft: NFT;
-          const metadata = {
-            name: nft.name,
-            description: nft.description,
-            image: nft.image_url,
-            animation_url: nft.video_url,
-            external_url: nft.external_url,
-            background_color: nft.background_color,
-            uri: nft.metadata_url ?? "",
-            image_url: nft.image_url,
-            attributes: Array.isArray(nft.extra_metadata?.attributes)
-              ? nft.extra_metadata?.attributes?.reduce(
-                  (acc, attr) => {
-                    acc[attr.trait_type] = attr.value;
-                    return acc;
-                  },
-                  {} as Record<string, unknown>,
-                )
-              : {},
-          };
-
-          if (nft.contract?.type === "erc1155") {
-            parsedNft = {
-              id: BigInt(nft.token_id),
-              type: "ERC1155",
-              owner: activeAccount.address,
-              tokenURI: nft.metadata_url ?? "",
-              supply: BigInt(nft.balance), // TODO: this is wrong
-              metadata,
-            };
-          } else {
-            parsedNft = {
-              id: BigInt(nft.token_id),
-              type: "ERC721",
-              owner: activeAccount.address,
-              tokenURI: nft.metadata_url ?? "",
-              metadata,
-            };
-          }
-
           return {
-            chain: getCachedChain(nft.chain_id),
-            address: nft.token_address as Address,
-            quantityOwned: BigInt(nft.balance),
-            ...parsedNft,
+            chain: getCachedChain(nft.chainId),
+            address: nft.tokenAddress as Address,
+            ...nft,
           };
         });
     },
@@ -197,29 +156,45 @@ export function ViewNFTsContent(props: {
 
   return (
     <>
-      <Container
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "12px",
-        }}
-      >
-        {nftQuery.error ? (
-          <Text>Error loading NFTs</Text>
-        ) : nftQuery.isLoading || !filteredNFTs ? (
-          <Skeleton height="150px" width="150px" />
-        ) : (
-          filteredNFTs.map((nft) => (
-            <NftCard
-              key={`${nft.chain.id}:${nft.address}:${nft.id}`}
-              {...nft}
-              client={props.client}
-              chain={nft.chain}
-              theme={props.theme}
-            />
-          ))
-        )}
-      </Container>
+      {nftQuery.error ? (
+        <Container center="both" py="lg">
+          <Text size="sm" color="secondaryText" center>
+            Error loading NFTs
+          </Text>
+        </Container>
+      ) : nftQuery.data?.length === 0 && !nftQuery.isLoading ? (
+        <Container center="both" py="lg">
+          <Text size="sm" color="secondaryText" center>
+            No NFTs found on this chain
+          </Text>
+        </Container>
+      ) : (
+        <Container
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "12px",
+          }}
+        >
+          {nftQuery.isLoading || !filteredNFTs ? (
+            <>
+              <Skeleton height="150px" width="150px" />
+              <Skeleton height="150px" width="150px" />
+              <Skeleton height="150px" width="150px" />
+            </>
+          ) : (
+            filteredNFTs.map((nft) => (
+              <NftCard
+                key={`${nft.chain.id}:${nft.address}:${nft.id}`}
+                {...nft}
+                client={props.client}
+                chain={nft.chain}
+                theme={props.theme}
+              />
+            ))
+          )}
+        </Container>
+      )}
       <Spacer y="lg" />
     </>
   );

@@ -1,11 +1,13 @@
 import { createThirdwebClient } from "../../src/client/client.js";
 
 const secretKey = process.env.TW_SECRET_KEY;
+const clientId = process.env.TW_CLIENT_ID;
 
 export const TEST_CLIENT = createThirdwebClient(
   secretKey
     ? {
         secretKey,
+        clientId: clientId ?? undefined,
       }
     : {
         clientId: "TEST",

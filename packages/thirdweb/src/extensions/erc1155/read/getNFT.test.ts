@@ -11,6 +11,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
     });
     expect(nft).toMatchInlineSnapshot(`
       {
+        "chainId": 1,
         "id": 2n,
         "metadata": {
           "animation_url": "ipfs://QmYoM63qaumQznBRx38tQjkY4ewbymeFb2KWBhkfMqNHax/3.mp4",
@@ -36,6 +37,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
         },
         "owner": null,
         "supply": 2519n,
+        "tokenAddress": "0x42d3641255C946CC451474295d29D3505173F22A",
         "tokenURI": "ipfs://QmbMXdbnNUAuGRoY6c6G792c6T9utfaBGqRUaMaRUf52Cb/2",
         "type": "ERC1155",
       }

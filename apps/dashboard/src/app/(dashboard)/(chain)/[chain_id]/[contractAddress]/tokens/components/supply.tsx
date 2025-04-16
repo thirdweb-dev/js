@@ -46,8 +46,15 @@ export const TokenDetailsCard: React.FC<TokenBalancesProps> = ({
         tokenSupplyQuery.data,
         tokenMetadataQuery.data.decimals,
       ),
+      tokenAddress: contract.address,
+      chainId: contract.chain.id,
     };
-  }, [tokenMetadataQuery.data, tokenSupplyQuery.data]);
+  }, [
+    tokenMetadataQuery.data,
+    tokenSupplyQuery.data,
+    contract.address,
+    contract.chain.id,
+  ]);
 
   return (
     <TokenDetailsCardUI

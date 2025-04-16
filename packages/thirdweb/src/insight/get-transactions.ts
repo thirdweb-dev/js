@@ -1,13 +1,9 @@
-import {
-  type GetV1WalletsByWalletAddressTransactionsData,
-  type GetV1WalletsByWalletAddressTransactionsResponse,
-  getV1WalletsByWalletAddressTransactions,
+import type {
+  GetV1WalletsByWalletAddressTransactionsData,
+  GetV1WalletsByWalletAddressTransactionsResponse,
 } from "@thirdweb-dev/insight";
-import { stringify } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { getThirdwebDomains } from "../utils/domains.js";
-import { getClientFetch } from "../utils/fetch.js";
 
 export type Transaction = NonNullable<
   GetV1WalletsByWalletAddressTransactionsResponse["data"]
@@ -33,24 +29,38 @@ export async function getTransactions(args: {
   chains: Chain[];
   queryOptions?: GetV1WalletsByWalletAddressTransactionsData["query"];
 }): Promise<Transaction[]> {
+  const [
+    { getV1WalletsByWalletAddressTransactions },
+    { getThirdwebDomains },
+    { getClientFetch },
+    { assertInsightEnabled },
+    { stringify },
+  ] = await Promise.all([
+    import("@thirdweb-dev/insight"),
+    import("../utils/domains.js"),
+    import("../utils/fetch.js"),
+    import("./common.js"),
+    import("../utils/json.js"),
+  ]);
+
+  await assertInsightEnabled(args.chains);
   const threeMonthsAgoInSeconds = Math.floor(
     (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
   );
-  const {
-    client,
-    walletAddress,
-    chains,
-    queryOptions = {
+  const { client, walletAddress, chains, queryOptions } = args;
+
+  const defaultQueryOptions: GetV1WalletsByWalletAddressTransactionsData["query"] =
+    {
+      chain: chains.map((chain) => chain.id),
       filter_block_timestamp_gte: threeMonthsAgoInSeconds,
       limit: 100,
-      page: 1,
-    },
-  } = args;
+    };
+
   const result = await getV1WalletsByWalletAddressTransactions({
     baseUrl: `https://${getThirdwebDomains().insight}`,
     fetch: getClientFetch(client),
     query: {
-      chain: chains.map((chain) => chain.id),
+      ...defaultQueryOptions,
       ...queryOptions,
     },
     path: {

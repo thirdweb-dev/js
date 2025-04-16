@@ -24,12 +24,13 @@ export async function mapEnglishAuction(
     endTimestamp: rawAuction.endTimestamp,
   });
 
+  const currencyContract = getContract({
+    ...options.contract,
+    address: rawAuction.currency,
+  });
   const [auctionCurrencyMetadata, nftAsset] = await Promise.all([
     getCurrencyMetadata({
-      contract: getContract({
-        ...options.contract,
-        address: rawAuction.currency,
-      }),
+      contract: currencyContract,
     }),
     getNFTAsset({
       ...options,
@@ -60,6 +61,8 @@ export async function mapEnglishAuction(
         rawAuction.minimumBidAmount,
         auctionCurrencyMetadata.decimals,
       ),
+      tokenAddress: currencyContract.address,
+      chainId: currencyContract.chain.id,
     },
     buyoutBidAmount: rawAuction.buyoutBidAmount,
     buyoutCurrencyValue: {
@@ -69,6 +72,8 @@ export async function mapEnglishAuction(
         rawAuction.buyoutBidAmount,
         auctionCurrencyMetadata.decimals,
       ),
+      tokenAddress: currencyContract.address,
+      chainId: currencyContract.chain.id,
     },
     timeBufferInSeconds: rawAuction.timeBufferInSeconds,
     bidBufferBps: rawAuction.bidBufferBps,

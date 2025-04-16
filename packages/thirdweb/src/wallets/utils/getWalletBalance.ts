@@ -5,7 +5,9 @@ import {
   getChainSymbol,
 } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
+import type { GetBalanceResult } from "../../extensions/erc20/read/getBalance.js";
 import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { toTokens } from "../../utils/units.js";
@@ -20,13 +22,7 @@ export type GetWalletBalanceOptions = {
   tokenAddress?: string;
 };
 
-export type GetWalletBalanceResult = {
-  value: bigint;
-  decimals: number;
-  displayValue: string;
-  symbol: string;
-  name: string;
-};
+export type GetWalletBalanceResult = GetBalanceResult;
 
 /**
  * Retrieves the balance of a token or native currency for a given wallet.
@@ -75,5 +71,7 @@ export async function getWalletBalance(
     displayValue: toTokens(nativeBalance, nativeDecimals),
     symbol: nativeSymbol,
     name: nativeName,
+    tokenAddress: tokenAddress ?? NATIVE_TOKEN_ADDRESS,
+    chainId: chain.id,
   };
 }
