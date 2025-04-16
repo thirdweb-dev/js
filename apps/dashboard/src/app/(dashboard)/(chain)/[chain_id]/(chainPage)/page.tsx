@@ -1,6 +1,7 @@
 import { CircleAlertIcon } from "lucide-react";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { getChain, getChainMetadata } from "../../utils";
+import NextSteps from "./components/client/NextSteps";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
 import { ClaimChainSection } from "./components/server/ClaimChainSection";
@@ -57,6 +58,8 @@ export default async function Page(props: {
       {chain.services.filter((s) => s.enabled).length > 0 && (
         <SupportedProductsSection services={chain.services} />
       )}
+      {/*Next Steps */}
+      <NextSteps chain={chain} />
 
       {/* Claim Chain */}
       {!chainMetadata && <ClaimChainSection />}
