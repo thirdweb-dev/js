@@ -4,10 +4,21 @@ import { DROP1155_CONTRACT } from "~test/test-contracts.js";
 import { getNFT } from "./getNFT.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
+  it("without owner with indexer", async () => {
+    const nft = await getNFT({
+      contract: DROP1155_CONTRACT,
+      tokenId: 2n,
+    });
+    expect(nft.metadata.name).toBe("Aura Platinum");
+    // biome-ignore lint/suspicious/noExplicitAny: todo type this better
+    expect((nft as any).supply).toBe(2519n);
+  });
+
   it("without owner", async () => {
     const nft = await getNFT({
       contract: DROP1155_CONTRACT,
       tokenId: 2n,
+      useIndexer: false,
     });
     expect(nft).toMatchInlineSnapshot(`
       {

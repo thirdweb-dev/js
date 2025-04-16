@@ -1,4 +1,5 @@
 import { maxUint256 } from "ox/Solidity";
+import { getContractNFTs } from "../../../insight/get-nfts.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { min } from "../../../utils/bigint.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
@@ -23,6 +24,11 @@ export type GetNFTsParams = {
    * The number of NFTs to retrieve.
    */
   count?: number;
+  /**
+   * Whether to use the insight API to fetch the NFTs.
+   * @default true
+   */
+  useIndexer?: boolean;
 };
 
 /**
@@ -41,6 +47,38 @@ export type GetNFTsParams = {
  * ```
  */
 export async function getNFTs(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getNFTsFromInsight(options);
+    } catch {
+      return await getNFTsFromRPC(options);
+    }
+  }
+  return await getNFTsFromRPC(options);
+}
+
+async function getNFTsFromInsight(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
+  const { contract, start, count = Number(DEFAULT_QUERY_ALL_COUNT) } = options;
+
+  const result = await getContractNFTs({
+    client: contract.client,
+    chains: [contract.chain],
+    contractAddress: contract.address,
+    queryOptions: {
+      limit: count,
+      page: start ? Math.floor(start / count) : undefined,
+    },
+  });
+
+  return result;
+}
+
+async function getNFTsFromRPC(
   options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT[]> {
   const start = BigInt(options.start || 0);
