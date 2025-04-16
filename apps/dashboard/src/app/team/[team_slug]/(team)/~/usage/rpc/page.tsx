@@ -45,7 +45,7 @@ export default async function RPCUsage(props: {
     return <div>Error fetching data, please try again later</div>;
   }
 
-  const { peakRate, totalCounts } = apiData.data;
+  const { peakRate, totalCounts, averageRate } = apiData.data;
 
   // Calculate percentage of limit for the peak
   const peakPercentage = (peakRate.peakRPS / currentRateLimit) * 100;
@@ -113,7 +113,9 @@ export default async function RPCUsage(props: {
             </div>
             <p className="mt-1 text-muted-foreground text-xs">
               <ClockIcon className="mr-1 inline h-3 w-3" />
-              {format(new Date(peakRate.date), "MMM d, HH:mm")}
+              {peakRate.date
+                ? format(new Date(peakRate.date), "MMM d, HH:mm")
+                : "No Requests in last 24 hours"}
             </p>
           </CardContent>
         </Card>
@@ -196,13 +198,13 @@ export default async function RPCUsage(props: {
       <RateGraph
         peakPercentage={peakPercentage}
         currentRateLimit={currentRateLimit}
-        data={apiData.data.averageRate}
+        data={averageRate}
       />
 
       <CountGraph
         peakPercentage={peakPercentage}
         currentRateLimit={currentRateLimit}
-        data={apiData.data.averageRate}
+        data={averageRate}
       />
     </div>
   );
