@@ -49,7 +49,7 @@ export const MarkdownRenderer: React.FC<{
             <h2
               className={cn(
                 commonHeadingClassName,
-                "mb-4 border-border border-b text-3xl",
+                "mb-3 border-border border-b text-xl md:text-2xl",
               )}
               {...cleanedProps(props)}
             />
@@ -60,7 +60,7 @@ export const MarkdownRenderer: React.FC<{
               {...cleanedProps(props)}
               className={cn(
                 commonHeadingClassName,
-                "mt-8 mb-4 border-border border-b text-2xl",
+                "mt-8 mb-3 border-border border-b text-lg md:text-xl",
               )}
             />
           ),
@@ -68,7 +68,10 @@ export const MarkdownRenderer: React.FC<{
           h3: (props) => (
             <h4
               {...cleanedProps(props)}
-              className={cn(commonHeadingClassName, "mt-4 text-xl")}
+              className={cn(
+                commonHeadingClassName,
+                "mt-4 text-base md:text-lg",
+              )}
             />
           ),
 
@@ -198,9 +201,7 @@ export const MarkdownRenderer: React.FC<{
             </li>
           ),
           strong(props) {
-            return (
-              <strong className="font-semibold" {...cleanedProps(props)} />
-            );
+            return <strong className="font-medium" {...cleanedProps(props)} />;
           },
         }}
       >

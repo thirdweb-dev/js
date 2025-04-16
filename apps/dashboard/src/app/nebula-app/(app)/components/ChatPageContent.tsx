@@ -463,9 +463,11 @@ export function ChatPageContent(props: {
         </div>
         <aside className="hidden w-[360px] flex-col border-l bg-card pt-4 xl:flex">
           <div className="px-4">
-            <h3 className="font-semibold text-lg tracking-tight">Context</h3>
+            <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
+              Settings
+            </h3>
             <p className="mb-5 text-muted-foreground text-sm">
-              Provide context to Nebula for your prompts
+              Modify Nebula to suit your needs
             </p>
           </div>
           <ContextFiltersForm
