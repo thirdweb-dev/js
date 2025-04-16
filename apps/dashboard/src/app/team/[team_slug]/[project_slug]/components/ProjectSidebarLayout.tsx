@@ -16,9 +16,8 @@ import { NebulaIcon } from "../../../../nebula-app/(app)/icons/NebulaIcon";
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
-  showNebula: boolean;
 }) {
-  const { layoutPath, children, showNebula } = props;
+  const { layoutPath, children } = props;
 
   const tracking = (label: string) => ({
     category: "project-sidebar",
@@ -60,16 +59,12 @@ export function ProjectSidebarLayout(props: {
           icon: ContractIcon,
           tracking: tracking("contracts"),
         },
-        ...(showNebula
-          ? [
-              {
-                href: `${layoutPath}/nebula`,
-                label: "Nebula",
-                icon: NebulaIcon,
-                tracking: tracking("nebula"),
-              },
-            ]
-          : []),
+        {
+          href: `${layoutPath}/nebula`,
+          label: "Nebula",
+          icon: NebulaIcon,
+          tracking: tracking("nebula"),
+        },
         {
           href: `${layoutPath}/insight`,
           label: "Insight",
