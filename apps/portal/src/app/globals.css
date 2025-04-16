@@ -19,44 +19,7 @@ html {
     --sticky-top-height: 70px;
   }
 
-  :root,
-  [data-theme="dark"] {
-    /* bg - neutral  */
-    --background: 0 0% 0%;
-    --card: 0 0% 3.92%;
-    --popover: 0 0% 0%;
-    --secondary: 0 0% 11%;
-    --muted: 0 0% 11%;
-    --accent: 0 0% 11%;
-    --inverted: 0 0% 100%;
-
-    /* bg - colorful */
-    --primary: 221 83% 54%;
-    --destructive: 360 72% 51%;
-
-    /* Text */
-    --foreground: 0 0% 98%;
-    --card-foreground: 0 0% 98%;
-    --popover-foreground: 0 0% 98%;
-    --primary-foreground: 0 0% 100%;
-    --secondary-foreground: 0 0% 98%;
-    --muted-foreground: 0 0% 63%;
-    --accent-foreground: 0 0% 98%;
-    --destructive-foreground: 0 0% 100%;
-    --link-foreground: 215.88 100% 65%;
-    --warning-text: 38 92% 50%;
-    --destructive-text: 360 72% 55%;
-    --success-text: 142 75% 50%;
-    --inverted-foreground: 0 0% 0%;
-
-    /* Borders */
-    --border: 0 0% 15%;
-    --active-border: 0 0% 22%;
-    --ring: 0 0% 30%;
-    --input: 0 0% 15%;
-  }
-
-  [data-theme="light"] {
+  :root {
     /* bg - neutral  */
     --background: 0 0% 98%;
     --popover: 0 0% 100%;
@@ -91,23 +54,58 @@ html {
     --input: 0 0% 85%;
     --ring: 0 0% 80%;
   }
+
+  .dark {
+    /* bg - neutral  */
+    --background: 0 0% 0%;
+    --card: 0 0% 3.92%;
+    --popover: 0 0% 0%;
+    --secondary: 0 0% 11%;
+    --muted: 0 0% 11%;
+    --accent: 0 0% 11%;
+    --inverted: 0 0% 100%;
+
+    /* bg - colorful */
+    --primary: 221 83% 54%;
+    --destructive: 360 72% 51%;
+
+    /* Text */
+    --foreground: 0 0% 98%;
+    --card-foreground: 0 0% 98%;
+    --popover-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 98%;
+    --muted-foreground: 0 0% 63%;
+    --accent-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
+    --link-foreground: 215.88 100% 65%;
+    --warning-text: 38 92% 50%;
+    --destructive-text: 360 72% 55%;
+    --success-text: 142 75% 50%;
+    --inverted-foreground: 0 0% 0%;
+
+    /* Borders */
+    --border: 0 0% 15%;
+    --active-border: 0 0% 22%;
+    --ring: 0 0% 30%;
+    --input: 0 0% 15%;
+  }
 }
 
-/* If no data-theme is added in body, its in dark theme  */
-body:not([data-theme="light"]) .light-only {
+.dark .light-only {
   display: none;
 }
 
-[data-theme="light"] .dark-only {
+html:not(.dark) .dark-only {
   display: none;
 }
 
 code span {
-  color: var(--code-dark-color);
+  color: var(--code-light-color);
 }
 
-body[data-theme="light"] code span {
-  color: var(--code-light-color);
+.dark code span {
+  color: var(--code-dark-color);
 }
 
 @layer base {
