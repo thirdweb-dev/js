@@ -189,6 +189,7 @@ export function ContextFiltersForm(props: {
                 <FormLabel>Chain IDs</FormLabel>
                 <FormControl>
                   <MultiNetworkSelector
+                    hideTestnets
                     disableChainId
                     className="bg-background"
                     selectedChainIds={form
