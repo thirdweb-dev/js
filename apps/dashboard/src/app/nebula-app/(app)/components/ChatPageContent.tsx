@@ -161,7 +161,9 @@ export function ChatPageContent(props: {
     (sessionId: string) => {
       _setSessionId(sessionId);
       // update page URL without reloading
-      window.history.replaceState({}, "", `/chat/${sessionId}`);
+      // THIS DOES NOT WORK ANYMORE!! - NEXT JS IS MONKEY PATCHING THIS TOO
+      // Until we find a better solution, we are just not gonna update the URL
+      // window.history.replaceState({}, "", `/chat/${sessionId}`);
 
       // if the current page is landing page, link to /chat
       // if current page is new /chat page, link to landing page
