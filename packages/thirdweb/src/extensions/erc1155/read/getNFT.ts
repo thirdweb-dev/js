@@ -61,7 +61,7 @@ async function getNFTFromInsight(
     return parseNFT(
       {
         id: tokenId,
-        type: "ERC721",
+        type: "ERC1155",
         uri: "",
       },
       {

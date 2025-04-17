@@ -338,16 +338,22 @@ function replaceIPFSGateway(url?: string) {
   if (!url || typeof url !== "string") {
     return url;
   }
-  if (url.includes("ipfscdn.io")) {
-    const paths = url.split("/");
-    const index = paths.findIndex((path) => path === "ipfs");
-    if (index === -1) {
+  try {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.host.endsWith(".ipfscdn.io")) {
+      const paths = parsedUrl.pathname.split("/");
+      const index = paths.findIndex((path) => path === "ipfs");
+      if (index === -1) {
+        return url;
+      }
+      const ipfsHash = paths.slice(index + 1).join("/");
+      if (ipfsHash) {
+        return `ipfs://${ipfsHash}`;
+      }
       return url;
     }
-    const ipfsHash = paths.slice(index + 1).join("/");
-    if (ipfsHash) {
-      return `ipfs://${ipfsHash}`;
-    }
+  } catch {
+    // If the URL is invalid, return it as is
     return url;
   }
   return url;
