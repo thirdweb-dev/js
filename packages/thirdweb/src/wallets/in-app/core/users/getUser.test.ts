@@ -190,6 +190,9 @@ describe("getUser", () => {
   it("should handle fetch errors", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: false,
+      status: 404,
+      statusText: "Not Found",
+      text: async () => "some message",
     });
 
     await expect(
@@ -197,7 +200,7 @@ describe("getUser", () => {
         client: mockClient,
         walletAddress: "0x123",
       }),
-    ).rejects.toThrow("Failed to get profiles");
+    ).rejects.toThrow("Failed to get profiles. 404 Not Found: some message");
   });
 
   it("should return null if no user is found", async () => {
