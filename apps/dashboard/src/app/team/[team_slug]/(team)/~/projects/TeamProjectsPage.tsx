@@ -26,8 +26,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { formatDate } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
-import { PlusIcon, SearchIcon, UserPlus } from "lucide-react";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -120,9 +119,6 @@ export function TeamProjectsPage(props: {
               createProject={() => setIsCreateProjectDialogOpen(true)}
               teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
             />
-            <Link href={`/team/${props.team.slug}/~/settings/members`}>
-              <ShareButton />
-            </Link>
           </div>
         </div>
       </div>
@@ -278,29 +274,6 @@ function AddNewButton(props: {
       <PlusIcon className="size-4" />
       <span>
         <span className="hidden lg:inline">Create</span> Project
-      </span>
-    </Button>
-  );
-}
-
-function ShareButton() {
-  //track event click
-  const trackEvent = useTrack();
-  return (
-    <Button
-      variant="default"
-      className="absolute top-0 right-0 gap-2 lg:static"
-      onClick={() =>
-        trackEvent({
-          category: "inviteTeam",
-          action: "click",
-          label: "invite-team",
-        })
-      }
-    >
-      <UserPlus className="size-4" />
-      <span>
-        <span className="hidden lg:inline">Invite</span>to Team
       </span>
     </Button>
   );

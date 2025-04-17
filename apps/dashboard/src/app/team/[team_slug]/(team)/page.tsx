@@ -6,6 +6,7 @@ import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
+import { InviteTeamMembersButton } from "./_components/invite-team-members-button";
 import {
   type ProjectWithAnalytics,
   TeamProjectsPage,
@@ -33,11 +34,14 @@ export default async function Page(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="border-border border-b py-10">
-        <div className="container">
-          <h1 className="font-semibold text-3xl tracking-tight">
-            Team Overview
-          </h1>
+      <div className="border-border border-b">
+        <div className="container flex flex-col items-start gap-3 py-10 md:flex-row md:items-center">
+          <div className="flex-1">
+            <h1 className="font-semibold text-3xl tracking-tight">
+              Team Overview
+            </h1>
+          </div>
+          <InviteTeamMembersButton teamSlug={params.team_slug} />
         </div>
       </div>
 
