@@ -95,7 +95,10 @@ export async function getUser({
   const res = await clientFetch(url.toString());
 
   if (!res.ok) {
-    throw new Error("Failed to get profiles");
+    const error = await res.text().catch(() => "Unknown error");
+    throw new Error(
+      `Failed to get profiles. ${res.status} ${res.statusText}: ${error}`,
+    );
   }
 
   const data = (await res.json()) as {
