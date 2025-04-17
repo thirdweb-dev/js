@@ -78,16 +78,7 @@ export async function fetchRpc(
     );
   }
 
-  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    return await response.json();
-  }
-  const text = await response.text();
-  try {
-    return JSON.parse(text);
-  } catch (err) {
-    console.error("Error parsing response", err, text);
-    throw err;
-  }
+  return await response.json();
 }
 
 type FetchSingleRpcOptions = {
@@ -121,14 +112,5 @@ export async function fetchSingleRpc(
       `RPC request failed with status ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
     );
   }
-  if (response.headers.get("Content-Type")?.startsWith("application/json")) {
-    return await response.json();
-  }
-  const text = await response.text();
-  try {
-    return JSON.parse(text);
-  } catch (err) {
-    console.error("Error parsing response", err, text);
-    throw err;
-  }
+  return await response.json();
 }
