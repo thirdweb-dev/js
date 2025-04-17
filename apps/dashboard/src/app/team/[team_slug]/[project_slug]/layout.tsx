@@ -1,5 +1,5 @@
 import { getProjects } from "@/api/projects";
-import { getTeamNebulaWaitList, getTeams } from "@/api/team";
+import { getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
 import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
@@ -49,9 +49,6 @@ export default async function ProjectLayout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
-  const isOnNebulaWaitList = (await getTeamNebulaWaitList(team.slug))
-    ?.onWaitlist;
-
   const layoutPath = `/team/${params.team_slug}/${params.project_slug}`;
 
   return (
@@ -67,10 +64,7 @@ export default async function ProjectLayout(props: {
             accountAddress={accountAddress}
           />
         </div>
-        <ProjectSidebarLayout
-          layoutPath={layoutPath}
-          showNebula={!!isOnNebulaWaitList}
-        >
+        <ProjectSidebarLayout layoutPath={layoutPath}>
           {props.children}
         </ProjectSidebarLayout>
       </div>

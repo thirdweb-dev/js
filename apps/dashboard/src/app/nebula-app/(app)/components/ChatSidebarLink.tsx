@@ -52,7 +52,7 @@ export function ChatSidebarLink(props: {
       <Button
         asChild
         variant="ghost"
-        className="!h-auto !w-full items-center justify-between px-2 text-left text-sm hover:bg-transparent"
+        className="h-auto w-full items-center justify-between px-2 py-1.5 text-left text-sm hover:bg-transparent"
       >
         <NavLink href={`/chat/${props.sessionId}`} activeClassName="bg-muted">
           <span className="line-clamp-1 block truncate">{props.title}</span>
@@ -61,7 +61,7 @@ export function ChatSidebarLink(props: {
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            className="-translate-y-1/2 !bg-background absolute top-1/2 right-1 z-10 h-auto w-auto p-1.5 opacity-0 group-hover:opacity-100"
+            className="-translate-y-1/2 absolute top-1/2 right-1 z-10 h-auto w-auto bg-accent p-1 opacity-0 hover:bg-zinc-300 group-hover:opacity-100 dark:hover:bg-zinc-700"
             variant="ghost"
           >
             <EllipsisIcon className="size-4" />

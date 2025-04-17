@@ -19,6 +19,7 @@ export function MultiNetworkSelector(props: {
   disableChainId?: boolean;
   className?: string;
   priorityChains?: number[];
+  hideTestnets?: boolean;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -44,13 +45,17 @@ export function MultiNetworkSelector(props: {
       sortedChains = [...priorityChains, ...otherChains];
     }
 
+    if (props.hideTestnets) {
+      sortedChains = sortedChains.filter((chain) => !chain.testnet);
+    }
+
     return sortedChains.map((chain) => {
       return {
         label: cleanChainName(chain.name),
         value: String(chain.chainId),
       };
     });
-  }, [allChains, props.priorityChains, idToChain]);
+  }, [allChains, props.priorityChains, idToChain, props.hideTestnets]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {

@@ -114,8 +114,8 @@ export async function predictAddress(args: {
             throw error;
           }
 
-          // Exponential backoff: 2^(retries + 1) * 100ms (200ms, 400ms, 800ms)
-          const delay = 2 ** (retries + 1) * 100;
+          // Exponential backoff: 2^(retries + 1) * 200ms (400ms, 800ms, 1600ms)
+          const delay = 2 ** (retries + 1) * 200;
           await new Promise((resolve) => setTimeout(resolve, delay));
           retries++;
         }

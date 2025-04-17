@@ -26,12 +26,13 @@ export async function mapDirectListing(
     endTimestamp: rawListing.endTimestamp,
   });
 
+  const currencyContract = getContract({
+    ...options.contract,
+    address: rawListing.currency,
+  });
   const [currencyValuePerToken, nftAsset] = await Promise.all([
     getCurrencyMetadata({
-      contract: getContract({
-        ...options.contract,
-        address: rawListing.currency,
-      }),
+      contract: currencyContract,
     }),
     getNFTAsset({
       ...options,
@@ -57,6 +58,8 @@ export async function mapDirectListing(
         rawListing.pricePerToken,
         currencyValuePerToken.decimals,
       ),
+      tokenAddress: currencyContract.address,
+      chainId: currencyContract.chain.id,
     },
     pricePerToken: rawListing.pricePerToken,
     asset: nftAsset,

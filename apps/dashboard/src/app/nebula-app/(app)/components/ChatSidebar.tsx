@@ -1,15 +1,8 @@
 "use client";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  FileCode2Icon,
-  MessageSquareShareIcon,
-  MessagesSquareIcon,
-  SquareDashedBottomCodeIcon,
-  TextIcon,
-} from "lucide-react";
+import { ChevronRightIcon, FileCode2Icon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -29,54 +22,47 @@ export function ChatSidebar(props: {
   const newChatPage = useNewChatPageLink();
 
   return (
-    <div className="flex h-full flex-col p-2">
-      <div className="flex items-center justify-start gap-3 p-2 lg:justify-between">
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-start gap-3 p-4 lg:justify-between">
         <Link href="/" className="flex items-center gap-2">
           <NebulaIcon className="size-8 text-foreground" aria-label="Nebula" />
-          <span className="font-semibold text-lg tracking-tight">
-            Playground
-          </span>
+          <span className="font-semibold text-lg tracking-tight">Nebula</span>
         </Link>
 
         <Badge variant="secondary" className="gap-1 py-1">
-          Alpha
+          Beta
         </Badge>
       </div>
 
-      <div className="h-4" />
+      <div className="h-1" />
 
-      <div className="flex flex-col gap-2 px-2">
+      <div className="flex flex-col gap-2 px-4">
         <Button asChild variant="outline" className="w-full gap-2 rounded-lg">
-          <Link href={newChatPage}>New Chat</Link>
+          <Link href={newChatPage}>
+            <PlusIcon className="size-4" />
+            New Chat
+          </Link>
         </Button>
       </div>
 
-      <div className="h-3" />
-
-      <SidebarIconLink
-        href="https://portal.thirdweb.com/nebula/api-reference"
-        icon={FileCode2Icon}
-        label="API Reference"
-        target="_blank"
-      />
-
-      <SidebarIconLink
-        href="/chat/history"
-        icon={MessagesSquareIcon}
-        label="All Chats"
-      />
+      <div className="h-5" />
 
       {sessionsToShow.length > 0 && (
-        <ScrollShadow
-          className="my-3 flex-1 border-t border-dashed pt-2"
-          scrollableClassName="max-h-full"
-          shadowColor="transparent"
-          shadowClassName="z-10"
-        >
+        <div className="flex-1 overflow-auto border-t border-dashed p-2 pt-2">
+          <div className="flex items-center justify-between px-2 py-3">
+            <h3 className="text-muted-foreground text-xs">Recent Chats</h3>
+            {sessionsToShow.length < sessions.length && (
+              <Link
+                href="/chat/history"
+                className="flex items-center gap-1 rounded-full text-foreground text-xs hover:underline"
+              >
+                View All
+                <ChevronRightIcon className="size-3.5 text-muted-foreground" />
+              </Link>
+            )}
+          </div>
+
           <div className="flex flex-col gap-1">
-            <h3 className="px-2 py-3 text-muted-foreground text-xs">
-              Recent Chats
-            </h3>
             {sessionsToShow.map((session) => {
               return (
                 <ChatSidebarLink
@@ -88,27 +74,13 @@ export function ChatSidebar(props: {
               );
             })}
           </div>
-        </ScrollShadow>
+        </div>
       )}
 
-      <div className="mb-3 border-y border-dashed py-3">
-        <SidebarIconLink
-          href="https://docs.google.com/forms/d/e/1FAIpQLSeM3fJRyywihRZUF1fiTNKEpJ_AzAcohRwXPpLr_3zxQ6W-tg/viewform?usp=sharing"
-          icon={MessageSquareShareIcon}
-          label="Take our quick survey!"
-          target="_blank"
-        />
-
-        <SidebarIconLink
-          href="https://portal.thirdweb.com/changelog"
-          icon={TextIcon}
-          label="Changelog"
-          target="_blank"
-        />
-
+      <div className="mb-3 border-y border-dashed px-2 py-3">
         <SidebarIconLink
           href="https://portal.thirdweb.com/nebula"
-          icon={SquareDashedBottomCodeIcon}
+          icon={FileCode2Icon}
           label="Documentation"
           target="_blank"
         />
@@ -130,13 +102,12 @@ function SidebarIconLink(props: {
   href: string;
 }) {
   return (
-    <Button asChild variant="ghost">
-      <Link
-        href={props.href}
-        target={props.target}
-        className="!justify-start !px-3 w-full gap-2.5 rounded-lg text-left"
-        prefetch={false}
-      >
+    <Button
+      asChild
+      variant="ghost"
+      className="h-auto w-full justify-start gap-2.5 rounded-lg px-2 py-1.5 text-left text-sm"
+    >
+      <Link href={props.href} target={props.target} prefetch={false}>
         <props.icon className="size-4" />
         {props.label}
       </Link>

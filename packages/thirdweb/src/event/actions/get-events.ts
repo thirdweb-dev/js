@@ -5,7 +5,6 @@ import type {
   ExtractAbiEventNames,
 } from "abitype";
 import { type Log, formatLog } from "viem";
-import { getChainServices } from "../../chains/utils.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getContractEvents as getContractEventsInsight } from "../../insight/get-events.js";
@@ -197,7 +196,7 @@ export async function getContractEvents<
         ),
       );
     } catch (e) {
-      console.warn("Error fetching from insight", e);
+      console.warn("Error fetching from insight, falling back to rpc", e);
       // fetch from rpc
       logs = await Promise.all(
         logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
@@ -224,17 +223,6 @@ async function getLogsFromInsight(options: {
   contract: ThirdwebContract<Abi>;
 }): Promise<Log[]> {
   const { params, contract } = options;
-
-  const chainServices = await getChainServices(contract.chain);
-  const insightEnabled = chainServices.some(
-    (c) => c.service === "insight" && c.enabled,
-  );
-
-  if (!insightEnabled) {
-    throw new Error(
-      `Insight is not available for chainId ${contract.chain.id}`,
-    );
-  }
 
   const fromBlock =
     typeof params.fromBlock === "bigint" ? Number(params.fromBlock) : undefined;

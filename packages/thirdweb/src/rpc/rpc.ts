@@ -144,7 +144,11 @@ export function getRpcClient(
 
             // No response.
             if (!response) {
-              inflight.reject(new Error("No response"));
+              inflight.reject(
+                new Error(
+                  `No response for index ${index} - all responses: ${stringify(responses)}`,
+                ),
+              );
             }
             // Response is an error or error string.
             else if (response instanceof Error) {

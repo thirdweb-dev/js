@@ -26,6 +26,7 @@ export function generateMoralisUrl({ chainId, owner }: GenerateURLParams) {
 export async function transformMoralisResponseToNFT(
   moralisResponse: MoralisResponse,
   owner: string,
+  chainId: number,
 ): Promise<WalletNFT[]> {
   return (
     await Promise.all(
@@ -47,6 +48,8 @@ export async function transformMoralisResponseToNFT(
             tokenURI: moralisNft.token_uri,
             supply: moralisNft.amount || "1",
             type: moralisNft.contract_type,
+            tokenAddress: moralisNft.token_address,
+            chainId,
           } as WalletNFT;
         } catch {
           return undefined as unknown as WalletNFT;

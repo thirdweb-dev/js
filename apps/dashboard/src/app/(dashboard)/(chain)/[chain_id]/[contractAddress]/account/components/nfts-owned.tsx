@@ -33,6 +33,7 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({
         type: nft.type,
         contractAddress: nft.contractAddress,
         chainId: contract.chain.id,
+        tokenAddress: nft.tokenAddress,
       }))}
       allNfts
       isPending={isWalletNFTsLoading}

@@ -74,31 +74,3 @@ export async function getDefaultTeam() {
   }
   return null;
 }
-
-type TeamNebulaWaitList = {
-  onWaitlist: boolean;
-  createdAt: null | string;
-};
-
-export async function getTeamNebulaWaitList(teamSlug: string) {
-  const token = await getAuthToken();
-
-  if (!token) {
-    return null;
-  }
-
-  const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/waitlist?scope=nebula`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  if (res.ok) {
-    return (await res.json()).result as TeamNebulaWaitList;
-  }
-
-  return null;
-}

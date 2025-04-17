@@ -23,8 +23,7 @@ export function EmptyStateChatPageContent(props: {
         </div>
         <div className="h-5" />
         <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
-          How can I help you <br className="max-sm:hidden" />
-          with the blockchain today?
+          How can I help you <br /> onchain today?
         </h1>
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">

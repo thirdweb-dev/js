@@ -200,3 +200,8 @@ body {
   --chakra-zIndices-overlay: 50;
   --chakra-colors-chakra-border-color: hsl(var(--border));
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) transparent;
+}

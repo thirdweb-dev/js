@@ -205,6 +205,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           owner: nft.owner,
           type: "ERC721",
           tokenURI: nft.tokenURI,
+          chainId: nft.chainId,
+          tokenAddress: nft.tokenAddress,
         };
       }
       return {
@@ -216,6 +218,8 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         owner: nft.owner,
         type: "ERC1155",
         tokenURI: nft.tokenURI,
+        chainId: nft.chainId,
+        tokenAddress: nft.tokenAddress,
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);

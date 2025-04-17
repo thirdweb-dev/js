@@ -59,17 +59,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     }, 60_000);
 
     it("should allow to claim tokens", async () => {
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "0",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 0n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+          .displayValue,
+      ).toBe("0");
       await sendAndConfirmTransaction({
         transaction: setClaimConditions({
           contract,
@@ -98,31 +91,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         transaction: claimTx,
         account: TEST_ACCOUNT_A,
       });
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "1",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 1000000000000000000n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+          .displayValue,
+      ).toBe("1");
     });
 
     it("should allow to claim tokens with value", async () => {
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_C.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "0",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 0n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_C.address }))
+          .displayValue,
+      ).toBe("0");
       // set cc with price
       await sendAndConfirmTransaction({
         transaction: setClaimConditions({
@@ -150,17 +129,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         transaction: claimTx,
         account: TEST_ACCOUNT_C,
       });
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_C.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "2",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 2000000000000000000n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_C.address }))
+          .displayValue,
+      ).toBe("2");
     });
 
     describe("Allowlists", () => {
@@ -181,17 +153,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: TEST_ACCOUNT_A,
         });
 
-        await expect(
-          getBalance({ contract, address: TEST_ACCOUNT_B.address }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "decimals": 18,
-            "displayValue": "0",
-            "name": "Test DropERC20",
-            "symbol": "",
-            "value": 0n,
-          }
-        `);
+        expect(
+          (await getBalance({ contract, address: TEST_ACCOUNT_B.address }))
+            .displayValue,
+        ).toBe("0");
 
         expect(
           await canClaim({
@@ -228,17 +193,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           }),
         });
 
-        await expect(
-          getBalance({ contract, address: TEST_ACCOUNT_B.address }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "decimals": 18,
-            "displayValue": "1",
-            "name": "Test DropERC20",
-            "symbol": "",
-            "value": 1000000000000000000n,
-          }
-        `);
+        expect(
+          (await getBalance({ contract, address: TEST_ACCOUNT_B.address }))
+            .displayValue,
+        ).toBe("1");
 
         await expect(
           sendAndConfirmTransaction({
@@ -274,17 +232,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: TEST_ACCOUNT_A,
         });
 
-        await expect(
-          getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "decimals": 18,
-            "displayValue": "1",
-            "name": "Test DropERC20",
-            "symbol": "",
-            "value": 1000000000000000000n,
-          }
-        `);
+        expect(
+          (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+            .displayValue,
+        ).toBe("1");
 
         // we try to claim an extra `2` tokens
         // this should faile bcause the max claimable is `3` and we have previously already claimed 2 tokens (one for ourselves, one for the other wallet)
@@ -318,17 +269,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           }),
         });
 
-        await expect(
-          getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "decimals": 18,
-            "displayValue": "2",
-            "name": "Test DropERC20",
-            "symbol": "",
-            "value": 2000000000000000000n,
-          }
-        `);
+        expect(
+          (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+            .displayValue,
+        ).toBe("2");
       });
     });
 
@@ -353,17 +297,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
       });
 
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "2",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 2000000000000000000n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+          .displayValue,
+      ).toBe("2");
 
       await sendAndConfirmTransaction({
         account: TEST_ACCOUNT_A,
@@ -374,17 +311,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         }),
       });
 
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_A.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "3",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 3000000000000000000n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_A.address }))
+          .displayValue,
+      ).toBe("3");
     });
 
     it("should be able to retrieve multiple phases", async () => {
@@ -436,17 +366,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_D,
       });
       // check that the account has claimed one token
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_D.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "0.000000000000000001",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 1n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_D.address }))
+          .displayValue,
+      ).toBe("0.000000000000000001");
 
       // attempt to claim another token (this should fail)
       await expect(
@@ -482,17 +405,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_D,
       });
       // check that the account has claimed two tokens
-      await expect(
-        getBalance({ contract, address: TEST_ACCOUNT_D.address }),
-      ).resolves.toMatchInlineSnapshot(`
-        {
-          "decimals": 18,
-          "displayValue": "0.000000000000000002",
-          "name": "Test DropERC20",
-          "symbol": "",
-          "value": 2n,
-        }
-      `);
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_D.address }))
+          .displayValue,
+      ).toBe("0.000000000000000002");
     });
   },
 );

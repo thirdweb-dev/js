@@ -25,12 +25,13 @@ export async function mapOffer(
     endTimestamp: rawOffer.expirationTimestamp,
   });
 
+  const currencyContract = getContract({
+    ...options.contract,
+    address: rawOffer.currency,
+  });
   const [currencyValuePerToken, nftAsset] = await Promise.all([
     getCurrencyMetadata({
-      contract: getContract({
-        ...options.contract,
-        address: rawOffer.currency,
-      }),
+      contract: currencyContract,
     }),
     getNFTAsset({
       ...options,
@@ -56,6 +57,8 @@ export async function mapOffer(
         rawOffer.totalPrice,
         currencyValuePerToken.decimals,
       ),
+      tokenAddress: currencyContract.address,
+      chainId: currencyContract.chain.id,
     },
     totalPrice: rawOffer.totalPrice,
     asset: nftAsset,

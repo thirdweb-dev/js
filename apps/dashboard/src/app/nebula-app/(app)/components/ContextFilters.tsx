@@ -66,9 +66,9 @@ export default function ContextFiltersButton(props: {
       </DialogTrigger>
       <DialogContent className="overflow-hidden p-0">
         <DialogHeader className="px-6 pt-6 pb-1">
-          <DialogTitle className="font-semibold text-xl">Context</DialogTitle>
+          <DialogTitle className="font-semibold text-xl">Settings</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Provide context to Nebula for your prompts
+            Modify Nebula to suit your needs
           </DialogDescription>
         </DialogHeader>
 
@@ -189,6 +189,7 @@ export function ContextFiltersForm(props: {
                 <FormLabel>Chain IDs</FormLabel>
                 <FormControl>
                   <MultiNetworkSelector
+                    hideTestnets
                     disableChainId
                     className="bg-background"
                     selectedChainIds={form
@@ -197,7 +198,9 @@ export function ContextFiltersForm(props: {
                       .filter(Boolean)
                       .map(Number)}
                     onChange={(values) => {
-                      form.setValue("chainIds", values.join(","));
+                      form.setValue("chainIds", values.join(","), {
+                        shouldDirty: true,
+                      });
                     }}
                     priorityChains={[
                       1, // ethereum
@@ -250,13 +253,20 @@ export function ContextFiltersForm(props: {
             </DialogClose>
           )}
           <Button
-            className="min-w-24 gap-2"
+            className="min-w-24 gap-2 disabled:text-muted-foreground disabled:opacity-100"
             type="submit"
             size="sm"
-            disabled={updateMutation.isPending}
+            variant={
+              props.modal
+                ? "default"
+                : form.formState.isDirty
+                  ? "default"
+                  : "outline"
+            }
+            disabled={updateMutation.isPending || !form.formState.isDirty}
           >
             {updateMutation.isPending && <Spinner className="size-4" />}
-            Update Context
+            Save
           </Button>
         </div>
       </form>

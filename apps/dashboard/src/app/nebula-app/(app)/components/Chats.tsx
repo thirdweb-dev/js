@@ -117,17 +117,9 @@ export function Chats(props: {
                   {message.type === "user" ? (
                     <div className="mt-6 flex justify-end">
                       <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
-                        <MarkdownRenderer
-                          skipHtml
-                          markdownText={message.text}
-                          code={{
-                            ignoreFormattingErrors: true,
-                            className: "bg-transparent",
-                          }}
-                          className="text-foreground [&>*:last-child]:mb-0"
-                          p={{ className: "text-foreground leading-normal" }}
-                          li={{ className: "text-foreground" }}
-                          inlineCode={{ className: "border-none" }}
+                        <StyledMarkdownRenderer
+                          text={message.text}
+                          isMessagePending={isMessagePending}
                         />
                       </div>
                     </div>
@@ -161,18 +153,9 @@ export function Chats(props: {
                       <div className="min-w-0 grow">
                         <ScrollShadow className="rounded-lg">
                           {message.type === "assistant" ? (
-                            <MarkdownRenderer
-                              skipHtml
-                              markdownText={message.text}
-                              code={{
-                                disableCodeHighlight: isMessagePending,
-                                ignoreFormattingErrors: true,
-                              }}
-                              className="text-foreground [&>*:last-child]:mb-0"
-                              p={{
-                                className: "text-foreground",
-                              }}
-                              li={{ className: "text-foreground" }}
+                            <StyledMarkdownRenderer
+                              text={message.text}
+                              isMessagePending={isMessagePending}
                             />
                           ) : message.type === "error" ? (
                             <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
@@ -330,5 +313,25 @@ function MessageActions(props: {
         )}
       </Button>
     </div>
+  );
+}
+
+function StyledMarkdownRenderer(props: {
+  text: string;
+  isMessagePending: boolean;
+}) {
+  return (
+    <MarkdownRenderer
+      skipHtml
+      markdownText={props.text}
+      className="text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
+      code={{
+        ignoreFormattingErrors: true,
+        className: "bg-transparent",
+      }}
+      p={{ className: "text-foreground leading-normal" }}
+      li={{ className: "text-foreground" }}
+      inlineCode={{ className: "border-none" }}
+    />
   );
 }
