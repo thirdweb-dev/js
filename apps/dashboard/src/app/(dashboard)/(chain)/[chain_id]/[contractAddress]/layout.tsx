@@ -9,6 +9,12 @@ import { isAddress, isContractDeployed } from "thirdweb/utils";
 import type { MinimalTeamsAndProjects } from "../../../../../components/contract-components/contract-deploy-form/add-to-project-card";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
 import { shortenIfAddress } from "../../../../../utils/usedapp-external";
+import { getRawAccount } from "../../../../account/settings/getAccount";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "../../../../api/lib/getAuthToken";
+import { NebulaFloatingChatButton } from "../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
 import { getContractMetadataHeaderData } from "./_layout/contract-metadata";
 import { ContractPageLayout } from "./_layout/contract-page-layout";
@@ -41,6 +47,12 @@ export default async function Layout(props: {
   if (chainMetadata.status === "deprecated") {
     notFound();
   }
+
+  const [authToken, account, accountAddress] = await Promise.all([
+    getAuthToken(),
+    getRawAccount(),
+    getAuthTokenWalletAddress(),
+  ]);
 
   const client = getThirdwebClient();
   const teamsAndProjects = await getTeamsAndProjectsIfLoggedIn();
@@ -75,6 +87,25 @@ export default async function Layout(props: {
   const { contractMetadata, externalLinks } =
     await getContractMetadataHeaderData(contract);
 
+  const contractAddress = info.contract.address;
+  const chainName = info.chainMetadata.name;
+  const chainId = info.contract.chain.id;
+
+  const contractPromptPrefix = `A user is viewing the contract address ${contractAddress} on ${chainName} (Chain ID: ${chainId}). Provide a concise summary of this contract's functionalities, such as token minting, staking, or governance mechanisms. Focus on what the contract enables users to do, avoiding transaction execution details unless requested.
+Users may be interested in how to interact with the contract. Outline common interaction patterns, such as claiming rewards, participating in governance, or transferring assets. Emphasize the contract's capabilities without guiding through transaction processes unless asked.
+Provide insights into how the contract is being used. Share information on user engagement, transaction volumes, or integration with other dApps, focusing on the contract's role within the broader ecosystem.
+Users may be considering integrating the contract into their applications. Discuss how this contract's functionalities can be leveraged within different types of dApps, highlighting potential use cases and benefits.
+
+The following is the user's message:`;
+
+  const examplePrompts: string[] = [
+    "What does this contract do?",
+    "What permissions or roles exist in this contract?",
+    "Which functions are used the most?",
+    "Has this contract been used recently?",
+    "Who are the largest holders/users of this?",
+  ];
+
   return (
     <ContractPageLayout
       chainMetadata={chainMetadata}
@@ -85,6 +116,21 @@ export default async function Layout(props: {
       teamsAndProjects={teamsAndProjects}
       client={client}
     >
+      <NebulaFloatingChatButton
+        authToken={authToken ?? undefined}
+        account={account}
+        label="Ask AI about this contract"
+        client={client}
+        nebulaParams={{
+          messagePrefix: contractPromptPrefix,
+          chainIds: [info.contract.chain.id],
+          wallet: accountAddress ?? undefined,
+        }}
+        examplePrompts={examplePrompts.map((prompt) => ({
+          title: prompt,
+          message: prompt,
+        }))}
+      />
       {props.children}
     </ContractPageLayout>
   );

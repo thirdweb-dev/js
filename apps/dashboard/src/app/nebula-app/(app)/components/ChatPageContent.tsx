@@ -202,12 +202,11 @@ export function ChatPageContent(props: {
         },
       ]);
 
-      const lowerCaseMessage = message.toLowerCase();
       // handle hardcoded replies first
+      const lowerCaseMessage = message.toLowerCase();
       const interceptedReply = examplePrompts.find(
         (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
       )?.interceptedReply;
-
       if (interceptedReply) {
         // slight delay to match other response times
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -231,8 +230,6 @@ export function ChatPageContent(props: {
           currentSessionId = session.id;
         }
 
-        let requestIdForMessage = "";
-
         // add this session on sidebar
         if (messages.length === 0) {
           const prevValue = newSessionsStore.getValue();
@@ -249,117 +246,22 @@ export function ChatPageContent(props: {
 
         setChatAbortController(abortController);
 
-        await promptNebula({
+        await handleNebulaPrompt({
           abortController,
-          message: message,
+          message,
           sessionId: currentSessionId,
           authToken: props.authToken,
-          handleStream(res) {
-            if (abortController.signal.aborted) {
-              return;
-            }
-
-            if (res.event === "init") {
-              requestIdForMessage = res.data.request_id;
-            }
-
-            if (res.event === "delta") {
-              setMessages((prev) => {
-                const lastMessage = prev[prev.length - 1];
-                // if last message is presence, overwrite it
-                if (lastMessage?.type === "presence") {
-                  return [
-                    ...prev.slice(0, -1),
-                    {
-                      text: res.data.v,
-                      type: "assistant",
-                      request_id: requestIdForMessage,
-                    },
-                  ];
-                }
-
-                // if last message is from chat, append to it
-                if (lastMessage?.type === "assistant") {
-                  return [
-                    ...prev.slice(0, -1),
-                    {
-                      text: lastMessage.text + res.data.v,
-                      type: "assistant",
-                      request_id: requestIdForMessage,
-                    },
-                  ];
-                }
-
-                // otherwise, add a new message
-                return [
-                  ...prev,
-                  {
-                    text: res.data.v,
-                    type: "assistant",
-                    request_id: requestIdForMessage,
-                  },
-                ];
-              });
-            }
-
-            if (res.event === "presence") {
-              setMessages((prev) => {
-                const lastMessage = prev[prev.length - 1];
-                // if last message is presence, overwrite it
-                if (lastMessage?.type === "presence") {
-                  return [
-                    ...prev.slice(0, -1),
-                    { text: res.data.data, type: "presence" },
-                  ];
-                }
-                // otherwise, add a new message
-                return [...prev, { text: res.data.data, type: "presence" }];
-              });
-            }
-
-            if (res.event === "action") {
-              if (res.type === "sign_transaction") {
-                setMessages((prev) => {
-                  let prevMessages = prev;
-                  // if last message is presence, remove it
-                  if (
-                    prevMessages[prevMessages.length - 1]?.type === "presence"
-                  ) {
-                    prevMessages = prevMessages.slice(0, -1);
-                  }
-
-                  return [
-                    ...prevMessages,
-                    {
-                      type: "send_transaction",
-                      data: res.data,
-                    },
-                  ];
-                });
-              }
-            }
-          },
-          context: contextFilters,
+          setMessages,
+          contextFilters: contextFilters,
         });
       } catch (error) {
         if (abortController.signal.aborted) {
           return;
         }
-        console.error(error);
 
-        setMessages((prev) => {
-          const newMessages = prev.slice(
-            0,
-            prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
-          );
-
-          // add error message
-          newMessages.push({
-            text: `Error: ${error instanceof Error ? error.message : "Failed to execute command"}`,
-            type: "error",
-          });
-
-          return newMessages;
+        handleNebulaPromptError({
+          error,
+          setMessages,
         });
       } finally {
         setIsChatStreaming(false);
@@ -542,4 +444,137 @@ function getLastUsedChainIds(): string[] | null {
   } catch {
     return null;
   }
+}
+
+export async function handleNebulaPrompt(params: {
+  abortController: AbortController;
+  message: string;
+  sessionId: string;
+  authToken: string;
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  contextFilters: NebulaContext | undefined;
+}) {
+  const {
+    abortController,
+    message,
+    sessionId,
+    authToken,
+    setMessages,
+    contextFilters,
+  } = params;
+  let requestIdForMessage = "";
+
+  await promptNebula({
+    abortController,
+    message,
+    sessionId,
+    authToken,
+    handleStream(res) {
+      if (abortController.signal.aborted) {
+        return;
+      }
+
+      if (res.event === "init") {
+        requestIdForMessage = res.data.request_id;
+      }
+
+      if (res.event === "delta") {
+        setMessages((prev) => {
+          const lastMessage = prev[prev.length - 1];
+          // if last message is presence, overwrite it
+          if (lastMessage?.type === "presence") {
+            return [
+              ...prev.slice(0, -1),
+              {
+                text: res.data.v,
+                type: "assistant",
+                request_id: requestIdForMessage,
+              },
+            ];
+          }
+
+          // if last message is from chat, append to it
+          if (lastMessage?.type === "assistant") {
+            return [
+              ...prev.slice(0, -1),
+              {
+                text: lastMessage.text + res.data.v,
+                type: "assistant",
+                request_id: requestIdForMessage,
+              },
+            ];
+          }
+
+          // otherwise, add a new message
+          return [
+            ...prev,
+            {
+              text: res.data.v,
+              type: "assistant",
+              request_id: requestIdForMessage,
+            },
+          ];
+        });
+      }
+
+      if (res.event === "presence") {
+        setMessages((prev) => {
+          const lastMessage = prev[prev.length - 1];
+          // if last message is presence, overwrite it
+          if (lastMessage?.type === "presence") {
+            return [
+              ...prev.slice(0, -1),
+              { text: res.data.data, type: "presence" },
+            ];
+          }
+          // otherwise, add a new message
+          return [...prev, { text: res.data.data, type: "presence" }];
+        });
+      }
+
+      if (res.event === "action") {
+        if (res.type === "sign_transaction") {
+          setMessages((prev) => {
+            let prevMessages = prev;
+            // if last message is presence, remove it
+            if (prevMessages[prevMessages.length - 1]?.type === "presence") {
+              prevMessages = prevMessages.slice(0, -1);
+            }
+
+            return [
+              ...prevMessages,
+              {
+                type: "send_transaction",
+                data: res.data,
+              },
+            ];
+          });
+        }
+      }
+    },
+    context: contextFilters,
+  });
+}
+
+export function handleNebulaPromptError(params: {
+  error: unknown;
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+}) {
+  const { error, setMessages } = params;
+  console.error(error);
+
+  setMessages((prev) => {
+    const newMessages = prev.slice(
+      0,
+      prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
+    );
+
+    // add error message
+    newMessages.push({
+      text: `Error: ${error instanceof Error ? error.message : "Failed to execute command"}`,
+      type: "error",
+    });
+
+    return newMessages;
+  });
 }

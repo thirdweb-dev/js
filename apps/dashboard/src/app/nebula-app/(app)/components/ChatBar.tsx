@@ -11,11 +11,17 @@ export function ChatBar(props: {
   isChatStreaming: boolean;
   abortChatStream: () => void;
   prefillMessage: string | undefined;
+  className?: string;
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-2">
+    <div
+      className={cn(
+        "rounded-2xl border border-border bg-card p-2",
+        props.className,
+      )}
+    >
       <div className="max-h-[70vh] overflow-y-auto">
         <AutoResizeTextarea
           placeholder={"Ask Nebula"}

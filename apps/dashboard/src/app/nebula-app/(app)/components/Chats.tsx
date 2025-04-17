@@ -53,6 +53,7 @@ export function Chats(props: {
   client: ThirdwebClient;
   setEnableAutoScroll: (enable: boolean) => void;
   enableAutoScroll: boolean;
+  useSmallText?: boolean;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -99,7 +100,7 @@ export function Chats(props: {
     >
       <ScrollShadow
         className="flex-1"
-        scrollableClassName="max-h-full"
+        scrollableClassName="max-h-full overscroll-contain"
         shadowColor="hsl(var(--background))"
         shadowClassName="z-[1]"
       >
@@ -110,7 +111,10 @@ export function Chats(props: {
                 props.isChatStreaming && index === props.messages.length - 1;
               return (
                 <div
-                  className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
+                  className={cn(
+                    "fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base",
+                    props.useSmallText && "lg:text-sm",
+                  )}
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
                   key={index}
                 >
@@ -120,6 +124,7 @@ export function Chats(props: {
                         <StyledMarkdownRenderer
                           text={message.text}
                           isMessagePending={isMessagePending}
+                          type="user"
                         />
                       </div>
                     </div>
@@ -156,6 +161,7 @@ export function Chats(props: {
                             <StyledMarkdownRenderer
                               text={message.text}
                               isMessagePending={isMessagePending}
+                              type="assistant"
                             />
                           ) : message.type === "error" ? (
                             <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
@@ -252,10 +258,14 @@ function MessageActions(props: {
   const sendBadRating = useMutation({
     mutationFn: () => sendRating("bad"),
     onSuccess() {
-      toast.info("Thanks for the feedback!");
+      toast.info("Thanks for the feedback!", {
+        position: "top-right",
+      });
     },
     onError() {
-      toast.error("Failed to send feedback");
+      toast.error("Failed to send feedback", {
+        position: "top-right",
+      });
     },
   });
 
@@ -319,6 +329,7 @@ function MessageActions(props: {
 function StyledMarkdownRenderer(props: {
   text: string;
   isMessagePending: boolean;
+  type: "assistant" | "user";
 }) {
   return (
     <MarkdownRenderer
@@ -329,7 +340,12 @@ function StyledMarkdownRenderer(props: {
         ignoreFormattingErrors: true,
         className: "bg-transparent",
       }}
-      p={{ className: "text-foreground leading-normal" }}
+      p={{
+        className:
+          props.type === "assistant"
+            ? "text-foreground leading-loose"
+            : "text-foreground leading-normal",
+      }}
       li={{ className: "text-foreground" }}
       inlineCode={{ className: "border-none" }}
     />
