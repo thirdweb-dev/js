@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { SupportForm_SelectInput } from "components/help/contact-forms/shared/SupportForm_SelectInput";
+import { SupportForm_TelegramInput } from "components/help/contact-forms/shared/SupportForm_TelegramInput";
 import dynamic from "next/dynamic";
 import {
   type ReactElement,
@@ -154,6 +155,8 @@ export function CreateTicket(props: {
               teams={props.teams}
             />
           </div>
+
+          <SupportForm_TelegramInput />
 
           <ProductAreaSelection
             productLabel={productLabel}
