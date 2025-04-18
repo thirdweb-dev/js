@@ -1,5 +1,128 @@
 # thirdweb
 
+## 5.95.0
+
+### Minor Changes
+
+- [#6706](https://github.com/thirdweb-dev/js/pull/6706) [`185d2f3`](https://github.com/thirdweb-dev/js/commit/185d2f309c349e37ac84bd3a2ce5a1c9c7011083) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getOwnedTokens, getOwnedNFTs and getTransaction functions
+
+  You can now use Insight, our in-house indexer directly from the SDK with a simple API:
+
+  ## Get Owned ERC20 tokens
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const tokens = await Insight.getOwnedTokens({
+    client,
+    ownerAddress,
+    chains: [base, polygon, arbitrum],
+  });
+  ```
+
+  ## Get Owned NFTs (ERC721 and ERC1155)
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const nfts = await Insight.getOwnedNFTs({
+    client,
+    ownerAddress,
+    chains: [sepolia],
+  });
+  ```
+
+  ## Get Transactions for a given wallet address
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const transactions = await Insight.getTransactions({
+    client,
+    walletAddress,
+    chains: [sepolia],
+  });
+  ```
+
+  All functions come with extra query filters for more granular queries, refer to the documentation for more details.
+
+### Patch Changes
+
+- [#6760](https://github.com/thirdweb-dev/js/pull/6760) [`7ecfcb9`](https://github.com/thirdweb-dev/js/commit/7ecfcb95afaeca56fd8dbf8b157ac6a1eb2339b2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add thirdweb branding to PayEmbed
+
+- [#6753](https://github.com/thirdweb-dev/js/pull/6753) [`4cf15a2`](https://github.com/thirdweb-dev/js/commit/4cf15a2475fce1c5b55d19f7cf51ab080e80e33f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use insight for 1155 getNFTs, getOwnedNFTs and getNFT
+
+- [#6752](https://github.com/thirdweb-dev/js/pull/6752) [`23d3757`](https://github.com/thirdweb-dev/js/commit/23d375778b900468409bb2435f60f1aff33823c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simplify RPC request handling
+
+- [#6741](https://github.com/thirdweb-dev/js/pull/6741) [`8d4d991`](https://github.com/thirdweb-dev/js/commit/8d4d991e5710cbed668a52522686cc2dce4e4790) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use insight for erc821/getNFT, erc721/getNFTs and erc721/getOwnedNFTs
+
+  Standard ERC721 getNFT, getNFTs and getOwnedNFTs now use insight, our in house indexer by default. If indexer is not availbale, will fallback to RPC.
+
+  You can also use the indexer directly using the Insight API:
+
+  for an entire collection
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getContractNFTs({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+  });
+  ```
+
+  or for a single NFT
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getNFT({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+    tokenId: 1n,
+  });
+  ```
+
+- [#6683](https://github.com/thirdweb-dev/js/pull/6683) [`a3e7300`](https://github.com/thirdweb-dev/js/commit/a3e73007230120f2e2d79b894cf1a3c81e062a21) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Get indexed events from `getContractEvents`
+
+  You can now automatically query indexed events on supported chains when calling getContractEvents
+
+  ```ts
+  import { getContractEvents } from "thirdweb";
+
+  const events = await getContractEvents({
+    contract: DOODLES_CONTRACT,
+    events: [transferEvent()],
+  });
+  ```
+
+  This method falls back to RPC eth_getLogs if the indexer is not available.
+
+  You can also use the dedicated indexer function via the Insight export
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getContractEvents({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+    event: transferEvent(),
+    decodeLogs: true,
+  });
+  ```
+
+- [#6732](https://github.com/thirdweb-dev/js/pull/6732) [`a45c558`](https://github.com/thirdweb-dev/js/commit/a45c558e06a7104c0e54df9647343e9681f73e1d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve pay error messages
+
+- [#6758](https://github.com/thirdweb-dev/js/pull/6758) [`62ce05e`](https://github.com/thirdweb-dev/js/commit/62ce05ec35aa362df25eaf46824651c7f0792f99) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error message for getUser
+
+- [#6734](https://github.com/thirdweb-dev/js/pull/6734) [`2a7df33`](https://github.com/thirdweb-dev/js/commit/2a7df337f790051d7eaf9258428349e162b4ed01) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error messages for failed requests
+
+- Updated dependencies [[`185d2f3`](https://github.com/thirdweb-dev/js/commit/185d2f309c349e37ac84bd3a2ce5a1c9c7011083)]:
+  - @thirdweb-dev/insight@1.0.0
+
 ## 5.94.2
 
 ### Patch Changes
