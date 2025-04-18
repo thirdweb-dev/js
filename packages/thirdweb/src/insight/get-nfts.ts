@@ -292,7 +292,7 @@ async function transformNFTModel(
             client: client,
           }),
           id: BigInt(token_id),
-        });
+        }).catch(() => 0n);
 
         parsedNft = parseNFT(metadata, {
           tokenId: BigInt(token_id),

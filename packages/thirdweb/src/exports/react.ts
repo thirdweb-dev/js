@@ -136,7 +136,7 @@ export type {
   PaymentInfo,
   DirectPaymentOptions,
   FundWalletOptions,
-  TranasctionOptions,
+  TransactionOptions,
 } from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {

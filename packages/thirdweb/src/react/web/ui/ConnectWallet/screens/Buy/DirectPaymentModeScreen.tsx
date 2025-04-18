@@ -27,6 +27,7 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { ConnectButton } from "../../ConnectButton.js";
+import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
 import type { SupportedChainAndTokens } from "./swap/useSwapSupportedChains.js";
 
@@ -108,7 +109,8 @@ export function DirectPaymentModeScreen(props: {
       };
 
   return (
-    <Container p="lg">
+    <Container px="lg">
+      <Spacer y="lg" />
       <ModalHeader title={metadata?.name || "Payment Details"} />
 
       <Spacer y="lg" />
@@ -267,6 +269,13 @@ export function DirectPaymentModeScreen(props: {
             }}
           />
         </div>
+      )}
+      <Spacer y="lg" />
+      {payUiOptions.showThirdwebBranding !== false && (
+        <>
+          <PoweredByThirdweb link="https://playground.thirdweb.com/connect/pay?utm_source=ub_text" />
+          <Spacer y="sm" />
+        </>
       )}
     </Container>
   );
