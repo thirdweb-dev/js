@@ -32,6 +32,7 @@ import { Input } from "../../../components/formElements.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
+import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import { WalletSwitcherConnectionScreen } from "../WalletSwitcherConnectionScreen.js";
@@ -833,7 +834,8 @@ function MainScreen(props: {
     }
     default: {
       return (
-        <Container p="lg">
+        <Container px="lg">
+          <Spacer y="lg" />
           <ModalHeader title={props.title} onBack={props.onBack} />
 
           <Spacer y="xl" />
@@ -899,6 +901,13 @@ function MainScreen(props: {
               </Button>
             )}
           </Container>
+          <Spacer y="lg" />
+          {payOptions.showThirdwebBranding !== false && (
+            <>
+              <PoweredByThirdweb link="https://playground.thirdweb.com/connect/pay?utm_source=ub_text" />
+              <Spacer y="sm" />
+            </>
+          )}
         </Container>
       );
     }

@@ -134,7 +134,14 @@ export type PayUIOptions = Prettify<
       name?: string;
       image?: string;
     };
-  } & (FundWalletOptions | DirectPaymentOptions | TranasctionOptions)
+
+    /**
+     * Show the "Powered by Thirdweb" branding at the bottom of the PayEmbed UI.
+     *
+     * By default it is `true`.
+     */
+    showThirdwebBranding?: boolean;
+  } & (FundWalletOptions | DirectPaymentOptions | TransactionOptions)
 >;
 
 export type FundWalletOptions = {
@@ -168,7 +175,7 @@ export type DirectPaymentOptions = {
   paymentInfo: PaymentInfo;
 };
 
-export type TranasctionOptions = {
+export type TransactionOptions = {
   mode: "transaction";
   /**
    * The transaction to be executed.
