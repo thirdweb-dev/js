@@ -10,6 +10,7 @@ describe("authorizeClient", () => {
     secretKeyHash: "secret-hash",
     bundleId: null,
     origin: "example.com",
+    incomingServiceApiKey: null,
   };
 
   it("should authorize client with valid secret key", () => {
@@ -27,6 +28,7 @@ describe("authorizeClient", () => {
       secretKeyHash: null,
       bundleId: null,
       origin: "sub.example.com",
+      incomingServiceApiKey: null,
     };
 
     const result = authorizeClient(
@@ -43,6 +45,7 @@ describe("authorizeClient", () => {
       secretKeyHash: null,
       bundleId: null,
       origin: null,
+      incomingServiceApiKey: null,
     };
 
     const validProjectResponseAnyDomain = {
@@ -67,6 +70,7 @@ describe("authorizeClient", () => {
       secretKeyHash: null,
       bundleId: "com.foo.bar",
       origin: null,
+      incomingServiceApiKey: null,
     };
 
     const result = authorizeClient(
@@ -87,6 +91,7 @@ describe("authorizeClient", () => {
       secretKeyHash: null,
       bundleId: null,
       origin: "unauthorized.com",
+      incomingServiceApiKey: null,
     };
 
     const result = authorizeClient(
@@ -100,5 +105,22 @@ describe("authorizeClient", () => {
     );
     expect(result.errorCode).toBe("ORIGIN_UNAUTHORIZED");
     expect(result.status).toBe(401);
+  });
+
+  it("should authorize client with incoming service api key", () => {
+    const authOptionsWithServiceKey: ClientAuthorizationPayload = {
+      secretKeyHash: null,
+      bundleId: null,
+      origin: "unauthorized.com", // Even unauthorized origin should work with service key
+      incomingServiceApiKey: "test-service-key",
+    };
+
+    const result = authorizeClient(
+      authOptionsWithServiceKey,
+      validTeamAndProjectResponse,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
+    ) as any;
+    expect(result.authorized).toBe(true);
+    expect(result.project).toEqual(validTeamAndProjectResponse.project);
   });
 });

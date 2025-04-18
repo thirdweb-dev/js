@@ -9,6 +9,8 @@ import { authorizeService } from "./service.js";
 import type { AuthorizationResult } from "./types.js";
 
 export type AuthorizationInput = {
+  incomingServiceApiKey: string | null;
+  incomingServiceApiKeyHash: string | null;
   secretKey: string | null;
   clientId: string | null;
   ecosystemId: string | null;
@@ -45,13 +47,19 @@ export async function authorize(
   let teamAndProjectResponse: TeamAndProjectResponse | null = null;
 
   // Use a separate cache key per auth method.
-  const cacheKey = authData.secretKeyHash
-    ? `key-v2:secret-key:${authData.secretKeyHash}`
-    : authData.hashedJWT
-      ? `key-v2:dashboard-jwt:${authData.hashedJWT}:${authData.teamId ?? "default"}`
-      : authData.clientId
-        ? `key-v2:client-id:${authData.clientId}`
-        : null;
+  const cacheKey = authData.incomingServiceApiKey
+    ? // incoming service key + clientId case
+      `key-v2:service-key:${authData.incomingServiceApiKeyHash}:${authData.clientId ?? "default"}`
+    : authData.secretKeyHash
+      ? // secret key case
+        `key-v2:secret-key:${authData.secretKeyHash}`
+      : authData.hashedJWT
+        ? // dashboard jwt case
+          `key-v2:dashboard-jwt:${authData.hashedJWT}:${authData.teamId ?? "default"}`
+        : authData.clientId
+          ? // clientId case
+            `key-v2:client-id:${authData.clientId}`
+          : null;
 
   // TODO if we have cache options we want to check the cache first
   if (cacheOptions && cacheKey) {

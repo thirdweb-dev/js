@@ -5,13 +5,14 @@ export type ClientAuthorizationPayload = {
   secretKeyHash: string | null;
   bundleId: string | null;
   origin: string | null;
+  incomingServiceApiKey: string | null;
 };
 
 export function authorizeClient(
   authOptions: ClientAuthorizationPayload,
   teamAndProjectResponse: TeamAndProjectResponse,
 ): AuthorizationResult {
-  const { origin, bundleId } = authOptions;
+  const { origin, bundleId, incomingServiceApiKey } = authOptions;
   const { team, project, authMethod } = teamAndProjectResponse;
 
   const authResult: AuthorizationResult = {
@@ -28,6 +29,12 @@ export function authorizeClient(
 
   if (authMethod === "secretKey") {
     // if the auth was done using secretKey, we do not want to enforce domains or bundleIds
+    return authResult;
+  }
+
+  if (authMethod === "publishableKey" && incomingServiceApiKey) {
+    // if the auth was done using a combination of publishableKey and incomingServiceKey,
+    // we will treat this the same as a secret key auth (relying on the upstream service to have already validated the publishableKey)
     return authResult;
   }
 

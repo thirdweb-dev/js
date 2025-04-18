@@ -228,7 +228,7 @@ export async function fetchTeamAndProject(
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
   const { apiUrl, serviceApiKey } = config;
-  const { teamId, clientId } = authData;
+  const { teamId, clientId, incomingServiceApiKey } = authData;
 
   const url = new URL("/v2/keys/use", apiUrl);
   if (clientId) {
@@ -247,10 +247,16 @@ export async function fetchTeamAndProject(
         headers: {
           ...(authData.secretKey ? { "x-secret-key": authData.secretKey } : {}),
           ...(authData.jwt ? { Authorization: `Bearer ${authData.jwt}` } : {}),
-          "x-service-api-key": serviceApiKey,
+          // use the incoming service api key if it exists, otherwise use the service api key
+          // this is done to ensure that the incoming service API key is VALID in the first place
+          "x-service-api-key": incomingServiceApiKey
+            ? incomingServiceApiKey
+            : serviceApiKey,
           "content-type": "application/json",
         },
       });
+
+      // TODO: if the response is a well understood status code (401, 402, etc), we should skip retry logic
 
       let text = "";
       try {

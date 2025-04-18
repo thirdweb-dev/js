@@ -151,7 +151,18 @@ export function extractAuthorizationData(
     }
   }
 
+  let incomingServiceApiKey: string | null = null;
+  let incomingServiceApiKeyHash: string | null = null;
+  if (getHeader(headers, "x-service-api-key")) {
+    incomingServiceApiKey = getHeader(headers, "x-service-api-key");
+    if (incomingServiceApiKey) {
+      incomingServiceApiKeyHash = hashSecretKey(incomingServiceApiKey);
+    }
+  }
+
   return {
+    incomingServiceApiKey,
+    incomingServiceApiKeyHash,
     jwt,
     hashedJWT: jwt ? hashSecretKey(jwt) : null,
     secretKeyHash,
