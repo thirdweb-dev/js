@@ -156,6 +156,11 @@ export async function extractAuthorizationData(
     }
   }
 
+  let teamId: string | null = null;
+  if (headers.has("x-team-id")) {
+    teamId = headers.get("x-team-id");
+  }
+
   return {
     incomingServiceApiKey,
     incomingServiceApiKeyHash,
@@ -168,7 +173,7 @@ export async function extractAuthorizationData(
     origin,
     bundleId,
     secretKeyHash,
-    teamId: authInput.teamId,
+    teamId: authInput.teamId ?? teamId ?? undefined,
     targetAddress: authInput.targetAddress,
   };
 }
