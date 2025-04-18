@@ -58,4 +58,7 @@ module.exports = [
   "/faucets",
   // -- brand kit --
   "/brand-kit",
+  // -- universal bridge landing pages --
+  "/universal-bridge-regions/:region_slug",
+  "/enterprise",
 ];
