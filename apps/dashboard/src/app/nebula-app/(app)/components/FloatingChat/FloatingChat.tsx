@@ -15,12 +15,14 @@ import {
   useState,
 } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
 
 const LazyFloatingChatContent = lazy(() => import("./FloatingChatContent"));
 
 export function NebulaFloatingChatButton(props: {
+  pageType: "chain" | "contract";
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
   label: string;
@@ -37,6 +39,7 @@ export function NebulaFloatingChatButton(props: {
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const closeModal = useCallback(() => setIsOpen(false), []);
   const [isDismissed, setIsDismissed] = useState(false);
+  const trackEvent = useTrack();
 
   if (isDismissed) {
     return null;
@@ -50,6 +53,12 @@ export function NebulaFloatingChatButton(props: {
             onClick={() => {
               setIsOpen(true);
               setHasBeenOpened(true);
+              trackEvent({
+                category: "floating_nebula",
+                action: "click",
+                label: "open",
+                page: props.pageType,
+              });
             }}
             variant="default"
             className="gap-2 rounded-full"
@@ -60,7 +69,15 @@ export function NebulaFloatingChatButton(props: {
           <Button
             variant="outline"
             className="size-10 rounded-full bg-card p-0"
-            onClick={() => setIsDismissed(true)}
+            onClick={() => {
+              setIsDismissed(true);
+              trackEvent({
+                category: "floating_nebula",
+                action: "click",
+                label: "dismiss",
+                page: props.pageType,
+              });
+            }}
           >
             <XIcon className="size-4" />
           </Button>
@@ -75,6 +92,7 @@ export function NebulaFloatingChatButton(props: {
         client={props.client}
         nebulaParams={props.nebulaParams}
         examplePrompts={props.examplePrompts}
+        pageType={props.pageType}
       />
     </>
   );
@@ -86,6 +104,7 @@ function NebulaChatUIContainer(props: {
   hasBeenOpened: boolean;
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
+  pageType: "chain" | "contract";
   client: ThirdwebClient;
   nebulaParams:
     | {
@@ -98,6 +117,7 @@ function NebulaChatUIContainer(props: {
   const ref = useOutsideClick(props.onClose);
   const shouldRenderChat = props.isOpen || props.hasBeenOpened;
   const [nebulaSessionKey, setNebulaSessionKey] = useState(0);
+  const trackEvent = useTrack();
 
   return (
     <div
@@ -112,6 +132,14 @@ function NebulaChatUIContainer(props: {
           className="group flex items-center gap-2"
           target="_blank"
           href="https://thirdweb.com/nebula"
+          onClick={() => {
+            trackEvent({
+              category: "floating_nebula",
+              action: "click",
+              label: "nebula-landing",
+              page: props.pageType,
+            });
+          }}
         >
           <h2 className="font-semibold text-lg tracking-tight">Nebula</h2>
           <ExternalLinkIcon className="size-4 text-muted-foreground/70 group-hover:text-foreground" />
@@ -158,6 +186,7 @@ function NebulaChatUIContainer(props: {
               nebulaParams={props.nebulaParams}
               key={nebulaSessionKey}
               examplePrompts={props.examplePrompts}
+              pageType={props.pageType}
             />
           </Suspense>
         )}

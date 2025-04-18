@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button } from "../../../../../@/components/ui/button";
+import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import type { NebulaContext } from "../../api/chat";
 import { createSession } from "../../api/session";
 import type { ExamplePrompt } from "../../data/examplePrompts";
@@ -20,6 +21,7 @@ export default function FloatingChatContent(props: {
   authToken: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
+  pageType: "chain" | "contract";
   nebulaParams:
     | {
         messagePrefix: string;
@@ -38,6 +40,7 @@ export default function FloatingChatContent(props: {
       client={props.client}
       nebulaParams={props.nebulaParams}
       examplePrompts={props.examplePrompts}
+      pageType={props.pageType}
     />
   );
 }
@@ -45,6 +48,7 @@ export default function FloatingChatContent(props: {
 function FloatingChatContentLoggedIn(props: {
   authToken: string;
   client: ThirdwebClient;
+  pageType: "chain" | "contract";
   examplePrompts: ExamplePrompt[];
   nebulaParams:
     | {
@@ -60,6 +64,7 @@ function FloatingChatContentLoggedIn(props: {
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
   >();
+  const trackEvent = useTrack();
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
 
@@ -89,6 +94,15 @@ function FloatingChatContentLoggedIn(props: {
       setUserHasSubmittedMessage(true);
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
+
+      trackEvent({
+        category: "floating_nebula",
+        action: "send",
+        label: "message",
+        message: userMessage,
+        page: props.pageType,
+        sessionId: sessionId,
+      });
 
       // if this is first message, set the message prefix
       const messageToSend =
@@ -145,6 +159,8 @@ function FloatingChatContentLoggedIn(props: {
       sessionId,
       props.nebulaParams?.messagePrefix,
       userHasSubmittedMessage,
+      trackEvent,
+      props.pageType,
     ],
   );
 

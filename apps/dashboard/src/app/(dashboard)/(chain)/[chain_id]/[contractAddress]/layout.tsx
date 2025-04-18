@@ -115,6 +115,7 @@ The following is the user's message:`;
       client={client}
     >
       <NebulaFloatingChatButton
+        pageType="contract"
         authToken={authToken ?? undefined}
         label="Ask AI about this contract"
         client={client}

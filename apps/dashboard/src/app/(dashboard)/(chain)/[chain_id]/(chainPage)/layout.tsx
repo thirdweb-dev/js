@@ -100,6 +100,7 @@ The following is the user's message:
   return (
     <>
       <NebulaFloatingChatButton
+        pageType="chain"
         authToken={authToken ?? undefined}
         label="Ask AI about this chain"
         client={client}
