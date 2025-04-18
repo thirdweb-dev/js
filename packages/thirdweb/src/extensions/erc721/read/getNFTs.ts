@@ -104,7 +104,7 @@ async function getNFTsFromInsight(
 ): Promise<NFT[]> {
   const { contract, start, count = Number(DEFAULT_QUERY_ALL_COUNT) } = options;
 
-  const [result, supply] = await Promise.all([
+  const [result, supplyInfo] = await Promise.all([
     getContractNFTs({
       client: contract.client,
       chains: [contract.chain],
@@ -115,13 +115,21 @@ async function getNFTsFromInsight(
         page: start ? Math.floor(start / count) : undefined,
       },
     }),
-    totalSupply(options),
+    getSupplyInfo(options).catch(() => ({
+      maxSupply: 0,
+      startTokenId: 0,
+    })),
   ]);
 
   const currentOffset = start ?? 0;
   const expectedResultLength = Math.min(
     count,
-    Math.max(0, Number(supply) - currentOffset),
+    Math.max(
+      0,
+      Number(supplyInfo.maxSupply) -
+        Number(supplyInfo.startTokenId) -
+        currentOffset,
+    ),
   );
   if (result.length < expectedResultLength) {
     // fresh contracts might be delayed in indexing, so we fallback to RPC
@@ -134,6 +142,27 @@ async function getNFTsFromInsight(
 async function getNFTsFromRPC(
   options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT[]> {
+  const { startTokenId, maxSupply } = await getSupplyInfo(options);
+  const start = BigInt(options.start ?? 0) + startTokenId;
+  const count = BigInt(options.count ?? DEFAULT_QUERY_ALL_COUNT);
+  const maxId = min(maxSupply, start + count);
+  const promises: ReturnType<typeof getNFT>[] = [];
+
+  for (let i = start; i < maxId; i++) {
+    promises.push(
+      getNFT({
+        ...options,
+        tokenId: i,
+        includeOwner: options.includeOwners ?? false,
+        useIndexer: false,
+      }),
+    );
+  }
+
+  return await Promise.all(promises);
+}
+
+async function getSupplyInfo(options: BaseTransactionOptions<GetNFTsParams>) {
   const [startTokenId_, maxSupply] = await Promise.allSettled([
     startTokenId(options),
     nextTokenIdToMint(options),
@@ -158,23 +187,9 @@ async function getNFTsFromRPC(
     }
     return [startTokenId__, maxSupply_] as const;
   });
-  const start = BigInt(options.start ?? 0) + startTokenId_;
-  const count = BigInt(options.count ?? DEFAULT_QUERY_ALL_COUNT);
 
-  const maxId = min(maxSupply + startTokenId_, start + count);
-
-  const promises: ReturnType<typeof getNFT>[] = [];
-
-  for (let i = start; i < maxId; i++) {
-    promises.push(
-      getNFT({
-        ...options,
-        tokenId: i,
-        includeOwner: options.includeOwners ?? false,
-        useIndexer: false,
-      }),
-    );
-  }
-
-  return await Promise.all(promises);
+  return {
+    startTokenId: startTokenId_,
+    maxSupply,
+  };
 }

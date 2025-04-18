@@ -97,7 +97,9 @@ async function getOwnedNFTsFromRPC(
   const ownedBalances = await getOwnedTokenIds(options);
 
   const nfts = await Promise.all(
-    ownedBalances.map((ob) => getNFT({ ...options, tokenId: ob.tokenId })),
+    ownedBalances.map((ob) =>
+      getNFT({ ...options, tokenId: ob.tokenId, useIndexer: false }),
+    ),
   );
 
   return nfts.map((nft, index) => ({
