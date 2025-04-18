@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.95.2
+
+### Patch Changes
+
+- [#6771](https://github.com/thirdweb-dev/js/pull/6771) [`9d72ddd`](https://github.com/thirdweb-dev/js/commit/9d72ddd6045e98822021027dc0e446f9505531f5) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing the team id explicitly via request headers
+
 ## 5.95.1
 
 ### Patch Changes
