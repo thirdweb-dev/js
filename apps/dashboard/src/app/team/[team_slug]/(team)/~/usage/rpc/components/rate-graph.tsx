@@ -2,54 +2,63 @@
 
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { formatDate } from "date-fns";
-import { InfoIcon } from "lucide-react";
 
 export function RateGraph(props: {
   peakPercentage: number;
   currentRateLimit: number;
-  data: { date: string; averageRate: number }[];
+  data: { date: string; averageRate: string; peakRPS: string }[];
 }) {
   return (
     <ThirdwebAreaChart
       chartClassName="aspect-[1.5] lg:aspect-[4]"
       header={{
         title: "Request Rate Over Time",
-        description: "Request rate over the last 24 hours. All times in UTC.",
+        description: "Request rate over the last 24 hours.",
       }}
-      // only show the footer if the peak usage is greater than 80%
-      footer={
-        props.peakPercentage > 80 ? (
-          <div className="flex items-center justify-center gap-2">
-            <InfoIcon className="h-4 w-4 text-muted-foreground" />
-            <p className="text-muted-foreground text-xs">
-              The red dashed line represents your current plan rate limit (
-              {props.currentRateLimit} RPS)
-            </p>
-          </div>
-        ) : undefined
+      config={
+        props.peakPercentage > 80
+          ? {
+              averageRate: {
+                label: "Average RPS",
+                color: "hsl(var(--chart-1))",
+              },
+              peakRPS: {
+                label: "Peak RPS",
+                color: "hsl(var(--chart-2))",
+              },
+              maxLine: {
+                label: "Plan Rate Limit",
+              },
+            }
+          : {
+              averageRate: {
+                label: "Average RPS",
+                color: "hsl(var(--chart-1))",
+              },
+              peakRPS: {
+                label: "Peak RPS",
+                color: "hsl(var(--chart-2))",
+              },
+            }
       }
-      config={{
-        averageRate: {
-          label: "Average RPS",
-          color: "hsl(var(--chart-1))",
-        },
-      }}
+      // @ts-expect-error - maxLine is always sent but not always rendered, this is OK
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: v.date,
-          averageRate: Number(v.averageRate.toFixed(2)),
+          time: `${v.date}Z`,
+          averageRate: Number(Number(v.averageRate).toFixed(2)),
+          peakRPS: Number(v.peakRPS),
+          maxLine: props.currentRateLimit,
         }))}
       yAxis
       xAxis={{
         sameDay: true,
       }}
+      showLegend
       hideLabel={false}
       toolTipLabelFormatter={(label) => {
-        return formatDate(new Date(label), "MMM dd, HH:mm");
+        return formatDate(label, "MMM dd, HH:mm");
       }}
-      // only show the upper limit if the peak usage is greater than 80%
-      maxLimit={props.peakPercentage > 80 ? props.currentRateLimit : undefined}
       isPending={false}
     />
   );

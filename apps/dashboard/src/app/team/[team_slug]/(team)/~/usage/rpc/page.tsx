@@ -48,7 +48,7 @@ export default async function RPCUsage(props: {
   const { peakRate, totalCounts, averageRate } = apiData.data;
 
   // Calculate percentage of limit for the peak
-  const peakPercentage = (peakRate.peakRPS / currentRateLimit) * 100;
+  const peakPercentage = (Number(peakRate.peakRPS) / currentRateLimit) * 100;
 
   // Determine status based on peak percentage
   const getStatusColor = (percentage: number) => {
@@ -98,7 +98,7 @@ export default async function RPCUsage(props: {
           <CardContent>
             <div className="flex items-center justify-between">
               <div className="font-bold text-2xl">
-                {peakRate.peakRPS.toFixed(1)} RPS
+                {Number(peakRate.peakRPS)} RPS
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -114,7 +114,7 @@ export default async function RPCUsage(props: {
             <p className="mt-1 text-muted-foreground text-xs">
               <ClockIcon className="mr-1 inline h-3 w-3" />
               {peakRate.date
-                ? format(new Date(peakRate.date), "MMM d, HH:mm")
+                ? format(new Date(`${peakRate.date}Z`), "MMM d, HH:mm")
                 : "No Requests in last 24 hours"}
             </p>
           </CardContent>
@@ -177,9 +177,9 @@ export default async function RPCUsage(props: {
           <AlertTriangleIcon className="h-4 w-4" />
           <AlertTitle>Rate Limit Exceeded</AlertTitle>
           <AlertDescription>
-            Your peak usage of {peakRate.peakRPS.toFixed(1)} RPS has exceeded
-            your plan limit of {currentRateLimit} RPS. Consider upgrading your
-            plan to avoid rate limiting.
+            Your peak usage of {Number(peakRate.peakRPS)} RPS has exceeded your
+            plan limit of {currentRateLimit} RPS. Consider upgrading your plan
+            to avoid rate limiting.
           </AlertDescription>
         </Alert>
       )}

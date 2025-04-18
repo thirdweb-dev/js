@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,17 +30,18 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
     description?: string;
     titleClassName?: string;
   };
-  footer?: React.ReactNode;
   customHeader?: React.ReactNode;
   // chart config
   config: TConfig;
   data: Array<Record<keyof TConfig, number> & { time: number | string | Date }>;
   showLegend?: boolean;
-  maxLimit?: number;
+
   yAxis?: boolean;
   xAxis?: {
     sameDay?: boolean;
   };
+
+  variant?: "stacked" | "individual";
 
   // chart className
   chartClassName?: string;
@@ -77,17 +77,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
           ) : props.data.length === 0 ? (
             <EmptyChartState />
           ) : (
-            <AreaChart
-              accessibilityLayer
-              data={
-                props.maxLimit
-                  ? props.data.map((d) => ({
-                      ...d,
-                      maxLimit: props.maxLimit,
-                    }))
-                  : props.data
-              }
-            >
+            <AreaChart accessibilityLayer data={props.data}>
               <CartesianGrid vertical={false} />
               {props.yAxis && <YAxis tickLine={false} axisLine={false} />}
               <XAxis
@@ -136,26 +126,28 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                   </linearGradient>
                 ))}
               </defs>
-              {configKeys.map((key) => (
-                <Area
-                  key={key}
-                  dataKey={key}
-                  type="natural"
-                  fill={`url(#fill_${key})`}
-                  fillOpacity={0.4}
-                  stroke={`var(--color-${key})`}
-                  stackId="a"
-                />
-              ))}
-              {props.maxLimit && (
-                <Area
-                  type="monotone"
-                  dataKey="maxLimit"
-                  stroke="#ef4444"
-                  strokeWidth={2}
-                  strokeDasharray="5 5"
-                  fill="none"
-                />
+              {configKeys.map((key) =>
+                key === "maxLine" ? (
+                  <Area
+                    key={key}
+                    type="monotone"
+                    dataKey="maxLine"
+                    stroke="#ef4444"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    fill="none"
+                  />
+                ) : (
+                  <Area
+                    key={key}
+                    dataKey={key}
+                    type="natural"
+                    fill={`url(#fill_${key})`}
+                    fillOpacity={0.4}
+                    stroke={`var(--color-${key})`}
+                    stackId={props.variant !== "stacked" ? undefined : "a"}
+                  />
+                ),
               )}
 
               {props.showLegend && (
@@ -167,9 +159,6 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
           )}
         </ChartContainer>
       </CardContent>
-      {props.footer && (
-        <CardFooter className="w-full">{props.footer}</CardFooter>
-      )}
     </Card>
   );
 }

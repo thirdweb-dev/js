@@ -56,19 +56,20 @@ export const fetchRPCUsage = unstable_cache(
 type Last24HoursRPCUsageApiResponse = {
   peakRate: {
     date: string;
-    peakRPS: number;
+    peakRPS: string;
   };
   averageRate: {
     date: string;
-    averageRate: number;
-    includedCount: number;
-    rateLimitedCount: number;
-    overageCount: number;
+    averageRate: string;
+    peakRPS: string;
+    includedCount: string;
+    rateLimitedCount: string;
+    overageCount: string;
   }[];
   totalCounts: {
-    includedCount: number;
-    rateLimitedCount: number;
-    overageCount: number;
+    includedCount: string;
+    rateLimitedCount: string;
+    overageCount: string;
   };
 };
 
@@ -106,7 +107,7 @@ export const getLast24HoursRPCUsage = unstable_cache(
       data: resData.data as Last24HoursRPCUsageApiResponse,
     };
   },
-  ["rpc-usage-last-24-hours"],
+  ["rpc-usage-last-24-hours:v2"],
   {
     revalidate: 60, // 1 minute
   },

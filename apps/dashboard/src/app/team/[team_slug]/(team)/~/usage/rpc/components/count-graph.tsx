@@ -8,18 +8,20 @@ export function CountGraph(props: {
   currentRateLimit: number;
   data: {
     date: string;
-    includedCount: number;
-    overageCount: number;
-    rateLimitedCount: number;
+    includedCount: string;
+    overageCount: string;
+    rateLimitedCount: string;
   }[];
 }) {
-  const hasAnyRateLimited = props.data.some((v) => v.rateLimitedCount > 0);
+  const hasAnyRateLimited = props.data.some(
+    (v) => Number(v.rateLimitedCount) > 0,
+  );
   return (
     <ThirdwebAreaChart
       chartClassName="aspect-[1.5] lg:aspect-[4]"
       header={{
         title: "Requests Over Time",
-        description: "Requests over the last 24 hours. All times in UTC.",
+        description: "Requests over the last 24 hours.",
       }}
       config={
         hasAnyRateLimited
@@ -47,13 +49,13 @@ export function CountGraph(props: {
       }}
       hideLabel={false}
       toolTipLabelFormatter={(label) => {
-        return formatDate(new Date(label), "MMM dd, HH:mm");
+        return formatDate(label, "MMM dd, HH:mm");
       }}
       // @ts-expect-error - sending MORE data than expected is ok
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: v.date,
+          time: `${v.date}Z`,
           includedCount: Number(v.includedCount) + Number(v.overageCount),
           rateLimitedCount: Number(v.rateLimitedCount),
         }))}
