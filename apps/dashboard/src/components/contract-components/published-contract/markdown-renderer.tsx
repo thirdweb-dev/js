@@ -106,8 +106,10 @@ export const MarkdownRenderer: React.FC<{
           ),
 
           code: ({ ...props }) => {
-            if (props?.className) {
-              if (code?.disableCodeHighlight) {
+            const codeStr = onlyText(props.children);
+
+            if (props?.className || codeStr.length > 100) {
+              if (code?.disableCodeHighlight || !props.className) {
                 return (
                   <div className="my-4">
                     {/* @ts-expect-error - TODO: fix this */}

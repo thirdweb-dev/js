@@ -123,7 +123,7 @@ export function ChatSidebar(props: {
       </div>
 
       <div className="[&>*]:!w-full p-4">
-        <NebulaConnectWallet />
+        <NebulaConnectWallet detailsButtonClassName="!bg-background hover:!border-active-border" />
       </div>
     </div>
   );

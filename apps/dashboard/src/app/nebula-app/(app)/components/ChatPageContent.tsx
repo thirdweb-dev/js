@@ -251,6 +251,7 @@ export function ChatPageContent(props: {
           authToken: props.authToken,
           setMessages,
           contextFilters: contextFilters,
+          setContextFilters,
         });
       } catch (error) {
         if (abortController.signal.aborted) {
@@ -266,7 +267,14 @@ export function ChatPageContent(props: {
         setEnableAutoScroll(false);
       }
     },
-    [sessionId, contextFilters, props.authToken, messages.length, initSession],
+    [
+      sessionId,
+      contextFilters,
+      props.authToken,
+      messages.length,
+      initSession,
+      setContextFilters,
+    ],
   );
 
   const hasDoneAutoPrompt = useRef(false);
@@ -450,6 +458,7 @@ export async function handleNebulaPrompt(params: {
   authToken: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
   contextFilters: NebulaContext | undefined;
+  setContextFilters: (v: NebulaContext | undefined) => void;
 }) {
   const {
     abortController,
@@ -458,6 +467,7 @@ export async function handleNebulaPrompt(params: {
     authToken,
     setMessages,
     contextFilters,
+    setContextFilters,
   } = params;
   let requestIdForMessage = "";
 
@@ -547,6 +557,13 @@ export async function handleNebulaPrompt(params: {
             ];
           });
         }
+      }
+
+      if (res.event === "context") {
+        setContextFilters({
+          chainIds: res.data.chain_ids.map((x) => x.toString()),
+          walletAddress: res.data.wallet_address,
+        });
       }
     },
     context: contextFilters,

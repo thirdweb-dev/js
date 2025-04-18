@@ -1,7 +1,7 @@
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button } from "../../../../../@/components/ui/button";
 import type { NebulaContext } from "../../api/chat";
@@ -63,14 +63,16 @@ function FloatingChatContentLoggedIn(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
 
-  const contextFilters: NebulaContext = useMemo(() => {
+  const [contextFilters, setContextFilters] = useState<
+    NebulaContext | undefined
+  >(() => {
     return {
       chainIds:
         props.nebulaParams?.chainIds.map((chainId) => chainId.toString()) ||
         null,
       walletAddress: props.nebulaParams?.wallet || null,
     };
-  }, [props.nebulaParams]);
+  });
 
   const initSession = useCallback(async () => {
     const session = await createSession({
@@ -120,6 +122,7 @@ function FloatingChatContentLoggedIn(props: {
           authToken: props.authToken,
           setMessages,
           contextFilters: contextFilters,
+          setContextFilters: setContextFilters,
         });
       } catch (error) {
         if (abortController.signal.aborted) {
