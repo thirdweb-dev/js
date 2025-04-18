@@ -24,18 +24,18 @@ export function PageHeader(props: {
         {/* right */}
         <div className="flex flex-col gap-3 md:flex-row">
           <Button asChild>
-            <Link target="_blank" href={props.docsLink}>
-              <BookOpenIcon className="mr-2 h-4 w-4" />
-              Documentation
+            <Link
+              target="_blank"
+              href={"https://thirdweb.com/dashboard?utm_source=playground"}
+            >
+              <PresentationIcon className="mr-2 h-4 w-4" />
+              Add instantly
             </Link>
           </Button>
           <Button asChild variant="outline" className="bg-card">
-            <Link
-              target="_blank"
-              href="https://thirdweb.com/contact-us?utm_source=playground"
-            >
-              <PresentationIcon className="mr-2 h-4 w-4" />
-              Book a Demo
+            <Link target="_blank" href={props.docsLink}>
+              <BookOpenIcon className="mr-2 h-4 w-4" />
+              Documentation
             </Link>
           </Button>
         </div>
