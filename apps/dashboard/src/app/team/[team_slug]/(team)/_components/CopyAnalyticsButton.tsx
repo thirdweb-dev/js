@@ -5,11 +5,16 @@ interface ShareTwitterButtonProps {
   targetId: string; // This defines targetId as a required string
 }
 
+interface ShareStatus {
+  type: "error" | "success";
+  message: string;
+}
+
 export default function ShareTwitterButton({
   targetId,
 }: ShareTwitterButtonProps) {
   const [isSharing, setIsSharing] = useState(false);
-  const [shareStatus, setShareStatus] = useState(null);
+  const [shareStatus, setShareStatus] = useState<ShareStatus | null>(null);
 
   const handleShare = async () => {
     setIsSharing(true);
@@ -34,7 +39,8 @@ export default function ShareTwitterButton({
       const blob = await new Promise((resolve) => {
         canvas.toBlob(resolve, "image/png");
       });
-      const data = [new ClipboardItem({ "image/png": blob })];
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      const data = [new ClipboardItem({ "image/png": blob } as any)];
       await navigator.clipboard.write(data);
       // Also save image for manual sharing
       const dataUrl = canvas.toDataURL("image/png");
@@ -71,6 +77,7 @@ export default function ShareTwitterButton({
       viewBox="0 0 24 24"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
