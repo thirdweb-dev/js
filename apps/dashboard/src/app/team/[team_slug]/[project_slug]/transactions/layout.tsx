@@ -1,8 +1,10 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
+import { CloudIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Badge } from "../../../../../@/components/ui/badge";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../@/constants/env";
 
 export default async function Page(props: {
@@ -53,13 +55,19 @@ function TransactionsLayout(props: {
             <h1 className="mb-0.5 font-semibold text-2xl tracking-tight lg:text-3xl">
               Transactions
             </h1>
-            <Link
-              href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
-              target="_blank"
-              className="-translate-x-2 max-w-full truncate py-1 text-muted-foreground"
-            >
-              {THIRDWEB_ENGINE_CLOUD_URL}
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
+                target="_blank"
+                className="-translate-x-2 max-w-full truncate py-1 text-muted-foreground"
+              >
+                {THIRDWEB_ENGINE_CLOUD_URL}
+              </Link>
+              <Badge variant="success" className="flex items-center gap-2">
+                <CloudIcon className="h-4 w-4" />
+                Cloud
+              </Badge>
+            </div>
           </div>
         </div>
 

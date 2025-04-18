@@ -126,7 +126,7 @@ function TransactionAnalyticsSummaryUI(props: {
         isPending={props.isPending}
       />
       <StatCard
-        label="Total Gas Cost (ETH)"
+        label="Total Gas Spent (includes testnet)"
         // If pending, value doesn't matter much.
         // If not pending, pass the wei string `as any` if data exists, otherwise pass 0.
         // Passing 0 ensures StatCard receives a number if data is missing post-loading.
@@ -135,7 +135,7 @@ function TransactionAnalyticsSummaryUI(props: {
             ? undefined
             : parseTotalGasCost(props.data?.totalGasCostWei ?? "0")
         }
-        formatter={(v: number) => v.toFixed(12)}
+        formatter={(v: number) => `${v.toFixed(10)} ETH`}
         icon={CoinsIcon}
         // Pass the formatter that handles the type juggling
         isPending={props.isPending}
