@@ -76,10 +76,7 @@ export default async function TeamOverviewPage(props: {
       <div className="flex grow justify-end gap-10 md:container md:pt-8">
         <ShareTwitterButton targetId="analytics-content" />
       </div>
-      <div
-        id="analytics-content"
-        className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16"
-      >
+      <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
         <Suspense fallback={<GenericLoadingPage />}>
           <OverviewPageContent
             teamId={team.id}
@@ -172,7 +169,7 @@ async function OverviewPageContent(props: {
   return (
     <div className="flex grow flex-col gap-6">
       {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
-        <div className="">
+        <div className="" id="analytics-content">
           <UsersChartCard
             userStats={walletUserStatsTimeSeries}
             searchParams={searchParams}
