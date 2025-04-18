@@ -160,6 +160,11 @@ export function extractAuthorizationData(
     }
   }
 
+  let teamId: string | null = null;
+  if (getHeader(headers, "x-team-id")) {
+    teamId = getHeader(headers, "x-team-id");
+  }
+
   return {
     incomingServiceApiKey,
     incomingServiceApiKeyHash,
@@ -173,7 +178,7 @@ export function extractAuthorizationData(
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
-    teamId: authInput.teamId,
+    teamId: authInput.teamId ?? teamId ?? undefined,
     useWalletAuth,
   };
 }

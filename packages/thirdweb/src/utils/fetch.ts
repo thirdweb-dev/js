@@ -55,6 +55,10 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
         !isBundlerUrl(urlString)
       ) {
         headers.set("authorization", `Bearer ${authToken}`);
+        // if we have a specific teamId set, add it to the request headers
+        if (client.teamId) {
+          headers.set("x-team-id", client.teamId);
+        }
       } else if (secretKey) {
         headers.set("x-secret-key", secretKey);
       } else if (clientId) {
