@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.2
+
+### Patch Changes
+
+- [#6730](https://github.com/thirdweb-dev/js/pull/6730) [`ec099a7`](https://github.com/thirdweb-dev/js/commit/ec099a781a144dfbd5f7558228ce4371c00e9a06) Thanks [@arcoraven](https://github.com/arcoraven)! - Update rate limit to sliding window
+
 ## 0.9.1
 
 ### Patch Changes
