@@ -57,10 +57,7 @@ export type BuyDirectListingButtonProps = Omit<
  * Since it uses the TransactionButton, it can take in any props that can be passed
  * to the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton)
  *
- *
- * @param props
- * @returns <TransactionButton />
- *
+ * @param props props of type [BuyDirectListingButtonProps](https://portal.thirdweb.com/references/typescript/v5/BuyDirectListingButtonProps)
  * @example
  * ```tsx
  * import { BuyDirectListingButton } from "thirdweb/react";

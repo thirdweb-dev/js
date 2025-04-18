@@ -10,10 +10,11 @@ import type {
   DirectListing,
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
-import { useActiveAccount } from "thirdweb/react";
+import { BuyDirectListingButton, useActiveAccount } from "thirdweb/react";
 
 import { CodeClient } from "@/components/ui/code/code.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { toast } from "sonner";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
@@ -141,11 +142,6 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                   </GridItem>
                 </>
               )}
-
-              {/*
-                  Todo: Add a Buy button somewhere in this section once the Dashboard is fully migrated to v5 (?)
-                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5
-                */}
             </SimpleGrid>
           </Card>
           {data?.asset.metadata.properties ? (
@@ -167,6 +163,27 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             isAuction={renderData.type === "english-auction"}
             twAccount={twAccount}
           />
+        )}
+
+        {!isOwner && renderData.status === "ACTIVE" && (
+          <BuyDirectListingButton
+            listingId={renderData.id}
+            contractAddress={renderData.assetContractAddress}
+            chain={contract.chain}
+            client={contract.client}
+            className="w-full"
+            quantity={1n}
+            onError={(error) => {
+              toast.error("Failed to buy listing", {
+                description: error.message,
+              });
+            }}
+            onTransactionConfirmed={() => {
+              toast.success("Listing bought successfully");
+            }}
+          >
+            Buy Listing
+          </BuyDirectListingButton>
         )}
       </SheetContent>
     </Sheet>
