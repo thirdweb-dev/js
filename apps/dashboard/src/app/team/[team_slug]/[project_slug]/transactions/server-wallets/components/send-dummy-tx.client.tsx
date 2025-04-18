@@ -152,7 +152,7 @@ export default function SendDummyTx(props: {
                   </div>
                 </div>
                 <p className="text-sm text-warning-text">
-                  This action requries a project secret key and a wallet access
+                  This action requries a project secret key and a Vault access
                   token.
                 </p>
                 <Input
@@ -163,7 +163,7 @@ export default function SendDummyTx(props: {
                 />
                 <Input
                   type="password"
-                  placeholder="Enter your wallet access token"
+                  placeholder="Enter your Vault access token"
                   value={accessToken}
                   onChange={(e) => setAccessToken(e.target.value)}
                 />

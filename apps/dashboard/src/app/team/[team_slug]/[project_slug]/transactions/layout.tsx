@@ -1,8 +1,9 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TabPathLinks } from "@/components/ui/tabs";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../@/constants/env";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -52,14 +53,13 @@ function TransactionsLayout(props: {
             <h1 className="mb-0.5 font-semibold text-2xl tracking-tight lg:text-3xl">
               Transactions
             </h1>
-            <CopyTextButton
-              textToShow={`https://wallet.thirdweb.com/${props.clientId}`} // TODO: change this
-              textToCopy={`https://wallet.thirdweb.com/${props.clientId}`} // TODO: change this
-              tooltip="Copy Wallet Link" // TODO: change this
-              copyIconPosition="right"
-              variant="ghost"
+            <Link
+              href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
+              target="_blank"
               className="-translate-x-2 max-w-full truncate py-1 text-muted-foreground"
-            />
+            >
+              {THIRDWEB_ENGINE_CLOUD_URL}
+            </Link>
           </div>
         </div>
 
