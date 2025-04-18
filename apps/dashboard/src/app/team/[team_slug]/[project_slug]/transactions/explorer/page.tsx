@@ -1,3 +1,16 @@
+"use client";
+import { ApiReferenceReact } from "@scalar/api-reference-react";
+import "@scalar/api-reference-react/style.css";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+
 export default function TransactionsExplorerPage() {
-  return <div>Explorer</div>;
+  return (
+    <div>
+      <ApiReferenceReact
+        configuration={{
+          url: `${THIRDWEB_ENGINE_CLOUD_URL}/openapi`,
+        }}
+      />
+    </div>
+  );
 }

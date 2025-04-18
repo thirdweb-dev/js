@@ -4,8 +4,8 @@ import { TabPathLinks } from "@/components/ui/tabs";
 import { CloudIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Badge } from "../../../../../@/components/ui/badge";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../@/constants/env";
+import { Badge } from "@/components/ui/badge";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
