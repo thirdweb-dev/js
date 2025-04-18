@@ -16,26 +16,27 @@
 
 ### Phase 2 — Core Building‑Blocks
 
-- [ ] 4. **`ThirdwebClient` class** (core HTTP / RPC client)
-- [ ] 5. **`createThirdwebClient` helper & configuration schema**
-- [ ] 6. **`useActiveAccount` React hook**
-- [ ] 7. **Wallet connection React components (`ConnectButton`, etc.)**
-- [ ] 8. **Transaction helpers (`prepareContractCall`, `sendTransaction`, etc.)**
-- [ ] 9. **`Contract` abstraction & frequently‑used methods**
+- [x] 4. **`ThirdwebClient` type** (client object docs)
+- [x] 5. **`createThirdwebClient` helper & configuration schema**
+- [x] 6. **`useActiveAccount` React hook**
+- [x] 7. **Wallet connection React components (`ConnectButton`, etc.)**
+- [x] 8. **`PayEmbed` component (thirdweb Pay)**
+- [x] 9. **Transaction helpers (`prepareContractCall`, `sendTransaction`, `readContract`, etc.)**
+- [x] 10. **`Extensions` that implement standards like `ERC721`, `ERC1155`, `ERC20`, `ERC4337` & frequently‑used methods**
 
 ### Phase 3 — Supporting Modules
 
-- [ ] 10. **Storage / File upload APIs**
-- [ ] 11. **Auth module (`login`, `logout`, `validateSession`)**
-- [ ] 12. **Gas & Pay utilities**
-- [ ] 13. **Chain / Network constants & helpers**
-- [ ] 14. **Analytics / Insight utilities**
+- [ ] 12. **Storage / File upload APIs**
+- [ ] 13. **Auth module (`login`, `logout`, `validateSession`)**
+- [ ] 14. **Gas & Pay utilities**
+- [ ] 15. **Chain / Network constants & helpers**
+- [ ] 16. **Analytics / Insight utilities**
 
 ### Phase 4 — Reference & Indexes
 
-- [ ] 15. **Generate master index file listing all doc pages**
-- [ ] 16. **Write contribution guidelines for keeping docs up‑to‑date**
-- [ ] 17. **Quality pass: lint markdown, verify code samples compile**
+- [ ] 17. **Generate master index file listing all doc pages**
+- [ ] 18. **Write contribution guidelines for keeping docs up‑to‑date**
+- [ ] 19. **Quality pass: lint markdown, verify code samples compile**
 
 ---
 
