@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.3
+
+### Patch Changes
+
+- [#6764](https://github.com/thirdweb-dev/js/pull/6764) [`72875f9`](https://github.com/thirdweb-dev/js/commit/72875f9de5041a6423cfa3ac347bb033e3fbf523) Thanks [@jnsdls](https://github.com/jnsdls)! - add support for service-to-service api key authentication
+
 ## 0.9.2
 
 ### Patch Changes

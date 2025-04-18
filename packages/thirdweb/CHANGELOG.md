@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.95.1
+
+### Patch Changes
+
+- [#6765](https://github.com/thirdweb-dev/js/pull/6765) [`03e2385`](https://github.com/thirdweb-dev/js/commit/03e238515b59a0934f94c9a5d7b92c35d5dc0b5b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fallbacks for live NFT data cache miss
+
 ## 5.95.0
 
 ### Minor Changes
