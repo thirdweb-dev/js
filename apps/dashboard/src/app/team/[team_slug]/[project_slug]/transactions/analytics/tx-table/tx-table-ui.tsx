@@ -28,17 +28,17 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { ChainIconClient } from "../../../../../../../components/icons/ChainIcon";
 import type {
   Transaction,
-  TransactionsResponse,
   TransactionStatus,
+  TransactionsResponse,
 } from "./types";
 
 // TODO - add Status selector dropdown here
@@ -290,7 +290,7 @@ function TxChainCell(props: { chainId: string | undefined }) {
 
   return (
     <div className="flex items-center gap-2">
-      <ChainIcon className="size-5" ipfsSrc={chain.icon?.url} />
+      <ChainIconClient className="size-5" ipfsSrc={chain.icon?.url} />
       <div className="max-w-[150px] truncate">
         {chain.name ?? `Chain ID: ${chainId}`}
       </div>

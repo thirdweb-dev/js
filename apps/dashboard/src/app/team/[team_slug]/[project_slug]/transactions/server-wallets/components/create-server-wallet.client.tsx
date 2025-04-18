@@ -375,7 +375,9 @@ export default function CreateServerWallet(props: {
         className="flex flex-row items-center gap-2"
       >
         {isLoading && <Loader2 className="animate-spin" />}
-        Create Server Wallet
+        {props.managementAccessToken
+          ? "Create Server Wallet"
+          : "Create Vault Admin Keys"}
       </Button>
 
       <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
@@ -400,13 +402,15 @@ export default function CreateServerWallet(props: {
           ) : initialiseProjectWithVaultMutation.data ? (
             <div>
               <DialogHeader className="p-6">
-                <DialogTitle>Wallet Management Keys</DialogTitle>
+                <DialogTitle>Vault Management Keys</DialogTitle>
               </DialogHeader>
 
               <div className="space-y-6 p-6 pt-0">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="mb-2 font-medium text-sm">Admin Key</h3>
+                    <h3 className="mb-2 font-medium text-sm">
+                      Vault Admin Key
+                    </h3>
                     <div className="flex flex-col gap-2">
                       <CopyTextButton
                         textToCopy={
@@ -444,15 +448,15 @@ export default function CreateServerWallet(props: {
                         tooltip="Copy Rotation Code"
                       />
                       <p className="text-muted-foreground text-xs">
-                        This code is used to rotate your admin key in case you
-                        loose it.
+                        This code is used to revoke and recreate your Vault
+                        admin key if needed. Keep it safe.
                       </p>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="mb-2 font-medium text-sm">
-                      Wallet Access Token
+                      Vault Access Token
                     </h3>
                     <div className="flex flex-col gap-2 ">
                       <CopyTextButton
@@ -466,12 +470,12 @@ export default function CreateServerWallet(props: {
                             .userAccessToken.accessToken,
                         )}
                         copyIconPosition="right"
-                        tooltip="Copy Wallet Access Token"
+                        tooltip="Copy Vault Access Token"
                       />
                       <p className="text-muted-foreground text-xs">
-                        This access token is used to send transactions to the
-                        blockchain from your backend. Can be revoked and
-                        recreated with your admin key.
+                        This access token is used to sign transactions and
+                        messages from your backend. Can be revoked and recreated
+                        with your admin key.
                       </p>
                     </div>
                   </div>
