@@ -1,4 +1,3 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getFaucetClaimAmount } from "../../../../../../api/testnet-faucet/claim/claim-amount";
 import { ChainIcon } from "../../../../components/server/chain-icon";
@@ -8,9 +7,9 @@ import { SectionTitle } from "./SectionTitle";
 
 export async function FaucetSection(props: {
   chain: ChainMetadata;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
-  const { chain, twAccount } = props;
+  const { chain, isLoggedIn } = props;
 
   // Check eligibility.
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
@@ -47,7 +46,7 @@ export async function FaucetSection(props: {
           <FaucetButton
             chain={chain}
             amount={amountToGive}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         </div>
       </div>

@@ -2,7 +2,6 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { accountStub } from "../../../../stories/stubs";
 import { BadgeContainer } from "../../../../stories/utils";
 import {
   ExecuteTransactionCardLayout,
@@ -68,7 +67,6 @@ function Variant(props: {
         setStatus={setStatus}
         status={status}
         client={client}
-        twAccount={accountStub()}
         txData={{
           chainId: 1,
           to: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675", // thirdweb.eth

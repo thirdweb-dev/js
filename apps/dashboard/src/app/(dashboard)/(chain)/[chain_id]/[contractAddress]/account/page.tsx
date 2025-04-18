@@ -28,7 +28,7 @@ export default async function Page(props: {
       <AccountPageClient
         contract={contract}
         chainMetadata={chainMetadata}
-        twAccount={account}
+        isLoggedIn={!!account}
       />
     );
   }
@@ -44,7 +44,7 @@ export default async function Page(props: {
     <AccountPage
       contract={contract}
       chainMetadata={chainMetadata}
-      twAccount={account}
+      isLoggedIn={!!account}
       isInsightSupported={isInsightSupported}
     />
   );

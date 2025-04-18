@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
@@ -27,10 +26,10 @@ type PermissionFormContext = {
 
 export function Permissions({
   contract,
-  twAccount,
+  isLoggedIn,
 }: {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const trackEvent = useTrack();
   const account = useActiveAccount();
@@ -127,7 +126,7 @@ export function Permissions({
             Reset
           </Button>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             disabled={!form.formState.isDirty}

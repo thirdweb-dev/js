@@ -1,5 +1,4 @@
 "use client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -14,7 +13,7 @@ interface ContractTokenPageProps {
   isERC20: boolean;
   isMintToSupported: boolean;
   isClaimToSupported: boolean;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
@@ -22,7 +21,7 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   isERC20,
   isMintToSupported,
   isClaimToSupported,
-  twAccount,
+  isLoggedIn,
 }) => {
   if (!isERC20) {
     return (
@@ -52,13 +51,13 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
         <h2 className="font-semibold text-2xl tracking-tight">Tokens</h2>
         <div className="flex flex-col gap-3 md:flex-row">
           {isClaimToSupported && (
-            <TokenClaimButton contract={contract} twAccount={twAccount} />
+            <TokenClaimButton contract={contract} isLoggedIn={isLoggedIn} />
           )}
-          <TokenBurnButton contract={contract} twAccount={twAccount} />
-          <TokenAirdropButton contract={contract} twAccount={twAccount} />
-          <TokenTransferButton contract={contract} twAccount={twAccount} />
+          <TokenBurnButton contract={contract} isLoggedIn={isLoggedIn} />
+          <TokenAirdropButton contract={contract} isLoggedIn={isLoggedIn} />
+          <TokenTransferButton contract={contract} isLoggedIn={isLoggedIn} />
           {isMintToSupported && (
-            <TokenMintButton contract={contract} account={twAccount} />
+            <TokenMintButton contract={contract} isLoggedIn={isLoggedIn} />
           )}
         </div>
       </div>

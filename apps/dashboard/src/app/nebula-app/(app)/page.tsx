@@ -1,9 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { isAddress } from "thirdweb";
 import { fetchChain } from "../../../utils/fetchChain";
-import { getValidAccount } from "../../account/settings/getAccount";
-import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
+import { getNebulaAuthToken } from "../_utils/authToken";
 import { ChatPageContent } from "./components/ChatPageContent";
 
 export default async function Page(props: {
@@ -15,10 +14,9 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const [chainIds, authToken, account] = await Promise.all([
+  const [chainIds, authToken] = await Promise.all([
     getChainIds(searchParams.chain),
-    getAuthToken(),
-    getValidAccount(),
+    getNebulaAuthToken(),
   ]);
 
   if (!authToken) {
@@ -30,7 +28,6 @@ export default async function Page(props: {
       authToken={authToken}
       session={undefined}
       type="landing"
-      account={account}
       initialParams={{
         q: typeof searchParams.q === "string" ? searchParams.q : undefined,
         chainIds: chainIds,

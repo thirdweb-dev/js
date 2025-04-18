@@ -2,7 +2,6 @@
 
 import { InlineCode } from "@/components/ui/inline-code";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
@@ -12,12 +11,12 @@ interface ContractPermissionsPageProps {
   contract: ThirdwebContract;
   detectedPermissionEnumerable: boolean;
   chainSlug: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractPermissionsPage: React.FC<
   ContractPermissionsPageProps
-> = ({ contract, detectedPermissionEnumerable, chainSlug, twAccount }) => {
+> = ({ contract, detectedPermissionEnumerable, chainSlug, isLoggedIn }) => {
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -61,7 +60,7 @@ export const ContractPermissionsPage: React.FC<
 
   return (
     <Flex direction="column" gap={6}>
-      <Permissions contract={contract} twAccount={twAccount} />
+      <Permissions contract={contract} isLoggedIn={isLoggedIn} />
     </Flex>
   );
 };

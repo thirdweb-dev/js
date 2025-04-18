@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { PlusIcon } from "lucide-react";
@@ -23,7 +22,7 @@ interface CreateListingButtonProps {
   contract: ThirdwebContract;
   createText?: string;
   type?: "direct-listings" | "english-auctions";
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
   isInsightSupported: boolean;
 }
 
@@ -33,7 +32,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   createText = "Create",
   type,
   contract,
-  twAccount,
+  isLoggedIn,
   isInsightSupported,
   ...restButtonProps
 }) => {
@@ -77,7 +76,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
               />
               <div className="mt-5">
                 <CreateListingsForm
-                  twAccount={twAccount}
+                  isLoggedIn={isLoggedIn}
                   contract={contract}
                   type={type}
                   actionText={createText}
@@ -90,7 +89,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           ) : (
             <div className="mt-5">
               <CreateListingsForm
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
                 contract={contract}
                 type={type}
                 actionText={createText}

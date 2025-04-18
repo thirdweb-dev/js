@@ -8,7 +8,6 @@ import { BadgeContainer } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import type { TransactionError } from "../../../../../../../contexts/error-handler";
-import { accountStub } from "../../../../../../../stories/stubs";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,
@@ -85,7 +84,7 @@ function Component() {
 
         <BadgeContainer label="Default">
           <BatchMetadataModuleUI
-            twAccount={accountStub()}
+            isLoggedIn={true}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             uploadMetadata={uploadMetadataStub}

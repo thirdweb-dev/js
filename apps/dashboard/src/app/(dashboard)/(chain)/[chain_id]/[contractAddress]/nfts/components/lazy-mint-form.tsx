@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Accordion,
   AccordionButton,
@@ -42,14 +41,14 @@ type LazyMintNftFormParams = {
   contract: ThirdwebContract;
   isErc721: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 };
 
 export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   contract,
   isErc721,
   setOpen,
-  twAccount,
+  isLoggedIn,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -342,7 +341,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           Cancel
         </Button>
         <TransactionButton
-          twAccount={twAccount}
+          isLoggedIn={isLoggedIn}
           txChainID={contract.chain.id}
           transactionCount={1}
           isPending={sendAndConfirmTx.isPending}

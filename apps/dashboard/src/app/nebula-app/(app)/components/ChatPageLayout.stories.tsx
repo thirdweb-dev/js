@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
-import { accountStub, randomLorem } from "../../../../stories/stubs";
+import { randomLorem } from "../../../../stories/stubs";
 import type { TruncatedSessionInfo } from "../api/types";
 import { ChatPageLayout } from "./ChatPageLayout";
 
@@ -42,13 +42,6 @@ export const ThirtyChats: Story = {
   },
 };
 
-export const NoEmail: Story = {
-  args: {
-    sessions: generateRandomSessions(30),
-    noEmail: true,
-  },
-};
-
 function generateRandomSessions(count: number): TruncatedSessionInfo[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i.toString(),
@@ -60,20 +53,12 @@ function generateRandomSessions(count: number): TruncatedSessionInfo[] {
 
 function Variant(props: {
   sessions: TruncatedSessionInfo[];
-  noEmail?: boolean;
 }) {
   return (
     <ChatPageLayout
       accountAddress="0xC569B9FD77d132e10954cA5E6EF617414e314b11"
       authToken="xxxxx"
       sessions={props.sessions}
-      account={accountStub(
-        props.noEmail
-          ? {
-              email: undefined,
-            }
-          : undefined,
-      )}
     >
       <div className="flex h-full w-full items-center justify-center">
         CHILDREN

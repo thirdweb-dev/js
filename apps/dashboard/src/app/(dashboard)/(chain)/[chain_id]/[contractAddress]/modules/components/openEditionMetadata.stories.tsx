@@ -6,7 +6,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { BadgeContainer } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { accountStub } from "../../../../../../../stories/stubs";
 import {
   OpenEditionMetadataModuleUI,
   type SetSharedMetadataFormValues,
@@ -87,7 +86,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
-            twAccount={accountStub()}
+            isLoggedIn={true}
           />
         </BadgeContainer>
       </div>

@@ -2,24 +2,23 @@
 
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Button } from "@/components/ui/button";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyStateChatPageContent } from "../(app)/components/EmptyStateChatPageContent";
 import { NebulaIcon } from "../(app)/icons/NebulaIcon";
-import { LoginAndOnboardingPageContent } from "../../login/LoginPage";
+import { NebulaLoginPage } from "./NebulaConnectEmbedLogin";
 
-export function NebulaLoginPage(props: {
-  account: Account | undefined;
+export function NebulaLoggedOutStatePage(props: {
   params: {
     chain: string | string[] | undefined;
     q: string | undefined;
     wallet: string | undefined;
   };
+  hasAuthToken: boolean;
 }) {
   const [message, setMessage] = useState<string | undefined>(props.params.q);
   const [showPage, setShowPage] = useState<"connect" | "welcome">(
-    props.account ? "connect" : "welcome",
+    props.hasAuthToken ? "connect" : "welcome",
   );
 
   const redirectPathObj = {
@@ -48,14 +47,17 @@ export function NebulaLoginPage(props: {
       {/* nav */}
       <header className="border-b bg-card">
         <div className="container flex items-center justify-between p-4">
-          <NebulaIcon className="size-8 shrink-0 text-foreground" />
+          <div className="flex shrink-0 items-center gap-2 ">
+            <NebulaIcon className="size-7 text-foreground" />
+            <span className="font-bold text-xl tracking-tight">Nebula</span>
+          </div>
 
           <div className="flex items-center gap-6">
             <ToggleThemeButton />
 
             <Link
               href="https://thirdweb.com/support"
-              className="text-muted-foreground text-sm hover:text-foreground"
+              className="hidden text-muted-foreground text-sm hover:text-foreground lg:block"
               target="_blank"
             >
               Support
@@ -63,7 +65,7 @@ export function NebulaLoginPage(props: {
 
             <Link
               href="https://portal.thirdweb.com/"
-              className="text-muted-foreground text-sm hover:text-foreground"
+              className="hidden text-muted-foreground text-sm hover:text-foreground lg:block"
               target="_blank"
             >
               Docs
@@ -79,11 +81,7 @@ export function NebulaLoginPage(props: {
       </header>
 
       {showPage === "connect" && (
-        <LoginAndOnboardingPageContent
-          loginWithInAppWallet={false}
-          account={props.account}
-          redirectPath={`/?${redirectPathParams}`}
-        />
+        <NebulaLoginPage redirectPath={`/?${redirectPathParams}`} />
       )}
 
       {showPage === "welcome" && (

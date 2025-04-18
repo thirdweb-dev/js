@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { voteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
 import { Divider, Flex, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import { useMemo } from "react";
@@ -14,12 +13,12 @@ import { ProposalButton } from "./components/proposal-button";
 
 interface ProposalsPageProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const address = useActiveAccount()?.address;
   const proposalsQuery = useReadContract(VoteExt.getAll, {
@@ -45,8 +44,8 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <Heading size="title.sm">Proposals</Heading>
         <div className="flex flex-col flex-wrap gap-3 md:flex-row">
-          <DelegateButton contract={contract} twAccount={twAccount} />
-          <ProposalButton contract={contract} twAccount={twAccount} />
+          <DelegateButton contract={contract} isLoggedIn={isLoggedIn} />
+          <ProposalButton contract={contract} isLoggedIn={isLoggedIn} />
         </div>
       </div>
       <div className="flex flex-col gap-4">
@@ -55,7 +54,7 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
             key={proposal.proposalId.toString()}
             contract={contract}
             proposal={proposal}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         ))}
         <Divider />

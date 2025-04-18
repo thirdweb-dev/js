@@ -32,7 +32,7 @@ export default async function Page(props: {
       <TokenIdPageClient
         contract={contract}
         tokenId={params.tokenId}
-        twAccount={account}
+        isLoggedIn={!!account}
       />
     );
   }
@@ -48,7 +48,7 @@ export default async function Page(props: {
       contract={contract}
       isErc721={supportedERCs.isERC721}
       tokenId={params.tokenId}
-      twAccount={account}
+      isLoggedIn={!!account}
     />
   );
 }

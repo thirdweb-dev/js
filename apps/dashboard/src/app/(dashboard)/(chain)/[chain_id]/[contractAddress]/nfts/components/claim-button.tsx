@@ -8,7 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -27,7 +26,7 @@ const CLAIM_FORM_ID = "nft-claim-form";
 
 interface NFTClaimButtonProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 /**
@@ -36,7 +35,7 @@ interface NFTClaimButtonProps {
  */
 export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -108,7 +107,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         </form>
         <div className="mt-4 flex justify-end">
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}

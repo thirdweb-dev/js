@@ -9,7 +9,6 @@ import { isAddress, isContractDeployed } from "thirdweb/utils";
 import type { MinimalTeamsAndProjects } from "../../../../../components/contract-components/contract-deploy-form/add-to-project-card";
 import { resolveFunctionSelectors } from "../../../../../lib/selectors";
 import { shortenIfAddress } from "../../../../../utils/usedapp-external";
-import { getRawAccount } from "../../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -48,9 +47,8 @@ export default async function Layout(props: {
     notFound();
   }
 
-  const [authToken, account, accountAddress] = await Promise.all([
+  const [authToken, accountAddress] = await Promise.all([
     getAuthToken(),
-    getRawAccount(),
     getAuthTokenWalletAddress(),
   ]);
 
@@ -118,7 +116,6 @@ The following is the user's message:`;
     >
       <NebulaFloatingChatButton
         authToken={authToken ?? undefined}
-        account={account}
         label="Ask AI about this contract"
         client={client}
         nebulaParams={{

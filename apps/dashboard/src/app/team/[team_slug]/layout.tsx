@@ -1,5 +1,9 @@
 import { getTeamBySlug } from "@/api/team";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { OpCreditsGrantedModalWrapperServer } from "../../../components/onboarding/OpCreditsGrantedModalWrapperServer";
+import { PosthogIdentifierServer } from "../../../components/wallets/PosthogIdentifierServer";
+import { EnsureValidConnectedWalletLoginServer } from "../../components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { isTeamOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 import {
@@ -37,6 +41,16 @@ export default async function RootTeamLayout(props: {
       </div>
 
       <SaveLastVisitedTeamPage />
+
+      <Suspense fallback={null}>
+        <OpCreditsGrantedModalWrapperServer />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EnsureValidConnectedWalletLoginServer />
+      </Suspense>
+      <Suspense fallback={null}>
+        <PosthogIdentifierServer />
+      </Suspense>
     </div>
   );
 }

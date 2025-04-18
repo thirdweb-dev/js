@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -83,7 +82,7 @@ export function OpenEditionMetadataModuleUI(
     isOwnerAccount: boolean;
     setSharedMetadata: (values: SetSharedMetadataFormValues) => Promise<void>;
     contractChainId: number;
-    twAccount: Account | undefined;
+    isLoggedIn: boolean;
   },
 ) {
   return (
@@ -99,7 +98,7 @@ export function OpenEditionMetadataModuleUI(
               <SetSharedMetadataSection
                 setSharedMetadata={props.setSharedMetadata}
                 contractChainId={props.contractChainId}
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
               />
             )}
             {!props.isOwnerAccount && (
@@ -121,7 +120,7 @@ export function OpenEditionMetadataModuleUI(
 function SetSharedMetadataSection(props: {
   setSharedMetadata: (values: SetSharedMetadataFormValues) => Promise<void>;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const form = useForm<SetSharedMetadataFormValues>({
     resolver: zodResolver(setSharedMetadataFormSchema),
@@ -219,7 +218,7 @@ function SetSharedMetadataSection(props: {
               isPending={setSharedMetadataMutation.isPending}
               transactionCount={1}
               txChainID={props.contractChainId}
-              twAccount={props.twAccount}
+              isLoggedIn={props.isLoggedIn}
             >
               Update
             </TransactionButton>

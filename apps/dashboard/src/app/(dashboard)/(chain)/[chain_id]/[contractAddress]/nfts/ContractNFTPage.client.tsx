@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { RedirectToContractOverview } from "../_components/redirect-contract-overview.client";
@@ -9,7 +8,7 @@ import { ContractNFTPage } from "./ContractNFTPage";
 
 export function ContractNFTPageClient(props: {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -32,7 +31,7 @@ export function ContractNFTPageClient(props: {
       contract={props.contract}
       isErc721={supportedERCs.isERC721}
       functionSelectors={functionSelectors}
-      twAccount={props.twAccount}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

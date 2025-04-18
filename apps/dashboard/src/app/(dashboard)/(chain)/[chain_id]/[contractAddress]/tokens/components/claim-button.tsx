@@ -9,7 +9,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -29,14 +28,14 @@ import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TokenClaimButtonProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const CLAIM_FORM_ID = "token-claim-form";
 
 export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
   ...restButtonProps
 }) => {
   const [open, setOpen] = useState(false);
@@ -93,7 +92,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={CLAIM_FORM_ID}

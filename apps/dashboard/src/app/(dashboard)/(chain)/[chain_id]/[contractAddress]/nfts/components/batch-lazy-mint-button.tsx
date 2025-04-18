@@ -9,7 +9,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -24,14 +23,14 @@ interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;
   contract: ThirdwebContract;
   isErc721: boolean;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   contract,
   canCreateDelayedRevealBatch,
   isErc721,
-  twAccount,
+  isLoggedIn,
 }) => {
   const trackEvent = useTrack();
   const [open, setOpen] = useState(false);
@@ -68,7 +67,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             <SheetTitle className="text-left">Upload NFTs</SheetTitle>
           </SheetHeader>
           <BatchLazyMint
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             chainId={contract.chain.id}
             onSubmit={async ({ revealType, data }) => {
               // nice, we can set up everything the same for both the only thing that changes is the action string

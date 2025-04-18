@@ -3,8 +3,7 @@ import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
-import { ipAddress } from "@vercel/functions";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
   GenerateLoginPayloadParams,
@@ -12,6 +11,7 @@ import type {
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
 import { isVercel } from "../../lib/vercel-utils";
+import { verifyTurnstileToken } from "./verifyTurnstileToken";
 
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
@@ -54,73 +54,11 @@ export async function doLogin(
       };
     }
 
-    // get the request headers
-    const requestHeaders = await headers();
-    if (!requestHeaders) {
-      return {
-        error: "Failed to get request headers. Please try again.",
-      };
-    }
-    // CF header, fallback to req.ip, then X-Forwarded-For
-    const [ip, errors] = (() => {
-      let ip: string | null = null;
-      const errors: string[] = [];
-      try {
-        ip = requestHeaders.get("CF-Connecting-IP") || null;
-      } catch (err) {
-        console.error("failed to get IP address from CF-Connecting-IP", err);
-        errors.push("failed to get IP address from CF-Connecting-IP");
-      }
-      if (!ip) {
-        try {
-          ip = ipAddress(requestHeaders) || null;
-        } catch (err) {
-          console.error(
-            "failed to get IP address from ipAddress() function",
-            err,
-          );
-          errors.push("failed to get IP address from ipAddress() function");
-        }
-      }
-      if (!ip) {
-        try {
-          ip = requestHeaders.get("X-Forwarded-For");
-        } catch (err) {
-          console.error("failed to get IP address from X-Forwarded-For", err);
-          errors.push("failed to get IP address from X-Forwarded-For");
-        }
-      }
-      return [ip, errors];
-    })();
-
-    if (!ip) {
-      return {
-        error: "Could not get IP address. Please try again.",
-        context: errors,
-      };
-    }
-
-    // https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
-    // Validate the token by calling the "/siteverify" API endpoint.
-    const result = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        body: JSON.stringify({
-          secret: process.env.TURNSTILE_SECRET_KEY,
-          response: turnstileToken,
-          remoteip: ip,
-        }),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    const outcome = await result.json();
-    if (!outcome.success) {
+    const result = await verifyTurnstileToken(turnstileToken);
+    if (!result.success) {
       return {
         error: "Invalid captcha. Please try again.",
+        context: result.context,
       };
     }
   }

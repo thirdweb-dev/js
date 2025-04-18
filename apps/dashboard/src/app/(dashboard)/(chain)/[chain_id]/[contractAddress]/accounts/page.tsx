@@ -24,7 +24,7 @@ export default async function Page(props: {
   const account = await getRawAccount();
 
   if (chainMetadata.chainId === localhost.id) {
-    return <AccountsPageClient contract={contract} twAccount={account} />;
+    return <AccountsPageClient contract={contract} isLoggedIn={!!account} />;
   }
 
   const { isAccountFactory } = await getContractPageMetadata(contract);
@@ -33,5 +33,5 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <AccountsPage contract={contract} twAccount={account} />;
+  return <AccountsPage contract={contract} isLoggedIn={!!account} />;
 }

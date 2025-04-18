@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
@@ -11,7 +10,7 @@ import { AccountPage } from "./AccountPage";
 export function AccountPageClient(props: {
   contract: ThirdwebContract;
   chainMetadata: ChainMetadata;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -31,7 +30,7 @@ export function AccountPageClient(props: {
     <AccountPage
       contract={props.contract}
       chainMetadata={props.chainMetadata}
-      twAccount={props.twAccount}
+      isLoggedIn={props.isLoggedIn}
       isInsightSupported={metadataQuery.data.isInsightSupported}
     />
   );

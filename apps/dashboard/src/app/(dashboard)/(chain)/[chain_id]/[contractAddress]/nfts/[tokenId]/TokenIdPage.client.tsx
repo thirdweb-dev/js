@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ErrorPage, LoadingPage } from "../../_components/page-skeletons";
 import { RedirectToContractOverview } from "../../_components/redirect-contract-overview.client";
@@ -10,7 +9,7 @@ import { TokenIdPage } from "./token-id";
 export function TokenIdPageClient(props: {
   contract: ThirdwebContract;
   tokenId: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const { contract } = props;
   const metadataQuery = useContractPageMetadata(props.contract);
@@ -34,7 +33,7 @@ export function TokenIdPageClient(props: {
       contract={contract}
       isErc721={supportedERCs.isERC721}
       tokenId={props.tokenId}
-      twAccount={props.twAccount}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

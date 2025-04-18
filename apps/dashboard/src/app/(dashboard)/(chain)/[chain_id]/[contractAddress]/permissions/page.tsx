@@ -27,7 +27,7 @@ export default async function Page(props: {
       <ContractPermissionsPageClient
         contract={contract}
         chainMetadata={info.chainMetadata}
-        twAccount={account}
+        isLoggedIn={!!account}
       />
     );
   }
@@ -40,7 +40,7 @@ export default async function Page(props: {
       contract={contract}
       chainSlug={info.chainMetadata.slug}
       detectedPermissionEnumerable={isPermissionsEnumerableSupported}
-      twAccount={account}
+      isLoggedIn={!!account}
     />
   );
 }

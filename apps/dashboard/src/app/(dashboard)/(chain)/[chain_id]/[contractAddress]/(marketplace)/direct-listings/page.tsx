@@ -24,7 +24,7 @@ export default async function Page(props: {
     return (
       <ContractDirectListingsPageClient
         contract={info.contract}
-        twAccount={account}
+        isLoggedIn={!!account}
       />
     );
   }
@@ -39,7 +39,7 @@ export default async function Page(props: {
   return (
     <ContractDirectListingsPage
       contract={info.contract}
-      twAccount={account}
+      isLoggedIn={!!account}
       isInsightSupported={isInsightSupported}
     />
   );

@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading, TrackedLinkButton } from "tw-components";
@@ -10,12 +9,12 @@ import { CreateAccountButton } from "./components/create-account-button";
 
 interface AccountsPageProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const AccountsPage: React.FC<AccountsPageProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   return (
     <Flex direction="column" gap={6}>
@@ -40,7 +39,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           >
             View Documentation
           </TrackedLinkButton>
-          <CreateAccountButton contract={contract} twAccount={twAccount} />
+          <CreateAccountButton contract={contract} isLoggedIn={isLoggedIn} />
         </ButtonGroup>
       </Flex>
       <AccountsCount contract={contract} />

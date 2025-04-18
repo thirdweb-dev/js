@@ -23,7 +23,7 @@ export default async function Page(props: {
   const account = await getRawAccount();
 
   if (chainMetadata.chainId === localhost.id) {
-    return <ClaimConditionsClient contract={contract} twAccount={account} />;
+    return <ClaimConditionsClient contract={contract} isLoggedIn={!!account} />;
   }
 
   const {
@@ -40,7 +40,7 @@ export default async function Page(props: {
     <ClaimConditions
       contract={contract}
       isERC20={supportedERCs.isERC20}
-      twAccount={account}
+      isLoggedIn={!!account}
       isMultiphase={true}
     />
   );

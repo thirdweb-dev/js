@@ -5,13 +5,9 @@ import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import { Suspense } from "react";
-import { OpCreditsGrantedModalWrapperServer } from "../components/onboarding/OpCreditsGrantedModalWrapperServer";
-import { PosthogIdentifierServer } from "../components/wallets/PosthogIdentifierServer";
 import { PHProvider } from "../lib/posthog/Posthog";
 import { PosthogHeadSetup } from "../lib/posthog/PosthogHeadSetup";
 import { PostHogPageView } from "../lib/posthog/PosthogPageView";
-import { EnsureValidConnectedWalletLoginServer } from "./components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { AppRouterProviders } from "./providers";
 
 const fontSans = Inter({
@@ -75,18 +71,7 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <AppRouterProviders>
-            {children}
-            <Suspense fallback={null}>
-              <OpCreditsGrantedModalWrapperServer />
-            </Suspense>
-            <Suspense fallback={null}>
-              <EnsureValidConnectedWalletLoginServer />
-            </Suspense>
-            <Suspense fallback={null}>
-              <PosthogIdentifierServer />
-            </Suspense>
-          </AppRouterProviders>
+          <AppRouterProviders>{children}</AppRouterProviders>
           <DashboardRouterTopProgressBar />
           <NextTopLoader
             color="hsl(var(--foreground))"

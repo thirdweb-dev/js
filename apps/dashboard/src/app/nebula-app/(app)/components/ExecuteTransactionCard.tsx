@@ -3,7 +3,6 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   ArrowRightLeftIcon,
   CircleCheckIcon,
@@ -49,14 +48,12 @@ export type TxStatus =
 
 export function ExecuteTransactionCard(props: {
   txData: NebulaTxData;
-  twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
   const [status, setStatus] = useState<TxStatus>({ type: "idle" });
   return (
     <ExecuteTransactionCardLayout
       txData={props.txData}
-      twAccount={props.twAccount}
       client={props.client}
       status={status}
       setStatus={setStatus}
@@ -66,7 +63,6 @@ export function ExecuteTransactionCard(props: {
 
 export function ExecuteTransactionCardLayout(props: {
   txData: NebulaTxData;
-  twAccount: TWAccount;
   client: ThirdwebClient;
   status: TxStatus;
   setStatus: (status: TxStatus) => void;
@@ -288,7 +284,7 @@ export function ExecuteTransactionCardLayout(props: {
               }
             }}
             className="gap-2"
-            twAccount={props.twAccount}
+            isLoggedIn={true}
           >
             <ArrowRightLeftIcon className="size-4" />
             Execute Transaction

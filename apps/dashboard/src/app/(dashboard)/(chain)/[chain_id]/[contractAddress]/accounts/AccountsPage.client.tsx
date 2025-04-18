@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { RedirectToContractOverview } from "../_components/redirect-contract-overview.client";
@@ -9,7 +8,7 @@ import { AccountsPage } from "./AccountsPage";
 
 export function AccountsPageClient(props: {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -25,5 +24,7 @@ export function AccountsPageClient(props: {
     return <RedirectToContractOverview contract={props.contract} />;
   }
 
-  return <AccountsPage contract={props.contract} twAccount={props.twAccount} />;
+  return (
+    <AccountsPage contract={props.contract} isLoggedIn={props.isLoggedIn} />
+  );
 }

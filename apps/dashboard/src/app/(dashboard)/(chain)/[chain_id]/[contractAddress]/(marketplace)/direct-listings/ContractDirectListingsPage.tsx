@@ -1,19 +1,18 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { CreateListingButton } from "../components/list-button";
 import { DirectListingsTable } from "./components/table";
 
 interface ContractDirectListingsPageProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
   isInsightSupported: boolean;
 }
 
 export const ContractDirectListingsPage: React.FC<
   ContractDirectListingsPageProps
-> = ({ contract, twAccount, isInsightSupported }) => {
+> = ({ contract, isLoggedIn, isInsightSupported }) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-row items-center justify-between">
@@ -26,12 +25,12 @@ export const ContractDirectListingsPage: React.FC<
             contract={contract}
             type="direct-listings"
             createText="Create Direct Listing"
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         </div>
       </div>
 
-      <DirectListingsTable contract={contract} twAccount={twAccount} />
+      <DirectListingsTable contract={contract} isLoggedIn={isLoggedIn} />
     </div>
   );
 };

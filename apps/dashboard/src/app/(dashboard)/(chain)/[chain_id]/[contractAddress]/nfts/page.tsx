@@ -23,7 +23,7 @@ export default async function Page(props: {
 
   const { contract } = info;
   if (contract.chain.id === localhost.id) {
-    return <ContractNFTPageClient contract={contract} twAccount={account} />;
+    return <ContractNFTPageClient contract={contract} isLoggedIn={!!account} />;
   }
 
   const { supportedERCs, functionSelectors } =
@@ -38,7 +38,7 @@ export default async function Page(props: {
       contract={contract}
       isErc721={supportedERCs.isERC721}
       functionSelectors={functionSelectors}
-      twAccount={account}
+      isLoggedIn={!!account}
     />
   );
 }

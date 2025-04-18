@@ -24,7 +24,7 @@ export default async function Page(props: {
 
   if (contract.chain.id === localhost.id) {
     return (
-      <ContractSplitPageClient contract={contract} twAccount={twAccount} />
+      <ContractSplitPageClient contract={contract} isLoggedIn={!!twAccount} />
     );
   }
 
@@ -34,5 +34,5 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractSplitPage contract={contract} twAccount={twAccount} />;
+  return <ContractSplitPage contract={contract} isLoggedIn={!!twAccount} />;
 }

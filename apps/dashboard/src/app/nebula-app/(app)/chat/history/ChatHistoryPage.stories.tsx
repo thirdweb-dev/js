@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { subDays } from "date-fns";
 import { ThirdwebProvider } from "thirdweb/react";
-import { accountStub, randomLorem } from "../../../../../stories/stubs";
+import { randomLorem } from "../../../../../stories/stubs";
 import { ChatPageLayout } from "../../components/ChatPageLayout";
 import { ChatHistoryPageUI } from "./ChatHistoryPage";
 
@@ -73,7 +73,6 @@ function Variant(props: {
 }) {
   return (
     <ChatPageLayout
-      account={accountStub()}
       accountAddress="0x1234567890"
       authToken="xxxxxxxx"
       sessions={createRandomSessions(props.length)}

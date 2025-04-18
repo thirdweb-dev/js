@@ -1,5 +1,4 @@
 "use client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import * as CommonExt from "thirdweb/extensions/common";
@@ -14,7 +13,7 @@ interface ContractSettingsPageProps {
   isPrimarySaleSupported: boolean;
   isRoyaltiesSupported: boolean;
   isPlatformFeesSupported: boolean;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
@@ -23,7 +22,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   isPrimarySaleSupported,
   isRoyaltiesSupported,
   isPlatformFeesSupported,
-  twAccount,
+  isLoggedIn,
 }) => {
   return (
     <Flex direction="column" gap={4}>
@@ -33,7 +32,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
             <GridItem order={isContractMetadataSupported ? 0 : 100}>
               <SettingsMetadata
                 contract={contract}
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
                 detectedState={
                   isContractMetadataSupported ? "enabled" : "disabled"
                 }
@@ -45,7 +44,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsPrimarySale
                 contract={contract}
                 detectedState={isPrimarySaleSupported ? "enabled" : "disabled"}
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
               />
             </GridItem>
           )}
@@ -55,7 +54,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsRoyalties
                 contract={contract}
                 detectedState={isRoyaltiesSupported ? "enabled" : "disabled"}
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
               />
             </GridItem>
           )}
@@ -65,7 +64,7 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
               <SettingsPlatformFees
                 contract={contract}
                 detectedState={isPlatformFeesSupported ? "enabled" : "disabled"}
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
               />
             </GridItem>
           )}
@@ -78,10 +77,11 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
 export function ContractSettingsPage(props: {
   contract: ThirdwebContract;
   functionSelectors: string[];
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
   hasDefaultFeeConfig: boolean;
 }) {
-  const { functionSelectors, contract, twAccount, hasDefaultFeeConfig } = props;
+  const { functionSelectors, contract, isLoggedIn, hasDefaultFeeConfig } =
+    props;
   return (
     <ContractSettingsPageInner
       contract={contract}
@@ -104,7 +104,7 @@ export function ContractSettingsPage(props: {
           CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
         ].every(Boolean)
       }
-      twAccount={twAccount}
+      isLoggedIn={isLoggedIn}
     />
   );
 }

@@ -25,7 +25,7 @@ export default async function Page(props: {
     return (
       <ContractEnglishAuctionsPageClient
         contract={info.contract}
-        twAccount={twAccount}
+        isLoggedIn={!!twAccount}
       />
     );
   }
@@ -40,7 +40,7 @@ export default async function Page(props: {
   return (
     <ContractEnglishAuctionsPage
       contract={info.contract}
-      twAccount={twAccount}
+      isLoggedIn={!!twAccount}
       isInsightSupported={isInsightSupported}
     />
   );

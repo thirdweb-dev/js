@@ -7,7 +7,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Textarea } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -22,14 +21,14 @@ import { Button, FormErrorMessage, FormLabel } from "tw-components";
 
 interface VoteButtonProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const PROPOSAL_FORM_ID = "proposal-form-id";
 
 export const ProposalButton: React.FC<VoteButtonProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const [open, setOpen] = useState(false);
   const sendTx = useSendAndConfirmTransaction();
@@ -107,7 +106,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({
             Cancel
           </Button>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             isPending={sendTx.isPending}

@@ -14,7 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import * as Sentry from "@sentry/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -44,7 +43,7 @@ type ModuleCardProps = {
     version?: string;
     publisher?: string;
   }[];
-  twAccount: TWAccount | undefined;
+  isLoggedIn: boolean;
 };
 
 export function ModuleCard(props: ModuleCardProps) {
@@ -108,7 +107,7 @@ export function ModuleCard(props: ModuleCardProps) {
           )}
         >
           <ModuleInstance
-            twAccount={props.twAccount}
+            isLoggedIn={props.isLoggedIn}
             contract={contract}
             contractInfo={{
               name: contractInfo.name,
@@ -161,7 +160,7 @@ export function ModuleCard(props: ModuleCardProps) {
               </Button>
 
               <TransactionButton
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
                 txChainID={contract.chain.id}
                 transactionCount={1}
                 isPending={uninstallMutation.isPending}

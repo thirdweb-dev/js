@@ -4,7 +4,6 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ExternalLinkIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import {
@@ -24,7 +23,6 @@ const LazyFloatingChatContent = lazy(() => import("./FloatingChatContent"));
 export function NebulaFloatingChatButton(props: {
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
-  account: Account | undefined;
   label: string;
   client: ThirdwebClient;
   nebulaParams:
@@ -74,7 +72,6 @@ export function NebulaFloatingChatButton(props: {
         isOpen={isOpen}
         hasBeenOpened={hasBeenOpened}
         authToken={props.authToken}
-        account={props.account}
         client={props.client}
         nebulaParams={props.nebulaParams}
         examplePrompts={props.examplePrompts}
@@ -88,7 +85,6 @@ function NebulaChatUIContainer(props: {
   isOpen: boolean;
   hasBeenOpened: boolean;
   authToken: string | undefined;
-  account: Account | undefined;
   examplePrompts: ExamplePrompt[];
   client: ThirdwebClient;
   nebulaParams:
@@ -158,7 +154,6 @@ function NebulaChatUIContainer(props: {
           >
             <LazyFloatingChatContent
               authToken={props.authToken}
-              account={props.account}
               client={props.client}
               nebulaParams={props.nebulaParams}
               key={nebulaSessionKey}

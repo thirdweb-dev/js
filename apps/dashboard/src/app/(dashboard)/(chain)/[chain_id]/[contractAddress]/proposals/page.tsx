@@ -23,7 +23,7 @@ export default async function Page(props: {
   const { contract } = info;
   if (contract.chain.id === localhost.id) {
     return (
-      <ContractProposalsPageClient contract={contract} twAccount={account} />
+      <ContractProposalsPageClient contract={contract} isLoggedIn={!!account} />
     );
   }
 
@@ -33,5 +33,5 @@ export default async function Page(props: {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractProposalsPage contract={contract} twAccount={account} />;
+  return <ContractProposalsPage contract={contract} isLoggedIn={!!account} />;
 }

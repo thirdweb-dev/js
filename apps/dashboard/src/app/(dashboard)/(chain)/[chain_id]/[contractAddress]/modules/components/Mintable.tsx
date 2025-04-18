@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -192,7 +191,7 @@ export function MintableModuleUI(
     name: string;
     isBatchMetadataInstalled: boolean;
     contractChainId: number;
-    twAccount: Account | undefined;
+    isLoggedIn: boolean;
   },
 ) {
   return (
@@ -211,7 +210,7 @@ export function MintableModuleUI(
               <AccordionContent className="px-1">
                 {props.isOwnerAccount && (
                   <MintNFTSection
-                    twAccount={props.twAccount}
+                    isLoggedIn={props.isLoggedIn}
                     mint={props.mint}
                     name={props.name}
                     isBatchMetadataInstalled={props.isBatchMetadataInstalled}
@@ -242,7 +241,7 @@ export function MintableModuleUI(
                   primarySaleRecipient={props.primarySaleRecipient}
                   update={props.updatePrimaryRecipient}
                   contractChainId={props.contractChainId}
-                  twAccount={props.twAccount}
+                  isLoggedIn={props.isLoggedIn}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -262,7 +261,7 @@ function PrimarySalesSection(props: {
   update: (values: UpdateFormValues) => Promise<void>;
   isOwnerAccount: boolean;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const form = useForm<UpdateFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -312,7 +311,7 @@ function PrimarySalesSection(props: {
 
         <div className="mt-4 flex justify-end">
           <TransactionButton
-            twAccount={props.twAccount}
+            isLoggedIn={props.isLoggedIn}
             size="sm"
             className="min-w-24"
             disabled={updateMutation.isPending || !props.isOwnerAccount}
@@ -340,7 +339,7 @@ function MintNFTSection(props: {
   name: string;
   isBatchMetadataInstalled: boolean;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -524,7 +523,7 @@ function MintNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
-              twAccount={props.twAccount}
+              isLoggedIn={props.isLoggedIn}
               size="sm"
               className="min-w-24"
               disabled={mintMutation.isPending}

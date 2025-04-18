@@ -35,9 +35,7 @@ export function mobileViewport(
   };
 }
 
-export function storybookLog(
-  ...mesages: (string | object | number | boolean)[]
-) {
+export function storybookLog(...mesages: unknown[]) {
   console.debug(
     "%cStorybook",
     "color: white; background-color: black; padding: 2px 4px; border-radius: 4px;",

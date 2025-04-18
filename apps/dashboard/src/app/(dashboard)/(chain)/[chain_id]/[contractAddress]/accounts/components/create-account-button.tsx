@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
@@ -14,12 +13,12 @@ import {
 
 interface CreateAccountButtonProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
   ...restButtonProps
 }) => {
   const sendTxMutation = useSendAndConfirmTransaction();
@@ -62,7 +61,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   return (
     <TransactionButton
-      twAccount={twAccount}
+      isLoggedIn={isLoggedIn}
       txChainID={contract.chain.id}
       onClick={() => {
         const tx = ERC4337Ext.createAccount({

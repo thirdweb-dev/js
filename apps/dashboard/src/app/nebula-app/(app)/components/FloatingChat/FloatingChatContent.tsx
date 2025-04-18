@@ -1,4 +1,3 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,7 +18,6 @@ import type { ChatMessage } from "../Chats";
 
 export default function FloatingChatContent(props: {
   authToken: string | undefined;
-  account: Account | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
   nebulaParams:
@@ -30,14 +28,13 @@ export default function FloatingChatContent(props: {
       }
     | undefined;
 }) {
-  if (!props.account || !props.authToken) {
+  if (!props.authToken) {
     return <LoggedOutStateChatContent />;
   }
 
   return (
     <FloatingChatContentLoggedIn
       authToken={props.authToken}
-      account={props.account}
       client={props.client}
       nebulaParams={props.nebulaParams}
       examplePrompts={props.examplePrompts}
@@ -47,7 +44,6 @@ export default function FloatingChatContent(props: {
 
 function FloatingChatContentLoggedIn(props: {
   authToken: string;
-  account: Account;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
   nebulaParams:
@@ -165,7 +161,6 @@ function FloatingChatContentLoggedIn(props: {
           authToken={props.authToken}
           sessionId={sessionId}
           className="min-w-0 pb-10"
-          twAccount={props.account}
           client={props.client}
           enableAutoScroll={enableAutoScroll}
           setEnableAutoScroll={setEnableAutoScroll}

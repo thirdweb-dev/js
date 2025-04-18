@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -167,7 +166,7 @@ export function RoyaltyModuleUI(
     ) => Promise<void>;
     setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
     contractChainId: number;
-    twAccount: Account | undefined;
+    isLoggedIn: boolean;
   },
 ) {
   return (
@@ -186,7 +185,7 @@ export function RoyaltyModuleUI(
                 <RoyaltyInfoPerTokenSection
                   setRoyaltyInfoForToken={props.setRoyaltyInfoForToken}
                   contractChainId={props.contractChainId}
-                  twAccount={props.twAccount}
+                  isLoggedIn={props.isLoggedIn}
                 />
               ) : (
                 <Alert variant="info">
@@ -209,7 +208,7 @@ export function RoyaltyModuleUI(
                   update={props.setDefaultRoyaltyInfo}
                   defaultRoyaltyInfo={props.defaultRoyaltyInfo}
                   contractChainId={props.contractChainId}
-                  twAccount={props.twAccount}
+                  isLoggedIn={props.isLoggedIn}
                 />
               ) : (
                 <Alert variant="info">
@@ -232,7 +231,7 @@ export function RoyaltyModuleUI(
                   update={props.setTransferValidator}
                   transferValidator={props.transferValidator}
                   contractChainId={props.contractChainId}
-                  twAccount={props.twAccount}
+                  isLoggedIn={props.isLoggedIn}
                 />
               ) : (
                 <Alert variant="info">
@@ -269,7 +268,7 @@ export type RoyaltyInfoFormValues = z.infer<typeof royaltyInfoFormSchema>;
 function RoyaltyInfoPerTokenSection(props: {
   setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const form = useForm<RoyaltyInfoFormValues>({
     resolver: zodResolver(royaltyInfoFormSchema),
@@ -349,7 +348,7 @@ function RoyaltyInfoPerTokenSection(props: {
 
           <div className="mt-4 flex justify-end">
             <TransactionButton
-              twAccount={props.twAccount}
+              isLoggedIn={props.isLoggedIn}
               size="sm"
               className="min-w-24"
               disabled={setRoyaltyInfoForTokenMutation.isPending}
@@ -383,7 +382,7 @@ function DefaultRoyaltyInfoSection(props: {
   defaultRoyaltyInfo?: readonly [string, number];
   update: (values: DefaultRoyaltyFormValues) => Promise<void>;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const [defaultRoyaltyRecipient, defaultRoyaltyPercentage] =
     props.defaultRoyaltyInfo || [];
@@ -460,7 +459,7 @@ function DefaultRoyaltyInfoSection(props: {
               transactionCount={1}
               isPending={updateMutation.isPending}
               txChainID={props.contractChainId}
-              twAccount={props.twAccount}
+              isLoggedIn={props.isLoggedIn}
             >
               Update
             </TransactionButton>
@@ -483,7 +482,7 @@ function TransferValidatorSection(props: {
   transferValidator: string | undefined;
   update: (values: TransferValidatorFormValues) => Promise<void>;
   contractChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const form = useForm<TransferValidatorFormValues>({
     resolver: zodResolver(transferValidatorFormSchema),
@@ -531,7 +530,7 @@ function TransferValidatorSection(props: {
 
         <div className="mt-4 flex justify-end">
           <TransactionButton
-            twAccount={props.twAccount}
+            isLoggedIn={props.isLoggedIn}
             size="sm"
             className="min-w-24 gap-2"
             disabled={updateMutation.isPending}

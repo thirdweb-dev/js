@@ -1,6 +1,4 @@
 "use client";
-
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import {
   isClaimToSupported,
@@ -12,7 +10,7 @@ import { ContractTokensPage } from "./ContractTokensPage";
 
 export function ContractTokensPageClient(props: {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -32,7 +30,7 @@ export function ContractTokensPageClient(props: {
       isERC20={supportedERCs.isERC20}
       isMintToSupported={isMintToSupported(functionSelectors)}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
-      twAccount={props.twAccount}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

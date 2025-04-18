@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { LoadingPage } from "../_components/page-skeletons";
@@ -10,13 +9,13 @@ import { ContractExplorerPage } from "./ContractExplorerPage";
 interface ContractExplorePageProps {
   contract: ThirdwebContract;
   chainMetadata: ChainMetadata;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractExplorerPageClient: React.FC<ContractExplorePageProps> = ({
   contract,
   chainMetadata,
-  twAccount,
+  isLoggedIn,
 }) => {
   const abiQuery = useResolveContractABI(contract);
 
@@ -29,7 +28,7 @@ export const ContractExplorerPageClient: React.FC<ContractExplorePageProps> = ({
       abi={abiQuery.data}
       contract={contract}
       chainMetadata={chainMetadata}
-      twAccount={twAccount}
+      isLoggedIn={isLoggedIn}
     />
   );
 };

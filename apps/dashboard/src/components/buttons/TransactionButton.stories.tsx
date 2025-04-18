@@ -14,7 +14,6 @@ import { useMutation } from "@tanstack/react-query";
 import { StarIcon } from "lucide-react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { accountStub } from "../../stories/stubs";
 import { BadgeContainer } from "../../stories/utils";
 import { TransactionButton } from "./TransactionButton";
 
@@ -202,7 +201,7 @@ function Variant(props: {
         transactionCount={props.transactionCount}
         txChainID={props.chainId}
         size={props.size}
-        twAccount={props.isLoggedIn ? accountStub() : undefined}
+        isLoggedIn={props.isLoggedIn}
       >
         {props.children || "Execute Tx"}
       </TransactionButton>

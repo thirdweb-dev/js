@@ -2,7 +2,6 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { UserXIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { getInstalledModules, owner } from "thirdweb/modules";
@@ -12,12 +11,12 @@ import { InstallModuleForm } from "./components/ModuleForm";
 
 interface ContractEditModulesPageProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractEditModulesPage: React.FC<
   ContractEditModulesPageProps
-> = ({ contract, twAccount }) => {
+> = ({ contract, isLoggedIn }) => {
   const account = useActiveAccount();
 
   const installedModulesQuery = useReadContract(getInstalledModules, {
@@ -68,7 +67,7 @@ export const ContractEditModulesPage: React.FC<
           </div>
           <div className="h-10" />
           <InstallModuleForm
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             contract={contract}
             refetchModules={() => installedModulesQuery.refetch()}
             account={account}
@@ -100,7 +99,7 @@ export const ContractEditModulesPage: React.FC<
         refetchModules={() => installedModulesQuery.refetch()}
         contract={contract}
         ownerAccount={isOwner ? account : undefined}
-        twAccount={twAccount}
+        isLoggedIn={isLoggedIn}
       />
     </div>
   );

@@ -26,7 +26,7 @@ export default async function Page(props: {
   if (contract.chain.id === localhost.id) {
     const account = await getRawAccount();
     return (
-      <ContractSettingsPageClient contract={contract} twAccount={account} />
+      <ContractSettingsPageClient contract={contract} isLoggedIn={!!account} />
     );
   }
 
@@ -46,7 +46,7 @@ export default async function Page(props: {
     <ContractSettingsPage
       contract={info.contract}
       functionSelectors={metadata.functionSelectors}
-      twAccount={account}
+      isLoggedIn={!!account}
       hasDefaultFeeConfig={hasDefaultFeeConfig}
     />
   );

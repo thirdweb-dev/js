@@ -48,7 +48,7 @@ export default function ContextFiltersButton(props: {
       <DialogTrigger asChild>
         <Button size="sm" variant="outline" className="max-w-full gap-2">
           <SlidersHorizontalIcon className="size-3.5 shrink-0 text-muted-foreground" />
-          Context
+          Settings
           <div className="flex gap-1 overflow-hidden">
             {chainIds && chainIds.length > 0 && (
               <Badge className="gap-1 truncate" variant="secondary">
@@ -159,8 +159,8 @@ export function ContextFiltersForm(props: {
     const promise = updateMutation.mutateAsync(data);
 
     toast.promise(promise, {
-      success: "Context updated",
-      error: "Failed to update context",
+      success: "Settings updated",
+      error: "Failed to update settings",
     });
 
     promise.then(() => {

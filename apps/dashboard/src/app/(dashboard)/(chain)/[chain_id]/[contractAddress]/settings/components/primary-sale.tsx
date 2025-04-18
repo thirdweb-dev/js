@@ -1,6 +1,5 @@
 "use client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
@@ -38,11 +37,11 @@ const CommonPrimarySaleSchema = z.object({
 export const SettingsPrimarySale = ({
   contract,
   detectedState,
-  twAccount,
+  isLoggedIn,
 }: {
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) => {
   const address = useActiveAccount()?.address;
   const trackEvent = useTrack();
@@ -144,7 +143,7 @@ export const SettingsPrimarySale = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             disabled={query.isPending || !form.formState.isDirty}

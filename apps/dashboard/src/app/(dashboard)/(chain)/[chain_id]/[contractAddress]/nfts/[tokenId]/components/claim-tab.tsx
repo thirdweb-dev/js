@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -15,13 +14,13 @@ import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 interface ClaimTabProps {
   contract: ThirdwebContract;
   tokenId: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
   contract,
   tokenId,
-  twAccount,
+  isLoggedIn,
 }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
@@ -125,12 +124,12 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
         </Flex>
 
         <TransactionButton
+          isLoggedIn={isLoggedIn}
           txChainID={contract.chain.id}
           transactionCount={1}
           isPending={form.formState.isSubmitting}
           type="submit"
           className="self-end"
-          twAccount={twAccount}
         >
           Claim
         </TransactionButton>

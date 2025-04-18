@@ -9,7 +9,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -29,14 +28,14 @@ import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TokenTransferButtonProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const TRANSFER_FORM_ID = "token-transfer-form";
 
 export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
@@ -103,7 +102,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
           <TransactionButton
             txChainID={contract.chain.id}
             transactionCount={1}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             form={TRANSFER_FORM_ID}
             isPending={sendConfirmation.isPending}
             type="submit"

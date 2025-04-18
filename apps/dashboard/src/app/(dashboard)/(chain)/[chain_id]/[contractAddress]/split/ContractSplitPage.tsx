@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Flex,
@@ -38,12 +37,12 @@ export type Balance = {
 
 interface SplitPageProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractSplitPage: React.FC<SplitPageProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const address = useActiveAccount()?.address;
   const { idToChain } = useAllChainsData();
@@ -115,7 +114,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
             }
             balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             contract={contract}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         </Flex>
       </Flex>

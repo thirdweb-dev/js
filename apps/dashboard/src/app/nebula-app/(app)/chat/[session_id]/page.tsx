@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
-import { getValidAccount } from "../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
+import { getNebulaAuthToken } from "../../../_utils/authToken";
 import { getSessionById } from "../../api/session";
 import { ChatPageContent } from "../../components/ChatPageContent";
 
@@ -12,15 +11,14 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const pagePath = `/chat/${params.session_id}`;
-  const authToken = await getAuthToken();
-  const account = await getValidAccount();
+  const authToken = await getNebulaAuthToken();
 
   if (!authToken) {
     loginRedirect(pagePath);
   }
 
   const session = await getSessionById({
-    authToken,
+    authToken: authToken,
     sessionId: params.session_id,
   }).catch(() => undefined);
 
@@ -33,7 +31,6 @@ export default async function Page(props: {
       authToken={authToken}
       session={session}
       type="new-chat"
-      account={account}
       initialParams={undefined}
     />
   );

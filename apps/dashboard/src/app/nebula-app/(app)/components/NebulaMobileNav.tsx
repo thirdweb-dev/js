@@ -7,7 +7,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,7 +17,6 @@ import { ChatSidebar } from "./ChatSidebar";
 export function MobileNav(props: {
   sessions: TruncatedSessionInfo[];
   authToken: string;
-  account: Account;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const newChatPage = useNewChatPageLink();
@@ -55,7 +53,6 @@ export function MobileNav(props: {
             type="mobile"
             authToken={props.authToken}
             sessions={props.sessions}
-            account={props.account}
           />
         </SheetContent>
       </Sheet>

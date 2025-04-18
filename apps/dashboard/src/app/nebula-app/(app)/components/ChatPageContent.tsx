@@ -9,7 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -28,7 +27,6 @@ export function ChatPageContent(props: {
   session: SessionInfo | undefined;
   authToken: string;
   type: "landing" | "new-chat";
-  account: Account;
   initialParams:
     | {
         q: string | undefined;
@@ -334,7 +332,6 @@ export function ChatPageContent(props: {
                 authToken={props.authToken}
                 sessionId={sessionId}
                 className="min-w-0 pt-6 pb-32"
-                twAccount={props.account}
                 client={client}
                 enableAutoScroll={enableAutoScroll}
                 setEnableAutoScroll={setEnableAutoScroll}

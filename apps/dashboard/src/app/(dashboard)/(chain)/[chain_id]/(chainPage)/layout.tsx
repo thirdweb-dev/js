@@ -19,7 +19,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { mapV4ChainToV5Chain } from "../../../../../contexts/map-chains";
-import { getRawAccount } from "../../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -61,10 +60,9 @@ export default async function ChainPageLayout(props: {
 }) {
   const params = await props.params;
   const { children } = props;
-  const [chain, authToken, account, accountAddress] = await Promise.all([
+  const [chain, authToken, accountAddress] = await Promise.all([
     getChain(params.chain_id),
     getAuthToken(),
-    getRawAccount(),
     getAuthTokenWalletAddress(),
   ]);
 
@@ -100,7 +98,6 @@ The following is the user's message:
     <>
       <NebulaFloatingChatButton
         authToken={authToken ?? undefined}
-        account={account}
         label="Ask AI about this chain"
         client={client}
         nebulaParams={{

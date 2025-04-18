@@ -1,4 +1,3 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
@@ -16,14 +15,14 @@ interface NftOverviewPageProps {
   isErc721: boolean;
   tokenId?: string;
   functionSelectors: string[];
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
   isErc721,
   functionSelectors,
-  twAccount,
+  isLoggedIn,
 }) => {
   const isERC721ClaimToSupported =
     ERC721Ext.isClaimToSupported(functionSelectors);
@@ -63,38 +62,38 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <h2 className="font-semibold text-2xl tracking-tight">NFTs</h2>
         <div className="grid grid-cols-2 gap-2 md:flex">
           {isRevealable && (
-            <NFTRevealButton contract={contract} twAccount={twAccount} />
+            <NFTRevealButton contract={contract} isLoggedIn={isLoggedIn} />
           )}
           {isERC721ClaimToSupported && (
             /**
              * This button is used for claiming NFT Drop contract (erc721) only!
              * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
              */
-            <NFTClaimButton contract={contract} twAccount={twAccount} />
+            <NFTClaimButton contract={contract} isLoggedIn={isLoggedIn} />
           )}
           {isMintToSupported && (
             <NFTMintButton
               contract={contract}
               isErc721={isErc721}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           )}
           {isSetSharedMetadataSupported && (
             <NFTSharedMetadataButton
               contract={contract}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           )}
           {isLazyMintable && (
             <NFTLazyMintButton
               contract={contract}
               isErc721={isErc721}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           )}
           {isLazyMintable && (
             <BatchLazyMintButton
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
               canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
               isErc721={isErc721}
               contract={contract}

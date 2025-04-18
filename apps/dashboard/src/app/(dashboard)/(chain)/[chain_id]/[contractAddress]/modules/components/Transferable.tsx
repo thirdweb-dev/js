@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -137,7 +136,7 @@ export function TransferableModuleUI(
     isOwnerAccount: boolean;
     update: (values: TransferableModuleFormValues) => Promise<void>;
     contractChainId: number;
-    twAccount: Account | undefined;
+    isLoggedIn: boolean;
   },
 ) {
   const form = useForm<TransferableModuleFormValues>({
@@ -200,7 +199,7 @@ export function TransferableModuleUI(
                   (props.isRestricted ? 0 : 1) + allowListLength
                 }
                 txChainID={props.contractChainId}
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
               >
                 Update
               </TransactionButton>

@@ -27,7 +27,10 @@ export default async function Page(props: {
 
   if (info.contract.chain.id === localhost.id) {
     return (
-      <ContractTokensPageClient contract={info.contract} twAccount={account} />
+      <ContractTokensPageClient
+        contract={info.contract}
+        isLoggedIn={!!account}
+      />
     );
   }
 
@@ -41,7 +44,7 @@ export default async function Page(props: {
       isERC20={supportedERCs.isERC20}
       isMintToSupported={isMintToSupported(functionSelectors)}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
-      twAccount={account}
+      isLoggedIn={!!account}
     />
   );
 }

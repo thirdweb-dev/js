@@ -1,7 +1,7 @@
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { accountStub, randomLorem } from "../../../../stories/stubs";
+import { randomLorem } from "../../../../stories/stubs";
 import { BadgeContainer } from "../../../../stories/utils";
 import { type ChatMessage, Chats } from "./Chats";
 
@@ -199,7 +199,6 @@ function Story() {
             authToken="xxxxx"
             isChatStreaming={false}
             sessionId="xxxxx"
-            twAccount={accountStub()}
             messages={[
               {
                 text: randomLorem(40),
@@ -223,7 +222,6 @@ function Story() {
             authToken="xxxxx"
             isChatStreaming={false}
             sessionId="xxxxx"
-            twAccount={accountStub()}
             messages={[
               {
                 text: responseWithCodeMarkdown,
@@ -255,7 +253,6 @@ function Variant(props: {
         authToken="xxxxx"
         isChatStreaming={false}
         sessionId="xxxxx"
-        twAccount={accountStub()}
         messages={props.messages}
       />
     </BadgeContainer>

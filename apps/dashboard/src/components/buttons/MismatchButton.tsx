@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/popover";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -78,14 +77,14 @@ function useIsNetworkMismatch(txChainId: number) {
 
 type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   txChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 };
 
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { txChainId, twAccount, ...buttonProps } = props;
+  const { txChainId, isLoggedIn, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -110,19 +109,7 @@ export const MismatchButton = forwardRef<
   const eventRef =
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
 
-  if (!twAccount) {
-    return (
-      <Button className={props.className} size={props.size} asChild>
-        <Link
-          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-        >
-          Sign in
-        </Link>
-      </Button>
-    );
-  }
-
-  if (!wallet || !chainId) {
+  if (!wallet || !chainId || !isLoggedIn) {
     return (
       <Button className={props.className} size={props.size} asChild>
         <Link
@@ -222,7 +209,7 @@ export const MismatchButton = forwardRef<
           dialogCloseClassName="focus:ring-0"
         >
           <DynamicHeight>
-            {dialog === "no-funds" && twAccount && (
+            {dialog === "no-funds" && (
               <NoFundsDialogContent
                 chain={activeWalletChain}
                 openPayModal={() => {
@@ -234,7 +221,7 @@ export const MismatchButton = forwardRef<
                   setDialog("pay");
                 }}
                 onCloseModal={() => setDialog(undefined)}
-                twAccount={twAccount}
+                isLoggedIn={props.isLoggedIn}
               />
             )}
 
@@ -294,7 +281,7 @@ function NoFundsDialogContent(props: {
   chain: Chain;
   openPayModal: () => void;
   onCloseModal: () => void;
-  twAccount: Account;
+  isLoggedIn: boolean;
 }) {
   const chainWithServiceInfoQuery = useQuery({
     queryKey: ["chain-with-services", props.chain.id],
@@ -351,7 +338,7 @@ function NoFundsDialogContent(props: {
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
               <GetFundsFromFaucet
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
                 chain={chainWithServiceInfoQuery.data}
               />
             ) : chainWithServiceInfoQuery.data.services.find(
@@ -392,7 +379,7 @@ function NoFundsDialogContent(props: {
 
 function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
-  twAccount: Account;
+  isLoggedIn: boolean;
 }) {
   const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
@@ -424,7 +411,7 @@ function GetFundsFromFaucet(props: {
         <FaucetButton
           chain={props.chain}
           amount={amountToGive}
-          twAccount={props.twAccount}
+          isLoggedIn={props.isLoggedIn}
         />
       </div>
     </div>

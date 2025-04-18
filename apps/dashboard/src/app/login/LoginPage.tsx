@@ -139,7 +139,7 @@ function LoginPageContainer(props: {
   );
 }
 
-export function LoginAndOnboardingPageContent(props: {
+function LoginAndOnboardingPageContent(props: {
   redirectPath: string;
   account: Account | undefined;
   loginWithInAppWallet: boolean;

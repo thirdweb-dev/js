@@ -3,7 +3,6 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
 import {
   AlertCircleIcon,
@@ -49,7 +48,6 @@ export function Chats(props: {
   authToken: string;
   sessionId: string | undefined;
   className?: string;
-  twAccount: TWAccount;
   client: ThirdwebClient;
   setEnableAutoScroll: (enable: boolean) => void;
   enableAutoScroll: boolean;
@@ -170,7 +168,6 @@ export function Chats(props: {
                           ) : message.type === "send_transaction" ? (
                             <ExecuteTransactionCardWithFallback
                               txData={message.data}
-                              twAccount={props.twAccount}
                               client={props.client}
                             />
                           ) : (
@@ -208,7 +205,6 @@ export function Chats(props: {
 
 function ExecuteTransactionCardWithFallback(props: {
   txData: NebulaTxData | null;
-  twAccount: TWAccount;
   client: ThirdwebClient;
 }) {
   if (!props.txData) {
@@ -220,13 +216,7 @@ function ExecuteTransactionCardWithFallback(props: {
     );
   }
 
-  return (
-    <ExecuteTransactionCard
-      txData={props.txData}
-      twAccount={props.twAccount}
-      client={props.client}
-    />
-  );
+  return <ExecuteTransactionCard txData={props.txData} client={props.client} />;
 }
 
 function MessageActions(props: {

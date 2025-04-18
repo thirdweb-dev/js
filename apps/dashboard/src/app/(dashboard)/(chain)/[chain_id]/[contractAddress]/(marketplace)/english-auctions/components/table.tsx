@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -13,14 +12,14 @@ import { MarketplaceTable } from "../../components/marketplace-table";
 
 interface EnglishAuctionsTableProps {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const getAllQueryResult = useReadContract(getAllAuctions, {
@@ -37,7 +36,7 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
 
   return (
     <MarketplaceTable
-      twAccount={twAccount}
+      isLoggedIn={isLoggedIn}
       contract={contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}

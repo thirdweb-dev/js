@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   tokensDelegated,
   votingTokenDecimals,
@@ -35,13 +34,13 @@ const ProposalStateToMetadataMap: Record<
 interface IProposal {
   proposal: VoteExt.ProposalItem;
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const Proposal: React.FC<IProposal> = ({
   proposal,
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const account = useActiveAccount();
   const hasVotedQuery = useReadContract(VoteExt.hasVoted, {
@@ -138,7 +137,7 @@ export const Proposal: React.FC<IProposal> = ({
       tokensDelegatedQuery.data ? (
         <div className="mt-6 flex gap-2">
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
@@ -152,7 +151,7 @@ export const Proposal: React.FC<IProposal> = ({
             </div>
           </TransactionButton>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}
@@ -167,7 +166,7 @@ export const Proposal: React.FC<IProposal> = ({
             </div>
           </TransactionButton>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"
             transactionCount={1}

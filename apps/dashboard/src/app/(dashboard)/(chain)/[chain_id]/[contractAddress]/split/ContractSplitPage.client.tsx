@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebContract } from "thirdweb";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { RedirectToContractOverview } from "../_components/redirect-contract-overview.client";
@@ -9,7 +8,7 @@ import { ContractSplitPage } from "./ContractSplitPage";
 
 export function ContractSplitPageClient(props: {
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -26,6 +25,9 @@ export function ContractSplitPageClient(props: {
   }
 
   return (
-    <ContractSplitPage contract={props.contract} twAccount={props.twAccount} />
+    <ContractSplitPage
+      contract={props.contract}
+      isLoggedIn={props.isLoggedIn}
+    />
   );
 }

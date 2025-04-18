@@ -2,7 +2,6 @@
 
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -17,7 +16,7 @@ interface ResetClaimEligibilityProps {
   isErc20: boolean;
   contract: ThirdwebContract;
   tokenId?: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
   isMultiphase: boolean;
 }
 
@@ -25,7 +24,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   contract,
   tokenId,
   isErc20,
-  twAccount,
+  isLoggedIn,
   isMultiphase,
 }) => {
   const trackEvent = useTrack();
@@ -95,7 +94,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   return (
     <AdminOnly contract={contract} fallback={<div className="pb-5" />}>
       <TransactionButton
-        twAccount={twAccount}
+        isLoggedIn={isLoggedIn}
         transactionCount={1}
         type="button"
         isPending={sendTxMutation.isPending}

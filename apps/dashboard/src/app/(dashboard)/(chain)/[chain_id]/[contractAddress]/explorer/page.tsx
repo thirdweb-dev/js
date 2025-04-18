@@ -28,7 +28,7 @@ export default async function Page(props: {
       <ContractExplorerPageClient
         contract={contract}
         chainMetadata={chainMetadata}
-        twAccount={account}
+        isLoggedIn={!!account}
       />
     );
   }
@@ -40,7 +40,7 @@ export default async function Page(props: {
       contract={contract}
       abi={abi}
       chainMetadata={chainMetadata}
-      twAccount={account}
+      isLoggedIn={!!account}
     />
   );
 }

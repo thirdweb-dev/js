@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../../stories/utils";
+import { BadgeContainer, storybookLog } from "../../../../stories/utils";
 import type { NebulaContext } from "../api/chat";
 import ContextFiltersButton from "./ContextFilters";
 
@@ -74,7 +74,7 @@ function Variant(props: {
         contextFilters={contextFilters}
         setContextFilters={setContextFilters}
         updateContextFilters={async (values) => {
-          console.log("Updating context", values);
+          storybookLog("Updating context", values);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />

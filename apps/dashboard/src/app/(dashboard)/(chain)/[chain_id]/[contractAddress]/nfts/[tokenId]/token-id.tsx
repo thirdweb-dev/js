@@ -19,7 +19,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -52,7 +51,7 @@ interface TokenIdPageProps {
   tokenId: string;
   contract: ThirdwebContract;
   isErc721: boolean;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 // TODO: verify the entire nft object with zod schema and display an error message
@@ -61,7 +60,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   contract,
   tokenId,
   isErc721,
-  twAccount,
+  isLoggedIn,
 }) => {
   const [tab, setTab] = useState("Details");
   const router = useDashboardRouter();
@@ -71,7 +70,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   const tabs = useNFTDrawerTabs({
     contract,
     tokenId,
-    twAccount,
+    isLoggedIn,
   });
 
   const client = useThirdwebClient();

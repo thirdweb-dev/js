@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -16,14 +15,14 @@ import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
 interface TokenAirdropFormProps {
   contract: ThirdwebContract;
   toggle?: Dispatch<SetStateAction<boolean>>;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 const GAS_COST_PER_ERC20_TRANSFER = 21000;
 
 export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   contract,
   toggle,
-  twAccount,
+  isLoggedIn,
 }) => {
   const { handleSubmit, setValue, watch } = useForm<{
     addresses: AirdropAddressInput[];
@@ -136,7 +135,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 </Text>
               )}
               <TransactionButton
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
                 transactionCount={1}
                 isPending={sendTransaction.isPending}
                 type="submit"

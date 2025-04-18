@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/popover";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ArrowLeftRightIcon, ExternalLinkIcon } from "lucide-react";
@@ -30,7 +29,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   isGasless?: boolean;
   txChainID: number;
   variant?: "destructive" | "primary" | "default";
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 };
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -40,7 +39,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   isGasless,
   txChainID,
   variant,
-  twAccount,
+  isLoggedIn,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -71,8 +70,8 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
       <PopoverTrigger asChild>
         <ButtonComponent
           variant={variant || "primary"}
+          isLoggedIn={isLoggedIn}
           txChainId={txChainID}
-          twAccount={twAccount}
           {...restButtonProps}
           disabled={disabled}
           className={cn("relative overflow-hidden", restButtonProps.className)}

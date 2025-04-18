@@ -1,4 +1,3 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import dynamic from "next/dynamic";
@@ -12,7 +11,7 @@ import type { NFTDrawerTab } from "./types";
 type UseNFTDrawerTabsParams = {
   contract: ThirdwebContract;
   tokenId: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 };
 
 const TransferTab = dynamic(() => import("./components/transfer-tab"));
@@ -32,7 +31,7 @@ const UpdateMetadataTab = dynamic(
 export function useNFTDrawerTabs({
   contract,
   tokenId,
-  twAccount,
+  isLoggedIn,
 }: UseNFTDrawerTabsParams): NFTDrawerTab[] {
   const functionSelectorQuery = useContractFunctionSelectors(contract);
   const functionSelectors = functionSelectorQuery.data || [];
@@ -132,7 +131,7 @@ export function useNFTDrawerTabs({
               contract={contract}
               tokenId={tokenId}
               isColumn
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
               isMultiphase={isERC1155Multiphase}
             />
           ),
@@ -151,7 +150,7 @@ export function useNFTDrawerTabs({
           <TransferTab
             contract={contract}
             tokenId={tokenId}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         ),
       },
@@ -167,7 +166,7 @@ export function useNFTDrawerTabs({
             <AirdropTab
               contract={contract}
               tokenId={tokenId}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           ),
         },
@@ -183,7 +182,7 @@ export function useNFTDrawerTabs({
             <BurnTab
               contract={contract}
               tokenId={tokenId}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           ),
         },
@@ -199,7 +198,7 @@ export function useNFTDrawerTabs({
             <MintSupplyTab
               contract={contract}
               tokenId={tokenId}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           ),
         },
@@ -214,7 +213,7 @@ export function useNFTDrawerTabs({
             <ClaimTabERC1155
               contract={contract}
               tokenId={tokenId}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           ),
         },
@@ -232,7 +231,7 @@ export function useNFTDrawerTabs({
               contract={contract}
               nft={nft}
               useUpdateMetadata={supportsUpdateMetadata}
-              twAccount={twAccount}
+              isLoggedIn={isLoggedIn}
             />
           ),
         },
@@ -250,6 +249,6 @@ export function useNFTDrawerTabs({
     isMinterRole,
     contract,
     functionSelectors,
-    twAccount,
+    isLoggedIn,
   ]);
 }

@@ -9,7 +9,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -29,7 +28,7 @@ import {
 interface AirdropTabProps {
   contract: ThirdwebContract;
   tokenId: string;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 /**
@@ -38,7 +37,7 @@ interface AirdropTabProps {
 const AirdropTab: React.FC<AirdropTabProps> = ({
   contract,
   tokenId,
-  twAccount,
+  isLoggedIn,
 }) => {
   const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, reset } = useForm<{
@@ -163,7 +162,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
             more, please do it in multiple transactions.
           </p>
           <TransactionButton
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
             isPending={sendAndConfirmTx.isPending}

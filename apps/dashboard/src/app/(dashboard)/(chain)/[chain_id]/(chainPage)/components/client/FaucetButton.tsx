@@ -25,7 +25,6 @@ import {
 } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -52,7 +51,6 @@ import {
   useWalletBalance,
 } from "thirdweb/react";
 import { z } from "zod";
-import { isAccountOnboardingComplete } from "../../../../../../login/onboarding/isOnboardingRequired";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -78,11 +76,11 @@ const claimFaucetSchema = z.object({
 export function FaucetButton({
   chain,
   amount,
-  twAccount,
+  isLoggedIn,
 }: {
   chain: ChainMetadata;
   amount: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }) {
   const pathname = usePathname();
   const client = useThirdwebClient();
@@ -186,7 +184,7 @@ export function FaucetButton({
         </div>
         <SendFundsToFaucetModalButton
           chain={definedChain}
-          isLoggedIn={!!twAccount}
+          isLoggedIn={isLoggedIn}
           client={client}
           chainMeta={chain}
           onFaucetRefill={() => {
@@ -198,27 +196,13 @@ export function FaucetButton({
   }
 
   // Force users to log in to claim the faucet
-  if (!address || !twAccount) {
+  if (!address || !isLoggedIn) {
     return (
       <Button variant="primary" className="w-full" asChild>
         <Link
           href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
         >
           Connect Wallet
-        </Link>
-      </Button>
-    );
-  }
-
-  if (!isAccountOnboardingComplete(twAccount)) {
-    return (
-      <Button asChild className="w-full">
-        <Link
-          href={
-            pathname ? `/login?next=${encodeURIComponent(pathname)}` : "/login"
-          }
-        >
-          Verify your Email
         </Link>
       </Button>
     );
