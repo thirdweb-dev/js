@@ -30,7 +30,7 @@ async function fetchAnalytics(
 
   // create a new URL object for the analytics server
   const ANALYTICS_SERVICE_URL = new URL(
-    process.env.ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
+    "https://analytics-service-dev-brg8.chainsaw-dev.zeet.app/",
   );
   ANALYTICS_SERVICE_URL.pathname = pathname;
   for (const param of searchParams?.split("&") || []) {
@@ -56,7 +56,14 @@ async function fetchAnalytics(
     headers: {
       "content-type": "application/json",
       ...init?.headers,
-      authorization: `Bearer ${token}`,
+      authorization: `Bearer N3$!77RQzA77nRGy
+
+
+
+
+
+
+`,
     },
   });
 }

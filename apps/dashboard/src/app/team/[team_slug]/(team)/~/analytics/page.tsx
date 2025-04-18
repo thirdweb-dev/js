@@ -26,6 +26,7 @@ import { getTeamBySlug } from "@/api/team";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
 import { Suspense } from "react";
+import ShareTwitterButton from "../../_components/CopyAnalyticsButton";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
 
@@ -62,6 +63,8 @@ export default async function TeamOverviewPage(props: {
 
   return (
     <div className="flex grow flex-col">
+      {/* Position the copy button */}
+
       <div className="border-b">
         <AnalyticsHeader
           title="Analytics"
@@ -70,7 +73,13 @@ export default async function TeamOverviewPage(props: {
           showRangeSelector={true}
         />
       </div>
-      <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
+      <div className="flex grow justify-end gap-10 md:container md:pt-8">
+        <ShareTwitterButton targetId="analytics-content" />
+      </div>
+      <div
+        id="analytics-content"
+        className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16"
+      >
         <Suspense fallback={<GenericLoadingPage />}>
           <OverviewPageContent
             teamId={team.id}
