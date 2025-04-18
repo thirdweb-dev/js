@@ -26,7 +26,7 @@ export function PageHeader(props: {
           <Button asChild>
             <Link target="_blank" href={"https://thirdweb.com/dashboard?utm_source=playground"} >
             <PresentationIcon className="mr-2 h-4 w-4" />
-              <BookOpenIcon className="mr-2 h-4 w-4" />
+              
               Add instantly
             </Link>
           </Button>
