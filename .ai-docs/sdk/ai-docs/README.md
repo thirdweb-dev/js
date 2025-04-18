@@ -4,11 +4,11 @@
 
 ### Phase 1 — Preparation
 
-- [ ] 1. **Inventory public API surface**
+- [x] 1. **Inventory public API surface**
   - crawl `packages/thirdweb/src` and record exported symbols from `exports/*` entrypoints
 - [ ] 2. **Design doc‑file layout**
   - decide filename conventions (`components/`, `hooks/`, `classes/`, `types/`, etc.) and cross‑linking strategy
-- [ ] 3. **Pick documentation template**
+- [x] 3. **Pick documentation template**
   - introduction
   - signature table (props / params / returns)
   - example‑in‑context snippet
