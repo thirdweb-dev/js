@@ -104,16 +104,29 @@ async function getNFTsFromInsight(
 ): Promise<NFT[]> {
   const { contract, start, count = Number(DEFAULT_QUERY_ALL_COUNT) } = options;
 
-  const result = await getContractNFTs({
-    client: contract.client,
-    chains: [contract.chain],
-    contractAddress: contract.address,
-    includeOwners: options.includeOwners ?? false,
-    queryOptions: {
-      limit: count,
-      page: start ? Math.floor(start / count) : undefined,
-    },
-  });
+  const [result, supply] = await Promise.all([
+    getContractNFTs({
+      client: contract.client,
+      chains: [contract.chain],
+      contractAddress: contract.address,
+      includeOwners: options.includeOwners ?? false,
+      queryOptions: {
+        limit: count,
+        page: start ? Math.floor(start / count) : undefined,
+      },
+    }),
+    totalSupply(options),
+  ]);
+
+  const currentOffset = start ?? 0;
+  const expectedResultLength = Math.min(
+    count,
+    Math.max(0, Number(supply) - currentOffset),
+  );
+  if (result.length < expectedResultLength) {
+    // fresh contracts might be delayed in indexing, so we fallback to RPC
+    return getNFTsFromRPC(options);
+  }
 
   return result;
 }
@@ -158,6 +171,7 @@ async function getNFTsFromRPC(
         ...options,
         tokenId: i,
         includeOwner: options.includeOwners ?? false,
+        useIndexer: false,
       }),
     );
   }

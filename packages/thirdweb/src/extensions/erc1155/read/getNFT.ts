@@ -50,7 +50,6 @@ export async function getNFT(
 async function getNFTFromInsight(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
-  const tokenId = options.tokenId;
   const nft = await getNFTInsight({
     client: options.contract.client,
     chain: options.contract.chain,
@@ -58,22 +57,8 @@ async function getNFTFromInsight(
     tokenId: options.tokenId,
   });
   if (!nft) {
-    return parseNFT(
-      {
-        id: tokenId,
-        type: "ERC1155",
-        uri: "",
-      },
-      {
-        tokenId: options.tokenId,
-        tokenUri: "",
-        type: "ERC1155",
-        owner: null,
-        supply: 0n,
-        tokenAddress: options.contract.address,
-        chainId: options.contract.chain.id,
-      },
-    );
+    // fresh contracts might be delayed in indexing, so we fallback to RPC
+    return getNFTFromRPC(options);
   }
   return nft;
 }
