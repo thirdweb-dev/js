@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { RefreshCcwIcon } from "lucide-react";
 import ListAccessTokensButton from "./list-access-tokens.client";
+import RotateAdminKeyButton from "./rotate-admin-key.client";
 
 export function KeyManagement({
   maskedAdminKey,
@@ -26,13 +27,7 @@ export function KeyManagement({
           <h3 className="font-medium text-sm">Vault Admin Key</h3>
           <p className="text-muted-foreground text-sm">{maskedAdminKey}</p>
         </div>
-        <Button
-          variant="outline"
-          className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
-        >
-          <RefreshCcwIcon className="size-4" />
-          Rotate Admin Key
-        </Button>
+        <RotateAdminKeyButton />
       </div>
       <div className="flex flex-row justify-end gap-4 border-border border-t px-6 pt-4 pb-4">
         <ListAccessTokensButton projectId={projectId} teamId={teamId} />

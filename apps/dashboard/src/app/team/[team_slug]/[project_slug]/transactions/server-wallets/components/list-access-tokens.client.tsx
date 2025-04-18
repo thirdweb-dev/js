@@ -368,7 +368,7 @@ export default function ListAccessTokensButton(props: {
                 </p>
                 <Input
                   type="password"
-                  placeholder="Enter your Vault Admin Key"
+                  placeholder="sa_adm_ABCD_1234..."
                   value={typedAdminKey}
                   onChange={(e) => setTypedAdminKey(e.target.value)}
                   onKeyDown={(e) => {
@@ -401,7 +401,7 @@ export default function ListAccessTokensButton(props: {
                         Loading...
                       </>
                     ) : (
-                      "List Tokens"
+                      "Manage Access Tokens"
                     )}
                   </Button>
                 </div>
