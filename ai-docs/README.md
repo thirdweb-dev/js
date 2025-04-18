@@ -10,7 +10,7 @@ Note: The code and files in this folder are intended for AI consumption only. Th
 - The file structure will always include a folder at this current layer of the file system. For example, the `sdk` folder should be docs related to the sdk. Inside the `sdk` folder, there is a `ai-docs` folder. The `sdk/ai-docs` folder should contain markdown files that are going to be fed into AI for context enrichment during code generation.
 - Utilize Git commits with highly descriptive messages to be able to create checkpoints on your work that are easy to follow.
 
-`.ai-docs` directory structure:
+`ai-docs` directory structure:
 
 ```
 .

@@ -1,6 +1,6 @@
 ## Documentation Generation Plan
 
-> This README tracks the step‑by‑step plan (and progress) for writing AI‑facing documentation for the **Thirdweb JS SDK** that lives under `.ai-docs/sdk/ai-docs`. Every major task is represented by a checkbox so work can be paused and resumed at any time.
+> This README tracks the step‑by‑step plan (and progress) for writing AI‑facing documentation for the **Thirdweb JS SDK** that lives under `ai-docs/sdk/ai-docs`. Every major task is represented by a checkbox so work can be paused and resumed at any time.
 
 ### Phase 1 — Preparation
 
@@ -39,4 +39,4 @@
 
 ---
 
-Each completed task should result in one or more Markdown files added under `.ai-docs/sdk/ai-docs/` following the agreed‑upon template. Keep this checklist updated as progress is made.
+Each completed task should result in one or more Markdown files added under `ai-docs/sdk/ai-docs/` following the agreed‑upon template. Keep this checklist updated as progress is made.

@@ -42,5 +42,5 @@ function Example() {
 
 ## Related
 
-- <!-- link to other docs within `.ai-docs/sdk/ai-docs` -->
+- <!-- link to other docs within `ai-docs/sdk/ai-docs` -->
 - <!-- external links if helpful -->
