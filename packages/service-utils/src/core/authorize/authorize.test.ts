@@ -19,6 +19,8 @@ describe("authorizeClient", () => {
         secretKeyHash: null,
         hashedJWT: null,
         jwt: null,
+        incomingServiceApiKey: null,
+        incomingServiceApiKeyHash: null,
         ecosystemId: null,
         ecosystemPartnerId: null,
       },

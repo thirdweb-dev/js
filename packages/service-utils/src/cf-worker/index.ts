@@ -147,7 +147,18 @@ export async function extractAuthorizationData(
     }
   }
 
+  let incomingServiceApiKey: string | null = null;
+  let incomingServiceApiKeyHash: string | null = null;
+  if (headers.has("x-service-api-key")) {
+    incomingServiceApiKey = headers.get("x-service-api-key");
+    if (incomingServiceApiKey) {
+      incomingServiceApiKeyHash = await hashSecretKey(incomingServiceApiKey);
+    }
+  }
+
   return {
+    incomingServiceApiKey,
+    incomingServiceApiKeyHash,
     jwt,
     hashedJWT: jwt ? await hashSecretKey(jwt) : null,
     secretKey,
