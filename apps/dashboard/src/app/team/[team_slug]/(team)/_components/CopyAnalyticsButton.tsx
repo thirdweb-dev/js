@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 
-export default function ShareTwitterButton({ targetId }) {
+interface ShareTwitterButtonProps {
+  targetId: string; // This defines targetId as a required string
+}
+
+export default function ShareTwitterButton({
+  targetId,
+}: ShareTwitterButtonProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [shareStatus, setShareStatus] = useState(null);
 
@@ -38,7 +44,7 @@ export default function ShareTwitterButton({ targetId }) {
       link.click();
       // Prepare Twitter share URL with better text prompt
       const tweetText = encodeURIComponent(
-        "Check this out! (Image copied to clipboard) #YourHashtag",
+        "🚀 Check out our dashboard on @thirdweb —\n 📊 New users growing\n 🔥 Users retained\n ⚡️ Onchain activity is real.",
       );
       const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
       // Open Twitter share dialog
