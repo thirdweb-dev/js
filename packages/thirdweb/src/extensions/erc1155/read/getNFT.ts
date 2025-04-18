@@ -1,9 +1,9 @@
+import { getNFT as getNFTInsight } from "../../../insight/get-nfts.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
 import { totalSupply } from "../__generated__/IERC1155/read/totalSupply.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
-
 export { isUriSupported as isGetNFTSupported } from "../__generated__/IERC1155/read/uri.js";
 
 /**
@@ -12,6 +12,11 @@ export { isUriSupported as isGetNFTSupported } from "../__generated__/IERC1155/r
  */
 export type GetNFTParams = {
   tokenId: bigint;
+  /**
+   * Whether to use the insight API to fetch the NFT.
+   * @default true
+   */
+  useIndexer?: boolean;
 };
 
 /**
@@ -29,6 +34,51 @@ export type GetNFTParams = {
  * ```
  */
 export async function getNFT(
+  options: BaseTransactionOptions<GetNFTParams>,
+): Promise<NFT> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getNFTFromInsight(options);
+    } catch {
+      return await getNFTFromRPC(options);
+    }
+  }
+  return await getNFTFromRPC(options);
+}
+
+async function getNFTFromInsight(
+  options: BaseTransactionOptions<GetNFTParams>,
+): Promise<NFT> {
+  const tokenId = options.tokenId;
+  const nft = await getNFTInsight({
+    client: options.contract.client,
+    chain: options.contract.chain,
+    contractAddress: options.contract.address,
+    tokenId: options.tokenId,
+  });
+  if (!nft) {
+    return parseNFT(
+      {
+        id: tokenId,
+        type: "ERC1155",
+        uri: "",
+      },
+      {
+        tokenId: options.tokenId,
+        tokenUri: "",
+        type: "ERC1155",
+        owner: null,
+        supply: 0n,
+        tokenAddress: options.contract.address,
+        chainId: options.contract.chain.id,
+      },
+    );
+  }
+  return nft;
+}
+
+async function getNFTFromRPC(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
   const [tokenUri, supply] = await Promise.all([
