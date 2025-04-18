@@ -258,7 +258,7 @@ function ProductsSection(props: {
       title: "Nebula",
       description:
         "Integrate a blockchain AI model to improve your users insight into your application and the blockchain",
-      href: `/team/${props.teamSlug}/~/nebula`,
+      href: `/team/${props.teamSlug}/${props.projectSlug}/nebula`,
       icon: NebulaIcon,
       trackingLabel: "nebula",
     },
@@ -308,7 +308,6 @@ function ProductCard(props: {
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
         <TrackedLinkTW
           href={props.href}
-          target="_blank"
           className="before:absolute before:inset-0"
           category="project-ftux"
           label={props.trackingLabel}
