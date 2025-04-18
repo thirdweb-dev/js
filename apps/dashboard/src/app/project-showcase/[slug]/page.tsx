@@ -77,7 +77,7 @@ export default async function DetailPage(props: {
                 src={
                   project.image?.startsWith("ipfs://")
                     ? (resolveSchemeWithErrorHandler({
-                        client: getThirdwebClient(),
+                        client: getThirdwebClient(undefined),
                         uri: project.image,
                       }) ?? "")
                     : (project.image ?? "/assets/showcase/default_image.png")

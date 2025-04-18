@@ -1,18 +1,9 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { download } from "thirdweb/storage";
-import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
-import {
-  type GenerateURLParams,
-  type MoralisSupportedChainId,
-  type WalletNFT,
-  moralisSupportedChainIds,
-} from "./types";
+import "server-only";
 
-export function isMoralisSupported(
-  chainId: number,
-): chainId is MoralisSupportedChainId {
-  return moralisSupportedChainIds.includes(chainId.toString());
-}
+import { download } from "thirdweb/storage";
+import { getUserThirdwebClient } from "../../../app/api/lib/getAuthToken";
+import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
+import type { GenerateURLParams, WalletNFT } from "./types";
 
 export function generateMoralisUrl({ chainId, owner }: GenerateURLParams) {
   const url = new URL(`https://deep-index.moralis.io/api/v2/${owner}/nft`);
@@ -28,6 +19,8 @@ export async function transformMoralisResponseToNFT(
   owner: string,
   chainId: number,
 ): Promise<WalletNFT[]> {
+  const client = await getUserThirdwebClient();
+
   return (
     await Promise.all(
       moralisResponse.result.map(async (moralisNft) => {
@@ -39,7 +32,7 @@ export async function transformMoralisResponseToNFT(
             metadata: shouldDownloadURI(moralisNft.token_uri)
               ? await download({
                   uri: handleArbitraryTokenURI(moralisNft.token_uri),
-                  client: getThirdwebClient(),
+                  client,
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))

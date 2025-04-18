@@ -1,5 +1,6 @@
 import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { AnalyticsQueryParams } from "types/analytics";
 import { getClientTransactions } from "../../../../../../@/api/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
@@ -7,6 +8,7 @@ import { TransactionsChartsUI } from "./TransactionCharts";
 export function TransactionsCharts(
   props: AnalyticsQueryParams & {
     searchParams: { [key: string]: string | string[] | undefined };
+    client: ThirdwebClient;
   },
 ) {
   return (
@@ -26,6 +28,7 @@ export function TransactionsCharts(
 async function TransactionsChartCardAsync(
   props: AnalyticsQueryParams & {
     searchParams: { [key: string]: string | string[] | undefined };
+    client: ThirdwebClient;
   },
 ) {
   const [data, aggregatedData] = await Promise.all([
@@ -45,6 +48,7 @@ async function TransactionsChartCardAsync(
       data={data}
       aggregatedData={aggregatedData}
       searchParams={props.searchParams}
+      client={props.client}
     />
   );
 }

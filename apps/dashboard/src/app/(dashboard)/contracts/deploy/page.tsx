@@ -3,6 +3,7 @@ import { DeployableContractTable } from "components/contract-components/contract
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { getUserThirdwebClient } from "../../../api/lib/getAuthToken";
 
 export default async function DeployMultipleContractsPage(props: {
   searchParams?: Promise<{
@@ -11,6 +12,7 @@ export default async function DeployMultipleContractsPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const ipfsHashes = searchParams?.ipfs;
+  const client = await getUserThirdwebClient();
 
   if (!ipfsHashes || !Array.isArray(ipfsHashes) || ipfsHashes.length === 0) {
     notFound();
@@ -35,7 +37,11 @@ export default async function DeployMultipleContractsPage(props: {
       <div className="h-6" />
 
       <Suspense fallback={<GenericLoadingPage />}>
-        <DeployableContractTable contractIds={ipfsHashes} context="deploy" />
+        <DeployableContractTable
+          contractIds={ipfsHashes}
+          context="deploy"
+          client={client}
+        />
       </Suspense>
     </div>
   );

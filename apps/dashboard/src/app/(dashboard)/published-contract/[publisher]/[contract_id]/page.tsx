@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { notFound } from "next/navigation";
 import { PublishedContract } from "../../../../../components/contract-components/published-contract";
 import { getRawAccount } from "../../../../account/settings/getAccount";
+import { getUserThirdwebClient } from "../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
@@ -18,10 +19,12 @@ export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
   const params = await props.params;
+  const client = await getUserThirdwebClient();
   const publishedContractVersions =
     await getPublishedContractsWithPublisherMapping({
       publisher: params.publisher,
       contract_id: params.contract_id,
+      client,
     });
 
   if (!publishedContractVersions) {
@@ -42,6 +45,7 @@ export default async function PublishedContractPage(
         {...params}
         allVersions={publishedContractVersions}
         activeVersion={publishedContract}
+        client={client}
       >
         <PublishedActions
           {...params}

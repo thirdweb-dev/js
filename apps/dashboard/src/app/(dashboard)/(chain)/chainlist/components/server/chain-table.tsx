@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Fuse from "fuse.js";
+import type { ThirdwebClient } from "thirdweb";
 import { StarButton } from "../../../components/client/star-button";
 import type {
   ChainMetadataWithServices,
@@ -141,6 +142,7 @@ export async function ChainsData(props: {
   searchParams: SearchParams;
   activeView: "table" | "grid";
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const { chainsToRender, totalCount, filteredCount } = await getChainsToRender(
     props.searchParams,
@@ -177,6 +179,7 @@ export async function ChainsData(props: {
               <TableBody>
                 {paginatedChains.map((chain) => (
                   <ChainListRow
+                    client={props.client}
                     key={chain.chainId}
                     chainId={chain.chainId}
                     chainName={chain.name}
@@ -207,6 +210,7 @@ export async function ChainsData(props: {
             {paginatedChains.map((chain) => (
               <li key={chain.chainId} className="h-full">
                 <ChainListCard
+                  client={props.client}
                   key={chain.chainId}
                   chainId={chain.chainId}
                   chainName={chain.name}

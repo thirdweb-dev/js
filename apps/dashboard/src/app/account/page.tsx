@@ -18,6 +18,11 @@ export default async function Page() {
     loginRedirect("/account");
   }
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
+
   const teamsWithRole = await Promise.all(
     teams.map(async (team) => {
       const member = await getMemberById(team.slug, account.id);
@@ -42,10 +47,7 @@ export default async function Page() {
       </header>
 
       <div className="container flex max-w-[950px] grow flex-col py-8">
-        <AccountTeamsUI
-          teamsWithRole={teamsWithRole}
-          client={getThirdwebClient(authToken)}
-        />
+        <AccountTeamsUI teamsWithRole={teamsWithRole} client={client} />
       </div>
     </div>
   );

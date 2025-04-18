@@ -1,6 +1,5 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { localhost } from "thirdweb/chains";
@@ -12,6 +11,7 @@ import { shortenIfAddress } from "../../../../../utils/usedapp-external";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
+  getUserThirdwebClient,
 } from "../../../../api/lib/getAuthToken";
 import { NebulaFloatingChatButton } from "../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
@@ -52,7 +52,7 @@ export default async function Layout(props: {
     getAuthTokenWalletAddress(),
   ]);
 
-  const client = getThirdwebClient();
+  const client = await getUserThirdwebClient();
   const teamsAndProjects = await getTeamsAndProjectsIfLoggedIn();
 
   if (contract.chain.id === localhost.id) {

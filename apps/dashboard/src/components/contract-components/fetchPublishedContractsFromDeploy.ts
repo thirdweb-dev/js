@@ -22,5 +22,7 @@ export async function fetchPublishedContractsFromDeploy(options: {
     compilerMetadataUri: contractUri,
   });
 
-  return await Promise.all(publishURIs.map((uri) => fetchDeployMetadata(uri)));
+  return await Promise.all(
+    publishURIs.map((uri) => fetchDeployMetadata(uri, client)),
+  );
 }

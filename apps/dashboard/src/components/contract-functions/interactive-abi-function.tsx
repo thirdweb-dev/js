@@ -481,7 +481,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 formattedResponseData.data.startsWith("ipfs://") && (
                   <Text size="label.sm">
                     <TrackedLink
-                      href={replaceIpfsUrl(formattedResponseData.data)}
+                      href={replaceIpfsUrl(
+                        formattedResponseData.data,
+                        contract.client,
+                      )}
                       isExternal
                       category="contract-explorer"
                       label="open-in-gateway"

@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { teamsAndProjectsStub } from "../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import {
   AccountHeaderDesktopUI,
   AccountHeaderMobileUI,
@@ -37,7 +40,6 @@ export const Mobile: Story = {
   },
 };
 
-const client = getThirdwebClient();
 const accountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 function Variants(props: {
@@ -61,7 +63,7 @@ function Variants(props: {
                 id: "foo",
                 email: "foo@example.com",
               }}
-              client={client}
+              client={storybookThirdwebClient}
               getChangelogNotifications={() => Promise.resolve([])}
               getInboxNotifications={() => Promise.resolve([])}
               markNotificationAsRead={() => Promise.resolve()}

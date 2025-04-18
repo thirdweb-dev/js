@@ -1,11 +1,14 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { teamsAndProjectsStub } from "../../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+  storybookThirdwebClient,
+} from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
@@ -35,8 +38,6 @@ export const Mobile: Story = {
     viewport: mobileViewport("iphone14"),
   },
 };
-
-const client = getThirdwebClient();
 
 function Variants(props: {
   type: "mobile" | "desktop";
@@ -164,7 +165,7 @@ function Variant(props: {
         logout={() => {}}
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
-        client={client}
+        client={storybookThirdwebClient}
         getChangelogNotifications={getChangelogsStub}
         getInboxNotifications={getInboxNotificationsStub}
         markNotificationAsRead={markNotificationAsReadStub}

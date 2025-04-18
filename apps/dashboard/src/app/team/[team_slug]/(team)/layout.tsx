@@ -2,10 +2,14 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { redirect } from "next/navigation";
 import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
 import { getValidAccount } from "../../../account/settings/getAccount";
-import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {
@@ -14,13 +18,14 @@ export default async function TeamLayout(props: {
 }) {
   const params = await props.params;
 
-  const [accountAddress, account, teams] = await Promise.all([
+  const [accountAddress, account, teams, authToken] = await Promise.all([
     getAuthTokenWalletAddress(),
     getValidAccount(`/team/${params.team_slug}`),
     getTeams(),
+    getAuthToken(),
   ]);
 
-  if (!teams || !accountAddress) {
+  if (!teams || !accountAddress || !authToken) {
     redirect("/login");
   }
 
@@ -39,6 +44,11 @@ export default async function TeamLayout(props: {
     })),
   );
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <div className="flex h-full grow flex-col">
       <AnnouncementBanner />
@@ -49,6 +59,7 @@ export default async function TeamLayout(props: {
           currentProject={undefined}
           account={account}
           accountAddress={accountAddress}
+          client={client}
         />
 
         <TabPathLinks

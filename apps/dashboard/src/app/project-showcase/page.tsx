@@ -66,6 +66,8 @@ export default async function ProjectShowcasePage(props: {
     currentPage * PROJECT_SHOWCASE_ITEMS_PER_PAGE,
   );
 
+  const client = getThirdwebClient(undefined);
+
   return (
     <div className="min-h-dvh bg-background">
       <section className="w-full">
@@ -137,7 +139,7 @@ export default async function ProjectShowcasePage(props: {
                       src={
                         project.image?.startsWith("ipfs://")
                           ? (resolveSchemeWithErrorHandler({
-                              client: getThirdwebClient(),
+                              client,
                               uri: project.image,
                             }) ?? "")
                           : (project.image ??

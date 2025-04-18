@@ -41,7 +41,10 @@ const formSchema = z.object({
   permission: z.union([z.literal("PARTNER_WHITELIST"), z.literal("ANYONE")]),
 });
 
-export function CreateEcosystemForm(props: { teamSlug: string }) {
+export function CreateEcosystemForm(props: {
+  teamSlug: string;
+  teamId: string;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,6 +59,7 @@ export function CreateEcosystemForm(props: { teamSlug: string }) {
         onSubmit={form.handleSubmit(async (values) => {
           const res = await createEcosystem({
             teamSlug: props.teamSlug,
+            teamId: props.teamId,
             ...values,
           });
           switch (res.status) {

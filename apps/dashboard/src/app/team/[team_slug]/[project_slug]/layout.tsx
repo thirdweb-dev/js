@@ -2,9 +2,13 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
 import { AnnouncementBanner } from "../../../../components/notices/AnnouncementBanner";
 import { getValidAccount } from "../../../account/settings/getAccount";
-import { getAuthTokenWalletAddress } from "../../../api/lib/getAuthToken";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
@@ -15,13 +19,14 @@ export default async function ProjectLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const [accountAddress, teams, account] = await Promise.all([
+  const [accountAddress, teams, account, authToken] = await Promise.all([
     getAuthTokenWalletAddress(),
     getTeams(),
     getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
+    getAuthToken(),
   ]);
 
-  if (!teams || !accountAddress) {
+  if (!teams || !accountAddress || !authToken) {
     redirect("/login");
   }
 
@@ -50,6 +55,10 @@ export default async function ProjectLayout(props: {
   }
 
   const layoutPath = `/team/${params.team_slug}/${params.project_slug}`;
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
 
   return (
     <SidebarProvider>
@@ -62,6 +71,7 @@ export default async function ProjectLayout(props: {
             teamsAndProjects={teamsAndProjects}
             account={account}
             accountAddress={accountAddress}
+            client={client}
           />
         </div>
         <ProjectSidebarLayout layoutPath={layoutPath}>

@@ -13,11 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getThirdwebClient } from "../../../../../@/constants/thirdweb.server";
 import { mapV4ChainToV5Chain } from "../../../../../contexts/map-chains";
 import {
   getAuthToken,
@@ -71,7 +71,10 @@ export default async function ChainPageLayout(props: {
   }
 
   const chainMetadata = await getChainMetadata(chain.chainId);
-  const client = getThirdwebClient(authToken ?? undefined);
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
 
   const chainPromptPrefix = `\
 You are assisting users exploring the chain ${chain.name} (Chain ID: ${chain.chainId}). Provide concise insights into the types of applications and activities prevalent on this chain, such as DeFi protocols, NFT marketplaces, or gaming platforms. Highlight notable projects or trends without delving into technical details like consensus mechanisms or gas fees.
@@ -157,6 +160,7 @@ The following is the user's message:
             headerImageUrl={chainMetadata?.headerImgUrl}
             logoUrl={chain.icon?.url}
             chain={chain}
+            client={client}
           />
 
           <div className="h-4 md:h-8" />

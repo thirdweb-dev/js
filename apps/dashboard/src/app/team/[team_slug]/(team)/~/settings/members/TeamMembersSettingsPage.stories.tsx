@@ -1,8 +1,10 @@
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
-import { BadgeContainer } from "../../../../../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../../../../../stories/utils";
 import { ManageMembersSection } from "./ManageMembersSection";
 
 const meta = {
@@ -77,7 +79,7 @@ function Story() {
             team={freeTeam}
             userHasEditPermission={true}
             members={membersStub}
-            client={getThirdwebClient()}
+            client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
           />
         </BadgeContainer>
@@ -87,7 +89,7 @@ function Story() {
             team={freeTeam}
             userHasEditPermission={false}
             members={membersStub}
-            client={getThirdwebClient()}
+            client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
           />
         </BadgeContainer>
@@ -97,7 +99,7 @@ function Story() {
             team={freeTeam}
             userHasEditPermission={true}
             members={membersStubNoName}
-            client={getThirdwebClient()}
+            client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
           />
         </BadgeContainer>

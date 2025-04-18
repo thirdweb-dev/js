@@ -1,16 +1,17 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { ThirdwebClient } from "thirdweb";
 
 export function DeployContractInfo(props: {
   name: string;
   displayName?: string;
   description?: string;
   logo?: string;
+  client: ThirdwebClient;
 }) {
   const contractNameDisplay = props.displayName || props.name;
 
   const contractImageLink = resolveSchemeWithErrorHandler({
-    client: getThirdwebClient(),
+    client: props.client,
     uri: props.logo,
   });
 

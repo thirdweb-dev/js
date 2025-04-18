@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { ZERO_ADDRESS, toTokens } from "thirdweb";
 import {
@@ -10,14 +9,14 @@ import {
   getRpcClient,
 } from "thirdweb/rpc";
 import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
+import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {
   params: Promise<{ chain_id: string; txHash: `0x${string}` }>;
 }) {
   const params = await props.params;
-  // consider if we want to pass the JWT here, likely no need to do it but we could?
-  const client = getThirdwebClient();
+  const client = await getUserThirdwebClient();
   const chain = await getChain(params.chain_id);
 
   const rpcRequest = getRpcClient({

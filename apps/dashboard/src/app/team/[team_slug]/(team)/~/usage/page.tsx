@@ -56,7 +56,10 @@ export default async function Page(props: {
     );
   }
 
-  const client = getThirdwebClient(authToken);
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
 
   return (
     <Usage

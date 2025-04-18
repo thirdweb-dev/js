@@ -1,6 +1,6 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { projectStub, teamStub } from "../../../../../stories/stubs";
+import { storybookThirdwebClient } from "../../../../../stories/utils";
 import { ProjectGeneralSettingsPageUI } from "./ProjectGeneralSettingsPage";
 
 const meta = {
@@ -44,7 +44,7 @@ function Story(props: {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           console.log("transferProject", newTeam);
         }}
-        client={getThirdwebClient()}
+        client={storybookThirdwebClient}
         teamsWithRole={[
           {
             role: props.isOwnerAccount ? "OWNER" : "MEMBER",

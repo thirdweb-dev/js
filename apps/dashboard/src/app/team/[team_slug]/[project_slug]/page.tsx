@@ -22,20 +22,23 @@ import {
   isProjectActive,
 } from "@/api/analytics";
 import { EmptyStateCard } from "app/team/components/Analytics/EmptyStateCard";
+import { RangeSelector } from "components/analytics/range-selector";
 import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   type ChainMetadata,
   defineChain,
   getChainMetadata,
 } from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
+import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../login/loginRedirect";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../components/Analytics/PieChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 import { TransactionsCharts } from "./components/Transactions";
-
-import { RangeSelector } from "components/analytics/range-selector";
 
 interface PageParams {
   team_slug: string;
@@ -57,7 +60,14 @@ export default async function ProjectOverviewPage(props: PageProps) {
     props.searchParams,
   ]);
 
-  const project = await getProject(params.team_slug, params.project_slug);
+  const [authToken, project] = await Promise.all([
+    getAuthToken(),
+    getProject(params.team_slug, params.project_slug),
+  ]);
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}`);
+  }
 
   if (!project) {
     redirect(`/team/${params.team_slug}`);
@@ -77,6 +87,11 @@ export default async function ProjectOverviewPage(props: PageProps) {
   });
 
   const isActive = Object.values(activeStatus).some((v) => !!v);
+
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
 
   return (
     <div className="flex grow flex-col">
@@ -105,6 +120,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
               range={range}
               interval={interval}
               searchParams={searchParams}
+              client={client}
             />
           </Suspense>
         </div>
@@ -120,8 +136,9 @@ async function ProjectAnalytics(props: {
   range: Range;
   interval: "day" | "week";
   searchParams: PageSearchParams;
+  client: ThirdwebClient;
 }) {
-  const { project, range, interval, searchParams } = props;
+  const { project, range, interval, searchParams, client } = props;
 
   // Fetch all analytics data in parallel
   const [
@@ -221,6 +238,7 @@ async function ProjectAnalytics(props: {
         to={range.to}
         period={interval}
         teamId={project.teamId}
+        client={client}
       />
       {userOpUsageTimeSeries.status === "fulfilled" &&
       userOpUsage.status === "fulfilled" &&

@@ -191,7 +191,10 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                         </Heading>
                         <Text size="body.md" lineHeight={1.2}>
                           <Link
-                            href={replaceIpfsUrl(publishedContract.audit)}
+                            href={replaceIpfsUrl(
+                              publishedContract.audit,
+                              client,
+                            )}
                             target="_blank"
                             className="text-link-foreground hover:text-foreground"
                           >

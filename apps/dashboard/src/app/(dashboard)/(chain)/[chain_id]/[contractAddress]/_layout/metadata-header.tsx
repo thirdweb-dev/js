@@ -2,10 +2,10 @@
 
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Button } from "@/components/ui/button";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { MediaRenderer } from "thirdweb/react";
 
@@ -22,6 +22,7 @@ interface MetadataHeaderProps {
   };
   chain: ChainMetadata;
   externalLinks?: ExternalLink[];
+  client: ThirdwebClient;
 }
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
@@ -29,6 +30,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   data,
   chain,
   externalLinks,
+  client,
 }) => {
   const cleanedChainName = chain?.name?.replace("Mainnet", "").trim();
   const validBlockExplorers = chain?.explorers
@@ -56,7 +58,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         <div className="size-16 shrink-0 overflow-hidden rounded-lg border border-border bg-muted md:size-20">
           <MediaRenderer
             src={data?.image}
-            client={getThirdwebClient()}
+            client={client}
             alt={""}
             className="h-full w-full"
             style={{

@@ -1,3 +1,4 @@
+import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 import { DeployFormForPublishInfo } from "../../../components/publish-based-deploy";
 import { moduleFromBase64 } from "../../../utils/module-base-64";
 
@@ -23,5 +24,9 @@ export default async function PublishedContractDeployPage(props: Props) {
     moduleParam?.map((m) => moduleFromBase64(m)).filter((m) => m !== null) ||
     [];
 
-  return <DeployFormForPublishInfo {...params} modules={modules} />;
+  const client = await getUserThirdwebClient();
+
+  return (
+    <DeployFormForPublishInfo {...params} modules={modules} client={client} />
+  );
 }

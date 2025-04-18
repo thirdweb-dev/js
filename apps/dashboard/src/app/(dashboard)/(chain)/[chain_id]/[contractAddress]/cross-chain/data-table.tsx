@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -39,6 +38,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  type ThirdwebClient,
   defineChain,
   eth_getCode,
   getContract,
@@ -113,6 +113,7 @@ export function DataTable({
     (m) => m.name === "SuperChainInterop",
   );
 
+  const client = coreContract.client;
   const addRowMutation = useMutation({
     mutationFn: async (chain: { chainId: number; name: string }) => {
       if (coreContract.chain.id === chain.chainId) {
@@ -122,7 +123,7 @@ export function DataTable({
       const c = defineChain(chain.chainId);
       const code = await eth_getCode(
         getRpcClient({
-          client: getThirdwebClient(),
+          client: client,
           chain: c,
         }),
         { address: coreContract.address },
@@ -261,7 +262,7 @@ export function DataTable({
         return (
           <Button
             type="button"
-            onClick={() => deployContract(row.getValue("chainId"))}
+            onClick={() => deployContract(row.getValue("chainId"), client)}
           >
             Deploy
           </Button>
@@ -324,7 +325,7 @@ export function DataTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const deployContract = async (chainId: number) => {
+  const deployContract = async (chainId: number, client: ThirdwebClient) => {
     try {
       if (!activeAccount) {
         throw new Error("No active account");
@@ -332,7 +333,6 @@ export function DataTable({
 
       // eslint-disable-next-line no-restricted-syntax
       const chain = defineChain(chainId);
-      const client = getThirdwebClient();
       const salt =
         inputSalt || concatHex(["0x03", padHex("0x", { size: 31 })]).toString();
 

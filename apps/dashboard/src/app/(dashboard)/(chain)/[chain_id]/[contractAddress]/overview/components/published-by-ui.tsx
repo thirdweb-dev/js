@@ -54,7 +54,7 @@ export async function getPublishedByCardProps(params: {
   let publisherAddressOrEns = publishedContractToShow.publisher;
   if (!isValidENSName(publishedContractToShow.publisher)) {
     try {
-      const res = await resolveEns(publishedContractToShow.publisher);
+      const res = await resolveEns(publishedContractToShow.publisher, client);
       if (res.ensName) {
         publisherAddressOrEns = res.ensName;
       }
@@ -147,6 +147,7 @@ export function PublishedByUI(props: {
   publisher: string;
   version: string | undefined;
   isBeta: boolean;
+  client: ThirdwebClient;
 }) {
   return (
     <ContractCard
@@ -159,6 +160,7 @@ export function PublishedByUI(props: {
         moduleId: m.name,
         version: m.version,
       }))}
+      client={props.client}
     />
   );
 }

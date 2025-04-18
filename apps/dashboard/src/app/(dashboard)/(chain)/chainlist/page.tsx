@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
+import {
+  getAuthToken,
+  getUserThirdwebClient,
+} from "../../../api/lib/getAuthToken";
 import {
   AllFilters,
   ChainOptionsFilter,
@@ -42,6 +45,8 @@ export default async function ChainListPage(props: {
       ? "table"
       : "grid";
 
+  const client = await getUserThirdwebClient();
+
   return (
     <section className="container mx-auto flex h-full flex-col px-4 py-10">
       <header className="flex flex-col gap-4">
@@ -76,6 +81,7 @@ export default async function ChainListPage(props: {
         searchParams={searchParams}
         activeView={activeView}
         isLoggedIn={!!authToken}
+        client={client}
       />
     </section>
   );

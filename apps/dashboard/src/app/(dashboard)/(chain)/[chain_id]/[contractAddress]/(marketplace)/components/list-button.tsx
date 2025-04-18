@@ -10,12 +10,12 @@ import {
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
-import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
-import { isMoralisSupported } from "lib/wallet/nfts/moralis";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import { isAlchemySupported } from "../../../../../../../lib/wallet/nfts/isAlchemySupported";
+import { isMoralisSupported } from "../../../../../../../lib/wallet/nfts/isMoralisSupported";
 import { CreateListingsForm } from "./list-form";
 
 interface CreateListingButtonProps {

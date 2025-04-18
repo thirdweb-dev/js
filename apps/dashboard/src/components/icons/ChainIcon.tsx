@@ -3,6 +3,7 @@
 import { Img } from "@/components/blocks/Img";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
+import { useThirdwebClient } from "../../@/constants/thirdweb.client";
 import { cn } from "../../@/lib/utils";
 import { fallbackChainIcon } from "../../utils/chain-icons";
 
@@ -13,7 +14,8 @@ type ChainIconProps = ImageProps & {
 };
 
 export const ChainIconClient = ({ ipfsSrc, ...restProps }: ChainIconProps) => {
-  const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc) : fallbackChainIcon;
+  const client = useThirdwebClient();
+  const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc, client) : fallbackChainIcon;
 
   return (
     <Img

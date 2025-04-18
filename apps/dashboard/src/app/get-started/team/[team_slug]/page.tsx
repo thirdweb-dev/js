@@ -23,10 +23,15 @@ export default async function Page(props: {
     notFound();
   }
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <TeamOnboardingLayout currentStep={1}>
       <TeamInfoForm
-        client={getThirdwebClient(authToken)}
+        client={client}
         teamId={team.id}
         teamSlug={params.team_slug}
       />

@@ -9,6 +9,7 @@ import { ChainIconClient } from "components/icons/ChainIcon";
 import { getDashboardChainRpc } from "lib/rpc";
 import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useThirdwebClient } from "../../@/constants/thirdweb.client";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
@@ -55,6 +56,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   prefillSlug,
   prefillChainId,
 }) => {
+  const client = useThirdwebClient();
   const { idToChain, nameToChain } = useAllChainsData();
   const chainOverrides = useStore(chainOverridesStore);
 
@@ -67,7 +69,11 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           : // if chain is custom or modified, show the rpc as is
             editingChain.isCustom || editingChain.isModified
             ? editingChain.rpc[0]
-            : getDashboardChainRpc(editingChain.chainId, editingChain)) || "",
+            : getDashboardChainRpc(
+                editingChain.chainId,
+                editingChain,
+                client,
+              )) || "",
       chainId: editingChain?.chainId
         ? `${editingChain?.chainId}`
         : prefillChainId || "",

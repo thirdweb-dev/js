@@ -1,5 +1,7 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { cookies } from "next/headers";
+import { LAST_USED_TEAM_ID } from "../../../constants/cookies";
 
 export async function getAuthToken() {
   const cookiesManager = await cookies();
@@ -25,4 +27,15 @@ export async function getAuthTokenWalletAddress() {
   }
 
   return null;
+}
+
+export async function getUserThirdwebClient() {
+  const authToken = await getAuthToken();
+  const cookiesManager = await cookies();
+  const lastUsedTeamId = cookiesManager.get(LAST_USED_TEAM_ID)?.value;
+
+  return getThirdwebClient({
+    jwt: authToken,
+    teamId: lastUsedTeamId,
+  });
 }

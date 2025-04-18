@@ -1,9 +1,8 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   fetchLatestPublishedContractVersion,
   fetchPublishedContractVersions,
 } from "components/contract-components/fetch-contracts-with-versions";
-import { isAddress } from "thirdweb";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 
 function mapThirdwebPublisher(publisher: string) {
@@ -16,15 +15,16 @@ function mapThirdwebPublisher(publisher: string) {
 export async function getPublishedContractsWithPublisherMapping(options: {
   publisher: string;
   contract_id: string;
+  client: ThirdwebClient;
 }) {
-  const { publisher, contract_id } = options;
+  const { publisher, contract_id, client } = options;
 
   try {
     // resolve ENS
     const publisherAddress = isAddress(publisher)
       ? publisher
       : await resolveAddress({
-          client: getThirdwebClient(),
+          client,
           name: mapThirdwebPublisher(publisher),
         });
 
@@ -32,6 +32,7 @@ export async function getPublishedContractsWithPublisherMapping(options: {
     const publishedContractVersions = await fetchPublishedContractVersions(
       publisherAddress,
       contract_id,
+      client,
     );
 
     return publishedContractVersions;
@@ -43,19 +44,24 @@ export async function getPublishedContractsWithPublisherMapping(options: {
 export async function getLatestPublishedContractsWithPublisherMapping(options: {
   publisher: string;
   contract_id: string;
+  client: ThirdwebClient;
 }) {
-  const { publisher, contract_id } = options;
+  const { publisher, contract_id, client } = options;
 
   try {
     // resolve ENS
     const publisherAddress = isAddress(publisher)
       ? publisher
       : await resolveAddress({
-          client: getThirdwebClient(),
+          client,
           name: mapThirdwebPublisher(publisher),
         });
 
-    return fetchLatestPublishedContractVersion(publisherAddress, contract_id);
+    return fetchLatestPublishedContractVersion(
+      publisherAddress,
+      contract_id,
+      client,
+    );
   } catch {
     return undefined;
   }

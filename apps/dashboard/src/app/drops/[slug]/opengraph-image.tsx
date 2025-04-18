@@ -81,9 +81,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     // download the chain icon if there is one
     chain.icon?.url && hasWorkingChainIcon
-      ? download({ uri: chain.icon.url, client: getThirdwebClient() }).then(
-          (res) => res.arrayBuffer(),
-        )
+      ? download({
+          uri: chain.icon.url,
+          client: getThirdwebClient(undefined),
+        }).then((res) => res.arrayBuffer())
       : undefined,
     // download the background image (based on chain)
     fetch(

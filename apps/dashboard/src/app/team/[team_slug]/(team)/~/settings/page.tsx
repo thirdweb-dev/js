@@ -22,10 +22,15 @@ export default async function Page(props: {
     notFound();
   }
 
+  const client = getThirdwebClient({
+    jwt: token,
+    teamId: team.id,
+  });
+
   return (
     <TeamGeneralSettingsPage
       team={team}
-      client={getThirdwebClient(token)}
+      client={client}
       accountId={account.id}
     />
   );

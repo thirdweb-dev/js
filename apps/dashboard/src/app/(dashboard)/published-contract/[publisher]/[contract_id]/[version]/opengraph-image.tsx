@@ -20,16 +20,17 @@ export default async function Image(props: {
     version: string;
   };
 }) {
-  const client = getThirdwebClient();
+  const client = getThirdwebClient(undefined);
   const { publisher, contract_id } = props.params;
 
   const [publishedContracts, socialProfiles] = await Promise.all([
     getPublishedContractsWithPublisherMapping({
       publisher: publisher,
       contract_id: contract_id,
+      client,
     }),
     getSocialProfiles({
-      address: (await resolveEns(publisher)).address || publisher,
+      address: (await resolveEns(publisher, client)).address || publisher,
       client,
     }),
   ]);

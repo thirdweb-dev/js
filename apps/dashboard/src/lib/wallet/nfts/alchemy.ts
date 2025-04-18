@@ -1,20 +1,15 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import "server-only";
+
 import { download } from "thirdweb/storage";
 import type { NFTMetadata } from "thirdweb/utils";
+import { getUserThirdwebClient } from "../../../app/api/lib/getAuthToken";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
   type AlchemySupportedChainId,
   type GenerateURLParams,
   type WalletNFT,
-  alchemySupportedChainIds,
   alchemySupportedChainIdsMap,
 } from "./types";
-
-export function isAlchemySupported(
-  chainId: number,
-): chainId is AlchemySupportedChainId {
-  return alchemySupportedChainIds.includes(chainId.toString());
-}
 
 export function generateAlchemyUrl({ chainId, owner }: GenerateURLParams) {
   const url = new URL(
@@ -30,6 +25,8 @@ export async function transformAlchemyResponseToNFT(
   alchemyResponse: AlchemyResponse,
   owner: string,
 ): Promise<WalletNFT[]> {
+  const client = await getUserThirdwebClient();
+
   return (
     await Promise.all(
       alchemyResponse.ownedNfts.map(async (alchemyNFT) => {
@@ -42,7 +39,7 @@ export async function transformAlchemyResponseToNFT(
             metadata: shouldDownloadURI(rawUri)
               ? await download({
                   uri: handleArbitraryTokenURI(rawUri),
-                  client: getThirdwebClient(),
+                  client,
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))

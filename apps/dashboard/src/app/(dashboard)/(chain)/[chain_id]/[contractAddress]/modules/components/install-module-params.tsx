@@ -1,3 +1,4 @@
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { FormControl } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -20,12 +21,13 @@ export function useModuleInstallParams(props: {
   module?: ModuleMeta;
   isQueryEnabled: boolean;
 }) {
+  const client = useThirdwebClient();
   const { module, isQueryEnabled } = props;
   return useQuery({
     queryKey: ["useModuleInstallParams", module],
     queryFn: async () => {
       invariant(module, "module must be defined");
-      return await getModuleInstalledParams(module);
+      return await getModuleInstalledParams(module, client);
     },
     enabled: !!(isQueryEnabled && module),
     refetchOnWindowFocus: false,

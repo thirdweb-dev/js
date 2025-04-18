@@ -5,9 +5,9 @@ import type { Team } from "@/api/team";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronsUpDownIcon } from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
 type TeamSelectorMobileMenuButtonProps = {
@@ -15,9 +15,8 @@ type TeamSelectorMobileMenuButtonProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   upgradeTeamLink: string | undefined;
   account: Pick<Account, "email" | "id"> | undefined;
+  client: ThirdwebClient;
 };
-
-const client = getThirdwebClient();
 
 export function TeamSelectorMobileMenuButton(
   props: TeamSelectorMobileMenuButtonProps,
@@ -49,7 +48,7 @@ export function TeamSelectorMobileMenuButton(
             teamsAndProjects={teamsAndProjects}
             upgradeTeamLink={props.upgradeTeamLink}
             account={props.account}
-            client={client}
+            client={props.client}
           />
         </DynamicHeight>
       </DialogContent>

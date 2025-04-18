@@ -1,10 +1,10 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ThirdwebProvider } from "thirdweb/react";
 import { projectStub } from "../../../../../../../../stories/stubs";
+import { storybookThirdwebClient } from "../../../../../../../../stories/utils";
 import {
   type SponsoredTransaction,
   SponsoredTransactionsTableUI,
@@ -63,8 +63,6 @@ function createSponsoredTransactionStub() {
       "0x0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba",
   } satisfies SponsoredTransaction;
 }
-
-const client = getThirdwebClient();
 
 export const Default: Story = {
   args: {
@@ -157,7 +155,7 @@ function Variant(props: {
         filters={{}}
         setFilters={() => {}}
         isError={props.isError}
-        client={client}
+        client={storybookThirdwebClient}
         totalPages={props.totalPages}
         isPending={props.isPending}
         pageNumber={pageNumber}

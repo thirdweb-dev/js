@@ -1,10 +1,10 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { getUserThirdwebClient } from "../../../../api/lib/getAuthToken";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
@@ -22,9 +22,10 @@ export default async function PublishContractPage(
     ? decodedPublishUri
     : `ipfs://${decodedPublishUri}`;
 
+  const client = await getUserThirdwebClient();
   const publishMetadataFromUri = await fetchDeployMetadata({
     uri: publishUri,
-    client: getThirdwebClient(),
+    client,
   }).catch(() => null);
 
   if (!publishMetadataFromUri) {
@@ -50,6 +51,7 @@ export default async function PublishContractPage(
       await getLatestPublishedContractsWithPublisherMapping({
         publisher: address,
         contract_id: publishMetadataFromUri.name,
+        client,
       });
 
     if (publishedContract) {

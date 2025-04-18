@@ -50,6 +50,11 @@ export default async function Page(props: {
     }),
   );
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: currentTeam.id,
+  });
+
   const currentTeamWithRole = teamsWithRole.find(
     (teamWithRole) => teamWithRole.team.id === currentTeam.id,
   );
@@ -61,7 +66,7 @@ export default async function Page(props: {
       project={project}
       teamSlug={team_slug}
       showNebulaSettings={currentTeam.enabledScopes.includes("nebula")}
-      client={getThirdwebClient(authToken)}
+      client={client}
       teamId={currentTeam.id}
       teamsWithRole={teamsWithRole}
       isOwnerAccount={isOwnerAccount}

@@ -1,7 +1,6 @@
-import { defineChain, getContract } from "thirdweb";
+import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { TransactionsChartCardUI } from "../../../(team)/_components/TransactionsCard";
-import { getThirdwebClient } from "../../../../../../@/constants/thirdweb.server";
 import { fetchDashboardContractMetadata } from "../../../../../../@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import type { TransactionStats } from "../../../../../../types/analytics";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
@@ -10,10 +9,12 @@ export function TransactionsChartsUI({
   data,
   aggregatedData,
   searchParams,
+  client,
 }: {
   data: TransactionStats[];
   aggregatedData: TransactionStats[];
   searchParams: { [key: string]: string | string[] | undefined };
+  client: ThirdwebClient;
 }) {
   return (
     <>
@@ -25,7 +26,7 @@ export function TransactionsChartsUI({
       />
       <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
         <ChainDistributionCard data={aggregatedData} />
-        <ContractDistributionCard data={aggregatedData} />
+        <ContractDistributionCard data={aggregatedData} client={client} />
       </div>
     </>
   );
@@ -65,7 +66,8 @@ async function ChainDistributionCard({ data }: { data: TransactionStats[] }) {
 
 async function ContractDistributionCard({
   data,
-}: { data: TransactionStats[] }) {
+  client,
+}: { data: TransactionStats[]; client: ThirdwebClient }) {
   const _reducedData = await Promise.all(
     Object.entries(
       data
@@ -97,7 +99,7 @@ async function ContractDistributionCard({
             getContract({
               chain,
               address: contractAddress as string, // we filter above
-              client: getThirdwebClient(),
+              client,
             }),
           ).catch(() => undefined);
           return {

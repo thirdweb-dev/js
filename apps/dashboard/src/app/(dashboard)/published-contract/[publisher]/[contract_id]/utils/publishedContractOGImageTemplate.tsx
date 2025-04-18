@@ -177,7 +177,7 @@ export async function publishedContractOGImageTemplate(params: {
     ),
   ).then((res) => res.arrayBuffer());
 
-  const client = getThirdwebClient();
+  const client = getThirdwebClient(undefined);
 
   const [
     inter400,

@@ -14,7 +14,10 @@ import {
 import { ChevronDownIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import {
+  getAuthToken,
+  getUserThirdwebClient,
+} from "../../../../api/lib/getAuthToken";
 import {
   AllFilters,
   ChainOptionsFilter,
@@ -79,6 +82,8 @@ export default async function ChainListLayout(props: {
     : viewportWithHint > 1000
       ? "table"
       : "grid";
+
+  const client = await getUserThirdwebClient();
 
   return (
     <>
@@ -150,6 +155,7 @@ export default async function ChainListLayout(props: {
           searchParams={searchParams}
           activeView={activeView}
           isLoggedIn={!!authToken}
+          client={client}
         />
       </section>
     </>

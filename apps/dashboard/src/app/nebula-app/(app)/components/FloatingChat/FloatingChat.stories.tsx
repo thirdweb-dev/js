@@ -1,6 +1,6 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
+import { storybookThirdwebClient } from "../../../../../stories/utils";
 import { examplePrompts } from "../../data/examplePrompts";
 import { NebulaFloatingChatButton } from "./FloatingChat";
 
@@ -19,15 +19,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof NebulaFloatingChatButton>;
 
-const client = getThirdwebClient();
-
 export const LoggedIn: Story = {
   args: {
     authToken: "foo",
     nebulaParams: undefined,
     label: "Ask AI about this contract",
     examplePrompts: examplePrompts,
-    client,
+    client: storybookThirdwebClient,
   },
 };
 
@@ -37,6 +35,6 @@ export const LoggedOut: Story = {
     nebulaParams: undefined,
     label: "Ask AI about this contract",
     examplePrompts: examplePrompts,
-    client,
+    client: storybookThirdwebClient,
   },
 };

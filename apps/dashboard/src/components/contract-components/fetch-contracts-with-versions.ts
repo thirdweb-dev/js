@@ -1,4 +1,3 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
@@ -18,8 +17,8 @@ export function mapThirdwebPublisher(publisher: string) {
 export async function fetchPublishedContractVersions(
   publisherAddress: string,
   contractId: string,
+  client: ThirdwebClient,
 ) {
-  const client = getThirdwebClient();
   const sortedVersions = await getSortedPublishedContractVersions({
     publisherAddress,
     contractId,
@@ -80,9 +79,8 @@ async function getSortedPublishedContractVersions(params: {
 export async function fetchLatestPublishedContractVersion(
   publisherAddress: string,
   contractId: string,
+  client: ThirdwebClient,
 ) {
-  const client = getThirdwebClient();
-
   const sortedVersions = await getSortedPublishedContractVersions({
     publisherAddress,
     contractId,
@@ -104,12 +102,14 @@ export async function fetchLatestPublishedContractVersion(
 export async function fetchPublishedContractVersion(
   publisherAddress: string,
   contractId: string,
+  client: ThirdwebClient,
   version = "latest",
 ) {
   if (version === "latest") {
     const latestVersion = await fetchLatestPublishedContractVersion(
       publisherAddress,
       contractId,
+      client,
     );
 
     return latestVersion || null;
@@ -118,6 +118,7 @@ export async function fetchPublishedContractVersion(
   const allVersions = await fetchPublishedContractVersions(
     publisherAddress,
     contractId,
+    client,
   );
 
   if (allVersions.length === 0) {

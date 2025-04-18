@@ -50,12 +50,17 @@ export default async function Page(props: {
     (invite) => invite.status === "pending" || invite.status === "expired",
   );
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <TeamMembersSettingsPage
       team={team}
       members={members}
       userHasEditPermission={accountMemberInfo.role === "OWNER"}
-      client={getThirdwebClient(authToken)}
+      client={client}
       teamInvites={pendingOrExpiredInvites}
     />
   );

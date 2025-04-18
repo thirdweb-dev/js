@@ -8,6 +8,7 @@ import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 
 export async function createEcosystem(options: {
   teamSlug: string;
+  teamId: string;
   name: string;
   logo: File;
   permission: "PARTNER_WHITELIST" | "ANYONE";
@@ -19,10 +20,13 @@ export async function createEcosystem(options: {
     };
   }
 
-  const { teamSlug, logo, ...data } = options;
+  const { teamSlug, teamId, logo, ...data } = options;
 
   const imageUrl = await upload({
-    client: getThirdwebClient(token),
+    client: getThirdwebClient({
+      jwt: token,
+      teamId: teamId,
+    }),
     files: [logo],
   });
 

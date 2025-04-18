@@ -22,9 +22,9 @@ type PageProps = {
 };
 
 export default async function Image(props: PageProps) {
-  const client = getThirdwebClient();
+  const client = getThirdwebClient(undefined);
   const params = await props.params;
-  const resolvedInfo = await resolveAddressAndEns(params.addressOrEns);
+  const resolvedInfo = await resolveAddressAndEns(params.addressOrEns, client);
 
   if (!resolvedInfo) {
     notFound();

@@ -1,10 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import type { TransactionError } from "../../../../../../../contexts/error-handler";
@@ -70,7 +69,7 @@ function Component() {
     <ThirdwebProvider>
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <div>
-          <ConnectButton client={getThirdwebClient()} />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
 
         <div className="flex items-center gap-5">

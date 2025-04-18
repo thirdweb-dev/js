@@ -7,12 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   type MintFormValues,
@@ -75,7 +74,7 @@ function Component() {
     <ThirdwebProvider>
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <div>
-          <ConnectButton client={getThirdwebClient()} />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
 
         <div className="flex flex-wrap items-center gap-5">

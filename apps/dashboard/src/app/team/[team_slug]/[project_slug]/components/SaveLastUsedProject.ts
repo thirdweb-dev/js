@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-
-export const LAST_USED_PROJECT_ID = "last-used-project-id";
-export const LAST_USED_TEAM_ID = "last-used-team-id";
+import {
+  LAST_USED_PROJECT_ID,
+  LAST_USED_TEAM_ID,
+} from "../../../../../constants/cookies";
+import { setCookie } from "../../../../../lib/cookie";
 
 export function SaveLastUsedProject(props: {
   projectId: string;
@@ -12,8 +14,8 @@ export function SaveLastUsedProject(props: {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     try {
-      localStorage.setItem(LAST_USED_PROJECT_ID, props.projectId);
-      localStorage.setItem(LAST_USED_TEAM_ID, props.teamId);
+      setCookie(LAST_USED_PROJECT_ID, props.projectId);
+      setCookie(LAST_USED_TEAM_ID, props.teamId);
     } catch {
       // ignore localStorage errors
     }

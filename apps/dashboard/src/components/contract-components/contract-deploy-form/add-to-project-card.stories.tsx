@@ -1,7 +1,9 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import {
   AddToProjectCardUI,
   type MinimalProject,
@@ -83,7 +85,7 @@ function Variant(props: {
     <BadgeContainer label={props.label}>
       <AddToProjectCardUI
         teamsAndProjects={teamsAndProjects}
-        client={getThirdwebClient()}
+        client={storybookThirdwebClient}
         onSelectionChange={setSelection}
         selection={selection}
         enabled={isEnabled}

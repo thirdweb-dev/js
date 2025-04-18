@@ -7,10 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { mobileViewport } from "../../../stories/utils";
+import {
+  mobileViewport,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
 const meta = {
@@ -40,8 +42,6 @@ export const Mobile: Story = {
     viewport: mobileViewport("iphone14"),
   },
 };
-
-const client = getThirdwebClient();
 
 function Variants() {
   const [isVerifiedEmail, setIsVerifiedEmail] = useState(true);
@@ -119,7 +119,7 @@ function Variants() {
             ? new Date().toISOString()
             : undefined,
         }}
-        client={client}
+        client={storybookThirdwebClient}
         updateAccountAvatar={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}

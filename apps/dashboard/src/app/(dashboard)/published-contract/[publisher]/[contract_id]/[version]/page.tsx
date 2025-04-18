@@ -1,6 +1,5 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { SimpleGrid } from "@chakra-ui/react";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "components/contract-components/published-contract";
@@ -8,9 +7,9 @@ import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
+import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
-
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
     return "deployer.thirdweb.eth";
@@ -32,13 +31,14 @@ export default async function PublishedContractPage(
   const params = await props.params;
   // resolve ENS if required
   let publisherAddress: string | undefined = undefined;
+  const client = await getUserThirdwebClient();
 
   if (isAddress(params.publisher)) {
     publisherAddress = params.publisher;
   } else {
     try {
       publisherAddress = await resolveAddress({
-        client: getThirdwebClient(),
+        client,
         name: mapThirdwebPublisher(params.publisher),
       });
     } catch {
@@ -54,6 +54,7 @@ export default async function PublishedContractPage(
   const publishedContractVersions = await fetchPublishedContractVersions(
     publisherAddress,
     params.contract_id,
+    client,
   );
 
   // determine the "active" version of the contract based on the version that is passed
@@ -73,6 +74,7 @@ export default async function PublishedContractPage(
         {...params}
         allVersions={publishedContractVersions}
         activeVersion={publishedContract}
+        client={client}
       >
         <PublishedActions
           {...params}

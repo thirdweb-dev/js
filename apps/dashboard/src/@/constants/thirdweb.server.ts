@@ -23,7 +23,14 @@ import { getZkPaymasterData } from "thirdweb/wallets/smart";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
 // returns a thirdweb client with optional JWT passed in
-export function getThirdwebClient(jwt?: string) {
+export function getThirdwebClient(
+  options:
+    | {
+        jwt: string | null | undefined;
+        teamId: string | undefined;
+      }
+    | undefined,
+) {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
@@ -71,7 +78,8 @@ export function getThirdwebClient(jwt?: string) {
   }
 
   return createThirdwebClient({
-    secretKey: jwt ? jwt : DASHBOARD_THIRDWEB_SECRET_KEY,
+    teamId: options?.teamId,
+    secretKey: options?.jwt ? options.jwt : DASHBOARD_THIRDWEB_SECRET_KEY,
     clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
     config: {
       storage: {

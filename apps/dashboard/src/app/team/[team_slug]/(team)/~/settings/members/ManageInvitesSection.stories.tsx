@@ -1,9 +1,11 @@
 import type { TeamInvite } from "@/api/team-invites";
 import type { TeamAccountRole } from "@/api/team-members";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
-import { BadgeContainer } from "../../../../../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../../../../../stories/utils";
 import { ManageInvitesSection } from "./ManageInvitesSection";
 
 const meta = {
@@ -70,7 +72,7 @@ function Story() {
             team={freeTeam}
             userHasEditPermission={true}
             teamInvites={invitesStub}
-            client={getThirdwebClient()}
+            client={storybookThirdwebClient}
             deleteInvite={deleteInviteStub}
           />
         </BadgeContainer>
@@ -80,7 +82,7 @@ function Story() {
             team={freeTeam}
             userHasEditPermission={false}
             teamInvites={invitesStub}
-            client={getThirdwebClient()}
+            client={storybookThirdwebClient}
             deleteInvite={deleteInviteStub}
           />
         </BadgeContainer>

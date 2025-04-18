@@ -1,4 +1,3 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   type DashboardContractMetadata,
   fetchDashboardContractMetadata,
@@ -32,6 +31,7 @@ export function ContractMetadata({
       chain={chain}
       address={contract.address}
       externalLinks={externalLinks}
+      client={contract.client}
     />
   );
 }
@@ -43,7 +43,7 @@ export async function getContractMetadataHeaderData(
     fetchDashboardContractMetadata(contract),
     fetchPublishedContractsFromDeploy({
       contract,
-      client: getThirdwebClient(),
+      client: contract.client,
     }),
   ]);
 

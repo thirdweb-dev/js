@@ -69,6 +69,11 @@ export default async function Page(props: {
     period: interval,
   });
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
+
   return (
     <div>
       <AccountAbstractionSummary
@@ -79,7 +84,7 @@ export default async function Page(props: {
       <div className="h-10" />
       <AccountAbstractionAnalytics
         userOpStats={userOpStats}
-        client={getThirdwebClient(authToken)}
+        client={client}
         teamId={project.teamId}
         projectId={project.id}
         teamSlug={params.team_slug}

@@ -117,6 +117,7 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               teamsAndProjects={props.teamsAndProjects}
               upgradeTeamLink={undefined}
               account={props.account}
+              client={props.client}
             />
           )}
         </div>

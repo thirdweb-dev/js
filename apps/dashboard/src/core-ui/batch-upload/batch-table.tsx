@@ -28,11 +28,13 @@ import {
 import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { NFTInput } from "thirdweb/utils";
+import { useThirdwebClient } from "../../@/constants/thirdweb.client";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
+  const client = useThirdwebClient();
   const img = useImageFileOrUrl(
     typeof src === "string" && src.startsWith("ipfs://")
-      ? replaceIpfsUrl(src)
+      ? replaceIpfsUrl(src, client)
       : src,
   );
   return <Image alt="" {...props} src={img} />;
@@ -41,9 +43,10 @@ const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
 const FileVideo: React.FC<
   BoxProps & Omit<React.ComponentProps<"video">, "ref">
 > = ({ src, ...props }) => {
+  const client = useThirdwebClient();
   const video = useImageFileOrUrl(
     typeof src === "string" && src.startsWith("ipfs://")
-      ? replaceIpfsUrl(src)
+      ? replaceIpfsUrl(src, client)
       : src,
   );
   return <Box as="video" {...props} src={video} />;

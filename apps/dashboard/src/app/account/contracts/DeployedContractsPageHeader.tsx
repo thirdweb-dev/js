@@ -52,7 +52,6 @@ export function DeployedContractsPageHeader(props: {
               href="/explore"
               category="contracts"
               label="deploy-contract"
-              target="_blank"
             >
               <PlusIcon className="size-4" />
               Deploy contract

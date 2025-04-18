@@ -1,7 +1,7 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { ThirdwebClient } from "thirdweb";
 import { defineChain, getChainMetadata } from "thirdweb/chains";
 
 type RouteListRowProps = {
@@ -15,6 +15,7 @@ type RouteListRowProps = {
   destinationTokenIconUri?: string | null;
   destinationTokenSymbol?: string;
   destinationTokenName?: string;
+  client: ThirdwebClient;
 };
 
 export async function RouteListRow({
@@ -26,6 +27,7 @@ export async function RouteListRow({
   destinationTokenAddress,
   destinationTokenIconUri,
   destinationTokenSymbol,
+  client,
 }: RouteListRowProps) {
   const [
     originChain,
@@ -40,13 +42,13 @@ export async function RouteListRow({
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: originTokenIconUri,
-          client: getThirdwebClient(),
+          client,
         })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: destinationTokenIconUri,
-          client: getThirdwebClient(),
+          client,
         })
       : undefined,
   ]);

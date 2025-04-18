@@ -1,6 +1,6 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../../../../../stories/stubs";
+import { storybookThirdwebClient } from "../../../../../../../stories/utils";
 import {
   DeleteTeamCard,
   LeaveTeamCard,
@@ -38,7 +38,7 @@ function Story() {
           console.log(value);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
-        client={getThirdwebClient()}
+        client={storybookThirdwebClient}
         leaveTeam={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}

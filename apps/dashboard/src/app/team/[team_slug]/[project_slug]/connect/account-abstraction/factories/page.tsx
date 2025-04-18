@@ -115,7 +115,10 @@ async function AsyncYourFactories(props: {
     authToken: props.authToken,
   });
 
-  const client = getThirdwebClient(props.authToken);
+  const client = getThirdwebClient({
+    jwt: props.authToken,
+    teamId: props.teamId,
+  });
 
   const factories = (
     await Promise.all(

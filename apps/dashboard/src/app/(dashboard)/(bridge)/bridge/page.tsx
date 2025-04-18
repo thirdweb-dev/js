@@ -1,3 +1,4 @@
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Metadata } from "next";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 
@@ -18,10 +19,14 @@ export default async function RoutesPage({
   searchParams,
 }: { searchParams: Record<string, string | string[]> }) {
   const { chainId } = searchParams;
+  const client = getThirdwebClient(undefined);
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
       <main className="container z-10 flex justify-center">
-        <UniversalBridgeEmbed chainId={chainId ? Number(chainId) : undefined} />
+        <UniversalBridgeEmbed
+          chainId={chainId ? Number(chainId) : undefined}
+          client={client}
+        />
       </main>
 
       {/* eslint-disable-next-line @next/next/no-img-element */}

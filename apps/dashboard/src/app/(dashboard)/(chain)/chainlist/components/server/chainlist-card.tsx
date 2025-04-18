@@ -2,11 +2,11 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleAlertIcon, TicketCheckIcon } from "lucide-react";
 import Link from "next/link";
+import type { JSX } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
-
-import type { JSX } from "react";
 
 type ChainListCardProps = {
   favoriteButton: JSX.Element | undefined;
@@ -17,6 +17,7 @@ type ChainListCardProps = {
   currencySymbol: string;
   isDeprecated: boolean;
   iconUrl?: string;
+  client: ThirdwebClient;
 };
 
 export async function ChainListCard({
@@ -28,6 +29,7 @@ export async function ChainListCard({
   enabledServices,
   favoriteButton,
   iconUrl,
+  client,
 }: ChainListCardProps) {
   const chainMetadata = await getChainMetadata(chainId);
 
@@ -36,7 +38,7 @@ export async function ChainListCard({
       <Card className="h-full w-full transition-colors hover:border-active-border">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
-            <ChainIcon iconUrl={iconUrl} className="size-6" />
+            <ChainIcon iconUrl={iconUrl} className="size-6" client={client} />
             <Link
               className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
               href={`/${chainSlug}`}

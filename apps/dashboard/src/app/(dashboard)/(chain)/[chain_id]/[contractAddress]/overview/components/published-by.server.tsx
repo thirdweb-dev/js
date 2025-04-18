@@ -1,4 +1,3 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { ThirdwebContract } from "thirdweb";
 import { getAuthTokenWalletAddress } from "../../../../../../api/lib/getAuthToken";
 import { PublishedByUI, getPublishedByCardProps } from "./published-by-ui";
@@ -8,12 +7,11 @@ interface PublishedByProps {
 }
 
 export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
-  const client = getThirdwebClient();
   const address = await getAuthTokenWalletAddress();
   const props = await getPublishedByCardProps({
     address,
     contract,
-    client,
+    client: contract.client,
   });
 
   if (!props) {
@@ -27,6 +25,7 @@ export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
       name={props.name}
       publisher={props.publisher}
       version={props.version}
+      client={contract.client}
     />
   );
 };

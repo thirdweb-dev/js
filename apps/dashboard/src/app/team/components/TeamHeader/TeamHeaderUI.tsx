@@ -165,6 +165,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             teamsAndProjects={props.teamsAndProjects}
             upgradeTeamLink={`/team/${currentTeam.slug}/settings`}
             account={props.account}
+            client={props.client}
           />
         </div>
 

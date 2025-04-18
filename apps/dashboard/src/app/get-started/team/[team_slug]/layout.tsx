@@ -2,6 +2,7 @@ import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { notFound } from "next/navigation";
+import { getThirdwebClient } from "../../../../@/constants/thirdweb.server";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -42,10 +43,16 @@ export default async function Layout(props: {
     })),
   );
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <div className="flex min-h-dvh grow flex-col">
       <div className="border-b bg-card">
         <TeamHeaderLoggedIn
+          client={client}
           account={account}
           accountAddress={accountAddress}
           currentProject={undefined}

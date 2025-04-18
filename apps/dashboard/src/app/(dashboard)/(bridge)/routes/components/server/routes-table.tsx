@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Address } from "thirdweb";
 import { checksumAddress } from "thirdweb/utils";
 import { getRoutes } from "../../../utils";
@@ -136,6 +137,7 @@ export async function RoutesData(props: {
   const startIndex = (activePage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedRoutes = routesToRender.slice(startIndex, endIndex);
+  const client = getThirdwebClient(undefined);
 
   return (
     <>
@@ -170,6 +172,7 @@ export async function RoutesData(props: {
                     destinationTokenIconUri={route.destinationToken.iconUri}
                     destinationTokenSymbol={route.destinationToken.symbol}
                     destinationTokenName={route.destinationToken.name}
+                    client={client}
                   />
                 ))}
               </TableBody>
@@ -193,6 +196,7 @@ export async function RoutesData(props: {
                   destinationTokenIconUri={route.destinationToken.iconUri}
                   destinationTokenSymbol={route.destinationToken.symbol}
                   destinationTokenName={route.destinationToken.name}
+                  client={client}
                 />
               </li>
             ))}

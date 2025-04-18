@@ -1,8 +1,10 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { BadgeContainer } from "../../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../../stories/utils";
 import {
   ExecuteTransactionCardLayout,
   type TxStatus,
@@ -25,8 +27,6 @@ export const Variants: Story = {
   args: {},
 };
 
-const client = getThirdwebClient();
-
 const exampleTxHash =
   "0xbe81f5a6421625052214b41bb79d1d82751b29aa5639b54d120f00531bb8bcf";
 
@@ -35,7 +35,7 @@ function Story() {
     <ThirdwebProvider>
       <div className="container flex max-w-[800px] flex-col gap-10 py-10">
         <div>
-          <ConnectButton client={client} />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
         <Variant label="Idle" status={{ type: "idle" }} />
         <Variant label="Sending" status={{ type: "sending" }} />
@@ -66,7 +66,7 @@ function Variant(props: {
       <ExecuteTransactionCardLayout
         setStatus={setStatus}
         status={status}
-        client={client}
+        client={storybookThirdwebClient}
         txData={{
           chainId: 1,
           to: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675", // thirdweb.eth

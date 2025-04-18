@@ -16,11 +16,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 
 type ExploreCategoryPageProps = {
   params: Promise<{
     category: string;
   }>;
+  client: ThirdwebClient;
 };
 
 export async function generateMetadata(
@@ -102,6 +104,7 @@ export default async function ExploreCategoryPage(
                 key={publisher + contractId + overrides?.title}
               >
                 <ContractCard
+                  client={props.client}
                   publisher={publisher}
                   contractId={contractId}
                   titleOverride={overrides?.title}

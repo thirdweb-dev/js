@@ -1,7 +1,10 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { teamStub } from "../../../stories/stubs";
-import { BadgeContainer, mobileViewport } from "../../../stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import { AccountTeamsUI } from "./AccountTeamsUI";
 
 const meta = {
@@ -37,7 +40,7 @@ function Variants() {
     <div className="container mx-auto flex w-full max-w-[1100px] flex-col gap-10 py-10">
       <BadgeContainer label="4 Teams">
         <AccountTeamsUI
-          client={getThirdwebClient()}
+          client={storybookThirdwebClient}
           teamsWithRole={[
             {
               team: teamStub("1", "free"),
@@ -61,7 +64,7 @@ function Variants() {
 
       <BadgeContainer label="1 Team">
         <AccountTeamsUI
-          client={getThirdwebClient()}
+          client={storybookThirdwebClient}
           teamsWithRole={[
             {
               team: teamStub("1", "free"),

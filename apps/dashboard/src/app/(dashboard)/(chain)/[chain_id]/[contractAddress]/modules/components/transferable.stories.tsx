@@ -1,10 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   type TransferableModuleFormValues,
@@ -74,7 +73,7 @@ function Component() {
         </div>
 
         <div>
-          <ConnectButton client={getThirdwebClient()} />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
 
         <BadgeContainer label="Empty AllowList, Not Restricted">

@@ -29,6 +29,11 @@ export default async function Page(props: {
     redirect("/team");
   }
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   const projects = await getProjects(params.team_slug);
   const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
 
@@ -49,7 +54,7 @@ export default async function Page(props: {
         <TeamProjectsPage
           projects={projectsWithTotalWallets}
           team={team}
-          client={getThirdwebClient(authToken)}
+          client={client}
         />
       </div>
     </div>

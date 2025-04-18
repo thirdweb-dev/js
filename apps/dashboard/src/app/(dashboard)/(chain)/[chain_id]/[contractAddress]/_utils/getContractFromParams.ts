@@ -5,6 +5,7 @@ import { TW_LOCAL_CHAIN_STORE } from "stores/storageKeys";
 import { getAddress, getContract, isAddress } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { fetchChain } from "utils/fetchChain";
+import { LAST_USED_TEAM_ID } from "../../../../../../constants/cookies";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 
 export async function getContractPageParamsInfo(params: {
@@ -43,13 +44,18 @@ export async function getContractPageParamsInfo(params: {
 
   // attempt to get the auth token
   const token = await getAuthToken();
+  const cookiesObj = await cookies();
+  const teamId = cookiesObj.get(LAST_USED_TEAM_ID)?.value;
 
   const contract = getContract({
     address: contractAddress,
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chainMetadata),
     // if we have the auth token pass it into the client
-    client: getThirdwebClient(token || undefined),
+    client: getThirdwebClient({
+      jwt: token || undefined,
+      teamId,
+    }),
   });
 
   return {

@@ -40,7 +40,7 @@ export default async function RootTeamLayout(props: {
         {props.children}
       </div>
 
-      <SaveLastVisitedTeamPage />
+      <SaveLastVisitedTeamPage teamId={team.id} />
 
       <Suspense fallback={null}>
         <OpCreditsGrantedModalWrapperServer />

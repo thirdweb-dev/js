@@ -39,7 +39,7 @@ export default async function DropPage({
   }
   // eslint-disable-next-line no-restricted-syntax
   const chain = defineDashboardChain(project.chainId, undefined);
-  const client = getThirdwebClient();
+  const client = getThirdwebClient(undefined);
 
   const contract = getContract({
     address: project.contractAddress,

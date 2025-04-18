@@ -2,11 +2,11 @@
 
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useCallback, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { LazyCreateProjectDialog } from "../../../../components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { doLogout } from "../../../login/auth-actions";
@@ -27,6 +27,7 @@ export function TeamHeaderLoggedIn(props: {
   currentProject: Project | undefined;
   account: Pick<Account, "email" | "id">;
   accountAddress: string;
+  client: ThirdwebClient;
 }) {
   const [createProjectDialogState, setCreateProjectDialogState] = useState<
     { team: Team; isOpen: true } | { isOpen: false }
@@ -61,7 +62,7 @@ export function TeamHeaderLoggedIn(props: {
         team,
       });
     },
-    client: getThirdwebClient(),
+    client: props.client,
     accountAddress: props.accountAddress,
     getChangelogNotifications: getChangelogNotifications,
     getInboxNotifications: getInboxNotifications,

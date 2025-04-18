@@ -18,10 +18,15 @@ export default async function Page() {
     loginRedirect(pagePath);
   }
 
+  const client = getThirdwebClient({
+    jwt: token,
+    teamId: undefined,
+  });
+
   return (
     <AccountSettingsPage
       account={account}
-      client={getThirdwebClient(token)}
+      client={client}
       defaultTeamSlug={defaultTeam.slug}
       defaultTeamName={defaultTeam.name}
     />

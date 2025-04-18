@@ -18,12 +18,14 @@ import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { type Column, type Row, useTable } from "react-table";
+import type { ThirdwebClient } from "thirdweb";
 import type { PublishedContractDetails } from "../../../../../components/contract-components/hooks";
 
 interface PublishedContractTableProps {
   contractDetails: ContractDataInput[];
   footer?: React.ReactNode;
   publisherEnsName: string | undefined;
+  client: ThirdwebClient;
 }
 
 type ContractDataInput = PublishedContractDetails;
@@ -57,7 +59,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
         Cell: (cell: any) => (
           <Img
             alt=""
-            src={cell.value ? replaceIpfsUrl(cell.value) : ""}
+            src={cell.value ? replaceIpfsUrl(cell.value, props.client) : ""}
             fallback={
               <div className="size-8 rounded-full border border-border bg-muted" />
             }
@@ -114,7 +116,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
                   className="relative z-10 h-auto w-auto p-2"
                 >
                   <TrackedLinkTW
-                    href={replaceIpfsUrl(cell.value.audit)}
+                    href={replaceIpfsUrl(cell.value.audit, props.client)}
                     category="deploy"
                     label="audited"
                     aria-label="View Contract Audit"
@@ -139,7 +141,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
     ];
 
     return cols;
-  }, [trackEvent, publisherEnsName]);
+  }, [trackEvent, publisherEnsName, props.client]);
 
   const tableInstance = useTable({
     columns: tableColumns,

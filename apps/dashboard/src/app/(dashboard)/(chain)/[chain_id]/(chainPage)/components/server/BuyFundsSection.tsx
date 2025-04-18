@@ -1,12 +1,16 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { PayModalButton } from "../client/PayModal";
 import { CreditCardIcon } from "../icons/CreditCardIcon";
 import { SectionTitle } from "./SectionTitle";
 
-export function BuyFundsSection(props: { chain: ChainMetadata }) {
+export function BuyFundsSection(props: {
+  chain: ChainMetadata;
+  client: ThirdwebClient;
+}) {
   const sanitizedChainName = props.chain.name.replace("Mainnet", "").trim();
 
   return (
@@ -18,6 +22,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
             <ChainIcon
               className="-mr-2 size-12 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
+              client={props.client}
             />
             <CreditCardIcon
               bg="hsl(var(--background))"
