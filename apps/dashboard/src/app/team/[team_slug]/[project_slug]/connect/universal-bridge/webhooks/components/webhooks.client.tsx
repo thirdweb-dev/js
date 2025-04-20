@@ -57,6 +57,7 @@ type Webhook = {
   createdAt: string;
   id: string;
   secret: string;
+  version?: string; // TODO (UB) make this mandatory after migration
 };
 
 type PayWebhooksPageProps = {
@@ -75,7 +76,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     queryFn: async () => {
       const res = await payServerProxy({
         method: "GET",
-        pathname: "/webhooks/get-all",
+        pathname: "/webhooks/get-all", // TODO (UB) switch to UB endpoint after migration
         searchParams: {
           /**
            *  @deprecated - remove after migration
@@ -147,6 +148,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
               <TableHead>Url</TableHead>
               <TableHead>Secret</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead>Webhook Version</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
@@ -166,6 +168,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell>
                   {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
                 </TableCell>
+                <TableCell>{webhook.version || "v1"}</TableCell>
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
@@ -263,7 +266,8 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
             <DialogHeader>
               <DialogTitle>Create Webhook</DialogTitle>
               <DialogDescription>
-                Receive a webhook notification when a pay event occurs.
+                Receive a webhook notification when a bridge, swap or onramp
+                event occurs.
               </DialogDescription>
             </DialogHeader>
 
@@ -294,21 +298,20 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
               )}
             />
 
-            {/* Note: this is a "fake" form field since there is nothing to select yet */}
             <FormItem>
-              <FormLabel>Event Type</FormLabel>
-              <Select disabled defaultValue="purchase_complete">
+              <FormLabel>Webhook Version</FormLabel>
+              <Select defaultValue="v2">
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Purchase Complete" />
+                  <SelectValue placeholder="v2" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="purchase_complete">
-                    Purchase Complete
-                  </SelectItem>
+                  <SelectItem value="v2">v2</SelectItem>
+                  <SelectItem value="v1">v1</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                Which event should trigger this webhook?
+                Select the data format of the webhook payload (v2 recommended,
+                v1 for legacy users).
               </FormDescription>
               <FormMessage />
             </FormItem>
