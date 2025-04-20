@@ -48,7 +48,7 @@
     "react-html-parser": "2.0.2",
     "remark-gfm": "3.0.1",
     "server-only": "^0.0.1",
-    "shiki": "1.27.0",
+    "shiki": "3.2.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "workspace:*",
