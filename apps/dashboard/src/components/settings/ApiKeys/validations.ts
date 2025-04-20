@@ -114,6 +114,13 @@ export const apiKeyEmbeddedWalletsValidationSchema = z.object({
 
 export const apiKeyPayConfigValidationSchema = z.object({
   payoutAddress: payoutAddressValidation,
+  developerFeeBPS: z
+    .string()
+    .transform((val) => Number(val))
+    .refine((val) => val >= 0 && val <= 100, {
+      message: "Developer fee must be between 0 and 100",
+    })
+    .optional(),
 });
 
 export type ApiKeyEmbeddedWalletsValidationSchema = z.infer<

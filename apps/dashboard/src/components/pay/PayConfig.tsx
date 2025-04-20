@@ -42,6 +42,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
     values: {
       payoutAddress: payService?.payoutAddress ?? "",
+      developerFeeBPS: payService?.developerFeeBPS ?? 0,
     },
   });
 
@@ -59,49 +60,55 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     },
   });
 
-  const handleSubmit = form.handleSubmit(({ payoutAddress }) => {
-    const services = props.project.services;
+  const handleSubmit = form.handleSubmit(
+    ({ payoutAddress, developerFeeBPS }) => {
+      const services = props.project.services;
 
-    const newServices = services.map((service) => {
-      if (service.name !== "pay") {
-        return service;
-      }
+      const newServices = services.map((service) => {
+        if (service.name !== "pay") {
+          return service;
+        }
 
-      return {
-        ...service,
-        payoutAddress,
-      };
-    });
+        return {
+          ...service,
+          payoutAddress,
+          developerFeeBPS: developerFeeBPS ? developerFeeBPS * 100 : 0,
+        };
+      });
 
-    updateProject.mutate(
-      {
-        services: newServices,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Fee sharing updated");
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "configuration-update",
-            label: "success",
-            data: {
-              payoutAddress,
-            },
-          });
+      updateProject.mutate(
+        {
+          services: newServices,
         },
-        onError: (err) => {
-          toast.error("Failed to update fee sharing");
-          console.error(err);
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "configuration-update",
-            label: "error",
-            error: err,
-          });
+        {
+          onSuccess: () => {
+            toast.success("Fee sharing updated");
+            trackEvent({
+              category: TRACKING_CATEGORY,
+              action: "configuration-update",
+              label: "success",
+              data: {
+                payoutAddress,
+              },
+            });
+          },
+          onError: (err) => {
+            toast.error("Failed to update fee sharing");
+            console.error(err);
+            trackEvent({
+              category: TRACKING_CATEGORY,
+              action: "configuration-update",
+              label: "error",
+              error: err,
+            });
+          },
         },
-      },
-    );
-  });
+      );
+    },
+    (errors) => {
+      console.log(errors);
+    },
+  );
 
   if (!payService) {
     return (
@@ -140,7 +147,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
             </h3>
             <p className="mt-1.5 mb-4 text-foreground text-sm">
               thirdweb collects a 0.3% protocol fee on swap transactions. You
-              may set your own developer fee in addition to this fee.
+              may set your own developer fee in addition to this fee.{" "}
               <Link
                 href="https://portal.thirdweb.com/connect/pay/fee-sharing"
                 target="_blank"
@@ -150,18 +157,35 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
               </Link>
             </p>
 
-            <FormField
-              control={form.control}
-              name="payoutAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Recipient address</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="0x..." />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="payoutAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recipient address</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="0x..." />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="developerFeeBPS"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fee amount</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <Input {...field} type="number" placeholder="0.5" />
+                        <span className="text-muted-foreground text-sm">%</span>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </SettingsCard>
       </form>
