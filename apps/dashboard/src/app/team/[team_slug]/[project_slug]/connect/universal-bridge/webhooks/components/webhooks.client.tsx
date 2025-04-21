@@ -1,6 +1,11 @@
 "use client";
 
 import { payServerProxy } from "@/actions/proxies";
+import {
+  createWebhook,
+  deleteWebhook,
+  getWebhooks,
+} from "@/api/universal-bridge/webhooks";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -50,53 +55,17 @@ import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
 
-type Webhook = {
-  url: string;
-  label: string;
-  active: boolean;
-  createdAt: string;
-  id: string;
-  secret: string;
-  version?: string; // TODO (UB) make this mandatory after migration
-};
-
 type PayWebhooksPageProps = {
-  /**
-   *  @deprecated - remove after migration
-   */
   clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
 };
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
-      const res = await payServerProxy({
-        method: "GET",
-        pathname: "/webhooks/get-all", // TODO (UB) switch to UB endpoint after migration
-        searchParams: {
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
+      return await getWebhooks({
+        clientId: props.clientId,
       });
-
-      if (!res.ok) {
-        throw new Error();
-      }
-
-      const json = res.data as { result: Array<Webhook> };
-      return json.result;
     },
   });
 
@@ -108,11 +77,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -126,11 +91,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button size="sm" variant="default" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -146,7 +107,6 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
             <TableRow>
               <TableHead>Label</TableHead>
               <TableHead>Url</TableHead>
-              <TableHead>Secret</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Webhook Version</TableHead>
               <TableHead>Delete</TableHead>
@@ -158,23 +118,13 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell className="font-medium">{webhook.label}</TableCell>
                 <TableCell>{webhook.url}</TableCell>
                 <TableCell>
-                  <CopyTextButton
-                    textToShow={shortenString(webhook.secret)}
-                    textToCopy={webhook.secret}
-                    tooltip="Use this secret to validate the authenticity of incoming webhook requests."
-                    copyIconPosition="right"
-                  />
-                </TableCell>
-                <TableCell>
                   {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
                 </TableCell>
                 <TableCell>{webhook.version || "v1"}</TableCell>
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
-                    projectId={props.projectId}
                     webhookId={webhook.id}
-                    teamId={props.teamId}
                   >
                     <Button variant="ghost" size="icon">
                       <TrashIcon className="size-5" strokeWidth={1} />
@@ -193,6 +143,11 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
 const formSchema = z.object({
   url: z.string().url("Please enter a valid URL."),
   label: z.string().min(3, "Label must be at least 3 characters long"),
+  version: z.string(),
+  secret: z
+    .string()
+    .min(12, "Secret must be at least 12 characters long")
+    .optional(),
 });
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
@@ -202,35 +157,21 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
     defaultValues: {
       url: "",
       label: "",
+      version: "2",
+      secret: undefined,
     },
   });
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await payServerProxy({
-        method: "POST",
-        pathname: "/webhooks/create",
-        body: JSON.stringify({
-          ...values,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await createWebhook({
+        clientId: props.clientId,
+        url: values.url,
+        label: values.label,
+        version: Number(values.version),
+        secret: values.secret,
       });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data as { result: string };
-      return json.result;
+      return null;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -258,6 +199,8 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                   form.clearErrors();
                   form.setValue("url", "");
                   form.setValue("label", "");
+                  form.setValue("version", "2");
+                  form.setValue("secret", undefined);
                 },
               }),
             )}
@@ -300,13 +243,13 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
 
             <FormItem>
               <FormLabel>Webhook Version</FormLabel>
-              <Select defaultValue="v2">
+              <Select defaultValue="2">
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="v2" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="v2">v2</SelectItem>
-                  <SelectItem value="v1">v1</SelectItem>
+                  <SelectItem value="2">v2</SelectItem>
+                  <SelectItem value="1">v1</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
@@ -340,30 +283,11 @@ function DeleteWebhookButton(
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await payServerProxy({
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        }),
-        pathname: "/webhooks/revoke",
+      await deleteWebhook({
+        clientId: props.clientId,
+        webhookId: id,
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete webhook");
-      }
-
-      const json = res.data as { result: string };
-      return json.result;
+      return null;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
