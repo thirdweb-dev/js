@@ -112,7 +112,9 @@ export async function status(options: status.Options): Promise<status.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code}: ${errorJson.message}`);
+    throw new Error(
+      `${errorJson.code} | ${errorJson.message} - ${errorJson.correlationId}`,
+    );
   }
 
   const { data }: { data: Status } = await response.json();
@@ -157,15 +159,15 @@ export async function status(options: status.Options): Promise<status.Result> {
 export declare namespace status {
   type Options =
     | {
-        transactionHash: ox__Hex.Hex;
-        chainId: number;
-        client: ThirdwebClient;
-      }
+      transactionHash: ox__Hex.Hex;
+      chainId: number;
+      client: ThirdwebClient;
+    }
     | {
-        transactionHash: ox__Hex.Hex;
-        chain: Chain;
-        client: ThirdwebClient;
-      };
+      transactionHash: ox__Hex.Hex;
+      chain: Chain;
+      client: ThirdwebClient;
+    };
 
   type Result = Status;
 }

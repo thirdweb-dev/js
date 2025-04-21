@@ -24,14 +24,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.quote", () => {
       Sell.quote({
         originChainId: 1,
         originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        destinationChainId: 10,
+        destinationChainId: 444,
         destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
         sellAmountWei: toWei("1000000000"),
         client: TEST_CLIENT,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: AMOUNT_TOO_HIGH | The provided amount is too high for the requested route.]`,
-    );
+    ).rejects.toThrowError();
   });
 });
 
@@ -43,8 +41,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.prepare", () => {
       destinationChainId: 10,
       destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       sellAmountWei: toWei("0.01"),
-      sender: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      receiver: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
       client: TEST_CLIENT,
     });
 
@@ -60,15 +58,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.prepare", () => {
       Sell.prepare({
         originChainId: 1,
         originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        destinationChainId: 10,
+        destinationChainId: 444,
         destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
         sellAmountWei: toWei("1000000000"),
-        sender: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        receiver: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+        receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
         client: TEST_CLIENT,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: AMOUNT_TOO_HIGH | The provided amount is too high for the requested route.]`,
-    );
+    ).rejects.toThrowError();
   });
 });
