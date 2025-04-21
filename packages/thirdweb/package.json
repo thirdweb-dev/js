@@ -347,7 +347,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@aws-sdk/client-kms": "3.592.0",
+    "@aws-sdk/client-kms": "3.787.0",
     "@aws-sdk/client-lambda": "3.592.0",
     "@aws-sdk/credential-providers": "3.592.0",
     "@biomejs/biome": "1.9.4",
