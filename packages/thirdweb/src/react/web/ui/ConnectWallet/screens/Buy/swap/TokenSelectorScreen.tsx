@@ -176,7 +176,12 @@ export function TokenSelectorScreen(props: {
     enabled: !!props.sourceSupportedTokens && !!chainInfo.data,
   });
 
-  if (walletsAndBalances.isLoading || chainInfo.isLoading) {
+  if (
+    walletsAndBalances.isLoading ||
+    chainInfo.isLoading ||
+    !chainInfo.data ||
+    !props.sourceSupportedTokens
+  ) {
     return <LoadingScreen />;
   }
 
@@ -307,6 +312,7 @@ function WalletRowWithBalances(props: {
       style={{
         borderRadius: radius.lg,
         border: `1px solid ${theme.colors.borderColor}`,
+        minHeight: "350px",
       }}
     >
       <Container
