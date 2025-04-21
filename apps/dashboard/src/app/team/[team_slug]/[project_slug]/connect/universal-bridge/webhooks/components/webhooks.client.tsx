@@ -8,7 +8,6 @@ import {
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
@@ -274,7 +273,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
 
               <CopyTextButton
                 textToCopy={secret}
-                className="!h-auto w-full justify-between truncate bg-card px-3 py-3 my-1 font-mono"
+                className="!h-auto my-1 w-full justify-between truncate bg-card px-3 py-3 font-mono"
                 textToShow={shortenString(secret)}
                 copyIconPosition="right"
                 tooltip="Copy Secret Key"
@@ -283,7 +282,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 Passed as a bearer token in all webhook requests to verify the
                 authenticity of the request.
               </FormDescription>
-              <CheckboxWithLabel className="text-foreground my-2">
+              <CheckboxWithLabel className="my-2 text-foreground">
                 <Checkbox
                   checked={secretStored}
                   onCheckedChange={(v) => {
