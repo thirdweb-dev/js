@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAuthToken } from "app/api/lib/getAuthToken";
 import { formatDistanceToNow } from "date-fns";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
@@ -61,14 +62,10 @@ type Webhook = {
 };
 
 type PayWebhooksPageProps = {
-  /**
-   *  @deprecated - remove after migration
-   */
   clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
 };
+
+const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
@@ -76,18 +73,11 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     queryFn: async () => {
       const res = await payServerProxy({
         method: "GET",
-        pathname: "/webhooks/get-all", // TODO (UB) switch to UB endpoint after migration
-        searchParams: {
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        },
+        pathname: `${UB_BASE_URL}/v1/developer/webhooks`,
         headers: {
           "Content-Type": "application/json",
+          "x-client-id-override": props.clientId,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
@@ -108,11 +98,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -126,11 +112,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button size="sm" variant="default" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -172,9 +154,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
-                    projectId={props.projectId}
                     webhookId={webhook.id}
-                    teamId={props.teamId}
                   >
                     <Button variant="ghost" size="icon">
                       <TrashIcon className="size-5" strokeWidth={1} />
@@ -207,30 +187,23 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await payServerProxy({
+      const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
         method: "POST",
-        pathname: "/webhooks/create",
         body: JSON.stringify({
           ...values,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
         }),
         headers: {
           "Content-Type": "application/json",
+          "x-client-id-override": props.clientId,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
       if (!res.ok) {
-        throw new Error(res.error);
+        throw new Error("Failed to create webhook");
       }
 
-      const json = res.data as { result: string };
-      return json.result;
+      return;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -340,30 +313,20 @@ function DeleteWebhookButton(
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await payServerProxy({
-        method: "POST",
+      const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks/${id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "x-client-id-override": props.clientId,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
-        body: JSON.stringify({
-          id,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        }),
-        pathname: "/webhooks/revoke",
       });
 
       if (!res.ok) {
         throw new Error("Failed to delete webhook");
       }
 
-      const json = res.data as { result: string };
-      return json.result;
+      return;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
