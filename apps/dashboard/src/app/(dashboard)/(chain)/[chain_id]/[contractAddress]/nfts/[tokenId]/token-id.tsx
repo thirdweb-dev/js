@@ -52,6 +52,7 @@ interface TokenIdPageProps {
   contract: ThirdwebContract;
   isErc721: boolean;
   isLoggedIn: boolean;
+  accountAddress: string | undefined;
 }
 
 // TODO: verify the entire nft object with zod schema and display an error message
@@ -61,6 +62,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   tokenId,
   isErc721,
   isLoggedIn,
+  accountAddress,
 }) => {
   const [tab, setTab] = useState("Details");
   const router = useDashboardRouter();
@@ -71,6 +73,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
     contract,
     tokenId,
     isLoggedIn,
+    accountAddress,
   });
 
   const client = useThirdwebClient();
