@@ -17,6 +17,7 @@ import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
+import { listAccessTokens } from "@thirdweb-dev/vault-sdk/dist/types/sdk";
 
 export default function ListAccessTokensButton(props: {
   projectId: string;
@@ -29,9 +30,7 @@ export default function ListAccessTokensButton(props: {
 
   // TODO allow passing permissions to the access token
   const createAccessTokenMutation = useMutation({
-    mutationFn: async (args: {
-      adminKey: string;
-    }) => {
+    mutationFn: async (args: { adminKey: string }) => {
       const vaultClient = await createVaultClient({
         baseUrl: THIRDWEB_VAULT_URL,
       });
@@ -160,6 +159,33 @@ export default function ListAccessTokensButton(props: {
                   },
                 ],
               },
+              {
+                type: "eoa:signStructuredMessage",
+                structuredPatterns: {
+                  userOpV06: {},
+                  userOpV07: {},
+                },
+                metadataPatterns: [
+                  {
+                    key: "projectId",
+                    rule: {
+                      pattern: props.projectId,
+                    },
+                  },
+                  {
+                    key: "teamId",
+                    rule: {
+                      pattern: props.teamId,
+                    },
+                  },
+                  {
+                    key: "type",
+                    rule: {
+                      pattern: "server-wallet",
+                    },
+                  },
+                ],
+              },
             ],
             metadata: {
               projectId: props.projectId,
@@ -192,10 +218,7 @@ export default function ListAccessTokensButton(props: {
   });
 
   const revokeAccessTokenMutation = useMutation({
-    mutationFn: async (args: {
-      adminKey: string;
-      accessTokenId: string;
-    }) => {
+    mutationFn: async (args: { adminKey: string; accessTokenId: string }) => {
       setDeletingTokenId(args.accessTokenId);
       const vaultClient = await createVaultClient({
         baseUrl: THIRDWEB_VAULT_URL,
@@ -237,25 +260,31 @@ export default function ListAccessTokensButton(props: {
   const listAccessTokensQuery = useQuery({
     queryKey: ["list-access-tokens", maskSecret(adminKey)],
     queryFn: async () => {
-      // TODO (engine-cloud): need the command in vault
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Return stub data for now
+      const vaultClient = await createVaultClient({
+        baseUrl: THIRDWEB_VAULT_URL,
+      });
+      const listResult = await listAccessTokens({
+        client: vaultClient,
+        request: {
+          auth: {
+            adminKey,
+          },
+          options: {},
+        },
+      });
+
+      if (!listResult.success) {
+        throw new Error(
+          `Failed to list access tokens: ${listResult.error.message}`,
+        );
+      }
       return {
-        accessTokens: [
-          {
-            key: "stub_1234567890abcdef",
-            id: "token_1",
-          },
-          {
-            key: "stub_1234567890abcdef",
-            id: "token_2",
-          },
-          {
-            key: "stub_1234567890abcdef",
-            id: "token_3",
-          },
-        ],
+        accessTokens: listResult.data.items.map((t) => ({
+          key: t.id, // todo: the actual user-facing key is not returned by this yet, fix this
+          id: t.id,
+        })),
       };
+      // Return stub data for now
     },
     enabled: !!adminKey,
   });

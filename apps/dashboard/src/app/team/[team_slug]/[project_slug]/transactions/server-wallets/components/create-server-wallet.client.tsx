@@ -250,6 +250,33 @@ export default function CreateServerWallet(props: {
                   },
                 ],
               },
+              {
+                type: "eoa:signStructuredMessage",
+                structuredPatterns: {
+                  userOpV06: {},
+                  userOpV07: {},
+                },
+                metadataPatterns: [
+                  {
+                    key: "projectId",
+                    rule: {
+                      pattern: props.project.id,
+                    },
+                  },
+                  {
+                    key: "teamId",
+                    rule: {
+                      pattern: props.project.teamId,
+                    },
+                  },
+                  {
+                    key: "type",
+                    rule: {
+                      pattern: "server-wallet",
+                    },
+                  },
+                ],
+              },
             ],
             metadata: {
               projectId: props.project.id,
