@@ -45,7 +45,7 @@
     "react-pick-color": "^2.0.0",
     "server-only": "^0.0.1",
     "shiki": "1.27.0",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^3.2.0",
     "thirdweb": "workspace:*",
     "use-debounce": "^10.0.4",
     "zod": "3.24.3"
