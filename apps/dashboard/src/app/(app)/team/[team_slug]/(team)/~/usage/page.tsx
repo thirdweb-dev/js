@@ -3,7 +3,7 @@ import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { fetchRPCUsage } from "@/api/usage/rpc";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { normalizeTimeISOString } from "lib/time";
+import { normalizeTimeISOString } from "@/lib/time";
 import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
