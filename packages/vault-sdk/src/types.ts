@@ -204,8 +204,8 @@ export type UserOperationV07Input = {
 
 // Corresponds to Rust StructuredMessageInput enum
 export type StructuredMessageInput =
-  | { userOpV06: UserOperationV06Input }
-  | { userOpV07: UserOperationV07Input };
+  | { useropV06: UserOperationV06Input }
+  | { useropV07: UserOperationV07Input };
 
 // ========== Policy Types ==========
 type RegexRule = {
@@ -311,8 +311,8 @@ export type PolicyComponent =
       metadataPatterns?: MetadataRule[];
       // Define how UserOp rules are applied, e.g., separate for v6/v7
       structuredPatterns: {
-        userOpV06?: UserOperationV06Rules;
-        userOpV07?: UserOperationV07Rules;
+        useropV06?: UserOperationV06Rules;
+        useropV07?: UserOperationV07Rules;
       };
     };
 
