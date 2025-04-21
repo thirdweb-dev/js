@@ -1,13 +1,11 @@
 "use client";
 
-import { payServerProxy } from "@/actions/proxies";
 import {
   createWebhook,
   deleteWebhook,
   getWebhooks,
 } from "@/api/universal-bridge/webhooks";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,20 +45,16 @@ import {
 } from "@/components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAuthToken } from "app/api/lib/getAuthToken";
 import { formatDistanceToNow } from "date-fns";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
 
 type PayWebhooksPageProps = {
   clientId: string;
 };
-
-const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
@@ -147,10 +141,7 @@ const formSchema = z.object({
   url: z.string().url("Please enter a valid URL."),
   label: z.string().min(3, "Label must be at least 3 characters long"),
   version: z.string(),
-  secret: z
-    .string()
-    .min(12, "Secret must be at least 12 characters long")
-    .optional(),
+  secret: z.string().optional(),
 });
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
@@ -172,7 +163,8 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
         url: values.url,
         label: values.label,
         version: Number(values.version),
-        secret: values.secret,
+        secret:
+          values.secret && values.secret.length > 0 ? values.secret : undefined,
       });
       return null;
     },
@@ -243,24 +235,44 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 </FormItem>
               )}
             />
+            <FormField
+              name="secret"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Secret</FormLabel>
+                  <Input {...field} placeholder="" />
+                  <FormDescription>
+                    A secret to verify the authenticity of any webhook requests.
+                    It will be included as a bearer token in the webhook request
+                    headers.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <FormItem>
-              <FormLabel>Webhook Version</FormLabel>
-              <Select defaultValue="2">
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="v2" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2">v2</SelectItem>
-                  <SelectItem value="1">v1</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select the data format of the webhook payload (v2 recommended,
-                v1 for legacy users).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+            <FormField
+              name="version"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Webhook Version</FormLabel>
+                  <Select {...field} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="v2" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2">v2</SelectItem>
+                      <SelectItem value="1">v1</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Select the data format of the webhook payload (v2
+                    recommended, v1 for legacy users).
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter>
               <Button
