@@ -80,7 +80,9 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code} | ${errorJson.message}`);
+    throw new Error(
+      `${errorJson.code} | ${errorJson.message} - ${errorJson.correlationId}`,
+    );
   }
 
   const { data }: { data: Quote } = await response.json();
@@ -229,7 +231,9 @@ export async function prepare(
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code} | ${errorJson.message}`);
+    throw new Error(
+      `${errorJson.code} | ${errorJson.message} - ${errorJson.correlationId}`,
+    );
   }
 
   const { data }: { data: PreparedQuote } = await response.json();
