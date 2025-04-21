@@ -1,5 +1,6 @@
 "use client";
 
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -45,7 +46,11 @@ const TransferTab: React.FC<TransferTabProps> = ({
     { contract },
   );
 
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const sendTxAndConfirm = useSendAndConfirmTransaction();
+
+  if (checking1155) {
+    return <GenericLoadingPage />;
+  }
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -71,7 +76,7 @@ const TransferTab: React.FC<TransferTabProps> = ({
                 tokenId: BigInt(tokenId),
                 from: account?.address ?? "",
               });
-          mutate(transaction, {
+          sendTxAndConfirm.mutate(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "nft",
@@ -128,11 +133,14 @@ const TransferTab: React.FC<TransferTabProps> = ({
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}
-            isPending={isPending || checking1155}
+            isPending={sendTxAndConfirm.isPending}
             type="submit"
             className="self-end"
             disabled={
-              !form.formState.isDirty || checking1155 || isPending || !account
+              !form.formState.isDirty ||
+              checking1155 ||
+              sendTxAndConfirm.isPending ||
+              !account
             }
           >
             Transfer

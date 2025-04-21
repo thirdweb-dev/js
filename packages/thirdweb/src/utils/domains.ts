@@ -60,9 +60,6 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
   insight: DEFAULT_INSIGHT_URL,
 };
 
-/**
- * @internal
- */
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
   domains = {
     rpc: DomainOverrides.rpc ?? DEFAULT_RPC_URL,

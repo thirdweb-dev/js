@@ -10,6 +10,7 @@ export function TokenIdPageClient(props: {
   contract: ThirdwebContract;
   tokenId: string;
   isLoggedIn: boolean;
+  accountAddress: string | undefined;
 }) {
   const { contract } = props;
   const metadataQuery = useContractPageMetadata(props.contract);
@@ -34,6 +35,7 @@ export function TokenIdPageClient(props: {
       isErc721={supportedERCs.isERC721}
       tokenId={props.tokenId}
       isLoggedIn={props.isLoggedIn}
+      accountAddress={props.accountAddress}
     />
   );
 }

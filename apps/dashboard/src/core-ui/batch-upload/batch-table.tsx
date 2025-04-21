@@ -41,7 +41,8 @@ const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
 };
 
 const FileVideo: React.FC<
-  BoxProps & Omit<React.ComponentProps<"video">, "ref">
+  BoxProps &
+    Omit<React.ComponentProps<"video">, "ref" | "src"> & { src: string | File }
 > = ({ src, ...props }) => {
   const client = useThirdwebClient();
   const video = useImageFileOrUrl(
@@ -93,7 +94,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             flexShrink={0}
             boxSize={24}
             objectFit="contain"
-            src={value}
+            src={value || ""}
             autoPlay
             playsInline
             muted

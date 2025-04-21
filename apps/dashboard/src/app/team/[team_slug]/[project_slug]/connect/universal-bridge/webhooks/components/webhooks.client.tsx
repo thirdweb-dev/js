@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAuthToken } from "app/api/lib/getAuthToken";
 import { formatDistanceToNow } from "date-fns";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
@@ -58,6 +59,8 @@ import { z } from "zod";
 type PayWebhooksPageProps = {
   clientId: string;
 };
+
+const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({

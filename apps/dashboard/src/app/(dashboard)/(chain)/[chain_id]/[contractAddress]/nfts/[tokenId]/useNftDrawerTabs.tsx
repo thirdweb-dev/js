@@ -5,13 +5,14 @@ import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
   contract: ThirdwebContract;
   tokenId: string;
   isLoggedIn: boolean;
+  accountAddress: string | undefined;
 };
 
 const TransferTab = dynamic(() => import("./components/transfer-tab"));
@@ -32,10 +33,10 @@ export function useNFTDrawerTabs({
   contract,
   tokenId,
   isLoggedIn,
+  accountAddress,
 }: UseNFTDrawerTabsParams): NFTDrawerTab[] {
   const functionSelectorQuery = useContractFunctionSelectors(contract);
   const functionSelectors = functionSelectorQuery.data || [];
-  const address = useActiveAccount()?.address;
 
   const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
 
@@ -44,13 +45,6 @@ export function useNFTDrawerTabs({
     ? false
     : isERC721Query.data || false;
   const isERC1155 = isERC721Query.isPending ? false : !isERC721;
-
-  const balanceOfQuery = useReadContract(ERC1155Ext.balanceOf, {
-    contract,
-    owner: address || "",
-    tokenId: BigInt(tokenId || 0),
-    queryOptions: { enabled: isERC1155 },
-  });
 
   const { data: nft } = useReadContract(
     isERC721 ? ERC721Ext.getNFT : ERC1155Ext.getNFT,
@@ -111,10 +105,10 @@ export function useNFTDrawerTabs({
 
     const isOwner = (() => {
       if (isERC1155) {
-        return balanceOfQuery?.data ? balanceOfQuery.data > 0n : false;
+        return true;
       }
       if (isERC721) {
-        return nft?.owner === address;
+        return nft?.owner === accountAddress;
       }
       return false;
     })();
@@ -241,10 +235,9 @@ export function useNFTDrawerTabs({
     return tabs;
   }, [
     isERC1155,
-    balanceOfQuery?.data,
     isERC721,
     nft,
-    address,
+    accountAddress,
     tokenId,
     isMinterRole,
     contract,
