@@ -39,6 +39,11 @@ type RotationCodeAuth = {
 };
 
 // ========== Base Types ==========
+// Represents Address, Bytes, U256, I256 as strings for broad compatibility
+type Bytes = string; // e.g., "0x..."
+// type HexString = string; // Generic hex string
+type BigNumberString = string; // String representation of U256/I256
+
 type UnencryptedError = {
   message: string;
   status: number;
@@ -115,19 +120,25 @@ type PingOptions = {
   message: string;
 };
 
-// type Transaction = {
-//   to: string;
-//   value: string;
-//   gasLimit: string;
-//   gasPrice: string;
-//   nonce: string;
-//   chainId: number;
-//   data: string;
-// };
-
 type SignTransactionOptions = {
   transaction: EthereumTypedTransaction;
   from: string;
+};
+
+export type SignAuthorizationOptions = {
+  from: Address;
+  authorization: Authorization; // Use the defined type
+};
+
+export type SignStructuredMessageOptions = {
+  from: Address;
+  structuredMessage: StructuredMessageInput; // Use the defined type
+  chainId?: number; // Keep as number for ChainId
+};
+
+export type GetAccessTokensOptions = {
+  page?: number;
+  pageSize?: number;
 };
 
 type SignMessageOptions = {
@@ -153,6 +164,49 @@ type CheckedSignTypedDataOptions<
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type SignedTypedDataOptions = CheckedSignTypedDataOptions<any, any>;
 
+// ========== User Operation Types ==========
+
+// Corresponds to Rust UserOperationV06Input
+export type UserOperationV06Input = {
+  sender: Address;
+  nonce: BigNumberString; // U256
+  initCode?: Bytes; // Optional due to #[serde(default)]
+  callData: Bytes;
+  callGasLimit: BigNumberString; // U256
+  verificationGasLimit: BigNumberString; // U256
+  preVerificationGas: BigNumberString; // U256
+  maxFeePerGas: BigNumberString; // U256
+  maxPriorityFeePerGas: BigNumberString; // U256
+  paymasterAndData?: Bytes; // Optional due to #[serde(default)]
+  signature?: Bytes; // Optional due to #[serde(default)]
+  entrypoint?: Address; // Optional due to #[serde(default = ...)]
+};
+
+// Corresponds to Rust UserOperationV07Input
+export type UserOperationV07Input = {
+  sender: Address;
+  nonce: BigNumberString; // U256
+  factory?: Address; // Optional due to #[serde(default)]
+  factoryData?: Bytes; // Optional due to #[serde(default)]
+  callData: Bytes;
+  callGasLimit: BigNumberString; // U256
+  verificationGasLimit: BigNumberString; // U256
+  preVerificationGas: BigNumberString; // U256
+  maxFeePerGas: BigNumberString; // U256
+  maxPriorityFeePerGas: BigNumberString; // U256
+  paymaster?: Address; // Optional due to #[serde(default)]
+  paymasterData?: Bytes; // Optional due to #[serde(default)] - Assuming default is empty bytes
+  paymasterVerificationGasLimit?: BigNumberString; // U256 - Assuming default is 0
+  paymasterPostOpGasLimit?: BigNumberString; // U256 - Assuming default is 0
+  signature?: Bytes; // Optional due to #[serde(default)]
+  entrypoint?: Address; // Optional due to #[serde(default = ...)]
+};
+
+// Corresponds to Rust StructuredMessageInput enum
+export type StructuredMessageInput =
+  | { userOpV06: UserOperationV06Input }
+  | { userOpV07: UserOperationV07Input };
+
 // ========== Policy Types ==========
 type RegexRule = {
   pattern: string;
@@ -162,7 +216,7 @@ type NumberRuleOp = "greaterThan" | "lessThan" | "equalTo";
 
 type NumberRule = {
   op: NumberRuleOp;
-  value: number | bigint;
+  value: number | BigNumberString;
 };
 
 type Rule = NumberRule | RegexRule;
@@ -172,7 +226,52 @@ type MetadataRule = {
   rule: Rule;
 };
 
-type PolicyComponent =
+// ========== Policy Rule Structs ==========
+
+// Corresponds to Rust UserOperationV06Rules
+export type UserOperationV06Rules = {
+  sender?: Rule;
+  nonce?: Rule;
+  initCode?: Rule;
+  callData?: Rule;
+  callGasLimit?: Rule;
+  verificationGasLimit?: Rule;
+  preVerificationGas?: Rule;
+  maxFeePerGas?: Rule;
+  maxPriorityFeePerGas?: Rule;
+  paymasterAndData?: Rule;
+  chainId?: Rule;
+  entrypoint?: Rule; // Optional, but Rust has a default func
+};
+
+// Corresponds to Rust UserOperationV07Rules
+export type UserOperationV07Rules = {
+  sender?: Rule;
+  nonce?: Rule;
+  factory?: Rule;
+  factoryData?: Rule;
+  callData?: Rule;
+  callGasLimit?: Rule;
+  verificationGasLimit?: Rule;
+  preVerificationGas?: Rule;
+  maxFeePerGas?: Rule;
+  maxPriorityFeePerGas?: Rule;
+  paymaster?: Rule;
+  paymasterVerificationGasLimit?: Rule;
+  paymasterPostOpGasLimit?: Rule;
+  paymasterData?: Rule;
+  chainId?: Rule;
+  entrypoint?: Rule; // Optional, but Rust has a default func
+};
+
+// Corresponds to Rust SignAuthorizationRules
+export type SignAuthorizationRules = {
+  chainId?: Rule;
+  nonce?: Rule;
+  address?: Rule;
+};
+
+export type PolicyComponent =
   | {
       type: "eoa:create";
       requiredMetadataPatterns?: MetadataRule[];
@@ -199,6 +298,22 @@ type PolicyComponent =
       type: "eoa:signTypedData";
       allowlist?: Address[];
       metadataPatterns?: MetadataRule[];
+    }
+  | {
+      type: "eoa:signAuthorization";
+      allowlist?: Address[];
+      metadataPatterns?: MetadataRule[];
+      payloadPatterns?: SignAuthorizationRules;
+    }
+  | {
+      type: "eoa:signStructuredMessage";
+      allowlist?: Address[];
+      metadataPatterns?: MetadataRule[];
+      // Define how UserOp rules are applied, e.g., separate for v6/v7
+      structuredPatterns: {
+        userOpV06?: UserOperationV06Rules;
+        userOpV07?: UserOperationV07Rules;
+      };
     };
 
 type OwnerType = string; // Define based on your eoa models
@@ -211,6 +326,23 @@ type CreateAccessTokenOptions = {
 
 type RevokeAccessTokenOptions = {
   id: string; // UUID
+};
+
+// ========== Authorization Types ==========
+
+// Corresponds to Rust Authorization struct
+export type Authorization = {
+  chainId: BigNumberString; // U256
+  address: Address;
+  nonce: number; // u64
+};
+
+// Corresponds to Rust SignedAuthorization struct
+// Merges Authorization fields due to #[serde(flatten)]
+export type SignedAuthorization = Authorization & {
+  yParity: number; // U8 (typically 0 or 1)
+  r: BigNumberString; // U256
+  s: BigNumberString; // U256
 };
 
 // ========== Response Data Types ==========
@@ -291,6 +423,38 @@ type RevokeAccessTokenData = {
   revokedAt?: string; // ISO date string
 };
 
+// Update SignAuthorizationData to use the defined SignedAuthorization type
+export type SignAuthorizationData = {
+  signedAuthorization: SignedAuthorization; // Use the defined type
+};
+
+// Add SignStructuredMessageData (as defined previously)
+export type SignStructuredMessageData = {
+  signature: Bytes;
+  message: string; // This likely represents the UserOp hash in Rust
+};
+
+// Add AccessTokenData (as defined previously, ensure OwnerType/MetadataValue are correct)
+export type AccessTokenData = {
+  id: string; // UUID
+  issuerId: string; // UUID
+  issuerType: OwnerType;
+  policies: PolicyComponent[];
+  expiresAt: string; // ISO date string
+  metadata: Record<string, MetadataValue>;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  revokedAt?: string | null; // ISO date string or null
+};
+
+// Add GetAccessTokensData (as defined previously)
+export type GetAccessTokensData = {
+  items: AccessTokenData[];
+  page: number;
+  pageSize: number;
+  totalRecords: number; // Rust uses u64, TS uses number
+};
+
 // ========== Operation Payloads ==========
 export type PingPayload = GenericPayload<{
   operation: "ping";
@@ -341,6 +505,21 @@ export type SignTransactionPayload = GenericPayload<{
   data: SignTransactionData;
 }>;
 
+export type SignAuthorizationPayload = GenericPayload<{
+  operation: "eoa:signAuthorization";
+  auth: Auth; // Assuming Auth is defined as before
+  options: SignAuthorizationOptions;
+  data: SignAuthorizationData;
+}>;
+
+// Add SignStructuredMessagePayload (using defined types)
+export type SignStructuredMessagePayload = GenericPayload<{
+  operation: "eoa:signStructuredMessage";
+  auth: Auth; // Assuming Auth is defined as before
+  options: SignStructuredMessageOptions;
+  data: SignStructuredMessageData;
+}>;
+
 export type CheckedSignTypedDataPayload<
   Types extends TypedData,
   PrimaryType extends keyof Types | "EIP712Domain" = keyof Types,
@@ -372,6 +551,13 @@ export type CreateAccessTokenPayload = GenericPayload<{
   data: CreateAccessTokenData;
 }>;
 
+// Add ListAccessTokensPayload (using defined types)
+export type ListAccessTokensPayload = GenericPayload<{
+  operation: "accessToken:list";
+  auth: Auth;
+  data: GetAccessTokensData;
+}>;
+
 export type RevokeAccessTokenPayload = GenericPayload<{
   operation: "accessToken:revoke";
   auth: Auth;
@@ -391,4 +577,7 @@ export type Payload =
   | SignMessagePayload
   | SignTypedDataPayload
   | CreateAccessTokenPayload
-  | RevokeAccessTokenPayload;
+  | RevokeAccessTokenPayload
+  | SignAuthorizationPayload
+  | SignStructuredMessagePayload
+  | ListAccessTokensPayload;

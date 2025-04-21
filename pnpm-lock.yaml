@@ -1315,9 +1315,9 @@ importers:
       abitype:
         specifier: 1.0.8
         version: 1.0.8(typescript@5.8.3)(zod@3.24.3)
-      ky:
-        specifier: ^1.8.0
-        version: 1.8.1
+      jose:
+        specifier: 6.0.10
+        version: 6.0.10
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -11205,10 +11205,6 @@ packages:
     peerDependencies:
       '@types/node': '>=18'
       typescript: '>=5.0.4'
-
-  ky@1.8.1:
-    resolution: {integrity: sha512-7Bp3TpsE+L+TARSnnDpk3xg8Idi8RwSLdj6CMbNWoOARIrGrbuLGusV0dYwbZOm4bB3jHNxSw8Wk/ByDqJEnDw==}
-    engines: {node: '>=18'}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -30556,8 +30552,6 @@ snapshots:
       typescript: 5.8.3
       zod: 3.24.3
       zod-validation-error: 3.4.0(zod@3.24.3)
-
-  ky@1.8.1: {}
 
   language-subtag-registry@0.3.23: {}
 
