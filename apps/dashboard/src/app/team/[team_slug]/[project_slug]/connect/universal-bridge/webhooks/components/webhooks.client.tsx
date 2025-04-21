@@ -6,8 +6,11 @@ import {
   getWebhooks,
 } from "@/api/universal-bridge/webhooks";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -47,9 +50,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import { type PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { randomPrivateKey } from "thirdweb/wallets";
+import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
 
 type PayWebhooksPageProps = {
@@ -146,13 +151,18 @@ const formSchema = z.object({
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const [open, setOpen] = useState(false);
+  const [secretStored, setSecretStored] = useState(false);
+  const secret = useMemo(() => {
+    if (!open) return "";
+    return randomPrivateKey();
+  }, [open]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       url: "",
       label: "",
       version: "2",
-      secret: undefined,
     },
   });
   const queryClient = useQueryClient();
@@ -163,8 +173,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
         url: values.url,
         label: values.label,
         version: Number(values.version),
-        secret:
-          values.secret && values.secret.length > 0 ? values.secret : undefined,
+        secret,
       });
       return null;
     },
@@ -189,6 +198,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 },
                 onSuccess: () => {
                   setOpen(false);
+                  setSecretStored(false);
                   toast.success("Webhook created successfully");
                   form.reset();
                   form.clearErrors();
@@ -235,21 +245,6 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 </FormItem>
               )}
             />
-            <FormField
-              name="secret"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Secret</FormLabel>
-                  <Input {...field} placeholder="" />
-                  <FormDescription>
-                    A secret to verify the authenticity of any webhook requests.
-                    It will be included as a bearer token in the webhook request
-                    headers.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               name="version"
@@ -274,10 +269,35 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
               )}
             />
 
+            <section>
+              <FormLabel>Secret Key</FormLabel>
+
+              <CopyTextButton
+                textToCopy={secret}
+                className="!h-auto w-full justify-between truncate bg-card px-3 py-3 my-1 font-mono"
+                textToShow={shortenString(secret)}
+                copyIconPosition="right"
+                tooltip="Copy Secret Key"
+              />
+              <FormDescription>
+                Passed as a bearer token in all webhook requests to verify the
+                authenticity of the request.
+              </FormDescription>
+              <CheckboxWithLabel className="text-foreground my-2">
+                <Checkbox
+                  checked={secretStored}
+                  onCheckedChange={(v) => {
+                    setSecretStored(!!v);
+                  }}
+                />
+                I confirm that I've securely stored my secret key
+              </CheckboxWithLabel>
+            </section>
+
             <DialogFooter>
               <Button
                 type="submit"
-                disabled={createMutation.isPending}
+                disabled={createMutation.isPending || !secretStored}
                 className="gap-2"
               >
                 Create Webhook
