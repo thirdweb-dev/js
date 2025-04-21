@@ -385,7 +385,7 @@
     "prettier": "3.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-native": "0.78.1",
+    "react-native": "0.79.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.1.0",
     "react-native-quick-crypto": "0.7.8",
