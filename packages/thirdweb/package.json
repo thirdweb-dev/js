@@ -394,7 +394,7 @@
     "sharp": "^0.33.5",
     "size-limit": "11.2.0",
     "storybook": "8.6.12",
-    "typedoc": "0.27.9",
+    "typedoc": "0.28.3",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
     "vite": "6.3.2",
