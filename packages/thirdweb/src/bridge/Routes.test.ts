@@ -102,9 +102,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.routes", () => {
           route.originToken.chainId === 1 &&
           route.destinationToken.chainId === 10 &&
           route.originToken.address ===
-          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" &&
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" &&
           route.destinationToken.address ===
-          "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       ),
     ).toBe(true);
   });

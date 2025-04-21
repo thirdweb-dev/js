@@ -159,15 +159,15 @@ export async function status(options: status.Options): Promise<status.Result> {
 export declare namespace status {
   type Options =
     | {
-      transactionHash: ox__Hex.Hex;
-      chainId: number;
-      client: ThirdwebClient;
-    }
+        transactionHash: ox__Hex.Hex;
+        chainId: number;
+        client: ThirdwebClient;
+      }
     | {
-      transactionHash: ox__Hex.Hex;
-      chain: Chain;
-      client: ThirdwebClient;
-    };
+        transactionHash: ox__Hex.Hex;
+        chain: Chain;
+        client: ThirdwebClient;
+      };
 
   type Result = Status;
 }
