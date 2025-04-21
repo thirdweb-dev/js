@@ -92,6 +92,11 @@ export const validTeamResponse: TeamResponse = {
       customAuth: true,
       customBranding: true,
     },
+    engineCloud: {
+      enabled: true,
+      mainnetEnabled: true,
+      rateLimit: 100,
+    },
   },
 };
 
