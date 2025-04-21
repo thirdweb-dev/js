@@ -12,6 +12,10 @@ export {
   signMessage,
   signTransaction,
   signTypedData,
+  listAccessTokens,
+  createSignedAccessToken,
+  signAuthorization,
+  signStructuredMessage,
 } from "../sdk.js";
 
 export {

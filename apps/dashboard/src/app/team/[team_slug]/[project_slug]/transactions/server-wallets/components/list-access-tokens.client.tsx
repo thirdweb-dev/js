@@ -11,13 +11,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createAccessToken, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
+import {
+  createAccessToken,
+  revokeAccessToken,
+  listAccessTokens,
+} from "@thirdweb-dev/vault-sdk";
 import { createVaultClient } from "@thirdweb-dev/vault-sdk";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
-import { listAccessTokens } from "@thirdweb-dev/vault-sdk/dist/types/sdk";
 
 export default function ListAccessTokensButton(props: {
   projectId: string;
