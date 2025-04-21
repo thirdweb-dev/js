@@ -116,6 +116,7 @@ describe.sequential("injected wallet", () => {
       method: "wallet_sendCalls",
       params: [
         {
+          atomicRequired: false,
           calls: [
             {
               to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
@@ -163,6 +164,7 @@ describe.sequential("injected wallet", () => {
       method: "wallet_sendCalls",
       params: [
         {
+          atomicRequired: false,
           calls: [
             {
               to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -197,6 +199,7 @@ describe.sequential("injected wallet", () => {
       method: "wallet_sendCalls",
       params: [
         {
+          atomicRequired: false,
           calls: [
             {
               to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",

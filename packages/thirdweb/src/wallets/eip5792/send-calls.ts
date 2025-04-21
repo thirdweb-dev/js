@@ -50,6 +50,7 @@ export type SendCallsOptions<
   capabilities?: WalletSendCallsParameters[number]["capabilities"];
   version?: WalletSendCallsParameters[number]["version"];
   chain?: Chain;
+  atomicRequired?: boolean;
 };
 
 export type SendCallsResult = WalletSendCallsId;
@@ -176,6 +177,8 @@ export async function sendCalls<const ID extends WalletId>(
       capabilities,
       version,
       chainId: numberToHex(chain.id),
+      // see: https://eips.ethereum.org/EIPS/eip-5792#wallet_sendcalls
+      atomicRequired: options.atomicRequired ?? false,
     },
   ];
 
