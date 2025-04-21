@@ -232,7 +232,7 @@
     "@radix-ui/react-tooltip": "1.2.3",
     "@tanstack/react-query": "5.74.4",
     "@thirdweb-dev/insight": "workspace:*",
-    "@walletconnect/ethereum-provider": "2.19.1",
+    "@walletconnect/ethereum-provider": "2.20.0",
     "@walletconnect/sign-client": "2.19.1",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
