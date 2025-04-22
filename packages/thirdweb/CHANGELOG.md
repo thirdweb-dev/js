@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.95.3
+
+### Patch Changes
+
+- [#6782](https://github.com/thirdweb-dev/js/pull/6782) [`d7dc83f`](https://github.com/thirdweb-dev/js/commit/d7dc83f9e65616fe2f61bb2a680429b163cd0307) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#6778](https://github.com/thirdweb-dev/js/pull/6778) [`4ccf062`](https://github.com/thirdweb-dev/js/commit/4ccf06260bd4fccc180998153c1e9abacd6044cb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix loading state when loading source tokens in PayEmbed
+
 ## 5.95.2
 
 ### Patch Changes
