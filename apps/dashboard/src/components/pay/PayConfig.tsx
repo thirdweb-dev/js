@@ -1,9 +1,8 @@
 "use client";
 
 import type { Project } from "@/api/projects";
+import { type Fee, updateFee } from "@/api/universal-bridge/developer";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Form,
   FormControl,
@@ -12,7 +11,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -20,7 +18,6 @@ import {
   apiKeyPayConfigValidationSchema,
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
-import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,56 +26,41 @@ interface PayConfigProps {
   project: Project;
   teamId: string;
   teamSlug: string;
+  fees: Fee;
 }
 
 const TRACKING_CATEGORY = "pay";
 
 export const PayConfig: React.FC<PayConfigProps> = (props) => {
-  const payService = props.project.services.find(
-    (service) => service.name === "pay",
-  );
-
   const form = useForm<ApiKeyPayConfigValidationSchema>({
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
     values: {
-      payoutAddress: payService?.payoutAddress ?? "",
-      developerFeeBPS: payService?.developerFeeBPS ?? 0,
+      payoutAddress: props.fees.feeRecipient ?? "",
+      developerFeeBPS: props.fees.feeBps ?? 0,
     },
   });
 
   const trackEvent = useTrack();
 
-  const updateProject = useMutation({
-    mutationFn: async (projectValues: Partial<Project>) => {
-      await updateProjectClient(
-        {
-          projectId: props.project.id,
-          teamId: props.teamId,
-        },
-        projectValues,
-      );
+  const updateFeeMutation = useMutation({
+    mutationFn: async (values: {
+      payoutAddress: string;
+      developerFeeBPS: number;
+    }) => {
+      await updateFee({
+        clientId: props.project.publishableKey,
+        feeRecipient: values.payoutAddress,
+        feeBps: values.developerFeeBPS,
+      });
     },
   });
 
   const handleSubmit = form.handleSubmit(
     ({ payoutAddress, developerFeeBPS }) => {
-      const services = props.project.services;
-
-      const newServices = services.map((service) => {
-        if (service.name !== "pay") {
-          return service;
-        }
-
-        return {
-          ...service,
+      updateFeeMutation.mutate(
+        {
           payoutAddress,
           developerFeeBPS: developerFeeBPS ? developerFeeBPS * 100 : 0,
-        };
-      });
-
-      updateProject.mutate(
-        {
-          services: newServices,
         },
         {
           onSuccess: () => {
@@ -110,24 +92,6 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     },
   );
 
-  if (!payService) {
-    return (
-      <Alert variant="warning">
-        <CircleAlertIcon className="size-5" />
-        <AlertTitle>Pay service is disabled</AlertTitle>
-        <AlertDescription>
-          Enable Pay service in{" "}
-          <UnderlineLink
-            href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
-          >
-            project settings
-          </UnderlineLink>{" "}
-          to configure settings
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit} autoComplete="off">
@@ -137,7 +101,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
           saveButton={{
             type: "submit",
             disabled: !form.formState.isDirty,
-            isPending: updateProject.isPending,
+            isPending: updateFeeMutation.isPending,
           }}
           noPermissionText={undefined}
         >

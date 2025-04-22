@@ -90,3 +90,59 @@ export async function deleteWebhook(props: {
 
   return;
 }
+
+export type Fee = {
+  feeRecipient: string;
+  feeBps: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export async function getFees(props: {
+  clientId: string;
+}) {
+  const authToken = await getAuthToken();
+  const res = await fetch(`${UB_BASE_URL}/v1/developer/fees`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "x-client-id-override": props.clientId,
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  const json = await res.json();
+  return json.data as Fee;
+}
+
+export async function updateFee(props: {
+  clientId: string;
+  feeRecipient: string;
+  feeBps: number;
+}) {
+  const authToken = await getAuthToken();
+  const res = await fetch(`${UB_BASE_URL}/v1/developer/fees`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "x-client-id-override": props.clientId,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      feeRecipient: props.feeRecipient,
+      feeBps: props.feeBps,
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  return;
+}

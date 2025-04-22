@@ -15,11 +15,5 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
-  return (
-    <PayWebhooksPage
-      clientId={project.publishableKey}
-      projectId={project.id}
-      teamId={project.teamId}
-    />
-  );
+  return <PayWebhooksPage clientId={project.publishableKey} />;
 }

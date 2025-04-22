@@ -4,7 +4,7 @@ import {
   createWebhook,
   deleteWebhook,
   getWebhooks,
-} from "@/api/universal-bridge/webhooks";
+} from "@/api/universal-bridge/developer";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -109,7 +109,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
               <TableHead>Label</TableHead>
               <TableHead>Url</TableHead>
               <TableHead>Created</TableHead>
-              <TableHead>Webhook Version</TableHead>
+              <TableHead>Version</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
@@ -249,7 +249,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
               name="version"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Webhook Version</FormLabel>
+                  <FormLabel>Version</FormLabel>
                   <Select {...field} onValueChange={field.onChange}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="v2" />
