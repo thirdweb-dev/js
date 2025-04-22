@@ -15,7 +15,7 @@ import {
   revokeAccessToken,
 } from "@thirdweb-dev/vault-sdk";
 import { createVaultClient } from "@thirdweb-dev/vault-sdk";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, LockIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
@@ -30,6 +30,7 @@ import {
   CheckboxWithLabel,
 } from "../../../../../../../@/components/ui/checkbox";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
+import { toDateTimeLocal } from "../../../../../../../utils/date-utils";
 import {
   SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
@@ -230,7 +231,7 @@ export default function ListAccessTokensButton(props: {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      setNewAccessToken(data.userAccessToken.id);
+      setNewAccessToken(data.userAccessToken.accessToken);
       listAccessTokensQuery.refetch();
     },
   });
@@ -303,11 +304,7 @@ export default function ListAccessTokensButton(props: {
               t.metadata?.purpose?.toString() !==
               SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
           )
-          .map((t) => ({
-            key: t.metadata?.purpose?.toString() ?? t.id,
-            id: t.id,
-            policies: t.policies || [],
-          })),
+          .filter((t) => !t.revokedAt),
       };
       // Return stub data for now
     },
@@ -379,11 +376,14 @@ export default function ListAccessTokensButton(props: {
               </div>
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                 <Button
-                  onClick={handleCloseModal}
+                  onClick={() => {
+                    setNewAccessToken(null);
+                    setKeysConfirmed(false);
+                  }}
                   disabled={!keysConfirmed}
                   variant={"primary"}
                 >
-                  Close
+                  Go Back
                 </Button>
               </div>
             </div>
@@ -400,15 +400,26 @@ export default function ListAccessTokensButton(props: {
                     <div className="flex flex-col gap-2">
                       {listAccessTokensQuery.data.accessTokens.map((token) => (
                         <div key={token.id} className="flex gap-2">
-                          <div className="flex-1 justify-between rounded-lg border border-border bg-background px-3 py-3 font-mono text-xs">
-                            <h4 className="pb-4 font-bold">{token.key}</h4>
+                          <div className="flex flex-1 flex-col justify-between gap-4 rounded-lg border border-border bg-background px-3 py-3 text-xs">
+                            <h4 className="font-bold">
+                              {token.metadata?.purpose ||
+                                "Unnamed Access Token"}
+                            </h4>
                             <div className="flex flex-row flex-wrap gap-2">
                               {token.policies.map((policy) => (
-                                <Badge key={policy.type} variant={"outline"}>
+                                <Badge
+                                  key={policy.type}
+                                  variant={"outline"}
+                                  className="font-mono"
+                                >
                                   {policy.type}
                                 </Badge>
                               ))}
                             </div>
+                            <p className="text-muted-foreground text-xs">
+                              Created on:{" "}
+                              {toDateTimeLocal(new Date(token.createdAt))}
+                            </p>
                           </div>
                           <Button
                             variant="destructive"
@@ -463,8 +474,9 @@ export default function ListAccessTokensButton(props: {
           ) : (
             <div className="px-6 pb-6">
               <div className="flex flex-col gap-4">
-                <p className="text-sm text-warning-text">
-                  🔐 This action requires your Vault admin key.
+                <p className="flex items-center gap-2 text-sm text-warning-text">
+                  <LockIcon className="h-4 w-4" /> This action requires your
+                  Vault admin key.
                 </p>
                 <Input
                   type="password"

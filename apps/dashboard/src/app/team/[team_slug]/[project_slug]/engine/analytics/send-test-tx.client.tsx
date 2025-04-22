@@ -12,7 +12,7 @@ import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -138,9 +138,9 @@ export function SendTestTransaction(props: {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4 px-3 pb-3"
         >
-          <p className="text-sm text-warning-text">
-            🔐 This action requires a project secret key and a vault access
-            token.
+          <p className="flex items-center gap-2 text-sm text-warning-text">
+            <LockIcon className="h-4 w-4" /> This action requires a project
+            secret key and a vault access token.
           </p>
           {/* Responsive container */}
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
@@ -217,6 +217,7 @@ export function SendTestTransaction(props: {
               <div className="flex flex-1 flex-col gap-2">
                 <p className="text-sm">Network</p>
                 <SingleNetworkSelector
+                  client={thirdwebClient}
                   chainId={form.watch("chainId")}
                   onChange={(chainId) => {
                     form.setValue("chainId", chainId);

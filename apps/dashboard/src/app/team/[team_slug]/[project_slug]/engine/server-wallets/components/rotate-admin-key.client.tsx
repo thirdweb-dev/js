@@ -19,7 +19,7 @@ import {
   createVaultClient,
   rotateServiceAccount,
 } from "@thirdweb-dev/vault-sdk";
-import { Loader2, RefreshCcwIcon } from "lucide-react";
+import { Loader2, LockIcon, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
@@ -191,8 +191,9 @@ export default function RotateAdminKeyButton() {
               </DialogHeader>
               <div className="px-6 pb-6">
                 <div className="flex flex-col gap-4">
-                  <p className="text-sm text-warning-text">
-                    🔐 This action requires your Vault rotation code.
+                  <p className="flex items-center gap-2 text-sm text-warning-text">
+                    <LockIcon className="h-4 w-4" /> This action requires your
+                    Vault rotation code.
                   </p>
                   <Input
                     type="password"
