@@ -1,12 +1,12 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
+import { THIRDWEB_VAULT_URL } from "../../../../../@/constants/env";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
-import { THIRDWEB_VAULT_URL } from "../../../../../@/constants/env";
-import { Wallet } from "./server-wallets/wallet-table/types";
+import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

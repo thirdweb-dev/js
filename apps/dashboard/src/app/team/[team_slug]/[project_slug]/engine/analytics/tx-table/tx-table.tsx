@@ -1,7 +1,7 @@
 "use client";
 
-import { TransactionsTableUI } from "./tx-table-ui";
 import { engineCloudProxy } from "@/actions/proxies";
+import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionsResponse } from "./types";
 
 export function TransactionsTable(props: { teamId: string; clientId: string }) {

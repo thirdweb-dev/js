@@ -1,32 +1,32 @@
+import { xchacha20poly1305 } from "@noble/ciphers/chacha";
+import { x25519 } from "@noble/curves/ed25519";
+import { hkdf } from "@noble/hashes/hkdf";
+import { sha256 } from "@noble/hashes/sha256";
+import { randomBytes } from "@noble/hashes/utils";
+import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
 import type { TypedData } from "abitype";
 import * as jose from "jose";
-import { x25519 } from "@noble/curves/ed25519";
-import { randomBytes } from "@noble/hashes/utils";
-import { sha256 } from "@noble/hashes/sha256";
-import { hkdf } from "@noble/hashes/hkdf";
-import { xchacha20poly1305 } from "@noble/ciphers/chacha";
-import { hexToBytes, bytesToHex } from "@noble/hashes/utils";
 
 import type {
+  CheckedSignTypedDataPayload,
   CreateAccessTokenPayload,
   CreateEoaPayload,
   CreateServiceAccountPayload,
   EncryptedPayload,
   GetServiceAccountPayload,
+  ListAccessTokensPayload,
   ListEoaPayload,
   Payload,
   PingPayload,
+  PolicyComponent,
+  Prettify,
   RevokeAccessTokenPayload,
   RotateServiceAccountPayload,
-  SignMessagePayload,
-  SignTransactionPayload,
-  Prettify,
-  UnencryptedErrorResponse,
-  CheckedSignTypedDataPayload,
-  ListAccessTokensPayload,
-  SignStructuredMessagePayload,
   SignAuthorizationPayload,
-  PolicyComponent,
+  SignMessagePayload,
+  SignStructuredMessagePayload,
+  SignTransactionPayload,
+  UnencryptedErrorResponse,
 } from "./types.js";
 
 function encryptForEnclave(

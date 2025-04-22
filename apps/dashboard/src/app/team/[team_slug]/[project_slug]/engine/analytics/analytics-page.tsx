@@ -1,9 +1,9 @@
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
+import type { Wallet } from "../server-wallets/wallet-table/types";
 import { TransactionAnalyticsFilter } from "./filter";
+import { SendTestTransaction } from "./send-test-tx.client";
 import { TransactionsChartCard } from "./tx-chart/tx-chart";
 import { TransactionsTable } from "./tx-table/tx-table";
-import { SendTestTransaction } from "./send-test-tx.client";
-import { Wallet } from "../server-wallets/wallet-table/types";
 
 export function TransactionsAnalyticsPageContent(props: {
   searchParams: {

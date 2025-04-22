@@ -1,15 +1,15 @@
 // Update type definitions for our standardized types
 import type {
-  Address,
   AccessList,
-  TxLegacy,
-  TxEip2930,
+  Address,
+  EthereumTypedTransaction,
+  SignedAuthorization,
   TxEip1559,
+  TxEip2930,
   TxEip4844,
   TxEip4844WithSidecar,
   TxEip7702,
-  EthereumTypedTransaction,
-  SignedAuthorization,
+  TxLegacy,
 } from "./transaction-types.js";
 
 // Custom error class for transaction parsing errors
