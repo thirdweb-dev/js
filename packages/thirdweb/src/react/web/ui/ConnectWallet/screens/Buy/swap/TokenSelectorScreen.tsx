@@ -312,7 +312,6 @@ function WalletRowWithBalances(props: {
       style={{
         borderRadius: radius.lg,
         border: `1px solid ${theme.colors.borderColor}`,
-        minHeight: "350px",
       }}
     >
       <Container
