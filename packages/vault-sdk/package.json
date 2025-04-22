@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/vault-sdk",
-  "version": "1.5.4",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -23,10 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@noble/ciphers": "^1.2.1",
     "@noble/curves": "1.8.1",
