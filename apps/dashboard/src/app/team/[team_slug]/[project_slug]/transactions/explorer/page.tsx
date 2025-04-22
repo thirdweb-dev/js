@@ -9,6 +9,12 @@ export default function TransactionsExplorerPage() {
       <ApiReferenceReact
         configuration={{
           url: `${THIRDWEB_ENGINE_CLOUD_URL}/openapi`,
+          servers: [
+            {
+              url: THIRDWEB_ENGINE_CLOUD_URL,
+              description: "Engine Cloud",
+            },
+          ],
         }}
       />
     </div>
