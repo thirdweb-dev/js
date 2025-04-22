@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { loginRedirect } from "../../../../login/loginRedirect";
+import { loginRedirect } from "../../../../(app)/login/loginRedirect";
 import { getNebulaAuthToken } from "../../../_utils/authToken";
 import { getSessionById } from "../../api/session";
 import { ChatPageContent } from "../../components/ChatPageContent";

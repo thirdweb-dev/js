@@ -7,12 +7,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { ResultItem } from "app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
+import type { ResultItem } from "app/(app)/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import type { EngineStatus } from "../../../app/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
+import type { EngineStatus } from "../../../app/(app)/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
 
 // Engine instances

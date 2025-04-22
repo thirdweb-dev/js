@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { TeamPlanBadge } from "../../app/components/TeamPlanBadge";
+import { TeamPlanBadge } from "../../app/(app)/components/TeamPlanBadge";
 import type { CreditsRecord } from "./ApplyForOpCreditsModal";
 
 type PlanCardProps = {

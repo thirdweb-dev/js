@@ -1,4 +1,4 @@
-import { loginRedirect } from "../../../login/loginRedirect";
+import { loginRedirect } from "../../../(app)/login/loginRedirect";
 import { getNebulaAuthToken } from "../../_utils/authToken";
 import { ChatPageContent } from "../components/ChatPageContent";
 

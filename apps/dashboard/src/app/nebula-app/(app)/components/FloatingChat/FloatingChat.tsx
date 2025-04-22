@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { ExternalLinkIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import {
@@ -15,7 +16,6 @@ import {
   useState,
 } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
 

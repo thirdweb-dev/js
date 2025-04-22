@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { subDays } from "date-fns";
+import { randomLorem } from "stories/stubs";
 import { ThirdwebProvider } from "thirdweb/react";
-import { randomLorem } from "../../../../../stories/stubs";
 import { ChatPageLayout } from "../../components/ChatPageLayout";
 import { ChatHistoryPageUI } from "./ChatHistoryPage";
 

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "stories/utils";
 import { type CodeEnvironment, CodeSegment } from "./code-segment.client";
 
 const meta = {

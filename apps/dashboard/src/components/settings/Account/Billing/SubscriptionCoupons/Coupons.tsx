@@ -1,6 +1,6 @@
 import { API_SERVER_URL } from "@/constants/env";
 import { Suspense } from "react";
-import { getAuthToken } from "../../../../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../app/(app)/api/lib/getAuthToken";
 import { CouponsClient } from "./CouponsClient";
 import type { CouponData } from "./CouponsUI";
 

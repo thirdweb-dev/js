@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { randomLorem } from "stories/stubs";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { randomLorem } from "../../../../stories/stubs";
-import {
-  BadgeContainer,
-  storybookThirdwebClient,
-} from "../../../../stories/utils";
 import { type ChatMessage, Chats } from "./Chats";
 
 const meta = {

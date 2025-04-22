@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useActiveAccount } from "thirdweb/react";
-import type { GetAuthTokenResponse } from "../../app/api/auth/get-auth-token/route";
+import type { GetAuthTokenResponse } from "../../app/(app)/api/auth/get-auth-token/route";
 import { LAST_USED_TEAM_ID } from "../../constants/cookies";
 import { getCookie } from "../../lib/cookie";
 import { getThirdwebClient } from "./thirdweb.server";

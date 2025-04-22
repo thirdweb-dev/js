@@ -1,5 +1,5 @@
 "use server";
-import { getAuthToken } from "app/api/lib/getAuthToken";
+import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
 
 const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
 

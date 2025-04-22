@@ -5,6 +5,7 @@ import {
   DASHBOARD_THIRDWEB_SECRET_KEY,
   NEXT_PUBLIC_NEBULA_URL,
 } from "@/constants/env";
+import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
@@ -12,8 +13,7 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
-import { isVercel } from "../../../lib/vercel-utils";
-import { verifyTurnstileToken } from "../../login/verifyTurnstileToken";
+import { verifyTurnstileToken } from "../../(app)/login/verifyTurnstileToken";
 import {
   NEBULA_COOKIE_ACTIVE_ACCOUNT,
   NEBULA_COOKIE_PREFIX_TOKEN,
@@ -30,7 +30,7 @@ export async function getNebulaLoginPayload(
     },
     body: JSON.stringify({
       address: params.address,
-      chainId: params.chainId?.toString(),
+      chain_id: params.chainId?.toString(),
     }),
   });
 

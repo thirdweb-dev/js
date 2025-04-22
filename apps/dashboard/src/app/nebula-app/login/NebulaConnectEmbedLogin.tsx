@@ -6,6 +6,8 @@ import { TURNSTILE_SITE_KEY } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import { isVercel } from "lib/vercel-utils";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import {
@@ -14,9 +16,8 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
-import { ClientOnly } from "../../../components/ClientOnly/ClientOnly";
-import { isVercel } from "../../../lib/vercel-utils";
-import { getSDKTheme } from "../../components/sdk-component-theme";
+import { getSDKTheme } from "../../(app)/components/sdk-component-theme";
+import { nebulaAAOptions } from "./account-abstraction";
 import {
   doNebulaLogin,
   doNebulaLogout,
@@ -150,7 +151,7 @@ function CustomConnectEmbed(props: {
                 props.onLogin();
               } catch (e) {
                 console.error("Failed to login", e);
-                throw e;
+                throw new Error("Failed to login"); // do not show the original error - that will be masked by next.js anyway
               }
             },
             doLogout: doNebulaLogout,
@@ -169,10 +170,7 @@ function CustomConnectEmbed(props: {
           className="shadow-lg"
           privacyPolicyUrl="/privacy-policy"
           termsOfServiceUrl="/terms"
-          // accountAbstraction={{
-          //   chain: ethereum,
-          //   sponsorGas: true,
-          // }}
+          accountAbstraction={nebulaAAOptions}
         />
       </ClientOnly>
     </div>

@@ -1,6 +1,8 @@
 "use client";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import {
   ChevronRightIcon,
@@ -12,8 +14,6 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Spinner } from "../../../../@/components/ui/Spinner/Spinner";
-import { useDashboardRouter } from "../../../../@/lib/DashboardRouter";
 import { doNebulaLogout } from "../../login/auth-actions";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";

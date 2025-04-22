@@ -1,6 +1,6 @@
 "use server";
 
-import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 import { API_SERVER_URL } from "../constants/env";
 
 export async function confirmEmailWithOTP(otp: string) {

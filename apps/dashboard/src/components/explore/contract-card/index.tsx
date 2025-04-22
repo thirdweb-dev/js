@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { moduleToBase64 } from "app/(dashboard)/published-contract/utils/module-base-64";
+import { moduleToBase64 } from "app/(app)/(dashboard)/published-contract/utils/module-base-64";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";

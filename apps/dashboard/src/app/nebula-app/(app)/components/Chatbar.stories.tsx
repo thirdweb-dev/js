@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
-import {
-  BadgeContainer,
-  storybookThirdwebClient,
-} from "../../../../stories/utils";
 import type { NebulaContext } from "../api/chat";
 import { ChatBar, type WalletMeta } from "./ChatBar";
 const meta = {
@@ -124,6 +121,15 @@ function Story() {
           connectedWallets={[]}
           activeAccountAddress={undefined}
         />
+
+        <Variant
+          label="Connecting Wallet"
+          isStreaming={false}
+          isConnectingWallet={true}
+          showContextSelector={true}
+          connectedWallets={[]}
+          activeAccountAddress={undefined}
+        />
       </div>
     </ThirdwebProvider>
   );
@@ -137,6 +143,7 @@ function Variant(props: {
   showContextSelector: boolean;
   connectedWallets: WalletMeta[];
   activeAccountAddress: string | undefined;
+  isConnectingWallet?: boolean;
 }) {
   const [context, setContext] = useState<NebulaContext | undefined>(
     props.context,
@@ -149,6 +156,7 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <ChatBar
+        isConnectingWallet={props.isConnectingWallet || false}
         client={storybookThirdwebClient}
         abortChatStream={() => {}}
         isChatStreaming={props.isStreaming}

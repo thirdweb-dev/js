@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { randomLorem } from "stories/stubs";
 import { ThirdwebProvider } from "thirdweb/react";
-import { randomLorem } from "../../../../stories/stubs";
 import type { TruncatedSessionInfo } from "../api/types";
 import { ChatPageLayout } from "./ChatPageLayout";
 

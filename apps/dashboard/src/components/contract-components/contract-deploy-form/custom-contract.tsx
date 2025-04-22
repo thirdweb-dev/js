@@ -12,7 +12,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { verifyContract } from "app/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
+import { verifyContract } from "app/(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import {
   DEFAULT_FEE_BPS,
@@ -45,7 +45,7 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
-import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
 import {
   LAST_USED_PROJECT_ID,
   LAST_USED_TEAM_ID,

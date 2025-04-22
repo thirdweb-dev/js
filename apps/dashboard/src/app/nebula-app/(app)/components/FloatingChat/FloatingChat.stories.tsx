@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
-import { storybookThirdwebClient } from "../../../../../stories/utils";
 import { examplePrompts } from "../../data/examplePrompts";
 import { NebulaFloatingChatButton } from "./FloatingChat";
 

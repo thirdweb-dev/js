@@ -1,4 +1,13 @@
 import type { Metadata } from "next";
+import "../../global.css";
+import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
+import { PHProvider } from "lib/posthog/Posthog";
+import { PosthogHeadSetup } from "lib/posthog/PosthogHeadSetup";
+import { PostHogPageView } from "lib/posthog/PosthogPageView";
+import { Inter } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
+import { NebulaProviders } from "./providers";
 
 const title =
   "thirdweb Nebula: The Most powerful AI for interacting with the blockchain";
@@ -14,8 +23,38 @@ export const metadata: Metadata = {
   },
 };
 
+const fontSans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
 export default function Layout(props: {
   children: React.ReactNode;
 }) {
-  return props.children;
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <PosthogHeadSetup />
+      </head>
+      <PHProvider>
+        <PostHogPageView />
+        <body
+          className={cn(
+            "bg-background font-sans antialiased",
+            fontSans.variable,
+          )}
+        >
+          <NebulaProviders>{props.children}</NebulaProviders>
+          <DashboardRouterTopProgressBar />
+          <NextTopLoader
+            color="hsl(var(--foreground))"
+            height={3}
+            shadow={false}
+            showSpinner={false}
+          />
+        </body>
+      </PHProvider>
+    </html>
+  );
 }

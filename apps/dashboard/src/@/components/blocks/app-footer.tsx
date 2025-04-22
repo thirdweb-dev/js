@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
+import { ThirdwebMiniLogo } from "app/(app)/components/ThirdwebMiniLogo";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";

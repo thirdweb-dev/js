@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../stories/utils";
+import { BadgeContainer } from "stories/utils";
 import { PaginationButtons } from "./pagination-buttons";
 
 const meta = {

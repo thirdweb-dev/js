@@ -5,11 +5,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { isValidENSName } from "thirdweb/utils";
+import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/(app)/team/components/last-visited-page/consts";
 import {
   NEBULA_COOKIE_ACTIVE_ACCOUNT,
   NEBULA_COOKIE_PREFIX_TOKEN,
 } from "./app/nebula-app/_utils/constants";
-import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/team/components/last-visited-page/consts";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes

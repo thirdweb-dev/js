@@ -19,13 +19,13 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
-import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
+import { FaucetButton } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
+import { GiftIcon } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
 import type {
   ChainMetadataWithServices,
   ChainServices,
-} from "app/(dashboard)/(chain)/types/chain";
-import { getSDKTheme } from "app/components/sdk-component-theme";
+} from "app/(app)/(dashboard)/(chain)/types/chain";
+import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
@@ -46,7 +46,7 @@ import {
   useWalletBalance,
 } from "thirdweb/react";
 import { privateKeyToAccount } from "thirdweb/wallets";
-import { getFaucetClaimAmount } from "../../app/api/testnet-faucet/claim/claim-amount";
+import { getFaucetClaimAmount } from "../../app/(app)/api/testnet-faucet/claim/claim-amount";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
@@ -121,7 +121,8 @@ export const MismatchButton = forwardRef<
     );
   }
 
-  const isBalanceRequired = !GAS_FREE_CHAINS.includes(txChainId);
+  const isBalanceRequired =
+    wallet.id === "smart" ? false : !GAS_FREE_CHAINS.includes(txChainId);
 
   const notEnoughBalance =
     (txChainBalance.data?.value || 0n) === 0n && isBalanceRequired;
@@ -484,9 +485,9 @@ const MismatchNotice: React.FC<{
       <Button
         size="sm"
         onClick={onSwitchWallet}
-        disabled={!actuallyCanAttemptSwitch}
+        disabled={!actuallyCanAttemptSwitch || switchNetworkMutation.isPending}
         variant="primary"
-        className="gap-2 capitalize"
+        className="gap-2 capitalize disabled:opacity-100"
       >
         {switchNetworkMutation.isPending ? (
           <Spinner className="size-4 shrink-0" />
@@ -494,7 +495,8 @@ const MismatchNotice: React.FC<{
           <UnplugIcon className="size-4 shrink-0" />
         )}
         <span className="line-clamp-1 block truncate">
-          Switch {txChain ? `to ${txChain.name}` : "chain"}
+          {switchNetworkMutation.isPending ? "Switching" : "Switch"}{" "}
+          {txChain ? `to ${txChain.name}` : "chain"}
         </span>
       </Button>
 
