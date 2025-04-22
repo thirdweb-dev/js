@@ -515,7 +515,7 @@ const MismatchNotice: React.FC<{
         </p>
 
         <p className="text-muted-foreground">
-          This action requires you to connect to the{" "}
+          🔐 This action requires you to connect to the{" "}
           <span className="font-semibold capitalize">
             {txChain?.name || `Chain ID #${txChainId}`}
           </span>{" "}

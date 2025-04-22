@@ -192,7 +192,7 @@ export default function RotateAdminKeyButton() {
               <div className="px-6 pb-6">
                 <div className="flex flex-col gap-4">
                   <p className="text-sm text-warning-text">
-                    This action requires your Vault rotation code.
+                    🔐 This action requires your Vault rotation code.
                   </p>
                   <Input
                     type="password"

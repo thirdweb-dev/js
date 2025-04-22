@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { CodeServer } from "../../../../../../../@/components/ui/code/code.server";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../../@/constants/env";
+import { CodeServer } from "@/components/ui/code/code.server";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import Link from "next/link";
+import { Button } from "../../../../../../../@/components/ui/button";
 import type { Wallet } from "../wallet-table/types";
-import SendDummyTx from "./send-dummy-tx.client";
 
 export function TryItOut(props: {
   authToken: string;
@@ -33,21 +33,22 @@ export function TryItOut(props: {
         <div className="h-4" />
         <div className="flex flex-row justify-end gap-4">
           <Button variant={"secondary"} asChild>
-            <a
-              href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`}
-              target="_blank"
+            <Link
+              href={`/team/${props.team_slug}/${props.project_slug}/engine/explorer`}
               rel="noreferrer"
             >
               View API reference
-            </a>
+            </Link>
           </Button>
           {props.wallet && (
-            <SendDummyTx
-              authToken={props.authToken}
-              wallet={props.wallet}
-              team_slug={props.team_slug}
-              project_slug={props.project_slug}
-            />
+            <Button variant={"primary"} asChild>
+              <Link
+                href={`/team/${props.team_slug}/${props.project_slug}/engine`}
+                rel="noreferrer"
+              >
+                Send a test transaction
+              </Link>
+            </Button>
           )}
         </div>
       </div>

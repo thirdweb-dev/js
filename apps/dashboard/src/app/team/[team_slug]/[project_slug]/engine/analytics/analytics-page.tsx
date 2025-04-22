@@ -2,6 +2,8 @@ import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { TransactionAnalyticsFilter } from "./filter";
 import { TransactionsChartCard } from "./tx-chart/tx-chart";
 import { TransactionsTable } from "./tx-table/tx-table";
+import { SendTestTransaction } from "./send-test-tx.client";
+import { Wallet } from "../server-wallets/wallet-table/types";
 
 export function TransactionsAnalyticsPageContent(props: {
   searchParams: {
@@ -13,6 +15,7 @@ export function TransactionsAnalyticsPageContent(props: {
   clientId: string;
   project_slug: string;
   team_slug: string;
+  wallets?: Wallet[];
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -29,6 +32,7 @@ export function TransactionsAnalyticsPageContent(props: {
             project_slug={props.project_slug}
             team_slug={props.team_slug}
           />
+          <SendTestTransaction wallets={props.wallets} />
           <TransactionsTable teamId={props.teamId} clientId={props.clientId} />
         </div>
       </div>

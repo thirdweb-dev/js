@@ -13,8 +13,8 @@ import { Input } from "@/components/ui/input";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createAccessToken,
-  revokeAccessToken,
   listAccessTokens,
+  revokeAccessToken,
 } from "@thirdweb-dev/vault-sdk";
 import { createVaultClient } from "@thirdweb-dev/vault-sdk";
 import { Loader2, Trash2 } from "lucide-react";
@@ -396,7 +396,7 @@ export default function ListAccessTokensButton(props: {
             <div className="px-6 pb-6">
               <div className="flex flex-col gap-4">
                 <p className="text-sm text-warning-text">
-                  This action requires your Vault admin key.
+                  🔐 This action requires your Vault admin key.
                 </p>
                 <Input
                   type="password"
