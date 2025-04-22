@@ -31,7 +31,7 @@ describe("rateLimit", () => {
 
     expect(result).toEqual({
       rateLimited: false,
-      requestCount: 0,
+      requestCount: 1,
       rateLimit: 0,
     });
     expect(mockRedis.mget).not.toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe("rateLimit", () => {
     // Verify correct keys are checked
     const expectedKeys = Array.from(
       { length: SLIDING_WINDOW_SECONDS },
-      (_, i) => `rate-limit:storage:1:${currentSecond - i}`,
+      (_, i) => `rate-limit:storage:1:s_${currentSecond - i}`,
     );
     expect(mockRedis.mget).toHaveBeenCalledWith(expectedKeys);
 
