@@ -3,6 +3,10 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import {
   ArrowRightLeftIcon,
   CircleCheckIcon,
@@ -19,11 +23,7 @@ import {
   waitForReceipt,
 } from "thirdweb";
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
-import { TransactionButton } from "../../../../components/buttons/TransactionButton";
-import { ChainIconClient } from "../../../../components/icons/ChainIcon";
-import { useTrack } from "../../../../hooks/analytics/useTrack";
-import { useV5DashboardChain } from "../../../../lib/v5-adapter";
-import { getSDKTheme } from "../../../components/sdk-component-theme";
+import { getSDKTheme } from "../../../(app)/components/sdk-component-theme";
 import type { NebulaTxData } from "./Chats";
 
 export type TxStatus =
@@ -145,14 +145,18 @@ export function ExecuteTransactionCardLayout(props: {
           {props.status.type !== "idle" && (
             <div className="flex items-center justify-between gap-2">
               <span className="text-muted-foreground">Status</span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span
                   className={cn(
                     "flex items-center gap-2 font-medium",
-                    props.status.type === "sending" && "text-blue-500",
-                    props.status.type === "confirming" && "text-yellow-500",
-                    props.status.type === "confirmed" && "text-green-500",
-                    props.status.type === "failed" && "text-red-500",
+                    props.status.type === "sending" &&
+                      "text-blue-700 dark:text-blue-500",
+                    props.status.type === "confirming" &&
+                      "text-yellow-600 dark:text-yellow-500",
+                    props.status.type === "confirmed" &&
+                      "text-green-700 dark:text-green-500",
+                    props.status.type === "failed" &&
+                      "text-red-700 dark:text-red-500",
                   )}
                 >
                   {/* icon */}

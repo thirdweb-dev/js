@@ -34,6 +34,7 @@ function Story(props: {
     <ThirdwebProvider>
       <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
         <EmptyStateChatPageContent
+          isConnectingWallet={false}
           sendMessage={() => {}}
           prefillMessage={props.prefillMessage}
           context={undefined}

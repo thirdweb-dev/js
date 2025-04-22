@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import {
-  BadgeContainer,
-  storybookThirdwebClient,
-} from "../../../../stories/utils";
 import {
   ExecuteTransactionCardLayout,
   type TxStatus,

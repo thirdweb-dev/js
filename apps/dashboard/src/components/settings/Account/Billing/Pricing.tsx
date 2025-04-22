@@ -9,8 +9,8 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
-import { useStripeRedirectEvent } from "../../../../app/stripe-redirect/stripeRedirectChannel";
-import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
+import { useStripeRedirectEvent } from "../../../../app/(app)/stripe-redirect/stripeRedirectChannel";
+import { getValidTeamPlan } from "../../../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
 import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 
 // this is used to determine whether to show "Upgrade" or "Downgrade" label based on tier level

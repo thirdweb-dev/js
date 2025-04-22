@@ -16,6 +16,7 @@ export function EmptyStateChatPageContent(props: {
   connectedWallets: WalletMeta[];
   activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
+  isConnectingWallet: boolean;
 }) {
   return (
     <div className="py-10 lg:py-16">
@@ -35,6 +36,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
+            isConnectingWallet={props.isConnectingWallet}
             showContextSelector={true}
             context={props.context}
             setContext={props.setContext}

@@ -2,7 +2,7 @@
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
-import { getUserThirdwebClient } from "../../app/api/lib/getAuthToken";
+import { getUserThirdwebClient } from "../../app/(app)/api/lib/getAuthToken";
 
 type BalanceQueryResponse = Array<{
   balance: string;

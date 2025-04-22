@@ -1,6 +1,7 @@
 "use client";
 
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ArrowUpIcon,
   CheckIcon,
@@ -28,8 +31,6 @@ import {
   AccountProvider,
 } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
-import { ChainIconClient } from "../../../../components/icons/ChainIcon";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 import type { NebulaContext } from "../api/chat";
 
 export type WalletMeta = {
@@ -50,6 +51,7 @@ export function ChatBar(props: {
   connectedWallets: WalletMeta[];
   activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
+  isConnectingWallet: boolean;
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
   const selectedChainIds = props.context?.chainIds?.map((x) => Number(x)) || [];
@@ -85,9 +87,9 @@ export function ChatBar(props: {
 
       <div className="flex items-end justify-between gap-3 px-2 pb-2">
         {/* left */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grow">
           {props.showContextSelector && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 [&>*]:w-auto">
               <MultiNetworkSelector
                 client={props.client}
                 hideTestnets
@@ -140,19 +142,30 @@ export function ChatBar(props: {
                 ]}
               />
 
-              {props.connectedWallets.length > 1 && (
-                <WalletSelector
-                  client={props.client}
-                  wallets={props.connectedWallets}
-                  activeAccountAddress={props.activeAccountAddress}
-                  onClick={(walletMeta) => {
-                    props.setActiveWallet(walletMeta);
-                    props.setContext({
-                      walletAddress: walletMeta.address,
-                      chainIds: props.context?.chainIds || [],
-                    });
-                  }}
-                />
+              {props.connectedWallets.length > 1 &&
+                !props.isConnectingWallet && (
+                  <WalletSelector
+                    client={props.client}
+                    wallets={props.connectedWallets}
+                    activeAccountAddress={props.activeAccountAddress}
+                    onClick={(walletMeta) => {
+                      props.setActiveWallet(walletMeta);
+                      props.setContext({
+                        walletAddress: walletMeta.address,
+                        chainIds: props.context?.chainIds || [],
+                      });
+                    }}
+                  />
+                )}
+
+              {props.isConnectingWallet && (
+                <Badge
+                  variant="outline"
+                  className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
+                >
+                  <Spinner className="size-3" />
+                  <span>Connecting Wallet</span>
+                </Badge>
               )}
             </div>
           )}
@@ -162,7 +175,7 @@ export function ChatBar(props: {
         {props.isChatStreaming ? (
           <Button
             variant="default"
-            className="!h-auto w-auto gap-2 p-2"
+            className="!h-auto w-auto shrink-0 gap-2 p-2"
             onClick={() => {
               props.abortChatStream();
             }}
@@ -173,7 +186,7 @@ export function ChatBar(props: {
         ) : (
           <Button
             aria-label="Send"
-            disabled={message.trim() === ""}
+            disabled={message.trim() === "" || props.isConnectingWallet}
             className={cn(
               "!h-auto w-auto border border-transparent p-2 disabled:opacity-100",
               message === "" &&

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useActiveAccount,
+  useActiveWalletConnectionStatus,
   useConnectedWallets,
   useSetActiveWallet,
 } from "thirdweb/react";
@@ -111,6 +112,7 @@ export function ChatPageContent(props: {
   }, []);
 
   const isNewSession = !props.session;
+  const connectionStatus = useActiveWalletConnectionStatus();
 
   // if this is a new session, user has not manually updated context
   // update the context to the current user's wallet address and chain id
@@ -347,6 +349,7 @@ export function ChatPageContent(props: {
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
+                isConnectingWallet={connectionStatus === "connecting"}
                 sendMessage={handleSendMessage}
                 prefillMessage={props.initialParams?.q}
                 context={contextFilters}
@@ -371,6 +374,7 @@ export function ChatPageContent(props: {
 
               <div className="container max-w-[800px]">
                 <ChatBar
+                  isConnectingWallet={connectionStatus === "connecting"}
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}
                   activeAccountAddress={address}

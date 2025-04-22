@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
+import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 import {
   BadgeContainer,
   storybookThirdwebClient,

@@ -1,7 +1,7 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
-import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
 export type Project = ProjectResponse;
 

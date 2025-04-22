@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import type { ChainMetadata } from "thirdweb/chains";
-import { fetchChain } from "../../../../utils/fetchChain";
+import { fetchChain } from "utils/fetchChain";
 
 export const getChains = unstable_cache(
   async (chainNamesOrIds: string[] | string | undefined) => {

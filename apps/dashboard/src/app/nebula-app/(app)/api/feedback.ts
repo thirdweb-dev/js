@@ -1,5 +1,5 @@
 import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
-import { fetchWithAuthToken } from "../../../../utils/fetchWithAuthToken";
+import { fetchWithAuthToken } from "utils/fetchWithAuthToken";
 
 export async function submitFeedback(params: {
   authToken: string;
