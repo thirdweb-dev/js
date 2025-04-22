@@ -1,24 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -29,22 +12,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
 import {
-  AlertCircleIcon,
   CalendarIcon,
   CalendarX2Icon,
   ClockIcon,
   InfinityIcon,
-  PlusIcon,
-  TicketCheckIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 type Coupon = {
   id: string;
@@ -119,21 +96,21 @@ export function CouponsUI(props: CouponsUIProps) {
       <div className="flex items-center justify-between border-b bg-card px-6 py-4">
         <h3 className="font-semibold text-xl tracking-tight">Coupons</h3>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <PlusIcon className="size-4" />
-              Apply Coupon
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="overflow-hidden p-0">
-            <ApplyCouponModalContent
-              isPaymentSetup={props.isPaymentSetup}
-              applyCoupon={props.applyCoupon}
-              accountCoupon={accountCoupon}
-            />
-          </DialogContent>
-        </Dialog>
+        {/* <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <PlusIcon className="size-4" />
+                Apply Coupon
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="overflow-hidden p-0">
+              <ApplyCouponModalContent
+                isPaymentSetup={props.isPaymentSetup}
+                applyCoupon={props.applyCoupon}
+                accountCoupon={accountCoupon}
+              />
+            </DialogContent>
+          </Dialog> */}
       </div>
 
       {props.status === "success" && props.activeCoupons.length > 0 ? (
@@ -255,137 +232,140 @@ function DeleteCouponButton(props: {
   );
 }
 
-const applyCouponFormSchema = z.object({
-  promoCode: z.string().min(1, "Coupon code is required"),
-});
+// UI to add coupon is disable for now
+// this will be enabled later in future with some changes
 
-function ApplyCouponModalContent(props: {
-  isPaymentSetup: boolean;
-  applyCoupon: ApplyCouponFn;
-  accountCoupon: CouponData | undefined;
-}) {
-  const applyCoupon = useMutation({
-    mutationFn: props.applyCoupon,
-  });
+// const applyCouponFormSchema = z.object({
+//   promoCode: z.string().min(1, "Coupon code is required"),
+// });
 
-  const form = useForm<z.infer<typeof applyCouponFormSchema>>({
-    resolver: zodResolver(applyCouponFormSchema),
-    defaultValues: {
-      promoCode: "",
-    },
-  });
+// function ApplyCouponModalContent(props: {
+//   isPaymentSetup: boolean;
+//   applyCoupon: ApplyCouponFn;
+//   accountCoupon: CouponData | undefined;
+// }) {
+//   const applyCoupon = useMutation({
+//     mutationFn: props.applyCoupon,
+//   });
 
-  async function onSubmit(values: z.infer<typeof applyCouponFormSchema>) {
-    try {
-      const res = await applyCoupon.mutateAsync(values.promoCode);
-      switch (res.status) {
-        case 200: {
-          toast.success("Coupon applied successfully");
+//   const form = useForm<z.infer<typeof applyCouponFormSchema>>({
+//     resolver: zodResolver(applyCouponFormSchema),
+//     defaultValues: {
+//       promoCode: "",
+//     },
+//   });
 
-          break;
-        }
-        case 400: {
-          toast.error("Coupon code is invalid");
-          break;
-        }
-        case 401: {
-          toast.error("You are not authorized to apply coupons", {
-            description: "Login to dashboard and try again",
-          });
-          break;
-        }
-        case 409: {
-          toast.error("Coupon already applied");
-          break;
-        }
-        case 429: {
-          toast.error("Too many coupons applied in a short period", {
-            description: "Please try again after some time",
-          });
-          break;
-        }
-        default: {
-          toast.error("Failed to apply coupon");
-        }
-      }
-    } catch {
-      toast.error("Failed to apply coupon");
-    }
-  }
+//   async function onSubmit(values: z.infer<typeof applyCouponFormSchema>) {
+//     try {
+//       const res = await applyCoupon.mutateAsync(values.promoCode);
+//       switch (res.status) {
+//         case 200: {
+//           toast.success("Coupon applied successfully");
 
-  const couponEnabled = props.isPaymentSetup && !props.accountCoupon;
+//           break;
+//         }
+//         case 400: {
+//           toast.error("Coupon code is invalid");
+//           break;
+//         }
+//         case 401: {
+//           toast.error("You are not authorized to apply coupons", {
+//             description: "Login to dashboard and try again",
+//           });
+//           break;
+//         }
+//         case 409: {
+//           toast.error("Coupon already applied");
+//           break;
+//         }
+//         case 429: {
+//           toast.error("Too many coupons applied in a short period", {
+//             description: "Please try again after some time",
+//           });
+//           break;
+//         }
+//         default: {
+//           toast.error("Failed to apply coupon");
+//         }
+//       }
+//     } catch {
+//       toast.error("Failed to apply coupon");
+//     }
+//   }
 
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="p-6">
-          <DialogHeader>
-            <DialogTitle>Apply Coupon</DialogTitle>
-            {couponEnabled && (
-              <DialogDescription>
-                Enter coupon code to apply discounts or free trials
-              </DialogDescription>
-            )}
-          </DialogHeader>
+//   const couponEnabled = props.isPaymentSetup && !props.accountCoupon;
 
-          <div className="h-4" />
+//   return (
+//     <Form {...form}>
+//       <form onSubmit={form.handleSubmit(onSubmit)}>
+//         <div className="p-6">
+//           <DialogHeader>
+//             <DialogTitle>Apply Coupon</DialogTitle>
+//             {couponEnabled && (
+//               <DialogDescription>
+//                 Enter coupon code to apply discounts or free trials
+//               </DialogDescription>
+//             )}
+//           </DialogHeader>
 
-          {couponEnabled && (
-            <FormField
-              control={form.control}
-              name="promoCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Coupon Code</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className=""
-                      disabled={!props.isPaymentSetup}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          )}
+//           <div className="h-4" />
 
-          {!props.isPaymentSetup && (
-            <Alert variant="destructive">
-              <AlertCircleIcon className="size-5" />
-              <AlertTitle>Payment method required</AlertTitle>
-              <AlertDescription>
-                A valid payment method must be added to apply a coupon.
-              </AlertDescription>
-            </Alert>
-          )}
+//           {couponEnabled && (
+//             <FormField
+//               control={form.control}
+//               name="promoCode"
+//               render={({ field }) => (
+//                 <FormItem>
+//                   <FormLabel>Coupon Code</FormLabel>
+//                   <FormControl>
+//                     <Input
+//                       {...field}
+//                       className=""
+//                       disabled={!props.isPaymentSetup}
+//                     />
+//                   </FormControl>
+//                 </FormItem>
+//               )}
+//             />
+//           )}
 
-          {props.isPaymentSetup && props.accountCoupon && (
-            <Alert variant="destructive">
-              <AlertCircleIcon className="size-5" />
-              <AlertTitle>Coupon already applied</AlertTitle>
-              <AlertDescription>
-                Remove coupon {`"${props.accountCoupon.coupon.name}"`} to apply
-                a new coupon
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
+//           {!props.isPaymentSetup && (
+//             <Alert variant="destructive">
+//               <AlertCircleIcon className="size-5" />
+//               <AlertTitle>Payment method required</AlertTitle>
+//               <AlertDescription>
+//                 A valid payment method must be added to apply a coupon.
+//               </AlertDescription>
+//             </Alert>
+//           )}
 
-        <div className="mt-4 flex items-center justify-end border-t bg-card p-6">
-          <Button
-            type="submit"
-            disabled={applyCoupon.isPending || !couponEnabled}
-            className="gap-2"
-          >
-            {applyCoupon.isPending ? (
-              <Spinner className="size-4" />
-            ) : (
-              <TicketCheckIcon className="size-4" />
-            )}
-            Redeem
-          </Button>
-        </div>
-      </form>
-    </Form>
-  );
-}
+//           {props.isPaymentSetup && props.accountCoupon && (
+//             <Alert variant="destructive">
+//               <AlertCircleIcon className="size-5" />
+//               <AlertTitle>Coupon already applied</AlertTitle>
+//               <AlertDescription>
+//                 Remove coupon {`"${props.accountCoupon.coupon.name}"`} to apply
+//                 a new coupon
+//               </AlertDescription>
+//             </Alert>
+//           )}
+//         </div>
+
+//         <div className="mt-4 flex items-center justify-end border-t bg-card p-6">
+//           <Button
+//             type="submit"
+//             disabled={applyCoupon.isPending || !couponEnabled}
+//             className="gap-2"
+//           >
+//             {applyCoupon.isPending ? (
+//               <Spinner className="size-4" />
+//             ) : (
+//               <TicketCheckIcon className="size-4" />
+//             )}
+//             Redeem
+//           </Button>
+//         </div>
+//       </form>
+//     </Form>
+//   );
+// }
