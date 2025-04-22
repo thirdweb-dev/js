@@ -1,7 +1,6 @@
 "use client";
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import {
-  ArrowRightLeftIcon,
   BookTextIcon,
   BoxIcon,
   HomeIcon,
@@ -9,6 +8,7 @@ import {
   WalletIcon,
 } from "lucide-react";
 import { ContractIcon } from "../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
+import { EngineIcon } from "../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
 import { PayIcon } from "../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
@@ -61,10 +61,10 @@ export function ProjectSidebarLayout(props: {
           tracking: tracking("contracts"),
         },
         {
-          href: `${layoutPath}/nebula`,
-          label: "Nebula",
-          icon: NebulaIcon,
-          tracking: tracking("nebula"),
+          href: `${layoutPath}/engine`,
+          label: "Engine",
+          icon: EngineIcon,
+          tracking: tracking("engine"),
         },
         {
           href: `${layoutPath}/insight`,
@@ -73,10 +73,10 @@ export function ProjectSidebarLayout(props: {
           tracking: tracking("insight"),
         },
         {
-          href: `${layoutPath}/transactions`,
-          label: "Transactions",
-          icon: ArrowRightLeftIcon,
-          tracking: tracking("transactions"),
+          href: `${layoutPath}/nebula`,
+          label: "Nebula",
+          icon: NebulaIcon,
+          tracking: tracking("nebula"),
         },
       ]}
       footerSidebarLinks={[

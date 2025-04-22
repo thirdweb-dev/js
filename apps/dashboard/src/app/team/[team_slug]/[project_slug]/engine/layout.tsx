@@ -1,11 +1,11 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { Badge } from "@/components/ui/badge";
 import { TabPathLinks } from "@/components/ui/tabs";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import { CloudIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -43,7 +43,7 @@ function TransactionsLayout(props: {
   clientId: string;
   children: React.ReactNode;
 }) {
-  const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/transactions`;
+  const engineLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
 
   return (
     <div className="flex grow flex-col">
@@ -53,7 +53,7 @@ function TransactionsLayout(props: {
         <div className="container flex max-w-7xl flex-col gap-4">
           <div>
             <h1 className="mb-0.5 font-semibold text-2xl tracking-tight lg:text-3xl">
-              Transactions
+              Engine
             </h1>
             <div className="flex items-center gap-2">
               <Link
@@ -79,16 +79,16 @@ function TransactionsLayout(props: {
           links={[
             {
               name: "Analytics",
-              path: `${smartWalletsLayoutSlug}`,
+              path: `${engineLayoutSlug}`,
               exactMatch: true,
             },
             {
               name: "Server Wallets",
-              path: `${smartWalletsLayoutSlug}/server-wallets`,
+              path: `${engineLayoutSlug}/server-wallets`,
             },
             {
               name: "Explorer",
-              path: `${smartWalletsLayoutSlug}/explorer`,
+              path: `${engineLayoutSlug}/explorer`,
             },
           ]}
         />

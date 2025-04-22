@@ -173,7 +173,7 @@ function EmptyChartContent(props: {
           variant="primary"
           onClick={() => {
             router.push(
-              `/team/${props.team_slug}/${props.project_slug}/transactions/server-wallets`,
+              `/team/${props.team_slug}/${props.project_slug}/engine/server-wallets`,
             );
           }}
         >

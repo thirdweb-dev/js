@@ -126,7 +126,7 @@ export default function SendDummyTx(props: {
                   onClick={() => {
                     handleCloseModal();
                     router.push(
-                      `/team/${props.team_slug}/${props.project_slug}/transactions`,
+                      `/team/${props.team_slug}/${props.project_slug}/engine`,
                     );
                   }}
                   variant={"primary"}
