@@ -253,8 +253,8 @@ export default function CreateServerWallet(props: {
               {
                 type: "eoa:signStructuredMessage",
                 structuredPatterns: {
-                  userOpV06: {},
-                  userOpV07: {},
+                  useropV06: {},
+                  useropV07: {},
                 },
                 metadataPatterns: [
                   {
