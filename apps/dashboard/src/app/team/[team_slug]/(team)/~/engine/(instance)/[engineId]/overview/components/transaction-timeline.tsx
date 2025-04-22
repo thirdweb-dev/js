@@ -17,10 +17,11 @@ import {
   Stepper,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CheckIcon } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "sonner";
 import { Button, FormLabel, Text } from "tw-components";
 
 interface TimelineStep {
@@ -188,14 +189,9 @@ const CancelTransactionButton = ({
   authToken: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent a request to cancel the transaction",
-    "Failed to cancel transaction",
-  );
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  const onClickContinue = async () => {
-    try {
+  const cancelTransactionMutation = useMutation({
+    mutationFn: async () => {
       const resp = await fetch(`${instanceUrl}transaction/cancel`, {
         method: "POST",
         headers: {
@@ -205,17 +201,24 @@ const CancelTransactionButton = ({
         },
         body: JSON.stringify({ queueId: transaction.queueId }),
       });
+
       if (!resp.ok) {
         const json = await resp.json();
         throw json.error?.message;
       }
-      onSuccess();
-    } catch (e) {
-      console.error("Cancelling transaction:", e);
-      onError(e);
-    }
+    },
+  });
 
-    onClose();
+  const cancelTransactions = async () => {
+    const promise = cancelTransactionMutation.mutateAsync();
+    toast.promise(promise, {
+      success: "Transaction cancelled successfully",
+      error: "Failed to cancel transaction",
+    });
+
+    promise.then(() => {
+      onClose();
+    });
   };
 
   return (
@@ -273,7 +276,11 @@ const CancelTransactionButton = ({
             >
               Close
             </Button>
-            <Button type="submit" colorScheme="red" onClick={onClickContinue}>
+            <Button
+              colorScheme="red"
+              onClick={cancelTransactions}
+              isLoading={cancelTransactionMutation.isPending}
+            >
               Cancel transaction
             </Button>
           </ModalFooter>
