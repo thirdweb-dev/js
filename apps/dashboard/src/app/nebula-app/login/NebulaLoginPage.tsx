@@ -10,21 +10,22 @@ import { NebulaLoginPage } from "./NebulaConnectEmbedLogin";
 
 export function NebulaLoggedOutStatePage(props: {
   params: {
-    chain: string | string[] | undefined;
+    chains: { slug: string; id: number }[];
     q: string | undefined;
-    wallet: string | undefined;
   };
   hasAuthToken: boolean;
 }) {
-  const [message, setMessage] = useState<string | undefined>(props.params.q);
   const [showPage, setShowPage] = useState<"connect" | "welcome">(
     props.hasAuthToken ? "connect" : "welcome",
   );
+  const [message, setMessage] = useState<string | undefined>(props.params.q);
+  const [chainIds, setChainIds] = useState<number[]>(
+    props.params.chains.map((c) => c.id),
+  );
 
   const redirectPathObj = {
-    chain: props.params.chain,
-    q: message, // don't use props.params.q, because message may be updated by user
-    wallet: props.params.wallet,
+    chain: chainIds,
+    q: message,
   };
 
   const redirectPathParams = Object.entries(redirectPathObj)
@@ -88,6 +89,18 @@ export function NebulaLoggedOutStatePage(props: {
         <div className="container relative flex max-w-[800px] grow flex-col justify-center overflow-hidden rounded-lg pb-6">
           <EmptyStateChatPageContent
             prefillMessage={message}
+            context={{
+              walletAddress: null,
+              chainIds: chainIds.map((x) => x.toString()),
+            }}
+            setContext={(v) => {
+              if (v?.chainIds) {
+                setChainIds(v.chainIds.map(Number));
+              }
+            }}
+            connectedWallets={[]}
+            activeAccountAddress={undefined}
+            setActiveWallet={() => {}}
             sendMessage={(msg) => {
               setMessage(msg);
               setShowPage("connect");

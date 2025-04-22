@@ -5,7 +5,9 @@ import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getThirdwebClient } from "../../../../../../../@/constants/thirdweb.server";
 import { AccountAbstractionSettingsPage } from "../../../../../../../components/smart-wallets/SponsorshipPolicies";
+import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
 export default async function Page(props: {
@@ -13,9 +15,10 @@ export default async function Page(props: {
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const [project, team] = await Promise.all([
+  const [project, team, authToken] = await Promise.all([
     getProject(team_slug, project_slug),
     getTeamBySlug(team_slug),
+    getAuthToken(),
   ]);
 
   if (!team) {
@@ -25,6 +28,11 @@ export default async function Page(props: {
   if (!project) {
     redirect(`/team/${team_slug}`);
   }
+
+  const client = await getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
 
   const bundlerService = project.services.find((s) => s.name === "bundler");
 
@@ -47,6 +55,7 @@ export default async function Page(props: {
   return (
     <ChakraProviderSetup>
       <AccountAbstractionSettingsPage
+        client={client}
         bundlerService={bundlerService}
         trackingCategory="account-abstraction-project-settings"
         project={project}

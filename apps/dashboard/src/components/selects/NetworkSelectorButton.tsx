@@ -173,6 +173,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               return (
                 <CustomChainRenderer
                   {...props}
+                  client={client}
                   openEditChainModal={(c) => {
                     setIsNetworkConfigModalOpen(true);
                     setEditChain(c);
@@ -199,7 +200,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           });
         }}
       >
-        <ChainIconClient ipfsSrc={chain?.icon?.url} className="size-5" />
+        <ChainIconClient
+          src={chain?.icon?.url}
+          client={client}
+          className="size-5"
+        />
         {chain?.name || "Select Network"}
 
         <ChevronDownIcon className="ml-auto size-4" />

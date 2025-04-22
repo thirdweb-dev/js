@@ -1,5 +1,6 @@
 "use client";
 
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -19,9 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { type Control, useFieldArray } from "react-hook-form";
-import { SingleNetworkSelector } from "../../../../../../../../../../../@/components/blocks/NetworkSelectors";
 import type { PartnerFormValues } from "./partner-form.client";
 
 type AllowedOperationsSectionProps = {
@@ -185,6 +186,7 @@ function TransactionRestrictions({
   control: Control<PartnerFormValues>;
   index: number;
 }) {
+  const client = useThirdwebClient();
   const transactionsArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${index}.allowedTransactions`,
@@ -220,6 +222,7 @@ function TransactionRestrictions({
                       <SingleNetworkSelector
                         chainId={field.value}
                         onChange={(chainId) => field.onChange(chainId)}
+                        client={client}
                       />
                     </FormControl>
                     <FormMessage />
@@ -313,6 +316,7 @@ function TypedDataRestrictions({
   control: Control<PartnerFormValues>;
   index: number;
 }) {
+  const client = useThirdwebClient();
   const typedDataArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${index}.allowedTypedData`,
@@ -368,6 +372,7 @@ function TypedDataRestrictions({
                       <SingleNetworkSelector
                         chainId={field.value}
                         onChange={(chainId) => field.onChange(chainId)}
+                        client={client}
                       />
                     </FormControl>
                     <FormMessage />
@@ -560,6 +565,7 @@ function UserOpTransactions({
   opIndex: number;
   signIndex: number;
 }) {
+  const client = useThirdwebClient();
   const userOpTransactionsArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${opIndex}.allowedPersonalSigns.${signIndex}.allowedTransactions`,
@@ -591,6 +597,7 @@ function UserOpTransactions({
                       <SingleNetworkSelector
                         chainId={field.value}
                         onChange={(chainId) => field.onChange(chainId)}
+                        client={client}
                       />
                     </FormControl>
                     <FormMessage />

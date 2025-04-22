@@ -133,6 +133,7 @@ export function ExecuteTransactionCardLayout(props: {
               <ChainIconClient
                 className="size-5 rounded-full"
                 src={chain.icon?.url}
+                client={props.client}
               />
               <span className="text-foreground">
                 {chain.name || `Chain ID: ${txData.chainId}`}

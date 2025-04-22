@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ContractTable } from "../../../../components/contract-components/tables/contract-table";
 import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
 import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
@@ -10,6 +11,7 @@ export function DeployedContractsPage(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  client: ThirdwebClient;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -36,6 +38,7 @@ async function DeployedContractsPageAsync(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  client: ThirdwebClient;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
     teamId: props.teamId,
@@ -50,6 +53,7 @@ async function DeployedContractsPageAsync(props: {
         pageSize={10}
         teamId={props.teamId}
         projectId={props.projectId}
+        client={props.client}
       />
     </ClientOnly>
   );

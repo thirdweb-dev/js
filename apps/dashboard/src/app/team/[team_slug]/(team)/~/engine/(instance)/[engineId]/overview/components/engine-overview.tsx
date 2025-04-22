@@ -2,12 +2,14 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
@@ -25,17 +27,24 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
   teamSlug,
   authToken,
 }) => {
+  const client = useThirdwebClient();
+
   return (
     <div>
       <BackendWalletsSection
         instance={instance}
         teamSlug={teamSlug}
         authToken={authToken}
+        client={client}
       />
       <div className="h-10" />
       <TransactionCharts instanceUrl={instance.url} authToken={authToken} />
       <div className="h-10" />
-      <TransactionsTable instanceUrl={instance.url} authToken={authToken} />
+      <TransactionsTable
+        instanceUrl={instance.url}
+        authToken={authToken}
+        client={client}
+      />
     </div>
   );
 };
@@ -44,6 +53,7 @@ function BackendWalletsSection(props: {
   instance: EngineInstance;
   teamSlug: string;
   authToken: string;
+  client: ThirdwebClient;
 }) {
   const { instance, teamSlug, authToken } = props;
   const activeWalletChain = useActiveWalletChain();
@@ -119,6 +129,7 @@ function BackendWalletsSection(props: {
                   className="min-w-40 max-w-52 lg:max-w-60"
                   popoverContentClassName="!w-[80vw] md:!w-[500px]"
                   align="end"
+                  client={props.client}
                 />
               </div>
             </div>
@@ -133,6 +144,7 @@ function BackendWalletsSection(props: {
         isFetched={backendWallets.isFetched}
         authToken={authToken}
         chainId={chainId}
+        client={props.client}
       />
     </section>
   );

@@ -1,15 +1,20 @@
 import { Flex, FormControl, ListItem, UnorderedList } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Heading, Link, Text } from "tw-components";
 import { AbiSelector } from "./abi-selector";
 import { NetworksFieldset } from "./networks-fieldset";
 
 interface DefaultFactoryProps {
   abi: Abi;
+  client: ThirdwebClient;
 }
 
-export const DefaultFactory: React.FC<DefaultFactoryProps> = ({ abi }) => {
+export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
+  abi,
+  client,
+}) => {
   const form = useFormContext();
 
   return (
@@ -62,7 +67,7 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({ abi }) => {
           />
         </FormControl>
       </Flex>
-      <NetworksFieldset />
+      <NetworksFieldset client={client} />
     </Flex>
   );
 };

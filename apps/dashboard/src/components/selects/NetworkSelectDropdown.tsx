@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 
 interface NetworkSelectDropdownProps {
@@ -16,6 +17,7 @@ interface NetworkSelectDropdownProps {
   isDisabled?: boolean;
   onSelect: (chain: string | undefined) => void;
   selectedChain: string | undefined;
+  client: ThirdwebClient;
 }
 
 export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
@@ -25,6 +27,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
   isDisabled,
   selectedChain,
   onSelect,
+  client,
 }) => {
   const { allChains } = useAllChainsData();
 
@@ -67,7 +70,11 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
       >
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
-            <ChainIconClient ipfsSrc={undefined} className="size-5" />
+            <ChainIconClient
+              src={undefined}
+              client={client}
+              className="size-5"
+            />
             All Networks
           </div>
         </SelectItem>
@@ -75,7 +82,11 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         {chains.map((chain) => (
           <SelectItem key={chain.chainId} value={String(chain.chainId)}>
             <div className="flex items-center gap-2 py-1">
-              <ChainIconClient ipfsSrc={chain.icon?.url} className="size-5" />
+              <ChainIconClient
+                src={chain.icon?.url}
+                client={client}
+                className="size-5"
+              />
               {useCleanChainName ? cleanChainName(chain.name) : chain.name}
             </div>
           </SelectItem>

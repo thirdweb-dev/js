@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
 import { SettingsIcon } from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
@@ -18,6 +19,7 @@ type ChainRenderProps = React.ComponentProps<
 type CustomChainRendererProps = ChainRenderProps & {
   disableChainConfig?: boolean;
   openEditChainModal: (chain: StoredChain) => void;
+  client: ThirdwebClient;
 };
 
 export const CustomChainRenderer = ({
@@ -28,6 +30,7 @@ export const CustomChainRenderer = ({
   close,
   disableChainConfig,
   openEditChainModal,
+  client,
 }: CustomChainRendererProps) => {
   const { idToChain } = useAllChainsData();
   const storedChain = idToChain.get(chain.id);
@@ -49,7 +52,11 @@ export const CustomChainRenderer = ({
             }
           }}
         >
-          <ChainIconClient ipfsSrc={chain.icon?.url} className="size-8" />
+          <ChainIconClient
+            src={chain.icon?.url}
+            client={client}
+            className="size-8"
+          />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <p

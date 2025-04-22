@@ -165,7 +165,6 @@ function FloatingChatContentLoggedIn(props: {
   );
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
-
   return (
     <div className="flex grow flex-col overflow-hidden">
       {showEmptyState ? (
@@ -187,6 +186,22 @@ function FloatingChatContentLoggedIn(props: {
         />
       )}
       <ChatBar
+        client={props.client}
+        context={contextFilters}
+        setContext={setContextFilters}
+        showContextSelector={false}
+        connectedWallets={
+          props.nebulaParams?.wallet
+            ? [
+                {
+                  address: props.nebulaParams.wallet,
+                  type: "user",
+                },
+              ]
+            : []
+        }
+        activeAccountAddress={props.nebulaParams?.wallet}
+        setActiveWallet={() => {}}
         abortChatStream={() => {
           chatAbortController?.abort();
           setChatAbortController(undefined);

@@ -175,6 +175,7 @@ export const CustomConnectWallet = (props: {
             renderChain(props) {
               return (
                 <CustomChainRenderer
+                  client={thirdwebClient}
                   {...props}
                   openEditChainModal={(c) => {
                     setIsNetworkConfigModalOpen(true);

@@ -54,7 +54,7 @@ import QRCode from "qrcode";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { getAddress } from "thirdweb";
+import { type ThirdwebClient, getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
 import { prettyPrintCurrency } from "./utils";
@@ -66,6 +66,7 @@ interface BackendWalletsTableProps {
   isFetched: boolean;
   authToken: string;
   chainId: number;
+  client: ThirdwebClient;
 }
 
 interface BackendWalletDashboard extends BackendWallet {
@@ -80,6 +81,7 @@ interface BackendWalletBalanceCellProps {
   address: string;
   authToken: string;
   chainId: number;
+  client: ThirdwebClient;
 }
 
 const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
@@ -132,6 +134,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   isFetched,
   authToken,
   chainId,
+  client,
 }) => {
   const editDisclosure = useDisclosure();
   const receiveDisclosure = useDisclosure();
@@ -198,13 +201,14 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
               address={address}
               authToken={authToken}
               chainId={chainId}
+              client={client}
             />
           );
         },
         id: "balance",
       }),
     ];
-  }, [instanceUrl, authToken, chainId, queryClient]);
+  }, [instanceUrl, authToken, chainId, queryClient, client]);
 
   const [selectedBackendWallet, setSelectedBackendWallet] =
     useState<BackendWallet>();
@@ -278,6 +282,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           instanceUrl={instanceUrl}
           authToken={authToken}
           chainId={chainId}
+          client={client}
         />
       )}
       {selectedBackendWallet && deleteDisclosure.isOpen && (
@@ -454,6 +459,7 @@ const SendFundsModal = ({
   instanceUrl,
   authToken,
   chainId,
+  client,
 }: {
   fromWallet: BackendWallet;
   backendWallets: BackendWallet[];
@@ -461,6 +467,7 @@ const SendFundsModal = ({
   instanceUrl: string;
   authToken: string;
   chainId: number;
+  client: ThirdwebClient;
 }) => {
   const form = useForm<SendFundsInput>();
   const sendTokens = useEngineSendTokens({
@@ -584,7 +591,8 @@ const SendFundsModal = ({
               <Flex align="center" gap={2}>
                 <ChainIconClient
                   className="size-3"
-                  ipfsSrc={chain?.icon?.url}
+                  src={chain?.icon?.url}
+                  client={client}
                 />
                 <Text>{chain?.name}</Text>
               </Flex>

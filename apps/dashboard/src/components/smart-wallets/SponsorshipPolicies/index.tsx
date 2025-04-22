@@ -22,7 +22,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { isAddress } from "thirdweb/utils";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import {
   Button,
   FormErrorMessage,
@@ -42,6 +42,7 @@ type AccountAbstractionSettingsPageProps = {
   trackingCategory: string;
   teamId: string;
   validTeamPlan: Team["billingPlan"];
+  client: ThirdwebClient;
 };
 
 const aaSettingsFormSchema = z.object({
@@ -401,6 +402,7 @@ export function AccountAbstractionSettingsPage(
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
                 <MultiNetworkSelector
+                  client={props.client}
                   selectedChainIds={form.watch("allowedChainIds") || []}
                   onChange={(chainIds) =>
                     form.setValue("allowedChainIds", chainIds)

@@ -1,6 +1,7 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { redirect } from "next/navigation";
+import { getThirdwebClient } from "../../../../../@/constants/thirdweb.server";
 import { DeployedContractsPage } from "../../../../account/contracts/_components/DeployedContractsPage";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
@@ -29,12 +30,18 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <div className="flex grow flex-col">
       <DeployedContractsPage
         teamId={team.id}
         projectId={project.id}
         authToken={authToken}
+        client={client}
       />
       <div className="h-20" />
       <ContractsFooter />

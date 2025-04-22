@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
-import { toTokens } from "thirdweb";
+import { type ThirdwebClient, toTokens } from "thirdweb";
 import { FormLabel, LinkButton, Text } from "tw-components";
 import { normalizeTime } from "../../../../../../../../../../lib/time";
 import { TransactionTimeline } from "./transaction-timeline";
@@ -110,6 +110,7 @@ const statusDetails: Record<
 export function TransactionsTable(props: {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) {
   const transactionDisclosure = useDisclosure();
   const [selectedTransaction, setSelectedTransaction] =
@@ -219,7 +220,10 @@ export function TransactionsTable(props: {
 
                     {/* Chain Id */}
                     <TableCell>
-                      <TxChainCell chainId={tx.chainId || undefined} />
+                      <TxChainCell
+                        chainId={tx.chainId || undefined}
+                        client={props.client}
+                      />
                     </TableCell>
 
                     {/* Status */}
@@ -285,6 +289,7 @@ export function TransactionsTable(props: {
               : undefined
           }
           setSelectedTransaction={setSelectedTransaction}
+          client={props.client}
         />
       )}
     </div>
@@ -357,8 +362,11 @@ function SkeletonRow() {
   );
 }
 
-function TxChainCell(props: { chainId: string | undefined }) {
-  const { chainId } = props;
+function TxChainCell(props: {
+  chainId: string | undefined;
+  client: ThirdwebClient;
+}) {
+  const { chainId, client } = props;
   const { idToChain } = useAllChainsData();
 
   if (!chainId) {
@@ -373,7 +381,11 @@ function TxChainCell(props: { chainId: string | undefined }) {
 
   return (
     <div className="flex items-center gap-2">
-      <ChainIconClient className="size-5" ipfsSrc={chain.icon?.url} />
+      <ChainIconClient
+        className="size-5"
+        src={chain.icon?.url}
+        client={client}
+      />
       <div className="max-w-[150px] truncate">
         {chain.name ?? `Chain ID: ${chainId}`}
       </div>
@@ -562,6 +574,7 @@ const TransactionDetailsDrawer = ({
   onClickNext,
   setSelectedTransaction,
   authToken,
+  client,
 }: {
   transaction: Transaction;
   instanceUrl: string;
@@ -569,6 +582,7 @@ const TransactionDetailsDrawer = ({
   onClickNext?: () => void;
   setSelectedTransaction: Dispatch<SetStateAction<Transaction | null>>;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const { idToChain } = useAllChainsData();
   const errorMessageDisclosure = useDisclosure();
@@ -622,7 +636,11 @@ const TransactionDetailsDrawer = ({
           <div>
             <FormLabel>Chain</FormLabel>
             <div className="flex items-center gap-2">
-              <ChainIconClient className="size-5" ipfsSrc={chain?.icon?.url} />
+              <ChainIconClient
+                className="size-5"
+                src={chain?.icon?.url}
+                client={client}
+              />
               <span>{chain?.name}</span>
             </div>
           </div>

@@ -40,6 +40,7 @@ import {
   Text,
   TrackedCopyButton,
 } from "tw-components";
+import { useThirdwebClient } from "../../../../../../../../../../@/constants/thirdweb.client";
 import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 
 interface RelayersTableProps {
@@ -63,6 +64,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
   const removeDisclosure = useDisclosure();
   const [selectedRelayer, setSelectedRelayer] = useState<EngineRelayer>();
   const { idToChain } = useAllChainsData();
+  const client = useThirdwebClient();
 
   const columns = [
     columnHelper.accessor("chainId", {
@@ -71,7 +73,11 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
           <Flex align="center" gap={2}>
-            <ChainIconClient className="size-3" ipfsSrc={chain?.icon?.url} />
+            <ChainIconClient
+              className="size-3"
+              src={chain?.icon?.url}
+              client={client}
+            />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -210,6 +216,7 @@ const EditModal = ({
   instanceUrl: string;
   authToken: string;
 }) => {
+  const client = useThirdwebClient();
   const { mutate: updateRelayer } = useEngineUpdateRelayer({
     instanceUrl,
     authToken,
@@ -285,6 +292,7 @@ const EditModal = ({
               <SingleNetworkSelector
                 chainId={form.watch("chainId")}
                 onChange={(val) => form.setValue("chainId", val)}
+                client={client}
               />
             </FormControl>
             <FormControl>
@@ -353,6 +361,7 @@ const RemoveModal = ({
   instanceUrl: string;
   authToken: string;
 }) => {
+  const client = useThirdwebClient();
   const { mutate: revokeRelayer } = useEngineRevokeRelayer({
     instanceUrl,
     authToken,
@@ -406,9 +415,10 @@ const RemoveModal = ({
               <Flex align="center" gap={2}>
                 <ChainIconClient
                   className="size-3"
-                  ipfsSrc={
+                  src={
                     idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url
                   }
+                  client={client}
                 />
                 <Text>
                   {idToChain.get(Number.parseInt(relayer.chainId))?.name}

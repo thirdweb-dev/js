@@ -487,6 +487,7 @@ export function DataTable({
 
         <div className="mt-4">
           <SingleNetworkSelector
+            client={client}
             onAddRow={addRowMutation.mutate}
             isAddingRow={addRowMutation.isPending}
             className="w-full"

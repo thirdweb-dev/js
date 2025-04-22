@@ -169,6 +169,10 @@ function CustomConnectEmbed(props: {
           className="shadow-lg"
           privacyPolicyUrl="/privacy-policy"
           termsOfServiceUrl="/terms"
+          // accountAbstraction={{
+          //   chain: ethereum,
+          //   sponsorGas: true,
+          // }}
         />
       </ClientOnly>
     </div>

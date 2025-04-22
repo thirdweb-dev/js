@@ -6,10 +6,12 @@ import {
   type Account,
   useAccountCredits,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ThirdwebClient } from "thirdweb";
 import { CreditsItem } from "./CreditsItem";
 
 export const CreditsInfoCard = (props: {
   twAccount: Account;
+  client: ThirdwebClient;
 }) => {
   const { data: credits } = useAccountCredits();
 
@@ -26,12 +28,14 @@ export const CreditsInfoCard = (props: {
         credit={opCredit}
         isOpCreditDefault={true}
         twAccount={props.twAccount}
+        client={props.client}
       />
       {restCredits?.map((credit) => (
         <CreditsItem
           key={credit.couponId}
           credit={credit}
           twAccount={props.twAccount}
+          client={props.client}
         />
       ))}
     </section>

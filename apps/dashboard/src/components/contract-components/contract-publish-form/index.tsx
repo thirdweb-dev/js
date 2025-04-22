@@ -344,13 +344,14 @@ export function ContractPublishForm(props: {
               <FactoryFieldset
                 abi={props.publishMetadata.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
+                client={client}
               />
             </Flex>
           )}
 
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
-              <NetworksFieldset fromStandard />
+              <NetworksFieldset fromStandard client={client} />
             </Flex>
           )}
 

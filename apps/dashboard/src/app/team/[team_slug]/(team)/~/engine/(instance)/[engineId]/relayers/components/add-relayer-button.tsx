@@ -27,6 +27,7 @@ import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
+import { useThirdwebClient } from "../../../../../../../../../../@/constants/thirdweb.client";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
@@ -80,6 +81,7 @@ const AddModal = ({
   disclosure: UseDisclosureReturn;
   authToken: string;
 }) => {
+  const client = useThirdwebClient();
   const { mutate: createRelayer } = useEngineCreateRelayer({
     instanceUrl,
     authToken,
@@ -152,6 +154,7 @@ const AddModal = ({
               <SingleNetworkSelector
                 chainId={form.watch("chainId")}
                 onChange={(val) => form.setValue("chainId", val)}
+                client={client}
               />
             </FormControl>
             <FormControl isRequired>

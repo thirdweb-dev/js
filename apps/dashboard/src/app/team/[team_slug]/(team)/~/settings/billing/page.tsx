@@ -1,9 +1,10 @@
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { redirect } from "next/navigation";
 import { Billing } from "../../../../../../../components/settings/Account/Billing";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
-
+import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 export default async function Page(props: {
   params: Promise<{
     team_slug: string;
@@ -12,9 +13,10 @@ export default async function Page(props: {
   const params = await props.params;
   const pagePath = `/team/${params.team_slug}/settings/billing`;
 
-  const [account, team] = await Promise.all([
+  const [account, team, authToken] = await Promise.all([
     getValidAccount(pagePath),
     getTeamBySlug(params.team_slug),
+    getAuthToken(),
   ]);
 
   if (!team) {
@@ -22,6 +24,11 @@ export default async function Page(props: {
   }
 
   const subscriptions = await getTeamSubscriptions(team.slug);
+
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
 
   if (!subscriptions) {
     return (
@@ -32,6 +39,11 @@ export default async function Page(props: {
   }
 
   return (
-    <Billing team={team} subscriptions={subscriptions} twAccount={account} />
+    <Billing
+      team={team}
+      subscriptions={subscriptions}
+      twAccount={account}
+      client={client}
+    />
   );
 }

@@ -377,7 +377,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             <div className="flex items-center gap-1">
               <ChainIconClient
                 className="size-5"
-                ipfsSrc={form.watch("icon")}
+                src={form.watch("icon")}
+                client={client}
               />
               <IconUpload
                 onUpload={(uri) => {

@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
-import { BadgeContainer } from "../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import { ContractTableUI } from "./contract-table";
 
 const meta = {
@@ -56,6 +59,7 @@ function Story() {
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <BadgeContainer label="0 Contracts">
           <ContractTableUI
+            client={storybookThirdwebClient}
             contracts={[]}
             removeContractFromProject={removeContractStub}
             pageSize={10}
@@ -64,6 +68,7 @@ function Story() {
 
         <BadgeContainer label="1 Contract">
           <ContractTableUI
+            client={storybookThirdwebClient}
             contracts={[popularPolygonNFTs[0] as ProjectContract]}
             pageSize={10}
             removeContractFromProject={removeContractStub}
@@ -72,6 +77,7 @@ function Story() {
 
         <BadgeContainer label="5 Contracts, 1 chain">
           <ContractTableUI
+            client={storybookThirdwebClient}
             contracts={popularPolygonNFTs}
             pageSize={10}
             removeContractFromProject={removeContractStub}
@@ -80,6 +86,7 @@ function Story() {
 
         <BadgeContainer label="10 Contracts, 2 chains">
           <ContractTableUI
+            client={storybookThirdwebClient}
             contracts={[...popularPolygonNFTs, ...EthereumPopularNFTs]}
             pageSize={10}
             removeContractFromProject={removeContractStub}
@@ -88,6 +95,7 @@ function Story() {
 
         <BadgeContainer label="15 Contracts, 3 chains">
           <ContractTableUI
+            client={storybookThirdwebClient}
             contracts={[
               ...popularPolygonNFTs,
               ...EthereumPopularNFTs,

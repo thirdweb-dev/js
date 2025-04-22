@@ -30,7 +30,7 @@ export async function getNebulaLoginPayload(
     },
     body: JSON.stringify({
       address: params.address,
-      // chainId: params.chainId?.toString(),
+      chainId: params.chainId?.toString(),
     }),
   });
 

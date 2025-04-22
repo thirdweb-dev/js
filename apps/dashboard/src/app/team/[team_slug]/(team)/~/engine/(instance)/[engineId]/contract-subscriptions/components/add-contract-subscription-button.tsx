@@ -187,6 +187,7 @@ const ModalBodyInputContract = ({
   form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
 }) => {
+  const client = useThirdwebClient();
   return (
     <>
       <ModalBody>
@@ -200,6 +201,7 @@ const ModalBodyInputContract = ({
             <SingleNetworkSelector
               chainId={form.watch("chainId")}
               onChange={(val) => form.setValue("chainId", val)}
+              client={client}
             />
           </FormControl>
 

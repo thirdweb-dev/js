@@ -89,6 +89,7 @@ export function SponsoredTransactionsTableUI(
             )}
 
             <ChainFilter
+              client={props.client}
               chainId={props.filters.chainId}
               setChainId={(chainId) =>
                 props.setFilters({ ...props.filters, chainId })
@@ -148,7 +149,10 @@ export function SponsoredTransactionsTableUI(
 
                     {/* Chain */}
                     <TableCell>
-                      <ChainCell chainId={transaction.chainId} />
+                      <ChainCell
+                        chainId={transaction.chainId}
+                        client={props.client}
+                      />
                     </TableCell>
 
                     {/* Wallet */}
@@ -307,7 +311,7 @@ function TransactionHashCell(props: { hash: string; chainId: string }) {
   );
 }
 
-function ChainCell(props: { chainId: string }) {
+function ChainCell(props: { chainId: string; client: ThirdwebClient }) {
   const { idToChain, allChains } = useAllChainsData();
   const chain = idToChain.get(Number(props.chainId));
 
@@ -317,7 +321,11 @@ function ChainCell(props: { chainId: string }) {
 
   return (
     <div className="relative flex w-max items-center gap-2">
-      <ChainIconClient ipfsSrc={chain?.icon?.url} className="size-6" />
+      <ChainIconClient
+        src={chain?.icon?.url}
+        className="size-6"
+        client={props.client}
+      />
       <Link
         target="_blank"
         href={`/${chain ? chain.slug : props.chainId}`}
@@ -367,6 +375,7 @@ function ProjectCell(props: {
 function ChainFilter(props: {
   chainId: string | undefined;
   setChainId: (chainId: string | undefined) => void;
+  client: ThirdwebClient;
 }) {
   const isChainFilterActive = props.chainId !== undefined;
 
@@ -386,6 +395,7 @@ function ChainFilter(props: {
       )}
 
       <SingleNetworkSelector
+        client={props.client}
         className={cn(isChainFilterActive && "rounded-l-none")}
         chainId={props.chainId ? Number(props.chainId) : undefined}
         onChange={(chainId) => props.setChainId(chainId.toString())}

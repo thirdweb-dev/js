@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
 import { useState } from "react";
 import { ImportModal } from "../../../../components/contract-components/import-contract/modal";
@@ -13,10 +14,12 @@ export function DeployViaCLIOrImportCard(props: {
 }) {
   const trackEvent = useTrack();
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const client = useThirdwebClient();
 
   return (
     <div className="rounded-lg border bg-card p-4 lg:p-6">
       <ImportModal
+        client={client}
         isOpen={importModalOpen}
         onClose={() => {
           setImportModalOpen(false);

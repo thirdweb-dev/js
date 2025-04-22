@@ -32,6 +32,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
@@ -55,6 +56,7 @@ interface ContractSubscriptionTableProps {
   isFetched: boolean;
   autoUpdate: boolean;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 const columnHelper = createColumnHelper<EngineContractSubscription>();
@@ -68,6 +70,7 @@ export const ContractSubscriptionTable: React.FC<
   isFetched,
   autoUpdate,
   authToken,
+  client,
 }) => {
   const removeDisclosure = useDisclosure();
   const [selectedContractSub, setSelectedContractSub] =
@@ -81,7 +84,11 @@ export const ContractSubscriptionTable: React.FC<
         const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
-            <ChainIconClient className="size-3" ipfsSrc={chain?.icon?.url} />
+            <ChainIconClient
+              className="size-3"
+              src={chain?.icon?.url}
+              client={client}
+            />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
@@ -241,6 +248,7 @@ export const ContractSubscriptionTable: React.FC<
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       )}
     </>
@@ -333,11 +341,13 @@ const RemoveModal = ({
   disclosure,
   instanceUrl,
   authToken,
+  client,
 }: {
   contractSubscription: EngineContractSubscription;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const { mutate: removeContractSubscription } =
     useEngineRemoveContractSubscription({
@@ -401,7 +411,8 @@ const RemoveModal = ({
                 <Flex align="center" gap={2}>
                   <ChainIconClient
                     className="size-3"
-                    ipfsSrc={chain?.icon?.url}
+                    src={chain?.icon?.url}
+                    client={client}
                   />
                   <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>

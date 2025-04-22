@@ -27,9 +27,9 @@ import { type TrendingContract, fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useDebounce } from "use-debounce";
 import { shortenIfAddress } from "utils/usedapp-external";
-
 const TRACKING_CATEGORY = "any_contract_search";
 
 const typesenseApiKey =
@@ -64,6 +64,7 @@ function contractTypesenseSearchQuery(
 export const CmdKSearchModal = (props: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  client: ThirdwebClient;
 }) => {
   const { open, setOpen } = props;
   const trackEvent = useTrack();
@@ -242,6 +243,7 @@ export const CmdKSearchModal = (props: {
                     {data.map((result, idx) => {
                       return (
                         <SearchResult
+                          client={props.client}
                           key={`${result.chainMetadata.chainId}_${result.contractAddress}`}
                           result={result}
                           isActive={idx === activeIndex}
@@ -272,6 +274,7 @@ export const CmdKSearchModal = (props: {
 
 export const CmdKSearch = (props: {
   className?: string;
+  client: ThirdwebClient;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -297,7 +300,7 @@ export const CmdKSearch = (props: {
         <SearchIcon className="size-5" />
       </Button>
 
-      <CmdKSearchModal open={open} setOpen={setOpen} />
+      <CmdKSearchModal open={open} setOpen={setOpen} client={props.client} />
     </>
   );
 };
@@ -307,6 +310,7 @@ interface SearchResultProps {
   isActive: boolean;
   onMouseEnter: () => void;
   onClick: () => void;
+  client: ThirdwebClient;
 }
 
 const SearchResult: React.FC<SearchResultProps> = ({
@@ -314,6 +318,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
   isActive,
   onMouseEnter,
   onClick,
+  client,
 }) => {
   return (
     <div
@@ -324,7 +329,8 @@ const SearchResult: React.FC<SearchResultProps> = ({
     >
       <ChainIconClient
         className="size-6 shrink-0"
-        ipfsSrc={result.chainMetadata?.icon?.url}
+        src={result.chainMetadata?.icon?.url}
+        client={client}
       />
       <div className="flex flex-col gap-1">
         <h3 className="line-clamp-2 font-semibold text-foreground">

@@ -8,6 +8,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { CircleAlertIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import { formatToDollars } from "./formatToDollars";
 
 interface CreditsItemProps {
@@ -15,6 +16,7 @@ interface CreditsItemProps {
   isOpCreditDefault?: boolean;
   onClickApply?: () => void;
   twAccount: Account;
+  client: ThirdwebClient;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
@@ -22,6 +24,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   isOpCreditDefault,
   onClickApply,
   twAccount,
+  client,
 }) => {
   const trackEvent = useTrack();
 
@@ -50,9 +53,9 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           <div className="absolute top-0 right-0">
             {isOpCredit ? (
               <ChainIconClient
-                ipfsSrc=// Hard-coded here to remove @thirdweb dev/chains
-                "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
+                src="ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
                 className="size-6"
+                client={client}
               />
             ) : isTwCredit ? (
               <Image

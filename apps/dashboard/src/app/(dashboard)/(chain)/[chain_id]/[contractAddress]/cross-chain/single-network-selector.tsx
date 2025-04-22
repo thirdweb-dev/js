@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useCallback, useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 
 type Option = { label: string; value: string };
 
@@ -10,6 +11,7 @@ export function SingleNetworkSelector(props: {
   onAddRow: (chain: { chainId: number; name: string }) => void;
   isAddingRow: boolean;
   className?: string;
+  client: ThirdwebClient;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -47,7 +49,8 @@ export function SingleNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
-              ipfsSrc={chain.icon?.url}
+              src={chain.icon?.url}
+              client={props.client}
               loading="lazy"
             />
             {chain.name}
@@ -59,7 +62,7 @@ export function SingleNetworkSelector(props: {
         </div>
       );
     },
-    [idToChain],
+    [idToChain, props.client],
   );
 
   const handleChange = async (chainId: string) => {

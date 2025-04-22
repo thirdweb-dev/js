@@ -12,16 +12,19 @@ import type { Abi } from "abitype";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, Heading, Text } from "tw-components";
 import { useCustomFactoryAbi } from "../hooks";
 import { AbiSelector } from "./abi-selector";
 
 interface CustomFactoryProps {
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
+  client: ThirdwebClient;
 }
 
 export const CustomFactory: React.FC<CustomFactoryProps> = ({
   setCustomFactoryAbi,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -81,6 +84,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
                   render={({ field: _field }) => {
                     return (
                       <SingleNetworkSelector
+                        client={client}
                         chainId={_field.value}
                         onChange={(value) => {
                           _field.onChange(value);
