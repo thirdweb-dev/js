@@ -3,7 +3,7 @@ import { getAuthToken } from "app/api/lib/getAuthToken";
 
 const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
 
-export type Webhook = {
+type Webhook = {
   url: string;
   label: string;
   active: boolean;
