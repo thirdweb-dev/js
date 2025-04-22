@@ -95,7 +95,7 @@ export function FullWidthSidebarLayout(props: {
           links={[...contentSidebarLinks, ...(footerSidebarLinks || [])]}
         />
 
-        <main className="z-0 flex min-w-0 grow flex-col max-sm:w-full">
+        <main className="flex min-w-0 grow flex-col max-sm:w-full">
           {children}
         </main>
         <AppFooter containerClassName="max-w-7xl" />
