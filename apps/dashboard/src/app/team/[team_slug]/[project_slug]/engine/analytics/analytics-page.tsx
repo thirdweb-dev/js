@@ -31,6 +31,7 @@ export function TransactionsAnalyticsPageContent(props: {
             clientId={props.clientId}
             project_slug={props.project_slug}
             team_slug={props.team_slug}
+            wallets={props.wallets ?? []}
           />
           <SendTestTransaction wallets={props.wallets} />
           <TransactionsTable teamId={props.teamId} clientId={props.clientId} />

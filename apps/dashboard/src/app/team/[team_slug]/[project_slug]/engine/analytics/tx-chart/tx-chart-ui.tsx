@@ -10,21 +10,19 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
 import type { TransactionStats } from "types/analytics";
+import type { Wallet } from "../../server-wallets/wallet-table/types";
 
 type ChartData = Record<string, number> & {
   time: string;
 };
 
 // TODO: write a story for this component when its finalized
-
-// This is copy of SponsoredTransactionsChartCard component
-// TODO - update the name of the component to something more relevant
 export function TransactionsChartCardUI(props: {
-  // TODO - update this
   userOpStats: TransactionStats[];
   isPending: boolean;
   project_slug: string;
   team_slug: string;
+  wallets: Wallet[];
 }) {
   const { userOpStats } = props;
   const topChainsToShow = 10;
@@ -150,6 +148,7 @@ export function TransactionsChartCardUI(props: {
         <EmptyChartContent
           project_slug={props.project_slug}
           team_slug={props.team_slug}
+          wallets={props.wallets}
         />
       }
     />
@@ -160,26 +159,39 @@ export function TransactionsChartCardUI(props: {
 function EmptyChartContent(props: {
   project_slug: string;
   team_slug: string;
+  wallets: Wallet[];
 }) {
   const router = useDashboardRouter();
   return (
     <div className="flex flex-col items-center justify-center px-4">
-      {/* TODO - update this */}
-      <span className="mb-6 text-center text-lg">
-        Create a server wallet and send your first transaction to get started
-      </span>
-      <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
-        <Button
-          variant="primary"
-          onClick={() => {
-            router.push(
-              `/team/${props.team_slug}/${props.project_slug}/engine/server-wallets`,
-            );
-          }}
-        >
-          Create a server wallet
-        </Button>
-      </div>
+      {props.wallets.length === 0 ? (
+        <>
+          <span className="mb-6 text-center text-lg">
+            Create a server wallet and send your first transaction to get
+            started
+          </span>
+          <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
+            <Button
+              variant="primary"
+              onClick={() => {
+                router.push(
+                  `/team/${props.team_slug}/${props.project_slug}/engine/server-wallets`,
+                );
+              }}
+            >
+              Create a server wallet
+            </Button>
+          </div>
+        </>
+      ) : (
+        <p className="flex items-center gap-2 rounded-full border bg-background px-3.5 py-1.5 text-sm">
+          <span className="!pointer-events-auto relative flex size-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+            <span className="relative inline-flex size-2 rounded-full bg-primary" />
+          </span>
+          Waiting for transactions...
+        </p>
+      )}
     </div>
   );
 }

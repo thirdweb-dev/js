@@ -14,6 +14,7 @@ export function TransactionsTable(props: { teamId: string; clientId: string }) {
           page,
         });
       }}
+      clientId={props.clientId}
     />
   );
 }

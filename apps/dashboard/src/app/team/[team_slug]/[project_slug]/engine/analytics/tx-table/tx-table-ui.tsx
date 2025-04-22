@@ -44,6 +44,7 @@ import type {
 // TODO - add Status selector dropdown here
 export function TransactionsTableUI(props: {
   getData: (params: { page: number }) => Promise<TransactionsResponse>;
+  clientId: string;
 }) {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [status, setStatus] = useState<TransactionStatus | undefined>(
@@ -53,7 +54,7 @@ export function TransactionsTableUI(props: {
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", page],
+    queryKey: ["transactions", props.clientId, page],
     queryFn: () => props.getData({ page }),
     refetchInterval: autoUpdate ? 4_000 : false,
     placeholderData: keepPreviousData,

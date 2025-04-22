@@ -167,11 +167,16 @@ async function AsyncTransactionsAnalyticsSummary(props: {
   teamId: string;
   clientId: string;
 }) {
-  const data = await getTransactionAnalyticsSummary({
-    teamId: props.teamId,
-    clientId: props.clientId,
-  });
-  return <TransactionAnalyticsSummaryUI data={data} isPending={false} />;
+  try {
+    const data = await getTransactionAnalyticsSummary({
+      teamId: props.teamId,
+      clientId: props.clientId,
+    });
+    return <TransactionAnalyticsSummaryUI data={data} isPending={false} />;
+  } catch (error) {
+    console.error("Failed to fetch transaction summary:", error);
+    return <TransactionAnalyticsSummaryUI data={undefined} isPending={false} />;
+  }
 }
 
 // Main component: Shows loading state (Suspense fallback) while fetching data

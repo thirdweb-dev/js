@@ -26,6 +26,12 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+export const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
+  "Project Wide Server Wallet Access Token";
+
+export const SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE =
+  "Dashboard Server Wallet Management Token";
+
 export default function CreateServerWallet(props: {
   project: Project;
   managementAccessToken: string | undefined;
@@ -117,7 +123,7 @@ export default function CreateServerWallet(props: {
             metadata: {
               projectId: props.project.id,
               teamId: props.project.teamId,
-              purpose: "Thirdweb Project Server Wallet Access Token",
+              purpose: SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
             },
           },
           auth: {
@@ -281,7 +287,7 @@ export default function CreateServerWallet(props: {
             metadata: {
               projectId: props.project.id,
               teamId: props.project.teamId,
-              purpose: "Thirdweb Project Server Wallet Access Token",
+              purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
             },
           },
           auth: {
@@ -415,9 +421,7 @@ export default function CreateServerWallet(props: {
           {initialiseProjectWithVaultMutation.isPending ? (
             <>
               <DialogHeader className="p-6">
-                <DialogTitle>
-                  Generating your wallet management keys
-                </DialogTitle>
+                <DialogTitle>Generating your Vault management keys</DialogTitle>
               </DialogHeader>
               <div className="flex flex-col items-center justify-center gap-4 p-10">
                 <Spinner className="size-8" />
@@ -430,6 +434,10 @@ export default function CreateServerWallet(props: {
             <div>
               <DialogHeader className="p-6">
                 <DialogTitle>Vault Management Keys</DialogTitle>
+                <p className="text-muted-foreground text-sm">
+                  These keys are used for end-to-end encryption and are required
+                  to interact with Vault, thirdweb's key management system.
+                </p>
               </DialogHeader>
 
               <div className="space-y-6 p-6 pt-0">

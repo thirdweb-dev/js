@@ -2,6 +2,7 @@ import { ResponsiveSuspense } from "responsive-rsc";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../../@/constants/env";
 import type { TransactionStats } from "../../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { getTxAnalyticsFiltersFromSearchParams } from "../getTransactionAnalyticsFilter";
 import { TransactionsChartCardUI } from "./tx-chart-ui";
 
@@ -13,6 +14,7 @@ async function AsyncTransactionsChartCard(props: {
   clientId: string;
   project_slug: string;
   team_slug: string;
+  wallets: Wallet[];
 }) {
   const data = await getTransactionsChart({
     teamId: props.teamId,
@@ -28,6 +30,7 @@ async function AsyncTransactionsChartCard(props: {
       userOpStats={data}
       project_slug={props.project_slug}
       team_slug={props.team_slug}
+      wallets={props.wallets}
     />
   );
 }
@@ -42,6 +45,7 @@ export function TransactionsChartCard(props: {
   clientId: string;
   project_slug: string;
   team_slug: string;
+  wallets: Wallet[];
 }) {
   const { range, interval } = getTxAnalyticsFiltersFromSearchParams(
     props.searchParams,
@@ -57,6 +61,7 @@ export function TransactionsChartCard(props: {
           userOpStats={[]}
           project_slug={props.project_slug}
           team_slug={props.team_slug}
+          wallets={[]}
         />
       }
     >
@@ -68,6 +73,7 @@ export function TransactionsChartCard(props: {
         clientId={props.clientId}
         project_slug={props.project_slug}
         team_slug={props.team_slug}
+        wallets={props.wallets}
       />
     </ResponsiveSuspense>
   );
@@ -115,7 +121,7 @@ async function getTransactionsChart({
 
     // TODO - need to handle this error state, like we do with the connect charts
     throw new Error(
-      `Error fetching transactions chart data: ${response.status} ${response.statusText}`,
+      `Error fetching transactions chart data: ${response.status} ${response.statusText} - ${await response.text().catch(() => "Unknown error")}`,
     );
   }
 

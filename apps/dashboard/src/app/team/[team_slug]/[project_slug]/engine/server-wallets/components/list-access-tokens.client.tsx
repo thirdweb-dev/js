@@ -1,6 +1,4 @@
 "use client";
-
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +18,22 @@ import { createVaultClient } from "@thirdweb-dev/vault-sdk";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../../../../../@/components/ui/alert";
+import { Badge } from "../../../../../../../@/components/ui/badge";
+import {
+  Checkbox,
+  CheckboxWithLabel,
+} from "../../../../../../../@/components/ui/checkbox";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
+import {
+  SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
+  SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
+} from "./create-server-wallet.client";
 
 export default function ListAccessTokensButton(props: {
   projectId: string;
@@ -30,7 +43,8 @@ export default function ListAccessTokensButton(props: {
   const [typedAdminKey, setTypedAdminKey] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const [deletingTokenId, setDeletingTokenId] = useState<string | null>(null);
-
+  const [newAccessToken, setNewAccessToken] = useState<string | null>(null);
+  const [keysConfirmed, setKeysConfirmed] = useState(false);
   // TODO allow passing permissions to the access token
   const createAccessTokenMutation = useMutation({
     mutationFn: async (args: { adminKey: string }) => {
@@ -193,7 +207,7 @@ export default function ListAccessTokensButton(props: {
             metadata: {
               projectId: props.projectId,
               teamId: props.teamId,
-              purpose: "Thirdweb Project Server Wallet Access Token",
+              purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
             },
           },
           auth: {
@@ -215,7 +229,8 @@ export default function ListAccessTokensButton(props: {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setNewAccessToken(data.userAccessToken.id);
       listAccessTokensQuery.refetch();
     },
   });
@@ -261,7 +276,7 @@ export default function ListAccessTokensButton(props: {
 
   // Stub data for now
   const listAccessTokensQuery = useQuery({
-    queryKey: ["list-access-tokens", maskSecret(adminKey)],
+    queryKey: ["list-access-tokensq", maskSecret(adminKey)],
     queryFn: async () => {
       const vaultClient = await createVaultClient({
         baseUrl: THIRDWEB_VAULT_URL,
@@ -282,10 +297,17 @@ export default function ListAccessTokensButton(props: {
         );
       }
       return {
-        accessTokens: listResult.data.items.map((t) => ({
-          key: t.id, // todo: the actual user-facing key is not returned by this yet, fix this
-          id: t.id,
-        })),
+        accessTokens: listResult.data.items
+          .filter(
+            (t) =>
+              t.metadata?.purpose?.toString() !==
+              SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
+          )
+          .map((t) => ({
+            key: t.metadata?.purpose?.toString() ?? t.id,
+            id: t.id,
+            policies: t.policies || [],
+          })),
       };
       // Return stub data for now
     },
@@ -296,6 +318,8 @@ export default function ListAccessTokensButton(props: {
     setModalOpen(false);
     setAdminKey("");
     setTypedAdminKey("");
+    setNewAccessToken(null);
+    setKeysConfirmed(false);
   };
 
   const isLoading = listAccessTokensQuery.isLoading;
@@ -317,7 +341,53 @@ export default function ListAccessTokensButton(props: {
           <DialogHeader className="p-6">
             <DialogTitle>Vault Access Tokens</DialogTitle>
           </DialogHeader>
-          {listAccessTokensQuery.isLoading ? (
+          {/* If new access token, show copy button */}
+          {newAccessToken ? (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 px-6 ">
+                <p className="text-muted-foreground text-xs">
+                  Here's your new access token. Store it securely as it will not
+                  be displayed again.
+                </p>
+                <CopyTextButton
+                  textToCopy={newAccessToken}
+                  className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                  textToShow={maskSecret(newAccessToken)}
+                  copyIconPosition="right"
+                  tooltip="Copy Vault Access Token"
+                />
+                <p className="text-muted-foreground text-xs">
+                  This access token is used to sign transactions and messages
+                  from your backend. Can be revoked and recreated with your
+                  admin key.
+                </p>
+                <Alert variant="destructive">
+                  <AlertTitle>Secure your keys</AlertTitle>
+                  <AlertDescription>
+                    These keys will not be displayed again. Store them securely
+                    as they provide access to your server wallets.
+                  </AlertDescription>
+                  <div className="h-4" />
+                  <CheckboxWithLabel className="text-foreground">
+                    <Checkbox
+                      checked={keysConfirmed}
+                      onCheckedChange={(v) => setKeysConfirmed(!!v)}
+                    />
+                    I confirm that I've securely stored these keys
+                  </CheckboxWithLabel>
+                </Alert>
+              </div>
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button
+                  onClick={handleCloseModal}
+                  disabled={!keysConfirmed}
+                  variant={"primary"}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          ) : listAccessTokensQuery.isLoading ? (
             <div className="flex flex-col items-center justify-center gap-4 p-10">
               <Spinner className="size-8" />
               <DialogTitle>Loading access tokens</DialogTitle>
@@ -330,17 +400,20 @@ export default function ListAccessTokensButton(props: {
                     <div className="flex flex-col gap-2">
                       {listAccessTokensQuery.data.accessTokens.map((token) => (
                         <div key={token.id} className="flex gap-2">
-                          <CopyTextButton
-                            textToCopy={token.key}
-                            className="!h-auto flex-1 justify-between bg-background px-3 py-3 font-mono text-xs"
-                            textToShow={maskSecret(token.key)}
-                            copyIconPosition="right"
-                            tooltip="Copy Vault Access Token"
-                          />
+                          <div className="flex-1 justify-between rounded-lg border border-border bg-background px-3 py-3 font-mono text-xs">
+                            <h4 className="pb-4 font-bold">{token.key}</h4>
+                            <div className="flex flex-row flex-wrap gap-2">
+                              {token.policies.map((policy) => (
+                                <Badge key={policy.type} variant={"outline"}>
+                                  {policy.type}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
                           <Button
                             variant="destructive"
                             size="sm"
-                            className="h-auto px-3 py-3"
+                            className="px-3 py-3"
                             onClick={() =>
                               revokeAccessTokenMutation.mutate({
                                 adminKey,
@@ -357,25 +430,6 @@ export default function ListAccessTokensButton(props: {
                           </Button>
                         </div>
                       ))}
-                      <Button
-                        variant="outline"
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                        onClick={() =>
-                          createAccessTokenMutation.mutate({ adminKey })
-                        }
-                        disabled={createAccessTokenMutation.isPending}
-                      >
-                        {createAccessTokenMutation.isPending ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Creating new access token...
-                          </>
-                        ) : (
-                          <>
-                            <span>+ Create new access token</span>
-                          </>
-                        )}
-                      </Button>
                     </div>
                   </div>
                   <p className="text-muted-foreground text-sm">
@@ -387,8 +441,22 @@ export default function ListAccessTokensButton(props: {
               </div>
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                <Button onClick={handleCloseModal} variant={"primary"}>
+                <Button onClick={handleCloseModal} variant={"outline"}>
                   Close
+                </Button>
+                <Button
+                  onClick={() => createAccessTokenMutation.mutate({ adminKey })}
+                  disabled={createAccessTokenMutation.isPending}
+                  variant={"primary"}
+                >
+                  {createAccessTokenMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating new access token...
+                    </>
+                  ) : (
+                    "Create new access token"
+                  )}
                 </Button>
               </div>
             </div>
