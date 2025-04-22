@@ -18,7 +18,7 @@ export const TEAM_PLANS: Record<
   }
 > = {
   starter: {
-    price: 5,
+    price: 9,
     title: "Starter",
     subTitle: null,
     trialPeriodDays: 0,
@@ -34,7 +34,7 @@ export const TEAM_PLANS: Record<
     ],
   },
   growth: {
-    price: 75,
+    price: 79,
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
     trialPeriodDays: 0,
@@ -48,7 +48,7 @@ export const TEAM_PLANS: Record<
     ],
   },
   accelerate: {
-    price: 250,
+    price: 249,
     title: "Accelerate",
     subTitle: "Everything in Growth, plus:",
     trialPeriodDays: 0,
@@ -62,7 +62,7 @@ export const TEAM_PLANS: Record<
     ],
   },
   scale: {
-    price: 500,
+    price: 549,
     title: "Scale",
     description: "For large organizations with custom needs.",
     subTitle: "Everything in Accelerate, plus:",
