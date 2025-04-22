@@ -1,5 +1,6 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { getFees } from "@/api/universal-bridge/developer";
 import { redirect } from "next/navigation";
 import { PayConfig } from "../../../../../../../components/pay/PayConfig";
 
@@ -24,5 +25,32 @@ export default async function Page(props: {
     redirect(`/team/${team_slug}`);
   }
 
-  return <PayConfig project={project} teamId={team.id} teamSlug={team_slug} />;
+  let fees = await getFees({
+    clientId: project.publishableKey,
+  }).catch(() => {
+    return {
+      feeRecipient: "",
+      feeBps: 0,
+      createdAt: "",
+      updatedAt: "",
+    };
+  });
+
+  if (!fees) {
+    fees = {
+      feeRecipient: "",
+      feeBps: 0,
+      createdAt: "",
+      updatedAt: "",
+    };
+  }
+
+  return (
+    <PayConfig
+      project={project}
+      teamId={team.id}
+      teamSlug={team_slug}
+      fees={fees}
+    />
+  );
 }

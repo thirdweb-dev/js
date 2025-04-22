@@ -1,10 +1,15 @@
 "use client";
 
-import { payServerProxy } from "@/actions/proxies";
+import {
+  createWebhook,
+  deleteWebhook,
+  getWebhooks,
+} from "@/api/universal-bridge/developer";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -44,58 +49,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { PlusIcon, TrashIcon } from "lucide-react";
-import { type PropsWithChildren, useState } from "react";
+import { type PropsWithChildren, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { randomPrivateKey } from "thirdweb/wallets";
 import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
 
-type Webhook = {
-  url: string;
-  label: string;
-  active: boolean;
-  createdAt: string;
-  id: string;
-  secret: string;
-};
-
 type PayWebhooksPageProps = {
-  /**
-   *  @deprecated - remove after migration
-   */
   clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
 };
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
     queryKey: ["webhooks", props.clientId],
     queryFn: async () => {
-      const res = await payServerProxy({
-        method: "GET",
-        pathname: "/webhooks/get-all",
-        searchParams: {
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
+      return await getWebhooks({
+        clientId: props.clientId,
       });
-
-      if (!res.ok) {
-        throw new Error();
-      }
-
-      const json = res.data as { result: Array<Webhook> };
-      return json.result;
     },
   });
 
@@ -107,11 +78,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -125,11 +92,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
-        <CreateWebhookButton
-          clientId={props.clientId}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        >
+        <CreateWebhookButton clientId={props.clientId}>
           <Button size="sm" variant="default" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -145,8 +108,8 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
             <TableRow>
               <TableHead>Label</TableHead>
               <TableHead>Url</TableHead>
-              <TableHead>Secret</TableHead>
               <TableHead>Created</TableHead>
+              <TableHead>Version</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
@@ -156,22 +119,13 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell className="font-medium">{webhook.label}</TableCell>
                 <TableCell>{webhook.url}</TableCell>
                 <TableCell>
-                  <CopyTextButton
-                    textToShow={shortenString(webhook.secret)}
-                    textToCopy={webhook.secret}
-                    tooltip="Use this secret to validate the authenticity of incoming webhook requests."
-                    copyIconPosition="right"
-                  />
-                </TableCell>
-                <TableCell>
                   {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
                 </TableCell>
+                <TableCell>{webhook.version || "v1"}</TableCell>
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
-                    projectId={props.projectId}
                     webhookId={webhook.id}
-                    teamId={props.teamId}
                   >
                     <Button variant="ghost" size="icon">
                       <TrashIcon className="size-5" strokeWidth={1} />
@@ -190,44 +144,37 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
 const formSchema = z.object({
   url: z.string().url("Please enter a valid URL."),
   label: z.string().min(3, "Label must be at least 3 characters long"),
+  version: z.string(),
+  secret: z.string().optional(),
 });
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   const [open, setOpen] = useState(false);
+  const [secretStored, setSecretStored] = useState(false);
+  const secret = useMemo(() => {
+    if (!open) return "";
+    return randomPrivateKey();
+  }, [open]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       url: "",
       label: "",
+      version: "2",
     },
   });
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await payServerProxy({
-        method: "POST",
-        pathname: "/webhooks/create",
-        body: JSON.stringify({
-          ...values,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      await createWebhook({
+        clientId: props.clientId,
+        url: values.url,
+        label: values.label,
+        version: Number(values.version),
+        secret,
       });
-
-      if (!res.ok) {
-        throw new Error(res.error);
-      }
-
-      const json = res.data as { result: string };
-      return json.result;
+      return null;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
@@ -250,11 +197,14 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 },
                 onSuccess: () => {
                   setOpen(false);
+                  setSecretStored(false);
                   toast.success("Webhook created successfully");
                   form.reset();
                   form.clearErrors();
                   form.setValue("url", "");
                   form.setValue("label", "");
+                  form.setValue("version", "2");
+                  form.setValue("secret", undefined);
                 },
               }),
             )}
@@ -263,7 +213,8 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
             <DialogHeader>
               <DialogTitle>Create Webhook</DialogTitle>
               <DialogDescription>
-                Receive a webhook notification when a pay event occurs.
+                Receive a webhook notification when a bridge, swap or onramp
+                event occurs.
               </DialogDescription>
             </DialogHeader>
 
@@ -294,29 +245,58 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
               )}
             />
 
-            {/* Note: this is a "fake" form field since there is nothing to select yet */}
-            <FormItem>
-              <FormLabel>Event Type</FormLabel>
-              <Select disabled defaultValue="purchase_complete">
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Purchase Complete" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="purchase_complete">
-                    Purchase Complete
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+            <FormField
+              name="version"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Version</FormLabel>
+                  <Select {...field} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="v2" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2">v2</SelectItem>
+                      <SelectItem value="1">v1</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Select the data format of the webhook payload (v2
+                    recommended, v1 for legacy users).
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <section>
+              <FormLabel>Secret Key</FormLabel>
+
+              <CopyTextButton
+                textToCopy={secret}
+                className="!h-auto my-1 w-full justify-between truncate bg-card px-3 py-3 font-mono"
+                textToShow={shortenString(secret)}
+                copyIconPosition="right"
+                tooltip="Copy Secret Key"
+              />
               <FormDescription>
-                Which event should trigger this webhook?
+                Passed as a bearer token in all webhook requests to verify the
+                authenticity of the request.
               </FormDescription>
-              <FormMessage />
-            </FormItem>
+              <CheckboxWithLabel className="my-2 text-foreground">
+                <Checkbox
+                  checked={secretStored}
+                  onCheckedChange={(v) => {
+                    setSecretStored(!!v);
+                  }}
+                />
+                I confirm that I've securely stored my secret key
+              </CheckboxWithLabel>
+            </section>
 
             <DialogFooter>
               <Button
                 type="submit"
-                disabled={createMutation.isPending}
+                disabled={createMutation.isPending || !secretStored}
                 className="gap-2"
               >
                 Create Webhook
@@ -337,30 +317,11 @@ function DeleteWebhookButton(
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await payServerProxy({
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          /**
-           *  @deprecated - remove after migration
-           */
-          clientId: props.clientId,
-          // switching to projectId for lookup, but have to send both during migration
-          projectId: props.projectId,
-          teamId: props.teamId,
-        }),
-        pathname: "/webhooks/revoke",
+      await deleteWebhook({
+        clientId: props.clientId,
+        webhookId: id,
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete webhook");
-      }
-
-      const json = res.data as { result: string };
-      return json.result;
+      return null;
     },
     onSuccess: () => {
       return queryClient.invalidateQueries({
