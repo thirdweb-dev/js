@@ -36,7 +36,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
     values: {
       payoutAddress: props.fees.feeRecipient ?? "",
-      developerFeeBPS: props.fees.feeBps ?? 0,
+      developerFeeBPS: props.fees.feeBps ? props.fees.feeBps / 100 : 0,
     },
   });
 
