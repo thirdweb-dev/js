@@ -25,7 +25,8 @@ export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
       return [];
     }
     const obj = eventsQuery.data
-      .slice().reverse()
+      .slice()
+      .reverse()
       .slice(0, 100)
       .reduce(
         (acc, curr) => {
