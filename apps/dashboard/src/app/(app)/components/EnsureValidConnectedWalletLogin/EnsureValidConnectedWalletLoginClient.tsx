@@ -3,6 +3,7 @@
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useEffect } from "react";
 import { useActiveAccount } from "thirdweb/react";
+import { checksumAddress } from "thirdweb/utils";
 
 export function EnsureValidConnectedWalletLoginClient(props: {
   loggedInAddress: string;
@@ -16,7 +17,10 @@ export function EnsureValidConnectedWalletLoginClient(props: {
       return;
     }
 
-    if (connectedAddress !== props.loggedInAddress) {
+    if (
+      checksumAddress(connectedAddress) !==
+      checksumAddress(props.loggedInAddress)
+    ) {
       const currentHref = new URL(window.location.href);
       const currentPathname = currentHref.pathname;
       const currentSearchParams = currentHref.searchParams.toString();
