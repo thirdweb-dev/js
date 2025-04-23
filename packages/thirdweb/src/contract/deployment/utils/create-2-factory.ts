@@ -322,6 +322,7 @@ const CUSTOM_GAS_FOR_CHAIN: Record<string, CustomChain> = {
 const FACTORIES: Record<string, string> = {
   "420120000": COMMON_FACTORY_ADDRESS,
   "420120001": COMMON_FACTORY_ADDRESS,
+  "88888": "0xc501b9abf5540de1dd24f66633b1ecf35ff7101f", // EIP155 is enforced, but the check fails, hence we hardcode the address here instead of computing dynamically
 };
 
 const CUSTOM_GAS_BINS = [
