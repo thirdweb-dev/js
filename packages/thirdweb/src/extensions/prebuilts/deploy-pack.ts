@@ -55,6 +55,8 @@ export type DeployPackContractOptions = Prettify<
 >;
 
 /**
+ * @deprecated [Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.]
+ *
  * Deploy a thirdweb Pack contract
  * @param options params for deploying [`Pack contract`](https://thirdweb.com/thirdweb.eth/Pack)
  * @returns
