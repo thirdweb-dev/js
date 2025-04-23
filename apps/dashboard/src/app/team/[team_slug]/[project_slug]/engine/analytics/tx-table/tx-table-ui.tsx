@@ -136,9 +136,7 @@ export function TransactionsTableUI(props: {
                     key={`${tx.id}${tx.chainId}`}
                     className="cursor-pointer hover:bg-accent/50"
                     onClick={() => {
-                      router.push(
-                        `/team/${props.project.teamId}/project/${props.project.id}/engine/tx/${tx.id}`,
-                      );
+                      router.push(`engine/tx/${tx.id}`);
                     }}
                   >
                     {/* Queue ID */}

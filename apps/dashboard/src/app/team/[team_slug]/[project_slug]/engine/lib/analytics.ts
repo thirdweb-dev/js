@@ -1,3 +1,4 @@
+import type { Transaction } from "thirdweb/dist/types/insight/get-transactions";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../@/constants/env";
 import type { TransactionStats } from "../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
@@ -154,7 +155,7 @@ export async function getSingleTransaction({
   teamId: string;
   clientId: string;
   transactionId: string;
-}): Promise<TransactionStats[]> {
+}): Promise<Transaction | undefined> {
   const authToken = await getAuthToken();
 
   const filters = {
@@ -168,7 +169,7 @@ export async function getSingleTransaction({
   };
 
   const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics`,
+    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/search`,
     {
       method: "POST",
       headers: {
@@ -183,7 +184,7 @@ export async function getSingleTransaction({
 
   if (!response.ok) {
     if (response.status === 401) {
-      return [];
+      return undefined;
     }
 
     // TODO - need to handle this error state, like we do with the connect charts
@@ -192,26 +193,54 @@ export async function getSingleTransaction({
     );
   }
 
-  type TransactionsChartResponse = {
+  type TransactionParam = {
+    to: string;
+    data: string;
+    value: string;
+  };
+
+  type ExecutionParams = {
+    type: string;
+    signerAddress: string;
+    entrypointAddress: string;
+    smartAccountAddress: string;
+  };
+
+  type ExecutionResult = {
+    status: string;
+  };
+
+  type Transaction = {
+    id: string;
+    batchIndex: number;
+    chainId: string;
+    from: string;
+    transactionParams: TransactionParam[];
+    transactionHash: string | null;
+    confirmedAt: string | null;
+    confirmedAtBlockNumber: number | null;
+    enrichedData: unknown[];
+    executionParams: ExecutionParams;
+    executionResult: ExecutionResult;
+    createdAt: string;
+    errorMessage: string | null;
+    cancelledAt: string | null;
+  };
+
+  type Pagination = {
+    totalCount: string;
+    page: number;
+    limit: number;
+  };
+
+  type TransactionsSearchResponse = {
     result: {
-      analytics: Array<{
-        timeBucket: string;
-        chainId: string;
-        count: number;
-      }>;
-      metadata: {
-        resolution: string;
-        startDate: string;
-        endDate: string;
-      };
+      transactions: Transaction[];
+      pagination: Pagination;
     };
   };
 
-  const data = (await response.json()) as TransactionsChartResponse;
+  const data = (await response.json()) as TransactionsSearchResponse;
 
-  return data.result.analytics.map((stat) => ({
-    date: stat.timeBucket,
-    chainId: Number(stat.chainId),
-    count: stat.count,
-  }));
+  return data.result.transactions[0];
 }
