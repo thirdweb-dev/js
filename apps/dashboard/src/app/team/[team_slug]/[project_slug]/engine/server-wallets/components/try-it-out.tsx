@@ -64,21 +64,22 @@ const response = fetch(
         headers: {
             "Content-Type": "application/json",
             "x-secret-key": "<your-project-secret-key>",
+            "x-vault-access-token": "<your-wallet-access-token>",
+
         },
         body: JSON.stringify({
             "executionOptions": {
                 "type": "AA",
-                "signerAddress": "<your-server-wallet-address>"
+                "signerAddress": "<your-server-wallet-address>",
+                "chainId": "84532"
             },
-            "transactionParams": [
+            "params": [
               {
                 "contractAddress": "0x...",
                 "method": "approve",
                 "params": ["0x...", "0"],
               },
             ],
-            "vaultAccessToken": "<your-wallet-access-token>",
-            "chainId": "84532"
         }),
     }
 );`;

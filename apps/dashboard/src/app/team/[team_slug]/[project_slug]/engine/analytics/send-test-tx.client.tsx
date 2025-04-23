@@ -67,20 +67,20 @@ export function SendTestTransaction(props: {
           headers: {
             "Content-Type": "application/json",
             "x-secret-key": form.getValues("projectSecretKey"),
+            "x-vault-access-token": args.accessToken,
           },
           body: JSON.stringify({
             executionOptions: {
               type: "AA",
               signerAddress: args.walletAddress,
+              chainId: args.chainId.toString(),
             },
-            transactionParams: [
+            params: [
               {
                 to: args.walletAddress,
                 value: "0",
               },
             ],
-            vaultAccessToken: args.accessToken,
-            chainId: args.chainId.toString(),
           }),
         },
       );
