@@ -169,9 +169,7 @@ function EmptyChartContent(props: {
             <Button
               variant="primary"
               onClick={() => {
-                router.push(
-                  `/team/${props.project.teamId}/${props.project.id}/engine/server-wallets`,
-                );
+                router.push("engine/server-wallets");
               }}
             >
               Create a server wallet

@@ -21,7 +21,7 @@ import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
-import { useV5DashboardChain } from "../../../../../../../lib/v5-adapter";
+import { useV5DashboardChain } from "../../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
 

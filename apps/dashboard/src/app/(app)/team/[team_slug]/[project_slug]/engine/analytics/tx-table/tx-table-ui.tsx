@@ -37,7 +37,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { ChainIconClient } from "../../../../../../../components/icons/ChainIcon";
+import { ChainIconClient } from "../../../../../../../../components/icons/ChainIcon";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
   Transaction,

@@ -13,19 +13,19 @@ import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
 import { Loader2, LockIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Project } from "../../../../../../../@/api/projects";
-import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
+import type { Project } from "../../../../../../../../@/api/projects";
+import { CopyTextButton } from "../../../../../../../../@/components/ui/CopyTextButton";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "../../../../../../../@/components/ui/alert";
-import { Badge } from "../../../../../../../@/components/ui/badge";
+} from "../../../../../../../../@/components/ui/alert";
+import { Badge } from "../../../../../../../../@/components/ui/badge";
 import {
   Checkbox,
   CheckboxWithLabel,
-} from "../../../../../../../@/components/ui/checkbox";
-import { toDateTimeLocal } from "../../../../../../../utils/date-utils";
+} from "../../../../../../../../@/components/ui/checkbox";
+import { toDateTimeLocal } from "../../../../../../../../utils/date-utils";
 import {
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,

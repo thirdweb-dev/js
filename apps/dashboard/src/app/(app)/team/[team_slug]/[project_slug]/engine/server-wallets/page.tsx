@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
-import { THIRDWEB_VAULT_URL } from "../../../../../../@/constants/env";
+import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { KeyManagement } from "./components/key-management";
 import { TryItOut } from "./components/try-it-out";

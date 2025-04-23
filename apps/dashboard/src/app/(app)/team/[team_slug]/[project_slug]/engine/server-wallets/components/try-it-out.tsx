@@ -1,7 +1,7 @@
 import { CodeServer } from "@/components/ui/code/code.server";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import Link from "next/link";
-import { Button } from "../../../../../../../@/components/ui/button";
+import { Button } from "../../../../../../../../@/components/ui/button";
 import type { Wallet } from "../wallet-table/types";
 
 export function TryItOut(props: {

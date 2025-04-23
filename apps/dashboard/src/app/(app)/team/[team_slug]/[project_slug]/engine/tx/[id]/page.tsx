@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { getProject } from "../../../../../../../@/api/projects";
-import { CodeServer } from "../../../../../../../@/components/ui/code/code.server";
+import { getProject } from "../../../../../../../../@/api/projects";
+import { CodeServer } from "../../../../../../../../@/components/ui/code/code.server";
 import { getSingleTransaction } from "../../lib/analytics";
 
 export default async function TransactionPage({

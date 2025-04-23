@@ -1,5 +1,5 @@
-import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../@/constants/env";
-import type { TransactionStats } from "../../../../../../types/analytics";
+import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import type { TransactionStats } from "../../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 
 // Define the structure of the data we expect back from our fetch function
