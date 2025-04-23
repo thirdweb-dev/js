@@ -77,6 +77,7 @@ export function watchContractEvents<
             fromBlock: blockNumber,
             // toBlock is inclusive
             toBlock: blockNumber,
+            useIndexer: false,
           }),
         {
           retries: 3,
