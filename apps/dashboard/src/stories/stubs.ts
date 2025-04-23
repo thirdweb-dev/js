@@ -95,6 +95,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         mainnetEnabled: true,
       },
     },
+    planCancellationDate: null,
   };
 
   return team;

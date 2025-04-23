@@ -8,6 +8,7 @@ import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
+import { RenewSubscriptionButton } from "../../../components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { useTrack } from "../../../hooks/analytics/useTrack";
 import { remainingDays } from "../../../utils/date-utils";
 import type { GetBillingCheckoutUrlAction } from "../../actions/billing";
@@ -16,20 +17,27 @@ import { CheckoutButton } from "../billing";
 
 type PricingCardCta = {
   hint?: string;
-  title: string;
+
   onClick?: () => void;
 } & (
   | {
       type: "link";
       href: string;
+      label: string;
     }
   | {
       type: "checkout";
+      label: string;
+    }
+  | {
+      type: "renew";
     }
 );
 
 type PricingCardProps = {
+  getTeam: () => Promise<Team>;
   teamSlug: string;
+  teamId: string;
   billingStatus: Team["billingStatus"];
   billingPlan: keyof typeof TEAM_PLANS;
   cta?: PricingCardCta;
@@ -41,7 +49,9 @@ type PricingCardProps = {
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
+  getTeam,
   teamSlug,
+  teamId,
   billingStatus,
   billingPlan,
   cta,
@@ -131,6 +141,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
       {cta && (
         <div className="flex flex-col gap-3">
+          {cta.type === "renew" && (
+            <RenewSubscriptionButton teamId={teamId} getTeam={getTeam} />
+          )}
           {billingPlanToSkuMap[billingPlan] && cta.type === "checkout" && (
             <CheckoutButton
               billingStatus={billingStatus}
@@ -143,7 +156,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               sku={billingPlanToSkuMap[billingPlan]}
               getBillingCheckoutUrl={getBillingCheckoutUrl}
             >
-              {cta.title}
+              {cta.label}
             </CheckoutButton>
           )}
 
@@ -154,7 +167,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               asChild
             >
               <Link href={cta.href} target="_blank" onClick={handleCTAClick}>
-                {cta.title}
+                {cta.label}
               </Link>
             </Button>
           )}

@@ -17,10 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import {
-  type CancelPlan,
-  CancelPlanButton,
-} from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
+import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
 import { BillingPricing } from "components/settings/Account/Billing/Pricing";
 import { differenceInDays, isAfter } from "date-fns";
 import { format } from "date-fns/format";
@@ -28,6 +25,7 @@ import { CreditCardIcon, FileTextIcon, SquarePenIcon } from "lucide-react";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { RenewSubscriptionButton } from "../../../../../../../../../components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
 
 export function PlanInfoCardUI(props: {
@@ -35,7 +33,6 @@ export function PlanInfoCardUI(props: {
   team: Team;
   getBillingPortalUrl: GetBillingPortalUrlAction;
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
-  cancelPlan: CancelPlan;
   getTeam: () => Promise<Team>;
 }) {
   const { subscriptions, team } = props;
@@ -63,6 +60,7 @@ export function PlanInfoCardUI(props: {
         getBillingCheckoutUrl={props.getBillingCheckoutUrl}
         isOpen={isPlanSheetOpen}
         onOpenChange={setIsPlanSheetOpen}
+        getTeam={props.getTeam}
       />
 
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
@@ -102,6 +100,16 @@ export function PlanInfoCardUI(props: {
               Your trial ends in {trialEndsAfterDays} days
             </p>
           )}
+          {props.team.planCancellationDate && (
+            <Badge variant="destructive">
+              Scheduled to cancel in{" "}
+              {differenceInDays(
+                new Date(props.team.planCancellationDate),
+                new Date(),
+              )}{" "}
+              days
+            </Badge>
+          )}
         </div>
 
         {props.team.billingPlan !== "free" && (
@@ -118,13 +126,20 @@ export function PlanInfoCardUI(props: {
               Change Plan
             </Button>
 
-            <CancelPlanButton
-              teamSlug={props.team.slug}
-              billingStatus={props.team.billingStatus}
-              cancelPlan={props.cancelPlan}
-              currentPlan={props.team.billingPlan}
-              getTeam={props.getTeam}
-            />
+            {props.team.planCancellationDate ? (
+              <RenewSubscriptionButton
+                teamId={props.team.id}
+                getTeam={props.getTeam}
+              />
+            ) : (
+              <CancelPlanButton
+                teamId={props.team.id}
+                teamSlug={props.team.slug}
+                billingStatus={props.team.billingStatus}
+                currentPlan={props.team.billingPlan}
+                getTeam={props.getTeam}
+              />
+            )}
           </div>
         )}
       </div>
@@ -291,6 +306,7 @@ function ViewPlansSheet(props: {
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  getTeam: () => Promise<Team>;
 }) {
   return (
     <Sheet open={props.isOpen} onOpenChange={props.onOpenChange}>
@@ -302,6 +318,7 @@ function ViewPlansSheet(props: {
           team={props.team}
           trialPeriodEndedAt={props.trialPeriodEndedAt}
           getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+          getTeam={props.getTeam}
         />
       </SheetContent>
     </Sheet>
