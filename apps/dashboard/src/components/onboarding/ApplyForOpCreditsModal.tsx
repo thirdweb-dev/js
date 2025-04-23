@@ -14,8 +14,8 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import { useState } from "react";
-import { TeamPlanBadge } from "../../app/components/TeamPlanBadge";
-import { getValidTeamPlan } from "../../app/team/components/TeamHeader/getValidTeamPlan";
+import { TeamPlanBadge } from "../../app/(app)/components/TeamPlanBadge";
+import { getValidTeamPlan } from "../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { PlanCard } from "./PlanCard";
 

@@ -60,9 +60,6 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
   insight: DEFAULT_INSIGHT_URL,
 };
 
-/**
- * @internal
- */
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
   domains = {
     rpc: DomainOverrides.rpc ?? DEFAULT_RPC_URL,
@@ -92,4 +89,14 @@ export const getThirdwebBaseUrl = (service: keyof DomainOverrides) => {
     return `http://${origin}`;
   }
   return `https://${origin}`;
+};
+
+let serviceKey: string | null = null;
+
+export const setServiceKey = (key: string | null) => {
+  serviceKey = key;
+};
+
+export const getServiceKey = () => {
+  return serviceKey;
 };

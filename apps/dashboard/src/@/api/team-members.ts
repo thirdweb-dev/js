@@ -1,6 +1,6 @@
 import "server-only";
 import { API_SERVER_URL } from "@/constants/env";
-import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
 const TeamAccountRole = {
   OWNER: "OWNER",

@@ -1,16 +1,20 @@
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Flex, FormControl, Select } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Heading, Text } from "tw-components";
 
 interface NetworksFieldsetProps {
   fromStandard?: boolean;
+  client: ThirdwebClient;
 }
 
 export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
   fromStandard,
+  client,
 }) => {
   const form = useFormContext();
+
   return (
     <Flex flexDir="column" gap={fromStandard ? 6 : 4}>
       <Flex flexDir="column" gap={2}>
@@ -38,6 +42,7 @@ export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
         <Flex flexDir="column" gap={2}>
           <Text>Please select the networks you want to enable:</Text>
           <MultiNetworkSelector
+            client={client}
             onChange={(chainIds) =>
               form.setValue("networksForDeployment.networksEnabled", chainIds)
             }

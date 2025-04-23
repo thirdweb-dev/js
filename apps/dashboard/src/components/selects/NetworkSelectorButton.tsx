@@ -12,8 +12,8 @@ import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
-import { useFavoriteChainIds } from "../../app/(dashboard)/(chain)/components/client/star-button";
-import { getSDKTheme } from "../../app/components/sdk-component-theme";
+import { useFavoriteChainIds } from "../../app/(app)/(dashboard)/(chain)/components/client/star-button";
+import { getSDKTheme } from "../../app/(app)/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
@@ -122,7 +122,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const chain = useActiveChainAsDashboardChain();
   const prevChain = useRef(chain);
 
-  // handle switch network done from wallet app/extension
+  // handle switch network done from wallet app/(app)/extension
   // TODO: legitimate use-case, but maybe theres a better way to hook into this?
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -173,6 +173,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               return (
                 <CustomChainRenderer
                   {...props}
+                  client={client}
                   openEditChainModal={(c) => {
                     setIsNetworkConfigModalOpen(true);
                     setEditChain(c);
@@ -199,7 +200,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           });
         }}
       >
-        <ChainIconClient ipfsSrc={chain?.icon?.url} className="size-5" />
+        <ChainIconClient
+          src={chain?.icon?.url}
+          client={client}
+          className="size-5"
+        />
         {chain?.name || "Select Network"}
 
         <ChevronDownIcon className="ml-auto size-4" />

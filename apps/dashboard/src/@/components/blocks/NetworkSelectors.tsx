@@ -4,6 +4,7 @@ import { MultiSelect } from "@/components/blocks/multi-select";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
 import { useCallback, useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ChainIconClient } from "../../../components/icons/ChainIcon";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 
@@ -20,6 +21,12 @@ export function MultiNetworkSelector(props: {
   className?: string;
   priorityChains?: number[];
   hideTestnets?: boolean;
+  popoverContentClassName?: string;
+  customTrigger?: React.ReactNode;
+  align?: "center" | "start" | "end";
+  side?: "left" | "right" | "top" | "bottom";
+  showSelectedValuesInModal?: boolean;
+  client: ThirdwebClient;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -84,8 +91,9 @@ export function MultiNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
-              ipfsSrc={chain.icon?.url}
               loading="lazy"
+              src={chain.icon?.url}
+              client={props.client}
             />
             {cleanChainName(chain.name)}
           </span>
@@ -99,14 +107,19 @@ export function MultiNetworkSelector(props: {
         </div>
       );
     },
-    [idToChain, props.disableChainId],
+    [idToChain, props.disableChainId, props.client],
   );
 
   return (
     <MultiSelect
       searchPlaceholder="Search by Name or Chain Id"
       selectedValues={props.selectedChainIds.map(String)}
+      popoverContentClassName={props.popoverContentClassName}
+      customTrigger={props.customTrigger}
       options={options}
+      align={props.align}
+      side={props.side}
+      showSelectedValuesInModal={props.showSelectedValuesInModal}
       onSelectedValuesChange={(chainIds) => {
         props.onChange(chainIds.map(Number));
       }}
@@ -132,6 +145,7 @@ export function SingleNetworkSelector(props: {
   disableChainId?: boolean;
   align?: "center" | "start" | "end";
   placeholder?: string;
+  client: ThirdwebClient;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
@@ -179,7 +193,8 @@ export function SingleNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
-              ipfsSrc={chain.icon?.url}
+              src={chain.icon?.url}
+              client={props.client}
               loading="lazy"
             />
             {cleanChainName(chain.name)}
@@ -194,7 +209,7 @@ export function SingleNetworkSelector(props: {
         </div>
       );
     },
-    [idToChain, props.disableChainId],
+    [idToChain, props.disableChainId, props.client],
   );
 
   const isLoadingChains = allChains.length === 0;

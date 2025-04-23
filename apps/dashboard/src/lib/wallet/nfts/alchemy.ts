@@ -2,7 +2,7 @@ import "server-only";
 
 import { download } from "thirdweb/storage";
 import type { NFTMetadata } from "thirdweb/utils";
-import { getUserThirdwebClient } from "../../../app/api/lib/getAuthToken";
+import { getUserThirdwebClient } from "../../../app/(app)/api/lib/getAuthToken";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
   type AlchemySupportedChainId,

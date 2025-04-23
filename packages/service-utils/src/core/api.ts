@@ -80,6 +80,11 @@ type TeamCapabilities = {
     customAuth: boolean;
     customBranding: boolean;
   };
+  engineCloud: {
+    enabled: boolean;
+    mainnetEnabled: boolean;
+    rateLimit: number;
+  };
 };
 
 type TeamPlan =

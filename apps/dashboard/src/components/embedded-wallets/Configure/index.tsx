@@ -2,6 +2,7 @@
 
 import type { Project } from "@/api/projects";
 import type { SMSCountryTiers } from "@/api/sms";
+import type { Team } from "@/api/team";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
@@ -20,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,10 +36,12 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { upload } from "thirdweb/storage";
 import { toArrFromList } from "utils/string";
-import type { Team } from "../../../@/api/team";
+import { FileInput } from "../../shared/FileInput";
 import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {
@@ -339,6 +344,34 @@ function BrandingFieldset(props: {
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
         show={canEditAdvancedFeatures && !!form.watch("branding")}
       >
+        {/* Application Image */}
+        <FormField
+          control={form.control}
+          name="branding.applicationImageUrl"
+          render={() => (
+            <FormItem className="space-y-1">
+              <FormLabel>Application Image URL</FormLabel>
+              <FormDescription className="!mb-4">
+                Logo that will display in the emails sent to users.{" "}
+                <br className="max-sm:hidden" /> The image must be squared with
+                recommended size of 72x72 px.
+              </FormDescription>
+              <FormControl>
+                <AppImageFormControl
+                  uri={form.watch("branding.applicationImageUrl")}
+                  setUri={(uri) => {
+                    form.setValue("branding.applicationImageUrl", uri, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* Application Name */}
         <FormField
           control={form.control}
@@ -346,40 +379,75 @@ function BrandingFieldset(props: {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Application Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
+              <FormDescription className="!mb-2">
                 Name that will be displayed in the emails sent to users.{" "}
                 <br className="max-sm:hidden" /> Defaults to your API Key's
                 name.
               </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Application Image */}
-        <FormField
-          control={form.control}
-          name="branding.applicationImageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Application Image URL</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>
-                Logo that will display in the emails sent to users.{" "}
-                <br className="max-sm:hidden" /> The image must be squared with
-                recommended size of 72x72 px.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
       </AdvancedConfigurationContainer>
     </Fieldset>
+  );
+}
+
+function AppImageFormControl(props: {
+  uri: string | undefined;
+  setUri: (uri: string) => void;
+}) {
+  const client = useThirdwebClient();
+  const [image, setImage] = useState<File | undefined>();
+  const resolveUrl = resolveSchemeWithErrorHandler({
+    client: client,
+    uri: props.uri || undefined,
+  });
+
+  const uploadImage = useMutation({
+    mutationFn: async (file: File) => {
+      const uri = await upload({
+        client: client,
+        files: [file],
+      });
+
+      return uri;
+    },
+  });
+
+  return (
+    <div className="flex">
+      <div className="relative">
+        <FileInput
+          accept={{ "image/*": [] }}
+          value={image}
+          setValue={async (v) => {
+            try {
+              setImage(v);
+              const uri = await uploadImage.mutateAsync(v);
+              props.setUri(uri);
+            } catch (error) {
+              setImage(undefined);
+              toast.error("Failed to upload image", {
+                description: error instanceof Error ? error.message : undefined,
+              });
+            }
+          }}
+          className="w-24 rounded-full bg-background lg:w-28"
+          disableHelperText
+          fileUrl={resolveUrl}
+        />
+
+        {uploadImage.isPending && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-full border bg-background/50">
+            <Spinner className="size-7" />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

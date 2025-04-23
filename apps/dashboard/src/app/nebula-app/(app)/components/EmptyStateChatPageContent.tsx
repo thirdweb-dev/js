@@ -2,13 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowUpRightIcon } from "lucide-react";
+import type { NebulaContext } from "../api/chat";
 import { examplePrompts } from "../data/examplePrompts";
 import { NebulaIcon } from "../icons/NebulaIcon";
-import { ChatBar } from "./ChatBar";
+import { nebulaThirdwebClient } from "../utils/nebulaThirdwebClient";
+import { ChatBar, type WalletMeta } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
   sendMessage: (message: string) => void;
   prefillMessage: string | undefined;
+  context: NebulaContext | undefined;
+  setContext: (context: NebulaContext | undefined) => void;
+  connectedWallets: WalletMeta[];
+  activeAccountAddress: string | undefined;
+  setActiveWallet: (wallet: WalletMeta) => void;
+  isConnectingWallet: boolean;
 }) {
   return (
     <div className="py-10 lg:py-16">
@@ -28,8 +36,16 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
+            isConnectingWallet={props.isConnectingWallet}
+            showContextSelector={true}
+            context={props.context}
+            setContext={props.setContext}
             sendMessage={props.sendMessage}
             isChatStreaming={false}
+            client={nebulaThirdwebClient}
+            connectedWallets={props.connectedWallets}
+            activeAccountAddress={props.activeAccountAddress}
+            setActiveWallet={props.setActiveWallet}
             abortChatStream={() => {
               // the page will switch so, no need to handle abort here
             }}

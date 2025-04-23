@@ -27,10 +27,11 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import React from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { PaginationButtons } from "../../../@/components/pagination-buttons";
 import { cn } from "../../../@/lib/utils";
-import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
-import { removeContractFromProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
+import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { ContractNameCell, ContractTypeCell } from "./cells";
 
@@ -43,10 +44,12 @@ export function ContractTable(props: {
   pageSize: number;
   teamId: string;
   projectId: string;
+  client: ThirdwebClient;
 }) {
   return (
     <ContractTableUI
       contracts={props.contracts}
+      client={props.client}
       pageSize={props.pageSize}
       removeContractFromProject={async (contractId) => {
         await removeContractFromProject({
@@ -63,6 +66,7 @@ export function ContractTableUI(props: {
   contracts: ProjectContract[];
   pageSize: number;
   removeContractFromProject: (contractId: string) => Promise<void>;
+  client: ThirdwebClient;
 }) {
   // instantly update the table without waiting for router refresh by adding deleted contract ids to the state
   const [deletedContractIds, setDeletedContractIds] = useState<string[]>([]);
@@ -130,6 +134,7 @@ export function ContractTableUI(props: {
               <TableHead>Type</TableHead>
               <TableHead className="tracking-normal">
                 <NetworkFilterCell
+                  client={props.client}
                   chainIds={uniqueChainIds}
                   chainId={
                     filters.chainId ? filters.chainId.toString() : undefined
@@ -171,7 +176,10 @@ export function ContractTableUI(props: {
                   </TableCell>
 
                   <TableCell>
-                    <ChainNameCell chainId={contract.chainId} />
+                    <ChainNameCell
+                      chainId={contract.chainId}
+                      client={props.client}
+                    />
                   </TableCell>
 
                   <TableCell>
@@ -234,10 +242,12 @@ const NetworkFilterCell = React.memo(function NetworkFilterCell({
   chainId: selectedChain,
   setChainId: setSelectedChain,
   chainIds,
+  client,
 }: {
   chainId: string | undefined;
   setChainId: (chainId: string | undefined) => void;
   chainIds: number[];
+  client: ThirdwebClient;
 }) {
   if (chainIds.length < 2) {
     return <> NETWORK </>;
@@ -249,12 +259,14 @@ const NetworkFilterCell = React.memo(function NetworkFilterCell({
       enabledChainIds={chainIds}
       onSelect={(chain) => setSelectedChain(chain)}
       selectedChain={selectedChain}
+      client={client}
     />
   );
 });
 
 const ChainNameCell = React.memo(function ChainNameCell(props: {
   chainId: string;
+  client: ThirdwebClient;
 }) {
   const { idToChain } = useAllChainsData();
   const data = idToChain.get(Number(props.chainId));
@@ -263,7 +275,11 @@ const ChainNameCell = React.memo(function ChainNameCell(props: {
     `Unknown Network (#${props.chainId})`;
   return (
     <div className="flex items-center gap-2">
-      <ChainIconClient className="size-5" ipfsSrc={data?.icon?.url} />
+      <ChainIconClient
+        className="size-5"
+        src={data?.icon?.url}
+        client={props.client}
+      />
       <SkeletonContainer
         loadedData={data ? cleanedChainName : undefined}
         skeletonData={`Chain ID ${props.chainId}`}

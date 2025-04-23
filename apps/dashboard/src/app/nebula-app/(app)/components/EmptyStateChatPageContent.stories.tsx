@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { ThirdwebProvider } from "thirdweb/react";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 const meta = {
@@ -30,11 +31,19 @@ function Story(props: {
   prefillMessage: string | undefined;
 }) {
   return (
-    <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
-      <EmptyStateChatPageContent
-        sendMessage={() => {}}
-        prefillMessage={props.prefillMessage}
-      />
-    </div>
+    <ThirdwebProvider>
+      <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
+        <EmptyStateChatPageContent
+          isConnectingWallet={false}
+          sendMessage={() => {}}
+          prefillMessage={props.prefillMessage}
+          context={undefined}
+          setContext={() => {}}
+          connectedWallets={[]}
+          activeAccountAddress={undefined}
+          setActiveWallet={() => {}}
+        />
+      </div>
+    </ThirdwebProvider>
   );
 }

@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.5
+
+### Patch Changes
+
+- [#6793](https://github.com/thirdweb-dev/js/pull/6793) [`f85163e`](https://github.com/thirdweb-dev/js/commit/f85163edee8ab21a1f7a1b70c4dffc5953a409d3) Thanks [@jnsdls](https://github.com/jnsdls)! - add engineCloud plan capability
+
+- [#6782](https://github.com/thirdweb-dev/js/pull/6782) [`d7dc83f`](https://github.com/thirdweb-dev/js/commit/d7dc83f9e65616fe2f61bb2a680429b163cd0307) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#6815](https://github.com/thirdweb-dev/js/pull/6815) [`69ec6e0`](https://github.com/thirdweb-dev/js/commit/69ec6e055363483b0a259d8ed052c6601d39679d) Thanks [@jnsdls](https://github.com/jnsdls)! - expose `rateLimitSlidingWindow` strategy directly for more low-level usage
+
 ## 0.9.4
 
 ### Patch Changes

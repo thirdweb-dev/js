@@ -4,6 +4,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import {
   AlertCircleIcon,
   CheckIcon,
@@ -14,7 +15,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";

@@ -12,15 +12,19 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useActiveAccount } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWalletConnectionStatus,
+  useConnectedWallets,
+  useSetActiveWallet,
+} from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { newChatPageUrlStore, newSessionsStore } from "../stores";
-import { ChatBar } from "./ChatBar";
+import { ChatBar, type WalletMeta } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
-import ContextFiltersButton, { ContextFiltersForm } from "./ContextFilters";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 export function ChatPageContent(props: {
@@ -31,11 +35,13 @@ export function ChatPageContent(props: {
     | {
         q: string | undefined;
         chainIds: number[];
-        wallet: string | undefined;
       }
     | undefined;
 }) {
   const address = useActiveAccount()?.address;
+  const connectedWallets = useConnectedWallets();
+  const setActiveWallet = useSetActiveWallet();
+
   const client = useThirdwebClient(props.authToken);
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
@@ -93,8 +99,7 @@ export function ChatPageContent(props: {
         contextRes?.chain_ids ||
         props.initialParams?.chainIds.map((x) => x.toString()) ||
         [],
-      walletAddress:
-        contextRes?.wallet_address || props.initialParams?.wallet || null,
+      walletAddress: contextRes?.wallet_address || null,
     };
 
     return value;
@@ -107,6 +112,7 @@ export function ChatPageContent(props: {
   }, []);
 
   const isNewSession = !props.session;
+  const connectionStatus = useActiveWalletConnectionStatus();
 
   // if this is a new session, user has not manually updated context
   // update the context to the current user's wallet address and chain id
@@ -130,7 +136,10 @@ export function ChatPageContent(props: {
         updatedContextFilters.walletAddress = address;
       }
 
-      if (updatedContextFilters.chainIds?.length === 0) {
+      if (
+        updatedContextFilters.chainIds?.length === 0 &&
+        !props.initialParams?.q
+      ) {
         // if we have last used chains in storage, continue using them
         try {
           const lastUsedChainIds = getLastUsedChainIds();
@@ -145,7 +154,12 @@ export function ChatPageContent(props: {
 
       return updatedContextFilters;
     });
-  }, [address, isNewSession, hasUserUpdatedContextFilters]);
+  }, [
+    address,
+    isNewSession,
+    hasUserUpdatedContextFilters,
+    props.initialParams?.q,
+  ]);
 
   const [sessionId, _setSessionId] = useState<string | undefined>(
     props.session?.id,
@@ -296,6 +310,11 @@ export function ChatPageContent(props: {
     messages.length === 0 &&
     !props.initialParams?.q;
 
+  const connectedWalletsMeta: WalletMeta[] = connectedWallets.map((x) => ({
+    address: x.getAccount()?.address || "",
+    type: x.id === "smart" ? "smart" : "user",
+  }));
+
   const handleUpdateContextFilters = async (
     values: NebulaContext | undefined,
   ) => {
@@ -309,27 +328,35 @@ export function ChatPageContent(props: {
     }
   };
 
+  const handleSetActiveWallet = (walletMeta: WalletMeta) => {
+    const wallet = connectedWallets.find(
+      (x) => x.getAccount()?.address === walletMeta.address,
+    );
+    if (wallet) {
+      setActiveWallet(wallet);
+    }
+  };
+
   return (
     <div className="flex grow flex-col overflow-hidden">
       <WalletDisconnectedDialog
         open={showConnectModal}
         onOpenChange={setShowConnectModal}
       />
-      <header className="flex justify-between border-b bg-background p-4 xl:hidden">
-        <ContextFiltersButton
-          contextFilters={contextFilters}
-          setContextFilters={setContextFilters}
-          updateContextFilters={handleUpdateContextFilters}
-        />
-      </header>
 
       <div className="flex grow overflow-hidden">
         <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
+                isConnectingWallet={connectionStatus === "connecting"}
                 sendMessage={handleSendMessage}
                 prefillMessage={props.initialParams?.q}
+                context={contextFilters}
+                setContext={setContextFilters}
+                connectedWallets={connectedWalletsMeta}
+                activeAccountAddress={address}
+                setActiveWallet={handleSetActiveWallet}
               />
             </div>
           ) : (
@@ -347,6 +374,12 @@ export function ChatPageContent(props: {
 
               <div className="container max-w-[800px]">
                 <ChatBar
+                  isConnectingWallet={connectionStatus === "connecting"}
+                  showContextSelector={true}
+                  connectedWallets={connectedWalletsMeta}
+                  activeAccountAddress={address}
+                  setActiveWallet={handleSetActiveWallet}
+                  client={client}
                   prefillMessage={undefined}
                   sendMessage={handleSendMessage}
                   isChatStreaming={isChatStreaming}
@@ -359,6 +392,11 @@ export function ChatPageContent(props: {
                       setMessages((prev) => prev.slice(0, -1));
                     }
                   }}
+                  context={contextFilters}
+                  setContext={(v) => {
+                    setContextFilters(v);
+                    handleUpdateContextFilters(v);
+                  }}
                 />
               </div>
             </div>
@@ -368,24 +406,6 @@ export function ChatPageContent(props: {
             Nebula may make mistakes. Please use with discretion
           </p>
         </div>
-        <aside className="hidden w-[360px] flex-col border-l bg-card pt-4 xl:flex">
-          <div className="px-4">
-            <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
-              Settings
-            </h3>
-            <p className="mb-5 text-muted-foreground text-sm">
-              Modify Nebula to suit your needs
-            </p>
-          </div>
-          <ContextFiltersForm
-            contextFilters={contextFilters}
-            setContextFilters={setContextFilters}
-            modal={undefined}
-            updateContextFilters={handleUpdateContextFilters}
-            formBodyClassName="px-4"
-            formActionContainerClassName="px-4 border-t-0 pt-0 bg-transparent"
-          />
-        </aside>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
-import { getSDKTheme } from "app/components/sdk-component-theme";
+import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -19,8 +19,8 @@ import {
   useActiveAccount,
   useConnectModal,
 } from "thirdweb/react";
-import { useFavoriteChainIds } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
-import { doLogout } from "../../../../app/login/auth-actions";
+import { useFavoriteChainIds } from "../../../../app/(app)/(dashboard)/(chain)/components/client/star-button";
+import { doLogout } from "../../../../app/(app)/login/auth-actions";
 import { LazyConfigureNetworkModal } from "../../../../components/configure-networks/LazyConfigureNetworkModal";
 import { useAllChainsData } from "../../../../hooks/chains/allChains";
 import {
@@ -175,6 +175,7 @@ export const CustomConnectWallet = (props: {
             renderChain(props) {
               return (
                 <CustomChainRenderer
+                  client={thirdwebClient}
                   {...props}
                   openEditChainModal={(c) => {
                     setIsNetworkConfigModalOpen(true);

@@ -89,6 +89,11 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         enabled: true,
         rateLimit: 1000,
       },
+      engineCloud: {
+        enabled: true,
+        rateLimit: 100,
+        mainnetEnabled: true,
+      },
     },
   };
 

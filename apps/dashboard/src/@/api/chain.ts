@@ -1,6 +1,6 @@
 import "server-only";
 import type { ChainMetadata } from "thirdweb/chains";
-import type { ChainService } from "../../app/(dashboard)/(chain)/types/chain";
+import type { ChainService } from "../../app/(app)/(dashboard)/(chain)/types/chain";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "../constants/env";
 
 export async function getGasSponsoredChains() {

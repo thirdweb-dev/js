@@ -16,7 +16,7 @@ import { ContractNameCell } from "components/contract-components/tables/cells";
 import { FactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { getChainMetadata } from "thirdweb/chains";
-import type { ProjectContract } from "../../../app/account/contracts/_components/getProjectContracts";
+import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 
 interface FactoryContractsProps {
   contracts: ProjectContract[];

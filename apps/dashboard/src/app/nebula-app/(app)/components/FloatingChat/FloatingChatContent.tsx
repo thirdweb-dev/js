@@ -1,10 +1,11 @@
+import { Button } from "@/components/ui/button";
+import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { Button } from "../../../../../@/components/ui/button";
-import { useTrack } from "../../../../../hooks/analytics/useTrack";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import type { NebulaContext } from "../../api/chat";
 import { createSession } from "../../api/session";
 import type { ExamplePrompt } from "../../data/examplePrompts";
@@ -67,6 +68,7 @@ function FloatingChatContentLoggedIn(props: {
   const trackEvent = useTrack();
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
+  const connectionStatus = useActiveWalletConnectionStatus();
 
   const [contextFilters, setContextFilters] = useState<
     NebulaContext | undefined
@@ -165,7 +167,6 @@ function FloatingChatContentLoggedIn(props: {
   );
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
-
   return (
     <div className="flex grow flex-col overflow-hidden">
       {showEmptyState ? (
@@ -187,6 +188,23 @@ function FloatingChatContentLoggedIn(props: {
         />
       )}
       <ChatBar
+        client={props.client}
+        isConnectingWallet={connectionStatus === "connecting"}
+        context={contextFilters}
+        setContext={setContextFilters}
+        showContextSelector={false}
+        connectedWallets={
+          props.nebulaParams?.wallet
+            ? [
+                {
+                  address: props.nebulaParams.wallet,
+                  type: "user",
+                },
+              ]
+            : []
+        }
+        activeAccountAddress={props.nebulaParams?.wallet}
+        setActiveWallet={() => {}}
         abortChatStream={() => {
           chatAbortController?.abort();
           setChatAbortController(undefined);

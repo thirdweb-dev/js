@@ -2,6 +2,7 @@ import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import type { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, Heading } from "tw-components";
 import { CustomFactory } from "./custom-factory";
 import { DefaultFactory } from "./default-factory";
@@ -9,11 +10,13 @@ import { DefaultFactory } from "./default-factory";
 interface FactoryFieldsetProps {
   abi: Abi;
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
+  client: ThirdwebClient;
 }
 
 export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
   abi,
   setCustomFactoryAbi,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -48,10 +51,13 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
           </Button>
         </ButtonGroup>
         {form.watch("deployType") === "autoFactory" && (
-          <DefaultFactory abi={abi} />
+          <DefaultFactory abi={abi} client={client} />
         )}
         {form.watch("deployType") === "customFactory" && (
-          <CustomFactory setCustomFactoryAbi={setCustomFactoryAbi} />
+          <CustomFactory
+            setCustomFactoryAbi={setCustomFactoryAbi}
+            client={client}
+          />
         )}
       </Flex>
     </Flex>
