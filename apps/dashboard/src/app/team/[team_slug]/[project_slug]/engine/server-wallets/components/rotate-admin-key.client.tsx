@@ -24,7 +24,7 @@ import {
   createManagementAccessToken,
   initVaultClient,
   maskSecret,
-} from "../../lib/vault-utils";
+} from "../../lib/vault.client";
 
 export default function RotateAdminKeyButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);

@@ -64,20 +64,20 @@ const response = fetch(
         headers: {
             "Content-Type": "application/json",
             "x-secret-key": "<your-project-secret-key>",
-            "x-vault-access-token": "<your-wallet-access-token>",
+            "x-vault-access-token": "<your-vault-access-token>",
 
         },
         body: JSON.stringify({
             "executionOptions": {
                 "type": "AA",
-                "signerAddress": "<your-server-wallet-address>",
+                "signerAddress": "<your-signer-address>",
                 "chainId": "84532"
             },
             "params": [
               {
                 "contractAddress": "0x...",
-                "method": "approve",
-                "params": ["0x...", "0"],
+                "method": "function mintTo(address to, uint256 amount)",
+                "params": ["0x...", "100"],
               },
             ],
         }),

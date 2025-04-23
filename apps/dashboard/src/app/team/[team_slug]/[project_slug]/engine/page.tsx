@@ -1,11 +1,11 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { listEoas } from "@thirdweb-dev/vault-sdk";
+import { THIRDWEB_VAULT_URL } from "@/constants/env";
+import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
-import { initVaultClient } from "./lib/vault-utils";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {
@@ -44,7 +44,9 @@ export default async function TransactionsAnalyticsPage(props: {
     (service) => service.name === "engineCloud",
   );
 
-  const vaultClient = await initVaultClient();
+  const vaultClient = await createVaultClient({
+    baseUrl: THIRDWEB_VAULT_URL,
+  });
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;

@@ -30,7 +30,7 @@ import {
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,
   initVaultClient,
-} from "../../lib/vault-utils";
+} from "../../lib/vault.client";
 
 export default function ListAccessTokensButton(props: {
   project: Project;
