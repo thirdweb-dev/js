@@ -11,26 +11,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
-import {
-  createAccessToken,
-  createEoa,
-  createServiceAccount,
-  createVaultClient,
-} from "@thirdweb-dev/vault-sdk";
+import { createEoa, createServiceAccount } from "@thirdweb-dev/vault-sdk";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
-export const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
-  "Project Wide Server Wallet Access Token";
-
-export const SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE =
-  "Dashboard Server Wallet Management Token";
+import {
+  createManagementAccessToken,
+  createWalletAccessToken,
+  initVaultClient,
+  maskSecret,
+} from "../lib/vault-utils";
 
 export default function CreateServerWallet(props: {
   project: Project;
@@ -44,9 +37,7 @@ export default function CreateServerWallet(props: {
     mutationFn: async () => {
       setModalOpen(true);
 
-      const vaultClient = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
 
       const serviceAccount = await createServiceAccount({
         client: vaultClient,
@@ -65,235 +56,16 @@ export default function CreateServerWallet(props: {
         throw new Error("Failed to create service account");
       }
 
-      const managementAccessTokenPromise = createAccessToken({
-        client: vaultClient,
-        request: {
-          options: {
-            expiresAt: new Date(
-              Date.now() + 60 * 60 * 1000 * 24 * 365 * 1000,
-            ).toISOString(), // 100 years from now
-            policies: [
-              {
-                type: "eoa:read",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:create",
-                requiredMetadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-            ],
-            metadata: {
-              projectId: props.project.id,
-              teamId: props.project.teamId,
-              purpose: SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
-            },
-          },
-          auth: {
-            adminKey: serviceAccount.data.adminKey,
-          },
-        },
+      const managementAccessTokenPromise = createManagementAccessToken({
+        project: props.project,
+        adminKey: serviceAccount.data.adminKey,
+        vaultClient,
       });
 
-      const userAccesTokenPromise = createAccessToken({
-        client: vaultClient,
-        request: {
-          options: {
-            expiresAt: new Date(
-              Date.now() + 60 * 60 * 1000 * 24 * 365 * 1000,
-            ).toISOString(), // 100 years from now
-            policies: [
-              {
-                type: "eoa:read",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:create",
-                requiredMetadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signMessage",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signTransaction",
-                payloadPatterns: {},
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signTypedData",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signStructuredMessage",
-                structuredPatterns: {
-                  useropV06: {},
-                  useropV07: {},
-                },
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.project.id,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.project.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-            ],
-            metadata: {
-              projectId: props.project.id,
-              teamId: props.project.teamId,
-              purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
-            },
-          },
-          auth: {
-            adminKey: serviceAccount.data.adminKey,
-          },
-        },
+      const userAccesTokenPromise = createWalletAccessToken({
+        project: props.project,
+        adminKey: serviceAccount.data.adminKey,
+        vaultClient,
       });
 
       const [userAccessTokenRes, managementAccessTokenRes] = await Promise.all([
@@ -304,25 +76,6 @@ export default function CreateServerWallet(props: {
       if (!managementAccessTokenRes.success || !userAccessTokenRes.success) {
         throw new Error("Failed to create access token");
       }
-
-      // store the management access token in the project
-      await updateProjectClient(
-        {
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-        },
-        {
-          services: [
-            ...props.project.services,
-            {
-              name: "engineCloud",
-              managementAccessToken: managementAccessTokenRes.data.accessToken,
-              maskedAdminKey: maskSecret(serviceAccount.data.adminKey),
-              actions: [],
-            },
-          ],
-        },
-      );
 
       return {
         serviceAccount: serviceAccount.data,
@@ -342,9 +95,7 @@ export default function CreateServerWallet(props: {
     }: {
       managementAccessToken: string;
     }) => {
-      const vaultClient = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
 
       const eoa = await createEoa({
         request: {
@@ -386,6 +137,20 @@ export default function CreateServerWallet(props: {
         managementAccessToken: props.managementAccessToken,
       });
     }
+  };
+
+  const handleCopyAllKeys = () => {
+    if (!initialiseProjectWithVaultMutation.data) {
+      return;
+    }
+    navigator.clipboard.writeText(
+      `
+Vault Admin Key: ${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}
+Rotation Code: ${initialiseProjectWithVaultMutation.data.serviceAccount.rotationCode}
+Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}
+        `,
+    );
+    toast.success("All keys copied to clipboard");
   };
 
   const handleCloseModal = () => {
@@ -533,6 +298,10 @@ export default function CreateServerWallet(props: {
               </div>
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button variant={"outline"} onClick={handleCopyAllKeys}>
+                  Copy all keys
+                </Button>
+
                 <Button
                   onClick={handleCloseModal}
                   disabled={!keysConfirmed}
@@ -547,8 +316,4 @@ export default function CreateServerWallet(props: {
       </Dialog>
     </>
   );
-}
-
-function maskSecret(secret: string) {
-  return `${secret.substring(0, 11)}...${secret.substring(secret.length - 5)}`;
 }

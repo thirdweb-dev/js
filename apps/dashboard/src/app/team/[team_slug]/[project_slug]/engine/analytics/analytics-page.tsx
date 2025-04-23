@@ -16,6 +16,7 @@ export function TransactionsAnalyticsPageContent(props: {
   project_slug: string;
   team_slug: string;
   wallets?: Wallet[];
+  expandTestTx?: boolean;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -33,8 +34,15 @@ export function TransactionsAnalyticsPageContent(props: {
             team_slug={props.team_slug}
             wallets={props.wallets ?? []}
           />
-          <SendTestTransaction wallets={props.wallets} />
-          <TransactionsTable teamId={props.teamId} clientId={props.clientId} />
+          <SendTestTransaction
+            wallets={props.wallets}
+            expanded={props.expandTestTx}
+          />
+          <TransactionsTable
+            teamId={props.teamId}
+            clientId={props.clientId}
+            wallets={props.wallets}
+          />
         </div>
       </div>
     </ResponsiveSearchParamsProvider>

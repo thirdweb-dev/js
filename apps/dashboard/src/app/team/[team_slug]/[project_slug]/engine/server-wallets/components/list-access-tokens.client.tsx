@@ -9,15 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  createAccessToken,
-  listAccessTokens,
-  revokeAccessToken,
-} from "@thirdweb-dev/vault-sdk";
-import { createVaultClient } from "@thirdweb-dev/vault-sdk";
+import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
 import { Loader2, LockIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { Project } from "../../../../../../../@/api/projects";
 import { CopyTextButton } from "../../../../../../../@/components/ui/CopyTextButton";
 import {
   Alert,
@@ -29,16 +25,15 @@ import {
   Checkbox,
   CheckboxWithLabel,
 } from "../../../../../../../@/components/ui/checkbox";
-import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
 import { toDateTimeLocal } from "../../../../../../../utils/date-utils";
 import {
-  SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
-} from "./create-server-wallet.client";
+  createWalletAccessToken,
+  initVaultClient,
+} from "../lib/vault-utils";
 
 export default function ListAccessTokensButton(props: {
-  projectId: string;
-  teamId: string;
+  project: Project;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [typedAdminKey, setTypedAdminKey] = useState("");
@@ -49,172 +44,12 @@ export default function ListAccessTokensButton(props: {
   // TODO allow passing permissions to the access token
   const createAccessTokenMutation = useMutation({
     mutationFn: async (args: { adminKey: string }) => {
-      const vaultClient = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
 
-      const userAccessTokenRes = await createAccessToken({
-        client: vaultClient,
-        request: {
-          options: {
-            expiresAt: new Date(
-              Date.now() + 60 * 60 * 1000 * 24 * 365 * 1000,
-            ).toISOString(), // 100 years from now
-            policies: [
-              {
-                type: "eoa:read",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:create",
-                requiredMetadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signMessage",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signTransaction",
-                payloadPatterns: {},
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signTypedData",
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-              {
-                type: "eoa:signStructuredMessage",
-                structuredPatterns: {
-                  useropV06: {},
-                  useropV07: {},
-                },
-                metadataPatterns: [
-                  {
-                    key: "projectId",
-                    rule: {
-                      pattern: props.projectId,
-                    },
-                  },
-                  {
-                    key: "teamId",
-                    rule: {
-                      pattern: props.teamId,
-                    },
-                  },
-                  {
-                    key: "type",
-                    rule: {
-                      pattern: "server-wallet",
-                    },
-                  },
-                ],
-              },
-            ],
-            metadata: {
-              projectId: props.projectId,
-              teamId: props.teamId,
-              purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
-            },
-          },
-          auth: {
-            adminKey: args.adminKey,
-          },
-        },
+      const userAccessTokenRes = await createWalletAccessToken({
+        project: props.project,
+        adminKey: args.adminKey,
+        vaultClient,
       });
 
       if (!userAccessTokenRes.success) {
@@ -239,9 +74,7 @@ export default function ListAccessTokensButton(props: {
   const revokeAccessTokenMutation = useMutation({
     mutationFn: async (args: { adminKey: string; accessTokenId: string }) => {
       setDeletingTokenId(args.accessTokenId);
-      const vaultClient = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
 
       const revokeAccessTokenRes = await revokeAccessToken({
         client: vaultClient,
@@ -279,9 +112,7 @@ export default function ListAccessTokensButton(props: {
   const listAccessTokensQuery = useQuery({
     queryKey: ["list-access-tokensq", maskSecret(adminKey)],
     queryFn: async () => {
-      const vaultClient = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
       const listResult = await listAccessTokens({
         client: vaultClient,
         request: {
@@ -335,7 +166,7 @@ export default function ListAccessTokensButton(props: {
 
       <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
         <DialogContent className="overflow-hidden p-0">
-          <DialogHeader className="p-6">
+          <DialogHeader className="px-6 pt-6">
             <DialogTitle>Vault Access Tokens</DialogTitle>
           </DialogHeader>
           {/* If new access token, show copy button */}
@@ -472,8 +303,8 @@ export default function ListAccessTokensButton(props: {
               </div>
             </div>
           ) : (
-            <div className="px-6 pb-6">
-              <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 px-6">
                 <p className="flex items-center gap-2 text-sm text-warning-text">
                   <LockIcon className="h-4 w-4" /> This action requires your
                   Vault admin key.
@@ -489,34 +320,34 @@ export default function ListAccessTokensButton(props: {
                     }
                   }}
                 />
-                <div className="flex justify-end gap-3">
-                  <Button
-                    variant={"outline"}
-                    onClick={() => {
-                      setAdminKey("");
-                      setTypedAdminKey("");
-                      setModalOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant={"primary"}
-                    onClick={() => {
-                      setAdminKey(typedAdminKey);
-                    }}
-                    disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
-                  >
-                    {listAccessTokensQuery.isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Loading...
-                      </>
-                    ) : (
-                      "Manage Access Tokens"
-                    )}
-                  </Button>
-                </div>
+              </div>
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button
+                  variant={"outline"}
+                  onClick={() => {
+                    setAdminKey("");
+                    setTypedAdminKey("");
+                    setModalOpen(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant={"primary"}
+                  onClick={() => {
+                    setAdminKey(typedAdminKey);
+                  }}
+                  disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
+                >
+                  {listAccessTokensQuery.isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    "Manage Access Tokens"
+                  )}
+                </Button>
               </div>
             </div>
           )}

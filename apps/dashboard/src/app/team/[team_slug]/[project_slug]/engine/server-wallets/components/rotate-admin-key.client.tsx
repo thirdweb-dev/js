@@ -1,5 +1,6 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -15,16 +16,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import {
-  createVaultClient,
-  rotateServiceAccount,
-} from "@thirdweb-dev/vault-sdk";
+import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
 import { Loader2, LockIcon, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
+import {
+  createManagementAccessToken,
+  initVaultClient,
+  maskSecret,
+} from "../lib/vault-utils";
 
-export default function RotateAdminKeyButton() {
+export default function RotateAdminKeyButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [rotationCode, setRotationCode] = useState("");
   const [keysConfirmed, setKeysConfirmed] = useState(false);
@@ -36,12 +38,10 @@ export default function RotateAdminKeyButton() {
       }
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const client = await createVaultClient({
-        baseUrl: THIRDWEB_VAULT_URL,
-      });
+      const vaultClient = await initVaultClient();
 
       const rotateServiceAccountRes = await rotateServiceAccount({
-        client,
+        client: vaultClient,
         request: {
           auth: {
             rotationCode,
@@ -51,6 +51,17 @@ export default function RotateAdminKeyButton() {
 
       if (rotateServiceAccountRes.error) {
         throw new Error(rotateServiceAccountRes.error.message);
+      }
+
+      // need to recreate the management access token with the new admin key
+      const res = await createManagementAccessToken({
+        project: props.project,
+        adminKey: rotateServiceAccountRes.data.newAdminKey,
+        vaultClient,
+      });
+
+      if (res.error) {
+        throw new Error(res.error.message);
       }
 
       return {
@@ -182,15 +193,18 @@ export default function RotateAdminKeyButton() {
             </div>
           ) : (
             <>
-              <DialogHeader className="p-6">
+              <DialogHeader className="px-6 pt-6">
                 <DialogTitle>Rotate your Vault admin key</DialogTitle>
                 <DialogDescription>
                   This action will generate a new Vault admin key and rotation
-                  code. This will invalidate all existing access tokens.
+                  code.{" "}
+                  <p className="text-destructive">
+                    This will invalidate all existing access tokens.
+                  </p>
                 </DialogDescription>
               </DialogHeader>
-              <div className="px-6 pb-6">
-                <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 px-6">
                   <p className="flex items-center gap-2 text-sm text-warning-text">
                     <LockIcon className="h-4 w-4" /> This action requires your
                     Vault rotation code.
@@ -206,33 +220,31 @@ export default function RotateAdminKeyButton() {
                       }
                     }}
                   />
-                  <div className="flex justify-end gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setRotationCode("");
-                        setModalOpen(false);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={() => rotateAdminKeyMutation.mutate()}
-                      disabled={
-                        !rotationCode || rotateAdminKeyMutation.isPending
-                      }
-                    >
-                      {rotateAdminKeyMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Rotating...
-                        </>
-                      ) : (
-                        "Rotate Admin Key"
-                      )}
-                    </Button>
-                  </div>
+                </div>
+                <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setRotationCode("");
+                      setModalOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => rotateAdminKeyMutation.mutate()}
+                    disabled={!rotationCode || rotateAdminKeyMutation.isPending}
+                  >
+                    {rotateAdminKeyMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Rotating...
+                      </>
+                    ) : (
+                      "Rotate Admin Key"
+                    )}
+                  </Button>
                 </div>
               </div>
             </>
@@ -241,8 +253,4 @@ export default function RotateAdminKeyButton() {
       </Dialog>
     </>
   );
-}
-
-function maskSecret(secret: string) {
-  return `${secret.substring(0, 11)}...${secret.substring(secret.length - 5)}`;
 }

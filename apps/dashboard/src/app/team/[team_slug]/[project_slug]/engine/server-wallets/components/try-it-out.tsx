@@ -43,7 +43,7 @@ export function TryItOut(props: {
           {props.wallet && (
             <Button variant={"primary"} asChild>
               <Link
-                href={`/team/${props.team_slug}/${props.project_slug}/engine`}
+                href={`/team/${props.team_slug}/${props.project_slug}/engine?expand_test_tx=true`}
                 rel="noreferrer"
               >
                 Send a test transaction

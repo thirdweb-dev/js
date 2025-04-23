@@ -1,11 +1,11 @@
+import type { Project } from "@/api/projects";
 import ListAccessTokensButton from "./list-access-tokens.client";
 import RotateAdminKeyButton from "./rotate-admin-key.client";
 
 export function KeyManagement({
   maskedAdminKey,
-  projectId,
-  teamId,
-}: { maskedAdminKey?: string; projectId: string; teamId: string }) {
+  project,
+}: { maskedAdminKey?: string; project: Project }) {
   return maskedAdminKey ? (
     <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex flex-row items-center gap-4 px-6 pt-6">
@@ -25,10 +25,10 @@ export function KeyManagement({
           <h3 className="font-medium text-sm">Vault Admin Key</h3>
           <p className="text-muted-foreground text-sm">{maskedAdminKey}</p>
         </div>
-        <RotateAdminKeyButton />
+        <RotateAdminKeyButton project={project} />
       </div>
       <div className="flex flex-row justify-end gap-4 border-border border-t px-6 pt-4 pb-4">
-        <ListAccessTokensButton projectId={projectId} teamId={teamId} />
+        <ListAccessTokensButton project={project} />
       </div>
     </div>
   ) : null;

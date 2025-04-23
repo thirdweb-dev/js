@@ -35,6 +35,7 @@ import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { ChainIconClient } from "../../../../../../../components/icons/ChainIcon";
+import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
   Transaction,
   TransactionStatus,
@@ -45,6 +46,7 @@ import type {
 export function TransactionsTableUI(props: {
   getData: (params: { page: number }) => Promise<TransactionsResponse>;
   clientId: string;
+  wallets?: Wallet[];
 }) {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [status, setStatus] = useState<TransactionStatus | undefined>(
@@ -58,6 +60,7 @@ export function TransactionsTableUI(props: {
     queryFn: () => props.getData({ page }),
     refetchInterval: autoUpdate ? 4_000 : false,
     placeholderData: keepPreviousData,
+    enabled: !!props.wallets && props.wallets.length > 0,
   });
 
   const transactions = transactionsQuery.data?.transactions ?? [];

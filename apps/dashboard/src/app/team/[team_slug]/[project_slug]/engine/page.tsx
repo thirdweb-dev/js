@@ -1,11 +1,11 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
-import { THIRDWEB_VAULT_URL } from "../../../../../@/constants/env";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
+import { initVaultClient } from "./server-wallets/lib/vault-utils";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {
@@ -14,6 +14,7 @@ export default async function TransactionsAnalyticsPage(props: {
     from?: string | string[] | undefined;
     to?: string | string[] | undefined;
     interval?: string | string[] | undefined;
+    expand_test_tx?: string | string[] | undefined;
   }>;
 }) {
   const [params, searchParams, authToken] = await Promise.all([
@@ -43,9 +44,7 @@ export default async function TransactionsAnalyticsPage(props: {
     (service) => service.name === "engineCloud",
   );
 
-  const vaultClient = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
-  });
+  const vaultClient = await initVaultClient();
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
@@ -78,6 +77,7 @@ export default async function TransactionsAnalyticsPage(props: {
         project_slug={params.project_slug}
         team_slug={params.team_slug}
         wallets={wallets}
+        expandTestTx={searchParams.expand_test_tx === "true"}
       />
     </div>
   );

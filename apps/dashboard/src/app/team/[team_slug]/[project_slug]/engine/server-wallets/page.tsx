@@ -1,22 +1,19 @@
 import { getProject } from "@/api/projects";
-import { THIRDWEB_VAULT_URL } from "@/constants/env";
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { KeyManagement } from "./components/key-management";
 import { TryItOut } from "./components/try-it-out";
+import { initVaultClient } from "./lib/vault-utils";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
 export default async function TransactionsServerWalletsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
-  const vaultClient = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
-  });
+  const vaultClient = await initVaultClient();
 
   const { team_slug, project_slug } = await props.params;
-
   const [authToken, project] = await Promise.all([
     getAuthToken(),
     getProject(team_slug, project_slug),
@@ -61,8 +58,7 @@ export default async function TransactionsServerWalletsPage(props: {
           />
           <KeyManagement
             maskedAdminKey={maskedAdminKey ?? undefined}
-            projectId={project.id}
-            teamId={project.teamId}
+            project={project}
           />
           <TryItOut
             authToken={authToken}

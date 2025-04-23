@@ -33,8 +33,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function SendTestTransaction(props: {
   wallets?: Wallet[];
+  expanded?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(props.expanded ?? false);
   const thirdwebClient = useThirdwebClient();
 
   const form = useForm<FormValues>({
@@ -111,7 +112,7 @@ export function SendTestTransaction(props: {
   };
 
   return (
-    <div className="w-full space-y-2 rounded-md border p-3">
+    <div className="w-full space-y-2 rounded-md border bg-card p-3">
       {/* Trigger Area */}
       <div
         role="button"
@@ -150,7 +151,7 @@ export function SendTestTransaction(props: {
                 <Input
                   id="secret-key"
                   type="password"
-                  placeholder="Project Secret Key"
+                  placeholder="abcd....1234"
                   {...form.register("projectSecretKey")}
                   disabled={isLoading}
                   className="text-xs"
@@ -163,7 +164,7 @@ export function SendTestTransaction(props: {
                 <Input
                   id="access-token"
                   type="password"
-                  placeholder="Vault Access Token"
+                  placeholder="vt_act_1234....ABCD"
                   {...form.register("accessToken")}
                   disabled={isLoading}
                   className="text-xs"
@@ -217,6 +218,7 @@ export function SendTestTransaction(props: {
               <div className="flex flex-1 flex-col gap-2">
                 <p className="text-sm">Network</p>
                 <SingleNetworkSelector
+                  className="bg-background"
                   client={thirdwebClient}
                   chainId={form.watch("chainId")}
                   onChange={(chainId) => {
@@ -230,7 +232,7 @@ export function SendTestTransaction(props: {
             <Button
               type="submit"
               variant="primary"
-              disabled={isLoading}
+              disabled={isLoading || !form.formState.isValid}
               size="sm"
               className="w-full min-w-[200px] md:w-auto"
             >

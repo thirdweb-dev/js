@@ -1,10 +1,15 @@
 "use client";
 
 import { engineCloudProxy } from "@/actions/proxies";
+import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionsResponse } from "./types";
 
-export function TransactionsTable(props: { teamId: string; clientId: string }) {
+export function TransactionsTable(props: {
+  teamId: string;
+  clientId: string;
+  wallets?: Wallet[];
+}) {
   return (
     <TransactionsTableUI
       getData={async ({ page }) => {
@@ -15,6 +20,7 @@ export function TransactionsTable(props: { teamId: string; clientId: string }) {
         });
       }}
       clientId={props.clientId}
+      wallets={props.wallets}
     />
   );
 }
