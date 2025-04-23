@@ -1,84 +1,8 @@
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
-import { getAuthToken } from "app/api/lib/getAuthToken";
 import { StatCard } from "components/analytics/stat"; // Assuming correct path
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 import { Suspense } from "react";
-// Import the specific utility function needed
 import { toEther } from "thirdweb/utils";
-
-// Define the structure of the data we expect back from our fetch function
-type TransactionSummaryData = {
-  totalCount: number;
-  totalGasCostWei: string;
-  totalGasUnitsUsed: string; // Keep fetched data structure
-};
-
-// Define the structure of the API response
-type AnalyticsSummaryApiResponse = {
-  result: {
-    summary: {
-      totalCount: number;
-      totalGasCostWei: string;
-      totalGasUnitsUsed: string;
-    };
-    metadata: {
-      startDate?: string;
-      endDate?: string;
-    };
-  };
-};
-
-// Fetches data from the /analytics-summary endpoint
-async function getTransactionAnalyticsSummary(props: {
-  teamId: string;
-  clientId: string;
-}): Promise<TransactionSummaryData> {
-  const authToken = await getAuthToken();
-  const body = {};
-  const defaultData: TransactionSummaryData = {
-    totalCount: 0,
-    totalGasCostWei: "0",
-    totalGasUnitsUsed: "0",
-  };
-
-  try {
-    const response = await fetch(
-      `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics-summary`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-team-id": props.teamId,
-          "x-client-id": props.clientId,
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(body),
-      },
-    );
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        console.error("Unauthorized fetching transaction summary");
-        return defaultData;
-      }
-      const errorText = await response.text();
-      throw new Error(
-        `Error fetching transaction summary: ${response.status} ${response.statusText} - ${errorText}`,
-      );
-    }
-
-    const data = (await response.json()) as AnalyticsSummaryApiResponse;
-
-    return {
-      totalCount: data.result.summary.totalCount ?? 0,
-      totalGasCostWei: data.result.summary.totalGasCostWei ?? "0",
-      totalGasUnitsUsed: data.result.summary.totalGasUnitsUsed ?? "0",
-    };
-  } catch (error) {
-    console.error("Failed to fetch transaction summary:", error);
-    return defaultData;
-  }
-}
+import type { TransactionSummaryData } from "../lib/analytics";
 
 // Renders the UI based on fetched data or pending state
 function TransactionAnalyticsSummaryUI(props: {

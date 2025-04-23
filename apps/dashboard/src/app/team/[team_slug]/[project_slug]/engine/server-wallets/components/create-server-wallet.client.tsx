@@ -23,7 +23,7 @@ import {
   createWalletAccessToken,
   initVaultClient,
   maskSecret,
-} from "../lib/vault-utils";
+} from "../../lib/vault-utils";
 
 export default function CreateServerWallet(props: {
   project: Project;

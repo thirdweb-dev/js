@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
-import { initVaultClient } from "./server-wallets/lib/vault-utils";
+import { initVaultClient } from "./lib/vault-utils";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {

@@ -5,7 +5,7 @@ import {
   createAccessToken,
   createVaultClient,
 } from "@thirdweb-dev/vault-sdk";
-import { updateProjectClient } from "../../../../../../../@3rdweb-sdk/react/hooks/useApi";
+import { updateProjectClient } from "../../../../../../@3rdweb-sdk/react/hooks/useApi";
 
 const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
   "Access Token for All Server Wallets";

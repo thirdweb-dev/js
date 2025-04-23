@@ -1,9 +1,7 @@
 import { ResponsiveSuspense } from "responsive-rsc";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../../@/constants/env";
-import type { TransactionStats } from "../../../../../../../types/analytics";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import { getTransactionsChart } from "../../lib/analytics";
+import { getTxAnalyticsFiltersFromSearchParams } from "../../lib/utils";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
-import { getTxAnalyticsFiltersFromSearchParams } from "../getTransactionAnalyticsFilter";
 import { TransactionsChartCardUI } from "./tx-chart-ui";
 
 async function AsyncTransactionsChartCard(props: {
@@ -77,74 +75,4 @@ export function TransactionsChartCard(props: {
       />
     </ResponsiveSuspense>
   );
-}
-
-async function getTransactionsChart({
-  teamId,
-  clientId,
-  from,
-  to,
-  interval,
-}: {
-  teamId: string;
-  clientId: string;
-  from: string;
-  to: string;
-  interval: "day" | "week";
-}): Promise<TransactionStats[]> {
-  const authToken = await getAuthToken();
-
-  const filters = {
-    startDate: from,
-    endDate: to,
-    resolution: interval,
-  };
-
-  const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-team-id": teamId,
-        "x-client-id": clientId,
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(filters),
-    },
-  );
-
-  if (!response.ok) {
-    if (response.status === 401) {
-      return [];
-    }
-
-    // TODO - need to handle this error state, like we do with the connect charts
-    throw new Error(
-      `Error fetching transactions chart data: ${response.status} ${response.statusText} - ${await response.text().catch(() => "Unknown error")}`,
-    );
-  }
-
-  type TransactionsChartResponse = {
-    result: {
-      analytics: Array<{
-        timeBucket: string;
-        chainId: string;
-        count: number;
-      }>;
-      metadata: {
-        resolution: string;
-        startDate: string;
-        endDate: string;
-      };
-    };
-  };
-
-  const data = (await response.json()) as TransactionsChartResponse;
-
-  return data.result.analytics.map((stat) => ({
-    date: stat.timeBucket,
-    chainId: Number(stat.chainId),
-    count: stat.count,
-  }));
 }

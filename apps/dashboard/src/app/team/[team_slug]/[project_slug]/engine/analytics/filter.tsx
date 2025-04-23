@@ -7,7 +7,7 @@ import {
 } from "responsive-rsc";
 import { DateRangeSelector } from "../../../../../../components/analytics/date-range-selector";
 import { IntervalSelector } from "../../../../../../components/analytics/interval-selector";
-import { getTxAnalyticsFiltersFromSearchParams } from "./getTransactionAnalyticsFilter";
+import { getTxAnalyticsFiltersFromSearchParams } from "../lib/utils";
 
 export function TransactionAnalyticsFilter() {
   const responsiveSearchParams = useResponsiveSearchParams();

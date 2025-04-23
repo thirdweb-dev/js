@@ -2,9 +2,9 @@ import { getProject } from "@/api/projects";
 import { listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { initVaultClient } from "../lib/vault-utils";
 import { KeyManagement } from "./components/key-management";
 import { TryItOut } from "./components/try-it-out";
-import { initVaultClient } from "./lib/vault-utils";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
