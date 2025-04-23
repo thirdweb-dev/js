@@ -13,6 +13,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getOwnedNFTs", () => {
       owner,
     });
     expect(nfts.length).greaterThan(0);
+    for (const item of nfts) {
+      expect(item.owner).toBe(owner);
+    }
   });
 
   it("should detect ownership functions using indexer", async () => {
