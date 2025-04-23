@@ -111,6 +111,9 @@ const SENTRY_OPTIONS: SentryBuildOptions = {
   automaticVercelMonitors: false,
 };
 
+// add additional languages to the framer rewrite paths here (english is already included by default)
+const FRAMER_ADDITIONAL_LANGUAGES = ["es"];
+
 const baseNextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -155,10 +158,18 @@ const baseNextConfig: NextConfig = {
         source: "/home",
         destination: "https://landing.thirdweb.com",
       },
-      ...FRAMER_PATHS.map((path) => ({
-        source: path,
-        destination: `https://landing.thirdweb.com${path}`,
-      })),
+      // flatmap the framer paths for the default language and the additional languages
+      ...FRAMER_PATHS.flatMap((path) => [
+        {
+          source: path,
+          destination: `https://landing.thirdweb.com${path}`,
+        },
+        // this is for additional languages
+        ...FRAMER_ADDITIONAL_LANGUAGES.map((lang) => ({
+          source: `/${lang}${path}`,
+          destination: `https://landing.thirdweb.com/${lang}${path}`,
+        })),
+      ]),
     ];
   },
   images: {
