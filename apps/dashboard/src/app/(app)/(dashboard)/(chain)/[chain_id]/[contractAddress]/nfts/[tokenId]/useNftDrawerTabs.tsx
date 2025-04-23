@@ -6,6 +6,7 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import { checksumAddress } from "thirdweb/utils";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
@@ -108,7 +109,11 @@ export function useNFTDrawerTabs({
         return true;
       }
       if (isERC721) {
-        return nft?.owner === accountAddress;
+        return (
+          accountAddress &&
+          nft?.owner &&
+          checksumAddress(nft.owner) === checksumAddress(accountAddress)
+        );
       }
       return false;
     })();
