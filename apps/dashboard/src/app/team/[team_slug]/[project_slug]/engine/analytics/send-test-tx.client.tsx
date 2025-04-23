@@ -1,5 +1,8 @@
 "use client";
+import type { Project } from "@/api/projects";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAvatar } from "@/components/blocks/wallet-address";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -18,8 +21,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { shortenAddress } from "thirdweb/utils";
 import * as z from "zod";
-import { SingleNetworkSelector } from "../../../../../../@/components/blocks/NetworkSelectors";
-import { Button } from "../../../../../../@/components/ui/button";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 
 const formSchema = z.object({
@@ -33,7 +34,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function SendTestTransaction(props: {
   wallets?: Wallet[];
-  clientId: string;
+  project: Project;
   expanded?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(props.expanded ?? false);
@@ -112,7 +113,7 @@ export function SendTestTransaction(props: {
       chainId: data.chainId,
     });
     queryClient.invalidateQueries({
-      queryKey: ["transactions", props.clientId],
+      queryKey: ["transactions", props.project.id],
     });
   };
 

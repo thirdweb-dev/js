@@ -1,5 +1,6 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
@@ -27,6 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
@@ -34,7 +37,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useThirdwebClient } from "../../../../../../../@/constants/thirdweb.client";
 import { ChainIconClient } from "../../../../../../../components/icons/ChainIcon";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
@@ -46,9 +48,10 @@ import type {
 // TODO - add Status selector dropdown here
 export function TransactionsTableUI(props: {
   getData: (params: { page: number }) => Promise<TransactionsResponse>;
-  clientId: string;
+  project: Project;
   wallets?: Wallet[];
 }) {
+  const router = useDashboardRouter();
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [status, setStatus] = useState<TransactionStatus | undefined>(
     undefined,
@@ -57,7 +60,7 @@ export function TransactionsTableUI(props: {
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", props.clientId, page],
+    queryKey: ["transactions", props.project.id, page],
     queryFn: () => props.getData({ page }),
     refetchInterval: autoUpdate ? 4_000 : false,
     placeholderData: keepPreviousData,
@@ -132,6 +135,11 @@ export function TransactionsTableUI(props: {
                   <TableRow
                     key={`${tx.id}${tx.chainId}`}
                     className="cursor-pointer hover:bg-accent/50"
+                    onClick={() => {
+                      router.push(
+                        `/team/${props.project.teamId}/project/${props.project.id}/engine/tx/${tx.id}`,
+                      );
+                    }}
                   >
                     {/* Queue ID */}
                     <TableCell className="font-medium">

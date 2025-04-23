@@ -1,5 +1,6 @@
 "use client";
 
+import type { Project } from "@/api/projects";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,7 @@ type ChartData = Record<string, number> & {
 export function TransactionsChartCardUI(props: {
   userOpStats: TransactionStats[];
   isPending: boolean;
-  project_slug: string;
-  team_slug: string;
+  project: Project;
   wallets: Wallet[];
 }) {
   const { userOpStats } = props;
@@ -145,11 +145,7 @@ export function TransactionsChartCardUI(props: {
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
       emptyChartState={
-        <EmptyChartContent
-          project_slug={props.project_slug}
-          team_slug={props.team_slug}
-          wallets={props.wallets}
-        />
+        <EmptyChartContent project={props.project} wallets={props.wallets} />
       }
     />
   );
@@ -157,8 +153,7 @@ export function TransactionsChartCardUI(props: {
 
 // TODO - update the title and doc links
 function EmptyChartContent(props: {
-  project_slug: string;
-  team_slug: string;
+  project: Project;
   wallets: Wallet[];
 }) {
   const router = useDashboardRouter();
@@ -175,7 +170,7 @@ function EmptyChartContent(props: {
               variant="primary"
               onClick={() => {
                 router.push(
-                  `/team/${props.team_slug}/${props.project_slug}/engine/server-wallets`,
+                  `/team/${props.project.teamId}/${props.project.id}/engine/server-wallets`,
                 );
               }}
             >

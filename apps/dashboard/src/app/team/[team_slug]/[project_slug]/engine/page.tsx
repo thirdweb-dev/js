@@ -72,10 +72,7 @@ export default async function TransactionsAnalyticsPage(props: {
       <div className="h-10" />
       <TransactionsAnalyticsPageContent
         searchParams={searchParams}
-        teamId={project.teamId}
-        clientId={project.publishableKey}
-        project_slug={params.project_slug}
-        team_slug={params.team_slug}
+        project={project}
         wallets={wallets}
         expandTestTx={searchParams.expand_test_tx === "true"}
       />

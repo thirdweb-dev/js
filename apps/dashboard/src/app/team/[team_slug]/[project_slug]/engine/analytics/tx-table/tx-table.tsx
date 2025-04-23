@@ -1,36 +1,34 @@
 "use client";
 
 import { engineCloudProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionsResponse } from "./types";
 
 export function TransactionsTable(props: {
-  teamId: string;
-  clientId: string;
+  project: Project;
   wallets?: Wallet[];
 }) {
   return (
     <TransactionsTableUI
       getData={async ({ page }) => {
         return await getTransactions({
-          teamId: props.teamId,
-          clientId: props.clientId,
+          project: props.project,
           page,
         });
       }}
-      clientId={props.clientId}
+      project={props.project}
       wallets={props.wallets}
     />
   );
 }
 
 async function getTransactions({
-  teamId,
-  clientId,
+  project,
+  page,
 }: {
-  teamId: string;
-  clientId: string;
+  project: Project;
   page: number;
 }) {
   const transactions = await engineCloudProxy<{ result: TransactionsResponse }>(
@@ -39,10 +37,13 @@ async function getTransactions({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-team-id": teamId,
-        "x-client-id": clientId,
+        "x-team-id": project.teamId,
+        "x-client-id": project.publishableKey,
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({
+        page,
+        limit: 20,
+      }),
     },
   );
 

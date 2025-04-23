@@ -1,3 +1,4 @@
+import type { Project } from "@/api/projects";
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getTransactionsChart } from "../../lib/analytics";
 import { getTxAnalyticsFiltersFromSearchParams } from "../../lib/utils";
@@ -8,15 +9,12 @@ async function AsyncTransactionsChartCard(props: {
   from: string;
   to: string;
   interval: "day" | "week";
-  teamId: string;
-  clientId: string;
-  project_slug: string;
-  team_slug: string;
+  project: Project;
   wallets: Wallet[];
 }) {
   const data = await getTransactionsChart({
-    teamId: props.teamId,
-    clientId: props.clientId,
+    clientId: props.project.publishableKey,
+    teamId: props.project.teamId,
     from: props.from,
     to: props.to,
     interval: props.interval,
@@ -26,8 +24,7 @@ async function AsyncTransactionsChartCard(props: {
     <TransactionsChartCardUI
       isPending={false}
       userOpStats={data}
-      project_slug={props.project_slug}
-      team_slug={props.team_slug}
+      project={props.project}
       wallets={props.wallets}
     />
   );
@@ -39,10 +36,7 @@ export function TransactionsChartCard(props: {
     to?: string | undefined | string[];
     interval?: string | undefined | string[];
   };
-  teamId: string;
-  clientId: string;
-  project_slug: string;
-  team_slug: string;
+  project: Project;
   wallets: Wallet[];
 }) {
   const { range, interval } = getTxAnalyticsFiltersFromSearchParams(
@@ -57,8 +51,7 @@ export function TransactionsChartCard(props: {
         <TransactionsChartCardUI
           isPending={true}
           userOpStats={[]}
-          project_slug={props.project_slug}
-          team_slug={props.team_slug}
+          project={props.project}
           wallets={[]}
         />
       }
@@ -67,10 +60,7 @@ export function TransactionsChartCard(props: {
         from={range.from.toISOString()}
         to={range.to.toISOString()}
         interval={interval}
-        teamId={props.teamId}
-        clientId={props.clientId}
-        project_slug={props.project_slug}
-        team_slug={props.team_slug}
+        project={props.project}
         wallets={props.wallets}
       />
     </ResponsiveSuspense>

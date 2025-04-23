@@ -1,3 +1,4 @@
+import type { Project } from "@/api/projects";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { TransactionAnalyticsFilter } from "./filter";
@@ -11,10 +12,7 @@ export function TransactionsAnalyticsPageContent(props: {
     to?: string | undefined | string[];
     interval?: string | undefined | string[];
   };
-  teamId: string;
-  clientId: string;
-  project_slug: string;
-  team_slug: string;
+  project: Project;
   wallets?: Wallet[];
   expandTestTx?: boolean;
 }) {
@@ -28,22 +26,15 @@ export function TransactionsAnalyticsPageContent(props: {
         <div className="flex grow flex-col gap-6">
           <TransactionsChartCard
             searchParams={props.searchParams}
-            teamId={props.teamId}
-            clientId={props.clientId}
-            project_slug={props.project_slug}
-            team_slug={props.team_slug}
+            project={props.project}
             wallets={props.wallets ?? []}
           />
           <SendTestTransaction
             wallets={props.wallets}
-            clientId={props.clientId}
+            project={props.project}
             expanded={props.expandTestTx}
           />
-          <TransactionsTable
-            teamId={props.teamId}
-            clientId={props.clientId}
-            wallets={props.wallets}
-          />
+          <TransactionsTable project={props.project} wallets={props.wallets} />
         </div>
       </div>
     </ResponsiveSearchParamsProvider>
