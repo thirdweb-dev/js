@@ -7,7 +7,10 @@ import type {
 import { type Log, formatLog } from "viem";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
-import { getContractEvents as getContractEventsInsight } from "../../insight/get-events.js";
+import {
+  type ContractEvent,
+  getContractEvents as getContractEventsInsight,
+} from "../../insight/get-events.js";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import {
   type GetLogsBlockParams,
@@ -156,6 +159,28 @@ export async function getContractEvents<
 
   // if we have an abi on the contract, we can encode the topics with it
   if (!events?.length && !!contract) {
+    if (useIndexer) {
+      // fetch all events from the indexer, no need to get events from ABI
+      const events = await getContractEventsInsight({
+        client: contract.client,
+        chains: [contract.chain],
+        contractAddress: contract.address,
+        decodeLogs: true,
+        queryOptions: {
+          limit: 500,
+          filter_block_hash: restParams.blockHash,
+          filter_block_number_gte: restParams.fromBlock,
+          filter_block_number_lte: restParams.toBlock,
+        },
+      }).catch(() => {
+        // chain might not support indexer
+        return null;
+      });
+      if (events) {
+        return toLog(events) as GetContractEventsResult<abiEvents, TStrict>;
+      }
+    }
+
     // if we have a contract *WITH* an abi we can use that
     if (contract.abi?.length) {
       // @ts-expect-error - we can't make typescript happy here, but we know this is an abi event
@@ -246,6 +271,10 @@ async function getLogsFromInsight(options: {
     },
   });
 
+  return toLog(r);
+}
+
+function toLog(r: ContractEvent[]) {
   const cleanedEventData = r.map((tx) => ({
     chainId: tx.chain_id,
     blockNumber: numberToHex(Number(tx.block_number)),
@@ -257,7 +286,18 @@ async function getLogsFromInsight(options: {
     address: tx.address,
     data: tx.data as Hex,
     topics: tx.topics as [`0x${string}`, ...`0x${string}`[]] | [] | undefined,
+    ...(tx.decoded
+      ? {
+          eventName: tx.decoded.name,
+          args: {
+            ...tx.decoded.indexed_params,
+            ...tx.decoded.non_indexed_params,
+          },
+        }
+      : {}),
   }));
 
-  return cleanedEventData.map((e) => formatLog(e));
+  return cleanedEventData
+    .map((e) => formatLog(e))
+    .sort((a, b) => Number((a.blockNumber ?? 0n) - (b.blockNumber ?? 0n)));
 }

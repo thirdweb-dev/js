@@ -58,7 +58,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
       includeOwner: true,
     });
     expect(nft.metadata.name).toBe("Doodle #1");
-    expect(nft.owner).toBe("0xbe9936fcfc50666f5425fde4a9decc59cef73b24");
+    expect(nft.owner).toBe("0xbE9936FCFC50666f5425FDE4A9decC59cEF73b24");
     expect(nft).toMatchInlineSnapshot(`
       {
         "chainId": 1,
@@ -90,12 +90,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
           "image": "ipfs://QmTDxnzcvj2p3xBrKcGv1wxoyhAn2yzCQnZZ9LmFjReuH9",
           "image_url": "ipfs://QmTDxnzcvj2p3xBrKcGv1wxoyhAn2yzCQnZZ9LmFjReuH9",
           "name": "Doodle #1",
-          "owner_addresses": [
-            "0xbe9936fcfc50666f5425fde4a9decc59cef73b24",
-          ],
           "uri": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         },
-        "owner": "0xbe9936fcfc50666f5425fde4a9decc59cef73b24",
+        "owner": "0xbE9936FCFC50666f5425FDE4A9decC59cEF73b24",
         "tokenAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
         "tokenURI": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         "type": "ERC721",

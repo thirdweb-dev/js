@@ -65,18 +65,14 @@ export async function getPaymasterAndData(args: {
     headers,
     body: stringify(body),
   });
-  const res = await response.json();
 
   if (!response.ok) {
-    const error = res.error || response.statusText;
-    const code = res.code || "UNKNOWN";
+    const error = (await response.text()) || response.statusText;
 
-    throw new Error(
-      `Paymaster error: ${error}
-Status: ${response.status}
-Code: ${code}`,
-    );
+    throw new Error(`Paymaster error: ${response.status} - ${error}`);
   }
+
+  const res = await response.json();
 
   if (res.result) {
     // some paymasters return a string, some return an object with more data

@@ -11,6 +11,7 @@ import type { NFT } from "../utils/nft/parseNft.js";
 
 import { getCachedChain } from "../chains/utils.js";
 import { getContract } from "../contract/contract.js";
+import { getAddress } from "../utils/address.js";
 type OwnedNFT = GetV1NftsResponse["data"][number];
 type ContractNFT = GetV1NftsByContractAddressResponse["data"][number];
 
@@ -268,20 +269,24 @@ async function transformNFTModel(
         token_type,
         ...rest
       } = nft;
+
+      let metadataToUse = rest;
+      let owners: string[] | undefined = ownerAddress
+        ? [getAddress(ownerAddress)]
+        : undefined;
+
+      if ("owner_addresses" in rest) {
+        const { owner_addresses, ...restWithoutOwnerAddresses } = rest;
+        metadataToUse = restWithoutOwnerAddresses;
+        owners = owners ?? owner_addresses?.map((o) => getAddress(o));
+      }
+
       const metadata = replaceIPFSGatewayRecursively({
         uri: nft.metadata_url ?? "",
         image: nft.image_url,
         attributes: nft.extra_metadata?.attributes ?? undefined,
-        ...rest,
+        ...metadataToUse,
       });
-
-      // replace the ipfs gateway with the ipfs gateway from the client recusively for each key in the metadata object
-
-      const owner_addresses = ownerAddress
-        ? [ownerAddress]
-        : "owner_addresses" in nft
-          ? nft.owner_addresses
-          : undefined;
 
       if (contract?.type === "erc1155") {
         // TODO (insight): this needs to be added in the API
@@ -298,7 +303,7 @@ async function transformNFTModel(
           tokenId: BigInt(token_id),
           tokenUri: replaceIPFSGateway(metadata_url) ?? "",
           type: "ERC1155",
-          owner: owner_addresses?.[0],
+          owner: owners?.[0],
           tokenAddress: contract?.address ?? "",
           chainId: contract?.chain_id ?? 0,
           supply: supply,
@@ -307,7 +312,7 @@ async function transformNFTModel(
         parsedNft = parseNFT(metadata, {
           tokenId: BigInt(token_id),
           type: "ERC721",
-          owner: owner_addresses?.[0],
+          owner: owners?.[0],
           tokenUri: replaceIPFSGateway(metadata_url) ?? "",
           tokenAddress: contract?.address ?? "",
           chainId: contract?.chain_id ?? 0,
