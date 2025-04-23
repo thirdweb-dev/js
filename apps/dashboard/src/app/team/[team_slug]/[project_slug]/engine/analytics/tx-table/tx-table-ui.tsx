@@ -34,6 +34,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useThirdwebClient } from "../../../../../../../@/constants/thirdweb.client";
 import { ChainIconClient } from "../../../../../../../components/icons/ChainIcon";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
@@ -281,7 +282,7 @@ function SkeletonRow() {
 function TxChainCell(props: { chainId: string | undefined }) {
   const { chainId } = props;
   const { idToChain } = useAllChainsData();
-
+  const thirdwebClient = useThirdwebClient();
   if (!chainId) {
     return "N/A";
   }
@@ -294,7 +295,11 @@ function TxChainCell(props: { chainId: string | undefined }) {
 
   return (
     <div className="flex items-center gap-2">
-      <ChainIconClient className="size-5" ipfsSrc={chain.icon?.url} />
+      <ChainIconClient
+        className="size-5"
+        client={thirdwebClient}
+        src={chain.icon?.url}
+      />
       <div className="max-w-[150px] truncate">
         {chain.name ?? `Chain ID: ${chainId}`}
       </div>

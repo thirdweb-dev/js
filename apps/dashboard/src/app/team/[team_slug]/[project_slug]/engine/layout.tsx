@@ -78,7 +78,7 @@ function TransactionsLayout(props: {
           scrollableClassName="container max-w-7xl"
           links={[
             {
-              name: "Analytics",
+              name: "Transactions",
               path: `${engineLayoutSlug}`,
               exactMatch: true,
             },
