@@ -6,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   ContractCard,
   ContractCardSkeleton,
@@ -16,13 +17,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import type { ThirdwebClient } from "thirdweb";
 
 type ExploreCategoryPageProps = {
   params: Promise<{
     category: string;
   }>;
-  client: ThirdwebClient;
 };
 
 export async function generateMetadata(
@@ -47,6 +46,7 @@ export default async function ExploreCategoryPage(
   if (!category) {
     notFound();
   }
+  const client = getThirdwebClient(undefined);
 
   return (
     <div className="flex flex-col">
@@ -94,6 +94,7 @@ export default async function ExploreCategoryPage(
             const overrides = Array.isArray(publishedContractId)
               ? publishedContractId[2]
               : undefined;
+
             if (!publisher || !contractId) {
               return null;
             }
@@ -104,7 +105,7 @@ export default async function ExploreCategoryPage(
                 key={publisher + contractId + overrides?.title}
               >
                 <ContractCard
-                  client={props.client}
+                  client={client}
                   publisher={publisher}
                   contractId={contractId}
                   titleOverride={overrides?.title}
