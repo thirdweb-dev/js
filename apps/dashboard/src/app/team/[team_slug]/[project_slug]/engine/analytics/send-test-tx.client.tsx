@@ -11,7 +11,7 @@ import {
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -33,10 +33,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function SendTestTransaction(props: {
   wallets?: Wallet[];
+  clientId: string;
   expanded?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(props.expanded ?? false);
   const thirdwebClient = useThirdwebClient();
+  const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -103,11 +105,14 @@ export function SendTestTransaction(props: {
     return null;
   }
 
-  const onSubmit = (data: FormValues) => {
-    sendDummyTxMutation.mutate({
+  const onSubmit = async (data: FormValues) => {
+    await sendDummyTxMutation.mutateAsync({
       walletAddress: selectedWallet.address,
       accessToken: data.accessToken,
       chainId: data.chainId,
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["transactions", props.clientId],
     });
   };
 

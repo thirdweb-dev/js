@@ -36,6 +36,7 @@ export function TransactionsAnalyticsPageContent(props: {
           />
           <SendTestTransaction
             wallets={props.wallets}
+            clientId={props.clientId}
             expanded={props.expandTestTx}
           />
           <TransactionsTable
