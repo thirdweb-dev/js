@@ -1,3 +1,5 @@
+"use client";
+
 import type { Project } from "@/api/projects";
 import { THIRDWEB_VAULT_URL } from "@/constants/env";
 import {
@@ -13,16 +15,16 @@ const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
 export const SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE =
   "Management Token for Dashboard";
 
-let vaultClient: VaultClient | null = null;
+let vc: VaultClient | null = null;
 
 export async function initVaultClient() {
-  if (vaultClient) {
-    return vaultClient;
+  if (vc) {
+    return vc;
   }
-  vaultClient = await createVaultClient({
+  vc = await createVaultClient({
     baseUrl: THIRDWEB_VAULT_URL,
   });
-  return vaultClient;
+  return vc;
 }
 
 export async function createWalletAccessToken(props: {
@@ -31,7 +33,7 @@ export async function createWalletAccessToken(props: {
   vaultClient: VaultClient;
 }) {
   return createAccessToken({
-    client: vaultClient,
+    client: props.vaultClient,
     request: {
       options: {
         expiresAt: new Date(

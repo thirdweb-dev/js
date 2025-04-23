@@ -1,4 +1,3 @@
-import type { Transaction } from "thirdweb/dist/types/insight/get-transactions";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "../../../../../../@/constants/env";
 import type { TransactionStats } from "../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
@@ -147,6 +146,53 @@ export async function getTransactionsChart({
   }));
 }
 
+type TransactionParam = {
+  to: string;
+  data: string;
+  value: string;
+};
+
+type ExecutionParams = {
+  type: string;
+  signerAddress: string;
+  entrypointAddress: string;
+  smartAccountAddress: string;
+};
+
+type ExecutionResult = {
+  status: string;
+};
+
+type Transaction = {
+  id: string;
+  batchIndex: number;
+  chainId: string;
+  from: string;
+  transactionParams: TransactionParam[];
+  transactionHash: string | null;
+  confirmedAt: string | null;
+  confirmedAtBlockNumber: number | null;
+  enrichedData: unknown[];
+  executionParams: ExecutionParams;
+  executionResult: ExecutionResult;
+  createdAt: string;
+  errorMessage: string | null;
+  cancelledAt: string | null;
+};
+
+type Pagination = {
+  totalCount: string;
+  page: number;
+  limit: number;
+};
+
+type TransactionsSearchResponse = {
+  result: {
+    transactions: Transaction[];
+    pagination: Pagination;
+  };
+};
+
 export async function getSingleTransaction({
   teamId,
   clientId,
@@ -192,53 +238,6 @@ export async function getSingleTransaction({
       `Error fetching single transaction data: ${response.status} ${response.statusText} - ${await response.text().catch(() => "Unknown error")}`,
     );
   }
-
-  type TransactionParam = {
-    to: string;
-    data: string;
-    value: string;
-  };
-
-  type ExecutionParams = {
-    type: string;
-    signerAddress: string;
-    entrypointAddress: string;
-    smartAccountAddress: string;
-  };
-
-  type ExecutionResult = {
-    status: string;
-  };
-
-  type Transaction = {
-    id: string;
-    batchIndex: number;
-    chainId: string;
-    from: string;
-    transactionParams: TransactionParam[];
-    transactionHash: string | null;
-    confirmedAt: string | null;
-    confirmedAtBlockNumber: number | null;
-    enrichedData: unknown[];
-    executionParams: ExecutionParams;
-    executionResult: ExecutionResult;
-    createdAt: string;
-    errorMessage: string | null;
-    cancelledAt: string | null;
-  };
-
-  type Pagination = {
-    totalCount: string;
-    page: number;
-    limit: number;
-  };
-
-  type TransactionsSearchResponse = {
-    result: {
-      transactions: Transaction[];
-      pagination: Pagination;
-    };
-  };
 
   const data = (await response.json()) as TransactionsSearchResponse;
 
