@@ -43,7 +43,6 @@ import { ChainIconClient } from "components/icons/ChainIcon";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format, formatDate } from "date-fns/format";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { normalizeTime } from "lib/time";
 import {
   ExternalLinkIcon,
   InfoIcon,
