@@ -40,7 +40,10 @@ import type { Status } from "./types/Status.js";
  *       chainId: 2741,
  *       transactionHash: '0xa70a82f42330f54be95a542e1fcfe6ed2dd9f07fb8c82ae67afb4342319f7433'
  *     }
- *   ]
+ *   ],
+ *   purchaseData: {
+ *     foo: "bar"
+ *   }
  * }
  * ```
  *
@@ -153,6 +156,7 @@ export async function status(options: status.Options): Promise<status.Result> {
     originTokenAddress: data.originTokenAddress,
     destinationTokenAddress: data.destinationTokenAddress,
     transactions: data.transactions,
+    purchaseData: data.purchaseData,
   };
 }
 

@@ -17,7 +17,7 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  *   originTokenAddress: NATIVE_TOKEN_ADDRESS,
  *   destinationChainId: 10,
  *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
- *   buyAmountWei: toWei("0.01"),
+ *   amount: toWei("0.01"),
  *   client: thirdwebClient,
  * });
  * ```
@@ -30,12 +30,37 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
  *   estimatedExecutionTimeMs: 1000
+ *   steps: [
+ *     {
+ *       originToken: {
+ *         chainId: 1,
+ *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *         symbol: "ETH",
+ *         name: "Ethereum",
+ *         decimals: 18,
+ *         priceUsd: 0.0025,
+ *         iconUri: "https://..."
+ *       },
+ *       destinationToken: {
+ *         chainId: 10,
+ *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *         symbol: "ETH",
+ *         name: "Ethereum",
+ *         decimals: 18,
+ *         priceUsd: 0.0025,
+ *         iconUri: "https://..."
+ *       },
+ *       originAmount: 10000026098875381n,
+ *       destinationAmount: 1000000000000000000n,
+ *       estimatedExecutionTimeMs: 1000
+ *     }
+ *   ],
  *   intent: {
  *     originChainId: 1,
  *     originTokenAddress: NATIVE_TOKEN_ADDRESS,
  *     destinationChainId: 10,
  *     destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
- *     buyAmountWei: 1000000000000000000n
+ *     amount: 1000000000000000000n
  *   }
  * }
  * ```
@@ -50,7 +75,7 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.buyAmountWei - The amount of the origin token to buy.
+ * @param options.amount - The amount of the destination token to receive.
  * @param options.client - Your thirdweb client.
  *
  * @returns A promise that resolves to a non-finalized quote for the requested buy.
@@ -65,9 +90,10 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     originTokenAddress,
     destinationChainId,
     destinationTokenAddress,
-    buyAmountWei,
     client,
   } = options;
+  const amount =
+    "buyAmountWei" in options ? options.buyAmountWei : options.amount;
 
   const clientFetch = getClientFetch(client);
   const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/quote`);
@@ -75,7 +101,7 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   url.searchParams.set("originTokenAddress", originTokenAddress);
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
-  url.searchParams.set("buyAmountWei", buyAmountWei.toString());
+  url.searchParams.set("buyAmountWei", amount.toString());
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -92,12 +118,14 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     blockNumber: data.blockNumber ? BigInt(data.blockNumber) : undefined,
     timestamp: data.timestamp,
     estimatedExecutionTimeMs: data.estimatedExecutionTimeMs,
+    steps: data.steps,
     intent: {
       originChainId,
       originTokenAddress,
       destinationChainId,
       destinationTokenAddress,
-      buyAmountWei,
+      buyAmountWei: amount,
+      amount,
     },
   };
 }
@@ -108,9 +136,15 @@ export declare namespace quote {
     originTokenAddress: ox__Address.Address;
     destinationChainId: number;
     destinationTokenAddress: ox__Address.Address;
-    buyAmountWei: bigint;
     client: ThirdwebClient;
-  };
+  } & (
+    | {
+        buyAmountWei: bigint;
+      }
+    | {
+        amount: bigint;
+      }
+  );
 
   type Result = Quote & {
     intent: {
@@ -119,6 +153,7 @@ export declare namespace quote {
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
       buyAmountWei: bigint;
+      amount: bigint;
     };
   };
 }
@@ -135,7 +170,7 @@ export declare namespace quote {
  *   originTokenAddress: NATIVE_TOKEN_ADDRESS,
  *   destinationChainId: 10,
  *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
- *   buyAmountWei: toWei("0.01"),
+ *   amount: toWei("0.01"),
  *   client: thirdwebClient,
  * });
  * ```
@@ -148,31 +183,56 @@ export declare namespace quote {
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
  *   estimatedExecutionTimeMs: 1000
- *   transactions: [
+ *   steps: [
  *     {
- *       action: "approval",
- *       id: "0x",
- *       to: "0x...",
- *       data: "0x...",
- *       chainId: 10,
- *       type: "eip1559"
- *     },
- *     {
- *       action: "buy",
- *       to: "0x...",
- *       value: 10000026098875381n,
- *       data: "0x...",
- *       chainId: 10,
- *       type: "eip1559"
+ *       originToken: {
+ *         chainId: 1,
+ *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *         symbol: "ETH",
+ *         name: "Ethereum",
+ *         decimals: 18,
+ *         priceUsd: 2000,
+ *         iconUri: "https://..."
+ *       },
+ *       destinationToken: {
+ *         chainId: 10,
+ *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *         symbol: "ETH",
+ *         name: "Ethereum",
+ *         decimals: 18,
+ *         priceUsd: 2000,
+ *         iconUri: "https://..."
+ *       },
+ *       originAmount: 10000026098875381n,
+ *       destinationAmount: 1000000000000000000n,
+ *       estimatedExecutionTimeMs: 1000
+ *       transactions: [
+ *         {
+ *           action: "approval",
+ *           id: "0x",
+ *           to: "0x...",
+ *           data: "0x...",
+ *           chainId: 10,
+ *           type: "eip1559"
+ *         },
+ *         {
+ *           action: "buy",
+ *           to: "0x...",
+ *           value: 10000026098875381n,
+ *           data: "0x...",
+ *           chainId: 10,
+ *           type: "eip1559"
+ *         }
+ *       ]
  *     }
  *   ],
  *   expiration: 1741730936680,
  *   intent: {
  *     originChainId: 1,
- *     originTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *     originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *     destinationChainId: 10,
- *     destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
- *     buyAmountWei: 1000000000000000000n
+ *     destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *     amount: 1000000000000000000n
  *   }
  * }
  * ```
@@ -192,12 +252,13 @@ export declare namespace quote {
  * @param options.originTokenAddress - The address of the origin token.
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
- * @param options.buyAmountWei - The amount of the origin token to buy.
+ * @param options.amount - The amount of the destination token to receive.
  * @param options.sender - The address of the sender.
  * @param options.receiver - The address of the recipient.
+ * @param options.purchaseData - Arbitrary data to be passed to the purchase function and included with any webhooks or status calls.
  * @param options.client - Your thirdweb client.
  *
- * @returns A promise that resolves to a non-finalized quote for the requested buy.
+ * @returns A promise that resolves to a finalized quote and transactions for the requested buy.
  *
  * @throws Will throw an error if there is an issue fetching the quote.
  * @bridge Buy
@@ -211,23 +272,32 @@ export async function prepare(
     originTokenAddress,
     destinationChainId,
     destinationTokenAddress,
-    buyAmountWei,
     sender,
     receiver,
     client,
+    amount,
+    purchaseData,
   } = options;
 
   const clientFetch = getClientFetch(client);
   const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/prepare`);
-  url.searchParams.set("originChainId", originChainId.toString());
-  url.searchParams.set("originTokenAddress", originTokenAddress);
-  url.searchParams.set("destinationChainId", destinationChainId.toString());
-  url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
-  url.searchParams.set("buyAmountWei", buyAmountWei.toString());
-  url.searchParams.set("sender", sender);
-  url.searchParams.set("receiver", receiver);
 
-  const response = await clientFetch(url.toString());
+  const response = await clientFetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      buyAmountWei: amount.toString(),
+      originChainId: originChainId.toString(),
+      originTokenAddress,
+      destinationChainId: destinationChainId.toString(),
+      destinationTokenAddress,
+      sender,
+      receiver,
+      purchaseData,
+    }),
+  });
   if (!response.ok) {
     const errorJson = await response.json();
     throw new Error(
@@ -242,19 +312,21 @@ export async function prepare(
     blockNumber: data.blockNumber ? BigInt(data.blockNumber) : undefined,
     timestamp: data.timestamp,
     estimatedExecutionTimeMs: data.estimatedExecutionTimeMs,
-    transactions: data.transactions.map((transaction) => ({
-      ...transaction,
-      value: transaction.value ? BigInt(transaction.value) : undefined,
-      client,
-      chain: defineChain(transaction.chainId),
+    steps: data.steps.map((step) => ({
+      ...step,
+      transactions: step.transactions.map((transaction) => ({
+        ...transaction,
+        value: transaction.value ? BigInt(transaction.value) : undefined,
+        client,
+        chain: defineChain(transaction.chainId),
+      })),
     })),
-    expiration: data.expiration,
     intent: {
       originChainId,
       originTokenAddress,
       destinationChainId,
       destinationTokenAddress,
-      buyAmountWei,
+      amount,
     },
   };
 }
@@ -265,10 +337,11 @@ export declare namespace prepare {
     originTokenAddress: ox__Address.Address;
     destinationChainId: number;
     destinationTokenAddress: ox__Address.Address;
-    buyAmountWei: bigint;
     sender: ox__Address.Address;
     receiver: ox__Address.Address;
+    amount: bigint;
     client: ThirdwebClient;
+    purchaseData?: unknown;
   };
 
   type Result = PreparedQuote & {
@@ -277,7 +350,8 @@ export declare namespace prepare {
       originTokenAddress: ox__Address.Address;
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
-      buyAmountWei: bigint;
+      amount: bigint;
+      purchaseData?: unknown;
     };
   };
 }
