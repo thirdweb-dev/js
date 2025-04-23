@@ -1,7 +1,7 @@
 import type { Address, Hex } from "thirdweb";
 
 // Revert data type (referenced but not defined in the provided code)
-export type RevertDataSerialized = {
+type RevertDataSerialized = {
   revertReason?: string;
   decodedError?: {
     name: string;
@@ -11,24 +11,24 @@ export type RevertDataSerialized = {
 };
 
 // Transaction parameters
-export type TransactionParamsSerialized = {
+type TransactionParamsSerialized = {
   to: Address;
   data: Hex;
   value: string;
 };
 
 // Execution parameters
-export type ExecutionParams4337Serialized = {
+type ExecutionParams4337Serialized = {
   type: "AA";
   entrypointAddress: string;
   smartAccountAddress: string;
   signerAddress: string;
 };
 
-export type ExecutionParamsSerialized = ExecutionParams4337Serialized;
+type ExecutionParamsSerialized = ExecutionParams4337Serialized;
 
 // Execution result
-export type ExecutionResult4337Serialized =
+type ExecutionResult4337Serialized =
   | {
       status: "QUEUED";
     }
@@ -54,13 +54,7 @@ export type ExecutionResult4337Serialized =
         }
     ));
 
-export type ExecutionResultSerialized = ExecutionResult4337Serialized;
-
-// Enriched data type (not fully defined in the provided code)
-export type EnrichedDataItem = {
-  type: string;
-  // data: any;
-};
+type ExecutionResultSerialized = ExecutionResult4337Serialized;
 
 // Main Transaction type from database
 export type Transaction = {
