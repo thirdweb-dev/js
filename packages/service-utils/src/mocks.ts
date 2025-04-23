@@ -98,6 +98,7 @@ export const validTeamResponse: TeamResponse = {
       rateLimit: 100,
     },
   },
+  planCancellationDate: null,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {

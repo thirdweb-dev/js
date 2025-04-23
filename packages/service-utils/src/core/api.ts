@@ -123,6 +123,7 @@ export type TeamResponse = {
   enabledScopes: ServiceName[];
   isOnboarded: boolean;
   capabilities: TeamCapabilities;
+  planCancellationDate: string | null;
 };
 
 export type ProjectSecretKey = {

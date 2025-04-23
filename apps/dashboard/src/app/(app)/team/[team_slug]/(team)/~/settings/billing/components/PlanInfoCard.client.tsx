@@ -30,25 +30,6 @@ export function PlanInfoCardClient(props: {
 
         return res.data.result;
       }}
-      cancelPlan={async (params) => {
-        const res = await apiServerProxy<{
-          data: {
-            result: "success";
-          };
-        }>({
-          pathname: `/v1/teams/${props.team.id}/checkout/cancel-plan`,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "PUT",
-          body: JSON.stringify(params),
-        });
-
-        if (!res.ok) {
-          console.error(res.error);
-          throw new Error(res.error);
-        }
-      }}
     />
   );
 }

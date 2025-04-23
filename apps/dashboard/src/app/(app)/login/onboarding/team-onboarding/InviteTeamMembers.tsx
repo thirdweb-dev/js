@@ -81,6 +81,8 @@ export function InviteTeamMembersUI(props: {
             teamSlug={props.team.slug}
             getBillingCheckoutUrl={props.getBillingCheckoutUrl}
             trackEvent={props.trackEvent}
+            getTeam={props.getTeam}
+            teamId={props.team.id}
           />
         </SheetContent>
       </Sheet>
@@ -148,6 +150,8 @@ function InviteModalContent(props: {
   billingStatus: Team["billingStatus"];
   getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   trackEvent: (params: TrackingParams) => void;
+  getTeam: () => Promise<Team>;
+  teamId: string;
 }) {
   const [planToShow, setPlanToShow] = useState<
     "starter" | "growth" | "accelerate" | "scale"
@@ -159,7 +163,7 @@ function InviteModalContent(props: {
       billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get Started",
+        label: "Get Started",
         type: "checkout",
         onClick() {
           props.trackEvent({
@@ -171,6 +175,8 @@ function InviteModalContent(props: {
         },
       }}
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+      getTeam={props.getTeam}
+      teamId={props.teamId}
     />
   );
 
@@ -180,7 +186,7 @@ function InviteModalContent(props: {
       billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get Started",
+        label: "Get Started",
         type: "checkout",
         onClick() {
           props.trackEvent({
@@ -193,6 +199,8 @@ function InviteModalContent(props: {
       }}
       highlighted
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+      getTeam={props.getTeam}
+      teamId={props.teamId}
     />
   );
 
@@ -202,7 +210,7 @@ function InviteModalContent(props: {
       billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get started",
+        label: "Get started",
         type: "checkout",
         onClick() {
           props.trackEvent({
@@ -214,6 +222,8 @@ function InviteModalContent(props: {
         },
       }}
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+      getTeam={props.getTeam}
+      teamId={props.teamId}
     />
   );
 
@@ -223,7 +233,7 @@ function InviteModalContent(props: {
       billingStatus={props.billingStatus}
       teamSlug={props.teamSlug}
       cta={{
-        title: "Get started",
+        label: "Get started",
         type: "checkout",
         onClick() {
           props.trackEvent({
@@ -235,6 +245,8 @@ function InviteModalContent(props: {
         },
       }}
       getBillingCheckoutUrl={props.getBillingCheckoutUrl}
+      getTeam={props.getTeam}
+      teamId={props.teamId}
     />
   );
 
