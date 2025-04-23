@@ -90,3 +90,13 @@ export const getThirdwebBaseUrl = (service: keyof DomainOverrides) => {
   }
   return `https://${origin}`;
 };
+
+let serviceKey: string | null = null;
+
+export const setServiceKey = (key: string | null) => {
+  serviceKey = key;
+};
+
+export const getServiceKey = () => {
+  return serviceKey;
+};

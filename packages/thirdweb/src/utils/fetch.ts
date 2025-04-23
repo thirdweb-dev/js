@@ -7,6 +7,7 @@ import {
   detectOS,
   detectPlatform,
 } from "./detect-platform.js";
+import { getServiceKey } from "./domains.js";
 import { isJWT } from "./jwt/is-jwt.js";
 import { IS_DEV } from "./process.js";
 
@@ -74,6 +75,11 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       // this already internally caches
       for (const [key, value] of getPlatformHeaders()) {
         (headers as Headers).set(key, value);
+      }
+
+      const serviceKey = getServiceKey();
+      if (serviceKey) {
+        headers.set("x-service-api-key", serviceKey);
       }
     }
 
