@@ -38,7 +38,7 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "API Keys",
+      name: "Projects",
       links: [
         {
           name: "Overview",
@@ -63,6 +63,10 @@ export const sidebar: SideBar = {
         {
           name: "Access Restrictions",
           href: `${accountSlug}/api-keys/access`,
+        },
+        {
+          name: "Transfer Projects",
+          href: `${accountSlug}/api-keys/transfer-projects`,
         },
       ],
     },

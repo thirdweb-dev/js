@@ -867,6 +867,50 @@ const infrastructureRedirects = {
   "/rpc-edge/faqs": "/infrastructure/rpc-edge/overview",
 };
 
+const glossaryRedirects = {
+  "/glossary": "https://thirdweb.com/learn/glossary",
+  "/claim-phases": "https://thirdweb.com/learn/glossary/claim-phases",
+  "/glossary/claiming": "https://thirdweb.com/learn/glossary/claim-phases",
+  "/glossary/composability":
+    "https://thirdweb.com/learn/glossary/composability",
+  "/glossary/delayed-reveal":
+    "https://thirdweb.com/learn/glossary/delayed-reveal",
+  "/glossary/drop": "https://thirdweb.com/learn/glossary/drop",
+  "/glossary/externally-owned-account":
+    "https://thirdweb.com/learn/glossary/externally-owned-account",
+  "/glossary/factory-contract":
+    "https://thirdweb.com/learn/glossary/factory-contract",
+  "/glossary/gas": "https://thirdweb.com/learn/glossary/gas-fee",
+  "/glossary/gasless-transactions":
+    "https://thirdweb.com/learn/glossary/gasless-transactions",
+  "/glossary/interoperability":
+    "https://thirdweb.com/learn/glossary/interoperability",
+  "/glossary/ipfs":
+    "https://thirdweb.com/learn/glossary/interplanetary-file-system-ipfs",
+  "/glossary/lazy-minting": "https://thirdweb.com/learn/glossary/lazy-minting",
+  "/glossary/local-wallet": "https://thirdweb.com/learn/glossary/local-wallet",
+  "/glossary/minting": "https://thirdweb.com/learn/glossary/minting",
+  "/glossary/nft": "https://thirdweb.com/learn/glossary/nft",
+  "/glossary/non-custodial-wallet":
+    "https://thirdweb.com/learn/glossary/non-custodial-wallet",
+  "/glossary/permissionless":
+    "https://thirdweb.com/learn/glossary/permissionless",
+  "/glossary/proxy-contracts":
+    "https://thirdweb.com/learn/glossary/proxy-contracts",
+  "/glossary/rpc": "https://thirdweb.com/learn/glossary/rpc-url",
+  "/glossary/signature-based-minting":
+    "https://thirdweb.com/learn/glossary/signature-based-minting",
+  "/glossary/smart-contract":
+    "https://thirdweb.com/learn/glossary/smart-contract",
+  "/glossary/smart-account":
+    "https://thirdweb.com/learn/glossary/smart-account",
+  "/glossary/soulbound": "https://thirdweb.com/learn/glossary/soulbound-tokens",
+  "/glossary/staking": "https://thirdweb.com/learn/glossary/staking",
+  "/glossary/token": "https://thirdweb.com/learn/glossary/token",
+  "/glossary/wallet": "https://thirdweb.com/learn/glossary/",
+  "/glossary/bundler": "https://thirdweb.com/learn/glossary/bundler",
+};
+
 const otherRedirects = {
   // wallets > connect redirects
   "/wallets": "/connect",
@@ -1020,6 +1064,7 @@ export const redirects = async () => {
     ...createRedirects(v5RestructuredRedirects),
     ...createRedirects(unrealEngineRedirects),
     ...createRedirects(v4ToV5Redirects),
+    ...createRedirects(glossaryRedirects),
   ];
 };
 

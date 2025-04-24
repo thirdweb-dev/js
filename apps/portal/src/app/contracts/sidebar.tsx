@@ -645,10 +645,6 @@ export const sidebar: SideBar = {
                   href: `${extensionsSlug}/erc-20/ERC20ClaimConditions`,
                 },
                 {
-                  name: "ERC20ClaimPhases",
-                  href: `${extensionsSlug}/erc-20/ERC20ClaimPhases`,
-                },
-                {
                   name: "ERC20Mintable",
                   href: `${extensionsSlug}/erc-20/ERC20Mintable`,
                 },
@@ -791,10 +787,6 @@ export const sidebar: SideBar = {
             {
               name: "ERC-4337",
               links: [
-                {
-                  name: "AccountModule",
-                  href: `${extensionsSlug}/erc-4337/AccountModule`,
-                },
                 {
                   name: "SmartWallet",
                   href: `${extensionsSlug}/erc-4337/SmartWallet`,

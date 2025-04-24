@@ -10,6 +10,10 @@ export const sidebar: SideBar = {
       href: "/engine",
     },
     {
+      name: "Playground",
+      href: "https://playground.thirdweb.com/engine/airdrop",
+    },
+    {
       name: "Get Started",
       href: `${engineSlug}/get-started`,
     },
