@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.96.2
+
+### Patch Changes
+
+- [#6834](https://github.com/thirdweb-dev/js/pull/6834) [`4c33936`](https://github.com/thirdweb-dev/js/commit/4c339363c0480b0ba3994355d28ac7a176930edc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always checksum Account.address
+
 ## 5.96.1
 
 ### Patch Changes
