@@ -67,6 +67,7 @@ export const validTeamResponse: TeamResponse = {
     insight: {
       enabled: true,
       rateLimit: 1000,
+      webhooks: true,
     },
     storage: {
       enabled: true,

@@ -55,6 +55,7 @@ type TeamCapabilities = {
   insight: {
     enabled: boolean;
     rateLimit: number;
+    webhooks: boolean;
   };
   storage: {
     enabled: boolean;
