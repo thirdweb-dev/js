@@ -9,6 +9,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { formatDate } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { formatTickerNumber } from "lib/format-utils";
+import Link from "next/link";
 import { useMemo } from "react";
 import type { TransactionStats } from "types/analytics";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
@@ -162,17 +163,24 @@ function EmptyChartContent(props: {
       {props.wallets.length === 0 ? (
         <>
           <span className="mb-6 text-center text-lg">
-            Create a server wallet and send your first transaction to get
-            started
+            Engine requires a {/* TODO (cloud): add a link to the docs */}
+            <Link
+              href="https://portal.thirdweb.com/engine/vault"
+              target="_blank"
+              className="underline"
+            >
+              Vault admin account
+            </Link>
+            . Create one to get started.
           </span>
           <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <Button
               variant="primary"
               onClick={() => {
-                router.push("engine/server-wallets");
+                router.push("engine/vault");
               }}
             >
-              Create a server wallet
+              Create Vault Admin Account
             </Button>
           </div>
         </>

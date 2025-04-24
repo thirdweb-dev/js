@@ -11,10 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import { createEoa, createServiceAccount } from "@thirdweb-dev/vault-sdk";
+import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -25,11 +24,9 @@ import {
   maskSecret,
 } from "../../lib/vault.client";
 
-export default function CreateServerWallet(props: {
+export default function CreateVaultAccountButton(props: {
   project: Project;
-  managementAccessToken: string | undefined;
 }) {
-  const router = useDashboardRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
 
@@ -89,51 +86,8 @@ export default function CreateServerWallet(props: {
     },
   });
 
-  const createEoaMutation = useMutation({
-    mutationFn: async ({
-      managementAccessToken,
-    }: {
-      managementAccessToken: string;
-    }) => {
-      const vaultClient = await initVaultClient();
-
-      const eoa = await createEoa({
-        request: {
-          options: {
-            metadata: {
-              projectId: props.project.id,
-              teamId: props.project.teamId,
-              type: "server-wallet",
-            },
-          },
-          auth: {
-            accessToken: managementAccessToken,
-          },
-        },
-        client: vaultClient,
-      });
-
-      if (!eoa.success) {
-        throw new Error("Failed to create eoa");
-      }
-
-      router.refresh();
-
-      return eoa;
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const handleCreateServerWallet = async () => {
-    if (!props.managementAccessToken) {
-      router.push("vault");
-    } else {
-      await createEoaMutation.mutateAsync({
-        managementAccessToken: props.managementAccessToken,
-      });
-    }
+    await initialiseProjectWithVaultMutation.mutateAsync();
   };
 
   const handleCopyAllKeys = () => {
@@ -158,8 +112,7 @@ Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.ac
     setKeysConfirmed(false);
   };
 
-  const isLoading =
-    initialiseProjectWithVaultMutation.isPending || createEoaMutation.isPending;
+  const isLoading = initialiseProjectWithVaultMutation.isPending;
 
   return (
     <>
@@ -170,7 +123,7 @@ Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.ac
         className="flex flex-row items-center gap-2"
       >
         {isLoading && <Loader2 className="animate-spin" />}
-        {props.managementAccessToken ? "Create Server Wallet" : "Get Started"}
+        {"Create Vault Admin Account"}
       </Button>
 
       <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>

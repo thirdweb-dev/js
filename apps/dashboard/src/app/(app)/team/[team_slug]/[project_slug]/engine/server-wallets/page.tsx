@@ -3,8 +3,6 @@ import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../@/constants/env";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
-import { KeyManagement } from "./components/key-management";
-import { TryItOut } from "./components/try-it-out";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
@@ -31,7 +29,6 @@ export default async function TransactionsServerWalletsPage(props: {
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
-  const maskedAdminKey = projectEngineCloudService?.maskedAdminKey;
 
   const eoas = managementAccessToken
     ? await listEoas({
@@ -45,8 +42,6 @@ export default async function TransactionsServerWalletsPage(props: {
       })
     : { data: { items: [] }, error: null, success: true };
 
-  const wallet = eoas.data?.items[0] as Wallet | undefined;
-
   return (
     <>
       {eoas.error ? (
@@ -57,16 +52,6 @@ export default async function TransactionsServerWalletsPage(props: {
             wallets={eoas.data.items as Wallet[]}
             project={project}
             managementAccessToken={managementAccessToken ?? undefined}
-          />
-          <KeyManagement
-            maskedAdminKey={maskedAdminKey ?? undefined}
-            project={project}
-          />
-          <TryItOut
-            authToken={authToken}
-            wallet={wallet}
-            team_slug={team_slug}
-            project_slug={project_slug}
           />
         </div>
       )}

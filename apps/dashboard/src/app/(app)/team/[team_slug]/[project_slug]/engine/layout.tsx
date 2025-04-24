@@ -83,12 +83,16 @@ function TransactionsLayout(props: {
               exactMatch: true,
             },
             {
+              name: "Explorer",
+              path: `${engineLayoutSlug}/explorer`,
+            },
+            {
               name: "Server Wallets",
               path: `${engineLayoutSlug}/server-wallets`,
             },
             {
-              name: "Explorer",
-              path: `${engineLayoutSlug}/explorer`,
+              name: "Vault",
+              path: `${engineLayoutSlug}/vault`,
             },
           ]}
         />

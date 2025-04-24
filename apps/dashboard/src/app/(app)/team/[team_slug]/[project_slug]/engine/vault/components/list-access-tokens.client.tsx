@@ -155,7 +155,7 @@ export default function ListAccessTokensButton(props: {
   return (
     <>
       <Button
-        variant={"outline"}
+        variant={"primary"}
         onClick={() => setModalOpen(true)}
         disabled={isLoading}
         className="flex flex-row items-center gap-2"
