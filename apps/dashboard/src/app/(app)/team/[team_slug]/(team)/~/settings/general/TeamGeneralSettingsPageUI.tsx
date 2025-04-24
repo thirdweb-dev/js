@@ -1,6 +1,7 @@
 "use client";
 
 import type { Team } from "@/api/team";
+import type { VerifiedDomainResponse } from "@/api/verified-domain";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -12,12 +13,15 @@ import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { TeamDomainVerificationCard } from "../_components/settings-cards/domain-verification";
 import { teamSlugRegex } from "./common";
 
 type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
 export function TeamGeneralSettingsPageUI(props: {
   team: Team;
+  initialVerification: VerifiedDomainResponse | null;
+  isOwnerAccount: boolean;
   updateTeamImage: (file: File | undefined) => Promise<void>;
   updateTeamField: UpdateTeamField;
   client: ThirdwebClient;
@@ -40,6 +44,12 @@ export function TeamGeneralSettingsPageUI(props: {
         client={props.client}
       />
       <TeamIdCard team={props.team} />
+      <TeamDomainVerificationCard
+        teamId={props.team.id}
+        initialVerification={props.initialVerification}
+        isOwnerAccount={props.isOwnerAccount}
+      />
+
       <LeaveTeamCard teamName={props.team.name} leaveTeam={props.leaveTeam} />
       <DeleteTeamCard
         enabled={hasPermissionToDelete}

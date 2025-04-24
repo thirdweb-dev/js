@@ -1,4 +1,6 @@
 import { getTeamBySlug } from "@/api/team";
+import { getMemberById } from "@/api/team-members";
+import { checkDomainVerification } from "@/api/verified-domain";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { notFound } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
@@ -12,10 +14,14 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
 
-  const [team, account, token] = await Promise.all([
+  // have to get the account FIRST to get to the team member below :-/
+  const account = await getValidAccount(`/team/${params.team_slug}/settings`);
+
+  const [team, teamMember, token, initialVerification] = await Promise.all([
     getTeamBySlug(params.team_slug),
-    getValidAccount(`/team/${params.team_slug}/settings`),
+    getMemberById(params.team_slug, account.id),
     getAuthToken(),
+    checkDomainVerification(params.team_slug),
   ]);
 
   if (!team || !token) {
@@ -27,11 +33,15 @@ export default async function Page(props: {
     teamId: team.id,
   });
 
+  const isOwnerAccount = teamMember?.role === "OWNER";
+
   return (
     <TeamGeneralSettingsPage
       team={team}
       client={client}
       accountId={account.id}
+      initialVerification={initialVerification}
+      isOwnerAccount={isOwnerAccount}
     />
   );
 }

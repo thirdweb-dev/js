@@ -18,6 +18,7 @@ import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButt
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "./TeamSelectorMobileMenuButton";
 import { getValidTeamPlan } from "./getValidTeamPlan";
+import { TeamVerifiedIcon } from "./team-verified-icon";
 
 export type TeamHeaderCompProps = {
   currentTeam: Team;
@@ -65,6 +66,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
               client={props.client}
             />
             <span> {currentTeam.name} </span>
+            <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
             <TeamPlanBadge plan={teamPlan} />
           </Link>
 
@@ -156,7 +158,10 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             />
 
             {!props.currentProject && (
-              <span className="font-semibold">{currentTeam.name}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold">{currentTeam.name}</span>
+                <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
+              </div>
             )}
           </Link>
 

@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { CheckIcon, CirclePlusIcon } from "lucide-react";
+import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
 import { SearchInput } from "./SearchInput";
 import { getValidTeamPlan } from "./getValidTeamPlan";
+import { TeamVerifiedIcon } from "./team-verified-icon";
 
 export function TeamSelectionUI(props: {
   setHoveredTeam: (team: Team | undefined) => void;
@@ -68,11 +70,11 @@ export function TeamSelectionUI(props: {
 
           <ul>
             {filteredTeams.map((team) => {
-              const isSelected = team.slug === currentTeam?.slug;
+              const isSelected = team.id === currentTeam?.id;
               return (
                 // biome-ignore lint/a11y/useKeyWithMouseEvents: <explanation>
                 <li
-                  key={team.slug}
+                  key={team.id}
                   className="py-0.5"
                   onMouseOver={() => {
                     setHoveredTeam(team);
@@ -96,10 +98,10 @@ export function TeamSelectionUI(props: {
                         />
 
                         <span className="truncate"> {team.name} </span>
+                        <TeamVerifiedIcon domain={team.verifiedDomain} />
                       </div>
-                      {isSelected && (
-                        <CheckIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      )}
+
+                      <TeamPlanBadge plan={team.billingPlan} />
                     </Link>
                   </Button>
                 </li>

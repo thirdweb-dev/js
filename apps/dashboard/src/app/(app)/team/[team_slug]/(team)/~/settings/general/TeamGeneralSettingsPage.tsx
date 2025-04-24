@@ -2,6 +2,7 @@
 
 import { apiServerProxy } from "@/actions/proxies";
 import type { Team } from "@/api/team";
+import type { VerifiedDomainResponse } from "@/api/verified-domain";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
@@ -10,6 +11,8 @@ import { updateTeam } from "./updateTeam";
 
 export function TeamGeneralSettingsPage(props: {
   team: Team;
+  initialVerification: VerifiedDomainResponse | null;
+  isOwnerAccount: boolean;
   client: ThirdwebClient;
   accountId: string;
 }) {
@@ -72,6 +75,8 @@ export function TeamGeneralSettingsPage(props: {
 
         router.refresh();
       }}
+      initialVerification={props.initialVerification}
+      isOwnerAccount={props.isOwnerAccount}
     />
   );
 }
