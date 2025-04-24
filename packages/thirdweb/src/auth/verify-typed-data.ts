@@ -24,7 +24,7 @@ export type VerifyTypedDataParams<
   };
 
 /**
- * @description Verify am [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data signature. This function is interoperable with all wallet types (smart accounts or EOAs).
+ * Verify am [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data signature. This function is interoperable with all wallet types (smart accounts or EOAs).
  *
  * @param {string} options.address The address that signed the typed data
  * @param {string | Uint8Array | Signature} options.signature The signature that was signed
@@ -38,7 +38,7 @@ export type VerifyTypedDataParams<
  * @param {typeof VerifyTypedDataParams.types} options.types The EIP-712 types that were signed.
  *
  * @returns {Promise<boolean>} A promise that resolves to `true` if the signature is valid, or `false` otherwise.
- * 
+ *
  * @example
  * ```ts
  * import { verifyTypedData } from "thirdweb/utils";

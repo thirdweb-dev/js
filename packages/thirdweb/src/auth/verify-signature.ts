@@ -74,7 +74,7 @@ export type VerifyContractWalletSignatureParams = Prettify<
 >;
 
 /**
- * @description Verifies a contract wallet signature using [ERC-6942](https://eips.ethereum.org/EIPS/eip-6942) Signature Validation for Predeploy Contracts.
+ * Verifies a contract wallet signature using [ERC-6942](https://eips.ethereum.org/EIPS/eip-6942) Signature Validation for Predeploy Contracts.
  * This function will validate signatures for both deployed and undeployed smart accounts of all signature types.
  *
  * @param {@link VerifyContractWalletSignatureParams} options - The parameters for verifying the signature.
