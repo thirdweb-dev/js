@@ -60,6 +60,7 @@ export default async function Page(props: {
         trackingCategory="account-abstraction-project-settings"
         project={project}
         teamId={team.id}
+        teamSlug={team.slug}
         validTeamPlan={getValidTeamPlan(team)}
       />
     </ChakraProviderSetup>

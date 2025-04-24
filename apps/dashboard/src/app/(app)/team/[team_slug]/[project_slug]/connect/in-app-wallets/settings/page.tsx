@@ -30,7 +30,7 @@ export default async function Page(props: {
       teamId={team.id}
       trackingCategory="in-app-wallet-project-settings"
       teamSlug={team_slug}
-      validTeamPlan={getValidTeamPlan(team)}
+      teamPlan={getValidTeamPlan(team)}
       smsCountryTiers={smsCountryTiers}
     />
   );

@@ -41,6 +41,7 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { upload } from "thirdweb/storage";
 import { toArrFromList } from "utils/string";
+import { planToTierRecordForGating } from "../../settings/Account/Billing/planToTierRecord";
 import { FileInput } from "../../shared/FileInput";
 import CountrySelector from "./sms-country-select/country-selector";
 
@@ -49,7 +50,7 @@ type InAppWalletSettingsPageProps = {
   project: Project;
   teamId: string;
   teamSlug: string;
-  validTeamPlan: Team["billingPlan"];
+  teamPlan: Team["billingPlan"];
   smsCountryTiers: SMSCountryTiers;
 };
 
@@ -113,7 +114,6 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   return (
     <InAppWalletSettingsPageUI
       {...props}
-      canEditAdvancedFeatures={props.validTeamPlan !== "free"}
       updateApiKey={handleUpdateProject}
       isUpdating={updateProject.isPending}
       smsCountryTiers={props.smsCountryTiers}
@@ -123,7 +123,6 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
 
 const InAppWalletSettingsPageUI: React.FC<
   InAppWalletSettingsPageProps & {
-    canEditAdvancedFeatures: boolean;
     updateApiKey: (
       projectValues: Partial<Project>,
       trackingData: UpdateAPIKeyTrackingData,
@@ -163,8 +162,7 @@ const InAppWalletSettingsPageUI: React.FC<
 };
 
 export const InAppWalletSettingsUI: React.FC<
-  Omit<InAppWalletSettingsPageProps, "validTeamPlan"> & {
-    canEditAdvancedFeatures: boolean;
+  InAppWalletSettingsPageProps & {
     updateApiKey: (
       projectValues: Partial<Project>,
       trackingData: UpdateAPIKeyTrackingData,
@@ -173,13 +171,19 @@ export const InAppWalletSettingsUI: React.FC<
     embeddedWalletService: ProjectEmbeddedWalletsService;
   }
 > = (props) => {
-  const { canEditAdvancedFeatures } = props;
   const services = props.project.services;
 
   const config = props.embeddedWalletService;
 
   const hasCustomBranding =
     !!config.applicationImageUrl?.length || !!config.applicationName?.length;
+
+  const authRequiredPlan = "accelerate";
+
+  // accelerate or higher plan required
+  const canEditSmsCountries =
+    planToTierRecordForGating[props.teamPlan] >=
+    planToTierRecordForGating[authRequiredPlan];
 
   const form = useForm<ApiKeyEmbeddedWalletsValidationSchema>({
     resolver: zodResolver(apiKeyEmbeddedWalletsValidationSchema),
@@ -197,7 +201,7 @@ export const InAppWalletSettingsUI: React.FC<
       redirectUrls: (config.redirectUrls || []).join("\n"),
       smsEnabledCountryISOs: config.smsEnabledCountryISOs
         ? config.smsEnabledCountryISOs
-        : canEditAdvancedFeatures
+        : canEditSmsCountries
           ? ["US", "CA"]
           : [],
     },
@@ -269,7 +273,9 @@ export const InAppWalletSettingsUI: React.FC<
         {/* Branding */}
         <BrandingFieldset
           form={form}
-          canEditAdvancedFeatures={canEditAdvancedFeatures}
+          teamPlan={props.teamPlan}
+          teamSlug={props.teamSlug}
+          requiredPlan={authRequiredPlan}
         />
 
         <NativeAppsFieldset form={form} />
@@ -278,22 +284,28 @@ export const InAppWalletSettingsUI: React.FC<
         <Fieldset legend="Authentication">
           <JSONWebTokenFields
             form={form}
-            canEditAdvancedFeatures={canEditAdvancedFeatures}
+            teamPlan={props.teamPlan}
+            teamSlug={props.teamSlug}
+            requiredPlan={authRequiredPlan}
           />
 
           <div className="h-5" />
 
           <AuthEndpointFields
             form={form}
-            canEditAdvancedFeatures={canEditAdvancedFeatures}
+            teamPlan={props.teamPlan}
+            teamSlug={props.teamSlug}
+            requiredPlan={authRequiredPlan}
           />
 
           <div className="h-5" />
 
           <SMSCountryFields
             form={form}
-            canEditAdvancedFeatures={canEditAdvancedFeatures}
             smsCountryTiers={props.smsCountryTiers}
+            teamPlan={props.teamPlan}
+            requiredPlan={authRequiredPlan}
+            teamSlug={props.teamSlug}
           />
         </Fieldset>
 
@@ -310,10 +322,10 @@ export const InAppWalletSettingsUI: React.FC<
 
 function BrandingFieldset(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
-  canEditAdvancedFeatures: boolean;
+  teamPlan: Team["billingPlan"];
+  teamSlug: string;
+  requiredPlan: Team["billingPlan"];
 }) {
-  const { form, canEditAdvancedFeatures } = props;
-
   return (
     <Fieldset legend="Branding">
       <SwitchContainer
@@ -322,31 +334,36 @@ function BrandingFieldset(props: {
         description="Pass a custom logo and app name to be used in the emails sent to users."
       >
         <GatedSwitch
-          id="branding-switch"
+          requiredPlan={props.requiredPlan}
+          teamSlug={props.teamSlug}
           trackingLabel="customEmailLogoAndName"
-          checked={!!form.watch("branding") && canEditAdvancedFeatures}
-          upgradeRequired={!canEditAdvancedFeatures}
-          onCheckedChange={(checked) =>
-            form.setValue(
-              "branding",
-              checked
-                ? {
-                    applicationImageUrl: "",
-                    applicationName: "",
-                  }
-                : undefined,
-            )
-          }
+          currentPlan={props.teamPlan}
+          switchProps={{
+            id: "branding-switch",
+            checked: !!props.form.watch("branding"),
+            onCheckedChange: (checked) =>
+              props.form.setValue(
+                "branding",
+                checked
+                  ? {
+                      applicationImageUrl: "",
+                      applicationName: "",
+                    }
+                  : undefined,
+              ),
+          }}
         />
       </SwitchContainer>
 
-      <AdvancedConfigurationContainer
+      <GatedCollapsibleContainer
+        requiredPlan={props.requiredPlan}
+        currentPlan={props.teamPlan}
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-        show={canEditAdvancedFeatures && !!form.watch("branding")}
+        isExpanded={!!props.form.watch("branding")}
       >
         {/* Application Image */}
         <FormField
-          control={form.control}
+          control={props.form.control}
           name="branding.applicationImageUrl"
           render={() => (
             <FormItem className="space-y-1">
@@ -358,9 +375,9 @@ function BrandingFieldset(props: {
               </FormDescription>
               <FormControl>
                 <AppImageFormControl
-                  uri={form.watch("branding.applicationImageUrl")}
+                  uri={props.form.watch("branding.applicationImageUrl")}
                   setUri={(uri) => {
-                    form.setValue("branding.applicationImageUrl", uri, {
+                    props.form.setValue("branding.applicationImageUrl", uri, {
                       shouldDirty: true,
                       shouldTouch: true,
                     });
@@ -374,7 +391,7 @@ function BrandingFieldset(props: {
 
         {/* Application Name */}
         <FormField
-          control={form.control}
+          control={props.form.control}
           name="branding.applicationName"
           render={({ field }) => (
             <FormItem>
@@ -391,7 +408,7 @@ function BrandingFieldset(props: {
             </FormItem>
           )}
         />
-      </AdvancedConfigurationContainer>
+      </GatedCollapsibleContainer>
     </Fieldset>
   );
 }
@@ -453,8 +470,10 @@ function AppImageFormControl(props: {
 
 function SMSCountryFields(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
-  canEditAdvancedFeatures: boolean;
   smsCountryTiers: SMSCountryTiers;
+  teamPlan: Team["billingPlan"];
+  requiredPlan: Team["billingPlan"];
+  teamSlug: string;
 }) {
   return (
     <div>
@@ -464,31 +483,30 @@ function SMSCountryFields(props: {
         description="Optionally allow users in selected countries to login via SMS OTP."
       >
         <GatedSwitch
-          id="sms-switch"
+          currentPlan={props.teamPlan}
+          requiredPlan={props.requiredPlan}
+          teamSlug={props.teamSlug}
+          switchProps={{
+            id: "sms-switch",
+            checked: !!props.form.watch("smsEnabledCountryISOs").length,
+            onCheckedChange: (checked) =>
+              props.form.setValue(
+                "smsEnabledCountryISOs",
+                checked
+                  ? // by default, enable US and CA only
+                    ["US", "CA"]
+                  : [],
+              ),
+          }}
           trackingLabel="sms"
-          checked={
-            !!props.form.watch("smsEnabledCountryISOs").length &&
-            props.canEditAdvancedFeatures
-          }
-          upgradeRequired={!props.canEditAdvancedFeatures}
-          onCheckedChange={(checked) =>
-            props.form.setValue(
-              "smsEnabledCountryISOs",
-              checked
-                ? // by default, enable US and CA only
-                  ["US", "CA"]
-                : [],
-            )
-          }
         />
       </SwitchContainer>
 
-      <AdvancedConfigurationContainer
+      <GatedCollapsibleContainer
         className="grid grid-cols-1"
-        show={
-          props.canEditAdvancedFeatures &&
-          !!props.form.watch("smsEnabledCountryISOs").length
-        }
+        currentPlan={props.teamPlan}
+        requiredPlan={props.requiredPlan}
+        isExpanded={!!props.form.watch("smsEnabledCountryISOs").length}
       >
         <FormField
           control={props.form.control}
@@ -501,17 +519,17 @@ function SMSCountryFields(props: {
             />
           )}
         />
-      </AdvancedConfigurationContainer>
+      </GatedCollapsibleContainer>
     </div>
   );
 }
 
 function JSONWebTokenFields(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
-  canEditAdvancedFeatures: boolean;
+  teamPlan: Team["billingPlan"];
+  teamSlug: string;
+  requiredPlan: Team["billingPlan"];
 }) {
-  const { form, canEditAdvancedFeatures } = props;
-
   return (
     <div>
       <SwitchContainer
@@ -533,32 +551,31 @@ function JSONWebTokenFields(props: {
         }
       >
         <GatedSwitch
-          id="authentication-switch"
-          upgradeRequired={!canEditAdvancedFeatures}
           trackingLabel="customAuthJWT"
-          checked={
-            !!form.watch("customAuthentication") && canEditAdvancedFeatures
-          }
-          onCheckedChange={(checked) => {
-            form.setValue(
-              "customAuthentication",
-              checked
-                ? {
-                    jwksUri: "",
-                    aud: "",
-                  }
-                : undefined,
-            );
+          currentPlan={props.teamPlan}
+          requiredPlan={props.requiredPlan}
+          teamSlug={props.teamSlug}
+          switchProps={{
+            id: "authentication-switch",
+            checked: !!props.form.watch("customAuthentication"),
+            onCheckedChange: (checked) => {
+              props.form.setValue(
+                "customAuthentication",
+                checked ? { jwksUri: "", aud: "" } : undefined,
+              );
+            },
           }}
         />
       </SwitchContainer>
 
-      <AdvancedConfigurationContainer
+      <GatedCollapsibleContainer
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-        show={canEditAdvancedFeatures && !!form.watch("customAuthentication")}
+        isExpanded={!!props.form.watch("customAuthentication")}
+        currentPlan={props.teamPlan}
+        requiredPlan={props.requiredPlan}
       >
         <FormField
-          control={form.control}
+          control={props.form.control}
           name="customAuthentication.jwksUri"
           render={({ field }) => (
             <FormItem>
@@ -576,7 +593,7 @@ function JSONWebTokenFields(props: {
         />
 
         <FormField
-          control={form.control}
+          control={props.form.control}
           name="customAuthentication.aud"
           render={({ field }) => (
             <FormItem>
@@ -591,19 +608,19 @@ function JSONWebTokenFields(props: {
             </FormItem>
           )}
         />
-      </AdvancedConfigurationContainer>
+      </GatedCollapsibleContainer>
     </div>
   );
 }
 
 function AuthEndpointFields(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
-  canEditAdvancedFeatures: boolean;
+  teamPlan: Team["billingPlan"];
+  teamSlug: string;
+  requiredPlan: Team["billingPlan"];
 }) {
-  const { form, canEditAdvancedFeatures } = props;
-
   const expandCustomAuthEndpointField =
-    form.watch("customAuthEndpoint") !== undefined && canEditAdvancedFeatures;
+    props.form.watch("customAuthEndpoint") !== undefined;
 
   return (
     <div>
@@ -628,28 +645,31 @@ function AuthEndpointFields(props: {
       >
         <GatedSwitch
           trackingLabel="customAuthEndpoint"
-          checked={expandCustomAuthEndpointField}
-          upgradeRequired={!canEditAdvancedFeatures}
-          onCheckedChange={(checked) => {
-            form.setValue(
-              "customAuthEndpoint",
-              checked
-                ? {
-                    authEndpoint: "",
-                    customHeaders: [],
-                  }
-                : undefined,
-            );
+          switchProps={{
+            id: "auth-endpoint-switch",
+            checked: expandCustomAuthEndpointField,
+            onCheckedChange: (checked) => {
+              props.form.setValue(
+                "customAuthEndpoint",
+                checked
+                  ? {
+                      authEndpoint: "",
+                      customHeaders: [],
+                    }
+                  : undefined,
+              );
+            },
           }}
+          currentPlan={props.teamPlan}
+          requiredPlan={props.requiredPlan}
+          teamSlug={props.teamSlug}
         />
       </SwitchContainer>
+
       {/* useFieldArray used on this component - it creates empty customAuthEndpoint.customHeaders array on mount */}
       {/* So only mount if expandCustomAuthEndpointField is true */}
       {expandCustomAuthEndpointField && (
-        <AuthEndpointFieldsContent
-          form={form}
-          canEditAdvancedFeatures={canEditAdvancedFeatures}
-        />
+        <AuthEndpointFieldsContent form={props.form} />
       )}
     </div>
   );
@@ -657,19 +677,16 @@ function AuthEndpointFields(props: {
 
 function AuthEndpointFieldsContent(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
-  canEditAdvancedFeatures: boolean;
 }) {
-  const { form } = props;
-
   const customHeaderFields = useFieldArray({
-    control: form.control,
+    control: props.form.control,
     name: "customAuthEndpoint.customHeaders",
   });
 
   return (
     <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
       <FormField
-        control={form.control}
+        control={props.form.control}
         name="customAuthEndpoint.authEndpoint"
         render={({ field }) => (
           <FormItem>
@@ -698,14 +715,14 @@ function AuthEndpointFieldsContent(props: {
                 <Input
                   placeholder="Name"
                   type="text"
-                  {...form.register(
+                  {...props.form.register(
                     `customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
                   )}
                 />
                 <Input
                   placeholder="Value"
                   type="text"
-                  {...form.register(
+                  {...props.form.register(
                     `customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
                   )}
                 />
@@ -781,12 +798,18 @@ function NativeAppsFieldset(props: {
   );
 }
 
-function AdvancedConfigurationContainer(props: {
+function GatedCollapsibleContainer(props: {
   children: React.ReactNode;
-  show: boolean;
+  isExpanded: boolean;
   className?: string;
+  requiredPlan: Team["billingPlan"];
+  currentPlan: Team["billingPlan"];
 }) {
-  if (!props.show) {
+  const upgradeRequired =
+    planToTierRecordForGating[props.currentPlan] <
+    planToTierRecordForGating[props.requiredPlan];
+
+  if (!props.isExpanded || upgradeRequired) {
     return null;
   }
 
@@ -800,7 +823,7 @@ function Fieldset(props: {
   return (
     <DynamicHeight>
       <fieldset className="rounded-lg border border-border bg-card p-4 md:p-6">
-        {/* put inside div to remove defualt styles on legend  */}
+        {/* put inside div to remove default styles on legend  */}
         <div className="mb-4 font-semibold text-xl tracking-tight">
           <legend> {props.legend}</legend>
         </div>
