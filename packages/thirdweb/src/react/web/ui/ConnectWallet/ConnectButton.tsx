@@ -479,7 +479,7 @@ function ConnectButtonInner(
   if (siweAuth.requiresAuth) {
     // loading state if loading
     // TODO: figure out a way to consolidate the loading states with the ones from locale loading
-    if (siweAuth.isLoading || siweAuth.isLoggingIn || siweAuth.isLoggingOut) {
+    if (siweAuth.isPending || siweAuth.isLoggingIn || siweAuth.isLoggingOut) {
       const combinedClassName = `${props.connectButton?.className || ""} ${TW_CONNECT_WALLET}`;
       return (
         <AnimatedButton
