@@ -110,7 +110,7 @@ export function useSiweAuth(
 
       return await authOptions.doLogin(signedPayload);
     },
-    onSettled: () => {
+    onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: ["siwe_auth", "isLoggedIn"],
       });
@@ -126,7 +126,7 @@ export function useSiweAuth(
 
       return await authOptions.doLogout();
     },
-    onSettled: () => {
+    onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: ["siwe_auth", "isLoggedIn"],
       });
