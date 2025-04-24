@@ -1310,8 +1310,8 @@ importers:
         specifier: 1.8.1
         version: 1.8.1
       '@noble/hashes':
-        specifier: 1.7.1
-        version: 1.7.1
+        specifier: 1.7.2
+        version: 1.7.2
       abitype:
         specifier: 1.0.8
         version: 1.0.8(typescript@5.8.3)(zod@3.24.3)
