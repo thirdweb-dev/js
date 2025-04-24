@@ -123,6 +123,7 @@ export type TeamResponse = {
   enabledScopes: ServiceName[];
   isOnboarded: boolean;
   capabilities: TeamCapabilities;
+  unthreadCustomerId: string | null;
   planCancellationDate: string | null;
 };
 

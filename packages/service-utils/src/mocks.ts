@@ -99,6 +99,7 @@ export const validTeamResponse: TeamResponse = {
     },
   },
   planCancellationDate: null,
+  unthreadCustomerId: null,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {

@@ -96,6 +96,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       },
     },
     planCancellationDate: null,
+    unthreadCustomerId: null,
   };
 
   return team;
