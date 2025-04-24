@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.96.3
+
+### Patch Changes
+
+- [#6846](https://github.com/thirdweb-dev/js/pull/6846) [`31ce837`](https://github.com/thirdweb-dev/js/commit/31ce837b54a56facf710e977ebc5c3cd1c3e6f5e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Only update isLoggedIn state on successfull logins
+
 ## 5.96.2
 
 ### Patch Changes
