@@ -99,14 +99,10 @@ export async function createTicketAction(
   }
 
   // @TODO: This needs to be updated to use team.unthreadCustomerId after all users are migrated.
-  let customerId = isValidPlan(team.supportPlan)
+  const customerId = isValidPlan(team.supportPlan)
     ? planToCustomerId[team.supportPlan]
     : // fallback to "free" tier
       planToCustomerId.free;
-  // @TODO: Test accounts. Remove when released.
-  if (teamId === "clku79c5k0188520uyn729f7v") {
-    customerId = team.unthreadCustomerId;
-  }
 
   const product = formData.get("product")?.toString() || "";
   const problemArea = formData.get("extraInfo_Problem_Area")?.toString() || "";
