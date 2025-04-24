@@ -5,7 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import {
+  useActiveWallet,
+  useActiveWalletConnectionStatus,
+} from "thirdweb/react";
 import type { NebulaContext } from "../../api/chat";
 import { createSession } from "../../api/session";
 import type { ExamplePrompt } from "../../data/examplePrompts";
@@ -69,6 +72,7 @@ function FloatingChatContentLoggedIn(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
+  const activeWallet = useActiveWallet();
 
   const [contextFilters, setContextFilters] = useState<
     NebulaContext | undefined
@@ -194,11 +198,11 @@ function FloatingChatContentLoggedIn(props: {
         setContext={setContextFilters}
         showContextSelector={false}
         connectedWallets={
-          props.nebulaParams?.wallet
+          props.nebulaParams?.wallet && activeWallet
             ? [
                 {
                   address: props.nebulaParams.wallet,
-                  type: "user",
+                  walletId: activeWallet.id,
                 },
               ]
             : []

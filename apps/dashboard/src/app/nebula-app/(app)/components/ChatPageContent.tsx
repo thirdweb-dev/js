@@ -312,7 +312,7 @@ export function ChatPageContent(props: {
 
   const connectedWalletsMeta: WalletMeta[] = connectedWallets.map((x) => ({
     address: x.getAccount()?.address || "",
-    type: x.id === "smart" ? "smart" : "user",
+    walletId: x.id,
   }));
 
   const handleUpdateContextFilters = async (
@@ -491,6 +491,8 @@ export async function handleNebulaPrompt(params: {
   } = params;
   let requestIdForMessage = "";
 
+  let hasReceivedResponse = false;
+
   await promptNebula({
     abortController,
     message,
@@ -506,6 +508,12 @@ export async function handleNebulaPrompt(params: {
       }
 
       if (res.event === "delta") {
+        // ignore empty string delta
+        if (!res.data.v) {
+          return;
+        }
+
+        hasReceivedResponse = true;
         setMessages((prev) => {
           const lastMessage = prev[prev.length - 1];
           // if last message is presence, overwrite it
@@ -561,6 +569,7 @@ export async function handleNebulaPrompt(params: {
 
       if (res.event === "action") {
         if (res.type === "sign_transaction") {
+          hasReceivedResponse = true;
           setMessages((prev) => {
             let prevMessages = prev;
             // if last message is presence, remove it
@@ -588,6 +597,24 @@ export async function handleNebulaPrompt(params: {
     },
     context: contextFilters,
   });
+
+  // if the stream ends without any delta or tx events - we have nothing to show
+  // show an error message in that case
+  if (!hasReceivedResponse) {
+    setMessages((prev) => {
+      const newMessages = prev.slice(
+        0,
+        prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
+      );
+
+      newMessages.push({
+        text: "No response received, please try again",
+        type: "error",
+      });
+
+      return newMessages;
+    });
+  }
 }
 
 export function handleNebulaPromptError(params: {

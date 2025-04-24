@@ -29,12 +29,15 @@ import {
   AccountBlobbie,
   AccountName,
   AccountProvider,
+  WalletName,
+  WalletProvider,
 } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
+import type { Wallet } from "thirdweb/wallets";
 import type { NebulaContext } from "../api/chat";
 
 export type WalletMeta = {
-  type: "user" | "smart";
+  walletId: Wallet["id"];
   address: string;
 };
 
@@ -95,7 +98,7 @@ export function ChatBar(props: {
                 hideTestnets
                 disableChainId
                 selectedChainIds={selectedChainIds}
-                popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[360px]"
+                popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[320px]"
                 align="start"
                 side="top"
                 showSelectedValuesInModal={true}
@@ -257,8 +260,22 @@ function WalletSelector(props: {
           aria-expanded={open}
           className="flex h-auto items-center gap-1 rounded-full px-2 py-1.5 text-xs"
         >
-          {shortenAddress(props.activeAccountAddress)}
-          <ChevronDown className="ml-1 size-3 text-muted-foreground/70" />
+          <AccountProvider
+            address={props.activeAccountAddress}
+            client={props.client}
+          >
+            <AccountAvatar
+              className="size-4 rounded-full"
+              loadingComponent={
+                <Skeleton className="size-3 rounded-full border" />
+              }
+              fallbackComponent={
+                <AccountBlobbie className="size-3 rounded-full" />
+              }
+            />
+            {shortenAddress(props.activeAccountAddress)}
+            <ChevronDown className="size-3 text-muted-foreground/70" />
+          </AccountProvider>
         </Button>
       </PopoverTrigger>
 
@@ -288,48 +305,58 @@ function WalletSelector(props: {
             >
               <div className="flex items-center gap-2">
                 <AccountProvider address={wallet.address} client={props.client}>
-                  <div className="flex items-center gap-2">
-                    <AccountAvatar
-                      className="size-8 rounded-full"
-                      loadingComponent={
-                        <Skeleton className="size-8 rounded-full border" />
-                      }
-                      fallbackComponent={
-                        <AccountBlobbie className="size-8 rounded-full" />
-                      }
-                    />
+                  <WalletProvider id={wallet.walletId}>
+                    <div className="flex items-center gap-2">
+                      <AccountAvatar
+                        className="size-8 rounded-full"
+                        loadingComponent={
+                          <Skeleton className="size-8 rounded-full border" />
+                        }
+                        fallbackComponent={
+                          <AccountBlobbie className="size-8 rounded-full" />
+                        }
+                      />
 
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <AccountName
-                          className="text-sm"
-                          loadingComponent={
-                            <span className="font-mono text-sm">
-                              {shortenAddress(wallet.address)}
-                            </span>
-                          }
-                          fallbackComponent={
-                            <span className="font-mono text-sm">
-                              {shortenAddress(wallet.address)}
-                            </span>
-                          }
-                        />
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <AccountName
+                            className="text-sm"
+                            loadingComponent={
+                              <span className="font-mono text-sm">
+                                {shortenAddress(wallet.address)}
+                              </span>
+                            }
+                            fallbackComponent={
+                              <span className="font-mono text-sm">
+                                {shortenAddress(wallet.address)}
+                              </span>
+                            }
+                          />
 
-                        <CopyButton address={wallet.address} />
+                          <CopyButton address={wallet.address} />
 
-                        {wallet.type === "smart" && (
-                          <Badge variant="outline" className="bg-card px-2">
-                            Gasless
-                          </Badge>
-                        )}
-                      </div>
+                          {wallet.walletId === "smart" && (
+                            <Badge variant="outline" className="bg-card px-2">
+                              Gasless
+                            </Badge>
+                          )}
+                        </div>
 
-                      <div className="text-muted-foreground text-xs">
-                        {wallet.type === "user" && "Your Account"}
-                        {wallet.type === "smart" && "Smart Account"}
+                        <div className="text-muted-foreground text-xs">
+                          {wallet.walletId === "smart" ? (
+                            "Smart Account"
+                          ) : (
+                            <WalletName
+                              fallbackComponent={<span> Your Account </span>}
+                              loadingComponent={
+                                <Skeleton className="h-3.5 w-40" />
+                              }
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </WalletProvider>
                 </AccountProvider>
               </div>
 
