@@ -13,7 +13,7 @@ export type ParseErc6492SignatureReturnType = OneOf<
 >;
 
 /**
- * @description Parses a serialized ({@link Hex}) [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492) signature.
+ * Parses a serialized ({@link Hex}) [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492) signature.
  * If the signature is not in ERC-6492 format, the original signature is returned.
  *
  * @param {Hex} signature The signature to parse

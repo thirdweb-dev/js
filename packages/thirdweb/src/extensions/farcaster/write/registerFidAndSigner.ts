@@ -12,7 +12,7 @@ import { getFid } from "../read/getFid.js";
 
 /**
  * Represents the parameters for the `registerFidAndSigner` function.
- * @description
+ *
  * This function can be used wither be provided pre-generated signatures or the wallet accounts directly.
  * This is done so the helpers can be used when there's no direct access to the account, but signatures can be generated (e.g. engine)
  *

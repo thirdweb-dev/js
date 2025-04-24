@@ -7,7 +7,6 @@ import type { ClientScopedStorage } from "./client-scoped-storage.js";
 import type { Profile } from "./types.js";
 
 /**
- * @description
  * Links a new account to the current one using an auth token.
  * For the public-facing API, use `wallet.linkProfile` instead.
  *
@@ -58,7 +57,6 @@ export async function linkAccount({
 }
 
 /**
- * @description
  * Links a new account to the current one using an auth token.
  * For the public-facing API, use `wallet.linkProfile` instead.
  *
@@ -107,7 +105,6 @@ export async function unlinkAccount({
 }
 
 /**
- * @description
  * Gets the linked accounts for the current user.
  * For the public-facing API, use `wallet.getProfiles` instead.
  *
