@@ -148,5 +148,6 @@ export function useSiweAuth(
     // checking if logged in
     isLoggedIn: isLoggedInQuery.data,
     isLoading: isLoggedInQuery.isFetching,
+    isPending: isLoggedInQuery.isPending,
   };
 }
