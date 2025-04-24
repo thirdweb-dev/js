@@ -79,6 +79,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       insight: {
         enabled: true,
         rateLimit: 1000,
+        webhooks: true,
       },
       embeddedWallets: {
         enabled: true,
