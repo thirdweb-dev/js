@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.96.1
+
+### Patch Changes
+
+- [#6832](https://github.com/thirdweb-dev/js/pull/6832) [`436750e`](https://github.com/thirdweb-dev/js/commit/436750ed15cda8d646fc60514a6a17fca953d445) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Lazy import native dependencies in React Native
+
 ## 5.96.0
 
 ### Minor Changes
