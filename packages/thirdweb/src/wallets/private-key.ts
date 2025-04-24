@@ -10,6 +10,7 @@ import { getRpcClient } from "../rpc/rpc.js";
 import type { AuthorizationRequest } from "../transaction/actions/eip7702/authorization.js";
 import { signTransaction } from "../transaction/actions/sign-transaction.js";
 import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
+import { getAddress } from "../utils/address.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { signMessage } from "../utils/signatures/sign-message.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
@@ -79,7 +80,7 @@ export function privateKeyToAccount(
   const address = publicKeyToAddress(publicKey);
 
   const account = {
-    address,
+    address: getAddress(address),
     sendTransaction: async (
       tx: SerializableTransaction & { chainId: number },
     ) => {

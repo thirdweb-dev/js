@@ -333,7 +333,7 @@ function createAccount({
   client: ThirdwebClient;
 }) {
   const account: Account = {
-    address: address,
+    address: getAddress(address),
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
