@@ -421,7 +421,7 @@ function createZkSyncAccount(args: {
 }): Account {
   const { creationOptions, connectionOptions, chain } = args;
   const account: Account = {
-    address: connectionOptions.personalAccount.address,
+    address: getAddress(connectionOptions.personalAccount.address),
     async sendTransaction(transaction: SendTransactionOption) {
       // override passed tx, we have to refetch gas and fees always
       const prepTx = {

@@ -14,6 +14,7 @@ import {
   TransactionTypeMap,
 } from "../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
+import { getAddress } from "../utils/address.js";
 import { toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
@@ -364,7 +365,7 @@ export async function fromEthersSigner(
 ): Promise<Account> {
   const address = await signer.getAddress();
   const account: Account = {
-    address,
+    address: getAddress(address),
     signMessage: async ({ message }) => {
       return signer.signMessage(
         typeof message === "string" ? message : message.raw,
