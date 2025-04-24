@@ -172,7 +172,7 @@ const isValidSignature = (
 };
 
 // extract the signature from request headers
-const signature = req.headers['x-signature'];
+const signature = req.headers['x-webhook-signature'];
 // get the raw body of the request
 const rawBody = req.rawBody;
 
