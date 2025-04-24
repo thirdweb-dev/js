@@ -59,6 +59,7 @@ export const validTeamResponse: TeamResponse = {
   canCreatePublicChains: false,
   enabledScopes: ["storage", "rpc", "bundler"],
   isOnboarded: true,
+  verifiedDomain: null,
   capabilities: {
     rpc: {
       enabled: true,

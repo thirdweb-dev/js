@@ -126,6 +126,7 @@ export type TeamResponse = {
   capabilities: TeamCapabilities;
   unthreadCustomerId: string | null;
   planCancellationDate: string | null;
+  verifiedDomain: string | null;
 };
 
 export type ProjectSecretKey = {
