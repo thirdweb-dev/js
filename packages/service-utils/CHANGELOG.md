@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.6
+
+### Patch Changes
+
+- [#6837](https://github.com/thirdweb-dev/js/pull/6837) [`d95b3d3`](https://github.com/thirdweb-dev/js/commit/d95b3d38c721797e7470c198abb44edf1a1f6495) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: Add unthreadCustomerId to TeamResponse
+
+- [#6842](https://github.com/thirdweb-dev/js/pull/6842) [`f2d0f11`](https://github.com/thirdweb-dev/js/commit/f2d0f119c1422eebb37c898e30832d5fda33f5f6) Thanks [@jnsdls](https://github.com/jnsdls)! - add insight.webhooks to capabilities
+
 ## 0.9.5
 
 ### Patch Changes
