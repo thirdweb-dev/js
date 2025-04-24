@@ -189,6 +189,7 @@ function FloatingChatContentLoggedIn(props: {
           enableAutoScroll={enableAutoScroll}
           setEnableAutoScroll={setEnableAutoScroll}
           useSmallText
+          sendMessage={handleSendMessage}
         />
       )}
       <ChatBar

@@ -52,6 +52,7 @@ export function Chats(props: {
   setEnableAutoScroll: (enable: boolean) => void;
   enableAutoScroll: boolean;
   useSmallText?: boolean;
+  sendMessage: (message: string) => void;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -169,6 +170,11 @@ export function Chats(props: {
                             <ExecuteTransactionCardWithFallback
                               txData={message.data}
                               client={props.client}
+                              onTxSettled={(txHash) => {
+                                props.sendMessage(
+                                  `I've sent the transaction with hash: ${txHash}.`,
+                                );
+                              }}
                             />
                           ) : (
                             <span className="leading-loose">
@@ -206,6 +212,7 @@ export function Chats(props: {
 function ExecuteTransactionCardWithFallback(props: {
   txData: NebulaTxData | null;
   client: ThirdwebClient;
+  onTxSettled: (txHash: string) => void;
 }) {
   if (!props.txData) {
     return (
@@ -216,7 +223,13 @@ function ExecuteTransactionCardWithFallback(props: {
     );
   }
 
-  return <ExecuteTransactionCard txData={props.txData} client={props.client} />;
+  return (
+    <ExecuteTransactionCard
+      txData={props.txData}
+      client={props.client}
+      onTxSettled={props.onTxSettled}
+    />
+  );
 }
 
 function MessageActions(props: {

@@ -370,6 +370,7 @@ export function ChatPageContent(props: {
                 client={client}
                 enableAutoScroll={enableAutoScroll}
                 setEnableAutoScroll={setEnableAutoScroll}
+                sendMessage={handleSendMessage}
               />
 
               <div className="container max-w-[800px]">

@@ -49,6 +49,7 @@ export type TxStatus =
 export function ExecuteTransactionCard(props: {
   txData: NebulaTxData;
   client: ThirdwebClient;
+  onTxSettled: (txHash: string) => void;
 }) {
   const [status, setStatus] = useState<TxStatus>({ type: "idle" });
   return (
@@ -57,6 +58,7 @@ export function ExecuteTransactionCard(props: {
       client={props.client}
       status={status}
       setStatus={setStatus}
+      onTxSettled={props.onTxSettled}
     />
   );
 }
@@ -66,6 +68,7 @@ export function ExecuteTransactionCardLayout(props: {
   client: ThirdwebClient;
   status: TxStatus;
   setStatus: (status: TxStatus) => void;
+  onTxSettled: (txHash: string) => void;
 }) {
   const { theme } = useTheme();
   const { txData } = props;
@@ -275,6 +278,8 @@ export function ExecuteTransactionCardLayout(props: {
                   txHash: confirmReceipt.transactionHash,
                 });
 
+                props.onTxSettled(txHash);
+
                 trackEvent({
                   category: "nebula",
                   action: "execute_transaction",
@@ -282,6 +287,9 @@ export function ExecuteTransactionCardLayout(props: {
                   chainId: txData.chainId,
                 });
               } catch {
+                if (txHash) {
+                  props.onTxSettled(txHash);
+                }
                 props.setStatus({
                   type: "failed",
                   txHash: txHash,

@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
+import {
+  BadgeContainer,
+  storybookLog,
+  storybookThirdwebClient,
+} from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   ExecuteTransactionCardLayout,
@@ -61,6 +65,9 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <ExecuteTransactionCardLayout
+        onTxSettled={(txHash) => {
+          storybookLog(`onTxSettled called with ${txHash}`);
+        }}
         setStatus={setStatus}
         status={status}
         client={storybookThirdwebClient}

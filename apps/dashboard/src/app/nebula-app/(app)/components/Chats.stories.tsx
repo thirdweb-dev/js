@@ -192,6 +192,7 @@ function Story() {
 
         <BadgeContainer label="Assistant response With request_id, Without request_id">
           <Chats
+            sendMessage={() => {}}
             enableAutoScroll={false}
             setEnableAutoScroll={() => {}}
             client={storybookThirdwebClient}
@@ -215,6 +216,7 @@ function Story() {
 
         <BadgeContainer label="Assistant markdown">
           <Chats
+            sendMessage={() => {}}
             enableAutoScroll={false}
             setEnableAutoScroll={() => {}}
             client={storybookThirdwebClient}
@@ -249,6 +251,7 @@ function Variant(props: {
         enableAutoScroll={false}
         setEnableAutoScroll={() => {}}
         client={storybookThirdwebClient}
+        sendMessage={() => {}}
         authToken="xxxxx"
         isChatStreaming={false}
         sessionId="xxxxx"
