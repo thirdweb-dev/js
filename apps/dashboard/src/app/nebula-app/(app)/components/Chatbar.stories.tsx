@@ -77,7 +77,7 @@ function Story() {
           showContextSelector={true}
           connectedWallets={[
             {
-              type: "user",
+              walletId: "io.metamask",
               address: userWalletAddress,
             },
           ]}
@@ -94,11 +94,11 @@ function Story() {
           showContextSelector={true}
           connectedWallets={[
             {
-              type: "user",
+              walletId: "io.metamask",
               address: userWalletAddress,
             },
             {
-              type: "smart",
+              walletId: "smart",
               address: smartWalletAddress,
             },
           ]}

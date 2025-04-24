@@ -40,19 +40,23 @@ export function ChatSidebar(props: {
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-start gap-3 p-4 lg:justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <NebulaIcon className="size-8 text-foreground" aria-label="Nebula" />
+          <NebulaIcon className="size-6 text-foreground" aria-label="Nebula" />
           <span className="font-semibold text-lg tracking-tight">Nebula</span>
         </Link>
 
         <Badge variant="secondary" className="gap-1 py-1">
-          Beta
+          Alpha
         </Badge>
       </div>
 
       <div className="h-1" />
 
       <div className="flex flex-col gap-2 px-4">
-        <Button asChild variant="outline" className="w-full gap-2 rounded-lg">
+        <Button
+          asChild
+          variant="outline"
+          className="w-full gap-2 rounded-lg bg-muted/50"
+        >
           <Link href={newChatPage}>
             <PlusIcon className="size-4" />
             New Chat
