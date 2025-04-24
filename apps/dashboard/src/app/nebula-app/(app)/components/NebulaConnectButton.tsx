@@ -2,8 +2,8 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTheme } from "next-themes";
@@ -14,15 +14,14 @@ import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
-import { cn } from "../../../../@/lib/utils";
 import { doNebulaLogout } from "../../login/auth-actions";
+import { nebulaAppThirdwebClient } from "../utils/nebulaThirdwebClient";
 
 export const NebulaConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
 }) => {
-  const thirdwebClient = useThirdwebClient();
   const router = useDashboardRouter();
   const { theme } = useTheme();
   const t = theme === "light" ? "light" : "dark";
@@ -67,7 +66,7 @@ export const NebulaConnectWallet = (props: {
   return (
     <ConnectButton
       theme={getSDKTheme(t)}
-      client={thirdwebClient}
+      client={nebulaAppThirdwebClient}
       connectModal={{
         privacyPolicyUrl: "/privacy-policy",
         termsOfServiceUrl: "/terms",

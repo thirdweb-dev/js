@@ -5,7 +5,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import type { NebulaContext } from "../api/chat";
 import { examplePrompts } from "../data/examplePrompts";
 import { NebulaIcon } from "../icons/NebulaIcon";
-import { nebulaThirdwebClient } from "../utils/nebulaThirdwebClient";
+import { nebulaAppThirdwebClient } from "../utils/nebulaThirdwebClient";
 import { ChatBar, type WalletMeta } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
@@ -42,7 +42,7 @@ export function EmptyStateChatPageContent(props: {
             setContext={props.setContext}
             sendMessage={props.sendMessage}
             isChatStreaming={false}
-            client={nebulaThirdwebClient}
+            client={nebulaAppThirdwebClient}
             connectedWallets={props.connectedWallets}
             activeAccountAddress={props.activeAccountAddress}
             setActiveWallet={props.setActiveWallet}

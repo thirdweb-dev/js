@@ -1,10 +1,7 @@
 "use server";
 import "server-only";
 
-import {
-  DASHBOARD_THIRDWEB_SECRET_KEY,
-  NEXT_PUBLIC_NEBULA_URL,
-} from "@/constants/env";
+import { NEBULA_APP_SECRET_KEY, NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
 import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
@@ -26,7 +23,7 @@ export async function getNebulaLoginPayload(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Secret-Key": DASHBOARD_THIRDWEB_SECRET_KEY,
+      "X-Secret-Key": NEBULA_APP_SECRET_KEY,
     },
     body: JSON.stringify({
       address: params.address,
@@ -70,7 +67,7 @@ export async function doNebulaLogin(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Secret-Key": DASHBOARD_THIRDWEB_SECRET_KEY,
+      "X-Secret-Key": NEBULA_APP_SECRET_KEY,
     },
     body: JSON.stringify(payload),
   });
