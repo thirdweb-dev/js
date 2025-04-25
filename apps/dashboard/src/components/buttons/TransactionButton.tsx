@@ -1,5 +1,4 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -17,8 +16,9 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
+  useConnectedWallets,
 } from "thirdweb/react";
-import type { WalletId } from "thirdweb/wallets";
+import type { Wallet, WalletId } from "thirdweb/wallets";
 import { MismatchButton } from "./MismatchButton";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
@@ -26,7 +26,6 @@ type ButtonProps = React.ComponentProps<typeof Button>;
 type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   transactionCount: number | undefined; // support for unknown number of tx count
   isPending: boolean;
-  isGasless?: boolean;
   txChainID: number;
   variant?: "destructive" | "primary" | "default";
   isLoggedIn: boolean;
@@ -36,19 +35,17 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   children,
   transactionCount,
   isPending,
-  isGasless,
   txChainID,
   variant,
   isLoggedIn,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
-
+  const connectedWallets = useConnectedWallets();
   // all wallets except inApp (aka - embedded) requires external confirmation - either from mobile app or extension
   const walletRequiresExternalConfirmation =
     activeWallet &&
-    activeWallet.id !== "inApp" &&
-    activeWallet.id !== "embedded";
+    !canSendTransactionWithoutConfirmation(activeWallet, connectedWallets);
 
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
@@ -58,17 +55,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     [chain],
   );
 
-  const ButtonComponent = useMemo(() => {
-    return isGasless ? Button : MismatchButton;
-  }, [isGasless]);
-
   const txCountDivWidth = 60;
   const disabled = isChainDeprecated || restButtonProps.disabled || isPending;
 
   return (
     <Popover open={walletRequiresExternalConfirmation && isPending}>
       <PopoverTrigger asChild>
-        <ButtonComponent
+        <MismatchButton
+          isPending={isPending}
           variant={variant || "primary"}
           isLoggedIn={isLoggedIn}
           txChainId={txChainID}
@@ -108,9 +102,8 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
 
           <span className="flex grow items-center justify-center gap-3">
             {children}
-            {isPending && <Spinner className="size-4" />}
           </span>
-        </ButtonComponent>
+        </MismatchButton>
       </PopoverTrigger>
 
       <PopoverContent className="min-w-[300px]" sideOffset={10} side="top">
@@ -200,3 +193,23 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
     </div>
   );
 };
+
+function canSendTransactionWithoutConfirmation(
+  wallet: Wallet,
+  connectedWallets: Wallet[],
+) {
+  // inApp wallet
+  if (wallet.id === "inApp") {
+    return true;
+  }
+
+  // smart wallet + inApp admin wallet
+  if (wallet.id === "smart") {
+    const adminWallet = connectedWallets.find(
+      (w) => w.getAccount()?.address === wallet.getAdminAccount?.()?.address,
+    );
+    return adminWallet?.id === "inApp";
+  }
+
+  return false;
+}
