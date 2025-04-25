@@ -25,7 +25,7 @@ export default function FloatingChatContent(props: {
   authToken: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
-  pageType: "chain" | "contract";
+  pageType: "chain" | "contract" | "support";
   nebulaParams:
     | {
         messagePrefix: string;
@@ -52,7 +52,7 @@ export default function FloatingChatContent(props: {
 function FloatingChatContentLoggedIn(props: {
   authToken: string;
   client: ThirdwebClient;
-  pageType: "chain" | "contract";
+  pageType: "chain" | "contract" | "support";
   examplePrompts: ExamplePrompt[];
   nebulaParams:
     | {
@@ -222,6 +222,7 @@ function FloatingChatContentLoggedIn(props: {
         isChatStreaming={isChatStreaming}
         prefillMessage=""
         sendMessage={handleSendMessage}
+        includeSupportButton={props.pageType === "support"}
         className="rounded-none border-x-0 border-b-0"
       />
     </div>

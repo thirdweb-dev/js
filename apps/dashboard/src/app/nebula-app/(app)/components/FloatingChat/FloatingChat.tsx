@@ -22,7 +22,7 @@ import { NebulaIcon } from "../../icons/NebulaIcon";
 const LazyFloatingChatContent = lazy(() => import("./FloatingChatContent"));
 
 export function NebulaFloatingChatButton(props: {
-  pageType: "chain" | "contract";
+  pageType: "chain" | "contract" | "support";
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
   label: string;
@@ -104,7 +104,7 @@ function NebulaChatUIContainer(props: {
   hasBeenOpened: boolean;
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
-  pageType: "chain" | "contract";
+  pageType: "chain" | "contract" | "support";
   client: ThirdwebClient;
   nebulaParams:
     | {

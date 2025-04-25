@@ -9,6 +9,12 @@ import contractsIcon from "../../../../../public/assets/support/contracts.png";
 import engineIcon from "../../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../../public/assets/support/wallets.png";
+import { NebulaFloatingChatButton } from "../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "../../api/lib/getAuthToken";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 
 export const metadata: Metadata = {
   title: "thirdweb Support",
@@ -112,7 +118,25 @@ const HELP_PRODUCTS = [
   },
 ] as const;
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const [authToken, accountAddress] = await Promise.all([
+    getAuthToken(),
+    getAuthTokenWalletAddress(),
+  ]);
+
+  const client = getThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
+  
+  const supportPromptPrefix = "You are a Customer Success Agent at thirdweb, assisting customers with blockchain and Web3-related issues. Use the following details to craft a professional, empathetic response: ";
+  const examplePrompts = [
+    "ERC20 - Transfer Amount Exceeds Allowance",
+    "Replacement transaction underpriced / Replacement fee too low",
+    "Nonce too low: next nonce #, tx nonce #",
+    "Nonce too high"
+  ];
+
   return (
     <main className="flex flex-col gap-12 pb-12">
       <div className="bg-gradient-to-b from-card/0 to-card py-20">
@@ -185,6 +209,22 @@ export default function SupportPage() {
           ))}
         </div>
       </section>
+
+      <NebulaFloatingChatButton
+        pageType="support"
+        authToken={authToken ?? undefined}
+        label="Ask AI about your issue"
+        client={client}
+        nebulaParams={{
+          messagePrefix: supportPromptPrefix,
+          chainIds: [],
+          wallet: accountAddress ?? undefined,
+        }}
+        examplePrompts={examplePrompts.map((prompt) => ({
+          title: prompt,
+          message: prompt,
+        }))}
+      />
     </main>
   );
 }
