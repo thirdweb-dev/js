@@ -572,7 +572,7 @@ export function AccountAbstractionSettingsPage(
               </div>
 
               <GatedSwitch
-                requiredPlan="accelerate"
+                requiredPlan="starter"
                 currentPlan={props.validTeamPlan}
                 teamSlug={props.teamSlug}
                 switchProps={{
