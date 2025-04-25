@@ -19,7 +19,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getThirdwebClient } from "../../../../../../@/constants/thirdweb.server";
 import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
-import { NebulaFloatingChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -99,7 +99,8 @@ The following is the user's message:
 
   return (
     <>
-      <NebulaFloatingChatButton
+      <NebulaChatButton
+        isFloating={true}
         pageType="chain"
         authToken={authToken ?? undefined}
         label="Ask AI about this chain"

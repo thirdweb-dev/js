@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { examplePrompts } from "../../data/examplePrompts";
-import { NebulaFloatingChatButton } from "./FloatingChat";
+import { NebulaChatButton } from "./FloatingChat";
 
 const meta = {
   title: "Nebula/FloatingChat",
-  component: NebulaFloatingChatButton,
+  component: NebulaChatButton,
   decorators: [
     (Story) => (
       <ThirdwebProvider>
@@ -14,10 +14,10 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
-} satisfies Meta<typeof NebulaFloatingChatButton>;
+} satisfies Meta<typeof NebulaChatButton>;
 
 export default meta;
-type Story = StoryObj<typeof NebulaFloatingChatButton>;
+type Story = StoryObj<typeof NebulaChatButton>;
 
 export const LoggedIn: Story = {
   args: {

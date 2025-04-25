@@ -8,7 +8,7 @@ import { localhost } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { NebulaFloatingChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -114,7 +114,8 @@ The following is the user's message:`;
       teamsAndProjects={teamsAndProjects}
       client={client}
     >
-      <NebulaFloatingChatButton
+      <NebulaChatButton
+        isFloating={true}
         pageType="contract"
         authToken={authToken ?? undefined}
         label="Ask AI about this contract"
