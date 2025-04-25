@@ -16,6 +16,8 @@ import {
   NEBULA_COOKIE_PREFIX_TOKEN,
 } from "../_utils/constants";
 
+const FOURTEEN_DAYS_IN_SECONDS = 14 * 24 * 60 * 60;
+
 export async function getNebulaLoginPayload(
   params: GenerateLoginPayloadParams,
 ): Promise<LoginPayload> {
@@ -131,8 +133,7 @@ export async function doNebulaLogin(
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      // 3 days
-      maxAge: 3 * 24 * 60 * 60,
+      maxAge: FOURTEEN_DAYS_IN_SECONDS,
     },
   );
 
@@ -144,8 +145,7 @@ export async function doNebulaLogin(
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      // 3 days
-      maxAge: 3 * 24 * 60 * 60,
+      maxAge: FOURTEEN_DAYS_IN_SECONDS,
     },
   );
 
@@ -209,8 +209,7 @@ export async function isNebulaLoggedIn(address: string) {
     httpOnly: false,
     secure: true,
     sameSite: "strict",
-    // 3 days
-    maxAge: 3 * 24 * 60 * 60,
+    maxAge: FOURTEEN_DAYS_IN_SECONDS,
   });
   return true;
 }
