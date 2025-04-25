@@ -144,6 +144,7 @@ function Variant(props: {
   connectedWallets: WalletMeta[];
   activeAccountAddress: string | undefined;
   isConnectingWallet?: boolean;
+  includeSupportButton?: boolean;
 }) {
   const [context, setContext] = useState<NebulaContext | undefined>(
     props.context,
@@ -162,6 +163,7 @@ function Variant(props: {
         isChatStreaming={props.isStreaming}
         sendMessage={() => {}}
         prefillMessage={props.prefillMessage}
+        includeSupportButton={props.includeSupportButton ?? true}
         context={context}
         setContext={setContext}
         showContextSelector={props.showContextSelector}

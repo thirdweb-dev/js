@@ -383,6 +383,7 @@ export function ChatPageContent(props: {
                   client={client}
                   prefillMessage={undefined}
                   sendMessage={handleSendMessage}
+                  includeSupportButton={true}
                   isChatStreaming={isChatStreaming}
                   abortChatStream={() => {
                     chatAbortController?.abort();
