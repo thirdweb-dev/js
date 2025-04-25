@@ -24,7 +24,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ExternalLinkIcon, PlusIcon, Trash2Icon, UserPlus } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -216,19 +215,17 @@ export function InviteSection(props: {
     });
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    // when form updates - reset mutation result
-    const subscription = form.watch(() => {
-      sendInvites.reset();
-    });
-
-    return () => subscription.unsubscribe();
-  }, [form.watch, sendInvites.reset]);
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        onChange={() => {
+          // when form updates - reset mutation result
+          if (sendInvites.data) {
+            sendInvites.reset();
+          }
+        }}
+      >
         <section>
           <div
             className={cn(
@@ -338,26 +335,42 @@ export function InviteSection(props: {
                 ))}
               </div>
 
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="mt-4 gap-2"
-                disabled={
-                  !inviteEnabled ||
-                  form.watch("invites").length >= maxAllowedInvitesAtOnce
-                }
-                onClick={() => {
-                  const currentInvites = form.watch("invites");
-                  form.setValue("invites", [
-                    ...currentInvites,
-                    { email: "", role: "MEMBER" },
-                  ]);
-                }}
-              >
-                <PlusIcon className="size-4" />
-                Add Another
-              </Button>
+              <div className="mt-6 flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  disabled={
+                    !inviteEnabled ||
+                    form.watch("invites").length >= maxAllowedInvitesAtOnce
+                  }
+                  onClick={() => {
+                    const currentInvites = form.watch("invites");
+                    form.setValue("invites", [
+                      ...currentInvites,
+                      { email: "", role: "MEMBER" },
+                    ]);
+                  }}
+                >
+                  <PlusIcon className="size-4" />
+                  Add Another
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!form.formState.isDirty}
+                  className="gap-2"
+                  onClick={() => {
+                    form.reset();
+                    sendInvites.reset();
+                  }}
+                >
+                  Reset
+                </Button>
+              </div>
             </div>
             {bottomSection}
           </div>
