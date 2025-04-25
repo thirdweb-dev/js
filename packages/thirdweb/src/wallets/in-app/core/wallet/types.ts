@@ -69,6 +69,7 @@ export type InAppWalletCreationOptions =
        * Metadata to display in the Connect Modal
        */
       metadata?: {
+        name?: string;
         image?: {
           src: string;
           width?: number;
