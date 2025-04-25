@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -14,7 +15,6 @@ import {
   getAuthToken,
   getAuthTokenWalletAddress,
 } from "../../api/lib/getAuthToken";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 
 export const metadata: Metadata = {
   title: "thirdweb Support",
@@ -128,13 +128,14 @@ export default async function SupportPage() {
     jwt: authToken,
     teamId: undefined,
   });
-  
-  const supportPromptPrefix = "You are a Customer Success Agent at thirdweb, assisting customers with blockchain and Web3-related issues. Use the following details to craft a professional, empathetic response: ";
+
+  const supportPromptPrefix =
+    "You are a Customer Success Agent at thirdweb, assisting customers with blockchain and Web3-related issues. Use the following details to craft a professional, empathetic response: ";
   const examplePrompts = [
     "ERC20 - Transfer Amount Exceeds Allowance",
     "Replacement transaction underpriced / Replacement fee too low",
     "Nonce too low: next nonce #, tx nonce #",
-    "Nonce too high"
+    "Nonce too high",
   ];
 
   return (
