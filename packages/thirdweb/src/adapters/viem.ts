@@ -394,7 +394,7 @@ function fromViemWalletClient(options: {
     );
   }
   return {
-    address: viemAccount.address,
+    address: viemAccount.address as `0x${string}`,
     signMessage: async (msg) => {
       return options.walletClient.signMessage({
         account: viemAccount,

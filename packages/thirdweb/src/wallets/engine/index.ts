@@ -19,7 +19,7 @@ export type EngineAccountOptions = {
   /**
    * The backend wallet to use for sending transactions inside engine.
    */
-  walletAddress: string;
+  walletAddress: `0x${string}`;
   overrides?: {
     /**
      * The address of the smart account to act on behalf of. Requires your backend wallet to be a valid signer on that smart account.

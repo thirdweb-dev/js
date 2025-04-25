@@ -164,7 +164,7 @@ export type Account = {
   /**
    * address of the account
    */
-  address: Address;
+  address: `0x${string}`;
   /**
    * Send the given transaction to the blockchain
    * @example

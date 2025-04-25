@@ -13,7 +13,7 @@ import {
 
 type UseWalletBalanceOptions = Prettify<
   Omit<GetWalletBalanceOptions, "address" | "chain"> & {
-    address: string | undefined;
+    address: `0x${string}` | undefined;
     chain: Chain | undefined;
   }
 >;

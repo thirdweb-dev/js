@@ -64,7 +64,7 @@ export const TokenRow = (props: {
   theme: Theme;
   client: ThirdwebClient;
   chain?: Chain;
-  address?: string;
+  address?: `0x${string}`;
   onTokenSelected?: (token?: TokenInfo) => void;
 }) => {
   const { token, theme, address, chain, client, onTokenSelected } = props;
