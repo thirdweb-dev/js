@@ -172,7 +172,7 @@ export function Chats(props: {
                               client={props.client}
                               onTxSettled={(txHash) => {
                                 props.sendMessage(
-                                  `I've sent the transaction with hash: ${txHash}.`,
+                                  getTransactionSettledPrompt(txHash),
                                 );
                               }}
                             />
@@ -207,6 +207,13 @@ export function Chats(props: {
       </ScrollShadow>
     </div>
   );
+}
+
+function getTransactionSettledPrompt(txHash: string) {
+  return `\
+I've executed the following transaction successfully with hash: ${txHash}.
+
+If our conversation calls for it, continue on to the next transaction or suggest next steps`;
 }
 
 function ExecuteTransactionCardWithFallback(props: {
