@@ -95,7 +95,7 @@ export function ExecuteTransactionCardLayout(props: {
         </h3>
 
         {/* content */}
-        <div className="px-4 text-sm lg:px-6 [&>*:not(:last-child)]:border-b [&>*]:h-12 lg:[&>*]:h-14">
+        <div className="px-4 text-sm lg:px-6 [&>*:not(:last-child)]:border-b [&>*]:h-[52px]">
           {/* From */}
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium text-muted-foreground">From</span>
@@ -229,7 +229,7 @@ export function ExecuteTransactionCardLayout(props: {
 
         {/* footer */}
         {props.status.type !== "confirmed" && (
-          <div className="flex items-center justify-end border-t px-4 py-6 lg:px-6">
+          <div className="flex items-center justify-end border-t px-4 py-5 lg:px-6">
             <TransactionButton
               isPending={sendTransaction.isPending}
               transactionCount={undefined}

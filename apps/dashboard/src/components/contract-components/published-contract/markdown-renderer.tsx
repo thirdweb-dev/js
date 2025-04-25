@@ -36,8 +36,7 @@ export const MarkdownRenderer: React.FC<{
   skipHtml?: boolean;
 }> = (markdownProps) => {
   const { markdownText, className, code } = markdownProps;
-  const commonHeadingClassName =
-    "mb-2 pb-2 leading-5 font-semibold tracking-tight";
+  const commonHeadingClassName = "mb-2 leading-5 font-semibold tracking-tight";
 
   return (
     <div className={className}>
@@ -49,7 +48,7 @@ export const MarkdownRenderer: React.FC<{
             <h2
               className={cn(
                 commonHeadingClassName,
-                "mb-3 border-border border-b text-xl md:text-2xl",
+                "mb-3 border-border border-b pb-2 text-xl md:text-2xl",
               )}
               {...cleanedProps(props)}
             />
@@ -60,7 +59,7 @@ export const MarkdownRenderer: React.FC<{
               {...cleanedProps(props)}
               className={cn(
                 commonHeadingClassName,
-                "mt-8 mb-3 border-border border-b text-lg md:text-xl",
+                "mt-8 mb-3 border-border border-b pb-2 text-lg md:text-xl",
               )}
             />
           ),
@@ -103,6 +102,10 @@ export const MarkdownRenderer: React.FC<{
               {...cleanedProps(props)}
               className="mt-4 underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
             />
+          ),
+
+          hr: (props) => (
+            <hr {...cleanedProps(props)} className="my-5 bg-border" />
           ),
 
           code: ({ ...props }) => {
@@ -180,21 +183,21 @@ export const MarkdownRenderer: React.FC<{
           ul: (props) => {
             return (
               <ul
-                className="mb-6 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+                className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
                 {...cleanedProps(props)}
               />
             );
           },
           ol: (props) => (
             <ol
-              className="mb-6 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
               {...cleanedProps(props)}
             />
           ),
           li: ({ children: c, ...props }) => (
             <li
               className={cn(
-                "mb-2 text-muted-foreground leading-loose [&>p]:m-0",
+                "mb-1.5 text-muted-foreground leading-loose [&>p]:m-0",
                 markdownProps.li?.className,
               )}
               {...cleanedProps(props)}

@@ -346,7 +346,7 @@ function StyledMarkdownRenderer(props: {
       p={{
         className:
           props.type === "assistant"
-            ? "text-foreground leading-loose"
+            ? "text-foreground"
             : "text-foreground leading-normal",
       }}
       li={{ className: "text-foreground" }}
