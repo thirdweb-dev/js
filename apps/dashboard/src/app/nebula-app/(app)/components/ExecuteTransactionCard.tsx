@@ -95,10 +95,10 @@ export function ExecuteTransactionCardLayout(props: {
         </h3>
 
         {/* content */}
-        <div className="px-4 text-sm lg:px-6 [&>*]:h-12 [&>*]:border-b lg:[&>*]:h-14">
+        <div className="px-4 text-sm lg:px-6 [&>*:not(:last-child)]:border-b [&>*]:h-12 lg:[&>*]:h-14">
           {/* From */}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-muted-foreground">From</span>
+            <span className="font-medium text-muted-foreground">From</span>
             {account ? (
               <WalletAddress
                 address={account.address}
@@ -113,7 +113,7 @@ export function ExecuteTransactionCardLayout(props: {
           {/* To */}
           {txData.to && (
             <div className="flex items-center justify-between gap-2">
-              <span className="text-muted-foreground">To</span>
+              <span className="font-medium text-muted-foreground">To</span>
 
               <WalletAddress
                 address={txData.to}
@@ -125,7 +125,7 @@ export function ExecuteTransactionCardLayout(props: {
 
           {/* Value */}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-muted-foreground">Value</span>
+            <span className="font-medium text-muted-foreground">Value</span>
             {toEther(BigInt(txData.value))} {chain.nativeCurrency?.symbol}
           </div>
 
@@ -147,7 +147,7 @@ export function ExecuteTransactionCardLayout(props: {
           {/* Status */}
           {props.status.type !== "idle" && (
             <div className="flex items-center justify-between gap-2">
-              <span className="text-muted-foreground">Status</span>
+              <span className="font-medium text-muted-foreground">Status</span>
               <div className="flex items-center gap-1.5">
                 <span
                   className={cn(
@@ -193,7 +193,9 @@ export function ExecuteTransactionCardLayout(props: {
           {/* Transaction Hash */}
           {"txHash" in props.status && props.status.txHash && (
             <div className="flex items-center justify-between gap-1">
-              <span className="text-muted-foreground">Transaction Hash</span>
+              <span className="font-medium text-muted-foreground">
+                Transaction Hash
+              </span>
               <div className="flex justify-end gap-2.5">
                 {explorer ? (
                   <Button
@@ -226,83 +228,86 @@ export function ExecuteTransactionCardLayout(props: {
         </div>
 
         {/* footer */}
-        <div className="flex items-center justify-end px-4 py-6 lg:px-6">
-          <TransactionButton
-            isPending={sendTransaction.isPending}
-            transactionCount={undefined}
-            txChainID={txData.chainId}
-            variant="default"
-            disabled={isTransactionPending}
-            size="sm"
-            onClick={async () => {
-              trackEvent({
-                category: "nebula",
-                action: "execute_transaction",
-                label: "attempt",
-                chainId: txData.chainId,
-              });
-
-              const tx = prepareTransaction({
-                chain: chain,
-                client: props.client,
-                data: txData.data,
-                to: txData.to,
-                value: BigInt(txData.value),
-              });
-
-              let txHash: string | undefined;
-
-              try {
-                // submit transaction
-                props.setStatus({ type: "sending" });
-                const submittedReceipt = await sendTransaction.mutateAsync(tx);
-                txHash = submittedReceipt.transactionHash;
-
+        {props.status.type !== "confirmed" && (
+          <div className="flex items-center justify-end border-t px-4 py-6 lg:px-6">
+            <TransactionButton
+              isPending={sendTransaction.isPending}
+              transactionCount={undefined}
+              txChainID={txData.chainId}
+              variant="default"
+              disabled={isTransactionPending}
+              size="sm"
+              onClick={async () => {
                 trackEvent({
                   category: "nebula",
                   action: "execute_transaction",
-                  label: "sent",
+                  label: "attempt",
                   chainId: txData.chainId,
                 });
 
-                // wait for receipt
-                props.setStatus({
-                  type: "confirming",
-                  txHash: submittedReceipt.transactionHash,
+                const tx = prepareTransaction({
+                  chain: chain,
+                  client: props.client,
+                  data: txData.data,
+                  to: txData.to,
+                  value: BigInt(txData.value),
                 });
 
-                const confirmReceipt = await waitForReceipt(submittedReceipt);
-                txHash = confirmReceipt.transactionHash;
-                props.setStatus({
-                  type: "confirmed",
-                  txHash: confirmReceipt.transactionHash,
-                });
+                let txHash: string | undefined;
 
-                props.onTxSettled(txHash);
+                try {
+                  // submit transaction
+                  props.setStatus({ type: "sending" });
+                  const submittedReceipt =
+                    await sendTransaction.mutateAsync(tx);
+                  txHash = submittedReceipt.transactionHash;
 
-                trackEvent({
-                  category: "nebula",
-                  action: "execute_transaction",
-                  label: "confirmed",
-                  chainId: txData.chainId,
-                });
-              } catch {
-                if (txHash) {
+                  trackEvent({
+                    category: "nebula",
+                    action: "execute_transaction",
+                    label: "sent",
+                    chainId: txData.chainId,
+                  });
+
+                  // wait for receipt
+                  props.setStatus({
+                    type: "confirming",
+                    txHash: submittedReceipt.transactionHash,
+                  });
+
+                  const confirmReceipt = await waitForReceipt(submittedReceipt);
+                  txHash = confirmReceipt.transactionHash;
+                  props.setStatus({
+                    type: "confirmed",
+                    txHash: confirmReceipt.transactionHash,
+                  });
+
                   props.onTxSettled(txHash);
+
+                  trackEvent({
+                    category: "nebula",
+                    action: "execute_transaction",
+                    label: "confirmed",
+                    chainId: txData.chainId,
+                  });
+                } catch {
+                  if (txHash) {
+                    props.onTxSettled(txHash);
+                  }
+                  props.setStatus({
+                    type: "failed",
+                    txHash: txHash,
+                  });
                 }
-                props.setStatus({
-                  type: "failed",
-                  txHash: txHash,
-                });
-              }
-            }}
-            className="gap-2"
-            isLoggedIn={true}
-          >
-            <ArrowRightLeftIcon className="size-4" />
-            Execute Transaction
-          </TransactionButton>
-        </div>
+              }}
+              className="gap-2"
+              isLoggedIn={true}
+            >
+              <ArrowRightLeftIcon className="size-4" />
+              Execute Transaction
+            </TransactionButton>
+          </div>
+        )}
       </div>
     </div>
   );
