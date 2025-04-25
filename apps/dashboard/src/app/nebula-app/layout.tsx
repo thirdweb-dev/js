@@ -35,6 +35,7 @@ export default function Layout(props: {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/assets/nebula/favicon.ico" />
         <PosthogHeadSetup />
       </head>
       <PHProvider>
