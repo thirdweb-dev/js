@@ -40,7 +40,6 @@ export function EmptyStateChatPageContent(props: {
             showContextSelector={true}
             context={props.context}
             setContext={props.setContext}
-            includeSupportButton={false}
             sendMessage={props.sendMessage}
             isChatStreaming={false}
             client={nebulaAppThirdwebClient}

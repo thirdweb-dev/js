@@ -22,7 +22,6 @@ import {
   CircleStopIcon,
   CopyIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import {
@@ -56,7 +55,6 @@ export function ChatBar(props: {
   activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
-  includeSupportButton: boolean;
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
   const selectedChainIds = props.context?.chainIds?.map((x) => Number(x)) || [];
@@ -175,14 +173,6 @@ export function ChatBar(props: {
             </div>
           )}
         </div>
-        {props.includeSupportButton && (
-          <Button
-            variant="default"
-            className="!h-auto w-auto shrink-0 gap-2 p-2"
-          >
-            <Link href="/support/create-ticket">Create Support Ticket</Link>
-          </Button>
-        )}
         {/* Send / Stop */}
         {props.isChatStreaming ? (
           <Button

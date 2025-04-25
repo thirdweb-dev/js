@@ -222,7 +222,6 @@ function FloatingChatContentLoggedIn(props: {
         isChatStreaming={isChatStreaming}
         prefillMessage=""
         sendMessage={handleSendMessage}
-        includeSupportButton={props.pageType === "support"}
         className="rounded-none border-x-0 border-b-0"
       />
     </div>
