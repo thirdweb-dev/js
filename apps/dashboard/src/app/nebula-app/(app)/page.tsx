@@ -1,5 +1,8 @@
 import { loginRedirect } from "../../(app)/login/loginRedirect";
-import { getNebulaAuthToken } from "../_utils/authToken";
+import {
+  getNebulaAuthToken,
+  getNebulaAuthTokenWalletAddress,
+} from "../_utils/authToken";
 import { ChatPageContent } from "./components/ChatPageContent";
 import { getChains } from "./utils/getChainIds";
 
@@ -11,17 +14,19 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const [chains, authToken] = await Promise.all([
+  const [chains, authToken, accountAddress] = await Promise.all([
     getChains(searchParams.chain),
     getNebulaAuthToken(),
+    getNebulaAuthTokenWalletAddress(),
   ]);
 
-  if (!authToken) {
+  if (!authToken || !accountAddress) {
     loginRedirect();
   }
 
   return (
     <ChatPageContent
+      accountAddress={accountAddress}
       authToken={authToken}
       session={undefined}
       type="landing"

@@ -29,6 +29,7 @@ import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 export function ChatPageContent(props: {
   session: SessionInfo | undefined;
+  accountAddress: string;
   authToken: string;
   type: "landing" | "new-chat";
   initialParams:
@@ -99,7 +100,7 @@ export function ChatPageContent(props: {
         contextRes?.chain_ids ||
         props.initialParams?.chainIds.map((x) => x.toString()) ||
         [],
-      walletAddress: contextRes?.wallet_address || null,
+      walletAddress: contextRes?.wallet_address || props.accountAddress || null,
     };
 
     return value;
