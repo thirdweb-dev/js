@@ -4,6 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { teamStub } from "stories/stubs";
+import { storybookThirdwebClient } from "../../../../../../../../stories/utils";
 import { InviteSection } from "./InviteSection";
 
 const meta = {
@@ -34,6 +35,14 @@ const TEAM_CONFIGS = [
   },
   { id: "scale", label: "Scale Team", team: teamStub("qux", "scale") },
   { id: "pro", label: "Pro Team", team: teamStub("bar", "pro") },
+] as const;
+
+const RECOMMENDED_MEMBERS_COUNTS = [
+  { id: "0", label: "No Recommended Members", value: 0 },
+  { id: "1", label: "1 Recommended Member", value: 1 },
+  { id: "3", label: "2 Recommended Members", value: 2 },
+  { id: "5", label: "11 Recommended Members", value: 11 },
+  { id: "100", label: "100 Recommended Members", value: 100 },
 ] as const;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -79,11 +88,25 @@ function Story() {
   const [hasEditPermission, setHasEditPermission] = useState("true");
   const [inviteResult, setInviteResult] =
     useState<keyof typeof INVITE_HANDLERS>("success");
+  const [recommendedMembersCount, setRecommendedMembersCount] =
+    useState<number>(0);
 
   const showPermissionControls =
     selectedTeam.id !== "free" && selectedTeam.id !== "pro";
   const showInviteControls =
     showPermissionControls && hasEditPermission === "true";
+
+  const recommendedMembers = Array.from(
+    { length: recommendedMembersCount },
+    (_, i) => ({
+      email: `user${i + 1}@example.com`,
+      name: i % 2 === 0 ? `User ${i + 1}` : null,
+      image:
+        i % 3 === 0
+          ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 1}`
+          : null,
+    }),
+  );
 
   return (
     <div className="container max-w-6xl py-10">
@@ -154,6 +177,26 @@ function Story() {
             </RadioGroup>
           </div>
         )}
+
+        <div>
+          <h3 className="mb-3 font-medium">Recommended Members</h3>
+          <RadioGroup
+            value={recommendedMembersCount.toString()}
+            onValueChange={(value) => {
+              setRecommendedMembersCount(Number.parseInt(value));
+            }}
+            className="flex gap-4"
+          >
+            {RECOMMENDED_MEMBERS_COUNTS.map(({ id, label, value }) => (
+              <RadioOption
+                key={id}
+                id={id}
+                label={label}
+                value={value.toString()}
+              />
+            ))}
+          </RadioGroup>
+        </div>
       </div>
 
       <div className="flex flex-col gap-10">
@@ -161,6 +204,8 @@ function Story() {
           team={selectedTeam.team}
           userHasEditPermission={hasEditPermission === "true"}
           inviteTeamMembers={INVITE_HANDLERS[inviteResult]}
+          recommendedMembers={recommendedMembers}
+          client={storybookThirdwebClient}
         />
       </div>
     </div>

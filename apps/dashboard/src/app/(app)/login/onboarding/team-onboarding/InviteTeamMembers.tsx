@@ -18,6 +18,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
 import { useState, useTransition } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useStripeRedirectEvent } from "../../../stripe-redirect/stripeRedirectChannel";
 import {
@@ -32,6 +33,7 @@ export function InviteTeamMembersUI(props: {
   onComplete: () => void;
   getTeam: () => Promise<Team>;
   trackEvent: (params: TrackingParams) => void;
+  client: ThirdwebClient;
 }) {
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -93,6 +95,9 @@ export function InviteTeamMembersUI(props: {
         userHasEditPermission={true}
         onInviteSuccess={() => setHasSentInvites(true)}
         shouldHideInviteButton={hasSentInvites}
+        client={props.client}
+        // its a new team, there's no recommended members
+        recommendedMembers={[]}
         customCTASection={
           <div className="flex gap-3">
             {props.team.billingPlan === "free" && (

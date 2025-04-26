@@ -6,6 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
+import { getRecommendedMembers } from "./getRecommendedMembers";
 
 export default async function Page(props: {
   params: Promise<{
@@ -55,6 +56,13 @@ export default async function Page(props: {
     teamId: team.id,
   });
 
+  const recommendedMembers = team.verifiedDomain
+    ? await getRecommendedMembers({
+        teamId: team.id,
+        authToken,
+      })
+    : [];
+
   return (
     <TeamMembersSettingsPage
       team={team}
@@ -62,6 +70,7 @@ export default async function Page(props: {
       userHasEditPermission={accountMemberInfo.role === "OWNER"}
       client={client}
       teamInvites={pendingOrExpiredInvites}
+      recommendedMembers={recommendedMembers}
     />
   );
 }

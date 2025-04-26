@@ -1,6 +1,7 @@
 "use client";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,13 +20,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { ExternalLinkIcon, PlusIcon, Trash2Icon, UserPlus } from "lucide-react";
+import {
+  CheckIcon,
+  ExternalLinkIcon,
+  PlusIcon,
+  SearchIcon,
+  Trash2Icon,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
 import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
@@ -39,6 +50,12 @@ const inviteFormSchema = z.object({
     )
     .min(1, "No invites added"),
 });
+
+export type RecommendedMember = {
+  email: string;
+  name: string | null;
+  image: string | null;
+};
 
 type InviteFormValues = z.infer<typeof inviteFormSchema>;
 
@@ -61,6 +78,8 @@ export function InviteSection(props: {
   className?: string;
   onInviteSuccess?: () => void;
   shouldHideInviteButton?: boolean;
+  recommendedMembers: RecommendedMember[];
+  client: ThirdwebClient;
 }) {
   const teamPlan = getValidTeamPlan(props.team);
   let bottomSection: React.ReactNode = null;
@@ -241,6 +260,41 @@ export function InviteSection(props: {
               </p>
             </div>
 
+            {props.recommendedMembers.length > 0 && (
+              <RecommendedMembersSection
+                client={props.client}
+                isDisabled={!inviteEnabled}
+                recommendedMembers={props.recommendedMembers}
+                selectedMembers={form
+                  .watch("invites")
+                  .map((invite) => invite.email)}
+                onToggleMember={(email) => {
+                  const currentInvites = form
+                    .getValues("invites")
+                    .filter((x) => x.email !== "");
+
+                  const inviteIndex = currentInvites.findIndex(
+                    (invite) => invite.email === email,
+                  );
+                  if (inviteIndex !== -1) {
+                    currentInvites.splice(inviteIndex, 1);
+                  } else {
+                    currentInvites.push({ email, role: "MEMBER" });
+                  }
+
+                  // must show at least one (even if its empty)
+                  if (currentInvites.length === 0) {
+                    currentInvites.push({ email: "", role: "MEMBER" });
+                  }
+
+                  form.setValue("invites", currentInvites, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                }}
+              />
+            )}
+
             <div className="px-4 py-6 lg:px-6">
               <div className="flex flex-col gap-5">
                 {form.watch("invites").map((_, index) => (
@@ -372,6 +426,7 @@ export function InviteSection(props: {
                 </Button>
               </div>
             </div>
+
             {bottomSection}
           </div>
         </section>
@@ -408,5 +463,119 @@ function RoleSelector(props: {
         ))}
       </SelectContent>
     </Select>
+  );
+}
+
+function RecommendedMembersSection(props: {
+  recommendedMembers: RecommendedMember[];
+  selectedMembers: string[];
+  onToggleMember: (email: string) => void;
+  isDisabled: boolean;
+  client: ThirdwebClient;
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredMembers = props.recommendedMembers.filter((member) =>
+    member.email.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const membersToShow = isExpanded
+    ? filteredMembers
+    : filteredMembers.slice(0, 11);
+
+  return (
+    <div className="relative border-b">
+      <div className="flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-6">
+        <div className="">
+          <h3 className="font-medium text-base">Recommended Members</h3>
+          <p className="text-muted-foreground text-sm">
+            Users with your team's verified domain in their email address that
+            aren't added to your team yet
+          </p>
+        </div>
+
+        <div className="relative flex items-center gap-2">
+          <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
+          <Input
+            placeholder="Search Email"
+            className="w-full bg-card pl-9 lg:w-72"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+          />
+        </div>
+      </div>
+
+      {membersToShow.length === 0 && (
+        <div className="px-4 pb-6 lg:px-6">
+          <div className="flex min-h-[200px] items-center justify-center rounded-lg bg-muted/50 text-muted-foreground">
+            No members found
+          </div>
+        </div>
+      )}
+
+      {membersToShow.length > 0 && (
+        <div className="grid max-h-[294px] grid-cols-1 gap-3 overflow-y-auto px-4 pb-6 md:grid-cols-2 lg:px-6 xl:grid-cols-3">
+          {membersToShow.map((member) => {
+            const isSelected = props.selectedMembers.includes(member.email);
+            return (
+              <Button
+                key={member.email}
+                variant="outline"
+                className={cn(
+                  "relative flex h-auto w-auto items-center justify-between gap-2 rounded-lg border-dashed p-2.5 text-start hover:border-active-border hover:border-solid hover:bg-accent/50 disabled:opacity-100",
+                  isSelected &&
+                    "border-active-border border-solid bg-accent/50",
+                )}
+                onClick={() => {
+                  props.onToggleMember(member.email);
+                }}
+                disabled={props.isDisabled}
+              >
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  <GradientAvatar
+                    id={member.email}
+                    client={props.client}
+                    src={
+                      member.image
+                        ? resolveSchemeWithErrorHandler({
+                            uri: member.image,
+                            client: props.client,
+                          })
+                        : ""
+                    }
+                    className="size-8 rounded-full border"
+                  />
+
+                  <div className="truncate text-foreground text-sm">
+                    {member.email}
+                  </div>
+                </div>
+
+                {isSelected && (
+                  <div className="p-1">
+                    <CheckIcon className="size-5 text-foreground" />
+                  </div>
+                )}
+              </Button>
+            );
+          })}
+
+          {filteredMembers.length > membersToShow.length && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-full rounded-lg border-dashed hover:border-active-border hover:border-solid hover:bg-accent/50"
+              onClick={() => {
+                setIsExpanded(true);
+              }}
+            >
+              + {filteredMembers.length - membersToShow.length} more
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

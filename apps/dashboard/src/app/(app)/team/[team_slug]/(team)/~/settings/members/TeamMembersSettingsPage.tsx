@@ -9,7 +9,7 @@ import { TabButtons } from "@/components/ui/tabs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { InviteSection } from "./InviteSection";
+import { InviteSection, type RecommendedMember } from "./InviteSection";
 import { ManageInvitesSection } from "./ManageInvitesSection";
 import { ManageMembersSection } from "./ManageMembersSection";
 
@@ -19,6 +19,7 @@ export function TeamMembersSettingsPage(props: {
   members: TeamMember[];
   client: ThirdwebClient;
   teamInvites: TeamInvite[];
+  recommendedMembers: RecommendedMember[];
 }) {
   const [manageTab, setManageTab] = useState<"members" | "invites">("members");
   const router = useDashboardRouter();
@@ -34,6 +35,7 @@ export function TeamMembersSettingsPage(props: {
 
       <InviteSection
         team={props.team}
+        client={props.client}
         userHasEditPermission={props.userHasEditPermission}
         inviteTeamMembers={async (params) => {
           const res = await sendTeamInvites({
@@ -51,6 +53,8 @@ export function TeamMembersSettingsPage(props: {
             results: res.results,
           };
         }}
+        // TODO
+        recommendedMembers={props.recommendedMembers}
       />
 
       <div className="h-10" />

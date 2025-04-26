@@ -1,5 +1,4 @@
 import { getTeamBySlug } from "@/api/team";
-import {} from "@/components/ui/breadcrumb";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
