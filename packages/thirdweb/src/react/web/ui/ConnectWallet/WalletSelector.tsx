@@ -218,9 +218,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   );
 
   const handleSelect = async (wallet: Wallet) => {
-    // if (connectionStatus !== "disconnected") {
-    //   await disconnect();
-    // }
     props.selectWallet(wallet);
   };
 
@@ -640,7 +637,7 @@ const WalletSelection: React.FC<{
               </Suspense>
             ) : (
               <WalletEntryButton
-                walletId={wallet.id}
+                wallet={wallet}
                 selectWallet={() => {
                   if (!props.diableSelectionDataReset) {
                     setSelectionData({});

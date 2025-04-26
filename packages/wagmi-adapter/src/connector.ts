@@ -94,8 +94,9 @@ export function inAppWalletConnector(
   const client = args.client;
   return createConnector<Provider, Properties, StorageItem>((config) => ({
     id: "in-app-wallet",
-    name: "In-App wallet",
+    name: args.metadata?.name || "In-App wallet",
     type: "in-app",
+    icon: args.metadata?.icon,
     connect: async (params) => {
       const rawStorage =
         typeof window !== "undefined" && window.localStorage

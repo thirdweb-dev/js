@@ -130,6 +130,7 @@ function AllWalletsUI(props: {
             >
               {walletInfosToShow.map((walletInfo, i) => {
                 const isLast = i === walletInfosToShow.length - 1;
+                const wallet = createWallet(walletInfo.id);
 
                 return (
                   <li
@@ -140,9 +141,8 @@ function AllWalletsUI(props: {
                     }}
                   >
                     <WalletEntryButton
-                      walletId={walletInfo.id}
+                      wallet={wallet}
                       selectWallet={() => {
-                        const wallet = createWallet(walletInfo.id);
                         props.onSelect(wallet);
                         if (!props.disableSelectionDataReset) {
                           setSelectionData({});
