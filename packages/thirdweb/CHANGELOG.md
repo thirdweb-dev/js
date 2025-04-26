@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.96.4
+
+### Patch Changes
+
+- [#6849](https://github.com/thirdweb-dev/js/pull/6849) [`e28eb73`](https://github.com/thirdweb-dev/js/commit/e28eb73894f2784b528a95a8cd34f1865362ac12) Thanks [@MananTank](https://github.com/MananTank)! - Signature Screen loading state improvements
+
+- [#6858](https://github.com/thirdweb-dev/js/pull/6858) [`adcbec6`](https://github.com/thirdweb-dev/js/commit/adcbec607f20275cfccac331c4af9a3055ee00bc) Thanks [@mmahdigh](https://github.com/mmahdigh)! - Add name and icon to inAppWallet metadata props to customize in-app wallets inside the connect modal
+
 ## 5.96.3
 
 ### Patch Changes
