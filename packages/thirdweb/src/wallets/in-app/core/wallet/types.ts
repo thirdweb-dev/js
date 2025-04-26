@@ -70,6 +70,7 @@ export type InAppWalletCreationOptions =
        */
       metadata?: {
         name?: string;
+        icon?: string;
         image?: {
           src: string;
           width?: number;

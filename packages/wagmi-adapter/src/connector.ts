@@ -96,7 +96,7 @@ export function inAppWalletConnector(
     id: "in-app-wallet",
     name: args.metadata?.name || "In-App wallet",
     type: "in-app",
-    icon: args.metadata?.image?.src,
+    icon: args.metadata?.icon,
     connect: async (params) => {
       const rawStorage =
         typeof window !== "undefined" && window.localStorage
