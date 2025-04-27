@@ -129,8 +129,15 @@ export function useWalletIcon(props: {
 /**
  * @internal Exported for tests only
  */
-export async function fetchWalletImage(props: {
-  id: WalletId;
-}) {
+export async function fetchWalletImage(props: { id: WalletId }) {
+  const { getInstalledWalletProviders } = await import(
+    "../../../wallets/injected/mipdStore.js"
+  );
+  const mipdImage = getInstalledWalletProviders().find(
+    (x) => x.info.rdns === props.id,
+  )?.info.icon;
+  if (mipdImage) {
+    return mipdImage;
+  }
   return getWalletInfo(props.id, true);
 }

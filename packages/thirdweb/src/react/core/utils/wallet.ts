@@ -194,9 +194,18 @@ export function useWalletInfo(id: WalletId | undefined) {
 export function useWalletImage(id: WalletId | undefined) {
   return useQuery({
     queryKey: ["wallet-image", id],
-    queryFn: () => {
+    queryFn: async () => {
       if (!id) {
         throw new Error("Wallet id is required");
+      }
+      const { getInstalledWalletProviders } = await import(
+        "../../../wallets/injected/mipdStore.js"
+      );
+      const mipdImage = getInstalledWalletProviders().find(
+        (x) => x.info.rdns === id,
+      )?.info.icon;
+      if (mipdImage) {
+        return mipdImage;
       }
       return getWalletInfo(id, true);
     },
