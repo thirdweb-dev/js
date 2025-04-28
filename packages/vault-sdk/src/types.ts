@@ -314,6 +314,11 @@ export type PolicyComponent =
         useropV06?: UserOperationV06Rules;
         useropV07?: UserOperationV07Rules;
       };
+    }
+  | {
+      type: "accessToken:read";
+      metadataPatterns?: MetadataRule[];
+      revealSensitive: boolean;
     };
 
 type OwnerType = string; // Define based on your eoa models
@@ -438,6 +443,8 @@ export type SignStructuredMessageData = {
 export type AccessTokenData = {
   id: string; // UUID
   issuerId: string; // UUID
+  // Only present if revealSensitive is true for the policy being used to read. Always returned for admin.
+  accessToken?: string | null;
   issuerType: OwnerType;
   policies: PolicyComponent[];
   expiresAt: string; // ISO date string
