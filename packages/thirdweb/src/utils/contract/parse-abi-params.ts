@@ -51,7 +51,7 @@ export function parseAbiParams(
   }
   return constructorParamTypes.map((type, index) => {
     const value = constructorParamValues[index];
-    if (type === "tuple" || type.endsWith("[]")) {
+    if (type === "tuple" || type.endsWith("]")) {
       if (typeof value === "string") {
         return JSON.parse(value);
       }

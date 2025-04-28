@@ -60,7 +60,7 @@ export const SolidityInput = forwardRef<
     );
   }
 
-  if (solidityType?.endsWith("[]")) {
+  if (solidityType?.endsWith("]")) {
     return (
       <SolidityRawInput
         formContext={form}
