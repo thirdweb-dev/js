@@ -146,7 +146,7 @@ export function getRpcClient(
             if (!response) {
               inflight.reject(
                 new Error(
-                  `No response for index ${index} - all responses: ${stringify(responses)}`,
+                  `RPC Error from ${rpcUrl}:\nrequests: ${stringify(requests)}\nresponses: ${stringify(responses)}`,
                 ),
               );
             }

@@ -25,7 +25,7 @@ export default async function globalSetup() {
       forkChainId: 1,
       forkBlockNumber: FORK_BLOCK_NUMBER,
       noMining: true,
-      startTimeout: 20000,
+      startTimeout: 60000,
     },
   });
 
@@ -41,7 +41,7 @@ export default async function globalSetup() {
       forkBlockNumber: FORK_BLOCK_NUMBER,
       // ey, i'm mining here!
       noMining: false,
-      startTimeout: 20000,
+      startTimeout: 60000,
     },
   });
 
@@ -56,7 +56,7 @@ export default async function globalSetup() {
       forkChainId: 10,
       forkBlockNumber: OPTIMISM_FORK_BLOCK_NUMBER,
       noMining: true,
-      startTimeout: 20000,
+      startTimeout: 60000,
     },
   });
 
@@ -97,7 +97,7 @@ export default async function globalSetup() {
       forkChainId: 137,
       forkBlockNumber: POLYGON_FORK_BLOCK_NUMBER,
       noMining: false,
-      startTimeout: 20000,
+      startTimeout: 60000,
     },
   });
 
@@ -112,7 +112,7 @@ export default async function globalSetup() {
       forkChainId: 8453,
       forkBlockNumber: BASE_FORK_BLOCK_NUMBER,
       noMining: true,
-      startTimeout: 20000,
+      startTimeout: 60000,
     },
   });
 
