@@ -51,11 +51,15 @@ const staticSidebarLinks: SidebarLink[] = [
             href: "/connect/account-abstraction/connect",
           },
           {
-            name: "Sponsor Gas",
+            name: "EIP-4337",
             href: "/connect/account-abstraction/sponsor",
           },
           {
-            name: "Native AA (zkSync)",
+            name: "EIP-7702",
+            href: "/connect/account-abstraction/7702",
+          },
+          {
+            name: "Native (zkSync)",
             href: "/connect/account-abstraction/native-aa",
           },
         ],

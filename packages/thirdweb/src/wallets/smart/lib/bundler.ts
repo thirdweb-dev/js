@@ -4,6 +4,8 @@ import { getContract } from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { userOperationRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint/events/UserOperationRevertReason.js";
 import { postOpRevertReasonEvent } from "../../../extensions/erc4337/__generated__/IEntryPoint_v07/events/PostOpRevertReason.js";
+import type { ExecuteWithSigParams } from "../../../extensions/erc7702/__generated__/MinimalAccount/write/executeWithSig.js";
+import type { SignedAuthorization } from "../../../transaction/actions/eip7702/authorization.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../../../transaction/serialize-transaction.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
@@ -338,6 +340,49 @@ export async function getZkPaymasterData(args: {
   };
 }
 
+/**
+ * @internal
+ */
+export async function executeWithSignature(args: {
+  eoaAddress: `0x${string}`;
+  wrappedCalls: ExecuteWithSigParams["wrappedCalls"];
+  signature: `0x${string}`;
+  authorization: SignedAuthorization | undefined;
+  options: BundlerOptions;
+}): Promise<{ transactionId: string }> {
+  const res = await sendBundlerRequest({
+    ...args,
+    operation: "tw_execute",
+    params: [
+      args.eoaAddress,
+      args.wrappedCalls,
+      args.signature,
+      args.authorization,
+    ],
+  });
+
+  return {
+    transactionId: res.queueId,
+  };
+}
+
+/**
+ * @internal
+ */
+export async function getQueuedTransactionHash(args: {
+  transactionId: string;
+  options: BundlerOptions;
+}): Promise<{ transactionHash: Hex }> {
+  const res = await sendBundlerRequest({
+    ...args,
+    operation: "tw_getTransactionHash",
+    params: [args.transactionId],
+  });
+  return {
+    transactionHash: res.transactionHash,
+  };
+}
+
 export async function broadcastZkTransaction(args: {
   options: BundlerOptions;
   transaction: SerializableTransaction;
@@ -367,7 +412,9 @@ async function sendBundlerRequest(args: {
     | "eth_getUserOperationReceipt"
     | "thirdweb_getUserOperationGasPrice"
     | "zk_paymasterData"
-    | "zk_broadcastTransaction";
+    | "zk_broadcastTransaction"
+    | "tw_execute"
+    | "tw_getTransactionHash";
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   params: any[];
 }) {
@@ -388,7 +435,6 @@ async function sendBundlerRequest(args: {
     }),
   });
   const res = await response.json();
-
   if (!response.ok || res.error) {
     let error = res.error || response.statusText;
     if (typeof error === "object") {

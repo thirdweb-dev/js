@@ -135,5 +135,7 @@ export function transferOwnership(
     nonce: async () => (await asyncOptions()).overrides?.nonce,
     extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
   });
 }

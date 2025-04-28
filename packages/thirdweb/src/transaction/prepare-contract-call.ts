@@ -49,6 +49,7 @@ export type PrepareContractCallOptions<
     | "maxFeePerGas"
     | "maxPriorityFeePerGas"
     | "nonce"
+    | "authorizationList"
   > & {
     contract: ThirdwebContract<TAbi>;
     method: TMethod | TPreparedMethod;

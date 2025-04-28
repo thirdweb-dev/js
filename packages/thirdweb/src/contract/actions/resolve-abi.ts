@@ -1,4 +1,5 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
+import { sepolia } from "viem/chains";
 import { download } from "../../storage/download.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { withCache } from "../../utils/promise/withCache.js";
@@ -39,7 +40,11 @@ export function resolveContractAbi<abi extends Abi>(
       }
 
       // for local chains, we need to resolve the composite abi from bytecode
-      if (contract.chain.id === 31337 || contract.chain.id === 1337) {
+      if (
+        contract.chain.id === 31337 ||
+        contract.chain.id === 1337 ||
+        contract.chain.id === sepolia.id // FIXME remove this once contract API handles 7702 delegation
+      ) {
         return (await resolveCompositeAbi(contract as ThirdwebContract)) as abi;
       }
 

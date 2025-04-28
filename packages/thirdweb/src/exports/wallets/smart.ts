@@ -42,3 +42,5 @@ export {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   TokenPaymaster,
 } from "../../wallets/smart/lib/constants.js";
+
+export { create7702MinimalAccount } from "../../wallets/in-app/core/eip7702/minimal-account.js";

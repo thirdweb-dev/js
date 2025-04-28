@@ -336,6 +336,7 @@ export function ${f.name}(
       nonce: async () => (await asyncOptions()).overrides?.nonce,
       extraGas: async () => (await asyncOptions()).overrides?.extraGas,
       erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+      authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
       `
         : ""
     }
@@ -885,7 +886,7 @@ async function main() {
   for (const folder of folders) {
     const OUT_PATH = join(EXTENSIONS_FOLDER, folder, "__generated__");
     // delete the "__generated__" folder inside the extension folder
-    await rmdir(OUT_PATH, { recursive: true });
+    await rmdir(OUT_PATH, { recursive: true }).catch(() => {});
 
     // create the "__generated__" folder inside the extension folder
     await mkdir(OUT_PATH, { recursive: true });
