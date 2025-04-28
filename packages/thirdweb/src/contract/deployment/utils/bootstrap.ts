@@ -236,7 +236,7 @@ export async function getOrDeployInfraContract(
   });
 }
 
-export async function getOrDeployInfraContractFromMetadata(
+async function getOrDeployInfraContractFromMetadata(
   options: ClientAndChainAndAccount & {
     contractMetadata: FetchDeployMetadataResult;
     constructorParams?: Record<string, unknown>;

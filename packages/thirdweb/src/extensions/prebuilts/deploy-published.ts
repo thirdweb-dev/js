@@ -3,7 +3,6 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import { getOrDeployInfraContractFromMetadata } from "../../contract/deployment/utils/bootstrap.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
@@ -435,18 +434,21 @@ export async function getInitializeTransaction(options: {
     const moduleInstallData: Hex[] = [];
     for (const module of modules) {
       // deploy the module if not already deployed
-      const contract = await getOrDeployInfraContractFromMetadata({
-        client,
-        chain,
+      const contractAddress = await deployContractfromDeployMetadata({
         account,
-        contractMetadata: module.deployMetadata,
+        chain,
+        client,
+        deployMetadata: module.deployMetadata,
+        implementationConstructorParams:
+          module.deployMetadata.implConstructorParams,
+        salt: "",
       });
 
       const installFunction = module.deployMetadata.abi.find(
         (i) => i.type === "function" && i.name === "encodeBytesOnInstall",
       ) as AbiFunction | undefined;
 
-      moduleAddresses.push(getAddress(contract.address));
+      moduleAddresses.push(getAddress(contractAddress));
       moduleInstallData.push(
         installFunction
           ? encodeAbiParameters(
