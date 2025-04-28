@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
@@ -23,8 +24,10 @@ export function TeamSelectionUI(props: {
   upgradeTeamLink: string | undefined;
   account: Pick<Account, "email" | "id" | "image"> | undefined;
   client: ThirdwebClient;
+  isOnProjectPage: boolean;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
+  const pathname = usePathname();
   const teamPlan = currentTeam ? getValidTeamPlan(currentTeam) : undefined;
   const teams = teamsAndProjects.map((x) => x.team);
   const [searchTeamTerm, setSearchTeamTerm] = useState("");
@@ -88,7 +91,13 @@ export function TeamSelectionUI(props: {
                     variant="ghost"
                     asChild
                   >
-                    <Link href={`/team/${team.slug}`}>
+                    <Link
+                      href={
+                        currentTeam && !props.isOnProjectPage
+                          ? pathname.replace(currentTeam.slug, team.slug)
+                          : `/team/${team.slug}`
+                      }
+                    >
                       <div className="flex items-center gap-2">
                         <GradientAvatar
                           src={team.image || ""}

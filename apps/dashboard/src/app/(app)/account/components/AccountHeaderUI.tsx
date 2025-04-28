@@ -113,6 +113,7 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
 
           {props.teamsAndProjects.length > 0 && (
             <TeamSelectorMobileMenuButton
+              isOnProjectPage={false}
               currentTeam={undefined}
               teamsAndProjects={props.teamsAndProjects}
               upgradeTeamLink={undefined}

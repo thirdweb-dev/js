@@ -16,6 +16,7 @@ type TeamSelectorMobileMenuButtonProps = {
   upgradeTeamLink: string | undefined;
   account: Pick<Account, "email" | "id"> | undefined;
   client: ThirdwebClient;
+  isOnProjectPage: boolean;
 };
 
 export function TeamSelectorMobileMenuButton(
@@ -43,6 +44,7 @@ export function TeamSelectorMobileMenuButton(
       <DialogContent dialogCloseClassName="hidden" className="p-0">
         <DynamicHeight>
           <TeamSelectionUI
+            isOnProjectPage={props.isOnProjectPage}
             currentTeam={currentTeam}
             setHoveredTeam={() => {}} // don't care on mobile
             teamsAndProjects={teamsAndProjects}

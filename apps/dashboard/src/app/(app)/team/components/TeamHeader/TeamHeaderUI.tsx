@@ -166,6 +166,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
           </Link>
 
           <TeamSelectorMobileMenuButton
+            isOnProjectPage={!!props.currentProject}
             currentTeam={props.currentTeam}
             teamsAndProjects={props.teamsAndProjects}
             upgradeTeamLink={`/team/${currentTeam.slug}/settings`}

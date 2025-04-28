@@ -84,6 +84,7 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
           <div className="no-scrollbar flex [&>div]:min-w-[280px]">
             {/* Left */}
             <TeamSelectionUI
+              isOnProjectPage={!!props.currentProject}
               currentTeam={currentTeam}
               setHoveredTeam={setHoveredTeam}
               teamsAndProjects={teamsAndProjects}
