@@ -443,8 +443,8 @@ export type SignStructuredMessageData = {
 export type AccessTokenData = {
   id: string; // UUID
   issuerId: string; // UUID
-  // Only present if revealSensitive is true for the policy being used to read. Always returned for admin.
-  accessToken?: string | null;
+  // Only revealed if revealSensitive is true for the policy being used to read, otherwise redacted/masked
+  accessToken: string;
   issuerType: OwnerType;
   policies: PolicyComponent[];
   expiresAt: string; // ISO date string
