@@ -101,6 +101,7 @@ export function ChatPageContent(props: {
         props.initialParams?.chainIds.map((x) => x.toString()) ||
         [],
       walletAddress: contextRes?.wallet_address || props.accountAddress || null,
+      networks: "mainnet",
     };
 
     return value;
@@ -131,6 +132,7 @@ export function ChatPageContent(props: {
         : {
             chainIds: [],
             walletAddress: null,
+            networks: null,
           };
 
       if (!updatedContextFilters.walletAddress && address) {
@@ -594,6 +596,7 @@ export async function handleNebulaPrompt(params: {
         setContextFilters({
           chainIds: res.data.chain_ids.map((x) => x.toString()),
           walletAddress: res.data.wallet_address,
+          networks: res.data.networks,
         });
       }
     },

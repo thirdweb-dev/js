@@ -18,6 +18,7 @@ export async function createSession(params: {
     body.context = {
       chain_ids: params.context.chainIds || [],
       wallet_address: params.context.walletAddress,
+      networks: params.context.networks,
     };
   }
 
@@ -47,6 +48,7 @@ export async function updateSession(params: {
     body.context = {
       chain_ids: params.contextFilters.chainIds || [],
       wallet_address: params.contextFilters.walletAddress,
+      networks: params.contextFilters.networks,
     };
   }
 

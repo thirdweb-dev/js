@@ -130,6 +130,7 @@ export function ChatBar(props: {
                   props.setContext({
                     walletAddress: props.context?.walletAddress || null,
                     chainIds: values.map((x) => x.toString()),
+                    networks: props.context?.networks || null,
                   });
                 }}
                 priorityChains={[
@@ -156,6 +157,7 @@ export function ChatBar(props: {
                       props.setContext({
                         walletAddress: walletMeta.address,
                         chainIds: props.context?.chainIds || [],
+                        networks: props.context?.networks || null,
                       });
                     }}
                   />

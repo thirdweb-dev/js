@@ -93,6 +93,7 @@ export function NebulaLoggedOutStatePage(props: {
             context={{
               walletAddress: null,
               chainIds: chainIds.map((x) => x.toString()),
+              networks: null,
             }}
             setContext={(v) => {
               if (v?.chainIds) {

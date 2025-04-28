@@ -16,6 +16,7 @@ import {
   useState,
 } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { NebulaContext } from "../../api/chat";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
 
@@ -25,6 +26,7 @@ export function NebulaChatButton(props: {
   pageType: "chain" | "contract" | "support";
   authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
+  networks: NebulaContext["networks"];
   label: string;
   client: ThirdwebClient;
   isFloating: boolean;
@@ -91,6 +93,7 @@ export function NebulaChatButton(props: {
       </div>
 
       <NebulaChatUIContainer
+        networks={props.networks}
         onClose={closeModal}
         isOpen={isOpen}
         hasBeenOpened={hasBeenOpened}
@@ -112,6 +115,7 @@ function NebulaChatUIContainer(props: {
   examplePrompts: ExamplePrompt[];
   pageType: "chain" | "contract" | "support";
   client: ThirdwebClient;
+  networks: NebulaContext["networks"];
   nebulaParams:
     | {
         messagePrefix: string;
@@ -187,6 +191,7 @@ function NebulaChatUIContainer(props: {
             }
           >
             <LazyFloatingChatContent
+              networks={props.networks}
               authToken={props.authToken}
               client={props.client}
               nebulaParams={props.nebulaParams}

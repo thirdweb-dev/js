@@ -26,6 +26,7 @@ export default function FloatingChatContent(props: {
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
   pageType: "chain" | "contract" | "support";
+  networks: NebulaContext["networks"];
   nebulaParams:
     | {
         messagePrefix: string;
@@ -40,6 +41,7 @@ export default function FloatingChatContent(props: {
 
   return (
     <FloatingChatContentLoggedIn
+      networks={props.networks}
       authToken={props.authToken}
       client={props.client}
       nebulaParams={props.nebulaParams}
@@ -54,6 +56,7 @@ function FloatingChatContentLoggedIn(props: {
   client: ThirdwebClient;
   pageType: "chain" | "contract" | "support";
   examplePrompts: ExamplePrompt[];
+  networks: NebulaContext["networks"];
   nebulaParams:
     | {
         messagePrefix: string;
@@ -82,6 +85,7 @@ function FloatingChatContentLoggedIn(props: {
         props.nebulaParams?.chainIds.map((chainId) => chainId.toString()) ||
         null,
       walletAddress: props.nebulaParams?.wallet || null,
+      networks: props.networks,
     };
   });
 

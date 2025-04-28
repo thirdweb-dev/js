@@ -48,6 +48,7 @@ function Story() {
           isStreaming={false}
           context={{
             chainIds: ["1"],
+            networks: null,
             walletAddress: null,
           }}
           showContextSelector={true}
@@ -60,6 +61,7 @@ function Story() {
           isStreaming={false}
           context={{
             chainIds: ["1", "137", "10"],
+            networks: null,
             walletAddress: null,
           }}
           showContextSelector={true}
@@ -72,6 +74,7 @@ function Story() {
           isStreaming={false}
           context={{
             chainIds: ["1", "137", "10", "146", "80094"],
+            networks: null,
             walletAddress: null,
           }}
           showContextSelector={true}
@@ -89,6 +92,7 @@ function Story() {
           isStreaming={false}
           context={{
             chainIds: ["1", "137", "10", "146", "80094"],
+            networks: null,
             walletAddress: null,
           }}
           showContextSelector={true}

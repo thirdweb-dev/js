@@ -6,6 +6,7 @@ import type { NebulaTxData } from "../components/Chats";
 export type NebulaContext = {
   chainIds: string[] | null;
   walletAddress: string | null;
+  networks: "mainnet" | "testnet" | "all" | null;
 };
 
 export async function promptNebula(params: {
@@ -26,6 +27,7 @@ export async function promptNebula(params: {
     body.context = {
       chain_ids: params.context.chainIds || [],
       wallet_address: params.context.walletAddress,
+      networks: params.context.networks,
     };
   }
 
@@ -116,6 +118,7 @@ export async function promptNebula(params: {
         const contextData = JSON.parse(data.data) as {
           wallet_address: string;
           chain_ids: number[];
+          networks: NebulaContext["networks"];
         };
 
         params.handleStream({
@@ -165,6 +168,7 @@ type ChatStreamedResponse =
       data: {
         wallet_address: string;
         chain_ids: number[];
+        networks: NebulaContext["networks"];
       };
     };
 

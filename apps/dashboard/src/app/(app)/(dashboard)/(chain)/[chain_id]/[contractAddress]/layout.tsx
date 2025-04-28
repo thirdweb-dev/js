@@ -115,6 +115,7 @@ The following is the user's message:`;
       client={client}
     >
       <NebulaChatButton
+        networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="contract"
         authToken={authToken ?? undefined}

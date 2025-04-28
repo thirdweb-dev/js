@@ -100,6 +100,7 @@ The following is the user's message:
   return (
     <>
       <NebulaChatButton
+        networks={chain.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="chain"
         authToken={authToken ?? undefined}

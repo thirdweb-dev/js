@@ -158,6 +158,7 @@ export default async function SupportPage() {
             </p>
             <div className="mt-6 flex w-full flex-col items-center gap-3">
               <NebulaChatButton
+                networks="all"
                 isFloating={false}
                 pageType="support"
                 authToken={authToken ?? undefined}
