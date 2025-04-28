@@ -256,6 +256,24 @@ export async function createManagementAccessToken(props: {
               },
             ],
           },
+          {
+            type: "accessToken:read",
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+            ],
+            revealSensitive: false,
+          },
         ],
         metadata: {
           projectId: props.project.id,
