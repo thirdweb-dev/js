@@ -200,6 +200,7 @@ export type ProjectService =
       actions: never[];
       maskedAdminKey?: string | null;
       managementAccessToken?: string | null;
+      rotationCode?: string | null;
     }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;

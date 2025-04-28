@@ -200,6 +200,7 @@ export async function createWalletAccessToken(props: {
 export async function createManagementAccessToken(props: {
   project: Project;
   adminKey: string;
+  rotationCode: string;
   vaultClient: VaultClient;
 }) {
   const res = await createAccessToken({
@@ -288,6 +289,13 @@ export async function createManagementAccessToken(props: {
   });
   if (res.success) {
     const data = res.data;
+    console.log({
+      name: "engineCloud",
+      managementAccessToken: data.accessToken,
+      maskedAdminKey: maskSecret(props.adminKey),
+      rotationCode: props.rotationCode,
+      actions: [],
+    });
     // store the management access token in the project
     await updateProjectClient(
       {
@@ -301,6 +309,7 @@ export async function createManagementAccessToken(props: {
             name: "engineCloud",
             managementAccessToken: data.accessToken,
             maskedAdminKey: maskSecret(props.adminKey),
+            rotationCode: props.rotationCode,
             actions: [],
           },
         ],

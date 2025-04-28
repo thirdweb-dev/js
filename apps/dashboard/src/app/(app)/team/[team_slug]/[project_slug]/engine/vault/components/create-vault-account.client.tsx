@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
@@ -24,11 +25,11 @@ import {
   maskSecret,
 } from "../../lib/vault.client";
 
-export default function CreateVaultAccountButton(props: {
-  project: Project;
-}) {
+export default function CreateVaultAccountButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
+  const [keysDownloaded, setKeysDownloaded] = useState(false);
+  const router = useDashboardRouter();
 
   const initialiseProjectWithVaultMutation = useMutation({
     mutationFn: async () => {
@@ -56,6 +57,7 @@ export default function CreateVaultAccountButton(props: {
       const managementAccessTokenPromise = createManagementAccessToken({
         project: props.project,
         adminKey: serviceAccount.data.adminKey,
+        rotationCode: serviceAccount.data.rotationCode,
         vaultClient,
       });
 
@@ -77,7 +79,6 @@ export default function CreateVaultAccountButton(props: {
       return {
         serviceAccount: serviceAccount.data,
         userAccessToken: userAccessTokenRes.data,
-        managementAccessToken: managementAccessTokenRes.data,
       };
     },
     onError: (error) => {
@@ -90,26 +91,47 @@ export default function CreateVaultAccountButton(props: {
     await initialiseProjectWithVaultMutation.mutateAsync();
   };
 
-  const handleCopyAllKeys = () => {
+  const handleDownloadKeys = () => {
     if (!initialiseProjectWithVaultMutation.data) {
       return;
     }
-    navigator.clipboard.writeText(
-      `
-Vault Admin Key: ${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}
-Rotation Code: ${initialiseProjectWithVaultMutation.data.serviceAccount.rotationCode}
-Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}
-        `,
-    );
-    toast.success("All keys copied to clipboard");
+
+    const fileContent = `Project: ${props.project.name} (${props.project.publishableKey})\nVault Admin Key: ${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}\nVault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}\n`;
+    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const filename = `${props.project.name}-${props.project.publishableKey}-vault-keys.txt`;
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link); // Required for Firefox
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success(`Keys downloaded as ${filename}`);
+    setKeysDownloaded(true);
   };
 
   const handleCloseModal = () => {
     if (!keysConfirmed) {
       return;
     }
+
     setModalOpen(false);
     setKeysConfirmed(false);
+    setKeysDownloaded(false);
+    // invalidate the page to force a reload
+    router.refresh();
+  };
+
+  const handlePrimaryButton = () => {
+    if (!keysDownloaded) {
+      handleDownloadKeys();
+      return;
+    }
+    handleCloseModal();
   };
 
   const isLoading = initialiseProjectWithVaultMutation.isPending;
@@ -180,29 +202,6 @@ Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.ac
                   </div>
 
                   <div>
-                    <h3 className="mb-2 font-medium text-sm">Rotation Code</h3>
-                    <div className="flex flex-col gap-2">
-                      <CopyTextButton
-                        textToCopy={
-                          initialiseProjectWithVaultMutation.data.serviceAccount
-                            .rotationCode
-                        }
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                        textToShow={maskSecret(
-                          initialiseProjectWithVaultMutation.data.serviceAccount
-                            .rotationCode,
-                        )}
-                        copyIconPosition="right"
-                        tooltip="Copy Rotation Code"
-                      />
-                      <p className="text-muted-foreground text-xs">
-                        This code is used to revoke and recreate your Vault
-                        admin key if needed. Keep it safe.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
                     <h3 className="mb-2 font-medium text-sm">
                       Vault Access Token
                     </h3>
@@ -246,16 +245,12 @@ Vault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.ac
               </div>
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                <Button variant={"outline"} onClick={handleCopyAllKeys}>
-                  Copy all keys
-                </Button>
-
                 <Button
-                  onClick={handleCloseModal}
-                  disabled={!keysConfirmed}
+                  onClick={handlePrimaryButton}
+                  disabled={keysDownloaded && !keysConfirmed}
                   variant={"primary"}
                 >
-                  Close
+                  {keysDownloaded ? "Close" : "Download Keys"}
                 </Button>
               </div>
             </div>

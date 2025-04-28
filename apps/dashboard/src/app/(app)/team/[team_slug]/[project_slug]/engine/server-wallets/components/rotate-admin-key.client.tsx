@@ -13,32 +13,39 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { Loader2, LockIcon, RefreshCcwIcon } from "lucide-react";
+import { Loader2, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
   createManagementAccessToken,
+  createWalletAccessToken,
   initVaultClient,
   maskSecret,
 } from "../../lib/vault.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 export default function RotateAdminKeyButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [rotationCode, setRotationCode] = useState("");
   const [keysConfirmed, setKeysConfirmed] = useState(false);
+  const router = useDashboardRouter();
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      if (!rotationCode) {
-        throw new Error("Rotation code is required");
-      }
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const vaultClient = await initVaultClient();
+      const rotationCode = props.project.services.find(
+        (service) => service.name === "engineCloud",
+      )?.rotationCode;
+
+      console.log("DEBUG", rotationCode);
+
+      if (!rotationCode) {
+        throw new Error("Rotation code not found");
+      }
 
       const rotateServiceAccountRes = await rotateServiceAccount({
         client: vaultClient,
@@ -54,20 +61,32 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
       }
 
       // need to recreate the management access token with the new admin key
-      const res = await createManagementAccessToken({
+      const managementAccessTokenPromise = createManagementAccessToken({
+        project: props.project,
+        adminKey: rotateServiceAccountRes.data.newAdminKey,
+        rotationCode: rotateServiceAccountRes.data.newRotationCode,
+        vaultClient,
+      });
+
+      const userAccesTokenPromise = createWalletAccessToken({
         project: props.project,
         adminKey: rotateServiceAccountRes.data.newAdminKey,
         vaultClient,
       });
 
-      if (res.error) {
-        throw new Error(res.error.message);
+      const [userAccessTokenRes, managementAccessTokenRes] = await Promise.all([
+        userAccesTokenPromise,
+        managementAccessTokenPromise,
+      ]);
+
+      if (!managementAccessTokenRes.success || !userAccessTokenRes.success) {
+        throw new Error("Failed to create access token");
       }
 
       return {
         success: true,
         adminKey: rotateServiceAccountRes.data.newAdminKey,
-        rotationKey: rotateServiceAccountRes.data.newRotationCode,
+        userAccessToken: userAccessTokenRes.data,
       };
     },
     onError: (error) => {
@@ -80,8 +99,10 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
       return;
     }
     setModalOpen(false);
-    setRotationCode("");
     setKeysConfirmed(false);
+    rotateAdminKeyMutation.reset();
+    // invalidate the page to force a reload of the project data
+    router.refresh();
   };
 
   const isLoading = rotateAdminKeyMutation.isPending;
@@ -143,26 +164,6 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                       </p>
                     </div>
                   </div>
-
-                  <div>
-                    <h3 className="mb-2 font-medium text-sm">
-                      New Rotation Key
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                      <CopyTextButton
-                        textToCopy={rotateAdminKeyMutation.data.rotationKey}
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                        textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.rotationKey,
-                        )}
-                        copyIconPosition="right"
-                        tooltip="Copy Rotation Key"
-                      />
-                      <p className="text-muted-foreground text-xs">
-                        This key is used to rotate your admin key in the future.
-                      </p>
-                    </div>
-                  </div>
                 </div>
                 <Alert variant="destructive">
                   <AlertTitle>Secure your keys</AlertTitle>
@@ -198,43 +199,28 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                 <DialogDescription>
                   This action will generate a new Vault admin key and rotation
                   code.{" "}
-                  <p className="text-destructive">
-                    This will invalidate all existing access tokens.
-                  </p>
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 px-6">
-                  <p className="flex items-center gap-2 text-sm text-warning-text">
-                    <LockIcon className="h-4 w-4" /> This action requires your
-                    Vault rotation code.
+                  <p className="text-destructive">
+                    This will invalidate your current admin key and all existing
+                    access tokens.
                   </p>
-                  <Input
-                    type="password"
-                    placeholder="sa_rot_ABCD_1234..."
-                    value={rotationCode}
-                    onChange={(e) => setRotationCode(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        rotateAdminKeyMutation.mutate();
-                      }
-                    }}
-                  />
                 </div>
                 <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setRotationCode("");
                       setModalOpen(false);
                     }}
                   >
                     Cancel
                   </Button>
                   <Button
-                    variant="primary"
+                    variant="destructive"
                     onClick={() => rotateAdminKeyMutation.mutate()}
-                    disabled={!rotationCode || rotateAdminKeyMutation.isPending}
+                    disabled={rotateAdminKeyMutation.isPending}
                   >
                     {rotateAdminKeyMutation.isPending ? (
                       <>

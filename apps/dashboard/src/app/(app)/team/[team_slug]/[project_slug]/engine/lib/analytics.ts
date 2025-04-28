@@ -53,7 +53,7 @@ export async function getTransactionAnalyticsSummary(props: {
     );
 
     if (!response.ok) {
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 400) {
         console.error("Unauthorized fetching transaction summary");
         return defaultData;
       }
@@ -112,7 +112,7 @@ export async function getTransactionsChart({
   );
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 400) {
       return [];
     }
 
