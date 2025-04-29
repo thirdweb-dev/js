@@ -89,7 +89,7 @@ function TransactionsLayout(props: {
               exactMatch: true,
             },
             {
-              name: "Explorer",
+              name: "API Explorer",
               path: `${engineLayoutSlug}/explorer`,
             },
             {
