@@ -25,7 +25,10 @@ import {
   maskSecret,
 } from "../../lib/vault.client";
 
-export default function CreateVaultAccountButton(props: { project: Project }) {
+export default function CreateVaultAccountButton(props: {
+  project: Project;
+  onUserAccessTokenCreated?: (userAccessToken: string) => void;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
@@ -75,6 +78,8 @@ export default function CreateVaultAccountButton(props: { project: Project }) {
       if (!managementAccessTokenRes.success || !userAccessTokenRes.success) {
         throw new Error("Failed to create access token");
       }
+
+      props.onUserAccessTokenCreated?.(userAccessTokenRes.data.accessToken);
 
       return {
         serviceAccount: serviceAccount.data,
