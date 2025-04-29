@@ -86,7 +86,7 @@ export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { txChainId, isLoggedIn, ...buttonProps } = props;
+  const { txChainId, isLoggedIn, isPending, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -161,7 +161,7 @@ export const MismatchButton = forwardRef<
     // if user is about to trigger a transaction on txChain, but txChainBalance is not yet loaded and is required before proceeding
     (!showSwitchChainPopover && txChainBalance.isPending && isBalanceRequired);
 
-  const showSpinner = props.isPending || switchNetworkMutation.isPending;
+  const showSpinner = isPending || switchNetworkMutation.isPending;
 
   return (
     <>
