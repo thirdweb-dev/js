@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -22,9 +21,9 @@ import { toast } from "sonner";
 import { shortenAddress } from "thirdweb/utils";
 import * as z from "zod";
 import type { Wallet } from "../server-wallets/wallet-table/types";
+import { engineCloudProxy } from "@/actions/proxies";
 
 const formSchema = z.object({
-  projectSecretKey: z.string().min(1, "Project secret key is required"),
   accessToken: z.string().min(1, "Access token is required"),
   walletIndex: z.string(),
   chainId: z.number(),
@@ -44,7 +43,6 @@ export function SendTestTransaction(props: {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      projectSecretKey: "",
       accessToken: "",
       walletIndex: "0",
       chainId: 84532,
@@ -60,36 +58,36 @@ export function SendTestTransaction(props: {
       accessToken: string;
       chainId: number;
     }) => {
-      const response = await fetch(
-        `${THIRDWEB_ENGINE_CLOUD_URL}/write/transaction`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-secret-key": form.getValues("projectSecretKey"),
-            "x-vault-access-token": args.accessToken,
-          },
-          body: JSON.stringify({
-            executionOptions: {
-              type: "AA",
-              signerAddress: args.walletAddress,
-              chainId: args.chainId.toString(),
-            },
-            params: [
-              {
-                to: args.walletAddress,
-                value: "0",
-              },
-            ],
-          }),
+      const response = await engineCloudProxy({
+        pathname: "/write/transaction",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-team-id": props.project.teamId,
+          "x-client-id": props.project.publishableKey,
+          "x-vault-access-token": args.accessToken,
         },
-      );
-      const result = await response.json();
+        body: JSON.stringify({
+          executionOptions: {
+            type: "AA",
+            signerAddress: args.walletAddress,
+            chainId: args.chainId.toString(),
+          },
+          params: [
+            {
+              to: args.walletAddress,
+              value: "0",
+            },
+          ],
+        }),
+      });
+
       if (!response.ok) {
-        const errorMsg = result?.error?.message || "Failed to send transaction";
+        const errorMsg = response.error ?? "Failed to send transaction";
         throw new Error(errorMsg);
       }
-      return result;
+
+      return response.data;
     },
     onSuccess: () => {
       toast.success("Test transaction sent successfully!");
@@ -146,24 +144,11 @@ export function SendTestTransaction(props: {
           className="space-y-4 px-3 pb-3"
         >
           <p className="flex items-center gap-2 text-sm text-warning-text">
-            <LockIcon className="h-4 w-4" /> This action requires a project
-            secret key and a vault access token.
+            <LockIcon className="h-4 w-4" /> This action requires your vault
+            access token.
           </p>
           {/* Responsive container */}
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
-            <div className="flex-grow">
-              <div className="flex flex-col gap-2">
-                <p className="text-sm">Project Secret Key</p>
-                <Input
-                  id="secret-key"
-                  type="password"
-                  placeholder="abcd....1234"
-                  {...form.register("projectSecretKey")}
-                  disabled={isLoading}
-                  className="text-xs"
-                />
-              </div>
-            </div>
             <div className="flex-grow">
               <div className="flex flex-col gap-2">
                 <p className="text-sm">Vault Access Token</p>
