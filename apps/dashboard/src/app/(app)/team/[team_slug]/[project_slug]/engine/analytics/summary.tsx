@@ -1,11 +1,7 @@
 import { StatCard } from "components/analytics/stat"; // Assuming correct path
 import { ActivityIcon, CoinsIcon } from "lucide-react";
-import { Suspense } from "react";
 import { toEther } from "thirdweb/utils";
-import {
-  type TransactionSummaryData,
-  getTransactionAnalyticsSummary,
-} from "../lib/analytics";
+import type { TransactionSummaryData } from "../lib/analytics";
 
 // Renders the UI based on fetched data or pending state
 function TransactionAnalyticsSummaryUI(props: {
@@ -89,38 +85,12 @@ function TransactionAnalyticsSummaryUI(props: {
   );
 }
 
-// Fetches data and renders the UI component
-async function AsyncTransactionsAnalyticsSummary(props: {
-  teamId: string;
-  clientId: string;
-}) {
-  try {
-    const data = await getTransactionAnalyticsSummary({
-      teamId: props.teamId,
-      clientId: props.clientId,
-    });
-    return <TransactionAnalyticsSummaryUI data={data} isPending={false} />;
-  } catch (error) {
-    console.error("Failed to fetch transaction summary:", error);
-    return <TransactionAnalyticsSummaryUI data={undefined} isPending={false} />;
-  }
-}
-
-// Main component: Shows loading state (Suspense fallback) while fetching data
 export function TransactionAnalyticsSummary(props: {
   teamId: string;
   clientId: string;
+  initialData: TransactionSummaryData | undefined;
 }) {
   return (
-    <Suspense
-      fallback={
-        <TransactionAnalyticsSummaryUI data={undefined} isPending={true} />
-      }
-    >
-      <AsyncTransactionsAnalyticsSummary
-        teamId={props.teamId}
-        clientId={props.clientId}
-      />
-    </Suspense>
+    <TransactionAnalyticsSummaryUI data={props.initialData} isPending={false} />
   );
 }

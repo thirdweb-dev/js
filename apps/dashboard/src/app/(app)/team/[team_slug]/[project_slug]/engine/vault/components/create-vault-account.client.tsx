@@ -15,7 +15,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { Loader2 } from "lucide-react";
+import { Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -145,7 +145,11 @@ export default function CreateVaultAccountButton(props: { project: Project }) {
         disabled={isLoading}
         className="flex flex-row items-center gap-2"
       >
-        {isLoading && <Loader2 className="animate-spin" />}
+        {isLoading ? (
+          <Loader2 className="animate-spin" />
+        ) : (
+          <LockIcon className="size-4" />
+        )}
         {"Create Vault Admin Account"}
       </Button>
 

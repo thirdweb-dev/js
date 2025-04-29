@@ -1,4 +1,5 @@
 "use client";
+import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAvatar } from "@/components/blocks/wallet-address";
@@ -12,16 +13,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, Loader2, LockIcon } from "lucide-react";
+import { Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { shortenAddress } from "thirdweb/utils";
 import * as z from "zod";
 import type { Wallet } from "../server-wallets/wallet-table/types";
-import { engineCloudProxy } from "@/actions/proxies";
 
 const formSchema = z.object({
   accessToken: z.string().min(1, "Access token is required"),
@@ -36,9 +37,10 @@ export function SendTestTransaction(props: {
   project: Project;
   expanded?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(props.expanded ?? false);
   const thirdwebClient = useThirdwebClient();
   const queryClient = useQueryClient();
+  const [hasSentTx, setHasSentTx] = useState(false);
+  const router = useDashboardRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -113,132 +115,135 @@ export function SendTestTransaction(props: {
     queryClient.invalidateQueries({
       queryKey: ["transactions", props.project.id],
     });
+    setHasSentTx(true);
   };
 
   return (
-    <div className="w-full space-y-2 rounded-md border bg-card p-3">
-      {/* Trigger Area */}
-      <div
-        role="button"
-        tabIndex={0}
-        className="flex cursor-pointer items-center justify-between p-3"
-        onClick={() => setIsOpen(!isOpen)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            setIsOpen(!isOpen);
-          }
-        }}
-      >
-        <h2 className="font-semibold text-xl tracking-tight">
-          Send Test Transaction
-        </h2>
-        <ChevronDown
-          className={`h-4 w-4 transform transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
-      </div>
-
-      {/* Content Area (conditional) */}
-      {isOpen && (
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 px-3 pb-3"
-        >
-          <p className="flex items-center gap-2 text-sm text-warning-text">
-            <LockIcon className="h-4 w-4" /> This action requires your vault
-            access token.
-          </p>
-          {/* Responsive container */}
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
-            <div className="flex-grow">
-              <div className="flex flex-col gap-2">
-                <p className="text-sm">Vault Access Token</p>
-                <Input
-                  id="access-token"
-                  type="password"
-                  placeholder="vt_act_1234....ABCD"
-                  {...form.register("accessToken")}
-                  disabled={isLoading}
-                  className="text-xs"
-                />
-              </div>
+    <div className="mt-3 w-full rounded-md border bg-background p-6">
+      <p className="font-medium text-foreground text-sm">
+        Engine is designed to scale, gas-free, fast, and secure. <br />
+      </p>
+      <div className="h-2" />
+      <p className="text-muted-foreground text-sm">
+        Fire up many test transactions and watch the table below to see how it
+        performs!
+      </p>
+      <div className="h-4" />
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <p className="flex items-center gap-2 text-sm text-warning-text">
+          <LockIcon className="h-4 w-4" /> This action requires your vault
+          access token.
+        </p>
+        <div className="h-4" />
+        {/* Responsive container */}
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
+          <div className="flex-grow">
+            <div className="flex flex-col gap-2">
+              <p className="text-sm">Vault Access Token</p>
+              <Input
+                id="access-token"
+                type="password"
+                placeholder="vt_act_1234....ABCD"
+                {...form.register("accessToken")}
+                disabled={isLoading}
+                className="text-xs"
+              />
             </div>
           </div>
-          {/* Wallet Selector */}
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
-              <div className="flex flex-1 flex-col gap-2">
-                <p className="text-sm">Signer</p>
-                <Select
-                  value={form.watch("walletIndex")}
-                  onValueChange={(value) => form.setValue("walletIndex", value)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue>
+        </div>
+        <div className="h-4" />
+        {/* Wallet Selector */}
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
+            <div className="flex flex-1 flex-col gap-2">
+              <p className="text-sm">Server Wallet</p>
+              <Select
+                value={form.watch("walletIndex")}
+                onValueChange={(value) => form.setValue("walletIndex", value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue>
+                    <div className="flex items-center gap-2">
+                      <WalletAvatar
+                        address={selectedWallet.address}
+                        profiles={[]}
+                        thirdwebClient={thirdwebClient}
+                        iconClassName="h-5 w-5"
+                      />
+                      <span className="font-mono text-sm">
+                        {shortenAddress(selectedWallet.address)}
+                      </span>
+                      <span className="text-muted-foreground text-sm">
+                        {selectedWallet.metadata.label}
+                      </span>
+                    </div>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {props.wallets.map((wallet, index) => (
+                    <SelectItem key={wallet.address} value={index.toString()}>
                       <div className="flex items-center gap-2">
                         <WalletAvatar
-                          address={selectedWallet.address}
+                          address={wallet.address}
                           profiles={[]}
                           thirdwebClient={thirdwebClient}
                           iconClassName="h-5 w-5"
                         />
                         <span className="font-mono text-sm">
-                          {shortenAddress(selectedWallet.address)}
+                          {shortenAddress(wallet.address)}
+                        </span>
+                        <span className="text-muted-foreground text-sm">
+                          {selectedWallet.metadata.label}
                         </span>
                       </div>
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {props.wallets.map((wallet, index) => (
-                      <SelectItem key={wallet.address} value={index.toString()}>
-                        <div className="flex items-center gap-2">
-                          <WalletAvatar
-                            address={wallet.address}
-                            profiles={[]}
-                            thirdwebClient={thirdwebClient}
-                            iconClassName="h-5 w-5"
-                          />
-                          <span className="font-mono text-sm">
-                            {shortenAddress(wallet.address)}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-1 flex-col gap-2">
-                <p className="text-sm">Network</p>
-                <SingleNetworkSelector
-                  className="bg-background"
-                  client={thirdwebClient}
-                  chainId={form.watch("chainId")}
-                  onChange={(chainId) => {
-                    form.setValue("chainId", chainId);
-                  }}
-                />
-              </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-1 flex-col gap-2">
+              <p className="text-sm">Network</p>
+              <SingleNetworkSelector
+                className="bg-background"
+                client={thirdwebClient}
+                chainId={form.watch("chainId")}
+                onChange={(chainId) => {
+                  form.setValue("chainId", chainId);
+                }}
+              />
             </div>
           </div>
-          <div className="flex justify-end">
+        </div>
+        <div className="h-6" />
+        <div className="flex flex-col gap-2 md:flex-row md:justify-end md:gap-2">
+          {hasSentTx && (
             <Button
-              type="submit"
-              variant="primary"
-              disabled={isLoading || !form.formState.isValid}
-              size="sm"
-              className="w-full min-w-[200px] md:w-auto"
+              variant="outline"
+              className="w-full md:w-auto"
+              onClick={() => {
+                router.refresh();
+              }}
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                "Send Transaction"
-              )}
+              Complete Setup
             </Button>
-          </div>
-        </form>
-      )}
+          )}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isLoading || !form.formState.isValid}
+            className="w-full min-w-[200px] md:w-auto"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>{hasSentTx ? "Send More Transactions" : "Send Transaction"}</>
+            )}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

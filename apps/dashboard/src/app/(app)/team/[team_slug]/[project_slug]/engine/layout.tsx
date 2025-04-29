@@ -111,27 +111,3 @@ function TransactionsLayout(props: {
     </div>
   );
 }
-
-// TODO: seo and add metadata
-
-// const seo = {
-//   title: "TODO",
-//   desc: "TODO",
-// };
-
-// export const metadata: Metadata = {
-//   title: seo.title,
-//   description: seo.desc,
-//   openGraph: {
-//     title: seo.title,
-//     description: seo.desc,
-//     images: [
-//       {
-//         url: `${getAbsoluteUrl()}/assets/og-image/TODO`,
-//         width: 1200,
-//         height: 630,
-//         alt: seo.title,
-//       },
-//     ],
-//   },
-// };

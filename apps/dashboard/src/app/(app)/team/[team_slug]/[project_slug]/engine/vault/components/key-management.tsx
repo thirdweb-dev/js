@@ -2,9 +2,9 @@ import type { Project } from "@/api/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
-import RotateAdminKeyButton from "./rotate-admin-key.client";
 import CreateVaultAccountButton from "./create-vault-account.client";
 import ListAccessTokens from "./list-access-tokens.client";
+import RotateAdminKeyButton from "./rotate-admin-key.client";
 
 export function KeyManagement({
   maskedAdminKey,
@@ -26,40 +26,7 @@ export function KeyManagement({
           </p>
         </div>
         {!maskedAdminKey ? (
-          <div className="flex flex-col gap-6">
-            <div className="px-6">
-              <Alert variant="info" className="bg-background">
-                <AlertTitle className="flex items-center gap-2">
-                  <InfoIcon className="h-4 w-4" />
-                  What is Vault?
-                </AlertTitle>
-                <AlertDescription className="text-primary-foreground text-sm">
-                  Vault is thirdweb's non-custodial key management system for
-                  your server wallets that allows you to:
-                  <ul className="list-disc py-2 pl-4">
-                    <li>Create multiple server wallets.</li>
-                    <li>Create Vault access tokens.</li>
-                    <li>Sign transactions using a Vault access token.</li>
-                  </ul>
-                  Your keys are stored in a hardware enclave, and all requests
-                  are end-to-end encrypted.{" "}
-                  <Link
-                    href="https://portal.thirdweb.com/engine/vault"
-                    className="underline"
-                  >
-                    Learn more about Vault security model.
-                  </Link>
-                  <div className="h-2" />
-                  Creating server wallets and access tokens requires a Vault
-                  admin account. Create one below to get started.
-                </AlertDescription>
-                <div className="h-4" />
-              </Alert>
-            </div>
-            <div className="flex flex-row justify-end gap-4 border-border border-t px-6 pt-4 pb-4">
-              <CreateVaultAccountButton project={project} />
-            </div>
-          </div>
+          <CreateVaultAccountAlert project={project} />
         ) : (
           <div />
         )}
@@ -91,6 +58,47 @@ export function KeyManagement({
           <ListAccessTokens project={project} />
         </>
       ) : null}
+    </div>
+  );
+}
+
+export async function CreateVaultAccountAlert(props: {
+  project: Project;
+}) {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="px-6">
+        <Alert variant="info" className="bg-background">
+          <AlertTitle className="flex items-center gap-2">
+            <InfoIcon className="h-4 w-4" />
+            What is Vault?
+          </AlertTitle>
+          <AlertDescription className="text-primary-foreground text-sm">
+            Vault is thirdweb's non-custodial key management system for your
+            server wallets that allows you to:
+            <ul className="list-disc py-2 pl-4">
+              <li>Create multiple server wallets.</li>
+              <li>Create Vault access tokens.</li>
+              <li>Sign transactions using a Vault access token.</li>
+            </ul>
+            Your keys are stored in a hardware enclave, and all requests are
+            end-to-end encrypted.{" "}
+            <Link
+              href="https://portal.thirdweb.com/engine/vault"
+              className="underline"
+            >
+              Learn more about Vault security model.
+            </Link>
+            <div className="h-2" />
+            Creating server wallets and access tokens requires a Vault admin
+            account. Create one below to get started.
+          </AlertDescription>
+          <div className="h-4" />
+        </Alert>
+      </div>
+      <div className="flex flex-row justify-end gap-4 border-border border-t px-6 pt-4 pb-4">
+        <CreateVaultAccountButton project={props.project} />
+      </div>
     </div>
   );
 }

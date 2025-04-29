@@ -5,7 +5,12 @@ import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
+import { EngineChecklist } from "./analytics/ftux.client";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
+import {
+  type TransactionSummaryData,
+  getTransactionAnalyticsSummary,
+} from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {
@@ -14,7 +19,6 @@ export default async function TransactionsAnalyticsPage(props: {
     from?: string | string[] | undefined;
     to?: string | string[] | undefined;
     interval?: string | string[] | undefined;
-    expand_test_tx?: string | string[] | undefined;
   }>;
 }) {
   const [params, searchParams, authToken] = await Promise.all([
@@ -65,18 +69,37 @@ export default async function TransactionsAnalyticsPage(props: {
 
   const wallets = eoas.data?.items as Wallet[] | undefined;
 
+  let initialData: TransactionSummaryData | undefined;
+  if (wallets && wallets.length > 0) {
+    const summary = await getTransactionAnalyticsSummary({
+      teamId: project.teamId,
+      clientId: project.publishableKey,
+    }).catch(() => undefined);
+    initialData = summary;
+  }
+  const hasTransactions = initialData ? initialData.totalCount > 0 : false;
+
   return (
     <div className="flex grow flex-col">
-      <TransactionAnalyticsSummary
-        teamId={project.teamId}
-        clientId={project.publishableKey}
+      <EngineChecklist
+        managementAccessToken={managementAccessToken ?? undefined}
+        hasTransactions={hasTransactions}
+        project={project}
+        wallets={wallets ?? []}
       />
+      {hasTransactions && (
+        <TransactionAnalyticsSummary
+          initialData={initialData}
+          teamId={project.teamId}
+          clientId={project.publishableKey}
+        />
+      )}
       <div className="h-10" />
       <TransactionsAnalyticsPageContent
         searchParams={searchParams}
         project={project}
+        hasTransactions={hasTransactions}
         wallets={wallets}
-        expandTestTx={searchParams.expand_test_tx === "true"}
       />
     </div>
   );
