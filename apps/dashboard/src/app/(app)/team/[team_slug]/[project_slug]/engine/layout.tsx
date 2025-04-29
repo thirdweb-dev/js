@@ -6,6 +6,7 @@ import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import { CloudIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Button } from "../../../../../../@/components/ui/button";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -51,23 +52,28 @@ function TransactionsLayout(props: {
       <div className="pt-4 lg:pt-6">
         {/* header */}
         <div className="container flex max-w-7xl flex-col gap-4">
-          <div>
-            <h1 className="mb-0.5 font-semibold text-2xl tracking-tight lg:text-3xl">
-              Engine
-            </h1>
-            <div className="flex items-center gap-2">
-              <Link
-                href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
-                target="_blank"
-                className="-translate-x-2 max-w-full truncate py-1 text-muted-foreground"
-              >
-                {THIRDWEB_ENGINE_CLOUD_URL}
-              </Link>
-              <Badge variant="success" className="flex items-center gap-2">
-                <CloudIcon className="h-4 w-4" />
-                Cloud
-              </Badge>
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-col">
+              <h1 className="mb-0.5 font-semibold text-2xl tracking-tight lg:text-3xl">
+                Engine
+              </h1>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
+                  target="_blank"
+                  className="max-w-full truncate py-1 text-muted-foreground"
+                >
+                  {THIRDWEB_ENGINE_CLOUD_URL}
+                </Link>
+                <Badge variant="success" className="flex items-center gap-2">
+                  <CloudIcon className="h-4 w-4" />
+                  Cloud
+                </Badge>
+              </div>
             </div>
+            <Link href={`/team/${props.teamSlug}/~/engine`} target="_blank">
+              <Button variant="outline">Looking for legacy engines?</Button>
+            </Link>
           </div>
         </div>
 
@@ -97,8 +103,6 @@ function TransactionsLayout(props: {
           ]}
         />
       </div>
-
-      {/* content */}
       <div className="h-6" />
       <div className="container flex max-w-7xl grow flex-col gap-6">
         <div>{props.children}</div>

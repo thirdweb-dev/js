@@ -834,7 +834,7 @@ function EmptyEngineState(props: {
                   className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
                   onClick={() => setSelectedTab("cloud-hosted")}
                 >
-                  Cloud-hosted
+                  Managed
                 </Button>
 
                 <Button
@@ -878,21 +878,20 @@ function EmptyEngineState(props: {
             {selectedTab === "cloud-hosted" && (
               <div className="flex flex-col text-center">
                 <h3 className="mb-0.5 font-semibold text-base">
-                  Cloud-Hosted Engine
+                  Managed Engine
                 </h3>
                 <p className="text-muted-foreground text-sm">
                   {props.teamPlan !== "pro" ? (
                     <>
                       Upgrade your team plan to Accelerate or Scale to get a
-                      fully managed cloud-hosted engine instance.{" "}
+                      fully managed engine instance.{" "}
                       <UnderlineLink href="/pricing" target="_blank">
                         View pricing
                       </UnderlineLink>
                     </>
                   ) : (
                     <>
-                      Contact us to add a cloud-hosted engine instance to your
-                      team
+                      Contact us to add a managed engine instance to your team
                     </>
                   )}
                 </p>

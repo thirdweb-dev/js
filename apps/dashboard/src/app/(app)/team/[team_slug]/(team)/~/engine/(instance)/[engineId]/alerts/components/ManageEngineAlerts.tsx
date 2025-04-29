@@ -239,7 +239,7 @@ function CreateAlertButton(props: {
       <ToolTipLabel
         label={
           props.alertRules.length === 0
-            ? "This feature is only available for cloud-hosted Engines running v2.0.10 or later."
+            ? "This feature is only available for managed Engines running v2.0.10 or later."
             : undefined
         }
       >

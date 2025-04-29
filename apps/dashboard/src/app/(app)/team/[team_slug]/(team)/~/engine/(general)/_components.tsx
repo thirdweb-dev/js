@@ -84,7 +84,7 @@ function CloudHostedEngineSection(props: {
   return (
     <div className="flex flex-col">
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
-        Get Cloud Hosted Engine
+        Get Managed Engine
       </h3>
 
       {props.teamPlan !== "pro" ? (
@@ -98,7 +98,7 @@ function CloudHostedEngineSection(props: {
             <UnderlineLink href="/pricing" target="_blank">
               Scale
             </UnderlineLink>{" "}
-            to get a cloud hosted Engine
+            to get a managed Engine instance
           </p>
 
           <div className="h-5" />
@@ -131,7 +131,7 @@ function CloudHostedEngineSection(props: {
       ) : (
         <div>
           <p className="mb-4 text-muted-foreground text-sm">
-            Contact us to get a cloud hosted engine for your team
+            Contact us to get a managed engine for your team
           </p>
           <Button variant="outline" size="sm" asChild className="gap-2">
             <Link href={PRO_CONTACT_US_URL} target="_blank">

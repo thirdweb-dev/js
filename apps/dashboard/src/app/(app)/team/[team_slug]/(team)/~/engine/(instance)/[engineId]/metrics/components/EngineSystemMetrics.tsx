@@ -50,7 +50,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
               category="engine"
               label="metrics-cloud-hosted-upsell"
             >
-              Cloud-Hosted Engine managed by thirdweb
+              Engine instance managed by thirdweb
             </TrackedLink>{" "}
             to view these metrics.
           </Text>
