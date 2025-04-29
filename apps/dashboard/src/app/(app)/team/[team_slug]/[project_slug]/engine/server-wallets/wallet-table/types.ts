@@ -4,7 +4,7 @@ export type Wallet = {
   metadata: {
     type: string;
     projectId: string;
-    name?: string;
+    label?: string;
   };
   createdAt: string;
   updatedAt: string;

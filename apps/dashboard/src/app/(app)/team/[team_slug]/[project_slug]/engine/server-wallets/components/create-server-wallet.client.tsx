@@ -1,10 +1,19 @@
 "use client";
 import type { Project } from "@/api/projects";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { createEoa } from "@thirdweb-dev/vault-sdk";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { initVaultClient } from "../../lib/vault.client";
 
@@ -13,11 +22,16 @@ export default function CreateServerWallet(props: {
   managementAccessToken: string | undefined;
 }) {
   const router = useDashboardRouter();
+  const [label, setLabel] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
   const createEoaMutation = useMutation({
     mutationFn: async ({
       managementAccessToken,
+      label,
     }: {
       managementAccessToken: string;
+      label: string;
     }) => {
       const vaultClient = await initVaultClient();
 
@@ -28,6 +42,7 @@ export default function CreateServerWallet(props: {
               projectId: props.project.id,
               teamId: props.project.teamId,
               type: "server-wallet",
+              label,
             },
           },
           auth: {
@@ -42,6 +57,7 @@ export default function CreateServerWallet(props: {
       }
 
       router.refresh();
+      setModalOpen(false);
 
       return eoa;
     },
@@ -56,6 +72,7 @@ export default function CreateServerWallet(props: {
     } else {
       await createEoaMutation.mutateAsync({
         managementAccessToken: props.managementAccessToken,
+        label,
       });
     }
   };
@@ -66,13 +83,59 @@ export default function CreateServerWallet(props: {
     <>
       <Button
         variant={"primary"}
-        onClick={handleCreateServerWallet}
-        disabled={isLoading}
+        onClick={() =>
+          props.managementAccessToken
+            ? setModalOpen(true)
+            : router.push("vault")
+        }
         className="flex flex-row items-center gap-2"
       >
-        {isLoading && <Loader2 className="animate-spin" />}
         {props.managementAccessToken ? "Create Server Wallet" : "Get Started"}
       </Button>
+
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="p-0">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>Create server wallet</DialogTitle>
+            <DialogDescription>
+              Enter a label for your server wallet.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 px-6">
+            <div>
+              <Input
+                placeholder="Wallet label (optional)"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+            <Button
+              variant="outline"
+              onClick={() => setModalOpen(false)}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleCreateServerWallet}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create"
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

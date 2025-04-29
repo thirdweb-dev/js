@@ -17,10 +17,13 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
+import { useState } from "react";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
+import { Badge } from "../../../../../../../../@/components/ui/badge";
+import { Switch } from "../../../../../../../../@/components/ui/switch";
 import { useV5DashboardChain } from "../../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
@@ -34,6 +37,7 @@ export function ServerWalletsTableUI({
   project: Project;
   managementAccessToken: string | undefined;
 }) {
+  const [showSigners, setShowSigners] = useState(false);
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex flex-row items-center gap-4 px-6 py-6">
@@ -47,6 +51,16 @@ export function ServerWalletsTableUI({
             </p>
           </div>
         </div>
+        <div className="flex items-center justify-end gap-2">
+          <label htmlFor="show-signers" className="cursor-pointer text-sm">
+            Show Signer Addresses
+          </label>
+          <Switch
+            id="show-signers"
+            checked={showSigners}
+            onCheckedChange={() => setShowSigners(!showSigners)}
+          />
+        </div>
         <CreateServerWallet
           project={project}
           managementAccessToken={managementAccessToken}
@@ -57,8 +71,8 @@ export function ServerWalletsTableUI({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Signer</TableHead>
-              <TableHead>Smart Account</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Label</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Updated At</TableHead>
             </TableRow>
@@ -74,11 +88,13 @@ export function ServerWalletsTableUI({
               wallets.map((wallet) => (
                 <TableRow key={wallet.id} className="hover:bg-accent/50">
                   <TableCell>
-                    <WalletAddress address={wallet.address} />
+                    {showSigners ? (
+                      <WalletAddress address={wallet.address} />
+                    ) : (
+                      <SmartAccountCell wallet={wallet} />
+                    )}
                   </TableCell>
-                  <TableCell>
-                    <SmartAccountCell wallet={wallet} />
-                  </TableCell>
+                  <TableCell>{wallet.metadata.label || "none"}</TableCell>
                   <TableCell>
                     <WalletDateCell date={wallet.createdAt} />
                   </TableCell>
@@ -115,7 +131,10 @@ function SmartAccountCell({ wallet }: { wallet: Wallet }) {
   return (
     <div>
       {smartAccountAddressQuery.data ? (
-        <WalletAddress address={smartAccountAddressQuery.data} />
+        <div className="flex items-center gap-2">
+          <WalletAddress address={smartAccountAddressQuery.data} />
+          <Badge variant={"default"}>Smart Account</Badge>
+        </div>
       ) : (
         <Spinner className="h-4 w-4" />
       )}
