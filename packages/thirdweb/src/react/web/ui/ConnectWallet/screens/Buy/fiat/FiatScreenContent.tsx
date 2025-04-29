@@ -177,7 +177,7 @@ export function FiatScreenContent(props: {
       )}
 
       <Container flex="column" gap="sm">
-        <Text size="sm">Pay with a debit card</Text>
+        <Text size="sm">Pay with card</Text>
         <div>
           <PayWithCreditCard
             isLoading={fiatQuoteQuery.isLoading}

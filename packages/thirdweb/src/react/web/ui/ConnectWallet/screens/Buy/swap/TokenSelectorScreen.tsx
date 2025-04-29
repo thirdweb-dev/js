@@ -281,7 +281,7 @@ export function TokenSelectorScreen(props: {
               >
                 <CardStackIcon width={iconSize.md} height={iconSize.md} />
                 <Text size="sm" color="primaryText">
-                  Pay with a debit card
+                  Pay with card
                 </Text>
               </Container>
             </Button>
