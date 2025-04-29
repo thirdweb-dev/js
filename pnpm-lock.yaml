@@ -1307,8 +1307,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       '@noble/curves':
-        specifier: 1.8.1
-        version: 1.8.1
+        specifier: 1.8.2
+        version: 1.8.2
       '@noble/hashes':
         specifier: 1.7.2
         version: 1.7.2
