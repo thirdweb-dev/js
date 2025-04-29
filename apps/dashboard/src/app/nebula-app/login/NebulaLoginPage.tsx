@@ -88,6 +88,7 @@ export function NebulaLoggedOutStatePage(props: {
       {showPage === "welcome" && (
         <div className="container relative flex max-w-[800px] grow flex-col justify-center overflow-hidden rounded-lg pb-6">
           <EmptyStateChatPageContent
+            showAurora={false}
             isConnectingWallet={false}
             prefillMessage={message}
             context={{

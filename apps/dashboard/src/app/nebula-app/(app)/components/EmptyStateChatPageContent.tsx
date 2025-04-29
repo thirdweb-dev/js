@@ -18,9 +18,13 @@ export function EmptyStateChatPageContent(props: {
   activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
+  showAurora: boolean;
 }) {
   return (
-    <div className="py-10 lg:py-16">
+    <div className="overflow-hidden py-10 lg:py-16">
+      {props.showAurora && (
+        <Aurora className="top-0 left-1/2 h-[800px] w-[1000px] text-[hsl(var(--nebula-pink-foreground)/8%)] lg:w-[150%] dark:text-[hsl(var(--nebula-pink-foreground)/10%)]" />
+      )}
       <div className="relative py-10">
         <FancyBorders />
         <div className="flex justify-center">
@@ -136,3 +140,22 @@ function DashedBgDiv(props: {
     />
   );
 }
+
+type AuroraProps = {
+  className?: string;
+};
+
+const Aurora: React.FC<AuroraProps> = ({ className }) => {
+  return (
+    <div
+      className={cn(
+        "-translate-x-1/2 -translate-y-1/2 pointer-events-none absolute",
+        className,
+      )}
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse at center, currentColor, transparent 60%)",
+      }}
+    />
+  );
+};
