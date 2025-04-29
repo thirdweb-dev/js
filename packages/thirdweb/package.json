@@ -193,7 +193,7 @@
     "@tanstack/react-query": "5.72.1",
     "@thirdweb-dev/insight": "workspace:*",
     "@walletconnect/ethereum-provider": "2.19.1",
-    "@walletconnect/sign-client": "2.19.1",
+    "@walletconnect/sign-client": "2.19.2",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
