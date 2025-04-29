@@ -4,7 +4,7 @@ import { InfoIcon } from "lucide-react";
 import Link from "next/link";
 import RotateAdminKeyButton from "../../server-wallets/components/rotate-admin-key.client";
 import CreateVaultAccountButton from "./create-vault-account.client";
-import ListAccessTokensButton from "./list-access-tokens.client";
+import ListAccessTokens from "./list-access-tokens.client";
 
 export function KeyManagement({
   maskedAdminKey,
@@ -65,29 +65,31 @@ export function KeyManagement({
         )}
       </div>
       {maskedAdminKey ? (
-        <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
-          <div className="flex flex-col px-6 pt-6">
-            <h2 className="font-semibold text-xl tracking-tight">Admin Key</h2>
-            <p className="text-muted-foreground text-sm">
-              This key is used to create new server wallets and access tokens.
-              <br /> We do not store this key. If you lose it, you can rotate it
-              to create a new one. Doing so will invalidate all existing access
-              tokens.
-            </p>
-            <div className="h-4" />
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-              <div className="flex min-w-[300px] flex-row items-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
-                <p className="text-muted-foreground text-sm">
-                  {maskedAdminKey}
-                </p>
+        <>
+          <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
+            <div className="flex flex-col p-6">
+              <h2 className="font-semibold text-xl tracking-tight">
+                Admin Key
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                This key is used to create new server wallets and access tokens.
+                <br /> We do not store this key. If you lose it, you can rotate
+                it to create a new one. Doing so will invalidate all existing
+                access tokens.
+              </p>
+              <div className="h-4" />
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                <div className="flex min-w-[300px] flex-row items-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
+                  <p className="text-muted-foreground text-sm">
+                    {maskedAdminKey}
+                  </p>
+                </div>
+                <RotateAdminKeyButton project={project} />
               </div>
-              <RotateAdminKeyButton project={project} />
             </div>
           </div>
-          <div className="flex flex-row justify-end gap-4 border-border border-t px-6 pt-4 pb-4">
-            <ListAccessTokensButton project={project} />
-          </div>
-        </div>
+          <ListAccessTokens project={project} />
+        </>
       ) : null}
     </div>
   );
