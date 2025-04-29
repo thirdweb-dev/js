@@ -100,7 +100,7 @@ export default function CreateVaultAccountButton(props: { project: Project }) {
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    const filename = `${props.project.name}-${props.project.publishableKey}-vault-keys.txt`;
+    const filename = `${props.project.name}-vault-keys.txt`;
     link.href = url;
     link.download = filename;
     document.body.appendChild(link); // Required for Firefox
@@ -122,6 +122,7 @@ export default function CreateVaultAccountButton(props: { project: Project }) {
     setModalOpen(false);
     setKeysConfirmed(false);
     setKeysDownloaded(false);
+    initialiseProjectWithVaultMutation.reset();
     // invalidate the page to force a reload
     router.refresh();
   };

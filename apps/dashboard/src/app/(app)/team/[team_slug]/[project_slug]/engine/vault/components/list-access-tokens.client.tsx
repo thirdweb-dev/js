@@ -1,9 +1,9 @@
 "use client";
 import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {} from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import {} from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
 import { Loader2, LockIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -31,8 +31,7 @@ export default function ListAccessTokens(props: {
   const [typedAdminKey, setTypedAdminKey] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const [deletingTokenId, setDeletingTokenId] = useState<string | null>(null);
-  const [newAccessToken, setNewAccessToken] = useState<string | null>(null);
-  const [keysConfirmed, setKeysConfirmed] = useState(false);
+  const queryClient = useQueryClient();
   // TODO allow passing permissions to the access token
   const createAccessTokenMutation = useMutation({
     mutationFn: async (args: { adminKey: string }) => {
@@ -57,9 +56,10 @@ export default function ListAccessTokens(props: {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
-      setNewAccessToken(data.userAccessToken.accessToken);
-      listAccessTokensQuery.refetch();
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["list-access-tokens"],
+      });
     },
   });
 
@@ -95,7 +95,9 @@ export default function ListAccessTokens(props: {
       setDeletingTokenId(null);
     },
     onSuccess: () => {
-      listAccessTokensQuery.refetch();
+      queryClient.invalidateQueries({
+        queryKey: ["list-access-tokens"],
+      });
       setDeletingTokenId(null);
     },
   });
@@ -171,6 +173,9 @@ export default function ListAccessTokens(props: {
                 setModalOpen(true);
               } else {
                 setAdminKey("");
+                queryClient.invalidateQueries({
+                  queryKey: ["list-access-tokens"],
+                });
               }
             }}
             variant={"primary"}
@@ -281,98 +286,47 @@ export default function ListAccessTokens(props: {
             <DialogHeader className="px-6 pt-6">
               <DialogTitle>Unlock Vault</DialogTitle>
             </DialogHeader>
-            {/* If new access token, show copy button */}
-            {newAccessToken ? (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4 px-6 ">
-                  <p className="text-muted-foreground text-xs">
-                    Here's your new access token. Store it securely as it will
-                    not be displayed again.
-                  </p>
-                  <CopyTextButton
-                    textToCopy={newAccessToken}
-                    className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                    textToShow={maskSecret(newAccessToken)}
-                    copyIconPosition="right"
-                    tooltip="Copy Vault Access Token"
-                  />
-                  <p className="text-muted-foreground text-xs">
-                    This access token is used to sign transactions and messages
-                    from your backend. Can be revoked and recreated with your
-                    admin key.
-                  </p>
-                  <Alert variant="destructive">
-                    <AlertTitle>Secure your keys</AlertTitle>
-                    <AlertDescription>
-                      These keys will not be displayed again. Store them
-                      securely as they provide access to your server wallets.
-                    </AlertDescription>
-                    <div className="h-4" />
-                    <CheckboxWithLabel className="text-foreground">
-                      <Checkbox
-                        checked={keysConfirmed}
-                        onCheckedChange={(v) => setKeysConfirmed(!!v)}
-                      />
-                      I confirm that I've securely stored these keys
-                    </CheckboxWithLabel>
-                  </Alert>
-                </div>
-                <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                  <Button
-                    onClick={() => {
-                      setNewAccessToken(null);
-                      setKeysConfirmed(false);
-                    }}
-                    disabled={!keysConfirmed}
-                    variant={"primary"}
-                  >
-                    Go Back
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4 px-6">
-                  <p className="flex items-center gap-2 text-sm text-warning-text">
-                    <LockIcon className="h-4 w-4" /> This action requires your
-                    Vault admin key.
-                  </p>
-                  <Input
-                    type="password"
-                    placeholder="sa_adm_ABCD_1234..."
-                    value={typedAdminKey}
-                    onChange={(e) => setTypedAdminKey(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        setAdminKey(typedAdminKey);
-                      }
-                    }}
-                  />
-                </div>
-                <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                  <Button
-                    variant={"outline"}
-                    onClick={() => {
-                      setAdminKey("");
-                      setTypedAdminKey("");
-                      setModalOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant={"primary"}
-                    onClick={() => {
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 px-6">
+                <p className="flex items-center gap-2 text-sm text-warning-text">
+                  <LockIcon className="h-4 w-4" /> This action requires your
+                  Vault admin key.
+                </p>
+                <Input
+                  type="password"
+                  placeholder="sa_adm_ABCD_1234..."
+                  value={typedAdminKey}
+                  onChange={(e) => setTypedAdminKey(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
                       setAdminKey(typedAdminKey);
-                      handleCloseModal();
-                    }}
-                    disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
-                  >
-                    Unlock Vault
-                  </Button>
-                </div>
+                    }
+                  }}
+                />
               </div>
-            )}
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button
+                  variant={"outline"}
+                  onClick={() => {
+                    setAdminKey("");
+                    setTypedAdminKey("");
+                    setModalOpen(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant={"primary"}
+                  onClick={() => {
+                    setAdminKey(typedAdminKey);
+                    handleCloseModal();
+                  }}
+                  disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
+                >
+                  Unlock Vault
+                </Button>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

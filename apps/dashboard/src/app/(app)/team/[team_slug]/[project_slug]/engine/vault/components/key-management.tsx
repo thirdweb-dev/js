@@ -2,7 +2,7 @@ import type { Project } from "@/api/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
-import RotateAdminKeyButton from "../../server-wallets/components/rotate-admin-key.client";
+import RotateAdminKeyButton from "./rotate-admin-key.client";
 import CreateVaultAccountButton from "./create-vault-account.client";
 import ListAccessTokens from "./list-access-tokens.client";
 
