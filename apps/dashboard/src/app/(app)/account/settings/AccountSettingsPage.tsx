@@ -1,6 +1,4 @@
 "use client";
-
-import { getBillingPortalUrl } from "@/actions/billing";
 import { confirmEmailWithOTP } from "@/actions/confirmEmail";
 import { apiServerProxy } from "@/actions/proxies";
 import { updateAccount } from "@/actions/updateAccount";
@@ -68,7 +66,6 @@ export function AccountSettingsPage(props: {
               return { status: 500 };
             }
           }}
-          getBillingPortalUrl={getBillingPortalUrl}
           updateAccountAvatar={async (file) => {
             let uri: string | undefined = undefined;
 

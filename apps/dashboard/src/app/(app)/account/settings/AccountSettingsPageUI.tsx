@@ -1,6 +1,5 @@
 "use client";
 
-import type { GetBillingPortalUrlAction } from "@/actions/billing";
 import { BillingPortalButton } from "@/components/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
@@ -63,7 +62,6 @@ export function AccountSettingsPageUI(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
   cancelSubscriptions: () => Promise<void>;
 }) {
   return (
@@ -89,7 +87,6 @@ export function AccountSettingsPageUI(props: {
         onAccountDeleted={props.onAccountDeleted}
         defaultTeamSlug={props.defaultTeamSlug}
         defaultTeamName={props.defaultTeamName}
-        getBillingPortalUrl={props.getBillingPortalUrl}
         cancelSubscriptions={props.cancelSubscriptions}
       />
     </div>
@@ -208,7 +205,6 @@ function DeleteAccountCard(props: {
   onAccountDeleted: () => void;
   defaultTeamSlug: string;
   defaultTeamName: string;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
   cancelSubscriptions: () => Promise<void>;
 }) {
   const title = "Delete Account";
@@ -333,7 +329,6 @@ function DeleteAccountCard(props: {
                         variant: "default",
                       }}
                       teamSlug={props.defaultTeamSlug}
-                      getBillingPortalUrl={props.getBillingPortalUrl}
                     >
                       Manage Billing
                     </BillingPortalButton>

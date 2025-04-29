@@ -72,9 +72,6 @@ function Story(props: {
         inviteTeamMembers={async (params) => {
           return { results: params.map(() => "fulfilled") };
         }}
-        getBillingCheckoutUrl={async () => {
-          return { status: 200 };
-        }}
         onComplete={() => {
           storybookLog("onComplete");
         }}

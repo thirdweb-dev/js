@@ -1,6 +1,5 @@
 "use client";
 
-import type { GetBillingCheckoutUrlAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -9,7 +8,8 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
-import { useStripeRedirectEvent } from "../../../../app/(app)/stripe-redirect/stripeRedirectChannel";
+
+import { useStripeRedirectEvent } from "../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
 import { getValidTeamPlan } from "../../../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
 import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 
@@ -28,7 +28,6 @@ const planToTierRecord: Record<Team["billingPlan"], number> = {
 interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   getTeam: () => Promise<Team>;
 }
 
@@ -49,7 +48,6 @@ type CtaLink =
 export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
-  getBillingCheckoutUrl,
   getTeam,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
@@ -106,7 +104,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           teamSlug={team.slug}
           teamId={team.id}
           highlighted={highlightStarterPlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
           getTeam={getTeam}
         />
 
@@ -126,7 +123,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           highlighted={highlightGrowthPlan}
           teamSlug={team.slug}
           teamId={team.id}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
           getTeam={getTeam}
         />
 
@@ -143,7 +139,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             isCurrentPlanScheduledToCancel,
           )}
           highlighted={highlightAcceleratePlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
           getTeam={getTeam}
         />
 
@@ -160,7 +155,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             isCurrentPlanScheduledToCancel,
           )}
           highlighted={highlightScalePlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
           getTeam={getTeam}
         />
       </div>

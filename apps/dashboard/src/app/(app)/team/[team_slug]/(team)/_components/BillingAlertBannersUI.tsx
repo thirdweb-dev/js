@@ -1,13 +1,12 @@
 "use client";
 
-import type { GetBillingPortalUrlAction } from "@/actions/billing";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTransition } from "react";
-import { useStripeRedirectEvent } from "../../../../stripe-redirect/stripeRedirectChannel";
+import { useStripeRedirectEvent } from "../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
 function BillingAlertBanner(props: {
   title: string;
@@ -65,7 +64,6 @@ function BillingAlertBanner(props: {
 
 export function PastDueBannerUI(props: {
   teamSlug: string;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
 }) {
   return (
     <BillingAlertBanner
@@ -85,7 +83,6 @@ export function PastDueBannerUI(props: {
 
 export function ServiceCutOffBannerUI(props: {
   teamSlug: string;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
 }) {
   return (
     <BillingAlertBanner
