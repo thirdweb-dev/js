@@ -46,11 +46,11 @@ export function NebulaLoggedOutStatePage(props: {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
       {/* nav */}
-      <header className="border-b bg-card">
+      <header className="border-b bg-background">
         <div className="container flex items-center justify-between p-4">
-          <div className="flex shrink-0 items-center gap-2 ">
-            <NebulaIcon className="size-7 text-foreground" />
-            <span className="font-bold text-xl tracking-tight">Nebula</span>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <NebulaIcon className="size-6 text-foreground" />
+            <span className="font-medium text-xl">Nebula</span>
           </div>
 
           <div className="flex items-center gap-6">

@@ -42,7 +42,7 @@ export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
   );
 };
 
-function useIsClientMounted() {
+export function useIsClientMounted() {
   const [hasMounted, setHasMounted] = useState(false);
 
   // eslint-disable-next-line no-restricted-syntax

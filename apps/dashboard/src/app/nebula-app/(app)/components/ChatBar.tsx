@@ -192,11 +192,8 @@ export function ChatBar(props: {
           <Button
             aria-label="Send"
             disabled={message.trim() === "" || props.isConnectingWallet}
-            className={cn(
-              "!h-auto w-auto border border-transparent p-2 disabled:opacity-100",
-              message === "" &&
-                "border-border bg-muted text-muted-foreground hover:border-transparent hover:text-foreground",
-            )}
+            className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
+            variant="pink"
             onClick={() => {
               if (message.trim() === "") return;
               setMessage("");

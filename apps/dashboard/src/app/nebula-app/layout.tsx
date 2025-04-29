@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../global.css";
+import "./nebula-global.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { PHProvider } from "lib/posthog/Posthog";

@@ -8,12 +8,14 @@ import {
   ChevronRightIcon,
   FileCode2Icon,
   LogOutIcon,
-  PaletteIcon,
+  MoonIcon,
   PlusIcon,
+  SunIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useIsClientMounted } from "../../../../components/ClientOnly/ClientOnly";
 import { doNebulaLogout } from "../../login/auth-actions";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -30,7 +32,6 @@ export function ChatSidebar(props: {
   const sessions = useSessionsWithLocalOverrides(props.sessions);
   const sessionsToShow = sessions.slice(0, 10);
   const newChatPage = useNewChatPageLink();
-  const { theme, setTheme } = useTheme();
   const router = useDashboardRouter();
   const logoutMutation = useMutation({
     mutationFn: doNebulaLogout,
@@ -39,9 +40,9 @@ export function ChatSidebar(props: {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-start gap-3 p-4 lg:justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-1">
           <NebulaIcon className="size-6 text-foreground" aria-label="Nebula" />
-          <span className="font-semibold text-lg tracking-tight">Nebula</span>
+          <span className="font-medium text-lg">Nebula</span>
         </Link>
 
         <Badge variant="secondary" className="gap-1 py-1">
@@ -54,8 +55,8 @@ export function ChatSidebar(props: {
       <div className="flex flex-col gap-2 px-4">
         <Button
           asChild
-          variant="outline"
-          className="w-full gap-2 rounded-lg bg-muted/50"
+          variant="pink"
+          className="w-full gap-2 rounded-lg border-nebula-pink-foreground"
         >
           <Link href={newChatPage}>
             <PlusIcon className="size-4" />
@@ -104,13 +105,7 @@ export function ChatSidebar(props: {
           target="_blank"
         />
 
-        <SidebarIconButton
-          onClick={() => {
-            setTheme(theme === "light" ? "dark" : "light");
-          }}
-          icon={PaletteIcon}
-          label="Theme"
-        />
+        <ToggleThemeButton />
 
         <SidebarIconButton
           onClick={async () => {
@@ -130,6 +125,23 @@ export function ChatSidebar(props: {
         <NebulaConnectWallet detailsButtonClassName="!bg-background hover:!border-active-border" />
       </div>
     </div>
+  );
+}
+
+function ToggleThemeButton() {
+  const { theme, setTheme } = useTheme();
+  const isClientMounted = useIsClientMounted();
+
+  return (
+    <SidebarIconButton
+      onClick={() => {
+        setTheme(theme === "light" ? "dark" : "light");
+      }}
+      icon={
+        isClientMounted ? (theme === "light" ? SunIcon : MoonIcon) : Spinner
+      }
+      label="Theme"
+    />
   );
 }
 

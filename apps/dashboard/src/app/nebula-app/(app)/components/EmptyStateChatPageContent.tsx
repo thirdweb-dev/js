@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { NebulaContext } from "../api/chat";
 import { examplePrompts } from "../data/examplePrompts";
@@ -23,9 +24,9 @@ export function EmptyStateChatPageContent(props: {
       <div className="relative py-10">
         <FancyBorders />
         <div className="flex justify-center">
-          <div className="rounded-full border p-1">
-            <div className="rounded-full border bg-card p-2">
-              <NebulaIcon className="size-7 text-muted-foreground" />
+          <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/20 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-1">
+            <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/40 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-2">
+              <NebulaIcon className="size-7 text-nebula-pink-foreground" />
             </div>
           </div>
         </div>
@@ -120,14 +121,17 @@ function DashedBgDiv(props: {
 }) {
   return (
     <div
-      className={props.className}
+      className={cn(
+        "text-nebula-pink-foreground/50 dark:text-active-border",
+        props.className,
+      )}
       style={{
-        backgroundImage: `linear-gradient(${props.type === "horizontal" ? "90deg" : "180deg"}, hsl(var(--active-border)) 0 30%, transparent 0 100%)`,
+        backgroundImage: `linear-gradient(${props.type === "horizontal" ? "90deg" : "180deg"}, currentColor 0 30%, transparent 0 100%)`,
         backgroundRepeat: "repeat",
         backgroundSize: "10px 10px",
         maskImage: `linear-gradient(${
           props.type === "horizontal" ? "to right" : "to bottom"
-        }, rgba(0,0,0,0.1), black 20%, black 80%, rgba(0,0,0,0.1))`,
+        }, rgba(0,0,0,0.1), black 30%, black 70%, rgba(0,0,0,0.1))`,
       }}
     />
   );
