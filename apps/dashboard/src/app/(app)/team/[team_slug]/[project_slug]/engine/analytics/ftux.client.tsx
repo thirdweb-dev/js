@@ -82,7 +82,7 @@ function CreateVaultAccountStep(props: { project: Project }) {
       </p>
       <div className="h-6" />
       <div className="flex flex-row justify-end gap-4">
-        <Link href="https://portal.thirdweb.com/engine/vault">
+        <Link href="https://portal.thirdweb.com/engine/vault" target="_blank">
           <Button variant="outline">Learn more about Vault</Button>
         </Link>
         <CreateVaultAccountButton project={props.project} />

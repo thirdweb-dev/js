@@ -24,7 +24,7 @@ export function TryItOut(props: {
               Usage from your backend
             </h2>
             <p className="text-muted-foreground text-sm">
-              Send transactions to the blockchain using a simple http API
+              Send transactions from your server wallets using a simple http API
             </p>
           </div>
         </div>
