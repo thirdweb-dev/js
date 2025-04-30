@@ -62,7 +62,7 @@ export function KeyManagement({
   );
 }
 
-export async function CreateVaultAccountAlert(props: {
+async function CreateVaultAccountAlert(props: {
   project: Project;
 }) {
   return (
