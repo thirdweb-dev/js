@@ -1,3 +1,4 @@
 ::selection {
-  background-color: hsl(var(--nebula-pink-foreground) / 0.25);
+  background-color: hsl(var(--inverted));
+  color: hsl(var(--inverted-foreground));
 }

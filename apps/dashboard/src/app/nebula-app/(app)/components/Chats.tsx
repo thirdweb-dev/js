@@ -18,6 +18,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
+import { Reasoning } from "./Reasoning/Reasoning";
 
 export type NebulaTxData = {
   chainId: number;
@@ -29,7 +30,11 @@ export type NebulaTxData = {
 export type ChatMessage =
   | {
       text: string;
-      type: "user" | "error" | "presence";
+      type: "user" | "error";
+    }
+  | {
+      texts: string[];
+      type: "presence";
     }
   | {
       // assistant type message loaded from history doesn't have request_id
@@ -140,7 +145,7 @@ export function Chats(props: {
                           )}
                         >
                           {message.type === "presence" && (
-                            <Spinner className="size-4" />
+                            <NebulaIcon className="size-5 text-muted-foreground" />
                           )}
 
                           {message.type === "assistant" && (
@@ -176,11 +181,12 @@ export function Chats(props: {
                                 );
                               }}
                             />
-                          ) : (
-                            <span className="leading-loose">
-                              {message.text}
-                            </span>
-                          )}
+                          ) : message.type === "presence" ? (
+                            <Reasoning
+                              isPending={isMessagePending}
+                              texts={message.texts}
+                            />
+                          ) : null}
                         </ScrollShadow>
 
                         {message.type === "assistant" &&

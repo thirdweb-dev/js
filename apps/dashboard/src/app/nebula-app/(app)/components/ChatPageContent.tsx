@@ -213,7 +213,7 @@ export function ChatPageContent(props: {
         // instant loading indicator feedback to user
         {
           type: "presence",
-          text: "Thinking...",
+          texts: [],
         },
       ]);
 
@@ -521,19 +521,8 @@ export async function handleNebulaPrompt(params: {
         hasReceivedResponse = true;
         setMessages((prev) => {
           const lastMessage = prev[prev.length - 1];
-          // if last message is presence, overwrite it
-          if (lastMessage?.type === "presence") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                text: res.data.v,
-                type: "assistant",
-                request_id: requestIdForMessage,
-              },
-            ];
-          }
 
-          // if last message is from chat, append to it
+          // append to previous assistant message
           if (lastMessage?.type === "assistant") {
             return [
               ...prev.slice(0, -1),
@@ -545,7 +534,7 @@ export async function handleNebulaPrompt(params: {
             ];
           }
 
-          // otherwise, add a new message
+          // start a new assistant message
           return [
             ...prev,
             {
@@ -560,28 +549,27 @@ export async function handleNebulaPrompt(params: {
       if (res.event === "presence") {
         setMessages((prev) => {
           const lastMessage = prev[prev.length - 1];
-          // if last message is presence, overwrite it
+
+          // append to previous presence message
           if (lastMessage?.type === "presence") {
             return [
               ...prev.slice(0, -1),
-              { text: res.data.data, type: "presence" },
+              {
+                type: "presence",
+                texts: [...lastMessage.texts, res.data.data],
+              },
             ];
           }
-          // otherwise, add a new message
-          return [...prev, { text: res.data.data, type: "presence" }];
+
+          // start a new presence message
+          return [...prev, { texts: [res.data.data], type: "presence" }];
         });
       }
 
       if (res.event === "action") {
         if (res.type === "sign_transaction") {
           hasReceivedResponse = true;
-          setMessages((prev) => {
-            let prevMessages = prev;
-            // if last message is presence, remove it
-            if (prevMessages[prevMessages.length - 1]?.type === "presence") {
-              prevMessages = prevMessages.slice(0, -1);
-            }
-
+          setMessages((prevMessages) => {
             return [
               ...prevMessages,
               {
@@ -608,10 +596,7 @@ export async function handleNebulaPrompt(params: {
   // show an error message in that case
   if (!hasReceivedResponse) {
     setMessages((prev) => {
-      const newMessages = prev.slice(
-        0,
-        prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
-      );
+      const newMessages = [...prev];
 
       newMessages.push({
         text: "No response received, please try again",
