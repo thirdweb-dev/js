@@ -55,6 +55,7 @@ async function importEngine({
 export function EngineImportCard(props: {
   prefillImportUrl: string | undefined;
   teamSlug: string;
+  projectSlug: string;
 }) {
   const router = useDashboardRouter();
 
@@ -63,7 +64,9 @@ export function EngineImportCard(props: {
       prefillImportUrl={props.prefillImportUrl}
       importEngine={async (params) => {
         await importEngine({ ...params, teamIdOrSlug: props.teamSlug });
-        router.push(`/team/${props.teamSlug}/~/engine`);
+        router.push(
+          `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`,
+        );
       }}
     />
   );

@@ -23,12 +23,14 @@ import { LocalConfig } from "./local-config";
 interface EngineWalletConfigProps {
   instance: EngineInstance;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   instance,
   teamSlug,
+  projectSlug,
   authToken,
 }) => {
   const { data: walletConfig } = useEngineWalletConfig({
@@ -72,7 +74,7 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
         <p className="text-muted-foreground">
           Create backend wallets on the{" "}
           <Link
-            href={`/team/${teamSlug}/~/engine/${instance.id}`}
+            href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}`}
             className="text-link-foreground hover:text-foreground"
           >
             Overview

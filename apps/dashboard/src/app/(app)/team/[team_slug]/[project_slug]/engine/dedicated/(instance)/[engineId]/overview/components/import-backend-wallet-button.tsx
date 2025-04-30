@@ -43,12 +43,13 @@ interface ImportBackendWalletButtonProps {
   instance: EngineInstance;
   walletConfig: WalletConfigResponse;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const ImportBackendWalletButton: React.FC<
   ImportBackendWalletButtonProps
-> = ({ instance, walletConfig, teamSlug, authToken }) => {
+> = ({ instance, walletConfig, teamSlug, projectSlug, authToken }) => {
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
@@ -196,7 +197,7 @@ export const ImportBackendWalletButton: React.FC<
                       <AlertDescription>
                         Provide your credentials on the{" "}
                         <Link
-                          href={`/team/${teamSlug}/~/engine/${instance.id}/configuration`}
+                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                           className="text-link-foreground hover:text-foreground"
                         >
                           Configuration

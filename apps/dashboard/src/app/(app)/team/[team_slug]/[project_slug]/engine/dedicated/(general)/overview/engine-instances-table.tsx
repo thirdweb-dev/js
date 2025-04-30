@@ -83,6 +83,7 @@ type RemovedEngineFromDashboard = (
 
 export function EngineInstancesTable(props: {
   teamSlug: string;
+  projectSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
   teamPlan: Team["billingPlan"];
@@ -95,6 +96,7 @@ export function EngineInstancesTable(props: {
       instances={props.instances}
       engineLinkPrefix={props.engineLinkPrefix}
       teamSlug={props.teamSlug}
+      projectSlug={props.projectSlug}
       deleteCloudHostedEngine={async (params) => {
         await deleteCloudHostedEngine(params);
         router.refresh();
@@ -119,6 +121,7 @@ export function EngineInstancesTableUI(props: {
   removeEngineFromDashboard: RemovedEngineFromDashboard;
   teamPlan: Team["billingPlan"];
   teamSlug: string;
+  projectSlug: string;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -127,7 +130,11 @@ export function EngineInstancesTableUI(props: {
       </h2>
 
       {props.instances.length === 0 ? (
-        <EmptyEngineState teamPlan={props.teamPlan} teamSlug={props.teamSlug} />
+        <EmptyEngineState
+          teamPlan={props.teamPlan}
+          teamSlug={props.teamSlug}
+          projectSlug={props.projectSlug}
+        />
       ) : (
         <TableContainer>
           <Table>
@@ -810,6 +817,7 @@ function DeleteEngineSubscriptionModalContent(props: {
 function EmptyEngineState(props: {
   teamPlan: Team["billingPlan"];
   teamSlug: string;
+  projectSlug: string;
 }) {
   const [selectedTab, setSelectedTab] = useState<
     "self-hosted" | "cloud-hosted"
@@ -870,7 +878,9 @@ function EmptyEngineState(props: {
                     size="sm"
                     asChild
                   >
-                    <Link href={`/team/${props.teamSlug}/~/engine/import`}>
+                    <Link
+                      href={`/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated/import`}
+                    >
                       Import self-hosted Engine
                       <ArrowRight size={16} />
                     </Link>

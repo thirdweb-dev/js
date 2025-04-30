@@ -7,14 +7,20 @@ import {
 interface EngineSystemProps {
   instance: EngineInstance;
   teamIdOrSlug: string;
+  projectSlug: string;
 }
 
 export const EngineSystem: React.FC<EngineSystemProps> = ({
   instance,
   teamIdOrSlug,
+  projectSlug,
 }) => {
   const healthQuery = useEngineSystemHealth(instance.url);
-  const metricsQuery = useEngineSystemMetrics(instance.id, teamIdOrSlug);
+  const metricsQuery = useEngineSystemMetrics(
+    instance.id,
+    teamIdOrSlug,
+    projectSlug,
+  );
   if (!healthQuery.data) {
     return null;
   }

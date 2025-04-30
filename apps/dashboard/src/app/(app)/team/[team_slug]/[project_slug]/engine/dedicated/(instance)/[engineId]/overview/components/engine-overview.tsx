@@ -19,12 +19,14 @@ import { TransactionCharts, TransactionsTable } from "./transactions-table";
 interface EngineOverviewProps {
   instance: EngineInstance;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const EngineOverview: React.FC<EngineOverviewProps> = ({
   instance,
   teamSlug,
+  projectSlug,
   authToken,
 }) => {
   const client = useThirdwebClient();
@@ -34,6 +36,7 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
       <BackendWalletsSection
         instance={instance}
         teamSlug={teamSlug}
+        projectSlug={projectSlug}
         authToken={authToken}
         client={client}
       />
@@ -52,10 +55,11 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
 function BackendWalletsSection(props: {
   instance: EngineInstance;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
   client: ThirdwebClient;
 }) {
-  const { instance, teamSlug, authToken } = props;
+  const { instance, teamSlug, projectSlug, authToken } = props;
   const activeWalletChain = useActiveWalletChain();
   const [_chainId, setChainId] = useState<number>();
   const chainId = _chainId || activeWalletChain?.id || 1;
@@ -85,7 +89,7 @@ function BackendWalletsSection(props: {
           <p className="text-muted-foreground text-sm leading-relaxed">
             Set up other wallet types from the{" "}
             <UnderlineLink
-              href={`/team/${teamSlug}/~/engine/${instance.id}/configuration`}
+              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
             >
               Configuration
             </UnderlineLink>{" "}
@@ -108,12 +112,14 @@ function BackendWalletsSection(props: {
                 instance={instance}
                 walletConfig={walletConfig}
                 teamSlug={teamSlug}
+                projectSlug={projectSlug}
                 authToken={authToken}
               />
               <CreateBackendWalletButton
                 instance={instance}
                 walletConfig={walletConfig}
                 teamSlug={teamSlug}
+                projectSlug={projectSlug}
                 authToken={authToken}
               />
             </div>

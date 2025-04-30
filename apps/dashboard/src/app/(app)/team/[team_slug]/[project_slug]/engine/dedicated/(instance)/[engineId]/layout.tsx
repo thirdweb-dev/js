@@ -20,6 +20,7 @@ import { EngineVersionBadge } from "./_components/version";
 export default async function Layout(props: {
   params: Promise<{
     team_slug: string;
+    project_slug: string;
     engineId: string;
   }>;
   children: React.ReactNode;
@@ -29,7 +30,9 @@ export default async function Layout(props: {
   const authToken = await getAuthToken();
 
   if (!authToken) {
-    loginRedirect(`/team/${params.team_slug}/~/engine/${params.engineId}`);
+    loginRedirect(
+      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated/${params.engineId}`,
+    );
   }
 
   const instance = await getEngineInstance({
@@ -39,13 +42,14 @@ export default async function Layout(props: {
     accountId: account.id,
   });
 
-  const engineRootLayoutPath = `/team/${params.team_slug}/~/engine`;
+  const engineRootLayoutPath = `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`;
 
   if (!instance) {
     return (
       <EngineSidebarLayout
         engineId={params.engineId}
         teamSlug={params.team_slug}
+        projectSlug={params.project_slug}
       >
         <EngineErrorPage rootPath={engineRootLayoutPath}>
           Engine Instance Not Found
@@ -66,9 +70,11 @@ export default async function Layout(props: {
         <EngineSidebarLayout
           engineId={params.engineId}
           teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
         >
           <EnsureEnginePermission
             teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
             accountId={account.id}
             authToken={authToken}
             engineId={params.engineId}

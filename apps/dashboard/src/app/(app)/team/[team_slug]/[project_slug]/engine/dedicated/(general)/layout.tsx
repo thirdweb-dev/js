@@ -101,7 +101,9 @@ function EngineLegacyBannerUI(props: {
           >
             <Button variant="outline">Learn More</Button>
           </Link>
-          <Link href={`/team/${props.teamSlug}/${props.projectSlug}/engine`}>
+          <Link
+            href={`/team/${props.teamSlug}/${props.projectSlug}/engine/cloud`}
+          >
             <Button variant={"primary"} className="flex items-center gap-2">
               <EngineIcon className="size-4" /> Try Engine Cloud
             </Button>

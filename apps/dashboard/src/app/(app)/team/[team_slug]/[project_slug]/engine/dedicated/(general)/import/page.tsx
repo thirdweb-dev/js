@@ -1,7 +1,7 @@
 import { EngineImportCard } from "./EngineImportPage";
 
 export default async function Page(props: {
-  params: Promise<{ team_slug: string }>;
+  params: Promise<{ team_slug: string; project_slug: string }>;
   searchParams: Promise<{
     importUrl?: string | string[];
   }>;
@@ -21,6 +21,7 @@ export default async function Page(props: {
       <EngineImportCard
         prefillImportUrl={importUrl ? decodeURIComponent(importUrl) : undefined}
         teamSlug={params.team_slug}
+        projectSlug={params.project_slug}
       />
     </div>
   );

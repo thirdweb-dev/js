@@ -15,15 +15,21 @@ import { StatusCodes } from "./StatusCodes";
 interface EngineStatusProps {
   instance: EngineInstance;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   instance,
   teamSlug,
+  projectSlug,
   authToken,
 }) => {
-  const systemMetricsQuery = useEngineSystemMetrics(instance.id, teamSlug);
+  const systemMetricsQuery = useEngineSystemMetrics(
+    instance.id,
+    teamSlug,
+    projectSlug,
+  );
   const queueMetricsQuery = useEngineQueueMetrics({
     authToken,
     instanceUrl: instance.url,
@@ -44,7 +50,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
           <Text>
             Upgrade to a{" "}
             <TrackedLink
-              href={`/team/${teamSlug}/~/engine/create`}
+              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/create`}
               isExternal
               color="blue.500"
               category="engine"

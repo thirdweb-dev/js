@@ -1,9 +1,9 @@
 "use client";
 
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useQuery } from "@tanstack/react-query";
 import type React from "react";
-import GenericLoadingPage from "../../../../ecosystem/loading";
 import { getEngineAccessPermission } from "../../../_utils/getEngineAccessPermission";
 import { EngineErrorPage } from "./EngineErrorPage";
 
@@ -13,10 +13,11 @@ export function EnsureEnginePermission(props: {
   authToken: string;
   children: React.ReactNode;
   teamSlug: string;
+  projectSlug: string;
   instance: EngineInstance;
 }) {
   const { instance } = props;
-  const rootPath = `/team/${props.teamSlug}/~/engine`;
+  const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`;
 
   const permissionQuery = useQuery({
     queryKey: [

@@ -9,12 +9,14 @@ import { EngineSystem } from "./system";
 interface EngineConfigurationProps {
   instance: EngineInstance;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
   instance,
   teamSlug,
+  projectSlug,
   authToken,
 }) => {
   return (
@@ -22,6 +24,7 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
       <EngineWalletConfig
         instance={instance}
         teamSlug={teamSlug}
+        projectSlug={projectSlug}
         authToken={authToken}
       />
       <EngineCorsConfig instanceUrl={instance.url} authToken={authToken} />
@@ -29,7 +32,11 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
         instanceUrl={instance.url}
         authToken={authToken}
       />
-      <EngineSystem instance={instance} teamIdOrSlug={teamSlug} />
+      <EngineSystem
+        instance={instance}
+        teamIdOrSlug={teamSlug}
+        projectSlug={projectSlug}
+      />
     </div>
   );
 };

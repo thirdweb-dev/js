@@ -48,6 +48,7 @@ export default async function Page(props: {
   return (
     <EngineInstancesList
       team_slug={params.team_slug}
+      project_slug={params.project_slug}
       instances={res.data || []}
       teamPlan={team.billingPlan}
     />

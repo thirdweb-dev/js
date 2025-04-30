@@ -1,44 +1,18 @@
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
   children: React.ReactNode;
 }) {
   const { team_slug, project_slug } = await props.params;
-  const authToken = await getAuthToken();
-
-  if (!authToken) {
-    redirect("/team");
-  }
-
-  const [team, project] = await Promise.all([
-    getTeamBySlug(team_slug),
-    getProject(team_slug, project_slug),
-  ]);
-
-  if (!team) {
-    redirect("/team");
-  }
-
-  if (!project) {
-    redirect(`/team/${team_slug}`);
-  }
 
   return (
-    <TransactionsLayout
-      projectSlug={project.slug}
-      teamSlug={team_slug}
-      clientId={project.publishableKey}
-    >
+    <TransactionsLayout projectSlug={project_slug} teamSlug={team_slug}>
       {props.children}
     </TransactionsLayout>
   );
@@ -47,7 +21,6 @@ export default async function Page(props: {
 function TransactionsLayout(props: {
   projectSlug: string;
   teamSlug: string;
-  clientId: string;
   children: React.ReactNode;
 }) {
   const engineBaseSlug = `/team/${props.teamSlug}/${props.projectSlug}/engine`;

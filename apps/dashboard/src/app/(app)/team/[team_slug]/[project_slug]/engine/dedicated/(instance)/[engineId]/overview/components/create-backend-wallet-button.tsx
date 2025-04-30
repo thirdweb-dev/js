@@ -43,12 +43,13 @@ interface CreateBackendWalletButtonProps {
   instance: EngineInstance;
   walletConfig: WalletConfigResponse;
   teamSlug: string;
+  projectSlug: string;
   authToken: string;
 }
 
 export const CreateBackendWalletButton: React.FC<
   CreateBackendWalletButtonProps
-> = ({ instance, walletConfig, teamSlug, authToken }) => {
+> = ({ instance, walletConfig, teamSlug, projectSlug, authToken }) => {
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
@@ -192,7 +193,7 @@ export const CreateBackendWalletButton: React.FC<
                       <AlertDescription>
                         Provide your credentials on the{" "}
                         <Link
-                          href={`/team/${teamSlug}/~/engine/${instance.id}/configuration`}
+                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                           className="text-link-foreground hover:text-foreground"
                         >
                           Configuration
@@ -249,7 +250,7 @@ export const CreateBackendWalletButton: React.FC<
                               The ID of the Circle credential to use for this
                               wallet. You can find this in the{" "}
                               <Link
-                                href={`/team/${teamSlug}/~/engine/${instance.id}/wallet-credentials`}
+                                href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/wallet-credentials`}
                                 className="text-link-foreground hover:text-foreground"
                               >
                                 Wallet Credentials

@@ -7,12 +7,14 @@ export default async function Page(props: EngineInstancePageProps) {
   const { instance, authToken } = await engineInstancePageHandler({
     engineId: params.engineId,
     teamSlug: params.team_slug,
+    projectSlug: params.project_slug,
   });
 
   return (
     <EngineOverview
       instance={instance}
       teamSlug={params.team_slug}
+      projectSlug={params.project_slug}
       authToken={authToken}
     />
   );

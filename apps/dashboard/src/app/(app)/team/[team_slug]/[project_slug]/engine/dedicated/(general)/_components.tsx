@@ -27,8 +27,8 @@ export function ImportEngineLink(props: {
   );
 }
 
-function EngineInfoSection(props: { team_slug: string }) {
-  const engineLinkPrefix = `/team/${props.team_slug}/~/engine`;
+function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
+  const engineLinkPrefix = `/team/${props.team_slug}/${props.project_slug}/engine/dedicated`;
 
   return (
     <div className="">
@@ -148,6 +148,7 @@ function CloudHostedEngineSection(props: {
 export function EngineFooterCard(props: {
   teamPlan: Team["billingPlan"];
   team_slug: string;
+  project_slug: string;
 }) {
   return (
     <div className="relative rounded-lg border p-6">
@@ -161,7 +162,10 @@ export function EngineFooterCard(props: {
         </>
       )}
 
-      <EngineInfoSection team_slug={props.team_slug} />
+      <EngineInfoSection
+        team_slug={props.team_slug}
+        project_slug={props.project_slug}
+      />
     </div>
   );
 }

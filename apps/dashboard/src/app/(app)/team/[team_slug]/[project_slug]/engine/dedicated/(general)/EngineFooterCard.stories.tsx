@@ -6,6 +6,7 @@ const meta = {
   component: EngineFooterCard,
   args: {
     team_slug: "demo-team",
+    project_slug: "demo-project",
   },
   decorators: [
     (Story) => (

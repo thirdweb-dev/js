@@ -1,7 +1,4 @@
 import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { THIRDWEB_VAULT_URL } from "@/constants/env";
-import { createVaultClient } from "@thirdweb-dev/vault-sdk";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { getEngineInstances } from "./dedicated/_utils/getEngineInstances";
@@ -21,15 +18,10 @@ export default async function TransactionsAnalyticsPage(props: {
     redirect("/team");
   }
 
-  const [team, project, engineInstances] = await Promise.all([
-    getTeamBySlug(team_slug),
+  const [project, engineInstances] = await Promise.all([
     getProject(team_slug, project_slug),
     getEngineInstances({ authToken, teamIdOrSlug: team_slug }),
   ]);
-
-  if (!team) {
-    redirect("/team");
-  }
 
   if (!project) {
     redirect(`/team/${team_slug}`);
@@ -38,14 +30,6 @@ export default async function TransactionsAnalyticsPage(props: {
   const projectEngineCloudService = project.services.find(
     (service) => service.name === "engineCloud",
   );
-
-  const vaultClient = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
-  }).catch(() => undefined);
-
-  if (!vaultClient) {
-    return <div>Error: Failed to connect to Vault</div>;
-  }
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
