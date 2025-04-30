@@ -46,7 +46,7 @@ export function ChatSidebar(props: {
         </Link>
 
         <Badge variant="secondary" className="gap-1 py-1">
-          Alpha
+          Beta
         </Badge>
       </div>
 
