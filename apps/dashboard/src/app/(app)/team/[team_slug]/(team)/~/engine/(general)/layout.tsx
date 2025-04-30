@@ -1,9 +1,10 @@
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CloudIcon } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "../../../../../../../../@/components/ui/badge";
-import { Button } from "../../../../../../../../@/components/ui/button";
 import { ImportEngineLink } from "./_components";
 
 export default async function Layout(props: {
@@ -42,16 +43,15 @@ export default async function Layout(props: {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href={`/team/${params.team_slug}`}>
-              <Button variant={"upsell"}>
-                <CloudIcon className="mr-2 h-4 w-4" /> Try Engine Cloud for Free
-              </Button>
-            </Link>
             <ImportEngineLink
               label="Import Engine"
               engineLinkPrefix={linkPrefix}
             />
           </div>
+        </div>
+        <div className="h-6" />
+        <div className="container">
+          <EngineLegacyBannerUI teamSlug={params.team_slug} />
         </div>
       </header>
 
@@ -60,5 +60,41 @@ export default async function Layout(props: {
         {props.children}
       </SidebarLayout>
     </div>
+  );
+}
+
+function EngineLegacyBannerUI(props: {
+  teamSlug: string;
+}) {
+  return (
+    <Alert variant="info">
+      <CloudIcon className="size-5" />
+      <AlertTitle>Engine Cloud (Beta)</AlertTitle>
+      <AlertDescription>
+        <div className="h-2" />
+        <p className="text-primary-foreground text-sm">
+          Try Engine Cloud (Beta) - now included for free in every thirdweb
+          project.
+        </p>
+        <div className="h-2" />
+        <ul className="list-disc pl-4 text-muted-foreground text-sm">
+          <li>No recurring monthly cost, pay-per-request model</li>
+          <li>Powered by Vault: our new TEE based key management system</li>
+          <li>Improved performance and simplified transaction API</li>
+        </ul>
+        <div className="h-4" />
+        <div className="flex justify-end gap-2">
+          <Link
+            href={`https://portal.thirdweb.com/engine/cloud`}
+            target="_blank"
+          >
+            <Button variant="outline">Learn More</Button>
+          </Link>
+          <Link href={`/team/${props.teamSlug}`}>
+            <Button variant={"primary"}>Create a Project</Button>
+          </Link>
+        </div>
+      </AlertDescription>
+    </Alert>
   );
 }

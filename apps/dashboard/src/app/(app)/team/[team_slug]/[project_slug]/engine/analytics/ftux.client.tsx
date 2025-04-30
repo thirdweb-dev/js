@@ -1,15 +1,15 @@
 "use client";
 import type { Project } from "@/api/projects";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { type Step, StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "../../../../../../../@/components/ui/button";
+import { maskSecret } from "../lib/vault.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import CreateVaultAccountButton from "../vault/components/create-vault-account.client";
 import { SendTestTransaction } from "./send-test-tx.client";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { maskSecret } from "../lib/vault.client";
 
 interface Props {
   managementAccessToken: string | undefined;
@@ -143,7 +143,8 @@ function CreateServerWalletStep(props: {
       </p>
       <div className="h-2" />
       <p className="text-muted-foreground text-sm">
-        Your server wallet will be used to send transactions to the Engine.
+        Server wallets are smart wallets, they don't require any gas funds to
+        send transactions.
       </p>
       <div className="h-6" />
       <div className="flex flex-row justify-end gap-4">
