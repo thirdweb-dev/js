@@ -129,7 +129,9 @@ export const SelectWithSearch = React.forwardRef<
                   selectedOption && "text-foreground",
                 )}
               >
-                {selectedOption?.label || placeholder}
+                {renderOption && selectedOption
+                  ? renderOption(selectedOption)
+                  : selectedOption?.label || placeholder}
               </span>
               <ChevronDown className="size-4 cursor-pointer text-muted-foreground" />
             </div>
