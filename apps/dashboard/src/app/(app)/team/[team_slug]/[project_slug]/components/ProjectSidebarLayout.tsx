@@ -12,7 +12,6 @@ import { EngineIcon } from "../../../../(dashboard)/(chain)/components/server/ic
 import { InsightIcon } from "../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
 import { PayIcon } from "../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
-import { Badge } from "../../../../../../@/components/ui/badge";
 import { NebulaIcon } from "../../../../../nebula-app/(app)/icons/NebulaIcon";
 
 export function ProjectSidebarLayout(props: {
@@ -63,11 +62,7 @@ export function ProjectSidebarLayout(props: {
         },
         {
           href: `${layoutPath}/engine`,
-          label: (
-            <span>
-              Engine <Badge>Beta</Badge>
-            </span>
-          ),
+          label: "Engine",
           icon: EngineIcon,
           tracking: tracking("engine"),
         },

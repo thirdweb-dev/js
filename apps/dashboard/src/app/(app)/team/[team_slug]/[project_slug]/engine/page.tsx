@@ -1,17 +1,7 @@
 import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { THIRDWEB_VAULT_URL } from "@/constants/env";
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
-import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
-import { EngineChecklist } from "./analytics/ftux.client";
-import { TransactionAnalyticsSummary } from "./analytics/summary";
-import {
-  type TransactionSummaryData,
-  getTransactionAnalyticsSummary,
-} from "./lib/analytics";
-import type { Wallet } from "./server-wallets/wallet-table/types";
+import { getEngineInstances } from "./dedicated/_utils/getEngineInstances";
 
 export default async function TransactionsAnalyticsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -21,86 +11,39 @@ export default async function TransactionsAnalyticsPage(props: {
     interval?: string | string[] | undefined;
   }>;
 }) {
-  const [params, searchParams, authToken] = await Promise.all([
-    props.params,
-    props.searchParams,
-    getAuthToken(),
-  ]);
+  const { team_slug, project_slug } = await props.params;
+  const authToken = await getAuthToken();
 
   if (!authToken) {
-    notFound();
-  }
-
-  const [team, project] = await Promise.all([
-    getTeamBySlug(params.team_slug),
-    getProject(params.team_slug, params.project_slug),
-  ]);
-
-  if (!team) {
     redirect("/team");
   }
 
+  const [project, engineInstances] = await Promise.all([
+    getProject(team_slug, project_slug),
+    getEngineInstances({ authToken, teamIdOrSlug: team_slug }),
+  ]);
+
   if (!project) {
-    redirect(`/team/${params.team_slug}`);
+    redirect(`/team/${team_slug}`);
   }
 
   const projectEngineCloudService = project.services.find(
     (service) => service.name === "engineCloud",
   );
 
-  const vaultClient = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
-  });
-
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
 
-  const eoas = managementAccessToken
-    ? await listEoas({
-        client: vaultClient,
-        request: {
-          auth: {
-            accessToken: managementAccessToken,
-          },
-          options: {},
-        },
-      })
-    : { data: { items: [] }, error: null, success: true };
-
-  const wallets = eoas.data?.items as Wallet[] | undefined;
-
-  let initialData: TransactionSummaryData | undefined;
-  if (wallets && wallets.length > 0) {
-    const summary = await getTransactionAnalyticsSummary({
-      teamId: project.teamId,
-      clientId: project.publishableKey,
-    }).catch(() => undefined);
-    initialData = summary;
+  // if we have a management access token, redirect to the engine cloud layout
+  if (managementAccessToken) {
+    redirect(`/team/${team_slug}/${project_slug}/engine/cloud`);
   }
-  const hasTransactions = initialData ? initialData.totalCount > 0 : false;
 
-  return (
-    <div className="flex grow flex-col">
-      <EngineChecklist
-        managementAccessToken={managementAccessToken ?? undefined}
-        hasTransactions={hasTransactions}
-        project={project}
-        wallets={wallets ?? []}
-      />
-      {hasTransactions && (
-        <TransactionAnalyticsSummary
-          initialData={initialData}
-          teamId={project.teamId}
-          clientId={project.publishableKey}
-        />
-      )}
-      <div className="h-10" />
-      <TransactionsAnalyticsPageContent
-        searchParams={searchParams}
-        project={project}
-        hasTransactions={hasTransactions}
-        wallets={wallets}
-      />
-    </div>
-  );
+  // if we have any legacy engine instances, redirect to the legacy engine layout
+  if (engineInstances.data?.length && engineInstances.data.length > 0) {
+    redirect(`/team/${team_slug}/${project_slug}/engine/dedicated`);
+  }
+
+  // otherwise, redirect to the engine cloud layout
+  redirect(`/team/${team_slug}/${project_slug}/engine/cloud`);
 }

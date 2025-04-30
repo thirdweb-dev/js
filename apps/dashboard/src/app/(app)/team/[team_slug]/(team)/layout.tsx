@@ -5,7 +5,6 @@ import { TabPathLinks } from "@/components/ui/tabs";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
-import { Badge } from "../../../../../@/components/ui/badge";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -74,15 +73,6 @@ export default async function TeamLayout(props: {
             {
               path: `/team/${params.team_slug}/~/analytics`,
               name: "Analytics",
-            },
-            {
-              path: `/team/${params.team_slug}/~/engine`,
-              name: (
-                <span className="flex items-center gap-2">
-                  Engines
-                  <Badge variant="warning">Legacy</Badge>
-                </span>
-              ),
             },
             {
               path: `/team/${params.team_slug}/~/ecosystem`,
