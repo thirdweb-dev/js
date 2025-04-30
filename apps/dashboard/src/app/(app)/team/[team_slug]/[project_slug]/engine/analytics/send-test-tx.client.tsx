@@ -2,7 +2,6 @@
 import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { WalletAvatar } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,9 +25,9 @@ import {
   optimismSepolia,
   sepolia,
 } from "thirdweb/chains";
-import { shortenAddress } from "thirdweb/utils";
 import * as z from "zod";
 import type { Wallet } from "../server-wallets/wallet-table/types";
+import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
 
 const formSchema = z.object({
   accessToken: z.string().min(1, "Access token is required"),
@@ -171,15 +170,7 @@ export function SendTestTransaction(props: {
                 <SelectTrigger className="w-full">
                   <SelectValue>
                     <div className="flex items-center gap-2">
-                      <WalletAvatar
-                        address={selectedWallet.address}
-                        profiles={[]}
-                        thirdwebClient={thirdwebClient}
-                        iconClassName="h-5 w-5"
-                      />
-                      <span className="font-mono text-sm">
-                        {shortenAddress(selectedWallet.address)}
-                      </span>
+                      <SmartAccountCell wallet={selectedWallet} />
                       <span className="text-muted-foreground text-sm">
                         {selectedWallet.metadata.label}
                       </span>
@@ -190,15 +181,7 @@ export function SendTestTransaction(props: {
                   {props.wallets.map((wallet, index) => (
                     <SelectItem key={wallet.address} value={index.toString()}>
                       <div className="flex items-center gap-2">
-                        <WalletAvatar
-                          address={wallet.address}
-                          profiles={[]}
-                          thirdwebClient={thirdwebClient}
-                          iconClassName="h-5 w-5"
-                        />
-                        <span className="font-mono text-sm">
-                          {shortenAddress(wallet.address)}
-                        </span>
+                        <SmartAccountCell wallet={wallet} />
                         <span className="text-muted-foreground text-sm">
                           {selectedWallet.metadata.label}
                         </span>

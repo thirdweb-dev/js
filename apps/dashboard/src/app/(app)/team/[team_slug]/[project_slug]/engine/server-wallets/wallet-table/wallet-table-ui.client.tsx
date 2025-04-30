@@ -2,7 +2,6 @@
 
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -23,6 +22,7 @@ import {
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
 import { Badge } from "../../../../../../../../@/components/ui/badge";
+import { Skeleton } from "../../../../../../../../@/components/ui/skeleton";
 import { Switch } from "../../../../../../../../@/components/ui/switch";
 import { useV5DashboardChain } from "../../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
@@ -111,7 +111,7 @@ export function ServerWalletsTableUI({
   );
 }
 
-function SmartAccountCell({ wallet }: { wallet: Wallet }) {
+export function SmartAccountCell({ wallet }: { wallet: Wallet }) {
   const chainId = 1; // TODO: add chain switcher for balance + smart account address
   const chain = useV5DashboardChain(chainId);
 
@@ -136,7 +136,7 @@ function SmartAccountCell({ wallet }: { wallet: Wallet }) {
           <Badge variant={"default"}>Smart Account</Badge>
         </div>
       ) : (
-        <Spinner className="h-4 w-4" />
+        <Skeleton className="h-4 w-20" />
       )}
     </div>
   );
