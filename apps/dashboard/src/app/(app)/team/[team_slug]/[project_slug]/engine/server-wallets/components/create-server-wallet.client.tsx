@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { createEoa } from "@thirdweb-dev/vault-sdk";
-import { Loader2 } from "lucide-react";
+import { Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { initVaultClient } from "../../lib/vault.client";
@@ -90,7 +90,16 @@ export default function CreateServerWallet(props: {
         }
         className="flex flex-row items-center gap-2"
       >
-        {props.managementAccessToken ? "Create Server Wallet" : "Get Started"}
+        {isLoading ? (
+          <Loader2 className="animate-spin" />
+        ) : (
+          <WalletIcon className="size-4" />
+        )}
+        {props.managementAccessToken
+          ? isLoading
+            ? "Creating..."
+            : "Create Server Wallet"
+          : "Get Started"}
       </Button>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>

@@ -20,6 +20,12 @@ import { Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  arbitrumSepolia,
+  baseSepolia,
+  optimismSepolia,
+  sepolia,
+} from "thirdweb/chains";
 import { shortenAddress } from "thirdweb/utils";
 import * as z from "zod";
 import type { Wallet } from "../server-wallets/wallet-table/types";
@@ -35,6 +41,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function SendTestTransaction(props: {
   wallets?: Wallet[];
   project: Project;
+  userAccessToken?: string;
   expanded?: boolean;
 }) {
   const thirdwebClient = useThirdwebClient();
@@ -45,7 +52,7 @@ export function SendTestTransaction(props: {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      accessToken: "",
+      accessToken: props.userAccessToken ?? "",
       walletIndex: "0",
       chainId: 84532,
     },
@@ -120,19 +127,10 @@ export function SendTestTransaction(props: {
 
   return (
     <div className="mt-3 w-full rounded-md border bg-background p-6">
-      <p className="font-medium text-foreground text-sm">
-        Engine is designed to scale, gas-free, fast, and secure. <br />
-      </p>
-      <div className="h-2" />
-      <p className="text-muted-foreground text-sm">
-        Fire up many test transactions and watch the table below to see how it
-        performs!
-      </p>
-      <div className="h-4" />
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <p className="flex items-center gap-2 text-sm text-warning-text">
-          <LockIcon className="h-4 w-4" /> This action requires your vault
-          access token.
+          <LockIcon className="h-4 w-4" />
+          Every wallet action requires your Vault access token.
         </p>
         <div className="h-4" />
         {/* Responsive container */}
@@ -142,12 +140,21 @@ export function SendTestTransaction(props: {
               <p className="text-sm">Vault Access Token</p>
               <Input
                 id="access-token"
-                type="password"
+                type={props.userAccessToken ? "text" : "password"}
                 placeholder="vt_act_1234....ABCD"
                 {...form.register("accessToken")}
                 disabled={isLoading}
                 className="text-xs"
               />
+              {props.userAccessToken && (
+                <div className="flex flex-col gap-2 ">
+                  <p className="text-muted-foreground text-xs">
+                    This is the project-wide access token you just created. You
+                    can create more access tokens using your admin key, with
+                    granular scopes and permissions.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -205,6 +212,32 @@ export function SendTestTransaction(props: {
               <p className="text-sm">Network</p>
               <SingleNetworkSelector
                 className="bg-background"
+                chainIds={[
+                  baseSepolia.id,
+                  optimismSepolia.id,
+                  arbitrumSepolia.id,
+                  sepolia.id,
+                  1301,
+                  1946,
+                  1993,
+                  919,
+                  6342,
+                  10143,
+                  44787,
+                  80002,
+                  80069,
+                  98985,
+                  128123,
+                  167009,
+                  168587773,
+                  37714555429,
+                  1952959480,
+                  97,
+                  296,
+                  1740,
+                  4202,
+                  10200,
+                ]}
                 client={thirdwebClient}
                 chainId={form.watch("chainId")}
                 onChange={(chainId) => {
@@ -216,20 +249,9 @@ export function SendTestTransaction(props: {
         </div>
         <div className="h-6" />
         <div className="flex flex-col gap-2 md:flex-row md:justify-end md:gap-2">
-          {hasSentTx && (
-            <Button
-              variant="outline"
-              className="w-full md:w-auto"
-              onClick={() => {
-                router.refresh();
-              }}
-            >
-              Complete Setup
-            </Button>
-          )}
           <Button
             type="submit"
-            variant="primary"
+            variant={hasSentTx ? "secondary" : "primary"}
             disabled={isLoading || !form.formState.isValid}
             className="w-full min-w-[200px] md:w-auto"
           >
@@ -242,6 +264,17 @@ export function SendTestTransaction(props: {
               <>{hasSentTx ? "Send More Transactions" : "Send Transaction"}</>
             )}
           </Button>
+          {hasSentTx && (
+            <Button
+              variant="primary"
+              className="w-full md:w-auto"
+              onClick={() => {
+                router.refresh();
+              }}
+            >
+              Complete Setup
+            </Button>
+          )}
         </div>
       </form>
     </div>

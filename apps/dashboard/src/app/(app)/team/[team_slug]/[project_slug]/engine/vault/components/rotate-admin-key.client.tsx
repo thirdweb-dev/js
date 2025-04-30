@@ -17,7 +17,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { Loader2, RefreshCcwIcon } from "lucide-react";
+import { CheckIcon, DownloadIcon, Loader2, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -129,14 +129,6 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
     router.refresh();
   };
 
-  const handlePrimaryButton = () => {
-    if (!keysDownloaded) {
-      handleDownloadKeys();
-      return;
-    }
-    handleCloseModal();
-  };
-
   const isLoading = rotateAdminKeyMutation.isPending;
 
   return (
@@ -230,6 +222,22 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                     as they provide access to your server wallets.
                   </AlertDescription>
                   <div className="h-4" />
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="link"
+                      onClick={handleDownloadKeys}
+                      className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
+                    >
+                      <DownloadIcon className="size-4" />
+                      {keysDownloaded ? "Keys Downloaded" : "Download Keys"}
+                    </Button>
+                    {keysDownloaded && (
+                      <span className="text-success-text text-xs">
+                        <CheckIcon className="size-4" />
+                      </span>
+                    )}
+                  </div>
+                  <div className="h-4" />
                   <CheckboxWithLabel className="text-foreground">
                     <Checkbox
                       checked={keysConfirmed}
@@ -242,11 +250,11 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                 <Button
-                  onClick={handlePrimaryButton}
-                  disabled={keysDownloaded && !keysConfirmed}
+                  onClick={handleCloseModal}
+                  disabled={!keysConfirmed}
                   variant="primary"
                 >
-                  {keysDownloaded ? "Close" : "Download Keys"}
+                  Close
                 </Button>
               </div>
             </div>
