@@ -17,13 +17,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
-import {
-  CheckIcon,
-  CircleAlertIcon,
-  DownloadIcon,
-  Loader2,
-  RefreshCcwIcon,
-} from "lucide-react";
+import { Loader2, RefreshCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -36,7 +30,6 @@ import {
 export default function RotateAdminKeyButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
-  const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
 
   const rotateAdminKeyMutation = useMutation({
@@ -47,6 +40,8 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
       const rotationCode = props.project.services.find(
         (service) => service.name === "engineCloud",
       )?.rotationCode;
+
+      console.log("DEBUG", rotationCode);
 
       if (!rotationCode) {
         throw new Error("Rotation code not found");
@@ -99,39 +94,14 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
     },
   });
 
-  const handleDownloadKeys = () => {
-    if (!rotateAdminKeyMutation.data) {
-      return;
-    }
-
-    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${rotateAdminKeyMutation.data.adminKey}\n\nVault Access Token:\n${rotateAdminKeyMutation.data.userAccessToken.accessToken}\n`;
-    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const filename = `${props.project.name}-vault-keys-rotated.txt`;
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link); // Required for Firefox
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    toast.success(`Keys downloaded as ${filename}`);
-    setKeysDownloaded(true);
-  };
-
   const handleCloseModal = () => {
     if (!keysConfirmed) {
       return;
     }
-
     setModalOpen(false);
     setKeysConfirmed(false);
-    setKeysDownloaded(false);
-    // invalidate the page to force a reload
     rotateAdminKeyMutation.reset();
+    // invalidate the page to force a reload of the project data
     router.refresh();
   };
 
@@ -194,32 +164,6 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                       </p>
                     </div>
                   </div>
-
-                  <div>
-                    <h3 className="mb-2 font-medium text-sm">
-                      New Vault Access Token
-                    </h3>
-                    <div className="flex flex-col gap-2 ">
-                      <CopyTextButton
-                        textToCopy={
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken
-                        }
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                        textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken,
-                        )}
-                        copyIconPosition="right"
-                        tooltip="Copy Vault Access Token"
-                      />
-                      <p className="text-muted-foreground text-xs">
-                        This access token is used to sign transactions and
-                        messages from your backend. Can be revoked and recreated
-                        with your admin key.
-                      </p>
-                    </div>
-                  </div>
                 </div>
                 <Alert variant="destructive">
                   <AlertTitle>Secure your keys</AlertTitle>
@@ -227,22 +171,6 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                     These keys will not be displayed again. Store them securely
                     as they provide access to your server wallets.
                   </AlertDescription>
-                  <div className="h-4" />
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="link"
-                      onClick={handleDownloadKeys}
-                      className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
-                    >
-                      <DownloadIcon className="size-4" />
-                      {keysDownloaded ? "Keys Downloaded" : "Download Keys"}
-                    </Button>
-                    {keysDownloaded && (
-                      <span className="text-success-text text-xs">
-                        <CheckIcon className="size-4" />
-                      </span>
-                    )}
-                  </div>
                   <div className="h-4" />
                   <CheckboxWithLabel className="text-foreground">
                     <Checkbox
@@ -275,18 +203,10 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
               </DialogHeader>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 px-6">
-                  <p className="text-md text-primary-foreground">
-                    Revoke your current keys and generates new ones.
+                  <p className="text-destructive">
+                    This will invalidate your current admin key and all existing
+                    access tokens.
                   </p>
-                  <Alert variant="destructive">
-                    <CircleAlertIcon className="size-5" />
-                    <AlertTitle>Important</AlertTitle>
-                    <AlertDescription>
-                      This action will invalidate your current admin key and all
-                      existing access tokens. You will need to update your
-                      backend to use these new access tokens.
-                    </AlertDescription>
-                  </Alert>
                 </div>
                 <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                   <Button

@@ -15,7 +15,7 @@ import { createEoa } from "@thirdweb-dev/vault-sdk";
 import { Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { initVaultClient } from "../../(overview)/lib/vault.client";
+import { initVaultClient } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
   project: Project;
