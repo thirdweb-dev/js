@@ -101,7 +101,7 @@ export default function CreateVaultAccountButton(props: {
       return;
     }
 
-    const fileContent = `Project: ${props.project.name} (${props.project.publishableKey})\nVault Admin Key: ${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}\nVault Access Token: ${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}\n\nVault Access Token:\n${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");

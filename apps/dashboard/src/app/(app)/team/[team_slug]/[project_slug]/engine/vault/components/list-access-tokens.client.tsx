@@ -173,6 +173,7 @@ export default function ListAccessTokens(props: {
                 setModalOpen(true);
               } else {
                 setAdminKey("");
+                setTypedAdminKey("");
                 queryClient.invalidateQueries({
                   queryKey: ["list-access-tokens"],
                 });
@@ -191,6 +192,12 @@ export default function ListAccessTokens(props: {
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-10 w-full" />
+          </div>
+        ) : listAccessTokensQuery.error ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-destructive-text text-sm">
+              Failed to list access tokens. Check your admin key and try again.
+            </p>
           </div>
         ) : listAccessTokensQuery.data ? (
           <div>

@@ -17,7 +17,13 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { CheckIcon, DownloadIcon, Loader2, RefreshCcwIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CircleAlertIcon,
+  DownloadIcon,
+  Loader2,
+  RefreshCcwIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -98,7 +104,7 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
       return;
     }
 
-    const fileContent = `Project: ${props.project.name} (${props.project.publishableKey})\nVault Admin Key: ${rotateAdminKeyMutation.data.adminKey}\nVault Access Token: ${rotateAdminKeyMutation.data.userAccessToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${rotateAdminKeyMutation.data.adminKey}\n\nVault Access Token:\n${rotateAdminKeyMutation.data.userAccessToken.accessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -269,10 +275,18 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
               </DialogHeader>
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 px-6">
-                  <p className="text-destructive">
-                    This will invalidate your current admin key and all existing
-                    access tokens.
+                  <p className="text-md text-primary-foreground">
+                    Revoke your current keys and generates new ones.
                   </p>
+                  <Alert variant="destructive">
+                    <CircleAlertIcon className="size-5" />
+                    <AlertTitle>Important</AlertTitle>
+                    <AlertDescription>
+                      This action will invalidate your current admin key and all
+                      existing access tokens. You will need to update your
+                      backend to use these new access tokens.
+                    </AlertDescription>
+                  </Alert>
                 </div>
                 <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                   <Button
