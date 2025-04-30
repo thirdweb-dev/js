@@ -105,16 +105,6 @@ function Story(props: {
     },
   });
 
-  const getBillingPortalUrlStub = async () => ({
-    status: 200,
-    url: "https://example.com",
-  });
-
-  const getBillingCheckoutUrlStub = async () => ({
-    status: 200,
-    url: "https://example.com",
-  });
-
   const teamTeamStub = async () =>
     ({
       ...team,
@@ -127,8 +117,6 @@ function Story(props: {
         <PlanInfoCardUI
           team={team}
           subscriptions={zeroUsageOnDemandSubs}
-          getBillingPortalUrl={getBillingPortalUrlStub}
-          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
           getTeam={teamTeamStub}
         />
       </BadgeContainer>
@@ -140,8 +128,6 @@ function Story(props: {
             planCancellationDate: addDays(new Date(), 10).toISOString(),
           }}
           subscriptions={zeroUsageOnDemandSubs}
-          getBillingPortalUrl={getBillingPortalUrlStub}
-          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
           getTeam={teamTeamStub}
         />
       </BadgeContainer>
@@ -150,8 +136,6 @@ function Story(props: {
         <PlanInfoCardUI
           team={team}
           subscriptions={trialPlanZeroUsageOnDemandSubs}
-          getBillingPortalUrl={getBillingPortalUrlStub}
-          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
           getTeam={teamTeamStub}
         />
       </BadgeContainer>
@@ -160,8 +144,6 @@ function Story(props: {
         <PlanInfoCardUI
           team={team}
           subscriptions={subsWith1Usage}
-          getBillingPortalUrl={getBillingPortalUrlStub}
-          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
           getTeam={teamTeamStub}
         />
       </BadgeContainer>
@@ -170,8 +152,6 @@ function Story(props: {
         <PlanInfoCardUI
           team={team}
           subscriptions={subsWith4Usage}
-          getBillingPortalUrl={getBillingPortalUrlStub}
-          getBillingCheckoutUrl={getBillingCheckoutUrlStub}
           getTeam={teamTeamStub}
         />
       </BadgeContainer>

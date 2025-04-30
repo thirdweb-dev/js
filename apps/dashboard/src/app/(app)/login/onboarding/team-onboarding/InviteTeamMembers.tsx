@@ -1,6 +1,5 @@
 "use client";
 
-import type { GetBillingCheckoutUrlAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -20,7 +19,7 @@ import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { pollWithTimeout } from "utils/pollWithTimeout";
-import { useStripeRedirectEvent } from "../../../stripe-redirect/stripeRedirectChannel";
+import { useStripeRedirectEvent } from "../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 import {
   InviteSection,
   type InviteTeamMembersFn,
@@ -28,7 +27,6 @@ import {
 
 export function InviteTeamMembersUI(props: {
   team: Team;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   inviteTeamMembers: InviteTeamMembersFn;
   onComplete: () => void;
   getTeam: () => Promise<Team>;
@@ -81,7 +79,6 @@ export function InviteTeamMembersUI(props: {
           <InviteModalContent
             billingStatus={props.team.billingStatus}
             teamSlug={props.team.slug}
-            getBillingCheckoutUrl={props.getBillingCheckoutUrl}
             trackEvent={props.trackEvent}
             getTeam={props.getTeam}
             teamId={props.team.id}
@@ -153,7 +150,6 @@ export function InviteTeamMembersUI(props: {
 function InviteModalContent(props: {
   teamSlug: string;
   billingStatus: Team["billingStatus"];
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   trackEvent: (params: TrackingParams) => void;
   getTeam: () => Promise<Team>;
   teamId: string;
@@ -179,7 +175,6 @@ function InviteModalContent(props: {
           });
         },
       }}
-      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
       getTeam={props.getTeam}
       teamId={props.teamId}
     />
@@ -203,7 +198,6 @@ function InviteModalContent(props: {
         },
       }}
       highlighted
-      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
       getTeam={props.getTeam}
       teamId={props.teamId}
     />
@@ -226,7 +220,6 @@ function InviteModalContent(props: {
           });
         },
       }}
-      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
       getTeam={props.getTeam}
       teamId={props.teamId}
     />
@@ -249,7 +242,6 @@ function InviteModalContent(props: {
           });
         },
       }}
-      getBillingCheckoutUrl={props.getBillingCheckoutUrl}
       getTeam={props.getTeam}
       teamId={props.teamId}
     />

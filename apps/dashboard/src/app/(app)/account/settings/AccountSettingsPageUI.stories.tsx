@@ -105,10 +105,6 @@ function Variants() {
       <AccountSettingsPageUI
         defaultTeamSlug="foo"
         defaultTeamName="Foo"
-        getBillingPortalUrl={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          return { status: 200 };
-        }}
         account={{
           name: "John Doe",
           email: "johndoe@gmail.com",

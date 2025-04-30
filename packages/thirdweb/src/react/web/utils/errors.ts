@@ -29,6 +29,6 @@ export function getErrorMessage(err: any): ApiError {
     code: "UNABLE_TO_GET_PRICE_QUOTE",
     title: "Failed to Find Quote",
     message:
-      "We couldn't get a quote for this token pair. Select another token or pay with a debit card.",
+      "We couldn't get a quote for this token pair. Select another token or pay with card.",
   };
 }

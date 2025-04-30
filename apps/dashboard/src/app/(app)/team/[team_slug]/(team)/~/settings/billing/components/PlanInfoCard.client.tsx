@@ -1,6 +1,4 @@
 "use client";
-
-import { getBillingCheckoutUrl, getBillingPortalUrl } from "@/actions/billing";
 import { apiServerProxy } from "@/actions/proxies";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
@@ -14,8 +12,6 @@ export function PlanInfoCardClient(props: {
     <PlanInfoCardUI
       team={props.team}
       subscriptions={props.subscriptions}
-      getBillingPortalUrl={getBillingPortalUrl}
-      getBillingCheckoutUrl={getBillingCheckoutUrl}
       getTeam={async () => {
         const res = await apiServerProxy<{
           result: Team;

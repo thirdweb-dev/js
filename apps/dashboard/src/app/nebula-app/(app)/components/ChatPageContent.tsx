@@ -352,6 +352,7 @@ export function ChatPageContent(props: {
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
+                showAurora={true}
                 isConnectingWallet={connectionStatus === "connecting"}
                 sendMessage={handleSendMessage}
                 prefillMessage={props.initialParams?.q}

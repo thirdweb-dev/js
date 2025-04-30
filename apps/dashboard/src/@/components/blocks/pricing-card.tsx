@@ -11,7 +11,6 @@ import { TEAM_PLANS } from "utils/pricing";
 import { RenewSubscriptionButton } from "../../../components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { useTrack } from "../../../hooks/analytics/useTrack";
 import { remainingDays } from "../../../utils/date-utils";
-import type { GetBillingCheckoutUrlAction } from "../../actions/billing";
 import type { ProductSKU } from "../../lib/billing";
 import { CheckoutButton } from "../billing";
 
@@ -45,7 +44,6 @@ type PricingCardProps = {
   highlighted?: boolean;
   current?: boolean;
   activeTrialEndsAt?: string;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
 };
 
 export const PricingCard: React.FC<PricingCardProps> = ({
@@ -58,7 +56,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   highlighted = false,
   current = false,
   activeTrialEndsAt,
-  getBillingCheckoutUrl,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
   const isCustomPrice = typeof plan.price === "string";
@@ -154,7 +151,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               }}
               teamSlug={teamSlug}
               sku={billingPlanToSkuMap[billingPlan]}
-              getBillingCheckoutUrl={getBillingCheckoutUrl}
             >
               {cta.label}
             </CheckoutButton>

@@ -86,7 +86,7 @@ export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { txChainId, isLoggedIn, ...buttonProps } = props;
+  const { txChainId, isLoggedIn, isPending, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -161,7 +161,7 @@ export const MismatchButton = forwardRef<
     // if user is about to trigger a transaction on txChain, but txChainBalance is not yet loaded and is required before proceeding
     (!showSwitchChainPopover && txChainBalance.isPending && isBalanceRequired);
 
-  const showSpinner = props.isPending || switchNetworkMutation.isPending;
+  const showSpinner = isPending || switchNetworkMutation.isPending;
 
   return (
     <>
@@ -501,11 +501,11 @@ const MismatchNotice: React.FC<{
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h3 className="mb-1 font-semibold text-lg tracking-tight">
+        <h3 className="mb-1 font-semibold text-base tracking-tight">
           Network Mismatch
         </h3>
 
-        <p className="mb-1 text-muted-foreground">
+        <p className="mb-1 text-muted-foreground text-sm">
           Your wallet is connected to the{" "}
           <span className="font-semibold capitalize">
             {walletConnectedNetworkInfo?.name ||
@@ -514,7 +514,7 @@ const MismatchNotice: React.FC<{
           network
         </p>
 
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           This action requires you to connect to the{" "}
           <span className="font-semibold capitalize">
             {txChain?.name || `Chain ID #${txChainId}`}
@@ -527,7 +527,7 @@ const MismatchNotice: React.FC<{
         size="sm"
         onClick={onSwitchWallet}
         disabled={!actuallyCanAttemptSwitch || switchNetworkMutation.isPending}
-        variant="primary"
+        variant="default"
         className="gap-2 capitalize disabled:opacity-100"
       >
         {switchNetworkMutation.isPending ? (

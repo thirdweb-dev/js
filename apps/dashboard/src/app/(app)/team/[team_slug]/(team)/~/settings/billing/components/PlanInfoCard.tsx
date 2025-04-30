@@ -1,9 +1,5 @@
 "use client";
 
-import type {
-  GetBillingCheckoutUrlAction,
-  GetBillingPortalUrlAction,
-} from "@/actions/billing";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { BillingPortalButton } from "@/components/billing";
@@ -31,8 +27,6 @@ import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getVal
 export function PlanInfoCardUI(props: {
   subscriptions: TeamSubscription[];
   team: Team;
-  getBillingPortalUrl: GetBillingPortalUrlAction;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   getTeam: () => Promise<Team>;
 }) {
   const { subscriptions, team } = props;
@@ -57,7 +51,6 @@ export function PlanInfoCardUI(props: {
       <ViewPlansSheet
         team={team}
         trialPeriodEndedAt={planSub?.trialEnd ?? undefined}
-        getBillingCheckoutUrl={props.getBillingCheckoutUrl}
         isOpen={isPlanSheetOpen}
         onOpenChange={setIsPlanSheetOpen}
         getTeam={props.getTeam}
@@ -212,7 +205,6 @@ export function PlanInfoCardUI(props: {
                 size: "sm",
                 className: "bg-background gap-2",
               }}
-              getBillingPortalUrl={props.getBillingPortalUrl}
             >
               <CreditCardIcon className="size-4 text-muted-foreground" />
               Manage Billing
@@ -303,7 +295,6 @@ function formatCurrencyAmount(centsAmount: number, currency: string) {
 function ViewPlansSheet(props: {
   team: Team;
   trialPeriodEndedAt: string | undefined;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   getTeam: () => Promise<Team>;
@@ -317,7 +308,6 @@ function ViewPlansSheet(props: {
         <BillingPricing
           team={props.team}
           trialPeriodEndedAt={props.trialPeriodEndedAt}
-          getBillingCheckoutUrl={props.getBillingCheckoutUrl}
           getTeam={props.getTeam}
         />
       </SheetContent>

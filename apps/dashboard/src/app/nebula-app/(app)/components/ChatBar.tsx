@@ -93,6 +93,33 @@ export function ChatBar(props: {
         <div className="grow">
           {props.showContextSelector && (
             <div className="flex flex-wrap gap-2 [&>*]:w-auto">
+              {props.connectedWallets.length > 1 &&
+                !props.isConnectingWallet && (
+                  <WalletSelector
+                    client={props.client}
+                    wallets={props.connectedWallets}
+                    activeAccountAddress={props.activeAccountAddress}
+                    onClick={(walletMeta) => {
+                      props.setActiveWallet(walletMeta);
+                      props.setContext({
+                        walletAddress: walletMeta.address,
+                        chainIds: props.context?.chainIds || [],
+                        networks: props.context?.networks || null,
+                      });
+                    }}
+                  />
+                )}
+
+              {props.isConnectingWallet && (
+                <Badge
+                  variant="outline"
+                  className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
+                >
+                  <Spinner className="size-3" />
+                  <span>Connecting Wallet</span>
+                </Badge>
+              )}
+
               <MultiNetworkSelector
                 client={props.client}
                 hideTestnets
@@ -145,33 +172,6 @@ export function ChatBar(props: {
                   10, // optimism
                 ]}
               />
-
-              {props.connectedWallets.length > 1 &&
-                !props.isConnectingWallet && (
-                  <WalletSelector
-                    client={props.client}
-                    wallets={props.connectedWallets}
-                    activeAccountAddress={props.activeAccountAddress}
-                    onClick={(walletMeta) => {
-                      props.setActiveWallet(walletMeta);
-                      props.setContext({
-                        walletAddress: walletMeta.address,
-                        chainIds: props.context?.chainIds || [],
-                        networks: props.context?.networks || null,
-                      });
-                    }}
-                  />
-                )}
-
-              {props.isConnectingWallet && (
-                <Badge
-                  variant="outline"
-                  className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
-                >
-                  <Spinner className="size-3" />
-                  <span>Connecting Wallet</span>
-                </Badge>
-              )}
             </div>
           )}
         </div>
@@ -192,11 +192,8 @@ export function ChatBar(props: {
           <Button
             aria-label="Send"
             disabled={message.trim() === "" || props.isConnectingWallet}
-            className={cn(
-              "!h-auto w-auto border border-transparent p-2 disabled:opacity-100",
-              message === "" &&
-                "border-border bg-muted text-muted-foreground hover:border-transparent hover:text-foreground",
-            )}
+            className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
+            variant="pink"
             onClick={() => {
               if (message.trim() === "") return;
               setMessage("");
@@ -254,6 +251,13 @@ function WalletSelector(props: {
     return null;
   }
 
+  // show smart account first
+  const sortedWallets = props.wallets.sort((a, b) => {
+    if (a.walletId === "smart") return -1;
+    if (b.walletId === "smart") return 1;
+    return 0;
+  });
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -292,7 +296,7 @@ function WalletSelector(props: {
         </div>
 
         <div className="[&>*:not(:last-child)]:border-b">
-          {props.wallets.map((wallet) => (
+          {sortedWallets.map((wallet) => (
             // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
             <div
               key={wallet.address}

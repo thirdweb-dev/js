@@ -217,7 +217,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
         </PopoverTrigger>
         <PopoverContent
           className={cn(
-            "flex max-h-[60vh] flex-col p-0",
+            "flex max-h-[500px] flex-col p-0",
             popoverContentClassName,
           )}
           align={props.align}
@@ -236,6 +236,8 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
             <Input
               placeholder={searchPlaceholder || "Search"}
               value={searchValue}
+              // do not focus on the input when the popover opens to avoid opening the keyboard
+              tabIndex={-1}
               onChange={(e) => setSearchValue(e.target.value)}
               className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
               onKeyDown={handleInputKeyDown}

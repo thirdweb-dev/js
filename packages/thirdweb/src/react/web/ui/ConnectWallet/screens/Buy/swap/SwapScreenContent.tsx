@@ -316,7 +316,7 @@ export function SwapScreenContent(props: {
               Insufficient Funds
             </Text>
             <Text size="xs" center multiline>
-              Select another token or pay with a debit card.
+              Select another token or pay with card.
             </Text>
           </div>
         )}

@@ -275,9 +275,9 @@ function EmptyStateChatPageContent(props: {
   return (
     <div className="flex flex-1 flex-col items-center justify-center overflow-auto p-4 ">
       <div className="mb-4 flex justify-center">
-        <div className="rounded-full border p-1">
-          <div className="rounded-full border bg-card p-2">
-            <NebulaIcon className="size-7 text-muted-foreground" />
+        <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/20 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-1">
+          <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/40 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-2">
+            <NebulaIcon className="size-7 text-nebula-pink-foreground" />
           </div>
         </div>
       </div>

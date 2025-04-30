@@ -65,6 +65,9 @@ module.exports = {
           DEFAULT: "hsl(var(--inverted))",
           foreground: "hsl(var(--inverted-foreground))",
         },
+        "nebula-pink": {
+          foreground: "hsl(var(--nebula-pink-foreground))",
+        },
         warning: {
           text: "hsl(var(--warning-text))",
         },

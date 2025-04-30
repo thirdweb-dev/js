@@ -1,6 +1,4 @@
 "use client";
-
-import { getPlanCancelUrl } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -12,12 +10,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { useStripeRedirectEvent } from "../../../../../app/(app)/stripe-redirect/stripeRedirectChannel";
+import { useStripeRedirectEvent } from "../../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
+import { buildCancelPlanUrl } from "../../../../../app/(app)/(stripe)/utils/build-url";
 import { PRO_CONTACT_US_URL } from "../../../../../constants/pro";
 import { pollWithTimeout } from "../../../../../utils/pollWithTimeout";
 import { tryCatch } from "../../../../../utils/try-catch";
@@ -139,36 +137,7 @@ function ImmediateCancelPlanButton(props: {
     });
   });
 
-  const cancelPlan = useMutation({
-    mutationFn: async (opts: { teamId: string }) => {
-      const { url, status } = await getPlanCancelUrl({
-        teamId: opts.teamId,
-        redirectUrl: getAbsoluteUrl("/stripe-redirect"),
-      });
-
-      if (!url) {
-        throw new Error("Failed to get cancel plan url");
-      }
-
-      if (status !== 200) {
-        throw new Error("Failed to get cancel plan url");
-      }
-
-      const tab = window.open(url, "_blank");
-      if (!tab) {
-        throw new Error("Failed to open cancel plan url");
-      }
-    },
-  });
-
-  async function handleCancelPlan() {
-    cancelPlan.mutate({
-      teamId: props.teamId,
-    });
-  }
-
-  const showPlanSpinner =
-    isPollingTeam || isRoutePending || cancelPlan.isPending;
+  const showPlanSpinner = isPollingTeam || isRoutePending;
 
   return (
     <Button
@@ -176,20 +145,16 @@ function ImmediateCancelPlanButton(props: {
       size="sm"
       className="gap-2 bg-background"
       disabled={showPlanSpinner}
-      onClick={handleCancelPlan}
+      asChild
     >
-      {showPlanSpinner ? (
-        <Spinner className="size-4 text-muted-foreground" />
-      ) : (
-        <CircleXIcon className="size-4 text-muted-foreground" />
-      )}
-      Cancel Plan
+      <Link href={buildCancelPlanUrl({ teamId: props.teamId })} target="_blank">
+        {showPlanSpinner ? (
+          <Spinner className="size-4 text-muted-foreground" />
+        ) : (
+          <CircleXIcon className="size-4 text-muted-foreground" />
+        )}
+        Cancel Plan
+      </Link>
     </Button>
   );
-}
-
-function getAbsoluteUrl(path: string) {
-  const url = new URL(window.location.origin);
-  url.pathname = path;
-  return url.toString();
 }
