@@ -8,7 +8,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
-import { getEngineInstances } from "../legacy/_utils/getEngineInstances";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -21,10 +20,9 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const [team, project, engineInstances] = await Promise.all([
+  const [team, project] = await Promise.all([
     getTeamBySlug(team_slug),
     getProject(team_slug, project_slug),
-    getEngineInstances({ authToken, teamIdOrSlug: team_slug }),
   ]);
 
   if (!team) {
@@ -33,11 +31,6 @@ export default async function Page(props: {
 
   if (!project) {
     redirect(`/team/${team_slug}`);
-  }
-
-  // if we have any legacy engine instances, redirect to the legacy engine layout
-  if (engineInstances.data?.length && engineInstances.data.length > 0) {
-    redirect(`/team/${team_slug}/${project_slug}/engine/legacy`);
   }
 
   return (
@@ -57,7 +50,8 @@ function TransactionsLayout(props: {
   clientId: string;
   children: React.ReactNode;
 }) {
-  const engineLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
+  const engineBaseSlug = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
+  const engineLayoutSlug = `${engineBaseSlug}/cloud`;
 
   return (
     <div className="flex grow flex-col">
@@ -86,7 +80,7 @@ function TransactionsLayout(props: {
                 </Link>
               </div>
             </div>
-            <Link href={`${engineLayoutSlug}/legacy`}>
+            <Link href={`${engineBaseSlug}/dedicated`}>
               <Button variant="outline">Switch to dedicated engines</Button>
             </Link>
           </div>

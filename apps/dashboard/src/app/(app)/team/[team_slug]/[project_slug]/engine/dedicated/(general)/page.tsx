@@ -8,6 +8,7 @@ import { EngineInstancesList } from "./overview/engine-list";
 export default async function Page(props: {
   params: Promise<{
     team_slug: string;
+    project_slug: string;
   }>;
   searchParams: Promise<{
     importUrl?: string;
@@ -20,7 +21,7 @@ export default async function Page(props: {
 
   if (searchParams.importUrl) {
     redirect(
-      `/team/${params.team_slug}/~/engine/import?importUrl=${searchParams.importUrl}`,
+      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated/import?importUrl=${searchParams.importUrl}`,
     );
   }
 
@@ -30,7 +31,9 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(`/team/${params.team_slug}/~/engine`);
+    loginRedirect(
+      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`,
+    );
   }
 
   if (!team) {

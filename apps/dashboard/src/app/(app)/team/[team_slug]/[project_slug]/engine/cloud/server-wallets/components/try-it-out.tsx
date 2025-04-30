@@ -1,10 +1,10 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { TabButtons } from "@/components/ui/tabs";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../../../../../../../../@/components/ui/button";
-import { CodeClient } from "../../../../../../../../../@/components/ui/code/code.client";
-import { TabButtons } from "../../../../../../../../../@/components/ui/tabs";
 import type { Wallet } from "../wallet-table/types";
 
 export function TryItOut(props: {
@@ -94,22 +94,12 @@ export function TryItOut(props: {
         <div className="flex flex-row justify-end gap-4">
           <Button variant={"secondary"} asChild>
             <Link
-              href={`/team/${props.team_slug}/${props.project_slug}/engine/explorer`}
+              href={`/team/${props.team_slug}/${props.project_slug}/engine/cloud/explorer`}
               rel="noreferrer"
             >
               View API reference
             </Link>
           </Button>
-          {props.wallet && (
-            <Button variant={"primary"} asChild>
-              <Link
-                href={`/team/${props.team_slug}/${props.project_slug}/engine?expand_test_tx=true`}
-                rel="noreferrer"
-              >
-                Send a test transaction
-              </Link>
-            </Button>
-          )}
         </div>
       </div>
     </div>

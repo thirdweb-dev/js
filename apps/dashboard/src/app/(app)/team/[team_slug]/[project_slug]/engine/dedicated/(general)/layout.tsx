@@ -16,7 +16,7 @@ export default async function Layout(props: {
   children: React.ReactNode;
 }) {
   const params = await props.params;
-  const linkPrefix = `/team/${params.team_slug}/${params.project_slug}/engine/legacy`;
+  const linkPrefix = `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`;
   const sidebarLinks: SidebarLink[] = [
     {
       label: "Engine Instances",
@@ -45,7 +45,7 @@ export default async function Layout(props: {
               </Badge>
             </h1>
             <p className="flex flex-col text-muted-foreground text-sm">
-              Manage your deployed Engine instances.
+              Manage your deployed Engine instances
             </p>
           </div>
           <div className="flex items-center gap-3">
