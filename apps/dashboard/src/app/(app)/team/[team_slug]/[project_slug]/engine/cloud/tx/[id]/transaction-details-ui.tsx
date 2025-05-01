@@ -208,6 +208,30 @@ export function TransactionDetailsUI({
         </Card>
         <Card>
           <CardHeader>
+            <CardTitle className="text-lg">Sender Information</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0">
+              <div className="w-full text-muted-foreground text-sm md:w-1/3">
+                Sender Address
+              </div>
+              <div className="md:w-2/3">
+                <WalletAddress address={senderAddress} />
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0">
+              <div className="w-full text-muted-foreground text-sm md:w-1/3">
+                Signer Address
+              </div>
+              <div className="md:w-2/3">
+                <WalletAddress address={signerAddress} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
             <CardTitle className="text-lg">Transaction Parameters</CardTitle>
           </CardHeader>
           <CardContent>
@@ -238,30 +262,6 @@ export function TransactionDetailsUI({
             </CardContent>
           </Card>
         )}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Sender Information</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0">
-              <div className="w-full text-muted-foreground text-sm md:w-1/3">
-                Sender Address
-              </div>
-              <div className="md:w-2/3">
-                <WalletAddress address={senderAddress} />
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0">
-              <div className="w-full text-muted-foreground text-sm md:w-1/3">
-                Signer Address
-              </div>
-              <div className="md:w-2/3">
-                <WalletAddress address={signerAddress} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Timing Information</CardTitle>

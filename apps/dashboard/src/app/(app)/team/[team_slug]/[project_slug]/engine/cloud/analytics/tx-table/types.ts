@@ -80,30 +80,7 @@ export type TransactionStatus =
   | "CONFIRMED"
   | "REVERTED";
 
-export type TransactionParam = {
-  to: string;
-  data: string;
-  value: string;
-};
-
-export type ExecutionParams = {
-  type: string;
-  signerAddress: string;
-  entrypointAddress: string;
-  smartAccountAddress: string;
-};
-
-export type ExecutionResult = {
-  status: TransactionStatus;
-  nonce?: string;
-  userOpHash?: string;
-  actualGasCost?: string;
-  actualGasUsed?: string;
-  onchainStatus?: string;
-  transactionHash?: string;
-};
-
-export type Pagination = {
+type Pagination = {
   totalCount: string;
   page: number;
   limit: number;
