@@ -52,6 +52,7 @@ export default async function TransactionsServerWalletsPage(props: {
           <ServerWalletsTable
             wallets={eoas.data.items as Wallet[]}
             project={project}
+            teamSlug={team_slug}
             managementAccessToken={managementAccessToken ?? undefined}
           />
           <TryItOut

@@ -24,6 +24,7 @@ export function TransactionsChartCardUI(props: {
   isPending: boolean;
   project: Project;
   wallets: Wallet[];
+  teamSlug: string;
 }) {
   const { userOpStats } = props;
   const topChainsToShow = 10;
@@ -146,7 +147,11 @@ export function TransactionsChartCardUI(props: {
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
       emptyChartState={
-        <EmptyChartContent project={props.project} wallets={props.wallets} />
+        <EmptyChartContent
+          teamSlug={props.teamSlug}
+          project={props.project}
+          wallets={props.wallets}
+        />
       }
     />
   );
@@ -155,6 +160,7 @@ export function TransactionsChartCardUI(props: {
 // TODO - update the title and doc links
 function EmptyChartContent(props: {
   project: Project;
+  teamSlug: string;
   wallets: Wallet[];
 }) {
   const router = useDashboardRouter();
@@ -177,7 +183,9 @@ function EmptyChartContent(props: {
             <Button
               variant="primary"
               onClick={() => {
-                router.push("engine/vault");
+                router.push(
+                  `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
+                );
               }}
             >
               Create Vault Admin Account

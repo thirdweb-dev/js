@@ -49,6 +49,7 @@ import type {
 export function TransactionsTableUI(props: {
   getData: (params: { page: number }) => Promise<TransactionsResponse>;
   project: Project;
+  teamSlug: string;
   wallets?: Wallet[];
 }) {
   const router = useDashboardRouter();
@@ -136,7 +137,9 @@ export function TransactionsTableUI(props: {
                     key={`${tx.id}${tx.chainId}`}
                     className="cursor-pointer hover:bg-accent/50"
                     onClick={() => {
-                      router.push(`engine/tx/${tx.id}`);
+                      router.push(
+                        `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/tx/${tx.id}`,
+                      );
                     }}
                   >
                     {/* Queue ID */}

@@ -14,6 +14,7 @@ export function TransactionsAnalyticsPageContent(props: {
   project: Project;
   hasTransactions: boolean;
   wallets?: Wallet[];
+  teamSlug: string;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -27,10 +28,15 @@ export function TransactionsAnalyticsPageContent(props: {
               searchParams={props.searchParams}
               project={props.project}
               wallets={props.wallets ?? []}
+              teamSlug={props.teamSlug}
             />
           </>
         )}
-        <TransactionsTable project={props.project} wallets={props.wallets} />
+        <TransactionsTable
+          project={props.project}
+          wallets={props.wallets}
+          teamSlug={props.teamSlug}
+        />
       </div>
     </ResponsiveSearchParamsProvider>
   );

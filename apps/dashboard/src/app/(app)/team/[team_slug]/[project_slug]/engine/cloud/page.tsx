@@ -79,6 +79,7 @@ export default async function TransactionsAnalyticsPage(props: {
   return (
     <div className="flex grow flex-col">
       <EngineChecklist
+        teamSlug={params.team_slug}
         managementAccessToken={managementAccessToken ?? undefined}
         hasTransactions={hasTransactions}
         project={project}
@@ -93,6 +94,7 @@ export default async function TransactionsAnalyticsPage(props: {
       )}
       <div className="h-10" />
       <TransactionsAnalyticsPageContent
+        teamSlug={params.team_slug}
         searchParams={searchParams}
         project={project}
         hasTransactions={hasTransactions}

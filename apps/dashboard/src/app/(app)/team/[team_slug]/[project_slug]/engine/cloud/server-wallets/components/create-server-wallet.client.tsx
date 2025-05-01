@@ -19,6 +19,7 @@ import { initVaultClient } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
   project: Project;
+  teamSlug: string;
   managementAccessToken: string | undefined;
 }) {
   const router = useDashboardRouter();
@@ -68,7 +69,9 @@ export default function CreateServerWallet(props: {
 
   const handleCreateServerWallet = async () => {
     if (!props.managementAccessToken) {
-      router.push("vault");
+      router.push(
+        `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
+      );
     } else {
       await createEoaMutation.mutateAsync({
         managementAccessToken: props.managementAccessToken,
@@ -86,7 +89,9 @@ export default function CreateServerWallet(props: {
         onClick={() =>
           props.managementAccessToken
             ? setModalOpen(true)
-            : router.push("vault")
+            : router.push(
+                `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
+              )
         }
         className="flex flex-row items-center gap-2"
       >

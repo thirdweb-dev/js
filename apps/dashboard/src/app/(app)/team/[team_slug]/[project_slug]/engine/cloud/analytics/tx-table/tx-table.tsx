@@ -9,6 +9,7 @@ import type { TransactionsResponse } from "./types";
 export function TransactionsTable(props: {
   project: Project;
   wallets?: Wallet[];
+  teamSlug: string;
 }) {
   return (
     <TransactionsTableUI
@@ -20,6 +21,7 @@ export function TransactionsTable(props: {
       }}
       project={props.project}
       wallets={props.wallets}
+      teamSlug={props.teamSlug}
     />
   );
 }

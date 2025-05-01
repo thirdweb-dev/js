@@ -14,6 +14,7 @@ interface Props {
   project: Project;
   wallets: Wallet[];
   hasTransactions: boolean;
+  teamSlug: string;
 }
 
 export const EngineChecklist: React.FC<Props> = (props) => {
@@ -28,6 +29,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
       children: (
         <CreateVaultAccountStep
           project={props.project}
+          teamSlug={props.teamSlug}
           onUserAccessTokenCreated={(token) => setUserAccessToken(token)}
         />
       ),
@@ -41,6 +43,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
       children: (
         <CreateServerWalletStep
           project={props.project}
+          teamSlug={props.teamSlug}
           managementAccessToken={props.managementAccessToken}
         />
       ),
@@ -70,6 +73,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     props.wallets,
     props.hasTransactions,
     userAccessToken,
+    props.teamSlug,
   ]);
 
   if (finalSteps.length === 1) {
@@ -83,6 +87,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
 
 function CreateVaultAccountStep(props: {
   project: Project;
+  teamSlug: string;
   onUserAccessTokenCreated: (userAccessToken: string) => void;
 }) {
   return (
@@ -100,12 +105,14 @@ function CreateVaultAccountStep(props: {
 
 function CreateServerWalletStep(props: {
   project: Project;
+  teamSlug: string;
   managementAccessToken: string | undefined;
 }) {
   return (
     <div className="mt-4 flex flex-row gap-4">
       <CreateServerWallet
         project={props.project}
+        teamSlug={props.teamSlug}
         managementAccessToken={props.managementAccessToken}
       />
     </div>

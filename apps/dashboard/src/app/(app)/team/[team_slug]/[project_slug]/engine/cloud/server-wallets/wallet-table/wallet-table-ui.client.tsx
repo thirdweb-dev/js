@@ -31,10 +31,12 @@ import type { Wallet } from "./types";
 export function ServerWalletsTableUI({
   wallets,
   project,
+  teamSlug,
   managementAccessToken,
 }: {
   wallets: Wallet[];
   project: Project;
+  teamSlug: string;
   managementAccessToken: string | undefined;
 }) {
   const [showSigners, setShowSigners] = useState(false);
@@ -63,6 +65,7 @@ export function ServerWalletsTableUI({
         </div>
         <CreateServerWallet
           project={project}
+          teamSlug={teamSlug}
           managementAccessToken={managementAccessToken}
         />
       </div>

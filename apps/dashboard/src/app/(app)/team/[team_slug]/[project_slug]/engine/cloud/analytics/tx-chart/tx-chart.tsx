@@ -11,6 +11,7 @@ async function AsyncTransactionsChartCard(props: {
   interval: "day" | "week";
   project: Project;
   wallets: Wallet[];
+  teamSlug: string;
 }) {
   const data = await getTransactionsChart({
     clientId: props.project.publishableKey,
@@ -26,6 +27,7 @@ async function AsyncTransactionsChartCard(props: {
       userOpStats={data}
       project={props.project}
       wallets={props.wallets}
+      teamSlug={props.teamSlug}
     />
   );
 }
@@ -38,6 +40,7 @@ export function TransactionsChartCard(props: {
   };
   project: Project;
   wallets: Wallet[];
+  teamSlug: string;
 }) {
   const { range, interval } = getTxAnalyticsFiltersFromSearchParams(
     props.searchParams,
@@ -53,6 +56,7 @@ export function TransactionsChartCard(props: {
           userOpStats={[]}
           project={props.project}
           wallets={[]}
+          teamSlug={props.teamSlug}
         />
       }
     >
@@ -62,6 +66,7 @@ export function TransactionsChartCard(props: {
         interval={interval}
         project={props.project}
         wallets={props.wallets}
+        teamSlug={props.teamSlug}
       />
     </ResponsiveSuspense>
   );
