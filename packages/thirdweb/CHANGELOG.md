@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.96.6
+
+### Patch Changes
+
+- [#6910](https://github.com/thirdweb-dev/js/pull/6910) [`2dba042`](https://github.com/thirdweb-dev/js/commit/2dba04223456223d554d844fbe77c5f42a8458a0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve destination tokens error handling
+
+- [#6906](https://github.com/thirdweb-dev/js/pull/6906) [`c271ec6`](https://github.com/thirdweb-dev/js/commit/c271ec6a4ae607e47cac54b7e310389c1fdf45f2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated Wallet Connect to 2.20.1
+
 ## 5.96.5
 
 ### Patch Changes
