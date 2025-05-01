@@ -220,11 +220,10 @@ export function SwapConfirmationScreen(props: {
                     walletAddress: account.address,
                     walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    amountWei: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toAmount: props.quote.swapDetails.toAmountWei,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
                     chainId: props.quote.swapDetails.fromToken.chainId,
-                    dstChainId: props.quote.swapDetails.toToken.chainId,
                   });
 
                   const transaction = approve({
@@ -250,11 +249,10 @@ export function SwapConfirmationScreen(props: {
                     walletAddress: account.address,
                     walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    amountWei: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toAmount: props.quote.swapDetails.toAmountWei,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
                     chainId: props.quote.swapDetails.fromToken.chainId,
-                    dstChainId: props.quote.swapDetails.toToken.chainId,
                   });
 
                   setStep("swap");
@@ -275,11 +273,10 @@ export function SwapConfirmationScreen(props: {
                     walletAddress: account.address,
                     walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    amountWei: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toAmount: props.quote.swapDetails.toAmountWei,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
                     chainId: props.quote.swapDetails.fromToken.chainId,
-                    dstChainId: props.quote.swapDetails.toToken.chainId,
                   });
                   const tx = props.quote.transactionRequest;
                   let _swapTx: WaitForReceiptOptions;
@@ -317,11 +314,10 @@ export function SwapConfirmationScreen(props: {
                     walletAddress: account.address,
                     walletType: wallet.id,
                     fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    fromAmount: props.quote.swapDetails.fromAmountWei,
+                    amountWei: props.quote.swapDetails.fromAmountWei,
                     toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toAmount: props.quote.swapDetails.toAmountWei,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
                     chainId: props.quote.swapDetails.fromToken.chainId,
-                    dstChainId: props.quote.swapDetails.toToken.chainId,
                   });
 
                   // do not add pending tx if the swap is part of fiat flow

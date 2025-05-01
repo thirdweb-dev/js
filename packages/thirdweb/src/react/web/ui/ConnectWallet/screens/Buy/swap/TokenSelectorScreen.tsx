@@ -5,6 +5,7 @@ import {
   Cross2Icon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -27,6 +28,7 @@ import {
   useChainName,
 } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
 import { useDisconnect } from "../../../../../../core/hooks/wallets/useDisconnect.js";
 import type {
@@ -73,6 +75,7 @@ export function TokenSelectorScreen(props: {
 }) {
   const connectedWallets = useConnectedWallets();
   const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
   const chainInfo = useChainMetadata(props.toChain);
   const theme = useCustomTheme();
 
@@ -233,7 +236,21 @@ export function TokenSelectorScreen(props: {
                 balances={balances}
                 client={props.client}
                 address={address}
-                onClick={props.onSelectToken}
+                onClick={(wallet, token, chain) => {
+                  trackPayEvent({
+                    event: "choose_payment_method_token",
+                    client: props.client,
+                    walletAddress: activeAccount?.address,
+                    walletType: activeWallet?.id,
+                    chainId: chain.id,
+                    fromToken: isNativeToken(token) ? undefined : token.address,
+                    toToken: isNativeToken(props.toToken)
+                      ? undefined
+                      : props.toToken.address,
+                    toChainId: props.toChain.id,
+                  });
+                  props.onSelectToken(wallet, token, chain);
+                }}
               />
             );
           })}
@@ -241,7 +258,19 @@ export function TokenSelectorScreen(props: {
           <Button
             variant="secondary"
             fullWidth
-            onClick={props.onConnect}
+            onClick={() => {
+              trackPayEvent({
+                event: "choose_payment_method_another_wallet",
+                client: props.client,
+                walletAddress: activeAccount?.address,
+                walletType: activeWallet?.id,
+                toChainId: props.toChain.id,
+                toToken: isNativeToken(props.toToken)
+                  ? undefined
+                  : props.toToken.address,
+              });
+              props.onConnect();
+            }}
             bg="tertiaryBg"
             style={{
               border: `1px solid ${theme.colors.borderColor}`,
@@ -265,7 +294,19 @@ export function TokenSelectorScreen(props: {
             <Button
               variant="secondary"
               fullWidth
-              onClick={props.onPayWithFiat}
+              onClick={() => {
+                trackPayEvent({
+                  event: "choose_payment_method_with_card",
+                  client: props.client,
+                  walletAddress: activeAccount?.address,
+                  walletType: activeWallet?.id,
+                  toChainId: props.toChain.id,
+                  toToken: isNativeToken(props.toToken)
+                    ? undefined
+                    : props.toToken.address,
+                });
+                props.onPayWithFiat();
+              }}
               bg="tertiaryBg"
               style={{
                 border: `1px solid ${theme.colors.borderColor}`,
