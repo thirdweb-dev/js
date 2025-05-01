@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
+import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -895,6 +896,15 @@ function MainScreen(props: {
                       backScreen: { id: "main" },
                     });
                   }
+                  trackPayEvent({
+                    event: "choose_payment_method_fund_wallet_mode",
+                    client,
+                    walletAddress: payerAccount.address,
+                    toChainId: toChain.id,
+                    toToken: isNativeToken(toToken)
+                      ? undefined
+                      : toToken.address,
+                  });
                 }}
               >
                 Continue

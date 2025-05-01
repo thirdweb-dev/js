@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { randomBytesHex } from "../../../../utils/random.js";
 import {
   type SendTransactionConfig,
   type ShowModalData,
@@ -106,6 +107,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     setRootEl(
       <TransactionModal
         title={payModal?.metadata?.name || "Transaction"}
+        txId={randomBytesHex()}
         tx={data.tx}
         onComplete={data.sendTx}
         onClose={() => {
