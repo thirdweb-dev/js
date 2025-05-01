@@ -245,7 +245,7 @@
     "prompts": "2.4.2",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.27.2"
+    "viem": "2.28.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
