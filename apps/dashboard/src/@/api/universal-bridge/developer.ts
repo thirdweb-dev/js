@@ -100,12 +100,14 @@ export type Fee = {
 
 export async function getFees(props: {
   clientId: string;
+  teamId: string;
 }) {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/fees`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "x-team-id": props.teamId,
       "x-client-id-override": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
@@ -122,6 +124,7 @@ export async function getFees(props: {
 
 export async function updateFee(props: {
   clientId: string;
+  teamId: string;
   feeRecipient: string;
   feeBps: number;
 }) {
@@ -131,6 +134,7 @@ export async function updateFee(props: {
     headers: {
       "Content-Type": "application/json",
       "x-client-id-override": props.clientId,
+      "x-team-id": props.teamId,
       Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({
