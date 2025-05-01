@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
+import { ThirdwebMiniLogo } from "app/(app)/components/ThirdwebMiniLogo";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
@@ -14,6 +14,37 @@ type AppFooterProps = {
   className?: string;
   containerClassName?: string;
 };
+
+const footerLinks = [
+  {
+    href: "/home",
+    label: "Home",
+  },
+  {
+    href: "https://blog.thirdweb.com",
+    label: "Blog",
+  },
+  {
+    href: "https://portal.thirdweb.com/changelog",
+    label: "Changelog",
+  },
+  {
+    href: "https://feedback.thirdweb.com/",
+    label: "Feedback",
+  },
+  {
+    href: "https://thirdweb.com/privacy-policy",
+    label: "Privacy Policy",
+  },
+  {
+    href: "https://thirdweb.com/terms",
+    label: "Terms of Service",
+  },
+  {
+    href: "https://thirdweb.com/chainlist",
+    label: "Chainlist",
+  },
+];
 
 export function AppFooter(props: AppFooterProps) {
   return (
@@ -80,57 +111,28 @@ export function AppFooter(props: AppFooterProps) {
         </div>
         {/* bottom row */}
         <div className="grid grid-flow-col grid-cols-2 grid-rows-5 gap-2 md:flex md:flex-row md:justify-between">
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="/home"
-          >
-            Home
-          </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://blog.thirdweb.com"
-            target="_blank"
-          >
-            Blog
-          </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://portal.thirdweb.com/changelog"
-            target="_blank"
-          >
-            Changelog
-          </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://feedback.thirdweb.com/"
-            target="_blank"
-          >
-            Feedback
-          </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/privacy-policy"
-            target="_blank"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/terms"
-            target="_blank"
-          >
-            Terms of Service
-          </Link>
-
-          <Link
-            className="px-[10px] py-[6px] text-muted-foreground text-sm hover:underline"
-            href="https://thirdweb.com/chainlist"
-            target="_blank"
-          >
-            Chain List
-          </Link>
+          {footerLinks.map((link) => (
+            <FooterLink key={link.href} {...link} />
+          ))}
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLink(props: {
+  href: string;
+  label: string;
+  prefetch?: boolean;
+}) {
+  return (
+    <Link
+      href={props.href}
+      prefetch={false}
+      className="px-0 py-[6px] text-muted-foreground text-sm hover:underline"
+      target="_blank"
+    >
+      {props.label}
+    </Link>
   );
 }

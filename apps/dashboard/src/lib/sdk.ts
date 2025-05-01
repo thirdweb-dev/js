@@ -1,12 +1,12 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import type { ThirdwebClient } from "thirdweb";
 import { resolveScheme } from "thirdweb/storage";
 
-export function replaceIpfsUrl(uri: string) {
+export function replaceIpfsUrl(uri: string, client: ThirdwebClient) {
   try {
     // eslint-disable-next-line no-restricted-syntax
     return resolveScheme({
       uri,
-      client: getThirdwebClient(),
+      client,
     });
   } catch (err) {
     console.error("error resolving ipfs url", uri, err);

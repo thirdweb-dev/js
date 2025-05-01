@@ -1,5 +1,41 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.6
+
+### Patch Changes
+
+- [#6837](https://github.com/thirdweb-dev/js/pull/6837) [`d95b3d3`](https://github.com/thirdweb-dev/js/commit/d95b3d38c721797e7470c198abb44edf1a1f6495) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: Add unthreadCustomerId to TeamResponse
+
+- [#6842](https://github.com/thirdweb-dev/js/pull/6842) [`f2d0f11`](https://github.com/thirdweb-dev/js/commit/f2d0f119c1422eebb37c898e30832d5fda33f5f6) Thanks [@jnsdls](https://github.com/jnsdls)! - add insight.webhooks to capabilities
+
+## 0.9.5
+
+### Patch Changes
+
+- [#6793](https://github.com/thirdweb-dev/js/pull/6793) [`f85163e`](https://github.com/thirdweb-dev/js/commit/f85163edee8ab21a1f7a1b70c4dffc5953a409d3) Thanks [@jnsdls](https://github.com/jnsdls)! - add engineCloud plan capability
+
+- [#6782](https://github.com/thirdweb-dev/js/pull/6782) [`d7dc83f`](https://github.com/thirdweb-dev/js/commit/d7dc83f9e65616fe2f61bb2a680429b163cd0307) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#6815](https://github.com/thirdweb-dev/js/pull/6815) [`69ec6e0`](https://github.com/thirdweb-dev/js/commit/69ec6e055363483b0a259d8ed052c6601d39679d) Thanks [@jnsdls](https://github.com/jnsdls)! - expose `rateLimitSlidingWindow` strategy directly for more low-level usage
+
+## 0.9.4
+
+### Patch Changes
+
+- [#6771](https://github.com/thirdweb-dev/js/pull/6771) [`9d72ddd`](https://github.com/thirdweb-dev/js/commit/9d72ddd6045e98822021027dc0e446f9505531f5) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing the team id explicitly via request headers
+
+## 0.9.3
+
+### Patch Changes
+
+- [#6764](https://github.com/thirdweb-dev/js/pull/6764) [`72875f9`](https://github.com/thirdweb-dev/js/commit/72875f9de5041a6423cfa3ac347bb033e3fbf523) Thanks [@jnsdls](https://github.com/jnsdls)! - add support for service-to-service api key authentication
+
+## 0.9.2
+
+### Patch Changes
+
+- [#6730](https://github.com/thirdweb-dev/js/pull/6730) [`ec099a7`](https://github.com/thirdweb-dev/js/commit/ec099a781a144dfbd5f7558228ce4371c00e9a06) Thanks [@arcoraven](https://github.com/arcoraven)! - Update rate limit to sliding window
+
 ## 0.9.1
 
 ### Patch Changes

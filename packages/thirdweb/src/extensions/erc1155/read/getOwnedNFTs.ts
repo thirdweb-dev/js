@@ -1,3 +1,4 @@
+import { getOwnedNFTs as getInsightNFTs } from "../../../insight/get-nfts.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { getNFT } from "./getNFT.js";
@@ -5,12 +6,17 @@ import {
   type GetOwnedTokenIdsParams,
   getOwnedTokenIds,
 } from "./getOwnedTokenIds.js";
-
 /**
  * Parameters for retrieving NFTs.
  * @extension ERC1155
  */
-export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
+export type GetOwnedNFTsParams = GetOwnedTokenIdsParams & {
+  /**
+   * Whether to use the insight API to fetch the NFTs.
+   * @default true
+   */
+  useIndexer?: boolean;
+};
 
 /**
  * Retrieves the owned ERC1155 NFTs for a given wallet address.
@@ -31,10 +37,69 @@ export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
 export async function getOwnedNFTs(
   options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<(NFT & { quantityOwned: bigint })[]> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getOwnedNFTsFromInsight(options);
+    } catch {
+      return await getOwnedNFTsFromRPC(options);
+    }
+  }
+  return await getOwnedNFTsFromRPC(options);
+}
+
+async function getOwnedNFTsFromInsight(
+  options: BaseTransactionOptions<GetOwnedNFTsParams>,
+): Promise<(NFT & { quantityOwned: bigint })[]> {
+  const limit = 50;
+  const nfts: (NFT & { quantityOwned: bigint })[] = [];
+  let page = 0;
+  let hasMore = true;
+
+  // TODO (insight): add support for contract address filters
+  while (hasMore) {
+    const pageResults = await getInsightNFTs({
+      client: options.contract.client,
+      chains: [options.contract.chain],
+      ownerAddress: options.address,
+      queryOptions: {
+        limit,
+        page,
+      },
+    });
+
+    nfts.push(...pageResults);
+
+    // If we got fewer results than the limit, we've reached the end
+    if (pageResults.length < limit) {
+      hasMore = false;
+    } else {
+      page++;
+    }
+  }
+
+  const results = nfts;
+
+  return results
+    .filter(
+      (n) =>
+        n.tokenAddress.toLowerCase() === options.contract.address.toLowerCase(),
+    )
+    .map((result) => ({
+      ...result,
+      owner: options.address,
+    }));
+}
+
+async function getOwnedNFTsFromRPC(
+  options: BaseTransactionOptions<GetOwnedNFTsParams>,
+): Promise<(NFT & { quantityOwned: bigint })[]> {
   const ownedBalances = await getOwnedTokenIds(options);
 
   const nfts = await Promise.all(
-    ownedBalances.map((ob) => getNFT({ ...options, tokenId: ob.tokenId })),
+    ownedBalances.map((ob) =>
+      getNFT({ ...options, tokenId: ob.tokenId, useIndexer: false }),
+    ),
   );
 
   return nfts.map((nft, index) => ({

@@ -2,16 +2,16 @@
 
 import {
   generateAlchemyUrl,
-  isAlchemySupported,
   transformAlchemyResponseToNFT,
 } from "lib/wallet/nfts/alchemy";
 import {
   generateMoralisUrl,
-  isMoralisSupported,
   transformMoralisResponseToNFT,
 } from "lib/wallet/nfts/moralis";
 import type { WalletNFT } from "lib/wallet/nfts/types";
 import { getVercelEnv } from "../../lib/vercel-utils";
+import { isAlchemySupported } from "../../lib/wallet/nfts/isAlchemySupported";
+import { isMoralisSupported } from "../../lib/wallet/nfts/isMoralisSupported";
 import { DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/env";
 
 type WalletNFTApiReturn =

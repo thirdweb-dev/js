@@ -1,5 +1,4 @@
 "use client";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
@@ -21,6 +20,7 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
+import { useThirdwebClient } from "../../../@/constants/thirdweb.client";
 import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
@@ -33,7 +33,7 @@ export function ContractPublishForm(props: {
   onPublishSuccess: () => Promise<void>;
   jwt: string;
 }) {
-  const client = getThirdwebClient(props.jwt);
+  const client = useThirdwebClient(props.jwt);
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "implParams" | "networks"
@@ -344,13 +344,14 @@ export function ContractPublishForm(props: {
               <FactoryFieldset
                 abi={props.publishMetadata.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
+                client={client}
               />
             </Flex>
           )}
 
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
-              <NetworksFieldset fromStandard />
+              <NetworksFieldset fromStandard client={client} />
             </Flex>
           )}
 

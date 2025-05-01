@@ -233,6 +233,10 @@ export const sidebar: SideBar = {
           href: "https://thirdweb.com/routes",
         },
         {
+          name: "Service Fees",
+          href: `${paySlug}/fees`,
+        },
+        {
           name: "Get Started",
           href: `${paySlug}/get-started`,
           expanded: true,

@@ -1,5 +1,29 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.65
+
+## 0.2.64
+
+### Patch Changes
+
+- [#6858](https://github.com/thirdweb-dev/js/pull/6858) [`adcbec6`](https://github.com/thirdweb-dev/js/commit/adcbec607f20275cfccac331c4af9a3055ee00bc) Thanks [@mmahdigh](https://github.com/mmahdigh)! - Respect inAppWallet metadata props
+
+## 0.2.63
+
+## 0.2.62
+
+## 0.2.61
+
+## 0.2.60
+
+## 0.2.59
+
+## 0.2.58
+
+## 0.2.57
+
+## 0.2.56
+
 ## 0.2.55
 
 ## 0.2.54

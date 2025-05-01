@@ -2,13 +2,15 @@ import type { ExploreCategory } from "data/explore";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ContractCard, ContractCardSkeleton } from "../contract-card";
 
 interface ContractRowProps {
   category: ExploreCategory;
+  client: ThirdwebClient;
 }
 
-export function ContractRow({ category }: ContractRowProps) {
+export function ContractRow({ category, client }: ContractRowProps) {
   return (
     <section>
       {/* Title, Description + View all link */}
@@ -75,6 +77,7 @@ export function ContractRow({ category }: ContractRowProps) {
               fallback={<ContractCardSkeleton />}
             >
               <ContractCard
+                client={client}
                 publisher={publisher}
                 contractId={contractId}
                 titleOverride={overrides?.title}

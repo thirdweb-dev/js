@@ -39,8 +39,6 @@ next-env.d.ts
 
 # generated files
 searchIndex.json
-public/llms.txt
-public/llms-full.txt
 
 .env
 public/sitemap*.xml

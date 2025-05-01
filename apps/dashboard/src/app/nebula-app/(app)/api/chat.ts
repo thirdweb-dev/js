@@ -6,6 +6,7 @@ import type { NebulaTxData } from "../components/Chats";
 export type NebulaContext = {
   chainIds: string[] | null;
   walletAddress: string | null;
+  networks: "mainnet" | "testnet" | "all" | null;
 };
 
 export async function promptNebula(params: {
@@ -26,6 +27,7 @@ export async function promptNebula(params: {
     body.context = {
       chain_ids: params.context.chainIds || [],
       wallet_address: params.context.walletAddress,
+      networks: params.context.networks,
     };
   }
 
@@ -105,6 +107,30 @@ export async function promptNebula(params: {
         });
         break;
       }
+
+      case "context": {
+        const data = JSON.parse(event.data) as {
+          data: string;
+          request_id: string;
+          session_id: string;
+        };
+
+        const contextData = JSON.parse(data.data) as {
+          wallet_address: string;
+          chain_ids: number[];
+          networks: NebulaContext["networks"];
+        };
+
+        params.handleStream({
+          event: "context",
+          data: contextData,
+        });
+        break;
+      }
+
+      default: {
+        console.warn("unhandled event", event);
+      }
     }
   }
 }
@@ -136,6 +162,14 @@ type ChatStreamedResponse =
       event: "action";
       type: "sign_transaction" & (string & {});
       data: NebulaTxData;
+    }
+  | {
+      event: "context";
+      data: {
+        wallet_address: string;
+        chain_ids: number[];
+        networks: NebulaContext["networks"];
+      };
     };
 
 type ChatStreamedEvent =
@@ -154,5 +188,9 @@ type ChatStreamedEvent =
   | {
       event: "action";
       type: "sign_transaction" & (string & {});
+      data: string;
+    }
+  | {
+      event: "context";
       data: string;
     };

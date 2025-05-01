@@ -18,15 +18,14 @@ import {
 } from "@/components/ui/popover";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
-import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
+import { FaucetButton } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
+import { GiftIcon } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
 import type {
   ChainMetadataWithServices,
   ChainServices,
-} from "app/(dashboard)/(chain)/types/chain";
-import { getSDKTheme } from "app/components/sdk-component-theme";
+} from "app/(app)/(dashboard)/(chain)/types/chain";
+import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
@@ -43,11 +42,12 @@ import {
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
+  useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
-import { privateKeyToAccount } from "thirdweb/wallets";
-import { getFaucetClaimAmount } from "../../app/api/testnet-faucet/claim/claim-amount";
+import { type Wallet, privateKeyToAccount } from "thirdweb/wallets";
+import { getFaucetClaimAmount } from "../../app/(app)/api/testnet-faucet/claim/claim-amount";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
@@ -78,14 +78,15 @@ function useIsNetworkMismatch(txChainId: number) {
 
 type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   txChainId: number;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
+  isPending: boolean;
 };
 
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { txChainId, twAccount, ...buttonProps } = props;
+  const { txChainId, isLoggedIn, isPending, ...buttonProps } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -94,6 +95,7 @@ export const MismatchButton = forwardRef<
   const client = useThirdwebClient();
   const pathname = usePathname();
   const txChain = useV5DashboardChain(txChainId);
+  const connectionStatus = useActiveWalletConnectionStatus();
 
   const txChainBalance = useWalletBalance({
     address: account?.address,
@@ -102,27 +104,40 @@ export const MismatchButton = forwardRef<
   });
 
   const networksMismatch = useIsNetworkMismatch(txChainId);
+  const switchNetwork = useSwitchActiveWalletChain();
+
+  const showSwitchChainPopover =
+    networksMismatch && wallet && !canSwitchNetworkWithoutConfirmation(wallet);
+
   const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
   const trackEvent = useTrack();
 
   const chainId = activeWalletChain?.id;
 
+  const switchNetworkMutation = useMutation({
+    mutationFn: switchNetwork,
+  });
+
   const eventRef =
     useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>(undefined);
 
-  if (!twAccount) {
+  if (connectionStatus === "connecting") {
     return (
-      <Button className={props.className} size={props.size} asChild>
-        <Link
-          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-        >
-          Sign in
-        </Link>
+      <Button
+        className={props.className}
+        size={props.size}
+        asChild
+        variant="outline"
+      >
+        <div>
+          <Spinner className="size-4 shrink-0" />
+          Connecting Wallet
+        </div>
       </Button>
     );
   }
 
-  if (!wallet || !chainId) {
+  if (!wallet || !chainId || !isLoggedIn) {
     return (
       <Button className={props.className} size={props.size} asChild>
         <Link
@@ -134,15 +149,19 @@ export const MismatchButton = forwardRef<
     );
   }
 
-  const isBalanceRequired = !GAS_FREE_CHAINS.includes(txChainId);
+  const isBalanceRequired =
+    wallet.id === "smart" ? false : !GAS_FREE_CHAINS.includes(txChainId);
 
   const notEnoughBalance =
     (txChainBalance.data?.value || 0n) === 0n && isBalanceRequired;
 
   const disabled =
     buttonProps.disabled ||
+    switchNetworkMutation.isPending ||
     // if user is about to trigger a transaction on txChain, but txChainBalance is not yet loaded and is required before proceeding
-    (!networksMismatch && txChainBalance.isPending && isBalanceRequired);
+    (!showSwitchChainPopover && txChainBalance.isPending && isBalanceRequired);
+
+  const showSpinner = isPending || switchNetworkMutation.isPending;
 
   return (
     <>
@@ -150,7 +169,7 @@ export const MismatchButton = forwardRef<
         open={isMismatchPopoverOpen}
         onOpenChange={(v) => {
           if (v) {
-            if (networksMismatch) {
+            if (showSwitchChainPopover) {
               setIsMismatchPopoverOpen(true);
             }
           } else {
@@ -161,14 +180,17 @@ export const MismatchButton = forwardRef<
         <PopoverTrigger asChild>
           <Button
             {...buttonProps}
+            className={cn("gap-2 disabled:opacity-100", buttonProps.className)}
             disabled={disabled}
             type={
-              networksMismatch || notEnoughBalance ? "button" : buttonProps.type
+              showSwitchChainPopover || notEnoughBalance
+                ? "button"
+                : buttonProps.type
             }
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
 
-              if (networksMismatch) {
+              if (showSwitchChainPopover) {
                 eventRef.current = e;
                 return;
               }
@@ -183,6 +205,12 @@ export const MismatchButton = forwardRef<
                 return;
               }
 
+              // in case of in-app or smart wallet wallet, the user is not prompted to switch the network
+              // we have to do it programmatically
+              if (activeWalletChain?.id !== txChain.id) {
+                await switchNetworkMutation.mutateAsync(txChain);
+              }
+
               if (buttonProps.onClick) {
                 return buttonProps.onClick(e);
               }
@@ -190,6 +218,7 @@ export const MismatchButton = forwardRef<
             ref={ref}
           >
             {buttonProps.children}
+            {showSpinner && <Spinner className="size-4 shrink-0" />}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="min-w-[350px]" side="top" sideOffset={10}>
@@ -222,7 +251,7 @@ export const MismatchButton = forwardRef<
           dialogCloseClassName="focus:ring-0"
         >
           <DynamicHeight>
-            {dialog === "no-funds" && twAccount && (
+            {dialog === "no-funds" && (
               <NoFundsDialogContent
                 chain={activeWalletChain}
                 openPayModal={() => {
@@ -234,7 +263,7 @@ export const MismatchButton = forwardRef<
                   setDialog("pay");
                 }}
                 onCloseModal={() => setDialog(undefined)}
-                twAccount={twAccount}
+                isLoggedIn={props.isLoggedIn}
               />
             )}
 
@@ -294,7 +323,7 @@ function NoFundsDialogContent(props: {
   chain: Chain;
   openPayModal: () => void;
   onCloseModal: () => void;
-  twAccount: Account;
+  isLoggedIn: boolean;
 }) {
   const chainWithServiceInfoQuery = useQuery({
     queryKey: ["chain-with-services", props.chain.id],
@@ -351,7 +380,7 @@ function NoFundsDialogContent(props: {
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
               <GetFundsFromFaucet
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
                 chain={chainWithServiceInfoQuery.data}
               />
             ) : chainWithServiceInfoQuery.data.services.find(
@@ -392,7 +421,7 @@ function NoFundsDialogContent(props: {
 
 function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
-  twAccount: Account;
+  isLoggedIn: boolean;
 }) {
   const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
@@ -424,7 +453,7 @@ function GetFundsFromFaucet(props: {
         <FaucetButton
           chain={props.chain}
           amount={amountToGive}
-          twAccount={props.twAccount}
+          isLoggedIn={props.isLoggedIn}
         />
       </div>
     </div>
@@ -472,11 +501,11 @@ const MismatchNotice: React.FC<{
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h3 className="mb-1 font-semibold text-lg tracking-tight">
+        <h3 className="mb-1 font-semibold text-base tracking-tight">
           Network Mismatch
         </h3>
 
-        <p className="mb-1 text-muted-foreground">
+        <p className="mb-1 text-muted-foreground text-sm">
           Your wallet is connected to the{" "}
           <span className="font-semibold capitalize">
             {walletConnectedNetworkInfo?.name ||
@@ -485,7 +514,7 @@ const MismatchNotice: React.FC<{
           network
         </p>
 
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           This action requires you to connect to the{" "}
           <span className="font-semibold capitalize">
             {txChain?.name || `Chain ID #${txChainId}`}
@@ -497,9 +526,9 @@ const MismatchNotice: React.FC<{
       <Button
         size="sm"
         onClick={onSwitchWallet}
-        disabled={!actuallyCanAttemptSwitch}
-        variant="primary"
-        className="gap-2 capitalize"
+        disabled={!actuallyCanAttemptSwitch || switchNetworkMutation.isPending}
+        variant="default"
+        className="gap-2 capitalize disabled:opacity-100"
       >
         {switchNetworkMutation.isPending ? (
           <Spinner className="size-4 shrink-0" />
@@ -507,7 +536,8 @@ const MismatchNotice: React.FC<{
           <UnplugIcon className="size-4 shrink-0" />
         )}
         <span className="line-clamp-1 block truncate">
-          Switch {txChain ? `to ${txChain.name}` : "chain"}
+          {switchNetworkMutation.isPending ? "Switching" : "Switch"}{" "}
+          {txChain ? `to ${txChain.name}` : "chain"}
         </span>
       </Button>
 
@@ -556,3 +586,7 @@ const GetLocalHostTestnetFunds: React.FC = () => {
     </Button>
   );
 };
+
+function canSwitchNetworkWithoutConfirmation(wallet: Wallet) {
+  return wallet.id === "inApp" || wallet.id === "smart";
+}

@@ -81,7 +81,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Set up foundry
-        uses: foundry-rs/foundry-toolchain@de808b1eea699e761c404bda44ba8f21aba30b2c # v1.3.1
+        uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
         with:
           cache: false
           version: nightly-c4a984fbf2c48b793c8cd53af84f56009dd1070c
@@ -89,7 +89,7 @@ jobs:
       - run: pnpm test
 
       - name: Code Coverage
-        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
+        uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
         with:
           directory: packages/
           flags: packages

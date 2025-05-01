@@ -61,7 +61,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
         path: "/v1/tokens/transfers/{contract_address}",
       },
       {
-        name: "Get token transfers by wallet address",
+        name: "Get token transfers",
         path: "/v1/tokens/transfers",
       },
       {
@@ -95,6 +95,10 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Nfts",
     paths: [
       {
+        name: "Get NFT balances by address",
+        path: "/v1/nfts/balance/{ownerAddress}",
+      },
+      {
         name: "Get collection",
         path: "/v1/nfts/collections/{contract_address}",
       },
@@ -111,7 +115,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
         path: "/v1/nfts/owners/{contract_address}/{token_id}",
       },
       {
-        name: "Get NFT transfers by owner",
+        name: "Get NFT transfers",
         path: "/v1/nfts/transfers",
       },
       {

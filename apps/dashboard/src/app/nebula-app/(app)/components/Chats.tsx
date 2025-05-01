@@ -3,8 +3,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Account as TWAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useMutation } from "@tanstack/react-query";
+import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import {
   AlertCircleIcon,
   CheckIcon,
@@ -15,10 +15,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import { MarkdownRenderer } from "../../../../components/contract-components/published-contract/markdown-renderer";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
+import { Reasoning } from "./Reasoning/Reasoning";
 
 export type NebulaTxData = {
   chainId: number;
@@ -30,7 +30,11 @@ export type NebulaTxData = {
 export type ChatMessage =
   | {
       text: string;
-      type: "user" | "error" | "presence";
+      type: "user" | "error";
+    }
+  | {
+      texts: string[];
+      type: "presence";
     }
   | {
       // assistant type message loaded from history doesn't have request_id
@@ -49,10 +53,11 @@ export function Chats(props: {
   authToken: string;
   sessionId: string | undefined;
   className?: string;
-  twAccount: TWAccount;
   client: ThirdwebClient;
   setEnableAutoScroll: (enable: boolean) => void;
   enableAutoScroll: boolean;
+  useSmallText?: boolean;
+  sendMessage: (message: string) => void;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -99,7 +104,7 @@ export function Chats(props: {
     >
       <ScrollShadow
         className="flex-1"
-        scrollableClassName="max-h-full"
+        scrollableClassName="max-h-full overscroll-contain"
         shadowColor="hsl(var(--background))"
         shadowClassName="z-[1]"
       >
@@ -110,7 +115,10 @@ export function Chats(props: {
                 props.isChatStreaming && index === props.messages.length - 1;
               return (
                 <div
-                  className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
+                  className={cn(
+                    "fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base",
+                    props.useSmallText && "lg:text-sm",
+                  )}
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
                   key={index}
                 >
@@ -120,6 +128,7 @@ export function Chats(props: {
                         <StyledMarkdownRenderer
                           text={message.text}
                           isMessagePending={isMessagePending}
+                          type="user"
                         />
                       </div>
                     </div>
@@ -136,7 +145,7 @@ export function Chats(props: {
                           )}
                         >
                           {message.type === "presence" && (
-                            <Spinner className="size-4" />
+                            <NebulaIcon className="size-5 text-muted-foreground" />
                           )}
 
                           {message.type === "assistant" && (
@@ -156,6 +165,7 @@ export function Chats(props: {
                             <StyledMarkdownRenderer
                               text={message.text}
                               isMessagePending={isMessagePending}
+                              type="assistant"
                             />
                           ) : message.type === "error" ? (
                             <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
@@ -164,14 +174,19 @@ export function Chats(props: {
                           ) : message.type === "send_transaction" ? (
                             <ExecuteTransactionCardWithFallback
                               txData={message.data}
-                              twAccount={props.twAccount}
                               client={props.client}
+                              onTxSettled={(txHash) => {
+                                props.sendMessage(
+                                  getTransactionSettledPrompt(txHash),
+                                );
+                              }}
                             />
-                          ) : (
-                            <span className="leading-loose">
-                              {message.text}
-                            </span>
-                          )}
+                          ) : message.type === "presence" ? (
+                            <Reasoning
+                              isPending={isMessagePending}
+                              texts={message.texts}
+                            />
+                          ) : null}
                         </ScrollShadow>
 
                         {message.type === "assistant" &&
@@ -200,10 +215,17 @@ export function Chats(props: {
   );
 }
 
+function getTransactionSettledPrompt(txHash: string) {
+  return `\
+I've executed the following transaction successfully with hash: ${txHash}.
+
+If our conversation calls for it, continue on to the next transaction or suggest next steps`;
+}
+
 function ExecuteTransactionCardWithFallback(props: {
   txData: NebulaTxData | null;
-  twAccount: TWAccount;
   client: ThirdwebClient;
+  onTxSettled: (txHash: string) => void;
 }) {
   if (!props.txData) {
     return (
@@ -217,8 +239,8 @@ function ExecuteTransactionCardWithFallback(props: {
   return (
     <ExecuteTransactionCard
       txData={props.txData}
-      twAccount={props.twAccount}
       client={props.client}
+      onTxSettled={props.onTxSettled}
     />
   );
 }
@@ -252,10 +274,14 @@ function MessageActions(props: {
   const sendBadRating = useMutation({
     mutationFn: () => sendRating("bad"),
     onSuccess() {
-      toast.info("Thanks for the feedback!");
+      toast.info("Thanks for the feedback!", {
+        position: "top-right",
+      });
     },
     onError() {
-      toast.error("Failed to send feedback");
+      toast.error("Failed to send feedback", {
+        position: "top-right",
+      });
     },
   });
 
@@ -319,6 +345,7 @@ function MessageActions(props: {
 function StyledMarkdownRenderer(props: {
   text: string;
   isMessagePending: boolean;
+  type: "assistant" | "user";
 }) {
   return (
     <MarkdownRenderer
@@ -329,7 +356,12 @@ function StyledMarkdownRenderer(props: {
         ignoreFormattingErrors: true,
         className: "bg-transparent",
       }}
-      p={{ className: "text-foreground leading-normal" }}
+      p={{
+        className:
+          props.type === "assistant"
+            ? "text-foreground"
+            : "text-foreground leading-normal",
+      }}
       li={{ className: "text-foreground" }}
       inlineCode={{ className: "border-none" }}
     />

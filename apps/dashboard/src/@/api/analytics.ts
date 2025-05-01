@@ -10,7 +10,7 @@ import type {
   WalletStats,
   WalletUserStats,
 } from "types/analytics";
-import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 import { getChains } from "./chain";
 
 async function fetchAnalytics(

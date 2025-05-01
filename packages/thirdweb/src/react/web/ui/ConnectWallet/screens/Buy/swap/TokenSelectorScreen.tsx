@@ -176,7 +176,12 @@ export function TokenSelectorScreen(props: {
     enabled: !!props.sourceSupportedTokens && !!chainInfo.data,
   });
 
-  if (walletsAndBalances.isLoading || chainInfo.isLoading) {
+  if (
+    walletsAndBalances.isLoading ||
+    chainInfo.isLoading ||
+    !chainInfo.data ||
+    !props.sourceSupportedTokens
+  ) {
     return <LoadingScreen />;
   }
 
@@ -276,7 +281,7 @@ export function TokenSelectorScreen(props: {
               >
                 <CardStackIcon width={iconSize.md} height={iconSize.md} />
                 <Text size="sm" color="primaryText">
-                  Pay with a debit card
+                  Pay with card
                 </Text>
               </Container>
             </Button>

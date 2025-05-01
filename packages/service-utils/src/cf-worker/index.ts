@@ -147,7 +147,23 @@ export async function extractAuthorizationData(
     }
   }
 
+  let incomingServiceApiKey: string | null = null;
+  let incomingServiceApiKeyHash: string | null = null;
+  if (headers.has("x-service-api-key")) {
+    incomingServiceApiKey = headers.get("x-service-api-key");
+    if (incomingServiceApiKey) {
+      incomingServiceApiKeyHash = await hashSecretKey(incomingServiceApiKey);
+    }
+  }
+
+  let teamId: string | null = null;
+  if (headers.has("x-team-id")) {
+    teamId = headers.get("x-team-id");
+  }
+
   return {
+    incomingServiceApiKey,
+    incomingServiceApiKeyHash,
     jwt,
     hashedJWT: jwt ? await hashSecretKey(jwt) : null,
     secretKey,
@@ -157,7 +173,7 @@ export async function extractAuthorizationData(
     origin,
     bundleId,
     secretKeyHash,
-    teamId: authInput.teamId,
+    teamId: authInput.teamId ?? teamId ?? undefined,
     targetAddress: authInput.targetAddress,
   };
 }

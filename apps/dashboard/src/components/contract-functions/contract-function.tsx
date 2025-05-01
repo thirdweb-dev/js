@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   Divider,
@@ -62,20 +61,24 @@ const ContractFunctionComment = lazy(
 interface ContractFunctionProps {
   fn: AbiFunction | AbiEvent;
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 const ContractFunction: React.FC<{
   fn: AbiFunction | AbiEvent;
   contract?: ThirdwebContract;
-  twAccount: Account | undefined;
-}> = ({ fn, contract, twAccount }) => {
+  isLoggedIn: boolean;
+}> = ({ fn, contract, isLoggedIn }) => {
   if (!contract) {
     return <ContractFunctionInputs fn={fn} />;
   }
 
   return (
-    <ContractFunctionInner contract={contract} fn={fn} twAccount={twAccount} />
+    <ContractFunctionInner
+      contract={contract}
+      fn={fn}
+      isLoggedIn={isLoggedIn}
+    />
   );
 };
 
@@ -158,7 +161,7 @@ function ContractFunctionInner(props: ContractFunctionProps) {
           key={JSON.stringify(fn)}
           contract={contract}
           abiFunction={fn}
-          twAccount={props.twAccount}
+          isLoggedIn={props.isLoggedIn}
         />
       )}
 
@@ -271,7 +274,7 @@ function ContractFunctionInputs(props: {
 interface ContractFunctionsPanelProps {
   fnsOrEvents: (AbiFunction | AbiEvent)[];
   contract?: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 type ExtensionFunctions = {
@@ -282,7 +285,7 @@ type ExtensionFunctions = {
 export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
   contract,
-  twAccount,
+  isLoggedIn,
 }) => {
   // TODO: clean this up
 
@@ -499,7 +502,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           <ContractFunction
             fn={selectedFunction}
             contract={contract}
-            twAccount={twAccount}
+            isLoggedIn={isLoggedIn}
           />
         )}
       </GridItem>

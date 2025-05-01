@@ -30,6 +30,7 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ConnectButton } from "../../ConnectButton.js";
+import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import { OutlineWalletIcon } from "../../icons/OutlineWalletIcon.js";
 import { formatTokenBalance } from "../formatTokenBalance.js";
 import {
@@ -167,7 +168,8 @@ export function TransactionModeScreen(props: {
     balanceQuery.data.value < transactionCostAndData.transactionValueWei;
 
   return (
-    <Container p="lg">
+    <Container px="lg">
+      <Spacer y="lg" />
       <ModalHeader title={metadata?.name || "Transaction"} />
 
       <Spacer y="lg" />
@@ -191,7 +193,7 @@ export function TransactionModeScreen(props: {
                   Insufficient Funds
                 </Text>
                 <Text size="xs" center multiline>
-                  Select another token or pay with a debit card.
+                  Select another token or pay with card.
                 </Text>
               </div>
             )}
@@ -377,6 +379,13 @@ export function TransactionModeScreen(props: {
             }}
           />
         </div>
+      )}
+      <Spacer y="lg" />
+      {payUiOptions.showThirdwebBranding !== false && (
+        <>
+          <PoweredByThirdweb link="https://playground.thirdweb.com/connect/pay?utm_source=ub_text" />
+          <Spacer y="sm" />
+        </>
       )}
     </Container>
   );

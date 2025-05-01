@@ -54,6 +54,7 @@ async function getOwnedNFTsFromRPC(
       getNFT({
         contract: options.contract,
         tokenId,
+        useIndexer: false,
       }).then((nft) => ({
         ...nft,
         // add the owner to the NFT since we know it

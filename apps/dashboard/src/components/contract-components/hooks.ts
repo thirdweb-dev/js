@@ -6,7 +6,7 @@ import type { Abi } from "abitype";
 import { resolveEns } from "lib/ens";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
-import type { ThirdwebContract } from "thirdweb";
+import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { getContract, resolveContractAbi } from "thirdweb/contract";
 import { isAddress, isValidENSName } from "thirdweb/utils";
 import {
@@ -20,6 +20,7 @@ export function useAllVersions(
   publisherAddress: string | undefined,
   contractId: string | undefined,
 ) {
+  const client = useThirdwebClient();
   return useQuery({
     queryKey: ["all-releases", publisherAddress, contractId],
     queryFn: () => {
@@ -27,7 +28,11 @@ export function useAllVersions(
         // should never happen because we check for this in the enabled check
         throw new Error("publisherAddress or contractId is not defined");
       }
-      return fetchPublishedContractVersions(publisherAddress, contractId);
+      return fetchPublishedContractVersions(
+        publisherAddress,
+        contractId,
+        client,
+      );
     },
 
     enabled: !!publisherAddress && !!contractId,
@@ -104,17 +109,22 @@ export type PublishedContractDetails = Awaited<
 >[number];
 
 export function usePublishedContractsQuery(address?: string) {
+  const client = useThirdwebClient();
   return useQuery<PublishedContractDetails[]>({
     queryKey: ["published-contracts", address],
-    queryFn: () => fetchPublishedContracts(address),
+    queryFn: () => fetchPublishedContracts({ address, client }),
     enabled: !!address,
   });
 }
 
-function ensQuery(addressOrEnsName?: string) {
+function ensQuery(params: {
+  addressOrEnsName?: string;
+  client: ThirdwebClient;
+}) {
+  let addressOrEnsName = params.addressOrEnsName;
+
   // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
   if (addressOrEnsName === "thirdweb.eth") {
-    // biome-ignore lint/style/noParameterAssign: FIXME
     addressOrEnsName = "deployer.thirdweb.eth";
   }
   const placeholderData = {
@@ -134,14 +144,15 @@ function ensQuery(addressOrEnsName?: string) {
         throw new Error("Invalid address or ENS name.");
       }
 
-      const { address, ensName } = await resolveEns(addressOrEnsName).catch(
-        () => ({
-          address: isAddress(addressOrEnsName || "")
-            ? addressOrEnsName || null
-            : null,
-          ensName: null,
-        }),
-      );
+      const { address, ensName } = await resolveEns(
+        addressOrEnsName,
+        params.client,
+      ).catch(() => ({
+        address: isAddress(addressOrEnsName || "")
+          ? addressOrEnsName || null
+          : null,
+        ensName: null,
+      }));
 
       if (isValidENSName(addressOrEnsName) && !address) {
         throw new Error("Failed to resolve ENS name.");
@@ -166,7 +177,8 @@ function ensQuery(addressOrEnsName?: string) {
 }
 
 export function useEns(addressOrEnsName?: string) {
-  return useQuery(ensQuery(addressOrEnsName));
+  const client = useThirdwebClient();
+  return useQuery(ensQuery({ addressOrEnsName, client }));
 }
 
 export function useContractEvents(abi: Abi) {

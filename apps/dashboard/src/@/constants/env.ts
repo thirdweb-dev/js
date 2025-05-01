@@ -4,6 +4,11 @@ export const DASHBOARD_THIRDWEB_CLIENT_ID =
 export const DASHBOARD_THIRDWEB_SECRET_KEY =
   process.env.DASHBOARD_SECRET_KEY || "";
 
+export const NEXT_PUBLIC_NEBULA_APP_CLIENT_ID =
+  process.env.NEXT_PUBLIC_NEBULA_APP_CLIENT_ID || "";
+
+export const NEBULA_APP_SECRET_KEY = process.env.NEBULA_APP_SECRET_KEY || "";
+
 export const THIRDWEB_API_SECRET = process.env.API_SERVER_SECRET || "";
 
 export const IPFS_GATEWAY_URL =

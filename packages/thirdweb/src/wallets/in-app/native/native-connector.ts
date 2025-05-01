@@ -3,22 +3,7 @@ import { stringify } from "../../../utils/json.js";
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account } from "../../interfaces/wallet.js";
-import { getUserStatus } from "../core/actions/get-enclave-user-status.js";
-import { authEndpoint } from "../core/authentication/authEndpoint.js";
-import { backendAuthenticate } from "../core/authentication/backend.js";
 import { ClientScopedStorage } from "../core/authentication/client-scoped-storage.js";
-import { guestAuthenticate } from "../core/authentication/guest.js";
-import { customJwt } from "../core/authentication/jwt.js";
-import {
-  getLinkedProfilesInternal,
-  linkAccount,
-  unlinkAccount,
-} from "../core/authentication/linkAccount.js";
-import {
-  loginWithPasskey,
-  registerPasskey,
-} from "../core/authentication/passkeys.js";
-import { siweAuthenticate } from "../core/authentication/siwe.js";
 import type {
   AuthArgsType,
   AuthLoginReturnType,
@@ -31,13 +16,9 @@ import type {
   SingleStepAuthArgsType,
 } from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
-import { EnclaveWallet } from "../core/wallet/enclave-wallet.js";
 import type { Ecosystem } from "../core/wallet/types.js";
 import type { IWebWallet } from "../core/wallet/web-wallet.js";
-import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
-import { deleteActiveAccount, socialAuth } from "./auth/native-auth.js";
-import { logoutUser } from "./helpers/auth/logout.js";
-import { ShardedWallet } from "./helpers/wallet/sharded-wallet.js";
+
 type NativeConnectorOptions = {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
@@ -73,6 +54,9 @@ export class InAppNativeConnector implements InAppConnector {
         "No auth token provided and no stored auth token found to initialize the wallet",
       );
     }
+    const { getUserStatus } = await import(
+      "../core/actions/get-enclave-user-status.js"
+    );
     const user = await getUserStatus({
       authToken:
         authResult?.storedToken.cookieString || (storedAuthToken as string),
@@ -115,6 +99,9 @@ export class InAppNativeConnector implements InAppConnector {
     }
 
     if (wallet && wallet.type === "enclave") {
+      const { EnclaveWallet } = await import(
+        "../core/wallet/enclave-wallet.js"
+      );
       this.wallet = new EnclaveWallet({
         client: this.client,
         ecosystem: this.ecosystem,
@@ -122,6 +109,9 @@ export class InAppNativeConnector implements InAppConnector {
         storage: this.storage,
       });
     } else {
+      const { ShardedWallet } = await import(
+        "./helpers/wallet/sharded-wallet.js"
+      );
       this.wallet = new ShardedWallet({
         client: this.client,
         storage: this.storage,
@@ -150,7 +140,8 @@ export class InAppNativeConnector implements InAppConnector {
     return this.wallet.getAccount();
   }
 
-  preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
+  async preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
+    const { sendOtp } = await import("../web/lib/auth/otp.js");
     return sendOtp({
       ...args,
       client: this.client,
@@ -164,9 +155,13 @@ export class InAppNativeConnector implements InAppConnector {
     switch (strategy) {
       case "email":
       case "phone": {
+        const { verifyOtp } = await import("../web/lib/auth/otp.js");
         return verifyOtp(params);
       }
       case "guest": {
+        const { guestAuthenticate } = await import(
+          "../core/authentication/guest.js"
+        );
         return guestAuthenticate({
           client: this.client,
           ecosystem: params.ecosystem,
@@ -174,6 +169,9 @@ export class InAppNativeConnector implements InAppConnector {
         });
       }
       case "backend": {
+        const { backendAuthenticate } = await import(
+          "../core/authentication/backend.js"
+        );
         return backendAuthenticate({
           client: this.client,
           walletSecret: params.walletSecret,
@@ -181,6 +179,9 @@ export class InAppNativeConnector implements InAppConnector {
         });
       }
       case "wallet": {
+        const { siweAuthenticate } = await import(
+          "../core/authentication/siwe.js"
+        );
         return siweAuthenticate({
           client: this.client,
           wallet: params.wallet,
@@ -199,6 +200,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "line":
       case "x":
       case "apple": {
+        const { socialAuth } = await import("./auth/native-auth.js");
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
           params.redirectUrl || (ExpoLinking.createURL("") as string);
@@ -210,18 +212,24 @@ export class InAppNativeConnector implements InAppConnector {
       }
       case "passkey":
         return this.passkeyAuth(params);
-      case "jwt":
+      case "jwt": {
+        const { customJwt } = await import("../core/authentication/jwt.js");
         return customJwt({
           jwt: params.jwt,
           client: this.client,
           ecosystem: this.ecosystem,
         });
-      case "auth_endpoint":
+      }
+      case "auth_endpoint": {
+        const { authEndpoint } = await import(
+          "../core/authentication/authEndpoint.js"
+        );
         return authEndpoint({
           payload: params.payload,
           client: this.client,
           ecosystem: this.ecosystem,
         });
+      }
       default:
         throw new Error(`Unsupported authentication type: ${strategy}`);
     }
@@ -287,6 +295,9 @@ export class InAppNativeConnector implements InAppConnector {
       let authToken: AuthStoredTokenWithCookieReturnType;
 
       if (type === "sign-up") {
+        const { registerPasskey } = await import(
+          "../core/authentication/passkeys.js"
+        );
         authToken = await registerPasskey({
           client,
           ecosystem,
@@ -299,6 +310,9 @@ export class InAppNativeConnector implements InAppConnector {
           },
         });
       } else {
+        const { loginWithPasskey } = await import(
+          "../core/authentication/passkeys.js"
+        );
         authToken = await loginWithPasskey({
           client,
           ecosystem,
@@ -325,13 +339,15 @@ export class InAppNativeConnector implements InAppConnector {
 
   // TODO (rn) expose in the interface
   async deleteActiveAccount() {
+    const { deleteActiveAccount } = await import("./auth/native-auth.js");
     return deleteActiveAccount({
       client: this.client,
       storage: this.storage,
     });
   }
 
-  logout(): Promise<LogoutReturnType> {
+  async logout(): Promise<LogoutReturnType> {
+    const { logoutUser } = await import("./helpers/auth/logout.js");
     return logoutUser({
       client: this.client,
       storage: this.storage,
@@ -339,6 +355,9 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   async linkProfile(args: AuthArgsType) {
+    const { linkAccount } = await import(
+      "../core/authentication/linkAccount.js"
+    );
     const { storedToken } = await this.authenticate(args);
     return await linkAccount({
       client: args.client,
@@ -349,6 +368,9 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   async unlinkProfile(profile: Profile) {
+    const { unlinkAccount } = await import(
+      "../core/authentication/linkAccount.js"
+    );
     return await unlinkAccount({
       client: this.client,
       ecosystem: this.ecosystem,
@@ -358,6 +380,9 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   async getProfiles() {
+    const { getLinkedProfilesInternal } = await import(
+      "../core/authentication/linkAccount.js"
+    );
     return getLinkedProfilesInternal({
       client: this.client,
       ecosystem: this.ecosystem,

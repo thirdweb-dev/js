@@ -22,7 +22,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { isAddress } from "thirdweb/utils";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import {
   Button,
   FormErrorMessage,
@@ -41,7 +41,9 @@ type AccountAbstractionSettingsPageProps = {
   project: Project;
   trackingCategory: string;
   teamId: string;
+  teamSlug: string;
   validTeamPlan: Team["billingPlan"];
+  client: ThirdwebClient;
 };
 
 const aaSettingsFormSchema = z.object({
@@ -401,6 +403,7 @@ export function AccountAbstractionSettingsPage(
             {form.watch("allowedChainIds") && (
               <Flex flexDir="column">
                 <MultiNetworkSelector
+                  client={props.client}
                   selectedChainIds={form.watch("allowedChainIds") || []}
                   onChange={(chainIds) =>
                     form.setValue("allowedChainIds", chainIds)
@@ -546,7 +549,12 @@ export function AccountAbstractionSettingsPage(
           <Flex flexDir="column" gap={4}>
             <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
-                <FormLabel pointerEvents="none">Server verifier</FormLabel>
+                <FormLabel
+                  pointerEvents="none"
+                  htmlFor="server-verifier-switch"
+                >
+                  Server verifier
+                </FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
                   and decide whether it should be sponsored or not. <br /> This
@@ -564,18 +572,20 @@ export function AccountAbstractionSettingsPage(
               </div>
 
               <GatedSwitch
-                upgradeRequired={props.validTeamPlan === "free"}
-                checked={
-                  form.watch("serverVerifier").enabled &&
-                  props.validTeamPlan !== "free"
-                }
-                onCheckedChange={(checked) => {
-                  form.setValue(
-                    "serverVerifier",
-                    !checked
-                      ? { enabled: false, url: null, headers: null }
-                      : { enabled: true, url: "", headers: [] },
-                  );
+                requiredPlan="starter"
+                currentPlan={props.validTeamPlan}
+                teamSlug={props.teamSlug}
+                switchProps={{
+                  id: "server-verifier-switch",
+                  checked: form.watch("serverVerifier").enabled,
+                  onCheckedChange: (checked) => {
+                    form.setValue(
+                      "serverVerifier",
+                      !checked
+                        ? { enabled: false, url: null, headers: null }
+                        : { enabled: true, url: "", headers: [] },
+                    );
+                  },
                 }}
               />
             </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -46,12 +45,12 @@ interface ExtendedPublishedContract extends PublishedContractWithVersion {
 
 interface PublishedContractProps {
   publishedContract: ExtendedPublishedContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 export const PublishedContract: React.FC<PublishedContractProps> = ({
   publishedContract,
-  twAccount,
+  isLoggedIn,
 }) => {
   const address = useActiveAccount()?.address;
   const client = useThirdwebClient();
@@ -148,7 +147,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                 events={contractEvents}
                 sources={sources.data}
                 abi={publishedContract?.abi}
-                twAccount={twAccount}
+                isLoggedIn={isLoggedIn}
               />
             </Card>
           )}
@@ -192,7 +191,10 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                         </Heading>
                         <Text size="body.md" lineHeight={1.2}>
                           <Link
-                            href={replaceIpfsUrl(publishedContract.audit)}
+                            href={replaceIpfsUrl(
+                              publishedContract.audit,
+                              client,
+                            )}
                             target="_blank"
                             className="text-link-foreground hover:text-foreground"
                           >

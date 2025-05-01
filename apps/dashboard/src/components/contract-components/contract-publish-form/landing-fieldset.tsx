@@ -28,6 +28,7 @@ import {
   Link,
   Text,
 } from "tw-components";
+import { useThirdwebClient } from "../../../@/constants/thirdweb.client";
 import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import { ExternalLinksFieldset } from "./external-links-fieldset";
 
@@ -40,6 +41,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   latestVersion,
   placeholderVersion,
 }) => {
+  const client = useThirdwebClient();
   const form = useFormContext<ExtendedMetadata>();
   const logoUrl = useImageFileOrUrl(form.watch("logo"));
 
@@ -103,7 +105,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                   alt=""
                   w="100%"
                   h="100%"
-                  src={replaceIpfsUrl(fileUrl)}
+                  src={replaceIpfsUrl(fileUrl, client)}
                   borderRadius="full"
                 />
               )}

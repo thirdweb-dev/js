@@ -3,25 +3,31 @@
 import { Img } from "@/components/blocks/Img";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
+import type { ThirdwebClient } from "thirdweb";
 import { cn } from "../../@/lib/utils";
 import { fallbackChainIcon } from "../../utils/chain-icons";
 
 type ImageProps = React.ComponentProps<"img">;
 
-type ChainIconProps = ImageProps & {
-  ipfsSrc?: string;
+type ChainIconProps = Omit<ImageProps, "src"> & {
+  client: ThirdwebClient;
+  src?: string;
 };
 
-export const ChainIconClient = ({ ipfsSrc, ...restProps }: ChainIconProps) => {
-  const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc) : fallbackChainIcon;
+export const ChainIconClient = ({
+  client,
+  src,
+  ...restProps
+}: ChainIconProps) => {
+  const resolvedSrc = src ? replaceIpfsUrl(src, client) : fallbackChainIcon;
 
   return (
     <Img
       {...restProps}
       // render different image element if src changes to avoid showing old image while loading new one
-      key={src}
+      key={resolvedSrc}
       className={cn("object-contain", restProps.className)}
-      src={src}
+      src={resolvedSrc}
       loading={restProps.loading || "lazy"}
       alt=""
       fallback={<img src={fallbackChainIcon} alt="" />}

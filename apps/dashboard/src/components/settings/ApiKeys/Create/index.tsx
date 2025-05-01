@@ -32,7 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { ProjectService } from "@thirdweb-dev/service-utils";
 import { SERVICES } from "@thirdweb-dev/service-utils";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -529,7 +529,7 @@ function CreatedProjectDetails(props: {
             className="min-w-28 gap-2"
           >
             View Project
-            <ExternalLinkIcon className="size-4" />
+            <ArrowRightIcon className="size-4" />
           </Button>
         )}
       </DialogFooter>

@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { TruncatedSessionInfo } from "../api/types";
 import { ChatSidebar } from "./ChatSidebar";
 import { MobileNav } from "./NebulaMobileNav";
@@ -10,7 +9,6 @@ export function ChatPageLayout(props: {
   sessions: TruncatedSessionInfo[];
   children: React.ReactNode;
   className?: string;
-  account: Account;
 }) {
   return (
     <div
@@ -24,15 +22,10 @@ export function ChatPageLayout(props: {
           sessions={props.sessions}
           authToken={props.authToken}
           type="desktop"
-          account={props.account}
         />
       </aside>
 
-      <MobileNav
-        sessions={props.sessions}
-        authToken={props.authToken}
-        account={props.account}
-      />
+      <MobileNav sessions={props.sessions} authToken={props.authToken} />
 
       {props.children}
     </div>

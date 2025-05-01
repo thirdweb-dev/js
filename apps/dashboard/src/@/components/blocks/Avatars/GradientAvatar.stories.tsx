@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../../stories/utils";
-import { getThirdwebClient } from "../../../constants/thirdweb.server";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../../stories/utils";
 import { Button } from "../../ui/button";
 import { GradientAvatar } from "./GradientAvatar";
 
@@ -17,8 +19,6 @@ export const Variants: Story = {
   args: {},
 };
 
-const client = getThirdwebClient();
-
 function Story() {
   return (
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
@@ -29,7 +29,7 @@ function Story() {
           id={undefined}
           src={undefined}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -38,7 +38,7 @@ function Story() {
           id={"foo"}
           src={undefined}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -47,7 +47,7 @@ function Story() {
           id={"foo"}
           src={""}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -56,7 +56,7 @@ function Story() {
           id={"bar"}
           src={""}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -65,7 +65,7 @@ function Story() {
           src="invalid-src"
           id={undefined}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -74,7 +74,7 @@ function Story() {
           src="https://picsum.photos/200/300"
           id={undefined}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -83,7 +83,7 @@ function Story() {
           src="ipfs://QmZbeJYEs7kCJHyQxjxU2SJUtjSAr4m87wzJFJUyWomKdj/Smily.svg"
           id={undefined}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -123,7 +123,7 @@ function ToggleTest() {
           src={data?.src}
           id={data?.id}
           className="size-20"
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
 
@@ -132,7 +132,7 @@ function ToggleTest() {
           className="size-20"
           src={data ? "invalid-src" : undefined}
           id={undefined}
-          client={client}
+          client={storybookThirdwebClient}
         />
       </BadgeContainer>
     </div>

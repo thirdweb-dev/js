@@ -1,23 +1,7 @@
 "use client";
-
 import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -25,70 +9,34 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { CircleXIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { useStripeRedirectEvent } from "../../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
+import { buildCancelPlanUrl } from "../../../../../app/(app)/(stripe)/utils/build-url";
 import { PRO_CONTACT_US_URL } from "../../../../../constants/pro";
 import { pollWithTimeout } from "../../../../../utils/pollWithTimeout";
-
-const cancelPlanFormSchema = z
-  .object({
-    comment: z.string().optional(),
-    feedback: z.enum([
-      "customer_service",
-      "low_quality",
-      "missing_features",
-      "other",
-      "switched_service",
-      "too_complex",
-      "too_expensive",
-      "unused",
-    ]),
-  })
-  // if feedback is other, comment is required
-  .refine(
-    (data) =>
-      !(
-        data.feedback === "other" &&
-        (!data.comment || data.comment.trim() === "")
-      ),
-    {
-      message: "Required",
-      path: ["comment"],
-    },
-  );
-
-type CancelPlanParams = z.infer<typeof cancelPlanFormSchema>;
-export type CancelPlan = (params: CancelPlanParams) => Promise<void>;
-
-const cancelReasons: Array<{
-  value: CancelPlanParams["feedback"];
-  label: string;
-}> = [
-  { value: "too_expensive", label: "Too expensive" },
-  { value: "too_complex", label: "Too complex to use" },
-  { value: "missing_features", label: "Missing features I need" },
-  { value: "low_quality", label: "Quality doesn't meet expectations" },
-  { value: "unused", label: "Not using it enough" },
-  { value: "switched_service", label: "Switched to another service" },
-  { value: "customer_service", label: "Unhappy with customer service" },
-  { value: "other", label: "Other reason" },
-];
+import { tryCatch } from "../../../../../utils/try-catch";
 
 export function CancelPlanButton(props: {
+  teamId: string;
   teamSlug: string;
-  cancelPlan: CancelPlan;
   currentPlan: Team["billingPlan"];
   billingStatus: Team["billingStatus"];
   getTeam: () => Promise<Team>;
 }) {
+  // shortcut the sheet in case the user is in the default state
+  if (props.billingStatus !== "invalidPayment" && props.currentPlan !== "pro") {
+    return (
+      <ImmediateCancelPlanButton
+        teamId={props.teamId}
+        getTeam={props.getTeam}
+      />
+    );
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -108,12 +56,8 @@ export function CancelPlanButton(props: {
           <UnpaidInvoicesWarning teamSlug={props.teamSlug} />
         ) : props.currentPlan === "pro" ? (
           <ProPlanCancelPlanSheetContent />
-        ) : (
-          <CancelPlanSheetContent
-            cancelPlan={props.cancelPlan}
-            getTeam={props.getTeam}
-          />
-        )}
+        ) : // this should never happen
+        null}
       </SheetContent>
     </Sheet>
   );
@@ -160,121 +104,57 @@ function ProPlanCancelPlanSheetContent() {
   );
 }
 
-function CancelPlanSheetContent(props: {
-  cancelPlan: CancelPlan;
+function ImmediateCancelPlanButton(props: {
+  teamId: string;
   getTeam: () => Promise<Team>;
 }) {
-  const [_isPending, startTransition] = useTransition();
-  const [isPollingTeam, setIsPollingTeam] = useState(false);
   const router = useDashboardRouter();
-  const isPending = _isPending || isPollingTeam;
+  const [isRoutePending, startTransition] = useTransition();
+  const [isPollingTeam, setIsPollingTeam] = useState(false);
 
-  const form = useForm<z.infer<typeof cancelPlanFormSchema>>({
-    resolver: zodResolver(cancelPlanFormSchema),
-    defaultValues: {
-      comment: "",
-      feedback: undefined,
-    },
-  });
-
-  const cancelPlan = useMutation({
-    mutationFn: props.cancelPlan,
-  });
-
-  function onSubmit(values: z.infer<typeof cancelPlanFormSchema>) {
-    const promise = cancelPlan.mutateAsync(values);
-    toast.promise(promise, {
-      success: "Plan cancelled successfully",
-      error: "Failed to cancel plan",
-    });
-    promise.then(async () => {
-      setIsPollingTeam(true);
-      // keep polling until the team plan is free, then refresh the page
-      await pollWithTimeout({
+  useStripeRedirectEvent(async () => {
+    setIsPollingTeam(true);
+    const verifyResult = await tryCatch(
+      pollWithTimeout({
         shouldStop: async () => {
           const team = await props.getTeam();
-          return team.billingPlan === "free";
+          const isCancelled =
+            team.billingPlan === "free" || team.planCancellationDate !== null;
+          return isCancelled;
         },
-        timeoutMs: 7000,
-      });
+        timeoutMs: 5000,
+      }),
+    );
 
-      setIsPollingTeam(false);
+    if (verifyResult.error) {
+      return;
+    }
 
-      startTransition(() => {
-        router.refresh();
-      });
+    setIsPollingTeam(false);
+    toast.success("Plan cancelled successfully");
+    startTransition(() => {
+      router.refresh();
     });
-  }
+  });
+
+  const showPlanSpinner = isPollingTeam || isRoutePending;
 
   return (
-    <div>
-      <div className="mb-1 flex items-center gap-2">
-        <h2 className="font-semibold text-2xl tracking-tight">Cancel Plan</h2>
-        {isPending && <Spinner className="size-5" />}
-      </div>
-      <p className="mb-4 text-muted-foreground text-sm">
-        Please let us know why you're cancelling your plan. Your feedback helps
-        us improve our service.
-      </p>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <FormField
-            control={form.control}
-            name="feedback"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Why are you cancelling?</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="bg-card">
-                      <SelectValue placeholder="Select a reason" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {cancelReasons.map((reason) => (
-                      <SelectItem key={reason.value} value={reason.value}>
-                        {reason.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="comment"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional comments</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell us more about your experience"
-                    className="bg-card"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={cancelPlan.isPending}
-          >
-            {cancelPlan.isPending ? <Spinner className="mr-2 h-4 w-4" /> : null}
-            Cancel plan
-          </Button>
-        </form>
-      </Form>
-    </div>
+    <Button
+      variant="outline"
+      size="sm"
+      className="gap-2 bg-background"
+      disabled={showPlanSpinner}
+      asChild
+    >
+      <Link href={buildCancelPlanUrl({ teamId: props.teamId })} target="_blank">
+        {showPlanSpinner ? (
+          <Spinner className="size-4 text-muted-foreground" />
+        ) : (
+          <CircleXIcon className="size-4 text-muted-foreground" />
+        )}
+        Cancel Plan
+      </Link>
+    </Button>
   );
 }

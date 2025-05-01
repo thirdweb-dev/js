@@ -27,16 +27,17 @@ import { ExternalLinkIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { getAddress, isAddress } from "thirdweb";
+import { type ThirdwebClient, getAddress, isAddress } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { z } from "zod";
-import { useAddContractToProject } from "../../../app/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
 
 type ImportModalProps = {
   isOpen: boolean;
   onClose: () => void;
   teamId: string;
   projectId: string;
+  client: ThirdwebClient;
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -60,7 +61,11 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           </DialogDescription>
         </DialogHeader>
 
-        <ImportForm teamId={props.teamId} projectId={props.projectId} />
+        <ImportForm
+          teamId={props.teamId}
+          projectId={props.projectId}
+          client={props.client}
+        />
       </DialogContent>
     </Dialog>
   );
@@ -85,6 +90,7 @@ const importFormSchema = z.object({
 function ImportForm(props: {
   teamId: string;
   projectId: string;
+  client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
   const activeChainId = useActiveWalletChain()?.id;
@@ -184,6 +190,7 @@ function ImportForm(props: {
         <div>
           <Label className="mb-3 inline-block">Network</Label>
           <SingleNetworkSelector
+            client={props.client}
             chainId={form.watch("chainId")}
             onChange={(v) => form.setValue("chainId", v)}
             side="top"

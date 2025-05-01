@@ -1,5 +1,5 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveEns } from "lib/ens";
+import type { ThirdwebClient } from "thirdweb";
 import {
   getAllPublishedContracts,
   getContractPublisher,
@@ -7,12 +7,16 @@ import {
 import { fetchDeployMetadata } from "./fetchDeployMetadata";
 
 // TODO: clean this up, jesus
-export async function fetchPublishedContracts(address?: string | null) {
+export async function fetchPublishedContracts(params: {
+  address?: string | null;
+  client: ThirdwebClient;
+}) {
+  const { address, client } = params;
   try {
     if (!address) {
       return [];
     }
-    const resolvedAddress = (await resolveEns(address)).address;
+    const resolvedAddress = (await resolveEns(address, client)).address;
 
     if (!resolvedAddress) {
       return [];
@@ -20,7 +24,7 @@ export async function fetchPublishedContracts(address?: string | null) {
 
     const tempResult = (
       (await getAllPublishedContracts({
-        contract: getContractPublisher(getThirdwebClient()),
+        contract: getContractPublisher(client),
         publisher: resolvedAddress,
       })) || []
     )
@@ -30,7 +34,7 @@ export async function fetchPublishedContracts(address?: string | null) {
     return await Promise.all(
       tempResult.map(async (c) => ({
         ...c,
-        metadata: await fetchDeployMetadata(c.publishMetadataUri),
+        metadata: await fetchDeployMetadata(c.publishMetadataUri, client),
       })),
     );
   } catch (e) {

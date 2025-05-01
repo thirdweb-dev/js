@@ -1,5 +1,5 @@
 import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
-import { fetchWithAuthToken } from "../../../../utils/fetchWithAuthToken";
+import { fetchWithAuthToken } from "utils/fetchWithAuthToken";
 import type { NebulaContext } from "./chat";
 import type {
   DeletedSessionInfo,
@@ -18,6 +18,7 @@ export async function createSession(params: {
     body.context = {
       chain_ids: params.context.chainIds || [],
       wallet_address: params.context.walletAddress,
+      networks: params.context.networks,
     };
   }
 
@@ -47,6 +48,7 @@ export async function updateSession(params: {
     body.context = {
       chain_ids: params.contextFilters.chainIds || [],
       wallet_address: params.contextFilters.walletAddress,
+      networks: params.contextFilters.networks,
     };
   }
 

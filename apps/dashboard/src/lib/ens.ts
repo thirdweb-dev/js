@@ -1,5 +1,4 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
-import { isAddress } from "thirdweb";
+import { type ThirdwebClient, isAddress } from "thirdweb";
 import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
 import { isValidENSName } from "thirdweb/utils";
 
@@ -10,12 +9,13 @@ interface ENSResolveResult {
 
 export async function resolveEns(
   ensNameOrAddress: string,
+  client: ThirdwebClient,
 ): Promise<ENSResolveResult> {
   if (isAddress(ensNameOrAddress)) {
     return {
       address: ensNameOrAddress,
       ensName: await resolveName({
-        client: getThirdwebClient(),
+        client,
         address: ensNameOrAddress,
       }),
     };
@@ -26,7 +26,7 @@ export async function resolveEns(
   }
 
   const address = await resolveAddress({
-    client: getThirdwebClient(),
+    client,
     name: ensNameOrAddress,
   });
 

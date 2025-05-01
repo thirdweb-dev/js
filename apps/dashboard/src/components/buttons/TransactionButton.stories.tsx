@@ -8,14 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { StarIcon } from "lucide-react";
 import { useState } from "react";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { accountStub } from "../../stories/stubs";
-import { BadgeContainer } from "../../stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "../../stories/utils";
 import { TransactionButton } from "./TransactionButton";
 
 const meta = {
@@ -80,7 +78,7 @@ function Story() {
         </div>
 
         <div>
-          <ConnectButton client={getThirdwebClient()} />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
 
         <Variant
@@ -202,7 +200,7 @@ function Variant(props: {
         transactionCount={props.transactionCount}
         txChainID={props.chainId}
         size={props.size}
-        twAccount={props.isLoggedIn ? accountStub() : undefined}
+        isLoggedIn={props.isLoggedIn}
       >
         {props.children || "Execute Tx"}
       </TransactionButton>

@@ -5,7 +5,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { isValidENSName } from "thirdweb/utils";
-import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/team/components/last-visited-page/consts";
+import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/(app)/team/components/last-visited-page/consts";
+import {
+  NEBULA_COOKIE_ACTIVE_ACCOUNT,
+  NEBULA_COOKIE_PREFIX_TOKEN,
+} from "./app/nebula-app/_utils/constants";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes
@@ -32,9 +36,14 @@ export async function middleware(request: NextRequest) {
   const subdomain = host?.split(".")[0];
   const paths = pathname.slice(1).split("/");
 
-  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
-  const authCookie = activeAccount
-    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
+  const nebulaActiveAccount = request.cookies.get(
+    NEBULA_COOKIE_ACTIVE_ACCOUNT,
+  )?.value;
+
+  const nebulaAuthCookie = nebulaActiveAccount
+    ? request.cookies.get(
+        NEBULA_COOKIE_PREFIX_TOKEN + getAddress(nebulaActiveAccount),
+      )
     : null;
 
   // nebula.thirdweb.com -> render page at app/nebula-app
@@ -44,7 +53,7 @@ export async function middleware(request: NextRequest) {
     (subdomain === "nebula" || subdomain.startsWith("nebula---"))
   ) {
     // preserve search params when redirecting to /login page
-    if (!authCookie && paths[0] !== "login") {
+    if (!nebulaAuthCookie && paths[0] !== "login") {
       return redirect(request, "/login", {
         searchParams: request.nextUrl.searchParams.toString(),
       });
@@ -68,6 +77,11 @@ export async function middleware(request: NextRequest) {
   }
 
   let cookiesToSet: Record<string, string> | undefined = undefined;
+
+  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const authCookie = activeAccount
+    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
+    : null;
 
   // utm collection
   // if user is already signed in - don't bother capturing utm params

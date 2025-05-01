@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../stories/utils";
+import {
+  BadgeContainer,
+  storybookThirdwebClient,
+} from "../../../stories/utils";
 import { MultiNetworkSelector } from "./NetworkSelectors";
 
 const meta = {
@@ -41,6 +44,7 @@ function Variant(props: {
     <BadgeContainer label={props.label}>
       <MultiNetworkSelector
         selectedChainIds={chainIds}
+        client={storybookThirdwebClient}
         onChange={setChainIds}
       />
     </BadgeContainer>

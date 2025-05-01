@@ -1,26 +1,26 @@
-import { getRawAccount } from "../../account/settings/getAccount";
-import { NebulaLoginPage } from "./NebulaLoginPage";
+import { getChains } from "../(app)/utils/getChainIds";
+import { getNebulaAuthToken } from "../_utils/authToken";
+import { NebulaLoggedOutStatePage } from "./NebulaLoginPage";
 
 export default async function NebulaLogin(props: {
   searchParams: Promise<{
     chain?: string | string[];
     q?: string | string[];
-    wallet?: string | string[];
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const account = await getRawAccount();
+  const authToken = await getNebulaAuthToken();
+  const chains = await getChains(searchParams.chain);
 
   return (
-    <NebulaLoginPage
-      account={account}
+    <NebulaLoggedOutStatePage
+      hasAuthToken={!!authToken}
       params={{
-        chain: searchParams.chain,
+        chains: chains.map((c) => ({
+          slug: c.slug,
+          id: c.chainId,
+        })),
         q: typeof searchParams.q === "string" ? searchParams.q : undefined,
-        wallet:
-          typeof searchParams.wallet === "string"
-            ? searchParams.wallet
-            : undefined,
       }}
     />
   );

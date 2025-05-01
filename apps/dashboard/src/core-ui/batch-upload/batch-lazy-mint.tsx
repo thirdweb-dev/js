@@ -1,7 +1,6 @@
 "use client";
 
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
   AlertIcon,
@@ -104,7 +103,7 @@ function useBatchLazyMintForm() {
 
 export const BatchLazyMint: ComponentWithChildren<
   BatchLazyMintProps & {
-    twAccount: Account | undefined;
+    isLoggedIn: boolean;
   }
 > = (props) => {
   const [step, setStep] = useState(0);
@@ -269,7 +268,7 @@ export const BatchLazyMint: ComponentWithChildren<
                   disabled={!nftMetadatas.length}
                   type="submit"
                   isPending={form.formState.isSubmitting}
-                  twAccount={props.twAccount}
+                  isLoggedIn={props.isLoggedIn}
                 >
                   {form.formState.isSubmitting
                     ? `Uploading ${nftMetadatas.length} NFTs`

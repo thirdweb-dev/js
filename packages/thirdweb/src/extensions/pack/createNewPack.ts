@@ -78,6 +78,8 @@ export type CreateNewPackParams = {
 };
 
 /**
+ * * @deprecated [Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.]
+ *
  * @extension PACK
  * @example
  * ```ts

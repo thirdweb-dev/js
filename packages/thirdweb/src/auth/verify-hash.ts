@@ -32,7 +32,7 @@ const ZKSYNC_VALIDATOR_ADDRESS: Address =
   "0xfB688330379976DA81eB64Fe4BF50d7401763B9C";
 
 /**
- * @description Verify that an address created the provided signature for a given hash using [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). This function is interoperable with all wallet types, including EOAs.
+ * Verify that an address created the provided signature for a given hash using [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). This function is interoperable with all wallet types, including EOAs.
  * This function should rarely be used directly, instead use @see {import("./verify-signature.js")} and @see {import("./verify-typed-data.js")}}
  *
  * @param {Hex} options.hash The hash that was signed

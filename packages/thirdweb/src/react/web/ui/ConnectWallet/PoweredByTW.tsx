@@ -6,13 +6,18 @@ import { ThirdwebTextIcon } from "./icons/ThirdwebTextIcon.js";
 /**
  * @internal
  */
-export function PoweredByThirdweb() {
+export function PoweredByThirdweb(props: {
+  link?: string;
+}) {
+  const link =
+    props.link ||
+    "https://playground.thirdweb.com/connect/sign-in/button?utm_source=cw_text";
   return (
     <Link
       color="secondaryText"
       hoverColor="primaryText"
       target="_blank"
-      href="https://thirdweb.com/connect?utm_source=cw_text"
+      href={link}
     >
       <Container
         flex="row"
@@ -23,7 +28,7 @@ export function PoweredByThirdweb() {
         }}
       >
         <Text
-          size="sm"
+          size="xs"
           weight={600}
           style={{
             color: "currentColor",
@@ -31,7 +36,7 @@ export function PoweredByThirdweb() {
         >
           Powered by
         </Text>
-        <ThirdwebTextIcon height={13} />
+        <ThirdwebTextIcon height={11} />
       </Container>
     </Link>
   );

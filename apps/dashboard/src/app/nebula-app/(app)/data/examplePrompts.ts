@@ -1,4 +1,4 @@
-type ExamplePrompt = {
+export type ExamplePrompt = {
   title: string;
   message: string;
   interceptedReply?: string;

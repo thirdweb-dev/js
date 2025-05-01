@@ -1,7 +1,7 @@
 import "server-only";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
-import { getAuthToken } from "../../app/api/lib/getAuthToken";
+import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
 export type Team = TeamResponse & { stripeCustomerId: string | null };
 

@@ -25,6 +25,7 @@ export type WalletSendCallsParameters<
     capabilities?: capabilities | undefined;
     version: string;
     chainId: chainId;
+    atomicRequired: boolean;
   },
 ];
 

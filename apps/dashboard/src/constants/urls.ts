@@ -20,3 +20,6 @@ export const THIRDWEB_SOCIAL_API_DOMAIN =
 
 export const THIRDWEB_BUNDLER_DOMAIN =
   process.env.NEXT_PUBLIC_BUNDLER_URL || "bundler.thirdweb-dev.com";
+
+export const THIRDWEB_INSIGHT_API_DOMAIN =
+  process.env.NEXT_PUBLIC_INSIGHT_API_URL || "insight.thirdweb-dev.com";

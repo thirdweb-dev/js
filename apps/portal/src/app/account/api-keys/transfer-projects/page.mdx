@@ -1,0 +1,36 @@
+import { Callout, Step, Steps, DocImage } from "@doc";
+import ProjOverview from "./assets/proj-overview.png";
+import ProjSettings from "./assets/proj-settings.png";
+import ProjTransfer from "./assets/proj-transfer.png";
+
+
+# Transfer projects to another team
+
+Learn how to transfer a thirdweb project from one team to another.
+
+<Callout variant="info" title="Owner Permissions Required">
+    To transfer projects, you must be an owner of both the source and destination teams.
+</Callout>
+
+<Steps>
+
+<Step title="Select Project">
+Select the project you want to transfer from the list of projects in your team.
+
+<DocImage src={ProjOverview} alt="Project overview"/>
+
+</Step>
+
+<Step title="Project Settings">
+Navigate to the project settings by clicking on the gear icon in the bottom left of the project dashboard.
+<DocImage src={ProjSettings} alt="Project settings"/>
+
+</Step>
+
+<Step title="Transfer Project">
+Navigate to the Transfer Project modal and select the destination team from the dropdown. Click on the Transfer Project button to initiate the transfer.
+
+<DocImage src={ProjTransfer} alt="Transfer project"/>
+</Step>
+
+</Steps>

@@ -93,6 +93,7 @@ import type { Route } from "./types/Route.js";
  * @param options.destinationChainId - Filter by a specific destination chain ID.
  * @param options.destinationTokenAddress - Filter by a specific destination token address.
  * @param options.transactionHash - Filter by a specific transaction hash.
+ * @param options.maxSteps - Limit the number of steps returned.
  * @param options.limit - Limit the number of routes returned.
  * @param options.offset - Offset the number of routes returned.
  *
@@ -109,6 +110,7 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
     originTokenAddress,
     destinationChainId,
     destinationTokenAddress,
+    maxSteps,
     limit,
     offset,
   } = options;
@@ -126,6 +128,9 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   }
   if (destinationTokenAddress) {
     url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
+  }
+  if (maxSteps) {
+    url.searchParams.set("maxSteps", maxSteps.toString());
   }
   if (limit) {
     url.searchParams.set("limit", limit.toString());
@@ -152,6 +157,7 @@ export declare namespace routes {
     destinationChainId?: number;
     destinationTokenAddress?: ox__Address.Address;
     transactionHash?: ox__Hex.Hex;
+    maxSteps?: number;
     limit?: number;
     offset?: number;
   };

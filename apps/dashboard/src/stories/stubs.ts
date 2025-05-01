@@ -79,6 +79,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       insight: {
         enabled: true,
         rateLimit: 1000,
+        webhooks: true,
       },
       embeddedWallets: {
         enabled: true,
@@ -89,7 +90,15 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         enabled: true,
         rateLimit: 1000,
       },
+      engineCloud: {
+        enabled: true,
+        rateLimit: 100,
+        mainnetEnabled: true,
+      },
     },
+    planCancellationDate: null,
+    unthreadCustomerId: null,
+    verifiedDomain: null,
   };
 
   return team;
@@ -316,18 +325,6 @@ export function randomLorem(length: number) {
     const randomIndex = Math.floor(Math.random() * loremWords.length);
     return loremWords[randomIndex];
   }).join(" ");
-}
-
-export function accountStub(overrides?: Partial<Account>): Account {
-  return {
-    email: "user@example.com",
-    name: "John Doe",
-    id: "foo",
-    isStaff: false,
-    advancedEnabled: false,
-    creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
-    ...overrides,
-  };
 }
 
 export function newAccountStub(overrides?: Partial<Account>): Account {

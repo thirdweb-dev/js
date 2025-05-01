@@ -59,6 +59,7 @@ export const validTeamResponse: TeamResponse = {
   canCreatePublicChains: false,
   enabledScopes: ["storage", "rpc", "bundler"],
   isOnboarded: true,
+  verifiedDomain: null,
   capabilities: {
     rpc: {
       enabled: true,
@@ -67,6 +68,7 @@ export const validTeamResponse: TeamResponse = {
     insight: {
       enabled: true,
       rateLimit: 1000,
+      webhooks: true,
     },
     storage: {
       enabled: true,
@@ -92,7 +94,14 @@ export const validTeamResponse: TeamResponse = {
       customAuth: true,
       customBranding: true,
     },
+    engineCloud: {
+      enabled: true,
+      mainnetEnabled: true,
+      rateLimit: 100,
+    },
   },
+  planCancellationDate: null,
+  unthreadCustomerId: null,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {

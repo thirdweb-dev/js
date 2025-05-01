@@ -1,4 +1,5 @@
 import { maxUint256 } from "ox/Solidity";
+import { getContractNFTs } from "../../../insight/get-nfts.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { min } from "../../../utils/bigint.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
@@ -23,6 +24,11 @@ export type GetNFTsParams = {
    * The number of NFTs to retrieve.
    */
   count?: number;
+  /**
+   * Whether to use the insight API to fetch the NFTs.
+   * @default true
+   */
+  useIndexer?: boolean;
 };
 
 /**
@@ -43,6 +49,50 @@ export type GetNFTsParams = {
 export async function getNFTs(
   options: BaseTransactionOptions<GetNFTsParams>,
 ): Promise<NFT[]> {
+  const { useIndexer = true } = options;
+  if (useIndexer) {
+    try {
+      return await getNFTsFromInsight(options);
+    } catch {
+      return await getNFTsFromRPC(options);
+    }
+  }
+  return await getNFTsFromRPC(options);
+}
+
+async function getNFTsFromInsight(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
+  const { contract, start, count = Number(DEFAULT_QUERY_ALL_COUNT) } = options;
+
+  const [result, supply] = await Promise.all([
+    getContractNFTs({
+      client: contract.client,
+      chains: [contract.chain],
+      contractAddress: contract.address,
+      queryOptions: {
+        limit: count,
+        page: start ? Math.floor(start / count) : undefined,
+      },
+    }),
+    nextTokenIdToMint(options).catch(() => maxUint256),
+  ]);
+
+  const currentOffset = start ?? 0;
+  const expectedResultLength = Math.min(
+    count,
+    Math.max(0, Number(supply) - currentOffset),
+  );
+  if (result.length < expectedResultLength) {
+    // fresh contracts might be delayed in indexing, so we fallback to RPC
+    return getNFTsFromRPC(options);
+  }
+  return result;
+}
+
+async function getNFTsFromRPC(
+  options: BaseTransactionOptions<GetNFTsParams>,
+): Promise<NFT[]> {
   const start = BigInt(options.start || 0);
   const count = BigInt(options.count || DEFAULT_QUERY_ALL_COUNT);
   // try to get the totalCount (non-standard) - if this fails then just use maxUint256
@@ -57,6 +107,7 @@ export async function getNFTs(
       getNFT({
         ...options,
         tokenId: i,
+        useIndexer: false,
       }),
     );
   }

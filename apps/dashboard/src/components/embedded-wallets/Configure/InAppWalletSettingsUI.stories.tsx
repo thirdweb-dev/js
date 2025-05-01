@@ -1,6 +1,6 @@
+import type { Team } from "@/api/team";
 import type { Meta, StoryObj } from "@storybook/react";
 import { projectStub } from "../../../stories/stubs";
-import { mobileViewport } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";
 
 const meta = {
@@ -16,44 +16,44 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const GrowthPlan: Story = {
-  args: {
-    canEditAdvancedFeatures: true,
-  },
-};
-
 export const FreePlan: Story = {
   args: {
-    canEditAdvancedFeatures: false,
+    currentPlan: "free",
   },
 };
 
-export const GrowthPlanMobile: Story = {
+export const GrowthPlan: Story = {
   args: {
-    canEditAdvancedFeatures: true,
-  },
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+    currentPlan: "growth",
   },
 };
 
-export const FreePlanMobile: Story = {
+export const AcceleratePlan: Story = {
   args: {
-    canEditAdvancedFeatures: false,
+    currentPlan: "accelerate",
   },
-  parameters: {
-    viewport: mobileViewport("iphone14"),
+};
+
+export const GrowthLegacyPlan: Story = {
+  args: {
+    currentPlan: "growth_legacy",
+  },
+};
+
+export const ProPlan: Story = {
+  args: {
+    currentPlan: "pro",
   },
 };
 
 function Variants(props: {
-  canEditAdvancedFeatures: boolean;
+  currentPlan: Team["billingPlan"];
 }) {
   return (
     <div className="mx-auto w-full max-w-[1140px] px-4 py-6">
       <div className="flex flex-col gap-10">
         <InAppWalletSettingsUI
-          canEditAdvancedFeatures={props.canEditAdvancedFeatures}
+          teamPlan={props.currentPlan}
           project={projectStub("foo", "bar")}
           teamId="bar"
           embeddedWalletService={{

@@ -13,6 +13,7 @@ export type Status =
         chainId: number;
         transactionHash: ox__Hex.Hex;
       }>;
+      purchaseData?: unknown;
     }
   | {
       status: "PENDING";

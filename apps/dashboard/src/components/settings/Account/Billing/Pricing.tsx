@@ -1,6 +1,5 @@
 "use client";
 
-import type { GetBillingCheckoutUrlAction } from "@/actions/billing";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -9,8 +8,9 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
-import { useStripeRedirectEvent } from "../../../../app/stripe-redirect/stripeRedirectChannel";
-import { getValidTeamPlan } from "../../../../app/team/components/TeamHeader/getValidTeamPlan";
+
+import { useStripeRedirectEvent } from "../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
+import { getValidTeamPlan } from "../../../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
 import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 
 // this is used to determine whether to show "Upgrade" or "Downgrade" label based on tier level
@@ -28,10 +28,13 @@ const planToTierRecord: Record<Team["billingPlan"], number> = {
 interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
-  getBillingCheckoutUrl: GetBillingCheckoutUrlAction;
+  getTeam: () => Promise<Team>;
 }
 
 type CtaLink =
+  | {
+      type: "renew";
+    }
   | {
       type: "checkout";
       label: string;
@@ -45,7 +48,7 @@ type CtaLink =
 export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
-  getBillingCheckoutUrl,
+  getTeam,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
   const [isPending, startTransition] = useTransition();
@@ -59,20 +62,20 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     }, 1000);
   });
 
-  const starterCta = getPlanCta(validTeamPlan, "starter");
-  const growthCta = getPlanCta(validTeamPlan, "growth");
-  const accelerateCta = getPlanCta(validTeamPlan, "accelerate");
-  const scaleCta = getPlanCta(validTeamPlan, "scale");
+  const isCurrentPlanScheduledToCancel = team.planCancellationDate !== null;
 
   const highlightGrowthPlan =
-    validTeamPlan === "free" ||
-    validTeamPlan === "starter" ||
-    validTeamPlan === "growth_legacy";
+    !isCurrentPlanScheduledToCancel &&
+    (validTeamPlan === "free" ||
+      validTeamPlan === "starter" ||
+      validTeamPlan === "growth_legacy");
 
-  const highlightStarterPlan = validTeamPlan === "starter_legacy";
-
-  const highlightAcceleratePlan = validTeamPlan === "growth";
-  const highlightScalePlan = validTeamPlan === "accelerate";
+  const highlightStarterPlan =
+    !isCurrentPlanScheduledToCancel && validTeamPlan === "starter_legacy";
+  const highlightAcceleratePlan =
+    !isCurrentPlanScheduledToCancel && validTeamPlan === "growth";
+  const highlightScalePlan =
+    !isCurrentPlanScheduledToCancel && validTeamPlan === "accelerate";
 
   return (
     <div>
@@ -93,23 +96,15 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           billingPlan="starter"
           billingStatus={team.billingStatus}
           current={validTeamPlan === "starter"}
-          cta={
-            starterCta?.type === "checkout"
-              ? {
-                  type: "checkout",
-                  title: starterCta.label,
-                }
-              : starterCta?.type === "link"
-                ? {
-                    type: "link",
-                    title: starterCta.label,
-                    href: starterCta.href,
-                  }
-                : undefined
-          }
+          cta={getPlanCta(
+            validTeamPlan,
+            "starter",
+            isCurrentPlanScheduledToCancel,
+          )}
           teamSlug={team.slug}
+          teamId={team.id}
           highlighted={highlightStarterPlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
+          getTeam={getTeam}
         />
 
         {/* Growth */}
@@ -120,23 +115,15 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
             validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
           }
           current={validTeamPlan === "growth"}
-          cta={
-            growthCta?.type === "checkout"
-              ? {
-                  type: "checkout",
-                  title: growthCta.label,
-                }
-              : growthCta?.type === "link"
-                ? {
-                    type: "link",
-                    title: growthCta.label,
-                    href: growthCta.href,
-                  }
-                : undefined
-          }
+          cta={getPlanCta(
+            validTeamPlan,
+            "growth",
+            isCurrentPlanScheduledToCancel,
+          )}
           highlighted={highlightGrowthPlan}
           teamSlug={team.slug}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
+          teamId={team.id}
+          getTeam={getTeam}
         />
 
         {/* Accelerate */}
@@ -144,23 +131,15 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           billingPlan="accelerate"
           billingStatus={team.billingStatus}
           teamSlug={team.slug}
+          teamId={team.id}
           current={validTeamPlan === "accelerate"}
-          cta={
-            accelerateCta?.type === "checkout"
-              ? {
-                  title: accelerateCta.label,
-                  type: "checkout",
-                }
-              : accelerateCta?.type === "link"
-                ? {
-                    title: accelerateCta.label,
-                    type: "link",
-                    href: accelerateCta.href,
-                  }
-                : undefined
-          }
+          cta={getPlanCta(
+            validTeamPlan,
+            "accelerate",
+            isCurrentPlanScheduledToCancel,
+          )}
           highlighted={highlightAcceleratePlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
+          getTeam={getTeam}
         />
 
         {/* Scale */}
@@ -168,23 +147,15 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           billingPlan="scale"
           billingStatus={team.billingStatus}
           teamSlug={team.slug}
+          teamId={team.id}
           current={validTeamPlan === "scale"}
-          cta={
-            scaleCta?.type === "checkout"
-              ? {
-                  title: scaleCta.label,
-                  type: "checkout",
-                }
-              : scaleCta?.type === "link"
-                ? {
-                    title: scaleCta.label,
-                    type: "link",
-                    href: scaleCta.href,
-                  }
-                : undefined
-          }
+          cta={getPlanCta(
+            validTeamPlan,
+            "scale",
+            isCurrentPlanScheduledToCancel,
+          )}
           highlighted={highlightScalePlan}
-          getBillingCheckoutUrl={getBillingCheckoutUrl}
+          getTeam={getTeam}
         />
       </div>
       <div className="h-8" />
@@ -234,6 +205,7 @@ function ProCard() {
 function getPlanCta(
   currentPlan: Team["billingPlan"],
   targetPlan: Team["billingPlan"],
+  isScheduledToCancel: boolean,
 ): CtaLink | undefined {
   // if any of the plan is pro - show contact us
   if (currentPlan === "pro" || targetPlan === "pro") {
@@ -244,8 +216,14 @@ function getPlanCta(
     };
   }
 
-  // if both same plan - return undefined
+  // if both same plan - return undefined...
   if (currentPlan === targetPlan) {
+    // ...UNLESS the plan is scheduled to cancel - show the renew button
+    if (isScheduledToCancel) {
+      return {
+        type: "renew",
+      };
+    }
     return undefined;
   }
 

@@ -7,6 +7,7 @@ import {
   detectOS,
   detectPlatform,
 } from "./detect-platform.js";
+import { getServiceKey } from "./domains.js";
 import { isJWT } from "./jwt/is-jwt.js";
 import { IS_DEV } from "./process.js";
 
@@ -55,6 +56,10 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
         !isBundlerUrl(urlString)
       ) {
         headers.set("authorization", `Bearer ${authToken}`);
+        // if we have a specific teamId set, add it to the request headers
+        if (client.teamId) {
+          headers.set("x-team-id", client.teamId);
+        }
       } else if (secretKey) {
         headers.set("x-secret-key", secretKey);
       } else if (clientId) {
@@ -70,6 +75,11 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       // this already internally caches
       for (const [key, value] of getPlatformHeaders()) {
         (headers as Headers).set(key, value);
+      }
+
+      const serviceKey = getServiceKey();
+      if (serviceKey) {
+        headers.set("x-service-api-key", serviceKey);
       }
     }
 

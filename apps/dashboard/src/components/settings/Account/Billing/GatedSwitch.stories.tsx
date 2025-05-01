@@ -1,5 +1,14 @@
-import { Separator } from "@/components/ui/separator";
+import type { Team } from "@/api/team";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 import { BadgeContainer } from "../../../../stories/utils";
 import { GatedSwitch } from "./GatedSwitch";
 
@@ -18,41 +27,52 @@ export const AllVariants: Story = {
 };
 
 function Variants() {
+  const [requiredPlan, setRequiredPlan] = useState<
+    "free" | "growth" | "accelerate" | "pro"
+  >("accelerate");
+
+  const plans: Team["billingPlan"][] = [
+    "free",
+    "starter_legacy",
+    "starter",
+    "growth_legacy",
+    "growth",
+    "accelerate",
+    "pro",
+  ];
+
   return (
-    <div className="min-h-dvh bg-background p-7 text-foreground">
-      <div className="mx-auto flex max-w-[500px] flex-col gap-8">
-        <BadgeContainer label="upgradeRequired">
-          <GatedSwitch upgradeRequired />
-        </BadgeContainer>
-
-        <BadgeContainer label="No upgradeRequired">
-          <GatedSwitch upgradeRequired={false} />
-        </BadgeContainer>
-
-        <BadgeContainer label="No upgradeRequired, disabled">
-          <GatedSwitch upgradeRequired={false} disabled />
-        </BadgeContainer>
-
-        <Separator />
-
-        <BadgeContainer label="upgradeRequired, Checked">
-          <GatedSwitch upgradeRequired checked />
-        </BadgeContainer>
-
-        <BadgeContainer label="upgradeRequired, unchecked">
-          <GatedSwitch upgradeRequired checked={false} />
-        </BadgeContainer>
-
-        <Separator />
-
-        <BadgeContainer label="No upgradeRequired, Checked">
-          <GatedSwitch upgradeRequired={false} checked />
-        </BadgeContainer>
-
-        <BadgeContainer label="No upgradeRequired, unchecked">
-          <GatedSwitch upgradeRequired={false} checked={false} />
-        </BadgeContainer>
+    <div className="container flex max-w-5xl flex-col gap-10 py-10">
+      <div className="flex items-center gap-2">
+        <Label>Required Plan</Label>
+        <Select
+          value={requiredPlan}
+          onValueChange={(value) =>
+            setRequiredPlan(value as typeof requiredPlan)
+          }
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select plan" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="free">Free</SelectItem>
+            <SelectItem value="growth">Growth</SelectItem>
+            <SelectItem value="accelerate">Accelerate</SelectItem>
+            <SelectItem value="pro">Pro</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
+
+      {plans.map((currentPlan) => (
+        <BadgeContainer key={currentPlan} label={`plan: ${currentPlan}`}>
+          <GatedSwitch
+            key={currentPlan}
+            currentPlan={currentPlan}
+            requiredPlan={requiredPlan}
+            teamSlug="foo"
+          />
+        </BadgeContainer>
+      ))}
     </div>
   );
 }

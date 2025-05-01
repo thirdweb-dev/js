@@ -1,22 +1,26 @@
-import { getValidAccount } from "../../../account/settings/getAccount";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../login/loginRedirect";
+import { loginRedirect } from "../../../(app)/login/loginRedirect";
+import {
+  getNebulaAuthToken,
+  getNebulaAuthTokenWalletAddress,
+} from "../../_utils/authToken";
 import { ChatPageContent } from "../components/ChatPageContent";
 
 export default async function Page() {
-  const authToken = await getAuthToken();
-  const account = await getValidAccount();
+  const [authToken, accountAddress] = await Promise.all([
+    getNebulaAuthToken(),
+    getNebulaAuthTokenWalletAddress(),
+  ]);
 
-  if (!authToken) {
+  if (!authToken || !accountAddress) {
     loginRedirect();
   }
 
   return (
     <ChatPageContent
+      accountAddress={accountAddress}
       authToken={authToken}
       session={undefined}
       type="new-chat"
-      account={account}
       initialParams={undefined}
     />
   );

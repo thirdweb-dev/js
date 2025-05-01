@@ -1,5 +1,293 @@
 # thirdweb
 
+## 5.96.5
+
+### Patch Changes
+
+- [#6891](https://github.com/thirdweb-dev/js/pull/6891) [`7684b76`](https://github.com/thirdweb-dev/js/commit/7684b768b02e49ff8f9b4a15391ee4eef60c7917) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Reword buy with card in PayEmbed
+
+- [#6869](https://github.com/thirdweb-dev/js/pull/6869) [`880650d`](https://github.com/thirdweb-dev/js/commit/880650d148786426b45b6bcd2a881b82008b8c49) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix module deployment with refs and zk
+
+- [#6870](https://github.com/thirdweb-dev/js/pull/6870) [`fd91ee8`](https://github.com/thirdweb-dev/js/commit/fd91ee8dfefeafd3d2282009bcf70eee98b9764e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle fixed size arrays in solidity inputs
+
+- [#6871](https://github.com/thirdweb-dev/js/pull/6871) [`0aadcd4`](https://github.com/thirdweb-dev/js/commit/0aadcd443455188694dcda35546e57848d6f2cf3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show injected wallet icon when available
+
+## 5.96.4
+
+### Patch Changes
+
+- [#6849](https://github.com/thirdweb-dev/js/pull/6849) [`e28eb73`](https://github.com/thirdweb-dev/js/commit/e28eb73894f2784b528a95a8cd34f1865362ac12) Thanks [@MananTank](https://github.com/MananTank)! - Signature Screen loading state improvements
+
+- [#6858](https://github.com/thirdweb-dev/js/pull/6858) [`adcbec6`](https://github.com/thirdweb-dev/js/commit/adcbec607f20275cfccac331c4af9a3055ee00bc) Thanks [@mmahdigh](https://github.com/mmahdigh)! - Add name and icon to inAppWallet metadata props to customize in-app wallets inside the connect modal
+
+## 5.96.3
+
+### Patch Changes
+
+- [#6846](https://github.com/thirdweb-dev/js/pull/6846) [`31ce837`](https://github.com/thirdweb-dev/js/commit/31ce837b54a56facf710e977ebc5c3cd1c3e6f5e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Only update isLoggedIn state on successfull logins
+
+## 5.96.2
+
+### Patch Changes
+
+- [#6834](https://github.com/thirdweb-dev/js/pull/6834) [`4c33936`](https://github.com/thirdweb-dev/js/commit/4c339363c0480b0ba3994355d28ac7a176930edc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always checksum Account.address
+
+## 5.96.1
+
+### Patch Changes
+
+- [#6832](https://github.com/thirdweb-dev/js/pull/6832) [`436750e`](https://github.com/thirdweb-dev/js/commit/436750ed15cda8d646fc60514a6a17fca953d445) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Lazy import native dependencies in React Native
+
+## 5.96.0
+
+### Minor Changes
+
+- [#6830](https://github.com/thirdweb-dev/js/pull/6830) [`e526f75`](https://github.com/thirdweb-dev/js/commit/e526f75f228401027c3acb3871eb2621cf89f41a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enhanced SDK Bridge functionality with the following key updates:
+
+  1. **Breaking Change:** Standardized parameter naming in bridge functions:
+
+     - Changed `buyAmountWei` to `amount` in Buy functions
+     - Changed `sellAmountWei` to `amount` in Sell functions
+
+     Example:
+
+     ```ts
+     // Before
+     const buyQuote = await buy.quote({
+       originChainId: 1,
+       originTokenAddress: NATIVE_TOKEN_ADDRESS,
+       destinationChainId: 10,
+       destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+       buyAmountWei: toWei("0.01"),
+       client: thirdwebClient,
+     });
+
+     // After
+     const buyQuote = await buy.quote({
+       originChainId: 1,
+       originTokenAddress: NATIVE_TOKEN_ADDRESS,
+       destinationChainId: 10,
+       destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+       amount: toWei("0.01"),
+       client: thirdwebClient,
+     });
+     ```
+
+  2. **Enhanced Quote Structure:** Added `steps` array to buy/sell quote responses with detailed token information:
+     ```ts
+     // Steps contains detailed information about each step in a cross-chain transaction
+     steps: [
+       {
+         originToken: {
+           chainId: 1,
+           address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+           symbol: "ETH",
+           name: "Ethereum",
+           decimals: 18,
+           priceUsd: 2000,
+           iconUri: "https://...",
+         },
+         destinationToken: {
+           chainId: 10,
+           address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+           symbol: "ETH",
+           name: "Ethereum",
+           decimals: 18,
+           priceUsd: 2000,
+           iconUri: "https://...",
+         },
+         originAmount: 1000000000000000000n,
+         destinationAmount: 9980000000000000000n,
+         estimatedExecutionTimeMs: 1000,
+         transactions: [
+           /* transactions for this step */
+         ],
+       },
+     ];
+     ```
+  3. **Added Purchase Data Support:** Added optional `purchaseData` parameter to Buy and Sell functions:
+     ```ts
+     // Example with purchaseData
+     const quote = await buy.prepare({
+       originChainId: 1,
+       originTokenAddress: NATIVE_TOKEN_ADDRESS,
+       destinationChainId: 10,
+       destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+       amount: toWei("0.01"),
+       sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+       receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+       purchaseData: {
+         foo: "bar",
+       },
+       client: thirdwebClient,
+     });
+     ```
+  4. **Enhanced Status Responses:** Status responses now include the `purchaseData` field that was provided during the initial transaction:
+     ```ts
+     // Status response includes purchaseData
+     {
+       status: "COMPLETED",
+       // ...other status fields
+       purchaseData: {
+         foo: "bar"
+       }
+     }
+     ```
+  5. **Updated API Interactions:** Changed from query parameters to JSON body for prepare functions to accommodate complex data.
+
+### Patch Changes
+
+- [#6823](https://github.com/thirdweb-dev/js/pull/6823) [`dc2e514`](https://github.com/thirdweb-dev/js/commit/dc2e514e564c8fc9dba41ae3be459fabf267be8f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Deprecate Pack
+
+- [#6822](https://github.com/thirdweb-dev/js/pull/6822) [`33666aa`](https://github.com/thirdweb-dev/js/commit/33666aa8c5adbe4f9f376c52dfebcd4091ce91db) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - More efficient multi event querying when using indexer
+
+- [#6819](https://github.com/thirdweb-dev/js/pull/6819) [`8b4b873`](https://github.com/thirdweb-dev/js/commit/8b4b8733172591853215072f1510396ef0e2ec96) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose setServiceKey
+
+- [#6824](https://github.com/thirdweb-dev/js/pull/6824) [`b2e56f8`](https://github.com/thirdweb-dev/js/commit/b2e56f89fe03e4d1c4c3cf80c784de9c35b1d4e5) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Custom factory addr for Chiliz mainnet
+
+## 5.95.3
+
+### Patch Changes
+
+- [#6782](https://github.com/thirdweb-dev/js/pull/6782) [`d7dc83f`](https://github.com/thirdweb-dev/js/commit/d7dc83f9e65616fe2f61bb2a680429b163cd0307) Thanks [@jnsdls](https://github.com/jnsdls)! - updated various dependencies
+
+- [#6778](https://github.com/thirdweb-dev/js/pull/6778) [`4ccf062`](https://github.com/thirdweb-dev/js/commit/4ccf06260bd4fccc180998153c1e9abacd6044cb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix loading state when loading source tokens in PayEmbed
+
+## 5.95.2
+
+### Patch Changes
+
+- [#6771](https://github.com/thirdweb-dev/js/pull/6771) [`9d72ddd`](https://github.com/thirdweb-dev/js/commit/9d72ddd6045e98822021027dc0e446f9505531f5) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing the team id explicitly via request headers
+
+## 5.95.1
+
+### Patch Changes
+
+- [#6765](https://github.com/thirdweb-dev/js/pull/6765) [`03e2385`](https://github.com/thirdweb-dev/js/commit/03e238515b59a0934f94c9a5d7b92c35d5dc0b5b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better fallbacks for live NFT data cache miss
+
+## 5.95.0
+
+### Minor Changes
+
+- [#6706](https://github.com/thirdweb-dev/js/pull/6706) [`185d2f3`](https://github.com/thirdweb-dev/js/commit/185d2f309c349e37ac84bd3a2ce5a1c9c7011083) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getOwnedTokens, getOwnedNFTs and getTransaction functions
+
+  You can now use Insight, our in-house indexer directly from the SDK with a simple API:
+
+  ## Get Owned ERC20 tokens
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const tokens = await Insight.getOwnedTokens({
+    client,
+    ownerAddress,
+    chains: [base, polygon, arbitrum],
+  });
+  ```
+
+  ## Get Owned NFTs (ERC721 and ERC1155)
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const nfts = await Insight.getOwnedNFTs({
+    client,
+    ownerAddress,
+    chains: [sepolia],
+  });
+  ```
+
+  ## Get Transactions for a given wallet address
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const transactions = await Insight.getTransactions({
+    client,
+    walletAddress,
+    chains: [sepolia],
+  });
+  ```
+
+  All functions come with extra query filters for more granular queries, refer to the documentation for more details.
+
+### Patch Changes
+
+- [#6760](https://github.com/thirdweb-dev/js/pull/6760) [`7ecfcb9`](https://github.com/thirdweb-dev/js/commit/7ecfcb95afaeca56fd8dbf8b157ac6a1eb2339b2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add thirdweb branding to PayEmbed
+
+- [#6753](https://github.com/thirdweb-dev/js/pull/6753) [`4cf15a2`](https://github.com/thirdweb-dev/js/commit/4cf15a2475fce1c5b55d19f7cf51ab080e80e33f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use insight for 1155 getNFTs, getOwnedNFTs and getNFT
+
+- [#6752](https://github.com/thirdweb-dev/js/pull/6752) [`23d3757`](https://github.com/thirdweb-dev/js/commit/23d375778b900468409bb2435f60f1aff33823c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Simplify RPC request handling
+
+- [#6741](https://github.com/thirdweb-dev/js/pull/6741) [`8d4d991`](https://github.com/thirdweb-dev/js/commit/8d4d991e5710cbed668a52522686cc2dce4e4790) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use insight for erc821/getNFT, erc721/getNFTs and erc721/getOwnedNFTs
+
+  Standard ERC721 getNFT, getNFTs and getOwnedNFTs now use insight, our in house indexer by default. If indexer is not availbale, will fallback to RPC.
+
+  You can also use the indexer directly using the Insight API:
+
+  for an entire collection
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getContractNFTs({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+  });
+  ```
+
+  or for a single NFT
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getNFT({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+    tokenId: 1n,
+  });
+  ```
+
+- [#6683](https://github.com/thirdweb-dev/js/pull/6683) [`a3e7300`](https://github.com/thirdweb-dev/js/commit/a3e73007230120f2e2d79b894cf1a3c81e062a21) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Get indexed events from `getContractEvents`
+
+  You can now automatically query indexed events on supported chains when calling getContractEvents
+
+  ```ts
+  import { getContractEvents } from "thirdweb";
+
+  const events = await getContractEvents({
+    contract: DOODLES_CONTRACT,
+    events: [transferEvent()],
+  });
+  ```
+
+  This method falls back to RPC eth_getLogs if the indexer is not available.
+
+  You can also use the dedicated indexer function via the Insight export
+
+  ```ts
+  import { Insight } from "thirdweb";
+
+  const events = await Insight.getContractEvents({
+    client,
+    chains: [sepolia],
+    contractAddress: "0x1234567890123456789012345678901234567890",
+    event: transferEvent(),
+    decodeLogs: true,
+  });
+  ```
+
+- [#6732](https://github.com/thirdweb-dev/js/pull/6732) [`a45c558`](https://github.com/thirdweb-dev/js/commit/a45c558e06a7104c0e54df9647343e9681f73e1d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve pay error messages
+
+- [#6758](https://github.com/thirdweb-dev/js/pull/6758) [`62ce05e`](https://github.com/thirdweb-dev/js/commit/62ce05ec35aa362df25eaf46824651c7f0792f99) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error message for getUser
+
+- [#6734](https://github.com/thirdweb-dev/js/pull/6734) [`2a7df33`](https://github.com/thirdweb-dev/js/commit/2a7df337f790051d7eaf9258428349e162b4ed01) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error messages for failed requests
+
+- Updated dependencies [[`185d2f3`](https://github.com/thirdweb-dev/js/commit/185d2f309c349e37ac84bd3a2ce5a1c9c7011083)]:
+  - @thirdweb-dev/insight@1.0.0
+
 ## 5.94.2
 
 ### Patch Changes

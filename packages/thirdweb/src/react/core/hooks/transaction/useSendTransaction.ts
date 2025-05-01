@@ -83,6 +83,7 @@ export type SendTransactionPayModalConfig =
               transactionHash: Hex;
             },
       ) => void;
+      showThirdwebBranding?: boolean;
     }
   | false;
 

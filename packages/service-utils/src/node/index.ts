@@ -151,7 +151,23 @@ export function extractAuthorizationData(
     }
   }
 
+  let incomingServiceApiKey: string | null = null;
+  let incomingServiceApiKeyHash: string | null = null;
+  if (getHeader(headers, "x-service-api-key")) {
+    incomingServiceApiKey = getHeader(headers, "x-service-api-key");
+    if (incomingServiceApiKey) {
+      incomingServiceApiKeyHash = hashSecretKey(incomingServiceApiKey);
+    }
+  }
+
+  let teamId: string | null = null;
+  if (getHeader(headers, "x-team-id")) {
+    teamId = getHeader(headers, "x-team-id");
+  }
+
   return {
+    incomingServiceApiKey,
+    incomingServiceApiKeyHash,
     jwt,
     hashedJWT: jwt ? hashSecretKey(jwt) : null,
     secretKeyHash,
@@ -162,7 +178,7 @@ export function extractAuthorizationData(
     origin,
     bundleId,
     targetAddress: authInput.targetAddress,
-    teamId: authInput.teamId,
+    teamId: authInput.teamId ?? teamId ?? undefined,
     useWalletAuth,
   };
 }

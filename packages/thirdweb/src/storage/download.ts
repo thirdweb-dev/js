@@ -11,7 +11,7 @@ export type DownloadOptions = Prettify<
 >;
 
 /**
- * @description Downloads a file from the specified IPFS, Arweave, or HTTP URI.
+ * Downloads a file from the specified IPFS, Arweave, or HTTP URI.
  *
  * `download` will parse the provided URI based on its scheme (ipfs://, ar://, https://) and convert it to a URL to fetch the file from thirdweb's storage service.
  *

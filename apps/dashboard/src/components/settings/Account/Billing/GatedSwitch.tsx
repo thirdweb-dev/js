@@ -1,47 +1,56 @@
-import { Badge } from "@/components/ui/badge";
+import type { Team } from "@/api/team";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { cn } from "@/lib/utils";
+import { TeamPlanBadge } from "../../../../app/(app)/components/TeamPlanBadge";
+import { planToTierRecordForGating } from "./planToTierRecord";
 
 type SwitchProps = React.ComponentProps<typeof Switch>;
 
-interface GatedSwitchProps extends SwitchProps {
+type GatedSwitchProps = {
   trackingLabel?: string;
-  upgradeRequired: boolean;
-}
+  currentPlan: Team["billingPlan"];
+  requiredPlan: Team["billingPlan"];
+  teamSlug: string;
+  switchProps?: SwitchProps;
+};
 
 export const GatedSwitch: React.FC<GatedSwitchProps> = (
-  allProps: GatedSwitchProps,
+  props: GatedSwitchProps,
 ) => {
-  const { upgradeRequired, trackingLabel, checked, ...props } = allProps;
+  const isUpgradeRequired =
+    planToTierRecordForGating[props.currentPlan] <
+    planToTierRecordForGating[props.requiredPlan];
 
   return (
     <ToolTipLabel
       hoverable
+      contentClassName="max-w-[300px]"
       label={
-        upgradeRequired ? (
-          <div className="w-[220px]">
-            To access this feature, you need to upgrade to the{" "}
+        isUpgradeRequired ? (
+          <span>
+            To access this feature, <br /> Upgrade to the{" "}
             <TrackedLinkTW
               target="_blank"
-              href="/team/~/~/settings/billing"
+              href={`/team/${props.teamSlug}/~/settings/billing`}
               category="advancedFeature"
-              label={trackingLabel}
-              className="text-link-foreground hover:text-foreground"
+              label={props.trackingLabel}
+              className="text-link-foreground capitalize hover:text-foreground"
             >
-              Growth plan
+              {props.requiredPlan} plan
             </TrackedLinkTW>
-            .
-          </div>
+          </span>
         ) : undefined
       }
     >
       <div className="inline-flex items-center gap-2">
-        {upgradeRequired && <Badge>Growth</Badge>}
+        {isUpgradeRequired && <TeamPlanBadge plan={props.requiredPlan} />}
         <Switch
-          checked={checked}
-          disabled={upgradeRequired || props.disabled}
-          {...props}
+          {...props.switchProps}
+          checked={props.switchProps?.checked && !isUpgradeRequired}
+          disabled={props.switchProps?.disabled || isUpgradeRequired}
+          className={cn("disabled:opacity-100", props.switchProps?.className)}
         />
       </div>
     </ToolTipLabel>

@@ -5,7 +5,6 @@ import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { InlineCode } from "@/components/ui/inline-code";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   ButtonGroup,
   Divider,
@@ -131,7 +130,7 @@ function formatContractCall(
 interface InteractiveAbiFunctionProps {
   abiFunction: AbiFunction;
   contract: ThirdwebContract;
-  twAccount: Account | undefined;
+  isLoggedIn: boolean;
 }
 
 function useAsyncRead(contract: ThirdwebContract, abiFunction: AbiFunction) {
@@ -482,7 +481,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 formattedResponseData.data.startsWith("ipfs://") && (
                   <Text size="label.sm">
                     <TrackedLink
-                      href={replaceIpfsUrl(formattedResponseData.data)}
+                      href={replaceIpfsUrl(
+                        formattedResponseData.data,
+                        contract.client,
+                      )}
                       isExternal
                       category="contract-explorer"
                       label="open-in-gateway"
@@ -546,7 +548,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 form={formId}
                 onClick={handleContractWrite}
                 txChainID={contract.chain.id}
-                twAccount={props.twAccount}
+                isLoggedIn={props.isLoggedIn}
               >
                 Execute
               </TransactionButton>

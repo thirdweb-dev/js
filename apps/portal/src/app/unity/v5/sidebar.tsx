@@ -85,8 +85,8 @@ export const sidebar: SideBar = {
           href: `${sdkSlug}/contracts`,
         },
         {
-          name: "Full Reference",
-          href: "https://thirdweb-dev.github.io/dotnet/index.html",
+          name: "Contract Extensions",
+          href: "/dotnet/contracts/extensions",
         },
       ],
     },

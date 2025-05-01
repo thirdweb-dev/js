@@ -1,4 +1,4 @@
-import { getRawAccount } from "../../app/account/settings/getAccount";
+import { getRawAccount } from "../../app/(app)/account/settings/getAccount";
 import { OpCreditsGrantedModalWrapper } from "./OpCreditsGrantedModalWrapper";
 
 export async function OpCreditsGrantedModalWrapperServer() {
