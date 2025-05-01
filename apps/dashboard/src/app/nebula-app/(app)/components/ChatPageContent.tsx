@@ -22,7 +22,7 @@ import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
-import { newChatPageUrlStore, newSessionsStore } from "../stores";
+import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
@@ -164,32 +164,13 @@ export function ChatPageContent(props: {
     props.initialParams?.q,
   ]);
 
-  const [sessionId, _setSessionId] = useState<string | undefined>(
+  const [sessionId, setSessionId] = useState<string | undefined>(
     props.session?.id,
   );
 
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
   >();
-
-  const setSessionId = useCallback(
-    (sessionId: string) => {
-      _setSessionId(sessionId);
-      // update page URL without reloading
-      // THIS DOES NOT WORK ANYMORE!! - NEXT JS IS MONKEY PATCHING THIS TOO
-      // Until we find a better solution, we are just not gonna update the URL
-      // window.history.replaceState({}, "", `/chat/${sessionId}`);
-
-      // if the current page is landing page, link to /chat
-      // if current page is new /chat page, link to landing page
-      if (props.type === "landing") {
-        newChatPageUrlStore.setValue("/chat");
-      } else {
-        newChatPageUrlStore.setValue("/");
-      }
-    },
-    [props.type],
-  );
 
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
@@ -202,7 +183,7 @@ export function ChatPageContent(props: {
     });
     setSessionId(session.id);
     return session;
-  }, [contextFilters, props.authToken, setSessionId]);
+  }, [contextFilters, props.authToken]);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
