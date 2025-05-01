@@ -1,6 +1,5 @@
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
@@ -15,16 +14,18 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import type { NebulaSwapData } from "../api/chat";
 import { submitFeedback } from "../api/feedback";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
 import { Reasoning } from "./Reasoning/Reasoning";
+import { ApproveTransactionCard, SwapTransactionCard } from "./Swap/SwapCards";
 
 export type NebulaTxData = {
   chainId: number;
   data: `0x${string}`;
   to: string;
-  value: string;
+  value?: string;
 };
 
 export type ChatMessage =
@@ -43,8 +44,14 @@ export type ChatMessage =
       type: "assistant";
     }
   | {
-      type: "send_transaction";
-      data: NebulaTxData | null;
+      type: "action";
+      subtype: "sign_transaction";
+      data: NebulaTxData;
+    }
+  | {
+      type: "action";
+      subtype: "sign_swap";
+      data: NebulaSwapData;
     };
 
 export function Chats(props: {
@@ -161,32 +168,12 @@ export function Chats(props: {
                       {/* Right Message */}
                       <div className="min-w-0 grow">
                         <ScrollShadow className="rounded-lg">
-                          {message.type === "assistant" ? (
-                            <StyledMarkdownRenderer
-                              text={message.text}
-                              isMessagePending={isMessagePending}
-                              type="assistant"
-                            />
-                          ) : message.type === "error" ? (
-                            <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
-                              {message.text}
-                            </div>
-                          ) : message.type === "send_transaction" ? (
-                            <ExecuteTransactionCardWithFallback
-                              txData={message.data}
-                              client={props.client}
-                              onTxSettled={(txHash) => {
-                                props.sendMessage(
-                                  getTransactionSettledPrompt(txHash),
-                                );
-                              }}
-                            />
-                          ) : message.type === "presence" ? (
-                            <Reasoning
-                              isPending={isMessagePending}
-                              texts={message.texts}
-                            />
-                          ) : null}
+                          <RenderMessage
+                            message={message}
+                            isMessagePending={isMessagePending}
+                            client={props.client}
+                            sendMessage={props.sendMessage}
+                          />
                         </ScrollShadow>
 
                         {message.type === "assistant" &&
@@ -215,34 +202,75 @@ export function Chats(props: {
   );
 }
 
+function RenderMessage(props: {
+  message: ChatMessage;
+  isMessagePending: boolean;
+  client: ThirdwebClient;
+  sendMessage: (message: string) => void;
+}) {
+  const { message, isMessagePending, client, sendMessage } = props;
+
+  switch (message.type) {
+    case "assistant":
+      return (
+        <StyledMarkdownRenderer
+          text={message.text}
+          isMessagePending={isMessagePending}
+          type="assistant"
+        />
+      );
+
+    case "presence":
+      return <Reasoning isPending={isMessagePending} texts={message.texts} />;
+
+    case "error":
+      return (
+        <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
+          {message.text}
+        </div>
+      );
+
+    case "action": {
+      if (message.subtype === "sign_transaction") {
+        return (
+          <ExecuteTransactionCard
+            txData={message.data}
+            client={client}
+            onTxSettled={(txHash) => {
+              sendMessage(getTransactionSettledPrompt(txHash));
+            }}
+          />
+        );
+      }
+
+      if (message.subtype === "sign_swap") {
+        if (message.data.action === "approval") {
+          return (
+            <ApproveTransactionCard swapData={message.data} client={client} />
+          );
+        }
+
+        return (
+          <SwapTransactionCard
+            swapData={message.data}
+            client={client}
+            onTxSettled={() => {
+              // no op
+            }}
+          />
+        );
+      }
+    }
+  }
+
+  return null;
+}
+
 function getTransactionSettledPrompt(txHash: string) {
   return `\
 I've executed the following transaction successfully with hash: ${txHash}.
 
 If our conversation calls for it, continue on to the next transaction or suggest next steps`;
-}
-
-function ExecuteTransactionCardWithFallback(props: {
-  txData: NebulaTxData | null;
-  client: ThirdwebClient;
-  onTxSettled: (txHash: string) => void;
-}) {
-  if (!props.txData) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircleIcon className="size-5" />
-        <AlertTitle>Failed to parse transaction data</AlertTitle>
-      </Alert>
-    );
-  }
-
-  return (
-    <ExecuteTransactionCard
-      txData={props.txData}
-      client={props.client}
-      onTxSettled={props.onTxSettled}
-    />
-  );
 }
 
 function MessageActions(props: {

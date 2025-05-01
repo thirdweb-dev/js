@@ -57,29 +57,14 @@ export const SendTransaction: Story = {
         request_id: undefined,
       },
       {
-        type: "send_transaction",
+        type: "action",
+        subtype: "sign_transaction",
         data: {
           chainId: 1,
           to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
           data: "0x",
           value: "0x16345785d8a0000",
         },
-      },
-    ],
-  },
-};
-
-export const InvalidTxData: Story = {
-  args: {
-    messages: [
-      {
-        text: randomLorem(40),
-        type: "assistant",
-        request_id: undefined,
-      },
-      {
-        type: "send_transaction",
-        data: null,
       },
     ],
   },

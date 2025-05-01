@@ -60,19 +60,21 @@ export function ChatPageContent(props: {
 
             if (content.type === "sign_transaction") {
               const txData = JSON.parse(content.data);
-              if (
-                typeof txData === "object" &&
-                txData !== null &&
-                txData.chainId
-              ) {
-                _messages.push({
-                  type: "send_transaction",
-                  data: txData,
-                });
-              }
+              _messages.push({
+                type: "action",
+                subtype: "sign_transaction",
+                data: txData,
+              });
+            } else if (content.type === "sign_swap") {
+              const swapData = JSON.parse(content.data);
+              _messages.push({
+                type: "action",
+                subtype: "sign_swap",
+                data: swapData,
+              });
             }
-          } catch {
-            // ignore
+          } catch (e) {
+            console.error("error processing message", e, { message });
           }
         } else {
           _messages.push({
@@ -548,13 +550,25 @@ export async function handleNebulaPrompt(params: {
       }
 
       if (res.event === "action") {
+        hasReceivedResponse = true;
         if (res.type === "sign_transaction") {
-          hasReceivedResponse = true;
           setMessages((prevMessages) => {
             return [
               ...prevMessages,
               {
-                type: "send_transaction",
+                type: "action",
+                subtype: res.type,
+                data: res.data,
+              },
+            ];
+          });
+        } else if (res.type === "sign_swap") {
+          setMessages((prevMessages) => {
+            return [
+              ...prevMessages,
+              {
+                type: "action",
+                subtype: res.type,
                 data: res.data,
               },
             ];

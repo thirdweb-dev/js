@@ -9,6 +9,38 @@ export type NebulaContext = {
   networks: "mainnet" | "testnet" | "all" | null;
 };
 
+export type NebulaSwapData = {
+  action: string;
+  transaction: {
+    chainId: number;
+    to: `0x${string}`;
+    data: `0x${string}`;
+  };
+  to: {
+    address: `0x${string}`;
+    amount: string;
+    chain_id: number;
+    decimals: number;
+    symbol: string;
+  };
+  from: {
+    address: `0x${string}`;
+    amount: string;
+    chain_id: number;
+    decimals: number;
+    symbol: string;
+  };
+  intent: {
+    amount: string;
+    destinationChainId: number;
+    destinationTokenAddress: `0x${string}`;
+    originChainId: number;
+    originTokenAddress: `0x${string}`;
+    receiver: `0x${string}`;
+    sender: `0x${string}`;
+  };
+};
+
 export async function promptNebula(params: {
   message: string;
   sessionId: string;
@@ -71,26 +103,29 @@ export async function promptNebula(params: {
         const data = JSON.parse(event.data);
 
         if (data.type === "sign_transaction") {
-          let txData = null;
-
           try {
-            const parsedTxData = JSON.parse(data.data);
-            if (
-              parsedTxData !== null &&
-              typeof parsedTxData === "object" &&
-              parsedTxData.chainId
-            ) {
-              txData = parsedTxData;
-            }
+            const parsedTxData = JSON.parse(data.data) as NebulaTxData;
+            params.handleStream({
+              event: "action",
+              type: "sign_transaction",
+              data: parsedTxData,
+            });
           } catch (e) {
-            console.error("failed to parse action data", e);
+            console.error("failed to parse action data", e, { event });
           }
+        }
 
-          params.handleStream({
-            event: "action",
-            type: "sign_transaction",
-            data: txData,
-          });
+        if (data.type === "sign_swap") {
+          try {
+            const swapData = JSON.parse(data.data) as NebulaSwapData;
+            params.handleStream({
+              event: "action",
+              type: "sign_swap",
+              data: swapData,
+            });
+          } catch (e) {
+            console.error("failed to parse action data", e, { event });
+          }
         }
 
         break;
@@ -160,8 +195,13 @@ type ChatStreamedResponse =
     }
   | {
       event: "action";
-      type: "sign_transaction" & (string & {});
+      type: "sign_transaction";
       data: NebulaTxData;
+    }
+  | {
+      event: "action";
+      type: "sign_swap";
+      data: NebulaSwapData;
     }
   | {
       event: "context";
@@ -187,7 +227,7 @@ type ChatStreamedEvent =
     }
   | {
       event: "action";
-      type: "sign_transaction" & (string & {});
+      type: "sign_transaction" | "sign_swap";
       data: string;
     }
   | {
