@@ -7,6 +7,7 @@ import {
   getPaySupportedSources,
 } from "../../../../../../../pay/utils/definitions.js";
 import { getClientFetch } from "../../../../../../../utils/fetch.js";
+import { stringify } from "../../../../../../../utils/json.js";
 import { withCache } from "../../../../../../../utils/promise/withCache.js";
 
 type Response = {
@@ -44,7 +45,16 @@ export async function fetchBuySupportedDestinations(
       const res = await fetchWithHeaders(
         `${getPaySupportedDestinations()}${isTestMode ? "?isTestMode=true" : ""}`,
       );
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(`Failed to fetch supported destinations: ${error}`);
+      }
       const data = (await res.json()) as Response;
+      if (!data.result) {
+        throw new Error(
+          `Failed to parse supported destinations: ${data ? stringify(data) : undefined}`,
+        );
+      }
       return data.result.map((item) => ({
         chain: defineChain({
           id: item.chainId,
