@@ -67,14 +67,14 @@
     },
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
-      "import": "./dist/esm/exports/react.js",
       "react-native": "./dist/esm/exports/react.native.js",
+      "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
-      "types": "./dist/types/exports/react-native.d.ts",
-      "import": "./dist/esm/exports/react-native.js",
-      "default": "./dist/cjs/exports/react-native.js"
+      "types": "./dist/types/exports/react.native.d.ts",
+      "import": "./dist/esm/exports/react.native.js",
+      "default": "./dist/cjs/exports/react.native.js"
     },
     "./rpc": {
       "types": "./dist/types/exports/rpc.d.ts",
@@ -98,14 +98,14 @@
     },
     "./wallets": {
       "types": "./dist/types/exports/wallets.d.ts",
-      "import": "./dist/esm/exports/wallets.js",
       "react-native": "./dist/esm/exports/wallets.native.js",
+      "import": "./dist/esm/exports/wallets.js",
       "default": "./dist/cjs/exports/wallets.js"
     },
     "./wallets/in-app": {
       "types": "./dist/types/exports/wallets/in-app.d.ts",
-      "import": "./dist/esm/exports/wallets/in-app.js",
       "react-native": "./dist/esm/exports/wallets/in-app.native.js",
+      "import": "./dist/esm/exports/wallets/in-app.js",
       "default": "./dist/cjs/exports/wallets/in-app.js"
     },
     "./wallets/*": {
@@ -142,66 +142,26 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ],
-      "bridge": [
-        "./dist/types/exports/bridge.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"],
+      "bridge": ["./dist/types/exports/bridge.d.ts"]
     }
   },
   "browser": {
