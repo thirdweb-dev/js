@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.96.7
+
+### Patch Changes
+
+- [#6914](https://github.com/thirdweb-dev/js/pull/6914) [`e23f53b`](https://github.com/thirdweb-dev/js/commit/e23f53bd786b871fd0ba0c9154da7280cc4a8817) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native exports
+
 ## 5.96.6
 
 ### Patch Changes
