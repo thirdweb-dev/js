@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.96.6",
+  "version": "5.96.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -142,26 +142,66 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
-      "auth": ["./dist/types/exports/auth.d.ts"],
-      "chains": ["./dist/types/exports/chains.d.ts"],
-      "contract": ["./dist/types/exports/contract.d.ts"],
-      "deploys": ["./dist/types/exports/deploys.d.ts"],
-      "event": ["./dist/types/exports/event.d.ts"],
-      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
-      "pay": ["./dist/types/exports/pay.d.ts"],
-      "react": ["./dist/types/exports/react.d.ts"],
-      "react-native": ["./dist/types/exports/react-native.d.ts"],
-      "rpc": ["./dist/types/exports/rpc.d.ts"],
-      "storage": ["./dist/types/exports/storage.d.ts"],
-      "transaction": ["./dist/types/exports/transaction.d.ts"],
-      "utils": ["./dist/types/exports/utils.d.ts"],
-      "wallets": ["./dist/types/exports/wallets.d.ts"],
-      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modules": ["./dist/types/exports/modules.d.ts"],
-      "social": ["./dist/types/exports/social.d.ts"],
-      "ai": ["./dist/types/exports/ai.d.ts"],
-      "bridge": ["./dist/types/exports/bridge.d.ts"]
+      "adapters/*": [
+        "./dist/types/exports/adapters/*.d.ts"
+      ],
+      "auth": [
+        "./dist/types/exports/auth.d.ts"
+      ],
+      "chains": [
+        "./dist/types/exports/chains.d.ts"
+      ],
+      "contract": [
+        "./dist/types/exports/contract.d.ts"
+      ],
+      "deploys": [
+        "./dist/types/exports/deploys.d.ts"
+      ],
+      "event": [
+        "./dist/types/exports/event.d.ts"
+      ],
+      "extensions/*": [
+        "./dist/types/exports/extensions/*.d.ts"
+      ],
+      "pay": [
+        "./dist/types/exports/pay.d.ts"
+      ],
+      "react": [
+        "./dist/types/exports/react.d.ts"
+      ],
+      "react-native": [
+        "./dist/types/exports/react-native.d.ts"
+      ],
+      "rpc": [
+        "./dist/types/exports/rpc.d.ts"
+      ],
+      "storage": [
+        "./dist/types/exports/storage.d.ts"
+      ],
+      "transaction": [
+        "./dist/types/exports/transaction.d.ts"
+      ],
+      "utils": [
+        "./dist/types/exports/utils.d.ts"
+      ],
+      "wallets": [
+        "./dist/types/exports/wallets.d.ts"
+      ],
+      "wallets/*": [
+        "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "modules": [
+        "./dist/types/exports/modules.d.ts"
+      ],
+      "social": [
+        "./dist/types/exports/social.d.ts"
+      ],
+      "ai": [
+        "./dist/types/exports/ai.d.ts"
+      ],
+      "bridge": [
+        "./dist/types/exports/bridge.d.ts"
+      ]
     }
   },
   "browser": {
