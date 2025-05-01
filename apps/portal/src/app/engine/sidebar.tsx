@@ -1,4 +1,19 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
+import {
+  BookMarked,
+  Braces,
+  Cloud,
+  Code,
+  ExternalLink,
+  Key,
+  ListCheck,
+  MessageCircleQuestion,
+  Rocket,
+  Server,
+  ShieldQuestion,
+  Wallet,
+  Wrench,
+} from "lucide-react";
 
 const engineSlug = "/engine";
 
@@ -8,28 +23,29 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/engine",
+      icon: <Cloud />,
     },
     {
       name: "Playground",
       href: "https://playground.thirdweb.com/engine/airdrop",
+      icon: <ExternalLink />,
     },
     {
       name: "Get Started",
       href: `${engineSlug}/get-started`,
+      icon: <Rocket />,
     },
     {
-      name: "Production Checklist",
-      href: `${engineSlug}/production-checklist`,
+      name: "Configure Wallets",
+      href: `${engineSlug}/configure-wallets`,
+      icon: <Wallet />,
     },
     {
-      name: "Self-Host",
-      href: `${engineSlug}/self-host`,
-    },
-    {
-      name: "Features",
+      name: "Key Concepts",
+      icon: <Key />,
       links: [
         {
-          name: "Backend Wallets",
+          name: "Server Wallets",
           href: `${engineSlug}/features/backend-wallets`,
         },
         {
@@ -91,7 +107,8 @@ export const sidebar: SideBar = {
       ],
     },
     {
-      name: "Guides",
+      name: "Tutorials",
+      icon: <BookMarked />,
       links: [
         { name: "Airdrop NFTs", href: `${engineSlug}/guides/airdrop-nfts` },
         { name: "NFT Checkout", href: `${engineSlug}/guides/nft-checkout` },
@@ -100,22 +117,37 @@ export const sidebar: SideBar = {
     {
       name: "API Reference",
       href: "https://thirdweb-engine.apidocumentation.com/",
+      icon: <Braces />,
     },
     {
       name: "Typescript SDK",
       href: `${engineSlug}/references/typescript`,
+      icon: <Code />,
+    },
+    {
+      name: "Prod Checklist",
+      href: `${engineSlug}/production-checklist`,
+      icon: <ListCheck />,
+    },
+    {
+      name: "Self-Host",
+      href: `${engineSlug}/self-host`,
+      icon: <Server />,
     },
     {
       name: "Security",
       href: `${engineSlug}/security`,
+      icon: <ShieldQuestion />,
+    },
+    {
+      name: "Troubleshoot",
+      href: `${engineSlug}/troubleshooting`,
+      icon: <Wrench />,
     },
     {
       name: "FAQ",
       href: `${engineSlug}/faq`,
-    },
-    {
-      name: "Troubleshooting",
-      href: `${engineSlug}/troubleshooting`,
+      icon: <MessageCircleQuestion />,
     },
   ],
 };

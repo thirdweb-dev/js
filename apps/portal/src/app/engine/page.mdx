@@ -1,6 +1,9 @@
 import OverviewImage from "./assets/engine-overview.png";
-import { DocImage, OpenSourceCard } from "@doc";
+import { DocImage, FeatureCard, OpenSourceCard, Callout } from "@doc";
 import { createMetadata } from "@/components/Document";
+import { Activity, CircleCheck, RotateCcw, Ban, File, MessageCircle, Wallet, Blocks, ArrowLeftRight, SlidersHorizontal} from "lucide-react";
+import SupportedChains from "../_images/supported-chains.png";
+
 
 export const metadata = createMetadata({
 	title: "thirdweb Engine",
@@ -9,84 +12,85 @@ export const metadata = createMetadata({
 
 # Engine
 
-Engine is an open-source, backend server that reads, writes, and deploys contracts at production scale.
-
-## Why use Engine?
-
-Engine enables your app to:
-
-- Send multiple blockchain transactions at once.
-- Resubmit stuck transactions, handling nonce values, gas settings, and RPC errors.
-- Avoid duplicate transactions.
-- Manage multiple backend wallets and their funds.
-- Control access from your backends and team members.
-- Sponsor user gas fees.
-- Deploy and interact with smart accounts.
-- Subscribe to contract events and transactions.
-
-🚀 [Get Engine hosted by thirdweb](https://thirdweb.com/team/~/~/engine/create) or [self-host for free](/engine/self-host).
-
-### Tiers
-
-Engine is available in two tiers: Cloud and Dedicated. 
-- **Cloud**: thirdweb-hosted Engine with autoscaling and high availability.
-- **Dedicated**: Self-hosted Engine with full control over your infrastructure.
-
-
-<DocImage
-	src={OverviewImage}
-	alt="Engine overview"
-	className="max-w-[500px] mx-auto"
-/>
+Engine provides a way to read and write to the blockchain at scale through simple API endpoints.
 
 <OpenSourceCard title="Engine" href="https://github.com/thirdweb-dev/engine" />
 
-## Standard Engine
+## Features
 
-Supports 500 write transactions per second. Great for minting APIs, airdrops, and managing user wallets.
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
+>
+	<FeatureCard
+		title="Concurrent Transactions"
+		description="Send multiple transactions at once with automatic nonce management"
+		iconUrl={<ArrowLeftRight />}
+	/>
 
-#### Features
+    <FeatureCard
+    	title="Avoid Transaction Failures"
+    	description="Resubmits stuck transactions, handling nonce values, gas settings, and RPC errors."
+		iconUrl={<RotateCcw/>}
+    />
 
-- <strong>High transaction throughput</strong> - Transactions batched on the same
-  block with nonces managed automatically.
-- <strong>Secure backend wallets</strong> - Your backend wallets stored locally,
-  on AWS KMS, or on Google KMS.
-- <strong>Any contract on any EVM chain</strong> - Supports contract calls on all <a href="https://thirdweb.com/chainlist">
-  	1700+ EVM blockchains
-  </a> and private subnets.
-- <strong>Contract deployments</strong> - Deploy smart accounts, tokens, NFTs, marketplaces,
-  and more.
-- <strong>Account abstraction</strong> - Use smart accounts and session keys to transact
-  on behalf of your users.
-- <strong>Built-in relayer</strong> - Sponsor gas for your users so reduce user friction.
-- <strong>Event webhooks</strong> - Get notified of wallet and contract events to
-  automate other actions like payments or emails.
-- <strong>Contract subscriptions</strong> - Store event logs and transaction receipts
-  to be queried later.
-- <strong>Transaction observability</strong> - Debug transaction failures with detailed
-  timelines, onchain errors, and gas details.
-- <strong>Idempotency</strong> - Prevent costly, duplicate transactions.
-- <strong>Production-ready web3 infrastructure</strong> - Includes RPC, IPFS, and
-  Account Abstraction out of the box.
+    <FeatureCard
+    	title="Wallet Management"
+    	description="Manage funds and send transactions without worrying about topping up gas fees."
+		iconUrl={<Wallet/>}
+    />
 
-## Premium Engine
+	<FeatureCard
+    	title="Granular Access Control"
+    	description="Control access to server wallets via access tokens with specified permission scopes"
+		  iconUrl={<SlidersHorizontal/>}
+    />
 
-Engine Premium provides added scaling and resilience. It include server autoscaling, server failover, database failover, and 30-day database backups.
+	<FeatureCard
+    	title="Abstract Blockchain Complexity"
+    	description="Sponsor gas fees using built-in relayers and session keys to transact on behalf of users."
+		iconUrl={<CircleCheck/>}
+    />
 
-#### Features
+    <FeatureCard
+    	title="Offchain Integrations"
+    	description="Integrate with existing services to do onchain actions triggered from offchain events."
+		iconUrl={<Blocks/>}
+    />
 
-- **_Everything in Standard Engine_**
-- **Autoscaling** - Scale to millions of users with a fleet of Engine instances that scale up along with your traffic.
-- **Production-grade Server** - High availability and redundancy.
-- **Production-grade Database** - High availability, Multi-AZ.
-- **Database backups** - Recoverability and peace of mind for your stored data (30-day database backups).
+        <FeatureCard
+    	title="Programmatic Deployments"
+    	description="Deploy smart accounts, tokens, NFTs, marketplaces, and more."
+		iconUrl={<Blocks/>}
+    />
 
-## Pricing
+    <FeatureCard
+    	title="Transaction Observability"
+    	description="Debug transaction failures with detailed timelines, onchain errors, and gas details."
+      iconUrl={<Activity/>}
+    />
+</div>
 
-Cloud-hosting Engine with thirdweb starts at $99 per month. Learn more about [Engine pricing](https://thirdweb.com/team/~/~/engine/create).
+## Engine Cloud vs. Dedicated
 
-Self-hosting Engine is always free.
+<Callout variant="info" title="Engine Cloud (Beta)">
+  Engine Cloud is currently in beta as we are adding more features, endpoints, and improving performance. 
+  
+  Try it out for free by creating a project on dashboard.
+</Callout>
 
-## Get in touch
+| Feature            | Cloud ☁️                                   | Dedicated (V3), Coming Soon               |
+|--------------------|-------------------------------------------|------------------------------------------|
+| Wallets            | Server Wallets                           | Server Wallets, AWS, GCP, Circle         |
+| Database Backups   | ❌                                        | 30 Day Backups                              |
+| Infrastructure     | Shared                                   | Isolated                                 |
+| Rate Limits        | [Limited by RPC Plan](https://thirdweb.com/pricing) | Unlimited                                |
+| Pricing            | [See pricing page](https://thirdweb.com/pricing) | [See pricing page](https://thirdweb.com/pricing) |
 
-For dedicated support and feature requests, [contact Sales](https://thirdweb.com/contact-us).
+
+## Supported Chains
+
+Engine is supported on every EVM compatible chain and private subnets. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=engine).
+
+<DocImage src={SupportedChains} />
+
+

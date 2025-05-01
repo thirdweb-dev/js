@@ -2,24 +2,24 @@ import { createMetadata, Details } from "@doc";
 import { Callout } from "@doc";
 
 export const metadata = createMetadata({
-	title: "Backend Wallets | thirdweb Engine",
+	title: "Server Wallets | thirdweb Engine",
 	description:
-		"Engine performs blockchain actions using backend wallets that you own and manage.",
+		"Engine performs blockchain actions using server wallets that you own and manage.",
 });
 
-# Backend Wallets
+# Server Wallets
 
 Engine performs blockchain actions using backend wallets that you own and manage.
 
 There are multiple options for securing backend wallets.
 
-## Smart Backend Wallets
+## Smart Server Wallets
 
-Smart backend wallets are the recommended way to perform blockchain operations with Engine. Each smart backend wallet consists of an EOA (managed internally by Engine) and a smart account (using thirdweb's default account implementation).
+Smart server wallets are the recommended way to perform blockchain operations with Engine. Each smart server wallet consists of an EOA (managed internally by Engine) and a smart account (using thirdweb's default account implementation).
 
 ### Benefits
 
-Smart backend wallets inherit smart account benefits and offer several advantages over traditional EOAs:
+Smart server wallets inherit smart account benefits and offer several advantages over traditional EOAs:
 
 - **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up gas.
 - **Better Nonce Management**: Smart accounts use multi-dimensional nonces, which are more efficient than EOAs.
@@ -55,7 +55,7 @@ For AWS and Google Cloud KMS options, follow the setup instructions in the respe
 
 ### Pricing
 
-Smart backend wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
+Smart server wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
 Smart accounts need to be deployed on each chain. This costs gas and is billed to your account like any other transaction.
 
 ## Local wallet
@@ -80,7 +80,7 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
    - `kms:Verify`
 1. On the user page, navigate to **Security credentials > Access keys**.
 1. Select **Create access key** to get an **Access Key** and **Secret Key**.
-1. In the dashboard, navigate to **Configuration > Backend Wallets**.
+1. In the dashboard, navigate to **Configuration > Server Wallets**.
 1. Select **AWS KMS** and provide the following:
    - Access Key (example: `AKIA...`)
    - Secret Key (example: `UW7A...`)
@@ -92,7 +92,7 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
    - Key type: `Asymmetric`
    - Key spec: `ECC_SECG_P256K1`
    - Key usage: `Sign and verify`
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. In the dashboard, navigate to **Overview > Server Wallets**.
 1. Select **Import** and provide the following:
    - AWS KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
    - AWS KMS ARN (example: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`)
@@ -109,7 +109,7 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
 1. Navigate to the [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page. Select the above service account.
 1. Navigate to the **Keys** tab. Select **Add Key > Create new key**.
 1. Select **JSON** to download the JSON file. This file contains the key's private key in plaintext.
-1. In the dashboard, navigate to **Configuration > Backend Wallets**.
+1. In the dashboard, navigate to **Configuration > Server Wallets**.
 1. Select **Google KMS** and provide the following:
 
    <Details id="gcpApplicationProjectId" summary="gcpApplicationProjectId">
@@ -175,7 +175,7 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
 1. Ensure your [keyring is created](https://cloud.google.com/kms/docs/create-key-ring) with the following settings:
    - Purpose: `Asymmetric sign`
    - Algorithm: `Elliptic Curve P-256 - SHA256 Digest`
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. In the dashboard, navigate to **Overview > Server Wallets**.
 1. Select **Import** and provide the following:
    - GCP KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
    - GCP KMS Version ID (example: `1`)
@@ -189,12 +189,12 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
 1. Create a Circle account at the [Circle Console](https://console.circle.com/signin).
 2. Navigate to [API & Client Keys](https://console.circle.com/api-keys).
 3. Create an API Key. (Either a standard key or a restricted key scoped to "Programmable Wallets" is required.) Do not enable the IP Allowlist. Store this key, it is not shown again.
-4. In the dashboard, navigate to **Configuration > Backend Wallets**.
+4. In the dashboard, navigate to **Configuration > Server Wallets**.
 5. Select **Circle** and provide the following:
    - API Key (example: `API_KEY:...`)
 
 <Callout variant="info">
-	Circle API Keys are scoped to either Testnet or Mainnet. Backend wallets
+	Circle API Keys are scoped to either Testnet or Mainnet. Server wallets
 	created with a testnet key will not work on the mainnet, and vice versa
 	<br /> If you want to change between testnet and mainnet, you will need to
 	update the API key configuration in engine, and recreate a wallet with the
@@ -205,7 +205,7 @@ An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can cr
 
 For AWS or Google Cloud KMS wallets, you must provide your credentials.
 
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. In the dashboard, navigate to **Overview > Server Wallets**.
 1. Select **Create**.
 1. (Optional) Provide a label to organize your wallets.
 
@@ -215,18 +215,18 @@ Circle wallets require creating a [Credential](/engine/features/wallet-credentia
 
 For AWS or Google Cloud KMS wallets, you must provide your credentials.
 
-1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. In the dashboard, navigate to **Overview > Server Wallets**.
 1. Select **Import**.
 1. Provide the requested fields.
    - See above for instructions for specific wallet types.
 
 ## List wallets
 
-In the dashboard, navigate to **Overview > Backend Wallets** to view your wallets created by or imported to Engine.
+In the dashboard, navigate to **Overview > Server Wallets** to view your wallets created by or imported to Engine.
 
 ## Best practices
 
 - It is recommend to use AWS or Google Cloud KMS wallets for production use. Private keys are never exposed and the wallet is backed up securely by the cloud provider.
-- Use labels and multiple backend wallets to organize and track usage.
+- Use labels and multiple server wallets to organize and track usage.
   - Example: Use one wallet to pay out creators on your platform and another to airdrop NFTs to users.
 - If your wallets require topping up gas or ERC20 tokens regularly, consider a separate "funds storage" backend wallet that transfers funds to other wallets via the dashboard UI or API.
