@@ -1,0 +1,103 @@
+---
+description: Rules for writing features in apps/dashboard
+globs: dashboard
+alwaysApply: false
+---
+
+# Reusable Core UI Components
+
+- Always import from the central UI library under `@/components/ui/*` – e.g. `import { Button } from "@/components/ui/button"`.
+- Prefer composable primitives over custom markup: `Button`, `Input`, `Select`, `Tabs`, `Card`, `Sidebar`, `Separator`, `Badge`.
+- Use `NavLink` (`@/components/ui/NavLink`) for internal navigation so active states are handled automatically.
+- Layouts should reuse `SidebarLayout` / `FullWidthSidebarLayout` (`@/components/blocks/SidebarLayout`).
+- For notices & skeletons rely on `AnnouncementBanner`, `GenericLoadingPage`, `EmptyStateCard`.
+- Icons come from `lucide-react` or the project-specific `…/icons` exports – never embed raw SVG.
+- Group related components in their own folder and expose a single barrel `index.ts` where necessary.
+- Keep components pure; fetch data outside (server component or hook) and pass it down via props.
+
+# Styling
+
+- Tailwind CSS is **the** styling system – avoid inline styles or CSS modules.
+- Merge class names with `cn` from `@/lib/utils` to keep conditional logic readable.
+- Stick to design-tokens: background (`bg-card`), borders (`border-border`), muted text (`text-muted-foreground`) etc.
+- Use the `container` class with a `max-w-7xl` cap for page width consistency.
+- Spacing utilities (`px-*`, `py-*`, `gap-*`) are preferred over custom margins.
+- Responsive helpers follow mobile-first (`max-sm`, `md`, `lg`, `xl`).
+- Never hard-code colors – always go through Tailwind variables.
+- Add `className` to the root element of every component for external overrides.
+
+# Creating a new Component
+
+- Place the file close to its feature: `feature/components/MyComponent.tsx`.
+- Name files after the component in **PascalCase**; append `.client.tsx` when interactive.
+- Client components must start with `'use client';` before imports.
+- Accept a typed `props` object and export a **named** function (`export function MyComponent()`).
+- Reuse core UI primitives; avoid re-implementing buttons, cards, modals.
+- Combine class names via `cn`, expose `className` prop if useful.
+- Local state or effects live inside; data fetching happens in hooks.
+- Provide a Storybook story (`MyComponent.stories.tsx`) or unit test alongside the component.
+
+# When to use Server Side Rendering (Server Components)
+
+- Reading cookies/headers with `next/headers` (`getAuthToken()`, `cookies()`).
+- Accessing server-only environment variables or secrets.
+- Heavy data fetching that should not ship to the client (e.g. analytics, billing).
+- Redirect logic using `redirect()` from `next/navigation`.
+- Building layout shells (`layout.tsx`) and top-level pages that mainly assemble data.
+- Export default async functions without `'use client';` – they run on the Node edge.
+- Co-locate data helpers under `@/api/**` and mark them with `"server-only"`.
+
+# When to use Client Side Rendering (Client Components)
+
+- Interactive UI that relies on hooks (`useState`, `useEffect`, React Query, wallet hooks).
+- Components that listen to user events, animations or live updates.
+- When you need access to browser APIs (localStorage, window, IntersectionObserver etc.).
+- Pages requiring fast transitions where data is prefetched on the client.
+- Anything that consumes hooks from `@tanstack/react-query` or thirdweb SDKs.
+
+# Fetching Authenticated Data – Server
+
+```ts
+import "server-only";
+import { API_SERVER_URL } from "@/constants/env";
+import { getAuthToken } from "@/app/(app)/api/lib/getAuthToken";
+
+export async function getProjects(teamSlug: string) {
+  const token = await getAuthToken();
+  if (!token) return [];
+  const res = await fetch(`${API_SERVER_URL}/v1/teams/${teamSlug}/projects`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.ok ? (await res.json()).result : [];
+}
+```
+
+Guidelines:
+
+- Always call `getAuthToken()` to get the JWT from cookies.
+- Prefix files with `import "server-only";` so they never end up in the client bundle.
+- Pass the token in the `Authorization: Bearer` header – never embed it in the URL.
+- Return typed results (`Project[]`, `User[]`, …) – avoid `any`.
+
+# Fetching Authenticated Data – Client
+
+```ts
+import { useQuery } from "@tanstack/react-query";
+import { fetchJson } from "@/lib/fetch-json";
+
+export function useProjects(teamSlug: string) {
+  return useQuery({
+    queryKey: ["projects", teamSlug],
+    queryFn: () => fetchJson(`/api/projects?team=${teamSlug}`), // internal API route handles token
+    staleTime: 60_000,
+  });
+}
+```
+
+Guidelines:
+
+- Use **React Query** (`@tanstack/react-query`) for all client data fetching.
+- Create light wrappers (e.g. `fetchJson`) that automatically attach the JWT from cookies/session when calling internal API routes.
+- Keep `queryKey` stable and descriptive for cache hits.
+- Prefer API routes or server actions to keep tokens secret; the browser only sees relative paths.
+- Configure `staleTime` / `cacheTime` according to freshness requirements.
