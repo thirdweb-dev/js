@@ -66,7 +66,7 @@ export type Transaction = {
   transactionHash: Hex | null;
   confirmedAt: Date | null;
   confirmedAtBlockNumber: string | null;
-  // enrichedData: EnrichedDataItem[];
+  enrichedData: unknown[];
   executionParams: ExecutionParamsSerialized;
   executionResult: ExecutionResultSerialized | null;
   createdAt: Date;
@@ -74,13 +74,42 @@ export type Transaction = {
   cancelledAt: Date | null;
 };
 
-export type TransactionStatus = ExecutionResultSerialized["status"];
+export type TransactionStatus =
+  | "QUEUED"
+  | "SUBMITTED"
+  | "CONFIRMED"
+  | "REVERTED";
+
+export type TransactionParam = {
+  to: string;
+  data: string;
+  value: string;
+};
+
+export type ExecutionParams = {
+  type: string;
+  signerAddress: string;
+  entrypointAddress: string;
+  smartAccountAddress: string;
+};
+
+export type ExecutionResult = {
+  status: TransactionStatus;
+  nonce?: string;
+  userOpHash?: string;
+  actualGasCost?: string;
+  actualGasUsed?: string;
+  onchainStatus?: string;
+  transactionHash?: string;
+};
+
+export type Pagination = {
+  totalCount: string;
+  page: number;
+  limit: number;
+};
 
 export type TransactionsResponse = {
   transactions: Transaction[];
-  pagination: {
-    limit: number;
-    page: number;
-    totalCount: number;
-  };
+  pagination: Pagination;
 };

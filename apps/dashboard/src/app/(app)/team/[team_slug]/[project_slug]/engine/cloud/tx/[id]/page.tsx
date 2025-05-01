@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
-import { CodeServer } from "@/components/ui/code/code.server";
 import { notFound, redirect } from "next/navigation";
 import { getSingleTransaction } from "../../lib/analytics";
+import { TransactionDetailsUI } from "./transaction-details-ui";
 
 export default async function TransactionPage({
   params,
@@ -27,10 +27,12 @@ export default async function TransactionPage({
   }
 
   return (
-    <div className="p-4">
-      <h1 className="mb-4 font-bold text-2xl">Transaction Details</h1>
-      {/* TODO: add transaction details UI */}
-      <CodeServer lang="json" code={JSON.stringify(transactionData, null, 2)} />
+    <div className="space-y-6 p-2">
+      <TransactionDetailsUI
+        transaction={transactionData}
+        teamSlug={team_slug}
+        project={project}
+      />
     </div>
   );
 }
