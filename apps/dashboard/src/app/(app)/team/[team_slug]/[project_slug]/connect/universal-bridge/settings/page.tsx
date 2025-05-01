@@ -27,6 +27,7 @@ export default async function Page(props: {
 
   let fees = await getFees({
     clientId: project.publishableKey,
+    teamId: team.id,
   }).catch(() => {
     return {
       feeRecipient: "",

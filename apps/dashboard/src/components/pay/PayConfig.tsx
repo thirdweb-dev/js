@@ -49,6 +49,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     }) => {
       await updateFee({
         clientId: props.project.publishableKey,
+        teamId: props.teamId,
         feeRecipient: values.payoutAddress,
         feeBps: values.developerFeeBPS,
       });
