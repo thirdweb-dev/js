@@ -289,13 +289,6 @@ export async function createManagementAccessToken(props: {
   });
   if (res.success) {
     const data = res.data;
-    console.log({
-      name: "engineCloud",
-      managementAccessToken: data.accessToken,
-      maskedAdminKey: maskSecret(props.adminKey),
-      rotationCode: props.rotationCode,
-      actions: [],
-    });
     // store the management access token in the project
     await updateProjectClient(
       {
