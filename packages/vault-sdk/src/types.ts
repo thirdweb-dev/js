@@ -403,7 +403,7 @@ type SignTypedDataData = {
   signature: string;
 };
 
-type CreateAccessTokenData = {
+export type AccessTokenData = {
   accessToken: string;
   id: string; // UUID
   issuerId: string; // UUID
@@ -413,19 +413,15 @@ type CreateAccessTokenData = {
   metadata: Record<string, MetadataValue>;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
+  /**
+   * If nullish then token hasn't been explicitly revoked, otherwise the ISO date string of the revocation.
+   * Note that an access token will be "implicitly" revoked if the token issuer account gets rotated. Check the isRotated field for this
+   */
   revokedAt?: string; // ISO date string
-};
-
-type RevokeAccessTokenData = {
-  id: string; // UUID
-  issuerId: string; // UUID
-  issuerType: OwnerType;
-  policies: PolicyComponent[];
-  expiresAt: string; // ISO date string
-  metadata: Record<string, MetadataValue>;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  revokedAt?: string; // ISO date string
+  /**
+   * Reflects whether the issuer of this token has "rotated" their account, which implicitly revokes the token, but is not tracked by the revokedAt? field.
+   */
+  isRotated: boolean;
 };
 
 // Update SignAuthorizationData to use the defined SignedAuthorization type
@@ -437,21 +433,6 @@ export type SignAuthorizationData = {
 export type SignStructuredMessageData = {
   signature: Bytes;
   message: string; // This likely represents the UserOp hash in Rust
-};
-
-// Add AccessTokenData (as defined previously, ensure OwnerType/MetadataValue are correct)
-export type AccessTokenData = {
-  id: string; // UUID
-  issuerId: string; // UUID
-  // Only revealed if revealSensitive is true for the policy being used to read, otherwise redacted/masked
-  accessToken: string;
-  issuerType: OwnerType;
-  policies: PolicyComponent[];
-  expiresAt: string; // ISO date string
-  metadata: Record<string, MetadataValue>;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  revokedAt?: string | null; // ISO date string or null
 };
 
 // Add GetAccessTokensData (as defined previously)
@@ -555,7 +536,7 @@ export type CreateAccessTokenPayload = GenericPayload<{
   operation: "accessToken:create";
   auth: Auth;
   options: CreateAccessTokenOptions;
-  data: CreateAccessTokenData;
+  data: AccessTokenData;
 }>;
 
 // Add ListAccessTokensPayload (using defined types)
@@ -569,7 +550,7 @@ export type RevokeAccessTokenPayload = GenericPayload<{
   operation: "accessToken:revoke";
   auth: Auth;
   options: RevokeAccessTokenOptions;
-  data: RevokeAccessTokenData;
+  data: AccessTokenData;
 }>;
 
 // ========== Union of all payloads ==========
