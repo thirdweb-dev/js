@@ -81,7 +81,7 @@ export type TransactionStatus =
   | "REVERTED";
 
 type Pagination = {
-  totalCount: string;
+  totalCount: number;
   page: number;
   limit: number;
 };
