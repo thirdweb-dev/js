@@ -165,7 +165,9 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           {props.customTrigger || (
             <Button
               ref={ref}
-              {...props}
+              {...(() => {
+                return { ...props };
+              })()}
               onClick={handleTogglePopover}
               className={cn(
                 "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
