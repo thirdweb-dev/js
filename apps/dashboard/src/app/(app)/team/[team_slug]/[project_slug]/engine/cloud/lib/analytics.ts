@@ -1,7 +1,10 @@
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import type { TransactionStats } from "../../../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import type { Address, Hex } from "thirdweb";
+import type {
+  Transaction,
+  TransactionsResponse,
+} from "../analytics/tx-table/types";
 
 // Define the structure of the data we expect back from our fetch function
 export type TransactionSummaryData = {
@@ -147,53 +150,6 @@ export async function getTransactionsChart({
   }));
 }
 
-type TransactionParam = {
-  to: Address;
-  data: Hex;
-  value: string;
-};
-
-type ExecutionParams = {
-  type: string;
-  signerAddress: string;
-  entrypointAddress: string;
-  smartAccountAddress: string;
-};
-
-type ExecutionResult = {
-  status: string;
-};
-
-type Transaction = {
-  id: string;
-  batchIndex: number;
-  chainId: string;
-  from: Address;
-  transactionParams: TransactionParam[];
-  transactionHash: Hex | null;
-  confirmedAt: string | null;
-  confirmedAtBlockNumber: number | null;
-  enrichedData: unknown[];
-  executionParams: ExecutionParams;
-  executionResult: ExecutionResult;
-  createdAt: string;
-  errorMessage: string | null;
-  cancelledAt: string | null;
-};
-
-type Pagination = {
-  totalCount: string;
-  page: number;
-  limit: number;
-};
-
-type TransactionsSearchResponse = {
-  result: {
-    transactions: Transaction[];
-    pagination: Pagination;
-  };
-};
-
 export async function getSingleTransaction({
   teamId,
   clientId,
@@ -240,7 +196,7 @@ export async function getSingleTransaction({
     );
   }
 
-  const data = (await response.json()) as TransactionsSearchResponse;
+  const data = (await response.json()).result as TransactionsResponse;
 
-  return data.result.transactions[0];
+  return data.transactions[0];
 }

@@ -77,8 +77,7 @@ export function SendTestTransaction(props: {
         },
         body: JSON.stringify({
           executionOptions: {
-            type: "AA",
-            signerAddress: args.walletAddress,
+            from: args.walletAddress,
             chainId: args.chainId.toString(),
           },
           params: [
