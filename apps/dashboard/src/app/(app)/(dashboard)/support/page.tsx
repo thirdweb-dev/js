@@ -161,7 +161,6 @@ export default async function SupportPage() {
                 networks="all"
                 isFloating={false}
                 pageType="support"
-                authToken={authToken ?? undefined}
                 label="Ask Nebula AI for support"
                 client={client}
                 nebulaParams={{

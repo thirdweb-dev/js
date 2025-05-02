@@ -4,6 +4,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ExternalLinkIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -19,12 +20,12 @@ import type { ThirdwebClient } from "thirdweb";
 import type { NebulaContext } from "../../api/chat";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
+import { getNebulaAuthToken } from "./actions";
 
 const LazyFloatingChatContent = lazy(() => import("./FloatingChatContent"));
 
 export function NebulaChatButton(props: {
   pageType: "chain" | "contract" | "support";
-  authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
   networks: NebulaContext["networks"];
   label: string;
@@ -97,7 +98,6 @@ export function NebulaChatButton(props: {
         onClose={closeModal}
         isOpen={isOpen}
         hasBeenOpened={hasBeenOpened}
-        authToken={props.authToken}
         client={props.client}
         nebulaParams={props.nebulaParams}
         examplePrompts={props.examplePrompts}
@@ -111,7 +111,6 @@ function NebulaChatUIContainer(props: {
   onClose: () => void;
   isOpen: boolean;
   hasBeenOpened: boolean;
-  authToken: string | undefined;
   examplePrompts: ExamplePrompt[];
   pageType: "chain" | "contract" | "support";
   client: ThirdwebClient;
@@ -183,25 +182,50 @@ function NebulaChatUIContainer(props: {
       {/* once opened keep the component mounted to preserve the states */}
       <div className="relative flex grow flex-col overflow-hidden">
         {shouldRenderChat && (
-          <Suspense
-            fallback={
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner className="size-10" />
-              </div>
-            }
-          >
-            <LazyFloatingChatContent
-              networks={props.networks}
-              authToken={props.authToken}
-              client={props.client}
-              nebulaParams={props.nebulaParams}
-              key={nebulaSessionKey}
-              examplePrompts={props.examplePrompts}
-              pageType={props.pageType}
-            />
-          </Suspense>
+          <ChatContent
+            sessionKey={nebulaSessionKey}
+            networks={props.networks}
+            client={props.client}
+            nebulaParams={props.nebulaParams}
+            examplePrompts={props.examplePrompts}
+            pageType={props.pageType}
+          />
         )}
       </div>
+    </div>
+  );
+}
+
+function ChatContent(
+  props: Omit<
+    React.ComponentProps<typeof LazyFloatingChatContent>,
+    "authToken"
+  > & {
+    sessionKey: number;
+  },
+) {
+  const { sessionKey, ...restProps } = props;
+  const nebulaAuthTokenQuery = useNebulaAuthToken();
+
+  if (nebulaAuthTokenQuery.isPending) {
+    return <LoadingScreen />;
+  }
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <LazyFloatingChatContent
+        key={sessionKey}
+        {...restProps}
+        authToken={nebulaAuthTokenQuery.data ?? undefined}
+      />
+    </Suspense>
+  );
+}
+
+function LoadingScreen() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <Spinner className="size-10" />
     </div>
   );
 }
@@ -233,4 +257,18 @@ function useOutsideClick(onOutsideClick: () => void) {
   }, [onOutsideClick]);
 
   return ref;
+}
+
+function useNebulaAuthToken() {
+  return useQuery({
+    queryKey: ["nebula-auth-token"],
+    queryFn: async () => {
+      const jwt = await getNebulaAuthToken();
+      return jwt || null;
+    },
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 }
