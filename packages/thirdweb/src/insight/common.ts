@@ -4,9 +4,9 @@ import { getChainServices } from "../chains/utils.js";
 export async function assertInsightEnabled(chains: Chain[]) {
   const chainData = await Promise.all(
     chains.map((chain) =>
-      getChainServices(chain).then((services) => ({
+      isInsightEnabled(chain).then((enabled) => ({
         chain,
-        enabled: services.some((c) => c.service === "insight" && c.enabled),
+        enabled,
       })),
     ),
   );
@@ -21,4 +21,9 @@ export async function assertInsightEnabled(chains: Chain[]) {
         .join(", ")}`,
     );
   }
+}
+
+export async function isInsightEnabled(chain: Chain) {
+  const chainData = await getChainServices(chain);
+  return chainData.some((c) => c.service === "insight" && c.enabled);
 }
