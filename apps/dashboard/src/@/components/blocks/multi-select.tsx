@@ -165,7 +165,12 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           {props.customTrigger || (
             <Button
               ref={ref}
-              {...props}
+              {...(() => {
+                // Extract customTrigger from props to avoid passing it to the DOM
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { customTrigger, ...restProps } = props;
+                return restProps;
+              })()}
               onClick={handleTogglePopover}
               className={cn(
                 "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
