@@ -48,7 +48,7 @@ export function AnnouncementBanner() {
   return (
     <AnnouncementBannerUI
       href="https://nebula.thirdweb.com/"
-      label="Nebula AI Beta is out and open to all"
+      label="Announcing Nebula App — the most powerful AI for blockchains! Try it now!"
       trackingLabel="nebula-beta-launch"
     />
   );
