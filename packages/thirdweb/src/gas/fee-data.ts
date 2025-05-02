@@ -44,6 +44,8 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   40875, // Homeverse Testnet
   1511670449, // GPT Mainnet
   5464, // Saga Mainnet
+  2020, // Ronin Mainnet
+  2021, // Ronin Testnet (Saigon)
 ];
 
 /**
