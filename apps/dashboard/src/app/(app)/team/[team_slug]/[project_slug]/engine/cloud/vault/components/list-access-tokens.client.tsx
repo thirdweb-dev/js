@@ -143,7 +143,7 @@ export default function ListAccessTokens(props: {
               t.metadata?.purpose?.toString() !==
               SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
           )
-          .filter((t) => !t.revokedAt),
+          .filter((t) => !t.revokedAt && !t.isRotated),
       };
       // Return stub data for now
     },

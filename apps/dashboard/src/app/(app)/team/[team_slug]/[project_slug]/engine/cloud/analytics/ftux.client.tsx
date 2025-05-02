@@ -15,6 +15,7 @@ interface Props {
   wallets: Wallet[];
   hasTransactions: boolean;
   teamSlug: string;
+  testTxWithWallet?: string | undefined;
 }
 
 export const EngineChecklist: React.FC<Props> = (props) => {
@@ -60,6 +61,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
           wallets={props.wallets}
           project={props.project}
           userAccessToken={userAccessToken}
+          teamSlug={props.teamSlug}
         />
       ),
       completed: props.hasTransactions,
@@ -75,6 +77,18 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     userAccessToken,
     props.teamSlug,
   ]);
+
+  if (props.testTxWithWallet) {
+    return (
+      <SendTestTransaction
+        wallets={props.wallets}
+        project={props.project}
+        userAccessToken={userAccessToken}
+        walletId={props.testTxWithWallet}
+        teamSlug={props.teamSlug}
+      />
+    );
+  }
 
   if (finalSteps.length === 1) {
     return null;

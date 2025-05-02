@@ -18,6 +18,7 @@ export default async function TransactionsAnalyticsPage(props: {
     from?: string | string[] | undefined;
     to?: string | string[] | undefined;
     interval?: string | string[] | undefined;
+    testTxWithWallet?: string | string[] | undefined;
   }>;
 }) {
   const [params, searchParams, authToken] = await Promise.all([
@@ -84,8 +85,9 @@ export default async function TransactionsAnalyticsPage(props: {
         hasTransactions={hasTransactions}
         project={project}
         wallets={wallets ?? []}
+        testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
       />
-      {hasTransactions && (
+      {hasTransactions && !searchParams.testTxWithWallet && (
         <TransactionAnalyticsSummary
           initialData={initialData}
           teamId={project.teamId}
@@ -97,7 +99,7 @@ export default async function TransactionsAnalyticsPage(props: {
         teamSlug={params.team_slug}
         searchParams={searchParams}
         project={project}
-        hasTransactions={hasTransactions}
+        showAnalytics={hasTransactions && !searchParams.testTxWithWallet}
         wallets={wallets}
       />
     </div>

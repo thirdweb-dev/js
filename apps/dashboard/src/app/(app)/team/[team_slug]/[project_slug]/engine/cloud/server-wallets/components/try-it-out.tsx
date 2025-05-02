@@ -113,8 +113,7 @@ curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract" \\
   -H "x-vault-access-token: <your-vault-access-token>" \\
   -d '{
     "executionOptions": {
-      "type": "AA",
-      "signerAddress": "<your-signer-address>",
+      "from": "<your-server-wallet-address>",
       "chainId": "84532"
     },
     "params": [
@@ -138,8 +137,7 @@ const response = await fetch(
     },
     body: JSON.stringify({
       "executionOptions": {
-        "type": "AA",
-        "signerAddress": "<your-signer-address>",
+        "from": "<your-server-wallet-address>",
         "chainId": "84532"
       },
       "params": [
@@ -165,8 +163,7 @@ headers = {
 }
 payload = {
     "executionOptions": {
-        "type": "AA",
-        "signerAddress": "<your-signer-address>",
+        "from": "<your-server-wallet-address>",
         "chainId": "84532"
     },
     "params": [
@@ -203,9 +200,8 @@ func main() {
 	
 	type RequestBody struct {
 		ExecutionOptions struct {
-			Type          string \`json:"type"\`
-			SignerAddress string \`json:"signerAddress"\`
-			ChainId       string \`json:"chainId"\`
+			From    string \`json:"from"\`
+			ChainId string \`json:"chainId"\`
 		} \`json:"executionOptions"\`
 		Params []Param \`json:"params"\`
 	}
@@ -219,8 +215,7 @@ func main() {
 			},
 		},
 	}
-	requestBody.ExecutionOptions.Type = "AA"
-	requestBody.ExecutionOptions.SignerAddress = "<your-signer-address>"
+	requestBody.ExecutionOptions.From = "<your-server-wallet-address>"
 	requestBody.ExecutionOptions.ChainId = "84532"
 	
 	jsonData, _ := json.Marshal(requestBody)
@@ -263,8 +258,7 @@ class Program
         {
             executionOptions = new
             {
-                type = "AA",
-                signerAddress = "<your-signer-address>",
+                from = "<your-server-wallet-address>",
                 chainId = "84532"
             },
             @params = new[]

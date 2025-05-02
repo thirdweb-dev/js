@@ -19,11 +19,14 @@ import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
+import { SendIcon } from "lucide-react";
 import { useState } from "react";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
+import { Button } from "../../../../../../../../../@/components/ui/button";
+import { useDashboardRouter } from "../../../../../../../../../@/lib/DashboardRouter";
 import { useV5DashboardChain } from "../../../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
@@ -76,8 +79,9 @@ export function ServerWalletsTableUI({
             <TableRow>
               <TableHead>Address</TableHead>
               <TableHead>Label</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Updated At</TableHead>
+              <TableHead className="text-right">Created At</TableHead>
+              <TableHead className="text-right">Updated At</TableHead>
+              <TableHead className="text-right">Send test tx</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,11 +102,18 @@ export function ServerWalletsTableUI({
                     )}
                   </TableCell>
                   <TableCell>{wallet.metadata.label || "none"}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-right">
                     <WalletDateCell date={wallet.createdAt} />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-right">
                     <WalletDateCell date={wallet.updatedAt} />
+                  </TableCell>
+                  <TableCell className="flex justify-end">
+                    <SendTestTransaction
+                      wallet={wallet}
+                      project={project}
+                      teamSlug={teamSlug}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -155,5 +166,26 @@ function WalletDateCell({ date }: { date: string }) {
     <ToolTipLabel label={format(dateObj, "PP pp z")}>
       <p>{formatDistanceToNowStrict(dateObj, { addSuffix: true })}</p>
     </ToolTipLabel>
+  );
+}
+
+function SendTestTransaction(props: {
+  wallet: Wallet;
+  teamSlug: string;
+  project: Project;
+}) {
+  const router = useDashboardRouter();
+  return (
+    <Button
+      variant="secondary"
+      size="sm"
+      onClick={() => {
+        router.push(
+          `/team/${props.teamSlug}/${props.project.slug}/engine/cloud?testTxWithWallet=${props.wallet.id}`,
+        );
+      }}
+    >
+      <SendIcon className="size-4" />
+    </Button>
   );
 }

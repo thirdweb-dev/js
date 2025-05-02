@@ -15,6 +15,7 @@ import { createEoa } from "@thirdweb-dev/vault-sdk";
 import { Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { engineCloudProxy } from "../../../../../../../../../@/actions/proxies";
 import { initVaultClient } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
@@ -56,6 +57,22 @@ export default function CreateServerWallet(props: {
       if (!eoa.success) {
         throw new Error("Failed to create eoa");
       }
+
+      // no need to await this, it's not blocking
+      engineCloudProxy({
+        pathname: "/cache/smart-account",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-team-id": props.project.teamId,
+          "x-client-id": props.project.publishableKey,
+        },
+        body: JSON.stringify({
+          signerAddress: eoa.data.address,
+        }),
+      }).catch((err) => {
+        console.warn("failed to cache server wallet", err);
+      });
 
       router.refresh();
       setModalOpen(false);

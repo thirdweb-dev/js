@@ -40,8 +40,10 @@ type FormValues = z.infer<typeof formSchema>;
 export function SendTestTransaction(props: {
   wallets?: Wallet[];
   project: Project;
+  teamSlug: string;
   userAccessToken?: string;
   expanded?: boolean;
+  walletId?: string;
 }) {
   const thirdwebClient = useThirdwebClient();
   const queryClient = useQueryClient();
@@ -52,7 +54,13 @@ export function SendTestTransaction(props: {
     resolver: zodResolver(formSchema),
     defaultValues: {
       accessToken: props.userAccessToken ?? "",
-      walletIndex: "0",
+      walletIndex:
+        props.wallets && props.walletId
+          ? props.wallets
+              .findIndex((w) => w.id === props.walletId)
+              ?.toString()
+              .replace("-1", "0")
+          : "0",
       chainId: 84532,
     },
   });
@@ -126,6 +134,9 @@ export function SendTestTransaction(props: {
   return (
     <div className="mt-3 w-full rounded-md border bg-background p-6">
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        {props.walletId && (
+          <h3 className="mb-4 font-medium text-lg">Send a test transaction</h3>
+        )}
         <p className="flex items-center gap-2 text-sm text-warning-text">
           <LockIcon className="h-4 w-4" />
           Every wallet action requires your Vault access token.
@@ -182,7 +193,7 @@ export function SendTestTransaction(props: {
                       <div className="flex items-center gap-2">
                         <SmartAccountCell wallet={wallet} />
                         <span className="text-muted-foreground text-sm">
-                          {selectedWallet.metadata.label}
+                          {wallet.metadata.label}
                         </span>
                       </div>
                     </SelectItem>
@@ -251,10 +262,16 @@ export function SendTestTransaction(props: {
               variant="primary"
               className="w-full md:w-auto"
               onClick={() => {
-                router.refresh();
+                if (props.walletId) {
+                  router.replace(
+                    `/team/${props.teamSlug}/${props.project.slug}/engine/cloud`,
+                  );
+                } else {
+                  router.refresh();
+                }
               }}
             >
-              Complete Setup
+              {props.walletId ? "Close" : "Complete Setup"}
             </Button>
           )}
         </div>

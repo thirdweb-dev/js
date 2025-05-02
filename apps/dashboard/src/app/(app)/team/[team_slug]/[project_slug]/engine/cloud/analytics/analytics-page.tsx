@@ -12,14 +12,14 @@ export function TransactionsAnalyticsPageContent(props: {
     interval?: string | undefined | string[];
   };
   project: Project;
-  hasTransactions: boolean;
+  showAnalytics: boolean;
   wallets?: Wallet[];
   teamSlug: string;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
       <div className="flex grow flex-col gap-6">
-        {props.hasTransactions && (
+        {props.showAnalytics && (
           <>
             <div className="flex justify-end">
               <TransactionAnalyticsFilter />
