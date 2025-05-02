@@ -1,4 +1,3 @@
-import { getDefaultTeam } from "@/api/team";
 import { isLoginRequired } from "@/constants/auth";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
@@ -188,18 +187,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // redirect /team/~/... to /team/<first_team_slug>/...
-  if (paths[0] === "team" && paths[1] === "~") {
-    const firstTeam = await getDefaultTeam();
-    if (firstTeam) {
-      const modifiedPaths = [...paths];
-      modifiedPaths[1] = firstTeam.slug;
-      return redirect(request, `/${modifiedPaths.join("/")}`, {
-        searchParams: request.nextUrl.searchParams.toString(),
-        cookiesToSet,
-      });
-    }
-  }
   // END /<address>/... case
   // all other cases are handled by the file system router so we just fall through
   if (cookiesToSet) {
