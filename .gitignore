@@ -31,3 +31,5 @@ storybook-static
 .aider*
 
 tsconfig.tsbuildinfo
+apps/dashboard/.cursor/rules/*
+apps/dashboard/.cursor/rules/*

@@ -3,6 +3,7 @@ import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import {
   BookTextIcon,
   BoxIcon,
+  CoinsIcon,
   HomeIcon,
   SettingsIcon,
   WalletIcon,
@@ -52,6 +53,12 @@ export function ProjectSidebarLayout(props: {
           href: `${layoutPath}/connect/universal-bridge`,
           icon: PayIcon,
           tracking: tracking("universal-bridge"),
+        },
+        {
+          href: `${layoutPath}/assets`,
+          label: "Assets",
+          icon: CoinsIcon,
+          tracking: tracking("assets"),
         },
         {
           href: `${layoutPath}/contracts`,
