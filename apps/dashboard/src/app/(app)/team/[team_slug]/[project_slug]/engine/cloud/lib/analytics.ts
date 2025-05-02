@@ -1,6 +1,7 @@
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
 import type { TransactionStats } from "../../../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import type { Address, Hex } from "thirdweb";
 
 // Define the structure of the data we expect back from our fetch function
 export type TransactionSummaryData = {
@@ -147,8 +148,8 @@ export async function getTransactionsChart({
 }
 
 type TransactionParam = {
-  to: string;
-  data: string;
+  to: Address;
+  data: Hex;
   value: string;
 };
 
@@ -167,9 +168,9 @@ type Transaction = {
   id: string;
   batchIndex: number;
   chainId: string;
-  from: string;
+  from: Address;
   transactionParams: TransactionParam[];
-  transactionHash: string | null;
+  transactionHash: Hex | null;
   confirmedAt: string | null;
   confirmedAtBlockNumber: number | null;
   enrichedData: unknown[];
