@@ -28,6 +28,7 @@ export function NebulaChatButton(props: {
   pageType: "chain" | "contract" | "support";
   examplePrompts: ExamplePrompt[];
   networks: NebulaContext["networks"];
+  isLoggedIn: boolean;
   label: string;
   client: ThirdwebClient;
   isFloating: boolean;
@@ -94,6 +95,7 @@ export function NebulaChatButton(props: {
       </div>
 
       <NebulaChatUIContainer
+        isLoggedIn={props.isLoggedIn}
         networks={props.networks}
         onClose={closeModal}
         isOpen={isOpen}
@@ -114,6 +116,7 @@ function NebulaChatUIContainer(props: {
   examplePrompts: ExamplePrompt[];
   pageType: "chain" | "contract" | "support";
   client: ThirdwebClient;
+  isLoggedIn: boolean;
   networks: NebulaContext["networks"];
   nebulaParams:
     | {
@@ -183,6 +186,7 @@ function NebulaChatUIContainer(props: {
       <div className="relative flex grow flex-col overflow-hidden">
         {shouldRenderChat && (
           <ChatContent
+            isLoggedIn={props.isLoggedIn}
             sessionKey={nebulaSessionKey}
             networks={props.networks}
             client={props.client}
@@ -202,12 +206,13 @@ function ChatContent(
     "authToken"
   > & {
     sessionKey: number;
+    isLoggedIn: boolean;
   },
 ) {
-  const { sessionKey, ...restProps } = props;
-  const nebulaAuthTokenQuery = useNebulaAuthToken();
+  const { sessionKey, isLoggedIn, ...restProps } = props;
+  const nebulaAuthTokenQuery = useNebulaAuthToken(isLoggedIn);
 
-  if (nebulaAuthTokenQuery.isPending) {
+  if (nebulaAuthTokenQuery.isFetching) {
     return <LoadingScreen />;
   }
 
@@ -259,16 +264,16 @@ function useOutsideClick(onOutsideClick: () => void) {
   return ref;
 }
 
-function useNebulaAuthToken() {
+function useNebulaAuthToken(isLoggedInToDashboard: boolean) {
   return useQuery({
-    queryKey: ["nebula-auth-token"],
+    queryKey: ["nebula-auth-token", isLoggedInToDashboard],
     queryFn: async () => {
       const jwt = await getNebulaAuthToken();
       return jwt || null;
     },
     retry: false,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: "always",
     refetchOnReconnect: false,
   });
 }

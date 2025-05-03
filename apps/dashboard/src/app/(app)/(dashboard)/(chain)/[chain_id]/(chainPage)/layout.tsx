@@ -100,6 +100,7 @@ The following is the user's message:
   return (
     <>
       <NebulaChatButton
+        isLoggedIn={!!authToken}
         networks={chain.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="chain"

@@ -111,6 +111,7 @@ The following is the user's message:`;
       client={client}
     >
       <NebulaChatButton
+        isLoggedIn={!!accountAddress}
         networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="contract"
