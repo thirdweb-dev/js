@@ -220,6 +220,10 @@ const statusDetails = {
     name: "Reverted",
     type: "destructive",
   },
+  FAILED: {
+    name: "Failed",
+    type: "destructive",
+  },
 } as const;
 
 function StatusSelector(props: {

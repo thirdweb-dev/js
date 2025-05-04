@@ -42,6 +42,7 @@ export type EngineAccountOptions = {
 
 /**
  * Creates an account that uses your engine backend wallet for sending transactions and signing messages.
+ * @deprecated This for v2 dedicated engine instances, for v3 and engine cloud use Engine.serverWallet()
  *
  * @param options - The options for the engine account.
  * @returns An account that uses your engine backend wallet.

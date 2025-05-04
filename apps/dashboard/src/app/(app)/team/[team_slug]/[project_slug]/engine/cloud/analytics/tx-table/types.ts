@@ -78,7 +78,8 @@ export type TransactionStatus =
   | "QUEUED"
   | "SUBMITTED"
   | "CONFIRMED"
-  | "REVERTED";
+  | "REVERTED"
+  | "FAILED";
 
 type Pagination = {
   totalCount: number;

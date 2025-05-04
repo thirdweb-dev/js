@@ -27,7 +27,11 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
     const { requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT, ...restInit } =
       init || {};
 
-    let headers = restInit.headers ? new Headers(restInit.headers) : undefined;
+    let headers = restInit.headers
+      ? new Headers(restInit.headers)
+      : typeof url === "object"
+        ? url.headers
+        : undefined;
     const urlString = typeof url === "string" ? url : url.url;
 
     // check if we are making a request to a thirdweb service (we don't want to send any headers to non-thirdweb services)
@@ -60,9 +64,13 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
         if (client.teamId) {
           headers.set("x-team-id", client.teamId);
         }
-      } else if (secretKey) {
+      }
+
+      if (secretKey) {
         headers.set("x-secret-key", secretKey);
-      } else if (clientId) {
+      }
+
+      if (clientId) {
         headers.set("x-client-id", clientId);
       }
 
@@ -112,6 +120,7 @@ const THIRDWEB_DOMAINS = [
   // dev domains
   ".thirdweb.dev",
   ".thirdweb-dev.com",
+  ".chainsaw-dev.zeet.app", // TODO (cloud): remove this once we have a proper domain
 ] as const;
 
 export const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);

@@ -104,6 +104,10 @@
     {
       "tagName": "@insight",
       "syntaxKind": "block"
+    },
+    {
+      "tagName": "@engine",
+      "syntaxKind": "block"
     }
   ],
   "supportForTags": {
@@ -132,6 +136,7 @@
     "@account": true,
     "@beta": true,
     "@nebula": true,
-    "@insight": true
+    "@insight": true,
+    "@engine": true
   }
 }

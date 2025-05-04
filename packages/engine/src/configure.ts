@@ -1,13 +1,13 @@
 import type { Config } from "@hey-api/client-fetch";
 import { client } from "./client/client.gen.js";
 
-export type InsightClientOptions = {
+export type EngineClientOptions = {
   readonly clientId: string;
   readonly secretKey?: string;
 };
 
 export function configure(
-  options: InsightClientOptions & { override?: Config },
+  options: EngineClientOptions & { override?: Config },
 ) {
   client.setConfig({
     headers: {
