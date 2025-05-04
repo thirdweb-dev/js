@@ -43,7 +43,7 @@ export async function getTransactionAnalyticsSummary(props: {
 
   try {
     const response = await fetch(
-      `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics-summary`,
+      `${THIRDWEB_ENGINE_CLOUD_URL}/transactions/analytics-summary`,
       {
         method: "POST",
         headers: {
@@ -102,7 +102,7 @@ export async function getTransactionsChart({
   };
 
   const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/analytics`,
+    `${THIRDWEB_ENGINE_CLOUD_URL}/transactions/analytics`,
     {
       method: "POST",
       headers: {
@@ -172,7 +172,7 @@ export async function getSingleTransaction({
   };
 
   const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/project/transactions/search`,
+    `${THIRDWEB_ENGINE_CLOUD_URL}/transactions/search`,
     {
       method: "POST",
       headers: {

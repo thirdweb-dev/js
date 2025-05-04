@@ -35,7 +35,7 @@ async function getTransactions({
 }) {
   const transactions = await engineCloudProxy<{ result: TransactionsResponse }>(
     {
-      pathname: "/project/transactions/search",
+      pathname: "/transactions/search",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
