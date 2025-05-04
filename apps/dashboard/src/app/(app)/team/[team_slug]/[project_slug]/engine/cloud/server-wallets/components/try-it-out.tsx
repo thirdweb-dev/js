@@ -13,7 +13,7 @@ export function TryItOut(props: {
   team_slug: string;
   project_slug: string;
 }) {
-  const [activeTab, setActiveTab] = useState<string>("curl");
+  const [activeTab, setActiveTab] = useState<string>("sdk");
 
   return (
     <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card p-6">
@@ -33,7 +33,12 @@ export function TryItOut(props: {
         <TabButtons
           tabs={[
             {
-              name: "curl",
+              name: "SDK",
+              onClick: () => setActiveTab("sdk"),
+              isActive: activeTab === "sdk",
+            },
+            {
+              name: "Curl",
               onClick: () => setActiveTab("curl"),
               isActive: activeTab === "curl",
             },
@@ -62,6 +67,9 @@ export function TryItOut(props: {
 
         <div className="h-4" />
 
+        {activeTab === "sdk" && (
+          <CodeClient lang="ts" code={sdkExample()} className="bg-background" />
+        )}
         {activeTab === "curl" && (
           <CodeClient
             lang="bash"
@@ -105,6 +113,37 @@ export function TryItOut(props: {
     </div>
   );
 }
+
+const sdkExample = () => `\
+import { Engine, createThirdwebClient, sendTransaction } from "thirdweb";
+import { claimTo } from "thirdweb/extensions/erc1155";
+
+const client = createThirdwebClient({
+  secretKey: "<your-project-secret-key>",
+});
+
+// Create a server wallet
+const serverWallet = Engine.serverWallet({  
+  client,
+  walletAddress: "<your-server-wallet-address>",
+  vaultAccessToken: "<your-vault-access-token>",
+});
+
+// Prepare a transaction
+const transaction = claimTo({
+  contract,
+  to: "0x...",
+  tokenId: 0n,
+  quantity: 1n,
+});
+
+// Send the transaction
+const result = await sendTransaction({
+  account: serverWallet,
+  transaction,
+});
+console.log("Transaction hash:", result.transactionHash);
+`;
 
 const curlExample = () => `\
 curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract" \\
