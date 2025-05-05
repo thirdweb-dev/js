@@ -35,6 +35,7 @@ describe("useAutoConnectCore", () => {
 
     expect(
       await autoConnectCore({
+        force: true,
         storage: mockStorage,
         props: {
           wallets: [wallet],
@@ -68,6 +69,7 @@ describe("useAutoConnectCore", () => {
 
     expect(
       await autoConnectCore({
+        force: true,
         storage: mockStorage,
         props: {
           wallets: [wallet],
@@ -111,6 +113,7 @@ describe("useAutoConnectCore", () => {
       });
 
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
@@ -155,6 +158,7 @@ describe("useAutoConnectCore", () => {
     });
 
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
@@ -191,6 +195,7 @@ describe("useAutoConnectCore", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet1],
@@ -235,6 +240,7 @@ describe("useAutoConnectCore", () => {
     const addConnectedWalletSpy = vi.spyOn(manager, "addConnectedWallet");
 
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet1, wallet2],
@@ -264,6 +270,7 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
@@ -276,6 +283,7 @@ describe("useAutoConnectCore", () => {
 
     expect(mockOnConnect).toHaveBeenCalledWith(wallet);
   });
+
   it("should continue even if onConnect callback throws", async () => {
     const mockOnConnect = vi.fn();
     mockOnConnect.mockImplementation(() => {
@@ -296,6 +304,7 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
@@ -308,6 +317,7 @@ describe("useAutoConnectCore", () => {
 
     expect(mockOnConnect).toHaveBeenCalledWith(wallet);
   });
+
   it("should call setLastAuthProvider if authProvider is present", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
@@ -328,6 +338,7 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
@@ -340,6 +351,7 @@ describe("useAutoConnectCore", () => {
 
     expect(mockSetLastAuthProvider).toHaveBeenCalledWith("email", mockStorage);
   });
+
   it("should set connection status to disconnect if no connectedWallet is returned", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
@@ -360,6 +372,7 @@ describe("useAutoConnectCore", () => {
       .mockResolvedValueOnce(null as unknown as Wallet);
 
     await autoConnectCore({
+      force: true,
       storage: mockStorage,
       props: {
         wallets: [wallet],
