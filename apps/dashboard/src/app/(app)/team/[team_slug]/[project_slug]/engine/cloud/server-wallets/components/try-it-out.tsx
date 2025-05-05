@@ -146,7 +146,7 @@ console.log("Transaction hash:", result.transactionHash);
 `;
 
 const curlExample = () => `\
-curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract" \\
+curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract" \\
   -H "Content-Type: application/json" \\
   -H "x-secret-key: <your-project-secret-key>" \\
   -H "x-vault-access-token: <your-vault-access-token>" \\
@@ -166,7 +166,7 @@ curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract" \\
 
 const jsExample = () => `\
 const response = await fetch(
-  "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract",
+  "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract",
   {
     method: "POST",
     headers: {
@@ -194,7 +194,7 @@ const pythonExample = () => `\
 import requests
 import json
 
-url = "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract"
+url = "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract"
 headers = {
     "Content-Type": "application/json",
     "x-secret-key": "<your-project-secret-key>",
@@ -228,7 +228,7 @@ import (
 )
 
 func main() {
-	url := "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract"
+	url := "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract"
 	
 	// Create the request payload
 	type Param struct {
@@ -291,7 +291,7 @@ class Program
 {
     static async Task Main()
     {
-        var url = "${THIRDWEB_ENGINE_CLOUD_URL}/write/contract";
+        var url = "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract";
         
         var requestData = new
         {

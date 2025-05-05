@@ -75,7 +75,7 @@ export function SendTestTransaction(props: {
       chainId: number;
     }) => {
       const response = await engineCloudProxy({
-        pathname: "/write/transaction",
+        pathname: "/v1/write/transaction",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

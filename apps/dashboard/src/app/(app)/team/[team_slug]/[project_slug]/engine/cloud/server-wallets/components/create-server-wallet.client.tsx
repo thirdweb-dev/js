@@ -60,7 +60,7 @@ export default function CreateServerWallet(props: {
 
       // no need to await this, it's not blocking
       engineCloudProxy({
-        pathname: "/cache/smart-account",
+        pathname: "/v1/cache/smart-account",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,7 +11,10 @@ import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccoun
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { setThirdwebDomains } from "../utils/domains.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
-import { DEFAULT_ACCOUNT_FACTORY_V0_7 } from "../wallets/smart/lib/constants.js";
+import {
+  DEFAULT_ACCOUNT_FACTORY_V0_6,
+  ENTRYPOINT_ADDRESS_v0_6,
+} from "../wallets/smart/lib/constants.js";
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
@@ -34,12 +37,12 @@ describe.runIf(
         rpc: "rpc.thirdweb-dev.com",
         storage: "storage.thirdweb-dev.com",
         bundler: "bundler.thirdweb-dev.com",
-        engineCloud: "engine-cloud-dev-l8wt.chainsaw-dev.zeet.app",
+        engineCloud: "localhost:3009", // "engine-cloud-dev-l8wt.chainsaw-dev.zeet.app",
       });
       serverWallet = Engine.serverWallet({
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
-        walletAddress: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
         chain: arbitrumSepolia,
       });
     });
@@ -120,7 +123,6 @@ describe.runIf(
       const smart = smartWallet({
         chain: sepolia,
         sponsorGas: true,
-        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7, // TODO (cloud): not working for 0.6, needs fix
         sessionKey: {
           address: sessionKeyAccountAddress,
           permissions: {
@@ -146,12 +148,14 @@ describe.runIf(
       const serverWallet = Engine.serverWallet({
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
-        walletAddress: sessionKeyAccountAddress,
+        address: sessionKeyAccountAddress,
         chain: sepolia,
         executionOptions: {
           type: "ERC4337",
           signerAddress: sessionKeyAccountAddress,
           smartAccountAddress: smartAccount.address,
+          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          entrypointAddress: ENTRYPOINT_ADDRESS_v0_6,
         },
       });
 

@@ -32,7 +32,7 @@ export type ServerWalletOptions = {
   /**
    * The server wallet address to use for sending transactions inside engine.
    */
-  walletAddress: string;
+  address: string;
   /**
    * The chain to use for signing messages and typed data (smart server wallet only).
    */
@@ -113,7 +113,7 @@ type ExecutionResult =
  * ```
  */
 export function serverWallet(options: ServerWalletOptions): Account {
-  const { client, vaultAccessToken, walletAddress, chain, executionOptions } =
+  const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
   const headers: HeadersInit = {
     "x-vault-access-token": vaultAccessToken,
@@ -126,13 +126,13 @@ export function serverWallet(options: ServerWalletOptions): Account {
           chainId: chainId.toString(),
         }
       : {
-          from: walletAddress,
+          from: address,
           chainId: chainId.toString(),
         };
   };
 
   return {
-    address: walletAddress,
+    address,
     sendTransaction: async (transaction: SendTransactionOption) => {
       const body = {
         executionOptions: getExecutionOptions(transaction.chainId),

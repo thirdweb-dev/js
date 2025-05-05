@@ -132,7 +132,7 @@ export type WriteContractData = {
   };
   path?: never;
   query?: never;
-  url: "/write/contract";
+  url: "/v1/write/contract";
 };
 
 export type WriteContractResponses = {
@@ -261,7 +261,7 @@ export type SendTransactionData = {
   };
   path?: never;
   query?: never;
-  url: "/write/transaction";
+  url: "/v1/write/transaction";
 };
 
 export type SendTransactionResponses = {
@@ -461,7 +461,7 @@ export type SignTransactionData = {
   };
   path?: never;
   query?: never;
-  url: "/sign/transaction";
+  url: "/v1/sign/transaction";
 };
 
 export type SignTransactionResponses = {
@@ -537,7 +537,7 @@ export type SignMessageData = {
   };
   path?: never;
   query?: never;
-  url: "/sign/message";
+  url: "/v1/sign/message";
 };
 
 export type SignMessageResponses = {
@@ -622,7 +622,7 @@ export type SignTypedDataData = {
   };
   path?: never;
   query?: never;
-  url: "/sign/typed-data";
+  url: "/v1/sign/typed-data";
 };
 
 export type SignTypedDataResponses = {
@@ -707,7 +707,7 @@ export type ReadContractData = {
   };
   path?: never;
   query?: never;
-  url: "/read/contract";
+  url: "/v1/read/contract";
 };
 
 export type ReadContractResponses = {
@@ -727,7 +727,7 @@ export type ReadContractResponses = {
 export type ReadContractResponse =
   ReadContractResponses[keyof ReadContractResponses];
 
-export type PostReadBalanceData = {
+export type GetNativeBalanceData = {
   body?: {
     /**
      * The chain ID to query the balance on.
@@ -740,10 +740,10 @@ export type PostReadBalanceData = {
   };
   path?: never;
   query?: never;
-  url: "/read/balance";
+  url: "/v1/read/balance";
 };
 
-export type PostReadBalanceErrors = {
+export type GetNativeBalanceErrors = {
   /**
    * Bad Request - Invalid input
    */
@@ -754,7 +754,7 @@ export type PostReadBalanceErrors = {
   500: unknown;
 };
 
-export type PostReadBalanceResponses = {
+export type GetNativeBalanceResponses = {
   /**
    * OK - Balance fetched successfully.
    */
@@ -768,8 +768,8 @@ export type PostReadBalanceResponses = {
   };
 };
 
-export type PostReadBalanceResponse =
-  PostReadBalanceResponses[keyof PostReadBalanceResponses];
+export type GetNativeBalanceResponse =
+  GetNativeBalanceResponses[keyof GetNativeBalanceResponses];
 
 export type EncodeFunctionDataData = {
   body?: {
@@ -804,7 +804,7 @@ export type EncodeFunctionDataData = {
   };
   path?: never;
   query?: never;
-  url: "/encode/contract";
+  url: "/v1/encode/contract";
 };
 
 export type EncodeFunctionDataResponses = {
@@ -864,7 +864,7 @@ export type SearchTransactionsData = {
   };
   path?: never;
   query?: never;
-  url: "/transactions/search";
+  url: "/v1/transactions/search";
 };
 
 export type SearchTransactionsResponses = {
@@ -932,7 +932,7 @@ export type GetTransactionAnalyticsData = {
   };
   path?: never;
   query?: never;
-  url: "/transactions/analytics";
+  url: "/v1/transactions/analytics";
 };
 
 export type GetTransactionAnalyticsResponses = {
@@ -967,7 +967,7 @@ export type GetTransactionAnalyticsSummaryData = {
   };
   path?: never;
   query?: never;
-  url: "/transactions/analytics-summary";
+  url: "/v1/transactions/analytics-summary";
 };
 
 export type GetTransactionAnalyticsSummaryErrors = {

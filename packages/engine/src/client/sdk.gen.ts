@@ -9,12 +9,12 @@ import { client as _heyApiClient } from "./client.gen.js";
 import type {
   EncodeFunctionDataData,
   EncodeFunctionDataResponse,
+  GetNativeBalanceData,
+  GetNativeBalanceResponse,
   GetTransactionAnalyticsData,
   GetTransactionAnalyticsResponse,
   GetTransactionAnalyticsSummaryData,
   GetTransactionAnalyticsSummaryResponse,
-  PostReadBalanceData,
-  PostReadBalanceResponse,
   ReadContractData,
   ReadContractResponse,
   SearchTransactionsData,
@@ -66,7 +66,7 @@ export const writeContract = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/write/contract",
+    url: "/v1/write/contract",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export const sendTransaction = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/write/transaction",
+    url: "/v1/write/transaction",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export const signTransaction = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/sign/transaction",
+    url: "/v1/sign/transaction",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -147,7 +147,7 @@ export const signMessage = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/sign/message",
+    url: "/v1/sign/message",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export const signTypedData = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/sign/typed-data",
+    url: "/v1/sign/typed-data",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export const readContract = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/read/contract",
+    url: "/v1/read/contract",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -211,14 +211,14 @@ export const readContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read the Native Balance for an Address
+ * Read Native Balance
  * Fetches the native cryptocurrency balance (e.g., ETH, MATIC) for a given address on a specific chain.
  */
-export const postReadBalance = <ThrowOnError extends boolean = false>(
-  options?: Options<PostReadBalanceData, ThrowOnError>,
+export const getNativeBalance = <ThrowOnError extends boolean = false>(
+  options?: Options<GetNativeBalanceData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostReadBalanceResponse,
+    GetNativeBalanceResponse,
     unknown,
     ThrowOnError
   >({
@@ -228,7 +228,7 @@ export const postReadBalance = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/read/balance",
+    url: "/v1/read/balance",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -255,7 +255,7 @@ export const encodeFunctionData = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/encode/contract",
+    url: "/v1/encode/contract",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -282,7 +282,7 @@ export const searchTransactions = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/transactions/search",
+    url: "/v1/transactions/search",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -309,7 +309,7 @@ export const getTransactionAnalytics = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/transactions/analytics",
+    url: "/v1/transactions/analytics",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -338,7 +338,7 @@ export const getTransactionAnalyticsSummary = <
         type: "apiKey",
       },
     ],
-    url: "/transactions/analytics-summary",
+    url: "/v1/transactions/analytics-summary",
     ...options,
     headers: {
       "Content-Type": "application/json",
