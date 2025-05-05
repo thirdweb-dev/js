@@ -1,0 +1,45 @@
+import { Callout } from '@doc';
+
+export const metadata = {
+    title: "AWS KMS Wallet",
+    description:
+        "Learn how to set up an AWS KMS wallet with thirdweb Engine.",
+};
+
+
+## AWS KMS wallet
+
+An AWS KMS Wallet is a wallet securely stored in your AWS account. Engine can create and transact with the wallet, but not delete it.
+
+<Callout variant="info" title="AWS KMS Support">
+  AWS KMS wallets are not currently supported on Engine Cloud. They are currently supported on Engine Dedicated v2, and will be available soon with Dedicated v3. 
+</Callout>
+
+
+#### Setup
+
+1. [Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console) with programmatic access.
+1. [Grant the following KMS permissions](https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html) to this user.
+   - `kms:CreateKey`
+   - `kms:GetPublicKey`
+   - `kms:Sign`
+   - `kms:CreateAlias`
+   - `kms:Verify`
+1. On the user page, navigate to **Security credentials > Access keys**.
+1. Select **Create access key** to get an **Access Key** and **Secret Key**.
+1. In the dashboard, navigate to **Configuration > Server Wallets**.
+1. Select **AWS KMS** and provide the following:
+   - Access Key (example: `AKIA...`)
+   - Secret Key (example: `UW7A...`)
+   - Region (example: `us-west-1`)
+
+#### Import an existing wallet
+
+1. Ensure your [KMS key is created](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) with the following settings:
+   - Key type: `Asymmetric`
+   - Key spec: `ECC_SECG_P256K1`
+   - Key usage: `Sign and verify`
+1. In the dashboard, navigate to **Overview > Server Wallets**.
+1. Select **Import** and provide the following:
+   - AWS KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
+   - AWS KMS ARN (example: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`)

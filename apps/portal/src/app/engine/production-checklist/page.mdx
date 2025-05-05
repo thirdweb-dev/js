@@ -1,18 +1,21 @@
 # Production Checklist
 
-Follow best practices when using Engine in a production environment.
+Before deploying Engine to production, ensure you have completed the following steps.
 
-### Security
+- [ ] Ensure access tokens are not accessible from your frontend. The Engine API is intended to be called from your backend only. 
 
-- The Engine API is intended to be called from your backend only. Ensure your access tokens are not accessible from your frontend.
-  - Exception: Relayer endpoints do not require access tokens. [Learn more about relayers.](infrastructure/engine/guides/relayer)
-- Securely store access tokens and the thirdweb secret key. Rotate these credentials if they are compromised.
-- Use labels to keep track of your wallets, admins, and access tokens.
-- Use access token with expirations to grant time-bound access.
-- Regularly review the admins list to remove inactive and former team members.
+  **Exception: Relayer endpoints do not require access tokens.**
 
-### Backend wallets
+- [ ] Securely store access tokens, vault admin keys, and your project's secret key. You may use a tool such as AWS Secrets Manager, Google Secrets Manager, and others. 
+- [ ] Use labels to keep track of your wallets, admins, and access tokens.
+- [ ] Use access token with expirations to grant time-bound access.
 
-- Recommended: Use a wallet backed by AWS KMS or Google KMS. Wallet access is always recoverable and private keys are never exposed.
+After deploying Engine to production, ensure you check regularly to keep your setup secure.
+- [ ] Regularly review the admins list to remove inactive and former team members.
+- [ ] Rotate credentials such as access tokens, admin keys, and your project's secret key if they have been compromised.
+- [ ] Ensure your server wallets have sufficient funds. Use [wallet webhooks](/engine/features/webhooks) to alert when your gas balance is low.
+
+## Recommended Actions
+
+- Use a wallet backed by AWS KMS or Google KMS. Wallet access is always recoverable and your wallet's private keys are never exposed.
 - If using a local wallet: **back up the private key**. Engine cannot recover private keys if the encrypted stored data is lost or corrupted.
-- Ensure your backend wallets have sufficient funds. Use [wallet webhooks](/engine/features/webhooks) to alert when your gas balance is low.

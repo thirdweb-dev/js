@@ -1,20 +1,17 @@
-import { Callout } from "@doc";
+import { Callout, Details } from "@doc";
 
-# FAQ
+# Engine FAQs
 
-## About Engine
-
-### Which contracts work with Engine?
-
+<Details summary="Which contracts work with Engine?"> 
 Engine supports reads and writes to any contract verified on the blockchain explorer, including any contract deployed via thirdweb.
 _Note: Some endpoints allow providing the contract ABI to support any unverified contract._
 
 Engine also supports deploys for thirdweb [prebuilt contracts](https://thirdweb.com/explore) including NFTs, tokens, marketplaces, and smart accounts.
 
 If you have a question about a particular contract type, [contact us](https://thirdweb.com/support).
+</Details>
 
-### How are Engine and the thirdweb Contract SDK different?
-
+<Details summary="What is the difference between Engine and thirdweb SDKs?"> 
 Engine is a server that manages your backend wallets and how they interact with contracts. This difference unlocks capabilities that thirdweb and other web3 SDKs, including:
 
 - Management of KMS backend wallets
@@ -24,10 +21,9 @@ Engine is a server that manages your backend wallets and how they interact with 
 - Webhooks on completed transactions to sync onchain and off-chain activity
 
 Additionally, Engine is built on top of the thirdweb SDK and has the same capabilities.
+</Details>
 
-## Using Engine
-
-### How do I wait for a transaction to be mined?
+<Details summary="How do I wait for a transaction to be mined?"> 
 
 Write calls to contracts do not block until they are mined. Instead they enqueue an async job and immediately return a reference to the job called `queueId`.
 
@@ -46,8 +42,9 @@ Here are three ways to determine when the job is mined:
   	console.log("Received data:", JSON.parse(res.result));
   };
   ```
+</Details>
 
-### How do I send native currency with my transaction?
+<Details summary="How do I send native currency with my transaction??"> 
 
 To send native tokens (e.g. ETH on Ethereum), set `txOverrides.value`.
 This may be required when calling a `payable` contract method.
@@ -64,7 +61,9 @@ Here's an example of sending 0.2 ETH:
 }
 ```
 
-### How do I override gas settings?
+</Details>
+
+<Details summary="How do I override gas settings?">
 
 To override the gas settings, set relevant `txOverrides` gas fields.
 Each field is optional and will be estimated by Engine if omitted.
@@ -89,7 +88,9 @@ Otherwise if gas prices don't fall, transactions may be in your queue indefinite
 
 </Callout>
 
-### How do I set a timeout on transactions?
+</Details>
+
+<Details summary="How do I set a timeout on transactions?">
 
 To specify a transaction timeout, set `txOverrides.timeoutSeconds`.
 Engine flags transactions as `errored` if they are not sent before the timeout. An `errored` webhook will be sent.
@@ -106,3 +107,5 @@ Here's an example of a 2-hour timeout:
   }
 }
 ```
+
+</Details>

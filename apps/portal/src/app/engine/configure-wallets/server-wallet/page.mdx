@@ -1,0 +1,37 @@
+import { Details } from "@doc";
+
+## Smart Server Wallets
+
+Smart server wallets are the recommended way to perform blockchain operations with Engine. Each smart server wallet consists of an EOA (managed internally by Engine) and a smart account (using thirdweb's default account implementation).
+
+### Benefits
+
+Smart server wallets inherit smart account benefits and offer several advantages over traditional EOAs:
+
+- **Gas Management**: Built-in paymaster eliminates the need to maintain gas tokens. This means you never need to hold crypto or top up gas.
+- **Better Nonce Management**: Smart accounts use multi-dimensional nonces, which are more efficient than EOAs.
+- **Simple Integration**: Works with all existing Engine endpoints without any code changes.
+
+### How it works
+
+The smart account is automatically deployed the first time you send a transaction on a chain. You don't need to think about deploying or managing the smart account - Engine handles everything behind the scenes. All transactions are sent as UserOperations to the EntryPoint contract on chain.
+
+<Details summary="How are Smart Backend Wallets different from existing engine AA features?">
+	Unlike the [previous account abstraction implementation in
+	Engine](account-abstraction) where you had to manage both the account address
+	(`x-account-address`) and the backend wallet address
+	(`x-backend-wallet-address`) separately, smart backend wallets simplify this.
+	The backend wallet address is now the smart account address itself.
+</Details>
+
+<Details summary="When not to use Smart Backend Wallets?">
+	At this time, Smart Backend Wallets do not allow for importing a smart
+	account. In use cases where you need to import a smart account (such as with
+	session keys), you should use [Engine AA features that utilise the
+	`x-account-address` header](account-abstraction).
+</Details>
+
+### Pricing
+
+Smart server wallets have no additional costs to use with your Engine instance. Transactions sent from smart backend wallets follow the [same billing model as regular account abstraction transactions with thirdweb](/connect/account-abstraction/infrastructure#pricing--billing).
+Smart accounts need to be deployed on each chain. This costs gas and is billed to your account like any other transaction.

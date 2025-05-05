@@ -12,6 +12,7 @@ import {
   Server,
   ShieldQuestion,
   Wallet,
+  Webhook,
   Wrench,
 } from "lucide-react";
 
@@ -36,21 +37,12 @@ export const sidebar: SideBar = {
       icon: <Rocket />,
     },
     {
-      name: "Configure Wallets",
-      href: `${engineSlug}/configure-wallets`,
-      icon: <Wallet />,
-    },
-    {
       name: "Key Concepts",
       icon: <Key />,
       links: [
         {
-          name: "Server Wallets",
-          href: `${engineSlug}/features/backend-wallets`,
-        },
-        {
-          name: "Wallet Credentials",
-          href: `${engineSlug}/features/wallet-credentials`,
+          name: "Transactions",
+          href: `${engineSlug}/features/transactions`,
         },
         {
           name: "Contracts",
@@ -67,10 +59,6 @@ export const sidebar: SideBar = {
         {
           name: "Webhooks",
           href: `${engineSlug}/features/webhooks`,
-        },
-        {
-          name: "Cancelling Transactions",
-          href: `${engineSlug}/features/cancelling-transactions`,
         },
         {
           name: "Preventing Duplicate Transactions",
@@ -107,6 +95,33 @@ export const sidebar: SideBar = {
       ],
     },
     {
+      name: "Configure Wallets",
+      href: `${engineSlug}/configure-wallets`,
+      icon: <Wallet />,
+      links: [
+        {
+          name: "Smart Server Wallet",
+          href: `${engineSlug}/configure-wallets/server-wallet`,
+        },
+        {
+          name: "AWS KMS",
+          href: `${engineSlug}/configure-wallets/aws-kms`,
+        },
+        {
+          name: "Google Cloud KMS",
+          href: `${engineSlug}/configure-wallets/gcp-kms`,
+        },
+        {
+          name: "Circle Wallet",
+          href: `${engineSlug}/configure-wallets/circle-wallet`,
+        },
+        {
+          name: "Wallet Credentials",
+          href: `${engineSlug}/configure-wallets/wallet-credentials`,
+        },
+      ],
+    },
+    {
       name: "Tutorials",
       icon: <BookMarked />,
       links: [
@@ -123,6 +138,11 @@ export const sidebar: SideBar = {
       name: "Typescript SDK",
       href: `${engineSlug}/references/typescript`,
       icon: <Code />,
+    },
+    {
+      name: "Webhooks",
+      href: `${engineSlug}/webhooks`,
+      icon: <Webhook />,
     },
     {
       name: "Prod Checklist",
