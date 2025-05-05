@@ -47,7 +47,9 @@ export function AccountAbstractionLayout(props: {
               </TrackedUnderlineLink>
             </p>
           </div>
-          {props.hasSmartWalletsWithoutBilling && <SmartWalletsBillingAlert />}
+          {props.hasSmartWalletsWithoutBilling && (
+            <SmartWalletsBillingAlert teamSlug={props.teamSlug} />
+          )}
           <GasCreditAlert
             teamSlug={props.teamSlug}
             projectId={props.projectId}
