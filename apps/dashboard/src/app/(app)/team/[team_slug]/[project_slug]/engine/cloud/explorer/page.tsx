@@ -1,23 +1,11 @@
-"use client";
-import { ApiReferenceReact } from "@scalar/api-reference-react";
-import "@scalar/api-reference-react/style.css";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { TryItOut } from "../server-wallets/components/try-it-out";
+import { Scalar } from "./components/scalar";
 
-export default function TransactionsExplorerPage() {
+export default async function TransactionsExplorerPage() {
   return (
-    <div>
-      <ApiReferenceReact
-        configuration={{
-          url: `${THIRDWEB_ENGINE_CLOUD_URL}/openapi`,
-          hideModels: true,
-          servers: [
-            {
-              url: THIRDWEB_ENGINE_CLOUD_URL,
-              description: "Engine Cloud",
-            },
-          ],
-        }}
-      />
+    <div className="flex flex-col gap-4">
+      <TryItOut />
+      <Scalar />
     </div>
   );
 }

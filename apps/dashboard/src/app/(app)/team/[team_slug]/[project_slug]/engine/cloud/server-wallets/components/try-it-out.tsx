@@ -1,18 +1,17 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
 import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { Wallet } from "../wallet-table/types";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../../../../../../../@/components/ui/alert";
 
-export function TryItOut(props: {
-  authToken: string;
-  wallet?: Wallet;
-  team_slug: string;
-  project_slug: string;
-}) {
+export function TryItOut() {
   const [activeTab, setActiveTab] = useState<string>("sdk");
 
   return (
@@ -24,7 +23,8 @@ export function TryItOut(props: {
               Usage from your backend
             </h2>
             <p className="text-muted-foreground text-sm">
-              Send transactions from your server wallets using a simple http API
+              Send transactions from your server wallets using the thirdweb SDK
+              or the HTTP API directly.
             </p>
           </div>
         </div>
@@ -33,7 +33,7 @@ export function TryItOut(props: {
         <TabButtons
           tabs={[
             {
-              name: "SDK",
+              name: "thirdweb SDK",
               onClick: () => setActiveTab("sdk"),
               isActive: activeTab === "sdk",
             },
@@ -68,7 +68,70 @@ export function TryItOut(props: {
         <div className="h-4" />
 
         {activeTab === "sdk" && (
-          <CodeClient lang="ts" code={sdkExample()} className="bg-background" />
+          <div className="flex flex-col gap-4">
+            <Alert variant="info" className="bg-background">
+              <CircleAlertIcon className="size-5" />
+              <AlertTitle>Using the thirdweb SDK on the backend</AlertTitle>
+              <AlertDescription className="leading-loose">
+                <p className="text-foreground text-sm">
+                  You can use the full TypeScript thirdweb SDK in your backend,
+                  allowing you to use:{" "}
+                  <ul className="ml-2 list-disc py-2 pl-4">
+                    <li>
+                      The full catalog of{" "}
+                      <Link
+                        href="https://portal.thirdweb.com/references/typescript/v5/functions#extensions"
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        extension functions
+                      </Link>
+                    </li>
+                    <li>
+                      The{" "}
+                      <Link
+                        href="https://portal.thirdweb.com/references/typescript/v5/prepareContractCall"
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        prepareContractCall
+                      </Link>{" "}
+                      function to encode your transactions
+                    </li>
+                    <li>
+                      The full{" "}
+                      <Link
+                        href="https://portal.thirdweb.com/references/typescript/v5/Account"
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        account
+                      </Link>{" "}
+                      interface, predefined chains, and more
+                    </li>
+                  </ul>
+                  The SDK handles encoding your transactions, signing them to
+                  Engine and polling for status.
+                </p>
+              </AlertDescription>
+            </Alert>
+            <h3 className="font-semibold text-lg tracking-tight">
+              Installation
+            </h3>
+            <CodeClient
+              lang="shell"
+              code={"npm install thirdweb"}
+              className="bg-background"
+            />
+            <h3 className="font-semibold text-lg tracking-tight">
+              Usage example: Minting a ERC1155 NFT to a user
+            </h3>
+            <CodeClient
+              lang="ts"
+              code={sdkExample()}
+              className="bg-background"
+            />
+          </div>
         )}
         {activeTab === "curl" && (
           <CodeClient
@@ -78,7 +141,25 @@ export function TryItOut(props: {
           />
         )}
         {activeTab === "js" && (
-          <CodeClient lang="js" code={jsExample()} className="bg-background" />
+          <div className="flex flex-col gap-4">
+            <p className="text-muted-foreground text-sm">
+              A lightweight, type safe wrapper package of the Engine HTTP API is
+              available on{" "}
+              <Link
+                href="https://www.npmjs.com/package/@thirdweb-dev/engine"
+                className="text-blue-500"
+                target="_blank"
+              >
+                NPM
+              </Link>
+              .
+            </p>
+            <CodeClient
+              lang="js"
+              code={jsExample()}
+              className="bg-background"
+            />
+          </div>
         )}
         {activeTab === "python" && (
           <CodeClient
@@ -97,27 +178,17 @@ export function TryItOut(props: {
             className="bg-background"
           />
         )}
-
-        <div className="h-4" />
-        <div className="flex flex-row justify-end gap-4">
-          <Button variant={"secondary"} asChild>
-            <Link
-              href={`/team/${props.team_slug}/${props.project_slug}/engine/cloud/explorer`}
-              rel="noreferrer"
-            >
-              View API reference
-            </Link>
-          </Button>
-        </div>
       </div>
     </div>
   );
 }
 
 const sdkExample = () => `\
-import { Engine, createThirdwebClient, sendTransaction } from "thirdweb";
-import { claimTo } from "thirdweb/extensions/erc1155";
+import { createThirdwebClient, sendTransaction, getContract, Engine } from "thirdweb";
+import { baseSepolia } from "thirdweb/chains";
+import { claimTo } from "thirdweb/extensions/1155";
 
+// Create a thirdweb client
 const client = createThirdwebClient({
   secretKey: "<your-project-secret-key>",
 });
@@ -125,19 +196,23 @@ const client = createThirdwebClient({
 // Create a server wallet
 const serverWallet = Engine.serverWallet({  
   client,
-  walletAddress: "<your-server-wallet-address>",
+  address: "<your-server-wallet-address>",
   vaultAccessToken: "<your-vault-access-token>",
 });
 
-// Prepare a transaction
+// Prepare the transaction
 const transaction = claimTo({
-  contract,
-  to: "0x...",
-  tokenId: 0n,
-  quantity: 1n,
+  contract: getContract({
+    client,
+    address: "0x...", // Address of the ERC1155 token contract
+    chain: baseSepolia, // Chain of the ERC1155 token contract
+  }),
+  to: "0x...", // The address of the user to mint to
+  tokenId: 0n, // The token ID of the NFT to mint
+  quantity: 1n, // The quantity of NFTs to mint
 });
 
-// Send the transaction
+// Send the transaction via Engine
 const result = await sendTransaction({
   account: serverWallet,
   transaction,

@@ -42,6 +42,12 @@ function TransactionsLayout(props: {
                 >
                   <EngineIcon className="size-4" /> Cloud
                 </Badge>
+                <Badge
+                  variant="outline"
+                  className="mt-0.5 flex items-center gap-2 text-sm"
+                >
+                  Beta
+                </Badge>
               </h1>
               <div className="flex items-center gap-2">
                 <Link
