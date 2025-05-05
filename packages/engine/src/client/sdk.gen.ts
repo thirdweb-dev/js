@@ -7,28 +7,28 @@ import type {
 } from "@hey-api/client-fetch";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
+  EncodeFunctionDataData,
+  EncodeFunctionDataResponse,
   GetTransactionAnalyticsData,
   GetTransactionAnalyticsResponse,
   GetTransactionAnalyticsSummaryData,
   GetTransactionAnalyticsSummaryResponse,
-  PostEncodeContractData,
-  PostEncodeContractResponse,
   PostReadBalanceData,
   PostReadBalanceResponse,
-  PostReadContractData,
-  PostReadContractResponse,
-  PostSignMessageData,
-  PostSignMessageResponse,
-  PostSignTransactionData,
-  PostSignTransactionResponse,
-  PostSignTypedDataData,
-  PostSignTypedDataResponse,
-  PostWriteContractData,
-  PostWriteContractResponse,
-  PostWriteTransactionData,
-  PostWriteTransactionResponse,
+  ReadContractData,
+  ReadContractResponse,
   SearchTransactionsData,
   SearchTransactionsResponse,
+  SendTransactionData,
+  SendTransactionResponse,
+  SignMessageData,
+  SignMessageResponse,
+  SignTransactionData,
+  SignTransactionResponse,
+  SignTypedDataData,
+  SignTypedDataResponse,
+  WriteContractData,
+  WriteContractResponse,
 } from "./types.gen.js";
 
 export type Options<
@@ -49,14 +49,14 @@ export type Options<
 };
 
 /**
- * Write to a Contract with a Function Call
+ * Write Contract
  * Call a write function on a contract.
  */
-export const postWriteContract = <ThrowOnError extends boolean = false>(
-  options?: Options<PostWriteContractData, ThrowOnError>,
+export const writeContract = <ThrowOnError extends boolean = false>(
+  options?: Options<WriteContractData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostWriteContractResponse,
+    WriteContractResponse,
     unknown,
     ThrowOnError
   >({
@@ -76,14 +76,14 @@ export const postWriteContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Send an Encoded Transaction
- * Send a transaction or a batch of transactions
+ * Send Transaction
+ * Send an encoded transaction or a batch of transactions
  */
-export const postWriteTransaction = <ThrowOnError extends boolean = false>(
-  options?: Options<PostWriteTransactionData, ThrowOnError>,
+export const sendTransaction = <ThrowOnError extends boolean = false>(
+  options?: Options<SendTransactionData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostWriteTransactionResponse,
+    SendTransactionResponse,
     unknown,
     ThrowOnError
   >({
@@ -106,11 +106,11 @@ export const postWriteTransaction = <ThrowOnError extends boolean = false>(
  * Sign Transaction
  * Sign transactions without sending them.
  */
-export const postSignTransaction = <ThrowOnError extends boolean = false>(
-  options?: Options<PostSignTransactionData, ThrowOnError>,
+export const signTransaction = <ThrowOnError extends boolean = false>(
+  options?: Options<SignTransactionData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostSignTransactionResponse,
+    SignTransactionResponse,
     unknown,
     ThrowOnError
   >({
@@ -133,11 +133,11 @@ export const postSignTransaction = <ThrowOnError extends boolean = false>(
  * Sign Message
  * Sign arbitrary messages.
  */
-export const postSignMessage = <ThrowOnError extends boolean = false>(
-  options?: Options<PostSignMessageData, ThrowOnError>,
+export const signMessage = <ThrowOnError extends boolean = false>(
+  options?: Options<SignMessageData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostSignMessageResponse,
+    SignMessageResponse,
     unknown,
     ThrowOnError
   >({
@@ -160,11 +160,11 @@ export const postSignMessage = <ThrowOnError extends boolean = false>(
  * Sign Typed Data
  * Sign EIP-712 typed data.
  */
-export const postSignTypedData = <ThrowOnError extends boolean = false>(
-  options?: Options<PostSignTypedDataData, ThrowOnError>,
+export const signTypedData = <ThrowOnError extends boolean = false>(
+  options?: Options<SignTypedDataData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostSignTypedDataResponse,
+    SignTypedDataResponse,
     unknown,
     ThrowOnError
   >({
@@ -184,14 +184,14 @@ export const postSignTypedData = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read from a Contract
- * Call read-only functions using multicall.
+ * Read Contract
+ * Call read-only contract functions or batch read using multicall.
  */
-export const postReadContract = <ThrowOnError extends boolean = false>(
-  options?: Options<PostReadContractData, ThrowOnError>,
+export const readContract = <ThrowOnError extends boolean = false>(
+  options?: Options<ReadContractData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostReadContractResponse,
+    ReadContractResponse,
     unknown,
     ThrowOnError
   >({
@@ -238,14 +238,14 @@ export const postReadBalance = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Encode A Contract Function Call
- * Get transaction parameters (to, data, value) for contract calls.
+ * Encode Function Data
+ * Encode a contract call into transaction parameters (to, data, value).
  */
-export const postEncodeContract = <ThrowOnError extends boolean = false>(
-  options?: Options<PostEncodeContractData, ThrowOnError>,
+export const encodeFunctionData = <ThrowOnError extends boolean = false>(
+  options?: Options<EncodeFunctionDataData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostEncodeContractResponse,
+    EncodeFunctionDataResponse,
     unknown,
     ThrowOnError
   >({
@@ -282,7 +282,7 @@ export const searchTransactions = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/project/transactions/search",
+    url: "/transactions/search",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -309,7 +309,7 @@ export const getTransactionAnalytics = <ThrowOnError extends boolean = false>(
         type: "apiKey",
       },
     ],
-    url: "/project/transactions/analytics",
+    url: "/transactions/analytics",
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -338,7 +338,7 @@ export const getTransactionAnalyticsSummary = <
         type: "apiKey",
       },
     ],
-    url: "/project/transactions/analytics-summary",
+    url: "/transactions/analytics-summary",
     ...options,
     headers: {
       "Content-Type": "application/json",

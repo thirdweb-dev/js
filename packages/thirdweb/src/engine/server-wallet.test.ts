@@ -7,13 +7,11 @@ import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import { getContract } from "../contract/contract.js";
 import { setContractURI } from "../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
+import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { setThirdwebDomains } from "../utils/domains.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
-import {
-  DEFAULT_ACCOUNT_FACTORY_V0_6,
-  ENTRYPOINT_ADDRESS_v0_6,
-} from "../wallets/smart/lib/constants.js";
+import { DEFAULT_ACCOUNT_FACTORY_V0_7 } from "../wallets/smart/lib/constants.js";
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
@@ -113,15 +111,18 @@ describe.runIf(
       ).rejects.toThrow();
     });
 
-    it.skip("should send a session key tx", async () => {
+    it("should send a session key tx", async () => {
+      const sessionKeyAccountAddress = process.env
+        .ENGINE_CLOUD_WALLET_ADDRESS_EOA as string;
       const personalAccount = await generateAccount({
         client: TEST_CLIENT,
       });
       const smart = smartWallet({
         chain: sepolia,
         sponsorGas: true,
+        factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7, // TODO (cloud): not working for 0.6, needs fix
         sessionKey: {
-          address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+          address: sessionKeyAccountAddress,
           permissions: {
             approvedTargets: "*",
           },
@@ -133,19 +134,27 @@ describe.runIf(
       });
       expect(smartAccount.address).toBeDefined();
 
+      const signers = await getAllActiveSigners({
+        contract: getContract({
+          client: TEST_CLIENT,
+          chain: sepolia,
+          address: smartAccount.address,
+        }),
+      });
+      expect(signers.map((s) => s.signer)).toContain(sessionKeyAccountAddress);
+
       const serverWallet = Engine.serverWallet({
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
-        walletAddress: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        walletAddress: sessionKeyAccountAddress,
         chain: sepolia,
         executionOptions: {
           type: "ERC4337",
-          signerAddress: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+          signerAddress: sessionKeyAccountAddress,
           smartAccountAddress: smartAccount.address,
-          entrypointAddress: ENTRYPOINT_ADDRESS_v0_6, // TODO (cloud): not working for 0.6, needs fix
-          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
         },
       });
+
       const tx = await sendTransaction({
         account: serverWallet,
         transaction: {

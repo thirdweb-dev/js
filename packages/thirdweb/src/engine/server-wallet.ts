@@ -1,10 +1,10 @@
 import {
   type AaExecutionOptions,
   type AaZksyncExecutionOptions,
-  postSignMessage,
-  postSignTypedData,
-  postWriteTransaction,
   searchTransactions,
+  sendTransaction,
+  signMessage,
+  signTypedData,
 } from "@thirdweb-dev/engine";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -145,7 +145,7 @@ export function serverWallet(options: ServerWalletOptions): Account {
         ],
       };
 
-      const result = await postWriteTransaction({
+      const result = await sendTransaction({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         fetch: getClientFetch(client),
         headers,
@@ -160,8 +160,7 @@ export function serverWallet(options: ServerWalletOptions): Account {
       if (!data) {
         throw new Error("No data returned from engine");
       }
-      const transactionId =
-        "transactions" in data ? data.transactions?.[0]?.id : data[0]?.id; // TODO (cloud) fix return type
+      const transactionId = data.transactions?.[0]?.id;
       if (!transactionId) {
         throw new Error("No transactionId returned from engine");
       }
@@ -193,36 +192,38 @@ export function serverWallet(options: ServerWalletOptions): Account {
 
         const data = searchResult.data?.result?.transactions?.[0];
 
-        if (data) {
-          const executionResult = data.executionResult as ExecutionResult;
-          const status = executionResult.status;
+        if (!data) {
+          throw new Error(`Transaction ${transactionId} not found`);
+        }
 
-          if (status === "FAILED") {
-            throw new Error(
-              `Transaction failed: ${executionResult.error || "Unknown error"}`,
-            );
-          }
+        const executionResult = data.executionResult as ExecutionResult;
+        const status = executionResult.status;
 
-          const onchainStatus =
-            executionResult && "onchainStatus" in executionResult
-              ? executionResult.onchainStatus
-              : null;
+        if (status === "FAILED") {
+          throw new Error(
+            `Transaction failed: ${executionResult.error || "Unknown error"}`,
+          );
+        }
 
-          if (status === "CONFIRMED" && onchainStatus === "REVERTED") {
-            const revertData =
-              "revertData" in executionResult
-                ? executionResult.revertData
-                : undefined;
-            throw new Error(
-              `Transaction reverted: ${revertData?.decodedError?.name || revertData?.revertReason || "Unknown revert reason"}`,
-            );
-          }
+        const onchainStatus =
+          executionResult && "onchainStatus" in executionResult
+            ? executionResult.onchainStatus
+            : null;
 
-          if (data.transactionHash) {
-            return {
-              transactionHash: data.transactionHash as Hex,
-            };
-          }
+        if (status === "CONFIRMED" && onchainStatus === "REVERTED") {
+          const revertData =
+            "revertData" in executionResult
+              ? executionResult.revertData
+              : undefined;
+          throw new Error(
+            `Transaction reverted: ${revertData?.decodedError?.name || revertData?.revertReason || "Unknown revert reason"}`,
+          );
+        }
+
+        if (data.transactionHash) {
+          return {
+            transactionHash: data.transactionHash as Hex,
+          };
         }
         // wait 1s before checking again
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -245,7 +246,7 @@ export function serverWallet(options: ServerWalletOptions): Account {
         throw new Error("Chain ID is required for signing messages");
       }
 
-      const signResult = await postSignMessage({
+      const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         fetch: getClientFetch(client),
         headers,
@@ -281,7 +282,7 @@ export function serverWallet(options: ServerWalletOptions): Account {
         throw new Error("Chain ID is required for signing messages");
       }
 
-      const signResult = await postSignTypedData({
+      const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         fetch: getClientFetch(client),
         headers,

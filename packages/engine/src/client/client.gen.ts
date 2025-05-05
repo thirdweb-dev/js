@@ -23,6 +23,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
   createConfig<ClientOptions>({
-    baseUrl: "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app",
+    baseUrl: "http://localhost:3009",
   }),
 );
