@@ -1,7 +1,9 @@
 import "server-only";
 import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
+import { cookies } from "next/headers";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
+import { LAST_USED_TEAM_ID } from "../../constants/cookies";
 
 export type Team = TeamResponse & { stripeCustomerId: string | null };
 
@@ -73,4 +75,23 @@ export async function getDefaultTeam() {
     return (await res.json())?.result as Team;
   }
   return null;
+}
+
+export async function getLastVisitedTeamOrDefaultTeam() {
+  const token = await getAuthToken();
+  if (!token) {
+    return null;
+  }
+
+  const cookiesStore = await cookies();
+  const lastVisitedTeamId = cookiesStore.get(LAST_USED_TEAM_ID)?.value;
+
+  if (lastVisitedTeamId) {
+    const team = await getTeamById(lastVisitedTeamId);
+    if (team) {
+      return team;
+    }
+  }
+
+  return getDefaultTeam();
 }
