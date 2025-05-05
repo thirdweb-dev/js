@@ -3,7 +3,6 @@ import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
 import { THIRDWEB_VAULT_URL } from "../../../../../../../../@/constants/env";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import { TryItOut } from "./components/try-it-out";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
 
@@ -54,11 +53,6 @@ export default async function TransactionsServerWalletsPage(props: {
             project={project}
             teamSlug={team_slug}
             managementAccessToken={managementAccessToken ?? undefined}
-          />
-          <TryItOut
-            authToken={authToken}
-            team_slug={team_slug}
-            project_slug={project_slug}
           />
         </div>
       )}
