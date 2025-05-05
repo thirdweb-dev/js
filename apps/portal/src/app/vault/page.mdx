@@ -1,0 +1,52 @@
+import { createMetadata } from "@/components/Document";
+import { DocImage, FeatureCard, OpenSourceCard, Callout } from "@doc";
+import { ArrowLeftRight, UserLock, Users, Wallet } from "lucide-react";
+
+
+export const metadata = createMetadata({
+	title: "thirdweb Vault",
+	description: "An open-source, backend server that reads, writes, and deploys contracts at production scale.",
+});
+
+
+# Vault
+
+thirdweb vault is an open-source non-custodial key management service, secured with TEE architecture (AWS Nitro Enclaves) and designed for blockchain applications.
+
+## Features
+
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
+>
+	<FeatureCard
+		title="Non-Custodial Wallets"
+		description="Generate and manage EOAs where private keys remain encrypted and secure"
+		iconUrl={<Wallet />}
+	/>
+
+    	<FeatureCard
+		title="Programmatic Signing"
+		description="Enable applications to request signatures based on rules without exposing keys"
+		iconUrl={<ArrowLeftRight />}
+	/>
+
+    <FeatureCard
+		title="Sophisticated Access Models"
+		description="Delegate signing capabilities with granular access controls"
+        iconUrl={<UserLock />}
+	/>
+
+    <FeatureCard
+		title="Flexibility"
+		description="Basic wallet functionality to multi-user organizations with complex permissioning"
+		iconUrl={<Users/>}
+	/>
+
+</div>
+
+With vault, you can build applications where:
+
+- Your users never need to manage private keys
+- Your backend services can request signatures without having access to private keys
+- Your users can create controlled access for team members, services, or automation
+- Security is enforced cryptographically, not through promises
