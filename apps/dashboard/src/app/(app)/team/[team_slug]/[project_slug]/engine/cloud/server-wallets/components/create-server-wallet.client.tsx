@@ -16,6 +16,7 @@ import { Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { engineCloudProxy } from "../../../../../../../../../@/actions/proxies";
+import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
 import { initVaultClient } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
@@ -26,6 +27,7 @@ export default function CreateServerWallet(props: {
   const router = useDashboardRouter();
   const [label, setLabel] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const trackEvent = useTrack();
 
   const createEoaMutation = useMutation({
     mutationFn: async ({
@@ -35,6 +37,11 @@ export default function CreateServerWallet(props: {
       managementAccessToken: string;
       label: string;
     }) => {
+      trackEvent({
+        category: "engine-cloud",
+        action: "create_server_wallet",
+      });
+
       const vaultClient = await initVaultClient();
 
       const eoa = await createEoa({
@@ -60,7 +67,7 @@ export default function CreateServerWallet(props: {
 
       // no need to await this, it's not blocking
       engineCloudProxy({
-        pathname: "/v1/cache/smart-account",
+        pathname: "/cache/smart-account",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

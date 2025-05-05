@@ -18,6 +18,7 @@ import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
 import { CheckIcon, DownloadIcon, Loader2, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
@@ -33,10 +34,16 @@ export default function CreateVaultAccountButton(props: {
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
+  const trackEvent = useTrack();
 
   const initialiseProjectWithVaultMutation = useMutation({
     mutationFn: async () => {
       setModalOpen(true);
+
+      trackEvent({
+        category: "engine-cloud",
+        action: "create_vault_account",
+      });
 
       const vaultClient = await initVaultClient();
 

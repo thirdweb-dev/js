@@ -26,6 +26,7 @@ import {
   sepolia,
 } from "thirdweb/chains";
 import * as z from "zod";
+import { useTrack } from "../../../../../../../../hooks/analytics/useTrack";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
 
@@ -49,6 +50,7 @@ export function SendTestTransaction(props: {
   const queryClient = useQueryClient();
   const [hasSentTx, setHasSentTx] = useState(false);
   const router = useDashboardRouter();
+  const trackEvent = useTrack();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -74,6 +76,11 @@ export function SendTestTransaction(props: {
       accessToken: string;
       chainId: number;
     }) => {
+      trackEvent({
+        category: "engine-cloud",
+        action: "send_test_tx",
+      });
+
       const response = await engineCloudProxy({
         pathname: "/v1/write/transaction",
         method: "POST",

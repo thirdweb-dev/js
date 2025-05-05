@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
@@ -38,10 +39,14 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
+  const trackEvent = useTrack();
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      trackEvent({
+        category: "engine-cloud",
+        action: "rotate_admin_key",
+      });
 
       const vaultClient = await initVaultClient();
       const rotationCode = props.project.services.find(

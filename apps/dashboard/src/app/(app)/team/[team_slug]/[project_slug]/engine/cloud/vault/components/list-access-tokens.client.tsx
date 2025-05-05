@@ -18,6 +18,7 @@ import { Loader2, LockIcon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { toDateTimeLocal } from "utils/date-utils";
+import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
 import {
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,
@@ -32,10 +33,16 @@ export default function ListAccessTokens(props: {
   const [adminKey, setAdminKey] = useState("");
   const [deletingTokenId, setDeletingTokenId] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const trackEvent = useTrack();
   // TODO allow passing permissions to the access token
   const createAccessTokenMutation = useMutation({
     mutationFn: async (args: { adminKey: string }) => {
       const vaultClient = await initVaultClient();
+
+      trackEvent({
+        category: "engine-cloud",
+        action: "create_access_token",
+      });
 
       const userAccessTokenRes = await createWalletAccessToken({
         project: props.project,
@@ -67,6 +74,11 @@ export default function ListAccessTokens(props: {
     mutationFn: async (args: { adminKey: string; accessTokenId: string }) => {
       setDeletingTokenId(args.accessTokenId);
       const vaultClient = await initVaultClient();
+
+      trackEvent({
+        category: "engine-cloud",
+        action: "revoke_access_token",
+      });
 
       const revokeAccessTokenRes = await revokeAccessToken({
         client: vaultClient,
