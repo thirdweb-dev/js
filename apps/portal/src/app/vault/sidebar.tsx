@@ -1,5 +1,12 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { Key, Rocket, ShieldQuestion, Vault } from "lucide-react";
+import {
+  Key,
+  MessageCircleQuestionIcon,
+  Rocket,
+  ShieldQuestion,
+  Vault,
+  Wrench,
+} from "lucide-react";
 
 export const sidebar: SideBar = {
   name: "Vault",
@@ -19,6 +26,10 @@ export const sidebar: SideBar = {
       icon: <Key />,
       links: [
         {
+          name: "Key Management",
+          href: "/vault/key-concepts/key-management",
+        },
+        {
           name: "Entities",
           href: "/vault/key-concepts/entities",
         },
@@ -28,7 +39,7 @@ export const sidebar: SideBar = {
         },
         {
           name: "Access Tokens",
-          href: "/vault/key-concepts/accounts",
+          href: "/vault/key-concepts/access-tokens",
         },
         {
           name: "Access Control",
@@ -38,8 +49,18 @@ export const sidebar: SideBar = {
     },
     {
       name: "Security",
-      href: "/vault/key-concepts/security",
+      href: "/vault/security",
       icon: <ShieldQuestion />,
+    },
+    {
+      name: "Troubleshoot",
+      href: "/vault/troubleshoot",
+      icon: <Wrench />,
+    },
+    {
+      name: "FAQs",
+      href: "/vault/faqs",
+      icon: <MessageCircleQuestionIcon />,
     },
   ],
 };

@@ -1,0 +1,25 @@
+import { Details } from "@doc";
+
+# Vault FAQs
+
+<Details summary="Why does thirdweb offer me the ability to backup my recovery code?">
+***thirdweb vault is entirely non-custodial.***
+
+This means that if you lose your keys and your recovery code, *you have no means of recovering any of your EOAs, any funds stored in them, or any smart accounts or other contracts your EOAs might own.*
+
+thirdweb *cannot* help you in such a scenario.
+
+While storing all keys with yourself is the most secure way to use thirdweb vault, the lack of recovery options might be inconvenient or scary. As a compromise, when used with Engine Cloud, thirdweb allows you to store a backup of your rotation code with us. This way if you ever lose your admin key, we can let you rotate it as long as you can access the project this vault was initialised for.
+
+***is this still non-custodial?***
+
+yes.
+
+thirdweb cannot access any of your wallets or created entities with your rotation code alone.
+
+a “rotation-code” only allows the “service account rotate” operation, which will invalidate your admin key and all existing access tokens.
+
+There is no way for thirdweb to “silently” access your vault without your knowledge with only the recovery code.
+
+Rotating your engine’s vault account through a thirdweb-stored rotation code requires a signature from your wallet. You will also be able to see rotation history, the thirdweb account which initiated this rotation, and their wallet signature.
+</Details>

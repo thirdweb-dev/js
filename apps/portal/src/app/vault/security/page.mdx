@@ -1,0 +1,94 @@
+# Security
+
+## Non Custodiality
+
+Vault guarantees non-custodiality through cryptography. All private and sensitive data is stored encrypted, and can only be decrypted within the secure enclave. The code running within the secure enclave is open-source, audited, and attested.
+
+## Attestation
+
+At any time, you can request an attestation document from Vault. This attestation document is signed by AWS (independently verifiable).
+
+The attestation document allows you to [verify](https://aws.amazon.com/blogs/compute/validating-attestation-documents-produced-by-aws-nitro-enclaves/) that the code being run inside the secure enclave has not been tampered, and is the same as the open source code that you can access.
+
+The code running inside a nitro enclave is an Enclave Image File (EIF). The EIF has unique PCR values which will change upon tampering.
+
+In the context of AWS Nitro Enclaves, an Enclave Image File (EIF) measurement, specifically the Platform Configuration Register (PCR) values, are **cryptographic hashes that uniquely identify the enclave's image and its contents**. PCRs are used to verify that the enclave has been loaded and is running in a known, trusted state, ensuring its integrity and preventing unauthorized modification
+
+The master key of the Vault can only be accessed by this exact code running inside the enclave. To verify this, you can query Vault to check the current AWS policy on the master key, and confirm that only nitro-enclaves with this specific PCR measurement have access to these resources.
+
+## Verify, Don’t Trust
+
+You can compile your own EIF from the Vault source-code, and retrieve PCR values. This allows you to compare the PCR values you received from Vault *against* the PCR measurements you generated yourself, proving that a hosted Vault service is running untampered code.
+
+## Chain of ~~Trust~~ Verification
+
+Armed with proof that the Vault service is running untampered code, you can audit the code to ensure Vault behaves as expected.
+
+For example: how can you verify that Vault is not lying about who can access it’s keys?
+
+You can look at the Vault code to confirm that it does indeed query the correct AWS APIs to fetch the current policies on it’s keys, and then returns it without modifications.
+
+If you know the code is correct, and if you know that the service is running untampered code, then you can confirm that the correct data is being returned to you.
+
+But how can you confirm that data from the Vault hasn’t been tampered by other non-enclave components your response might be coming through? To solve this, Vault uses an end to end encrypted communication protocol with perfect forward secrecy.
+
+This same approach can be used to verify that all entities are always stored encrypted, and access is only granted to authorized requests. To further prevent data leakage, Vault uses HMAC hashes instead of raw identifiers to associate entities with each other in the encrypted database. This means Vault can not-only guarantee non-custodial access to entities, but also preserves privacy between entities and their owners. E2E encryption also means that all your operations and responses remain private and untampered.
+
+# End to End Encryption
+
+Every sensitive request to Vault is made to the `/v1/enclave/post` endpoint with a payload that looks like this:
+
+```json
+
+  {
+    "ephemeralPublicKey": "05d7deb3ef80f929ee6d1afdbf63d43e68ae9d1a045577cf6a2cbc29baaa5c5f",
+    "nonce": "716d11684ed4a973ff401e9bc84db48608c1f78abdba59a2",
+    "ciphertext": "ed0665497121ca59ef610f976f0a3beaa494c17b65ca127e72f286fa3464fde3f14e305d9fded6090bd5fd7fd2fd57d93d399619fe950d71790daec1b753d5b221d914e6e29c6734e6a38c7d237a91fea289f4812eeefae88281cc9cae8e7421ca1d81a5ac4181d889a9a082fbaf7cd5c650a2c8ccf61981d9fc3535a76733e0b00dbad4a2492c399b8a49c00f89d11283fe408754e470f5ec3579fac2aedc4c042eb75dd6804cf0fa331d5da039cfad6e36f5d00e7c6e78b5e0956a36af01761c31b0d85d90b3d15e0808a544c3f15ba1d3ae108efd36add25791ee6d27d58d9bf7c87903bbd5c54ed52c3b501eb9c67ff374308d95b7acabd7e02375fd0aab6668008583740f1883ed0c00731f732ecd4d46498939f223b1eba1c0c536cea12cf85370c17ef30fce992c129938e1f049c64c2cadafd1efc93692445c47923f6bb9ffbb8226fbf7f5bfa5a14060a2085c1df145294397a7035761c20fdac820a57ed4bdd591941a9d9804c3c92c1e5e0f60857a68516b330816c57e133b4dfcf492cdc1f9ab3d9097babd997552adbb90c871e82fbab041555f0ab4ae3fb93adf4a3ba2182d76787d58568275849595564eb10e601f7ede972f2c6d8429112f90ce4aa09177ca2811d7025100cd3621edcc8b091d2e943afdc44f91d2f60abb3daae1"
+  }
+```
+
+The communication protocol ensures that requests can only be decrypted by the Vault-enclave, and responses can only be decrypted by you. The protocol also provides perfect forward secrecy, meaning even if cryptographic keys for a previous request is exposed, future requests still remain non-compromised.
+
+## Protocol
+
+Vault uses the xChaCha20Poly1305 cryptographic cipher, combined with the x25519dalek for zero round trip key-exchange.
+
+### Step 1
+
+The client queries the Vault’s xChaCha20Poly1305 public-key from the `GET api/v1/enclave` endpoint.
+
+### Step 2
+
+The client generates a random 32 byte ephemeral secret key (and stores it to decrypt the response too)
+
+### Step 3
+
+The client derives a shared secret using xChaCha20Poly1305:
+
+```json
+shared_secret = diffie_hellman(client_ephemeral_secret_key, vault_public_key)
+```
+
+### Step 4
+
+The client derives an encryption key from the `shared_secret` using HKDF
+
+### Step 5
+
+The client generates a random 24 byte nonce
+
+The client generates the `ciphertext` using xChaCha20Poly1305 with the random nonce, and the derives encryption key
+
+### Sending the Payload
+
+The generated ciphertext, nonce, and the public key to the ephemeral secret are all hex encoded and sent as the payload
+
+## Decrypting the Resposne
+
+The response also arrives in the same payload format. We just perform the steps in reverse now.
+
+1. Use `x25519dalek`  `diffie_hellman` to derive a `shared_secret` from the:
+    1. private key we used for sending the request
+    2. the public key returned in the response
+2. HKDF the `shared_secret` to get the `encryption_key`
+3. Use the `nonce` in the response (which Vault randomly generates) + the `shared_secret` with xChaCha20Poly1305 to decrypt your payload.
