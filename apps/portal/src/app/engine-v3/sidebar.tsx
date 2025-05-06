@@ -48,13 +48,13 @@ export const sidebar: SideBar = {
       links: [
         {
           name: "Smart Server Wallet",
-          href: `${engineV3Slug}/configure-wallets/server-wallet`,
+          href: `${engineV3Slug}/configure-wallets/smart-server-wallet`,
         },
       ],
     },
     {
       name: "API Reference",
-      href: "engine.thirdweb.com/reference",
+      href: "https://engine.thirdweb.com/reference",
       icon: <Braces />,
     },
     {
@@ -69,7 +69,7 @@ export const sidebar: SideBar = {
     },
     {
       name: "Troubleshoot",
-      href: `${engineV3Slug}/troubleshooting`,
+      href: `${engineV3Slug}/troubleshoot`,
       icon: <Wrench />,
     },
     {
