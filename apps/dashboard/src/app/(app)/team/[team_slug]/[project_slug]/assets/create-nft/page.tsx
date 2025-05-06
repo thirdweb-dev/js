@@ -31,6 +31,8 @@ import { FileInput } from "components/shared/FileInput";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
+import { useAllChainsData } from "hooks/chains/allChains";
+import type { StoredChain } from "stores/chainStores";
 
 // Form schemas
 const collectionInfoSchema = z.object({
@@ -104,6 +106,9 @@ export default function CreateNFTPage() {
   });
   const [showRoyaltySettings, setShowRoyaltySettings] = useState(false);
 
+  // Get chain data
+  const { allChains } = useAllChainsData();
+
   // Forms
   const collectionInfoForm = useForm<CollectionInfoValues>({
     resolver: zodResolver(collectionInfoSchema),
@@ -151,8 +156,27 @@ export default function CreateNFTPage() {
   const renderStepIndicators = () => (
     <div className="flex justify-center mb-8 pt-6">
       <div className="relative flex w-full max-w-md justify-between">
-        {/* Connect line between circles */}
-        <div className="absolute top-5 left-0 right-0 h-0.5 -translate-y-1/2 bg-muted" />
+        {/* Segmented lines between circles instead of a single line */}
+        <div className="absolute top-5 left-0 right-0 flex justify-between">
+          {/* First segment: between step 1 and 2 */}
+          <div className="w-1/2 flex items-center">
+            <div
+              className={`h-0.5 w-full ${
+                step > 1 ? "bg-primary/20" : "bg-muted"
+              }`}
+              style={{ marginLeft: "25px", marginRight: "25px" }}
+            />
+          </div>
+          {/* Second segment: between step 2 and 3 */}
+          <div className="w-1/2 flex items-center">
+            <div
+              className={`h-0.5 w-full ${
+                step > 2 ? "bg-primary/20" : "bg-muted"
+              }`}
+              style={{ marginLeft: "25px", marginRight: "25px" }}
+            />
+          </div>
+        </div>
 
         <StepIndicator step={1} currentStep={step} label="Basic Info" />
         <StepIndicator step={2} currentStep={step} label="Options" />
@@ -263,12 +287,21 @@ export default function CreateNFTPage() {
                     <SelectTrigger id="chain">
                       <SelectValue placeholder="Select chain" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Ethereum">Ethereum</SelectItem>
-                      <SelectItem value="Base">Base</SelectItem>
-                      <SelectItem value="Polygon">Polygon</SelectItem>
-                      <SelectItem value="Arbitrum">Arbitrum</SelectItem>
-                      <SelectItem value="Optimism">Optimism</SelectItem>
+                    <SelectContent className="max-h-[300px]">
+                      {allChains.map((chain: StoredChain) => (
+                        <SelectItem key={chain.chainId} value={chain.name}>
+                          <div className="flex items-center gap-2">
+                            {chain.icon?.url && (
+                              <img
+                                src={chain.icon.url}
+                                alt={chain.name}
+                                className="w-4 h-4 rounded-full"
+                              />
+                            )}
+                            {chain.name}
+                          </div>
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormFieldSetup>
