@@ -212,10 +212,21 @@ const transaction = claimTo({
   quantity: 1n, // The quantity of NFTs to mint
 });
 
-// Send the transaction via Engine
-const result = await sendTransaction({
-  account: serverWallet,
+// Enqueue the transaction via Engine
+const { transactionId } = await serverWallet.enqueueTransaction({
   transaction,
+});
+
+// Get the execution status of the transaction at any point in time
+const executionResult = await Engine.getTransactionStatus({
+  client,
+  transactionId,
+});
+
+// Utility function to poll for the transaction to be submitted onchain
+const txHash = await Engine.waitForTransactionHash({
+  client,
+  transactionId,
 });
 console.log("Transaction hash:", result.transactionHash);
 `;
