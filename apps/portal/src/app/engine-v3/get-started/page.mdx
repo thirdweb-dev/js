@@ -1,0 +1,258 @@
+import { Callout, Step, Steps, Tabs, TabsContent, TabsTrigger, TabsList } from "@doc";
+
+# Get started
+
+Learn how to get started with thirdweb Engine. This guide will walk you through the steps to start building with thirdweb Engine by creating a Vault, server wallets, and integrating into your application.
+
+## Prerequisites
+
+- Create a thirdweb project. If you don't have a project yet, [learn how to create a project](/account/api-keys/create).
+
+## Engine Setup
+
+<Steps>
+	<Step title="Navigate to Engine">
+		In your project dashboard, navigate to **Engine** to get started.
+	</Step>
+
+	<Step title="Create Vault">
+		Create a vault to manage your Engine's server wallets. After setup, you can manage your Vault to create additional access tokens or rotate admin keys.
+
+		<Callout variant="info" title="Vault">
+			Vault is thirdweb's key management service designed to store smart server wallets non-custodially. Learn more about [Vault].
+		</Callout>
+	</Step>
+
+	<Step title="Create Server Wallet">
+		Create a server wallet to perform blockchain actions with Engine.
+
+		<Callout variant="info" title="Server Wallet">
+			Server wallets are smart wallets Engine uses to perform blockchain actions. [Learn more about server wallets](/engine/configure-wallets/server-wallets).
+		</Callout>
+	</Step>
+
+	<Step title="Send Test Transaction">
+		To verify your server wallet setup and see how transactions work, you can send a test transaction in the next step. This sends a no-op transaction—a transaction with zero value—to your own wallet.
+
+		You can send additional test transactions or proceed with the full setup whenever you're ready.
+	</Step>
+
+	<Step title="Integrate with your app">
+		Integrate Engine into your application using the thirdweb SDK or Engine API. [View full API reference.](https://client.scalar.com/workspace/default/request/yq_Wx56PL4Ur6jOZsAOpA)
+
+		<Tabs defaultValue="curl">
+			<TabsList>
+				<TabsTrigger value="curl">Curl</TabsTrigger>
+				<TabsTrigger value="javascript">JavaScript</TabsTrigger>
+				<TabsTrigger value="python">Python</TabsTrigger>
+				<TabsTrigger value="go">Go</TabsTrigger>
+				<TabsTrigger value="c-sharp">C#</TabsTrigger>
+			</TabsList>
+
+			<TabsContent value="curl">
+				```bash
+				curl -X POST "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract" \
+					-H "Content-Type: application/json" \
+					-H "x-secret-key: <your-project-secret-key>" \
+					-H "x-vault-access-token: <your-vault-access-token>" \
+					-d '{
+						"executionOptions": {
+							"from": "<your-server-wallet-address>",
+							"chainId": "84532"
+						},
+						"params": [
+							{
+								"contractAddress": "0x...",
+								"method": "function mintTo(address to, uint256 amount)",
+								"params": ["0x...", "100"]
+							}
+						]
+					}'
+				```
+
+			</TabsContent>
+
+			<TabsContent value="javascript">
+				```typescript
+				const response = await fetch(
+					"https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"x-secret-key": "<your-project-secret-key>",
+							"x-vault-access-token": "<your-vault-access-token>",
+						},
+						body: JSON.stringify({
+							executionOptions: {
+								from: "<your-server-wallet-address>",
+								chainId: "84532",
+							},
+							params: [
+								{
+									contractAddress: "0x...",
+									method: "function mintTo(address to, uint256 amount)",
+									params: ["0x...", "100"],
+								},
+							],
+						}),
+					}
+				);
+				```
+			</TabsContent>
+
+			<TabsContent value="python">
+				```python
+				import requests
+				import json
+
+				url = "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract"
+				headers = {
+					"Content-Type": "application/json",
+					"x-secret-key": "<your-project-secret-key>",
+					"x-vault-access-token": "<your-vault-access-token>"
+				}
+				payload = {
+					"executionOptions": {
+						"from": "<your-server-wallet-address>",
+						"chainId": "84532"
+					},
+					"params": [
+						{
+							"contractAddress": "0x...",
+							"method": "function mintTo(address to, uint256 amount)",
+							"params": ["0x...", "100"]
+						}
+					]
+				}
+
+				response = requests.post(url, headers=headers, json=payload)
+				result = response.json()
+				```
+			</TabsContent>
+
+			<TabsContent value="go">
+				```go
+				package main
+
+				import (
+					"bytes"
+					"encoding/json"
+					"fmt"
+					"net/http"
+				)
+
+				func main() {
+					url := "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract"
+					
+					// Create the request payload
+					type Param struct {
+						ContractAddress string   `json:"contractAddress"`
+						Method          string   `json:"method"`
+						Params          []string `json:"params"`
+					}
+					
+					type RequestBody struct {
+						ExecutionOptions struct {
+							From    string `json:"from"`
+							ChainId string `json:"chainId"`
+						} `json:"executionOptions"`
+						Params []Param `json:"params"`
+					}
+					
+					requestBody := RequestBody{
+						Params: []Param{
+							{
+								ContractAddress: "0x...",
+								Method:          "function mintTo(address to, uint256 amount)",
+								Params:          []string{"0x...", "100"},
+							},
+						},
+					}
+					requestBody.ExecutionOptions.From = "<your-server-wallet-address>"
+					requestBody.ExecutionOptions.ChainId = "84532"
+					
+					jsonData, _ := json.Marshal(requestBody)
+					
+					// Create the HTTP request
+					req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+					req.Header.Set("Content-Type", "application/json")
+					req.Header.Set("x-secret-key", "<your-project-secret-key>")
+					req.Header.Set("x-vault-access-token", "<your-vault-access-token>")
+					
+					// Send the request
+					client := &http.Client{}
+					resp, err := client.Do(req)
+					if err != nil {
+						fmt.Println("Error:", err)
+						return
+					}
+					defer resp.Body.Close()
+					
+					// Process the response
+					var result map[string]interface{}
+					json.NewDecoder(resp.Body).Decode(&result)
+					fmt.Println("Response:", result)
+				}
+				```
+			</TabsContent>
+
+			<TabsContent value="c-sharp">
+				```
+                using System;
+                using System.Net.Http;
+                using System.Text;
+                using System.Text.Json;
+                using System.Threading.Tasks;
+
+                class Program
+                {
+                    static async Task Main()
+                    {
+                        var url = "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract";
+                        
+                        var requestData = new
+                        {
+                            executionOptions = new
+                            {
+                                from = "<your-server-wallet-address>",
+                                chainId = "84532"
+                            },
+                            @params = new[]
+                            {
+                                new
+                                {
+                                    contractAddress = "0x...",
+                                    method = "function mintTo(address to, uint256 amount)",
+                                    @params = new[] { "0x...", "100" }
+                                }
+                            }
+                        };
+                        
+                        var json = JsonSerializer.Serialize(requestData);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        
+                        using var httpClient = new HttpClient();
+                        httpClient.DefaultRequestHeaders.Add("x-secret-key", "<your-project-secret-key>");
+                        httpClient.DefaultRequestHeaders.Add("x-vault-access-token", "<your-vault-access-token>");
+                        
+                        var response = await httpClient.PostAsync(url, content);
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        
+                        Console.WriteLine(responseContent);
+    }
+}
+				```
+			</TabsContent>
+		</Tabs>
+
+		<Callout variant="info" title="TypeScript SDK">
+			You can use the full TypeScript SDK in your backend, allowing you to use:
+			- The full catalog of extension functions
+			- The prepareContractCall function to encode your transactions
+			- The full account interface, predefined chains, and more
+			The SDK handles encoding your transactions, signing them to Engine and polling for status.
+		</Callout>
+	</Step>
+</Steps>
+
