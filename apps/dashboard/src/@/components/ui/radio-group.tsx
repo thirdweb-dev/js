@@ -1,7 +1,7 @@
 "use client";
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { Circle } from "lucide-react";
+import { CircleIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -35,7 +35,7 @@ const RadioGroupItem = React.forwardRef<
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+        <CircleIcon className="size-2.5 fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
@@ -59,11 +59,11 @@ const RadioGroupItemButton = React.forwardRef<
       <div className="flex aspect-square h-4 w-4 items-center justify-center rounded-full border text-inverted ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 group-hover:border-foreground/25 group-data-[state=checked]:border-inverted">
         {/* Show on checked */}
         <RadioGroupPrimitive.Indicator className="flex items-center justify-center rounded-full transition-all">
-          <Circle className="h-2 w-2 fill-current text-current" />
+          <CircleIcon className="size-2 fill-current text-current" />
         </RadioGroupPrimitive.Indicator>
         {/* Show on hover */}
         <div className="hidden items-center justify-center rounded-full text-foreground/25 transition-all group-hover:flex group-data-[state=checked]:hidden">
-          <Circle className="h-2 w-2 fill-current text-current" />
+          <CircleIcon className="size-2 fill-current text-current" />
         </div>
       </div>
       <Label className="cursor-pointer">{props.children}</Label>

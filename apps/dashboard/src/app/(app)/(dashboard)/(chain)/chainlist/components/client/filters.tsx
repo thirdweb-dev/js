@@ -11,7 +11,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
+import { ChevronDownIcon, FilterIcon, XIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import type React from "react";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
@@ -32,7 +32,7 @@ export function AllFilters(props: { hideChainType?: boolean }) {
           variant="outline"
           className="h-10 w-auto gap-2 p-2 lg:h-10 lg:border-0 lg:px-4 lg:py-2"
         >
-          <Filter strokeWidth={1} className="lg:size-4" />
+          <FilterIcon strokeWidth={1} className="lg:size-4" />
           <span className="hidden lg:inline">All Filters</span>
         </Button>
       </PopoverTrigger>

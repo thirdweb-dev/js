@@ -1,4 +1,4 @@
-import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import {
@@ -27,7 +27,7 @@ export const sidebar: SideBar = {
     {
       name: "Live Playground",
       href: "https://playground.thirdweb.com/",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "API Reference",

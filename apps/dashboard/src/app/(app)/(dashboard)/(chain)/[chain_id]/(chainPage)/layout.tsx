@@ -13,11 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getThirdwebClient } from "../../../../../../@/constants/thirdweb.server";
 import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import {

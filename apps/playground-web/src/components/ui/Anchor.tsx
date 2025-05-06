@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Link as LinkIcon } from "lucide-react";
+import { LinkIcon } from "lucide-react";
 
 export function Anchor(props: {
   id: string;

@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { AlertCircleIcon, CheckCircleIcon } from "lucide-react";
 import { useState } from "react";
 
 interface DomainVerificationFormProps {
@@ -142,7 +142,7 @@ export function TeamDomainVerificationCard({
             </div>
 
             <Alert variant="info">
-              <AlertCircle className="size-4" />
+              <AlertCircleIcon className="size-4" />
               <AlertTitle>
                 DNS changes can take up to 48 hours to propagate.
               </AlertTitle>
@@ -174,7 +174,7 @@ export function TeamDomainVerificationCard({
       <div>
         <div className="flex items-center justify-between">
           <div className="mt-2 flex items-start space-x-3">
-            <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
+            <CheckCircleIcon className="mt-0.5 h-5 w-5 text-green-500" />
             <div>
               <p className="font-medium">{domainQuery.data.domain}</p>
               <p className="text-muted-foreground text-sm">

@@ -10,9 +10,11 @@ const fontSans = Inter({
   display: "swap",
 });
 
-export default function CheckoutLayout({
+export default async function CheckoutLayout({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <Providers>

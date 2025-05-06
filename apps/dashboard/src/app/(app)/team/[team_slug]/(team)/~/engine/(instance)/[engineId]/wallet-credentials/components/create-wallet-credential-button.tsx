@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useEngineCreateWalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CredentialForm } from "./credential-form";
@@ -61,7 +61,7 @@ export const CreateWalletCredentialButton: React.FC<
           setIsOpen(true);
         }}
       >
-        <Plus className="mr-2 h-4 w-4" />
+        <PlusIcon className="mr-2 h-4 w-4" />
         Create Wallet Credential
       </Button>
 

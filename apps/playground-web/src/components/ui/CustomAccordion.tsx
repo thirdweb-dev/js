@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { Anchor } from "./Anchor";
 import { DynamicHeight } from "./DynamicHeight";
@@ -106,7 +106,7 @@ export function CustomAccordion(props: CustomAccordionProps) {
             : "",
         )}
       >
-        <ChevronDown
+        <ChevronDownIcon
           className={cn(
             "ease size-4 shrink-0 transition-transform duration-300",
             isOpen && "rotate-180",
