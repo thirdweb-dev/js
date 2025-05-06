@@ -60,6 +60,7 @@ export type BuyWithFiatQuoteQueryOptions = Omit<
  *   );
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithFiatQuote(

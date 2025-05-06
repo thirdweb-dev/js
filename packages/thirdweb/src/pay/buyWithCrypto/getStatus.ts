@@ -123,6 +123,7 @@ export type ValidBuyWithCryptoStatus = Exclude<
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithCryptoStatus(
