@@ -32,6 +32,23 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.quote", () => {
       }),
     ).rejects.toThrowError();
   });
+
+  it("should limit quotes to routes with a certain number of steps", async () => {
+    const quote = await Sell.quote({
+      originChainId: 1,
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      destinationChainId: 10,
+      destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      amount: toWei("0.01"),
+      maxSteps: 2,
+      client: TEST_CLIENT,
+    });
+
+    expect(quote).toBeDefined();
+    expect(quote.originAmount).toEqual(toWei("0.01"));
+    expect(quote.intent).toBeDefined();
+    expect(quote.steps.length).toBeLessThanOrEqual(2);
+  });
 });
 
 describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.prepare", () => {
@@ -68,5 +85,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Sell.prepare", () => {
         client: TEST_CLIENT,
       }),
     ).rejects.toThrowError();
+  });
+
+  it("should limit quotes to routes with a certain number of steps", async () => {
+    const quote = await Sell.prepare({
+      originChainId: 1,
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      destinationChainId: 10,
+      destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      amount: toWei("0.01"),
+      maxSteps: 2,
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      client: TEST_CLIENT,
+    });
+
+    expect(quote).toBeDefined();
+    expect(quote.originAmount).toEqual(toWei("0.01"));
+    expect(quote.steps.length).toBeLessThanOrEqual(2);
+    expect(quote.intent).toBeDefined();
   });
 });

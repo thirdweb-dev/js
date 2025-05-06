@@ -2,6 +2,7 @@ import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
+import { stringify } from "../utils/json.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
 
@@ -70,6 +71,20 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  *
  * You can access this functions input and output types with `Buy.quote.Options` and `Buy.quote.Result`, respectively.
  *
+ * To limit quotes to routes that have a certain number of steps involved, use the `maxSteps` option.
+ *
+ * ```ts
+ * const quote = await Bridge.Buy.quote({
+ *   originChainId: 1,
+ *   originTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   destinationChainId: 10,
+ *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   amount: toWei("0.01"),
+ *   maxSteps: 2, // Will only return a quote for routes with 2 or fewer steps
+ *   client: thirdwebClient,
+ * });
+ * ```
+ *
  * @param options - The options for the quote.
  * @param options.originChainId - The chain ID of the origin token.
  * @param options.originTokenAddress - The address of the origin token.
@@ -91,6 +106,7 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     destinationChainId,
     destinationTokenAddress,
     client,
+    maxSteps,
   } = options;
   const amount =
     "buyAmountWei" in options ? options.buyAmountWei : options.amount;
@@ -102,6 +118,9 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
   url.searchParams.set("buyAmountWei", amount.toString());
+  if (maxSteps) {
+    url.searchParams.set("maxSteps", maxSteps.toString());
+  }
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -137,6 +156,7 @@ export declare namespace quote {
     destinationChainId: number;
     destinationTokenAddress: ox__Address.Address;
     client: ThirdwebClient;
+    maxSteps?: number;
   } & (
     | {
         buyAmountWei: bigint;
@@ -247,6 +267,37 @@ export declare namespace quote {
  *
  * You can access this functions input and output types with `Buy.prepare.Options` and `Buy.prepare.Result`, respectively.
  *
+ * You can include arbitrary data to be included on any webhooks and status responses with the `purchaseData` option.
+ *
+ * ```ts
+ * const quote = await Bridge.Buy.prepare({
+ *   originChainId: 1,
+ *   originTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   destinationChainId: 10,
+ *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   amount: toWei("0.01"),
+ *   purchaseData: {
+ *     size: "large",
+ *     shippingAddress: "123 Main St, New York, NY 10001",
+ *   },
+ *   client: thirdwebClient,
+ * });
+ * ```
+ *
+ * To limit quotes to routes that have a certain number of steps involved, use the `maxSteps` option.
+ *
+ * ```ts
+ * const quote = await Bridge.Buy.prepare({
+ *   originChainId: 1,
+ *   originTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   destinationChainId: 10,
+ *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   amount: toWei("0.01"),
+ *   maxSteps: 2, // Will only return a quote for routes with 2 or fewer steps
+ *   client: thirdwebClient,
+ * });
+ * ```
+ *
  * @param options - The options for the quote.
  * @param options.originChainId - The chain ID of the origin token.
  * @param options.originTokenAddress - The address of the origin token.
@@ -277,6 +328,7 @@ export async function prepare(
     client,
     amount,
     purchaseData,
+    maxSteps,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -287,7 +339,7 @@ export async function prepare(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+    body: stringify({
       buyAmountWei: amount.toString(),
       originChainId: originChainId.toString(),
       originTokenAddress,
@@ -296,6 +348,7 @@ export async function prepare(
       sender,
       receiver,
       purchaseData,
+      maxSteps,
     }),
   });
   if (!response.ok) {
@@ -342,6 +395,7 @@ export declare namespace prepare {
     amount: bigint;
     client: ThirdwebClient;
     purchaseData?: unknown;
+    maxSteps?: number;
   };
 
   type Result = PreparedQuote & {
