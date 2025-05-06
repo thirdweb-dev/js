@@ -17,7 +17,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ArrowUpIcon,
   CheckIcon,
-  ChevronDown,
   ChevronDownIcon,
   CircleStopIcon,
   CopyIcon,
@@ -280,7 +279,7 @@ function WalletSelector(props: {
               }
             />
             {shortenAddress(props.activeAccountAddress)}
-            <ChevronDown className="size-3 text-muted-foreground/70" />
+            <ChevronDownIcon className="size-3 text-muted-foreground/70" />
           </AccountProvider>
         </Button>
       </PopoverTrigger>

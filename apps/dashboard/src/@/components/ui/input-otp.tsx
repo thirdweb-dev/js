@@ -1,7 +1,7 @@
 "use client";
 
 import { OTPInput, OTPInputContext } from "input-otp";
-import { Dot } from "lucide-react";
+import { DotIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -65,7 +65,7 @@ const InputOTPSeparator = React.forwardRef<
 >(({ ...props }, ref) => (
   // biome-ignore lint/a11y/useFocusableInteractive: pure shadcn component - it works
   <div ref={ref} role="separator" {...props}>
-    <Dot />
+    <DotIcon />
   </div>
 ));
 InputOTPSeparator.displayName = "InputOTPSeparator";

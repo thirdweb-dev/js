@@ -14,7 +14,7 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { Pencil, Trash2 } from "lucide-react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "tw-components/link";
 import type { Ecosystem, Partner } from "../../../../../types";
@@ -146,7 +146,7 @@ function PartnerRow(props: {
               );
             }}
           >
-            <Pencil className="size-4" />
+            <PencilIcon className="size-4" />
             <span className="sr-only">Edit</span>
           </Button>
           <ConfirmationDialog
@@ -179,7 +179,7 @@ function PartnerRow(props: {
               className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
               disabled={isDeleting}
             >
-              <Trash2 className="size-4" />
+              <Trash2Icon className="size-4" />
               <span className="sr-only">Delete</span>
             </Button>
           </ConfirmationDialog>

@@ -46,7 +46,9 @@ export function FunctionTDoc(props: {
     <>
       {props.showHeading !== false && (
         <Heading level={props.level} id={slugger.slug(doc.name)}>
-          {extensionName ? `${extensionName}.${doc.name}` : doc.name}
+          {extensionName && extensionName !== "Common"
+            ? `${extensionName}.${doc.name}`
+            : doc.name}
         </Heading>
       )}
 

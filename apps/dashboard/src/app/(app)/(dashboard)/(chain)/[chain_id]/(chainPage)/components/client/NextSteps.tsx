@@ -1,6 +1,6 @@
 "use client";
 import { useTrack } from "hooks/analytics/useTrack";
-import { FileText } from "lucide-react";
+import { FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
 import { SectionTitle } from "../server/SectionTitle";
@@ -14,7 +14,7 @@ export default function NextSteps(props: { chain: ChainMetadata }) {
       <SectionTitle title="Next Steps" />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <div className="relative flex gap-3 rounded-lg border bg-card p-4 pr-8 transition-colors hover:border-active-border">
-          <FileText className="mt-0.5 size-5 shrink-0" />
+          <FileTextIcon className="mt-0.5 size-5 shrink-0" />
           <div>
             <h3 className="mb-1.5 font-medium">
               <Link

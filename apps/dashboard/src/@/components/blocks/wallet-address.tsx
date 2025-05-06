@@ -8,7 +8,7 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useClipboard } from "hooks/useClipboard";
-import { Check, Copy, XIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
 import { useMemo } from "react";
 import { type ThirdwebClient, isAddress } from "thirdweb";
 import { ZERO_ADDRESS } from "thirdweb";
@@ -104,9 +104,9 @@ export function WalletAddress(props: {
               className="flex items-center gap-2"
             >
               {hasCopied ? (
-                <Check className="h-4 w-4" />
+                <CheckIcon className="h-4 w-4" />
               ) : (
-                <Copy className="h-4 w-4" />
+                <CopyIcon className="h-4 w-4" />
               )}
               {hasCopied ? "Copied!" : "Copy"}
             </Button>

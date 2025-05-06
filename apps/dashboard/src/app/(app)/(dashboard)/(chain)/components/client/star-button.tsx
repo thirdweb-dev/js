@@ -6,7 +6,7 @@ import { Button, type ButtonProps } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Star } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { useActiveAccount } from "thirdweb/react";
 
 async function favoriteChains() {
@@ -104,7 +104,7 @@ export function StarButton(props: {
         {mutation.isPending ? (
           <Spinner className={cn("size-6", props.iconClassName)} />
         ) : (
-          <Star
+          <StarIcon
             className={cn(
               "size-6 text-foreground transition-all",
               props.iconClassName,

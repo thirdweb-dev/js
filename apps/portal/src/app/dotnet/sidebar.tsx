@@ -1,6 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import type { SidebarLink } from "@/components/others/Sidebar";
-import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 
 const walletProviders: SidebarLink = (() => {
   const parentSlug = "/dotnet/wallets/providers";
@@ -215,7 +215,7 @@ export const sidebar: SideBar = {
       name: "API Reference",
       href: "https://thirdweb-dev.github.io/dotnet/index.html",
       isCollapsible: false,
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "Integrations",

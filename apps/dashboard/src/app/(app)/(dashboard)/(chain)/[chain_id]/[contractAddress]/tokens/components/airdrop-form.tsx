@@ -3,7 +3,7 @@
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { CircleCheck, Upload } from "lucide-react";
+import { CircleCheckIcon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -108,13 +108,13 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                   colorScheme="primary"
                   borderRadius="md"
                   onClick={() => setAirdropFormOpen(true)}
-                  rightIcon={<Upload size={16} />}
+                  rightIcon={<UploadIcon className="size-4" />}
                 >
                   Upload addresses
                 </Button>
                 {addresses.length > 0 && (
                   <div className="flex flex-row items-center justify-center gap-2 text-green-500">
-                    <CircleCheck className="text-green-500" size={16} />
+                    <CircleCheckIcon className="text-green-500" size={16} />
                     <Text size="body.sm" color="inherit">
                       <strong>{addresses.length} addresses</strong> ready to be
                       airdropped

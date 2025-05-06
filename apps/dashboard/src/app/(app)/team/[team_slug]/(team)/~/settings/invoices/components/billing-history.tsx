@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/table";
 import {
   ChevronLeftIcon,
-  ChevronRight,
-  CreditCard,
-  Download,
-  Receipt,
+  ChevronRightIcon,
+  CreditCardIcon,
+  DownloadIcon,
+  ReceiptIcon,
 } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
@@ -78,14 +78,14 @@ export function BillingHistory(props: {
     if (props.status === "open") {
       return (
         <div className="py-6 text-center">
-          <Receipt className="mx-auto h-12 w-12 text-muted-foreground" />
+          <ReceiptIcon className="mx-auto h-12 w-12 text-muted-foreground" />
           <h3 className="mt-2 font-medium text-lg">No open invoices</h3>
         </div>
       );
     }
     return (
       <div className="py-6 text-center">
-        <Receipt className="mx-auto h-12 w-12 text-muted-foreground" />
+        <ReceiptIcon className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 font-medium text-lg">No billing history</h3>
         <p className="mt-1 text-muted-foreground text-sm">
           Your invoice history will appear here once you have made payments.
@@ -130,7 +130,7 @@ export function BillingHistory(props: {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <CreditCard className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <CreditCardIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                             Pay Now
                           </a>
                         </Button>
@@ -143,7 +143,7 @@ export function BillingHistory(props: {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <Download className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <DownloadIcon className="mr-2 h-4 w-4 text-muted-foreground" />
                           PDF
                         </a>
                       </Button>
@@ -190,7 +190,7 @@ export function BillingHistory(props: {
             {isLoading && props.hasMore ? (
               <div className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
             ) : (
-              <ChevronRight className="ml-2 h-4 w-4" />
+              <ChevronRightIcon className="ml-2 h-4 w-4" />
             )}
           </Button>
         </div>
