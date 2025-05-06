@@ -3,13 +3,6 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
@@ -31,8 +24,7 @@ import { FileInput } from "components/shared/FileInput";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
-import { useAllChainsData } from "hooks/chains/allChains";
-import type { StoredChain } from "stores/chainStores";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 
 // Form schemas
 const collectionInfoSchema = z.object({
@@ -105,9 +97,6 @@ export default function CreateNFTPage() {
     platformFeeBps: "250",
   });
   const [showRoyaltySettings, setShowRoyaltySettings] = useState(false);
-
-  // Get chain data
-  const { allChains } = useAllChainsData();
 
   // Forms
   const collectionInfoForm = useForm<CollectionInfoValues>({
@@ -278,32 +267,12 @@ export default function CreateNFTPage() {
                     collectionInfoForm.formState.errors.chain?.message
                   }
                 >
-                  <Select
-                    defaultValue={collectionInfoForm.watch("chain")}
-                    onValueChange={(value) =>
-                      collectionInfoForm.setValue("chain", value)
-                    }
-                  >
-                    <SelectTrigger id="chain">
-                      <SelectValue placeholder="Select chain" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
-                      {allChains.map((chain: StoredChain) => (
-                        <SelectItem key={chain.chainId} value={chain.name}>
-                          <div className="flex items-center gap-2">
-                            {chain.icon?.url && (
-                              <img
-                                src={chain.icon.url}
-                                alt={chain.name}
-                                className="w-4 h-4 rounded-full"
-                              />
-                            )}
-                            {chain.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <NetworkSelectorButton
+                    className="bg-background"
+                    onSwitchChain={(chain) => {
+                      collectionInfoForm.setValue("chain", chain.name);
+                    }}
+                  />
                 </FormFieldSetup>
 
                 <FormFieldSetup

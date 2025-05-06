@@ -2,13 +2,7 @@
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,8 +13,7 @@ import * as z from "zod";
 import { Fieldset } from "components/contract-components/contract-deploy-form/common";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
-import { useAllChainsData } from "hooks/chains/allChains";
-import type { StoredChain } from "stores/chainStores";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 
 // Form schema
 const contractDetailsSchema = z.object({
@@ -65,9 +58,6 @@ export default function ImportAssetPage() {
   const [step, setStep] = useState<number>(1);
   const [contractDetails, setContractDetails] =
     useState<ContractDetailsValues>();
-
-  // Get chain data
-  const { allChains } = useAllChainsData();
 
   // Form
   const contractDetailsForm = useForm<ContractDetailsValues>({
@@ -154,34 +144,13 @@ export default function ImportAssetPage() {
                 errorMessage={
                   contractDetailsForm.formState.errors.network?.message
                 }
-                helperText="Select the blockchain where the contract is deployed"
               >
-                <Select
-                  defaultValue={contractDetailsForm.watch("network")}
-                  onValueChange={(value) =>
-                    contractDetailsForm.setValue("network", value)
-                  }
-                >
-                  <SelectTrigger id="network">
-                    <SelectValue placeholder="Select network" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    {allChains.map((chain: StoredChain) => (
-                      <SelectItem key={chain.chainId} value={chain.name}>
-                        <div className="flex items-center gap-2">
-                          {chain.icon?.url && (
-                            <img
-                              src={chain.icon.url}
-                              alt={chain.name}
-                              className="w-4 h-4 rounded-full"
-                            />
-                          )}
-                          {chain.name}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <NetworkSelectorButton
+                  className="bg-background"
+                  onSwitchChain={(chain) => {
+                    contractDetailsForm.setValue("network", chain.name);
+                  }}
+                />
               </FormFieldSetup>
             </div>
 
