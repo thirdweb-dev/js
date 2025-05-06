@@ -2,9 +2,9 @@ import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
+import { stringify } from "../utils/json.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
-import { stringify } from "../utils/json.js";
 
 /**
  * Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
@@ -158,13 +158,13 @@ export declare namespace quote {
     client: ThirdwebClient;
     maxSteps?: number;
   } & (
-      | {
+    | {
         buyAmountWei: bigint;
       }
-      | {
+    | {
         amount: bigint;
       }
-    );
+  );
 
   type Result = Quote & {
     intent: {

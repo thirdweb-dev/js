@@ -2,9 +2,9 @@ import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getClientFetch } from "../utils/fetch.js";
+import { stringify } from "../utils/json.js";
 import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
-import { stringify } from "../utils/json.js";
 
 /**
  * Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
