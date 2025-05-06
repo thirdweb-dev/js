@@ -1,5 +1,86 @@
 # thirdweb
 
+## 5.97.0
+
+### Minor Changes
+
+- [#6956](https://github.com/thirdweb-dev/js/pull/6956) [`08cff4b`](https://github.com/thirdweb-dev/js/commit/08cff4b6c2f0f7a02c0d4efae386a3bcc79de07b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - feat(bridge): Add chains endpoint to retrieve Universal Bridge supported chains
+
+  ```typescript
+  import { Bridge } from "thirdweb";
+
+  const chains = await Bridge.chains({
+    client: thirdwebClient,
+  });
+  ```
+
+  Returned chains include chain information such as chainId, name, icon, and nativeCurrency details.
+
+### Patch Changes
+
+- [#6953](https://github.com/thirdweb-dev/js/pull/6953) [`736c3f8`](https://github.com/thirdweb-dev/js/commit/736c3f8558330f55fd813fe11ca009c6f1f00f52) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the `maxSteps` option to Buy.quote, Buy.prepare, Sell.quote, and Sell.prepare functions. This allows users to limit quotes to routes with a specific number of steps or fewer. For example:
+
+  ```ts
+  const quote = await bridge.Buy.quote({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    maxSteps: 2,
+  });
+
+  const preparedQuote = await bridge.Buy.prepare({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    sender: "0x...",
+    receiver: "0x...",
+    maxSteps: 2,
+  });
+
+  const quote = await bridge.Sell.quote({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    maxSteps: 3,
+  });
+
+  const preparedQuote = await bridge.Sell.prepare({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    sender: "0x...",
+    receiver: "0x...",
+    maxSteps: 3,
+  });
+  ```
+
+- [#6952](https://github.com/thirdweb-dev/js/pull/6952) [`055e451`](https://github.com/thirdweb-dev/js/commit/055e451fd02b0336da23bd1a9994a36f99853831) Thanks [@gregfromstl](https://github.com/gregfromstl)! - +Deprecate legacy Pay functions
+
+- [#6955](https://github.com/thirdweb-dev/js/pull/6955) [`6dd2b09`](https://github.com/thirdweb-dev/js/commit/6dd2b09450e97da8a1a29200ca12ffc0c4d921e3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added the `sortBy` option to Bridge.routes
+
+  ```ts
+  import { Bridge } from "thirdweb";
+
+  const routes = await Bridge.routes({
+    originChainId: 1,
+    originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    limit: 10,
+    offset: 0,
+    sortBy: "popularity",
+    client: thirdwebClient,
+  });
+  ```
+
+- [#6900](https://github.com/thirdweb-dev/js/pull/6900) [`e9d0b6e`](https://github.com/thirdweb-dev/js/commit/e9d0b6e3d282e3fef902e98bf894b00fedc8d5d6) Thanks [@MananTank](https://github.com/MananTank)! - Only attempt autoconnect once
+
 ## 5.96.8
 
 ### Patch Changes
