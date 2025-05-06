@@ -15,7 +15,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { CheckIcon, DownloadIcon, Loader2, LockIcon } from "lucide-react";
+import { CheckIcon, DownloadIcon, Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
@@ -150,7 +150,7 @@ export default function CreateVaultAccountButton(props: {
         className="flex flex-row items-center gap-2"
       >
         {isLoading ? (
-          <Loader2 className="animate-spin" />
+          <Loader2Icon className="size-4 animate-spin" />
         ) : (
           <LockIcon className="size-4" />
         )}
@@ -177,19 +177,16 @@ export default function CreateVaultAccountButton(props: {
           ) : initialiseProjectWithVaultMutation.data ? (
             <div>
               <DialogHeader className="p-6">
-                <DialogTitle>Vault Management Keys</DialogTitle>
+                <DialogTitle>Save your Vault Admin Key</DialogTitle>
                 <p className="text-muted-foreground text-sm">
-                  These keys are used for end-to-end encryption and are required
-                  to interact with Vault, thirdweb's key management system.
+                  You'll need this key to create server wallets and access
+                  tokens.
                 </p>
               </DialogHeader>
 
               <div className="space-y-6 p-6 pt-0">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="mb-2 font-medium text-sm">
-                      Vault Admin Key
-                    </h3>
                     <div className="flex flex-col gap-2">
                       <CopyTextButton
                         textToCopy={
@@ -205,12 +202,13 @@ export default function CreateVaultAccountButton(props: {
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
-                        This key is used to create or revoke your access tokens.
+                        Download this key to your local machine or a password
+                        manager.
                       </p>
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <h3 className="mb-2 font-medium text-sm">
                       Vault Access Token
                     </h3>
@@ -234,10 +232,10 @@ export default function CreateVaultAccountButton(props: {
                         with your admin key.
                       </p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <Alert variant="destructive">
-                  <AlertTitle>Secure your keys</AlertTitle>
+                  <AlertTitle>Secure your admin key</AlertTitle>
                   <AlertDescription>
                     These keys will not be displayed again. Store them securely
                     as they provide access to your server wallets.
@@ -250,7 +248,7 @@ export default function CreateVaultAccountButton(props: {
                       className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
                     >
                       <DownloadIcon className="size-4" />
-                      {keysDownloaded ? "Keys Downloaded" : "Download Keys"}
+                      {keysDownloaded ? "Key Downloaded" : "Download Admin Key"}
                     </Button>
                     {keysDownloaded && (
                       <span className="text-success-text text-xs">
@@ -264,7 +262,7 @@ export default function CreateVaultAccountButton(props: {
                       checked={keysConfirmed}
                       onCheckedChange={(v) => setKeysConfirmed(!!v)}
                     />
-                    I confirm that I've securely stored these keys
+                    I confirm that I've securely stored my admin key
                   </CheckboxWithLabel>
                 </Alert>
               </div>

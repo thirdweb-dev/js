@@ -85,7 +85,6 @@ describe.runIf(
         tokenId: 0n,
         quantity: 1n,
       });
-      console.time("enqueue");
       const result = await serverWallet.enqueueTransaction({
         transaction: claimTx,
       });

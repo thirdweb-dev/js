@@ -15,7 +15,7 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, LockIcon } from "lucide-react";
+import { Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ import {
   sepolia,
 } from "thirdweb/chains";
 import * as z from "zod";
+import { CopyTextButton } from "../../../../../../../../@/components/ui/CopyTextButton";
 import { useTrack } from "../../../../../../../../hooks/analytics/useTrack";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
@@ -146,7 +147,9 @@ export function SendTestTransaction(props: {
         )}
         <p className="flex items-center gap-2 text-sm text-warning-text">
           <LockIcon className="h-4 w-4" />
-          Every wallet action requires your Vault access token.
+          {props.userAccessToken
+            ? "Copy your Vault access token, you'll need it for every HTTP call to Engine."
+            : "Every wallet action requires your Vault access token."}
         </p>
         <div className="h-4" />
         {/* Responsive container */}
@@ -154,22 +157,30 @@ export function SendTestTransaction(props: {
           <div className="flex-grow">
             <div className="flex flex-col gap-2">
               <p className="text-sm">Vault Access Token</p>
-              <Input
-                id="access-token"
-                type={props.userAccessToken ? "text" : "password"}
-                placeholder="vt_act_1234....ABCD"
-                {...form.register("accessToken")}
-                disabled={isLoading}
-                className="text-xs"
-              />
-              {props.userAccessToken && (
+              {props.userAccessToken ? (
                 <div className="flex flex-col gap-2 ">
+                  <CopyTextButton
+                    copyIconPosition="right"
+                    textToCopy={props.userAccessToken}
+                    textToShow={props.userAccessToken}
+                    tooltip="Copy Vault Access Token"
+                    className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                  />
                   <p className="text-muted-foreground text-xs">
-                    This is the project-wide access token you just created. You
-                    can create more access tokens using your admin key, with
-                    granular scopes and permissions.
+                    This is a project-wide access token to access your server
+                    wallets. You can create more access tokens using your admin
+                    key, with granular scopes and permissions.
                   </p>
                 </div>
+              ) : (
+                <Input
+                  id="access-token"
+                  type={props.userAccessToken ? "text" : "password"}
+                  placeholder="vt_act_1234....ABCD"
+                  {...form.register("accessToken")}
+                  disabled={isLoading}
+                  className="text-xs"
+                />
               )}
             </div>
           </div>
@@ -257,7 +268,7 @@ export function SendTestTransaction(props: {
           >
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Sending...
               </>
             ) : (

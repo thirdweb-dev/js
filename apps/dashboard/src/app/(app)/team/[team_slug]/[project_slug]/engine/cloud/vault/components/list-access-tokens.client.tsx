@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
-import { Loader2, LockIcon, Trash2 } from "lucide-react";
+import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { toDateTimeLocal } from "utils/date-utils";
@@ -227,7 +227,10 @@ export default function ListAccessTokens(props: {
                             {token.accessToken.includes("**") ? (
                               <div className="flex flex-grow flex-row items-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
                                 <p className="text-muted-foreground text-sm">
-                                  {token.accessToken}
+                                  {token.accessToken}{" "}
+                                  <span className="text-muted-foreground text-xs">
+                                    (unlock vault to reveal the full token)
+                                  </span>
                                 </p>
                               </div>
                             ) : (
@@ -258,7 +261,7 @@ export default function ListAccessTokens(props: {
                               {deletingTokenId === token.id ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                               ) : (
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2Icon className="h-4 w-4" />
                               )}
                             </Button>
                           </div>
@@ -291,7 +294,7 @@ export default function ListAccessTokens(props: {
           >
             {createAccessTokenMutation.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 size-4 animate-spin" />
                 Creating new access token...
               </>
             ) : (
