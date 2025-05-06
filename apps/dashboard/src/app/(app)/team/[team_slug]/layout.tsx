@@ -1,5 +1,4 @@
 import { getTeamBySlug } from "@/api/team";
-import { OpCreditsGrantedModalWrapperServer } from "components/onboarding/OpCreditsGrantedModalWrapperServer";
 import { PosthogIdentifierServer } from "components/wallets/PosthogIdentifierServer";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -42,9 +41,6 @@ export default async function RootTeamLayout(props: {
 
       <SaveLastVisitedTeamPage teamId={team.id} />
 
-      <Suspense fallback={null}>
-        <OpCreditsGrantedModalWrapperServer />
-      </Suspense>
       <Suspense fallback={null}>
         <EnsureValidConnectedWalletLoginServer />
       </Suspense>

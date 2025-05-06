@@ -126,7 +126,7 @@ function FloatingChatContentLoggedIn(props: {
         // instant loading indicator feedback to user
         {
           type: "presence",
-          text: "Thinking...",
+          texts: [],
         },
       ]);
 

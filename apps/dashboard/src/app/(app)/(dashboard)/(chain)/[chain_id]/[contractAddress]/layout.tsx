@@ -10,7 +10,6 @@ import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
 import {
-  getAuthToken,
   getAuthTokenWalletAddress,
   getUserThirdwebClient,
 } from "../../../../api/lib/getAuthToken";
@@ -47,10 +46,7 @@ export default async function Layout(props: {
     notFound();
   }
 
-  const [authToken, accountAddress] = await Promise.all([
-    getAuthToken(),
-    getAuthTokenWalletAddress(),
-  ]);
+  const accountAddress = await getAuthTokenWalletAddress();
 
   const client = await getUserThirdwebClient();
   const teamsAndProjects = await getTeamsAndProjectsIfLoggedIn();
@@ -115,10 +111,10 @@ The following is the user's message:`;
       client={client}
     >
       <NebulaChatButton
+        isLoggedIn={!!accountAddress}
         networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="contract"
-        authToken={authToken ?? undefined}
         label="Ask AI about this contract"
         client={client}
         nebulaParams={{

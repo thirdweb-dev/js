@@ -1,7 +1,10 @@
-import { CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
-import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
+import {
+  getCustomTag,
+  getExtensionName,
+} from "../../references/components/TDoc/utils/getSidebarLinkgroups";
 
 const slug = "/typescript/v5";
 const docs = await fetchTypeScriptDoc();
@@ -24,7 +27,7 @@ export const sidebar: SideBar = {
     {
       name: "Live Playground",
       href: "https://playground.thirdweb.com/",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "API Reference",
@@ -221,30 +224,86 @@ export const sidebar: SideBar = {
           href: `${slug}/storage`,
         },
         {
-          name: "Pay with Fiat",
-          links:
-            docs.functions
+          name: "Bridge, Swap, and Onramp",
+          links: [
+            {
+              name: "Buy",
+              links:
+                docs.functions
+                  ?.filter((f) => {
+                    const [tag] = getCustomTag(f) || [];
+                    if (tag !== "@bridge") return false;
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    if (extensionName !== "Buy") return false;
+                    return true;
+                  })
+                  .map((f) => {
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    return {
+                      name: f.name,
+                      href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                    };
+                  }) || [],
+            },
+            {
+              name: "Sell",
+              links:
+                docs.functions
+                  ?.filter((f) => {
+                    const [tag] = getCustomTag(f) || [];
+                    if (tag !== "@bridge") return false;
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    if (extensionName !== "Sell") return false;
+                    return true;
+                  })
+                  .map((f) => {
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    return {
+                      name: f.name,
+                      href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                    };
+                  }) || [],
+            },
+            ...(docs.functions
               ?.filter((f) => {
                 const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Fiat");
+                if (tag !== "@bridge") return false;
+                const blockTag = f.signatures?.[0]?.blockTags?.find(
+                  (b) => b.tag === "@bridge",
+                );
+                const extensionName = blockTag
+                  ? getExtensionName(blockTag) || "Common"
+                  : "Common";
+                if (extensionName !== "Common") return false;
+                return true;
               })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-              })) || [],
-        },
-        {
-          name: "Bridge & Swap",
-          links:
-            docs.functions
-              ?.filter((f) => {
-                const [tag] = getCustomTag(f) || [];
-                return tag === "@buyCrypto" && f.name.includes("Crypto");
-              })
-              ?.map((f) => ({
-                name: f.name,
-                href: `${slug}/${f.name}`,
-              })) || [],
+              ?.map((f) => {
+                return {
+                  name: f.name,
+                  href: `${slug}/${f.name}`,
+                };
+              }) || []),
+          ],
         },
       ],
     },

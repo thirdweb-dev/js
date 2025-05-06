@@ -250,6 +250,8 @@ export function DirectPaymentModeScreen(props: {
               client,
               walletAddress: payerAccount.address,
               walletType: activeWallet?.id,
+              toChainId: paymentInfo.chain.id,
+              toToken: paymentInfo.token?.address,
             });
             onContinue(totalCost, paymentInfo.chain, token);
           }}

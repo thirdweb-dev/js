@@ -4,6 +4,7 @@ import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -19,6 +20,7 @@ import { ExecutingTxScreen } from "./ExecutingScreen.js";
 
 type ModalProps = {
   title: string;
+  txId: string;
   onComplete: () => void;
   onClose: () => void;
   client: ThirdwebClient;
@@ -35,8 +37,8 @@ export function TransactionModal(props: ModalProps) {
   const wallet = useActiveWallet();
 
   useQuery({
-    queryKey: ["transaction-modal-event"],
-    queryFn: () => {
+    queryKey: ["transaction-modal-event", props.txId],
+    queryFn: async () => {
       if (!account || !wallet) {
         throw new Error(); // never happens, because enabled is false
       }
@@ -44,7 +46,10 @@ export function TransactionModal(props: ModalProps) {
         client: props.client,
         walletAddress: account.address,
         walletType: wallet.id,
-        dstChainId: props.tx.chain.id,
+        toChainId: props.tx.chain.id,
+        toToken: props.tx.erc20Value
+          ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
+          : undefined,
         event: "open_pay_transaction_modal",
       });
 

@@ -22,7 +22,7 @@ import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type { SessionInfo } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
-import { newChatPageUrlStore, newSessionsStore } from "../stores";
+import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
 import { type ChatMessage, Chats } from "./Chats";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
@@ -60,19 +60,21 @@ export function ChatPageContent(props: {
 
             if (content.type === "sign_transaction") {
               const txData = JSON.parse(content.data);
-              if (
-                typeof txData === "object" &&
-                txData !== null &&
-                txData.chainId
-              ) {
-                _messages.push({
-                  type: "send_transaction",
-                  data: txData,
-                });
-              }
+              _messages.push({
+                type: "action",
+                subtype: "sign_transaction",
+                data: txData,
+              });
+            } else if (content.type === "sign_swap") {
+              const swapData = JSON.parse(content.data);
+              _messages.push({
+                type: "action",
+                subtype: "sign_swap",
+                data: swapData,
+              });
             }
-          } catch {
-            // ignore
+          } catch (e) {
+            console.error("error processing message", e, { message });
           }
         } else {
           _messages.push({
@@ -164,32 +166,13 @@ export function ChatPageContent(props: {
     props.initialParams?.q,
   ]);
 
-  const [sessionId, _setSessionId] = useState<string | undefined>(
+  const [sessionId, setSessionId] = useState<string | undefined>(
     props.session?.id,
   );
 
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
   >();
-
-  const setSessionId = useCallback(
-    (sessionId: string) => {
-      _setSessionId(sessionId);
-      // update page URL without reloading
-      // THIS DOES NOT WORK ANYMORE!! - NEXT JS IS MONKEY PATCHING THIS TOO
-      // Until we find a better solution, we are just not gonna update the URL
-      // window.history.replaceState({}, "", `/chat/${sessionId}`);
-
-      // if the current page is landing page, link to /chat
-      // if current page is new /chat page, link to landing page
-      if (props.type === "landing") {
-        newChatPageUrlStore.setValue("/chat");
-      } else {
-        newChatPageUrlStore.setValue("/");
-      }
-    },
-    [props.type],
-  );
 
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
@@ -202,7 +185,7 @@ export function ChatPageContent(props: {
     });
     setSessionId(session.id);
     return session;
-  }, [contextFilters, props.authToken, setSessionId]);
+  }, [contextFilters, props.authToken]);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
@@ -213,7 +196,7 @@ export function ChatPageContent(props: {
         // instant loading indicator feedback to user
         {
           type: "presence",
-          text: "Thinking...",
+          texts: [],
         },
       ]);
 
@@ -392,10 +375,6 @@ export function ChatPageContent(props: {
                     chatAbortController?.abort();
                     setChatAbortController(undefined);
                     setIsChatStreaming(false);
-                    // if last message is presence, remove it
-                    if (messages[messages.length - 1]?.type === "presence") {
-                      setMessages((prev) => prev.slice(0, -1));
-                    }
                   }}
                   context={contextFilters}
                   setContext={(v) => {
@@ -521,19 +500,8 @@ export async function handleNebulaPrompt(params: {
         hasReceivedResponse = true;
         setMessages((prev) => {
           const lastMessage = prev[prev.length - 1];
-          // if last message is presence, overwrite it
-          if (lastMessage?.type === "presence") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                text: res.data.v,
-                type: "assistant",
-                request_id: requestIdForMessage,
-              },
-            ];
-          }
 
-          // if last message is from chat, append to it
+          // append to previous assistant message
           if (lastMessage?.type === "assistant") {
             return [
               ...prev.slice(0, -1),
@@ -545,7 +513,7 @@ export async function handleNebulaPrompt(params: {
             ];
           }
 
-          // otherwise, add a new message
+          // start a new assistant message
           return [
             ...prev,
             {
@@ -560,32 +528,43 @@ export async function handleNebulaPrompt(params: {
       if (res.event === "presence") {
         setMessages((prev) => {
           const lastMessage = prev[prev.length - 1];
-          // if last message is presence, overwrite it
+
+          // append to previous presence message
           if (lastMessage?.type === "presence") {
             return [
               ...prev.slice(0, -1),
-              { text: res.data.data, type: "presence" },
+              {
+                type: "presence",
+                texts: [...lastMessage.texts, res.data.data],
+              },
             ];
           }
-          // otherwise, add a new message
-          return [...prev, { text: res.data.data, type: "presence" }];
+
+          // start a new presence message
+          return [...prev, { texts: [res.data.data], type: "presence" }];
         });
       }
 
       if (res.event === "action") {
+        hasReceivedResponse = true;
         if (res.type === "sign_transaction") {
-          hasReceivedResponse = true;
-          setMessages((prev) => {
-            let prevMessages = prev;
-            // if last message is presence, remove it
-            if (prevMessages[prevMessages.length - 1]?.type === "presence") {
-              prevMessages = prevMessages.slice(0, -1);
-            }
-
+          setMessages((prevMessages) => {
             return [
               ...prevMessages,
               {
-                type: "send_transaction",
+                type: "action",
+                subtype: res.type,
+                data: res.data,
+              },
+            ];
+          });
+        } else if (res.type === "sign_swap") {
+          setMessages((prevMessages) => {
+            return [
+              ...prevMessages,
+              {
+                type: "action",
+                subtype: res.type,
                 data: res.data,
               },
             ];
@@ -608,10 +587,7 @@ export async function handleNebulaPrompt(params: {
   // show an error message in that case
   if (!hasReceivedResponse) {
     setMessages((prev) => {
-      const newMessages = prev.slice(
-        0,
-        prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
-      );
+      const newMessages = [...prev];
 
       newMessages.push({
         text: "No response received, please try again",

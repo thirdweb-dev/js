@@ -34,6 +34,7 @@ export type BuyWithFiatHistoryQueryOptions = Omit<
  *  return <div> ... </div>
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithFiatHistory(

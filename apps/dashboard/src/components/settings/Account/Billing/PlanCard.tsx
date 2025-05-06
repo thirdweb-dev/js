@@ -12,6 +12,7 @@ import { CreditsItem } from "./CreditsItem";
 export const CreditsInfoCard = (props: {
   twAccount: Account;
   client: ThirdwebClient;
+  teamSlug: string;
 }) => {
   const { data: credits } = useAccountCredits();
 
@@ -29,6 +30,7 @@ export const CreditsInfoCard = (props: {
         isOpCreditDefault={true}
         twAccount={props.twAccount}
         client={props.client}
+        teamSlug={props.teamSlug}
       />
       {restCredits?.map((credit) => (
         <CreditsItem
@@ -36,6 +38,7 @@ export const CreditsInfoCard = (props: {
           credit={credit}
           twAccount={props.twAccount}
           client={props.client}
+          teamSlug={props.teamSlug}
         />
       ))}
     </section>

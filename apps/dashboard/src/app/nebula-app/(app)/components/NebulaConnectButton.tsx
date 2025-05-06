@@ -92,6 +92,8 @@ export const NebulaConnectWallet = (props: {
         className: props.detailsButtonClassName,
       }}
       chains={allChainsV5}
+      // we have an AutoConnect already added in root layout with AA configuration
+      autoConnect={false}
     />
   );
 };

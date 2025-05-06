@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.96.5",
+  "version": "5.97.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -67,14 +67,14 @@
     },
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
-      "import": "./dist/esm/exports/react.js",
       "react-native": "./dist/esm/exports/react.native.js",
+      "import": "./dist/esm/exports/react.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
-      "types": "./dist/types/exports/react-native.d.ts",
-      "import": "./dist/esm/exports/react-native.js",
-      "default": "./dist/cjs/exports/react-native.js"
+      "types": "./dist/types/exports/react.native.d.ts",
+      "import": "./dist/esm/exports/react.native.js",
+      "default": "./dist/cjs/exports/react.native.js"
     },
     "./rpc": {
       "types": "./dist/types/exports/rpc.d.ts",
@@ -98,14 +98,14 @@
     },
     "./wallets": {
       "types": "./dist/types/exports/wallets.d.ts",
-      "import": "./dist/esm/exports/wallets.js",
       "react-native": "./dist/esm/exports/wallets.native.js",
+      "import": "./dist/esm/exports/wallets.js",
       "default": "./dist/cjs/exports/wallets.js"
     },
     "./wallets/in-app": {
       "types": "./dist/types/exports/wallets/in-app.d.ts",
-      "import": "./dist/esm/exports/wallets/in-app.js",
       "react-native": "./dist/esm/exports/wallets/in-app.native.js",
+      "import": "./dist/esm/exports/wallets/in-app.js",
       "default": "./dist/cjs/exports/wallets/in-app.js"
     },
     "./wallets/*": {
@@ -198,8 +198,8 @@
     "@tanstack/react-query": "5.74.4",
     "@thirdweb-dev/engine": "workspace:*",
     "@thirdweb-dev/insight": "workspace:*",
-    "@walletconnect/ethereum-provider": "2.19.1",
-    "@walletconnect/sign-client": "2.19.1",
+    "@walletconnect/ethereum-provider": "2.20.1",
+    "@walletconnect/sign-client": "2.20.1",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
@@ -211,7 +211,7 @@
     "prompts": "2.4.2",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.27.2"
+    "viem": "2.28.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -363,7 +363,7 @@
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
-    "vite": "6.3.2",
+    "vite": "6.3.4",
     "vitest": "3.1.2"
   }
 }

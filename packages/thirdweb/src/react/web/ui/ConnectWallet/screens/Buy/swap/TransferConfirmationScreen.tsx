@@ -1,6 +1,7 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -309,6 +310,14 @@ export function TransferConfirmationScreen(
                     }),
                   }),
                 ]);
+                trackPayEvent({
+                  client: props.client,
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
+                  toChainId: chain.id,
+                  toToken: isNativeToken(token) ? undefined : token.address,
+                  event: "transfer_confirmation_success_transaction_mode",
+                });
                 // its the last step before the transaction, so propagate onPurchaseSuccess here
                 props.onSuccess?.(
                   transferBuyWithCryptoQuote({
@@ -353,6 +362,14 @@ export function TransferConfirmationScreen(
                     BigInt(transferResponse.approvalData.amountWei)
                   ) {
                     setStep("approve");
+                    trackPayEvent({
+                      client: props.client,
+                      walletAddress: payer.account.address,
+                      walletType: payer.wallet.id,
+                      toChainId: chain.id,
+                      toToken: isNativeToken(token) ? undefined : token.address,
+                      event: "prompt_transfer_approval",
+                    });
                     const transaction = approve({
                       contract: getContract({
                         client: client,
@@ -372,8 +389,25 @@ export function TransferConfirmationScreen(
                       account: props.payer.account,
                       transaction,
                     });
+                    trackPayEvent({
+                      client: props.client,
+                      walletAddress: payer.account.address,
+                      walletType: payer.wallet.id,
+                      toChainId: chain.id,
+                      toToken: isNativeToken(token) ? undefined : token.address,
+                      event: "transfer_approval_success",
+                    });
                   }
                 }
+
+                trackPayEvent({
+                  client: props.client,
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
+                  toChainId: chain.id,
+                  toToken: isNativeToken(token) ? undefined : token.address,
+                  event: "prompt_transfer_confirmation",
+                });
 
                 setStep("transfer");
                 // execute the transfer
@@ -385,6 +419,15 @@ export function TransferConfirmationScreen(
                 // switches to the status polling screen
                 setTransactionHash(tx.transactionHash);
                 setStatus({ id: "idle" });
+
+                trackPayEvent({
+                  client: props.client,
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
+                  toChainId: chain.id,
+                  toToken: isNativeToken(token) ? undefined : token.address,
+                  event: "transfer_confirmation_success",
+                });
               }
               // biome-ignore lint/suspicious/noExplicitAny: catch multiple errors
             } catch (e: any) {

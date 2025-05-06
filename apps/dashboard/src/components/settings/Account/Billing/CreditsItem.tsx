@@ -17,6 +17,7 @@ interface CreditsItemProps {
   onClickApply?: () => void;
   twAccount: Account;
   client: ThirdwebClient;
+  teamSlug: string;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
@@ -25,6 +26,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   onClickApply,
   twAccount,
   client,
+  teamSlug,
 }) => {
   const trackEvent = useTrack();
 
@@ -130,7 +132,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
         <div className="mt-2 flex justify-end border-t px-4 py-4 lg:px-6">
           <Button asChild size="sm" variant="outline">
             <Link
-              href="/team/~/~/settings/credits"
+              href={`/team/${teamSlug}/~/settings/credits`}
               onClick={() => {
                 trackEvent({
                   category: "op-sponsorship",

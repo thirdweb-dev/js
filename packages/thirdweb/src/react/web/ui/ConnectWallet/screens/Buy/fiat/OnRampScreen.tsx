@@ -398,6 +398,9 @@ function useOnRampScreenState(props: {
         client: props.client,
         walletAddress: props.payer.account.address,
         walletType: props.payer.wallet.id,
+        toChainId: props.quote.onRampToken.token.chainId,
+        toToken: props.quote.onRampToken.token.tokenAddress,
+        amountWei: props.quote.onRampToken.amountWei,
       });
       setPopupWindow(popup);
       addPendingTx({
@@ -679,11 +682,10 @@ function useSwapMutation(props: {
           walletAddress: account.address,
           walletType: props.payer.wallet.id,
           fromToken: quote.swapDetails.fromToken.tokenAddress,
-          fromAmount: quote.swapDetails.fromAmountWei,
-          toToken: quote.swapDetails.toToken.tokenAddress,
-          toAmount: quote.swapDetails.toAmountWei,
           chainId: quote.swapDetails.fromToken.chainId,
-          dstChainId: quote.swapDetails.toToken.chainId,
+          amountWei: quote.swapDetails.fromAmountWei,
+          toToken: quote.swapDetails.toToken.tokenAddress,
+          toChainId: quote.swapDetails.toToken.chainId,
         });
 
         const transaction = approve({
@@ -705,11 +707,10 @@ function useSwapMutation(props: {
           walletAddress: account.address,
           walletType: props.payer.wallet.id,
           fromToken: quote.swapDetails.fromToken.tokenAddress,
-          fromAmount: quote.swapDetails.fromAmountWei,
+          amountWei: quote.swapDetails.fromAmountWei,
           toToken: quote.swapDetails.toToken.tokenAddress,
-          toAmount: quote.swapDetails.toAmountWei,
           chainId: quote.swapDetails.fromToken.chainId,
-          dstChainId: quote.swapDetails.toToken.chainId,
+          toChainId: quote.swapDetails.toToken.chainId,
         });
       }
 
@@ -719,11 +720,10 @@ function useSwapMutation(props: {
         walletAddress: account.address,
         walletType: props.payer.wallet.id,
         fromToken: quote.swapDetails.fromToken.tokenAddress,
-        fromAmount: quote.swapDetails.fromAmountWei,
+        amountWei: quote.swapDetails.fromAmountWei,
         toToken: quote.swapDetails.toToken.tokenAddress,
-        toAmount: quote.swapDetails.toAmountWei,
         chainId: quote.swapDetails.fromToken.chainId,
-        dstChainId: quote.swapDetails.toToken.chainId,
+        toChainId: quote.swapDetails.toToken.chainId,
       });
       const tx = quote.transactionRequest;
       let _swapTx: WaitForReceiptOptions;
@@ -754,11 +754,10 @@ function useSwapMutation(props: {
         walletAddress: account.address,
         walletType: props.payer.wallet.id,
         fromToken: quote.swapDetails.fromToken.tokenAddress,
-        fromAmount: quote.swapDetails.fromAmountWei,
+        amountWei: quote.swapDetails.fromAmountWei,
         toToken: quote.swapDetails.toToken.tokenAddress,
-        toAmount: quote.swapDetails.toAmountWei,
+        toChainId: quote.swapDetails.toToken.chainId,
         chainId: quote.swapDetails.fromToken.chainId,
-        dstChainId: quote.swapDetails.toToken.chainId,
       });
 
       // do not add pending tx if the swap is part of fiat flow

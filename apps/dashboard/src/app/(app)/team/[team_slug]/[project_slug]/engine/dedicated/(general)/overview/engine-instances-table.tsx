@@ -63,7 +63,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { MoreHorizontalIcon } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -882,7 +882,7 @@ function EmptyEngineState(props: {
                       href={`/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated/import`}
                     >
                       Import self-hosted Engine
-                      <ArrowRight size={16} />
+                      <ArrowRightIcon size={16} />
                     </Link>
                   </Button>
                 </div>
@@ -915,14 +915,14 @@ function EmptyEngineState(props: {
                     <Button className="w-full gap-2" size="sm" asChild>
                       <Link href={`/team/${props.teamSlug}/~/settings/billing`}>
                         Upgrade Plan
-                        <ArrowRight size={16} />
+                        <ArrowRightIcon size={16} />
                       </Link>
                     </Button>
                   ) : (
                     <Button className="w-full gap-2" size="sm" asChild>
                       <Link href={PRO_CONTACT_US_URL} target="_blank">
                         Contact Us
-                        <ArrowRight size={16} />
+                        <ArrowRightIcon size={16} />
                       </Link>
                     </Button>
                   )}

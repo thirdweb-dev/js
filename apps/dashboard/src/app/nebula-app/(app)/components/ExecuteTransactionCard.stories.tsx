@@ -6,13 +6,11 @@ import {
   storybookThirdwebClient,
 } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import {
-  ExecuteTransactionCardLayout,
-  type TxStatus,
-} from "./ExecuteTransactionCard";
+import { ExecuteTransactionCardLayout } from "./ExecuteTransactionCard";
+import type { TxStatus } from "./Swap/common";
 
 const meta = {
-  title: "Nebula/ExecuteTransactionCard",
+  title: "Nebula/actions/ExecuteTransactionCard",
   component: Story,
   parameters: {
     nextjs: {
@@ -68,6 +66,7 @@ function Variant(props: {
         onTxSettled={(txHash) => {
           storybookLog(`onTxSettled called with ${txHash}`);
         }}
+        sendTx={async () => {}}
         setStatus={setStatus}
         status={status}
         client={storybookThirdwebClient}

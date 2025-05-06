@@ -32,6 +32,12 @@ import type { AutoConnectProps } from "./types.js";
 export async function autoConnect(
   props: AutoConnectProps & {
     wallets?: Wallet[];
+    /**
+     * If true, the auto connect will be forced even if autoConnect has already been attempted successfully earlier.
+     *
+     * @default `false`
+     */
+    force?: boolean;
   },
 ): Promise<boolean> {
   const wallets = props.wallets || getDefaultWallets(props);

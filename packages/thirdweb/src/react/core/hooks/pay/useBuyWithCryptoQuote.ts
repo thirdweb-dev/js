@@ -71,6 +71,7 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithCryptoQuote(

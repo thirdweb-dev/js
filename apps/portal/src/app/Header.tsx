@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
-import { ChevronDownIcon, Menu, TableOfContentsIcon } from "lucide-react";
+import { ChevronDownIcon, MenuIcon, TableOfContentsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -165,7 +165,7 @@ export function Header() {
             className="p-2"
             onClick={() => setShowBurgerMenu(!showBurgerMenu)}
           >
-            <Menu className="size-7" />
+            <MenuIcon className="size-7" />
           </Button>
         </div>
 

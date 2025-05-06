@@ -57,27 +57,52 @@ Implement features using Web3 SDKs and tools.
 - I have an ERC1155 contract from thirdweb. Can you show me how to generate and mint with a signature?
 `;
 
+const deployTokenReply = `
+Let's create your token! Just name it and I'll get started. I'll take care of the rest.
+
+Add more info for more fun:
+- Symbol (e.g. 'HELLO')
+- Description (e.g. 'Hello world token deployed by Nebula')
+- Total Supply (e.g. 1 million)
+- Mint total supply to your wallet (default is true)
+- Decimal places (default 18)
+- Image URL
+
+If you want, I can generate an image for it too. 
+`;
+
+const buyUsdcReply = `
+Easy. How much USDC?
+You can pay with any token, but I'll default to ETH.
+`;
+
+const transferEthReply = `
+Great! How much ETH and to what address?
+`;
+
 export const examplePrompts: ExamplePrompt[] = [
   {
     title: "What can Nebula do?",
-    message: "What can Nebula do?",
+    message: "Tell me about Nebula's capabilities.",
     interceptedReply: whatCanNebulaDoReply,
   },
   {
-    title: "Deploy an ERC-20 Token",
-    message:
-      "Deploy an ERC-20 Token with name 'Hello World', description 'Hello world token deployed by Nebula', and symbol 'HELLO'",
+    title: "Launch a Token",
+    message: "I'd like to deploy a token.",
+    interceptedReply: deployTokenReply,
   },
   {
-    title: "USDC contract address on Ethereum",
-    message: "What is the USDC contract address on Ethereum?",
+    title: "Buy USDC",
+    message: "I want to buy USDC",
+    interceptedReply: buyUsdcReply,
   },
   {
-    title: "Analyze WETH smart contract",
-    message: "Analyze 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 on ethereum",
+    title: "Analyze the Uniswap contracts",
+    message: "Analyze the Uniswap v3 contracts on Ethereum",
   },
   {
-    title: "Transfer 0.001 ETH to thirdweb.eth",
-    message: "Transfer 0.001 ETH to thirdweb.eth",
+    title: "Send ETH to someone",
+    message: "I want to send some ETH",
+    interceptedReply: transferEthReply,
   },
 ];

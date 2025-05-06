@@ -26,7 +26,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
-import { MailQuestion, TrashIcon } from "lucide-react";
+import { MailQuestionIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Card, FormLabel, Text } from "tw-components";
@@ -137,7 +137,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
         isFetched={isFetched}
         onMenuClick={[
           {
-            icon: <MailQuestion className="size-4" />,
+            icon: <MailQuestionIcon className="size-4" />,
             text: "Test webhook",
             onClick: (row) => {
               setSelectedWebhook(row);

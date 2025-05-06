@@ -30,7 +30,11 @@ export const Billing: React.FC<BillingProps> = ({
         <PlanInfoCardClient team={team} subscriptions={subscriptions} />
       </div>
 
-      <CreditsInfoCard twAccount={twAccount} client={client} />
+      <CreditsInfoCard
+        twAccount={twAccount}
+        client={client}
+        teamSlug={team.slug}
+      />
       <Coupons teamId={team.id} isPaymentSetup={validPayment} />
     </div>
   );

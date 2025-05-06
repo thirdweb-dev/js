@@ -47,9 +47,9 @@ function AnnouncementBannerUI(props: {
 export function AnnouncementBanner() {
   return (
     <AnnouncementBannerUI
-      href="https://playground.thirdweb.com/connect/pay"
-      label="Let users pay with whatever they have without leaving your app"
-      trackingLabel="ub-launch"
+      href="https://nebula.thirdweb.com/"
+      label="Announcing Nebula App — the most powerful AI for blockchains! Try it now!"
+      trackingLabel="nebula-beta-launch"
     />
   );
 }
