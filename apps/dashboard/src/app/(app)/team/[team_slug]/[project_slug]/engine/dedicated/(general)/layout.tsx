@@ -94,11 +94,7 @@ function EngineLegacyBannerUI(props: {
         </ul>
         <div className="h-4" />
         <div className="flex justify-end gap-2">
-          {/* TODO (cloud): add link to Engine Cloud blog post */}
-          <Link
-            href={"https://portal.thirdweb.com/engine/cloud"}
-            target="_blank"
-          >
+          <Link href={"https://portal.thirdweb.com/engine/v3"} target="_blank">
             <Button variant="outline">Learn More</Button>
           </Link>
           <Link

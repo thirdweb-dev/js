@@ -203,7 +203,7 @@ export function TransactionsTableUI(props: {
   );
 }
 
-const statusDetails = {
+export const statusDetails = {
   QUEUED: {
     name: "Queued",
     type: "warning",

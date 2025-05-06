@@ -15,26 +15,8 @@ import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { toEther } from "thirdweb";
 import { ChainIconClient } from "../../../../../../../../../components/icons/ChainIcon";
+import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
-
-const statusDetails = {
-  QUEUED: {
-    name: "Queued",
-    type: "warning",
-  },
-  SUBMITTED: {
-    name: "Submitted",
-    type: "warning",
-  },
-  CONFIRMED: {
-    name: "Confirmed",
-    type: "success",
-  },
-  REVERTED: {
-    name: "Reverted",
-    type: "destructive",
-  },
-} as const;
 
 export function TransactionDetailsUI({
   transaction,
