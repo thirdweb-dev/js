@@ -34,6 +34,7 @@ export type BuyWithCryptoHistoryQueryOptions = Omit<
  *  return <div> ... </div>
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithCryptoHistory(

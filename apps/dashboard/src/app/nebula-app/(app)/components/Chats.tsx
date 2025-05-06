@@ -173,6 +173,7 @@ export function Chats(props: {
                             isMessagePending={isMessagePending}
                             client={props.client}
                             sendMessage={props.sendMessage}
+                            nextMessage={props.messages[index + 1]}
                           />
                         </ScrollShadow>
 
@@ -207,8 +208,9 @@ function RenderMessage(props: {
   isMessagePending: boolean;
   client: ThirdwebClient;
   sendMessage: (message: string) => void;
+  nextMessage: ChatMessage | undefined;
 }) {
-  const { message, isMessagePending, client, sendMessage } = props;
+  const { message, isMessagePending, client, sendMessage, nextMessage } = props;
 
   switch (message.type) {
     case "assistant":
@@ -237,6 +239,11 @@ function RenderMessage(props: {
             txData={message.data}
             client={client}
             onTxSettled={(txHash) => {
+              // do not send automatic prompt if there is another transaction after this one
+              if (nextMessage?.type === "action") {
+                return;
+              }
+
               sendMessage(getTransactionSettledPrompt(txHash));
             }}
           />
@@ -254,8 +261,13 @@ function RenderMessage(props: {
           <SwapTransactionCard
             swapData={message.data}
             client={client}
-            onTxSettled={() => {
-              // no op
+            onTxSettled={(txHash) => {
+              // do not send automatic prompt if there is another transaction after this one
+              if (nextMessage?.type === "action") {
+                return;
+              }
+
+              sendMessage(getTransactionSettledPrompt(txHash));
             }}
           />
         );

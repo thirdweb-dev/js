@@ -20,7 +20,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
-import { teamSlugRegex } from "../../../team/[team_slug]/(team)/~/settings/general/common";
+import {
+  maxTeamNameLength,
+  maxTeamSlugLength,
+  teamNameSchema,
+  teamSlugSchema,
+} from "../../../team/[team_slug]/(team)/~/settings/general/common";
 
 type TeamData = {
   name?: string;
@@ -28,27 +33,8 @@ type TeamData = {
   image?: File;
 };
 
-const teamSlugSchema = z
-  .string()
-  .min(3, {
-    message: "URL must be at least 3 characters",
-  })
-  .max(48, {
-    message: "URL must be at most 48 characters",
-  })
-  .refine((slug) => !teamSlugRegex.test(slug), {
-    message: "URL can only contain lowercase letters, numbers and hyphens",
-  });
-
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: "Name must be at least 3 characters",
-    })
-    .max(32, {
-      message: "Name must be at most 32 characters",
-    }),
+  name: teamNameSchema,
   slug: teamSlugSchema,
   image: z.instanceof(File).optional(),
 });
@@ -155,8 +141,6 @@ export function TeamInfoFormUI(props: {
     });
   }
 
-  const maxTeamNameLength = 32;
-
   return (
     <div className="rounded-lg border bg-card ">
       <Form {...form}>
@@ -234,6 +218,7 @@ export function TeamInfoFormUI(props: {
                         }}
                         className="truncate border-0 font-mono"
                         placeholder="my-team"
+                        maxLength={maxTeamSlugLength}
                       />
                       {(isCheckingSlug || isCalculatingSlug) && (
                         <div className="-translate-y-1/2 fade-in-0 absolute top-1/2 right-3 duration-300">

@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.96.8
+
+### Patch Changes
+
+- [#6918](https://github.com/thirdweb-dev/js/pull/6918) [`98cce77`](https://github.com/thirdweb-dev/js/commit/98cce77cf1cb9ffd78f21a56cf5992802e11d97e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle zero address as native tokens in UB
+
+- [#6924](https://github.com/thirdweb-dev/js/pull/6924) [`20d182b`](https://github.com/thirdweb-dev/js/commit/20d182b228728d83f5063846805b216d6fabe094) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize token query in PayEmbed using Insight where possible
+
+## 5.96.7
+
+### Patch Changes
+
+- [#6914](https://github.com/thirdweb-dev/js/pull/6914) [`e23f53b`](https://github.com/thirdweb-dev/js/commit/e23f53bd786b871fd0ba0c9154da7280cc4a8817) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native exports
+
 ## 5.96.6
 
 ### Patch Changes

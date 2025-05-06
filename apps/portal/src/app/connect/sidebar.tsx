@@ -237,6 +237,10 @@ export const sidebar: SideBar = {
           href: `${paySlug}/fees`,
         },
         {
+          name: "API",
+          href: "https://bridge.thirdweb.com/reference",
+        },
+        {
           name: "Get Started",
           href: `${paySlug}/get-started`,
           expanded: true,
@@ -246,7 +250,7 @@ export const sidebar: SideBar = {
               href: `${paySlug}/get-started#option-1-connectbutton`,
             },
             {
-              name: "Embed Pay",
+              name: "Embed",
               href: `${paySlug}/get-started#option-2-embed-pay`,
             },
             {

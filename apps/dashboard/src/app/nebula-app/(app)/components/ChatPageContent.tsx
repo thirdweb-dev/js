@@ -375,10 +375,6 @@ export function ChatPageContent(props: {
                     chatAbortController?.abort();
                     setChatAbortController(undefined);
                     setIsChatStreaming(false);
-                    // if last message is presence, remove it
-                    if (messages[messages.length - 1]?.type === "presence") {
-                      setMessages((prev) => prev.slice(0, -1));
-                    }
                   }}
                   context={contextFilters}
                   setContext={(v) => {

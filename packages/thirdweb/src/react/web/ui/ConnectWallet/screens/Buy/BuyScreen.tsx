@@ -4,7 +4,10 @@ import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../../../../../constants/addresses.js";
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
@@ -982,6 +985,9 @@ function createSupportedTokens(
 
   for (const x of data) {
     tokens[x.chain.id] = x.tokens.filter((t) => {
+      if (t.address === ZERO_ADDRESS) {
+        return false;
+      }
       // for source tokens, data is not provided, so we include all of them
       if (
         t.buyWithCryptoEnabled === undefined &&

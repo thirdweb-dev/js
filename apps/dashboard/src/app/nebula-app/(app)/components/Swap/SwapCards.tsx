@@ -2,8 +2,10 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowRightLeftIcon, CheckIcon } from "lucide-react";
 import {
+  NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
   type ThirdwebClient,
+  getAddress,
   prepareTransaction,
   toTokens,
 } from "thirdweb";
@@ -38,6 +40,9 @@ export function SwapTransactionCardLayout(props: {
 }) {
   const { swapData } = props;
   const txChain = useV5DashboardChain(swapData.transaction.chainId);
+
+  const isSellingNativeToken =
+    getAddress(swapData.from.address) === getAddress(NATIVE_TOKEN_ADDRESS);
 
   return (
     <div className="max-w-lg">
@@ -102,6 +107,12 @@ export function SwapTransactionCardLayout(props: {
                   client: props.client,
                   data: swapData.transaction.data,
                   to: swapData.transaction.to,
+                  erc20Value: isSellingNativeToken
+                    ? undefined
+                    : {
+                        amountWei: BigInt(swapData.from.amount),
+                        tokenAddress: swapData.from.address,
+                      },
                 });
 
                 props.sendTx(tx);

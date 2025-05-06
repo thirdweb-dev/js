@@ -1,7 +1,8 @@
 import { Wallet, File, MessageCircle, Braces, Bot, Blocks } from "lucide-react";
-import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack, Grid, ArticleCard } from "@doc";
+import { DocImage, createMetadata, FeatureCard, GithubTemplateCard, Stack, Grid, ArticleCard, ArticleIconCard } from "@doc";
 import NebulaDiagram from "./assets/nebula-diagram.png";
 import SupportedChains from "../_images/supported-chains.png";
+import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
@@ -17,7 +18,17 @@ export const metadata = createMetadata({
 
 Nebula is a natural language model with improved blockchain reasoning, autonomous transaction capabilities, and real-time access to the blockchain. [Learn more about Nebula.](https://blog.thirdweb.com/introducing-nebula-a-powerful-blockchain-model-to-read-write-and-reason-onchain/)
 
-Nebula is currently available in Alpha. [Join the waitlist.](https://thirdweb.com/nebula)
+Nebula is currently live in Beta. 
+
+<Stack>
+<ArticleIconCard
+	title="Try Nebula live"
+	icon={ExternalLink}
+	href="https://nebula.thirdweb.com"
+/>
+</Stack>
+
+## Nebula API
 
 <DocImage src={NebulaDiagram} />
 

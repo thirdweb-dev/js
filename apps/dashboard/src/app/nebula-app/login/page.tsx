@@ -1,4 +1,4 @@
-import { getChains } from "../(app)/utils/getChainIds";
+import { getChainsForNebula } from "../(app)/utils/getChainIds";
 import { getNebulaAuthToken } from "../_utils/authToken";
 import { NebulaLoggedOutStatePage } from "./NebulaLoginPage";
 
@@ -10,7 +10,7 @@ export default async function NebulaLogin(props: {
 }) {
   const searchParams = await props.searchParams;
   const authToken = await getNebulaAuthToken();
-  const chains = await getChains(searchParams.chain);
+  const chains = await getChainsForNebula(searchParams.chain);
 
   return (
     <NebulaLoggedOutStatePage

@@ -4,7 +4,7 @@ import {
   getNebulaAuthTokenWalletAddress,
 } from "../_utils/authToken";
 import { ChatPageContent } from "./components/ChatPageContent";
-import { getChains } from "./utils/getChainIds";
+import { getChainsForNebula } from "./utils/getChainIds";
 
 export default async function Page(props: {
   searchParams: Promise<{
@@ -15,7 +15,7 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
 
   const [chains, authToken, accountAddress] = await Promise.all([
-    getChains(searchParams.chain),
+    getChainsForNebula(searchParams.chain),
     getNebulaAuthToken(),
     getNebulaAuthTokenWalletAddress(),
   ]);

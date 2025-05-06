@@ -52,6 +52,7 @@ import {
  *  return <button onClick={handleBuyWithCrypto}>Swap</button>
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithCryptoStatus(params?: BuyWithCryptoTransaction) {

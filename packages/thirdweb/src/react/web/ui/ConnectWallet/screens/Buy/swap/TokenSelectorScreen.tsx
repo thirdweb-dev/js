@@ -7,14 +7,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
-import {
-  type GetWalletBalanceResult,
-  getWalletBalance,
-} from "../../../../../../../wallets/utils/getWalletBalance.js";
 import type { WalletId } from "../../../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -47,12 +41,10 @@ import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { FiatValue } from "./FiatValue.js";
 import { WalletRow } from "./WalletRow.js";
-
-type TokenBalance = {
-  balance: GetWalletBalanceResult;
-  chain: Chain;
-  token: TokenInfo;
-};
+import {
+  type TokenBalance,
+  fetchBalancesForWallet,
+} from "./fetchBalancesForWallet.js";
 
 type WalletKey = {
   id: WalletId;
@@ -90,93 +82,35 @@ export function TokenSelectorScreen(props: {
       activeAccount?.address,
       connectedWallets.map((w) => w.getAccount()?.address),
     ],
-    queryFn: async () => {
-      // in parallel, get the balances of all the wallets on each of the sourceSupportedTokens
-      const walletBalanceMap = new Map<WalletKey, TokenBalance[]>();
-
-      const balancePromises = connectedWallets.flatMap((wallet) => {
-        const account = wallet.getAccount();
-        if (!account) return [];
-        const walletKey: WalletKey = {
-          id: wallet.id,
-          address: account.address,
-        };
-        walletBalanceMap.set(walletKey, []);
-
-        // inject the destination token too since it can be used as well to pay/transfer
-        const toToken = isNativeToken(props.toToken)
-          ? {
-              address: NATIVE_TOKEN_ADDRESS,
-              name: chainInfo.data?.nativeCurrency.name || "",
-              symbol: chainInfo.data?.nativeCurrency.symbol || "",
-              icon: chainInfo.data?.icon?.url,
-            }
-          : props.toToken;
-
-        const tokens = {
-          ...props.sourceSupportedTokens,
-          [props.toChain.id]: [
-            toToken,
-            ...(props.sourceSupportedTokens?.[props.toChain.id] || []),
-          ],
-        };
-
-        return Object.entries(tokens).flatMap(([chainId, tokens]) => {
-          return tokens.map(async (token) => {
-            try {
-              const chain = getCachedChain(Number(chainId));
-              const balance = await getWalletBalance({
-                address: account.address,
-                chain,
-                tokenAddress: isNativeToken(token) ? undefined : token.address,
-                client: props.client,
-              });
-
-              // show the token if:
-              // - its not the destination token and balance is greater than 0
-              // - its the destination token and balance is greater than the token amount AND we the account is not the default account in fund_wallet mode
-              const shouldInclude =
-                token.address === toToken.address &&
-                chain.id === props.toChain.id
-                  ? props.mode === "fund_wallet" &&
-                    account.address === activeAccount?.address
-                    ? false
-                    : Number(balance.displayValue) > Number(props.tokenAmount)
-                  : balance.value > 0n;
-
-              if (shouldInclude) {
-                const existingBalances = walletBalanceMap.get(walletKey) || [];
-                existingBalances.push({ balance, chain, token });
-                existingBalances.sort((a, b) => {
-                  if (
-                    a.chain.id === props.toChain.id &&
-                    a.token.address === toToken.address
-                  )
-                    return -1;
-                  if (
-                    b.chain.id === props.toChain.id &&
-                    b.token.address === toToken.address
-                  )
-                    return 1;
-                  if (a.chain.id === props.toChain.id) return -1;
-                  if (b.chain.id === props.toChain.id) return 1;
-                  return a.chain.id > b.chain.id ? 1 : -1;
-                });
-              }
-            } catch (error) {
-              console.error(
-                `Failed to fetch balance for wallet ${wallet.id} on chain ${chainId} for token ${token.symbol}:`,
-                error,
-              );
-            }
-          });
-        });
-      });
-
-      await Promise.all(balancePromises);
-      return walletBalanceMap;
-    },
     enabled: !!props.sourceSupportedTokens && !!chainInfo.data,
+    queryFn: async () => {
+      const entries = await Promise.all(
+        connectedWallets.map(async (wallet) => {
+          const balances = await fetchBalancesForWallet({
+            wallet,
+            accountAddress: activeAccount?.address,
+            sourceSupportedTokens: props.sourceSupportedTokens || [],
+            toChain: props.toChain,
+            toToken: props.toToken,
+            tokenAmount: props.tokenAmount,
+            mode: props.mode,
+            client: props.client,
+          });
+          return [
+            {
+              id: wallet.id,
+              address: wallet.getAccount()?.address || "",
+            } as WalletKey,
+            balances,
+          ] as const;
+        }),
+      );
+      const map = new Map<WalletKey, TokenBalance[]>();
+      for (const entry of entries) {
+        map.set(entry[0], entry[1]);
+      }
+      return map;
+    },
   });
 
   if (

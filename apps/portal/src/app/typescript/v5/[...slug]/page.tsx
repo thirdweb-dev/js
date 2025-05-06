@@ -15,7 +15,8 @@ export default async function Page(props: PageProps) {
   }
 
   // API page
-  const selectedDoc = docSlug && slugToDoc[docSlug];
+  const selectedDoc =
+    docSlug && (slugToDoc[docSlug] || slugToDoc[`common/${docSlug}`]);
 
   if (selectedDoc) {
     return (

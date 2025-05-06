@@ -4,279 +4,120 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 export const metadata = createMetadata({
 	title: "Universal Bridge Webhooks Implementation Guide — thirdweb Docs",
 	description:
-		"Learn how to set up webhooks for web3 payments with thirdweb’s Universal bridge feature: the technical docs",
+		"Learn how to set up webhooks for any Universal Bridge transactions.",
 });
 
 # Webhooks
 
-Universal Bridge can be configured to send webhook events to notify your application any time an event happens on your transaction. Universal Bridge sends a response, via a HTTP request, to any endpoint URLs that you have provided us in your Team > Project > Connect > Universal Bridge > Webhooks page in [thirdweb dashboard](https://thirdweb.com/team).
+You can create a webhook in your project dashboard under the Universal Bridge tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
 
-## Events
+## Response Objects
 
-To listen to events, create a webhook in your Team > Project > Connect > Pay > Webhooks page in [thirdweb dashboard](https://thirdweb.com/team). Webhook URLs must start with `https://`.
+To get the TypeScript type for webhook responses, see the [`Webhook.Payload`](https://portal.thirdweb.com/typescript/v5/webhook/payload) type in the SDK.
 
-| Event               | Description                         |
-| ------------------- | ----------------------------------- |
-| `purchase_complete` | A transaction is confirmed onchain. |
+### Example Payloads
 
-### Purchase Complete
-
-Triggered when a transaction is confirmed onchain. This event provides information about the new status of the order and its transactionHash, as well as other relevant information.
-
-Example Response:
-
-<Tabs defaultValue="fiat">
+<Tabs defaultValue="bridge">
 
 <TabsList>
-	<TabsTrigger value="fiat">Fiat Purchase</TabsTrigger>
-	<TabsTrigger value="crypto">Crypto Purchase</TabsTrigger>
+	<TabsTrigger value="bridge">Bridge & Swap</TabsTrigger>
+	<TabsTrigger value="onramp">Onramp</TabsTrigger>
 </TabsList>
-
-<TabsContent value='fiat'>
+<TabsContent value='onramp'>
 ```json
 {
+  "version": 2,
   "data": {
-    "buyWithFiatStatus": {
-      "intentId": "f4cf8ab7-bb62-4b3b-a180-70fc7d72446c",
-      "status": "ON_RAMP_TRANSFER_COMPLETED",
-      "toAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
-      "quote": {
-        "createdAt": "2024-06-18T23:46:46.024Z",
-        "fromCurrency": {
-          "amountUnits": "279",
-          "amount": "2.79",
-          "currencySymbol": "USD",
-          "decimals": 2,
-          "amountUSDCents": 279
-        },
-        "fromCurrencyWithFees": {
-          "amountUnits": "294",
-          "amount": "2.94",
-          "currencySymbol": "USD",
-          "decimals": 2,
-          "amountUSDCents": 279
-        },
-        "onRampToken": {
-          "chainId": 137,
-          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          "name": "Matic",
-          "symbol": "MATIC",
-          "decimals": 18,
-          "priceUSDCents": 54.797200000000004
-        },
-        "toToken": {
-          "chainId": 137,
-          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          "name": "Matic",
-          "symbol": "MATIC",
-          "decimals": 18,
-          "priceUSDCents": 54.797200000000004
-        },
-        "estimatedOnRampAmountWei": "5000000000000000000",
-        "estimatedOnRampAmount": "5",
-        "estimatedToTokenAmount": "5",
-        "estimatedToTokenAmountWei": "5000000000000000000",
-        "estimatedDurationSeconds": 30
-      },
-      "source": {
-        "completedAt": "2024-06-18T23:49:00.347Z",
-        "amount": "5",
-        "amountWei": "5000000000000000000",
-        "token": {
-          "chainId": 137,
-          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          "name": "Matic",
-          "symbol": "MATIC",
-          "decimals": 18,
-          "priceUSDCents": 54.797200000000004
-        },
-        "transactionHash": "0x4bb089f6a60b49235a817b52bf39bc078f1246df15731b85837526bb62cf4e70",
-        "explorerLink": "https://polygonscan.com/tx/0x4bb089f6a60b49235a817b52bf39bc078f1246df15731b85837526bb62cf4e70",
-        "amountUSDCents": 275
-      }
-    }
+    "id": "d5d33244-f855-441d-af62-4593094a3eb1",
+    "onramp": "stripe",
+    "token": {
+      "chainId": 8453,
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "priceUsd": 0.99995,
+      "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+    },
+    "amount": "5100000",
+    "currency": "USDC",
+    "currencyAmount": 5.36,
+    "receiver": "0xa5a484Af10FF67257A06DDbf8DdE6A99a483f098",
+    "status": "PENDING",
+    "purchaseData": null
   }
 }
 ```
 </TabsContent>
 
-<TabsContent value='crypto'>
+<TabsContent value='bridge'>
 ```json
 {
+  "version": 2,
   "data": {
-    "buyWithCryptoStatus": {
-      "swapType": "SAME_CHAIN",
-      "source": {
-        "transactionHash": "0x74d6c619a09e78f03f4bd495f29d5937a2539d0bbe8973e7710dce3e88c30b8b",
-        "token": {
-          "chainId": 10,
-          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          "decimals": 18,
-          "name": "ETH",
-          "symbol": "ETH",
-          "priceUSDCents": 346529
-        },
-        "amountWei": "318486512146714",
-        "amount": "0.000318486512146714",
-        "amountUSDCents": 110,
-        "completedAt": "2024-06-18T23:44:07.000Z"
+    "transactionId": "0x7baae858e28628fe57cb0ca93c86fcda68f556563199cb4472044bfd9fbe5ec8",
+    "paymentId": "0xbea711bf1da223b29b176cff7f01596834dd63c7ad85477a3504f4b9285b33a2",
+    "clientId": "c56b27030ad22846003fafbb4302b5d7",
+    "action": "SELL",
+    "status": "COMPLETED",
+    "originToken": {
+      "chainId": 466,
+      "address": "0x675C3ce7F43b00045a4Dab954AF36160fb57cB45",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "priceUsd": 0.99995,
+      "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+    },
+    "originAmount": "24875000",
+    "destinationToken": {
+      "chainId": 8453,
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "priceUsd": 0.99995,
+      "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+    },
+    "destinationAmount": "24794905",
+    "sender": "0xb4523A0D69612B9A4629A70E42021B2F384CC8Fa",
+    "receiver": "0x044A83bA68f36CF1F27836Cb93614f86d8B0ea96",
+    "type": "sell",
+    "transactions": [
+      {
+        "chainId": 466,
+        "transactionHash": "0xc507bde1da0832d097c2160aacc2c9333ac3a0516c8dca4fb955f4c949da1ef6"
       },
-      "status": "COMPLETED",
-      "subStatus": "SUCCESS",
-      "fromAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
-      "toAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
-      "quote": {
-        "fromToken": {
-          "chainId": 10,
-          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-          "decimals": 18,
-          "name": "ETH",
-          "symbol": "ETH",
-          "priceUSDCents": 346529
-        },
-        "toToken": {
-          "chainId": 10,
-          "tokenAddress": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
-          "decimals": 6,
-          "name": "USD Coin",
-          "symbol": "USDC",
-          "priceUSDCents": 99
-        },
-        "fromAmountWei": "318486512146714",
-        "fromAmount": "0.000318486512146714",
-        "toAmountWei": "1100000",
-        "toAmount": "1.1",
-        "toAmountMinWei": "1100000",
-        "toAmountMin": "1.1",
-        "estimated": {
-          "fromAmountUSDCents": 110,
-          "toAmountMinUSDCents": 109,
-          "toAmountUSDCents": 109,
-          "slippageBPS": 91,
-          "feesUSDCents": 32,
-          "gasCostUSDCents": 40,
-          "durationSeconds": 30
-        },
-        "createdAt": "2024-06-18T23:43:45.900Z"
-      },
-      "destination": {
-        "transactionHash": "0x74d6c619a09e78f03f4bd495f29d5937a2539d0bbe8973e7710dce3e88c30b8b",
-        "token": {
-          "chainId": 10,
-          "tokenAddress": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
-          "decimals": 6,
-          "name": "USD Coin",
-          "symbol": "USDC",
-          "priceUSDCents": 99
-        },
-        "amountWei": "1100000",
-        "amount": "1.1",
-        "amountUSDCents": 109,
-        "completedAt": "2024-06-18T23:44:07.000Z"
+      {
+        "chainId": 8453,
+        "transactionHash": "0xc44b372284061a11ec96c67acfc96a67cc6180d14753b55a93c1f780d16ddc95"
       }
-    }
+    ],
+    "developerFeeBps": 20,
+    "developerFeeRecipient": "0x66d3d733e597bdf8b794ab6e13c8f2be0fcda39b"
   }
 }
 ```
 </TabsContent>
 </Tabs>
 
-## Webhook Verification (Recommended)
+## Webhook Verification
 
-Since any outside origin can call your webhook endpoint, it is recommended to verify the webhook signature to ensure a request comes from your Pay instance.
+There are two ways to verify a webhook request authenticity:
+1. Checking that the bearer token in the `Authorization` header matches the secret key received when you created the webhook.
+2. Decrypting the payload signature from the `x-payload-signature` header and verifying it against the received webhook body.
 
-### Check the Signature
+### Decrypting the Payload Signature
 
-The payload body is signed with the webhook secret and provided in the X-Pay-Signature request header.
-
-Get the webhook secret for your webhook endpoint from the dashboard.
-
-This code example checks if the signature is valid:
-
-```tsx
-const generateSignature = (
-	body: string,
-	timestamp: string,
-	secret: string,
-): string => {
-	const payload = `${timestamp}.${body}`;
-	return crypto.createHmac("sha256", secret).update(payload).digest("hex");
-};
-
-const isValidSignature = (
-	body: string,
-	timestamp: string,
-	signature: string,
-	secret: string,
-): boolean => {
-	const expectedSignature = generateSignature(body, timestamp, secret);
-	return crypto.timingSafeEqual(
-		Buffer.from(expectedSignature),
-		Buffer.from(signature),
-	);
-};
+The payload signature is constructed using the `x-timestamp` header and the webhook's full body:
+```ts
+const signature = crypto
+  .createHmac("sha256", decryptedSecret)
+  .update(`${timestamp}.${payload}`)
+  .digest("hex");
 ```
+The `x-timestamp` header is a UNIX timestamp in seconds, and the webhook body is the JSON payload received by your webhook endpoint.
 
-Check the timestamp
-The event timestamp is provided in the X-Pay-Timestamp request header.
+Then verify that the signature matches the `x-payload-signature` header.
 
-This code example checks if the event exceeds a given expiration duration:
-
-```tsx
-export const isExpired = (
-	timestamp: string,
-	expirationInSeconds: number,
-): boolean => {
-	const currentTime = Math.floor(Date.now() / 1000);
-	return currentTime - parseInt(timestamp) > expirationInSeconds;
-};
-```
-
-### Example webhook endpoint
-
-This NodeJS code example listens for event notifications on the /webhook endpoint:
-
-```tsx
-import express from "express";
-import bodyParser from "body-parser";
-import { isValidSignature, isExpired } from "./webhookHelper";
-
-const app = express();
-const port = 3000;
-
-const WEBHOOK_SECRET = "<your_webhook_auth_secret>";
-
-app.use(bodyParser.text());
-
-app.post("/webhook", (req, res) => {
-	const signatureFromHeader = req.header("X-Pay-Signature");
-	const timestampFromHeader = req.header("X-Pay-Timestamp");
-
-	if (!signatureFromHeader || !timestampFromHeader) {
-		return res.status(401).send("Missing signature or timestamp header");
-	}
-
-	if (
-		!isValidSignature(
-			req.body,
-			timestampFromHeader,
-			signatureFromHeader,
-			WEBHOOK_SECRET,
-		)
-	) {
-		return res.status(401).send("Invalid signature");
-	}
-
-	if (isExpired(timestampFromHeader, 300)) {
-		// Assuming expiration time is 5 minutes (300 seconds)
-		return res.status(401).send("Request has expired");
-	}
-
-	// Process the request
-	res.status(200).send("Webhook received!");
-});
-
-app.listen(port, () => {
-	console.log(`Server started on http://localhost:${port}`);
-});
-```
+**When using webhooks to distribute purchased items, always verify that the proper amount was paid to the proper address.**

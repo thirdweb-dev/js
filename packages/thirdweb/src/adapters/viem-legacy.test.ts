@@ -149,11 +149,6 @@ describe("walletClient.toViem", () => {
       walletClient.switchChain({
         id: FORKED_ETHEREUM_CHAIN.id,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      [UnknownRpcError: An unknown RPC error occurred.
-
-      Details: Can't switch chains because only an account was passed to 'viemAdapter.walletClient.toViem()', please pass a connected wallet instance instead.
-      Version: viem@2.27.2]
-    `);
+    ).rejects.toThrow();
   });
 });

@@ -1,4 +1,4 @@
-import { fetchChain } from "utils/fetchChain";
+import { fetchChainWithLocalOverrides } from "../../../../../utils/fetchChainWithLocalOverrides";
 import {
   type ProjectContract,
   getProjectContracts,
@@ -19,7 +19,9 @@ export async function getSortedDeployedContracts(params: {
   const chainIds = Array.from(new Set(contracts.map((c) => c.chainId)));
   const chains = (
     await Promise.allSettled(
-      chainIds.map((chainId) => fetchChain(chainId.toString())),
+      chainIds.map((chainId) =>
+        fetchChainWithLocalOverrides(chainId.toString()),
+      ),
     )
   )
     .filter((c) => c.status === "fulfilled")

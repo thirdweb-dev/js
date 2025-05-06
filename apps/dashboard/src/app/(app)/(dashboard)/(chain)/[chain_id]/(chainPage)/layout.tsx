@@ -100,10 +100,10 @@ The following is the user's message:
   return (
     <>
       <NebulaChatButton
+        isLoggedIn={!!authToken}
         networks={chain.testnet ? "testnet" : "mainnet"}
         isFloating={true}
         pageType="chain"
-        authToken={authToken ?? undefined}
         label="Ask AI about this chain"
         client={client}
         nebulaParams={{
