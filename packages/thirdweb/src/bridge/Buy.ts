@@ -91,6 +91,7 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  * @param options.destinationChainId - The chain ID of the destination token.
  * @param options.destinationTokenAddress - The address of the destination token.
  * @param options.amount - The amount of the destination token to receive.
+ * @param [options.maxSteps] - Limit the number of total steps in the route.
  * @param options.client - Your thirdweb client.
  *
  * @returns A promise that resolves to a non-finalized quote for the requested buy.
@@ -307,6 +308,7 @@ export declare namespace quote {
  * @param options.sender - The address of the sender.
  * @param options.receiver - The address of the recipient.
  * @param options.purchaseData - Arbitrary data to be passed to the purchase function and included with any webhooks or status calls.
+ * @param [options.maxSteps] - Limit the number of total steps in the route.
  * @param options.client - Your thirdweb client.
  *
  * @returns A promise that resolves to a finalized quote and transactions for the requested buy.
