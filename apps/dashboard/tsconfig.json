@@ -29,6 +29,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "lucide-react.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "additional.d.ts",

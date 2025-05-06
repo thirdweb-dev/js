@@ -9,6 +9,12 @@
   "typescript.preferences.autoImportFileExcludePatterns": [
     "./packages/thirdweb/src/exports"
   ],
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+    "@radix-ui",
+    "next/router",
+    "next/dist",
+    "^lucide-react/dist/lucide-react.suffixed$"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"

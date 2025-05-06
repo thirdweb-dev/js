@@ -8,8 +8,8 @@ import { useEns } from "components/contract-components/hooks";
 import {
   LogOutIcon,
   MenuIcon,
-  Moon,
-  Sun,
+  MoonIcon,
+  SunIcon,
   UserRoundIcon,
   WalletIcon,
   XIcon,
@@ -213,7 +213,7 @@ export function MobileBurgerMenuButton(
             >
               <span className="text-base text-muted-foreground">Theme</span>
               <div className="ml-auto flex items-center gap-2 rounded-lg border px-2 py-1">
-                <Sun
+                <SunIcon
                   className={cn(
                     "size-4",
                     theme === "light"
@@ -221,7 +221,7 @@ export function MobileBurgerMenuButton(
                       : "text-muted-foreground",
                   )}
                 />
-                <Moon
+                <MoonIcon
                   className={cn(
                     "size-4",
                     theme === "dark"

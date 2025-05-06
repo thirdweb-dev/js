@@ -12,7 +12,7 @@ import {
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Flame } from "lucide-react";
+import { FlameIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -66,7 +66,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
           disabled={!hasBalance}
           className="gap-2"
         >
-          <Flame size={16} /> Burn
+          <FlameIcon className="size-4" /> Burn
         </Button>
       </SheetTrigger>
       <SheetContent>

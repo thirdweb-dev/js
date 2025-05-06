@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CheckIcon, ChevronDown, SearchIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, SearchIcon } from "lucide-react";
 import React, { useRef, useMemo, useEffect } from "react";
 import { useShowMore } from "../../lib/useShowMore";
 import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
@@ -131,7 +131,7 @@ export const SelectWithSearch = React.forwardRef<
               >
                 {selectedOption?.label || placeholder}
               </span>
-              <ChevronDown className="size-4 cursor-pointer text-muted-foreground" />
+              <ChevronDownIcon className="size-4 cursor-pointer text-muted-foreground" />
             </div>
           </Button>
         </PopoverTrigger>

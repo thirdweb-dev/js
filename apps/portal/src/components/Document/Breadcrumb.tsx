@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 
 type Crumb = {
@@ -21,7 +21,7 @@ export function Breadcrumb(props: { crumbs: Crumb[] }) {
               </Link>
               {i !== props.crumbs.length - 1 && (
                 <span className="text-muted-foreground opacity-50">
-                  <ChevronRight size={16} />
+                  <ChevronRightIcon className="size-4" />
                 </span>
               )}
             </li>

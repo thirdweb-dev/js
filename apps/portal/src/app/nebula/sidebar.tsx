@@ -2,16 +2,16 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 import { NebulaSideIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 
 import {
-  Blocks,
-  Braces,
-  Code,
-  ExternalLink,
-  Key,
-  MessageCircleQuestion,
-  PencilRuler,
-  Rocket,
-  Workflow,
-  Wrench,
+  BlocksIcon,
+  BracesIcon,
+  CodeIcon,
+  ExternalLinkIcon,
+  KeyIcon,
+  MessageCircleQuestionIcon,
+  PencilRulerIcon,
+  RocketIcon,
+  WorkflowIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 export const sidebar: SideBar = {
@@ -25,12 +25,12 @@ export const sidebar: SideBar = {
     {
       name: "Prompt Guide",
       href: "/nebula/prompt-guide",
-      icon: <PencilRuler />,
+      icon: <PencilRulerIcon />,
     },
     {
       name: "Playground",
       href: "https://nebula.thirdweb.com",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       separator: true,
@@ -42,11 +42,11 @@ export const sidebar: SideBar = {
         {
           name: "Get Started",
           href: "/nebula/get-started",
-          icon: <Rocket />,
+          icon: <RocketIcon />,
         },
         {
           name: "Key Concepts",
-          icon: <Key />,
+          icon: <KeyIcon />,
           links: [
             {
               name: "Chat & Execute",
@@ -73,7 +73,7 @@ export const sidebar: SideBar = {
         {
           name: "API Reference",
           href: "/nebula/api-reference",
-          icon: <Braces />,
+          icon: <BracesIcon />,
           links: [
             {
               name: "Chat",
@@ -123,7 +123,7 @@ export const sidebar: SideBar = {
         },
         {
           name: "SDK Reference",
-          icon: <Code />,
+          icon: <CodeIcon />,
           links: [
             {
               name: "Typescript",
@@ -140,7 +140,7 @@ export const sidebar: SideBar = {
         {
           name: "Plugins & Integrations",
           href: "/nebula/plugins",
-          icon: <Blocks />,
+          icon: <BlocksIcon />,
           links: [
             {
               name: "OpenAI",
@@ -161,11 +161,11 @@ export const sidebar: SideBar = {
         {
           name: "Get Started",
           href: "/nebula/mcp-server/get-started",
-          icon: <Rocket />,
+          icon: <RocketIcon />,
         },
         {
           name: "Integrations",
-          icon: <Workflow />,
+          icon: <WorkflowIcon />,
           links: [
             {
               name: "Claude Desktop",
@@ -185,7 +185,7 @@ export const sidebar: SideBar = {
       links: [
         {
           name: "Python SDK",
-          icon: <Code />,
+          icon: <CodeIcon />,
           links: [
             {
               name: "Installation",
@@ -205,12 +205,12 @@ export const sidebar: SideBar = {
     {
       name: "Troubleshoot",
       href: "/nebula/troubleshoot",
-      icon: <Wrench />,
+      icon: <WrenchIcon />,
     },
     {
       name: "FAQs",
       href: "/nebula/faqs",
-      icon: <MessageCircleQuestion />,
+      icon: <MessageCircleQuestionIcon />,
     },
   ],
 };

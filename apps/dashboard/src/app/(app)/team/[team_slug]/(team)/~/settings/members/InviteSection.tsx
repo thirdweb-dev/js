@@ -30,7 +30,7 @@ import {
   PlusIcon,
   SearchIcon,
   Trash2Icon,
-  UserPlus,
+  UserPlusIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -183,7 +183,7 @@ export function InviteSection(props: {
               {sendInvites.isPending ? (
                 <Spinner className="size-4" />
               ) : (
-                <UserPlus className="size-4" />
+                <UserPlusIcon className="size-4" />
               )}
               {form.watch("invites").length > 1
                 ? "Send Invites"

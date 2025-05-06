@@ -16,7 +16,7 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
 import type { WalletUser } from "thirdweb/wallets";
@@ -177,7 +177,7 @@ export function InAppWalletUsersPageContent(props: {
               onClick={() => setActivePage((p) => Math.max(1, p - 1))}
               disabled={activePage === 1 || walletsQuery.isPending}
             >
-              <ArrowLeft className="size-4" />
+              <ArrowLeftIcon className="size-4" />
               Previous
             </Button>
             <Button
@@ -188,7 +188,7 @@ export function InAppWalletUsersPageContent(props: {
               disabled={wallets.length === 0 || walletsQuery.isPending}
             >
               Next
-              <ArrowRight className="size-4" />
+              <ArrowRightIcon className="size-4" />
             </Button>
           </div>
         </div>
