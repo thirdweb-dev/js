@@ -1,11 +1,11 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
-  Key,
+  KeyIcon,
   MessageCircleQuestionIcon,
-  Rocket,
-  ShieldQuestion,
-  Vault,
-  Wrench,
+  RocketIcon,
+  ShieldQuestionIcon,
+  VaultIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 export const sidebar: SideBar = {
@@ -14,16 +14,16 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/vault",
-      icon: <Vault />,
+      icon: <VaultIcon />,
     },
     {
       name: "Get Started",
       href: "/vault/get-started",
-      icon: <Rocket />,
+      icon: <RocketIcon />,
     },
     {
       name: "Key Concepts",
-      icon: <Key />,
+      icon: <KeyIcon />,
       links: [
         {
           name: "Key Management",
@@ -50,12 +50,12 @@ export const sidebar: SideBar = {
     {
       name: "Security",
       href: "/vault/security",
-      icon: <ShieldQuestion />,
+      icon: <ShieldQuestionIcon />,
     },
     {
       name: "Troubleshoot",
       href: "/vault/troubleshoot",
-      icon: <Wrench />,
+      icon: <WrenchIcon />,
     },
     {
       name: "FAQs",

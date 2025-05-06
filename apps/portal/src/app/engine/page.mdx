@@ -1,7 +1,7 @@
 import OverviewImage from "./assets/engine-overview.png";
 import { DocImage, FeatureCard, OpenSourceCard, Callout } from "@doc";
 import { createMetadata } from "@/components/Document";
-import { Activity, CircleCheck, RotateCcw, Ban, File, MessageCircle, Wallet, Blocks, ArrowLeftRight, SlidersHorizontal} from "lucide-react";
+import { ActivityIcon, CircleCheckIcon, RotateCcwIcon, BanIcon, FileIcon, MessageCircleIcon, WalletIcon, BlocksIcon, ArrowLeftRightIcon, SlidersHorizontalIcon } from "lucide-react";
 import SupportedChains from "../_images/supported-chains.png";
 
 
@@ -31,50 +31,50 @@ Engine provides a way to read and write to the blockchain at scale through simpl
 	<FeatureCard
 		title="Concurrent Transactions"
 		description="Send multiple transactions at once with automatic nonce management"
-		iconUrl={<ArrowLeftRight />}
+		iconUrl={<ArrowLeftRightIcon />}
 	/>
 
-    <FeatureCard
-    	title="Avoid Transaction Failures"
-    	description="Resubmits stuck transactions, handling nonce values, gas settings, and RPC errors."
-		iconUrl={<RotateCcw/>}
-    />
-
-    <FeatureCard
-    	title="Wallet Management"
-    	description="Manage funds and send transactions without worrying about topping up gas fees."
-		iconUrl={<Wallet/>}
-    />
+	<FeatureCard
+		title="Avoid Transaction Failures"
+		description="Resubmits stuck transactions, handling nonce values, gas settings, and RPC errors."
+		iconUrl={<RotateCcwIcon />}
+	/>
 
 	<FeatureCard
-    	title="Granular Access Control"
-    	description="Control access to server wallets via access tokens with specified permission scopes"
-		  iconUrl={<SlidersHorizontal/>}
-    />
+		title="Wallet Management"
+		description="Manage funds and send transactions without worrying about topping up gas fees."
+		iconUrl={<WalletIcon />}
+	/>
 
 	<FeatureCard
-    	title="Abstract Blockchain Complexity"
-    	description="Sponsor gas fees using built-in relayers and session keys to transact on behalf of users."
-		iconUrl={<CircleCheck/>}
-    />
+		title="Granular Access Control"
+		description="Control access to server wallets via access tokens with specified permission scopes"
+		iconUrl={<SlidersHorizontalIcon />}
+	/>
 
-    <FeatureCard
-    	title="Offchain Integrations"
-    	description="Integrate with existing services to do onchain actions triggered from offchain events."
-		iconUrl={<Blocks/>}
-    />
+	<FeatureCard
+		title="Abstract Blockchain Complexity"
+		description="Sponsor gas fees using built-in relayers and session keys to transact on behalf of users."
+		iconUrl={<CircleCheckIcon />}
+	/>
 
-        <FeatureCard
-    	title="Programmatic Deployments"
-    	description="Deploy smart accounts, tokens, NFTs, marketplaces, and more."
-		iconUrl={<Blocks/>}
-    />
+	<FeatureCard
+		title="Offchain Integrations"
+		description="Integrate with existing services to do onchain actions triggered from offchain events."
+		iconUrl={<BlocksIcon />}
+	/>
 
-    <FeatureCard
-    	title="Transaction Observability"
-    	description="Debug transaction failures with detailed timelines, onchain errors, and gas details."
-      iconUrl={<Activity/>}
-    />
+	<FeatureCard
+		title="Programmatic Deployments"
+		description="Deploy smart accounts, tokens, NFTs, marketplaces, and more."
+		iconUrl={<BlocksIcon />}
+	/>
+
+	<FeatureCard
+		title="Transaction Observability"
+		description="Debug transaction failures with detailed timelines, onchain errors, and gas details."
+		iconUrl={<ActivityIcon />}
+	/>
 </div>
 
 ## Engine Cloud vs. Dedicated

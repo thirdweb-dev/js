@@ -1,19 +1,19 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
-  BookMarked,
-  Braces,
-  Cloud,
-  Code,
-  ExternalLink,
-  Key,
-  ListCheck,
-  MessageCircleQuestion,
-  Rocket,
-  Server,
-  ShieldQuestion,
-  Wallet,
-  Webhook,
-  Wrench,
+  BookMarkedIcon,
+  BracesIcon,
+  CloudIcon,
+  CodeIcon,
+  ExternalLinkIcon,
+  KeyIcon,
+  ListCheckIcon,
+  MessageCircleQuestionIcon,
+  RocketIcon,
+  ServerIcon,
+  ShieldQuestionIcon,
+  WalletIcon,
+  WebhookIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 const engineSlug = "/engine";
@@ -24,21 +24,21 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/engine",
-      icon: <Cloud />,
+      icon: <CloudIcon />,
     },
     {
       name: "Playground",
       href: "https://playground.thirdweb.com/engine/airdrop",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "Get Started",
       href: `${engineSlug}/get-started`,
-      icon: <Rocket />,
+      icon: <RocketIcon />,
     },
     {
       name: "Key Concepts",
-      icon: <Key />,
+      icon: <KeyIcon />,
       links: [
         {
           name: "Transactions",
@@ -97,7 +97,7 @@ export const sidebar: SideBar = {
     {
       name: "Configure Wallets",
       href: `${engineSlug}/configure-wallets`,
-      icon: <Wallet />,
+      icon: <WalletIcon />,
       links: [
         {
           name: "Smart Server Wallet",
@@ -123,7 +123,7 @@ export const sidebar: SideBar = {
     },
     {
       name: "Tutorials",
-      icon: <BookMarked />,
+      icon: <BookMarkedIcon />,
       links: [
         { name: "Airdrop NFTs", href: `${engineSlug}/guides/airdrop-nfts` },
         { name: "NFT Checkout", href: `${engineSlug}/guides/nft-checkout` },
@@ -132,42 +132,42 @@ export const sidebar: SideBar = {
     {
       name: "API Reference",
       href: "https://thirdweb-engine.apidocumentation.com/",
-      icon: <Braces />,
+      icon: <BracesIcon />,
     },
     {
       name: "Typescript SDK",
       href: `${engineSlug}/references/typescript`,
-      icon: <Code />,
+      icon: <CodeIcon />,
     },
     {
       name: "Webhooks",
       href: `${engineSlug}/webhooks`,
-      icon: <Webhook />,
+      icon: <WebhookIcon />,
     },
     {
       name: "Prod Checklist",
       href: `${engineSlug}/production-checklist`,
-      icon: <ListCheck />,
+      icon: <ListCheckIcon />,
     },
     {
       name: "Self-Host",
       href: `${engineSlug}/self-host`,
-      icon: <Server />,
+      icon: <ServerIcon />,
     },
     {
       name: "Security",
       href: `${engineSlug}/security`,
-      icon: <ShieldQuestion />,
+      icon: <ShieldQuestionIcon />,
     },
     {
       name: "Troubleshoot",
       href: `${engineSlug}/troubleshooting`,
-      icon: <Wrench />,
+      icon: <WrenchIcon />,
     },
     {
       name: "FAQ",
       href: `${engineSlug}/faq`,
-      icon: <MessageCircleQuestion />,
+      icon: <MessageCircleQuestionIcon />,
     },
   ],
 };
