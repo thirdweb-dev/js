@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import { Providers } from "./components/client/Providers.client";
+import { ThemeHandler } from "./components/client/ThemeHandler.client";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -9,9 +11,11 @@ const fontSans = Inter({
   display: "swap",
 });
 
-export default function CheckoutLayout({
+export default async function CheckoutLayout({
   children,
-}: { children: React.ReactNode }) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <Providers>
@@ -27,6 +31,9 @@ export default function CheckoutLayout({
               fontSans.variable,
             )}
           >
+            <Suspense>
+              <ThemeHandler />
+            </Suspense>
             {children}
           </body>
         </ThemeProvider>
