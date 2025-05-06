@@ -161,8 +161,27 @@ export default function CreateTokenPage() {
   const renderStepIndicators = () => (
     <div className="flex justify-center mb-8 pt-6">
       <div className="relative flex w-full max-w-md justify-between">
-        {/* Connect line between circles */}
-        <div className="absolute top-5 left-0 right-0 h-0.5 -translate-y-1/2 bg-muted" />
+        {/* Segmented lines between circles instead of a single line */}
+        <div className="absolute top-5 left-0 right-0 flex justify-between">
+          {/* First segment: between step 1 and 2 */}
+          <div className="w-1/2 flex items-center">
+            <div
+              className={`h-0.5 w-full ${
+                step > 1 ? "bg-primary/20" : "bg-muted"
+              }`}
+              style={{ marginLeft: "25px", marginRight: "25px" }}
+            />
+          </div>
+          {/* Second segment: between step 2 and 3 */}
+          <div className="w-1/2 flex items-center">
+            <div
+              className={`h-0.5 w-full ${
+                step > 2 ? "bg-primary/20" : "bg-muted"
+              }`}
+              style={{ marginLeft: "25px", marginRight: "25px" }}
+            />
+          </div>
+        </div>
 
         <StepIndicator step={1} currentStep={step} label="Token Info" />
         <StepIndicator step={2} currentStep={step} label="Token Options" />
@@ -342,7 +361,7 @@ export default function CreateTokenPage() {
                 </FormFieldSetup>
 
                 <FormFieldSetup
-                  label="Airdrop % of supply to:"
+                  label="Airdrop % of supply to list:"
                   isRequired
                   errorMessage={
                     advancedOptionsForm.formState.errors.airdropSupply?.message

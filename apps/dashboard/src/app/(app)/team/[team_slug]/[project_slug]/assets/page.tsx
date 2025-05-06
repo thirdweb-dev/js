@@ -66,58 +66,63 @@ export default function AssetsPage() {
       <div className="container max-w-7xl py-8">
         <h2 className="text-xl font-semibold mb-6">Create Asset</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <Card className="bg-background">
-            <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="bg-primary/10 p-3 rounded-full mb-4">
-                <Coins className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-medium mb-1">Create Token</h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Launch your own ERC-20 token (TokenERC20)
-              </p>
-              <Link href="./assets/create-token" passHref>
-                <Button variant="default" className="w-full">
-                  <PlusIcon className="mr-2 h-4 w-4" /> Create Token
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <Link
+            href="./assets/create-token"
+            passHref
+            className="block h-full transition-all duration-200 hover:opacity-80"
+          >
+            <Card className="bg-background h-full cursor-pointer hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
+                <div className="bg-primary/10 p-3 rounded-full mb-4">
+                  <Coins className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-medium mb-1">Create Token</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Launch your own ERC-20 token (TokenERC20)
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="bg-background">
-            <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="bg-primary/10 p-3 rounded-full mb-4">
-                <ImageIcon className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-medium mb-1">
-                Create NFT Collection
-              </h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Launch an NFT collection (DropERC721)
-              </p>
-              <Link href="./assets/create-nft" passHref>
-                <Button variant="default" className="w-full">
-                  <PlusIcon className="mr-2 h-4 w-4" /> Create NFT Collection
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <Link
+            href="./assets/create-nft"
+            passHref
+            className="block h-full transition-all duration-200 hover:opacity-80"
+          >
+            <Card className="bg-background h-full cursor-pointer hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
+                <div className="bg-primary/10 p-3 rounded-full mb-4">
+                  <ImageIcon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-medium mb-1">
+                  Create NFT Collection
+                </h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Launch an NFT collection (DropERC721)
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="bg-background">
-            <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="bg-primary/10 p-3 rounded-full mb-4">
-                <FileIcon className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-medium mb-1">
-                Import Existing Asset
-              </h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Import tokens or NFTs you already own
-              </p>
-              <Button variant="default" className="w-full">
-                <PlusIcon className="mr-2 h-4 w-4" /> Import Asset
-              </Button>
-            </CardContent>
-          </Card>
+          <Link
+            href="./assets/import"
+            passHref
+            className="block h-full transition-all duration-200 hover:opacity-80"
+          >
+            <Card className="bg-background h-full cursor-pointer hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
+                <div className="bg-primary/10 p-3 rounded-full mb-4">
+                  <FileIcon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-medium mb-1">
+                  Import Existing Asset
+                </h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Import tokens or NFTs you already own
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         <div className="my-12">
