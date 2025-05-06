@@ -1,21 +1,25 @@
 import {
   type AaExecutionOptions,
   type AaZksyncExecutionOptions,
-  searchTransactions,
   sendTransaction,
   signMessage,
   signTypedData,
 } from "@thirdweb-dev/engine";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { encode } from "../transaction/actions/encode.js";
+import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
+import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
+import { waitForTransactionHash } from "./get-status.js";
 
 /**
  * Options for creating an server wallet.
@@ -45,44 +49,12 @@ export type ServerWalletOptions = {
     | Omit<AaZksyncExecutionOptions, "chainId">;
 };
 
-type RevertDataSerialized = {
-  revertReason?: string;
-  decodedError?: {
-    name: string;
-    signature: string;
-    args: string[];
-  };
+export type ServerWallet = Account & {
+  enqueueTransaction: (args: {
+    transaction: PreparedTransaction;
+    simulate?: boolean;
+  }) => Promise<{ transactionId: string }>;
 };
-
-type ExecutionResult =
-  | {
-      status: "QUEUED";
-    }
-  | {
-      status: "FAILED";
-      error: string;
-    }
-  | {
-      status: "SUBMITTED";
-      monitoringStatus: "WILL_MONITOR" | "CANNOT_MONITOR";
-      userOpHash: string;
-    }
-  | ({
-      status: "CONFIRMED";
-      userOpHash: Hex;
-      transactionHash: Hex;
-      actualGasCost: string;
-      actualGasUsed: string;
-      nonce: string;
-    } & (
-      | {
-          onchainStatus: "SUCCESS";
-        }
-      | {
-          onchainStatus: "REVERTED";
-          revertData?: RevertDataSerialized;
-        }
-    ));
 
 /**
  * Create a server wallet for sending transactions and signing messages via engine (v3+).
@@ -90,29 +62,56 @@ type ExecutionResult =
  * @returns An account object that can be used to send transactions and sign messages.
  * @engine
  * @example
+ * ### Creating a server wallet
  * ```ts
  * import { Engine } from "thirdweb";
  *
- * const myServerWallet = Engine.serverWallet({
- *   client,
- *   vaultAccessToken,
- *   walletAddress,
+ * const client = createThirdwebClient({
+ *   secretKey: "<your-project-secret-key>",
  * });
  *
- * // then use the account as you would any other account
+ * const myServerWallet = Engine.serverWallet({
+ *   client,
+ *   address: "<your-server-wallet-address>",
+ *   vaultAccessToken: "<your-vault-access-token>",
+ * });
+ * ```
+ *
+ * ### Sending a transaction
+ * ```ts
+ * // prepare the transaction
  * const transaction = claimTo({
  *   contract,
  *   to: "0x...",
  *   quantity: 1n,
  * });
- * const result = await sendTransaction({
+ *
+ * // enqueue the transaction
+ * const { transactionId } = await myServerWallet.enqueueTransaction({
  *   transaction,
- *   account: myServerWallet
  * });
- * console.log("Transaction sent:", result.transactionHash);
+ * ```
+ *
+ * ### Polling for the transaction to be submitted onchain
+ * ```ts
+ * // optionally poll for the transaction to be submitted onchain
+ * const { transactionHash } = await Engine.waitForTransactionHash({
+ *   client,
+ *   transactionId,
+ * });
+ * console.log("Transaction sent:", transactionHash);
+ * ```
+ *
+ * ### Getting the execution status of a transaction
+ * ```ts
+ * const executionResult = await Engine.getTransactionStatus({
+ *   client,
+ *   transactionId,
+ * });
+ * console.log("Transaction status:", executionResult.status);
  * ```
  */
-export function serverWallet(options: ServerWalletOptions): Account {
+export function serverWallet(options: ServerWalletOptions): ServerWallet {
   const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
   const headers: HeadersInit = {
@@ -131,104 +130,77 @@ export function serverWallet(options: ServerWalletOptions): Account {
         };
   };
 
+  const enqueueTx = async (transaction: SendTransactionOption) => {
+    const body = {
+      executionOptions: getExecutionOptions(transaction.chainId),
+      params: [
+        {
+          to: transaction.to ?? undefined,
+          data: transaction.data,
+          value: transaction.value?.toString(),
+        },
+      ],
+    };
+
+    const result = await sendTransaction({
+      baseUrl: getThirdwebBaseUrl("engineCloud"),
+      fetch: getClientFetch(client),
+      headers,
+      body,
+    });
+
+    if (result.error) {
+      throw new Error(`Error sending transaction: ${result.error}`);
+    }
+
+    const data = result.data?.result;
+    if (!data) {
+      throw new Error("No data returned from engine");
+    }
+    const transactionId = data.transactions?.[0]?.id;
+    if (!transactionId) {
+      throw new Error("No transactionId returned from engine");
+    }
+    return transactionId;
+  };
+
   return {
     address,
-    sendTransaction: async (transaction: SendTransactionOption) => {
-      const body = {
-        executionOptions: getExecutionOptions(transaction.chainId),
-        params: [
-          {
-            to: transaction.to ?? undefined,
-            data: transaction.data,
-            value: transaction.value?.toString(),
-          },
-        ],
-      };
-
-      const result = await sendTransaction({
-        baseUrl: getThirdwebBaseUrl("engineCloud"),
-        fetch: getClientFetch(client),
-        headers,
-        body,
-      });
-
-      if (result.error) {
-        throw new Error(`Error sending transaction: ${result.error}`);
-      }
-
-      const data = result.data?.result;
-      if (!data) {
-        throw new Error("No data returned from engine");
-      }
-      const transactionId = data.transactions?.[0]?.id;
-      if (!transactionId) {
-        throw new Error("No transactionId returned from engine");
-      }
-
-      // wait for the queueId to be processed
-      const startTime = Date.now();
-      const TIMEOUT_IN_MS = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-      while (Date.now() - startTime < TIMEOUT_IN_MS) {
-        const searchResult = await searchTransactions({
-          baseUrl: getThirdwebBaseUrl("engineCloud"),
-          fetch: getClientFetch(client),
-          body: {
-            filters: [
-              {
-                field: "id",
-                values: [transactionId],
-                operation: "OR",
-              },
-            ],
-          },
+    enqueueTransaction: async (args: {
+      transaction: PreparedTransaction;
+      simulate?: boolean;
+    }) => {
+      let serializedTransaction: SendTransactionOption;
+      if (args.simulate) {
+        serializedTransaction = await toSerializableTransaction({
+          transaction: args.transaction,
         });
-
-        if (searchResult.error) {
-          throw new Error(
-            `Error searching for transaction: ${stringify(searchResult.error)}`,
-          );
-        }
-
-        const data = searchResult.data?.result?.transactions?.[0];
-
-        if (!data) {
-          throw new Error(`Transaction ${transactionId} not found`);
-        }
-
-        const executionResult = data.executionResult as ExecutionResult;
-        const status = executionResult.status;
-
-        if (status === "FAILED") {
-          throw new Error(
-            `Transaction failed: ${executionResult.error || "Unknown error"}`,
-          );
-        }
-
-        const onchainStatus =
-          executionResult && "onchainStatus" in executionResult
-            ? executionResult.onchainStatus
-            : null;
-
-        if (status === "CONFIRMED" && onchainStatus === "REVERTED") {
-          const revertData =
-            "revertData" in executionResult
-              ? executionResult.revertData
-              : undefined;
-          throw new Error(
-            `Transaction reverted: ${revertData?.decodedError?.name || revertData?.revertReason || "Unknown revert reason"}`,
-          );
-        }
-
-        if (data.transactionHash) {
-          return {
-            transactionHash: data.transactionHash as Hex,
-          };
-        }
-        // wait 1s before checking again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } else {
+        const [to, data, value] = await Promise.all([
+          args.transaction.to
+            ? resolvePromisedValue(args.transaction.to)
+            : null,
+          encode(args.transaction),
+          args.transaction.value
+            ? resolvePromisedValue(args.transaction.value)
+            : null,
+        ]);
+        serializedTransaction = {
+          chainId: args.transaction.chain.id,
+          data,
+          to: to ?? undefined,
+          value: value ?? undefined,
+        };
       }
-      throw new Error("Transaction timed out after 5 minutes");
+      const transactionId = await enqueueTx(serializedTransaction);
+      return { transactionId };
+    },
+    sendTransaction: async (transaction: SendTransactionOption) => {
+      const transactionId = await enqueueTx(transaction);
+      return waitForTransactionHash({
+        client,
+        transactionId,
+      });
     },
     signMessage: async (data) => {
       const { message, chainId } = data;

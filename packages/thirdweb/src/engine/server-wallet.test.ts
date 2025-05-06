@@ -10,7 +10,6 @@ import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { setThirdwebDomains } from "../utils/domains.js";
-import type { Account } from "../wallets/interfaces/wallet.js";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   ENTRYPOINT_ADDRESS_v0_6,
@@ -30,14 +29,14 @@ describe.runIf(
     retry: 0,
   },
   () => {
-    let serverWallet: Account;
+    let serverWallet: Engine.ServerWallet;
 
     beforeAll(async () => {
       setThirdwebDomains({
         rpc: "rpc.thirdweb-dev.com",
         storage: "storage.thirdweb-dev.com",
         bundler: "bundler.thirdweb-dev.com",
-        engineCloud: "localhost:3009", // "engine-cloud-dev-l8wt.chainsaw-dev.zeet.app",
+        engineCloud: "engine.thirdweb-dev.com",
       });
       serverWallet = Engine.serverWallet({
         client: TEST_CLIENT,
@@ -61,7 +60,7 @@ describe.runIf(
       expect(signature).toBeDefined();
     });
 
-    it("should send a tx", async () => {
+    it("should send a tx with regular API", async () => {
       const tx = await sendTransaction({
         account: serverWallet,
         transaction: {
@@ -72,6 +71,30 @@ describe.runIf(
         },
       });
       expect(tx).toBeDefined();
+    });
+
+    it("should enqueue a tx", async () => {
+      const nftContract = getContract({
+        client: TEST_CLIENT,
+        chain: sepolia,
+        address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+      });
+      const claimTx = claimTo({
+        contract: nftContract,
+        to: TEST_ACCOUNT_B.address,
+        tokenId: 0n,
+        quantity: 1n,
+      });
+      console.time("enqueue");
+      const result = await serverWallet.enqueueTransaction({
+        transaction: claimTx,
+      });
+      expect(result.transactionId).toBeDefined();
+      const txHash = await Engine.waitForTransactionHash({
+        client: TEST_CLIENT,
+        transactionId: result.transactionId,
+      });
+      expect(txHash.transactionHash).toBeDefined();
     });
 
     it("should send a extension tx", async () => {
