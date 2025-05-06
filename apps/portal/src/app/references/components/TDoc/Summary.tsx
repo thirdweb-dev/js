@@ -38,7 +38,7 @@ export function TypedocSummary(props: {
 
             // TODO - link to doc
             return (
-              <DocLink href={isUrlNum ? "" : s.url} key={Math.random()}>
+              <DocLink href={isUrlNum ? "" : s.url} key={s.url}>
                 <TypedocSummary summary={s.children} />
               </DocLink>
             );
