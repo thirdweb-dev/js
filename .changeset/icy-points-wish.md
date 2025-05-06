@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Deprecate legacy Pay functins
++Deprecate legacy Pay functions
