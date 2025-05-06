@@ -169,9 +169,9 @@ function EmptyChartContent(props: {
       {props.wallets.length === 0 ? (
         <>
           <span className="mb-6 text-center text-lg">
-            Engine requires a {/* TODO (cloud): add a link to the docs */}
+            Engine requires a{" "}
             <Link
-              href="https://portal.thirdweb.com/engine/vault"
+              href="https://portal.thirdweb.com/vault"
               target="_blank"
               className="underline"
             >

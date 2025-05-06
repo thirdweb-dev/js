@@ -18,7 +18,7 @@ export function KeyManagement({
           <p className="text-muted-foreground text-sm">
             Secure, non-custodial key management system for your server wallets.{" "}
             <Link
-              href="https://portal.thirdweb.com/engine/vault"
+              href="https://portal.thirdweb.com/vault"
               className="underline"
             >
               Learn more.
@@ -84,7 +84,7 @@ async function CreateVaultAccountAlert(props: {
             Your keys are stored in a hardware enclave, and all requests are
             end-to-end encrypted.{" "}
             <Link
-              href="https://portal.thirdweb.com/engine/vault"
+              href="https://portal.thirdweb.com/vault"
               className="underline"
             >
               Learn more about Vault security model.
