@@ -3,15 +3,9 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -22,7 +16,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Fieldset } from "components/contract-components/contract-deploy-form/common";
@@ -30,8 +24,8 @@ import { FileInput } from "components/shared/FileInput";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
-import { useAllChainsData } from "hooks/chains/allChains";
-import type { StoredChain } from "stores/chainStores";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { useActiveAccount } from "thirdweb/react";
 
 // Form schemas
 const tokenInfoSchema = z.object({
@@ -49,6 +43,10 @@ const tokenInfoSchema = z.object({
 const advancedOptionsSchema = z.object({
   ownerSupply: z.string().default("100"),
   airdropSupply: z.string().default("0"),
+  // Sale settings
+  saleEnabled: z.boolean().default(false),
+  saleSupply: z.string().default("0"),
+  salePrice: z.string().default("0.1"),
   // Advanced settings
   primarySaleAddress: z.string().optional(),
   platformFeeBps: z.string().default("250"), // Using basis points (2.5% = 250 basis points)
@@ -98,17 +96,22 @@ export default function CreateTokenPage() {
     {
       ownerSupply: "100",
       airdropSupply: "0",
+      saleEnabled: false,
+      saleSupply: "0",
+      salePrice: "0.1",
       platformFeeBps: "250",
       royaltyBps: "0",
       platformFeeRecipient: "",
       royaltyRecipient: "",
-      primarySaleAddress: "",
     }
   );
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [lastUpdatedField, setLastUpdatedField] = useState<string | null>(null);
 
-  // Get chain data
-  const { allChains } = useAllChainsData();
+  // Get the connected wallet address
+  const activeAccount = useActiveAccount();
+  const connectedAddress = activeAccount?.address;
 
   // Forms
   const tokenInfoForm = useForm<TokenInfoValues>({
@@ -128,6 +131,9 @@ export default function CreateTokenPage() {
     defaultValues: {
       ownerSupply: "100",
       airdropSupply: "0",
+      saleEnabled: false,
+      saleSupply: "0",
+      salePrice: "0.1",
       primarySaleAddress: "",
       platformFeeBps: "250",
       platformFeeRecipient: "",
@@ -136,6 +142,99 @@ export default function CreateTokenPage() {
     },
   });
 
+  // Set the connected wallet address as the default recipient for all fields when available
+  useEffect(() => {
+    if (connectedAddress) {
+      if (!advancedOptionsForm.getValues("primarySaleAddress")) {
+        advancedOptionsForm.setValue("primarySaleAddress", connectedAddress);
+      }
+      if (!advancedOptionsForm.getValues("platformFeeRecipient")) {
+        advancedOptionsForm.setValue("platformFeeRecipient", connectedAddress);
+      }
+      if (!advancedOptionsForm.getValues("royaltyRecipient")) {
+        advancedOptionsForm.setValue("royaltyRecipient", connectedAddress);
+      }
+    }
+  }, [connectedAddress, advancedOptionsForm]);
+
+  // Watch for changes in percentage fields and ensure they sum to 100%
+  useEffect(() => {
+    if (!lastUpdatedField) return;
+
+    const isSaleEnabled = advancedOptionsForm.getValues("saleEnabled");
+
+    // Get current values
+    let owner = parseFloat(advancedOptionsForm.getValues("ownerSupply")) || 0;
+    let airdrop =
+      parseFloat(advancedOptionsForm.getValues("airdropSupply")) || 0;
+    let sale = isSaleEnabled
+      ? parseFloat(advancedOptionsForm.getValues("saleSupply")) || 0
+      : 0;
+
+    // Ensure the values are non-negative
+    owner = Math.max(0, owner);
+    airdrop = Math.max(0, airdrop);
+    sale = Math.max(0, sale);
+
+    // Calculate the total
+    const total = owner + airdrop + sale;
+
+    // If the total is already 100%, no adjustment needed
+    if (Math.abs(total - 100) < 0.01) return;
+
+    // Different adjustment strategies based on which field was last updated
+    if (total > 100) {
+      // If total exceeds 100%, reduce other fields proportionally
+      if (lastUpdatedField === "ownerSupply") {
+        // Reduce airdrop and sale proportionally
+        if (airdrop + sale > 0) {
+          const reduction = total - 100;
+          const airdropRatio = airdrop / (airdrop + sale);
+          const saleRatio = sale / (airdrop + sale);
+
+          airdrop = Math.max(0, airdrop - reduction * airdropRatio);
+          sale = Math.max(0, sale - reduction * saleRatio);
+        } else {
+          // If other fields are 0, cap owner at 100
+          owner = 100;
+        }
+      } else if (lastUpdatedField === "airdropSupply") {
+        // Reduce owner first, then sale if needed
+        owner = Math.max(0, 100 - airdrop - sale);
+        if (owner < 0) {
+          // If owner would go negative, cap airdrop and adjust sale
+          airdrop = isSaleEnabled ? Math.max(0, 100 - sale) : 100;
+          owner = 0;
+        }
+      } else if (lastUpdatedField === "saleSupply") {
+        // Reduce owner first, then airdrop if needed
+        owner = Math.max(0, 100 - airdrop - sale);
+        if (owner < 0) {
+          // If owner would go negative, cap sale and adjust airdrop
+          sale = Math.max(0, 100 - airdrop);
+          owner = 0;
+        }
+      }
+    } else if (total < 100) {
+      // If total is less than 100%, increase owner to make up the difference
+      owner = 100 - airdrop - sale;
+    }
+
+    // Update the form values with the adjusted percentages
+    if (lastUpdatedField !== "ownerSupply") {
+      advancedOptionsForm.setValue("ownerSupply", owner.toFixed(2));
+    }
+    if (lastUpdatedField !== "airdropSupply") {
+      advancedOptionsForm.setValue("airdropSupply", airdrop.toFixed(2));
+    }
+    if (lastUpdatedField !== "saleSupply" && isSaleEnabled) {
+      advancedOptionsForm.setValue("saleSupply", sale.toFixed(2));
+    }
+
+    // Reset the last updated field after processing
+    setLastUpdatedField(null);
+  }, [lastUpdatedField, advancedOptionsForm]);
+
   // Step handlers
   const onTokenInfoSubmit = (data: TokenInfoValues) => {
     setTokenInfo(data);
@@ -143,7 +242,18 @@ export default function CreateTokenPage() {
   };
 
   const onAdvancedOptionsSubmit = (data: AdvancedOptionsValues) => {
-    setAdvancedOptions(data);
+    // Ensure owner percentage is correctly calculated before submitting
+    const airdrop = parseFloat(data.airdropSupply) || 0;
+    const sale = data.saleEnabled ? parseFloat(data.saleSupply) || 0 : 0;
+    const owner = Math.max(0, 100 - airdrop - sale);
+
+    // Update the owner percentage to ensure total is 100%
+    const finalData = {
+      ...data,
+      ownerSupply: owner.toFixed(2),
+    };
+
+    setAdvancedOptions(finalData);
     setStep(3);
   };
 
@@ -154,13 +264,20 @@ export default function CreateTokenPage() {
   };
 
   // Allocation bar calculations
-  const ownerPercentage =
-    parseFloat(advancedOptionsForm.watch("ownerSupply")) || 0;
   const airdropPercentage =
     parseFloat(advancedOptionsForm.watch("airdropSupply")) || 0;
-  const totalAllocation = ownerPercentage + airdropPercentage;
+  const salePercentage = advancedOptionsForm.watch("saleEnabled")
+    ? parseFloat(advancedOptionsForm.watch("saleSupply")) || 0
+    : 0;
 
-  const isAllocationValid = totalAllocation <= 100;
+  // Ensure owner percentage makes the total exactly 100%
+  const ownerPercentage = Math.max(0, 100 - airdropPercentage - salePercentage);
+
+  // Handle CSV file upload
+  const handleCsvUpload = (file: File | undefined) => {
+    setCsvFile(file || null);
+    // File processing would happen here in a real implementation
+  };
 
   // Render functions
   const renderStepIndicators = () => (
@@ -271,32 +388,15 @@ export default function CreateTokenPage() {
                   htmlFor="chain"
                   errorMessage={tokenInfoForm.formState.errors.chain?.message}
                 >
-                  <Select
-                    defaultValue={tokenInfoForm.watch("chain")}
-                    onValueChange={(value) =>
-                      tokenInfoForm.setValue("chain", value)
-                    }
-                  >
-                    <SelectTrigger id="chain">
-                      <SelectValue placeholder="Select chain" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
-                      {allChains.map((chain: StoredChain) => (
-                        <SelectItem key={chain.chainId} value={chain.name}>
-                          <div className="flex items-center gap-2">
-                            {chain.icon?.url && (
-                              <img
-                                src={chain.icon.url}
-                                alt={chain.name}
-                                className="w-4 h-4 rounded-full"
-                              />
-                            )}
-                            {chain.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <NetworkSelectorButton
+                    className="bg-background"
+                    onSwitchChain={(chain) => {
+                      tokenInfoForm.setValue(
+                        "chain",
+                        chain.name || chain.chainId?.toString() || ""
+                      );
+                    }}
+                  />
                 </FormFieldSetup>
 
                 <FormFieldSetup
@@ -357,6 +457,82 @@ export default function CreateTokenPage() {
             className="space-y-6"
           >
             <div className="space-y-6">
+              {/* Sell Token Option */}
+              <div className="border rounded-lg p-4 space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="saleEnabled"
+                    checked={advancedOptionsForm.watch("saleEnabled")}
+                    onCheckedChange={(checked) => {
+                      advancedOptionsForm.setValue("saleEnabled", checked);
+                      if (
+                        checked &&
+                        parseFloat(advancedOptionsForm.watch("saleSupply")) ===
+                          0
+                      ) {
+                        advancedOptionsForm.setValue("saleSupply", "10");
+                        setLastUpdatedField("saleSupply");
+                      } else if (!checked) {
+                        advancedOptionsForm.setValue("saleSupply", "0");
+                        setLastUpdatedField("saleSupply");
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor="saleEnabled"
+                    className="text-base font-medium cursor-pointer"
+                  >
+                    Launch token with Initial Sale Fixed Price
+                  </label>
+                </div>
+                <p className="text-sm text-muted-foreground ml-7">
+                  Make sure your token is tradeable
+                </p>
+
+                {advancedOptionsForm.watch("saleEnabled") && (
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormFieldSetup
+                      label="Sell % of supply"
+                      isRequired
+                      errorMessage={
+                        advancedOptionsForm.formState.errors.saleSupply?.message
+                      }
+                    >
+                      <div className="flex">
+                        <Input
+                          placeholder="10"
+                          value={advancedOptionsForm.watch("saleSupply")}
+                          onChange={(e) => {
+                            advancedOptionsForm.setValue(
+                              "saleSupply",
+                              e.target.value
+                            );
+                            setLastUpdatedField("saleSupply");
+                          }}
+                        />
+                        <span className="ml-2 self-center">%</span>
+                      </div>
+                    </FormFieldSetup>
+
+                    <FormFieldSetup
+                      label="Price per token"
+                      isRequired
+                      errorMessage={
+                        advancedOptionsForm.formState.errors.salePrice?.message
+                      }
+                    >
+                      <div className="flex">
+                        <Input
+                          placeholder="0.1"
+                          {...advancedOptionsForm.register("salePrice")}
+                        />
+                        <span className="ml-2 self-center">USD</span>
+                      </div>
+                    </FormFieldSetup>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormFieldSetup
                   label="Send % of supply to owner"
@@ -368,7 +544,14 @@ export default function CreateTokenPage() {
                   <div className="flex">
                     <Input
                       placeholder="100"
-                      {...advancedOptionsForm.register("ownerSupply")}
+                      value={advancedOptionsForm.watch("ownerSupply")}
+                      onChange={(e) => {
+                        advancedOptionsForm.setValue(
+                          "ownerSupply",
+                          e.target.value
+                        );
+                        setLastUpdatedField("ownerSupply");
+                      }}
                     />
                     <span className="ml-2 self-center">%</span>
                   </div>
@@ -384,7 +567,14 @@ export default function CreateTokenPage() {
                   <div className="flex">
                     <Input
                       placeholder="0"
-                      {...advancedOptionsForm.register("airdropSupply")}
+                      value={advancedOptionsForm.watch("airdropSupply")}
+                      onChange={(e) => {
+                        advancedOptionsForm.setValue(
+                          "airdropSupply",
+                          e.target.value
+                        );
+                        setLastUpdatedField("airdropSupply");
+                      }}
                     />
                     <span className="ml-2 self-center">%</span>
                   </div>
@@ -398,7 +588,23 @@ export default function CreateTokenPage() {
                     <p className="text-sm text-muted-foreground mb-4">
                       Upload a CSV file with wallet addresses and amounts
                     </p>
-                    <Button variant="outline">Upload file</Button>
+                    <FileInput
+                      accept={{ "text/csv": [] }}
+                      value={csvFile || undefined}
+                      setValue={handleCsvUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        alert("CSV upload functionality not implemented")
+                      }
+                    >
+                      Upload CSV
+                    </Button>
+                    {csvFile && (
+                      <p className="mt-2 text-sm font-medium">{csvFile.name}</p>
+                    )}
                   </div>
                 )}
 
@@ -406,31 +612,57 @@ export default function CreateTokenPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Token Allocation</span>
-                  <span
-                    className={
-                      isAllocationValid
-                        ? "text-muted-foreground"
-                        : "text-red-500"
-                    }
-                  >
-                    {totalAllocation}%
-                  </span>
+                  <span className="text-muted-foreground">100.00%</span>
                 </div>
-                <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${
-                      isAllocationValid ? "bg-primary" : "bg-red-500"
-                    }`}
-                    style={{
-                      width: `${Math.min(totalAllocation, 100)}%`,
-                    }}
-                  ></div>
+                <div className="h-3 w-full bg-muted rounded-full overflow-hidden flex">
+                  {/* Owner segment */}
+                  {ownerPercentage > 0 && (
+                    <div
+                      className="h-full bg-primary"
+                      style={{
+                        width: `${ownerPercentage}%`,
+                      }}
+                    ></div>
+                  )}
+                  {/* Airdrop segment */}
+                  {airdropPercentage > 0 && (
+                    <div
+                      className="h-full bg-purple-500"
+                      style={{
+                        width: `${airdropPercentage}%`,
+                      }}
+                    ></div>
+                  )}
+                  {/* Sale segment */}
+                  {salePercentage > 0 && (
+                    <div
+                      className="h-full bg-green-500"
+                      style={{
+                        width: `${salePercentage}%`,
+                      }}
+                    ></div>
+                  )}
                 </div>
-                {!isAllocationValid && (
-                  <p className="text-red-500 text-xs">
-                    Total allocation exceeds 100%
-                  </p>
-                )}
+                <div className="flex gap-4 text-xs">
+                  {ownerPercentage > 0 && (
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-primary rounded-full mr-1"></div>
+                      <span>Owner: {ownerPercentage.toFixed(2)}%</span>
+                    </div>
+                  )}
+                  {airdropPercentage > 0 && (
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
+                      <span>Airdrop: {airdropPercentage.toFixed(2)}%</span>
+                    </div>
+                  )}
+                  {salePercentage > 0 && (
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                      <span>Initial Sale: {salePercentage.toFixed(2)}%</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -451,26 +683,30 @@ export default function CreateTokenPage() {
 
               {showAdvancedSettings && (
                 <div className="border rounded-md mt-2 p-4 space-y-6">
-                  {/* Primary Sale Settings */}
-                  <div>
-                    <h3 className="text-base font-medium mb-4">
-                      Primary Sales
-                    </h3>
-                    <FormFieldSetup
-                      label="Recipient Address"
-                      isRequired={false}
-                      errorMessage={
-                        advancedOptionsForm.formState.errors.primarySaleAddress
-                          ?.message
-                      }
-                      helperText="The wallet address that should receive the revenue from initial sales of the assets."
-                    >
-                      <SolidityInput
-                        solidityType="address"
-                        {...advancedOptionsForm.register("primarySaleAddress")}
-                      />
-                    </FormFieldSetup>
-                  </div>
+                  {/* Primary Sale Settings - only show if sale is enabled */}
+                  {advancedOptionsForm.watch("saleEnabled") && (
+                    <div>
+                      <h3 className="text-base font-medium mb-4">
+                        Primary Sales
+                      </h3>
+                      <FormFieldSetup
+                        label="Recipient Address"
+                        isRequired={false}
+                        errorMessage={
+                          advancedOptionsForm.formState.errors
+                            .primarySaleAddress?.message
+                        }
+                        helperText="The wallet address that should receive the revenue from initial sales of the assets."
+                      >
+                        <SolidityInput
+                          solidityType="address"
+                          {...advancedOptionsForm.register(
+                            "primarySaleAddress"
+                          )}
+                        />
+                      </FormFieldSetup>
+                    </div>
+                  )}
 
                   {/* Platform Fee Settings */}
                   <div>
@@ -577,7 +813,7 @@ export default function CreateTokenPage() {
               <Button type="button" variant="outline" onClick={goBack}>
                 <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
               </Button>
-              <Button type="submit" disabled={!isAllocationValid}>
+              <Button type="submit">
                 Next <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -674,6 +910,22 @@ export default function CreateTokenPage() {
                 <p className="text-muted-foreground text-sm">Airdrop:</p>
                 <p>{advancedOptions?.airdropSupply}%</p>
               </div>
+
+              {advancedOptions?.saleEnabled && (
+                <>
+                  <div className="space-y-2">
+                    <p className="text-muted-foreground text-sm">
+                      Initial Sale:
+                    </p>
+                    <p>{advancedOptions?.saleSupply}%</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-muted-foreground text-sm">Sale Price:</p>
+                    <p>{advancedOptions?.salePrice} USD per token</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
