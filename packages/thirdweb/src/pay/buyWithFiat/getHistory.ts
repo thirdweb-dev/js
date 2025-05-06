@@ -5,6 +5,7 @@ import type { BuyWithFiatStatus } from "./getStatus.js";
 
 /**
  * The parameters for [`getBuyWithFiatHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory) function
+ * @deprecated
  * @buyCrypto
  */
 export type BuyWithFiatHistoryParams = {
@@ -60,6 +61,7 @@ export type BuyWithFiatHistoryData = {
  * })
  * ```
  * @returns Object of type [`BuyWithFiatHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryData)
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithFiatHistory(

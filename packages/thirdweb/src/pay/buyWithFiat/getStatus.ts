@@ -8,6 +8,7 @@ import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 
 /**
  * Parameters for the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
+ * @deprecated
  * @buyCrypto
  */
 export type GetBuyWithFiatStatusParams = {
@@ -172,6 +173,7 @@ export type BuyWithFiatStatus =
  * // when the fiatStatus.status is "ON_RAMP_TRANSFER_COMPLETED" - the process is complete
  * // when the fiatStatus.status is "CRYPTO_SWAP_REQUIRED" - start the swap process
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithFiatStatus(

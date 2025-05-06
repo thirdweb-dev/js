@@ -32,6 +32,7 @@ import type { WithPickedOnceQueryOptions } from "../types.js";
  *   return <div>...</div>;
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export function useBuyWithFiatStatus(

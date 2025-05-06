@@ -23,12 +23,14 @@ export function TypedocSummary(props: {
       {props.summary.map((s) => {
         switch (s.type) {
           case "code": {
-            return <CodeBlock lang={s.lang} code={s.value} />;
+            return (
+              <CodeBlock lang={s.lang} code={s.value} key={Math.random()} />
+            );
           }
 
           case "html":
           case "inlineCode": {
-            return <InlineCode code={s.value} />;
+            return <InlineCode code={s.value} key={Math.random()} />;
           }
 
           case "link": {
@@ -36,7 +38,7 @@ export function TypedocSummary(props: {
 
             // TODO - link to doc
             return (
-              <DocLink href={isUrlNum ? "" : s.url}>
+              <DocLink href={isUrlNum ? "" : s.url} key={Math.random()}>
                 <TypedocSummary summary={s.children} />
               </DocLink>
             );
@@ -44,27 +46,27 @@ export function TypedocSummary(props: {
 
           case "paragraph": {
             return (
-              <Paragraph className={props.className}>
+              <Paragraph className={props.className} key={Math.random()}>
                 <TypedocSummary summary={s.children} />
               </Paragraph>
             );
           }
 
           case "text": {
-            return <span> {s.value}</span>;
+            return <span key={Math.random()}>{s.value}</span>;
           }
 
           case "list": {
             if (s.ordered) {
               return (
-                <OrderedList>
+                <OrderedList key={Math.random()}>
                   <TypedocSummary summary={s.children} />
                 </OrderedList>
               );
             }
 
             return (
-              <UnorderedList>
+              <UnorderedList key={Math.random()}>
                 <TypedocSummary summary={s.children} />
               </UnorderedList>
             );
@@ -72,7 +74,7 @@ export function TypedocSummary(props: {
 
           case "listItem": {
             return (
-              <li>
+              <li key={Math.random()}>
                 <TypedocSummary summary={s.children} className="mb-0" />
               </li>
             );
@@ -81,6 +83,7 @@ export function TypedocSummary(props: {
           case "heading": {
             return (
               <Heading
+                key={Math.random()}
                 level={s.depth}
                 id={slugger.slug(s.children[0]?.value, false)}
               >
@@ -92,7 +95,7 @@ export function TypedocSummary(props: {
           case "strong":
           case "emphasis": {
             return (
-              <em>
+              <em key={Math.random()}>
                 <TypedocSummary summary={s.children} />
               </em>
             );

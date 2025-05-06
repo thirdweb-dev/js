@@ -64,7 +64,8 @@ export function getTDocPage(options: {
         );
       }
 
-      const selectedDoc = docSlug && slugToDoc[docSlug];
+      const selectedDoc =
+        docSlug && (slugToDoc[docSlug] || slugToDoc[`common/${docSlug}`]);
 
       if (!selectedDoc) {
         notFound();
