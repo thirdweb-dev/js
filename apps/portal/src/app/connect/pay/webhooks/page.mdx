@@ -119,3 +119,5 @@ const signature = crypto
 The `x-timestamp` header is a UNIX timestamp in seconds, and the webhook body is the JSON payload received by your webhook endpoint.
 
 Then verify that the signature matches the `x-payload-signature` header.
+
+**When using webhooks to distribute purchased items, always verify that the proper amount was paid to the proper address.**
