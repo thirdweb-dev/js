@@ -700,7 +700,7 @@ export default function CreateNFTPage() {
                 <p className="text-muted-foreground text-sm">Initial Mint:</p>
                 <p>{mintSettings?.initialMint}</p>
               </div>
-
+              {/* 
               <div className="space-y-2">
                 <p className="text-muted-foreground text-sm">Collection:</p>
                 <p>
@@ -710,7 +710,7 @@ export default function CreateNFTPage() {
                   {mintSettings?.collectionType === "project" &&
                     "Project Collection"}
                 </p>
-              </div>
+              </div> */}
 
               <div className="space-y-2">
                 <p className="text-muted-foreground text-sm">Platform Fee:</p>

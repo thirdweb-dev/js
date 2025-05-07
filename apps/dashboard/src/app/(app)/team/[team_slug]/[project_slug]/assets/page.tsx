@@ -229,9 +229,19 @@ export default function AssetsPage() {
                         {asset.contractAddress}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <ExternalLinkIcon className="h-4 w-4" />
-                        </Button>
+                        <Link
+                          href="https://token-marketplace.thirdweb-preview.com/nfts/ethereum/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
+                            <ExternalLinkIcon className="h-4 w-4" />
+                          </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
