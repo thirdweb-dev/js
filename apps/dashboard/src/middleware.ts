@@ -65,16 +65,6 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  // requesting page at app/nebula-app on thirdweb.com -> redirect to nebula.thirdweb.com
-  if (paths[0] === "nebula-app") {
-    const newPaths = paths.slice(1);
-    const url = new URL(request.nextUrl.href);
-    url.host = `nebula.${host}`;
-    url.pathname = `/${newPaths.join("/")}`;
-
-    return NextResponse.redirect(url.href);
-  }
-
   let cookiesToSet: Record<string, string> | undefined = undefined;
 
   const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;

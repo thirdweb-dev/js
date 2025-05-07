@@ -11,7 +11,7 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -40,6 +40,7 @@ export function ChatPageContent(props: {
     | undefined;
 }) {
   const address = useActiveAccount()?.address;
+  const connectionStatus = useActiveWalletConnectionStatus();
   const connectedWallets = useConnectedWallets();
   const setActiveWallet = useSetActiveWallet();
 
@@ -90,10 +91,7 @@ export function ChatPageContent(props: {
     return [];
   });
 
-  const [hasUserUpdatedContextFilters, setHasUserUpdatedContextFilters] =
-    useState(false);
-
-  const [contextFilters, _setContextFilters] = useState<
+  const [_contextFilters, _setContextFilters] = useState<
     NebulaContext | undefined
   >(() => {
     const contextRes = props.session?.context;
@@ -109,62 +107,49 @@ export function ChatPageContent(props: {
     return value;
   });
 
+  const contextFilters = useMemo(() => {
+    return {
+      chainIds: _contextFilters?.chainIds || [],
+      networks: _contextFilters?.networks || null,
+      walletAddress: address || _contextFilters?.walletAddress || null,
+    } satisfies NebulaContext;
+  }, [_contextFilters, address]);
+
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
-    setHasUserUpdatedContextFilters(true);
     saveLastUsedChainIds(v?.chainIds || undefined);
   }, []);
 
-  const isNewSession = !props.session;
-  const connectionStatus = useActiveWalletConnectionStatus();
-
-  // if this is a new session, user has not manually updated context
-  // update the context to the current user's wallet address and chain id
+  const shouldRunEffect = useRef(true);
+  // if this is a new session,
+  // update chains to the last used chains in context filter
+  // we have to do this in effect to avoid hydration errors
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isNewSession || hasUserUpdatedContextFilters) {
+    // if viewing a session or context is set via params - do not update context
+    if (props.session || props.initialParams?.q || !shouldRunEffect.current) {
       return;
     }
 
+    shouldRunEffect.current = false;
+
     _setContextFilters((_contextFilters) => {
-      const updatedContextFilters: NebulaContext = _contextFilters
-        ? {
-            ..._contextFilters,
-          }
-        : {
-            chainIds: [],
-            walletAddress: null,
-            networks: null,
+      try {
+        const lastUsedChainIds = getLastUsedChainIds();
+        if (lastUsedChainIds) {
+          return {
+            networks: _contextFilters?.networks || null,
+            walletAddress: _contextFilters?.walletAddress || null,
+            chainIds: lastUsedChainIds,
           };
-
-      if (!updatedContextFilters.walletAddress && address) {
-        updatedContextFilters.walletAddress = address;
-      }
-
-      if (
-        updatedContextFilters.chainIds?.length === 0 &&
-        !props.initialParams?.q
-      ) {
-        // if we have last used chains in storage, continue using them
-        try {
-          const lastUsedChainIds = getLastUsedChainIds();
-          if (lastUsedChainIds) {
-            updatedContextFilters.chainIds = lastUsedChainIds;
-            return updatedContextFilters;
-          }
-        } catch {
-          // ignore local storage errors
         }
+      } catch {
+        // ignore local storage errors
       }
 
-      return updatedContextFilters;
+      return _contextFilters;
     });
-  }, [
-    address,
-    isNewSession,
-    hasUserUpdatedContextFilters,
-    props.initialParams?.q,
-  ]);
+  }, [props.session, props.initialParams?.q]);
 
   const [sessionId, setSessionId] = useState<string | undefined>(
     props.session?.id,
@@ -342,7 +327,6 @@ export function ChatPageContent(props: {
                 context={contextFilters}
                 setContext={setContextFilters}
                 connectedWallets={connectedWalletsMeta}
-                activeAccountAddress={address}
                 setActiveWallet={handleSetActiveWallet}
               />
             </div>
@@ -365,7 +349,6 @@ export function ChatPageContent(props: {
                   isConnectingWallet={connectionStatus === "connecting"}
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}
-                  activeAccountAddress={address}
                   setActiveWallet={handleSetActiveWallet}
                   client={client}
                   prefillMessage={undefined}

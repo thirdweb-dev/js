@@ -153,10 +153,6 @@ function Variant(props: {
     props.context,
   );
 
-  const [activeAccountAddress, setActiveAccountAddress] = useState<
-    string | undefined
-  >(props.activeAccountAddress);
-
   return (
     <BadgeContainer label={props.label}>
       <ChatBar
@@ -170,9 +166,12 @@ function Variant(props: {
         setContext={setContext}
         showContextSelector={props.showContextSelector}
         connectedWallets={props.connectedWallets}
-        activeAccountAddress={activeAccountAddress}
         setActiveWallet={(wallet) => {
-          setActiveAccountAddress(wallet.address);
+          setContext({
+            chainIds: context?.chainIds || [],
+            networks: context?.networks || null,
+            walletAddress: wallet.address,
+          });
         }}
       />
     </BadgeContainer>

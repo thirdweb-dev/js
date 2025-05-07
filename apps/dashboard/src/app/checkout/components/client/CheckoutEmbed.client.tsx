@@ -11,7 +11,8 @@ import {
 } from "constants/urls";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { getVercelEnv } from "lib/vercel-utils";
-import { useMemo } from "react";
+import { useTheme } from "next-themes";
+import { useEffect, useMemo } from "react";
 import { NATIVE_TOKEN_ADDRESS, createThirdwebClient, toTokens } from "thirdweb";
 import { AutoConnect, PayEmbed } from "thirdweb/react";
 import { setThirdwebDomains } from "thirdweb/utils";
@@ -35,8 +36,17 @@ export function CheckoutEmbed({
   image?: string;
   redirectUri?: string;
   clientId: string;
-  theme: "light" | "dark";
+  theme?: "light" | "dark";
 }) {
+  const { theme: browserTheme, setTheme } = useTheme();
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (theme) {
+      setTheme(theme);
+    }
+  }, [theme, setTheme]);
+
   const client = useMemo(() => {
     if (getVercelEnv() !== "production") {
       setThirdwebDomains({
@@ -59,7 +69,7 @@ export function CheckoutEmbed({
       <AutoConnect client={client} />
       <PayEmbed
         client={client}
-        theme={theme === "light" ? "light" : "dark"}
+        theme={theme ?? (browserTheme === "light" ? "light" : "dark")}
         payOptions={{
           metadata: {
             name,
@@ -75,17 +85,33 @@ export function CheckoutEmbed({
           onPurchaseSuccess: (result) => {
             if (!redirectUri) return;
             const url = new URL(redirectUri);
-            if (result.type === "transaction") {
-              url.searchParams.set("txHash", result.transactionHash);
-              return window.open(url.toString());
+            switch (result.type) {
+              case "crypto": {
+                url.searchParams.set("status", result.status.status);
+                if (
+                  "source" in result.status &&
+                  result.status.source?.transactionHash
+                ) {
+                  url.searchParams.set(
+                    "txHash",
+                    result.status.source?.transactionHash,
+                  );
+                }
+                break;
+              }
+              case "fiat": {
+                url.searchParams.set("status", result.status.status);
+                if ("intentId" in result.status) {
+                  url.searchParams.set("intentId", result.status.intentId);
+                }
+                break;
+              }
+              case "transaction": {
+                url.searchParams.set("txHash", result.transactionHash);
+                break;
+              }
             }
-            if (result.status.status === "NOT_FOUND") {
-              throw new Error("Transaction not found");
-            }
-            const txHash = result.status.source?.transactionHash;
-            if (typeof txHash === "string") {
-              url.searchParams.set("txHash", txHash);
-            }
+            return window.open(url.toString());
           },
         }}
       />

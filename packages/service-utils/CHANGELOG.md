@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.7
+
+### Patch Changes
+
+- [#6960](https://github.com/thirdweb-dev/js/pull/6960) [`928113b`](https://github.com/thirdweb-dev/js/commit/928113bb0bc7d6237148857320563e1e98cf51e1) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: Support Engine Core and Webhook usage events
+
 ## 0.9.6
 
 ### Patch Changes
