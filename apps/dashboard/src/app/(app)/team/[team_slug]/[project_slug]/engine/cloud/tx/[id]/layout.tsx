@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function TransactionLayout({
@@ -15,7 +15,7 @@ export default function TransactionLayout({
           href={`/team/${params.team_slug}/${params.project_slug}/engine/cloud`}
           className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeftIcon className="size-4" />
           Back to Transactions
         </Link>
       </div>

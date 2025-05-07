@@ -21,7 +21,7 @@ import {
   CheckIcon,
   CircleAlertIcon,
   DownloadIcon,
-  Loader2,
+  Loader2Icon,
   RefreshCcwIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -150,7 +150,7 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
         disabled={isLoading}
         className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
       >
-        {isLoading && <Loader2 className="animate-spin" />}
+        {isLoading && <Loader2Icon className="size-4 animate-spin" />}
         {!isLoading && <RefreshCcwIcon className="size-4" />}
         Rotate Admin Key
       </Button>
@@ -309,7 +309,7 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                   >
                     {rotateAdminKeyMutation.isPending ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2Icon className="mr-2 size-4 animate-spin" />
                         Rotating...
                       </>
                     ) : (

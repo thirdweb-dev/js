@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { createEoa } from "@thirdweb-dev/vault-sdk";
-import { Loader2, WalletIcon } from "lucide-react";
+import { Loader2Icon, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { engineCloudProxy } from "../../../../../../../../../@/actions/proxies";
@@ -120,7 +120,7 @@ export default function CreateServerWallet(props: {
         className="flex flex-row items-center gap-2"
       >
         {isLoading ? (
-          <Loader2 className="animate-spin" />
+          <Loader2Icon className="size-4 animate-spin" />
         ) : (
           <WalletIcon className="size-4" />
         )}
@@ -164,7 +164,7 @@ export default function CreateServerWallet(props: {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="mr-2 size-4 animate-spin" />
                   Creating...
                 </>
               ) : (

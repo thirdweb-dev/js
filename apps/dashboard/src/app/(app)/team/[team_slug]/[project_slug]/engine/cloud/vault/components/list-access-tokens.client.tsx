@@ -259,9 +259,9 @@ export default function ListAccessTokens(props: {
                               }
                             >
                               {deletingTokenId === token.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <Loader2Icon className="size-4 animate-spin" />
                               ) : (
-                                <Trash2Icon className="h-4 w-4" />
+                                <Trash2Icon className="size-4" />
                               )}
                             </Button>
                           </div>
