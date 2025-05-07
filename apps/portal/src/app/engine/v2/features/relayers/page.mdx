@@ -1,0 +1,188 @@
+import { Details, Callout, DocImage } from "@doc";
+import Relayer1 from "../../assets/relayer-1.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Relayers | thirdweb Engine",
+	description:
+		"Use Engine to deploy, manage, and transact with smart accounts on behalf of your users",
+});
+
+# Relayers
+
+Use Engine as a relayer to sponsor gas for transactions on behalf of your users. Users sign a transaction with their own wallet (no gas required), and pay [gas fees](/glossary/gas) with an Engine backend wallet.
+
+Removing the need for your users to get gas greatly improves the user experience and reach of your dApp.
+
+## Use cases
+
+Enable users to claim, transfer, list, or burn NFTs with no gas. [Learn more about gasless transactions.](/glossary/gasless-transactions)
+
+## Requirements
+
+- Your Engine instance has a [backend wallet](/engine/v2/features/backend-wallets) with funds.
+- The target contract must support one of:
+  - [EIP-2771 meta transactions](https://eips.ethereum.org/EIPS/eip-2771) \*
+  - [EIP-2612 permit approval](https://eips.ethereum.org/EIPS/eip-2612)
+  - [Polygon meta transactions](https://docs.polygon.technology/pos/concepts/transactions/meta-transactions/)
+
+\*The target contract must trust a forwarder that implements the `verify` and `execute` methods, like thirdweb's default forwarder (0xd04f98c88ce1054c90022ee34d566b9237a1203c).
+
+## Allow calls to Engine from your domain (CORS)
+
+1. Native to [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your Engine instance.
+1. Navigate to the **Configuration** section.
+1. Under **Allowlisted Domains**, enter your application domain(s).
+   - Include local or development environments for testing.
+
+<Callout variant='warning' title="The relay endpoint is unauthenticated.">
+
+Set **Allowed Contracts** and **Allowed Forwarders** to restrict transactions your relayer allows.
+
+</Callout>
+
+## Create a relayer
+
+1. Navigate to [Engine dashboard](https://thirdweb.com/team/~/~/engine) and select your Engine instance.
+1. Navigate to the **Explorer** section.
+1. Select **Add relayer**.
+1. Provide the following details:
+   - **Chain**: The chain where contracts will be called.
+   - **Backend Wallet**: The backend wallet that will submit meta-transactions to the forwarder. Ensure this wallet has sufficient gas funds.
+   - **Label**: A descriptive name for this relayer.
+   - **Allowed Contracts**: (Optional) A list of contract addresses this relayer is allowed to submit transactions to.
+   - **Allowed Forwarders**: (Optional) A list of forwarder addresses this relayer is allowed to submit transactions to.
+
+The relayer will be assigned a URL in this format: `https://<engine_url>/relayer/<relayer_id>`
+
+## Submit a meta transaction from your app frontend
+
+Use the [Connect SDK](/react) to prompt the user to sign transactions and send it this relayer.
+
+First wrap your app with `<ThirdwebProvider>`:
+
+```tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+<ThirdwebProvider>
+	<YourApp />
+</ThirdwebProvider>;
+```
+
+Next prompt the user to connect a wallet. See [ConnectButton](https://portal.thirdweb.com/connect/sign-in/ConnectButton) for customization options.
+
+```tsx
+import { ConnectButton } from "thirdweb/react";
+
+<ConnectButton client={client} />;
+```
+
+This example will call the `claim` method on an [NFT Drop contract](https://portal.thirdweb.com/contracts/explore/pre-built-contracts/nft-drop):
+
+```solidity
+function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, AllowlistProof calldata _allowlistProof, bytes memory _data)
+```
+
+Render a `<TransactionButton>` to prepare a transaction to be relayed via Engine.
+
+```tsx
+import { TransactionButton } from "thirdweb/react";
+
+<TransactionButton
+	transaction={() => {
+		const contract = getContract({
+			client,
+			chain,
+			address: NFT_ADDRESS,
+		});
+
+		return prepareContractCall({
+			contract,
+			method: resolveMethod("claim"),
+			params: [
+				// receiver
+				account.address,
+				// quantity
+				1n,
+				// currency
+				NATIVE_TOKEN_ADDRESS,
+				// pricePerToken
+				0n,
+				// allowlistProof
+				{
+					proof: [],
+					quantityLimitPerWallet: 0n,
+					pricePerToken: 0n,
+					currency: NATIVE_TOKEN_ADDRESS,
+				},
+				// data
+				"0x",
+			],
+		});
+	}}
+	onTransactionSent={(result) =>
+		console.log("Submitted:", result.transactionHash)
+	}
+	onTransactionConfirmed={(receipt) =>
+		console.log("Confirmed:", receipt.transactionHash)
+	}
+	onError={(error) => console.error("Error:", error)}
+	gasless={{
+		provider: "engine",
+		relayerUrl: RELAYER_URL, // e.g. https://<engine_url>/relayer/<relayer_id>
+		relayerForwarderAddress: FORWARDER_ADDRESS, // a trusted forwarder on the contract
+	}}
+>
+	Claim
+</TransactionButton>;
+```
+
+## Submit a meta transaction from your app backend (Advanced)
+
+Alternatively submit transactions to your relayer from your backend. This approach allows you to apply server-side validation or business logic before submitting the transaction to be relayed.
+
+1.  Prompt the user to sign a transaction.
+    - This step does not require gas.
+    - The signature must match the format that the forwarder expects.
+1.  Call your backend with this signature.
+1.  Call Engine from your backend: `POST https://<engine_url>/relayer/{relayer_id}`
+
+    <Details id="relayer-body-payload" summary="Body payload">
+
+        ```typescript
+        {
+        	type: "forward";
+        	request: {
+        		chainid?: string | undefined;
+        		from: string;
+        		to: string;
+        		value: string;
+        		gas: string;
+        		nonce: string;
+        		data: string;
+        	};
+        	signature: string;
+        	forwarderAddress: string;
+        } | {
+        	type: "permit";
+        	request: {
+        		to: string;
+        		owner: string;
+        		spender: string;
+        		value: string;
+        		nonce: string;
+        		deadline: string;
+        	};
+        	signature: string;
+        } | {
+        	type: "execute-meta-transaction";
+        	request: {
+        		from: string;
+        		to: string;
+        		data: string;
+        	};
+        	signature: string;
+        }
+        ```
+
+     </Details>
