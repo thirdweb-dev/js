@@ -20,7 +20,7 @@ import {
 } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
-import type { SessionInfo } from "../api/types";
+import type { NebulaSessionHistoryMessage, SessionInfo } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
@@ -48,45 +48,7 @@ export function ChatPageContent(props: {
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
     if (props.session?.history) {
-      const _messages: ChatMessage[] = [];
-
-      for (const message of props.session.history) {
-        if (message.role === "action") {
-          try {
-            const content = JSON.parse(message.content) as {
-              session_id: string;
-              data: string;
-              type: "sign_transaction" | (string & {});
-            };
-
-            if (content.type === "sign_transaction") {
-              const txData = JSON.parse(content.data);
-              _messages.push({
-                type: "action",
-                subtype: "sign_transaction",
-                data: txData,
-              });
-            } else if (content.type === "sign_swap") {
-              const swapData = JSON.parse(content.data);
-              _messages.push({
-                type: "action",
-                subtype: "sign_swap",
-                data: swapData,
-              });
-            }
-          } catch (e) {
-            console.error("error processing message", e, { message });
-          }
-        } else {
-          _messages.push({
-            text: message.content,
-            type: message.role,
-            request_id: undefined,
-          });
-        }
-      }
-
-      return _messages;
+      return parseHistoryToMessages(props.session.history);
     }
     return [];
   });
@@ -316,7 +278,7 @@ export function ChatPageContent(props: {
       />
 
       <div className="flex grow overflow-hidden">
-        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
+        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-4">
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
@@ -470,97 +432,126 @@ export async function handleNebulaPrompt(params: {
         return;
       }
 
-      if (res.event === "init") {
-        requestIdForMessage = res.data.request_id;
-      }
-
-      if (res.event === "delta") {
-        // ignore empty string delta
-        if (!res.data.v) {
+      switch (res.event) {
+        case "init": {
+          requestIdForMessage = res.data.request_id;
           return;
         }
 
-        hasReceivedResponse = true;
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-
-          // append to previous assistant message
-          if (lastMessage?.type === "assistant") {
+        case "image": {
+          hasReceivedResponse = true;
+          setMessages((prevMessages) => {
             return [
-              ...prev.slice(0, -1),
+              ...prevMessages,
               {
-                text: lastMessage.text + res.data.v,
+                type: "image",
+                data: res.data,
+                request_id: res.request_id,
+              },
+            ];
+          });
+          return;
+        }
+
+        case "delta": {
+          // ignore empty string delta
+          if (!res.data.v) {
+            return;
+          }
+
+          hasReceivedResponse = true;
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+
+            // append to previous assistant message
+            if (lastMessage?.type === "assistant") {
+              return [
+                ...prev.slice(0, -1),
+                {
+                  text: lastMessage.text + res.data.v,
+                  type: "assistant",
+                  request_id: requestIdForMessage,
+                },
+              ];
+            }
+
+            // start a new assistant message
+            return [
+              ...prev,
+              {
+                text: res.data.v,
                 type: "assistant",
                 request_id: requestIdForMessage,
               },
             ];
-          }
-
-          // start a new assistant message
-          return [
-            ...prev,
-            {
-              text: res.data.v,
-              type: "assistant",
-              request_id: requestIdForMessage,
-            },
-          ];
-        });
-      }
-
-      if (res.event === "presence") {
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-
-          // append to previous presence message
-          if (lastMessage?.type === "presence") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                type: "presence",
-                texts: [...lastMessage.texts, res.data.data],
-              },
-            ];
-          }
-
-          // start a new presence message
-          return [...prev, { texts: [res.data.data], type: "presence" }];
-        });
-      }
-
-      if (res.event === "action") {
-        hasReceivedResponse = true;
-        if (res.type === "sign_transaction") {
-          setMessages((prevMessages) => {
-            return [
-              ...prevMessages,
-              {
-                type: "action",
-                subtype: res.type,
-                data: res.data,
-              },
-            ];
           });
-        } else if (res.type === "sign_swap") {
-          setMessages((prevMessages) => {
-            return [
-              ...prevMessages,
-              {
-                type: "action",
-                subtype: res.type,
-                data: res.data,
-              },
-            ];
-          });
+          return;
         }
-      }
 
-      if (res.event === "context") {
-        setContextFilters({
-          chainIds: res.data.chain_ids.map((x) => x.toString()),
-          walletAddress: res.data.wallet_address,
-          networks: res.data.networks,
-        });
+        case "presence": {
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+
+            // append to previous presence message
+            if (lastMessage?.type === "presence") {
+              return [
+                ...prev.slice(0, -1),
+                {
+                  type: "presence",
+                  texts: [...lastMessage.texts, res.data.data],
+                },
+              ];
+            }
+
+            // start a new presence message
+            return [...prev, { texts: [res.data.data], type: "presence" }];
+          });
+          return;
+        }
+
+        case "action": {
+          hasReceivedResponse = true;
+          switch (res.type) {
+            case "sign_transaction": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    type: "action",
+                    subtype: res.type,
+                    data: res.data,
+                    request_id: res.request_id,
+                  },
+                ];
+              });
+              return;
+            }
+            case "sign_swap": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    type: "action",
+                    subtype: res.type,
+                    data: res.data,
+                    request_id: res.request_id,
+                  },
+                ];
+              });
+              return;
+            }
+          }
+          return;
+        }
+
+        case "context": {
+          setContextFilters({
+            chainIds: res.data.chain_ids.map((x) => x.toString()),
+            walletAddress: res.data.wallet_address,
+            networks: res.data.networks,
+          });
+          return;
+        }
       }
     },
     context: contextFilters,
@@ -603,4 +594,81 @@ export function handleNebulaPromptError(params: {
 
     return newMessages;
   });
+}
+
+function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
+  const messages: ChatMessage[] = [];
+
+  for (const message of history) {
+    switch (message.role) {
+      case "action": {
+        try {
+          const content = JSON.parse(message.content) as {
+            session_id: string;
+            data: string;
+            type: "sign_transaction" | "sign_swap";
+            request_id: string;
+          };
+
+          if (content.type === "sign_transaction") {
+            const txData = JSON.parse(content.data);
+            messages.push({
+              type: "action",
+              subtype: "sign_transaction",
+              data: txData,
+              request_id: content.request_id,
+            });
+          } else if (content.type === "sign_swap") {
+            const swapData = JSON.parse(content.data);
+            messages.push({
+              type: "action",
+              subtype: "sign_swap",
+              data: swapData,
+              request_id: content.request_id,
+            });
+          }
+        } catch (e) {
+          console.error("error processing message", e, { message });
+        }
+        break;
+      }
+
+      case "image": {
+        const content = JSON.parse(message.content) as {
+          type: "image";
+          request_id: string;
+          data: {
+            width: number;
+            height: number;
+            url: string;
+          };
+        };
+
+        messages.push({
+          type: "image",
+          data: content.data,
+          request_id: content.request_id,
+        });
+        break;
+      }
+
+      case "user": {
+        messages.push({
+          text: message.content,
+          type: message.role,
+        });
+        break;
+      }
+
+      case "assistant": {
+        messages.push({
+          text: message.content,
+          type: message.role,
+          request_id: undefined,
+        });
+      }
+    }
+  }
+
+  return messages;
 }

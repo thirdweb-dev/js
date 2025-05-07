@@ -3,6 +3,12 @@ type SessionContextFilter = {
   wallet_address: string | null;
 };
 
+export type NebulaSessionHistoryMessage = {
+  role: "user" | "assistant" | "action" | "image";
+  content: string;
+  timestamp: number;
+};
+
 export type SessionInfo = {
   id: string;
   account_id: string;
@@ -11,11 +17,7 @@ export type SessionInfo = {
   can_execute: boolean;
   created_at: string;
   deleted_at: string | null;
-  history: Array<{
-    role: "user" | "assistant" | "action";
-    content: string;
-    timestamp: number;
-  }> | null;
+  history: Array<NebulaSessionHistoryMessage> | null;
   updated_at: string;
   archived_at: string | null;
   title: string | null;
