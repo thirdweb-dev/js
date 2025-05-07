@@ -12,7 +12,7 @@ export function configure(
   client.setConfig({
     headers: {
       ...(options.clientId && { "x-client-id": options.clientId }),
-      ...(options.secretKey && { "x-api-key": options.secretKey }),
+      ...(options.secretKey && { "x-secret-key": options.secretKey }),
     },
     ...(options.override ?? {}),
   });

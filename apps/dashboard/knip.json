@@ -12,6 +12,7 @@
   "ignoreDependencies": [
     "@storybook/blocks",
     "@thirdweb-dev/service-utils",
+    "@thirdweb-dev/vault-sdk",
     "@types/color",
     "fast-xml-parser"
   ]

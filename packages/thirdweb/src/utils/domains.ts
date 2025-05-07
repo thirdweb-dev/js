@@ -39,6 +39,11 @@ type DomainOverrides = {
    * @default "insight.thirdweb.com"
    */
   insight?: string;
+  /**
+   * The base URL for the engine cloud server.
+   * @default "engine.thirdweb.com"
+   */
+  engineCloud?: string;
 };
 
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
@@ -49,6 +54,8 @@ const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 const DEFAULT_BUNDLER_URL = "bundler.thirdweb.com";
 const DEFAULT_ANALYTICS_URL = "c.thirdweb.com";
 const DEFAULT_INSIGHT_URL = "insight.thirdweb.com";
+const DEFAULT_ENGINE_CLOUD_URL = "engine.thirdweb.com";
+
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   rpc: DEFAULT_RPC_URL,
   inAppWallet: DEFAULT_IN_APP_WALLET_URL,
@@ -58,6 +65,7 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
   bundler: DEFAULT_BUNDLER_URL,
   analytics: DEFAULT_ANALYTICS_URL,
   insight: DEFAULT_INSIGHT_URL,
+  engineCloud: DEFAULT_ENGINE_CLOUD_URL,
 };
 
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
@@ -70,6 +78,7 @@ export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
     bundler: DomainOverrides.bundler ?? DEFAULT_BUNDLER_URL,
     analytics: DomainOverrides.analytics ?? DEFAULT_ANALYTICS_URL,
     insight: DomainOverrides.insight ?? DEFAULT_INSIGHT_URL,
+    engineCloud: DomainOverrides.engineCloud ?? DEFAULT_ENGINE_CLOUD_URL,
   };
 };
 
