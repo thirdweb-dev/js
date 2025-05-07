@@ -1,4 +1,8 @@
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoreHorizontalIcon,
+} from "lucide-react";
 import * as React from "react";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
@@ -66,7 +70,7 @@ const PaginationPrevious = ({
     className={cn("h-10 gap-1 pl-2.5", className)}
     {...props}
   >
-    <ChevronLeft className="h-4 w-4" />
+    <ChevronLeftIcon className="size-4" />
     <span className="max-sm:hidden">Previous</span>
   </PaginationLink>
 );
@@ -83,7 +87,7 @@ const PaginationNext = ({
     {...props}
   >
     <span className="max-sm:hidden">Next</span>
-    <ChevronRight className="h-4 w-4" />
+    <ChevronRightIcon className="size-4" />
   </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
@@ -100,7 +104,7 @@ const PaginationEllipsis = ({
     )}
     {...props}
   >
-    <MoreHorizontal className="h-4 w-4" />
+    <MoreHorizontalIcon className="size-4" />
     <span className="sr-only">More pages</span>
   </span>
 );

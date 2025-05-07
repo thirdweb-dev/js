@@ -356,6 +356,9 @@ export function TransactionModeScreen(props: {
               client,
               walletAddress: payerAccount.address,
               walletType: activeWallet?.id,
+              toChainId: payUiOptions.transaction.chain.id,
+              toToken: transactionCostAndData.token.address,
+              amountWei: totalCostWei.toString(),
             });
             onContinue(
               toTokens(totalCostWei, transactionCostAndData.decimals),

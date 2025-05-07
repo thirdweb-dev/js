@@ -88,7 +88,7 @@ function main(params: { assetsFolder: string; srcFolder: string }) {
   // remove the files for which its name can be found in the content of the file
   folderVisitor(params.srcFolder, (content) => {
     for (const assetFileName of assetFileNames) {
-      if (content.includes(assetFileName.name)) {
+      if (content.includes(`/${assetFileName.name}`)) {
         unusedFileNames.delete(assetFileName);
       }
     }

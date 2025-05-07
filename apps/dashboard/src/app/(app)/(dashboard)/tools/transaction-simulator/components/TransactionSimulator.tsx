@@ -11,7 +11,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
-import { ArrowDown, WalletIcon } from "lucide-react";
+import { ArrowDownIcon, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -207,7 +207,7 @@ ${Object.keys(populatedTransaction)
         </Card>
 
         <div className="flex justify-center">
-          <ArrowDown />
+          <ArrowDownIcon className="size-4" />
         </div>
 
         <Card className="flex flex-col gap-4 p-4">
@@ -273,7 +273,7 @@ ${Object.keys(populatedTransaction)
       {state.message && (
         <>
           <div className="flex justify-center">
-            <ArrowDown />
+            <ArrowDownIcon className="size-4" />
           </div>
           <Card className="max-w-[800px] p-4">
             <p className="overflow-auto whitespace-pre-wrap font-mono text-sm">

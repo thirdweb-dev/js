@@ -75,7 +75,7 @@ export default async function Page(props: {
   });
 
   return (
-    <div>
+    <div className="flex grow flex-col">
       <AccountAbstractionSummary
         teamId={project.teamId}
         projectId={project.id}

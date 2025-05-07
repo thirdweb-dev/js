@@ -3,12 +3,13 @@ import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 import { type JSX, useMemo } from "react";
 
-type Step = {
+export type Step = {
   title: string | JSX.Element;
   description?: string;
   completed: boolean;
   children: React.ReactNode;
   showCompletedChildren?: boolean;
+  showIncompleteChildren?: boolean;
 };
 
 interface StepsCardProps {
@@ -57,8 +58,11 @@ export const StepsCard: React.FC<StepsCardProps> = ({
 
       <div className="flex w-full flex-col gap-7">
         {steps.map(({ children, ...step }, index) => {
+          const isActiveStep = index === lastStepCompleted + 1;
           const showChildren =
-            !step.completed || (step.completed && step.showCompletedChildren);
+            isActiveStep ||
+            (!step.completed && step.showIncompleteChildren !== false) ||
+            (step.completed && step.showCompletedChildren);
           return (
             <div
               className="flex flex-col gap-2 md:flex-row md:items-start lg:gap-3"

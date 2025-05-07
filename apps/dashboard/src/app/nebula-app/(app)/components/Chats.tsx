@@ -1,30 +1,22 @@
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
-import {
-  AlertCircleIcon,
-  CheckIcon,
-  CopyIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { AlertCircleIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { submitFeedback } from "../api/feedback";
+import type { NebulaSwapData } from "../api/chat";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
+import { MessageActions } from "./MessageActions";
+import { NebulaImage } from "./NebulaImage";
 import { Reasoning } from "./Reasoning/Reasoning";
+import { ApproveTransactionCard, SwapTransactionCard } from "./Swap/SwapCards";
 
 export type NebulaTxData = {
   chainId: number;
   data: `0x${string}`;
   to: string;
-  value: string;
+  value?: string;
 };
 
 export type ChatMessage =
@@ -43,8 +35,25 @@ export type ChatMessage =
       type: "assistant";
     }
   | {
-      type: "send_transaction";
-      data: NebulaTxData | null;
+      type: "action";
+      subtype: "sign_transaction";
+      request_id: string;
+      data: NebulaTxData;
+    }
+  | {
+      type: "action";
+      subtype: "sign_swap";
+      request_id: string;
+      data: NebulaSwapData;
+    }
+  | {
+      type: "image";
+      request_id: string;
+      data: {
+        width: number;
+        height: number;
+        url: string;
+      };
     };
 
 export function Chats(props: {
@@ -122,88 +131,15 @@ export function Chats(props: {
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique key
                   key={index}
                 >
-                  {message.type === "user" ? (
-                    <div className="mt-6 flex justify-end">
-                      <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
-                        <StyledMarkdownRenderer
-                          text={message.text}
-                          isMessagePending={isMessagePending}
-                          type="user"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex gap-3">
-                      {/* Left Icon */}
-                      <div className="-translate-y-[2px] relative shrink-0">
-                        <div
-                          className={cn(
-                            "flex size-9 items-center justify-center rounded-full",
-                            message.type === "assistant" && "border bg-card",
-                            message.type === "error" && "border",
-                            message.type === "presence" && "border bg-card",
-                          )}
-                        >
-                          {message.type === "presence" && (
-                            <NebulaIcon className="size-5 text-muted-foreground" />
-                          )}
-
-                          {message.type === "assistant" && (
-                            <NebulaIcon className="size-5 text-muted-foreground" />
-                          )}
-
-                          {message.type === "error" && (
-                            <AlertCircleIcon className="size-5 text-destructive-text" />
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Right Message */}
-                      <div className="min-w-0 grow">
-                        <ScrollShadow className="rounded-lg">
-                          {message.type === "assistant" ? (
-                            <StyledMarkdownRenderer
-                              text={message.text}
-                              isMessagePending={isMessagePending}
-                              type="assistant"
-                            />
-                          ) : message.type === "error" ? (
-                            <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
-                              {message.text}
-                            </div>
-                          ) : message.type === "send_transaction" ? (
-                            <ExecuteTransactionCardWithFallback
-                              txData={message.data}
-                              client={props.client}
-                              onTxSettled={(txHash) => {
-                                props.sendMessage(
-                                  getTransactionSettledPrompt(txHash),
-                                );
-                              }}
-                            />
-                          ) : message.type === "presence" ? (
-                            <Reasoning
-                              isPending={isMessagePending}
-                              texts={message.texts}
-                            />
-                          ) : null}
-                        </ScrollShadow>
-
-                        {message.type === "assistant" &&
-                          !isMessagePending &&
-                          props.sessionId &&
-                          message.request_id && (
-                            <MessageActions
-                              messageText={message.text}
-                              authToken={props.authToken}
-                              requestId={message.request_id}
-                              sessionId={props.sessionId}
-                              className="mt-4"
-                            />
-                          )}
-                      </div>
-                    </div>
-                  )}
+                  <RenderMessage
+                    message={message}
+                    isMessagePending={isMessagePending}
+                    client={props.client}
+                    sendMessage={props.sendMessage}
+                    nextMessage={props.messages[index + 1]}
+                    authToken={props.authToken}
+                    sessionId={props.sessionId}
+                  />
                 </div>
               );
             })}
@@ -215,131 +151,189 @@ export function Chats(props: {
   );
 }
 
+function RenderMessage(props: {
+  message: ChatMessage;
+  isMessagePending: boolean;
+  client: ThirdwebClient;
+  sendMessage: (message: string) => void;
+  nextMessage: ChatMessage | undefined;
+  authToken: string;
+  sessionId: string | undefined;
+}) {
+  const { message } = props;
+  if (props.message.type === "user") {
+    return (
+      <div className="mt-6 flex justify-end">
+        <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
+          <StyledMarkdownRenderer
+            text={props.message.text}
+            isMessagePending={props.isMessagePending}
+            type="user"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex gap-3">
+      {/* Left Icon */}
+      <div className="-translate-y-[2px] relative shrink-0">
+        <div
+          className={cn(
+            "flex size-9 items-center justify-center rounded-full",
+            message.type === "assistant" && "border bg-card",
+            message.type === "error" && "border",
+            message.type === "presence" && "border bg-card",
+          )}
+        >
+          {message.type === "presence" && (
+            <NebulaIcon className="size-5 text-muted-foreground" />
+          )}
+
+          {message.type === "assistant" && (
+            <NebulaIcon className="size-5 text-muted-foreground" />
+          )}
+
+          {message.type === "error" && (
+            <AlertCircleIcon className="size-5 text-destructive-text" />
+          )}
+        </div>
+      </div>
+
+      {/* Right Message */}
+      <div className="min-w-0 grow">
+        <ScrollShadow className="rounded-lg">
+          <RenderResponse
+            message={message}
+            isMessagePending={props.isMessagePending}
+            client={props.client}
+            sendMessage={props.sendMessage}
+            nextMessage={props.nextMessage}
+            sessionId={props.sessionId}
+            authToken={props.authToken}
+          />
+        </ScrollShadow>
+
+        {/* message feedback */}
+        {message.type === "assistant" &&
+          !props.isMessagePending &&
+          props.sessionId &&
+          message.request_id && (
+            <MessageActions
+              messageText={message.text}
+              authToken={props.authToken}
+              requestId={message.request_id}
+              sessionId={props.sessionId}
+              className="mt-4"
+            />
+          )}
+      </div>
+    </div>
+  );
+}
+
+function RenderResponse(props: {
+  message: ChatMessage;
+  isMessagePending: boolean;
+  client: ThirdwebClient;
+  sendMessage: (message: string) => void;
+  nextMessage: ChatMessage | undefined;
+  sessionId: string | undefined;
+  authToken: string;
+}) {
+  const { message, isMessagePending, client, sendMessage, nextMessage } = props;
+
+  switch (message.type) {
+    case "assistant":
+      return (
+        <StyledMarkdownRenderer
+          text={message.text}
+          isMessagePending={isMessagePending}
+          type="assistant"
+        />
+      );
+
+    case "presence":
+      return <Reasoning isPending={isMessagePending} texts={message.texts} />;
+
+    case "error":
+      return (
+        <div className="rounded-xl border bg-card px-4 py-2 text-destructive-text leading-normal">
+          {message.text}
+        </div>
+      );
+    case "image": {
+      return (
+        <NebulaImage
+          url={message.data.url}
+          width={message.data.width}
+          height={message.data.height}
+          client={client}
+          requestId={message.request_id}
+          sessionId={props.sessionId}
+          authToken={props.authToken}
+        />
+      );
+    }
+
+    case "action": {
+      if (message.subtype === "sign_transaction") {
+        return (
+          <ExecuteTransactionCard
+            txData={message.data}
+            client={client}
+            onTxSettled={(txHash) => {
+              // do not send automatic prompt if there is another transaction after this one
+              if (nextMessage?.type === "action") {
+                return;
+              }
+
+              sendMessage(getTransactionSettledPrompt(txHash));
+            }}
+          />
+        );
+      }
+
+      if (message.subtype === "sign_swap") {
+        if (message.data.action === "approval") {
+          return (
+            <ApproveTransactionCard swapData={message.data} client={client} />
+          );
+        }
+
+        return (
+          <SwapTransactionCard
+            swapData={message.data}
+            client={client}
+            onTxSettled={(txHash) => {
+              // do not send automatic prompt if there is another transaction after this one
+              if (nextMessage?.type === "action") {
+                return;
+              }
+
+              sendMessage(getTransactionSettledPrompt(txHash));
+            }}
+          />
+        );
+      }
+
+      return null;
+    }
+
+    case "user": {
+      return null;
+    }
+  }
+
+  return null;
+}
+
 function getTransactionSettledPrompt(txHash: string) {
   return `\
 I've executed the following transaction successfully with hash: ${txHash}.
 
 If our conversation calls for it, continue on to the next transaction or suggest next steps`;
-}
-
-function ExecuteTransactionCardWithFallback(props: {
-  txData: NebulaTxData | null;
-  client: ThirdwebClient;
-  onTxSettled: (txHash: string) => void;
-}) {
-  if (!props.txData) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircleIcon className="size-5" />
-        <AlertTitle>Failed to parse transaction data</AlertTitle>
-      </Alert>
-    );
-  }
-
-  return (
-    <ExecuteTransactionCard
-      txData={props.txData}
-      client={props.client}
-      onTxSettled={props.onTxSettled}
-    />
-  );
-}
-
-function MessageActions(props: {
-  authToken: string;
-  requestId: string;
-  sessionId: string;
-  messageText: string;
-  className?: string;
-}) {
-  const [isCopied, setIsCopied] = useState(false);
-  function sendRating(rating: "good" | "bad") {
-    return submitFeedback({
-      authToken: props.authToken,
-      rating,
-      requestId: props.requestId,
-      sessionId: props.sessionId,
-    });
-  }
-  const sendPositiveRating = useMutation({
-    mutationFn: () => sendRating("good"),
-    onSuccess() {
-      toast.info("Thanks for the feedback!");
-    },
-    onError() {
-      toast.error("Failed to send feedback");
-    },
-  });
-
-  const sendBadRating = useMutation({
-    mutationFn: () => sendRating("bad"),
-    onSuccess() {
-      toast.info("Thanks for the feedback!", {
-        position: "top-right",
-      });
-    },
-    onError() {
-      toast.error("Failed to send feedback", {
-        position: "top-right",
-      });
-    },
-  });
-
-  return (
-    <div
-      className={cn("flex items-center gap-2 text-foreground", props.className)}
-    >
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-8 gap-2 rounded-lg text-sm"
-        onClick={() => {
-          navigator.clipboard.writeText(props.messageText);
-          setIsCopied(true);
-          setTimeout(() => {
-            setIsCopied(false);
-          }, 1000);
-        }}
-      >
-        {isCopied ? (
-          <CheckIcon className="size-3.5 text-green-500" />
-        ) : (
-          <CopyIcon className="size-3.5" />
-        )}
-        Copy
-      </Button>
-
-      <Button
-        variant="outline"
-        size="sm"
-        className="size-8 rounded-lg p-0"
-        onClick={() => {
-          sendPositiveRating.mutate();
-        }}
-      >
-        {sendPositiveRating.isPending ? (
-          <Spinner className="size-4" />
-        ) : (
-          <ThumbsUpIcon className="size-4" />
-        )}
-      </Button>
-
-      <Button
-        variant="outline"
-        size="sm"
-        className="size-8 rounded-lg p-0"
-        onClick={() => {
-          sendBadRating.mutate();
-        }}
-      >
-        {sendBadRating.isPending ? (
-          <Spinner className="size-4" />
-        ) : (
-          <ThumbsDownIcon className="size-4" />
-        )}
-      </Button>
-    </div>
-  );
 }
 
 function StyledMarkdownRenderer(props: {

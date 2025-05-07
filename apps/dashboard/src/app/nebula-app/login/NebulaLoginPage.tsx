@@ -102,7 +102,6 @@ export function NebulaLoggedOutStatePage(props: {
               }
             }}
             connectedWallets={[]}
-            activeAccountAddress={undefined}
             setActiveWallet={() => {}}
             sendMessage={(msg) => {
               setMessage(msg);

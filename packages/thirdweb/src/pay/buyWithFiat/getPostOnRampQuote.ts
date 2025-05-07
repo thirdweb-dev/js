@@ -55,6 +55,7 @@ export type GetPostOnRampQuoteParams = {
  *  });
  * }
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export async function getPostOnRampQuote({

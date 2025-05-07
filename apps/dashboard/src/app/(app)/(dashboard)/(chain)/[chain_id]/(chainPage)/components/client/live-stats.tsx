@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "@/constants/env";
 import { useQuery } from "@tanstack/react-query";
-import { CircleCheck, XIcon } from "lucide-react";
+import { CircleCheckIcon, XIcon } from "lucide-react";
 import { hostnameEndsWith } from "utils/url";
 import { PrimaryInfoItem } from "../server/primary-info-item";
 
@@ -67,7 +67,7 @@ export function ChainLiveStats(props: { rpc: string }) {
         titleIcon={
           stats.isSuccess ? (
             <ToolTipLabel label="Working">
-              <CircleCheck className="size-4 text-success-text" />
+              <CircleCheckIcon className="size-4 text-success-text" />
             </ToolTipLabel>
           ) : stats.isError ? (
             <ToolTipLabel label="Not Working">

@@ -11,6 +11,8 @@ export function Reasoning(props: {
 }) {
   const [_isOpen, setIsOpen] = useState(false);
   const isOpen = props.isPending ? true : _isOpen;
+  const showAll = !props.isPending;
+  const lastText = props.texts[props.texts.length - 1];
 
   return (
     <DynamicHeight>
@@ -23,7 +25,7 @@ export function Reasoning(props: {
         {props.isPending ? (
           <TextShimmer text="Reasoning..." />
         ) : (
-          <span>Reasoning</span>
+          <span className="text-foreground">Reasoning</span>
         )}
 
         {!props.isPending && (
@@ -36,17 +38,27 @@ export function Reasoning(props: {
         )}
       </Button>
 
-      {isOpen && props.texts.length > 0 && (
-        <ul className="list-none space-y-1.5">
-          {props.texts.map((text) => (
-            <li
-              key={text}
-              className="fade-in-0 animate-in text-muted-foreground text-sm leading-relaxed duration-300"
-            >
-              {text.trim()}
-            </li>
-          ))}
-        </ul>
+      {isOpen && (
+        <>
+          {showAll && props.texts.length > 0 && (
+            <ul className="list-none space-y-1.5">
+              {props.texts.map((text) => (
+                <li
+                  key={text}
+                  className="fade-in-0 animate-in text-muted-foreground text-sm leading-relaxed duration-300"
+                >
+                  {text.trim()}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {!showAll && lastText && (
+            <div className="text-muted-foreground text-sm leading-relaxed">
+              {lastText.trim()}
+            </div>
+          )}
+        </>
       )}
     </DynamicHeight>
   );

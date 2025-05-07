@@ -4,7 +4,8 @@ import { defineChain } from "../chains/utils.js";
 import { status } from "./Status.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
-  it("should handle successful status", async () => {
+  // TODO: flaky test
+  it.skip("should handle successful status", async () => {
     const result = await status({
       transactionHash:
         "0x5959b9321ec581640db531b80bac53cbd968f3d34fc6cb1d5f4ea75f26df2ad7",

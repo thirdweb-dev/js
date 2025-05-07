@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { useEns } from "components/contract-components/hooks";
-import { LogOutIcon, Moon, Sun } from "lucide-react";
+import { LogOutIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useState } from "react";
@@ -107,13 +107,13 @@ export function AccountButton(props: {
             <p className="text-sm">Theme</p>
 
             <div className="ml-auto flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-foreground">
-              <Sun
+              <SunIcon
                 className={cn(
                   "size-4",
                   theme === "light" ? "opacity-100" : "opacity-30",
                 )}
               />
-              <Moon
+              <MoonIcon
                 className={cn(
                   "size-4",
                   theme === "dark" ? "opacity-100" : "opacity-30",

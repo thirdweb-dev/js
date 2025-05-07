@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { CircleCheck, CircleIcon } from "lucide-react";
+import { CircleCheckIcon, CircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { useActiveWallet } from "thirdweb/react";
@@ -142,7 +142,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
           {isActive ? (
             <Spinner className="size-6 text-foreground" />
           ) : hasCompleted ? (
-            <CircleCheck className="size-6 text-green-500" />
+            <CircleCheckIcon className="size-6 text-green-500" />
           ) : (
             <CircleIcon className="size-6 text-muted-foreground" />
           )}

@@ -61,6 +61,7 @@ export type BuyWithCryptoHistoryData = {
  * const status = await getBuyWithCryptoHistory(params)
  * ```
  * @returns Object of type [`BuyWithCryptoHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoHistoryData)
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithCryptoHistory(

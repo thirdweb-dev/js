@@ -1,16 +1,16 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
-  Album,
-  Box,
-  Braces,
-  Brain,
-  ExternalLink,
+  AlbumIcon,
+  BoxIcon,
+  BracesIcon,
+  BrainIcon,
+  ExternalLinkIcon,
   MessageCircleQuestionIcon,
-  Network,
-  Rocket,
-  StickyNote,
-  Webhook,
-  Wrench,
+  NetworkIcon,
+  RocketIcon,
+  StickyNoteIcon,
+  WebhookIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 const insightSlug = "/insight";
@@ -21,37 +21,37 @@ export const sidebar: SideBar = {
     {
       name: "Overview",
       href: "/insight",
-      icon: <Box />,
+      icon: <BoxIcon />,
     },
     {
       name: "Use Cases",
       href: `${insightSlug}/use-cases`,
-      icon: <StickyNote />,
+      icon: <StickyNoteIcon />,
     },
     {
       name: "Playground",
       href: "https://playground.thirdweb.com/insight",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "Get Started",
       href: `${insightSlug}/get-started`,
-      icon: <Rocket />,
+      icon: <RocketIcon />,
     },
     {
       name: "Blueprints",
       href: `${insightSlug}/blueprints`,
-      icon: <Album />,
+      icon: <AlbumIcon />,
     },
     {
       name: "Multichain Queries",
       href: `${insightSlug}/multichain-queries`,
-      icon: <Network />,
+      icon: <NetworkIcon />,
     },
     {
       name: "Agents & LLMs",
       href: `${insightSlug}/agents-and-llms`,
-      icon: <Brain />,
+      icon: <BrainIcon />,
       links: [
         {
           name: "llms.txt",
@@ -62,7 +62,7 @@ export const sidebar: SideBar = {
     {
       name: "Webhooks",
       href: `${insightSlug}/webhooks`,
-      icon: <Webhook />,
+      icon: <WebhookIcon />,
       links: [
         {
           name: "Getting Started",
@@ -89,12 +89,12 @@ export const sidebar: SideBar = {
     {
       name: "API Reference",
       href: "https://insight-api.thirdweb.com/reference",
-      icon: <Braces />,
+      icon: <BracesIcon />,
     },
     {
       name: "Troubleshoot",
       href: `${insightSlug}/troubleshoot`,
-      icon: <Wrench />,
+      icon: <WrenchIcon />,
     },
     {
       name: "FAQs",

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import ReactHtmlParser from "react-html-parser";
 import { fetchChangeLogs, fetchPost } from "../ghost";
 import "./styles.css";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import { Author } from "../components/Author";
@@ -30,7 +30,7 @@ export default async function Page(props: {
           href="/changelog"
           className="-translate-x-1/4 !p-2 !text-muted-foreground hover:!text-foreground mb-4 bg-transparent"
         >
-          <ArrowLeft className="size-6" />
+          <ArrowLeftIcon className="size-6" />
         </Link>
       </Button>
 

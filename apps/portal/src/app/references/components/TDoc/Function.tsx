@@ -19,6 +19,7 @@ import { DeprecatedCalloutTDoc } from "./Deprecated";
 import { SourceLinkTypeDoc } from "./SourceLink";
 import { TypedocSummary } from "./Summary";
 import fetchDocBySlug from "./fetchDocs/fetchDocBySlug";
+import { getExtensionName } from "./utils/getSidebarLinkgroups";
 import { getTags } from "./utils/getTags";
 import { getTokenLinks } from "./utils/getTokenLinks";
 
@@ -35,11 +36,19 @@ export function FunctionTDoc(props: {
     ? doc.signatures?.length > 1
     : false;
 
+  const blockTag = doc.signatures?.[0]?.blockTags?.find(
+    (b) =>
+      b.tag === "@extension" || b.tag === "@modules" || b.tag === "@bridge",
+  );
+  const extensionName = blockTag ? getExtensionName(blockTag) : undefined;
+
   return (
     <>
       {props.showHeading !== false && (
         <Heading level={props.level} id={slugger.slug(doc.name)}>
-          {doc.name}
+          {extensionName && extensionName !== "Common"
+            ? `${extensionName}.${doc.name}`
+            : doc.name}
         </Heading>
       )}
 

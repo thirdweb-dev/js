@@ -16,7 +16,7 @@ import type { UserOpStats } from "types/analytics";
 import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
-  time: string; // human readable date
+  time: string;
 };
 
 export function SponsoredTransactionsChartCard(props: {

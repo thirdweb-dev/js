@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import clsx from "clsx";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link from "next/link";
@@ -252,7 +252,7 @@ export function DocSidebarMobile(props: ReferenceSideBarProps) {
       <DropdownMenuTrigger asChild>
         <Button className="w-full justify-between border bg-card py-3 text-left font-medium text-foreground xl:hidden">
           {props.name}
-          <ChevronDown
+          <ChevronDownIcon
             className={clsx(
               "size-4 text-muted-foreground transition-transform",
               open && "rotate-180",

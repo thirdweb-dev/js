@@ -119,6 +119,7 @@ export type BuyWithCryptoTransfer = {
  *  }
  * });
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithCryptoTransfer(

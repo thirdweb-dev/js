@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Upload } from "lucide-react";
+import { UploadIcon } from "lucide-react";
 import { type ChangeEvent, useRef, useState } from "react";
 
 export function UploadImage(props: {
@@ -67,7 +67,7 @@ export function UploadImage(props: {
         />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center p-4 text-muted-foreground">
-          <Upload className="mb-2 h-8 w-8" />
+          <UploadIcon className="mb-2 h-8 w-8" />
           <p className="text-center text-sm">Upload Image</p>
         </div>
       )}

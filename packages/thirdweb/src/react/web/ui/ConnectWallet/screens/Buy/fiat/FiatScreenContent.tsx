@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
@@ -274,7 +275,17 @@ export function FiatScreenContent(props: {
           data-disabled={disableSubmit}
           disabled={disableSubmit}
           fullWidth
-          onClick={handleSubmit}
+          onClick={() => {
+            trackPayEvent({
+              event: "confirm_onramp_quote",
+              client: client,
+              walletAddress: payer.account.address,
+              walletType: payer.wallet.id,
+              toChainId: toChain.id,
+              toToken: isNativeToken(toToken) ? undefined : toToken.address,
+            });
+            handleSubmit();
+          }}
           gap="xs"
         >
           {fiatQuoteQuery.isLoading ? (

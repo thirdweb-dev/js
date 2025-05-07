@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AlertCircle, AlertTriangle, Info } from "lucide-react";
+import { AlertCircleIcon, AlertTriangleIcon, InfoIcon } from "lucide-react";
 
 export function Callout(props: {
   children: React.ReactNode;
@@ -25,14 +25,16 @@ export function Callout(props: {
           {!props.disableIcon && (
             <>
               {props.variant === "danger" && (
-                <AlertTriangle className="size-5 shrink-0" />
+                <AlertTriangleIcon className="size-5 shrink-0" />
               )}
 
               {props.variant === "warning" && (
-                <AlertCircle className="size-5 shrink-0 " />
+                <AlertCircleIcon className="size-5 shrink-0 " />
               )}
 
-              {props.variant === "info" && <Info className="size-5 shrink-0" />}
+              {props.variant === "info" && (
+                <InfoIcon className="size-5 shrink-0" />
+              )}
             </>
           )}
 

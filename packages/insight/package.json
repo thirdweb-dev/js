@@ -28,7 +28,7 @@
     "@hey-api/client-fetch": "0.10.0"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "0.66.5",
+    "@hey-api/openapi-ts": "0.67.0",
     "rimraf": "6.0.1",
     "tslib": "^2.8.1"
   },
