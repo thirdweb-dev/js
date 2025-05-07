@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 0.0.2
+
+### Patch Changes
+
+- [#6639](https://github.com/thirdweb-dev/js/pull/6639) [`c81fed3`](https://github.com/thirdweb-dev/js/commit/c81fed36171c987f668cede5d9744e47ca956ca3) Thanks [@MananTank](https://github.com/MananTank)! - Introducing vault sdk
+
 ## 1.5.4
 
 ### Patch Changes
