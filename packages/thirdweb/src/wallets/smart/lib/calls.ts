@@ -184,7 +184,7 @@ export function prepareExecute(args: {
   let value = transaction.value || 0n;
   // special handling of hedera chains, decimals for native value is 8 instead of 18 when passed as contract params
   if (transaction.chainId === 295 || transaction.chainId === 296) {
-    value = value / BigInt(10 ** 10);
+    value = BigInt(value) / BigInt(10 ** 10);
   }
   return prepareContractCall({
     contract: accountContract,
@@ -220,7 +220,7 @@ export function prepareBatchExecute(args: {
   const chainId = transactions[0]?.chainId;
   // special handling of hedera chains, decimals for native value is 8 instead of 18 when passed as contract params
   if (chainId === 295 || chainId === 296) {
-    values = values.map((value) => value / BigInt(10 ** 10));
+    values = values.map((value) => BigInt(value) / BigInt(10 ** 10));
   }
   return prepareContractCall({
     contract: accountContract,
