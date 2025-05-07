@@ -17,6 +17,7 @@ export async function getNFTInfo(options: NFTProviderProps): Promise<NFT> {
         }),
         getNFT1155({
           ...options,
+          useIndexer: false, // TODO (insight): switch this call to only call insight once
         }),
       ]).then(([possibleNFT721, possibleNFT1155]) => {
         // getNFT extension always return an NFT object
