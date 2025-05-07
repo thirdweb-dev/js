@@ -10,7 +10,7 @@ import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 
 export type TabLink = {
-  name: string;
+  name: React.ReactNode;
   href: string;
   isActive: boolean;
   isDisabled?: boolean;
@@ -43,7 +43,7 @@ export function TabLinks(props: {
             return (
               <Button
                 asChild
-                key={tab.name}
+                key={tab.href}
                 disabled={tab.isDisabled}
                 variant="ghost"
               >
@@ -206,7 +206,7 @@ function useUnderline<El extends HTMLElement>() {
 
 export function TabPathLinks(props: {
   links: {
-    name: string;
+    name: React.ReactNode;
     path: string;
     exactMatch?: boolean;
     isDisabled?: boolean;

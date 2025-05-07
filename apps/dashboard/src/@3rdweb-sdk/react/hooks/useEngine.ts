@@ -7,12 +7,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { ResultItem } from "app/(app)/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/metrics/components/StatusCodes";
 import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import type { EngineStatus } from "../../../app/(app)/team/[team_slug]/(team)/~/engine/(instance)/[engineId]/overview/components/transactions-table";
+import type { ResultItem } from "../../../app/(app)/team/[team_slug]/[project_slug]/engine/dedicated/(instance)/[engineId]/metrics/components/StatusCodes";
+import type { EngineStatus } from "../../../app/(app)/team/[team_slug]/[project_slug]/engine/dedicated/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
 
 // Engine instances
@@ -1641,7 +1641,11 @@ interface EngineResourceMetrics {
   };
 }
 
-export function useEngineSystemMetrics(engineId: string, teamIdOrSlug: string) {
+export function useEngineSystemMetrics(
+  engineId: string,
+  teamIdOrSlug: string,
+  projectSlug: string,
+) {
   const [enabled, setEnabled] = useState(true);
 
   return useQuery({
@@ -1649,7 +1653,7 @@ export function useEngineSystemMetrics(engineId: string, teamIdOrSlug: string) {
     queryFn: async () => {
       const res = await apiServerProxy({
         method: "GET",
-        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/metrics`,
+        pathname: `/v1/teams/${teamIdOrSlug}/${projectSlug}/engine/dedicated/${engineId}/metrics`,
       });
 
       if (!res.ok) {

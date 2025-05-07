@@ -82,9 +82,9 @@ export async function getPaymasterAndData(args: {
       };
     }
     // check for policy errors
-    if (res.result.policyId && res.result.reason) {
+    if (res.result.reason) {
       console.warn(
-        `Paymaster policy rejected this transaction with reason: ${res.result.reason} (policyId: ${res.result.policyId})`,
+        `Paymaster policy rejected this transaction with reason: ${res.result.reason} ${res.result.policyId ? `(policyId: ${res.result.policyId})` : ""}`,
       );
     }
 

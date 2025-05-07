@@ -38,9 +38,14 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
     return null;
   }
 
-  const projectsToShow = teamsAndProjects.find(
+  const teamProjects = teamsAndProjects.find(
     (x) => x.team.slug === projectsToShowOfTeam.slug,
   )?.projects;
+
+  // @TODO: HACK hide Engine projects from the list.
+  const projectsToShow = teamProjects?.filter(
+    (project) => !project.name.startsWith("Cloud-hosted Engine ("),
+  );
 
   return (
     <Popover
