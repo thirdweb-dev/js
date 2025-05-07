@@ -23,7 +23,7 @@ import {
   PROJECT_SHOWCASE_ITEMS_PER_PAGE,
 } from "lib/project-showcase-constants";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { FileText } from "lucide-react";
+import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -171,7 +171,7 @@ export default async function ProjectShowcasePage(props: {
                           // onClick={(e) => e.stopPropagation()}
                         >
                           <Button variant="outline" size="sm">
-                            <FileText className="mr-2 h-4 w-4" /> Case Study
+                            <FileTextIcon className="mr-2 h-4 w-4" /> Case Study
                           </Button>
                         </Link>
                       )}

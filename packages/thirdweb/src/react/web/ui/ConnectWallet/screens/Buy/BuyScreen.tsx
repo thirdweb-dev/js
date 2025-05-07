@@ -1,9 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
+import { trackPayEvent } from "../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../../../../../constants/addresses.js";
 import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
@@ -267,8 +271,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       <WalletSwitcherConnectionScreen
         accountAbstraction={props.connectOptions?.accountAbstraction}
         appMetadata={props.connectOptions?.appMetadata}
-        chain={props.connectOptions?.chain}
-        chains={props.connectOptions?.chains}
+        chain={toChain || props.connectOptions?.chain}
+        chains={[toChain, ...(props.connectOptions?.chains || [])]}
         client={props.client}
         connectLocale={props.connectLocale}
         isEmbed={props.isEmbed}
@@ -895,6 +899,15 @@ function MainScreen(props: {
                       backScreen: { id: "main" },
                     });
                   }
+                  trackPayEvent({
+                    event: "choose_payment_method_fund_wallet_mode",
+                    client,
+                    walletAddress: payerAccount.address,
+                    toChainId: toChain.id,
+                    toToken: isNativeToken(toToken)
+                      ? undefined
+                      : toToken.address,
+                  });
                 }}
               >
                 Continue
@@ -972,6 +985,9 @@ function createSupportedTokens(
 
   for (const x of data) {
     tokens[x.chain.id] = x.tokens.filter((t) => {
+      if (t.address === ZERO_ADDRESS) {
+        return false;
+      }
       // for source tokens, data is not provided, so we include all of them
       if (
         t.buyWithCryptoEnabled === undefined &&

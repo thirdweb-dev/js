@@ -1,4 +1,7 @@
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../../../../constants/addresses.js";
 import { type Address, getAddress } from "../../../../../utils/address.js";
 import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
 
@@ -15,7 +18,8 @@ export function isNativeToken(
   return (
     (token &&
       ("nativeToken" in token ||
-        token.address?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase())) ||
+        token.address?.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase() ||
+        token?.address === ZERO_ADDRESS)) ||
     false
   );
 }

@@ -18,7 +18,7 @@ import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandl
 import {
   AlertTriangleIcon,
   CheckIcon,
-  ChevronsUpDown,
+  ChevronsUpDownIcon,
   ExternalLinkIcon,
   PlusCircleIcon,
 } from "lucide-react";
@@ -78,7 +78,7 @@ function EcosystemSelect(props: {
           className="relative flex w-full justify-start truncate pr-8 pl-3 md:w-48"
         >
           <div className="truncate">{props.ecosystem?.name}</div>
-          <ChevronsUpDown className="absolute right-2 h-4 w-4 text-muted-foreground" />
+          <ChevronsUpDownIcon className="absolute right-2 h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full md:w-48">

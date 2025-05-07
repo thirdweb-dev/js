@@ -1,5 +1,122 @@
 # thirdweb
 
+## 5.97.2
+
+### Patch Changes
+
+- [#6969](https://github.com/thirdweb-dev/js/pull/6969) [`4e42158`](https://github.com/thirdweb-dev/js/commit/4e42158c7bcf6ae2dd064abaf1972a6529ae5449) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle hedera native currency decimal values for smart wallet calls
+
+- [#6967](https://github.com/thirdweb-dev/js/pull/6967) [`5a069fe`](https://github.com/thirdweb-dev/js/commit/5a069fe657de66fd8f64a7d41c089e32c1930ba2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always connect to destination chain if available in PayEmbed
+
+## 5.97.1
+
+### Patch Changes
+
+- [#6963](https://github.com/thirdweb-dev/js/pull/6963) [`760b250`](https://github.com/thirdweb-dev/js/commit/760b250bc30d5ccff2549c3bba322ae0cf076d51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix metamask deeplink parsing
+
+## 5.97.0
+
+### Minor Changes
+
+- [#6956](https://github.com/thirdweb-dev/js/pull/6956) [`08cff4b`](https://github.com/thirdweb-dev/js/commit/08cff4b6c2f0f7a02c0d4efae386a3bcc79de07b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - feat(bridge): Add chains endpoint to retrieve Universal Bridge supported chains
+
+  ```typescript
+  import { Bridge } from "thirdweb";
+
+  const chains = await Bridge.chains({
+    client: thirdwebClient,
+  });
+  ```
+
+  Returned chains include chain information such as chainId, name, icon, and nativeCurrency details.
+
+### Patch Changes
+
+- [#6953](https://github.com/thirdweb-dev/js/pull/6953) [`736c3f8`](https://github.com/thirdweb-dev/js/commit/736c3f8558330f55fd813fe11ca009c6f1f00f52) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the `maxSteps` option to Buy.quote, Buy.prepare, Sell.quote, and Sell.prepare functions. This allows users to limit quotes to routes with a specific number of steps or fewer. For example:
+
+  ```ts
+  const quote = await bridge.Buy.quote({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    maxSteps: 2,
+  });
+
+  const preparedQuote = await bridge.Buy.prepare({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    sender: "0x...",
+    receiver: "0x...",
+    maxSteps: 2,
+  });
+
+  const quote = await bridge.Sell.quote({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    maxSteps: 3,
+  });
+
+  const preparedQuote = await bridge.Sell.prepare({
+    originChainId: 1,
+    originTokenAddress: "0x...",
+    destinationChainId: 137,
+    destinationTokenAddress: "0x...",
+    amount: 1000000n,
+    sender: "0x...",
+    receiver: "0x...",
+    maxSteps: 3,
+  });
+  ```
+
+- [#6952](https://github.com/thirdweb-dev/js/pull/6952) [`055e451`](https://github.com/thirdweb-dev/js/commit/055e451fd02b0336da23bd1a9994a36f99853831) Thanks [@gregfromstl](https://github.com/gregfromstl)! - +Deprecate legacy Pay functions
+
+- [#6955](https://github.com/thirdweb-dev/js/pull/6955) [`6dd2b09`](https://github.com/thirdweb-dev/js/commit/6dd2b09450e97da8a1a29200ca12ffc0c4d921e3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Added the `sortBy` option to Bridge.routes
+
+  ```ts
+  import { Bridge } from "thirdweb";
+
+  const routes = await Bridge.routes({
+    originChainId: 1,
+    originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    limit: 10,
+    offset: 0,
+    sortBy: "popularity",
+    client: thirdwebClient,
+  });
+  ```
+
+- [#6900](https://github.com/thirdweb-dev/js/pull/6900) [`e9d0b6e`](https://github.com/thirdweb-dev/js/commit/e9d0b6e3d282e3fef902e98bf894b00fedc8d5d6) Thanks [@MananTank](https://github.com/MananTank)! - Only attempt autoconnect once
+
+## 5.96.8
+
+### Patch Changes
+
+- [#6918](https://github.com/thirdweb-dev/js/pull/6918) [`98cce77`](https://github.com/thirdweb-dev/js/commit/98cce77cf1cb9ffd78f21a56cf5992802e11d97e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle zero address as native tokens in UB
+
+- [#6924](https://github.com/thirdweb-dev/js/pull/6924) [`20d182b`](https://github.com/thirdweb-dev/js/commit/20d182b228728d83f5063846805b216d6fabe094) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize token query in PayEmbed using Insight where possible
+
+## 5.96.7
+
+### Patch Changes
+
+- [#6914](https://github.com/thirdweb-dev/js/pull/6914) [`e23f53b`](https://github.com/thirdweb-dev/js/commit/e23f53bd786b871fd0ba0c9154da7280cc4a8817) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native exports
+
+## 5.96.6
+
+### Patch Changes
+
+- [#6910](https://github.com/thirdweb-dev/js/pull/6910) [`2dba042`](https://github.com/thirdweb-dev/js/commit/2dba04223456223d554d844fbe77c5f42a8458a0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve destination tokens error handling
+
+- [#6906](https://github.com/thirdweb-dev/js/pull/6906) [`c271ec6`](https://github.com/thirdweb-dev/js/commit/c271ec6a4ae607e47cac54b7e310389c1fdf45f2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated Wallet Connect to 2.20.1
+
 ## 5.96.5
 
 ### Patch Changes

@@ -358,6 +358,8 @@ export function ProjectGeneralSettingsPageUI(props: {
             rotateSecretKey={props.rotateSecretKey}
           />
 
+          <ProjectIdCard project={project} />
+
           <AllowedDomainsSetting
             form={form}
             isUpdatingProject={updateProject.isPending}
@@ -429,6 +431,31 @@ function ProjectNameSetting(props: {
         type="text"
         {...form.register("name")}
         className="max-w-[350px] bg-background"
+      />
+    </SettingsCard>
+  );
+}
+
+function ProjectIdCard(props: {
+  project: Project;
+}) {
+  return (
+    <SettingsCard
+      header={{
+        title: "Project ID",
+        description: "This is your project's ID on thirdweb",
+      }}
+      bottomText="Used when interacting with the thirdweb API"
+      noPermissionText={undefined}
+      errorText={undefined}
+    >
+      <CopyTextButton
+        textToCopy={props.project.id}
+        textToShow={props.project.id}
+        variant="outline"
+        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
+        tooltip="Copy Project ID"
+        copyIconPosition="right"
       />
     </SettingsCard>
   );

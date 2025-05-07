@@ -14,6 +14,7 @@ const app = await Application.bootstrapWithPlugins({
     "src/bridge/Buy.ts",
     "src/bridge/Sell.ts",
     "src/insight/index.ts",
+    "src/engine/index.ts",
   ],
   exclude: [
     "src/exports/*.native.ts",

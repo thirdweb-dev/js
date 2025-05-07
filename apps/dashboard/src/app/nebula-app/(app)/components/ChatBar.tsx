@@ -17,7 +17,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ArrowUpIcon,
   CheckIcon,
-  ChevronDown,
   ChevronDownIcon,
   CircleStopIcon,
   CopyIcon,
@@ -52,7 +51,6 @@ export function ChatBar(props: {
   showContextSelector: boolean;
   client: ThirdwebClient;
   connectedWallets: WalletMeta[];
-  activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
 }) {
@@ -98,7 +96,7 @@ export function ChatBar(props: {
                   <WalletSelector
                     client={props.client}
                     wallets={props.connectedWallets}
-                    activeAccountAddress={props.activeAccountAddress}
+                    selectedAddress={props.context?.walletAddress || undefined}
                     onClick={(walletMeta) => {
                       props.setActiveWallet(walletMeta);
                       props.setContext({
@@ -243,11 +241,11 @@ function WalletSelector(props: {
   wallets: WalletMeta[];
   onClick: (wallet: WalletMeta) => void;
   client: ThirdwebClient;
-  activeAccountAddress: string | undefined;
+  selectedAddress: string | undefined;
 }) {
   const [open, setOpen] = useState(false);
 
-  if (!props.activeAccountAddress) {
+  if (!props.selectedAddress) {
     return null;
   }
 
@@ -267,7 +265,7 @@ function WalletSelector(props: {
           className="flex h-auto items-center gap-1 rounded-full px-2 py-1.5 text-xs"
         >
           <AccountProvider
-            address={props.activeAccountAddress}
+            address={props.selectedAddress}
             client={props.client}
           >
             <AccountAvatar
@@ -279,8 +277,8 @@ function WalletSelector(props: {
                 <AccountBlobbie className="size-3 rounded-full" />
               }
             />
-            {shortenAddress(props.activeAccountAddress)}
-            <ChevronDown className="size-3 text-muted-foreground/70" />
+            {shortenAddress(props.selectedAddress)}
+            <ChevronDownIcon className="size-3 text-muted-foreground/70" />
           </AccountProvider>
         </Button>
       </PopoverTrigger>
@@ -302,7 +300,7 @@ function WalletSelector(props: {
               key={wallet.address}
               className={cn(
                 "flex cursor-pointer items-center justify-between px-3 py-4 hover:bg-accent/50",
-                props.activeAccountAddress === wallet.address && "bg-accent/50",
+                props.selectedAddress === wallet.address && "bg-accent/50",
               )}
               onClick={() => {
                 setOpen(false);
@@ -366,7 +364,7 @@ function WalletSelector(props: {
                 </AccountProvider>
               </div>
 
-              {props.activeAccountAddress === wallet.address && (
+              {props.selectedAddress === wallet.address && (
                 <CheckIcon className="size-4 text-foreground" />
               )}
             </div>

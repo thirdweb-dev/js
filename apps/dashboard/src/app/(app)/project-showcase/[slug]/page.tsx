@@ -10,7 +10,7 @@ import {
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { PROJECT_SHOWCASE_DATA } from "lib/project-showcase-constants";
-import { ExternalLink, FileText } from "lucide-react";
+import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import Link from "next/link";
 
 export default async function DetailPage(props: {
@@ -52,7 +52,7 @@ export default async function DetailPage(props: {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <ExternalLink className="mr-2 h-4 w-4" />
+                  <ExternalLinkIcon className="mr-2 h-4 w-4" />
                   Visit Project Website
                 </Link>
               </Button>
@@ -63,7 +63,7 @@ export default async function DetailPage(props: {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <FileText className="mr-2 h-4 w-4" />
+                    <FileTextIcon className="mr-2 h-4 w-4" />
                     Link to Case Study
                   </Link>
                 </Button>

@@ -6,6 +6,7 @@ import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
 import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
+ * @deprecated
  * @buyCrypto
  */
 export type GetBuyWithFiatQuoteParams = {
@@ -102,6 +103,7 @@ export type GetBuyWithFiatQuoteParams = {
  * - The on-ramp and destination token information.
  * - Processing fees
  *
+ * @deprecated
  * @buyCrypto
  */
 export type BuyWithFiatQuote = {

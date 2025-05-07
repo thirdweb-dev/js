@@ -41,7 +41,6 @@ function Story(props: {
           context={undefined}
           setContext={() => {}}
           connectedWallets={[]}
-          activeAccountAddress={undefined}
           setActiveWallet={() => {}}
         />
       </div>

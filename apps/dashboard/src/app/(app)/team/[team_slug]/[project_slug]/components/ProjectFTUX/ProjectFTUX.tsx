@@ -234,7 +234,7 @@ function ProductsSection(props: {
       title: "Engine",
       description:
         "Scale your application with a backend server to read, write, and deploy contracts at production-grade.",
-      href: `/team/${props.teamSlug}/~/engine`,
+      href: `/team/${props.teamSlug}/${props.projectSlug}/engine`,
       icon: EngineIcon,
       trackingLabel: "engine",
     },

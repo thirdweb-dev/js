@@ -19,18 +19,7 @@ import {
 import type { WalletId } from "../wallet-types.js";
 import type { AutoConnectProps } from "./types.js";
 
-/**
- * @internal
- */
-export const autoConnectCore = async ({
-  storage,
-  props,
-  createWalletFn,
-  manager,
-  connectOverride,
-  getInstalledWallets,
-  setLastAuthProvider,
-}: {
+type AutoConnectCoreProps = {
   storage: AsyncStorage;
   props: AutoConnectProps & { wallets: Wallet[] };
   createWalletFn: (id: WalletId) => Wallet;
@@ -43,7 +32,45 @@ export const autoConnectCore = async ({
     authProvider: AuthArgsType["strategy"],
     storage: AsyncStorage,
   ) => Promise<void>;
-}): Promise<boolean> => {
+  /**
+   * If true, the auto connect will be forced even if autoConnect has already been attempted successfully earlier.
+   *
+   * @default `false`
+   */
+  force?: boolean;
+};
+
+let lastAutoConnectionResultPromise: Promise<boolean> | undefined = undefined;
+
+/**
+ * @internal
+ */
+export const autoConnectCore = async (props: AutoConnectCoreProps) => {
+  // if an auto connect was attempted already
+  if (lastAutoConnectionResultPromise && !props.force) {
+    // wait for its resolution
+    const lastResult = await lastAutoConnectionResultPromise;
+    // if it was successful, return true
+    // if not continue with the new auto connect
+    if (lastResult) {
+      return true;
+    }
+  }
+
+  const resultPromise = _autoConnectCore(props);
+  lastAutoConnectionResultPromise = resultPromise;
+  return resultPromise;
+};
+
+const _autoConnectCore = async ({
+  storage,
+  props,
+  createWalletFn,
+  manager,
+  connectOverride,
+  getInstalledWallets,
+  setLastAuthProvider,
+}: AutoConnectCoreProps): Promise<boolean> => {
   const { wallets, onConnect } = props;
   const timeout = props.timeout ?? 15000;
 

@@ -100,7 +100,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
             </ToolTipLabel>
           )}
 
-          <span className="flex grow items-center justify-center gap-3">
+          <span className="flex grow items-center justify-center gap-2">
             {children}
           </span>
         </MismatchButton>

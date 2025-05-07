@@ -152,7 +152,7 @@ export function useSendTransactionCore(args: {
           client: tx.client,
           walletAddress: account.address,
           walletType: wallet?.id,
-          dstChainId: tx.chain.id,
+          chainId: tx.chain.id,
           event: "pay_transaction_modal_disabled",
         });
         return sendTransaction({
@@ -188,7 +188,7 @@ export function useSendTransactionCore(args: {
                     client: tx.client,
                     walletAddress: account.address,
                     walletType: wallet?.id,
-                    dstChainId: tx.chain.id,
+                    toChainId: tx.chain.id,
                     event: "pay_transaction_modal_pay_api_error",
                     error: err?.message,
                   });
@@ -221,7 +221,8 @@ export function useSendTransactionCore(args: {
                 client: tx.client,
                 walletAddress: account.address,
                 walletType: wallet?.id,
-                dstChainId: tx.chain.id,
+                toChainId: tx.chain.id,
+                toToken: _erc20Value?.tokenAddress || undefined,
                 event: "pay_transaction_modal_chain_token_not_supported",
                 error: `chain ${tx.chain.id} ${_erc20Value ? `/ token ${_erc20Value?.tokenAddress}` : ""} not supported`,
               });
@@ -272,7 +273,8 @@ export function useSendTransactionCore(args: {
                 client: tx.client,
                 walletAddress: account.address,
                 walletType: wallet?.id,
-                dstChainId: tx.chain.id,
+                toChainId: tx.chain.id,
+                toToken: _erc20Value?.tokenAddress || undefined,
                 event: "pay_transaction_modal_has_enough_funds",
               });
               sendTx();

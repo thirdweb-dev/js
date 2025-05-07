@@ -2,7 +2,7 @@ import { unstable_cache } from "next/cache";
 import type { ChainMetadata } from "thirdweb/chains";
 import { fetchChain } from "utils/fetchChain";
 
-export const getChains = unstable_cache(
+export const getChainsForNebula = unstable_cache(
   async (chainNamesOrIds: string[] | string | undefined) => {
     if (!chainNamesOrIds) {
       return [];
@@ -25,7 +25,7 @@ export const getChains = unstable_cache(
 
     return chains;
   },
-  ["nebula_getChains"],
+  ["getChainsForNebula"],
   {
     revalidate: 60 * 60 * 24, // 24 hours
   },

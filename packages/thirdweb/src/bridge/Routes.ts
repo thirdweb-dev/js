@@ -86,6 +86,21 @@ import type { Route } from "./types/Route.js";
  * });
  * ```
  *
+ * You can sort the returned routes by `popularity`:
+ * ```ts
+ * import { Bridge } from "thirdweb";
+ *
+ * // Get the 10 most popular routes starting from mainnet ETH
+ * const routes = await Bridge.routes({
+ *   originChainId: 1,
+ *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *   limit: 10,
+ *   offset: 0,
+ *   sortBy: "popularity",
+ *   client: thirdwebClient,
+ * });
+ * ```
+ *
  * @param options - The options for the quote.
  * @param options.client - Your thirdweb client.
  * @param options.originChainId - Filter by a specific origin chain ID.
@@ -94,6 +109,7 @@ import type { Route } from "./types/Route.js";
  * @param options.destinationTokenAddress - Filter by a specific destination token address.
  * @param options.transactionHash - Filter by a specific transaction hash.
  * @param options.maxSteps - Limit the number of steps returned.
+ * @param options.sortBy - Sort the routes by various categories.
  * @param options.limit - Limit the number of routes returned.
  * @param options.offset - Offset the number of routes returned.
  *
@@ -111,6 +127,7 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
     destinationChainId,
     destinationTokenAddress,
     maxSteps,
+    sortBy,
     limit,
     offset,
   } = options;
@@ -138,6 +155,9 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   if (offset) {
     url.searchParams.set("offset", offset.toString());
   }
+  if (sortBy) {
+    url.searchParams.set("sortBy", sortBy);
+  }
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -157,6 +177,7 @@ export declare namespace routes {
     destinationChainId?: number;
     destinationTokenAddress?: ox__Address.Address;
     transactionHash?: ox__Hex.Hex;
+    sortBy?: "popularity";
     maxSteps?: number;
     limit?: number;
     offset?: number;

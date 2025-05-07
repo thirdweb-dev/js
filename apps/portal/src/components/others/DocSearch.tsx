@@ -13,11 +13,7 @@ import { Button } from "../ui/button";
 import type { SearchResult } from "@/app/api/search/types";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import {
-  Command as CommandIcon,
-  FileText as FileTextIcon,
-  Search as SearchIcon,
-} from "lucide-react";
+import { CommandIcon, FileTextIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { Spinner } from "../ui/Spinner/Spinner";
 import { Input } from "../ui/input";

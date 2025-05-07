@@ -1,6 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
-import { ExternalLink } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: move the following two slugs to walletSlug with updated docs
@@ -26,12 +26,12 @@ export const sidebar: SideBar = {
     {
       name: "Playground",
       href: "https://playground.thirdweb.com/",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     {
       name: "Templates",
       href: "https://thirdweb.com/templates",
-      icon: <ExternalLink />,
+      icon: <ExternalLinkIcon />,
     },
     { separator: true },
     // Connect\
@@ -237,6 +237,10 @@ export const sidebar: SideBar = {
           href: `${paySlug}/fees`,
         },
         {
+          name: "API",
+          href: "https://bridge.thirdweb.com/reference",
+        },
+        {
           name: "Get Started",
           href: `${paySlug}/get-started`,
           expanded: true,
@@ -246,7 +250,7 @@ export const sidebar: SideBar = {
               href: `${paySlug}/get-started#option-1-connectbutton`,
             },
             {
-              name: "Embed Pay",
+              name: "Embed",
               href: `${paySlug}/get-started#option-2-embed-pay`,
             },
             {

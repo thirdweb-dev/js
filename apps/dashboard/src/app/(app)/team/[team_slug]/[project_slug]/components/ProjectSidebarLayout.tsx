@@ -9,9 +9,11 @@ import {
   WalletIcon,
 } from "lucide-react";
 import { ContractIcon } from "../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
+import { EngineIcon } from "../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
 import { PayIcon } from "../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
+import { Badge } from "../../../../../../@/components/ui/badge";
 import { NebulaIcon } from "../../../../../nebula-app/(app)/icons/NebulaIcon";
 
 export function ProjectSidebarLayout(props: {
@@ -67,16 +69,26 @@ export function ProjectSidebarLayout(props: {
           tracking: tracking("contracts"),
         },
         {
-          href: `${layoutPath}/nebula`,
-          label: "Nebula",
-          icon: NebulaIcon,
-          tracking: tracking("nebula"),
+          href: `${layoutPath}/engine`,
+          label: (
+            <span className="flex items-center gap-2">
+              Engine <Badge>New</Badge>
+            </span>
+          ),
+          icon: EngineIcon,
+          tracking: tracking("engine"),
         },
         {
           href: `${layoutPath}/insight`,
           label: "Insight",
           icon: InsightIcon,
           tracking: tracking("insight"),
+        },
+        {
+          href: `${layoutPath}/nebula`,
+          label: "Nebula",
+          icon: NebulaIcon,
+          tracking: tracking("nebula"),
         },
       ]}
       footerSidebarLinks={[

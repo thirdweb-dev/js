@@ -132,14 +132,18 @@ function CustomConnectEmbed(props: {
         <ConnectEmbed
           auth={{
             getLoginPayload: getNebulaLoginPayload,
-            doLogin: async (params) => {
+            doLogin: async (loginPayload) => {
               if (isVercel() && !turnstileToken) {
                 setAlwaysShowTurnstile(true);
                 throw new Error("Please complete the captcha.");
               }
 
               try {
-                const result = await doNebulaLogin(params, turnstileToken);
+                const result = await doNebulaLogin({
+                  type: "nebula-app",
+                  loginPayload: loginPayload,
+                  turnstileToken,
+                });
                 if (result.error) {
                   console.error(
                     "Failed to login",

@@ -42,18 +42,29 @@ export async function getNebulaLoginPayload(
 }
 
 export async function doNebulaLogin(
-  payload: VerifyLoginPayloadParams,
-  turnstileToken: string | undefined,
+  params:
+    | {
+        type: "nebula-app";
+        loginPayload: VerifyLoginPayloadParams;
+        turnstileToken: string | undefined;
+      }
+    | {
+        type: "floating-chat";
+        loginPayload: {
+          payload: LoginPayload;
+          token: string;
+        };
+      },
 ) {
   // only validate the turnstile token if we are in a vercel environment
-  if (isVercel()) {
-    if (!turnstileToken) {
+  if (params.type === "nebula-app" && isVercel()) {
+    if (!params.turnstileToken) {
       return {
         error: "Please complete the captcha.",
       };
     }
 
-    const result = await verifyTurnstileToken(turnstileToken);
+    const result = await verifyTurnstileToken(params.turnstileToken);
     if (!result.success) {
       return {
         error: "Invalid captcha. Please try again.",
@@ -71,7 +82,7 @@ export async function doNebulaLogin(
       "Content-Type": "application/json",
       "X-Secret-Key": NEBULA_APP_SECRET_KEY,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(params.loginPayload),
   });
 
   // if the request failed, log the error and throw an error
@@ -79,7 +90,8 @@ export async function doNebulaLogin(
     try {
       // clear the cookies to prevent any weird issues
       cookieStore.delete(
-        NEBULA_COOKIE_PREFIX_TOKEN + getAddress(payload.payload.address),
+        NEBULA_COOKIE_PREFIX_TOKEN +
+          getAddress(params.loginPayload.payload.address),
       );
       cookieStore.delete(NEBULA_COOKIE_ACTIVE_ACCOUNT);
     } catch {
@@ -127,7 +139,8 @@ export async function doNebulaLogin(
 
   // set the token cookie
   cookieStore.set(
-    NEBULA_COOKIE_PREFIX_TOKEN + getAddress(payload.payload.address),
+    NEBULA_COOKIE_PREFIX_TOKEN +
+      getAddress(params.loginPayload.payload.address),
     jwt,
     {
       httpOnly: true,
@@ -140,7 +153,7 @@ export async function doNebulaLogin(
   // set the active account cookie
   cookieStore.set(
     NEBULA_COOKIE_ACTIVE_ACCOUNT,
-    getAddress(payload.payload.address),
+    getAddress(params.loginPayload.payload.address),
     {
       httpOnly: true,
       secure: true,
@@ -151,6 +164,7 @@ export async function doNebulaLogin(
 
   return {
     success: true,
+    token: jwt,
   };
 }
 

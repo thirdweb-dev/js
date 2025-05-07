@@ -8,13 +8,21 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { z } from "zod";
 import { TeamDomainVerificationCard } from "../_components/settings-cards/domain-verification";
-import { teamSlugRegex } from "./common";
+import {
+  maxTeamNameLength,
+  maxTeamSlugLength,
+  teamNameSchema,
+  teamSlugSchema,
+} from "./common";
 
 type UpdateTeamField = (team: Partial<Team>) => Promise<void>;
 
@@ -59,111 +67,109 @@ export function TeamGeneralSettingsPageUI(props: {
   );
 }
 
+const teamNameFormSchema = z.object({
+  name: teamNameSchema,
+});
+
 function TeamNameFormControl(props: {
   team: Team;
   updateTeamField: UpdateTeamField;
 }) {
-  const [teamName, setTeamName] = useState(props.team.name);
-  const maxTeamNameLength = 32;
-
+  const form = useForm<{ name: string }>({
+    values: { name: props.team.name },
+    resolver: zodResolver(teamNameFormSchema),
+  });
   const updateTeamMutation = useMutation({
     mutationFn: (name: string) => props.updateTeamField({ name }),
   });
 
-  function handleSave() {
-    const promises = updateTeamMutation.mutateAsync(teamName);
-    toast.promise(promises, {
-      success: "Team name updated successfully",
-      error: "Failed to update team name",
-    });
-  }
-
   return (
-    <SettingsCard
-      header={{
-        title: "Team Name",
-        description: "This is your team's name on thirdweb",
-      }}
-      bottomText={`Please use ${maxTeamNameLength} characters at maximum.`}
-      saveButton={{
-        onClick: handleSave,
-        disabled: teamName.length === 0,
-        isPending: updateTeamMutation.isPending,
-      }}
-      errorText={undefined}
-      noPermissionText={undefined} // TODO
+    <form
+      onSubmit={form.handleSubmit((values) => {
+        const promise = updateTeamMutation.mutateAsync(values.name);
+        toast.promise(promise, {
+          success: "Team name updated successfully",
+          error: "Failed to update team name",
+        });
+      })}
     >
-      <Input
-        value={teamName}
-        maxLength={maxTeamNameLength}
-        onChange={(e) => {
-          setTeamName(e.target.value);
+      <SettingsCard
+        header={{
+          title: "Team Name",
+          description: "This is your team's name on thirdweb",
         }}
-        className="md:w-[450px]"
-      />
-    </SettingsCard>
+        bottomText={`Please use ${maxTeamNameLength} characters at maximum.`}
+        saveButton={{
+          type: "submit",
+          disabled: !form.formState.isDirty,
+          isPending: updateTeamMutation.isPending,
+        }}
+        errorText={form.formState.errors.name?.message}
+        noPermissionText={undefined}
+      >
+        <Input
+          {...form.register("name")}
+          maxLength={maxTeamNameLength}
+          className="md:w-[450px]"
+        />
+      </SettingsCard>
+    </form>
   );
 }
+
+const teamSlugFormSchema = z.object({
+  slug: teamSlugSchema,
+});
 
 function TeamSlugFormControl(props: {
   team: Team;
   updateTeamField: (team: Partial<Team>) => Promise<void>;
 }) {
-  const [teamSlug, setTeamSlug] = useState(props.team.slug);
-  const maxTeamURLLength = 48;
-  const [errorMessage, setErrorMessage] = useState<string | undefined>();
-
+  const form = useForm<{ slug: string }>({
+    defaultValues: { slug: props.team.slug },
+    resolver: zodResolver(teamSlugFormSchema),
+  });
   const updateTeamMutation = useMutation({
-    mutationFn: (slug: string) => props.updateTeamField({ slug: slug }),
+    mutationFn: (slug: string) => props.updateTeamField({ slug }),
   });
 
-  function handleSave() {
-    const promises = updateTeamMutation.mutateAsync(teamSlug);
-    toast.promise(promises, {
-      success: "Team URL updated successfully",
-      error: "Failed to update team URL",
-    });
-  }
-
   return (
-    <SettingsCard
-      header={{
-        title: "Team URL",
-        description:
-          "This is your team's URL namespace on thirdweb. All your team's projects and settings can be accessed using this URL",
-      }}
-      bottomText={`Please use ${maxTeamURLLength} characters at maximum.`}
-      errorText={errorMessage}
-      saveButton={{
-        onClick: handleSave,
-        disabled: errorMessage !== undefined,
-        isPending: updateTeamMutation.isPending,
-      }}
-      noPermissionText={undefined} // TODO
+    <form
+      onSubmit={form.handleSubmit((values) => {
+        const promise = updateTeamMutation.mutateAsync(values.slug);
+        toast.promise(promise, {
+          success: "Team URL updated successfully",
+          error: "Failed to update team URL",
+        });
+      })}
     >
-      <div className="relative flex rounded-lg border border-border md:w-[450px]">
-        <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-card px-3 font-mono text-muted-foreground/80 text-sm">
-          thirdweb.com/team/
+      <SettingsCard
+        header={{
+          title: "Team URL",
+          description:
+            "This is your team's URL namespace on thirdweb. All your team's projects and settings can be accessed using this URL",
+        }}
+        bottomText={`Please use ${maxTeamSlugLength} characters at maximum.`}
+        errorText={form.formState.errors.slug?.message}
+        saveButton={{
+          type: "submit",
+          disabled: !form.formState.isDirty,
+          isPending: updateTeamMutation.isPending,
+        }}
+        noPermissionText={undefined}
+      >
+        <div className="relative flex rounded-lg border border-border md:w-[450px]">
+          <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-card px-3 font-mono text-muted-foreground/80 text-sm">
+            thirdweb.com/team/
+          </div>
+          <Input
+            {...form.register("slug")}
+            maxLength={maxTeamSlugLength}
+            className="truncate border-0 font-mono"
+          />
         </div>
-        <Input
-          value={teamSlug}
-          onChange={(e) => {
-            const value = e.target.value.slice(0, maxTeamURLLength);
-            setTeamSlug(value);
-            if (value.trim().length === 0) {
-              setErrorMessage("Team URL can not be empty");
-            } else if (teamSlugRegex.test(value)) {
-              setErrorMessage(
-                "Invalid Team URL. Only letters, numbers and hyphens are allowed",
-              );
-            } else {
-              setErrorMessage(undefined);
-            }
-          }}
-          className="truncate border-0 font-mono"
-        />
-      </div>
-    </SettingsCard>
+      </SettingsCard>
+    </form>
   );
 }
 
@@ -186,8 +192,8 @@ function TeamAvatarFormControl(props: {
   });
 
   function handleSave() {
-    const promises = updateTeamAvatarMutation.mutateAsync(teamAvatar);
-    toast.promise(promises, {
+    const promise = updateTeamAvatarMutation.mutateAsync(teamAvatar);
+    toast.promise(promise, {
       success: "Team avatar updated successfully",
       error: "Failed to update team avatar",
     });
@@ -263,8 +269,8 @@ export function LeaveTeamCard(props: {
   });
 
   function handleLeave() {
-    const promises = leaveTeam.mutateAsync();
-    toast.promise(promises, {
+    const promise = leaveTeam.mutateAsync();
+    toast.promise(promise, {
       success: "Left team successfully",
       error: "Failed to leave team",
     });
@@ -308,8 +314,8 @@ export function DeleteTeamCard(props: {
   });
 
   function handleDelete() {
-    const promises = deleteTeam.mutateAsync();
-    toast.promise(promises, {
+    const promise = deleteTeam.mutateAsync();
+    toast.promise(promise, {
       success: "Team deleted successfully",
       error: "Failed to delete team",
     });

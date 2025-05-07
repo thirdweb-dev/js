@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { CheckIcon, ChevronDown, SearchIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
 import {
   forwardRef,
   useCallback,
@@ -215,7 +215,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                     orientation="vertical"
                     className="flex h-full min-h-6"
                   />
-                  <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
+                  <ChevronDownIcon className="h-4 cursor-pointer text-muted-foreground" />
                 </div>
               </div>
             ) : (
@@ -223,7 +223,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                 <span className="text-muted-foreground text-sm">
                   {placeholder}
                 </span>
-                <ChevronDown className="h-4 cursor-pointer text-muted-foreground" />
+                <ChevronDownIcon className="h-4 cursor-pointer text-muted-foreground" />
               </div>
             )}
           </Button>

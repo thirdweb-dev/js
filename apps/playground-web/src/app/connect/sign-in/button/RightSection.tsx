@@ -182,12 +182,6 @@ export function RightSection(props: {
                 }}
                 locale={connectOptions.localeId}
                 auth={connectOptions.enableAuth ? playgroundAuth : undefined}
-                chains={[
-                  sepolia,
-                  baseSepolia,
-                  optimismSepolia,
-                  arbitrumSepolia,
-                ]}
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
                     ? {

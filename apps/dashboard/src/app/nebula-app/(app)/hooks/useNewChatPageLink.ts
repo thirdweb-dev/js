@@ -1,9 +1,8 @@
 "use client";
 
-import { useStore } from "@/lib/reactive";
-import { newChatPageUrlStore } from "../stores";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 export function useNewChatPageLink() {
-  const newChatPage = useStore(newChatPageUrlStore);
-  return newChatPage || "/chat";
+  const selectedLayout = useSelectedLayoutSegment();
+  return selectedLayout === "chat" ? "/" : "/chat";
 }
