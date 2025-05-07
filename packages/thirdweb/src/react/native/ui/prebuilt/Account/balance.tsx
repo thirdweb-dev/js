@@ -55,7 +55,7 @@ export interface AccountBalanceProps extends Omit<TextProps, "children"> {
    * If not passed, the component will return `null`.
    *
    * You can/should pass a descriptive text/component to this prop, indicating that the
-   * balance was not fetched succesfully
+   * balance was not fetched successfully
    * @example
    * ```tsx
    * <AccountBalance

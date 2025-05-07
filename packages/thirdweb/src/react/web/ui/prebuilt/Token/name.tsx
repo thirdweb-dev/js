@@ -50,7 +50,7 @@ export interface TokenNameProps
    * If not passed, the component will return `null`.
    *
    * You can/should pass a descriptive text/component to this prop, indicating that the
-   * name was not fetched succesfully
+   * name was not fetched successfully
    * @example
    * ```tsx
    * <TokenName fallbackComponent={"Failed to load"}
