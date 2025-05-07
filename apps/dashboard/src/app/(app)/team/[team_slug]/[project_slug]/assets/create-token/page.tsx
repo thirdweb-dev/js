@@ -596,7 +596,7 @@ export default function CreateTokenPage() {
                     htmlFor="saleEnabled"
                     className="text-base font-medium cursor-pointer"
                   >
-                    Launch token with Initial Sale Fixed Price
+                    Launch token with Token Sale
                   </label>
                 </div>
                 <p className="text-sm text-muted-foreground ml-7">
