@@ -345,7 +345,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             const promise = sendAndConfirmTx.mutateAsync(approveTx);
             toast.promise(promise, {
               loading: "Approving NFT for listing",
-              success: "NFT approved succesfully",
+              success: "NFT approved successfully",
               error: "Failed to approve NFT",
             });
             await promise;

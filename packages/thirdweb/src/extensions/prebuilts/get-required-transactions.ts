@@ -178,7 +178,7 @@ async function getTransactionsForMaketplaceV3(options: {
   client: ThirdwebClient;
 }): Promise<DeployTransactionResult[]> {
   const { chain, client } = options;
-  const WETHAdress = await computePublishedContractAddress({
+  const WETHAddress = await computePublishedContractAddress({
     chain,
     client,
     contractId: "WETH9",
@@ -195,7 +195,7 @@ async function getTransactionsForMaketplaceV3(options: {
       chain,
       client,
       contractId: "DirectListingsLogic",
-      constructorParams: { _nativeTokenWrapper: WETHAdress },
+      constructorParams: { _nativeTokenWrapper: WETHAddress },
     }).then((c) =>
       c
         ? null
@@ -205,7 +205,7 @@ async function getTransactionsForMaketplaceV3(options: {
       chain,
       client,
       contractId: "EnglishAuctionsLogic",
-      constructorParams: { _nativeTokenWrapper: WETHAdress },
+      constructorParams: { _nativeTokenWrapper: WETHAddress },
     }).then((c) =>
       c
         ? null
@@ -233,7 +233,7 @@ async function getTransactionsForDynamicContract(options: {
   deployMetadata: FetchDeployMetadataResult;
 }): Promise<DeployTransactionResult[]> {
   const { chain, client } = options;
-  const WETHAdress = await computePublishedContractAddress({
+  const WETHAddress = await computePublishedContractAddress({
     chain,
     client,
     contractId: "WETH9",
@@ -255,7 +255,7 @@ async function getTransactionsForDynamicContract(options: {
             contractId: e.extensionName,
             publisher: e.publisherAddress,
             version: e.extensionVersion || "latest",
-            constructorParams: { _nativeTokenWrapper: WETHAdress },
+            constructorParams: { _nativeTokenWrapper: WETHAddress },
           }).then((c) =>
             c
               ? null

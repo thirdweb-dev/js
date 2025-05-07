@@ -86,7 +86,7 @@ export async function fetchConstructorParams(
       ),
     ];
 
-    // regex finds the LAST occurence of solc metadata bytes, result always in same position
+    // regex finds the LAST occurrence of solc metadata bytes, result always in same position
     // TODO: we currently don't handle error string embedded in the bytecode, need to strip ascii (upgradeableProxy) in patterns[2]
     // https://etherscan.io/address/0xee6a57ec80ea46401049e92587e52f5ec1c24785#code
     if (matches?.[0]?.[2]) {
