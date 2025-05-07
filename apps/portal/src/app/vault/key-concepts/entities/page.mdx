@@ -1,0 +1,21 @@
+# Entities
+
+Entities are the resources secured by vault. Entities are owned by a vault account.
+Vault currently secures the EOA entity.
+
+## EOA
+
+An EOA (Externally Owned Account) is an EVM account controlled by a private key held by a user. It's a fundamental part of the EVM ecosystem, used for managing funds, initiating transactions, and interacting with smart contracts.
+The private key to the EOA is always stored encrypted, and only decrypted within vault.
+
+Vault supports the following EOA related operations (API reference):
+
+```typescript
+eoa:list
+eoa:create
+eoa:signMessage
+eoa:signTypedData
+eoa:signTransaction
+eoa:signStructuredMessage
+eoa:signAuthorization
+```

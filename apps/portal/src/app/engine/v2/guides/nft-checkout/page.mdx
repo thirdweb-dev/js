@@ -1,0 +1,230 @@
+import { DocImage } from "@doc";
+import OverviewImage from "../../assets/nft-checkout-overview.png";
+import NftCheckout1 from "../../assets/nft-checkout-1.png";
+import NftCheckout2 from "../../assets/nft-checkout-2.png";
+import NftCheckout3 from "../../assets/nft-checkout-3.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "NFT Checkout | thirdweb Engine",
+	description: "This guide uses thirdweb Engine to sell NFTs with credit card",
+});
+
+# NFT Checkout
+
+This guide uses thirdweb Engine to sell NFTs with credit card:
+
+1. A buyer pays with credit card.
+1. Upon payment, your backend calls Engine.
+1. Engine mints an NFT to the buyer's wallet.
+
+The buyer receives the NFT without requiring wallet signatures or gas funds.
+
+<DocImage src={OverviewImage} alt="NFT checkout overview" />
+
+## Prerequisites
+
+- A thirdweb client ID and secret key from your Team > Project > Settings page.
+- An Engine instance
+- A [backend wallet](/engine/v2/features/backend-wallets) with currency to pay for gas
+- An [access token](/engine/v2/features/authentication) for your Engine instance
+- A deployed NFT contract that can be claimed by the backend wallet
+- A [Stripe account](https://dashboard.stripe.com/register) on test mode (no real payments will be made)
+
+## Frontend: Add Connect Wallet and credit card form
+
+Use [`<ConnectButton>`](/references/typescript/v5/ConnectButton) to prompt the buyer for their wallet address. The buyer provides their credit card details and selects **Pay now** to send payment details directly to Stripe.
+
+```tsx
+function Home() {
+	return (
+		<ThirdwebProvider>
+			<PurchasePage />
+		</ThirdwebProvider>
+	);
+}
+```
+
+```tsx
+// src/app/page.tsx
+function PurchasePage() {
+	const buyerWalletAddress = useAddress();
+	const [clientSecret, setClientSecret] = useState("");
+
+	// Retrieve a Stripe client secret to display the credit card form.
+	const onClick = async () => {
+		const resp = await fetch("/api/stripe-intent", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ buyerWalletAddress }),
+		});
+		const json = await resp.json();
+		setClientSecret(json.clientSecret);
+	};
+
+	const stripe = loadStripe("<stripe_publishable_key>");
+
+	return (
+		<main>
+			<ConnectWallet />
+
+			{!clientSecret ? (
+				<button onClick={onClick}>Buy with credit card</button>
+			) : (
+				<Elements stripe={stripe} options={{ clientSecret }}>
+					<CreditCardForm />
+				</Elements>
+			)}
+		</main>
+	);
+}
+```
+
+```tsx
+const CreditCardForm = () => {
+	const elements = useElements();
+	const stripe = useStripe();
+
+	const onClick = async () => {
+		// Submit payment to Stripe. The NFT is minted later in the webhook.
+		await stripe.confirmPayment({
+			elements,
+			confirmParams: { return_url: "http://localhost:3000" },
+			redirect: "if_required",
+		});
+		alert("Payment success. The NFT will be delivered to your wallet shortly.");
+	};
+
+	return (
+		<>
+			<PaymentElement />
+			<button onClick={onClick}>Pay now</button>
+		</>
+	);
+};
+```
+
+## Backend: Get a Stripe client secret
+
+`POST /api/stripe-intent` returns a client secret which is needed to display the credit card form.
+
+```tsx
+// src/app/api/stripe-intent/route.ts
+
+export async function POST(req: Request) {
+	const { buyerWalletAddress } = await req.json();
+
+	const stripe = new Stripe("<stripe_secret_key>", {
+		apiVersion: "2023-10-16",
+	});
+	const paymentIntent = await stripe.paymentIntents.create({
+		amount: 100_00,
+		currency: "usd",
+		payment_method_types: ["card"],
+		// buyerWalletAddress is needed in the webhook.
+		metadata: { buyerWalletAddress },
+	});
+
+	return NextResponse.json({
+		clientSecret: paymentIntent.client_secret,
+	});
+}
+```
+
+## Backend: Configure the Stripe webhook
+
+`POST /api/stripe-webhook` calls Engine to mint an NFT when a buyer is successfully charged.
+
+```tsx
+// src/app/api/stripe-webhook/route.ts
+
+export const config = {
+	api: { bodyParser: false },
+};
+
+export async function POST(req: NextRequest) {
+	// Validate the webhook signature
+	// Source: https://stripe.com/docs/webhooks#secure-webhook
+	const body = await req.text();
+	const signature = headers().get("stripe-signature");
+	const stripe = new Stripe("<stripe_secret_key>", {
+		apiVersion: "2023-10-16",
+	});
+
+	// Validate and parse the payload.
+	const event = stripe.webhooks.constructEvent(
+		body,
+		signature,
+		"<webhook_secret_key>",
+	);
+
+	if (event.type === "charge.succeeded") {
+		const { buyerWalletAddress } = event.data.object.metadata;
+
+		// Mint an NFT to the buyer with Engine.
+		const engine = new Engine({
+			url: "<engine_url>",
+			accessToken: "<engine_access_token>",
+		});
+		await engine.erc1155.mintTo(
+			"<chain_id>",
+			"<nft_contract_address>",
+			"<backend_wallet_address>",
+			{
+				receiver: buyerWalletAddress,
+				metadataWithSupply: {
+					metadata: {
+						name: "Engine Hackathon 2023",
+						description: "Created with thirdweb Engine",
+						image:
+							"ipfs://QmakhKF5oMyxupCZ2RsmcvPRyYTHnQzYeb9mQGv3RM81n1/hat.webp",
+					},
+					supply: "1",
+				},
+			},
+		);
+	}
+
+	return NextResponse.json({ message: "OK" });
+}
+```
+
+## Configure Stripe webhooks
+
+Navigate to the [Stripe webhooks dashboard (test mode)](https://dashboard.stripe.com/test/webhooks) and add the `/api/stripe-webhook` endpoint and send the `charge.succeeded` event.
+
+## Try it out!
+
+Here’s what the user flow looks like.
+
+The buyer is prompted to provide their credit card.
+
+<DocImage src={NftCheckout1} alt="Initial page load" className="w-[550px]" />
+
+They provide their card details.
+
+> _Tip: Stripe testmode accepts `4242 4242 4242 4242` as a valid credit card._
+
+<DocImage
+	src={NftCheckout2}
+	alt="Prompted for card details"
+	className="w-[550px]"
+/>
+
+They are informed when their payment is submitted.
+
+<DocImage src={NftCheckout3} alt="Successful payment" className="w-[550px]" />
+
+## Full code example
+
+The code above is simplified for readability. [View the full source code &rarr;](https://github.com/thirdweb-example/engine-nft-checkout)
+
+## FAQ
+
+### Can I accept different payment methods?
+
+Yes! You provide the payment provider and can accept different currencies (EUR, JPY), digital wallets (Apple Pay, Google Pay), bank payments (ACH, SEPA), local payment methods (UPI, iDEAL), and more.
+
+### How is thirdweb NFT Checkout different?
+
+[thirdweb Checkout](https://thirdweb.com/checkout) is a full solution that detects fraud, provides chargeback liability, accepts multiple payment methods including cryptocurrency, includes a prebuilt checkout UX, and more.

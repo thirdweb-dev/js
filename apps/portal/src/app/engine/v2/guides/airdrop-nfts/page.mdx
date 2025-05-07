@@ -1,0 +1,132 @@
+import { DocImage } from "@doc";
+import OverviewImage from "../../assets/airdrop-overview.png";
+import DemoImage1 from "../../assets/airdrop-nfts-1.png";
+import DemoImage2 from "../../assets/airdrop-nfts-2.png";
+import DemoImage3 from "../../assets/airdrop-nfts-3.png";
+import DemoImage4 from "../../assets/airdrop-nfts-4.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Airdrop NFTs | thirdweb Engine",
+	description:
+		"Engine makes it effortless for any developer to airdrop NFTs at scale. You sponsor the gas so your users only need a wallet address!",
+});
+
+# Airdrop NFTs
+
+Engine makes it effortless for any developer to airdrop NFTs at scale. You sponsor the gas so your users only need a wallet address!
+
+<DocImage
+	src={OverviewImage}
+	alt="Airdrop overview"
+	className="max-w-[600px] mx-auto"
+/>
+
+## Prerequisites
+
+- An Engine instance
+- A [backend wallet](/engine/v2/features/backend-wallets) with currency to pay for gas
+- A deployed NFT contract that can be claimed by the backend wallet
+- A client ID and secret key from your Team > Project > Settings page.
+
+## Frontend: Add Connect Wallet and Claim buttons
+
+Use [`ConnectButton`](/references/typescript/v5/ConnectButton) component to prompt the user for their wallet. The **Claim** button calls `POST /api/claim`.
+
+```tsx
+import { useActiveAccount } from "thirdweb/react";
+function ClaimPage() {
+	const account = useActiveAccount();
+	const address = account?.address;
+
+	const onClick = async () => {
+		await fetch("/api/claim", {
+			method: "POST",
+			body: JSON.stringify({ address }),
+		});
+		alert(`🎉 A reward has been sent to your wallet: ${address}`);
+	};
+
+	return (
+		<main>
+			<h2>Thank you for being a superfan! ❤️</h2>
+			<ConnectWallet />
+			{address && <button onClick={onClick}>Claim my reward</button>}
+		</main>
+	);
+}
+
+function Example() {
+	return (
+		<ThirdwebProvider activeChain="<chain_id>" clientId="<thirdweb_client_id>">
+			<ClaimPage />
+		</ThirdwebProvider>
+	);
+}
+```
+
+_Replace `<thirdweb_client_id>`_.
+
+## Backend: Call Engine to mint an NFT
+
+`POST /api/claim` calls Engine to mint an NFT to the user's wallet.
+
+```tsx
+export async function POST(request: Request) {
+	const { userWalletAddress } = await request.json();
+
+	await fetch(
+		"<engine_url>/contract/<chain_id>/<nft_contract_address>/erc1155/mint-to",
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer <thirdweb_secret_key>",
+				"x-backend-wallet-address": "<backend_wallet_address>",
+			},
+			body: JSON.stringify({
+				receiver: userWalletAddress,
+				metadataWithSupply: {
+					metadata: {
+						name: "Acme Inc. Superfan",
+						description: "Created with thirdweb Engine",
+						image:
+							"ipfs://QmciR3WLJsf2BgzTSjbG5zCxsrEQ8PqsHK7JWGWsDSNo46/nft.png",
+					},
+					supply: "1",
+				},
+			}),
+		},
+	);
+
+	return NextResponse.json({ message: "Success!" });
+}
+```
+
+## Try it out!
+
+Here’s what the user flow looks like.
+
+The app prompts the user to connect their wallet.
+
+<DocImage src={DemoImage1} alt="Initial page load" />
+
+<DocImage
+	src={DemoImage2}
+	alt="The app prompts the user to connect their wallet"
+/>
+
+A user presses claim.
+
+<DocImage src={DemoImage3} alt="A user presses claim" />
+
+They'll receive the NFT in their wallet shortly!
+
+<DocImage
+	src={DemoImage4}
+	alt="They'll receive the NFT in their wallet shortly"
+/>
+
+## Full code example
+
+The code above is simplified for readability. [View the full source code &rarr;](https://github.com/thirdweb-example/engine-minting-api)

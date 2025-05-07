@@ -1,0 +1,58 @@
+# Engine TypeScript SDK
+
+You can use the full TypeScript thirdweb SDK in your backend, allowing you to use:
+- The full catalog of extension functions
+- The prepareContractCall function to encode your transactions
+- The full account interface, predefined chains, and more
+The SDK handles encoding your transactions, signing them to Engine and polling for status.
+
+## Example
+
+Install SDK
+
+```bash
+npm install thirdweb
+```
+
+
+```typescript
+import {
+  createThirdwebClient,
+  sendTransaction,
+  getContract,
+  Engine,
+} from "thirdweb";
+import { baseSepolia } from "thirdweb/chains";
+import { claimTo } from "thirdweb/extensions/1155";
+
+// Create a thirdweb client
+const client = createThirdwebClient({
+  secretKey: "<your-project-secret-key>",
+});
+
+// Create a server wallet
+const serverWallet = Engine.serverWallet({
+  client,
+  address: "<your-server-wallet-address>",
+  vaultAccessToken: "<your-vault-access-token>",
+});
+
+// Prepare the transaction
+const transaction = claimTo({
+  contract: getContract({
+    client,
+    address: "0x...", // Address of the ERC1155 token contract
+    chain: baseSepolia, // Chain of the ERC1155 token contract
+  }),
+  to: "0x...", // The address of the user to mint to
+  tokenId: 0n, // The token ID of the NFT to mint
+  quantity: 1n, // The quantity of NFTs to mint
+});
+
+// Send the transaction via Engine
+const result = await sendTransaction({
+  account: serverWallet,
+  transaction,
+});
+console.log("Transaction hash:", result.transactionHash);
+```

@@ -1,0 +1,42 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Gasless Transactions | thirdweb Engine",
+	description:
+		"Attract a broader audience by removing the need to have gas to use your application. Engine offers multiple options for developers looking to sponsor gas for their users' transactions.",
+});
+
+# Gasless Transactions
+
+Attract a broader audience by removing the need to have gas to use your application. Engine offers multiple options for developers looking to sponsor gas for their users' transactions.
+
+## Use cases
+
+- Build an NFT checkout where the buyer is sent an NFT upon fiat payment.
+- Enable users to transfer an NFT to a friend or list an NFT on a marketplace.
+- Minimize friction by seamlessly managing transactions for players in a web3 game.
+
+## Approaches
+
+Here are several ways to offer gasless transactions to your users.
+
+### Send transactions with backend wallets
+
+If a contract method can be called on behalf of a user, the simplest approach is to send the transaction from a backend wallet.
+
+Examples:
+
+- An NFT contract that can be claimed _by_ a wallet and _sent to_ another wallet.
+- An oracle where state can be updated by any wallet.
+
+### Send meta-transactions with relayers
+
+If your contract supports meta-transactions, use Engine as a relayer to send meta-transactions that are signed by your users' wallets.
+
+[Learn more about relayers in Engine.](/engine/v2/features/relayers)
+
+### Send transactions with smart accounts
+
+If your users have smart accounts, use Engine backend wallets to transact on behalf of smart accounts.
+
+[Learn more about smart accounts in Engine.](/engine/v2/features/smart-wallets)

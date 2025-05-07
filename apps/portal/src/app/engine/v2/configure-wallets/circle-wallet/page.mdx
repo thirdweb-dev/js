@@ -1,0 +1,32 @@
+import { Callout } from '@doc';
+
+export const metadata = {
+    title: "Circle Wallet",
+    description:
+        "Learn how to set up a Circle wallet with thirdweb Engine.",
+};
+
+## Circle Wallet
+
+[Circle Programmable Wallets](https://developers.circle.com/w3s/programmable-wallets) is a Wallet as a Service (WaaS) solution designed to simplify the creation and management of secure Web3 wallets and their private keys. Engine can create and transact with the wallet, but not delete it.
+
+<Callout variant="info" title="Circle Wallets">
+    Circle wallets are not currently supported on Engine Cloud. They are currently supported on Engine Dedicated v2, and will be available soon with Dedicated v3.
+</Callout>
+
+#### Setup
+
+1. Create a Circle account at the [Circle Console](https://console.circle.com/signin).
+2. Navigate to [API & Client Keys](https://console.circle.com/api-keys).
+3. Create an API Key. (Either a standard key or a restricted key scoped to "Programmable Wallets" is required.) Do not enable the IP Allowlist. Store this key, it is not shown again.
+4. In the dashboard, navigate to **Configuration > Server Wallets**.
+5. Select **Circle** and provide the following:
+   - API Key (example: `API_KEY:...`)
+
+<Callout variant="info" title="Circle API Key">
+	Circle API Keys are scoped to either Testnet or Mainnet. Server wallets
+	created with a testnet key will not work on the mainnet, and vice versa
+	<br /> If you want to change between testnet and mainnet, you will need to
+	update the API key configuration in engine, and recreate a wallet with the
+	Mainnet scope.
+</Callout>
