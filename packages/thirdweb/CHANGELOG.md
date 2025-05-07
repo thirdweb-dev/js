@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.97.3
+
+### Patch Changes
+
+- [#6974](https://github.com/thirdweb-dev/js/pull/6974) [`5f6403b`](https://github.com/thirdweb-dev/js/commit/5f6403bb8d5820b1ac0967920850db32b606575e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle hex value format for smart wallet execution
+
 ## 5.97.2
 
 ### Patch Changes
