@@ -15,6 +15,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  Loader2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -25,7 +26,13 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
+import { deployContractfromDeployMetadata } from "thirdweb/deploys";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { defineChain } from "thirdweb/chains";
+import { toast } from "sonner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { upload } from "thirdweb/storage";
 
 // Form schemas
 const tokenInfoSchema = z.object({
@@ -90,27 +97,18 @@ const StepIndicator = ({
 );
 
 export default function CreateTokenPage() {
-  const [step, setStep] = useState<number>(1);
-  const [tokenInfo, setTokenInfo] = useState<TokenInfoValues>();
-  const [advancedOptions, setAdvancedOptions] = useState<AdvancedOptionsValues>(
-    {
-      ownerSupply: "100",
-      airdropSupply: "0",
-      saleEnabled: false,
-      saleSupply: "0",
-      salePrice: "0.1",
-      platformFeeBps: "250",
-      royaltyBps: "0",
-      platformFeeRecipient: "",
-      royaltyRecipient: "",
-    }
-  );
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [tokenInfo, setTokenInfo] = useState<TokenInfoValues | null>(null);
+  const [advancedOptions, setAdvancedOptions] =
+    useState<AdvancedOptionsValues | null>(null);
+  const [csvData, setCsvData] = useState<string[][]>([]);
   const [lastUpdatedField, setLastUpdatedField] = useState<string | null>(null);
-
-  // Get the connected wallet address
+  const [isDeploying, setIsDeploying] = useState(false);
+  const router = useDashboardRouter();
+  const params = router.params;
   const activeAccount = useActiveAccount();
+  const switchChain = useSwitchActiveWalletChain();
+  const thirdwebClient = useThirdwebClient();
   const connectedAddress = activeAccount?.address;
 
   // Forms
@@ -238,7 +236,7 @@ export default function CreateTokenPage() {
   // Step handlers
   const onTokenInfoSubmit = (data: TokenInfoValues) => {
     setTokenInfo(data);
-    setStep(2);
+    setCurrentStep(2);
   };
 
   const onAdvancedOptionsSubmit = (data: AdvancedOptionsValues) => {
@@ -254,12 +252,12 @@ export default function CreateTokenPage() {
     };
 
     setAdvancedOptions(finalData);
-    setStep(3);
+    setCurrentStep(3);
   };
 
   const goBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -275,8 +273,120 @@ export default function CreateTokenPage() {
 
   // Handle CSV file upload
   const handleCsvUpload = (file: File | undefined) => {
-    setCsvFile(file || null);
+    setCsvData(file || []);
     // File processing would happen here in a real implementation
+  };
+
+  const deployToken = async () => {
+    if (!tokenInfo || !advancedOptions || !activeAccount || !thirdwebClient) {
+      toast.error("Missing required information. Please check your inputs.");
+      return;
+    }
+
+    setIsDeploying(true);
+
+    try {
+      // Make sure we have the necessary URL parts
+      const pathParts = window.location.pathname.split("/");
+      const teamSlug = pathParts[2];
+      const projectSlug = pathParts[3];
+
+      if (!teamSlug || !projectSlug) {
+        throw new Error("Invalid URL structure");
+      }
+
+      console.log("Token info:", tokenInfo);
+      console.log("Advanced options:", advancedOptions);
+
+      // Make sure we have all required token properties
+      if (!tokenInfo.name || !tokenInfo.symbol || !tokenInfo.chain) {
+        throw new Error("Missing required token information");
+      }
+
+      // Calculate supply percentages - use totalSupply property
+      const totalSupply =
+        parseFloat(tokenInfo.supply || "0") *
+        Math.pow(10, parseInt(advancedOptions.platformFeeBps || "18"));
+
+      const ownerPercentage =
+        parseFloat(advancedOptions.ownerSupply || "100") / 100;
+      const airdropPercentage =
+        parseFloat(advancedOptions.airdropSupply || "0") / 100;
+      const salePercentage = advancedOptions.saleEnabled
+        ? parseFloat(advancedOptions.saleSupply || "0") / 100
+        : 0;
+
+      // Get wallet chain
+      const chainId = parseInt(tokenInfo.chain, 10);
+      const walletChain = isNaN(chainId)
+        ? defineChain({ name: tokenInfo.chain.toLowerCase() })
+        : defineChain({ chainId });
+
+      // Switch network if needed
+      await switchChain({ chain: walletChain });
+
+      // Prepare initialization parameters with fallbacks for all values
+      const initializeParams = {
+        name: tokenInfo.name,
+        symbol: tokenInfo.symbol,
+        decimals: parseInt(advancedOptions.platformFeeBps || "18"),
+        primary_sale_recipient:
+          advancedOptions.primarySaleAddress || activeAccount.address,
+        platform_fee_recipient:
+          advancedOptions.platformFeeRecipient || activeAccount.address,
+        platform_fee_basis_points: parseInt(
+          advancedOptions.platformFeeBps || "0"
+        ),
+      };
+
+      // Print out what we're going to deploy
+      console.log("Deploying with parameters:", initializeParams);
+
+      // Handle token image
+      let imageUri = "";
+      if (tokenInfo.image) {
+        try {
+          const imageFile = await fetch(tokenInfo.image).then((r) => r.blob());
+          imageUri = await upload({
+            client: thirdwebClient,
+            data: [imageFile],
+          });
+        } catch (err) {
+          console.error("Error uploading image:", err);
+        }
+      }
+
+      // Deploy the contract
+      const contractAddress = await deployContractfromDeployMetadata({
+        client: thirdwebClient,
+        signer: activeAccount,
+        contractMetadata: {
+          name: tokenInfo.name,
+          description: tokenInfo.description || "",
+          image: imageUri,
+          external_link: tokenInfo.externalLink || "",
+        },
+        publishMetadata: {
+          name: "TokenERC20",
+          publisherAddress: activeAccount.address,
+        },
+        constructorParams: initializeParams,
+      });
+
+      toast.success("Token deployed successfully!");
+
+      // Navigate to the token's page
+      router.push(
+        `/team/${teamSlug}/${projectSlug}/contracts/${contractAddress}`
+      );
+    } catch (error) {
+      console.error("Error deploying token:", error);
+      toast.error(
+        `Failed to deploy token: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    } finally {
+      setIsDeploying(false);
+    }
   };
 
   // Render functions
@@ -289,7 +399,7 @@ export default function CreateTokenPage() {
           <div className="w-1/2 flex items-center">
             <div
               className={`h-0.5 w-full ${
-                step > 1 ? "bg-primary/20" : "bg-muted"
+                currentStep > 1 ? "bg-primary/20" : "bg-muted"
               }`}
               style={{ marginLeft: "25px", marginRight: "25px" }}
             />
@@ -298,16 +408,20 @@ export default function CreateTokenPage() {
           <div className="w-1/2 flex items-center">
             <div
               className={`h-0.5 w-full ${
-                step > 2 ? "bg-primary/20" : "bg-muted"
+                currentStep > 2 ? "bg-primary/20" : "bg-muted"
               }`}
               style={{ marginLeft: "25px", marginRight: "25px" }}
             />
           </div>
         </div>
 
-        <StepIndicator step={1} currentStep={step} label="Token Info" />
-        <StepIndicator step={2} currentStep={step} label="Token Options" />
-        <StepIndicator step={3} currentStep={step} label="Overview" />
+        <StepIndicator step={1} currentStep={currentStep} label="Token Info" />
+        <StepIndicator
+          step={2}
+          currentStep={currentStep}
+          label="Token Options"
+        />
+        <StepIndicator step={3} currentStep={currentStep} label="Overview" />
       </div>
     </div>
   );
@@ -590,7 +704,7 @@ export default function CreateTokenPage() {
                     </p>
                     <FileInput
                       accept={{ "text/csv": [] }}
-                      value={csvFile || undefined}
+                      value={csvData.map((row) => row[0]) || undefined}
                       setValue={handleCsvUpload}
                       className="hidden"
                     />
@@ -602,8 +716,10 @@ export default function CreateTokenPage() {
                     >
                       Upload CSV
                     </Button>
-                    {csvFile && (
-                      <p className="mt-2 text-sm font-medium">{csvFile.name}</p>
+                    {csvData.length > 0 && (
+                      <p className="mt-2 text-sm font-medium">
+                        {csvData[0][0]}
+                      </p>
                     )}
                   </div>
                 )}
@@ -671,17 +787,15 @@ export default function CreateTokenPage() {
                 type="button"
                 variant="outline"
                 className="flex w-full justify-between"
-                onClick={() => setShowAdvancedSettings(!showAdvancedSettings)}
+                onClick={() => setLastUpdatedField("showAdvancedSettings")}
               >
                 <span>Advanced Settings</span>
-                {showAdvancedSettings ? (
+                {lastUpdatedField === "showAdvancedSettings" && (
                   <ChevronUpIcon className="h-4 w-4" />
-                ) : (
-                  <ChevronDownIcon className="h-4 w-4" />
                 )}
               </Button>
 
-              {showAdvancedSettings && (
+              {lastUpdatedField === "showAdvancedSettings" && (
                 <div className="border rounded-md mt-2 p-4 space-y-6">
                   {/* Primary Sale Settings - only show if sale is enabled */}
                   {advancedOptionsForm.watch("saleEnabled") && (
@@ -837,7 +951,11 @@ export default function CreateTokenPage() {
           <div>
             <h3 className="text-lg font-medium mb-4 flex justify-between">
               Token Info
-              <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentStep(1)}
+              >
                 Edit
               </Button>
             </h3>
@@ -896,7 +1014,11 @@ export default function CreateTokenPage() {
           <div>
             <h3 className="text-lg font-medium mb-4 flex justify-between">
               Token Options
-              <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentStep(2)}
+              >
                 Edit
               </Button>
             </h3>
@@ -983,9 +1105,19 @@ export default function CreateTokenPage() {
             <Button
               type="button"
               className="bg-primary hover:bg-primary/90"
-              onClick={() => alert("Token creation would be processed here")}
+              onClick={deployToken}
+              disabled={isDeploying}
             >
-              Deploy Token <CheckIcon className="ml-2 h-4 w-4" />
+              {isDeploying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Deploying
+                  Token...
+                </>
+              ) : (
+                <>
+                  Deploy Token <CheckIcon className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -995,7 +1127,7 @@ export default function CreateTokenPage() {
 
   // Render the appropriate step
   const renderCurrentStep = () => {
-    switch (step) {
+    switch (currentStep) {
       case 1:
         return renderStep1();
       case 2:

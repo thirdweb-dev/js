@@ -15,16 +15,46 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Fieldset } from "components/contract-components/contract-deploy-form/common";
-import { FileInput } from "components/shared/FileInput";
-import { BasisPointsInput } from "components/inputs/BasisPointsInput";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import Link from "next/link";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Form } from "@/components/ui/form";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
+import { deployContractfromDeployMetadata } from "thirdweb/deploys";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { defineChain } from "thirdweb/chains";
+import { toast } from "sonner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { upload } from "thirdweb/storage";
+import { Fieldset } from "components/contract-components/contract-deploy-form/common";
+import { FileInput } from "components/shared/FileInput";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Form schemas
 const collectionInfoSchema = z.object({
@@ -85,18 +115,20 @@ const StepIndicator = ({
 );
 
 export default function CreateNFTPage() {
-  const [step, setStep] = useState<number>(1);
-  const [collectionInfo, setCollectionInfo] = useState<CollectionInfoValues>();
-  const [mintSettings, setMintSettings] = useState<MintSettingsValues>({
-    price: "0.1",
-    supply: "10000",
-    initialMint: "1",
-    royaltyPercentage: "0",
-    royaltyAddress: "",
-    collectionType: "new",
-    platformFeeBps: "250",
-  });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [collectionInfo, setCollectionInfo] =
+    useState<CollectionInfoValues | null>(null);
+  const [mintSettings, setMintSettings] = useState<MintSettingsValues | null>(
+    null
+  );
   const [showRoyaltySettings, setShowRoyaltySettings] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const router = useDashboardRouter();
+  const params = router.params;
+  const activeAccount = useActiveAccount();
+  const switchChain = useSwitchActiveWalletChain();
+  const thirdwebClient = useThirdwebClient();
+  const connectedAddress = activeAccount?.address;
 
   // Forms
   const collectionInfoForm = useForm<CollectionInfoValues>({
@@ -127,17 +159,17 @@ export default function CreateNFTPage() {
   // Step handlers
   const onCollectionInfoSubmit = (data: CollectionInfoValues) => {
     setCollectionInfo(data);
-    setStep(2);
+    setCurrentStep(2);
   };
 
   const onMintSettingsSubmit = (data: MintSettingsValues) => {
     setMintSettings(data);
-    setStep(3);
+    setCurrentStep(3);
   };
 
   const goBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -151,7 +183,7 @@ export default function CreateNFTPage() {
           <div className="w-1/2 flex items-center">
             <div
               className={`h-0.5 w-full ${
-                step > 1 ? "bg-primary/20" : "bg-muted"
+                currentStep > 1 ? "bg-primary/20" : "bg-muted"
               }`}
               style={{ marginLeft: "25px", marginRight: "25px" }}
             />
@@ -160,16 +192,16 @@ export default function CreateNFTPage() {
           <div className="w-1/2 flex items-center">
             <div
               className={`h-0.5 w-full ${
-                step > 2 ? "bg-primary/20" : "bg-muted"
+                currentStep > 2 ? "bg-primary/20" : "bg-muted"
               }`}
               style={{ marginLeft: "25px", marginRight: "25px" }}
             />
           </div>
         </div>
 
-        <StepIndicator step={1} currentStep={step} label="Basic Info" />
-        <StepIndicator step={2} currentStep={step} label="Options" />
-        <StepIndicator step={3} currentStep={step} label="Overview" />
+        <StepIndicator step={1} currentStep={currentStep} label="Basic Info" />
+        <StepIndicator step={2} currentStep={currentStep} label="Options" />
+        <StepIndicator step={3} currentStep={currentStep} label="Overview" />
       </div>
     </div>
   );
@@ -578,7 +610,11 @@ export default function CreateNFTPage() {
           <div>
             <h3 className="text-lg font-medium mb-4 flex justify-between">
               Basic Info
-              <Button variant="ghost" size="sm" onClick={() => setStep(1)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentStep(1)}
+              >
                 Edit
               </Button>
             </h3>
@@ -641,7 +677,11 @@ export default function CreateNFTPage() {
           <div>
             <h3 className="text-lg font-medium mb-4 flex justify-between">
               Options
-              <Button variant="ghost" size="sm" onClick={() => setStep(2)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentStep(2)}
+              >
                 Edit
               </Button>
             </h3>
@@ -719,11 +759,19 @@ export default function CreateNFTPage() {
             <Button
               type="button"
               className="bg-primary hover:bg-primary/90"
-              onClick={() =>
-                alert("NFT Collection creation would be processed here")
-              }
+              onClick={deployNFTCollection}
+              disabled={isDeploying}
             >
-              Deploy Collection <CheckIcon className="ml-2 h-4 w-4" />
+              {isDeploying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Deploying
+                  Collection...
+                </>
+              ) : (
+                <>
+                  Deploy Collection <CheckIcon className="ml-2 h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -733,7 +781,7 @@ export default function CreateNFTPage() {
 
   // Render the appropriate step
   const renderCurrentStep = () => {
-    switch (step) {
+    switch (currentStep) {
       case 1:
         return renderStep1();
       case 2:
@@ -742,6 +790,111 @@ export default function CreateNFTPage() {
         return renderStep3();
       default:
         return renderStep1();
+    }
+  };
+
+  // Add this after the existing functions
+  const deployNFTCollection = async () => {
+    if (!collectionInfo || !mintSettings || !activeAccount || !thirdwebClient) {
+      toast.error("Missing required information. Please check your inputs.");
+      return;
+    }
+
+    setIsDeploying(true);
+
+    try {
+      // Make sure we have the necessary URL parts
+      const pathParts = window.location.pathname.split("/");
+      const teamSlug = pathParts[2];
+      const projectSlug = pathParts[3];
+
+      if (!teamSlug || !projectSlug) {
+        throw new Error("Invalid URL structure");
+      }
+
+      console.log("Collection info:", collectionInfo);
+      console.log("Mint settings:", mintSettings);
+
+      // Make sure we have all required collection properties
+      if (
+        !collectionInfo.name ||
+        !collectionInfo.symbol ||
+        !collectionInfo.chain
+      ) {
+        throw new Error("Missing required collection information");
+      }
+
+      // Get wallet chain
+      const chainId = parseInt(collectionInfo.chain, 10);
+      const walletChain = isNaN(chainId)
+        ? defineChain({ name: collectionInfo.chain.toLowerCase() })
+        : defineChain({ chainId });
+
+      console.log("Using chain:", walletChain);
+
+      // Switch network if needed
+      await switchChain({ chain: walletChain });
+
+      // Handle collection image
+      let imageUri = "";
+      if (collectionInfo.image) {
+        try {
+          const imageFile = await fetch(collectionInfo.image).then((r) =>
+            r.blob()
+          );
+          imageUri = await upload({
+            client: thirdwebClient,
+            data: [imageFile],
+          });
+        } catch (err) {
+          console.error("Error uploading image:", err);
+        }
+      }
+
+      // Prepare initialization parameters
+      const initializeParams = {
+        name: collectionInfo.name,
+        symbol: collectionInfo.symbol,
+        description: collectionInfo.description || "",
+        primary_sale_recipient:
+          mintSettings.royaltyAddress || activeAccount.address,
+        fee_recipient: mintSettings.royaltyAddress || activeAccount.address,
+        seller_fee_basis_points:
+          parseInt(mintSettings.royaltyPercentage || "0") * 100,
+      };
+
+      console.log("Deploying with parameters:", initializeParams);
+
+      // Deploy the contract
+      const contractAddress = await deployContractfromDeployMetadata({
+        client: thirdwebClient,
+        signer: activeAccount,
+        contractMetadata: {
+          name: collectionInfo.name,
+          description: collectionInfo.description || "",
+          image: imageUri,
+          external_link: "",
+        },
+        publishMetadata: {
+          name: "NFTCollection",
+          publisherAddress: activeAccount.address,
+        },
+        constructorParams: initializeParams,
+      });
+
+      toast.success("NFT Collection deployed successfully!");
+
+      // Navigate to the collection's page
+      router.push(
+        `/team/${teamSlug}/${projectSlug}/contracts/${contractAddress}`
+      );
+    } catch (error) {
+      console.error("Error deploying NFT collection:", error);
+      toast.error(
+        `Failed to deploy NFT collection: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    } finally {
+      setIsDeploying(false);
     }
   };
 
