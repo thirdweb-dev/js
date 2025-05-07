@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.97.1
+
+### Patch Changes
+
+- [#6963](https://github.com/thirdweb-dev/js/pull/6963) [`760b250`](https://github.com/thirdweb-dev/js/commit/760b250bc30d5ccff2549c3bba322ae0cf076d51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix metamask deeplink parsing
+
 ## 5.97.0
 
 ### Minor Changes
