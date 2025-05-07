@@ -52,13 +52,35 @@ describe("getClientFetch", () => {
     );
   });
 
-  it("should send a bearer token if secret key is a JWT", () => {
+  it("should NOT send a bearer token if secret key is a JWT", () => {
     vi.spyOn(global, "fetch").mockResolvedValue(new Response());
     const clientFetch = getClientFetch({
       clientId: "test-client-id",
       secretKey: "foo.bar.baz",
     });
     clientFetch("https://api.thirdweb.com/test");
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.thirdweb.com/test",
+      expect.objectContaining({
+        headers: expect.any(Headers),
+      }),
+    );
+
+    // biome-ignore lint/suspicious/noExplicitAny: `any` type ok for tests
+    const headers = (global.fetch as any).mock.calls[0][1].headers;
+    expect(headers.get("authorization")).toBe(null);
+  });
+
+  it("should send a bearer token if secret key is a JWT and useAuthToken is true", () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(new Response());
+    const clientFetch = getClientFetch({
+      clientId: "test-client-id",
+      secretKey: "foo.bar.baz",
+    });
+    clientFetch("https://api.thirdweb.com/test", {
+      useAuthToken: true,
+    });
 
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.thirdweb.com/test",
