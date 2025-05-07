@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.97.2
+
+### Patch Changes
+
+- [#6969](https://github.com/thirdweb-dev/js/pull/6969) [`4e42158`](https://github.com/thirdweb-dev/js/commit/4e42158c7bcf6ae2dd064abaf1972a6529ae5449) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle hedera native currency decimal values for smart wallet calls
+
+- [#6967](https://github.com/thirdweb-dev/js/pull/6967) [`5a069fe`](https://github.com/thirdweb-dev/js/commit/5a069fe657de66fd8f64a7d41c089e32c1930ba2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always connect to destination chain if available in PayEmbed
+
+## 5.97.1
+
+### Patch Changes
+
+- [#6963](https://github.com/thirdweb-dev/js/pull/6963) [`760b250`](https://github.com/thirdweb-dev/js/commit/760b250bc30d5ccff2549c3bba322ae0cf076d51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix metamask deeplink parsing
+
 ## 5.97.0
 
 ### Minor Changes

@@ -25,7 +25,12 @@ export const DeepLinkConnectUI = (props: {
   onBack?: () => void;
   client: ThirdwebClient;
 }) => {
-  const link = encodeURIComponent(window.location.toString());
+  let link = window.location.toString();
+  if (props.wallet.id === "io.metamask") {
+    link = link.replace("https://", "");
+  } else {
+    link = encodeURIComponent(link);
+  }
   const deeplink = `${props.deepLinkPrefix}${link}?ref=${link}`;
   return (
     <Container animate="fadein">

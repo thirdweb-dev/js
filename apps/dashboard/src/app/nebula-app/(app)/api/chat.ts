@@ -99,6 +99,24 @@ export async function promptNebula(params: {
         break;
       }
 
+      case "image": {
+        const data = JSON.parse(event.data) as {
+          data: {
+            width: number;
+            height: number;
+            url: string;
+          };
+          request_id: string;
+        };
+
+        params.handleStream({
+          event: "image",
+          data: data.data,
+          request_id: data.request_id,
+        });
+        break;
+      }
+
       case "action": {
         const data = JSON.parse(event.data);
 
@@ -109,6 +127,7 @@ export async function promptNebula(params: {
               event: "action",
               type: "sign_transaction",
               data: parsedTxData,
+              request_id: data.request_id,
             });
           } catch (e) {
             console.error("failed to parse action data", e, { event });
@@ -122,6 +141,7 @@ export async function promptNebula(params: {
               event: "action",
               type: "sign_swap",
               data: swapData,
+              request_id: data.request_id,
             });
           } catch (e) {
             console.error("failed to parse action data", e, { event });
@@ -197,11 +217,22 @@ type ChatStreamedResponse =
       event: "action";
       type: "sign_transaction";
       data: NebulaTxData;
+      request_id: string;
     }
   | {
       event: "action";
       type: "sign_swap";
       data: NebulaSwapData;
+      request_id: string;
+    }
+  | {
+      event: "image";
+      data: {
+        width: number;
+        height: number;
+        url: string;
+      };
+      request_id: string;
     }
   | {
       event: "context";
@@ -223,6 +254,10 @@ type ChatStreamedEvent =
     }
   | {
       event: "delta";
+      data: string;
+    }
+  | {
+      event: "image";
       data: string;
     }
   | {
