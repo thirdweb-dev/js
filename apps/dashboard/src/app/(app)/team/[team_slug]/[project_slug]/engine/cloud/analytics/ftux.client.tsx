@@ -8,6 +8,7 @@ import CreateServerWallet from "../server-wallets/components/create-server-walle
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import CreateVaultAccountButton from "../vault/components/create-vault-account.client";
 import { SendTestTransaction } from "./send-test-tx.client";
+import { deleteUserAccessToken } from "./utils";
 
 interface Props {
   managementAccessToken: string | undefined;
@@ -78,6 +79,11 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     props.teamSlug,
   ]);
 
+  const isComplete = useMemo(
+    () => finalSteps.every((step) => step.completed),
+    [finalSteps],
+  );
+
   if (props.testTxWithWallet) {
     return (
       <SendTestTransaction
@@ -90,10 +96,11 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     );
   }
 
-  if (finalSteps.length === 1) {
+  if (finalSteps.length === 0 || isComplete) {
+    // clear token from local storage after FTUX is complete
+    deleteUserAccessToken(props.project.id);
     return null;
   }
-
   return (
     <StepsCard title="Setup Your Engine" steps={finalSteps} delay={1000} />
   );
