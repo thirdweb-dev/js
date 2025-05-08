@@ -271,8 +271,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       <WalletSwitcherConnectionScreen
         accountAbstraction={props.connectOptions?.accountAbstraction}
         appMetadata={props.connectOptions?.appMetadata}
-        chain={props.connectOptions?.chain}
-        chains={props.connectOptions?.chains}
+        chain={toChain || props.connectOptions?.chain}
+        chains={[toChain, ...(props.connectOptions?.chains || [])]}
         client={props.client}
         connectLocale={props.connectLocale}
         isEmbed={props.isEmbed}

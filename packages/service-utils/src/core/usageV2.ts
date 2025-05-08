@@ -1,6 +1,7 @@
 export const USAGE_V2_SOURCES = [
   "bundler",
-  "engine",
+  "engine", // Engine Core -- treat as a client-side event
+  "engine-cloud", // Engine Cloud
   "insight",
   "nebula",
   "rpc",
@@ -8,14 +9,18 @@ export const USAGE_V2_SOURCES = [
   "storage",
   "wallet",
   "pay",
+  "webhook",
 ] as const;
 export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
+
 export function getTopicName(source: UsageV2Source) {
   switch (source) {
     // Some sources are sent from clients and are written to an "untrusted" table.
     case "sdk":
     case "engine":
       return `usage_v2.untrusted_raw_${source}`;
+    case "engine-cloud":
+      return "usage_v2.raw_engine";
     default:
       return `usage_v2.raw_${source}`;
   }

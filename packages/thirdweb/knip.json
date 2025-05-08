@@ -8,7 +8,8 @@
     "@testing-library/jest-dom",
     "tslib",
     "@size-limit/preset-big-lib",
-    "@thirdweb-dev/insight"
+    "@thirdweb-dev/insight",
+    "@thirdweb-dev/engine"
   ],
   "rules": {
     "optionalPeerDependencies": "off",

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { normalizeTimeISOString } from "lib/time";
+import { normalizeTimeISOString } from "@/lib/time";
 import { FileCode2Icon, MessageSquareQuoteIcon } from "lucide-react";
 import Link from "next/link";
 import {

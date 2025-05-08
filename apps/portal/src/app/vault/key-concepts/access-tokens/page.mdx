@@ -1,0 +1,42 @@
+
+# Access Tokens
+Access tokens are a core security mechanism in thirdweb Vault that enable secure, controlled delegation of wallet operations. Created by either user accounts or service accounts, access tokens allow precise, policy-based access to account-owned entities like EOAs.
+
+### Purpose and Benefits
+
+Access tokens serve several critical functions:
+
+- **Delegation without sharing keys**: Grant specific capabilities to services, applications, or team members without exposing your admin key
+- **Fine-grained permission control**: Limit exactly what operations can be performed and under what conditions
+- **Instant revocation**: Immediately terminate access when needed
+- **Auditable access paths**: Track and monitor who has what level of access to your entities
+
+### Policy-Based Control
+
+Each access token is configured with a set of policies that define:
+
+1. **Which operations** can be performed (e.g., signing transactions, reading wallet information)
+2. **Which entities** can be accessed (using allowlists or metadata patterns)
+3. **What constraints** apply to each operation (e.g., transaction value limits, allowed chains)
+
+An access token can only perform operations explicitly permitted by its policy. For example, you might create an access token that can only:
+
+- Sign transactions on Ethereum mainnet
+- With a maximum value of 1 ETH
+- To a specific set of contract addresses
+- Using only wallets tagged with a particular purpose
+
+### Practical Applications
+
+Access tokens enable critical workflows for blockchain applications:
+
+- **Application integrations**: Let your application sign transactions without holding private keys
+- **Team collaboration**: Grant different team members appropriate access levels to shared wallets
+- **Automated processes**: Enable secure automated signing for scheduled operations
+- **Temporary access**: Create time-limited tokens for specific projects or partnerships
+
+### Using Metadata for Flexible Control
+
+A particularly powerful feature of access tokens is their ability to use metadata patterns for entity access control. Rather than maintaining explicit allowlists, you can tag your EOAs with descriptive metadata and then create access tokens that match specific patterns.
+
+This metadata-based approach provides tremendous flexibility in how you organize and control access to your wallet infrastructure, which is detailed further in the sections below

@@ -50,7 +50,7 @@ export interface TokenSymbolProps
    * If not passed, the component will return `null`.
    *
    * You can/should pass a descriptive text/component to this prop, indicating that the
-   * symbol was not fetched succesfully
+   * symbol was not fetched successfully
    * @example
    * ```tsx
    * <TokenSymbol fallbackComponent={"Failed to load"}

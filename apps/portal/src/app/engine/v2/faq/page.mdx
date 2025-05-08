@@ -1,0 +1,111 @@
+import { Callout, Details } from "@doc";
+
+# Engine FAQs
+
+<Details summary="Which contracts work with Engine?"> 
+Engine supports reads and writes to any contract verified on the blockchain explorer, including any contract deployed via thirdweb.
+_Note: Some endpoints allow providing the contract ABI to support any unverified contract._
+
+Engine also supports deploys for thirdweb [prebuilt contracts](https://thirdweb.com/explore) including NFTs, tokens, marketplaces, and smart accounts.
+
+If you have a question about a particular contract type, [contact us](https://thirdweb.com/support).
+</Details>
+
+<Details summary="What is the difference between Engine and thirdweb SDKs?"> 
+Engine is a server that manages your backend wallets and how they interact with contracts. This difference unlocks capabilities that thirdweb and other web3 SDKs, including:
+
+- Management of KMS backend wallets
+- Fine-grained access control with access tokens
+- Transaction parallelization to handle higher throughput per wallet
+- Observability and retries on stuck transactions
+- Webhooks on completed transactions to sync onchain and off-chain activity
+
+Additionally, Engine is built on top of the thirdweb SDK and has the same capabilities.
+</Details>
+
+<Details summary="How do I wait for a transaction to be mined?"> 
+
+Write calls to contracts do not block until they are mined. Instead they enqueue an async job and immediately return a reference to the job called `queueId`.
+
+Here are three ways to determine when the job is mined:
+
+- Use [webhooks](/engine/v2/features/webhooks) to notify your backend when a transaction event occurs.
+- Poll the `/transaction/status/<queue_id>` endpoint.
+- Use websockets:
+
+  ```js
+  const socket = new WebSocket(
+  	"wss://<engine_url>/transaction/status/<queue_id>?token=<session_token>",
+  );
+  socket.onmessage = (event) => {
+  	const res = JSON.parse(event.data);
+  	console.log("Received data:", JSON.parse(res.result));
+  };
+  ```
+</Details>
+
+<Details summary="How do I send native currency with my transaction?">
+
+To send native tokens (e.g. ETH on Ethereum), set `txOverrides.value`.
+This may be required when calling a `payable` contract method.
+
+Here's an example of sending 0.2 ETH:
+
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "value": "200000000000000000"
+  }
+}
+```
+
+</Details>
+
+<Details summary="How do I override gas settings?">
+
+To override the gas settings, set relevant `txOverrides` gas fields.
+Each field is optional and will be estimated by Engine if omitted.
+
+Here's an example of setting a gas limit of 210,000 gas units, 1 gwei max fee, and 1 gwei max priority fee:
+
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "gas": "210000",
+    "maxFeePerGas": "1000000000",
+    "maxPriorityFeePerGas": "1000000000"
+  }
+}
+```
+
+<Callout variant='warning' title="It is highly recommended to set a timeout when setting a maxFeePerGas.">
+
+Otherwise if gas prices don't fall, transactions may be in your queue indefinitely.
+
+</Callout>
+
+</Details>
+
+<Details summary="How do I set a timeout on transactions?">
+
+To specify a transaction timeout, set `txOverrides.timeoutSeconds`.
+Engine flags transactions as `errored` if they are not sent before the timeout. An `errored` webhook will be sent.
+
+Note: A transaction sent before the timeout may be mined after the timeout.
+
+Here's an example of a 2-hour timeout:
+```json
+{
+  // ...other arguments in the write transaction
+
+  "txOverrides": {
+    "timeoutSeconds": 7200
+  }
+}
+```
+
+</Details>

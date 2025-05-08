@@ -578,6 +578,30 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Plume Mainnet
+  98866: {
+    headerImgUrl: plumeBanner.src,
+    about:
+      "Plume Network is the first full-stack L1 RWA Chain and ecosystem purpose-built for RWAfi, enabling the rapid adoption and demand-driven integration of real world assets. With 180+ projects building on the network, Plume offers a composable, EVM-compatible environment for onboarding and managing diverse real world assets. Coupled with an end-to-end tokenization engine and a network of financial infrastructure partners, Plume simplifies asset onboarding and enables seamless DeFi integration for RWAs so anyone can tokenize real world assets, distribute them globally, and make them useful for native crypto users.",
+    cta: {
+      backgroundImageUrl: plumeCTA.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://miles.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
+  //Plume Mainnet
+  98867: {
+    headerImgUrl: plumeBanner.src,
+    about:
+      "Plume Network is the first full-stack L1 RWA Chain and ecosystem purpose-built for RWAfi, enabling the rapid adoption and demand-driven integration of real world assets. With 180+ projects building on the network, Plume offers a composable, EVM-compatible environment for onboarding and managing diverse real world assets. Coupled with an end-to-end tokenization engine and a network of financial infrastructure partners, Plume simplifies asset onboarding and enables seamless DeFi integration for RWAs so anyone can tokenize real world assets, distribute them globally, and make them useful for native crypto users.",
+    cta: {
+      backgroundImageUrl: plumeCTA.src,
+      title: "Bringing the Real World Onchain",
+      buttonLink: "https://miles.plumenetwork.xyz/",
+      buttonText: "Learn more",
+    },
+  },
   //Rivalz Mainnet
   753: {
     headerImgUrl: rivalzBanner.src,

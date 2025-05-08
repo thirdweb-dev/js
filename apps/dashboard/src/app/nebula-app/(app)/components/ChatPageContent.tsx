@@ -11,7 +11,7 @@ import {
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -20,7 +20,7 @@ import {
 } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
-import type { SessionInfo } from "../api/types";
+import type { NebulaSessionHistoryMessage, SessionInfo } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
@@ -40,6 +40,7 @@ export function ChatPageContent(props: {
     | undefined;
 }) {
   const address = useActiveAccount()?.address;
+  const connectionStatus = useActiveWalletConnectionStatus();
   const connectedWallets = useConnectedWallets();
   const setActiveWallet = useSetActiveWallet();
 
@@ -47,53 +48,12 @@ export function ChatPageContent(props: {
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
     if (props.session?.history) {
-      const _messages: ChatMessage[] = [];
-
-      for (const message of props.session.history) {
-        if (message.role === "action") {
-          try {
-            const content = JSON.parse(message.content) as {
-              session_id: string;
-              data: string;
-              type: "sign_transaction" | (string & {});
-            };
-
-            if (content.type === "sign_transaction") {
-              const txData = JSON.parse(content.data);
-              _messages.push({
-                type: "action",
-                subtype: "sign_transaction",
-                data: txData,
-              });
-            } else if (content.type === "sign_swap") {
-              const swapData = JSON.parse(content.data);
-              _messages.push({
-                type: "action",
-                subtype: "sign_swap",
-                data: swapData,
-              });
-            }
-          } catch (e) {
-            console.error("error processing message", e, { message });
-          }
-        } else {
-          _messages.push({
-            text: message.content,
-            type: message.role,
-            request_id: undefined,
-          });
-        }
-      }
-
-      return _messages;
+      return parseHistoryToMessages(props.session.history);
     }
     return [];
   });
 
-  const [hasUserUpdatedContextFilters, setHasUserUpdatedContextFilters] =
-    useState(false);
-
-  const [contextFilters, _setContextFilters] = useState<
+  const [_contextFilters, _setContextFilters] = useState<
     NebulaContext | undefined
   >(() => {
     const contextRes = props.session?.context;
@@ -109,62 +69,49 @@ export function ChatPageContent(props: {
     return value;
   });
 
+  const contextFilters = useMemo(() => {
+    return {
+      chainIds: _contextFilters?.chainIds || [],
+      networks: _contextFilters?.networks || null,
+      walletAddress: address || _contextFilters?.walletAddress || null,
+    } satisfies NebulaContext;
+  }, [_contextFilters, address]);
+
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
-    setHasUserUpdatedContextFilters(true);
     saveLastUsedChainIds(v?.chainIds || undefined);
   }, []);
 
-  const isNewSession = !props.session;
-  const connectionStatus = useActiveWalletConnectionStatus();
-
-  // if this is a new session, user has not manually updated context
-  // update the context to the current user's wallet address and chain id
+  const shouldRunEffect = useRef(true);
+  // if this is a new session,
+  // update chains to the last used chains in context filter
+  // we have to do this in effect to avoid hydration errors
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (!isNewSession || hasUserUpdatedContextFilters) {
+    // if viewing a session or context is set via params - do not update context
+    if (props.session || props.initialParams?.q || !shouldRunEffect.current) {
       return;
     }
 
+    shouldRunEffect.current = false;
+
     _setContextFilters((_contextFilters) => {
-      const updatedContextFilters: NebulaContext = _contextFilters
-        ? {
-            ..._contextFilters,
-          }
-        : {
-            chainIds: [],
-            walletAddress: null,
-            networks: null,
+      try {
+        const lastUsedChainIds = getLastUsedChainIds();
+        if (lastUsedChainIds) {
+          return {
+            networks: _contextFilters?.networks || null,
+            walletAddress: _contextFilters?.walletAddress || null,
+            chainIds: lastUsedChainIds,
           };
-
-      if (!updatedContextFilters.walletAddress && address) {
-        updatedContextFilters.walletAddress = address;
-      }
-
-      if (
-        updatedContextFilters.chainIds?.length === 0 &&
-        !props.initialParams?.q
-      ) {
-        // if we have last used chains in storage, continue using them
-        try {
-          const lastUsedChainIds = getLastUsedChainIds();
-          if (lastUsedChainIds) {
-            updatedContextFilters.chainIds = lastUsedChainIds;
-            return updatedContextFilters;
-          }
-        } catch {
-          // ignore local storage errors
         }
+      } catch {
+        // ignore local storage errors
       }
 
-      return updatedContextFilters;
+      return _contextFilters;
     });
-  }, [
-    address,
-    isNewSession,
-    hasUserUpdatedContextFilters,
-    props.initialParams?.q,
-  ]);
+  }, [props.session, props.initialParams?.q]);
 
   const [sessionId, setSessionId] = useState<string | undefined>(
     props.session?.id,
@@ -331,7 +278,7 @@ export function ChatPageContent(props: {
       />
 
       <div className="flex grow overflow-hidden">
-        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-6">
+        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-4">
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
@@ -342,7 +289,6 @@ export function ChatPageContent(props: {
                 context={contextFilters}
                 setContext={setContextFilters}
                 connectedWallets={connectedWalletsMeta}
-                activeAccountAddress={address}
                 setActiveWallet={handleSetActiveWallet}
               />
             </div>
@@ -365,7 +311,6 @@ export function ChatPageContent(props: {
                   isConnectingWallet={connectionStatus === "connecting"}
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}
-                  activeAccountAddress={address}
                   setActiveWallet={handleSetActiveWallet}
                   client={client}
                   prefillMessage={undefined}
@@ -487,97 +432,126 @@ export async function handleNebulaPrompt(params: {
         return;
       }
 
-      if (res.event === "init") {
-        requestIdForMessage = res.data.request_id;
-      }
-
-      if (res.event === "delta") {
-        // ignore empty string delta
-        if (!res.data.v) {
+      switch (res.event) {
+        case "init": {
+          requestIdForMessage = res.data.request_id;
           return;
         }
 
-        hasReceivedResponse = true;
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-
-          // append to previous assistant message
-          if (lastMessage?.type === "assistant") {
+        case "image": {
+          hasReceivedResponse = true;
+          setMessages((prevMessages) => {
             return [
-              ...prev.slice(0, -1),
+              ...prevMessages,
               {
-                text: lastMessage.text + res.data.v,
+                type: "image",
+                data: res.data,
+                request_id: res.request_id,
+              },
+            ];
+          });
+          return;
+        }
+
+        case "delta": {
+          // ignore empty string delta
+          if (!res.data.v) {
+            return;
+          }
+
+          hasReceivedResponse = true;
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+
+            // append to previous assistant message
+            if (lastMessage?.type === "assistant") {
+              return [
+                ...prev.slice(0, -1),
+                {
+                  text: lastMessage.text + res.data.v,
+                  type: "assistant",
+                  request_id: requestIdForMessage,
+                },
+              ];
+            }
+
+            // start a new assistant message
+            return [
+              ...prev,
+              {
+                text: res.data.v,
                 type: "assistant",
                 request_id: requestIdForMessage,
               },
             ];
-          }
-
-          // start a new assistant message
-          return [
-            ...prev,
-            {
-              text: res.data.v,
-              type: "assistant",
-              request_id: requestIdForMessage,
-            },
-          ];
-        });
-      }
-
-      if (res.event === "presence") {
-        setMessages((prev) => {
-          const lastMessage = prev[prev.length - 1];
-
-          // append to previous presence message
-          if (lastMessage?.type === "presence") {
-            return [
-              ...prev.slice(0, -1),
-              {
-                type: "presence",
-                texts: [...lastMessage.texts, res.data.data],
-              },
-            ];
-          }
-
-          // start a new presence message
-          return [...prev, { texts: [res.data.data], type: "presence" }];
-        });
-      }
-
-      if (res.event === "action") {
-        hasReceivedResponse = true;
-        if (res.type === "sign_transaction") {
-          setMessages((prevMessages) => {
-            return [
-              ...prevMessages,
-              {
-                type: "action",
-                subtype: res.type,
-                data: res.data,
-              },
-            ];
           });
-        } else if (res.type === "sign_swap") {
-          setMessages((prevMessages) => {
-            return [
-              ...prevMessages,
-              {
-                type: "action",
-                subtype: res.type,
-                data: res.data,
-              },
-            ];
-          });
+          return;
         }
-      }
 
-      if (res.event === "context") {
-        setContextFilters({
-          chainIds: res.data.chain_ids.map((x) => x.toString()),
-          walletAddress: res.data.wallet_address,
-          networks: res.data.networks,
-        });
+        case "presence": {
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+
+            // append to previous presence message
+            if (lastMessage?.type === "presence") {
+              return [
+                ...prev.slice(0, -1),
+                {
+                  type: "presence",
+                  texts: [...lastMessage.texts, res.data.data],
+                },
+              ];
+            }
+
+            // start a new presence message
+            return [...prev, { texts: [res.data.data], type: "presence" }];
+          });
+          return;
+        }
+
+        case "action": {
+          hasReceivedResponse = true;
+          switch (res.type) {
+            case "sign_transaction": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    type: "action",
+                    subtype: res.type,
+                    data: res.data,
+                    request_id: res.request_id,
+                  },
+                ];
+              });
+              return;
+            }
+            case "sign_swap": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    type: "action",
+                    subtype: res.type,
+                    data: res.data,
+                    request_id: res.request_id,
+                  },
+                ];
+              });
+              return;
+            }
+          }
+          return;
+        }
+
+        case "context": {
+          setContextFilters({
+            chainIds: res.data.chain_ids.map((x) => x.toString()),
+            walletAddress: res.data.wallet_address,
+            networks: res.data.networks,
+          });
+          return;
+        }
       }
     },
     context: contextFilters,
@@ -620,4 +594,81 @@ export function handleNebulaPromptError(params: {
 
     return newMessages;
   });
+}
+
+function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
+  const messages: ChatMessage[] = [];
+
+  for (const message of history) {
+    switch (message.role) {
+      case "action": {
+        try {
+          const content = JSON.parse(message.content) as {
+            session_id: string;
+            data: string;
+            type: "sign_transaction" | "sign_swap";
+            request_id: string;
+          };
+
+          if (content.type === "sign_transaction") {
+            const txData = JSON.parse(content.data);
+            messages.push({
+              type: "action",
+              subtype: "sign_transaction",
+              data: txData,
+              request_id: content.request_id,
+            });
+          } else if (content.type === "sign_swap") {
+            const swapData = JSON.parse(content.data);
+            messages.push({
+              type: "action",
+              subtype: "sign_swap",
+              data: swapData,
+              request_id: content.request_id,
+            });
+          }
+        } catch (e) {
+          console.error("error processing message", e, { message });
+        }
+        break;
+      }
+
+      case "image": {
+        const content = JSON.parse(message.content) as {
+          type: "image";
+          request_id: string;
+          data: {
+            width: number;
+            height: number;
+            url: string;
+          };
+        };
+
+        messages.push({
+          type: "image",
+          data: content.data,
+          request_id: content.request_id,
+        });
+        break;
+      }
+
+      case "user": {
+        messages.push({
+          text: message.content,
+          type: message.role,
+        });
+        break;
+      }
+
+      case "assistant": {
+        messages.push({
+          text: message.content,
+          type: message.role,
+          request_id: undefined,
+        });
+      }
+    }
+  }
+
+  return messages;
 }

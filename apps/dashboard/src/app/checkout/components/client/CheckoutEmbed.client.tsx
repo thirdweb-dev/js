@@ -85,17 +85,33 @@ export function CheckoutEmbed({
           onPurchaseSuccess: (result) => {
             if (!redirectUri) return;
             const url = new URL(redirectUri);
-            if (result.type === "transaction") {
-              url.searchParams.set("txHash", result.transactionHash);
-              return window.open(url.toString());
+            switch (result.type) {
+              case "crypto": {
+                url.searchParams.set("status", result.status.status);
+                if (
+                  "source" in result.status &&
+                  result.status.source?.transactionHash
+                ) {
+                  url.searchParams.set(
+                    "txHash",
+                    result.status.source?.transactionHash,
+                  );
+                }
+                break;
+              }
+              case "fiat": {
+                url.searchParams.set("status", result.status.status);
+                if ("intentId" in result.status) {
+                  url.searchParams.set("intentId", result.status.intentId);
+                }
+                break;
+              }
+              case "transaction": {
+                url.searchParams.set("txHash", result.transactionHash);
+                break;
+              }
             }
-            if (result.status.status === "NOT_FOUND") {
-              throw new Error("Transaction not found");
-            }
-            const txHash = result.status.source?.transactionHash;
-            if (typeof txHash === "string") {
-              url.searchParams.set("txHash", txHash);
-            }
+            return window.open(url.toString());
           },
         }}
       />

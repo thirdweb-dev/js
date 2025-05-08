@@ -82,6 +82,11 @@ export * as Bridge from "../bridge/index.js";
 export * as Insight from "../insight/index.js";
 
 /**
+ * ENGINE
+ */
+export * as Engine from "../engine/index.js";
+
+/**
  * WALLETS
  */
 export {

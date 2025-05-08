@@ -31,3 +31,4 @@ storybook-static
 .aider*
 
 tsconfig.tsbuildinfo
+.cursor

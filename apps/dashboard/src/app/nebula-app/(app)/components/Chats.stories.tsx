@@ -59,6 +59,7 @@ export const SendTransaction: Story = {
       {
         type: "action",
         subtype: "sign_transaction",
+        request_id: "xxxxx",
         data: {
           chainId: 1,
           to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",

@@ -15,7 +15,7 @@ describe("chains", () => {
 
     // Basic structure validation
     if (result.length > 0) {
-      const chain = result[0];
+      const chain = result.find((chain) => chain.chainId === 1);
       expect(chain).toHaveProperty("chainId");
       expect(chain).toHaveProperty("name");
       expect(chain).toHaveProperty("icon");

@@ -45,13 +45,19 @@ import {
   ConnectButton,
   TransactionButton,
 } from "thirdweb/react";
+import { baseSepolia } from "thirdweb/chains";
 
 const wallets = [
   inAppWallet(
-    // turn on gas sponsorship for in-app wallets
-    { smartAccount: { chain, sponsorGas: true } },
-  ),
-];
+    { 
+      // turn on gas sponsorship for in-app wallets
+      // Can use EIP4337 or EIP7702 on supported chains
+      executionMode: {
+        mode: "EIP4337",
+        smartAccount: { chain: baseSepolia, sponsorGas: true },
+      },
+    }),
+  ];
 
 function App() {
   return (

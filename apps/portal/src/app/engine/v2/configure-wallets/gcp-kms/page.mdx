@@ -1,0 +1,87 @@
+import { Details } from "@doc";
+
+## Google Cloud KMS wallet
+
+A Google Cloud KMS Wallet is a wallet securely stored in your Google Cloud account. Engine can create and transact with the wallet, but not delete it.
+
+#### Setup
+
+1. [Enable Google KMS API](https://cloud.google.com/kms/docs/create-encryption-keys#before-you-begin) for your GCP account.
+1. [Create a Service Account](https://cloud.google.com/iam/docs/service-accounts-create).
+1. Navigate to the [IAM](https://console.cloud.google.com/iam-admin/iam) page. Find the service account and select **Edit Principal** to add the following roles:
+   - Cloud KMS Admin
+   - Cloud KMS CryptoKey Signer/Verifier
+1. Navigate to the [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page. Select the above service account.
+1. Navigate to the **Keys** tab. Select **Add Key > Create new key**.
+1. Select **JSON** to download the JSON file. This file contains the key's private key in plaintext.
+1. In the dashboard, navigate to **Configuration > Server Wallets**.
+1. Select **Google KMS** and provide the following:
+
+   <Details id="gcpApplicationProjectId" summary="gcpApplicationProjectId">
+
+   This is the Project ID of the GCP project where the key was created.
+
+   **Where to find**:
+
+   - Navigate to the Google Cloud Console.
+   - Click on the project dropdown at the top of the page.
+   - The Project ID is displayed under your project's name.
+
+   </Details>
+
+   <Details id="gcpKmsLocationId" summary="gcpKmsLocationId">
+
+   This is the location where the keyring was created (e.g., us-central1, europe-west1).
+
+   **Where to find**:
+
+   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
+   - Click on the keyring that contains your key.
+   - The location is displayed in the Location field.
+
+   </Details>
+
+   <Details id="gcpKmsKeyRingId" summary="gcpKmsKeyRingId">
+
+   This is the ID of the keyring where your key is stored.
+
+   **Where to find**:
+
+   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
+   - Select the keyring that contains your key.
+   - The KeyRing ID is displayed in the list or the URL.
+
+   </Details>
+
+   <Details id="gcpApplicationCredentialEmail" summary="gcpApplicationCredentialEmail">
+
+   This is the email associated with the service account used for accessing the KMS key.
+
+   **Where to find**:
+
+   - In the Google Cloud Console, go to **IAM & Admin > Service Accounts**.
+   - Find the service account you are using. its email will be in the format: `name@project.iam.gserviceaccount.com`
+
+   </Details>
+
+   <Details id="gcpApplicationCredentialPrivateKey" summary="gcpApplicationCredentialPrivateKey">
+
+   This is the private key of the service account that is used for authenticating API requests.
+
+   **Where to find**:
+
+   - Open the JSON file downloaded above.
+   - Copy the value of the `private_key` field.
+
+   </Details>
+
+#### Import an existing wallet
+
+1. Ensure your [keyring is created](https://cloud.google.com/kms/docs/create-key-ring) with the following settings:
+   - Purpose: `Asymmetric sign`
+   - Algorithm: `Elliptic Curve P-256 - SHA256 Digest`
+1. In the dashboard, navigate to **Overview > Server Wallets**.
+1. Select **Import** and provide the following:
+   - GCP KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
+   - GCP KMS Version ID (example: `1`)
+

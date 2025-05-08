@@ -42,6 +42,7 @@ export type EngineAccountOptions = {
 
 /**
  * Creates an account that uses your engine backend wallet for sending transactions and signing messages.
+ * @deprecated This for v2 dedicated engine instances, for v3 and engine cloud use Engine.serverWallet()
  *
  * @param options - The options for the engine account.
  * @returns An account that uses your engine backend wallet.
@@ -95,13 +96,19 @@ export function engineAccount(options: EngineAccountOptions): Account {
       const ENGINE_URL = new URL(engineUrl);
       ENGINE_URL.pathname = `/backend-wallet/${transaction.chainId}/send-transaction`;
 
-      const engineData: Record<string, string | undefined> = {
+      const engineData: Record<string, unknown> = {
         // add to address if we have it (is optional to pass to engine)
         toAddress: transaction.to || undefined,
         // engine wants a hex string here so we serialize it
         data: transaction.data || "0x",
         // value is always required
         value: toHex(transaction.value ?? 0n),
+        // optional authorization list
+        authorizationList: transaction.authorizationList,
+
+        txOverrides: {
+          gas: transaction.gas,
+        },
       };
 
       // TODO: gas overrides etc?

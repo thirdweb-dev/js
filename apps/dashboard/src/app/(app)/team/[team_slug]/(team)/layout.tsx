@@ -75,10 +75,6 @@ export default async function TeamLayout(props: {
               name: "Analytics",
             },
             {
-              path: `/team/${params.team_slug}/~/engine`,
-              name: "Engines",
-            },
-            {
               path: `/team/${params.team_slug}/~/ecosystem`,
               name: "Ecosystems",
             },

@@ -11,7 +11,7 @@ export async function signTransaction({
   storage,
 }: {
   client: ThirdwebClient;
-  payload: Record<string, Hex | number | undefined>;
+  payload: Record<string, unknown>;
   storage: ClientScopedStorage;
 }) {
   const authToken = await storage.getAuthCookie();

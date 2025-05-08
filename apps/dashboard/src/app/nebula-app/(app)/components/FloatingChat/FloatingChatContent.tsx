@@ -212,7 +212,6 @@ function FloatingChatContentLoggedIn(props: {
               ]
             : []
         }
-        activeAccountAddress={props.nebulaParams?.wallet}
         setActiveWallet={() => {}}
         abortChatStream={() => {
           chatAbortController?.abort();

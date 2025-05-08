@@ -1,5 +1,53 @@
 # thirdweb
 
+## 5.98.0
+
+### Minor Changes
+
+- [#6874](https://github.com/thirdweb-dev/js/pull/6874) [`e96ebba`](https://github.com/thirdweb-dev/js/commit/e96ebba2cba7ec63ba04d0d0a47c177059d6a19e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - EIP7702 support for in-app wallets
+
+  You can now turn your in-app wallets into smart accounts with 7702!
+
+  This lets you:
+
+  - sponsor transactions
+  - batch transactions
+  - add session keys
+  - and more!
+
+  simply pass the executionMode "EIP7702" to get started:
+
+  ```ts
+  const wallet = inAppWallet({
+    executionMode: {
+      mode: "EIP7702",
+      sponsorGas: true,
+    },
+  });
+  ```
+
+  Keep in mind that this will only work on chains that support 7702.
+
+## 5.97.3
+
+### Patch Changes
+
+- [#6974](https://github.com/thirdweb-dev/js/pull/6974) [`5f6403b`](https://github.com/thirdweb-dev/js/commit/5f6403bb8d5820b1ac0967920850db32b606575e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle hex value format for smart wallet execution
+
+## 5.97.2
+
+### Patch Changes
+
+- [#6969](https://github.com/thirdweb-dev/js/pull/6969) [`4e42158`](https://github.com/thirdweb-dev/js/commit/4e42158c7bcf6ae2dd064abaf1972a6529ae5449) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle hedera native currency decimal values for smart wallet calls
+
+- [#6967](https://github.com/thirdweb-dev/js/pull/6967) [`5a069fe`](https://github.com/thirdweb-dev/js/commit/5a069fe657de66fd8f64a7d41c089e32c1930ba2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always connect to destination chain if available in PayEmbed
+
+## 5.97.1
+
+### Patch Changes
+
+- [#6963](https://github.com/thirdweb-dev/js/pull/6963) [`760b250`](https://github.com/thirdweb-dev/js/commit/760b250bc30d5ccff2549c3bba322ae0cf076d51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix metamask deeplink parsing
+
 ## 5.97.0
 
 ### Minor Changes

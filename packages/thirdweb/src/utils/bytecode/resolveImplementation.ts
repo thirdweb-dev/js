@@ -48,6 +48,7 @@ export async function resolveImplementation(
 
   // check other proxy types
   let implementationAddress: string | undefined;
+
   if (beacon && beacon !== AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below

@@ -1,7 +1,7 @@
 import { createMetadata, DocImage, Grid, SDKCard, FeatureCard } from "@doc";
 import PayOverviewImage from "../assets/pay-overview.png";
 import SupportedChains from "../../../_images/supported-chains.png";
-import {Rocket, ArrowLeftRight, Wallet, Pencil, ShieldCheck, PiggyBank, Globe, Component} from "lucide-react";
+import {RocketIcon, ArrowLeftRightIcon, WalletIcon, PencilIcon, ShieldCheckIcon, PiggyBankIcon, GlobeIcon, ComponentIcon} from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
@@ -27,45 +27,45 @@ Universal Bridge allows you to create both simple and advanced payment flows for
 	<FeatureCard
 		title="Avoid chargeback & liability"
 		description="Automatic screening for sanctioned wallets and regions to ensure application safety."
-		iconUrl={<Rocket />}
+		iconUrl={<RocketIcon />}
 	/>
 
-    <FeatureCard
-    	title="Global Coverage"
-    	description="Bridging support in over 160+ countries to reach a truly global audience."
-    		iconUrl={<Globe/>}
-    />
-    <FeatureCard
-    	title="Earn revenue"
-    	description="Monetize your application and earn swap fees on each transaction."
-    		iconUrl={<PiggyBank />}
-    />
-    		<FeatureCard
-    	title="Transact Securely"
-    	description="Strict one-time approvals ensuring funds are not at risk of exploits."
-    	iconUrl={<ShieldCheck />}
-    />
-    	<FeatureCard
-    	title="Easy-to-integrate Components"
-    	description="Easily integrate components for buying funds, e-commerce checkouts, and more."
-    	iconUrl={<Component />}
-    />
+	<FeatureCard
+		title="Global Coverage"
+		description="Bridging support in over 160+ countries to reach a truly global audience."
+			iconUrl={<GlobeIcon />}
+	/>
+	<FeatureCard
+		title="Earn revenue"
+		description="Monetize your application and earn swap fees on each transaction."
+			iconUrl={<PiggyBankIcon />}
+	/>
+			<FeatureCard
+		title="Transact Securely"
+		description="Strict one-time approvals ensuring funds are not at risk of exploits."
+		iconUrl={<ShieldCheckIcon />}
+	/>
+		<FeatureCard
+		title="Easy-to-integrate Components"
+		description="Easily integrate components for buying funds, e-commerce checkouts, and more."
+		iconUrl={<ComponentIcon />}
+	/>
 
-    <FeatureCard
-    	title="Customizable Flows"
-    	description="Create your own customized headless flows using the Universal Bridge SDK or API."
-    		iconUrl={<Pencil/>}
-    />
-        <FeatureCard
-    	title="Flexible Wallet Payments"
-    	description="Enable payments with any wallet that has funds not just the one connected."
-    		iconUrl= {<Wallet />}
-    />
-        <FeatureCard
-    	title="Multi-hop Routing"
-    	description="Handle multiple swaps at once within one session for a seamless swap experience."
-    		iconUrl={<ArrowLeftRight />}
-    />
+	<FeatureCard
+		title="Customizable Flows"
+		description="Create your own customized headless flows using the Universal Bridge SDK or API."
+			iconUrl={<PencilIcon />}
+	/>
+		<FeatureCard
+		title="Flexible Wallet Payments"
+		description="Enable payments with any wallet that has funds not just the one connected."
+			iconUrl={<WalletIcon />}
+	/>
+		<FeatureCard
+		title="Multi-hop Routing"
+		description="Handle multiple swaps at once within one session for a seamless swap experience."
+			iconUrl={<ArrowLeftRightIcon />}
+	/>
 
 </div>
 

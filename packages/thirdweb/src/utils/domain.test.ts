@@ -16,6 +16,7 @@ describe("Thirdweb Domains", () => {
     bundler: "bundler.thirdweb.com",
     analytics: "c.thirdweb.com",
     insight: "insight.thirdweb.com",
+    engineCloud: "engine.thirdweb.com",
   };
 
   beforeEach(() => {

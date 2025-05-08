@@ -46,6 +46,10 @@ const links = [
 
 const toolLinks = [
   {
+    name: "Vault",
+    href: "/vault",
+  },
+  {
     name: "Chain List",
     href: "https://thirdweb.com/chainlist",
   },

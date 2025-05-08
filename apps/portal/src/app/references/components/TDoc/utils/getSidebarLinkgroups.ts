@@ -45,6 +45,7 @@ const tagsToGroup = {
   "@account": "Account",
   "@nebula": "Nebula",
   "@insight": "Insight",
+  "@engine": "Engine",
 } as const;
 
 type TagKey = keyof typeof tagsToGroup;
@@ -63,6 +64,7 @@ const sidebarGroupOrder: TagKey[] = [
   "@contract",
   "@transaction",
   "@insight",
+  "@engine",
   "@bridge",
   "@nebula",
   "@social",

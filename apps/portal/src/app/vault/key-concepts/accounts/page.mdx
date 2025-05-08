@@ -1,0 +1,36 @@
+import { Callout } from "@doc";
+
+# Accounts
+
+Vault will support 2 accounts types
+
+1. User Account (*coming soon*):
+2. Service Account
+
+## User Account
+
+User accounts can be authenticated by:
+
+1. passkey
+2. SIWE
+3. OTP (email/SMS)
+4. oauth (google etc)
+
+These are meant to be owned and operated by end-users and are ideal for integrating with consumer facing applications that want to provide a web2 like blockchain experience, while still being fully non-custodial.
+
+## Service Accounts
+
+Service accounts in thirdweb Vault provide a hierarchical security model for organizational key management, combining administrative control with precise delegation capabilities. These are ideal for applications where you have programmatic access control needs for wallets, but still want to keep the system non-custodial.
+
+<Callout variant="info" title="Engine Service Accounts">
+thirdweb uses vault service accounts to power engine
+</Callout>
+
+### Service Account Credentials
+
+A service account has two primary credentials:
+
+1. **Admin Key**: Grants access to every operation on every entity owned by the account
+2. **Rotation Code**: Used to invalidate current credentials and generate new ones during security events
+
+Service Accounts can used in combination with access-tokens to build non-custodial programmable access control for your enterprise applications.

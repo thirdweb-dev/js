@@ -1,0 +1,81 @@
+
+import { createMetadata, DocImage } from "@doc";
+import lifecycleImage from "../../assets/tx-lifecycle.webp";
+import cancelTxImage from "../../assets/cancel-transaction-button.png";
+
+# Engine Transactions
+
+Blockchain **read** calls (e.g. get token balance) are synchronous and will return the value read.
+
+Blockchain **write** calls (e.g. transfer tokens) are asynchronous:
+
+- Your app backend sends a write transaction to Engine.
+- Engine enqueues the job and returns a reference to the job: `queueId`.
+  - If `queueId` is returned, this transaction will be attempted.
+  - If `queueId` is not returned, this transaction failed to be added to the queue and will not be attempted.
+- Engine will attempt to submit the transaction from your specified backend wallet.
+  - If there is an error (failed simulation, out of gas), the transaction is set to `errored` and will not be re-attempted.
+- Engine polls to check if the transaction is mined. If it is, the transaction is set to `mined`.
+- If the transaction is not mined after some duration, Engine re-submits the transaction with aggressive gas settings. This transaction is sent with the same nonce and will be mined at most once.
+
+<DocImage
+	src={lifecycleImage}
+	alt="Transaction lifecycle"
+	className="max-w-[800px] mx-auto"
+/>
+
+## Learn what each transaction status means
+
+- **Queued**: The transaction was received by Engine and waiting in the transaction queue.
+- **Sent**: The transaction was successfully sent to RPC.
+- **Mined**: The transaction was successfully mined onchain.
+- **Cancelled**: The transaction was cancelled by the user.
+- **Errored**: The transaction failed to be sent to RPC or to the chain's nodes. This can happen for many reasons (malformed transaction, failed simulation, too low gas).
+
+## Cancelling Transactions
+
+Engine submits transactions to the blockchain within 5-10 seconds of receiving a request. During gas or traffic spikes, transactions may take longer to be mined.
+
+In some cases, your application may want to cancel the transaction, such as:
+
+- The transaction was sent in error.
+- An NFT collection's supply has run out.
+- The transaction's exchange rate has changed and should be re-attempted with a new exchange rate.
+
+When Engine receives a cancellation request:
+
+- If the transaction is completed (mined, errored, or canceled), this endpoint returns an error.
+- If the transaction is already submitted to RPC, this endpoint sends a no-op transaction with aggressive gas options to "replace" the original transaction.
+- If the transaction is not yet submitted, this endpoint will remove it from the queue.
+
+**When canceled, the transaction will not be re-attempted.** Your backend may safely re-attempt this transaction.
+
+## Cancel a transaction from the API
+
+```typescript
+// queueId was returned from a previous write request.
+
+const resp = await fetch("<engine_url>/transaction/cancel", {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/json",
+		Authorization: "Bearer <access_token>",
+	},
+	body: JSON.stringify({ queueId }),
+});
+if (resp.status === 200) {
+	console.log(`Transaction ${queueId} was canceled.`);
+}
+```
+
+Reference: [`Cancel Transaction`](https://thirdweb-engine.apidocumentation.com/reference#tag/transaction/POST/transaction/cancel)
+
+## Cancel a transaction from the dashboard
+
+Select the **Cancel** icon next to a queued transaction in the Tranasctions table.
+
+<DocImage src={cancelTxImage} />
+
+## Cancel all queued transactions
+
+Coming soon.

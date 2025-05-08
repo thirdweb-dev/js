@@ -1,11 +1,9 @@
 "use client";
 
+import { normalizeTimeISOString } from "@/lib/time";
 import { DateRangeSelector } from "components/analytics/date-range-selector";
 import { IntervalSelector } from "components/analytics/interval-selector";
-import {
-  getNebulaFiltersFromSearchParams,
-  normalizeTimeISOString,
-} from "lib/time";
+import { getNebulaFiltersFromSearchParams } from "lib/time";
 import {
   useResponsiveSearchParams,
   useSetResponsiveSearchParams,
@@ -22,7 +20,7 @@ export function NebulaAnalyticsFilter() {
   });
 
   return (
-    <div className="no-scrollbar flex items-center gap-3 overflow-auto">
+    <div className="no-scrollbar flex items-center gap-3 max-sm:overflow-auto">
       <DateRangeSelector
         range={range}
         popoverAlign="end"

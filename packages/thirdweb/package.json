@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.97.0",
+  "version": "5.98.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -138,6 +138,11 @@
       "import": "./dist/esm/exports/insight.js",
       "default": "./dist/cjs/exports/insight.js"
     },
+    "./engine": {
+      "types": "./dist/types/exports/engine.d.ts",
+      "import": "./dist/esm/exports/engine.js",
+      "default": "./dist/cjs/exports/engine.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -231,6 +236,7 @@
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/react-tooltip": "1.2.3",
     "@tanstack/react-query": "5.74.4",
+    "@thirdweb-dev/engine": "workspace:*",
     "@thirdweb-dev/insight": "workspace:*",
     "@walletconnect/ethereum-provider": "2.20.1",
     "@walletconnect/sign-client": "2.20.1",

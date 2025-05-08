@@ -181,14 +181,15 @@ export function prepareExecute(args: {
   if (execute) {
     return execute(accountContract, transaction);
   }
+  let value = transaction.value || 0n;
+  // special handling of hedera chains, decimals for native value is 8 instead of 18 when passed as contract params
+  if (transaction.chainId === 295 || transaction.chainId === 296) {
+    value = BigInt(value) / BigInt(10 ** 10);
+  }
   return prepareContractCall({
     contract: accountContract,
     method: "function execute(address, uint256, bytes)",
-    params: [
-      transaction.to || "",
-      transaction.value || 0n,
-      transaction.data || "0x",
-    ],
+    params: [transaction.to || "", value, transaction.data || "0x"],
     // if gas is specified for the inner tx, use that and add 21k for the execute call on the account contract
     // this avoids another estimateGas call when bundling the userOp
     // and also allows for passing custom gas limits for the inner tx
@@ -215,12 +216,18 @@ export function prepareBatchExecute(args: {
   if (executeBatch) {
     return executeBatch(accountContract, transactions);
   }
+  let values = transactions.map((tx) => tx.value || 0n);
+  const chainId = transactions[0]?.chainId;
+  // special handling of hedera chains, decimals for native value is 8 instead of 18 when passed as contract params
+  if (chainId === 295 || chainId === 296) {
+    values = values.map((value) => BigInt(value) / BigInt(10 ** 10));
+  }
   return prepareContractCall({
     contract: accountContract,
     method: "function executeBatch(address[], uint256[], bytes[])",
     params: [
       transactions.map((tx) => tx.to || ""),
-      transactions.map((tx) => tx.value || 0n),
+      values,
       transactions.map((tx) => tx.data || "0x"),
     ],
   });

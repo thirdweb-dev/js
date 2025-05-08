@@ -1,0 +1,28 @@
+import { createMetadata, Details } from "@doc";
+import { Callout } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Server Wallets | thirdweb Engine",
+	description:
+		"Engine performs blockchain actions using server wallets that you own and manage.",
+});
+
+## Create a wallet
+
+For AWS or Google Cloud KMS wallets, you must provide your credentials.
+
+1. In the dashboard, navigate to **Overview > Server Wallets**.
+1. Select **Create**.
+1. (Optional) Provide a label to organize your wallets.
+
+Circle wallets require creating a [Credential](/engine/v2/features/wallet-credentials) first before creating a wallet.
+
+## Import a wallet
+
+For AWS or Google Cloud KMS wallets, you must provide your credentials.
+
+1. In the dashboard, navigate to **Overview > Server Wallets**.
+1. Select **Import**.
+1. Provide the requested fields.
+   - See above for instructions for specific wallet types.
+

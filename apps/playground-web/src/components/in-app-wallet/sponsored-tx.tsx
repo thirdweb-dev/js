@@ -44,9 +44,13 @@ export function SponsoredInAppTxPreview() {
                   "guest",
                 ],
               },
-              smartAccount: {
-                chain: baseSepolia,
-                sponsorGas: true,
+              // TODO (7702): update to 7702 once pectra is out
+              executionMode: {
+                mode: "EIP4337",
+                smartAccount: {
+                  chain: baseSepolia,
+                  sponsorGas: true,
+                },
               },
             }),
           ]}

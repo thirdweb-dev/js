@@ -15,7 +15,6 @@ export function EmptyStateChatPageContent(props: {
   context: NebulaContext | undefined;
   setContext: (context: NebulaContext | undefined) => void;
   connectedWallets: WalletMeta[];
-  activeAccountAddress: string | undefined;
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
   showAurora: boolean;
@@ -49,7 +48,6 @@ export function EmptyStateChatPageContent(props: {
             isChatStreaming={false}
             client={nebulaAppThirdwebClient}
             connectedWallets={props.connectedWallets}
-            activeAccountAddress={props.activeAccountAddress}
             setActiveWallet={props.setActiveWallet}
             abortChatStream={() => {
               // the page will switch so, no need to handle abort here
