@@ -214,7 +214,7 @@ export const sidebar: SideBar = {
             },
             {
               name: "Migration Guide",
-              href: `${walletSlug}//web3-onboard/migration-guide`,
+              href: `${walletSlug}/web3-onboard/migration-guide`,
             },
           ],
         },
