@@ -2,6 +2,7 @@ import * as ox__Hex from "ox/Hex";
 import { formatTransactionRequest } from "viem";
 import { roundUpGas } from "../../gas/op-gas-fee-reducer.js";
 import { getAddress } from "../../utils/address.js";
+import { hexToBytes } from "../../utils/encoding/to-bytes.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
@@ -122,7 +123,6 @@ export async function estimateGas(
           data: encodedData,
           from: fromAddress ? getAddress(fromAddress) : undefined,
           value,
-          // TODO: Remove this casting when we migrate this file to Ox
           authorizationList: authorizationList?.map((auth) => ({
             ...auth,
             r: ox__Hex.fromNumber(auth.r),
@@ -130,6 +130,15 @@ export async function estimateGas(
             nonce: Number(auth.nonce),
             contractAddress: getAddress(auth.address),
           })),
+          ...(authorizationList && authorizationList?.length > 0
+            ? {
+                gas:
+                  minGas(
+                    hexToBytes(encodedData),
+                    BigInt(authorizationList?.length ?? 0),
+                  ) + 100_000n,
+              }
+            : {}),
         }),
       );
 
@@ -146,4 +155,20 @@ export async function estimateGas(
   })();
   cache.set(txWithFrom, promise);
   return promise;
+}
+
+// EIP-7623 + EIP-7702 floor calculation
+const TxGas = 21_000n;
+const TxCostFloorPerToken = 10n; // params.TxCostFloorPerToken
+const TxTokenPerNonZero = 4n; // params.TxTokenPerNonZeroByte
+const TxAuthTupleGas = 12_500n;
+
+function minGas(data: Uint8Array, authCount = 0n) {
+  let nz = 0n;
+  for (const b of data) if (b !== 0) nz++;
+  const z = BigInt(data.length) - nz;
+  const tokens = nz * TxTokenPerNonZero + z;
+  const floor = TxGas + tokens * TxCostFloorPerToken;
+  const intrinsic = TxGas + authCount * TxAuthTupleGas;
+  return floor > intrinsic ? floor : intrinsic;
 }

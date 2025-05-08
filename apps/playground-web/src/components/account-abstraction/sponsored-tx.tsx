@@ -36,11 +36,12 @@ export function SponsoredTxPreview() {
     contract: editionDropContract,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: smartAccount?.address!,
+    useIndexer: false,
     queryOptions: { enabled: !!smartAccount },
   });
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-4">
       {isNftLoading ? (
         <div className="mt-24 w-full">Loading...</div>
       ) : (
@@ -63,14 +64,14 @@ export function SponsoredTxPreview() {
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "400px", marginTop: "10px" }}
+              style={{ width: "300px", marginTop: "10px" }}
             />
           ) : null}
           {smartAccount ? (
             <div className="flex flex-col justify-center p-2">
               <p className="mb-2 text-center font-semibold">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
-                Kittens
+                {nft?.metadata?.name}
               </p>
               <TransactionButton
                 transaction={() =>
@@ -94,7 +95,7 @@ export function SponsoredTxPreview() {
                   setTxHash(receipt.transactionHash);
                 }}
               >
-                Mint
+                Mint with EIP-4337
               </TransactionButton>
             </div>
           ) : null}

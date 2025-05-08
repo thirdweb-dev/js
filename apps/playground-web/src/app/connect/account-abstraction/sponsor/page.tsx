@@ -7,21 +7,17 @@ import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Sponsored transactions | thirdweb Connect",
-  description:
-    "Easily enable gas-free transactions for your users, Free on testnets, billed at the end of the month on mainnets.",
+  title: "EIP-4337 Smart Contract Wallets | thirdweb Connect",
+  description: "Turn any EOA into a smart contract wallet with EIP-4337.",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Sponsored transactions"
+        title="EIP-4337 Smart Contract Wallets"
         description={
-          <>
-            Easily enable gas-free transactions for your users, Free on
-            testnets, billed at the end of the month on mainnets.
-          </>
+          <>Turn any EOA into a smart contract wallet with EIP-4337.</>
         }
         docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
       >

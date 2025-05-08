@@ -10,7 +10,7 @@ import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
+  title: "Account Abstraction | thirdweb Connect",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
 };

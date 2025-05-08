@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../interfaces/wallet.js";
-import type { CreateWalletArgs } from "../../wallet-types.js";
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
+import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
 
 /**
  * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure).
@@ -251,7 +251,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * @wallet
  */
 export function inAppWallet(
-  createOptions?: CreateWalletArgs<"inApp">[1],
+  createOptions?: InAppWalletCreationOptions,
 ): Wallet<"inApp"> {
   return createInAppWallet({
     createOptions,
