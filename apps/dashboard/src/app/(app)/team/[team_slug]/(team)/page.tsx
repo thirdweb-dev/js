@@ -3,7 +3,13 @@ import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { subDays } from "date-fns";
+import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../../../@/components/ui/alert";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { InviteTeamMembersButton } from "./_components/invite-team-members-button";
@@ -50,12 +56,20 @@ export default async function Page(props: {
         </div>
       </div>
 
-      <div className="container flex grow flex-col pt-8 pb-20">
+      <div className="container flex grow flex-col gap-6 pt-8 pb-20">
         <TeamProjectsPage
           projects={projectsWithTotalWallets}
           team={team}
           client={client}
         />
+        <Alert variant={"info"}>
+          <CircleAlertIcon className="h-4 w-4" />
+          <AlertTitle>Looking for Engines?</AlertTitle>
+          <AlertDescription>
+            Engines have moved inside projects. Open or create a project to
+            manage your engines.
+          </AlertDescription>
+        </Alert>
       </div>
     </div>
   );
