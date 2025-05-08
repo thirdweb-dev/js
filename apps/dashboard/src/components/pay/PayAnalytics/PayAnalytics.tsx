@@ -1,107 +1,102 @@
-"use client";
-
-import { useState } from "react";
-import {
-  DateRangeSelector,
-  type Range,
-  getLastNDaysRange,
-} from "../../analytics/date-range-selector";
-import { PayCustomersTable } from "./components/PayCustomersTable";
-import { PayNewCustomers } from "./components/PayNewCustomers";
-import { PaymentHistory } from "./components/PaymentHistory";
-import { PaymentsSuccessRate } from "./components/PaymentsSuccessRate";
+import { getLastNDaysRange } from "../../analytics/date-range-selector";
 import { Payouts } from "./components/Payouts";
 import { TotalPayVolume } from "./components/TotalPayVolume";
 import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
+import { PaymentsSuccessRate } from "./components/PaymentsSuccessRate";
+import { PayNewCustomers } from "./components/PayNewCustomers";
+import { PayCustomersTable } from "./components/PayCustomersTable";
+import {
+  getUniversalBridgeUsage,
+  getUniversalBridgeWalletUsage,
+} from "@/api/analytics";
+import { useMemo } from "react";
 
-export function PayAnalytics(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
-  clientId: string;
+export async function PayAnalytics(props: {
   // switching to projectId for lookup, but have to send both during migration
   projectId: string;
   teamId: string;
 }) {
-  const clientId = props.clientId;
   const projectId = props.projectId;
   const teamId = props.teamId;
-  const [range, setRange] = useState<Range>(() =>
-    getLastNDaysRange("last-120"),
-  );
-
+  const range = getLastNDaysRange("last-120");
   const numberOfDays = Math.round(
     (range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24),
   );
+  const [period, dateFormat]: [
+    "day" | "week" | "month",
+    {
+      month: "short" | "long";
+      day?: "numeric" | "2-digit";
+    },
+  ] = useMemo(() => {
+    if (numberOfDays > 90) {
+      return ["month", { month: "short" }];
+    }
+    if (numberOfDays > 30) {
+      return ["week", { month: "short", day: "numeric" }];
+    }
+    return ["day", { month: "short", day: "numeric" }];
+  }, [numberOfDays]);
+
+  const volumeData = await getUniversalBridgeUsage({
+    teamId: teamId,
+    projectId: projectId,
+    from: range.from,
+    to: range.to,
+    period,
+  }).catch((error) => {
+    console.error(error);
+    return [];
+  });
+  const walletData = await getUniversalBridgeWalletUsage({
+    teamId: teamId,
+    projectId: projectId,
+    from: range.from,
+    to: range.to,
+    period,
+  }).catch((error) => {
+    console.error(error);
+    return [];
+  });
+  console.log(walletData);
 
   return (
     <div>
       <div className="mb-4 flex">
-        <DateRangeSelector range={range} setRange={setRange} />
+        {/* <DateRangeSelector range={range} setRange={() => {}} /> */}
       </div>
       <div className="flex flex-col gap-10 lg:gap-6">
         <GridWithSeparator>
           <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
             <TotalVolumePieChart
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
+              data={volumeData?.filter((x) => x.status === "completed") || []}
             />
           </div>
           <TotalPayVolume
-            clientId={clientId}
-            projectId={projectId}
-            teamId={teamId}
-            from={range.from}
-            to={range.to}
-            numberOfDays={numberOfDays}
+            data={volumeData?.filter((x) => x.status === "completed") || []}
+            dateFormat={dateFormat}
           />
         </GridWithSeparator>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           <CardContainer>
             <Payouts
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-              numberOfDays={numberOfDays}
+              data={volumeData?.filter((x) => x.status === "completed") || []}
+              dateFormat={dateFormat}
             />
           </CardContainer>
           <CardContainer>
-            <PaymentsSuccessRate
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-            />
+            <PaymentsSuccessRate data={volumeData || []} />
           </CardContainer>
         </div>
 
         <GridWithSeparator>
           <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
-            <PayNewCustomers
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-              numberOfDays={numberOfDays}
-            />
+            <PayNewCustomers data={walletData || []} dateFormat={dateFormat} />
           </div>
-          <PayCustomersTable
-            clientId={clientId}
-            projectId={projectId}
-            teamId={teamId}
-            from={range.from}
-            to={range.to}
-          />
+          <PayCustomersTable data={walletData || []} />
         </GridWithSeparator>
-
+        {/*
         <CardContainer>
           <PaymentHistory
             clientId={clientId}
@@ -111,6 +106,7 @@ export function PayAnalytics(props: {
             to={range.to}
           />
         </CardContainer>
+         */}
       </div>
     </div>
   );

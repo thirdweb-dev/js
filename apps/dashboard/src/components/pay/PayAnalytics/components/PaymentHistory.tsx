@@ -1,3 +1,4 @@
+"use client";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";

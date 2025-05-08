@@ -1,211 +1,79 @@
+"use client";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useMemo } from "react";
+import type { UniversalBridgeWalletStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
 import {
-  type PayTopCustomersData,
-  usePayCustomers,
-} from "../hooks/usePayCustomers";
-import {
-  FailedToLoad,
   TableData,
   TableHeading,
   TableHeadingRow,
+  CardHeading,
 } from "./common";
 
-type UIData = {
-  customers: Array<{
-    walletAddress: string;
-    totalSpendUSDCents: number;
-  }>;
-  showLoadMore: boolean;
-};
-
-type ProcessedQuery = {
-  data?: UIData;
-  isError?: boolean;
-  isPending?: boolean;
-  isEmpty?: boolean;
-};
-
-function processQuery(
-  topCustomersQuery: ReturnType<typeof usePayCustomers>,
-): ProcessedQuery {
-  if (topCustomersQuery.isPending) {
-    return { isPending: true };
-  }
-
-  if (topCustomersQuery.isError) {
-    return { isError: true };
-  }
-
-  if (!topCustomersQuery.data) {
-    return { isEmpty: true };
-  }
-
-  let customers = topCustomersQuery.data.pages.flatMap(
-    (x) => x.pageData.customers,
-  );
-
-  customers = customers?.filter((x) => x.totalSpendUSDCents > 0);
-
-  if (customers.length === 0) {
-    return { isEmpty: true };
-  }
-
-  return {
-    data: {
-      customers,
-      showLoadMore: !!topCustomersQuery.hasNextPage,
-    },
-  };
-}
+type PayTopCustomersData = Array<{
+  walletAddress: string;
+  totalSpendUSDCents: number;
+}>;
 
 export function PayCustomersTable(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
-  clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
-  from: Date;
-  to: Date;
+  data: UniversalBridgeWalletStats[];
 }) {
-  const [type, setType] = useState<"top-customers" | "new-customers">(
-    "top-customers",
-  );
-
-  const topCustomersQuery = usePayCustomers({
-    /**
-     *  @deprecated - remove after migration
-     */
-    clientId: props.clientId,
-    // switching to projectId for lookup, but have to send both during migration
-    projectId: props.projectId,
-    teamId: props.teamId,
-    from: props.from,
-    to: props.to,
-    pageSize: 100,
-    type,
-  });
-
-  const uiQuery = processQuery(topCustomersQuery);
-
-  const customersData = uiQuery.data?.customers;
+  const tableData = useMemo(() => {
+    return getTopCustomers(props.data);
+  }, [props.data]);
+  const isEmpty = useMemo(() => tableData.length === 0, [tableData]);
 
   return (
     <div className="flex flex-col">
       {/* header */}
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <Select
-          value={type}
-          onValueChange={(value: "top-customers" | "new-customers") => {
-            setType(value);
-          }}
-        >
-          <SelectTrigger className="w-auto border-none bg-transparent p-0 text-base focus:ring-transparent">
-            <SelectValue placeholder="Select" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="top-customers">
-              Top Customers By Spend
-            </SelectItem>
-            <SelectItem value="new-customers"> New Customers </SelectItem>
-          </SelectContent>
-        </Select>
+        <CardHeading>Top Customers </CardHeading>
 
-        {customersData && (
+        {tableData && (
           <ExportToCSVButton
             fileName="top_customers"
             getData={async () => {
-              return getCSVData(customersData);
+              return getCSVData(tableData);
             }}
           />
         )}
       </div>
 
-      {!uiQuery.isError ? (
-        <>
-          <div className="h-5" />
-          <RenderData
-            query={uiQuery}
-            loadMore={() => {
-              topCustomersQuery.fetchNextPage();
-            }}
-          />
-        </>
-      ) : (
-        <FailedToLoad />
-      )}
+      <div className="h-5" />
+      <ScrollShadow
+        className="overflow-hidden rounded-lg border"
+        scrollableClassName="h-[280px]"
+        disableTopShadow={true}
+      >
+        <table className="w-full">
+          <thead>
+            <TableHeadingRow>
+              <TableHeading> Wallet Address </TableHeading>
+              <TableHeading> Total spend </TableHeading>
+            </TableHeadingRow>
+          </thead>
+          <tbody className="relative">
+            {tableData.map((customer, i) => {
+              return (
+                <CustomerTableRow
+                  key={customer.walletAddress}
+                  customer={customer}
+                  rowIndex={i}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+        {isEmpty && (
+          <div className="flex min-h-[240px] w-full items-center justify-center text-muted-foreground text-sm">
+            No data available
+          </div>
+        )}
+      </ScrollShadow>
     </div>
-  );
-}
-
-function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
-  return (
-    <ScrollShadow
-      className="overflow-hidden rounded-lg border"
-      scrollableClassName="h-[280px]"
-      disableTopShadow={true}
-    >
-      <table className="w-full">
-        <thead>
-          <TableHeadingRow>
-            <TableHeading> Wallet Address </TableHeading>
-            <TableHeading> Total spend </TableHeading>
-          </TableHeadingRow>
-        </thead>
-        <tbody className="relative">
-          {props.query.isPending ? (
-            <>
-              {new Array(5).fill(0).map((_, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                <CustomerTableRow rowIndex={i} key={i} />
-              ))}
-            </>
-          ) : (
-            <>
-              {props.query.data?.customers.map((customer, i) => {
-                return (
-                  <CustomerTableRow
-                    key={customer.walletAddress}
-                    customer={customer}
-                    rowIndex={i}
-                  />
-                );
-              })}
-            </>
-          )}
-        </tbody>
-      </table>
-      {props.query.isEmpty && (
-        <div className="flex min-h-[240px] w-full items-center justify-center text-muted-foreground text-sm">
-          No data available
-        </div>
-      )}
-      {props.query.data?.showLoadMore && (
-        <div className="flex justify-center py-3">
-          <Button
-            className="h-auto p-2 text-link-foreground text-sm"
-            variant="ghost"
-            onClick={props.loadMore}
-          >
-            View More
-          </Button>
-        </div>
-      )}
-    </ScrollShadow>
   );
 }
 
@@ -246,7 +114,7 @@ function CustomerTableRow(props: {
   );
 }
 
-function getCSVData(data: PayTopCustomersData["customers"]) {
+function getCSVData(data: PayTopCustomersData) {
   const header = ["Wallet Address", "Total spend"];
   const rows = data.map((customer) => [
     customer.walletAddress,
@@ -254,4 +122,26 @@ function getCSVData(data: PayTopCustomersData["customers"]) {
   ]);
 
   return { header, rows };
+}
+
+export function getTopCustomers(data: UniversalBridgeWalletStats[]) {
+  const customers = new Set<string>();
+  for (const item of data) {
+    if (!customers.has(item.walletAddress) && item.amountUsdCents > 0) {
+      customers.add(item.walletAddress);
+    }
+  }
+  const customersData = [];
+  for (const customer of customers) {
+    const totalSpend = data
+      .filter((x) => x.walletAddress === customer)
+      .reduce((acc, curr) => acc + curr.amountUsdCents, 0);
+    customersData.push({
+      walletAddress: customer,
+      totalSpendUSDCents: totalSpend,
+    });
+  }
+  return customersData.sort(
+    (a, b) => b.totalSpendUSDCents - a.totalSpendUSDCents,
+  );
 }
