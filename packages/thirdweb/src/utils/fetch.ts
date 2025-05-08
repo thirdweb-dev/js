@@ -8,7 +8,6 @@ import {
   detectPlatform,
 } from "./detect-platform.js";
 import { getServiceKey } from "./domains.js";
-import { isJWT } from "./jwt/is-jwt.js";
 import { IS_DEV } from "./process.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
@@ -45,39 +44,29 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       if (!headers) {
         headers = new Headers();
       }
-      // auth token if secret key === jwt
-      const authToken =
-        useAuthToken && client.secretKey && isJWT(client.secretKey)
-          ? client.secretKey
-          : undefined;
-      // secret key if secret key !== jwt
-      const secretKey =
-        client.secretKey && !isJWT(client.secretKey)
-          ? client.secretKey
-          : undefined;
-      const clientId = client.clientId;
 
-      // if we have an auth token set, use that (thirdweb dashboard sets this for the user)
+      // if we have an auth token set & useAuthToken is true, use the auth token (thirdweb dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
       if (
-        authToken &&
+        useAuthToken &&
+        client.authToken &&
         !isPayUrl(urlString) &&
         !isInAppWalletUrl(urlString) &&
         !isBundlerUrl(urlString)
       ) {
-        headers.set("authorization", `Bearer ${authToken}`);
+        headers.set("authorization", `Bearer ${client.authToken}`);
         // if we have a specific teamId set, add it to the request headers
         if (client.teamId) {
           headers.set("x-team-id", client.teamId);
         }
       }
-
-      if (secretKey) {
-        headers.set("x-secret-key", secretKey);
+      // never set BOTH auth header and secret key header at the same time, auth header takes precedence
+      else if (client.secretKey) {
+        headers.set("x-secret-key", client.secretKey);
       }
 
-      if (clientId) {
-        headers.set("x-client-id", clientId);
+      if (client.clientId) {
+        headers.set("x-client-id", client.clientId);
       }
 
       if (ecosystem) {

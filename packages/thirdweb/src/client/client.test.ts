@@ -29,15 +29,23 @@ describe("client", () => {
     it("should accept a jwt being passed", () => {
       const client = createThirdwebClient({
         clientId: "foo",
-        secretKey: "bar.baz.qux",
+        authToken: "bar.baz.qux",
       });
       expect(client.clientId).toBe("foo");
-      expect(client.secretKey).toBe("bar.baz.qux");
+      expect(client.authToken).toBe("bar.baz.qux");
+      expect(client.secretKey).toBeUndefined();
     });
-    it("should throw if clientId is missing with JWT input", () => {
+
+    it("should throw an error if authToken is passed as secretKey", () => {
       expect(() =>
         createThirdwebClient({ secretKey: "bar.baz.qux" }),
-      ).toThrowError(/clientId must be provided when using a JWT secretKey/);
+      ).toThrowError(/have to pass authToken directly/);
+    });
+
+    it("should throw if clientId is missing with JWT input", () => {
+      expect(() =>
+        createThirdwebClient({ authToken: "bar.baz.qux", secretKey: "foo" }),
+      ).toThrowError(/have to pass clientId when passing authToken/);
     });
   });
 });

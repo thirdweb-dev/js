@@ -62,10 +62,12 @@ export type CreateThirdwebClientOptions = Prettify<
     | {
         clientId: string;
         secretKey?: string;
+        authToken?: string;
       }
     | {
         clientId?: string;
         secretKey: string;
+        authToken?: string;
       }
   ) &
     ClientOptions
@@ -74,6 +76,11 @@ export type CreateThirdwebClientOptions = Prettify<
 export type ThirdwebClient = {
   readonly clientId: string;
   readonly secretKey: string | undefined;
+  /**
+   * The auth token for thirdweb dashboard usage.
+   * @hidden
+   */
+  readonly authToken: string | undefined;
 } & Readonly<ClientOptions>;
 
 /**
@@ -109,16 +116,18 @@ export type ThirdwebClient = {
 export function createThirdwebClient(
   options: CreateThirdwebClientOptions,
 ): ThirdwebClient {
-  const { clientId, secretKey, ...rest } = options;
+  const { clientId, secretKey, authToken, ...rest } = options;
 
   let realClientId: string | undefined = clientId;
 
+  if (authToken && !clientId) {
+    // always HAVE to also pass clientId when passing auth token
+    throw new Error("have to pass clientId when passing authToken");
+  }
+
   if (secretKey) {
     if (isJWT(secretKey)) {
-      // when passing a JWT as secret key we HAVE to also have a clientId
-      if (!clientId) {
-        throw new Error("clientId must be provided when using a JWT secretKey");
-      }
+      throw new Error("have to pass authToken directly");
     } else {
       // always PREFER the clientId if provided, only compute it from the secretKey if we don't have a clientId passed explicitly
       realClientId = clientId ?? computeClientIdFromSecretKey(secretKey);
@@ -132,6 +141,7 @@ export function createThirdwebClient(
 
   return {
     ...rest,
+    authToken,
     clientId: realClientId,
     secretKey,
   } as const;

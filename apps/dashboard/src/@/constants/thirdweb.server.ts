@@ -79,7 +79,8 @@ export function getThirdwebClient(
 
   return createThirdwebClient({
     teamId: options?.teamId,
-    secretKey: options?.jwt ? options.jwt : DASHBOARD_THIRDWEB_SECRET_KEY,
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    authToken: options?.jwt ?? undefined,
     clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
     config: {
       storage: {
