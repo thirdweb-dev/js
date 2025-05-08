@@ -2,52 +2,8 @@
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ImageIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  Loader2,
-} from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import Link from "next/link";
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Form } from "@/components/ui/form";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
-import { deployContractfromDeployMetadata } from "thirdweb/deploys";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { defineChain } from "thirdweb/chains";
-import { toast } from "sonner";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { upload } from "thirdweb/storage";
-import { Fieldset } from "components/contract-components/contract-deploy-form/common";
-import { FileInput } from "components/shared/FileInput";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -55,6 +11,50 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Fieldset } from "components/contract-components/contract-deploy-form/common";
+import { BasisPointsInput } from "components/inputs/BasisPointsInput";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { FileInput } from "components/shared/FileInput";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ImageIcon,
+  Loader2,
+} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { defineChain } from "thirdweb/chains";
+import {
+  arbitrum,
+  avalanche,
+  base,
+  ethereum,
+  optimism,
+  polygon,
+} from "thirdweb/chains";
+import { getContract } from "thirdweb/contract";
+import { deployERC721Contract } from "thirdweb/deploys";
+import { setClaimConditions } from "thirdweb/extensions/erc721";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "thirdweb/react";
+import { upload } from "thirdweb/storage";
+import { sendTransaction } from "thirdweb/transaction";
+import * as z from "zod";
 
 // Form schemas
 const collectionInfoSchema = z.object({
@@ -101,7 +101,7 @@ const StepIndicator = ({
           ? "bg-primary text-primary-foreground"
           : currentStep > step
             ? "bg-primary/20 text-primary"
-            : "bg-muted text-muted-foreground"
+            : "bg-muted text-muted-foreground",
       )}
     >
       {currentStep > step ? (
@@ -119,13 +119,13 @@ export default function CreateNFTPage() {
   const [collectionInfo, setCollectionInfo] =
     useState<CollectionInfoValues | null>(null);
   const [mintSettings, setMintSettings] = useState<MintSettingsValues | null>(
-    null
+    null,
   );
   const [showRoyaltySettings, setShowRoyaltySettings] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const router = useDashboardRouter();
-  const params = router.params;
   const activeAccount = useActiveAccount();
+  const activeChain = useActiveWalletChain();
   const switchChain = useSwitchActiveWalletChain();
   const thirdwebClient = useThirdwebClient();
   const connectedAddress = activeAccount?.address;
@@ -136,7 +136,7 @@ export default function CreateNFTPage() {
     defaultValues: {
       name: "",
       symbol: "",
-      chain: "Ethereum",
+      chain: activeChain?.id ? activeChain.id.toString() : "Ethereum",
       description: "",
       asCollection: true,
       image: undefined,
@@ -302,7 +302,10 @@ export default function CreateNFTPage() {
                   <NetworkSelectorButton
                     className="bg-background"
                     onSwitchChain={(chain) => {
-                      collectionInfoForm.setValue("chain", chain.name);
+                      collectionInfoForm.setValue(
+                        "chain",
+                        chain.chainId?.toString() || "",
+                      );
                     }}
                   />
                 </FormFieldSetup>
@@ -372,7 +375,6 @@ export default function CreateNFTPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ETH">ETH</SelectItem>
-                        <SelectItem value="USD">USD</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -454,7 +456,7 @@ export default function CreateNFTPage() {
                             onChange={() =>
                               mintSettingsForm.setValue(
                                 "collectionType",
-                                "existing"
+                                "existing",
                               )
                             }
                           />
@@ -480,7 +482,7 @@ export default function CreateNFTPage() {
                             onChange={() =>
                               mintSettingsForm.setValue(
                                 "collectionType",
-                                "project"
+                                "project",
                               )
                             }
                           />
@@ -564,7 +566,7 @@ export default function CreateNFTPage() {
                     >
                       <BasisPointsInput
                         value={Number(
-                          mintSettingsForm.watch("royaltyPercentage")
+                          mintSettingsForm.watch("royaltyPercentage"),
                         )}
                         onChange={(value) =>
                           mintSettingsForm.setValue(
@@ -572,7 +574,7 @@ export default function CreateNFTPage() {
                             value.toString(),
                             {
                               shouldTouch: true,
-                            }
+                            },
                           )
                         }
                       />
@@ -716,7 +718,7 @@ export default function CreateNFTPage() {
                 <p className="text-muted-foreground text-sm">Platform Fee:</p>
                 <p>
                   {(Number(mintSettings?.platformFeeBps || 250) / 100).toFixed(
-                    2
+                    2,
                   )}
                   %
                 </p>
@@ -735,7 +737,7 @@ export default function CreateNFTPage() {
                 </p>
                 <p>
                   {(Number(mintSettings?.royaltyPercentage || 0) / 100).toFixed(
-                    2
+                    2,
                   )}
                   %
                 </p>
@@ -824,28 +826,71 @@ export default function CreateNFTPage() {
         throw new Error("Missing required collection information");
       }
 
-      // Get wallet chain
-      const chainId = parseInt(collectionInfo.chain, 10);
-      const walletChain = isNaN(chainId)
-        ? defineChain({ name: collectionInfo.chain.toLowerCase() })
-        : defineChain({ chainId });
+      // Get the appropriate chain
+      let chain;
+      const chainName = collectionInfo.chain.toLowerCase();
+      switch (chainName) {
+        case "ethereum":
+          chain = ethereum;
+          break;
+        case "polygon":
+          chain = polygon;
+          break;
+        case "optimism":
+          chain = optimism;
+          break;
+        case "arbitrum":
+          chain = arbitrum;
+          break;
+        case "avalanche":
+          chain = avalanche;
+          break;
+        case "base":
+          chain = base;
+          break;
+        default:
+          // Try to parse as a chain ID
+          const chainId = Number.parseInt(collectionInfo.chain, 10);
+          if (!isNaN(chainId)) {
+            chain = defineChain(chainId);
+          } else {
+            console.log("Unsupported chain:", collectionInfo);
+            throw new Error(`Unsupported chain: ${collectionInfo.chain}`);
+          }
+      }
 
-      console.log("Using chain:", walletChain);
+      console.log("Using chain:", chain);
 
       // Switch network if needed
-      await switchChain({ chain: walletChain });
+      await switchChain(chain);
 
       // Handle collection image
       let imageUri = "";
       if (collectionInfo.image) {
         try {
-          const imageFile = await fetch(collectionInfo.image).then((r) =>
-            r.blob()
-          );
-          imageUri = await upload({
-            client: thirdwebClient,
-            data: [imageFile],
+          const imageFile = await fetch(
+            typeof collectionInfo.image === "string"
+              ? collectionInfo.image
+              : URL.createObjectURL(collectionInfo.image as Blob),
+          ).then((r) => r.blob());
+
+          // Convert Blob to File with a name
+          const file = new File([imageFile], "collection-image.png", {
+            type: imageFile.type || "image/png",
           });
+
+          // Upload the image using the correct format
+          const uploadResult = await upload({
+            client: thirdwebClient,
+            files: [file],
+          });
+
+          // Ensure imageUri is always a string
+          if (uploadResult) {
+            imageUri = Array.isArray(uploadResult)
+              ? uploadResult[0]
+              : uploadResult;
+          }
         } catch (err) {
           console.error("Error uploading image:", err);
         }
@@ -860,38 +905,70 @@ export default function CreateNFTPage() {
           mintSettings.royaltyAddress || activeAccount.address,
         fee_recipient: mintSettings.royaltyAddress || activeAccount.address,
         seller_fee_basis_points:
-          parseInt(mintSettings.royaltyPercentage || "0") * 100,
+          Number.parseInt(mintSettings.royaltyPercentage || "0") * 100,
       };
 
       console.log("Deploying with parameters:", initializeParams);
 
-      // Deploy the contract
-      const contractAddress = await deployContractfromDeployMetadata({
+      const contractAddress = await deployERC721Contract({
+        chain,
         client: thirdwebClient,
-        signer: activeAccount,
-        contractMetadata: {
-          name: collectionInfo.name,
-          description: collectionInfo.description || "",
-          image: imageUri,
-          external_link: "",
-        },
-        publishMetadata: {
-          name: "NFTCollection",
-          publisherAddress: activeAccount.address,
-        },
-        constructorParams: initializeParams,
+        account: activeAccount,
+        type: "DropERC721",
+        params: initializeParams,
       });
 
-      toast.success("NFT Collection deployed successfully!");
+      // Get a reference to the deployed contract
+      const contract = getContract({
+        client: thirdwebClient,
+        chain,
+        address: contractAddress,
+      });
 
-      // Navigate to the collection's page
-      router.push(
-        `/team/${teamSlug}/${projectSlug}/contracts/${contractAddress}`
-      );
+      // Set up claim conditions for the NFT collection
+      console.log("Setting up claim conditions...");
+      const priceValue = Number.parseFloat(mintSettings.price) || 0.1;
+      const maxSupply = BigInt(mintSettings.supply) || 10000n;
+
+      try {
+        const transaction = setClaimConditions({
+          contract,
+          phases: [
+            {
+              maxClaimableSupply: maxSupply,
+              maxClaimablePerWallet: 1n,
+              price: priceValue,
+              currencyAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", // Native token (ETH, MATIC, etc.)
+              startTime: new Date(),
+              overrideList: [
+                { address: activeAccount.address, maxClaimable: "unlimited" }, // this wallet can claim a given amount, or "unlimited"
+              ],
+              metadata: {
+                name: "Claim Phase",
+              },
+            },
+          ],
+        });
+
+        await sendTransaction({ transaction, account: activeAccount });
+        console.log("Claim conditions set successfully!");
+
+        toast.success("NFT Collection deployed successfully!");
+
+        // Navigate to the collection's page
+        setTimeout(() => {
+          router.push(`/${chain.id}/${contractAddress}`);
+        }, 2000);
+      } catch (error) {
+        console.error("Error setting claim conditions:", error);
+        toast.error(
+          `Failed to set claim conditions: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
+      }
     } catch (error) {
       console.error("Error deploying NFT collection:", error);
       toast.error(
-        `Failed to deploy NFT collection: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to deploy NFT collection: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     } finally {
       setIsDeploying(false);

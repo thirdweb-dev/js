@@ -2,18 +2,17 @@
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Fieldset } from "components/contract-components/contract-deploy-form/common";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Fieldset } from "components/contract-components/contract-deploy-form/common";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { Form } from "@/components/ui/form";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 
 // Form schema
 const contractDetailsSchema = z.object({
@@ -41,7 +40,7 @@ const StepIndicator = ({
           ? "bg-primary text-primary-foreground"
           : currentStep > step
             ? "bg-primary/20 text-primary"
-            : "bg-muted text-muted-foreground"
+            : "bg-muted text-muted-foreground",
       )}
     >
       {currentStep > step ? (

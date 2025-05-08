@@ -113,7 +113,7 @@ function RenderSidebarGroup(props: {
 
   return (
     <SidebarMenu className="gap-1.5">
-      {sidebarLinks.map((link) => {
+      {sidebarLinks.map((link, idx) => {
         if ("href" in link) {
           return (
             <SidebarMenuItem key={link.href}>
@@ -137,14 +137,14 @@ function RenderSidebarGroup(props: {
         }
 
         if ("separator" in link) {
-          return <SidebarSeparator className="my-1" />;
+          return <SidebarSeparator className="my-1" key={`separator-${idx}`} />;
         }
 
         return (
           <RenderSidebarGroup
             sidebarLinks={link.links}
             groupName={link.group}
-            key={link.group}
+            key={link.group || `group-${idx}`}
           />
         );
       })}

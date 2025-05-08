@@ -11,14 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
 import {
   Coins,
+  ExternalLinkIcon,
+  FileIcon,
   ImageIcon,
   PlusIcon,
-  FileIcon,
-  ExternalLinkIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 // Temporary hardcoded chart data
 const generateChartData = () => {

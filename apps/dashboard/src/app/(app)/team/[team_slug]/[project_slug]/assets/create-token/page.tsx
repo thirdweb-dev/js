@@ -1,38 +1,63 @@
 "use client";
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { UnorderedList } from "@/components/ui/List/List";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Fieldset } from "components/contract-components/contract-deploy-form/common";
+import { BasisPointsInput } from "components/inputs/BasisPointsInput";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { FileInput } from "components/shared/FileInput";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { useCsvUpload } from "hooks/useCsvUpload";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  UploadIcon,
   CheckIcon,
-  ChevronDownIcon,
   ChevronUpIcon,
+  CircleAlertIcon,
   Loader2,
+  UploadIcon,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Fieldset } from "components/contract-components/contract-deploy-form/common";
-import { FileInput } from "components/shared/FileInput";
-import { BasisPointsInput } from "components/inputs/BasisPointsInput";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { Form } from "@/components/ui/form";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
-import { deployContractfromDeployMetadata } from "thirdweb/deploys";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { defineChain } from "thirdweb/chains";
+import type { Column } from "react-table";
 import { toast } from "sonner";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { sendTransaction, toWei, waitForReceipt } from "thirdweb";
+import { ZERO_ADDRESS } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import {
+  arbitrum,
+  avalanche,
+  base,
+  ethereum,
+  optimism,
+  polygon,
+} from "thirdweb/chains";
+import { getContract } from "thirdweb/contract";
+import { deployERC20Contract } from "thirdweb/deploys";
+import {
+  claimTo,
+  setClaimConditions,
+  transferBatch,
+} from "thirdweb/extensions/erc20";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "thirdweb/react";
 import { upload } from "thirdweb/storage";
+import * as z from "zod";
 
 // Form schemas
 const tokenInfoSchema = z.object({
@@ -65,6 +90,24 @@ const advancedOptionsSchema = z.object({
 type TokenInfoValues = z.infer<typeof tokenInfoSchema>;
 type AdvancedOptionsValues = z.infer<typeof advancedOptionsSchema>;
 
+// Airdrop address input interface
+export interface AirdropAddressInput {
+  address: string;
+  quantity: string;
+  isValid?: boolean;
+  resolvedAddress?: string;
+}
+
+// CSV parser for airdrop data
+const csvParser = (items: AirdropAddressInput[]): AirdropAddressInput[] => {
+  return items
+    .map(({ address, quantity }) => ({
+      address: (address || "").trim(),
+      quantity: (quantity || "1").trim(),
+    }))
+    .filter(({ address }) => address !== "");
+};
+
 // Step indicator component
 const StepIndicator = ({
   step,
@@ -83,7 +126,7 @@ const StepIndicator = ({
           ? "bg-primary text-primary-foreground"
           : currentStep > step
             ? "bg-primary/20 text-primary"
-            : "bg-muted text-muted-foreground"
+            : "bg-muted text-muted-foreground",
       )}
     >
       {currentStep > step ? (
@@ -96,6 +139,199 @@ const StepIndicator = ({
   </div>
 );
 
+// CSV upload component for airdrops
+interface AirdropUploadProps {
+  setAirdrop: (airdrop: AirdropAddressInput[]) => void;
+  onClose: () => void;
+}
+
+export const AirdropUpload: React.FC<AirdropUploadProps> = ({
+  setAirdrop,
+  onClose,
+}) => {
+  const {
+    normalizeQuery,
+    getInputProps,
+    getRootProps,
+    isDragActive,
+    rawData,
+    noCsv,
+    reset,
+    removeInvalid,
+  } = useCsvUpload<AirdropAddressInput>({ csvParser });
+  const paginationPortalRef = useRef<HTMLDivElement>(null);
+
+  const normalizeData = normalizeQuery.data;
+
+  const columns = useMemo(() => {
+    return [
+      {
+        Header: "Address",
+        accessor: ({ address, isValid }) => {
+          if (isValid) {
+            return address;
+          }
+          return (
+            <ToolTipLabel
+              label={
+                address === ZERO_ADDRESS
+                  ? "Cannot send tokens to ZERO_ADDRESS"
+                  : address.startsWith("0x")
+                    ? "Address is not valid"
+                    : "Address couldn't be resolved"
+              }
+            >
+              <div className="flex flex-row items-center gap-2">
+                <CircleAlertIcon className="size-4 text-red-500" />
+                <div className="cursor-default font-bold text-red-500">
+                  {address}
+                </div>
+              </div>
+            </ToolTipLabel>
+          );
+        },
+      },
+      {
+        Header: "Quantity",
+        accessor: ({ quantity }: { quantity: string }) => {
+          return quantity || "1";
+        },
+      },
+    ] as Column<AirdropAddressInput>[];
+  }, []);
+
+  if (!normalizeData) {
+    return (
+      <div className="flex min-h-[400px] w-full grow items-center justify-center rounded-lg border border-border">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
+  const onSave = () => {
+    setAirdrop(
+      normalizeData.result.map((o) => ({
+        address: o.resolvedAddress || o.address,
+        quantity: o.quantity,
+        isValid: o.isValid,
+      })),
+    );
+    onClose();
+  };
+
+  return (
+    <div className="flex w-full flex-col gap-6">
+      {normalizeData.result.length && rawData.length > 0 ? (
+        <>
+          <div className="border rounded p-4 overflow-auto max-h-[400px]">
+            <table className="w-full">
+              <thead className="border-b">
+                <tr>
+                  <th className="text-left p-2">Address</th>
+                  <th className="text-left p-2">Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {normalizeData.result.map((item, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="p-2">
+                      {item.isValid ? (
+                        item.address
+                      ) : (
+                        <div className="flex flex-row items-center gap-2">
+                          <CircleAlertIcon className="size-4 text-red-500" />
+                          <span className="font-bold text-red-500">
+                            {item.address}
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-2">{item.quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 flex justify-between">
+            <div ref={paginationPortalRef} />
+            <div className="mt-3 flex flex-row gap-2">
+              <Button
+                variant="outline"
+                disabled={rawData.length === 0}
+                onClick={() => {
+                  reset();
+                }}
+              >
+                Reset
+              </Button>
+              {normalizeQuery.data.invalidFound ? (
+                <Button
+                  disabled={rawData.length === 0}
+                  onClick={() => {
+                    removeInvalid();
+                  }}
+                >
+                  Remove invalid
+                </Button>
+              ) : (
+                <Button onClick={onSave} disabled={rawData.length === 0}>
+                  Next
+                </Button>
+              )}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col gap-8">
+          <div className="relative aspect-[21/9] w-full">
+            <div
+              className={cn(
+                "flex h-full cursor-pointer items-center justify-center rounded-md border border-border hover:border-primary",
+                noCsv ? "bg-red-200" : "bg-background",
+              )}
+              {...getRootProps()}
+            >
+              <input {...getInputProps()} />
+              <div className="flex flex-col p-6">
+                <UploadIcon
+                  className={cn("mx-auto mb-2 size-4 text-gray-500", {
+                    "text-red-500": noCsv,
+                  })}
+                />
+                {isDragActive ? (
+                  <p className="text-center text-sm font-medium">
+                    Drop the files here
+                  </p>
+                ) : (
+                  <p className="text-center text-sm font-medium">
+                    {noCsv
+                      ? `No valid CSV file found, make sure your CSV includes the "address" & "quantity" column.`
+                      : "Drag & Drop a CSV file here"}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-sm font-medium">Requirements</h3>
+            <UnorderedList>
+              <li>
+                Files must contain one .csv file with an address and quantity
+                column. If the quantity column is not provided, that record will
+                default to 1 token.
+              </li>
+              <li>
+                Repeated addresses will be removed and only the first found will
+                be kept.
+              </li>
+            </UnorderedList>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function CreateTokenPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [tokenInfo, setTokenInfo] = useState<TokenInfoValues | null>(null);
@@ -104,9 +340,20 @@ export default function CreateTokenPage() {
   const [csvData, setCsvData] = useState<string[][]>([]);
   const [lastUpdatedField, setLastUpdatedField] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
+  // Deployment status for button text
+  const [deploymentStatus, setDeploymentStatus] = useState("Deploy Token");
+  // Error states
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorStep, setErrorStep] = useState<string | null>(null);
+  // Airdrop states
+  const [showAirdropUpload, setShowAirdropUpload] = useState(false);
+  const [airdropAddresses, setAirdropAddresses] = useState<
+    AirdropAddressInput[]
+  >([]);
+
   const router = useDashboardRouter();
-  const params = router.params;
   const activeAccount = useActiveAccount();
+  const activeChain = useActiveWalletChain();
   const switchChain = useSwitchActiveWalletChain();
   const thirdwebClient = useThirdwebClient();
   const connectedAddress = activeAccount?.address;
@@ -117,7 +364,7 @@ export default function CreateTokenPage() {
     defaultValues: {
       name: "",
       symbol: "",
-      chain: "Ethereum",
+      chain: activeChain?.id ? activeChain.id.toString() : "Ethereum",
       supply: "1000000",
       description: "",
       image: undefined,
@@ -155,6 +402,13 @@ export default function CreateTokenPage() {
     }
   }, [connectedAddress, advancedOptionsForm]);
 
+  // Set active chain as default when available
+  useEffect(() => {
+    if (activeChain?.id) {
+      tokenInfoForm.setValue("chain", activeChain.id.toString());
+    }
+  }, [activeChain, tokenInfoForm]);
+
   // Watch for changes in percentage fields and ensure they sum to 100%
   useEffect(() => {
     if (!lastUpdatedField) return;
@@ -162,11 +416,12 @@ export default function CreateTokenPage() {
     const isSaleEnabled = advancedOptionsForm.getValues("saleEnabled");
 
     // Get current values
-    let owner = parseFloat(advancedOptionsForm.getValues("ownerSupply")) || 0;
+    let owner =
+      Number.parseFloat(advancedOptionsForm.getValues("ownerSupply")) || 0;
     let airdrop =
-      parseFloat(advancedOptionsForm.getValues("airdropSupply")) || 0;
+      Number.parseFloat(advancedOptionsForm.getValues("airdropSupply")) || 0;
     let sale = isSaleEnabled
-      ? parseFloat(advancedOptionsForm.getValues("saleSupply")) || 0
+      ? Number.parseFloat(advancedOptionsForm.getValues("saleSupply")) || 0
       : 0;
 
     // Ensure the values are non-negative
@@ -241,8 +496,8 @@ export default function CreateTokenPage() {
 
   const onAdvancedOptionsSubmit = (data: AdvancedOptionsValues) => {
     // Ensure owner percentage is correctly calculated before submitting
-    const airdrop = parseFloat(data.airdropSupply) || 0;
-    const sale = data.saleEnabled ? parseFloat(data.saleSupply) || 0 : 0;
+    const airdrop = Number.parseFloat(data.airdropSupply) || 0;
+    const sale = data.saleEnabled ? Number.parseFloat(data.saleSupply) || 0 : 0;
     const owner = Math.max(0, 100 - airdrop - sale);
 
     // Update the owner percentage to ensure total is 100%
@@ -250,6 +505,11 @@ export default function CreateTokenPage() {
       ...data,
       ownerSupply: owner.toFixed(2),
     };
+
+    // Save the airdrop addresses for later use during deployment
+    if (airdrop > 0 && airdropAddresses.length > 0) {
+      console.log(`Saving ${airdropAddresses.length} addresses for airdrop`);
+    }
 
     setAdvancedOptions(finalData);
     setCurrentStep(3);
@@ -263,9 +523,9 @@ export default function CreateTokenPage() {
 
   // Allocation bar calculations
   const airdropPercentage =
-    parseFloat(advancedOptionsForm.watch("airdropSupply")) || 0;
+    Number.parseFloat(advancedOptionsForm.watch("airdropSupply")) || 0;
   const salePercentage = advancedOptionsForm.watch("saleEnabled")
-    ? parseFloat(advancedOptionsForm.watch("saleSupply")) || 0
+    ? Number.parseFloat(advancedOptionsForm.watch("saleSupply")) || 0
     : 0;
 
   // Ensure owner percentage makes the total exactly 100%
@@ -273,17 +533,32 @@ export default function CreateTokenPage() {
 
   // Handle CSV file upload
   const handleCsvUpload = (file: File | undefined) => {
-    setCsvData(file || []);
+    if (!file) {
+      setCsvData([]);
+      return;
+    }
+
+    // In a real implementation, you would parse the CSV here
+    // For now, we'll just set a placeholder
+    setCsvData([["Sample Address", "Sample Amount"]]);
     // File processing would happen here in a real implementation
   };
 
   const deployToken = async () => {
     if (!tokenInfo || !advancedOptions || !activeAccount || !thirdwebClient) {
       toast.error("Missing required information. Please check your inputs.");
+      setErrorMessage(
+        "Missing required information. Please check all form fields and try again.",
+      );
+      setErrorStep("preparation");
       return;
     }
 
     setIsDeploying(true);
+    setDeploymentStatus("Preparing Deployment...");
+    // Reset error states when starting a new deployment
+    setErrorMessage(null);
+    setErrorStep(null);
 
     try {
       // Make sure we have the necessary URL parts
@@ -300,92 +575,425 @@ export default function CreateTokenPage() {
 
       // Make sure we have all required token properties
       if (!tokenInfo.name || !tokenInfo.symbol || !tokenInfo.chain) {
-        throw new Error("Missing required token information");
+        const missingFields = [
+          !tokenInfo.name && "name",
+          !tokenInfo.symbol && "symbol",
+          !tokenInfo.chain && "chain",
+        ]
+          .filter(Boolean)
+          .join(", ");
+
+        const errorMsg = `Missing required token information: ${missingFields}`;
+        setErrorMessage(errorMsg);
+        setErrorStep("validation");
+        throw new Error(errorMsg);
       }
 
-      // Calculate supply percentages - use totalSupply property
-      const totalSupply =
-        parseFloat(tokenInfo.supply || "0") *
-        Math.pow(10, parseInt(advancedOptions.platformFeeBps || "18"));
+      // Get the appropriate chain
+      let chain;
+      const chainName = tokenInfo.chain.toLowerCase();
+      switch (chainName) {
+        case "ethereum":
+          chain = ethereum;
+          break;
+        case "polygon":
+          chain = polygon;
+          break;
+        case "optimism":
+          chain = optimism;
+          break;
+        case "arbitrum":
+          chain = arbitrum;
+          break;
+        case "avalanche":
+          chain = avalanche;
+          break;
+        case "base":
+          chain = base;
+          break;
+        default:
+          // Try to parse as a chain ID
+          const chainId = Number.parseInt(tokenInfo.chain, 10);
+          if (!isNaN(chainId)) {
+            chain = defineChain(chainId);
+          } else {
+            const errorMsg = `Unsupported chain: ${tokenInfo.chain}`;
+            setErrorMessage(errorMsg);
+            setErrorStep("chain");
+            throw new Error(errorMsg);
+          }
+      }
 
-      const ownerPercentage =
-        parseFloat(advancedOptions.ownerSupply || "100") / 100;
-      const airdropPercentage =
-        parseFloat(advancedOptions.airdropSupply || "0") / 100;
-      const salePercentage = advancedOptions.saleEnabled
-        ? parseFloat(advancedOptions.saleSupply || "0") / 100
-        : 0;
-
-      // Get wallet chain
-      const chainId = parseInt(tokenInfo.chain, 10);
-      const walletChain = isNaN(chainId)
-        ? defineChain({ name: tokenInfo.chain.toLowerCase() })
-        : defineChain({ chainId });
+      console.log("Using chain:", chain);
 
       // Switch network if needed
-      await switchChain({ chain: walletChain });
-
-      // Prepare initialization parameters with fallbacks for all values
-      const initializeParams = {
-        name: tokenInfo.name,
-        symbol: tokenInfo.symbol,
-        decimals: parseInt(advancedOptions.platformFeeBps || "18"),
-        primary_sale_recipient:
-          advancedOptions.primarySaleAddress || activeAccount.address,
-        platform_fee_recipient:
-          advancedOptions.platformFeeRecipient || activeAccount.address,
-        platform_fee_basis_points: parseInt(
-          advancedOptions.platformFeeBps || "0"
-        ),
-      };
-
-      // Print out what we're going to deploy
-      console.log("Deploying with parameters:", initializeParams);
+      try {
+        setDeploymentStatus("Switching Network...");
+        await switchChain(chain);
+      } catch (switchError) {
+        const errorMsg = `Failed to switch network: ${switchError instanceof Error ? switchError.message : "Unknown error"}`;
+        setErrorMessage(errorMsg);
+        setErrorStep("network");
+        throw new Error(errorMsg);
+      }
 
       // Handle token image
       let imageUri = "";
       if (tokenInfo.image) {
+        setDeploymentStatus("Uploading Token Image...");
         try {
-          const imageFile = await fetch(tokenInfo.image).then((r) => r.blob());
-          imageUri = await upload({
-            client: thirdwebClient,
-            data: [imageFile],
+          const imageFile = await fetch(
+            typeof tokenInfo.image === "string"
+              ? tokenInfo.image
+              : URL.createObjectURL(tokenInfo.image as Blob),
+          ).then((r) => r.blob());
+
+          // Convert Blob to File with a name
+          const file = new File([imageFile], "token-image.png", {
+            type: imageFile.type || "image/png",
           });
-        } catch (err) {
-          console.error("Error uploading image:", err);
+
+          // Upload the image using the correct format
+          const uploadResult = await upload({
+            client: thirdwebClient,
+            files: [file],
+          });
+
+          // Ensure imageUri is always a string
+          if (uploadResult) {
+            imageUri = Array.isArray(uploadResult)
+              ? uploadResult[0]
+              : uploadResult;
+          }
+        } catch (imageError) {
+          console.error("Error uploading image:", imageError);
+          // Continue without image, but log warning
+          toast.warning("Failed to upload token image, proceeding without it");
         }
       }
 
-      // Deploy the contract
-      const contractAddress = await deployContractfromDeployMetadata({
-        client: thirdwebClient,
-        signer: activeAccount,
-        contractMetadata: {
-          name: tokenInfo.name,
-          description: tokenInfo.description || "",
-          image: imageUri,
-          external_link: tokenInfo.externalLink || "",
-        },
-        publishMetadata: {
-          name: "TokenERC20",
-          publisherAddress: activeAccount.address,
-        },
-        constructorParams: initializeParams,
-      });
+      // Calculate the percentage allocations
+      const totalSupply = tokenInfo.supply;
+      const decimals = 18; // Standard for most tokens
 
-      toast.success("Token deployed successfully!");
-
-      // Navigate to the token's page
-      router.push(
-        `/team/${teamSlug}/${projectSlug}/contracts/${contractAddress}`
+      // Calculate claim conditions parameters
+      const totalSupplyBigInt = BigInt(
+        Math.floor(Number.parseFloat(totalSupply) * 10 ** decimals),
       );
+      let saleSupply = 0n;
+      let salePrice = 0;
+
+      if (advancedOptions.saleEnabled) {
+        saleSupply = BigInt(
+          Math.floor(
+            ((Number.parseFloat(totalSupply) *
+              Number.parseFloat(advancedOptions.saleSupply)) /
+              100) *
+              10 ** decimals,
+          ),
+        );
+        salePrice = Number.parseFloat(advancedOptions.salePrice);
+      }
+
+      // Prepare token parameters
+      const tokenParams = {
+        name: tokenInfo.name,
+        symbol: tokenInfo.symbol,
+        description: tokenInfo.description || "",
+        primary_sale_recipient:
+          advancedOptions.primarySaleAddress || activeAccount.address,
+        platform_fee_recipient:
+          advancedOptions.platformFeeRecipient || activeAccount.address,
+        platform_fee_basis_points: Number.parseInt(
+          advancedOptions.platformFeeBps || "250",
+        ),
+      };
+
+      console.log("Deploying token with parameters:", tokenParams);
+
+      // Deploy the token using deployERC20Contract
+      try {
+        setDeploymentStatus("Deploying Contract...");
+        const contractAddress = await deployERC20Contract({
+          chain,
+          client: thirdwebClient,
+          account: activeAccount,
+          type: "DropERC20",
+          params: tokenParams,
+        });
+
+        console.log("Token deployed to address:", contractAddress);
+
+        // Get a reference to the deployed contract
+        const contract = getContract({
+          client: thirdwebClient,
+          chain,
+          address: contractAddress,
+        });
+
+        // Wait a moment before setting claim conditions
+        setDeploymentStatus("Waiting for deployment confirmation...");
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Short delay for UI feedback
+
+        // Set up claim conditions - required for both sale and owner claiming
+        try {
+          setDeploymentStatus("Setting Claim Conditions...");
+          console.log("Setting up claim conditions...");
+          const transaction = setClaimConditions({
+            contract,
+            phases: [
+              {
+                maxClaimableSupply: totalSupplyBigInt,
+                // If it's an initial sale, limit to 1 token per wallet (except for the owner)
+                // If it's just for owner claiming, leave it unlimited
+                maxClaimablePerWallet: advancedOptions.saleEnabled
+                  ? toWei("1")
+                  : toWei("0"),
+                price: salePrice,
+                currencyAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", // Native token
+                startTime: new Date(),
+                metadata: {
+                  name: advancedOptions.saleEnabled
+                    ? "Token Sale Phase"
+                    : "Owner Claim Phase",
+                },
+                overrideList: [
+                  { address: activeAccount.address, maxClaimable: "unlimited" },
+                ],
+              },
+            ],
+          });
+
+          try {
+            const tx = await sendTransaction({
+              transaction,
+              account: activeAccount,
+            });
+
+            // Wait for the claim conditions transaction to be confirmed
+            setDeploymentStatus("Confirming claim conditions...");
+            if (tx.transactionHash) {
+              try {
+                await waitForReceipt({
+                  client: thirdwebClient,
+                  chain,
+                  transactionHash: tx.transactionHash,
+                });
+                console.log("Claim conditions set and confirmed successfully!");
+              } catch (confirmError) {
+                const errorMsg = `Failed to confirm claim conditions: ${confirmError instanceof Error ? confirmError.message : "Unknown error"}`;
+                setErrorMessage(errorMsg);
+                setErrorStep("claim_confirmation");
+                throw new Error(errorMsg);
+              }
+            }
+          } catch (sendError) {
+            const errorMsg = `Failed to send claim conditions transaction: ${sendError instanceof Error ? sendError.message : "Unknown error"}`;
+            setErrorMessage(errorMsg);
+            setErrorStep("claim_transaction");
+            throw new Error(errorMsg);
+          }
+        } catch (claimError) {
+          const errorMsg = `Error setting claim conditions: ${claimError instanceof Error ? claimError.message : "Unknown error"}`;
+          console.error(errorMsg, claimError);
+          setErrorMessage(errorMsg);
+          setErrorStep("claim_conditions");
+          // dont continue if claim conditions fail
+          toast.error(errorMsg);
+          setIsDeploying(false);
+          setDeploymentStatus("Deploy Token");
+          return;
+        }
+
+        // Mint tokens to owner's wallet (owner's allocation + airdrop allocation if needed)
+        const ownerSupplyPercentage =
+          Number.parseFloat(advancedOptions.ownerSupply) || 0;
+        const airdropSupplyPercentage =
+          Number.parseFloat(advancedOptions.airdropSupply) || 0;
+
+        // Calculate total tokens to mint to owner (their own allocation + airdrop amount if needed)
+        const mintPercentage =
+          ownerSupplyPercentage +
+          (airdropAddresses.length > 0 ? airdropSupplyPercentage : 0);
+
+        if (mintPercentage > 0) {
+          try {
+            setDeploymentStatus("Minting Tokens to Owner...");
+            console.log(
+              `Minting ${mintPercentage}% of tokens to owner's wallet...`,
+            );
+
+            // Calculate total tokens to mint based on percentage and total supply
+            const mintTokenAmount = BigInt(
+              Math.floor(
+                (Number.parseFloat(totalSupply) * mintPercentage) / 100,
+              ),
+            );
+
+            console.log(
+              `Minting ${mintTokenAmount} tokens to ${activeAccount.address}`,
+            );
+
+            const claimTransaction = claimTo({
+              contract,
+              to: activeAccount.address,
+              quantity: mintTokenAmount.toString(),
+            });
+
+            try {
+              const mintTx = await sendTransaction({
+                transaction: claimTransaction,
+                account: activeAccount,
+              });
+
+              // Wait for the mint transaction to be confirmed
+              setDeploymentStatus("Confirming token mint...");
+              if (mintTx.transactionHash) {
+                try {
+                  await waitForReceipt({
+                    client: thirdwebClient,
+                    chain,
+                    transactionHash: mintTx.transactionHash,
+                  });
+                  console.log(
+                    `Successfully minted ${mintTokenAmount} tokens to owner's wallet`,
+                  );
+                } catch (confirmError) {
+                  const errorMsg = `Failed to confirm token mint: ${confirmError instanceof Error ? confirmError.message : "Unknown error"}`;
+                  setErrorMessage(errorMsg);
+                  setErrorStep("mint_confirmation");
+                  throw new Error(errorMsg);
+                }
+              }
+            } catch (mintSendError) {
+              const errorMsg = `Failed to send token mint transaction: ${mintSendError instanceof Error ? mintSendError.message : "Unknown error"}`;
+              setErrorMessage(errorMsg);
+              setErrorStep("mint_transaction");
+              throw new Error(errorMsg);
+            }
+
+            // Now airdrop from owner's wallet to recipients if needed
+            if (airdropSupplyPercentage > 0 && airdropAddresses.length > 0) {
+              try {
+                setDeploymentStatus(
+                  `Airdropping to ${airdropAddresses.length} Addresses...`,
+                );
+                console.log(
+                  `Airdropping to ${airdropAddresses.length} addresses...`,
+                );
+
+                // Calculate the total token amount for airdrop based on percentage
+                const totalAirdropTokens =
+                  (Number.parseFloat(totalSupply) * airdropSupplyPercentage) /
+                  100;
+
+                // Calculate token amounts for each recipient proportionally based on their quantity
+                // First, sum up all quantities
+                const totalQuantities = airdropAddresses.reduce(
+                  (sum, address) =>
+                    sum + Number.parseFloat(address.quantity || "1"),
+                  0,
+                );
+
+                // Then, calculate each recipient's token amount based on their proportion
+                const batch = airdropAddresses.map((address) => {
+                  const proportion =
+                    Number.parseFloat(address.quantity || "1") /
+                    totalQuantities;
+                  const amount = BigInt(
+                    Math.floor(totalAirdropTokens * proportion),
+                  );
+                  return {
+                    to: address.address,
+                    amount: amount.toString(),
+                  };
+                });
+
+                // Execute the batch transfer from owner's wallet to recipients
+                const batchTransaction = transferBatch({
+                  contract,
+                  batch,
+                });
+
+                try {
+                  const airdropTx = await sendTransaction({
+                    transaction: batchTransaction,
+                    account: activeAccount,
+                  });
+
+                  // Wait for the airdrop transaction to be confirmed
+                  setDeploymentStatus("Confirming airdrop...");
+                  if (airdropTx.transactionHash) {
+                    try {
+                      await waitForReceipt({
+                        client: thirdwebClient,
+                        chain,
+                        transactionHash: airdropTx.transactionHash,
+                      });
+                      console.log(
+                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`,
+                      );
+                      toast.success(
+                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`,
+                      );
+                    } catch (confirmError) {
+                      const errorMsg = `Failed to confirm airdrop: ${confirmError instanceof Error ? confirmError.message : "Unknown error"}`;
+                      setErrorMessage(errorMsg);
+                      setErrorStep("airdrop_confirmation");
+                      throw new Error(errorMsg);
+                    }
+                  }
+                } catch (airdropSendError) {
+                  const errorMsg = `Failed to send airdrop transaction: ${airdropSendError instanceof Error ? airdropSendError.message : "Unknown error"}`;
+                  setErrorMessage(errorMsg);
+                  setErrorStep("airdrop_transaction");
+                  throw new Error(errorMsg);
+                }
+              } catch (airdropError) {
+                const errorMsg = `Error performing airdrop: ${airdropError instanceof Error ? airdropError.message : "Unknown error"}`;
+                console.error(errorMsg, airdropError);
+                setErrorMessage(errorMsg);
+                setErrorStep("airdrop");
+                toast.error(errorMsg);
+                // Continue even if airdrop fails - the token is still minted to owner
+              }
+            }
+          } catch (mintError) {
+            const errorMsg = `Error minting tokens: ${mintError instanceof Error ? mintError.message : "Unknown error"}`;
+            console.error(errorMsg, mintError);
+            setErrorMessage(errorMsg);
+            setErrorStep("mint");
+            toast.error(errorMsg);
+            // Continue deployment - contract is deployed but minting failed
+          }
+        }
+
+        toast.success("Token deployed successfully!");
+        setDeploymentStatus("Deployment Complete!");
+
+        // Navigate to the token's page
+        setTimeout(() => {
+          router.push(`/${chain.id}/${contractAddress}`);
+        }, 2000);
+      } catch (deployError) {
+        const errorMsg = `Contract deployment failed: ${deployError instanceof Error ? deployError.message : "Unknown error"}`;
+        console.error(errorMsg, deployError);
+        setErrorMessage(errorMsg);
+        setErrorStep("deployment");
+        throw new Error(errorMsg);
+      }
     } catch (error) {
       console.error("Error deploying token:", error);
-      toast.error(
-        `Failed to deploy token: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Failed to deploy token: ${errorMsg}`);
+      setDeploymentStatus("Deployment Failed");
     } finally {
-      setIsDeploying(false);
+      setTimeout(() => {
+        if (isDeploying) {
+          setIsDeploying(false);
+          setDeploymentStatus("Deploy Token");
+        }
+      }, 3000);
     }
   };
 
@@ -507,7 +1115,7 @@ export default function CreateTokenPage() {
                     onSwitchChain={(chain) => {
                       tokenInfoForm.setValue(
                         "chain",
-                        chain.name || chain.chainId?.toString() || ""
+                        chain.chainId?.toString() || "",
                       );
                     }}
                   />
@@ -581,8 +1189,9 @@ export default function CreateTokenPage() {
                       advancedOptionsForm.setValue("saleEnabled", checked);
                       if (
                         checked &&
-                        parseFloat(advancedOptionsForm.watch("saleSupply")) ===
-                          0
+                        Number.parseFloat(
+                          advancedOptionsForm.watch("saleSupply"),
+                        ) === 0
                       ) {
                         advancedOptionsForm.setValue("saleSupply", "10");
                         setLastUpdatedField("saleSupply");
@@ -619,7 +1228,7 @@ export default function CreateTokenPage() {
                           onChange={(e) => {
                             advancedOptionsForm.setValue(
                               "saleSupply",
-                              e.target.value
+                              e.target.value,
                             );
                             setLastUpdatedField("saleSupply");
                           }}
@@ -640,7 +1249,7 @@ export default function CreateTokenPage() {
                           placeholder="0.1"
                           {...advancedOptionsForm.register("salePrice")}
                         />
-                        <span className="ml-2 self-center">USD</span>
+                        <span className="ml-2 self-center">NATIVE TOKEN</span>
                       </div>
                     </FormFieldSetup>
                   </div>
@@ -662,7 +1271,7 @@ export default function CreateTokenPage() {
                       onChange={(e) => {
                         advancedOptionsForm.setValue(
                           "ownerSupply",
-                          e.target.value
+                          e.target.value,
                         );
                         setLastUpdatedField("ownerSupply");
                       }}
@@ -685,7 +1294,7 @@ export default function CreateTokenPage() {
                       onChange={(e) => {
                         advancedOptionsForm.setValue(
                           "airdropSupply",
-                          e.target.value
+                          e.target.value,
                         );
                         setLastUpdatedField("airdropSupply");
                       }}
@@ -696,30 +1305,82 @@ export default function CreateTokenPage() {
               </div>
 
               {advancedOptionsForm.watch("airdropSupply") &&
-                parseFloat(advancedOptionsForm.watch("airdropSupply")) > 0 && (
-                  <div className="border border-dashed border-border rounded-md p-6 flex flex-col items-center justify-center text-center">
-                    <UploadIcon className="h-10 w-10 text-muted-foreground mb-4" />
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Upload a CSV file with wallet addresses and amounts
-                    </p>
-                    <FileInput
-                      accept={{ "text/csv": [] }}
-                      value={csvData.map((row) => row[0]) || undefined}
-                      setValue={handleCsvUpload}
-                      className="hidden"
-                    />
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        alert("CSV upload functionality not implemented")
-                      }
-                    >
-                      Upload CSV
-                    </Button>
-                    {csvData.length > 0 && (
-                      <p className="mt-2 text-sm font-medium">
-                        {csvData[0][0]}
-                      </p>
+                Number.parseFloat(advancedOptionsForm.watch("airdropSupply")) >
+                  0 && (
+                  <div className="border border-dashed border-border rounded-md p-6">
+                    {showAirdropUpload ? (
+                      <AirdropUpload
+                        setAirdrop={(addresses) => {
+                          setAirdropAddresses(addresses);
+                          setShowAirdropUpload(false);
+                        }}
+                        onClose={() => setShowAirdropUpload(false)}
+                      />
+                    ) : airdropAddresses.length > 0 ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">
+                            {airdropAddresses.length} Addresses Ready for
+                            Airdrop
+                          </span>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowAirdropUpload(true)}
+                          >
+                            Edit List
+                          </Button>
+                        </div>
+                        <div className="border p-2 rounded max-h-40 overflow-y-auto">
+                          <table className="w-full text-sm">
+                            <thead className="border-b">
+                              <tr>
+                                <th className="text-left p-1">Address</th>
+                                <th className="text-left p-1">Quantity</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {airdropAddresses
+                                .slice(0, 5)
+                                .map((address, idx) => (
+                                  <tr key={idx} className="border-b">
+                                    <td className="p-1 font-mono text-xs">
+                                      {address.address.slice(0, 10)}...
+                                      {address.address.slice(-8)}
+                                    </td>
+                                    <td className="p-1">{address.quantity}</td>
+                                  </tr>
+                                ))}
+                              {airdropAddresses.length > 5 && (
+                                <tr>
+                                  <td
+                                    colSpan={2}
+                                    className="p-1 text-center text-muted-foreground"
+                                  >
+                                    ...and {airdropAddresses.length - 5} more
+                                    addresses
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <UploadIcon className="h-10 w-10 text-muted-foreground mb-4" />
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Upload a CSV file with wallet addresses and token
+                          amounts
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowAirdropUpload(true)}
+                        >
+                          Upload CSV
+                        </Button>
+                      </div>
                     )}
                   </div>
                 )}
@@ -815,7 +1476,7 @@ export default function CreateTokenPage() {
                         <SolidityInput
                           solidityType="address"
                           {...advancedOptionsForm.register(
-                            "primarySaleAddress"
+                            "primarySaleAddress",
                           )}
                         />
                       </FormFieldSetup>
@@ -841,7 +1502,7 @@ export default function CreateTokenPage() {
                         <SolidityInput
                           solidityType="address"
                           {...advancedOptionsForm.register(
-                            "platformFeeRecipient"
+                            "platformFeeRecipient",
                           )}
                         />
                       </FormFieldSetup>
@@ -857,7 +1518,7 @@ export default function CreateTokenPage() {
                       >
                         <BasisPointsInput
                           value={Number(
-                            advancedOptionsForm.watch("platformFeeBps")
+                            advancedOptionsForm.watch("platformFeeBps"),
                           )}
                           onChange={(value) =>
                             advancedOptionsForm.setValue(
@@ -865,7 +1526,7 @@ export default function CreateTokenPage() {
                               value.toString(),
                               {
                                 shouldTouch: true,
-                              }
+                              },
                             )
                           }
                         />
@@ -904,7 +1565,7 @@ export default function CreateTokenPage() {
                       >
                         <BasisPointsInput
                           value={Number(
-                            advancedOptionsForm.watch("royaltyBps")
+                            advancedOptionsForm.watch("royaltyBps"),
                           )}
                           onChange={(value) =>
                             advancedOptionsForm.setValue(
@@ -912,7 +1573,7 @@ export default function CreateTokenPage() {
                               value.toString(),
                               {
                                 shouldTouch: true,
-                              }
+                              },
                             )
                           }
                         />
@@ -1102,23 +1763,58 @@ export default function CreateTokenPage() {
             <Button type="button" variant="outline" onClick={goBack}>
               <ArrowLeftIcon className="mr-2 h-4 w-4" /> Back
             </Button>
-            <Button
-              type="button"
-              className="bg-primary hover:bg-primary/90"
-              onClick={deployToken}
-              disabled={isDeploying}
-            >
-              {isDeploying ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Deploying
-                  Token...
-                </>
-              ) : (
-                <>
-                  Deploy Token <CheckIcon className="ml-2 h-4 w-4" />
-                </>
+            <div className="flex flex-col items-end">
+              {errorMessage && (
+                <div className="text-red-500 text-sm mb-2 max-w-md text-right">
+                  {errorStep && (
+                    <span className="font-bold">
+                      {errorStep.replace("_", " ").toUpperCase()}:{" "}
+                    </span>
+                  )}
+                  {errorMessage}
+                  {errorStep === "claim_conditions" && (
+                    <div className="mt-1 text-xs text-amber-500">
+                      <p>Try these fixes:</p>
+                      <ul className="list-disc list-inside">
+                        <li>Check if you have enough native tokens for gas</li>
+                        <li>Wait a few minutes and try again</li>
+                        <li>Verify that the parameters are valid</li>
+                      </ul>
+                    </div>
+                  )}
+                  {errorStep === "deployment" && (
+                    <div className="mt-1 text-xs text-amber-500">
+                      <p>Try these fixes:</p>
+                      <ul className="list-disc list-inside">
+                        <li>Check your wallet connection</li>
+                        <li>Make sure you have enough funds for deployment</li>
+                        <li>Try a different browser or network</li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
               )}
-            </Button>
+              <Button
+                type="button"
+                className={cn(
+                  "bg-primary hover:bg-primary/90",
+                  errorStep && "bg-red-500 hover:bg-red-600",
+                )}
+                onClick={deployToken}
+                disabled={isDeploying}
+              >
+                {isDeploying ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                    {deploymentStatus}
+                  </>
+                ) : (
+                  <>
+                    {deploymentStatus} <CheckIcon className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </Fieldset>
