@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.98.0
+
+### Minor Changes
+
+- [#6874](https://github.com/thirdweb-dev/js/pull/6874) [`e96ebba`](https://github.com/thirdweb-dev/js/commit/e96ebba2cba7ec63ba04d0d0a47c177059d6a19e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - EIP7702 support for in-app wallets
+
+  You can now turn your in-app wallets into smart accounts with 7702!
+
+  This lets you:
+
+  - sponsor transactions
+  - batch transactions
+  - add session keys
+  - and more!
+
+  simply pass the executionMode "EIP7702" to get started:
+
+  ```ts
+  const wallet = inAppWallet({
+    executionMode: {
+      mode: "EIP7702",
+      sponsorGas: true,
+    },
+  });
+  ```
+
+  Keep in mind that this will only work on chains that support 7702.
+
 ## 5.97.3
 
 ### Patch Changes
