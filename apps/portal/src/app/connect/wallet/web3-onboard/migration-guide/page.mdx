@@ -1,4 +1,6 @@
-# Migration Guide: Blocknative to thirdweb (2025)
+import { InstallTabs, Steps, Step, Callout } from "@doc";
+
+# Migration Guide: Blocknative to thirdweb
 
 ## Introduction
 
@@ -14,11 +16,10 @@ Learn how to migrate from Blocknative's Web3Onboard to thirdweb while maintainin
 ## Prerequisites
 
 - An existing project using Blocknative/Web3Onboard
-- Basic familiarity with web3 development
 
 ## Migration Steps
-
-### 1. Update Dependencies
+<Steps>
+<Step title="Update Dependencies">
 
 First, remove the Blocknative packages and install the thirdweb packages:
 
@@ -30,9 +31,9 @@ npm uninstall bnc-onboard @web3-onboard/core @web3-onboard/injected-wallets
 npm install thirdweb
 
 ```
+</Step>
 
-### 2. Update Configuration (React)
-
+<Step title = "Update Configuration (React)">
 Replace your Blocknative configuration with thirdweb's:
 
 ### Before (with Blocknative):
@@ -82,8 +83,9 @@ function App() {
 }
 
 ```
+</Step>
 
-### 3. Custom Wallet Configuration
+<Step title ="Custom Wallet Configuration">
 
 If you need to support specific wallets:
 
@@ -115,8 +117,9 @@ function App() {
 }
 
 ```
+</Step>
 
-### 4. Update Wallet Connection Logic
+<Step title ="Update Wallet Connection Logic">
 
 Replace the wallet connection logic:
 
@@ -171,8 +174,9 @@ function WalletConnect() {
 }
 
 ```
+</Step>
 
-### 5. Multi-chain Support
+<Step title = "Multi-chain Support">
 
 Configure multi-chain support with thirdweb:
 
@@ -194,6 +198,9 @@ function App() {
 }
 
 ```
+</Step>
+
+</Steps>
 
 ### Common Issues
 
@@ -209,11 +216,6 @@ function App() {
 
 After successfully migrating, consider exploring additional thirdweb features:
 
-- Smart wallets and account abstraction
-- In-app wallets for easier onboarding
-- Gas-less transactions
-- Advanced wallet management
-
-## Conclusion
-
-By following this guide, you've successfully migrated from Blocknative to thirdweb while maintaining the same wallet support. Your users will experience no disruption in service, and you can now take advantage of thirdweb's comprehensive web3 development platform.
+- [Smart wallets and account abstraction](https://portal.thirdweb.com/connect/account-abstraction/overview)
+- [In-app wallets for easier onboarding](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure)
+- [Gas-less transactions](https://portal.thirdweb.com/react/v5/account-abstraction/get-started)
