@@ -30,6 +30,7 @@ import { CopyTextButton } from "../../../../../../../../@/components/ui/CopyText
 import { useTrack } from "../../../../../../../../hooks/analytics/useTrack";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
+import { deleteUserAccessToken, getUserAccessToken } from "./utils";
 
 const formSchema = z.object({
   accessToken: z.string().min(1, "Access token is required"),
@@ -53,10 +54,13 @@ export function SendTestTransaction(props: {
   const router = useDashboardRouter();
   const trackEvent = useTrack();
 
+  const userAccessToken =
+    props.userAccessToken ?? getUserAccessToken(props.project.id) ?? "";
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      accessToken: props.userAccessToken ?? "",
+      accessToken: userAccessToken,
       walletIndex:
         props.wallets && props.walletId
           ? props.wallets
@@ -147,7 +151,7 @@ export function SendTestTransaction(props: {
         )}
         <p className="flex items-center gap-2 text-sm text-warning-text">
           <LockIcon className="h-4 w-4" />
-          {props.userAccessToken
+          {userAccessToken
             ? "Copy your Vault access token, you'll need it for every HTTP call to Engine."
             : "Every wallet action requires your Vault access token."}
         </p>
@@ -157,12 +161,12 @@ export function SendTestTransaction(props: {
           <div className="flex-grow">
             <div className="flex flex-col gap-2">
               <p className="text-sm">Vault Access Token</p>
-              {props.userAccessToken ? (
+              {userAccessToken ? (
                 <div className="flex flex-col gap-2 ">
                   <CopyTextButton
                     copyIconPosition="right"
-                    textToCopy={props.userAccessToken}
-                    textToShow={props.userAccessToken}
+                    textToCopy={userAccessToken}
+                    textToShow={userAccessToken}
                     tooltip="Copy Vault Access Token"
                     className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                   />
@@ -175,7 +179,7 @@ export function SendTestTransaction(props: {
               ) : (
                 <Input
                   id="access-token"
-                  type={props.userAccessToken ? "text" : "password"}
+                  type={userAccessToken ? "text" : "password"}
                   placeholder="vt_act_1234....ABCD"
                   {...form.register("accessToken")}
                   disabled={isLoading}
@@ -287,6 +291,8 @@ export function SendTestTransaction(props: {
                 } else {
                   router.refresh();
                 }
+                // clear token from local storage after FTUX is complete
+                deleteUserAccessToken(props.project.id);
               }}
             >
               {props.walletId ? "Close" : "Complete Setup"}
