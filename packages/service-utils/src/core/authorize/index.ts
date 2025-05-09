@@ -49,13 +49,13 @@ export async function authorize(
   // Use a separate cache key per auth method.
   const cacheKey = authData.incomingServiceApiKey
     ? // incoming service key + clientId case
-      `key-v2:service-key:${authData.incomingServiceApiKeyHash}:${authData.clientId ?? "default"}`
+      `key-v2:service-key:${authData.incomingServiceApiKeyHash}:${authData.clientId ?? "client_default"}`
     : authData.secretKeyHash
       ? // secret key case
         `key-v2:secret-key:${authData.secretKeyHash}`
       : authData.hashedJWT
         ? // dashboard jwt case
-          `key-v2:dashboard-jwt:${authData.hashedJWT}:${authData.teamId ?? "default"}`
+          `key-v2:dashboard-jwt:${authData.hashedJWT}:${authData.teamId ?? "team_default"}:${authData.clientId ?? "client_default"}`
         : authData.clientId
           ? // clientId case
             `key-v2:client-id:${authData.clientId}`

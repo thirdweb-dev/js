@@ -562,7 +562,7 @@ importers:
         specifier: 5.74.4
         version: 5.74.4(react@19.1.0)
       '@thirdweb-dev/engine':
-        specifier: ^0.0.19
+        specifier: 0.0.19
         version: 0.0.19
       class-variance-authority:
         specifier: ^0.7.1
