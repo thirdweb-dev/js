@@ -23,10 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-kms": "3.592.0",
     "@aws-sdk/client-lambda": "3.592.0",
@@ -42,7 +39,7 @@
     "@react-native-community/netinfo": "^11",
     "@walletconnect/react-native-compat": "^2",
     "expo-application": "^5 || ^6",
-    "expo-linking": "^6",
+    "expo-linking": "^6 || ^7",
     "expo-web-browser": "^13 || ^14",
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
