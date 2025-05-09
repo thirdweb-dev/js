@@ -7,10 +7,10 @@ import { useMemo } from "react";
 import type { UniversalBridgeWalletStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
 import {
+  CardHeading,
   TableData,
   TableHeading,
   TableHeadingRow,
-  CardHeading,
 } from "./common";
 
 type PayTopCustomersData = Array<{

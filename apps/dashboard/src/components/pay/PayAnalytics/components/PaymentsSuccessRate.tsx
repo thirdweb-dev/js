@@ -10,8 +10,8 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import type { UniversalBridgeStats } from "types/analytics";
 import { useMemo } from "react";
+import type { UniversalBridgeStats } from "types/analytics";
 import { CardHeading } from "./common";
 
 type PayVolumeType = "all" | "crypto" | "fiat";
@@ -113,7 +113,7 @@ export function PaymentsSuccessRate(props: {
 
 function Bar(props: { rate: number }) {
   return (
-    <div className="flex items-center gap-0.5 rounded-lg overflow-hidden">
+    <div className="flex items-center gap-0.5 overflow-hidden rounded-lg">
       <ToolTipLabel label="Succeeded">
         <div
           className="h-5 rounded-lg rounded-r-none border-r-0 bg-success-text transition-all"

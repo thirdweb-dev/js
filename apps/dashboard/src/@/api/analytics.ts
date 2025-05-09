@@ -32,8 +32,8 @@ async function fetchAnalytics(
 
   // create a new URL object for the analytics server
   const ANALYTICS_SERVICE_URL = new URL(
-    "https://analytics-service-dev-ldna.zeet-nftlabs.zeet.app",
-  ); // Production analytics URL (yes I know it says dev)
+    process.env.ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
+  );
   ANALYTICS_SERVICE_URL.pathname = pathname;
   for (const param of searchParams?.split("&") || []) {
     const [key, value] = param.split("=");
@@ -46,16 +46,16 @@ async function fetchAnalytics(
     );
   }
   // client id DEBUG OVERRIDE
-  ANALYTICS_SERVICE_URL.searchParams.delete("projectId");
-  ANALYTICS_SERVICE_URL.searchParams.delete("teamId");
-  ANALYTICS_SERVICE_URL.searchParams.append(
-    "teamId",
-    "team_clmb33q9w00gn1x0u2ri8z0k0",
-  );
-  ANALYTICS_SERVICE_URL.searchParams.append(
-    "projectId",
-    "prj_clyqwud5y00u1na7nzxnzlz7o",
-  );
+  // ANALYTICS_SERVICE_URL.searchParams.delete("projectId");
+  // ANALYTICS_SERVICE_URL.searchParams.delete("teamId");
+  // ANALYTICS_SERVICE_URL.searchParams.append(
+  //   "teamId",
+  //   "team_clmb33q9w00gn1x0u2ri8z0k0",
+  // );
+  // ANALYTICS_SERVICE_URL.searchParams.append(
+  //   "projectId",
+  //   "prj_clyqwud5y00u1na7nzxnzlz7o",
+  // );
 
   return fetch(ANALYTICS_SERVICE_URL, {
     ...init,
@@ -428,7 +428,6 @@ export async function getUniversalBridgeWalletUsage(args: {
   }
 
   const json = await res.json();
-  console.log(json);
 
   return json.data as UniversalBridgeWalletStats[];
 }

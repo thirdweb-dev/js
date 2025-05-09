@@ -1,4 +1,9 @@
 "use client";
+import {
+  type Payment,
+  type PaymentsResponse,
+  getPayments,
+} from "@/api/universal-bridge/developer";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
@@ -6,209 +11,138 @@ import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useState } from "react";
-import {
-  type PayPurchasesData,
-  getPayPurchases,
-  usePayPurchases,
-} from "../hooks/usePayPurchases";
+import { useMemo, useState } from "react";
+import { toTokens } from "thirdweb";
 import {
   CardHeading,
-  FailedToLoad,
   TableData,
   TableHeading,
   TableHeadingRow,
 } from "./common";
 
-type UIData = {
-  purchases: PayPurchasesData["purchases"];
-  pages: number;
-};
-
-const pageSize = 10;
-
-type ProcessedQuery = {
-  data?: UIData;
-  isPending?: boolean;
-  isError?: boolean;
-  isEmpty?: boolean;
-};
-
-function processQuery(
-  purchasesQuery: ReturnType<typeof usePayPurchases>,
-): ProcessedQuery {
-  if (purchasesQuery.isPending) {
-    return { isPending: true };
-  }
-  if (purchasesQuery.isError) {
-    return { isError: true };
-  }
-  if (!purchasesQuery.data) {
-    return { isEmpty: true };
-  }
-
-  const purchases = purchasesQuery.data.purchases;
-  const totalCount = purchasesQuery.data.count;
-
-  if (purchases.length === 0) {
-    return { isEmpty: true };
-  }
-
-  return {
-    data: {
-      purchases,
-      pages: Math.ceil(totalCount / pageSize),
-    },
-  };
-}
+const pageSize = 50;
 
 export function PaymentHistory(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
   clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
-  from: Date;
-  to: Date;
 }) {
   const [page, setPage] = useState(1);
-
-  const purchasesQuery = usePayPurchases({
-    /**
-     *  @deprecated - remove after migration
-     */
-    clientId: props.clientId,
-    // switching to projectId for lookup, but have to send both during migration
-    projectId: props.projectId,
-    teamId: props.teamId,
-    from: props.from,
-    to: props.to,
-    start: (page - 1) * pageSize,
-    count: pageSize,
+  const { data: payPurchaseData, isLoading } = useQuery<
+    PaymentsResponse,
+    Error
+  >({
+    queryKey: ["payments", props.clientId, page],
+    queryFn: async () => {
+      const res = await getPayments({
+        clientId: props.clientId,
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+      return res;
+    },
   });
-
-  const uiQuery = processQuery(purchasesQuery);
+  const isEmpty = useMemo(
+    () => !payPurchaseData?.data.length,
+    [payPurchaseData],
+  );
 
   return (
     <div className="w-full">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <CardHeading> Transaction History</CardHeading>
-        {!uiQuery.isError && (
-          <ExportToCSVButton
-            fileName="transaction_history"
-            getData={async () => {
-              const purchaseData = await getPayPurchases({
-                /**
-                 *  @deprecated - remove after migration
-                 */
-                clientId: props.clientId,
-                // switching to projectId for lookup, but have to send both during migration
-                projectId: props.projectId,
-                teamId: props.teamId,
-                count: 10000,
-                from: props.from,
-                start: 0,
-                to: props.to,
-              });
-
-              return getCSVData(purchaseData.purchases);
-            }}
-          />
-        )}
+        <ExportToCSVButton
+          fileName="transaction_history"
+          getData={async () => {
+            return getCSVData(payPurchaseData?.data || []);
+          }}
+        />
       </div>
 
       <div className="h-5" />
 
-      {!uiQuery.isError ? (
-        <RenderData
-          query={uiQuery}
-          activePage={page}
-          setPage={setPage}
-          isLoadingMore={purchasesQuery.isFetching}
-        />
-      ) : (
-        <FailedToLoad />
-      )}
+      <div>
+        <ScrollShadow className="overflow-hidden rounded-lg border">
+          <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
+            <thead>
+              <TableHeadingRow>
+                <TableHeading> Paid </TableHeading>
+                <TableHeading> Bought </TableHeading>
+                <TableHeading>Type</TableHeading>
+                <TableHeading>Status</TableHeading>
+                <TableHeading>Recipient</TableHeading>
+                <TableHeading>Date</TableHeading>
+              </TableHeadingRow>
+            </thead>
+            <tbody>
+              {(!isEmpty || isLoading) &&
+                (payPurchaseData && !isLoading ? (
+                  <>
+                    {payPurchaseData.data.map((purchase) => {
+                      return <TableRow key={purchase.id} purchase={purchase} />;
+                    })}
+                  </>
+                ) : (
+                  new Array(pageSize).fill(0).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                    <SkeletonTableRow key={i} />
+                  ))
+                ))}
+            </tbody>
+          </table>
+
+          {isEmpty && !isLoading ? (
+            <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
+              No data available
+            </div>
+          ) : payPurchaseData ? (
+            <div className="my-8">
+              <PaginationButtons
+                activePage={page}
+                totalPages={Math.ceil(
+                  payPurchaseData.meta.totalCount / pageSize,
+                )}
+                onPageClick={setPage}
+              />
+            </div>
+          ) : null}
+        </ScrollShadow>
+      </div>
     </div>
   );
 }
 
-function RenderData(props: {
-  query: ProcessedQuery;
-  isLoadingMore: boolean;
-  activePage: number;
-  setPage: (page: number) => void;
-}) {
-  return (
-    <div>
-      <ScrollShadow className="overflow-hidden rounded-lg border">
-        <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
-          <thead>
-            <TableHeadingRow>
-              <TableHeading> Bought </TableHeading>
-              <TableHeading> Paid </TableHeading>
-              <TableHeading>Type</TableHeading>
-              <TableHeading>Status</TableHeading>
-              <TableHeading>Recipient</TableHeading>
-              <TableHeading>Date</TableHeading>
-            </TableHeadingRow>
-          </thead>
-          <tbody>
-            {!props.query.isEmpty &&
-              (props.query.data && !props.isLoadingMore ? (
-                <>
-                  {props.query.data.purchases.map((purchase) => {
-                    return (
-                      <TableRow key={purchase.purchaseId} purchase={purchase} />
-                    );
-                  })}
-                </>
-              ) : (
-                new Array(pageSize).fill(0).map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                  <SkeletonTableRow key={i} />
-                ))
-              ))}
-          </tbody>
-        </table>
-
-        {props.query.isEmpty ? (
-          <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
-            No data available
-          </div>
-        ) : props.query.data ? (
-          <div className="my-8">
-            <PaginationButtons
-              activePage={props.activePage}
-              totalPages={props.query.data?.pages || 5}
-              onPageClick={props.setPage}
-            />
-          </div>
-        ) : null}
-      </ScrollShadow>
-    </div>
-  );
-}
-
-function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
+function TableRow(props: { purchase: Payment }) {
   const { purchase } = props;
+  const originAmount = toTokens(
+    purchase.originAmount,
+    purchase.originToken.decimals,
+  );
+  const destinationAmount = toTokens(
+    purchase.destinationAmount,
+    purchase.destinationToken.decimals,
+  );
+  const type = (() => {
+    if (purchase.originToken.chainId !== purchase.destinationToken.chainId) {
+      return "Bridge";
+    }
+    if (purchase.originToken.address !== purchase.destinationToken.address) {
+      return "Swap";
+    }
+    return "Transfer";
+  })();
 
   return (
     <tr
-      key={purchase.purchaseId}
+      key={purchase.id}
       className="fade-in-0 border-border border-b duration-300"
     >
-      {/* Bought */}
-      <TableData>{`${formatTokenAmount(purchase.toAmount)} ${purchase.toToken.symbol}`}</TableData>
-
       {/* Paid */}
+      <TableData>{`${formatTokenAmount(originAmount)} ${purchase.originToken.symbol}`}</TableData>
+
+      {/* Bought */}
       <TableData>
-        {purchase.purchaseType === "SWAP"
-          ? `${formatTokenAmount(purchase.fromAmount)} ${purchase.fromToken.symbol}`
-          : `${formatTokenAmount(`${purchase.fromAmountUSDCents / 100}`)} ${purchase.fromCurrencySymbol}`}
+        {`${formatTokenAmount(destinationAmount)} ${purchase.destinationToken.symbol}`}
       </TableData>
 
       {/* Type */}
@@ -217,12 +151,12 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
           variant="secondary"
           className={cn(
             "uppercase",
-            purchase.purchaseType === "ONRAMP"
+            type === "Transfer"
               ? "bg-fuchsia-200 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-200"
               : "bg-indigo-200 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200",
           )}
         >
-          {purchase.purchaseType === "ONRAMP" ? "Fiat" : "Crypto"}
+          {type}
         </Badge>
       </TableData>
 
@@ -244,13 +178,13 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
 
       {/* Address */}
       <TableData>
-        <WalletAddress address={purchase.fromAddress} />
+        <WalletAddress address={purchase.sender} />
       </TableData>
 
       {/* Date */}
       <TableData>
         <p className="min-w-[180px] lg:min-w-auto">
-          {format(new Date(purchase.updatedAt), "LLL dd, y h:mm a")}
+          {format(new Date(purchase.createdAt), "LLL dd, y h:mm a")}
         </p>
       </TableData>
     </tr>
@@ -282,25 +216,43 @@ function SkeletonTableRow() {
   );
 }
 
-function getCSVData(data: PayPurchasesData["purchases"]) {
+function getCSVData(data: Payment[]) {
   const header = ["Type", "Bought", "Paid", "Status", "Recipient", "Date"];
 
-  const rows: string[][] = data.map((purchase) => [
-    // bought
-    `${formatTokenAmount(purchase.toAmount)} ${purchase.toToken.symbol}`,
-    // paid
-    purchase.purchaseType === "SWAP"
-      ? `${formatTokenAmount(purchase.fromAmount)} ${purchase.fromToken.symbol}`
-      : `${formatTokenAmount(`${purchase.fromAmountUSDCents / 100}`)} ${purchase.fromCurrencySymbol}`,
-    // type
-    purchase.purchaseType === "ONRAMP" ? "Fiat" : "Crypto",
-    // status
-    purchase.status,
-    // recipient
-    purchase.fromAddress,
-    // date
-    format(new Date(purchase.updatedAt), "LLL dd y h:mm a"),
-  ]);
+  const rows: string[][] = data.map((purchase) => {
+    const toAmount = toTokens(
+      purchase.destinationAmount,
+      purchase.destinationToken.decimals,
+    );
+    const fromAmount = toTokens(
+      purchase.originAmount,
+      purchase.originToken.decimals,
+    );
+    const type = (() => {
+      if (purchase.originToken.chainId !== purchase.destinationToken.chainId) {
+        return "BRIDGE";
+      }
+      if (purchase.originToken.address !== purchase.destinationToken.address) {
+        return "SWAP";
+      }
+      return "TRANSFER";
+    })();
+
+    return [
+      // bought
+      `${formatTokenAmount(toAmount)} ${purchase.destinationToken.symbol}`,
+      // paid
+      `${formatTokenAmount(fromAmount)} ${purchase.originToken.symbol}`,
+      // type
+      type,
+      // status
+      purchase.status,
+      // sender
+      purchase.sender,
+      // date
+      format(new Date(purchase.createdAt), "LLL dd y h:mm a"),
+    ];
+  });
 
   return { header, rows };
 }

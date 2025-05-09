@@ -2,9 +2,9 @@
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
+import type { UniversalBridgeStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
 import { chartHeight } from "./common";
-import type { UniversalBridgeStats } from "types/analytics";
 
 type VolData = {
   name: string;

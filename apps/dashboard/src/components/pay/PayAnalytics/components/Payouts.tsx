@@ -1,10 +1,10 @@
 "use client";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { useMemo } from "react";
-import { toUSD } from "../../../../utils/number";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeStats } from "types/analytics";
-import { ChangeBadge, NoDataOverlay, chartHeight, CardHeading } from "./common";
+import { toUSD } from "../../../../utils/number";
+import { CardHeading, ChangeBadge, NoDataOverlay, chartHeight } from "./common";
 
 type GraphData = {
   date: string;
