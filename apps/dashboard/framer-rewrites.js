@@ -31,6 +31,8 @@ module.exports = [
   "/solutions/consumer-apps",
   "/solutions/defi",
   "/solutions/ecosystem",
+  // -- support pages --
+  "/knowledge-base",
   // -- campaigns --
   // "/unlimited-wallets", -- OFF for now
   // -- TPP --
