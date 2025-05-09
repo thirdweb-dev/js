@@ -4,7 +4,7 @@ import { ContractPublishForm } from "components/contract-components/contract-pub
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { getUserThirdwebClient } from "../../../../api/lib/getAuthToken";
+import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
@@ -22,10 +22,9 @@ export default async function PublishContractPage(
     ? decodedPublishUri
     : `ipfs://${decodedPublishUri}`;
 
-  const client = await getUserThirdwebClient();
   const publishMetadataFromUri = await fetchDeployMetadata({
     uri: publishUri,
-    client,
+    client: serverThirdwebClient,
   }).catch(() => null);
 
   if (!publishMetadataFromUri) {
@@ -51,7 +50,7 @@ export default async function PublishContractPage(
       await getLatestPublishedContractsWithPublisherMapping({
         publisher: address,
         contract_id: publishMetadataFromUri.name,
-        client,
+        client: serverThirdwebClient,
       });
 
     if (publishedContract) {

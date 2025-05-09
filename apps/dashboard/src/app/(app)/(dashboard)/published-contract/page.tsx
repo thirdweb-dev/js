@@ -1,6 +1,6 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { getUserThirdwebClient } from "../../api/lib/getAuthToken";
 
 export default async function Page(props: {
   searchParams: Promise<{
@@ -13,10 +13,8 @@ export default async function Page(props: {
     return redirect("/team");
   }
 
-  const client = await getUserThirdwebClient();
-
   const contractMetadata = await fetchDeployMetadata({
-    client,
+    client: serverThirdwebClient,
     // force `ipfs://` prefix
     uri: searchParams.uri.startsWith("ipfs://")
       ? searchParams.uri

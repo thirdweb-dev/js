@@ -1,6 +1,5 @@
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
-  DASHBOARD_THIRDWEB_SECRET_KEY,
   IPFS_GATEWAY_URL,
 } from "@/constants/env";
 import {
@@ -12,7 +11,7 @@ import {
   THIRDWEB_SOCIAL_API_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
 } from "constants/urls";
-import { createThirdwebClient } from "thirdweb";
+import { type ThirdwebClient, createThirdwebClient } from "thirdweb";
 import { populateEip712Transaction } from "thirdweb/transaction";
 import {
   getTransactionDecorator,
@@ -22,15 +21,10 @@ import {
 import { getZkPaymasterData } from "thirdweb/wallets/smart";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
-// returns a thirdweb client with optional JWT passed in
-export function getThirdwebClient(
-  options:
-    | {
-        jwt: string | null | undefined;
-        teamId: string | undefined;
-      }
-    | undefined,
-) {
+export function getConfiguredThirdwebClient(options: {
+  secretKey: string | undefined;
+  teamId: string | undefined;
+}): ThirdwebClient {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
@@ -78,8 +72,8 @@ export function getThirdwebClient(
   }
 
   return createThirdwebClient({
-    teamId: options?.teamId,
-    secretKey: options?.jwt ? options.jwt : DASHBOARD_THIRDWEB_SECRET_KEY,
+    teamId: options.teamId,
+    secretKey: options.secretKey,
     clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
     config: {
       storage: {

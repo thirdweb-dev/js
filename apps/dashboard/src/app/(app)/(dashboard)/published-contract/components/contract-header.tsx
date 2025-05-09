@@ -1,7 +1,5 @@
-"use client";
 import type { PublishedContractWithVersion } from "components/contract-components/fetch-contracts-with-versions";
 import type { PropsWithChildren } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { ModuleList } from "../[publisher]/[contract_id]/components/module-list.client";
 import { DeployContractInfo } from "./contract-info";
 import { DeployContractVersionSelector } from "./version-selector";
@@ -12,7 +10,6 @@ type DeployContractHeaderProps = {
   version?: string;
   allVersions: PublishedContractWithVersion[];
   activeVersion: PublishedContractWithVersion;
-  client: ThirdwebClient;
 };
 
 export function DeployContractHeader(
@@ -23,7 +20,6 @@ export function DeployContractHeader(
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         <DeployContractInfo
           name={props.activeVersion.name}
-          client={props.client}
           displayName={props.activeVersion.displayName}
           description={props.activeVersion.description}
           logo={props.activeVersion.logo}

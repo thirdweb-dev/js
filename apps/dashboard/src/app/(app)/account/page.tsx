@@ -1,6 +1,6 @@
 import { getTeams } from "@/api/team";
 import { getMemberById } from "@/api/team-members";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../api/lib/getAuthToken";
 import { loginRedirect } from "../login/loginRedirect";
@@ -18,7 +18,7 @@ export default async function Page() {
     loginRedirect("/account");
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: undefined,
   });

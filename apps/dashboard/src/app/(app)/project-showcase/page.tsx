@@ -15,7 +15,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   PROJECT_SHOWCASE_DATA,
@@ -27,6 +26,7 @@ import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 
 export const metadata: Metadata = {
   title: "Project Showcase | Built on thirdweb",
@@ -65,8 +65,6 @@ export default async function ProjectShowcasePage(props: {
     (currentPage - 1) * PROJECT_SHOWCASE_ITEMS_PER_PAGE,
     currentPage * PROJECT_SHOWCASE_ITEMS_PER_PAGE,
   );
-
-  const client = getThirdwebClient(undefined);
 
   return (
     <div className="min-h-dvh bg-background">
@@ -139,7 +137,7 @@ export default async function ProjectShowcasePage(props: {
                       src={
                         project.image?.startsWith("ipfs://")
                           ? (resolveSchemeWithErrorHandler({
-                              client,
+                              client: serverThirdwebClient,
                               uri: project.image,
                             }) ?? "")
                           : (project.image ??

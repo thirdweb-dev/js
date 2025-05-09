@@ -1,7 +1,6 @@
 import { getUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   type Range,
   getLastNDaysRange,
@@ -10,6 +9,7 @@ import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbs
 import { AccountAbstractionSummary } from "components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { getClientThirdwebClient } from "../../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { searchParamLoader } from "./search-params";
 
@@ -69,7 +69,7 @@ export default async function Page(props: {
     period: interval,
   });
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: project.teamId,
   });

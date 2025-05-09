@@ -3,19 +3,18 @@ import "server-only";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import type { ThirdwebClient } from "thirdweb";
+import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { fallbackChainIcon } from "../../../../../../utils/chain-icons";
 
 export async function ChainIcon(props: {
   iconUrl?: string;
   className?: string;
-  client: ThirdwebClient;
 }) {
   if (props.iconUrl) {
     let imageLink = fallbackChainIcon;
 
     const resolved = resolveSchemeWithErrorHandler({
-      client: props.client,
+      client: serverThirdwebClient,
       uri: props.iconUrl,
     });
 

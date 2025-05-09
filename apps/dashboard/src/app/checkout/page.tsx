@@ -1,8 +1,8 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Metadata } from "next";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
+import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
 import { CheckoutEmbed } from "./components/client/CheckoutEmbed.client";
 import type { CheckoutParams } from "./components/types";
 
@@ -46,10 +46,10 @@ export default async function RoutesPage({
   const client =
     params.clientId && !Array.isArray(params.clientId)
       ? createThirdwebClient({ clientId: params.clientId })
-      : getThirdwebClient(undefined);
+      : getClientThirdwebClient(undefined);
 
   const tokenContract = getContract({
-    client: getThirdwebClient(undefined), // for this RPC call, use the dashboard client
+    client: getClientThirdwebClient(undefined), // for this RPC call, use the dashboard client
     // eslint-disable-next-line no-restricted-syntax
     chain: defineChain(Number(params.chainId)),
     address: params.tokenAddress,

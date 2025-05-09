@@ -1,5 +1,5 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import type { Metadata } from "next";
+import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 
 const title = "Universal Bridge: Swap, Bridge, and On-Ramp";
@@ -19,7 +19,7 @@ export default async function RoutesPage({
   searchParams,
 }: { searchParams: Record<string, string | string[]> }) {
   const { chainId } = searchParams;
-  const client = getThirdwebClient(undefined);
+  const client = getClientThirdwebClient(undefined);
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
       <main className="container z-10 flex justify-center">

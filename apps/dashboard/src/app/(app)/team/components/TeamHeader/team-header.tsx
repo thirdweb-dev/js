@@ -1,6 +1,6 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { LAST_USED_TEAM_ID } from "constants/cookies";
 import { cookies } from "next/headers";
 import { getRawAccount } from "../../../account/settings/getAccount";
@@ -41,7 +41,7 @@ export async function TeamHeader() {
     return <HeaderLoggedOut />;
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: lastUsedTeam?.id,
   });

@@ -1,6 +1,5 @@
 import {
   IPFS_GATEWAY_URL,
-  NEBULA_APP_SECRET_KEY,
   NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
 } from "@/constants/env";
 import {
@@ -17,7 +16,7 @@ import { setThirdwebDomains } from "thirdweb/utils";
 import { getVercelEnv } from "../../../../lib/vercel-utils";
 
 // returns a thirdweb client with optional JWT passed in
-function getThirdwebClient() {
+function getNebulaThirdwebClient() {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
@@ -32,7 +31,7 @@ function getThirdwebClient() {
   }
 
   return createThirdwebClient({
-    secretKey: NEBULA_APP_SECRET_KEY,
+    secretKey: undefined,
     clientId: NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
     config: {
       storage: {
@@ -42,4 +41,4 @@ function getThirdwebClient() {
   });
 }
 
-export const nebulaAppThirdwebClient = getThirdwebClient();
+export const nebulaAppThirdwebClient = getNebulaThirdwebClient();

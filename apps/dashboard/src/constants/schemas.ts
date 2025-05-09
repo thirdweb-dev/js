@@ -2,7 +2,7 @@ import { resolveEns } from "lib/ens";
 import { isAddress } from "thirdweb";
 import { isValidENSName } from "thirdweb/utils";
 import z from "zod";
-import { getThirdwebClient } from "../@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "../@/constants/thirdweb-client.client";
 
 /**
  * This file contains some useful zod schemas from the SDK v4
@@ -25,7 +25,7 @@ const EnsSchema: z.ZodType<`0x${string}`, z.ZodTypeDef, string> = z
   // TODO - move this schema inside component to use client with authToken, teamId filled in
   .transform(
     async (ens) =>
-      (await resolveEns(ens, getThirdwebClient(undefined))).address,
+      (await resolveEns(ens, getClientThirdwebClient(undefined))).address,
   )
   .refine(
     (address): address is `0x${string}` => !!address && isAddress(address),

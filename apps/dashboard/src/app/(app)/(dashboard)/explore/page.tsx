@@ -1,4 +1,3 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ContractRow } from "components/explore/contract-row";
 import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
@@ -20,8 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ExplorePage() {
-  const client = getThirdwebClient(undefined);
-
   return (
     <div className="flex flex-col">
       <div className="container flex flex-col gap-4 py-8">
@@ -40,7 +37,7 @@ export default async function ExplorePage() {
               {Math.floor(EXPLORE_PAGE_DATA.length / 2) === idx && (
                 <PublishUpsellCard />
               )}
-              <ContractRow category={category} client={client} />
+              <ContractRow category={category} />
             </Fragment>
           ))}
         </div>

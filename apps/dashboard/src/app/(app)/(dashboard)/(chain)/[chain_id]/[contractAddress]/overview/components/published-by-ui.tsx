@@ -160,7 +160,6 @@ export function PublishedByUI(props: {
         moduleId: m.name,
         version: m.version,
       }))}
-      client={props.client}
     />
   );
 }
