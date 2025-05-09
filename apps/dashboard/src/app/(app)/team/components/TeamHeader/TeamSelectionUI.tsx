@@ -93,8 +93,13 @@ export function TeamSelectionUI(props: {
                   >
                     <Link
                       href={
-                        currentTeam && !props.isOnProjectPage
-                          ? pathname.replace(currentTeam.slug, team.slug)
+                        currentTeam &&
+                        !props.isOnProjectPage &&
+                        pathname.startsWith("/team")
+                          ? pathname.replace(
+                              `/team/${currentTeam.slug}`,
+                              `/team/${team.slug}`,
+                            )
                           : `/team/${team.slug}`
                       }
                     >
