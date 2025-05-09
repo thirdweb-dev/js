@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.8
+
+### Patch Changes
+
+- [#6984](https://github.com/thirdweb-dev/js/pull/6984) [`bc75ae6`](https://github.com/thirdweb-dev/js/commit/bc75ae68265cbfbac50df0704b45117b812bbf10) Thanks [@jnsdls](https://github.com/jnsdls)! - handle jwt auth method explicitly
+
 ## 0.9.7
 
 ### Patch Changes
