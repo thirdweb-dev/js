@@ -94,11 +94,6 @@ export function useTokensData({
 
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    // already set
-    if (tokensStore.getValue().length > 0) {
-      return;
-    }
-
     if (!tokensQuery.data) {
       return;
     }

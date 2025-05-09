@@ -128,7 +128,7 @@ export const SelectWithSearch = React.forwardRef<
               <span
                 className={cn(
                   "truncate text-muted-foreground text-sm",
-                  selectedOption && "text-foreground",
+                  selectedOption && "w-full text-foreground",
                 )}
               >
                 {renderOption && selectedOption

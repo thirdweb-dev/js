@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CreditCardIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
@@ -22,6 +22,10 @@ export function CheckoutLinkForm() {
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
+
+  const isFormComplete = useMemo(() => {
+    return chainId && recipientAddress && tokenAddressWithChain && amount;
+  }, [chainId, recipientAddress, tokenAddressWithChain, amount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,6 +145,7 @@ export function CheckoutLinkForm() {
               type="button"
               variant="outline"
               className="flex-1"
+              disabled={isLoading || !isFormComplete}
               onClick={async () => {
                 if (
                   !chainId ||
@@ -169,7 +174,11 @@ export function CheckoutLinkForm() {
             >
               Preview
             </Button>
-            <Button type="submit" className="flex-1" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={isLoading || !isFormComplete}
+            >
               {isLoading ? "Creating..." : "Create"}
             </Button>
           </div>

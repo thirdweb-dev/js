@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { shortenAddress } from "thirdweb/utils";
 import { useTokensData } from "../../../hooks/tokens/tokens";
 import { replaceIpfsUrl } from "../../../lib/sdk";
 import { fallbackChainIcon } from "../../../utils/chain-icons";
@@ -89,8 +90,8 @@ export function TokenSelector(props: {
 
           {!props.disableChainId && (
             <Badge variant="outline" className="gap-2 max-sm:hidden">
-              <span className="text-muted-foreground">Chain ID</span>
-              {token.chainId}
+              <span className="text-muted-foreground">Address</span>
+              {shortenAddress(token.address, 4)}
             </Badge>
           )}
         </div>
