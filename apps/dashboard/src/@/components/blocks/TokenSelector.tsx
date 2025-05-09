@@ -22,10 +22,12 @@ export function TokenSelector(props: {
   placeholder?: string;
   client: ThirdwebClient;
   disabled?: boolean;
+  enabled?: boolean;
 }) {
-  const { tokens, isLoading } = useTokensData({
+  const { tokens, isFetching } = useTokensData({
     clientId: props.client.clientId,
     chainId: props.chainId,
+    enabled: props.enabled,
   });
 
   const options = useMemo(() => {
@@ -108,13 +110,13 @@ export function TokenSelector(props: {
       closeOnSelect={true}
       showCheck={false}
       placeholder={
-        isLoading ? "Loading Tokens..." : props.placeholder || "Select Token"
+        isFetching ? "Loading Tokens..." : props.placeholder || "Select Token"
       }
       overrideSearchFn={searchFn}
       renderOption={renderOption}
       className={props.className}
       popoverContentClassName={props.popoverContentClassName}
-      disabled={isLoading || props.disabled}
+      disabled={isFetching || props.disabled}
       side={props.side}
       align={props.align}
     />

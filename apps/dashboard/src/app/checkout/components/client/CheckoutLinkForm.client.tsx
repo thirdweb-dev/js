@@ -10,9 +10,9 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CreditCardIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { defineChain, getContract } from "thirdweb";
+import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
-import { checksumAddress } from "thirdweb/utils";
+import { resolveEns } from "../../../../lib/ens";
 
 export function CheckoutLinkForm() {
   const client = useThirdwebClient();
@@ -33,41 +33,20 @@ export function CheckoutLinkForm() {
         throw new Error("All fields are required");
       }
 
-      // Validate addresses
-      if (!checksumAddress(recipientAddress)) {
-        throw new Error("Invalid recipient address");
-      }
-      if (!checksumAddress(tokenAddressWithChain)) {
-        throw new Error("Invalid token address");
-      }
-
-      const [_chainId, tokenAddress] = tokenAddressWithChain.split(":");
-      if (Number(_chainId) !== chainId) {
-        throw new Error("Chain ID does not match token chain");
-      }
-      if (!tokenAddress) {
-        throw new Error("Missing token address");
-      }
-      // Get token decimals
-      const tokenContract = getContract({
+      const inputs = await parseInputs(
         client,
-        // eslint-disable-next-line no-restricted-syntax
-        chain: defineChain(chainId),
-        address: tokenAddress,
-      });
-      const { decimals } = await getCurrencyMetadata({
-        contract: tokenContract,
-      });
-
-      // Convert amount to wei
-      const amountInWei = BigInt(Number.parseFloat(amount) * 10 ** decimals);
+        chainId,
+        tokenAddressWithChain,
+        recipientAddress,
+        amount,
+      );
 
       // Build checkout URL
       const params = new URLSearchParams({
-        chainId: chainId.toString(),
-        recipientAddress,
-        tokenAddress: tokenAddressWithChain,
-        amount: amountInWei.toString(),
+        chainId: inputs.chainId.toString(),
+        recipientAddress: inputs.recipientAddress,
+        tokenAddress: inputs.tokenAddress,
+        amount: inputs.amount.toString(),
       });
 
       const checkoutUrl = `${window.location.origin}/checkout?${params.toString()}`;
@@ -121,6 +100,7 @@ export function CheckoutLinkForm() {
               className="w-full"
               client={client}
               disabled={!chainId}
+              enabled={!!chainId}
             />
           </div>
 
@@ -132,7 +112,7 @@ export function CheckoutLinkForm() {
               id="recipient"
               value={recipientAddress}
               onChange={(e) => setRecipientAddress(e.target.value)}
-              placeholder="0x..."
+              placeholder="Address or ENS"
               required
               className="w-full"
             />
@@ -161,7 +141,7 @@ export function CheckoutLinkForm() {
               type="button"
               variant="outline"
               className="flex-1"
-              onClick={() => {
+              onClick={async () => {
                 if (
                   !chainId ||
                   !recipientAddress ||
@@ -171,11 +151,18 @@ export function CheckoutLinkForm() {
                   toast.error("Please fill in all fields first");
                   return;
                 }
-                const params = new URLSearchParams({
-                  chainId: chainId.toString(),
+                const inputs = await parseInputs(
+                  client,
+                  chainId,
+                  tokenAddressWithChain,
                   recipientAddress,
-                  tokenAddress: tokenAddressWithChain,
                   amount,
+                );
+                const params = new URLSearchParams({
+                  chainId: inputs.chainId.toString(),
+                  recipientAddress: inputs.recipientAddress,
+                  tokenAddress: inputs.tokenAddress,
+                  amount: inputs.amount.toString(),
                 });
                 window.open(`/checkout?${params.toString()}`, "_blank");
               }}
@@ -190,4 +177,48 @@ export function CheckoutLinkForm() {
       </CardContent>
     </Card>
   );
+}
+
+async function parseInputs(
+  client: ThirdwebClient,
+  chainId: number,
+  tokenAddressWithChain: string,
+  recipientAddressOrEns: string,
+  decimalAmount: string,
+) {
+  const [_chainId, tokenAddress] = tokenAddressWithChain.split(":");
+  if (Number(_chainId) !== chainId) {
+    throw new Error("Chain ID does not match token chain");
+  }
+  if (!tokenAddress) {
+    throw new Error("Missing token address");
+  }
+
+  const ensPromise = resolveEns(recipientAddressOrEns, client);
+  const currencyPromise = getCurrencyMetadata({
+    contract: getContract({
+      client,
+      // eslint-disable-next-line no-restricted-syntax
+      chain: defineChain(chainId),
+      address: tokenAddress,
+    }),
+  });
+  const [ens, currencyMetadata] = await Promise.all([
+    ensPromise,
+    currencyPromise,
+  ]);
+  if (!ens.address) {
+    throw new Error("Invalid recipient address");
+  }
+
+  const amountInWei = BigInt(
+    Number.parseFloat(decimalAmount) * 10 ** currencyMetadata.decimals,
+  );
+
+  return {
+    chainId,
+    tokenAddress,
+    recipientAddress: ens.address,
+    amount: amountInWei,
+  };
 }

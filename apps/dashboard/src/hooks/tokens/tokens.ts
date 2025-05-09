@@ -84,10 +84,12 @@ const structuredTokensStore = /* @__PURE__ */ createStructuredTokensStore();
 export function useTokensData({
   clientId,
   chainId,
-}: { clientId: string; chainId?: number }) {
+  enabled,
+}: { clientId: string; chainId?: number; enabled?: boolean }) {
   const tokensQuery = useQuery({
     queryKey: ["universal-bridge-tokens", chainId],
     queryFn: () => getUniversalBrigeTokens({ clientId, chainId }),
+    enabled,
   });
 
   // eslint-disable-next-line no-restricted-syntax
@@ -107,5 +109,6 @@ export function useTokensData({
   return {
     tokens: useStore(structuredTokensStore),
     isLoading: tokensQuery.isLoading,
+    isFetching: tokensQuery.isFetching,
   };
 }
