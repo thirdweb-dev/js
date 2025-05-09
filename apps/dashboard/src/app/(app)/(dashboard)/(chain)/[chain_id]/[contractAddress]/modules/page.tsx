@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -19,24 +18,26 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract } = info;
+  const { clientContract, serverContract, isLocalhostChain } = info;
 
   const account = await getRawAccount();
 
-  if (contract.chain.id === localhost.id) {
+  if (isLocalhostChain) {
     return (
       <ContractEditModulesPageClient
-        contract={contract}
+        contract={clientContract}
         isLoggedIn={!!account}
       />
     );
   }
 
-  const { isModularCore } = await getContractPageMetadata(contract);
+  const { isModularCore } = await getContractPageMetadata(serverContract);
 
   if (!isModularCore) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractEditModulesPage contract={contract} isLoggedIn={!!account} />;
+  return (
+    <ContractEditModulesPage contract={clientContract} isLoggedIn={!!account} />
+  );
 }

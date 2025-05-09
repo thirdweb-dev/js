@@ -1,7 +1,9 @@
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { getAddress, getContract, isAddress } from "thirdweb";
+import { localhost } from "thirdweb/chains";
 import { fetchChainWithLocalOverrides } from "../../../../../../../utils/fetchChainWithLocalOverrides";
+import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 
 export async function getContractPageParamsInfo(params: {
   contractAddress: string;
@@ -17,17 +19,26 @@ export async function getContractPageParamsInfo(params: {
 
   // attempt to get the auth token
 
-  const contract = getContract({
+  const serverContract = getContract({
+    address: contractAddress,
+    // eslint-disable-next-line no-restricted-syntax
+    chain: mapV4ChainToV5Chain(chainMetadata),
+    client: serverThirdwebClient,
+  });
+
+  const clientContract = getContract({
     address: contractAddress,
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chainMetadata),
     // if we have the auth token pass it into the client
-    client: serverThirdwebClient,
+    client: await getUserThirdwebClient(),
   });
 
   return {
     chainMetadata,
-    contract,
+    serverContract,
+    clientContract,
+    isLocalhostChain: chainMetadata.chainId === localhost.id,
   };
 }
 

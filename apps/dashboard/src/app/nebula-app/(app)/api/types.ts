@@ -3,11 +3,38 @@ type SessionContextFilter = {
   wallet_address: string | null;
 };
 
-export type NebulaSessionHistoryMessage = {
-  role: "user" | "assistant" | "action" | "image";
-  content: string;
-  timestamp: number;
+type NebulaUserMessageContentItem =
+  | {
+      type: "image";
+      image_url: string;
+    }
+  | {
+      type: "text";
+      text: string;
+    }
+  | {
+      type: "transaction";
+      transaction_hash: string;
+      chain_id: number;
+    };
+
+export type NebulaUserMessageContent = NebulaUserMessageContentItem[];
+
+export type NebulaUserMessage = {
+  role: "user";
+  content: NebulaUserMessageContent;
 };
+
+export type NebulaSessionHistoryMessage =
+  | {
+      role: "assistant" | "action" | "image";
+      content: string;
+      timestamp: number;
+    }
+  | {
+      role: "user";
+      content: NebulaUserMessageContent | string;
+    };
 
 export type SessionInfo = {
   id: string;

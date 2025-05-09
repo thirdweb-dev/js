@@ -1,6 +1,6 @@
 "use client";
 
-import { isProd } from "@/constants/env";
+import { isProd } from "@/constants/env-utils";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";

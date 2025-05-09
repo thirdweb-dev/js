@@ -7,15 +7,24 @@ import { ArrowDownToLineIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import { MessageActions } from "./MessageActions";
 
-export function NebulaImage(props: {
-  url: string;
-  width: number;
-  height: number;
-  client: ThirdwebClient;
-  requestId: string;
-  sessionId: string | undefined;
-  authToken: string;
-}) {
+export function NebulaImage(
+  props:
+    | {
+        type: "response";
+        url: string;
+        width: number;
+        height: number;
+        client: ThirdwebClient;
+        requestId: string;
+        sessionId: string | undefined;
+        authToken: string;
+      }
+    | {
+        type: "submitted";
+        url: string;
+        client: ThirdwebClient;
+      },
+) {
   const src = resolveSchemeWithErrorHandler({
     uri: props.url,
     client: props.client,
@@ -32,8 +41,8 @@ export function NebulaImage(props: {
   return (
     <div className="group relative max-w-[80%] lg:max-w-[60%]">
       <Img
-        width={props.width}
-        height={props.height}
+        width={props.type === "response" ? props.width : undefined}
+        height={props.type === "response" ? props.height : undefined}
         src={src}
         className="w-full rounded-lg border"
         skeleton={<div className="animate-skeleton bg-muted" />}
@@ -53,7 +62,7 @@ export function NebulaImage(props: {
         )}
       </Button>
 
-      {props.sessionId && (
+      {props.type === "response" && props.sessionId && (
         <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <MessageActions
             authToken={props.authToken}

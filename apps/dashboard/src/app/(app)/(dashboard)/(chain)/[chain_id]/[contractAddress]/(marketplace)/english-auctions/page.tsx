@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
@@ -21,17 +20,17 @@ export default async function Page(props: {
 
   const twAccount = await getRawAccount();
 
-  if (info.chainMetadata.chainId === localhost.id) {
+  if (info.isLocalhostChain) {
     return (
       <ContractEnglishAuctionsPageClient
-        contract={info.contract}
+        contract={info.clientContract}
         isLoggedIn={!!twAccount}
       />
     );
   }
 
   const { isEnglishAuctionSupported, isInsightSupported } =
-    await getContractPageMetadata(info.contract);
+    await getContractPageMetadata(info.serverContract);
 
   if (!isEnglishAuctionSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -39,7 +38,7 @@ export default async function Page(props: {
 
   return (
     <ContractEnglishAuctionsPage
-      contract={info.contract}
+      contract={info.clientContract}
       isLoggedIn={!!twAccount}
       isInsightSupported={isInsightSupported}
     />

@@ -1,7 +1,7 @@
 "use client";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -194,7 +194,7 @@ const client = createThirdwebClient({
 });
 
 // Create a server wallet
-const serverWallet = Engine.serverWallet({  
+const serverWallet = Engine.serverWallet({
   client,
   address: "<your-server-wallet-address>",
   vaultAccessToken: "<your-vault-access-token>",
@@ -232,7 +232,7 @@ console.log("Transaction hash:", result.transactionHash);
 `;
 
 const curlExample = () => `\
-curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract" \\
+curl -X POST "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract" \\
   -H "Content-Type: application/json" \\
   -H "x-secret-key: <your-project-secret-key>" \\
   -H "x-vault-access-token: <your-vault-access-token>" \\
@@ -252,7 +252,7 @@ curl -X POST "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract" \\
 
 const jsExample = () => `\
 const response = await fetch(
-  "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract",
+  "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract",
   {
     method: "POST",
     headers: {
@@ -280,7 +280,7 @@ const pythonExample = () => `\
 import requests
 import json
 
-url = "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract"
+url = "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract"
 headers = {
     "Content-Type": "application/json",
     "x-secret-key": "<your-project-secret-key>",
@@ -314,15 +314,15 @@ import (
 )
 
 func main() {
-	url := "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract"
-	
+	url := "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract"
+
 	// Create the request payload
 	type Param struct {
 		ContractAddress string   \`json:"contractAddress"\`
 		Method          string   \`json:"method"\`
 		Params          []string \`json:"params"\`
 	}
-	
+
 	type RequestBody struct {
 		ExecutionOptions struct {
 			From    string \`json:"from"\`
@@ -330,7 +330,7 @@ func main() {
 		} \`json:"executionOptions"\`
 		Params []Param \`json:"params"\`
 	}
-	
+
 	requestBody := RequestBody{
 		Params: []Param{
 			{
@@ -342,15 +342,15 @@ func main() {
 	}
 	requestBody.ExecutionOptions.From = "<your-server-wallet-address>"
 	requestBody.ExecutionOptions.ChainId = "84532"
-	
+
 	jsonData, _ := json.Marshal(requestBody)
-	
+
 	// Create the HTTP request
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-secret-key", "<your-project-secret-key>")
 	req.Header.Set("x-vault-access-token", "<your-vault-access-token>")
-	
+
 	// Send the request
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -359,7 +359,7 @@ func main() {
 		return
 	}
 	defer resp.Body.Close()
-	
+
 	// Process the response
 	var result map[string]interface{}
 	json.NewDecoder(resp.Body).Decode(&result)
@@ -377,8 +377,8 @@ class Program
 {
     static async Task Main()
     {
-        var url = "${THIRDWEB_ENGINE_CLOUD_URL}/v1/write/contract";
-        
+        var url = "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract";
+
         var requestData = new
         {
             executionOptions = new
@@ -396,17 +396,17 @@ class Program
                 }
             }
         };
-        
+
         var json = JsonSerializer.Serialize(requestData);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        
+
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-secret-key", "<your-project-secret-key>");
         httpClient.DefaultRequestHeaders.Add("x-vault-access-token", "<your-vault-access-token>");
-        
+
         var response = await httpClient.PostAsync(url, content);
         var responseContent = await response.Content.ReadAsStringAsync();
-        
+
         Console.WriteLine(responseContent);
     }
 }`;

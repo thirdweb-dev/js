@@ -15,5 +15,5 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <ContractSourcesPage contract={info.contract} />;
+  return <ContractSourcesPage contract={info.clientContract} />;
 }

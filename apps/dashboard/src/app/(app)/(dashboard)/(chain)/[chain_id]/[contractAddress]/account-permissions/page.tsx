@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { AccountSignersClient } from "./AccountSigners.client";
@@ -18,18 +17,18 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract, chainMetadata } = info;
+  const { clientContract, serverContract, isLocalhostChain } = info;
 
-  if (chainMetadata.chainId === localhost.id) {
-    return <AccountSignersClient contract={contract} />;
+  if (isLocalhostChain) {
+    return <AccountSignersClient contract={clientContract} />;
   }
 
   const { isAccountPermissionsSupported } =
-    await getContractPageMetadata(contract);
+    await getContractPageMetadata(serverContract);
 
   if (!isAccountPermissionsSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <AccountSigners contract={contract} />;
+  return <AccountSigners contract={clientContract} />;
 }

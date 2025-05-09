@@ -1,6 +1,7 @@
 "use server";
 import "server-only";
-import { API_SERVER_URL, BASE_URL } from "@/constants/env";
+import { BASE_URL } from "@/constants/env-utils";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
 import { upload } from "thirdweb/storage";
@@ -31,7 +32,7 @@ export async function createEcosystem(options: {
   });
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/checkout/create-link`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/checkout/create-link`,
     {
       method: "POST",
       body: JSON.stringify({

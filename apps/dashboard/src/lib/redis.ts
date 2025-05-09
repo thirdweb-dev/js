@@ -1,4 +1,5 @@
 import "server-only";
+import { REDIS_URL } from "@/constants/server-envs";
 import Redis from "ioredis";
 
 // wrapped in a function to avoid calling this during build
@@ -7,7 +8,6 @@ function getRedis() {
   if (redis_) {
     return redis_;
   }
-  const REDIS_URL = process.env.REDIS_URL || "";
 
   redis_ = new Redis(REDIS_URL);
   return redis_;

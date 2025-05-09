@@ -1,7 +1,7 @@
 "use server";
 
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
 
 export async function sendTeamInvites(options: {
   teamId: string;
@@ -40,17 +40,20 @@ async function sendInvite(
   invite: { email: string; role: "OWNER" | "MEMBER" },
   token: string,
 ) {
-  const res = await fetch(`${API_SERVER_URL}/v1/teams/${teamId}/invites`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/invites`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inviteEmail: invite.email,
+        inviteRole: invite.role,
+      }),
     },
-    body: JSON.stringify({
-      inviteEmail: invite.email,
-      inviteRole: invite.role,
-    }),
-  });
+  );
 
   if (!res.ok) {
     const errorMessage = await res.text();

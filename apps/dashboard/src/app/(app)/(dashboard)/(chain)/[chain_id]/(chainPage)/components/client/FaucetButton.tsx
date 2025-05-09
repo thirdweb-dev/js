@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  THIRDWEB_ENGINE_FAUCET_WALLET,
-  TURNSTILE_SITE_KEY,
-} from "@/constants/env";
+  NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+} from "@/constants/public-envs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,7 +90,7 @@ export function FaucetButton({
   // eslint-disable-next-line no-restricted-syntax
   const definedChain = mapV4ChainToV5Chain(chain);
   const faucetWalletBalanceQuery = useWalletBalance({
-    address: THIRDWEB_ENGINE_FAUCET_WALLET,
+    address: NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
     chain: definedChain,
     client,
   });
@@ -260,7 +260,7 @@ export function FaucetButton({
                 <FormControl>
                   <Turnstile
                     className="mt-4"
-                    siteKey={TURNSTILE_SITE_KEY}
+                    siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                     onSuccess={(token) => field.onChange(token)}
                   />
                 </FormControl>
@@ -342,7 +342,7 @@ function SendFundsToFaucetModalContent(props: {
     const sendNativeTokenTx = prepareTransaction({
       chain: props.chain,
       client: props.client,
-      to: THIRDWEB_ENGINE_FAUCET_WALLET,
+      to: NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
       value: toWei(values.amount.toString()),
     });
 
@@ -370,8 +370,8 @@ function SendFundsToFaucetModalContent(props: {
             copyIconPosition="right"
             variant="outline"
             className="w-full justify-between bg-card py-2 font-mono"
-            textToCopy={THIRDWEB_ENGINE_FAUCET_WALLET}
-            textToShow={THIRDWEB_ENGINE_FAUCET_WALLET}
+            textToCopy={NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET}
+            textToShow={NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET}
             tooltip={undefined}
           />
         </div>

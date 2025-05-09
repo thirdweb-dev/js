@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BASE_URL } from "@/constants/env";
+import { BASE_URL } from "@/constants/env-utils";
 import { useMutation } from "@tanstack/react-query";
 import { formatDate } from "date-fns";
 import { EllipsisIcon, MailIcon } from "lucide-react";

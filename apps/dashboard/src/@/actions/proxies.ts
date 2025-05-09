@@ -1,7 +1,12 @@
 "use server";
 
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL, THIRDWEB_ENGINE_CLOUD_URL } from "../constants/env";
+import {
+  NEXT_PUBLIC_ENGINE_CLOUD_URL,
+  NEXT_PUBLIC_PAY_URL,
+  NEXT_PUBLIC_THIRDWEB_API_HOST,
+} from "../constants/public-envs";
+import { ANALYTICS_SERVICE_URL } from "../constants/server-envs";
 
 type ProxyActionParams = {
   pathname: string;
@@ -76,13 +81,13 @@ async function proxy<T>(
 }
 
 export async function apiServerProxy<T>(params: ProxyActionParams) {
-  return proxy<T>(API_SERVER_URL, params);
+  return proxy<T>(NEXT_PUBLIC_THIRDWEB_API_HOST, params);
 }
 
 export async function engineCloudProxy<T>(params: ProxyActionParams) {
-  return proxy<T>(THIRDWEB_ENGINE_CLOUD_URL, params);
+  return proxy<T>(NEXT_PUBLIC_ENGINE_CLOUD_URL, params);
 }
 
 export async function analyticsServerProxy<T>(params: ProxyActionParams) {
-  return proxy<T>(process.env.ANALYTICS_SERVICE_URL || "", params);
+  return proxy<T>(ANALYTICS_SERVICE_URL, params);
 }

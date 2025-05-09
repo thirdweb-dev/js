@@ -1,4 +1,4 @@
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 import type { TransactionStats } from "../../../../../../../../types/analytics";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import type {
@@ -43,7 +43,7 @@ export async function getTransactionAnalyticsSummary(props: {
 
   try {
     const response = await fetch(
-      `${THIRDWEB_ENGINE_CLOUD_URL}/v1/transactions/analytics-summary`,
+      `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/analytics-summary`,
       {
         method: "POST",
         headers: {
@@ -102,7 +102,7 @@ export async function getTransactionsChart({
   };
 
   const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/v1/transactions/analytics`,
+    `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/analytics`,
     {
       method: "POST",
       headers: {
@@ -172,7 +172,7 @@ export async function getSingleTransaction({
   };
 
   const response = await fetch(
-    `${THIRDWEB_ENGINE_CLOUD_URL}/v1/transactions/search`,
+    `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/search`,
     {
       method: "POST",
       headers: {

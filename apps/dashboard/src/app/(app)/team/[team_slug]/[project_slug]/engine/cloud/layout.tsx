@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 import Link from "next/link";
 import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 
@@ -51,11 +51,11 @@ function TransactionsLayout(props: {
               </h1>
               <div className="flex items-center gap-2">
                 <Link
-                  href={`${THIRDWEB_ENGINE_CLOUD_URL}/reference`} // TODO: change this
+                  href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`} // TODO: change this
                   target="_blank"
                   className="max-w-full truncate py-1 text-muted-foreground"
                 >
-                  {THIRDWEB_ENGINE_CLOUD_URL}
+                  {NEXT_PUBLIC_ENGINE_CLOUD_URL}
                 </Link>
               </div>
             </div>

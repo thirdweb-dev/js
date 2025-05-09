@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -21,11 +20,11 @@ export default async function Page(props: {
 
   const account = await getRawAccount();
 
-  const { contract } = info;
-  if (contract.chain.id === localhost.id) {
+  const { clientContract, serverContract, isLocalhostChain } = info;
+  if (isLocalhostChain) {
     return (
       <ContractPermissionsPageClient
-        contract={contract}
+        contract={clientContract}
         chainMetadata={info.chainMetadata}
         isLoggedIn={!!account}
       />
@@ -33,11 +32,11 @@ export default async function Page(props: {
   }
 
   const { isPermissionsEnumerableSupported } =
-    await getContractPageMetadata(contract);
+    await getContractPageMetadata(serverContract);
 
   return (
     <ContractPermissionsPage
-      contract={contract}
+      contract={clientContract}
       chainSlug={info.chainMetadata.slug}
       detectedPermissionEnumerable={isPermissionsEnumerableSupported}
       isLoggedIn={!!account}

@@ -1,7 +1,7 @@
 import {
-  IPFS_GATEWAY_URL,
+  NEXT_PUBLIC_IPFS_GATEWAY_URL,
   NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
-} from "@/constants/env";
+} from "@/constants/public-envs";
 import {
   THIRDWEB_BUNDLER_DOMAIN,
   THIRDWEB_INAPP_WALLET_DOMAIN,
@@ -35,7 +35,7 @@ function getNebulaThirdwebClient() {
     clientId: NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
     config: {
       storage: {
-        gatewayUrl: IPFS_GATEWAY_URL,
+        gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
       },
     },
   });

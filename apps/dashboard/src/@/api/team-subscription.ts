@@ -1,5 +1,5 @@
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
 import type { ProductSKU } from "../lib/billing";
 
 type InvoiceLine = {
@@ -47,7 +47,7 @@ export async function getTeamSubscriptions(slug: string) {
   }
 
   const teamRes = await fetch(
-    `${API_SERVER_URL}/v1/teams/${slug}/subscriptions`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${slug}/subscriptions`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -5,6 +5,7 @@ import { AlertCircleIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { NebulaSwapData } from "../api/chat";
+import type { NebulaUserMessage, NebulaUserMessageContent } from "../api/types";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { ExecuteTransactionCard } from "./ExecuteTransactionCard";
 import { MessageActions } from "./MessageActions";
@@ -21,8 +22,12 @@ export type NebulaTxData = {
 
 export type ChatMessage =
   | {
+      type: "user";
+      content: NebulaUserMessageContent;
+    }
+  | {
       text: string;
-      type: "user" | "error";
+      type: "error";
     }
   | {
       texts: string[];
@@ -66,7 +71,7 @@ export function Chats(props: {
   setEnableAutoScroll: (enable: boolean) => void;
   enableAutoScroll: boolean;
   useSmallText?: boolean;
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -122,6 +127,15 @@ export function Chats(props: {
             {props.messages.map((message, index) => {
               const isMessagePending =
                 props.isChatStreaming && index === props.messages.length - 1;
+
+              const shouldHideMessage =
+                message.type === "user" &&
+                message.content.every((msg) => msg.type === "transaction");
+
+              if (shouldHideMessage) {
+                return null;
+              }
+
               return (
                 <div
                   className={cn(
@@ -155,22 +169,48 @@ function RenderMessage(props: {
   message: ChatMessage;
   isMessagePending: boolean;
   client: ThirdwebClient;
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   nextMessage: ChatMessage | undefined;
   authToken: string;
   sessionId: string | undefined;
 }) {
   const { message } = props;
+
   if (props.message.type === "user") {
     return (
-      <div className="mt-6 flex justify-end">
-        <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
-          <StyledMarkdownRenderer
-            text={props.message.text}
-            isMessagePending={props.isMessagePending}
-            type="user"
-          />
-        </div>
+      <div className="mt-6 flex flex-col gap-4">
+        {props.message.content.map((msg) => {
+          if (msg.type === "text") {
+            return (
+              <div className="flex justify-end" key={msg.type}>
+                <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
+                  <StyledMarkdownRenderer
+                    text={msg.text}
+                    isMessagePending={props.isMessagePending}
+                    type="user"
+                  />
+                </div>
+              </div>
+            );
+          }
+
+          if (msg.type === "image") {
+            return (
+              <NebulaImage
+                key={msg.type}
+                type="submitted"
+                url={msg.image_url}
+                client={props.client}
+              />
+            );
+          }
+
+          if (msg.type === "transaction") {
+            return null;
+          }
+
+          return null;
+        })}
       </div>
     );
   }
@@ -237,7 +277,7 @@ function RenderResponse(props: {
   message: ChatMessage;
   isMessagePending: boolean;
   client: ThirdwebClient;
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   nextMessage: ChatMessage | undefined;
   sessionId: string | undefined;
   authToken: string;
@@ -266,6 +306,7 @@ function RenderResponse(props: {
     case "image": {
       return (
         <NebulaImage
+          type="response"
           url={message.data.url}
           width={message.data.width}
           height={message.data.height}
@@ -289,7 +330,16 @@ function RenderResponse(props: {
                 return;
               }
 
-              sendMessage(getTransactionSettledPrompt(txHash));
+              sendMessage({
+                role: "user",
+                content: [
+                  {
+                    type: "transaction",
+                    transaction_hash: txHash,
+                    chain_id: message.data.chainId,
+                  },
+                ],
+              });
             }}
           />
         );
@@ -312,7 +362,16 @@ function RenderResponse(props: {
                 return;
               }
 
-              sendMessage(getTransactionSettledPrompt(txHash));
+              sendMessage({
+                role: "user",
+                content: [
+                  {
+                    type: "transaction",
+                    transaction_hash: txHash,
+                    chain_id: message.data.transaction.chainId,
+                  },
+                ],
+              });
             }}
           />
         );
@@ -327,13 +386,6 @@ function RenderResponse(props: {
   }
 
   return null;
-}
-
-function getTransactionSettledPrompt(txHash: string) {
-  return `\
-I've executed the following transaction successfully with hash: ${txHash}.
-
-If our conversation calls for it, continue on to the next transaction or suggest next steps`;
 }
 
 function StyledMarkdownRenderer(props: {

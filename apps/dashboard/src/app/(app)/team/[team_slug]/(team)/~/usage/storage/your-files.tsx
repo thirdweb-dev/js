@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { DASHBOARD_STORAGE_URL } from "@/constants/env";
+import { NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER } from "@/constants/public-envs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { formatDistance } from "date-fns/formatDistance";
@@ -66,7 +66,7 @@ function usePinnedFilesQuery({
     ],
     queryFn: async () => {
       const res = await fetch(
-        `${DASHBOARD_STORAGE_URL}/ipfs/pinned?limit=${pageSize}${
+        `${NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER}/ipfs/pinned?limit=${pageSize}${
           offset ? `&offset=${offset}` : ""
         }`,
         {
@@ -88,12 +88,15 @@ function useUnpinFileMutation(params: {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ cid }: { cid: string }) => {
-      const res = await fetch(`${DASHBOARD_STORAGE_URL}/ipfs/pinned/${cid}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
+      const res = await fetch(
+        `${NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER}/ipfs/pinned/${cid}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         },
-      });
+      );
       return res.json();
     },
     onSuccess: () => {

@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { ErrorBoundary } from "react-error-boundary";
-import { localhost } from "thirdweb/chains";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
 import { ContractOverviewPage } from "./overview/ContractOverviewPage";
@@ -20,21 +19,22 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract, chainMetadata } = info;
-  if (contract.chain.id === localhost.id) {
+  const { clientContract, serverContract, chainMetadata, isLocalhostChain } =
+    info;
+  if (isLocalhostChain) {
     return (
       <ContractOverviewPageClient
         chainMetadata={chainMetadata}
-        contract={contract}
+        contract={clientContract}
       />
     );
   }
 
-  const contractPageMetadata = await getContractPageMetadata(contract);
+  const contractPageMetadata = await getContractPageMetadata(serverContract);
 
   return (
     <ContractOverviewPage
-      contract={contract}
+      contract={clientContract}
       hasDirectListings={contractPageMetadata.isDirectListingSupported}
       hasEnglishAuctions={contractPageMetadata.isEnglishAuctionSupported}
       isErc1155={contractPageMetadata.supportedERCs.isERC1155}
@@ -48,7 +48,7 @@ export default async function Page(props: {
       functionSelectors={contractPageMetadata.functionSelectors}
       publishedBy={
         <ErrorBoundary fallback={null}>
-          <PublishedBy contract={contract} />
+          <PublishedBy contract={serverContract} />
         </ErrorBoundary>
       }
     />

@@ -1,7 +1,8 @@
-import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 // TODO - copy the source of this library to dashboard
 import { stream } from "fetch-event-stream";
 import type { NebulaTxData } from "../components/Chats";
+import type { NebulaUserMessage } from "./types";
 
 export type NebulaContext = {
   chainIds: string[] | null;
@@ -42,7 +43,7 @@ export type NebulaSwapData = {
 };
 
 export async function promptNebula(params: {
-  message: string;
+  message: NebulaUserMessage;
   sessionId: string;
   authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
@@ -50,7 +51,7 @@ export async function promptNebula(params: {
   context: undefined | NebulaContext;
 }) {
   const body: Record<string, string | boolean | object> = {
-    message: params.message,
+    messages: [params.message],
     stream: true,
     session_id: params.sessionId,
   };

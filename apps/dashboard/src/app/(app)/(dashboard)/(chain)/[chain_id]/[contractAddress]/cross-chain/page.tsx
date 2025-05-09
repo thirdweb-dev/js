@@ -53,27 +53,28 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract } = info;
+  const { clientContract, serverContract } = info;
 
-  const isModularCore = (await getContractPageMetadata(contract)).isModularCore;
+  const isModularCore = (await getContractPageMetadata(serverContract))
+    .isModularCore;
 
   let twCloneFactoryContract: Readonly<
     ContractOptions<[], `0x${string}`>
   > | null = null;
   try {
     twCloneFactoryContract = await getDeployedCloneFactoryContract({
-      chain: contract.chain,
-      client: contract.client,
+      chain: serverContract.chain,
+      client: serverContract.client,
     });
   } catch {}
 
   const originalCode = await eth_getCode(
     getRpcClient({
-      client: contract.client,
-      chain: contract.chain,
+      client: serverContract.client,
+      chain: serverContract.chain,
     }),
     {
-      address: contract.address,
+      address: serverContract.address,
     },
   );
 
@@ -82,14 +83,14 @@ export default async function Page(props: {
   let isDirectDeploy = false;
   try {
     const res = await fetch(
-      `https://contract.thirdweb-dev.com/creation/${contract.chain.id}/${contract.address}`,
+      `https://contract.thirdweb-dev.com/creation/${serverContract.chain.id}/${serverContract.address}`,
     );
     const creationData = await res.json();
 
     if (creationData.status === "1" && creationData.result[0]?.txHash) {
       const rpcClient = getRpcClient({
-        client: contract.client,
-        chain: contract.chain,
+        client: serverContract.client,
+        chain: serverContract.chain,
       });
       creationTxReceipt = await eth_getTransactionReceipt(rpcClient, {
         hash: creationData.result[0]?.txHash,
@@ -141,7 +142,7 @@ export default async function Page(props: {
           const chainMetadata = await getChainMetadata(chain);
 
           const rpcRequest = getRpcClient({
-            client: contract.client,
+            client: serverContract.client,
             chain,
           });
           const code = await eth_getCode(rpcRequest, {
@@ -167,14 +168,14 @@ export default async function Page(props: {
         }
       }),
     )
-  ).filter((c) => c.chainId !== contract.chain.id);
+  ).filter((c) => c.chainId !== serverContract.chain.id);
 
   let coreMetadata: FetchDeployMetadataResult | undefined;
   try {
     coreMetadata = (
       await fetchPublishedContractsFromDeploy({
-        contract,
-        client: contract.client,
+        contract: serverContract,
+        client: serverContract.client,
       })
     ).at(-1) as FetchDeployMetadataResult;
   } catch {}
@@ -201,7 +202,7 @@ export default async function Page(props: {
     // fetch events from contract
     if (!modules && creationBlockNumber) {
       const events = await getContractEvents({
-        contract: contract,
+        contract: serverContract,
         events: [moduleEvent],
       });
 
@@ -216,11 +217,13 @@ export default async function Page(props: {
     if (!modules && initializeData) {
       // biome-ignore lint/suspicious/noExplicitAny: FIXME
       const decodedData: any = await decodeFunctionData({
-        contract,
+        contract: serverContract,
         data: initializeData,
       });
 
-      const abi = await resolveContractAbi(contract).catch(() => undefined);
+      const abi = await resolveContractAbi(serverContract).catch(
+        () => undefined,
+      );
 
       if (abi) {
         const initializeFunction = abi.find(
@@ -241,11 +244,11 @@ export default async function Page(props: {
             (
               await fetchPublishedContractsFromDeploy({
                 contract: getContract({
-                  chain: contract.chain,
-                  client: contract.client,
+                  chain: serverContract.chain,
+                  client: serverContract.client,
                   address: m,
                 }),
-                client: contract.client,
+                client: serverContract.client,
               })
             ).at(-1),
           ),
@@ -275,7 +278,7 @@ export default async function Page(props: {
         initializeData={initializeData}
         inputSalt={inputSalt}
         data={chainsDeployedOn}
-        coreContract={contract}
+        coreContract={clientContract}
         initCode={initCode}
         isDirectDeploy={isDirectDeploy}
       />

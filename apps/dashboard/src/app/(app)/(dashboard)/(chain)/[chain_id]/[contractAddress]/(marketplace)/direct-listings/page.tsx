@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
@@ -20,17 +19,17 @@ export default async function Page(props: {
     notFound();
   }
 
-  if (info.chainMetadata.chainId === localhost.id) {
+  if (info.isLocalhostChain) {
     return (
       <ContractDirectListingsPageClient
-        contract={info.contract}
+        contract={info.clientContract}
         isLoggedIn={!!account}
       />
     );
   }
 
   const { isDirectListingSupported, isInsightSupported } =
-    await getContractPageMetadata(info.contract);
+    await getContractPageMetadata(info.serverContract);
 
   if (!isDirectListingSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -38,7 +37,7 @@ export default async function Page(props: {
 
   return (
     <ContractDirectListingsPage
-      contract={info.contract}
+      contract={info.clientContract}
       isLoggedIn={!!account}
       isInsightSupported={isInsightSupported}
     />

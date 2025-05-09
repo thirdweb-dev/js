@@ -82,7 +82,7 @@ import {
   getChains,
   getGasSponsoredChains,
 } from "@/api/chain";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { ChainMetadataWithServices, ChainServices } from "./types/chain";
 
@@ -106,12 +106,12 @@ export async function getChain(
 ): Promise<ChainMetadataWithServices> {
   const [chain, chainServices] = await Promise.all([
     fetch(
-      `${API_SERVER_URL}/v1/chains/${chainIdOrSlug}`,
+      `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}`,
       // revalidate every 15 minutes
       { next: { revalidate: 15 * 60 } },
     ).then((res) => res.json()) as Promise<{ data: ChainMetadata }>,
     fetch(
-      `${API_SERVER_URL}/v1/chains/${chainIdOrSlug}/services`,
+      `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}/services`,
       // revalidate every 15 minutes
       { next: { revalidate: 15 * 60 } },
     ).then((res) => res.json()) as Promise<{ data: ChainServices }>,

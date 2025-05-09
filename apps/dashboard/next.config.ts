@@ -123,6 +123,7 @@ const baseNextConfig: NextConfig = {
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
+    taint: true,
   },
   serverExternalPackages: ["pino-pretty"],
   async headers() {

@@ -11,6 +11,7 @@ import {
 } from "thirdweb/react";
 import type { NebulaContext } from "../../api/chat";
 import { createSession } from "../../api/session";
+import type { NebulaUserMessage } from "../../api/types";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
 import { ChatBar } from "../ChatBar";
@@ -99,36 +100,53 @@ function FloatingChatContentLoggedIn(props: {
   }, [props.authToken, contextFilters]);
 
   const handleSendMessage = useCallback(
-    async (userMessage: string) => {
+    async (userMessage: NebulaUserMessage) => {
       const abortController = new AbortController();
       setUserHasSubmittedMessage(true);
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
 
+      const textMessage = userMessage.content.find((x) => x.type === "text");
+
       trackEvent({
         category: "floating_nebula",
         action: "send",
         label: "message",
-        message: userMessage,
+        message: textMessage?.text,
         page: props.pageType,
         sessionId: sessionId,
       });
 
-      // if this is first message, set the message prefix
-      const messageToSend =
-        props.nebulaParams?.messagePrefix && !userHasSubmittedMessage
-          ? `${props.nebulaParams.messagePrefix}\n\n${userMessage}`
-          : userMessage;
-
       setMessages((prev) => [
         ...prev,
-        { text: userMessage, type: "user" },
+        {
+          type: "user",
+          content: userMessage.content,
+        },
         // instant loading indicator feedback to user
         {
           type: "presence",
           texts: [],
         },
       ]);
+
+      const messagePrefix = props.nebulaParams?.messagePrefix;
+
+      // if this is first message, set the message prefix
+      // deep clone `userMessage` to avoid mutating the original message, its a pretty small object so JSON.parse is fine
+      const messageToSend = JSON.parse(
+        JSON.stringify(userMessage),
+      ) as NebulaUserMessage;
+
+      // if this is first message, set the message prefix
+      if (messagePrefix && !userHasSubmittedMessage) {
+        const textMessage = messageToSend.content.find(
+          (x) => x.type === "text",
+        );
+        if (textMessage) {
+          textMessage.text = `${messagePrefix}\n\n${textMessage.text}`;
+        }
+      }
 
       try {
         // Ensure we have a session ID
@@ -223,7 +241,7 @@ function FloatingChatContentLoggedIn(props: {
           }
         }}
         isChatStreaming={isChatStreaming}
-        prefillMessage=""
+        prefillMessage={undefined}
         sendMessage={handleSendMessage}
         className="rounded-none border-x-0 border-b-0"
       />
@@ -268,7 +286,7 @@ function LoggedOutStateChatContent() {
 }
 
 function EmptyStateChatPageContent(props: {
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   examplePrompts: ExamplePrompt[];
 }) {
   return (
@@ -293,7 +311,17 @@ function EmptyStateChatPageContent(props: {
             <ExamplePromptButton
               key={prompt.title}
               label={prompt.title}
-              onClick={() => props.sendMessage(prompt.message)}
+              onClick={() =>
+                props.sendMessage({
+                  role: "user",
+                  content: [
+                    {
+                      type: "text",
+                      text: prompt.message,
+                    },
+                  ],
+                })
+              }
             />
           );
         })}

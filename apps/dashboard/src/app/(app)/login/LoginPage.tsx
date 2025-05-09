@@ -4,7 +4,7 @@ import { getRawAccountAction } from "@/actions/getAccount";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { TURNSTILE_SITE_KEY } from "@/constants/env";
+import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
@@ -261,7 +261,7 @@ function CustomConnectEmbed(props: {
           // match the theme of the rest of the app
           theme: theme === "light" ? "light" : "dark",
         }}
-        siteKey={TURNSTILE_SITE_KEY}
+        siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
         onSuccess={(token) => setTurnstileToken(token)}
       />
       <ClientOnly ssr={<ConnectEmbedSizedLoadingCard />}>
