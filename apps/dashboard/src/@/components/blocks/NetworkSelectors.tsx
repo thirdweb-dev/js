@@ -218,6 +218,7 @@ export function SingleNetworkSelector(props: {
     <SelectWithSearch
       searchPlaceholder="Search by Name or Chain ID"
       value={String(props.chainId)}
+      showCheck={false}
       options={options}
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));

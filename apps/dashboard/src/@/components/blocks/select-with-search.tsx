@@ -34,6 +34,7 @@ interface SelectWithSearchProps
   side?: "left" | "right" | "top" | "bottom";
   align?: "center" | "start" | "end";
   closeOnSelect?: boolean;
+  showCheck?: boolean;
 }
 
 export const SelectWithSearch = React.forwardRef<
@@ -52,6 +53,7 @@ export const SelectWithSearch = React.forwardRef<
       popoverContentClassName,
       searchPlaceholder,
       closeOnSelect,
+      showCheck = true,
       ...props
     },
     ref,
@@ -193,9 +195,11 @@ export const SelectWithSearch = React.forwardRef<
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
                     >
-                      <div className="flex size-4 items-center justify-center">
-                        {isSelected && <CheckIcon className="size-4" />}
-                      </div>
+                      {showCheck && (
+                        <div className="flex size-4 items-center justify-center">
+                          {isSelected && <CheckIcon className="size-4" />}
+                        </div>
+                      )}
 
                       <div className="min-w-0 grow">
                         {renderOption ? renderOption(option) : option.label}

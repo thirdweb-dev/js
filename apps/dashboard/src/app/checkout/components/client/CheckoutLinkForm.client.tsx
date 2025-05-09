@@ -1,9 +1,11 @@
 "use client";
 
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CreditCardIcon } from "lucide-react";
 import { useState } from "react";
@@ -16,7 +18,7 @@ export function CheckoutLinkForm() {
   const client = useThirdwebClient();
   const [chainId, setChainId] = useState<number>();
   const [recipientAddress, setRecipientAddress] = useState("");
-  const [tokenAddress, setTokenAddress] = useState("");
+  const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
@@ -27,7 +29,7 @@ export function CheckoutLinkForm() {
     setIsLoading(true);
 
     try {
-      if (!chainId || !recipientAddress || !tokenAddress || !amount) {
+      if (!chainId || !recipientAddress || !tokenAddressWithChain || !amount) {
         throw new Error("All fields are required");
       }
 
@@ -35,10 +37,17 @@ export function CheckoutLinkForm() {
       if (!checksumAddress(recipientAddress)) {
         throw new Error("Invalid recipient address");
       }
-      if (!checksumAddress(tokenAddress)) {
+      if (!checksumAddress(tokenAddressWithChain)) {
         throw new Error("Invalid token address");
       }
 
+      const [_chainId, tokenAddress] = tokenAddressWithChain.split(":");
+      if (Number(_chainId) !== chainId) {
+        throw new Error("Chain ID does not match token chain");
+      }
+      if (!tokenAddress) {
+        throw new Error("Missing token address");
+      }
       // Get token decimals
       const tokenContract = getContract({
         client,
@@ -57,7 +66,7 @@ export function CheckoutLinkForm() {
       const params = new URLSearchParams({
         chainId: chainId.toString(),
         recipientAddress,
-        tokenAddress,
+        tokenAddress: tokenAddressWithChain,
         amount: amountInWei.toString(),
       });
 
@@ -90,9 +99,9 @@ export function CheckoutLinkForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="network" className="font-medium text-sm">
+            <Label htmlFor="network" className="font-medium text-sm">
               Network
-            </label>
+            </Label>
             <SingleNetworkSelector
               chainId={chainId}
               onChange={setChainId}
@@ -102,9 +111,23 @@ export function CheckoutLinkForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="recipient" className="font-medium text-sm">
+            <Label htmlFor="token" className="font-medium text-sm">
+              Token
+            </Label>
+            <TokenSelector
+              tokenAddress={tokenAddressWithChain}
+              chainId={chainId ?? undefined}
+              onChange={setTokenAddressWithChain}
+              className="w-full"
+              client={client}
+              disabled={!chainId}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="recipient" className="font-medium text-sm">
               Recipient Address
-            </label>
+            </Label>
             <Input
               id="recipient"
               value={recipientAddress}
@@ -116,23 +139,9 @@ export function CheckoutLinkForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="token" className="font-medium text-sm">
-              Token Address
-            </label>
-            <Input
-              id="token"
-              value={tokenAddress}
-              onChange={(e) => setTokenAddress(e.target.value)}
-              placeholder="0x..."
-              required
-              className="w-full"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="amount" className="font-medium text-sm">
+            <Label htmlFor="amount" className="font-medium text-sm">
               Amount
-            </label>
+            </Label>
             <Input
               id="amount"
               type="number"
@@ -153,14 +162,19 @@ export function CheckoutLinkForm() {
               variant="outline"
               className="flex-1"
               onClick={() => {
-                if (!chainId || !recipientAddress || !tokenAddress || !amount) {
+                if (
+                  !chainId ||
+                  !recipientAddress ||
+                  !tokenAddressWithChain ||
+                  !amount
+                ) {
                   toast.error("Please fill in all fields first");
                   return;
                 }
                 const params = new URLSearchParams({
                   chainId: chainId.toString(),
                   recipientAddress,
-                  tokenAddress,
+                  tokenAddress: tokenAddressWithChain,
                   amount,
                 });
                 window.open(`/checkout?${params.toString()}`, "_blank");
