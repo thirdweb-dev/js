@@ -4,6 +4,7 @@ import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
 import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
 import { CheckoutEmbed } from "./components/client/CheckoutEmbed.client";
+import { CheckoutLinkForm } from "./components/client/CheckoutLinkForm.client";
 import type { CheckoutParams } from "./components/types";
 
 const title = "thirdweb Checkout";
@@ -23,16 +24,27 @@ export default async function RoutesPage({
 }: { searchParams: Promise<CheckoutParams> }) {
   const params = await searchParams;
 
-  if (!params.chainId || Array.isArray(params.chainId)) {
+  // If no query parameters are provided, show the form
+  if (
+    !params.chainId ||
+    !params.recipientAddress ||
+    !params.tokenAddress ||
+    !params.amount
+  ) {
+    return <CheckoutLinkForm />;
+  }
+
+  // Validate query parameters
+  if (Array.isArray(params.chainId)) {
     throw new Error("A single chainId parameter is required.");
   }
-  if (!params.recipientAddress || Array.isArray(params.recipientAddress)) {
+  if (Array.isArray(params.recipientAddress)) {
     throw new Error("A single recipientAddress parameter is required.");
   }
-  if (!params.tokenAddress || Array.isArray(params.tokenAddress)) {
+  if (Array.isArray(params.tokenAddress)) {
     throw new Error("A single tokenAddress parameter is required.");
   }
-  if (!params.amount || Array.isArray(params.amount)) {
+  if (Array.isArray(params.amount)) {
     throw new Error("A single amount parameter is required.");
   }
   if (Array.isArray(params.clientId)) {

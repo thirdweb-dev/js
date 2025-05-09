@@ -1,0 +1,1 @@
+export const UB_BASE_URL = process.env.NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST;
