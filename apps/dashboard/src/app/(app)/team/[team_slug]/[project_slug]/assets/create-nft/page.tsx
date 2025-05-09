@@ -30,7 +30,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   ImageIcon,
-  Loader2,
+  Loader,
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -101,7 +101,7 @@ const StepIndicator = ({
           ? "bg-primary text-primary-foreground"
           : currentStep > step
             ? "bg-primary/20 text-primary"
-            : "bg-muted text-muted-foreground",
+            : "bg-muted text-muted-foreground"
       )}
     >
       {currentStep > step ? (
@@ -119,7 +119,7 @@ export default function CreateNFTPage() {
   const [collectionInfo, setCollectionInfo] =
     useState<CollectionInfoValues | null>(null);
   const [mintSettings, setMintSettings] = useState<MintSettingsValues | null>(
-    null,
+    null
   );
   const [showRoyaltySettings, setShowRoyaltySettings] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -304,7 +304,7 @@ export default function CreateNFTPage() {
                     onSwitchChain={(chain) => {
                       collectionInfoForm.setValue(
                         "chain",
-                        chain.chainId?.toString() || "",
+                        chain.chainId?.toString() || ""
                       );
                     }}
                   />
@@ -456,7 +456,7 @@ export default function CreateNFTPage() {
                             onChange={() =>
                               mintSettingsForm.setValue(
                                 "collectionType",
-                                "existing",
+                                "existing"
                               )
                             }
                           />
@@ -482,7 +482,7 @@ export default function CreateNFTPage() {
                             onChange={() =>
                               mintSettingsForm.setValue(
                                 "collectionType",
-                                "project",
+                                "project"
                               )
                             }
                           />
@@ -566,7 +566,7 @@ export default function CreateNFTPage() {
                     >
                       <BasisPointsInput
                         value={Number(
-                          mintSettingsForm.watch("royaltyPercentage"),
+                          mintSettingsForm.watch("royaltyPercentage")
                         )}
                         onChange={(value) =>
                           mintSettingsForm.setValue(
@@ -574,7 +574,7 @@ export default function CreateNFTPage() {
                             value.toString(),
                             {
                               shouldTouch: true,
-                            },
+                            }
                           )
                         }
                       />
@@ -718,7 +718,7 @@ export default function CreateNFTPage() {
                 <p className="text-muted-foreground text-sm">Platform Fee:</p>
                 <p>
                   {(Number(mintSettings?.platformFeeBps || 250) / 100).toFixed(
-                    2,
+                    2
                   )}
                   %
                 </p>
@@ -737,7 +737,7 @@ export default function CreateNFTPage() {
                 </p>
                 <p>
                   {(Number(mintSettings?.royaltyPercentage || 0) / 100).toFixed(
-                    2,
+                    2
                   )}
                   %
                 </p>
@@ -766,7 +766,7 @@ export default function CreateNFTPage() {
             >
               {isDeploying ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Deploying
+                  <Loader className="mr-2 h-4 w-4 animate-spin" /> Deploying
                   Collection...
                 </>
               ) : (
@@ -871,7 +871,7 @@ export default function CreateNFTPage() {
           const imageFile = await fetch(
             typeof collectionInfo.image === "string"
               ? collectionInfo.image
-              : URL.createObjectURL(collectionInfo.image as Blob),
+              : URL.createObjectURL(collectionInfo.image as Blob)
           ).then((r) => r.blob());
 
           // Convert Blob to File with a name
@@ -962,13 +962,13 @@ export default function CreateNFTPage() {
       } catch (error) {
         console.error("Error setting claim conditions:", error);
         toast.error(
-          `Failed to set claim conditions: ${error instanceof Error ? error.message : "Unknown error"}`,
+          `Failed to set claim conditions: ${error instanceof Error ? error.message : "Unknown error"}`
         );
       }
     } catch (error) {
       console.error("Error deploying NFT collection:", error);
       toast.error(
-        `Failed to deploy NFT collection: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to deploy NFT collection: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     } finally {
       setIsDeploying(false);

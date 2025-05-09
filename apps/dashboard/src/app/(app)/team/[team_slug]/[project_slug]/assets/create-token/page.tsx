@@ -126,7 +126,7 @@ const StepIndicator = ({
           ? "bg-primary text-primary-foreground"
           : currentStep > step
             ? "bg-primary/20 text-primary"
-            : "bg-muted text-muted-foreground",
+            : "bg-muted text-muted-foreground"
       )}
     >
       {currentStep > step ? (
@@ -214,7 +214,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
         address: o.resolvedAddress || o.address,
         quantity: o.quantity,
         isValid: o.isValid,
-      })),
+      }))
     );
     onClose();
   };
@@ -287,7 +287,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             <div
               className={cn(
                 "flex h-full cursor-pointer items-center justify-center rounded-md border border-border hover:border-primary",
-                noCsv ? "bg-red-200" : "bg-background",
+                noCsv ? "bg-red-200" : "bg-background"
               )}
               {...getRootProps()}
             >
@@ -548,7 +548,7 @@ export default function CreateTokenPage() {
     if (!tokenInfo || !advancedOptions || !activeAccount || !thirdwebClient) {
       toast.error("Missing required information. Please check your inputs.");
       setErrorMessage(
-        "Missing required information. Please check all form fields and try again.",
+        "Missing required information. Please check all form fields and try again."
       );
       setErrorStep("preparation");
       return;
@@ -645,7 +645,7 @@ export default function CreateTokenPage() {
           const imageFile = await fetch(
             typeof tokenInfo.image === "string"
               ? tokenInfo.image
-              : URL.createObjectURL(tokenInfo.image as Blob),
+              : URL.createObjectURL(tokenInfo.image as Blob)
           ).then((r) => r.blob());
 
           // Convert Blob to File with a name
@@ -678,7 +678,7 @@ export default function CreateTokenPage() {
 
       // Calculate claim conditions parameters
       const totalSupplyBigInt = BigInt(
-        Math.floor(Number.parseFloat(totalSupply) * 10 ** decimals),
+        Math.floor(Number.parseFloat(totalSupply) * 10 ** decimals)
       );
       let saleSupply = 0n;
       let salePrice = 0;
@@ -689,8 +689,8 @@ export default function CreateTokenPage() {
             ((Number.parseFloat(totalSupply) *
               Number.parseFloat(advancedOptions.saleSupply)) /
               100) *
-              10 ** decimals,
-          ),
+              10 ** decimals
+          )
         );
         salePrice = Number.parseFloat(advancedOptions.salePrice);
       }
@@ -705,7 +705,7 @@ export default function CreateTokenPage() {
         platform_fee_recipient:
           advancedOptions.platformFeeRecipient || activeAccount.address,
         platform_fee_basis_points: Number.parseInt(
-          advancedOptions.platformFeeBps || "250",
+          advancedOptions.platformFeeBps || "250"
         ),
       };
 
@@ -820,18 +820,18 @@ export default function CreateTokenPage() {
           try {
             setDeploymentStatus("Minting Tokens to Owner...");
             console.log(
-              `Minting ${mintPercentage}% of tokens to owner's wallet...`,
+              `Minting ${mintPercentage}% of tokens to owner's wallet...`
             );
 
             // Calculate total tokens to mint based on percentage and total supply
             const mintTokenAmount = BigInt(
               Math.floor(
-                (Number.parseFloat(totalSupply) * mintPercentage) / 100,
-              ),
+                (Number.parseFloat(totalSupply) * mintPercentage) / 100
+              )
             );
 
             console.log(
-              `Minting ${mintTokenAmount} tokens to ${activeAccount.address}`,
+              `Minting ${mintTokenAmount} tokens to ${activeAccount.address}`
             );
 
             const claimTransaction = claimTo({
@@ -856,7 +856,7 @@ export default function CreateTokenPage() {
                     transactionHash: mintTx.transactionHash,
                   });
                   console.log(
-                    `Successfully minted ${mintTokenAmount} tokens to owner's wallet`,
+                    `Successfully minted ${mintTokenAmount} tokens to owner's wallet`
                   );
                 } catch (confirmError) {
                   const errorMsg = `Failed to confirm token mint: ${confirmError instanceof Error ? confirmError.message : "Unknown error"}`;
@@ -876,10 +876,10 @@ export default function CreateTokenPage() {
             if (airdropSupplyPercentage > 0 && airdropAddresses.length > 0) {
               try {
                 setDeploymentStatus(
-                  `Airdropping to ${airdropAddresses.length} Addresses...`,
+                  `Airdropping to ${airdropAddresses.length} Addresses...`
                 );
                 console.log(
-                  `Airdropping to ${airdropAddresses.length} addresses...`,
+                  `Airdropping to ${airdropAddresses.length} addresses...`
                 );
 
                 // Calculate the total token amount for airdrop based on percentage
@@ -892,7 +892,7 @@ export default function CreateTokenPage() {
                 const totalQuantities = airdropAddresses.reduce(
                   (sum, address) =>
                     sum + Number.parseFloat(address.quantity || "1"),
-                  0,
+                  0
                 );
 
                 // Then, calculate each recipient's token amount based on their proportion
@@ -901,7 +901,7 @@ export default function CreateTokenPage() {
                     Number.parseFloat(address.quantity || "1") /
                     totalQuantities;
                   const amount = BigInt(
-                    Math.floor(totalAirdropTokens * proportion),
+                    Math.floor(totalAirdropTokens * proportion)
                   );
                   return {
                     to: address.address,
@@ -931,10 +931,10 @@ export default function CreateTokenPage() {
                         transactionHash: airdropTx.transactionHash,
                       });
                       console.log(
-                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`,
+                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`
                       );
                       toast.success(
-                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`,
+                        `Successfully airdropped tokens to ${airdropAddresses.length} addresses`
                       );
                     } catch (confirmError) {
                       const errorMsg = `Failed to confirm airdrop: ${confirmError instanceof Error ? confirmError.message : "Unknown error"}`;
@@ -1115,7 +1115,7 @@ export default function CreateTokenPage() {
                     onSwitchChain={(chain) => {
                       tokenInfoForm.setValue(
                         "chain",
-                        chain.chainId?.toString() || "",
+                        chain.chainId?.toString() || ""
                       );
                     }}
                   />
@@ -1190,7 +1190,7 @@ export default function CreateTokenPage() {
                       if (
                         checked &&
                         Number.parseFloat(
-                          advancedOptionsForm.watch("saleSupply"),
+                          advancedOptionsForm.watch("saleSupply")
                         ) === 0
                       ) {
                         advancedOptionsForm.setValue("saleSupply", "10");
@@ -1228,7 +1228,7 @@ export default function CreateTokenPage() {
                           onChange={(e) => {
                             advancedOptionsForm.setValue(
                               "saleSupply",
-                              e.target.value,
+                              e.target.value
                             );
                             setLastUpdatedField("saleSupply");
                           }}
@@ -1271,7 +1271,7 @@ export default function CreateTokenPage() {
                       onChange={(e) => {
                         advancedOptionsForm.setValue(
                           "ownerSupply",
-                          e.target.value,
+                          e.target.value
                         );
                         setLastUpdatedField("ownerSupply");
                       }}
@@ -1294,7 +1294,7 @@ export default function CreateTokenPage() {
                       onChange={(e) => {
                         advancedOptionsForm.setValue(
                           "airdropSupply",
-                          e.target.value,
+                          e.target.value
                         );
                         setLastUpdatedField("airdropSupply");
                       }}
@@ -1476,7 +1476,7 @@ export default function CreateTokenPage() {
                         <SolidityInput
                           solidityType="address"
                           {...advancedOptionsForm.register(
-                            "primarySaleAddress",
+                            "primarySaleAddress"
                           )}
                         />
                       </FormFieldSetup>
@@ -1502,7 +1502,7 @@ export default function CreateTokenPage() {
                         <SolidityInput
                           solidityType="address"
                           {...advancedOptionsForm.register(
-                            "platformFeeRecipient",
+                            "platformFeeRecipient"
                           )}
                         />
                       </FormFieldSetup>
@@ -1518,7 +1518,7 @@ export default function CreateTokenPage() {
                       >
                         <BasisPointsInput
                           value={Number(
-                            advancedOptionsForm.watch("platformFeeBps"),
+                            advancedOptionsForm.watch("platformFeeBps")
                           )}
                           onChange={(value) =>
                             advancedOptionsForm.setValue(
@@ -1526,7 +1526,7 @@ export default function CreateTokenPage() {
                               value.toString(),
                               {
                                 shouldTouch: true,
-                              },
+                              }
                             )
                           }
                         />
@@ -1565,7 +1565,7 @@ export default function CreateTokenPage() {
                       >
                         <BasisPointsInput
                           value={Number(
-                            advancedOptionsForm.watch("royaltyBps"),
+                            advancedOptionsForm.watch("royaltyBps")
                           )}
                           onChange={(value) =>
                             advancedOptionsForm.setValue(
@@ -1573,7 +1573,7 @@ export default function CreateTokenPage() {
                               value.toString(),
                               {
                                 shouldTouch: true,
-                              },
+                              }
                             )
                           }
                         />
@@ -1798,7 +1798,7 @@ export default function CreateTokenPage() {
                 type="button"
                 className={cn(
                   "bg-primary hover:bg-primary/90",
-                  errorStep && "bg-red-500 hover:bg-red-600",
+                  errorStep && "bg-red-500 hover:bg-red-600"
                 )}
                 onClick={deployToken}
                 disabled={isDeploying}
