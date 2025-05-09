@@ -90,7 +90,7 @@ export function NebulaLoggedOutStatePage(props: {
           <EmptyStateChatPageContent
             showAurora={false}
             isConnectingWallet={false}
-            prefillMessage={message}
+            prefillMessage={props.params.q}
             context={{
               walletAddress: null,
               chainIds: chainIds.map((x) => x.toString()),
@@ -104,7 +104,10 @@ export function NebulaLoggedOutStatePage(props: {
             connectedWallets={[]}
             setActiveWallet={() => {}}
             sendMessage={(msg) => {
-              setMessage(msg);
+              const textMessage = msg.content.find((x) => x.type === "text");
+              if (textMessage) {
+                setMessage(textMessage.text);
+              }
               setShowPage("connect");
             }}
           />

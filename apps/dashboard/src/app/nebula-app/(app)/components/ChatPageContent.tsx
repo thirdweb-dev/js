@@ -20,7 +20,11 @@ import {
 } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
-import type { NebulaSessionHistoryMessage, SessionInfo } from "../api/types";
+import type {
+  NebulaSessionHistoryMessage,
+  NebulaUserMessage,
+  SessionInfo,
+} from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
@@ -135,12 +139,14 @@ export function ChatPageContent(props: {
   }, [contextFilters, props.authToken]);
 
   const handleSendMessage = useCallback(
-    async (message: string) => {
+    async (message: NebulaUserMessage) => {
       setUserHasSubmittedMessage(true);
       setMessages((prev) => [
         ...prev,
-        { text: message, type: "user" },
-        // instant loading indicator feedback to user
+        {
+          type: "user",
+          content: message.content,
+        },
         {
           type: "presence",
           texts: [],
@@ -148,7 +154,10 @@ export function ChatPageContent(props: {
       ]);
 
       // handle hardcoded replies first
-      const lowerCaseMessage = message.toLowerCase();
+      const lowerCaseMessage = message.content
+        .find((x) => x.type === "text")
+        ?.text.toLowerCase();
+
       const interceptedReply = examplePrompts.find(
         (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
       )?.interceptedReply;
@@ -175,13 +184,18 @@ export function ChatPageContent(props: {
           currentSessionId = session.id;
         }
 
+        const firstTextMessage =
+          message.role === "user"
+            ? message.content.find((x) => x.type === "text")?.text || ""
+            : "";
+
         // add this session on sidebar
-        if (messages.length === 0) {
+        if (messages.length === 0 && firstTextMessage) {
           const prevValue = newSessionsStore.getValue();
           newSessionsStore.setValue([
             {
               id: currentSessionId,
-              title: message,
+              title: firstTextMessage,
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             },
@@ -193,7 +207,7 @@ export function ChatPageContent(props: {
 
         await handleNebulaPrompt({
           abortController,
-          message,
+          message: message,
           sessionId: currentSessionId,
           authToken: props.authToken,
           setMessages,
@@ -234,7 +248,15 @@ export function ChatPageContent(props: {
       !hasDoneAutoPrompt.current
     ) {
       hasDoneAutoPrompt.current = true;
-      handleSendMessage(props.initialParams.q);
+      handleSendMessage({
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: props.initialParams.q,
+          },
+        ],
+      });
     }
   }, [props.initialParams?.q, messages.length, handleSendMessage]);
 
@@ -402,7 +424,7 @@ function getLastUsedChainIds(): string[] | null {
 
 export async function handleNebulaPrompt(params: {
   abortController: AbortController;
-  message: string;
+  message: NebulaUserMessage;
   sessionId: string;
   authToken: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
@@ -654,7 +676,15 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
 
       case "user": {
         messages.push({
-          text: message.content,
+          content:
+            typeof message.content === "string"
+              ? [
+                  {
+                    type: "text",
+                    text: message.content,
+                  },
+                ]
+              : message.content,
           type: message.role,
         });
         break;

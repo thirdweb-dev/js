@@ -34,6 +34,7 @@ import {
 import { shortenAddress } from "thirdweb/utils";
 import type { Wallet } from "thirdweb/wallets";
 import type { NebulaContext } from "../api/chat";
+import type { NebulaUserMessage } from "../api/types";
 
 export type WalletMeta = {
   walletId: Wallet["id"];
@@ -41,7 +42,7 @@ export type WalletMeta = {
 };
 
 export function ChatBar(props: {
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   isChatStreaming: boolean;
   abortChatStream: () => void;
   prefillMessage: string | undefined;
@@ -53,10 +54,21 @@ export function ChatBar(props: {
   connectedWallets: WalletMeta[];
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
+  // TODO - add this option later
+  // showImageUploader: boolean;
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
   const selectedChainIds = props.context?.chainIds?.map((x) => Number(x)) || [];
   const firstChainId = selectedChainIds[0];
+
+  function handleSubmit(message: string) {
+    setMessage("");
+    props.sendMessage({
+      role: "user",
+      // TODO - add image here later
+      content: [{ type: "text", text: message }],
+    });
+  }
 
   return (
     <div
@@ -77,8 +89,7 @@ export function ChatBar(props: {
             }
             if (e.key === "Enter" && !props.isChatStreaming) {
               e.preventDefault();
-              setMessage("");
-              props.sendMessage(message);
+              handleSubmit(message);
             }
           }}
           className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -194,8 +205,7 @@ export function ChatBar(props: {
             variant="pink"
             onClick={() => {
               if (message.trim() === "") return;
-              setMessage("");
-              props.sendMessage(message);
+              handleSubmit(message);
             }}
           >
             <ArrowUpIcon className="size-4" />
