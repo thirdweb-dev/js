@@ -1,0 +1,134 @@
+import { DocImage } from '@doc';
+import StreamedResponse from "../../assets/streamed-response.png";
+
+# Response Handling
+
+## Streamed vs non-streamed responses
+
+- **Streaming Responses**: This method streams data in real-time, providing immediate feedback as the response is generated. Set the `stream` parameter to `true` in your request, the API delivers responses via Server-Sent Events (SSE).
+- **Non-Streaming Responses**: When the `stream` parameter is set to `false`, the API returns the complete response in a single JSON payload after processing is complete.
+
+<DocImage src={StreamedResponse} />
+
+For `stream:true`, you'll need to handle the following event types:
+
+- `init`: Initializes the stream and provides session information
+- `presence`: Provides backend status updates about worker processing
+- `action`: Contains blockchain transaction or action data
+- `delta`: Contains chunks of the response message text
+- `error`: Contains error information if something goes wrong
+
+
+**Example SSE Stream:**
+
+```jsx
+event: init
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "init",
+  "source": "user",
+  "data": ""
+}
+
+event: presence
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "presence",
+  "source": "executor",
+  "data": "Performing function execution: ExecuteNativeTransferClientSigning"
+}
+
+event: action
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "sign_transaction",
+  "source": "executor",
+  "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
+}
+
+event: delta
+data: {"v": "To send 0.0001 ETH on the Sepolia network"}
+
+event: delta
+data: {"v": " to the address associated with"}
+```
+**JavaScript Example for handling streams:**
+
+```jsx
+const eventSource = new EventSource("/chat", {
+  headers: {
+    "x-secret-key": "YOUR_THIRDWEB_SECRET_KEY",
+  },
+});
+
+let messageText = "";
+
+eventSource.addEventListener("init", (event) => {
+  const data = JSON.parse(event.data);
+  console.log("Stream initialized:", data);
+});
+
+eventSource.addEventListener("presence", (event) => {
+  const data = JSON.parse(event.data);
+  console.log("Backend status:", data.data);
+});
+
+eventSource.addEventListener("action", (event) => {
+  const data = JSON.parse(event.data);
+  console.log("Received action:", data);
+  if (data.type === "sign_transaction") {
+    // Handle transaction signing
+    handleTransaction(data);
+  }
+});
+
+eventSource.addEventListener("delta", (event) => {
+  const data = JSON.parse(event.data);
+  messageText += data.v;
+  console.log("Current message:", messageText);
+});
+
+eventSource.addEventListener("error", (event) => {
+  const error = JSON.parse(event.data);
+  console.error("Error:", error);
+  eventSource.close();
+});
+```
+## Response Format
+
+By default, responses are returned as JSON Objects. You may optionally specify the desired response format using the `response_format` parameter. 
+
+- **JSON Object**: To receive the response as a JSON object, set `response_format` to `{ "type": "json_object" }`.
+- **JSON Schema**: For responses adhering to a specific JSON schema, set `response_format` to `{ "type": "json_schema", "json_schema": { ... } }`, where you define the desired schema structure.
+
+Example with `json_schema` format,
+
+```jsx
+curl -X POST https://nebula-api.thirdweb.com/chat \
+-H "Content-Type: application/json" \
+-H "x-secret-key: ...." \
+-d '{
+  "message": "what is the balance of eimanabdel.eth on contract 0xddC761FEb956Caf62dfa1c8b42e9f33Df424715A on sepolia",
+  "stream": false,
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "type": "object",
+      "properties": {
+        "ens_name": {
+          "type": "string",
+          "description": "The ENS name being queried"
+        },
+        "balance": {
+          "type": "integer",
+          "description": "The balance of the address on the specified contract"
+        }
+      },
+      "required": ["ens_name", "balance"]
+    }
+  }
+}'
+```
