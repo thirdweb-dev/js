@@ -11,7 +11,7 @@ export type TokenMetadata = {
   iconUri?: string;
 };
 
-export async function getUniversalBrigeTokens(props: {
+export async function getUniversalBridgeTokens(props: {
   clientId?: string;
   chainId?: number;
 }) {

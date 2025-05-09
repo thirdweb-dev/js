@@ -7,11 +7,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { CreditCardIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ChevronDownIcon, CreditCardIcon } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
+import {
+  type ThirdwebClient,
+  defineChain,
+  getContract,
+  toUnits,
+} from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
+import { resolveScheme, upload } from "thirdweb/storage";
+import { FileInput } from "../../../../components/shared/FileInput";
 import { resolveEns } from "../../../../lib/ens";
 
 export function CheckoutLinkForm() {
@@ -20,23 +27,121 @@ export function CheckoutLinkForm() {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
   const [amount, setAmount] = useState("");
+  const [title, setTitle] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imageUri, setImageUri] = useState<string>("");
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const isFormComplete = useMemo(() => {
     return chainId && recipientAddress && tokenAddressWithChain && amount;
   }, [chainId, recipientAddress, tokenAddressWithChain, amount]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(undefined);
-    setIsLoading(true);
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      try {
+        setImage(file);
+        setUploadingImage(true);
+
+        const uri = await upload({
+          client,
+          files: [file],
+        });
+
+        // eslint-disable-next-line no-restricted-syntax
+        const resolvedUrl = resolveScheme({
+          uri,
+          client,
+        });
+
+        setImageUri(resolvedUrl);
+        toast.success("Image uploaded successfully");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Failed to upload image");
+        setImage(null);
+      } finally {
+        setUploadingImage(false);
+      }
+    },
+    [client],
+  );
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError(undefined);
+      setIsLoading(true);
+
+      try {
+        if (
+          !chainId ||
+          !recipientAddress ||
+          !tokenAddressWithChain ||
+          !amount
+        ) {
+          throw new Error("All fields are required");
+        }
+
+        const inputs = await parseInputs(
+          client,
+          chainId,
+          tokenAddressWithChain,
+          recipientAddress,
+          amount,
+        );
+
+        // Build checkout URL
+        const params = new URLSearchParams({
+          chainId: inputs.chainId.toString(),
+          recipientAddress: inputs.recipientAddress,
+          tokenAddress: inputs.tokenAddress,
+          amount: inputs.amount.toString(),
+        });
+
+        // Add title as name parameter if provided
+        if (title) {
+          params.set("name", title);
+        }
+
+        // Add image URI if available
+        if (imageUri) {
+          params.set("image", imageUri);
+        }
+
+        const checkoutUrl = `${window.location.origin}/checkout?${params.toString()}`;
+
+        // Copy to clipboard
+        await navigator.clipboard.writeText(checkoutUrl);
+
+        // Show success toast
+        toast.success("Checkout link copied to clipboard.");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      amount,
+      chainId,
+      client,
+      imageUri,
+      recipientAddress,
+      title,
+      tokenAddressWithChain,
+    ],
+  );
+
+  const handlePreview = useCallback(async () => {
+    if (!chainId || !recipientAddress || !tokenAddressWithChain || !amount) {
+      toast.error("Please fill in all fields first");
+      return;
+    }
 
     try {
-      if (!chainId || !recipientAddress || !tokenAddressWithChain || !amount) {
-        throw new Error("All fields are required");
-      }
-
       const inputs = await parseInputs(
         client,
         chainId,
@@ -45,7 +150,6 @@ export function CheckoutLinkForm() {
         amount,
       );
 
-      // Build checkout URL
       const params = new URLSearchParams({
         chainId: inputs.chainId.toString(),
         recipientAddress: inputs.recipientAddress,
@@ -53,19 +157,29 @@ export function CheckoutLinkForm() {
         amount: inputs.amount.toString(),
       });
 
-      const checkoutUrl = `${window.location.origin}/checkout?${params.toString()}`;
+      // Add title as name parameter if provided
+      if (title) {
+        params.set("name", title);
+      }
 
-      // Copy to clipboard
-      await navigator.clipboard.writeText(checkoutUrl);
+      // Add image URI if available
+      if (imageUri) {
+        params.set("image", imageUri);
+      }
 
-      // Show success toast
-      toast.success("Checkout link copied to clipboard.");
+      window.open(`/checkout?${params.toString()}`, "_blank");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+      toast.error(err instanceof Error ? err.message : "An error occurred");
     }
-  };
+  }, [
+    amount,
+    chainId,
+    client,
+    imageUri,
+    recipientAddress,
+    title,
+    tokenAddressWithChain,
+  ]);
 
   return (
     <Card className="mx-auto w-full max-w-[500px]">
@@ -138,6 +252,65 @@ export function CheckoutLinkForm() {
             />
           </div>
 
+          <div className="space-y-4">
+            <Button
+              type="button"
+              variant="ghost"
+              className="flex w-full items-center justify-between px-0 text-muted-foreground hover:bg-transparent"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
+              <span>Advanced Options</span>
+              <ChevronDownIcon
+                className={`size-4 transition-transform duration-200 ease-in-out ${
+                  showAdvanced ? "rotate-180" : ""
+                }`}
+              />
+            </Button>
+
+            <div
+              className={`grid transition-all duration-200 ease-in-out ${
+                showAdvanced
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="space-y-6 pt-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="title" className="font-medium text-sm">
+                      Title
+                    </Label>
+                    <Input
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Checkout for..."
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="image" className="font-medium text-sm">
+                      Image
+                    </Label>
+                    <div className="w-full px-1 pb-1">
+                      <FileInput
+                        accept={{ "image/*": [] }}
+                        setValue={handleImageUpload}
+                        value={image || imageUri}
+                        className="!rounded-md aspect-square h-24 w-full"
+                        isDisabled={uploadingImage}
+                        selectOrUpload="Upload"
+                        helperText="image"
+                        fileUrl={imageUri}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
           <div className="flex gap-2">
@@ -146,31 +319,7 @@ export function CheckoutLinkForm() {
               variant="outline"
               className="flex-1"
               disabled={isLoading || !isFormComplete}
-              onClick={async () => {
-                if (
-                  !chainId ||
-                  !recipientAddress ||
-                  !tokenAddressWithChain ||
-                  !amount
-                ) {
-                  toast.error("Please fill in all fields first");
-                  return;
-                }
-                const inputs = await parseInputs(
-                  client,
-                  chainId,
-                  tokenAddressWithChain,
-                  recipientAddress,
-                  amount,
-                );
-                const params = new URLSearchParams({
-                  chainId: inputs.chainId.toString(),
-                  recipientAddress: inputs.recipientAddress,
-                  tokenAddress: inputs.tokenAddress,
-                  amount: inputs.amount.toString(),
-                });
-                window.open(`/checkout?${params.toString()}`, "_blank");
-              }}
+              onClick={handlePreview}
             >
               Preview
             </Button>
@@ -220,9 +369,7 @@ async function parseInputs(
     throw new Error("Invalid recipient address");
   }
 
-  const amountInWei = BigInt(
-    Number.parseFloat(decimalAmount) * 10 ** currencyMetadata.decimals,
-  );
+  const amountInWei = toUnits(decimalAmount, currencyMetadata.decimals);
 
   return {
     chainId,

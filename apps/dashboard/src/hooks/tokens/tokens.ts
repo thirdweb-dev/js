@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import type { Address } from "thirdweb";
 import {
   type TokenMetadata,
-  getUniversalBrigeTokens,
+  getUniversalBridgeTokens,
 } from "../../@/api/universal-bridge/tokens";
 import { createStore, useStore } from "../../@/lib/reactive";
 
@@ -88,7 +88,7 @@ export function useTokensData({
 }: { clientId: string; chainId?: number; enabled?: boolean }) {
   const tokensQuery = useQuery({
     queryKey: ["universal-bridge-tokens", chainId],
-    queryFn: () => getUniversalBrigeTokens({ clientId, chainId }),
+    queryFn: () => getUniversalBridgeTokens({ clientId, chainId }),
     enabled,
   });
 
