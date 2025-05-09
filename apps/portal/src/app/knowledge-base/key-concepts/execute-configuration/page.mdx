@@ -1,0 +1,19 @@
+# Execute Configuration
+
+Configure transaction execution behavior using the execute config:
+
+```json
+{
+  "execute_config": {
+    "mode": "client",
+    "signer_wallet_address": "0x..."
+  }
+}
+```
+
+Parameters:
+
+- `mode`: Execution mode (currently supports "client")
+- `signer_wallet_address`: Wallet address for transaction signing
+
+When mode is "client", Nebula returns an unsigned transaction for local wallet signing.

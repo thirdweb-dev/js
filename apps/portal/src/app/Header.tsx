@@ -124,7 +124,7 @@ const supportLinks = [
   },
   {
     name: "Knowledge Base",
-    href: "https://support.thirdweb.com",
+    href: "/knowledge-base",
   },
   {
     name: "Contact Sales",
