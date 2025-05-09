@@ -30,7 +30,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   ImageIcon,
-  Loader,
+  RefreshCcw,
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -766,7 +766,7 @@ export default function CreateNFTPage() {
             >
               {isDeploying ? (
                 <>
-                  <Loader className="mr-2 h-4 w-4 animate-spin" /> Deploying
+                  <RefreshCcw className="mr-2 h-4 w-4 animate-spin" /> Deploying
                   Collection...
                 </>
               ) : (
