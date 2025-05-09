@@ -9,7 +9,7 @@ import {
 import { useId, useMemo, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeStats } from "types/analytics";
-import { CardHeading, chartHeight } from "./common";
+import { CardHeading, NoDataOverlay, chartHeight } from "./common";
 
 type GraphData = {
   date: string;
@@ -127,7 +127,7 @@ export function TotalPayVolume(props: {
 
       <div className="relative flex w-full flex-1 justify-center">
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <AreaChart data={graphData || emptyGraphData}>
+          <AreaChart data={isEmpty ? emptyGraphData : graphData}>
             <defs>
               <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
@@ -177,6 +177,7 @@ export function TotalPayVolume(props: {
             )}
           </AreaChart>
         </ResponsiveContainer>
+        {isEmpty && <NoDataOverlay />}
       </div>
     </div>
   );

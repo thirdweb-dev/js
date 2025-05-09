@@ -73,9 +73,11 @@ export function Payouts(props: {
         <div className="mb-5 flex items-center gap-3">
           <SkeletonContainer
             loadedData={
-              props.data && props.data.length > 0
-                ? toUSD(totalPayoutsUSD)
-                : undefined
+              !props.data
+                ? undefined
+                : props.data.length > 0
+                  ? toUSD(totalPayoutsUSD)
+                  : "NA"
             }
             skeletonData="$20"
             render={(value) => {
@@ -101,7 +103,7 @@ export function Payouts(props: {
 
         <div className="relative flex w-full justify-center">
           <ResponsiveContainer width="100%" height={chartHeight}>
-            <BarChart data={graphData || emptyGraphData}>
+            <BarChart data={isEmpty ? emptyGraphData : graphData}>
               <Tooltip
                 content={(x) => {
                   const payload = x.payload?.[0]?.payload as

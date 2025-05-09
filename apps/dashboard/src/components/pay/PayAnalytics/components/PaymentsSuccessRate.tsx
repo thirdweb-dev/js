@@ -21,7 +21,7 @@ export function PaymentsSuccessRate(props: {
 }) {
   const [type, setType] = useState<PayVolumeType>("all");
   const isEmpty = useMemo(() => {
-    return props.data.length === 0;
+    return props.data.length === 0 || props.data.every((x) => x.count === 0);
   }, [props.data]);
   const graphData = useMemo(() => {
     let succeeded = 0;
@@ -77,9 +77,9 @@ export function PaymentsSuccessRate(props: {
         </Select>
       </div>
 
-      <div className="flex flex-1 flex-col justify-center">
+      <div className="relative flex flex-1 flex-col justify-center">
         <div className="h-10" />
-        {isEmpty ? (
+        {isEmpty || graphData.total === 0 ? (
           <EmptyBar />
         ) : (
           <SkeletonContainer

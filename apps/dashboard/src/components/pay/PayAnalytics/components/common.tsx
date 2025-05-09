@@ -2,8 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
-import {} from "@/components/ui/select";
-
 export function NoDataOverlay() {
   return (
     <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-card/50 text-muted-foreground text-sm backdrop-blur-sm">

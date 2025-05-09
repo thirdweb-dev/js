@@ -230,6 +230,5 @@ export async function getPayments(props: {
   }
 
   const json = await res.json();
-  console.log("json", json);
   return json as PaymentsResponse;
 }

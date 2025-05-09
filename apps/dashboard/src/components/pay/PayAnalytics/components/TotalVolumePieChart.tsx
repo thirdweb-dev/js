@@ -17,7 +17,7 @@ export function TotalVolumePieChart(props: {
 }) {
   const data = props.data;
   const isEmpty =
-    !data || data.length === 0 || data.every((x) => x.amountUsdCents === 0);
+    data.length === 0 || data.every((x) => x.amountUsdCents === 0);
   const skeletonData: VolData[] = [
     {
       name: "Crypto",
@@ -87,9 +87,11 @@ export function TotalVolumePieChart(props: {
 
               <SkeletonContainer
                 loadedData={
-                  data && data.length > 0
-                    ? toUSD(cryptoTotalUSD + fiatTotalUSD)
-                    : undefined
+                  !data
+                    ? undefined
+                    : data.length > 0
+                      ? toUSD(cryptoTotalUSD + fiatTotalUSD)
+                      : "NA"
                 }
                 skeletonData="$100"
                 render={(totalAmount) => {
@@ -117,9 +119,7 @@ export function TotalVolumePieChart(props: {
                 color={v.color}
                 label={v.name}
                 amount={
-                  data && data.length > 0
-                    ? toUSD(isEmpty ? 0 : v.amount)
-                    : undefined
+                  !data ? undefined : data.length > 0 ? toUSD(v.amount) : "NA"
                 }
               />
             ))}
