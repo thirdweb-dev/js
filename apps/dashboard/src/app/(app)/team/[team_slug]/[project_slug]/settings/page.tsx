@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getMemberById } from "@/api/team-members";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
@@ -50,7 +50,7 @@ export default async function Page(props: {
     }),
   );
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: currentTeam.id,
   });

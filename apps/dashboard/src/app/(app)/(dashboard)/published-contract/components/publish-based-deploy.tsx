@@ -3,9 +3,10 @@ import {
   fetchPublishedContractVersions,
 } from "components/contract-components/fetch-contracts-with-versions";
 import { ZERO_FEE_VERSIONS } from "constants/fee-config";
-import { type ThirdwebClient, isAddress } from "thirdweb";
+import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
 
@@ -14,7 +15,6 @@ type PublishBasedDeployProps = {
   contract_id: string;
   version?: string;
   modules?: Array<{ publisher: string; moduleId: string; version?: string }>;
-  client: ThirdwebClient;
 };
 
 function mapThirdwebPublisher(publisher: string) {
@@ -25,20 +25,28 @@ function mapThirdwebPublisher(publisher: string) {
 }
 
 export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
-  const client = props.client;
   // resolve ENS if required
   const publisherAddress = isAddress(props.publisher)
     ? props.publisher
     : await resolveAddress({
-        client,
+        client: serverThirdwebClient,
         name: mapThirdwebPublisher(props.publisher),
       });
 
   // get all the published versions of the contract
   const [publishedContractVersions, ...modules] = await Promise.all([
-    fetchPublishedContractVersions(publisherAddress, props.contract_id, client),
+    fetchPublishedContractVersions(
+      publisherAddress,
+      props.contract_id,
+      serverThirdwebClient,
+    ),
     ...(props.modules || []).map((m) =>
-      fetchPublishedContractVersion(m.publisher, m.moduleId, client, m.version),
+      fetchPublishedContractVersion(
+        m.publisher,
+        m.moduleId,
+        serverThirdwebClient,
+        m.version,
+      ),
     ),
   ]);
 
@@ -61,14 +69,14 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
   const [contractMetadata, contractMetadataNoFee, ...fetchedModules] =
     await Promise.all([
       fetchDeployMetadata({
-        client,
+        client: serverThirdwebClient,
         // force `ipfs://` prefix
         uri: publishedContract.publishMetadataUri.startsWith("ipfs://")
           ? publishedContract.publishMetadataUri
           : `ipfs://${publishedContract.publishMetadataUri}`,
       }).catch(() => null),
       fetchDeployMetadata({
-        client,
+        client: serverThirdwebClient,
         // force `ipfs://` prefix
         uri: publishedContractNoFee?.publishMetadataUri.startsWith("ipfs://")
           ? publishedContractNoFee.publishMetadataUri
@@ -76,7 +84,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       }).catch(() => null),
       ...(moduleUris || []).map((uri) =>
         fetchDeployMetadata({
-          client,
+          client: serverThirdwebClient,
           // force `ipfs://` prefix
           uri: uri.startsWith("ipfs://") ? uri : `ipfs://${uri}`,
         }).catch(() => null),

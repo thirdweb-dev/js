@@ -1,4 +1,4 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
 import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
@@ -24,7 +24,7 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
     await getLatestPublishedContractsWithPublisherMapping({
       publisher: publisher,
       contract_id: contract_id,
-      client: getThirdwebClient(undefined),
+      client: serverThirdwebClient,
     });
 
   if (!publishedContract) {

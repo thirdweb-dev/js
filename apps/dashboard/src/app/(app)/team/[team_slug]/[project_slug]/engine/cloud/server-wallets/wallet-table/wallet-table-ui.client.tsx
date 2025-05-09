@@ -15,7 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
@@ -26,6 +25,7 @@ import {
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
 import { Button } from "../../../../../../../../../@/components/ui/button";
+import { useThirdwebClient } from "../../../../../../../../../@/constants/thirdweb.client";
 import { useDashboardRouter } from "../../../../../../../../../@/lib/DashboardRouter";
 import { useV5DashboardChain } from "../../../../../../../../../lib/v5-adapter";
 import CreateServerWallet from "../components/create-server-wallet.client";
@@ -128,12 +128,13 @@ export function ServerWalletsTableUI({
 export function SmartAccountCell({ wallet }: { wallet: Wallet }) {
   const chainId = 1; // TODO: add chain switcher for balance + smart account address
   const chain = useV5DashboardChain(chainId);
+  const client = useThirdwebClient();
 
   const smartAccountAddressQuery = useQuery({
     queryKey: ["smart-account-address", wallet.address],
     queryFn: async () => {
       const smartAccountAddress = await predictSmartAccountAddress({
-        client: getThirdwebClient(undefined),
+        client: client,
         adminAddress: wallet.address,
         chain,
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,

@@ -1,11 +1,11 @@
 import { GradientBlobbie } from "@/components/blocks/Avatars/GradientBlobbie";
 /* eslint-disable @next/next/no-img-element */
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { resolveAvatar } from "thirdweb/extensions/ens";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { resolveAddressAndEns } from "./resolveAddressAndEns";
 
 export const runtime = "edge";
@@ -22,9 +22,11 @@ type PageProps = {
 };
 
 export default async function Image(props: PageProps) {
-  const client = getThirdwebClient(undefined);
   const params = await props.params;
-  const resolvedInfo = await resolveAddressAndEns(params.addressOrEns, client);
+  const resolvedInfo = await resolveAddressAndEns(
+    params.addressOrEns,
+    serverThirdwebClient,
+  );
 
   if (!resolvedInfo) {
     notFound();
@@ -41,14 +43,14 @@ export default async function Image(props: PageProps) {
 
   const ensImage = resolvedInfo.ensName
     ? await resolveAvatar({
-        client: client,
+        client: serverThirdwebClient,
         name: resolvedInfo.ensName,
       })
     : null;
 
   const resolvedENSImageSrc = ensImage
     ? resolveSchemeWithErrorHandler({
-        client: client,
+        client: serverThirdwebClient,
         uri: ensImage,
       })
     : null;

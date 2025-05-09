@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { ImageResponse } from "next/og";
 import { download } from "thirdweb/storage";
 import { fetchChain } from "utils/fetchChain";
+import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 
 // Route segment config
 export const runtime = "edge";
@@ -79,7 +78,7 @@ export default async function Image({
     chain.icon?.url && hasWorkingChainIcon
       ? download({
           uri: chain.icon.url,
-          client: getThirdwebClient(undefined),
+          client: serverThirdwebClient,
         }).then((res) => res.arrayBuffer())
       : undefined,
     // download the background image (based on chain)

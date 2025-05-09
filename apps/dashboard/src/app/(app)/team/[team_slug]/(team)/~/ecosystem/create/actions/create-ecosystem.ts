@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
 import { API_SERVER_URL, BASE_URL } from "@/constants/env";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
 import { upload } from "thirdweb/storage";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
@@ -23,7 +23,7 @@ export async function createEcosystem(options: {
   const { teamSlug, teamId, logo, ...data } = options;
 
   const imageUrl = await upload({
-    client: getThirdwebClient({
+    client: getClientThirdwebClient({
       jwt: token,
       teamId: teamId,
     }),

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import { getThirdwebClient } from "../@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "../@/constants/thirdweb-client.client";
 
 function StoryBadge(props: {
   label: string;
@@ -44,7 +44,7 @@ export function storybookLog(...mesages: unknown[]) {
   );
 }
 
-export const storybookThirdwebClient = getThirdwebClient({
+export const storybookThirdwebClient = getClientThirdwebClient({
   jwt: null,
   teamId: undefined,
 });

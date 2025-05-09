@@ -21,7 +21,6 @@ import {
   getWalletUsers,
   isProjectActive,
 } from "@/api/analytics";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { EmptyStateCard } from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { RangeSelector } from "components/analytics/range-selector";
 import { Suspense } from "react";
@@ -32,6 +31,7 @@ import {
   getChainMetadata,
 } from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
+import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { CombinedBarChartCard } from "../../components/Analytics/CombinedBarChartCard";
@@ -88,7 +88,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
 
   const isActive = Object.values(activeStatus).some((v) => !!v);
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: project.teamId,
   });

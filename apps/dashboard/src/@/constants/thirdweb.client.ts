@@ -4,7 +4,7 @@ import { useActiveAccount } from "thirdweb/react";
 import type { GetAuthTokenResponse } from "../../app/(app)/api/auth/get-auth-token/route";
 import { LAST_USED_TEAM_ID } from "../../constants/cookies";
 import { getCookie } from "../../lib/cookie";
-import { getThirdwebClient } from "./thirdweb.server";
+import { getClientThirdwebClient } from "./thirdweb-client.client";
 
 // returns a thirdweb client with optional JWT passed i
 
@@ -38,7 +38,7 @@ export function useThirdwebClient(jwt?: string) {
   return useMemo(
     // prefer jwt from props over the one from the token query if it exists
     () =>
-      getThirdwebClient({
+      getClientThirdwebClient({
         jwt: jwt || query.data,
         teamId: lastUsedTeamId,
       }),

@@ -2,13 +2,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { moduleToBase64 } from "app/(app)/(dashboard)/published-contract/utils/module-base-64";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
 import { ClientOnly } from "../../ClientOnly/ClientOnly";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher } from "../publisher";
@@ -24,7 +24,6 @@ interface ContractCardProps {
     itemIndex: `${number}`;
   };
   isBeta: boolean | undefined;
-  client: ThirdwebClient;
   // for modular contracts to show the modules in the card
   // publisher and moduleId are required
   // version is optional
@@ -88,12 +87,11 @@ export async function ContractCard({
   tracking,
   modules = [],
   isBeta,
-  client,
 }: ContractCardProps) {
   const publishedContractResult = await fetchPublishedContractVersion(
     publisher,
     contractId,
-    client,
+    serverThirdwebClient,
     version,
   ).catch(() => null);
 
@@ -103,7 +101,7 @@ export async function ContractCard({
 
   const auditLink = resolveSchemeWithErrorHandler({
     uri: publishedContractResult.audit,
-    client,
+    client: serverThirdwebClient,
   });
 
   return (

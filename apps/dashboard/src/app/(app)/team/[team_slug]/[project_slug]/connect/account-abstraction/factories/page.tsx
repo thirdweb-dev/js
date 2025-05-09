@@ -4,7 +4,7 @@ import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoading
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
 import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
@@ -115,11 +115,6 @@ async function AsyncYourFactories(props: {
     authToken: props.authToken,
   });
 
-  const client = getThirdwebClient({
-    jwt: props.authToken,
-    teamId: props.teamId,
-  });
-
   const factories = (
     await Promise.all(
       deployedContracts.map(async (c) => {
@@ -128,7 +123,7 @@ async function AsyncYourFactories(props: {
             // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(Number(c.chainId)),
             address: c.contractAddress,
-            client,
+            client: serverThirdwebClient,
           });
           const m = await getCompilerMetadata(contract);
           return m.name.indexOf("AccountFactory") > -1 ? c : null;

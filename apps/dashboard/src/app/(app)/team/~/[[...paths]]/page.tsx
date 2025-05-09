@@ -2,7 +2,7 @@ import { type Team, getTeams } from "@/api/team";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ChevronRightIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -49,7 +49,7 @@ export default async function Page(props: {
     );
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: undefined,
   });

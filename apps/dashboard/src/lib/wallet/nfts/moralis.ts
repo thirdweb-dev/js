@@ -1,7 +1,7 @@
 import "server-only";
 
 import { download } from "thirdweb/storage";
-import { getUserThirdwebClient } from "../../../app/(app)/api/lib/getAuthToken";
+import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import type { GenerateURLParams, WalletNFT } from "./types";
 
@@ -19,8 +19,6 @@ export async function transformMoralisResponseToNFT(
   owner: string,
   chainId: number,
 ): Promise<WalletNFT[]> {
-  const client = await getUserThirdwebClient();
-
   return (
     await Promise.all(
       moralisResponse.result.map(async (moralisNft) => {
@@ -32,7 +30,7 @@ export async function transformMoralisResponseToNFT(
             metadata: shouldDownloadURI(moralisNft.token_uri)
               ? await download({
                   uri: handleArbitraryTokenURI(moralisNft.token_uri),
-                  client,
+                  client: serverThirdwebClient,
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))
