@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -21,13 +20,15 @@ export default async function Page(props: {
 
   const account = await getRawAccount();
 
-  const { contract } = info;
-  if (contract.chain.id === localhost.id) {
-    return <ContractNFTPageClient contract={contract} isLoggedIn={!!account} />;
+  const { clientContract, serverContract, isLocalhostChain } = info;
+  if (isLocalhostChain) {
+    return (
+      <ContractNFTPageClient contract={clientContract} isLoggedIn={!!account} />
+    );
   }
 
   const { supportedERCs, functionSelectors } =
-    await getContractPageMetadata(contract);
+    await getContractPageMetadata(serverContract);
 
   if (!supportedERCs.isERC721 && !supportedERCs.isERC1155) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -35,7 +36,7 @@ export default async function Page(props: {
 
   return (
     <ContractNFTPage
-      contract={contract}
+      contract={clientContract}
       isErc721={supportedERCs.isERC721}
       functionSelectors={functionSelectors}
       isLoggedIn={!!account}

@@ -147,7 +147,6 @@ export function PublishedByUI(props: {
   publisher: string;
   version: string | undefined;
   isBeta: boolean;
-  client: ThirdwebClient;
 }) {
   return (
     <ContractCard

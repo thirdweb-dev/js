@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import {
   isClaimToSupported,
   isMintToSupported,
@@ -25,22 +24,22 @@ export default async function Page(props: {
 
   const account = await getRawAccount();
 
-  if (info.contract.chain.id === localhost.id) {
+  if (info.isLocalhostChain) {
     return (
       <ContractTokensPageClient
-        contract={info.contract}
+        contract={info.clientContract}
         isLoggedIn={!!account}
       />
     );
   }
 
   const { supportedERCs, functionSelectors } = await getContractPageMetadata(
-    info.contract,
+    info.serverContract,
   );
 
   return (
     <ContractTokensPage
-      contract={info.contract}
+      contract={info.clientContract}
       isERC20={supportedERCs.isERC20}
       isMintToSupported={isMintToSupported(functionSelectors)}
       isClaimToSupported={isClaimToSupported(functionSelectors)}

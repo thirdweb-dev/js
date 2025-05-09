@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
@@ -20,18 +19,23 @@ export default async function Page(props: {
   }
   const account = await getRawAccount();
 
-  const { contract } = info;
-  if (contract.chain.id === localhost.id) {
+  const { clientContract, serverContract, isLocalhostChain } = info;
+  if (isLocalhostChain) {
     return (
-      <ContractProposalsPageClient contract={contract} isLoggedIn={!!account} />
+      <ContractProposalsPageClient
+        contract={clientContract}
+        isLoggedIn={!!account}
+      />
     );
   }
 
-  const { isVoteContract } = await getContractPageMetadata(contract);
+  const { isVoteContract } = await getContractPageMetadata(serverContract);
 
   if (!isVoteContract) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
   }
 
-  return <ContractProposalsPage contract={contract} isLoggedIn={!!account} />;
+  return (
+    <ContractProposalsPage contract={clientContract} isLoggedIn={!!account} />
+  );
 }

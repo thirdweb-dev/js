@@ -4,7 +4,6 @@ import type { MinimalTeamsAndProjects } from "components/contract-components/con
 import { resolveFunctionSelectors } from "lib/selectors";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -40,7 +39,8 @@ export default async function Layout(props: {
     return <ConfigureCustomChain chainSlug={params.chain_id} />;
   }
 
-  const { contract, chainMetadata } = info;
+  const { clientContract, serverContract, chainMetadata, isLocalhostChain } =
+    info;
 
   if (chainMetadata.status === "deprecated") {
     notFound();
@@ -51,11 +51,11 @@ export default async function Layout(props: {
   const client = await getUserThirdwebClient();
   const teamsAndProjects = await getTeamsAndProjectsIfLoggedIn();
 
-  if (contract.chain.id === localhost.id) {
+  if (isLocalhostChain) {
     return (
       <ContractPageLayoutClient
         chainMetadata={chainMetadata}
-        contract={contract}
+        contract={clientContract}
         teamsAndProjects={teamsAndProjects}
         client={client}
       >
@@ -65,25 +65,27 @@ export default async function Layout(props: {
   }
 
   // check if the contract exists
-  const isValidContract = await isContractDeployed(contract).catch(() => false);
+  const isValidContract = await isContractDeployed(serverContract).catch(
+    () => false,
+  );
   if (!isValidContract) {
     // TODO - replace 404 with a better page to upsell deploy or other thirdweb products
     notFound();
   }
-  const contractPageMetadata = await getContractPageMetadata(contract);
+  const contractPageMetadata = await getContractPageMetadata(serverContract);
 
   const sidebarLinks = getContractPageSidebarLinks({
     chainSlug: chainMetadata.slug,
-    contractAddress: contract.address,
+    contractAddress: serverContract.address,
     metadata: contractPageMetadata,
   });
 
   const { contractMetadata, externalLinks } =
-    await getContractMetadataHeaderData(contract);
+    await getContractMetadataHeaderData(serverContract);
 
-  const contractAddress = info.contract.address;
-  const chainName = info.chainMetadata.name;
-  const chainId = info.contract.chain.id;
+  const contractAddress = serverContract.address;
+  const chainName = chainMetadata.name;
+  const chainId = chainMetadata.chainId;
 
   const contractPromptPrefix = `A user is viewing the contract address ${contractAddress} on ${chainName} (Chain ID: ${chainId}). Provide a concise summary of this contract's functionalities, such as token minting, staking, or governance mechanisms. Focus on what the contract enables users to do, avoiding transaction execution details unless requested.
 Users may be interested in how to interact with the contract. Outline common interaction patterns, such as claiming rewards, participating in governance, or transferring assets. Emphasize the contract's capabilities without guiding through transaction processes unless asked.
@@ -103,7 +105,7 @@ The following is the user's message:`;
   return (
     <ContractPageLayout
       chainMetadata={chainMetadata}
-      contract={contract}
+      contract={clientContract}
       sidebarLinks={sidebarLinks}
       dashboardContractMetadata={contractMetadata}
       externalLinks={externalLinks}
@@ -119,7 +121,7 @@ The following is the user's message:`;
         client={client}
         nebulaParams={{
           messagePrefix: contractPromptPrefix,
-          chainIds: [info.contract.chain.id],
+          chainIds: [chainId],
           wallet: accountAddress ?? undefined,
         }}
         examplePrompts={examplePrompts.map((prompt) => ({
@@ -177,9 +179,9 @@ export async function generateMetadata(props: {
     }
 
     const [functionSelectors, contractMetadata] = await Promise.all([
-      resolveFunctionSelectors(info.contract),
+      resolveFunctionSelectors(info.serverContract),
       getContractMetadata({
-        contract: info.contract,
+        contract: info.serverContract,
       }),
     ]);
 

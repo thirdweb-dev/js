@@ -1,11 +1,9 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { type ThirdwebContract, resolveContractAbi } from "thirdweb/contract";
 import { type Abi, toEventSelector, toFunctionSelector } from "thirdweb/utils";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
 import { ContractAnalyticsPage } from "./ContractAnalyticsPage";
-import { ContractAnalyticsPageClient } from "./ContractAnalyticsPage.client";
 
 export default async function Page(props: {
   params: Promise<{
@@ -20,21 +18,13 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { eventSelectorToName, writeFnSelectorToName } = await getSelectors(
-    info.contract,
-  );
-
-  if (info.chainMetadata.chainId === localhost.id) {
-    return (
-      <ContractAnalyticsPageClient
-        contract={info.contract}
-        writeFnSelectorToNameRecord={writeFnSelectorToName}
-        eventSelectorToNameRecord={eventSelectorToName}
-      />
-    );
-  }
-
-  const { isInsightSupported } = await getContractPageMetadata(info.contract);
+  const [
+    { eventSelectorToName, writeFnSelectorToName },
+    { isInsightSupported },
+  ] = await Promise.all([
+    getSelectors(info.serverContract),
+    getContractPageMetadata(info.serverContract),
+  ]);
 
   if (!isInsightSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -42,7 +32,7 @@ export default async function Page(props: {
 
   return (
     <ContractAnalyticsPage
-      contract={info.contract}
+      contract={info.clientContract}
       writeFnSelectorToNameRecord={writeFnSelectorToName}
       eventSelectorToNameRecord={eventSelectorToName}
     />

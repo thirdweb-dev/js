@@ -25,7 +25,6 @@ export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
       name={props.name}
       publisher={props.publisher}
       version={props.version}
-      client={contract.client}
     />
   );
 };

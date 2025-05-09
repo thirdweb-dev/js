@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { ClaimConditions } from "../_components/claim-conditions/claim-conditions";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
@@ -18,19 +17,31 @@ export default async function Page(props: {
   if (!info) {
     notFound();
   }
-  const { contract, chainMetadata } = info;
+  const { clientContract, serverContract, isLocalhostChain } = info;
 
-  const account = await getRawAccount();
+  const [
+    account,
+    {
+      isERC20ClaimConditionsSupported,
+      isERC721ClaimConditionsSupported,
+      supportedERCs,
+    },
+  ] = await Promise.all([
+    getRawAccount(),
+    isLocalhostChain
+      ? {
+          isERC20ClaimConditionsSupported: undefined,
+          isERC721ClaimConditionsSupported: undefined,
+          supportedERCs: undefined,
+        }
+      : getContractPageMetadata(serverContract),
+  ]);
 
-  if (chainMetadata.chainId === localhost.id) {
-    return <ClaimConditionsClient contract={contract} isLoggedIn={!!account} />;
+  if (isLocalhostChain) {
+    return (
+      <ClaimConditionsClient contract={clientContract} isLoggedIn={!!account} />
+    );
   }
-
-  const {
-    isERC20ClaimConditionsSupported,
-    isERC721ClaimConditionsSupported,
-    supportedERCs,
-  } = await getContractPageMetadata(contract);
 
   if (!isERC20ClaimConditionsSupported && !isERC721ClaimConditionsSupported) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -38,7 +49,7 @@ export default async function Page(props: {
 
   return (
     <ClaimConditions
-      contract={contract}
+      contract={clientContract}
       isERC20={supportedERCs.isERC20}
       isLoggedIn={!!account}
       isMultiphase={true}

@@ -27,7 +27,7 @@ export default async function Image({
     }
 
     const contractMetadata = await getContractMetadata({
-      contract: info.contract,
+      contract: info.serverContract,
     });
 
     if (contractMetadata.name === null) {
@@ -40,7 +40,7 @@ export default async function Image({
 
     return contractOGImageTemplate({
       displayName: contractDisplayName,
-      contractAddress: info.contract.address,
+      contractAddress: info.serverContract.address,
       chainName: info.chainMetadata.name,
       logo: contractMetadata.image,
     });

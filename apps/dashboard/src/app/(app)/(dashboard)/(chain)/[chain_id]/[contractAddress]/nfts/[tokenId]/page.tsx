@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { getRawAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthTokenWalletAddress } from "../../../../../../api/lib/getAuthToken";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
@@ -30,11 +29,11 @@ export default async function Page(props: {
     getRawAccount(),
   ]);
 
-  const { contract } = info;
-  if (contract.chain.id === localhost.id) {
+  const { clientContract, serverContract, isLocalhostChain } = info;
+  if (isLocalhostChain) {
     return (
       <TokenIdPageClient
-        contract={contract}
+        contract={clientContract}
         tokenId={params.tokenId}
         isLoggedIn={!!account}
         accountAddress={accountAddress || undefined}
@@ -42,7 +41,7 @@ export default async function Page(props: {
     );
   }
 
-  const { supportedERCs } = await getContractPageMetadata(contract);
+  const { supportedERCs } = await getContractPageMetadata(serverContract);
 
   if (!supportedERCs.isERC721 && !supportedERCs.isERC1155) {
     redirect(`/${params.chain_id}/${params.contractAddress}`);
@@ -50,7 +49,7 @@ export default async function Page(props: {
 
   return (
     <TokenIdPage
-      contract={contract}
+      contract={clientContract}
       isErc721={supportedERCs.isERC721}
       tokenId={params.tokenId}
       isLoggedIn={!!account}

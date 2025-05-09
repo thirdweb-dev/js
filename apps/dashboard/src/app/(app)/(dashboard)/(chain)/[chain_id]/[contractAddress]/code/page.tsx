@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { resolveContractAbi } from "thirdweb/contract";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { ContractCodePage } from "./contract-code-page";
@@ -18,23 +17,24 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract, chainMetadata } = info;
+  const { clientContract, serverContract, chainMetadata, isLocalhostChain } =
+    info;
 
-  if (contract.chain.id === localhost.id) {
+  if (isLocalhostChain) {
     return (
       <ContractCodePageClient
-        contract={contract}
+        contract={clientContract}
         chainMetadata={chainMetadata}
       />
     );
   }
 
-  const abi = await resolveContractAbi(contract).catch(() => undefined);
+  const abi = await resolveContractAbi(serverContract).catch(() => undefined);
 
   return (
     <ContractCodePage
       abi={abi}
-      contract={contract}
+      contract={clientContract}
       chainMetadata={chainMetadata}
     />
   );

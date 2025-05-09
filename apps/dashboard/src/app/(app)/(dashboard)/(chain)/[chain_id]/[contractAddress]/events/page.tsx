@@ -15,5 +15,5 @@ export default async function Page(props: {
     notFound();
   }
 
-  return <EventsFeed contract={info.contract} />;
+  return <EventsFeed contract={info.clientContract} />;
 }

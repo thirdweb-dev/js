@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { localhost } from "thirdweb/chains";
 import { resolveContractAbi } from "thirdweb/contract";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
@@ -19,25 +18,26 @@ export default async function Page(props: {
     notFound();
   }
 
-  const { contract, chainMetadata } = info;
+  const { clientContract, serverContract, chainMetadata, isLocalhostChain } =
+    info;
 
   const account = await getRawAccount();
 
-  if (contract.chain.id === localhost.id) {
+  if (isLocalhostChain) {
     return (
       <ContractExplorerPageClient
-        contract={contract}
+        contract={clientContract}
         chainMetadata={chainMetadata}
         isLoggedIn={!!account}
       />
     );
   }
 
-  const abi = await resolveContractAbi(contract).catch(() => undefined);
+  const abi = await resolveContractAbi(serverContract).catch(() => undefined);
 
   return (
     <ContractExplorerPage
-      contract={contract}
+      contract={clientContract}
       abi={abi}
       chainMetadata={chainMetadata}
       isLoggedIn={!!account}
