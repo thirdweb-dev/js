@@ -32,7 +32,5 @@ export const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
 
 export const NEXT_PUBLIC_NEBULA_URL = process.env.NEXT_PUBLIC_NEBULA_URL || "";
 
-export const NEXT_PUBLIC_PAY_URL = process.env.NEXT_PUBLIC_PAY_URL || "";
-
 export const NEXT_PUBLIC_DEMO_ENGINE_URL =
   process.env.NEXT_PUBLIC_DEMO_ENGINE_URL || "";
