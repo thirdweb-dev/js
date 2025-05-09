@@ -9,6 +9,10 @@ type NebulaUserMessageContentItem =
       image_url: string;
     }
   | {
+      type: "image";
+      b64: string;
+    }
+  | {
       type: "text";
       text: string;
     }

@@ -1,9 +1,12 @@
 "use client";
 
+import { Img } from "@/components/blocks/Img";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ImageUploadButton } from "@/components/ui/image-upload-button";
 import {
   Popover,
   PopoverContent,
@@ -11,7 +14,9 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useAllChainsData } from "hooks/chains/allChains";
 import {
@@ -20,8 +25,11 @@ import {
   ChevronDownIcon,
   CircleStopIcon,
   CopyIcon,
+  PaperclipIcon,
+  XIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import {
   AccountAvatar,
@@ -41,6 +49,8 @@ export type WalletMeta = {
   address: string;
 };
 
+const maxAllowedImagesPerMessage = 4;
+
 export function ChatBar(props: {
   sendMessage: (message: NebulaUserMessage) => void;
   isChatStreaming: boolean;
@@ -54,164 +64,346 @@ export function ChatBar(props: {
   connectedWallets: WalletMeta[];
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
-  // TODO - add this option later
-  // showImageUploader: boolean;
+  allowImageUpload: boolean;
+  onLoginClick: undefined | (() => void);
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
   const selectedChainIds = props.context?.chainIds?.map((x) => Number(x)) || [];
   const firstChainId = selectedChainIds[0];
+  const [images, setImages] = useState<
+    Array<{ file: File; b64: string | undefined }>
+  >([]);
 
   function handleSubmit(message: string) {
-    setMessage("");
-    props.sendMessage({
+    const userMessage: NebulaUserMessage = {
       role: "user",
-      // TODO - add image here later
       content: [{ type: "text", text: message }],
-    });
+    };
+    if (images.length > 0) {
+      for (const image of images) {
+        if (image.b64) {
+          userMessage.content.push({ type: "image", b64: image.b64 });
+        }
+      }
+    }
+    props.sendMessage(userMessage);
+    setMessage("");
+    setImages([]);
+  }
+
+  const uploadImageMutation = useMutation({
+    mutationFn: async (image: File) => {
+      return toBase64(image);
+    },
+  });
+
+  async function handleImageUpload(images: File[]) {
+    try {
+      const urls = await Promise.all(
+        images.map(async (image) => {
+          const b64 = await uploadImageMutation.mutateAsync(image);
+          return { file: image, b64: b64 };
+        }),
+      );
+
+      setImages((prev) => [...prev, ...urls]);
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to upload image", {
+        position: "top-right",
+      });
+    }
   }
 
   return (
-    <div
-      className={cn(
-        "rounded-2xl border border-border bg-card p-2",
-        props.className,
-      )}
-    >
-      <div className="max-h-[200px] overflow-y-auto">
-        <AutoResizeTextarea
-          placeholder={"Ask Nebula"}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => {
-            // ignore if shift key is pressed to allow entering new lines
-            if (e.shiftKey) {
-              return;
-            }
-            if (e.key === "Enter" && !props.isChatStreaming) {
-              e.preventDefault();
-              handleSubmit(message);
-            }
-          }}
-          className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
-          disabled={props.isChatStreaming}
-        />
-      </div>
+    <DynamicHeight transition="height 200ms ease">
+      <div
+        className={cn(
+          "overflow-hidden rounded-2xl border border-border bg-card",
+          props.className,
+        )}
+      >
+        {images.length > 0 && (
+          <ImagePreview
+            images={images}
+            isUploading={uploadImageMutation.isPending}
+            onRemove={(index) => {
+              setImages((prev) => prev.filter((_, i) => i !== index));
+            }}
+          />
+        )}
 
-      <div className="flex items-end justify-between gap-3 px-2 pb-2">
-        {/* left */}
-        <div className="grow">
-          {props.showContextSelector && (
-            <div className="flex flex-wrap gap-2 [&>*]:w-auto">
-              {props.connectedWallets.length > 1 &&
-                !props.isConnectingWallet && (
-                  <WalletSelector
-                    client={props.client}
-                    wallets={props.connectedWallets}
-                    selectedAddress={props.context?.walletAddress || undefined}
-                    onClick={(walletMeta) => {
-                      props.setActiveWallet(walletMeta);
-                      props.setContext({
-                        walletAddress: walletMeta.address,
-                        chainIds: props.context?.chainIds || [],
-                        networks: props.context?.networks || null,
-                      });
-                    }}
-                  />
-                )}
+        <div className="p-2">
+          <div className="max-h-[200px] overflow-y-auto">
+            <AutoResizeTextarea
+              placeholder={"Ask Nebula"}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                // ignore if shift key is pressed to allow entering new lines
+                if (e.shiftKey) {
+                  return;
+                }
+                if (e.key === "Enter" && !props.isChatStreaming) {
+                  e.preventDefault();
+                  handleSubmit(message);
+                }
+              }}
+              className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+              disabled={props.isChatStreaming}
+            />
+          </div>
 
-              {props.isConnectingWallet && (
-                <Badge
-                  variant="outline"
-                  className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
-                >
-                  <Spinner className="size-3" />
-                  <span>Connecting Wallet</span>
-                </Badge>
-              )}
-
-              <MultiNetworkSelector
-                client={props.client}
-                hideTestnets
-                disableChainId
-                selectedChainIds={selectedChainIds}
-                popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[320px]"
-                align="start"
-                side="top"
-                showSelectedValuesInModal={true}
-                customTrigger={
-                  <Button
-                    variant="ghost"
-                    className="h-auto w-full p-0 hover:bg-transparent "
-                  >
-                    {selectedChainIds.length > 0 && firstChainId && (
-                      <ChainBadge
-                        chainId={firstChainId}
-                        plusMore={selectedChainIds.length - 1}
+          <div className="flex items-end justify-between gap-3 px-2 pb-2">
+            {/* left */}
+            <div className="grow">
+              {props.showContextSelector && (
+                <div className="flex flex-wrap gap-2 [&>*]:w-auto">
+                  {props.connectedWallets.length > 1 &&
+                    !props.isConnectingWallet && (
+                      <WalletSelector
                         client={props.client}
+                        wallets={props.connectedWallets}
+                        selectedAddress={
+                          props.context?.walletAddress || undefined
+                        }
+                        onClick={(walletMeta) => {
+                          props.setActiveWallet(walletMeta);
+                          props.setContext({
+                            walletAddress: walletMeta.address,
+                            chainIds: props.context?.chainIds || [],
+                            networks: props.context?.networks || null,
+                          });
+                        }}
                       />
                     )}
 
-                    {selectedChainIds.length === 0 && (
-                      <Badge
-                        variant="outline"
-                        className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
-                      >
-                        Select Chains
-                        <ChevronDownIcon className="size-3 text-muted-foreground" />
-                      </Badge>
-                    )}
-                  </Button>
-                }
-                onChange={(values) => {
-                  props.setContext({
-                    walletAddress: props.context?.walletAddress || null,
-                    chainIds: values.map((x) => x.toString()),
-                    networks: props.context?.networks || null,
-                  });
-                }}
-                priorityChains={[
-                  1, // ethereum
-                  56, // bnb smart chain mainnet (bsc)
-                  42161, // arbitrum one mainnet
-                  8453, // base mainnet
-                  43114, // avalanche mainnet
-                  146, // sonic
-                  137, // polygon
-                  80094, // berachain mainnet
-                  10, // optimism
-                ]}
-              />
-            </div>
-          )}
-        </div>
+                  {props.isConnectingWallet && (
+                    <Badge
+                      variant="outline"
+                      className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
+                    >
+                      <Spinner className="size-3" />
+                      <span>Connecting Wallet</span>
+                    </Badge>
+                  )}
 
-        {/* Send / Stop */}
-        {props.isChatStreaming ? (
-          <Button
-            variant="default"
-            className="!h-auto w-auto shrink-0 gap-2 p-2"
-            onClick={() => {
-              props.abortChatStream();
-            }}
-          >
-            <CircleStopIcon className="size-4" />
-            Stop
-          </Button>
-        ) : (
-          <Button
-            aria-label="Send"
-            disabled={message.trim() === "" || props.isConnectingWallet}
-            className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
-            variant="pink"
-            onClick={() => {
-              if (message.trim() === "") return;
-              handleSubmit(message);
-            }}
-          >
-            <ArrowUpIcon className="size-4" />
-          </Button>
-        )}
+                  <MultiNetworkSelector
+                    client={props.client}
+                    hideTestnets
+                    disableChainId
+                    selectedChainIds={selectedChainIds}
+                    popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[320px]"
+                    align="start"
+                    side="top"
+                    showSelectedValuesInModal={true}
+                    customTrigger={
+                      <Button
+                        variant="ghost"
+                        className="h-auto w-full p-0 hover:bg-transparent "
+                      >
+                        {selectedChainIds.length > 0 && firstChainId && (
+                          <ChainBadge
+                            chainId={firstChainId}
+                            plusMore={selectedChainIds.length - 1}
+                            client={props.client}
+                          />
+                        )}
+
+                        {selectedChainIds.length === 0 && (
+                          <Badge
+                            variant="outline"
+                            className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
+                          >
+                            Select Chains
+                            <ChevronDownIcon className="size-3 text-muted-foreground" />
+                          </Badge>
+                        )}
+                      </Button>
+                    }
+                    onChange={(values) => {
+                      props.setContext({
+                        walletAddress: props.context?.walletAddress || null,
+                        chainIds: values.map((x) => x.toString()),
+                        networks: props.context?.networks || null,
+                      });
+                    }}
+                    priorityChains={[
+                      1, // ethereum
+                      56, // bnb smart chain mainnet (bsc)
+                      42161, // arbitrum one mainnet
+                      8453, // base mainnet
+                      43114, // avalanche mainnet
+                      146, // sonic
+                      137, // polygon
+                      80094, // berachain mainnet
+                      10, // optimism
+                    ]}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* right */}
+            <div className="flex items-center gap-2">
+              {props.allowImageUpload ? (
+                <ImageUploadButton
+                  multiple
+                  value={undefined}
+                  onChange={(files) => {
+                    const totalFiles = files.length + images.length;
+
+                    if (totalFiles > maxAllowedImagesPerMessage) {
+                      toast.error(
+                        `You can only upload up to ${maxAllowedImagesPerMessage} images at a time`,
+                        {
+                          position: "top-right",
+                        },
+                      );
+                      return;
+                    }
+
+                    const validFiles: File[] = [];
+
+                    for (const file of files) {
+                      if (file.size <= 5 * 1024 * 1024) {
+                        validFiles.push(file);
+                      } else {
+                        toast.error("Image is larger than 5MB", {
+                          description: `File: ${file.name}`,
+                          position: "top-right",
+                        });
+                      }
+                    }
+
+                    handleImageUpload(validFiles);
+                  }}
+                  variant="ghost"
+                  className="!h-auto w-auto shrink-0 gap-2 p-2"
+                >
+                  <ToolTipLabel label="Attach Image">
+                    <PaperclipIcon className="size-4" />
+                  </ToolTipLabel>
+                </ImageUploadButton>
+              ) : props.onLoginClick ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="!h-auto w-auto shrink-0 gap-2 p-2"
+                    >
+                      <ToolTipLabel label="Attach Image">
+                        <PaperclipIcon className="size-4" />
+                      </ToolTipLabel>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-72">
+                    <div>
+                      <p className="mb-3 text-muted-foreground text-sm">
+                        Get access to image uploads by signing in to Nebula
+                      </p>
+                      <Button
+                        variant="default"
+                        onClick={props.onLoginClick}
+                        className="w-full"
+                      >
+                        Sign in
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              ) : null}
+
+              {/* Send / Stop */}
+              {props.isChatStreaming ? (
+                <Button
+                  variant="default"
+                  className="!h-auto w-auto shrink-0 gap-2 p-2"
+                  onClick={() => {
+                    props.abortChatStream();
+                  }}
+                >
+                  <CircleStopIcon className="size-4" />
+                  Stop
+                </Button>
+              ) : (
+                <Button
+                  aria-label="Send"
+                  disabled={
+                    (message.trim() === "" && images.length === 0) ||
+                    props.isConnectingWallet
+                  }
+                  className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
+                  variant="pink"
+                  onClick={() => {
+                    if (message.trim() === "" && images.length === 0) return;
+                    handleSubmit(message);
+                  }}
+                >
+                  <ArrowUpIcon className="size-4" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
+    </DynamicHeight>
+  );
+}
+
+async function toBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // includes "data:<mime-type>;base64," prefix
+    reader.onload = () =>
+      resolve(typeof reader.result === "string" ? reader.result : "");
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+function ImagePreview(props: {
+  images: Array<{ file: File; b64: string | undefined }>;
+  isUploading: boolean;
+  onRemove: (index: number) => void;
+}) {
+  return (
+    <div className="fade-in-0 flex animate-in flex-wrap items-center gap-2 border-b border-dashed bg-background p-3">
+      {props.images.map((image, index) => {
+        return (
+          <div
+            className="relative flex items-center gap-2 rounded-lg border bg-card p-1"
+            key={image.file.name}
+          >
+            <Img
+              src={image.b64}
+              className="size-8 rounded"
+              skeleton={
+                <div className="flex items-center justify-center rounded border">
+                  <Spinner className="size-4 text-muted-foreground" />
+                </div>
+              }
+            />
+            <div className="w-[100px] lg:w-[120px]">
+              <p className="truncate text-muted-foreground text-xs">
+                {props.isUploading ? "Uploading..." : image.file.name}
+              </p>
+              <p className="text-muted-foreground text-xs">
+                {Math.round(image.file.size / 1024)} kB
+              </p>
+            </div>
+
+            <ToolTipLabel label="Remove Image">
+              <Button
+                variant="outline"
+                className="-top-1.5 -right-1.5 absolute h-auto w-auto rounded-full bg-card p-0.5"
+                onClick={() => props.onRemove(index)}
+              >
+                <XIcon className="size-2.5" />
+              </Button>
+            </ToolTipLabel>
+          </div>
+        );
+      })}
     </div>
   );
 }

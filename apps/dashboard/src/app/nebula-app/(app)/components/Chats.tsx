@@ -179,10 +179,11 @@ function RenderMessage(props: {
   if (props.message.type === "user") {
     return (
       <div className="mt-6 flex flex-col gap-4">
-        {props.message.content.map((msg) => {
+        {props.message.content.map((msg, index) => {
           if (msg.type === "text") {
             return (
-              <div className="flex justify-end" key={msg.type}>
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <div className="flex justify-end" key={index}>
                 <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
                   <StyledMarkdownRenderer
                     text={msg.text}
@@ -196,12 +197,20 @@ function RenderMessage(props: {
 
           if (msg.type === "image") {
             return (
-              <NebulaImage
-                key={msg.type}
-                type="submitted"
-                url={msg.image_url}
-                client={props.client}
-              />
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <div className="flex justify-end" key={index}>
+                <NebulaImage
+                  type="submitted"
+                  url={
+                    "b64" in msg
+                      ? msg.b64.startsWith("data:image")
+                        ? msg.b64
+                        : `data:image/png;base64,${msg.b64}`
+                      : msg.image_url
+                  }
+                  client={props.client}
+                />
+              </div>
             );
           }
 

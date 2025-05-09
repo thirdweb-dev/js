@@ -215,6 +215,7 @@ function FloatingChatContentLoggedIn(props: {
         />
       )}
       <ChatBar
+        onLoginClick={undefined}
         client={props.client}
         isConnectingWallet={connectionStatus === "connecting"}
         context={contextFilters}
@@ -244,6 +245,7 @@ function FloatingChatContentLoggedIn(props: {
         prefillMessage={undefined}
         sendMessage={handleSendMessage}
         className="rounded-none border-x-0 border-b-0"
+        allowImageUpload={true}
       />
     </div>
   );

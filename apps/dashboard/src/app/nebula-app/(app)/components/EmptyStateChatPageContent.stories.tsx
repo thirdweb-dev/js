@@ -34,6 +34,7 @@ function Story(props: {
     <ThirdwebProvider>
       <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
         <EmptyStateChatPageContent
+          onLoginClick={undefined}
           showAurora={false}
           isConnectingWallet={false}
           sendMessage={() => {}}
@@ -42,6 +43,7 @@ function Story(props: {
           setContext={() => {}}
           connectedWallets={[]}
           setActiveWallet={() => {}}
+          allowImageUpload={true}
         />
       </div>
     </ThirdwebProvider>

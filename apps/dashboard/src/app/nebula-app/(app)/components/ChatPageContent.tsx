@@ -304,6 +304,7 @@ export function ChatPageContent(props: {
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
+                onLoginClick={undefined}
                 showAurora={true}
                 isConnectingWallet={connectionStatus === "connecting"}
                 sendMessage={handleSendMessage}
@@ -312,6 +313,7 @@ export function ChatPageContent(props: {
                 setContext={setContextFilters}
                 connectedWallets={connectedWalletsMeta}
                 setActiveWallet={handleSetActiveWallet}
+                allowImageUpload={true}
               />
             </div>
           ) : (
@@ -348,6 +350,8 @@ export function ChatPageContent(props: {
                     setContextFilters(v);
                     handleUpdateContextFilters(v);
                   }}
+                  allowImageUpload={true}
+                  onLoginClick={undefined}
                 />
               </div>
             </div>

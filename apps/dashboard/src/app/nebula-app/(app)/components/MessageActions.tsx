@@ -18,6 +18,7 @@ export function MessageActions(props: {
   sessionId: string;
   messageText: string | undefined;
   className?: string;
+  buttonClassName?: string;
 }) {
   const [isCopied, setIsCopied] = useState(false);
   function sendRating(rating: "good" | "bad") {
@@ -66,7 +67,7 @@ export function MessageActions(props: {
         <Button
           variant="outline"
           size="sm"
-          className="h-8 gap-2 rounded-lg text-sm"
+          className={cn("h-8 gap-2 rounded-lg text-sm", props.buttonClassName)}
           onClick={() => {
             navigator.clipboard.writeText(messageText);
             setIsCopied(true);
@@ -87,7 +88,10 @@ export function MessageActions(props: {
       <Button
         variant="outline"
         size="sm"
-        className="size-8 rounded-lg bg-background p-0"
+        className={cn(
+          "size-8 rounded-lg bg-background p-0",
+          props.buttonClassName,
+        )}
         onClick={() => {
           sendPositiveRating.mutate();
         }}
@@ -102,7 +106,10 @@ export function MessageActions(props: {
       <Button
         variant="outline"
         size="sm"
-        className="size-8 rounded-lg bg-background p-0"
+        className={cn(
+          "size-8 rounded-lg bg-background p-0",
+          props.buttonClassName,
+        )}
         onClick={() => {
           sendBadRating.mutate();
         }}

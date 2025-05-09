@@ -19,6 +19,8 @@ export function EmptyStateChatPageContent(props: {
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
   showAurora: boolean;
+  allowImageUpload: boolean;
+  onLoginClick: undefined | (() => void);
 }) {
   return (
     <div className="overflow-hidden py-10 lg:py-16">
@@ -41,6 +43,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
+            onLoginClick={props.onLoginClick}
             isConnectingWallet={props.isConnectingWallet}
             showContextSelector={true}
             context={props.context}
@@ -54,6 +57,7 @@ export function EmptyStateChatPageContent(props: {
               // the page will switch so, no need to handle abort here
             }}
             prefillMessage={props.prefillMessage}
+            allowImageUpload={props.allowImageUpload}
           />
           <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">
