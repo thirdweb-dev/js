@@ -1,4 +1,4 @@
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { Ecosystem } from "../types";
 
 export async function fetchEcosystemList(
@@ -6,7 +6,7 @@ export async function fetchEcosystemList(
   teamIdOrSlug: string,
 ) {
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamIdOrSlug}/ecosystem-wallet`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/ecosystem-wallet`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,

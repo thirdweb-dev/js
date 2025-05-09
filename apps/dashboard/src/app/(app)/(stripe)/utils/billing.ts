@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { ProductSKU } from "@/lib/billing";
 import { getAbsoluteUrl } from "../../../../lib/vercel-utils";
 import { getAuthToken } from "../../api/lib/getAuthToken";
@@ -15,7 +15,7 @@ export async function getBillingCheckoutUrl(options: {
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${options.teamSlug}/checkout/create-link`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/create-link`,
     {
       method: "POST",
       body: JSON.stringify({
@@ -50,7 +50,7 @@ export async function getPlanCancelUrl(options: {
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${options.teamId}/checkout/cancel-plan-link`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/checkout/cancel-plan-link`,
     {
       method: "POST",
       headers: {
@@ -88,7 +88,7 @@ export async function getBillingPortalUrl(options: {
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${options.teamSlug}/checkout/create-session-link`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/create-session-link`,
     {
       method: "POST",
       body: JSON.stringify({

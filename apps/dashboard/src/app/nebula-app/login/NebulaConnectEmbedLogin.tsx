@@ -2,7 +2,7 @@
 
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { TURNSTILE_SITE_KEY } from "@/constants/env";
+import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -125,7 +125,7 @@ function CustomConnectEmbed(props: {
           // match the theme of the rest of the app
           theme: theme === "light" ? "light" : "dark",
         }}
-        siteKey={TURNSTILE_SITE_KEY}
+        siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
         onSuccess={(token) => setTurnstileToken(token)}
       />
       <ClientOnly ssr={<ConnectEmbedSizedLoadingCard />}>

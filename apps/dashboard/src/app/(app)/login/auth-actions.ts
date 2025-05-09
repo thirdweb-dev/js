@@ -2,7 +2,8 @@
 import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
 import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
@@ -16,14 +17,14 @@ import { verifyTurnstileToken } from "./verifyTurnstileToken";
 export async function getLoginPayload(
   params: GenerateLoginPayloadParams,
 ): Promise<LoginPayload> {
-  if (!THIRDWEB_API_SECRET) {
+  if (!API_SERVER_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
   }
-  const res = await fetch(`${API_SERVER_URL}/v2/siwe/payload`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v2/siwe/payload`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-service-api-key": THIRDWEB_API_SECRET,
+      "x-service-api-key": API_SERVER_SECRET,
     },
     body: JSON.stringify({
       address: params.address,
@@ -42,7 +43,7 @@ export async function doLogin(
   payload: VerifyLoginPayloadParams,
   turnstileToken: string | undefined,
 ) {
-  if (!THIRDWEB_API_SECRET) {
+  if (!API_SERVER_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
   }
 
@@ -78,11 +79,11 @@ export async function doLogin(
     );
 
   // forward the request to the API server
-  const res = await fetch(`${API_SERVER_URL}/v2/siwe/login`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v2/siwe/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-service-api-key": THIRDWEB_API_SECRET,
+      "x-service-api-key": API_SERVER_SECRET,
     },
     // set the createAccount flag to true to create a new account if it does not exist
     body: JSON.stringify({ ...payload, createAccount: true, utm: utmCookies }),
@@ -184,7 +185,7 @@ export async function isLoggedIn(address: string) {
     return false;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

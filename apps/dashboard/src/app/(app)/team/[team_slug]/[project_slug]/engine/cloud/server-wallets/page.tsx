@@ -1,7 +1,7 @@
 import { getProject } from "@/api/projects";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
-import { THIRDWEB_VAULT_URL } from "../../../../../../../../@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "../../../../../../../../@/constants/public-envs";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";
@@ -10,7 +10,7 @@ export default async function TransactionsServerWalletsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const vaultClient = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
+    baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
   });
 
   const { team_slug, project_slug } = await props.params;

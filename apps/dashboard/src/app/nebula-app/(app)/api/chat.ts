@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 // TODO - copy the source of this library to dashboard
 import { stream } from "fetch-event-stream";
 import type { NebulaTxData } from "../components/Chats";

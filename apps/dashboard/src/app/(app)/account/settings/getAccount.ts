@@ -1,4 +1,4 @@
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
@@ -15,7 +15,7 @@ export async function getRawAccount() {
     return undefined;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/account/me`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,

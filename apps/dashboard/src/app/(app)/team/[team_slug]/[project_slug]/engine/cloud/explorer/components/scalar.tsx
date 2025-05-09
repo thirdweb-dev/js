@@ -1,7 +1,7 @@
 "use client";
 import { ApiReferenceReact } from "@scalar/api-reference-react";
 import "@scalar/api-reference-react/style.css";
-import { THIRDWEB_ENGINE_CLOUD_URL } from "@/constants/env";
+import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 
 export function Scalar() {
   return (
@@ -9,11 +9,11 @@ export function Scalar() {
       <h2 className="font-bold text-2xl tracking-tight">Full API Reference</h2>
       <ApiReferenceReact
         configuration={{
-          url: `${THIRDWEB_ENGINE_CLOUD_URL}/openapi`,
+          url: `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/openapi`,
           hideModels: true,
           servers: [
             {
-              url: THIRDWEB_ENGINE_CLOUD_URL,
+              url: NEXT_PUBLIC_ENGINE_CLOUD_URL,
               description: "Engine Cloud",
             },
           ],

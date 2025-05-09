@@ -1,5 +1,6 @@
 import "server-only";
-import { API_SERVER_URL, THIRDWEB_API_SECRET } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { cookies } from "next/headers";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
@@ -14,11 +15,14 @@ export async function getTeamBySlug(slug: string) {
     return null;
   }
 
-  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const teamRes = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${slug}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   if (teamRes.ok) {
     return (await teamRes.json())?.result as Team;
   }
@@ -26,11 +30,14 @@ export async function getTeamBySlug(slug: string) {
 }
 
 export async function service_getTeamBySlug(slug: string) {
-  const teamRes = await fetch(`${API_SERVER_URL}/v1/teams/${slug}`, {
-    headers: {
-      "x-service-api-key": THIRDWEB_API_SECRET,
+  const teamRes = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${slug}`,
+    {
+      headers: {
+        "x-service-api-key": API_SERVER_SECRET,
+      },
     },
-  });
+  );
 
   if (teamRes.ok) {
     return (await teamRes.json())?.result as Team;
@@ -49,7 +56,7 @@ export async function getTeams() {
     return null;
   }
 
-  const teamsRes = await fetch(`${API_SERVER_URL}/v1/teams`, {
+  const teamsRes = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -66,7 +73,7 @@ export async function getDefaultTeam() {
     return null;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/teams/~`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/~`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

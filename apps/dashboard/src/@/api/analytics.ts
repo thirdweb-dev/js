@@ -11,6 +11,7 @@ import type {
   WalletUserStats,
 } from "types/analytics";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
+import { ANALYTICS_SERVICE_URL } from "../constants/server-envs";
 import { getChains } from "./chain";
 
 async function fetchAnalytics(
@@ -29,29 +30,30 @@ async function fetchAnalytics(
   }
 
   // create a new URL object for the analytics server
-  const ANALYTICS_SERVICE_URL = new URL(
-    process.env.ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
+  const analyticsServiceUrl = new URL(
+    ANALYTICS_SERVICE_URL || "https://analytics.thirdweb.com",
   );
-  ANALYTICS_SERVICE_URL.pathname = pathname;
+
+  analyticsServiceUrl.pathname = pathname;
   for (const param of searchParams?.split("&") || []) {
     const [key, value] = param.split("=");
     if (!key || !value) {
       throw new Error("Invalid input, no key or value provided");
     }
-    ANALYTICS_SERVICE_URL.searchParams.append(
+    analyticsServiceUrl.searchParams.append(
       decodeURIComponent(key),
       decodeURIComponent(value),
     );
   }
   // client id DEBUG OVERRIDE
-  // ANALYTICS_SERVICE_URL.searchParams.delete("clientId");
-  // ANALYTICS_SERVICE_URL.searchParams.delete("accountId");
-  // ANALYTICS_SERVICE_URL.searchParams.append(
+  // analyticsServiceUrl.searchParams.delete("clientId");
+  // analyticsServiceUrl.searchParams.delete("accountId");
+  // analyticsServiceUrl.searchParams.append(
   //   "clientId",
   //   "...",
   // );
 
-  return fetch(ANALYTICS_SERVICE_URL, {
+  return fetch(analyticsServiceUrl, {
     ...init,
     headers: {
       "content-type": "application/json",

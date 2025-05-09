@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
@@ -13,7 +13,7 @@ export async function getProjects(teamSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/projects`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/projects`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ export async function getProject(teamSlug: string, projectSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/projects/${projectSlug}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/projects/${projectSlug}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

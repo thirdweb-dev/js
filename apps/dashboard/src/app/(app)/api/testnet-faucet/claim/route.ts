@@ -1,11 +1,14 @@
 import { getTeams } from "@/api/team";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import {
-  API_SERVER_URL,
+  NEXT_PUBLIC_THIRDWEB_API_HOST,
+  NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
+} from "@/constants/public-envs";
+import {
   THIRDWEB_ACCESS_TOKEN,
-  THIRDWEB_ENGINE_FAUCET_WALLET,
   THIRDWEB_ENGINE_URL,
-} from "@/constants/env";
+  TURNSTILE_SECRET_KEY,
+} from "@/constants/server-envs";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
@@ -62,7 +65,7 @@ export const POST = async (req: NextRequest) => {
 
   if (
     !THIRDWEB_ENGINE_URL ||
-    !THIRDWEB_ENGINE_FAUCET_WALLET ||
+    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
     !THIRDWEB_ACCESS_TOKEN
   ) {
     return NextResponse.json(
@@ -100,7 +103,7 @@ export const POST = async (req: NextRequest) => {
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
     {
       body: JSON.stringify({
-        secret: process.env.TURNSTILE_SECRET_KEY,
+        secret: TURNSTILE_SECRET_KEY,
         response: turnstileToken,
         remoteip: ip,
       }),
@@ -122,12 +125,15 @@ export const POST = async (req: NextRequest) => {
   }
 
   // Make sure the connected wallet has a thirdweb account
-  const accountRes = await fetch(`${API_SERVER_URL}/v1/account/me`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${authCookie.value}`,
+  const accountRes = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authCookie.value}`,
+      },
     },
-  });
+  );
 
   if (accountRes.status !== 200) {
     // Account not found on this connected address
@@ -224,7 +230,7 @@ export const POST = async (req: NextRequest) => {
       headers: {
         "Content-Type": "application/json",
         "x-idempotency-key": idempotencyKey,
-        "x-backend-wallet-address": THIRDWEB_ENGINE_FAUCET_WALLET,
+        "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
         Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
       },
       body: JSON.stringify({

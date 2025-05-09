@@ -1,6 +1,7 @@
 import "server-only";
 
-import { BRIDGE_URL, DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST } from "@/constants/public-envs";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
 import type { Route } from "./types/route";
 
@@ -9,7 +10,7 @@ export async function getRoutes({
 }: {
   limit?: number;
 } = {}) {
-  const url = new URL(`${BRIDGE_URL}/v1/routes`);
+  const url = new URL(`${NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST}/v1/routes`);
   if (limit) {
     url.searchParams.set("limit", limit.toString());
   }

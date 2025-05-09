@@ -1,4 +1,4 @@
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 
@@ -9,7 +9,7 @@ export async function getAccountUsage() {
     return undefined;
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/account/usage`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/usage`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 "use server";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
 
 export async function updateAccount(values: {
   name?: string;
@@ -13,7 +13,7 @@ export async function updateAccount(values: {
     throw new Error("No Auth token");
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/account`, {
+  const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
