@@ -124,7 +124,7 @@ function getCSVData(data: PayTopCustomersData) {
   return { header, rows };
 }
 
-export function getTopCustomers(data: UniversalBridgeWalletStats[]) {
+function getTopCustomers(data: UniversalBridgeWalletStats[]) {
   const customers = new Set<string>();
   for (const item of data) {
     if (!customers.has(item.walletAddress) && item.amountUsdCents > 0) {

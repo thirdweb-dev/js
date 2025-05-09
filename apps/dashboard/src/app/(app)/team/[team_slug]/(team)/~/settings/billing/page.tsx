@@ -1,10 +1,11 @@
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { Billing } from "components/settings/Account/Billing";
 import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+
 export default async function Page(props: {
   params: Promise<{
     team_slug: string;
@@ -25,7 +26,7 @@ export default async function Page(props: {
 
   const subscriptions = await getTeamSubscriptions(team.slug);
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

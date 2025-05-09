@@ -1,4 +1,3 @@
-import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getFaucetClaimAmount } from "../../../../../../api/testnet-faucet/claim/claim-amount";
 import { ChainIcon } from "../../../../components/server/chain-icon";
@@ -9,9 +8,8 @@ import { SectionTitle } from "./SectionTitle";
 export async function FaucetSection(props: {
   chain: ChainMetadata;
   isLoggedIn: boolean;
-  client: ThirdwebClient;
 }) {
-  const { chain, isLoggedIn, client } = props;
+  const { chain, isLoggedIn } = props;
 
   // Check eligibility.
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
@@ -26,7 +24,6 @@ export async function FaucetSection(props: {
             <ChainIcon
               className="-mr-2 size-12 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
-              client={client}
             />
             <GiftIcon bg="hsl(var(--background))" className="-ml-2 size-12" />
           </div>

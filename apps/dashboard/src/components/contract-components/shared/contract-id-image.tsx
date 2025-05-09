@@ -2,18 +2,16 @@
 import { replaceIpfsUrl } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
-import type { ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import generalContractIcon from "../../../../public/assets/tw-icons/general.png";
+import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 
 type ContractIdImageProps = {
   deployedMetadataResult: FetchDeployMetadataResult;
-  client: ThirdwebClient;
 };
 
 export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   deployedMetadataResult,
-  client,
 }) => {
   const logo = deployedMetadataResult.logo;
 
@@ -27,7 +25,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
       <img
         alt=""
         className="size-8 rounded-full"
-        src={replaceIpfsUrl(logo, client)}
+        src={replaceIpfsUrl(logo, serverThirdwebClient)}
       />
     );
   }

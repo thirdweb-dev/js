@@ -83,15 +83,6 @@ export async function engineCloudProxy<T>(params: ProxyActionParams) {
   return proxy<T>(THIRDWEB_ENGINE_CLOUD_URL, params);
 }
 
-export async function payServerProxy<T>(params: ProxyActionParams) {
-  return proxy<T>(
-    process.env.NEXT_PUBLIC_PAY_URL
-      ? `https://${process.env.NEXT_PUBLIC_PAY_URL}`
-      : "https://pay.thirdweb-dev.com",
-    params,
-  );
-}
-
 export async function analyticsServerProxy<T>(params: ProxyActionParams) {
   return proxy<T>(process.env.ANALYTICS_SERVICE_URL || "", params);
 }

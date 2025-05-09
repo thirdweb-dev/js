@@ -19,6 +19,7 @@ import { CheckIcon, DownloadIcon, Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
+import { storeUserAccessToken } from "../../analytics/utils";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
@@ -86,6 +87,11 @@ export default function CreateVaultAccountButton(props: {
         throw new Error("Failed to create access token");
       }
 
+      // save in local storage in case the user refreshes the page during FTUX
+      storeUserAccessToken(
+        props.project.id,
+        userAccessTokenRes.data.accessToken,
+      );
       props.onUserAccessTokenCreated?.(userAccessTokenRes.data.accessToken);
 
       return {

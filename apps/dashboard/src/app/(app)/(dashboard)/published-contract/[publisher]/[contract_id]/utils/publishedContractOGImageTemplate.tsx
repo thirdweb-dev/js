@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { ImageResponse } from "next/og";
 import { isAddress } from "thirdweb";
 import { download } from "thirdweb/storage";
@@ -168,8 +168,6 @@ export async function publishedContractOGImageTemplate(params: {
     new URL("og-lib/fonts/ibm-plex-mono/700.ttf", import.meta.url),
   ).then((res) => res.arrayBuffer());
 
-  const client = getThirdwebClient(undefined);
-
   const [
     inter400,
     inter500,
@@ -191,13 +189,13 @@ export async function publishedContractOGImageTemplate(params: {
     params.logo
       ? download({
           uri: params.logo,
-          client,
+          client: serverThirdwebClient,
         }).then((res) => res.arrayBuffer())
       : undefined,
     params.publisherAvatar
       ? download({
           uri: params.publisherAvatar,
-          client,
+          client: serverThirdwebClient,
         }).then((res) => res.arrayBuffer())
       : undefined,
   ]);

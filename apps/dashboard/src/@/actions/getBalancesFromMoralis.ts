@@ -2,7 +2,7 @@
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
-import { getUserThirdwebClient } from "../../app/(app)/api/lib/getAuthToken";
+import { serverThirdwebClient } from "../constants/thirdweb-client.server";
 
 type BalanceQueryResponse = Array<{
   balance: string;
@@ -23,7 +23,6 @@ export async function getTokenBalancesFromMoralis(params: {
       error: string;
     }
 > {
-  const client = await getUserThirdwebClient();
   const { contractAddress, chainId } = params;
 
   if (!isAddress(contractAddress)) {
@@ -39,7 +38,7 @@ export async function getTokenBalancesFromMoralis(params: {
     const balance = await getWalletBalance({
       address: contractAddress,
       chain,
-      client,
+      client: serverThirdwebClient,
     });
     return [
       {

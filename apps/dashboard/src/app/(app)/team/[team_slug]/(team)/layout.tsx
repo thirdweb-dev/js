@@ -2,9 +2,9 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -44,7 +44,7 @@ export default async function TeamLayout(props: {
     })),
   );
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

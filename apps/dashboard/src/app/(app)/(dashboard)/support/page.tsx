@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -124,7 +124,7 @@ export default async function SupportPage() {
     getAuthTokenWalletAddress(),
   ]);
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: undefined,
   });

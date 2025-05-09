@@ -1,7 +1,7 @@
 import { getTeamBySlug } from "@/api/team";
 import { getMemberById } from "@/api/team-members";
 import { checkDomainVerification } from "@/api/verified-domain";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
@@ -28,7 +28,7 @@ export default async function Page(props: {
     notFound();
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: token,
     teamId: team.id,
   });

@@ -1,7 +1,7 @@
 import { getTeamBySlug } from "@/api/team";
 import { getTeamInvites } from "@/api/team-invites";
 import { getMembers } from "@/api/team-members";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
@@ -51,7 +51,7 @@ export default async function Page(props: {
     (invite) => invite.status === "pending" || invite.status === "expired",
   );
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

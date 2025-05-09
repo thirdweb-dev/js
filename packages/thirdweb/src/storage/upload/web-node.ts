@@ -25,6 +25,8 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
       body: form,
       requestTimeoutMs:
         client.config?.storage?.fetch?.requestTimeoutMs || 120000,
+      // force auth token usage for storage uploads
+      useAuthToken: true,
     },
   );
 

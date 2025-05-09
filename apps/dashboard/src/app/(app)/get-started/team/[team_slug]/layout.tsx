@@ -1,8 +1,8 @@
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { notFound } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -43,7 +43,7 @@ export default async function Layout(props: {
     })),
   );
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

@@ -1,4 +1,3 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -13,6 +12,7 @@ import {
   getActiveClaimCondition as getActiveClaimCondition1155,
   getNFT as getNFT1155,
 } from "thirdweb/extensions/erc1155";
+import { serverThirdwebClient } from "../../../../@/constants/thirdweb-client.server";
 import { DROP_PAGES } from "./data";
 import { NftMint } from "./mint-ui";
 
@@ -39,12 +39,11 @@ export default async function DropPage({
   }
   // eslint-disable-next-line no-restricted-syntax
   const chain = defineDashboardChain(project.chainId, undefined);
-  const client = getThirdwebClient(undefined);
 
   const contract = getContract({
     address: project.contractAddress,
     chain,
-    client,
+    client: serverThirdwebClient,
   });
 
   const [nft, claimCondition, contractMetadata] = await Promise.all([
@@ -89,7 +88,7 @@ export default async function DropPage({
         contract: getContract({
           address: claimCondition.currency,
           chain,
-          client,
+          client: serverThirdwebClient,
         }),
       })
     : undefined;

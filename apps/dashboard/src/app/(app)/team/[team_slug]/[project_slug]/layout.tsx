@@ -1,9 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -55,7 +55,7 @@ export default async function ProjectLayout(props: {
   }
 
   const layoutPath = `/team/${params.team_slug}/${params.project_slug}`;
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

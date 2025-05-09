@@ -8,23 +8,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
+import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 import { fetchDeployMetadata } from "../fetchDeployMetadata";
 import { ContractIdImage } from "../shared/contract-id-image";
 
 type DeployableContractTableProps = {
   contractIds: string[];
   context: "deploy" | "publish";
-  client: ThirdwebClient;
 };
 
 export async function DeployableContractTable(
   props: DeployableContractTableProps,
 ) {
-  const { contractIds, context, client } = props;
+  const { contractIds, context } = props;
   const deployedContractMetadata = await Promise.all(
     contractIds.map(async (id) => {
-      const res = await fetchDeployMetadata(id, client);
+      const res = await fetchDeployMetadata(id, serverThirdwebClient);
       return {
         contractId: id,
         ...res,
@@ -63,10 +62,7 @@ export async function DeployableContractTable(
               >
                 {/* Icon */}
                 <TableCell>
-                  <ContractIdImage
-                    deployedMetadataResult={metadata}
-                    client={client}
-                  />
+                  <ContractIdImage deployedMetadataResult={metadata} />
                 </TableCell>
 
                 {/* name */}

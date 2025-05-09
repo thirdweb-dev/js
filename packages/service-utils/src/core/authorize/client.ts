@@ -22,6 +22,11 @@ export function authorizeClient(
     authMethod,
   };
 
+  if (authMethod === "jwt") {
+    // ignore domains and bundleIds for JWT auth, if the token is valid we'll return the authResult
+    return authResult;
+  }
+
   // if there's no project, we'll return the authResult (JWT or teamId auth)
   if (!project) {
     return authResult;

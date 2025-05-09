@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
+import { serverThirdwebClient } from "../../../../../../../@/constants/thirdweb-client.server";
 
 type RouteListCardProps = {
   originChainId: number;
@@ -15,7 +15,6 @@ type RouteListCardProps = {
   destinationTokenIconUri?: string | null;
   destinationTokenSymbol: string;
   destinationTokenName: string;
-  client: ThirdwebClient;
 };
 
 export async function RouteListCard({
@@ -27,7 +26,6 @@ export async function RouteListCard({
   destinationTokenAddress,
   destinationTokenIconUri,
   destinationTokenName,
-  client,
 }: RouteListCardProps) {
   const [
     originChain,
@@ -42,13 +40,13 @@ export async function RouteListCard({
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: originTokenIconUri,
-          client,
+          client: serverThirdwebClient,
         })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
           uri: destinationTokenIconUri,
-          client,
+          client: serverThirdwebClient,
         })
       : undefined,
   ]);

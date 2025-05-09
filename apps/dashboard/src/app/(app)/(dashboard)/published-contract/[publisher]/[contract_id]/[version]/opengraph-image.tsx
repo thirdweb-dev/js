@@ -1,4 +1,4 @@
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { format } from "date-fns/format";
 import { resolveEns } from "lib/ens";
 import { correctAndUniqueLicenses } from "lib/licenses";
@@ -20,18 +20,19 @@ export default async function Image(props: {
     version: string;
   };
 }) {
-  const client = getThirdwebClient(undefined);
   const { publisher, contract_id } = props.params;
 
   const [publishedContracts, socialProfiles] = await Promise.all([
     getPublishedContractsWithPublisherMapping({
       publisher: publisher,
       contract_id: contract_id,
-      client,
+      client: serverThirdwebClient,
     }),
     getSocialProfiles({
-      address: (await resolveEns(publisher, client)).address || publisher,
-      client,
+      address:
+        (await resolveEns(publisher, serverThirdwebClient)).address ||
+        publisher,
+      client: serverThirdwebClient,
     }),
   ]);
 

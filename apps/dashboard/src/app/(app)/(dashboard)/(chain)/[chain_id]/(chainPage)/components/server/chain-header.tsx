@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { mapV4ChainToV5Chain } from "../../../../../../../../contexts/map-chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
@@ -11,7 +10,6 @@ type ChainHeaderProps = {
   headerImageUrl?: string;
   logoUrl?: string;
   chain: ChainMetadata;
-  client: ThirdwebClient;
 };
 
 // TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
@@ -41,7 +39,6 @@ export function ChainHeader(props: ChainHeaderProps) {
         {/* chain logo */}
 
         <ChainIcon
-          client={props.client}
           iconUrl={props.logoUrl}
           className={cn(
             "-translate-y-[50%] absolute top-0 left-0 size-20 overflow-hidden rounded-full border border-border bg-muted p-2 lg:size-36 lg:p-4",

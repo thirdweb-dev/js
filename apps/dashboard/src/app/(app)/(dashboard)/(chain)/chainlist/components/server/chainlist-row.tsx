@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { JSX } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
 import type { ChainSupportedService } from "../../../types/chain";
@@ -25,7 +24,6 @@ type ChainListRowProps = {
   currencySymbol: string;
   isDeprecated: boolean;
   iconUrl?: string;
-  client: ThirdwebClient;
 };
 
 export async function ChainListRow({
@@ -37,7 +35,6 @@ export async function ChainListRow({
   enabledServices,
   favoriteButton,
   iconUrl,
-  client,
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
@@ -47,7 +44,7 @@ export async function ChainListRow({
         <div className="flex w-[370px] flex-row items-center gap-4">
           <div className="flex items-center gap-2">
             {favoriteButton && <div className="mr-6"> {favoriteButton} </div>}
-            <ChainIcon iconUrl={iconUrl} className="size-6" client={client} />
+            <ChainIcon iconUrl={iconUrl} className="size-6" />
             <Link
               href={`/${chainSlug}`}
               className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"

@@ -1,15 +1,11 @@
 import { getWalletConnections } from "@/api/analytics";
 import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { subDays } from "date-fns";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "../../../../../@/components/ui/alert";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { InviteTeamMembersButton } from "./_components/invite-team-members-button";
@@ -35,7 +31,7 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

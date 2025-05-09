@@ -3,10 +3,10 @@ import { getTeamBySlug } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { AccountAbstractionSettingsPage } from "components/smart-wallets/SponsorshipPolicies";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
 
@@ -29,7 +29,7 @@ export default async function Page(props: {
     redirect(`/team/${team_slug}`);
   }
 
-  const client = await getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

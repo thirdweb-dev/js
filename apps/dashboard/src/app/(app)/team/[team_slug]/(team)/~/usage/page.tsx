@@ -2,9 +2,9 @@ import { getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { fetchRPCUsage } from "@/api/usage/rpc";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import { normalizeTimeISOString } from "@/lib/time";
 import { redirect } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../../../@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
@@ -56,7 +56,7 @@ export default async function Page(props: {
     );
   }
 
-  const client = getThirdwebClient({
+  const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });

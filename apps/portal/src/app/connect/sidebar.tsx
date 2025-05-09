@@ -207,7 +207,16 @@ export const sidebar: SideBar = {
         },
         {
           name: "Web3 Onboard",
-          href: `${walletSlug}/web3-onboard`,
+          links: [
+            {
+              name: "Overview",
+              href: `${walletSlug}/web3-onboard/overview`,
+            },
+            {
+              name: "Migration Guide",
+              href: `${walletSlug}/web3-onboard/migration-guide`,
+            },
+          ],
         },
         {
           name: "Migrate to thirdweb",

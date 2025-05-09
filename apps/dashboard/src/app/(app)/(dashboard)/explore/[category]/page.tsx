@@ -6,7 +6,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getThirdwebClient } from "@/constants/thirdweb.server";
 import {
   ContractCard,
   ContractCardSkeleton,
@@ -46,7 +45,6 @@ export default async function ExploreCategoryPage(
   if (!category) {
     notFound();
   }
-  const client = getThirdwebClient(undefined);
 
   return (
     <div className="flex flex-col">
@@ -105,7 +103,6 @@ export default async function ExploreCategoryPage(
                 key={publisher + contractId + overrides?.title}
               >
                 <ContractCard
-                  client={client}
                   publisher={publisher}
                   contractId={contractId}
                   titleOverride={overrides?.title}

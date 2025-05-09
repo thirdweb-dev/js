@@ -22,10 +22,16 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
    */
   async function fetchWithHeaders(
     url: string | Request,
-    init?: Omit<RequestInit, "signal"> & { requestTimeoutMs?: number },
+    init?: Omit<RequestInit, "signal"> & {
+      requestTimeoutMs?: number;
+      useAuthToken?: boolean;
+    },
   ): Promise<Response> {
-    const { requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT, ...restInit } =
-      init || {};
+    const {
+      requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT,
+      useAuthToken,
+      ...restInit
+    } = init || {};
 
     let headers = restInit.headers
       ? new Headers(restInit.headers)
@@ -41,7 +47,7 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       }
       // auth token if secret key === jwt
       const authToken =
-        client.secretKey && isJWT(client.secretKey)
+        useAuthToken && client.secretKey && isJWT(client.secretKey)
           ? client.secretKey
           : undefined;
       // secret key if secret key !== jwt
