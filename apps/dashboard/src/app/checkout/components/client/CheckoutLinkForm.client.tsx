@@ -189,7 +189,7 @@ export function CheckoutLinkForm() {
             <CreditCardIcon className="size-5 sm:size-6" />
           </div>
           <CardTitle className="text-center sm:text-left">
-            Create a Checkout Link
+            Create a Payment Link
           </CardTitle>
         </div>
       </CardHeader>
@@ -300,6 +300,7 @@ export function CheckoutLinkForm() {
                         value={image || imageUri}
                         className="!rounded-md aspect-square h-24 w-full"
                         isDisabled={uploadingImage}
+                        isDisabledText="Uploading..."
                         selectOrUpload="Upload"
                         helperText="image"
                         fileUrl={imageUri}

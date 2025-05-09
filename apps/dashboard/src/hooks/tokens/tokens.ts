@@ -82,13 +82,12 @@ const tokensStore = /* @__PURE__ */ createStore<TokenMetadata[]>([]);
 const structuredTokensStore = /* @__PURE__ */ createStructuredTokensStore();
 
 export function useTokensData({
-  clientId,
   chainId,
   enabled,
-}: { clientId: string; chainId?: number; enabled?: boolean }) {
+}: { chainId?: number; enabled?: boolean }) {
   const tokensQuery = useQuery({
     queryKey: ["universal-bridge-tokens", chainId],
-    queryFn: () => getUniversalBridgeTokens({ clientId, chainId }),
+    queryFn: () => getUniversalBridgeTokens({ chainId }),
     enabled,
   });
 
