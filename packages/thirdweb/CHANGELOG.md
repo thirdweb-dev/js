@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.98.1
+
+### Patch Changes
+
+- [#7004](https://github.com/thirdweb-dev/js/pull/7004) [`6f1d4b1`](https://github.com/thirdweb-dev/js/commit/6f1d4b1fcf680235731a2900d423cf0e7a95194e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle tx with value on engineAccount
+
 ## 5.98.0
 
 ### Minor Changes
