@@ -93,7 +93,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
           amount,
         );
 
-        // Build checkout URL
+        // Build payment URL
         const params = new URLSearchParams({
           chainId: inputs.chainId.toString(),
           recipientAddress: inputs.recipientAddress,
@@ -112,13 +112,13 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
           params.set("image", imageUri);
         }
 
-        const checkoutUrl = `${window.location.origin}/checkout?${params.toString()}`;
+        const paymentUrl = `${window.location.origin}/pay?${params.toString()}`;
 
         // Copy to clipboard
-        await navigator.clipboard.writeText(checkoutUrl);
+        await navigator.clipboard.writeText(paymentUrl);
 
         // Show success toast
-        toast.success("Checkout link copied to clipboard.");
+        toast.success("Payment link copied to clipboard.");
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -169,7 +169,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
         params.set("image", imageUri);
       }
 
-      window.open(`/checkout?${params.toString()}`, "_blank");
+      window.open(`/pay?${params.toString()}`, "_blank");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "An error occurred");
     }
@@ -290,7 +290,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
                       id="title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Checkout for..."
+                      placeholder="A title for your payment"
                       className="w-full"
                     />
                   </div>
