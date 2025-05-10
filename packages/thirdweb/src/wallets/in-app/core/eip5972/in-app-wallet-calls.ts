@@ -70,7 +70,7 @@ export async function inAppWalletGetCallsStatus(args: {
   }
 
   const request = getRpcClient({ client, chain });
-  let status: "CONFIRMED" | "PENDING" = "CONFIRMED";
+  let status: "pending" | "success" | "failure" = "success";
   const receipts: (WalletCallReceipt<bigint, "success" | "reverted"> | null)[] =
     await Promise.all(
       bundle.map((hash) =>
@@ -88,7 +88,7 @@ export async function inAppWalletGetCallsStatus(args: {
             transactionHash: receipt.transactionHash,
           }))
           .catch(() => {
-            status = "PENDING";
+            status = "pending";
             return null; // Return null if there's an error to filter out later
           }),
       ),
@@ -96,9 +96,11 @@ export async function inAppWalletGetCallsStatus(args: {
 
   return {
     status,
-    receipts: receipts.filter((r) => r !== null) as WalletCallReceipt<
-      bigint,
-      "success" | "reverted"
-    >[], // ts 5.5 please come we need you
+    statusCode: 200,
+    atomic: false,
+    chainId: chain.id,
+    id: bundleId,
+    version: "2.0.0",
+    receipts: receipts.filter((r) => r !== null),
   };
 }

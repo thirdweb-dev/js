@@ -22,13 +22,7 @@ import {
 } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { COINBASE } from "../constants.js";
-import type {
-  GetCallsStatusResponse,
-  WalletCapabilities,
-  WalletCapabilitiesRecord,
-  WalletSendCallsId,
-  WalletSendCallsParameters,
-} from "../eip5792/types.js";
+import type {} from "../eip5792/types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
@@ -169,109 +163,6 @@ export function isCoinbaseSDKWallet(
   wallet: Wallet,
 ): wallet is Wallet<typeof COINBASE> {
   return wallet.id === COINBASE;
-}
-
-/**
- * @internal
- */
-export async function coinbaseSDKWalletGetCapabilities(args: {
-  wallet: Wallet<typeof COINBASE>;
-}) {
-  const { wallet } = args;
-
-  const account = wallet.getAccount();
-  if (!account) {
-    return {
-      message: `Can't get capabilities, no account connected for wallet: ${wallet.id}`,
-    };
-  }
-
-  const config = wallet.getConfig();
-  const provider = await getCoinbaseWebProvider(config);
-  try {
-    return (await provider.request({
-      method: "wallet_getCapabilities",
-      params: [account.address],
-    })) as WalletCapabilitiesRecord<WalletCapabilities, number>;
-  } catch (error: unknown) {
-    if (/unsupport|not support/i.test((error as Error).message)) {
-      return {
-        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
-      };
-    }
-    throw error;
-  }
-}
-
-/**
- * @internal
- */
-export async function coinbaseSDKWalletSendCalls(args: {
-  wallet: Wallet<typeof COINBASE>;
-  params: WalletSendCallsParameters;
-}) {
-  const { wallet, params } = args;
-
-  const config = wallet.getConfig();
-  const provider = await getCoinbaseWebProvider(config);
-
-  try {
-    return (await provider.request({
-      method: "wallet_sendCalls",
-      params,
-    })) as WalletSendCallsId;
-  } catch (error) {
-    if (/unsupport|not support/i.test((error as Error).message)) {
-      throw new Error(
-        `${wallet.id} does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.`,
-      );
-    }
-    throw error;
-  }
-}
-
-/**
- * @internal
- */
-export async function coinbaseSDKWalletShowCallsStatus(args: {
-  wallet: Wallet<typeof COINBASE>;
-  bundleId: string;
-}) {
-  const { wallet, bundleId } = args;
-
-  const provider = await getCoinbaseWebProvider(wallet.getConfig());
-
-  try {
-    return await provider.request({
-      method: "wallet_showCallsStatus",
-      params: [bundleId],
-    });
-  } catch (error: unknown) {
-    if (/unsupport|not support/i.test((error as Error).message)) {
-      throw new Error(
-        `${wallet.id} does not support wallet_showCallsStatus, reach out to them directly to request EIP-5792 support.`,
-      );
-    }
-    throw error;
-  }
-}
-
-/**
- * @internal
- */
-export async function coinbaseSDKWalletGetCallsStatus(args: {
-  wallet: Wallet<typeof COINBASE>;
-  bundleId: string;
-}) {
-  const { wallet, bundleId } = args;
-
-  const config = wallet.getConfig();
-  const provider = await getCoinbaseWebProvider(config);
-
-  return provider.request({
-    method: "wallet_getCallsStatus",
-    params: [bundleId],
-  }) as Promise<GetCallsStatusResponse>;
 }
 
 function createAccount({

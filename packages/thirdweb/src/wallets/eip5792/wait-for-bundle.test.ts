@@ -12,7 +12,7 @@ import { waitForBundle } from "./wait-for-bundle.js";
 const MOCK_BUNDLE_ID = "0x1234567890abcdef";
 
 const MOCK_SUCCESS_RECEIPT: GetCallsStatusResponse = {
-  status: "CONFIRMED",
+  status: "success",
   receipts: [
     {
       logs: [],
@@ -25,11 +25,21 @@ const MOCK_SUCCESS_RECEIPT: GetCallsStatusResponse = {
       gasUsed: 12345n,
     },
   ],
+  atomic: false,
+  chainId: 1,
+  id: MOCK_BUNDLE_ID,
+  version: "2.0.0",
+  statusCode: 200,
 };
 
 const MOCK_PENDING_RECEIPT: GetCallsStatusResponse = {
-  status: "PENDING",
+  status: "pending",
   receipts: [],
+  atomic: false,
+  chainId: 1,
+  id: MOCK_BUNDLE_ID,
+  version: "2.0.0",
+  statusCode: 100,
 };
 
 const mockGetCallsStatus = vi.spyOn(getCallsStatusExports, "getCallsStatus");
