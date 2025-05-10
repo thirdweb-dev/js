@@ -74,7 +74,6 @@ export async function deleteWebhook(props: {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "x-client-id-override": props.clientId,
         Authorization: `Bearer ${authToken}`,
       },
     },
@@ -214,7 +213,6 @@ export async function getPayments(props: {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
   });
