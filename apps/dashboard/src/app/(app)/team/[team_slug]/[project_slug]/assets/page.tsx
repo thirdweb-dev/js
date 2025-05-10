@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Coins,
+  WalletIcon,
   ExternalLinkIcon,
   FileIcon,
   ImageIcon,
@@ -74,7 +74,7 @@ export default function AssetsPage() {
             <Card className="bg-background h-full cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
                 <div className="bg-primary/10 p-3 rounded-full mb-4">
-                  <Coins className="h-6 w-6 text-primary" />
+                  <WalletIcon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-1">Create Token</h3>
                 <p className="text-muted-foreground text-sm mb-4">
@@ -92,7 +92,7 @@ export default function AssetsPage() {
             <Card className="bg-background h-full cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
                 <div className="bg-primary/10 p-3 rounded-full mb-4">
-                  <ImageIcon className="h-6 w-6 text-primary" />
+                  <WalletIcon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-1">
                   Create NFT Collection
@@ -221,7 +221,7 @@ export default function AssetsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1.5">
-                          <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                          <div className="h-2 w-2 rounded-full bg-blue-500"></div>
                           {asset.network}
                         </div>
                       </TableCell>
@@ -257,7 +257,7 @@ export default function AssetsPage() {
             <Card className="bg-background">
               <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
                 <div className="bg-primary/10 p-3 rounded-full mb-4">
-                  <Coins className="h-6 w-6 text-primary" />
+                  <WalletIcon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-2">Token Guide</h3>
                 <p className="text-muted-foreground text-sm mb-4">
@@ -269,7 +269,7 @@ export default function AssetsPage() {
             <Card className="bg-background">
               <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
                 <div className="bg-primary/10 p-3 rounded-full mb-4">
-                  <ImageIcon className="h-6 w-6 text-primary" />
+                  <WalletIcon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-2">NFT Guide</h3>
                 <p className="text-muted-foreground text-sm mb-4">
@@ -281,7 +281,7 @@ export default function AssetsPage() {
             <Card className="bg-background">
               <CardContent className="pt-6 flex flex-col items-center justify-center text-center h-full">
                 <div className="bg-primary/10 p-3 rounded-full mb-4">
-                  <FileIcon className="h-6 w-6 text-primary" />
+                  <WalletIcon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium mb-2">Asset Management</h3>
                 <p className="text-muted-foreground text-sm mb-4">
