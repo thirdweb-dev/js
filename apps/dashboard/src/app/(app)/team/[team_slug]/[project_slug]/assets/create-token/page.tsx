@@ -26,7 +26,7 @@ import {
   CheckIcon,
   ChevronUpIcon,
   CircleAlertIcon,
-  Loader2,
+  Loader2Icon,
   UploadIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -1805,7 +1805,7 @@ export default function CreateTokenPage() {
               >
                 {isDeploying ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />{" "}
                     {deploymentStatus}
                   </>
                 ) : (
