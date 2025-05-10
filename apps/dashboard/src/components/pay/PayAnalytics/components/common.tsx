@@ -34,7 +34,13 @@ export function ChangeBadge(props: { percent: number }) {
           ) : (
             <ArrowDownIcon className="size-4" />
           )}
-          {percentValue}
+
+          {new Intl.NumberFormat("en-US", {
+            style: "percent",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            signDisplay: "never",
+          }).format(props.percent)}
         </Badge>
       </div>
     </ToolTipLabel>
