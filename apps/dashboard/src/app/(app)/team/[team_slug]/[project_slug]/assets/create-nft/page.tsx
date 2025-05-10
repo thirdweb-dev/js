@@ -128,6 +128,7 @@ export default function CreateNFTPage() {
   const activeChain = useActiveWalletChain();
   const switchChain = useSwitchActiveWalletChain();
   const thirdwebClient = useThirdwebClient();
+  const connectedAddress = activeAccount?.address;
 
   // Forms
   const collectionInfoForm = useForm<CollectionInfoValues>({
@@ -905,7 +906,6 @@ export default function CreateNFTPage() {
         fee_recipient: mintSettings.royaltyAddress || activeAccount.address,
         seller_fee_basis_points:
           Number.parseInt(mintSettings.royaltyPercentage || "0") * 100,
-        ...(imageUri ? { image: imageUri } : {}),
       };
 
       console.log("Deploying with parameters:", initializeParams);
