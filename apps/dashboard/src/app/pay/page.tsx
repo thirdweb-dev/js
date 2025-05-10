@@ -1,5 +1,4 @@
 import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
-import { loginRedirect } from "app/(app)/login/loginRedirect";
 import type { Metadata } from "next";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
@@ -34,11 +33,6 @@ export default async function RoutesPage({
     !params.amount
   ) {
     const authToken = await getAuthToken();
-
-    if (!authToken) {
-      const searchParams = new URLSearchParams(params);
-      return loginRedirect(`/pay?${searchParams.toString()}`);
-    }
 
     const client = getClientThirdwebClient({
       jwt: authToken,
