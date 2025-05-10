@@ -114,10 +114,16 @@ describe.sequential("injected wallet", async () => {
       method: "wallet_getCallsStatus",
       params: ["test"],
     });
-    expect(result).toEqual({
-      status: "CONFIRMED",
-      receipts: [],
-    });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "atomic": false,
+        "chainId": undefined,
+        "receipts": [],
+        "status": "success",
+        "statusCode": 200,
+        "version": "2.0.0",
+      }
+    `);
   });
 
   test("without support should fail", async () => {
@@ -163,8 +169,8 @@ describe.sequential("in-app wallet", async () => {
       bundleId,
     });
 
-    expect(result.status).toEqual("CONFIRMED");
-    expect(result.receipts.length).toEqual(2);
+    expect(result.status).toEqual("success");
+    expect(result.receipts?.length).toEqual(2);
   });
 
   test("with smart account", async () => {
@@ -188,8 +194,8 @@ describe.sequential("in-app wallet", async () => {
       bundleId,
     });
 
-    expect(result.status).toEqual("CONFIRMED");
-    expect(result.receipts.length).toEqual(1);
+    expect(result.status).toEqual("success");
+    expect(result.receipts?.length).toEqual(1);
   });
 
   test("with pending transaction", async () => {
@@ -213,8 +219,8 @@ describe.sequential("in-app wallet", async () => {
       bundleId,
     });
 
-    expect(result.status).toEqual("PENDING");
-    expect(result.receipts.length).toEqual(0);
+    expect(result.status).toEqual("pending");
+    expect(result.receipts?.length).toEqual(0);
   });
 
   test("unknown bundle id should fail", async () => {

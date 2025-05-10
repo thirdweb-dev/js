@@ -1,6 +1,10 @@
-import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
+import {
+  getCoinbaseWebProvider,
+  isCoinbaseSDKWallet,
+} from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
+import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
 import { isWalletConnect } from "../wallet-connect/controller.js";
@@ -49,16 +53,13 @@ export async function showCallsStatus({
     );
   }
 
+  let provider: Ethereum;
   if (isCoinbaseSDKWallet(wallet)) {
-    const { coinbaseSDKWalletShowCallsStatus } = await import(
-      "../coinbase/coinbase-web.js"
-    );
-    await coinbaseSDKWalletShowCallsStatus({ wallet, bundleId });
-    return;
+    provider = (await getCoinbaseWebProvider(wallet.getConfig())) as Ethereum;
+  } else {
+    // Default to injected wallet
+    provider = getInjectedProvider(wallet.id);
   }
-
-  // Default to injected wallet
-  const provider = getInjectedProvider(wallet.id);
 
   try {
     return await provider.request({

@@ -76,8 +76,7 @@ export function waitForBundle(
             client,
             bundleId,
           });
-
-          if (result.status === "CONFIRMED") {
+          if (result.status === "success") {
             // stop the polling
             unwatch();
             // resolve the top level promise with the result

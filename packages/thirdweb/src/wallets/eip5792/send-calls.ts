@@ -6,14 +6,19 @@ import { encode } from "../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { type Address, getAddress } from "../../utils/address.js";
 import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import {
   type PromisedObject,
   resolvePromisedValue,
 } from "../../utils/promise/resolve-promised-value.js";
 import type { OneOf } from "../../utils/type-utils.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
+import {
+  type CoinbaseWalletCreationOptions,
+  isCoinbaseSDKWallet,
+} from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
+import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
 import { isWalletConnect } from "../wallet-connect/controller.js";
@@ -121,7 +126,7 @@ export async function sendCalls<const ID extends WalletId>(
     wallet,
     calls,
     capabilities,
-    version = "1.0",
+    version = "2.0.0",
     chain = wallet.getChain(),
   } = options;
 
@@ -182,31 +187,34 @@ export async function sendCalls<const ID extends WalletId>(
     },
   ];
 
-  if (isCoinbaseSDKWallet(wallet)) {
-    const { coinbaseSDKWalletSendCalls } = await import(
-      "../coinbase/coinbase-web.js"
-    );
-    return coinbaseSDKWalletSendCalls({
-      wallet,
-      params: injectedWalletCallParams,
-    });
-  }
-
   if (isWalletConnect(wallet)) {
     throw new Error("sendCalls is not yet supported for Wallet Connect");
   }
 
-  // Default to injected wallet
-  const provider = getInjectedProvider(wallet.id);
+  let provider: Ethereum;
+  if (isCoinbaseSDKWallet(wallet)) {
+    const { getCoinbaseWebProvider } = await import(
+      "../coinbase/coinbase-web.js"
+    );
+    const config = wallet.getConfig() as CoinbaseWalletCreationOptions;
+    provider = (await getCoinbaseWebProvider(config)) as Ethereum;
+  } else {
+    provider = getInjectedProvider(wallet.id);
+  }
+
   try {
-    return await provider.request({
+    const batchId = await provider.request({
       method: "wallet_sendCalls",
       params: injectedWalletCallParams as ViemWalletSendCallsParameters, // The viem type definition is slightly different
     });
+    if (typeof batchId === "object" && "id" in batchId) {
+      return batchId.id;
+    }
+    return batchId;
   } catch (error) {
     if (/unsupport|not support/i.test((error as Error).message)) {
       throw new Error(
-        `${wallet.id} does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.`,
+        `${wallet.id} errored calling wallet_sendCalls, with error: ${error instanceof Error ? error.message : stringify(error)}`,
       );
     }
     throw error;
