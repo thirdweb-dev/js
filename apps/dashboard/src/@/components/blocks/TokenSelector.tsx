@@ -26,7 +26,6 @@ export function TokenSelector(props: {
   enabled?: boolean;
 }) {
   const { tokens, isFetching } = useTokensData({
-    clientId: props.client.clientId,
     chainId: props.chainId,
     enabled: props.enabled,
   });

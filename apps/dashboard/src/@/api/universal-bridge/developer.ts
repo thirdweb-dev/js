@@ -14,15 +14,12 @@ type Webhook = {
   version?: number; // TODO (UB) make this mandatory after migration
 };
 
-export async function getWebhooks(props: {
-  clientId: string;
-}) {
+export async function getWebhooks() {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -54,7 +51,6 @@ export async function createWebhook(props: {
     }),
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -109,7 +105,6 @@ export async function getFees(props: {
     headers: {
       "Content-Type": "application/json",
       "x-team-id": props.teamId,
-      "x-client-id-override": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -134,7 +129,6 @@ export async function updateFee(props: {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
       "x-team-id": props.teamId,
       Authorization: `Bearer ${authToken}`,
     },

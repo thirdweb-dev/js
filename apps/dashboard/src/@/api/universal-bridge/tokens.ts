@@ -1,5 +1,5 @@
 "use server";
-import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { UB_BASE_URL } from "./constants";
 
 export type TokenMetadata = {
@@ -12,10 +12,8 @@ export type TokenMetadata = {
 };
 
 export async function getUniversalBridgeTokens(props: {
-  clientId?: string;
   chainId?: number;
 }) {
-  const authToken = await getAuthToken();
   const url = new URL(`${UB_BASE_URL}/v1/tokens`);
 
   if (props.chainId) {
@@ -27,8 +25,7 @@ export async function getUniversalBridgeTokens(props: {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
-      Authorization: `Bearer ${authToken}`,
+      "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
     } as Record<string, string>,
   });
 
