@@ -49,10 +49,13 @@ export function PayNewCustomers(props: {
     }
     const lastPeriod = newUsersData[newUsersData.length - 2];
     const currentPeriod = newUsersData[newUsersData.length - 1];
+    // Calculate the percent change from last period to current period
     const trend =
       lastPeriod && currentPeriod && lastPeriod.value > 0
         ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : 0;
+        : lastPeriod?.value === 0
+          ? 100
+          : 0;
     return { graphData: newUsersData, trend };
   }, [props.data, props.dateFormat]);
   const isEmpty = useMemo(

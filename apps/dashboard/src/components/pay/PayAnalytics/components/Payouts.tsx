@@ -54,7 +54,9 @@ export function Payouts(props: {
     const trend =
       lastPeriod && currentPeriod && lastPeriod.value > 0
         ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : 0;
+        : lastPeriod?.value === 0
+          ? 100
+          : 0;
     return {
       graphData: cleanedData,
       totalPayoutsUSD: totalPayouts / 100,
