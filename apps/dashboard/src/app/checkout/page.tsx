@@ -40,7 +40,12 @@ export default async function RoutesPage({
       return loginRedirect(`/checkout?${searchParams.toString()}`);
     }
 
-    return <CheckoutLinkForm />;
+    const client = getClientThirdwebClient({
+      jwt: authToken,
+      teamId: undefined,
+    });
+
+    return <CheckoutLinkForm client={client} />;
   }
 
   // Validate query parameters

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import { ChevronDownIcon, CreditCardIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -21,8 +21,7 @@ import { resolveScheme, upload } from "thirdweb/storage";
 import { FileInput } from "../../../../components/shared/FileInput";
 import { resolveEns } from "../../../../lib/ens";
 
-export function CheckoutLinkForm() {
-  const client = useThirdwebClient();
+export function CheckoutLinkForm({ client }: { client: ThirdwebClient }) {
   const [chainId, setChainId] = useState<number>();
   const [recipientAddress, setRecipientAddress] = useState("");
   const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
@@ -99,6 +98,7 @@ export function CheckoutLinkForm() {
           recipientAddress: inputs.recipientAddress,
           tokenAddress: inputs.tokenAddress,
           amount: inputs.amount.toString(),
+          clientId: client.clientId,
         });
 
         // Add title as name parameter if provided
@@ -155,6 +155,7 @@ export function CheckoutLinkForm() {
         recipientAddress: inputs.recipientAddress,
         tokenAddress: inputs.tokenAddress,
         amount: inputs.amount.toString(),
+        clientId: client.clientId,
       });
 
       // Add title as name parameter if provided
@@ -256,7 +257,9 @@ export function CheckoutLinkForm() {
             <Button
               type="button"
               variant="ghost"
-              className="flex w-full items-center justify-between px-0 text-muted-foreground hover:bg-transparent"
+              className={cn(
+                "flex w-full items-center justify-between px-0 text-muted-foreground hover:bg-transparent",
+              )}
               onClick={() => setShowAdvanced(!showAdvanced)}
             >
               <span>Advanced Options</span>
@@ -268,13 +271,14 @@ export function CheckoutLinkForm() {
             </Button>
 
             <div
-              className={`grid transition-all duration-200 ease-in-out ${
+              className={cn(
+                "grid transition-all duration-200 ease-in-out",
                 showAdvanced
                   ? "grid-rows-[1fr] opacity-100"
-                  : "grid-rows-[0fr] opacity-0"
-              }`}
+                  : "grid-rows-[0fr] opacity-0",
+              )}
             >
-              <div className="overflow-hidden">
+              <div className={cn(showAdvanced ? "" : "overflow-hidden")}>
                 <div className="space-y-6 pt-2">
                   <div className="space-y-2">
                     <Label htmlFor="title" className="font-medium text-sm">
@@ -293,7 +297,7 @@ export function CheckoutLinkForm() {
                     <Label htmlFor="image" className="font-medium text-sm">
                       Image
                     </Label>
-                    <div className="w-full px-1 pb-1">
+                    <div className="w-full">
                       <FileInput
                         accept={{ "image/*": [] }}
                         setValue={handleImageUpload}
