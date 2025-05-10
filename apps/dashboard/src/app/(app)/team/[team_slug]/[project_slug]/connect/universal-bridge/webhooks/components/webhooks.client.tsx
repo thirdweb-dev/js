@@ -58,13 +58,17 @@ import { z } from "zod";
 
 type PayWebhooksPageProps = {
   clientId: string;
+  teamId: string;
 };
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
-    queryKey: ["webhooks", props.clientId],
+    queryKey: ["webhooks", props.clientId, props.teamId],
     queryFn: async () => {
-      return await getWebhooks();
+      return await getWebhooks({
+        clientId: props.clientId,
+        teamId: props.teamId,
+      });
     },
   });
 
@@ -76,7 +80,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton clientId={props.clientId}>
+        <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
           <Button variant="primary" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -90,7 +94,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
-        <CreateWebhookButton clientId={props.clientId}>
+        <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
           <Button size="sm" variant="default" className="gap-1">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
@@ -123,6 +127,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell className="text-right">
                   <DeleteWebhookButton
                     clientId={props.clientId}
+                    teamId={props.teamId}
                     webhookId={webhook.id}
                   >
                     <Button variant="ghost" size="icon">
@@ -167,6 +172,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       await createWebhook({
         clientId: props.clientId,
+        teamId: props.teamId,
         url: values.url,
         label: values.label,
         version: Number(values.version),
@@ -317,6 +323,7 @@ function DeleteWebhookButton(
     mutationFn: async (id: string) => {
       await deleteWebhook({
         clientId: props.clientId,
+        teamId: props.teamId,
         webhookId: id,
       });
       return null;

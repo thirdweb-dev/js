@@ -5,11 +5,11 @@ import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
 import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
-import { CheckoutEmbed } from "./components/client/CheckoutEmbed.client";
-import { CheckoutLinkForm } from "./components/client/CheckoutLinkForm.client";
-import type { CheckoutParams } from "./components/types";
+import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
+import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
+import type { PayParams } from "./components/types";
 
-const title = "thirdweb Checkout";
+const title = "thirdweb Pay";
 const description = "Fast, secure, and simple payments.";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function RoutesPage({
   searchParams,
-}: { searchParams: Promise<CheckoutParams> }) {
+}: { searchParams: Promise<PayParams> }) {
   const params = await searchParams;
 
   // If no query parameters are provided, show the form
@@ -37,7 +37,7 @@ export default async function RoutesPage({
 
     if (!authToken) {
       const searchParams = new URLSearchParams(params);
-      return loginRedirect(`/checkout?${searchParams.toString()}`);
+      return loginRedirect(`/pay?${searchParams.toString()}`);
     }
 
     const client = getClientThirdwebClient({
@@ -45,7 +45,7 @@ export default async function RoutesPage({
       teamId: undefined,
     });
 
-    return <CheckoutLinkForm client={client} />;
+    return <PaymentLinkForm client={client} />;
   }
 
   // Validate query parameters
@@ -96,7 +96,7 @@ export default async function RoutesPage({
   };
 
   return (
-    <CheckoutEmbed
+    <PayPageEmbed
       redirectUri={params.redirectUri}
       chainId={Number(params.chainId)}
       recipientAddress={params.recipientAddress}

@@ -12,6 +12,7 @@ import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   type ThirdwebClient,
+  createThirdwebClient,
   defineChain,
   getContract,
   toUnits,
@@ -21,7 +22,7 @@ import { resolveScheme, upload } from "thirdweb/storage";
 import { FileInput } from "../../../../components/shared/FileInput";
 import { resolveEns } from "../../../../lib/ens";
 
-export function CheckoutLinkForm({ client }: { client: ThirdwebClient }) {
+export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
   const [chainId, setChainId] = useState<number>();
   const [recipientAddress, setRecipientAddress] = useState("");
   const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
@@ -38,35 +39,35 @@ export function CheckoutLinkForm({ client }: { client: ThirdwebClient }) {
     return chainId && recipientAddress && tokenAddressWithChain && amount;
   }, [chainId, recipientAddress, tokenAddressWithChain, amount]);
 
-  const handleImageUpload = useCallback(
-    async (file: File) => {
-      try {
-        setImage(file);
-        setUploadingImage(true);
+  const handleImageUpload = useCallback(async (file: File) => {
+    try {
+      setImage(file);
+      setUploadingImage(true);
 
-        const uri = await upload({
-          client,
-          files: [file],
-        });
+      const uploadClient = createThirdwebClient({
+        clientId: "7ae789153cf9ecde8f35649f2d8a4333",
+      });
+      const uri = await upload({
+        client: uploadClient,
+        files: [file],
+      });
 
-        // eslint-disable-next-line no-restricted-syntax
-        const resolvedUrl = resolveScheme({
-          uri,
-          client,
-        });
+      // eslint-disable-next-line no-restricted-syntax
+      const resolvedUrl = resolveScheme({
+        uri,
+        client: uploadClient,
+      });
 
-        setImageUri(resolvedUrl);
-        toast.success("Image uploaded successfully");
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Failed to upload image");
-        setImage(null);
-      } finally {
-        setUploadingImage(false);
-      }
-    },
-    [client],
-  );
+      setImageUri(resolvedUrl);
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image");
+      setImage(null);
+    } finally {
+      setUploadingImage(false);
+    }
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {

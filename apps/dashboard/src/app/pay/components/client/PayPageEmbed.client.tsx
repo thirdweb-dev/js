@@ -17,7 +17,7 @@ import { NATIVE_TOKEN_ADDRESS, createThirdwebClient, toTokens } from "thirdweb";
 import { AutoConnect, PayEmbed } from "thirdweb/react";
 import { setThirdwebDomains } from "thirdweb/utils";
 
-export function CheckoutEmbed({
+export function PayPageEmbed({
   chainId,
   recipientAddress,
   amount,

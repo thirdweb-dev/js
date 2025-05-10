@@ -14,12 +14,17 @@ type Webhook = {
   version?: number; // TODO (UB) make this mandatory after migration
 };
 
-export async function getWebhooks() {
+export async function getWebhooks(props: {
+  clientId: string;
+  teamId: string;
+}) {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -35,12 +40,20 @@ export async function getWebhooks() {
 
 export async function createWebhook(props: {
   clientId: string;
+  teamId: string;
   version?: number;
   url: string;
   label: string;
   secret?: string;
 }) {
   const authToken = await getAuthToken();
+  console.log(
+    "UB_BASE_URL",
+    UB_BASE_URL,
+    props.clientId,
+    props.teamId,
+    authToken,
+  );
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
     method: "POST",
     body: JSON.stringify({
@@ -51,6 +64,8 @@ export async function createWebhook(props: {
     }),
     headers: {
       "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -65,6 +80,7 @@ export async function createWebhook(props: {
 
 export async function deleteWebhook(props: {
   clientId: string;
+  teamId: string;
   webhookId: string;
 }) {
   const authToken = await getAuthToken();
@@ -74,7 +90,8 @@ export async function deleteWebhook(props: {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "x-client-id-override": props.clientId,
+        "x-client-id": props.clientId,
+        "x-team-id": props.teamId,
         Authorization: `Bearer ${authToken}`,
       },
     },
@@ -105,6 +122,7 @@ export async function getFees(props: {
     headers: {
       "Content-Type": "application/json",
       "x-team-id": props.teamId,
+      "x-client-id": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
   });
@@ -130,6 +148,7 @@ export async function updateFee(props: {
     headers: {
       "Content-Type": "application/json",
       "x-team-id": props.teamId,
+      "x-client-id": props.clientId,
       Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({
@@ -187,6 +206,7 @@ export type Payment = {
 
 export async function getPayments(props: {
   clientId: string;
+  teamId: string;
   limit?: number;
   offset?: number;
 }) {
@@ -214,7 +234,8 @@ export async function getPayments(props: {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-client-id-override": props.clientId,
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
       Authorization: `Bearer ${authToken}`,
     },
   });
