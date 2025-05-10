@@ -74,9 +74,7 @@ export function PayNewCustomers(props: {
           <div className="mb-5 flex items-center gap-3">
             <SkeletonContainer
               loadedData={
-                isEmpty
-                  ? "NA"
-                  : graphData.reduce((acc, curr) => acc + curr.value, 0)
+                isEmpty ? "NA" : graphData[graphData.length - 1]?.value || 0
               }
               skeletonData={100}
               render={(v) => {
