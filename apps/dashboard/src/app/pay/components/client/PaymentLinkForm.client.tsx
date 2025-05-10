@@ -205,6 +205,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
               chainId={chainId}
               onChange={setChainId}
               client={client}
+              disableTestnets
               className="w-full"
             />
           </div>

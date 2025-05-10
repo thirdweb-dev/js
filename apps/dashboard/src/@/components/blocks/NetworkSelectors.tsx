@@ -144,6 +144,7 @@ export function SingleNetworkSelector(props: {
   side?: "left" | "right" | "top" | "bottom";
   disableChainId?: boolean;
   align?: "center" | "start" | "end";
+  disableTestnets?: boolean;
   placeholder?: string;
   client: ThirdwebClient;
 }) {
@@ -154,8 +155,12 @@ export function SingleNetworkSelector(props: {
       return allChains;
     }
     const chainIdSet = new Set(props.chainIds);
-    return allChains.filter((chain) => chainIdSet.has(chain.chainId));
-  }, [allChains, props.chainIds]);
+    return allChains.filter(
+      (chain) =>
+        chainIdSet.has(chain.chainId) &&
+        (!props.disableTestnets || !chain.testnet),
+    );
+  }, [allChains, props.chainIds, props.disableTestnets]);
 
   const options = useMemo(() => {
     return chainsToShow.map((chain) => {
