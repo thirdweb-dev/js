@@ -1,3 +1,4 @@
+"use client";
 import {
   Select,
   SelectContent,
@@ -5,155 +6,77 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format } from "date-fns";
-import { useEffect, useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { AreaChartLoadingState } from "../../../analytics/area-chart";
-import { type PayVolumeData, usePayVolume } from "../hooks/usePayVolume";
-import {
-  CardHeading,
-  FailedToLoad,
-  IntervalSelector,
-  NoDataOverlay,
-  chartHeight,
-} from "./common";
+import type { UniversalBridgeStats } from "types/analytics";
+import { CardHeading, NoDataOverlay, chartHeight } from "./common";
 
 type GraphData = {
   date: string;
   value: number;
 };
 
-type ProcessedQuery = {
-  data?: PayVolumeData;
-  isError?: boolean;
-  isEmpty?: boolean;
-  isPending?: boolean;
-};
-
-function processQuery(
-  volumeQuery: ReturnType<typeof usePayVolume>,
-): ProcessedQuery {
-  if (volumeQuery.isPending) {
-    return { isPending: true };
-  }
-
-  if (volumeQuery.isError) {
-    return { isError: true };
-  }
-  if (!volumeQuery.data) {
-    return { isEmpty: true };
-  }
-
-  if (volumeQuery.data.intervalResults.length === 0) {
-    return { isEmpty: true };
-  }
-
-  return {
-    data: volumeQuery.data,
-  };
-}
-
 export function TotalPayVolume(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
-  clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
-  from: Date;
-  to: Date;
-  numberOfDays: number;
-}) {
-  const [intervalType, setIntervalType] = useState<"day" | "week">(
-    props.numberOfDays > 30 ? "week" : "day",
-  );
-
-  // if prop changes, update intervalType
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    setIntervalType(props.numberOfDays > 30 ? "week" : "day");
-  }, [props.numberOfDays]);
-
-  const volumeQuery = processQuery(
-    usePayVolume({
-      /**
-       *  @deprecated - remove after migration
-       */
-      clientId: props.clientId,
-      // switching to projectId for lookup, but have to send both during migration
-      projectId: props.projectId,
-      teamId: props.teamId,
-      from: props.from,
-      intervalType,
-      to: props.to,
-    }),
-  );
-
-  return (
-    <section className="relative flex flex-col justify-center">
-      {!volumeQuery.isError ? (
-        <RenderData
-          query={volumeQuery}
-          intervalType={intervalType}
-          setIntervalType={setIntervalType}
-        />
-      ) : (
-        <FailedToLoad />
-      )}
-    </section>
-  );
-}
-
-function RenderData(props: {
-  query: ProcessedQuery;
-  intervalType: "day" | "week";
-  setIntervalType: (intervalType: "day" | "week") => void;
+  data: UniversalBridgeStats[];
+  dateFormat?: {
+    month: "short" | "long";
+    day?: "numeric" | "2-digit";
+  };
 }) {
   const uniqueId = useId();
   const [successType, setSuccessType] = useState<"success" | "fail">("success");
   const [type, setType] = useState<"all" | "crypto" | "fiat">("all");
 
-  const graphData: GraphData[] | undefined =
-    props.query.data?.intervalResults.map((x) => {
-      const date = format(new Date(x.interval), "LLL dd");
-
+  const graphData: GraphData[] | undefined = useMemo(() => {
+    let data = (() => {
       switch (type) {
         case "crypto": {
-          return {
-            date,
-            value:
-              x.buyWithCrypto[
-                successType === "success" ? "succeeded" : "failed"
-              ].amountUSDCents / 100,
-          };
+          return props.data?.filter((x) => x.type === "onchain");
         }
-
         case "fiat": {
-          return {
-            date,
-            value:
-              x.buyWithFiat[successType === "success" ? "succeeded" : "failed"]
-                .amountUSDCents / 100,
-          };
+          return props.data?.filter((x) => x.type === "onramp");
         }
-
         case "all": {
-          return {
-            date,
-            value:
-              x.sum[successType === "success" ? "succeeded" : "failed"]
-                .amountUSDCents / 100,
-          };
+          return props.data;
         }
-
         default: {
           throw new Error("Invalid tab");
         }
       }
-    });
+    })();
 
-  const chartColor = props.query.isEmpty
+    data = (() => {
+      if (successType === "fail") {
+        return data.filter((x) => x.status === "failed");
+      }
+      return data.filter((x) => x.status === "completed");
+    })();
+
+    const dates = new Set<string>();
+    for (const item of data) {
+      if (!dates.has(item.date)) {
+        dates.add(item.date);
+      }
+    }
+
+    const cleanedData = [];
+    for (const date of dates) {
+      const items = data.filter((x) => x.date === date);
+      const total = items.reduce((acc, curr) => acc + curr.amountUsdCents, 0);
+      cleanedData.push({
+        date: new Date(date).toLocaleDateString("en-US", {
+          ...props.dateFormat,
+          timeZone: "UTC",
+        }),
+        value: total / 100,
+      });
+    }
+    return cleanedData;
+  }, [props.data, type, successType, props.dateFormat]);
+
+  const isEmpty =
+    graphData.length === 0 || graphData.every((x) => x.value === 0);
+  const chartColor = isEmpty
     ? "hsl(var(--muted-foreground))"
     : successType === "success"
       ? "hsl(var(--chart-1))"
@@ -164,7 +87,7 @@ function RenderData(props: {
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <CardHeading>Volume</CardHeading>
 
-        {props.query.data && (
+        {props.data && (
           <div className="flex gap-2">
             <Select
               value={type}
@@ -196,11 +119,6 @@ function RenderData(props: {
                 <SelectItem value="fail">Failed</SelectItem>
               </SelectContent>
             </Select>
-
-            <IntervalSelector
-              intervalType={props.intervalType}
-              setIntervalType={props.setIntervalType}
-            />
           </div>
         )}
       </div>
@@ -208,63 +126,58 @@ function RenderData(props: {
       <div className="h-10" />
 
       <div className="relative flex w-full flex-1 justify-center">
-        {props.query.isPending ? (
-          <AreaChartLoadingState height={`${chartHeight}px`} />
-        ) : (
-          <ResponsiveContainer width="100%" height={chartHeight}>
-            <AreaChart data={graphData || emptyGraphData}>
-              <defs>
-                <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
-                  <stop offset="95%" stopColor={chartColor} stopOpacity={0.0} />
-                </linearGradient>
-              </defs>
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <AreaChart data={isEmpty ? emptyGraphData : graphData}>
+            <defs>
+              <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
+                <stop offset="95%" stopColor={chartColor} stopOpacity={0.0} />
+              </linearGradient>
+            </defs>
 
-              {graphData && (
-                <Tooltip
-                  content={(x) => {
-                    const payload = x.payload?.[0]?.payload as
-                      | GraphData
-                      | undefined;
-                    return (
-                      <div className="rounded border border-border bg-popover px-4 py-2">
-                        <p className="mb-1 text-muted-foreground text-sm">
-                          {payload?.date}
-                        </p>
-                        <p className="text-base text-medium">
-                          ${payload?.value.toLocaleString()}
-                        </p>
-                      </div>
-                    );
-                  }}
-                />
-              )}
-
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke={chartColor}
-                fillOpacity={1}
-                fill={`url(#${uniqueId})`}
-                strokeWidth={2}
-                strokeLinecap="round"
+            {graphData && (
+              <Tooltip
+                content={(x) => {
+                  const payload = x.payload?.[0]?.payload as
+                    | GraphData
+                    | undefined;
+                  return (
+                    <div className="rounded border border-border bg-popover px-4 py-2">
+                      <p className="mb-1 text-muted-foreground text-sm">
+                        {payload?.date}
+                      </p>
+                      <p className="text-base text-medium">
+                        ${payload?.value.toLocaleString()}
+                      </p>
+                    </div>
+                  );
+                }}
               />
+            )}
 
-              {graphData && (
-                <XAxis
-                  dataKey="date"
-                  axisLine={false}
-                  tickLine={false}
-                  className="font-sans text-xs"
-                  stroke="hsl(var(--muted-foreground))"
-                  dy={10}
-                />
-              )}
-            </AreaChart>
-          </ResponsiveContainer>
-        )}
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke={chartColor}
+              fillOpacity={1}
+              fill={`url(#${uniqueId})`}
+              strokeWidth={2}
+              strokeLinecap="round"
+            />
 
-        {props.query.isEmpty && <NoDataOverlay />}
+            {graphData && (
+              <XAxis
+                dataKey="date"
+                axisLine={false}
+                tickLine={false}
+                className="font-sans text-xs"
+                stroke="hsl(var(--muted-foreground))"
+                dy={10}
+              />
+            )}
+          </AreaChart>
+        </ResponsiveContainer>
+        {isEmpty && <NoDataOverlay />}
       </div>
     </div>
   );

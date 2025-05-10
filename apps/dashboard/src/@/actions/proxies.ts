@@ -3,7 +3,6 @@
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 import {
   NEXT_PUBLIC_ENGINE_CLOUD_URL,
-  NEXT_PUBLIC_PAY_URL,
   NEXT_PUBLIC_THIRDWEB_API_HOST,
 } from "../constants/public-envs";
 import { ANALYTICS_SERVICE_URL } from "../constants/server-envs";
@@ -86,15 +85,6 @@ export async function apiServerProxy<T>(params: ProxyActionParams) {
 
 export async function engineCloudProxy<T>(params: ProxyActionParams) {
   return proxy<T>(NEXT_PUBLIC_ENGINE_CLOUD_URL, params);
-}
-
-export async function payServerProxy<T>(params: ProxyActionParams) {
-  return proxy<T>(
-    NEXT_PUBLIC_PAY_URL
-      ? `https://${NEXT_PUBLIC_PAY_URL}`
-      : "https://pay.thirdweb-dev.com",
-    params,
-  );
 }
 
 export async function analyticsServerProxy<T>(params: ProxyActionParams) {

@@ -1,11 +1,8 @@
-"use client";
-
-import { useState } from "react";
 import {
-  DateRangeSelector,
-  type Range,
-  getLastNDaysRange,
-} from "../../analytics/date-range-selector";
+  getUniversalBridgeUsage,
+  getUniversalBridgeWalletUsage,
+} from "@/api/analytics";
+import type { Range } from "../../analytics/date-range-selector";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PayNewCustomers } from "./components/PayNewCustomers";
 import { PaymentHistory } from "./components/PaymentHistory";
@@ -14,104 +11,80 @@ import { Payouts } from "./components/Payouts";
 import { TotalPayVolume } from "./components/TotalPayVolume";
 import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
 
-export function PayAnalytics(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
+export async function PayAnalytics(props: {
   clientId: string;
   // switching to projectId for lookup, but have to send both during migration
   projectId: string;
   teamId: string;
+  range: Range;
+  interval: "day" | "week";
 }) {
-  const clientId = props.clientId;
-  const projectId = props.projectId;
-  const teamId = props.teamId;
-  const [range, setRange] = useState<Range>(() =>
-    getLastNDaysRange("last-120"),
-  );
+  const { projectId, teamId, range, interval } = props;
 
-  const numberOfDays = Math.round(
-    (range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24),
-  );
+  const dateFormat =
+    interval === "day"
+      ? { month: "short" as const, day: "numeric" as const }
+      : {
+          month: "short" as const,
+          day: "numeric" as const,
+        };
+
+  const volumeData = await getUniversalBridgeUsage({
+    teamId: teamId,
+    projectId: projectId,
+    from: range.from,
+    to: range.to,
+    period: interval,
+  }).catch((error) => {
+    console.error(error);
+    return [];
+  });
+  const walletData = await getUniversalBridgeWalletUsage({
+    teamId: teamId,
+    projectId: projectId,
+    from: range.from,
+    to: range.to,
+    period: interval,
+  }).catch((error) => {
+    console.error(error);
+    return [];
+  });
 
   return (
-    <div>
-      <div className="mb-4 flex">
-        <DateRangeSelector range={range} setRange={setRange} />
-      </div>
-      <div className="flex flex-col gap-10 lg:gap-6">
-        <GridWithSeparator>
-          <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
-            <TotalVolumePieChart
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-            />
-          </div>
-          <TotalPayVolume
-            clientId={clientId}
-            projectId={projectId}
-            teamId={teamId}
-            from={range.from}
-            to={range.to}
-            numberOfDays={numberOfDays}
+    <div className="flex flex-col gap-10 lg:gap-6">
+      <GridWithSeparator>
+        <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
+          <TotalVolumePieChart
+            data={volumeData?.filter((x) => x.status === "completed") || []}
           />
-        </GridWithSeparator>
-
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-          <CardContainer>
-            <Payouts
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-              numberOfDays={numberOfDays}
-            />
-          </CardContainer>
-          <CardContainer>
-            <PaymentsSuccessRate
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-            />
-          </CardContainer>
         </div>
+        <TotalPayVolume
+          data={volumeData?.filter((x) => x.status === "completed") || []}
+          dateFormat={dateFormat}
+        />
+      </GridWithSeparator>
 
-        <GridWithSeparator>
-          <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
-            <PayNewCustomers
-              clientId={clientId}
-              projectId={projectId}
-              teamId={teamId}
-              from={range.from}
-              to={range.to}
-              numberOfDays={numberOfDays}
-            />
-          </div>
-          <PayCustomersTable
-            clientId={clientId}
-            projectId={projectId}
-            teamId={teamId}
-            from={range.from}
-            to={range.to}
-          />
-        </GridWithSeparator>
-
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <CardContainer>
-          <PaymentHistory
-            clientId={clientId}
-            projectId={projectId}
-            teamId={teamId}
-            from={range.from}
-            to={range.to}
+          <Payouts
+            data={volumeData?.filter((x) => x.status === "completed") || []}
+            dateFormat={dateFormat}
           />
         </CardContainer>
+        <CardContainer>
+          <PaymentsSuccessRate data={volumeData || []} />
+        </CardContainer>
       </div>
+
+      <GridWithSeparator>
+        <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
+          <PayNewCustomers data={walletData || []} dateFormat={dateFormat} />
+        </div>
+        <PayCustomersTable data={walletData || []} />
+      </GridWithSeparator>
+      <CardContainer>
+        <PaymentHistory clientId={props.clientId} />
+      </CardContainer>
     </div>
   );
 }

@@ -1,25 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { ArrowDownIcon, ArrowUpIcon, OctagonXIcon } from "lucide-react";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-export function FailedToLoad() {
-  return (
-    <div className="flex min-h-[250px] flex-1 items-center justify-center">
-      <div className="flex items-center gap-2">
-        <OctagonXIcon className="size-5 text-destructive-foreground" />
-        <p className="text-muted-foreground">Unable to load</p>
-      </div>
-    </div>
-  );
-}
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
 export function NoDataOverlay() {
   return (
@@ -73,28 +54,6 @@ export function TableHeading(props: { children: React.ReactNode }) {
     <th className="min-w-[150px] border-border border-b bg-background px-3 py-3 text-left font-medium text-muted-foreground text-sm">
       {props.children}
     </th>
-  );
-}
-
-export function IntervalSelector(props: {
-  intervalType: "day" | "week";
-  setIntervalType: (intervalType: "day" | "week") => void;
-}) {
-  return (
-    <Select
-      value={props.intervalType}
-      onValueChange={(value: "day" | "week") => {
-        props.setIntervalType(value);
-      }}
-    >
-      <SelectTrigger className="w-auto bg-card">
-        <SelectValue placeholder="Select" />
-      </SelectTrigger>
-      <SelectContent position="popper">
-        <SelectItem value="week"> Weekly </SelectItem>
-        <SelectItem value="day"> Daily</SelectItem>
-      </SelectContent>
-    </Select>
   );
 }
 

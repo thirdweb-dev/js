@@ -1,179 +1,109 @@
+"use client";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import type { UniversalBridgeStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
-import { AreaChartLoadingState } from "../../../analytics/area-chart";
-import { usePayVolume } from "../hooks/usePayVolume";
-import {
-  CardHeading,
-  ChangeBadge,
-  FailedToLoad,
-  IntervalSelector,
-  NoDataOverlay,
-  chartHeight,
-} from "./common";
+import { CardHeading, ChangeBadge, NoDataOverlay, chartHeight } from "./common";
 
 type GraphData = {
   date: string;
   value: number;
 };
 
-type ProcessedQuery = {
-  data?: {
-    totalPayoutsUSD: number;
-    graphData: GraphData[];
-    percentChange: number;
-  };
-  isError?: boolean;
-  isEmpty?: boolean;
-  isPending?: boolean;
-};
-
-function processQuery(query: ReturnType<typeof usePayVolume>): ProcessedQuery {
-  if (query.isPending) {
-    return { isPending: true };
-  }
-
-  if (query.isError) {
-    return { isError: true };
-  }
-  if (!query.data) {
-    return { isEmpty: true };
-  }
-
-  if (query.data.intervalResults.length === 0) {
-    return { isEmpty: true };
-  }
-
-  const graphData: GraphData[] = query.data.intervalResults.map((result) => ({
-    date: format(new Date(result.interval), "LLL dd"),
-    value: result.payouts.amountUSDCents / 100,
-  }));
-
-  const totalPayoutsUSD = query.data.aggregate.payouts.amountUSDCents / 100;
-
-  const percentChange =
-    query.data.aggregate.payouts.bpsIncreaseFromPriorRange / 100;
-
-  return {
-    data: {
-      graphData,
-      percentChange,
-      totalPayoutsUSD,
-    },
-  };
-}
-
 export function Payouts(props: {
-  /**
-   *  @deprecated - remove after migration
-   */
-  clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
-  projectId: string;
-  teamId: string;
-  from: Date;
-  to: Date;
-  numberOfDays: number;
+  data: UniversalBridgeStats[];
+  dateFormat?: {
+    month: "short" | "long";
+    day?: "numeric" | "2-digit";
+  };
 }) {
-  const [intervalType, setIntervalType] = useState<"day" | "week">(
-    props.numberOfDays > 30 ? "week" : "day",
-  );
+  const isEmpty =
+    !props.data ||
+    props.data.length === 0 ||
+    props.data.every((x) => x.developerFeeUsdCents === 0);
 
-  // if prop changes, update intervalType
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    setIntervalType(props.numberOfDays > 30 ? "week" : "day");
-  }, [props.numberOfDays]);
+  const barColor = isEmpty ? "hsl(var(--accent))" : "hsl(var(--chart-1))";
+  const { graphData, totalPayoutsUSD, trend } = useMemo(() => {
+    const dates = new Set<string>();
+    for (const item of props.data) {
+      if (!dates.has(item.date)) {
+        dates.add(item.date);
+      }
+    }
 
-  const uiQuery = processQuery(
-    usePayVolume({
-      /**
-       *  @deprecated - remove after migration
-       */
-      clientId: props.clientId,
-      // switching to projectId for lookup, but have to send both during migration
-      projectId: props.projectId,
-      teamId: props.teamId,
-      from: props.from,
-      to: props.to,
-      intervalType,
-    }),
-  );
+    const cleanedData = [];
+    let totalPayouts = 0;
+    for (const date of dates) {
+      const items = props.data.filter((x) => x.date === date);
+      const total = items.reduce(
+        (acc, curr) => acc + curr.developerFeeUsdCents,
+        0,
+      );
+      totalPayouts += total;
+      cleanedData.push({
+        date: new Date(date).toLocaleDateString("en-US", {
+          ...props.dateFormat,
+          timeZone: "UTC",
+        }),
+        value: total / 100,
+      });
+    }
+    const lastPeriod = cleanedData[cleanedData.length - 2];
+    const currentPeriod = cleanedData[cleanedData.length - 1];
+    const trend =
+      lastPeriod && currentPeriod && lastPeriod.value > 0
+        ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
+        : 0;
+    return {
+      graphData: cleanedData,
+      totalPayoutsUSD: totalPayouts / 100,
+      trend,
+    };
+  }, [props.data, props.dateFormat]);
 
   return (
     <section className="relative flex w-full flex-col justify-center">
       {/* header */}
       <div className="mb-1 flex items-center justify-between gap-2">
         <CardHeading> Payouts </CardHeading>
-
-        {uiQuery.data && (
-          <IntervalSelector
-            intervalType={intervalType}
-            setIntervalType={setIntervalType}
-          />
-        )}
+        <div />
       </div>
-
-      {!uiQuery.isError ? (
-        <RenderData
-          query={uiQuery}
-          intervalType={intervalType}
-          setIntervalType={setIntervalType}
-        />
-      ) : (
-        <FailedToLoad />
-      )}
-    </section>
-  );
-}
-
-function RenderData(props: {
-  query: ProcessedQuery;
-  intervalType: "day" | "week";
-  setIntervalType: (intervalType: "day" | "week") => void;
-}) {
-  const barColor = props.query.isEmpty
-    ? "hsl(var(--accent))"
-    : "hsl(var(--chart-1))";
-  return (
-    <div>
-      <div className="mb-5 flex items-center gap-3">
-        <SkeletonContainer
-          loadedData={
-            props.query.isEmpty
-              ? "$-"
-              : props.query.data
-                ? toUSD(props.query.data.totalPayoutsUSD)
-                : undefined
-          }
-          skeletonData="$20"
-          render={(value) => {
-            return (
-              <p className="font-semibold text-4xl tracking-tighter">{value}</p>
-            );
-          }}
-        />
-
-        {!props.query.isEmpty && (
+      <div className="w-full">
+        <div className="mb-5 flex items-center gap-3">
           <SkeletonContainer
-            className="rounded-2xl"
-            loadedData={props.query.data?.percentChange}
-            skeletonData={1}
-            render={(percent) => {
-              return <ChangeBadge percent={percent} />;
+            loadedData={
+              !props.data
+                ? undefined
+                : props.data.length > 0
+                  ? toUSD(totalPayoutsUSD)
+                  : "NA"
+            }
+            skeletonData="$20"
+            render={(value) => {
+              return (
+                <p className="font-semibold text-4xl tracking-tighter">
+                  {value}
+                </p>
+              );
             }}
           />
-        )}
-      </div>
 
-      <div className="relative flex w-full justify-center">
-        {props.query.isPending ? (
-          <AreaChartLoadingState height={`${chartHeight}px`} />
-        ) : (
+          {!isEmpty && (
+            <SkeletonContainer
+              className="rounded-2xl"
+              loadedData={trend}
+              skeletonData={1}
+              render={(percent) => {
+                return <ChangeBadge percent={percent} />;
+              }}
+            />
+          )}
+        </div>
+
+        <div className="relative flex w-full justify-center">
           <ResponsiveContainer width="100%" height={chartHeight}>
-            <BarChart data={props.query.data?.graphData || emptyGraphData}>
+            <BarChart data={isEmpty ? emptyGraphData : graphData}>
               <Tooltip
                 content={(x) => {
                   const payload = x.payload?.[0]?.payload as
@@ -203,7 +133,7 @@ function RenderData(props: {
                 className="stroke-background"
               />
 
-              {props.query.data && (
+              {graphData && (
                 <XAxis
                   dataKey="date"
                   axisLine={false}
@@ -215,20 +145,11 @@ function RenderData(props: {
               )}
             </BarChart>
           </ResponsiveContainer>
-        )}
 
-        {props.query.isEmpty && <NoDataOverlay />}
-      </div>
-
-      {props.query.data && (
-        <div className="absolute top-0 right-0">
-          <IntervalSelector
-            intervalType={props.intervalType}
-            setIntervalType={props.setIntervalType}
-          />
+          {isEmpty && <NoDataOverlay />}
         </div>
-      )}
-    </div>
+      </div>
+    </section>
   );
 }
 
