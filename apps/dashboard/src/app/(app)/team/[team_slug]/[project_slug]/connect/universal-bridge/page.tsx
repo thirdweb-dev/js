@@ -37,7 +37,7 @@ export default async function Page(props: {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
       <div>
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex justify-start">
           <PayAnalyticsFilter />
         </div>
         <ResponsiveSuspense
