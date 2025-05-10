@@ -255,7 +255,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Button
               type="button"
               variant="ghost"
@@ -281,7 +281,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
               )}
             >
               <div className={cn(showAdvanced ? "" : "overflow-hidden")}>
-                <div className="space-y-6 pt-2">
+                <div className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="title" className="font-medium text-sm">
                       Title
