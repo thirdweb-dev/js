@@ -151,15 +151,18 @@ export function SingleNetworkSelector(props: {
   const { allChains, idToChain } = useAllChainsData();
 
   const chainsToShow = useMemo(() => {
-    if (!props.chainIds) {
-      return allChains;
+    let chains = allChains;
+
+    if (props.disableTestnets) {
+      chains = chains.filter((chain) => !chain.testnet);
     }
-    const chainIdSet = new Set(props.chainIds);
-    return allChains.filter(
-      (chain) =>
-        chainIdSet.has(chain.chainId) &&
-        (!props.disableTestnets || !chain.testnet),
-    );
+
+    if (props.chainIds) {
+      const chainIdSet = new Set(props.chainIds);
+      chains = chains.filter((chain) => chainIdSet.has(chain.chainId));
+    }
+
+    return chains;
   }, [allChains, props.chainIds, props.disableTestnets]);
 
   const options = useMemo(() => {
