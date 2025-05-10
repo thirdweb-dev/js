@@ -21,15 +21,26 @@ export function inAppWalletGetCapabilities(args: {
   const sponsorGas =
     config?.smartAccount && "sponsorGas" in config.smartAccount
       ? config.smartAccount.sponsorGas
-      : false;
+      : config?.executionMode
+        ? config.executionMode.mode === "EIP4337" &&
+          config.executionMode.smartAccount &&
+          "sponsorGas" in config.executionMode.smartAccount
+          ? config.executionMode.smartAccount.sponsorGas
+          : config.executionMode.mode === "EIP7702"
+            ? config.executionMode.sponsorGas
+            : false
+        : false;
 
   return {
     [chain.id]: {
       paymasterService: {
         supported: sponsorGas,
       },
-      atomicBatch: {
-        supported: account?.sendBatchTransaction !== undefined,
+      atomic: {
+        status:
+          account?.sendBatchTransaction !== undefined
+            ? "supported"
+            : "unsupported",
       },
     },
   };

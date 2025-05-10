@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getContract } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
+import { baseSepolia } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
@@ -10,15 +10,18 @@ import {
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
+  useActiveWallet,
+  useDisconnect,
   useReadContract,
 } from "thirdweb/react";
 import { shortenHex } from "thirdweb/utils";
 import { inAppWallet } from "thirdweb/wallets/in-app";
 import { THIRDWEB_CLIENT } from "../../lib/client";
+import { Button } from "../ui/button";
 
-const chain = sepolia;
-const editionDropAddress = "0x7B3e0B8353Ad5cD6C60355B50550F63335752f9F";
-const editionDropTokenId = 1n;
+const chain = baseSepolia;
+const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
+const editionDropTokenId = 2n;
 
 const editionDropContract = getContract({
   address: editionDropAddress,
@@ -36,6 +39,8 @@ const iaw = inAppWallet({
 export function Eip7702SmartAccountPreview() {
   const [txHash, setTxHash] = useState<string | null>(null);
   const activeEOA = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,
     tokenId: editionDropTokenId,
@@ -48,6 +53,21 @@ export function Eip7702SmartAccountPreview() {
     queryOptions: { enabled: !!activeEOA },
   });
 
+  if (activeEOA && activeWallet && activeWallet?.id !== iaw.id) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        Please connect with an in-app wallet for this example
+        <Button
+          onClick={() => {
+            disconnect(activeWallet);
+          }}
+        >
+          Disconnect current wallet
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       {isNftLoading ? (
@@ -57,7 +77,7 @@ export function Eip7702SmartAccountPreview() {
           <div className="flex flex-col justify-center gap-2 p-2">
             <ConnectButton
               client={THIRDWEB_CLIENT}
-              chain={sepolia}
+              chain={chain}
               wallets={[iaw]}
               connectButton={{
                 label: "Login to mint!",

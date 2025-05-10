@@ -35,6 +35,11 @@ function Eip7702SmartAccount() {
   return (
     <>
       <CodeExample
+        header={{
+          title: "Turning in-app wallets into EIP-7702 smart accounts",
+          description:
+            "In-app wallets can be turned into EIP-7702 smart accounts by changing the execution mode",
+        }}
         preview={<Eip7702SmartAccountPreview />}
         code={`\
 import { claimTo } from "thirdweb/extensions/erc1155";

@@ -3,16 +3,16 @@ import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import * as watchBlockNumberExports from "../../rpc/watchBlockNumber.js";
-import * as getCallsStatusExports from "../../wallets/eip5792/get-calls-status.js";
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
+import * as getCallsStatusExports from "./get-calls-status.js";
 import type { GetCallsStatusResponse } from "./types.js";
-import { waitForBundle } from "./wait-for-bundle.js";
+import { waitForCallsReceipt } from "./wait-for-calls-receipt.js";
 
-const MOCK_BUNDLE_ID = "0x1234567890abcdef";
+const MOCK_CALL_ID = "0x1234567890abcdef";
 
 const MOCK_SUCCESS_RECEIPT: GetCallsStatusResponse = {
-  status: "CONFIRMED",
+  status: "success",
   receipts: [
     {
       logs: [],
@@ -25,11 +25,21 @@ const MOCK_SUCCESS_RECEIPT: GetCallsStatusResponse = {
       gasUsed: 12345n,
     },
   ],
+  atomic: false,
+  chainId: 1,
+  id: MOCK_CALL_ID,
+  version: "2.0.0",
+  statusCode: 200,
 };
 
 const MOCK_PENDING_RECEIPT: GetCallsStatusResponse = {
-  status: "PENDING",
+  status: "pending",
   receipts: [],
+  atomic: false,
+  chainId: 1,
+  id: MOCK_CALL_ID,
+  version: "2.0.0",
+  statusCode: 100,
 };
 
 const mockGetCallsStatus = vi.spyOn(getCallsStatusExports, "getCallsStatus");
@@ -61,10 +71,10 @@ describe("waitForBundle", () => {
     mockGetCallsStatus.mockResolvedValueOnce(MOCK_SUCCESS_RECEIPT);
 
     // can't `await` here because we still need to be able to increment the block number below
-    const res = waitForBundle({
+    const res = waitForCallsReceipt({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      bundleId: MOCK_BUNDLE_ID,
+      id: MOCK_CALL_ID,
       wallet,
     });
 
@@ -76,10 +86,10 @@ describe("waitForBundle", () => {
   it("should reject with an error when bundle is not complete after waiting 10 blocks", async () => {
     mockGetCallsStatus.mockRejectedValue(MOCK_PENDING_RECEIPT);
 
-    const result = waitForBundle({
+    const result = waitForCallsReceipt({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      bundleId: MOCK_BUNDLE_ID,
+      id: MOCK_CALL_ID,
       wallet,
       maxBlocksWaitTime: 10,
     });

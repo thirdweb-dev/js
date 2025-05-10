@@ -10,7 +10,6 @@ import type { PreparedSendCall } from "../../../eip5792/send-calls.js";
 import type {
   GetCallsStatusResponse,
   WalletCallReceipt,
-  WalletSendCallsId,
 } from "../../../eip5792/types.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 
@@ -22,19 +21,19 @@ const bundlesToTransactions = new LruMap<Hex[]>(1000);
 export async function inAppWalletSendCalls(args: {
   account: Account;
   calls: PreparedSendCall[];
-}): Promise<WalletSendCallsId> {
+}): Promise<string> {
   const { account, calls } = args;
 
   const hashes: Hex[] = [];
-  const bundleId = randomBytesHex(65);
-  bundlesToTransactions.set(bundleId, hashes);
+  const id = randomBytesHex(65);
+  bundlesToTransactions.set(id, hashes);
   if (account.sendBatchTransaction) {
     const receipt = await sendBatchTransaction({
       account,
       transactions: calls,
     });
     hashes.push(receipt.transactionHash);
-    bundlesToTransactions.set(bundleId, hashes);
+    bundlesToTransactions.set(id, hashes);
   } else {
     for (const tx of calls) {
       const receipt = await sendAndConfirmTransaction({
@@ -42,11 +41,11 @@ export async function inAppWalletSendCalls(args: {
         transaction: tx,
       });
       hashes.push(receipt.transactionHash);
-      bundlesToTransactions.set(bundleId, hashes);
+      bundlesToTransactions.set(id, hashes);
     }
   }
 
-  return bundleId;
+  return id;
 }
 
 /**
@@ -55,22 +54,22 @@ export async function inAppWalletSendCalls(args: {
 export async function inAppWalletGetCallsStatus(args: {
   wallet: Wallet;
   client: ThirdwebClient;
-  bundleId: string;
+  id: string;
 }): Promise<GetCallsStatusResponse> {
-  const { wallet, client, bundleId } = args;
+  const { wallet, client, id } = args;
 
   const chain = wallet.getChain();
   if (!chain) {
     throw new Error("Failed to get calls status, no active chain found");
   }
 
-  const bundle = bundlesToTransactions.get(bundleId);
+  const bundle = bundlesToTransactions.get(id);
   if (!bundle) {
     throw new Error("Failed to get calls status, unknown bundle id");
   }
 
   const request = getRpcClient({ client, chain });
-  let status: "CONFIRMED" | "PENDING" = "CONFIRMED";
+  let status: "pending" | "success" | "failure" = "success";
   const receipts: (WalletCallReceipt<bigint, "success" | "reverted"> | null)[] =
     await Promise.all(
       bundle.map((hash) =>
@@ -88,7 +87,7 @@ export async function inAppWalletGetCallsStatus(args: {
             transactionHash: receipt.transactionHash,
           }))
           .catch(() => {
-            status = "PENDING";
+            status = "pending";
             return null; // Return null if there's an error to filter out later
           }),
       ),
@@ -96,9 +95,11 @@ export async function inAppWalletGetCallsStatus(args: {
 
   return {
     status,
-    receipts: receipts.filter((r) => r !== null) as WalletCallReceipt<
-      bigint,
-      "success" | "reverted"
-    >[], // ts 5.5 please come we need you
+    statusCode: 200,
+    atomic: false,
+    chainId: chain.id,
+    id,
+    version: "2.0.0",
+    receipts: receipts.filter((r) => r !== null),
   };
 }
