@@ -13,7 +13,6 @@ import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
 
 export async function PayAnalytics(props: {
   clientId: string;
-  // switching to projectId for lookup, but have to send both during migration
   projectId: string;
   teamId: string;
   range: Range;
@@ -29,7 +28,7 @@ export async function PayAnalytics(props: {
           day: "numeric" as const,
         };
 
-  const volumeData = await getUniversalBridgeUsage({
+  const volumeDataPromise = getUniversalBridgeUsage({
     teamId: teamId,
     projectId: projectId,
     from: range.from,
@@ -39,7 +38,7 @@ export async function PayAnalytics(props: {
     console.error(error);
     return [];
   });
-  const walletData = await getUniversalBridgeWalletUsage({
+  const walletDataPromise = getUniversalBridgeWalletUsage({
     teamId: teamId,
     projectId: projectId,
     from: range.from,
@@ -49,6 +48,11 @@ export async function PayAnalytics(props: {
     console.error(error);
     return [];
   });
+
+  const [volumeData, walletData] = await Promise.all([
+    volumeDataPromise,
+    walletDataPromise,
+  ]);
 
   return (
     <div className="flex flex-col gap-10 lg:gap-6">
@@ -83,7 +87,7 @@ export async function PayAnalytics(props: {
         <PayCustomersTable data={walletData || []} />
       </GridWithSeparator>
       <CardContainer>
-        <PaymentHistory clientId={props.clientId} />
+        <PaymentHistory clientId={props.clientId} teamId={props.teamId} />
       </CardContainer>
     </div>
   );

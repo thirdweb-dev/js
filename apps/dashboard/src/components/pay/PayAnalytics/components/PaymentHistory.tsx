@@ -26,6 +26,7 @@ const pageSize = 50;
 
 export function PaymentHistory(props: {
   clientId: string;
+  teamId: string;
 }) {
   const [page, setPage] = useState(1);
   const { data: payPurchaseData, isLoading } = useQuery<
@@ -36,6 +37,7 @@ export function PaymentHistory(props: {
     queryFn: async () => {
       const res = await getPayments({
         clientId: props.clientId,
+        teamId: props.teamId,
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
