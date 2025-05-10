@@ -63,7 +63,7 @@ type PayWebhooksPageProps = {
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
-    queryKey: ["webhooks", props.clientId],
+    queryKey: ["webhooks", props.clientId, props.teamId],
     queryFn: async () => {
       return await getWebhooks({
         clientId: props.clientId,
