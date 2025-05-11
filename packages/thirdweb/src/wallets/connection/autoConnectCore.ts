@@ -207,7 +207,9 @@ const _autoConnectCore = async ({
     !props.siweAuth?.isLoggedIn &&
     !props.siweAuth?.isLoggingIn
   ) {
-    await props.siweAuth?.doLogin();
+    await props.siweAuth?.doLogin().catch((err) => {
+      console.warn("Error signing in with SIWE:", err.message);
+    });
   }
   manager.isAutoConnecting.setValue(false);
   return autoConnected; // useQuery needs a return value
