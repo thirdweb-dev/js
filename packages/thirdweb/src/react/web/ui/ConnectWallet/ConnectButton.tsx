@@ -410,6 +410,24 @@ function ConnectButtonInner(
     }
   }, [activeAccount]);
 
+  // if the wallet is connected and auth is required, trigger a login attempt automatically
+  useEffect(() => {
+    if (
+      activeAccount &&
+      siweAuth.requiresAuth &&
+      !siweAuth.isLoggedIn &&
+      !siweAuth.isLoggingIn
+    ) {
+      siweAuth.doLogin();
+    }
+  }, [
+    activeAccount,
+    siweAuth.requiresAuth,
+    siweAuth.doLogin,
+    siweAuth.isLoggedIn,
+    siweAuth.isLoggingIn,
+  ]);
+
   const theme = props.theme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();
   const locale = props.connectLocale;
