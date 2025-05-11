@@ -11,8 +11,8 @@ import {
 } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius } from "../../../../core/design-system/index.js";
 import {
-  type SiweAuthOptions,
   useSiweAuth,
+  type SiweAuthOptions,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectEmbedProps } from "../../../../core/hooks/connection/ConnectEmbedProps.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
@@ -247,6 +247,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       chain={preferredChain}
       appMetadata={props.appMetadata}
       client={props.client}
+      siweLogin={siweAuth.doLogin}
       wallets={wallets}
       accountAbstraction={props.accountAbstraction}
       timeout={
@@ -326,21 +327,21 @@ const ConnectEmbedContent = (props: {
   };
   size: "compact" | "wide";
   header:
-    | {
-        title?: string;
-        titleIcon?: string;
-      }
-    | true
-    | undefined;
+  | {
+    title?: string;
+    titleIcon?: string;
+  }
+  | true
+  | undefined;
   localeId: LocaleId;
   onConnect: ((wallet: Wallet) => void) | undefined;
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
   walletConnect:
-    | {
-        projectId?: string;
-      }
-    | undefined;
+  | {
+    projectId?: string;
+  }
+  | undefined;
   wallets: Wallet[];
   welcomeScreen: WelcomeScreen | undefined;
 }) => {

@@ -30,7 +30,6 @@ import { LockIcon } from "./icons/LockIcon.js";
 import { useConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { SignatureScreen } from "./screens/SignatureScreen.js";
-import { useAdminWallet } from "src/exports/react.native.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -298,6 +297,9 @@ export function ConnectButton(props: ConnectButtonProps) {
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const connectionManager = useConnectionManager();
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
 
   usePreloadWalletProviders({
     wallets,
@@ -338,6 +340,7 @@ export function ConnectButton(props: ConnectButtonProps) {
       }
       accountAbstraction={props.accountAbstraction}
       onConnect={props.onConnect}
+      siweLogin={siweAuth.doLogin}
     />
   );
 
@@ -363,7 +366,11 @@ export function ConnectButton(props: ConnectButtonProps) {
 
   return (
     <WalletUIStatesProvider theme={props.theme} isOpen={false}>
-      <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
+      <ConnectButtonInner
+        {...props}
+        siweAuth={siweAuth}
+        connectLocale={localeQuery.data}
+      />
       <ConnectModal
         shouldSetActive={true}
         accountAbstraction={props.accountAbstraction}
@@ -397,12 +404,11 @@ export function ConnectButton(props: ConnectButtonProps) {
 function ConnectButtonInner(
   props: ConnectButtonProps & {
     connectLocale: ConnectLocale;
+    siweAuth: ReturnType<typeof useSiweAuth>;
   },
 ) {
-  const activeWallet = useActiveWallet();
+  const siweAuth = props.siweAuth;
   const activeAccount = useActiveAccount();
-  const adminWallet = useAdminWallet();
-  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open
@@ -411,28 +417,6 @@ function ConnectButtonInner(
       setShowSignatureModal(false);
     }
   }, [activeAccount]);
-
-  // if an IAW wallet is connected and auth is required, trigger a login attempt automatically
-  useEffect(() => {
-    const isIAW = activeWallet?.id === "inApp" || adminWallet?.id === "inApp";
-    if (
-      activeAccount &&
-      siweAuth.requiresAuth &&
-      !siweAuth.isLoggedIn &&
-      !siweAuth.isLoggingIn &&
-      isIAW
-    ) {
-      siweAuth.doLogin();
-    }
-  }, [
-    activeAccount,
-    siweAuth.requiresAuth,
-    siweAuth.doLogin,
-    siweAuth.isLoggedIn,
-    siweAuth.isLoggingIn,
-    activeWallet,
-    adminWallet,
-  ]);
 
   const theme = props.theme || "dark";
   const connectionStatus = useActiveWalletConnectionStatus();

@@ -118,4 +118,9 @@ export type AutoConnectProps = {
    * Callback to be called when the connection is timeout-ed
    */
   onTimeout?: () => void;
+
+  /**
+   * @hidden
+   */
+  siweLogin?: () => Promise<void>;
 };

@@ -9,7 +9,10 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
-import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
+import {
+  useSiweAuth,
+  type SiweAuthOptions,
+} from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
@@ -23,6 +26,9 @@ import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
+import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
+import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component
@@ -300,6 +306,13 @@ export function PayEmbed(props: PayEmbedProps) {
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
   const connectionManager = useConnectionManager();
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(
+    activeWallet,
+    activeAccount,
+    props.connectOptions?.auth,
+  );
 
   // Add props.chain and props.chains to defined chains store
   useEffect(() => {
@@ -342,6 +355,7 @@ export function PayEmbed(props: PayEmbedProps) {
   } else {
     content = (
       <>
+        <AutoConnect client={props.client} siweLogin={siweAuth.doLogin} />
         {screen === "buy" && (
           <BuyScreen
             title={metadata?.name || "Buy"}
@@ -459,10 +473,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

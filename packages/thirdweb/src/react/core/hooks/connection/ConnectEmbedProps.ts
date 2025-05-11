@@ -290,6 +290,11 @@ export type ConnectEmbedProps = {
   auth?: SiweAuthOptions;
 
   /**
+   * @hidden
+   */
+  siweLogin?: () => Promise<void>;
+
+  /**
    * Customize the welcome screen. This prop is only applicable when modalSize prop is set to "wide". On "wide" Modal size, a welcome screen is shown on the right side of the modal.
    *
    * This screen can be customized in two ways
