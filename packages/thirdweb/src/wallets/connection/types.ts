@@ -125,5 +125,7 @@ export type AutoConnectProps = {
   siweAuth?: {
     requiresAuth: boolean;
     doLogin: () => Promise<void>;
+    isLoggedIn: boolean | undefined;
+    isLoggingIn: boolean | undefined;
   };
 };
