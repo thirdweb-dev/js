@@ -1,4 +1,3 @@
-import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
 import type { Metadata } from "next";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
@@ -32,14 +31,7 @@ export default async function RoutesPage({
     !params.tokenAddress &&
     !params.amount
   ) {
-    const authToken = await getAuthToken();
-
-    const client = getClientThirdwebClient({
-      jwt: authToken,
-      teamId: undefined,
-    });
-
-    return <PaymentLinkForm client={client} />;
+    return <PaymentLinkForm />;
   }
 
   // Validate query parameters
