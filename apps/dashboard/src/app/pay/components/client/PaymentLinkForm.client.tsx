@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon, CreditCardIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
@@ -21,7 +22,6 @@ import {
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { resolveScheme, upload } from "thirdweb/storage";
 import { setThirdwebDomains } from "thirdweb/utils";
-import { getClientThirdwebClient } from "../../../../@/constants/thirdweb-client.client";
 import { FileInput } from "../../../../components/shared/FileInput";
 import {
   THIRDWEB_ANALYTICS_DOMAIN,
