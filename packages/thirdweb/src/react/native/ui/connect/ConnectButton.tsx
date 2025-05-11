@@ -49,7 +49,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const siweAuth = useSiweAuth(wallet, account, props.auth);
   useAutoConnect({
     ...props,
-    siweLogin: siweAuth.doLogin,
+    siweAuth: siweAuth,
   });
 
   const fadeAnim = useRef(new Animated.Value(0)); // For background opacity
@@ -122,9 +122,9 @@ export function ConnectButton(props: ConnectButtonProps) {
       ) : (
         <ThemedButton theme={theme} onPress={() => openModal()}>
           {status === "connecting" ||
-          siweAuth.isLoggingIn ||
-          siweAuth.isLoading ||
-          siweAuth.isLoggingOut ? (
+            siweAuth.isLoggingIn ||
+            siweAuth.isLoading ||
+            siweAuth.isLoggingOut ? (
             <>
               <ThemedSpinner color={theme.colors.primaryButtonText} />
             </>

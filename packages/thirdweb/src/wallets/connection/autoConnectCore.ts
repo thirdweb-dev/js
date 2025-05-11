@@ -192,8 +192,8 @@ const _autoConnectCore = async ({
   }
 
   // Auto-login with SIWE
-  if (urlToken && activeWallet && props.siweLogin) {
-    await props.siweLogin();
+  if (urlToken && activeWallet && props.siweAuth?.requiresAuth) {
+    await props.siweAuth?.doLogin();
   }
   manager.isAutoConnecting.setValue(false);
   return autoConnected; // useQuery needs a return value

@@ -340,7 +340,7 @@ export function ConnectButton(props: ConnectButtonProps) {
       }
       accountAbstraction={props.accountAbstraction}
       onConnect={props.onConnect}
-      siweLogin={siweAuth.doLogin}
+      siweAuth={siweAuth}
     />
   );
 

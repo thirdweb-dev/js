@@ -122,5 +122,8 @@ export type AutoConnectProps = {
   /**
    * @hidden
    */
-  siweLogin?: () => Promise<void>;
+  siweAuth?: {
+    requiresAuth: boolean;
+    doLogin: () => Promise<void>;
+  };
 };

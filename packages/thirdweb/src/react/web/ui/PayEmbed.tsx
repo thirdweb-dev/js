@@ -355,7 +355,7 @@ export function PayEmbed(props: PayEmbedProps) {
   } else {
     content = (
       <>
-        <AutoConnect client={props.client} siweLogin={siweAuth.doLogin} />
+        <AutoConnect client={props.client} siweAuth={siweAuth} />
         {screen === "buy" && (
           <BuyScreen
             title={metadata?.name || "Buy"}
