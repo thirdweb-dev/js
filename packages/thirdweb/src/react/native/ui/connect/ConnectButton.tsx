@@ -47,7 +47,10 @@ export function ConnectButton(props: ConnectButtonProps) {
   const status = useActiveWalletConnectionStatus();
   const connectionManager = useConnectionManager();
   const siweAuth = useSiweAuth(wallet, account, props.auth);
-  useAutoConnect(props);
+  useAutoConnect({
+    ...props,
+    siweAuth: siweAuth,
+  });
 
   const fadeAnim = useRef(new Animated.Value(0)); // For background opacity
   const slideAnim = useRef(new Animated.Value(screenHeight)); // For bottom sheet position

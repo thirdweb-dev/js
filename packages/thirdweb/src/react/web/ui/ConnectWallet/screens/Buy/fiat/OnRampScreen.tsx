@@ -23,10 +23,7 @@ import { sendTransaction } from "../../../../../../../transaction/actions/send-t
 import type { WaitForReceiptOptions } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { isEcosystemWallet } from "../../../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import { isInAppWallet } from "../../../../../../../wallets/in-app/core/wallet/index.js";
-import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
-import { isSmartWallet } from "../../../../../../../wallets/smart/is-smart-wallet.js";
+import { isInAppSigner } from "../../../../../../../wallets/in-app/core/wallet/is-in-app-signer.js";
 import { spacing } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
@@ -778,21 +775,4 @@ function useSwapMutation(props: {
       invalidateWalletBalance(queryClient);
     },
   });
-}
-
-function isInAppSigner(options: {
-  wallet: Wallet;
-  connectedWallets: Wallet[];
-}) {
-  const isInAppOrEcosystem = (w: Wallet) =>
-    isInAppWallet(w) || isEcosystemWallet(w);
-  const isSmartWalletWithAdmin =
-    isSmartWallet(options.wallet) &&
-    options.connectedWallets.some(
-      (w) =>
-        isInAppOrEcosystem(w) &&
-        w.getAccount()?.address?.toLowerCase() ===
-          options.wallet.getAdminAccount?.()?.address?.toLowerCase(),
-    );
-  return isInAppOrEcosystem(options.wallet) || isSmartWalletWithAdmin;
 }

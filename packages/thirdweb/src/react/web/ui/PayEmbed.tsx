@@ -9,13 +9,19 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
-import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
+import {
+  type SiweAuthOptions,
+  useSiweAuth,
+} from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
+import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
@@ -300,6 +306,13 @@ export function PayEmbed(props: PayEmbedProps) {
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
   const connectionManager = useConnectionManager();
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(
+    activeWallet,
+    activeAccount,
+    props.connectOptions?.auth,
+  );
 
   // Add props.chain and props.chains to defined chains store
   useEffect(() => {
@@ -342,6 +355,7 @@ export function PayEmbed(props: PayEmbedProps) {
   } else {
     content = (
       <>
+        <AutoConnect client={props.client} siweAuth={siweAuth} />
         {screen === "buy" && (
           <BuyScreen
             title={metadata?.name || "Buy"}

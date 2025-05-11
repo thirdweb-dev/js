@@ -297,6 +297,9 @@ export function ConnectButton(props: ConnectButtonProps) {
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const connectionManager = useConnectionManager();
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
 
   usePreloadWalletProviders({
     wallets,
@@ -337,6 +340,7 @@ export function ConnectButton(props: ConnectButtonProps) {
       }
       accountAbstraction={props.accountAbstraction}
       onConnect={props.onConnect}
+      siweAuth={siweAuth}
     />
   );
 
@@ -362,7 +366,11 @@ export function ConnectButton(props: ConnectButtonProps) {
 
   return (
     <WalletUIStatesProvider theme={props.theme} isOpen={false}>
-      <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
+      <ConnectButtonInner
+        {...props}
+        siweAuth={siweAuth}
+        connectLocale={localeQuery.data}
+      />
       <ConnectModal
         shouldSetActive={true}
         accountAbstraction={props.accountAbstraction}
@@ -396,11 +404,11 @@ export function ConnectButton(props: ConnectButtonProps) {
 function ConnectButtonInner(
   props: ConnectButtonProps & {
     connectLocale: ConnectLocale;
+    siweAuth: ReturnType<typeof useSiweAuth>;
   },
 ) {
-  const activeWallet = useActiveWallet();
+  const siweAuth = props.siweAuth;
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open

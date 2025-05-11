@@ -82,11 +82,11 @@ const _autoConnectCore = async ({
     getStoredActiveWalletId(storage),
   ]);
 
-  const result = getUrlToken();
+  const urlToken = getUrlToken();
 
   // If an auth cookie is found and this site supports the wallet, we'll set the auth cookie in the client storage
-  const wallet = wallets.find((w) => w.id === result?.walletId);
-  if (result?.authCookie && wallet) {
+  const wallet = wallets.find((w) => w.id === urlToken?.walletId);
+  if (urlToken?.authCookie && wallet) {
     const clientStorage = new ClientScopedStorage({
       storage,
       clientId: props.client.clientId,
@@ -97,17 +97,17 @@ const _autoConnectCore = async ({
           }
         : undefined,
     });
-    await clientStorage.saveAuthCookie(result.authCookie);
+    await clientStorage.saveAuthCookie(urlToken.authCookie);
   }
-  if (result?.walletId) {
-    lastActiveWalletId = result.walletId;
-    lastConnectedWalletIds = lastConnectedWalletIds?.includes(result.walletId)
+  if (urlToken?.walletId) {
+    lastActiveWalletId = urlToken.walletId;
+    lastConnectedWalletIds = lastConnectedWalletIds?.includes(urlToken.walletId)
       ? lastConnectedWalletIds
-      : [result.walletId, ...(lastConnectedWalletIds || [])];
+      : [urlToken.walletId, ...(lastConnectedWalletIds || [])];
   }
 
-  if (result?.authProvider) {
-    await setLastAuthProvider?.(result.authProvider, storage);
+  if (urlToken?.authProvider) {
+    await setLastAuthProvider?.(urlToken.authProvider, storage);
   }
 
   // if no wallets were last connected or we didn't receive an auth token
@@ -132,7 +132,7 @@ const _autoConnectCore = async ({
         wallet: activeWallet,
         client: props.client,
         lastConnectedChain,
-        authResult: result?.authResult,
+        authResult: urlToken?.authResult,
       }),
       {
         ms: timeout,
@@ -183,12 +183,17 @@ const _autoConnectCore = async ({
         wallet,
         client: props.client,
         lastConnectedChain,
-        authResult: result?.authResult,
+        authResult: urlToken?.authResult,
       });
       manager.addConnectedWallet(wallet);
     } catch {
       // no-op
     }
+  }
+
+  // Auto-login with SIWE
+  if (urlToken && activeWallet && props.siweAuth?.requiresAuth) {
+    await props.siweAuth?.doLogin();
   }
   manager.isAutoConnecting.setValue(false);
   return autoConnected; // useQuery needs a return value
