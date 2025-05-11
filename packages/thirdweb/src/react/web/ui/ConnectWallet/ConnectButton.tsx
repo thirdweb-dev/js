@@ -30,6 +30,7 @@ import { LockIcon } from "./icons/LockIcon.js";
 import { useConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { SignatureScreen } from "./screens/SignatureScreen.js";
+import { useAdminWallet } from "src/exports/react.native.js";
 
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
@@ -400,6 +401,7 @@ function ConnectButtonInner(
 ) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
+  const adminWallet = useAdminWallet();
   const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
@@ -410,13 +412,15 @@ function ConnectButtonInner(
     }
   }, [activeAccount]);
 
-  // if the wallet is connected and auth is required, trigger a login attempt automatically
+  // if an IAW wallet is connected and auth is required, trigger a login attempt automatically
   useEffect(() => {
+    const isIAW = activeWallet?.id === "inApp" || adminWallet?.id === "inApp";
     if (
       activeAccount &&
       siweAuth.requiresAuth &&
       !siweAuth.isLoggedIn &&
-      !siweAuth.isLoggingIn
+      !siweAuth.isLoggingIn &&
+      isIAW
     ) {
       siweAuth.doLogin();
     }
@@ -426,6 +430,8 @@ function ConnectButtonInner(
     siweAuth.doLogin,
     siweAuth.isLoggedIn,
     siweAuth.isLoggingIn,
+    activeWallet,
+    adminWallet,
   ]);
 
   const theme = props.theme || "dark";
