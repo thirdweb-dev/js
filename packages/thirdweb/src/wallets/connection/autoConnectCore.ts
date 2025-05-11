@@ -8,6 +8,7 @@ import type {
   AuthArgsType,
   AuthStoredTokenWithCookieReturnType,
 } from "../in-app/core/authentication/types.js";
+import { isInAppSigner } from "../in-app/core/wallet/is-in-app-signer.js";
 import { getUrlToken } from "../in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import {
@@ -92,9 +93,9 @@ const _autoConnectCore = async ({
       clientId: props.client.clientId,
       ecosystem: isEcosystemWallet(wallet)
         ? {
-            id: wallet.id,
-            partnerId: wallet.getConfig()?.partnerId,
-          }
+          id: wallet.id,
+          partnerId: wallet.getConfig()?.partnerId,
+        }
         : undefined,
     });
     await clientStorage.saveAuthCookie(urlToken.authCookie);
@@ -150,9 +151,9 @@ const _autoConnectCore = async ({
       const connectedWallet = await (connectOverride
         ? connectOverride(activeWallet)
         : manager.connect(activeWallet, {
-            client: props.client,
-            accountAbstraction: props.accountAbstraction,
-          }));
+          client: props.client,
+          accountAbstraction: props.accountAbstraction,
+        }));
       if (connectedWallet) {
         autoConnected = true;
         try {
@@ -192,7 +193,20 @@ const _autoConnectCore = async ({
   }
 
   // Auto-login with SIWE
-  if (urlToken && activeWallet && props.siweAuth?.requiresAuth) {
+  const isIAW =
+    activeWallet &&
+    isInAppSigner({
+      wallet: activeWallet,
+      connectedWallets: activeWallet
+        ? [activeWallet, ...otherWallets]
+        : otherWallets,
+    });
+  if (
+    isIAW &&
+    props.siweAuth?.requiresAuth &&
+    !props.siweAuth?.isLoggedIn &&
+    !props.siweAuth?.isLoggingIn
+  ) {
     await props.siweAuth?.doLogin();
   }
   manager.isAutoConnecting.setValue(false);
