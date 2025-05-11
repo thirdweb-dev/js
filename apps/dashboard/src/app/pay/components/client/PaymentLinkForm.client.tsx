@@ -2,10 +2,12 @@
 
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon, CreditCardIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
@@ -19,10 +21,22 @@ import {
 } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { resolveScheme, upload } from "thirdweb/storage";
+import { setThirdwebDomains } from "thirdweb/utils";
 import { FileInput } from "../../../../components/shared/FileInput";
+import {
+  THIRDWEB_ANALYTICS_DOMAIN,
+  THIRDWEB_BUNDLER_DOMAIN,
+  THIRDWEB_INAPP_WALLET_DOMAIN,
+  THIRDWEB_INSIGHT_API_DOMAIN,
+  THIRDWEB_PAY_DOMAIN,
+  THIRDWEB_RPC_DOMAIN,
+  THIRDWEB_SOCIAL_API_DOMAIN,
+  THIRDWEB_STORAGE_DOMAIN,
+} from "../../../../constants/urls";
 import { resolveEns } from "../../../../lib/ens";
+import { getVercelEnv } from "../../../../lib/vercel-utils";
 
-export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
+export function PaymentLinkForm() {
   const [chainId, setChainId] = useState<number>();
   const [recipientAddress, setRecipientAddress] = useState("");
   const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
@@ -32,8 +46,24 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
   const [imageUri, setImageUri] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string>();
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState<string>("");
+
+  const client = useMemo(() => {
+    if (getVercelEnv() !== "production") {
+      setThirdwebDomains({
+        rpc: THIRDWEB_RPC_DOMAIN,
+        pay: THIRDWEB_PAY_DOMAIN,
+        storage: THIRDWEB_STORAGE_DOMAIN,
+        insight: THIRDWEB_INSIGHT_API_DOMAIN,
+        analytics: THIRDWEB_ANALYTICS_DOMAIN,
+        inAppWallet: THIRDWEB_INAPP_WALLET_DOMAIN,
+        bundler: THIRDWEB_BUNDLER_DOMAIN,
+        social: THIRDWEB_SOCIAL_API_DOMAIN,
+      });
+    }
+    return getClientThirdwebClient();
+  }, []);
 
   const isFormComplete = useMemo(() => {
     return chainId && recipientAddress && tokenAddressWithChain && amount;
@@ -72,7 +102,6 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setError(undefined);
       setIsLoading(true);
 
       try {
@@ -112,15 +141,11 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
           params.set("image", imageUri);
         }
 
-        const paymentUrl = `${window.location.origin}/pay?${params.toString()}`;
-
-        // Copy to clipboard
-        await navigator.clipboard.writeText(paymentUrl);
-
-        // Show success toast
-        toast.success("Payment link copied to clipboard.");
+        const url = `${window.location.origin}/pay?${params.toString()}`;
+        setPaymentUrl(url);
+        toast.success("Payment link created!");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        toast.error(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setIsLoading(false);
       }
@@ -290,7 +315,7 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
                       id="title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="A title for your payment"
+                      placeholder="Payment for..."
                       className="w-full"
                     />
                   </div>
@@ -318,25 +343,35 @@ export function PaymentLinkForm({ client }: { client: ThirdwebClient }) {
             </div>
           </div>
 
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <div className="flex flex-col space-y-4">
+            {paymentUrl && (
+              <CopyTextButton
+                textToCopy={paymentUrl}
+                textToShow={paymentUrl}
+                tooltip="Copy Payment Link"
+                className="w-full justify-between truncate bg-background px-3 py-2"
+                copyIconPosition="right"
+              />
+            )}
 
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              disabled={isLoading || !isFormComplete}
-              onClick={handlePreview}
-            >
-              Preview
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={isLoading || !isFormComplete}
-            >
-              {isLoading ? "Creating..." : "Create"}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                disabled={isLoading || !isFormComplete}
+                onClick={handlePreview}
+              >
+                Preview
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={isLoading || !isFormComplete}
+              >
+                {isLoading ? "Creating..." : "Create"}
+              </Button>
+            </div>
           </div>
         </form>
       </CardContent>
