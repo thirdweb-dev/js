@@ -10,15 +10,18 @@ import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
 import {
-  useSiweAuth,
   type SiweAuthOptions,
+  useSiweAuth,
 } from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
+import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
@@ -26,9 +29,6 @@ import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
-import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
-import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component
@@ -473,10 +473,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

@@ -92,9 +92,9 @@ const _autoConnectCore = async ({
       clientId: props.client.clientId,
       ecosystem: isEcosystemWallet(wallet)
         ? {
-          id: wallet.id,
-          partnerId: wallet.getConfig()?.partnerId,
-        }
+            id: wallet.id,
+            partnerId: wallet.getConfig()?.partnerId,
+          }
         : undefined,
     });
     await clientStorage.saveAuthCookie(urlToken.authCookie);
@@ -150,9 +150,9 @@ const _autoConnectCore = async ({
       const connectedWallet = await (connectOverride
         ? connectOverride(activeWallet)
         : manager.connect(activeWallet, {
-          client: props.client,
-          accountAbstraction: props.accountAbstraction,
-        }));
+            client: props.client,
+            accountAbstraction: props.accountAbstraction,
+          }));
       if (connectedWallet) {
         autoConnected = true;
         try {
