@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.98.2
+
+### Patch Changes
+
+- [#7009](https://github.com/thirdweb-dev/js/pull/7009) [`5a13ad4`](https://github.com/thirdweb-dev/js/commit/5a13ad45217d2a941c7d799ed925b0ee7cc41e80) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Automatically trigger SIWE sign in when a wallet is connected
+
+- [#7011](https://github.com/thirdweb-dev/js/pull/7011) [`98eda9d`](https://github.com/thirdweb-dev/js/commit/98eda9dd3d3bc6f60779c1d5b1bebb14927d92db) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Auto-login on autoconnect of IAW in all cases
+
 ## 5.98.1
 
 ### Patch Changes
