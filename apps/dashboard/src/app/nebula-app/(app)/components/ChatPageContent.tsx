@@ -578,6 +578,20 @@ export async function handleNebulaPrompt(params: {
           });
           return;
         }
+
+        case "error": {
+          hasReceivedResponse = true;
+          setMessages((prev) => {
+            return [
+              ...prev,
+              {
+                text: res.data.errorMessage,
+                type: "error",
+              },
+            ];
+          });
+          return;
+        }
       }
     },
     context: contextFilters,

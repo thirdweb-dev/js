@@ -152,6 +152,24 @@ export async function promptNebula(params: {
         break;
       }
 
+      case "error": {
+        const data = JSON.parse(event.data) as {
+          code: number;
+          error: {
+            message: string;
+          };
+        };
+
+        params.handleStream({
+          event: "error",
+          data: {
+            code: data.code,
+            errorMessage: data.error.message,
+          },
+        });
+        break;
+      }
+
       case "init": {
         const data = JSON.parse(event.data);
         params.handleStream({
@@ -242,6 +260,13 @@ type ChatStreamedResponse =
         chain_ids: number[];
         networks: NebulaContext["networks"];
       };
+    }
+  | {
+      event: "error";
+      data: {
+        code: number;
+        errorMessage: string;
+      };
     };
 
 type ChatStreamedEvent =
@@ -268,5 +293,9 @@ type ChatStreamedEvent =
     }
   | {
       event: "context";
+      data: string;
+    }
+  | {
+      event: "error";
       data: string;
     };
