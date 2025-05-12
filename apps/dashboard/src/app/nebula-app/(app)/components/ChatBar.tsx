@@ -484,7 +484,19 @@ function WalletSelector(props: {
                 <AccountBlobbie className="size-3 rounded-full" />
               }
             />
-            {shortenAddress(props.selectedAddress)}
+            <AccountName
+              className="text-xs"
+              loadingComponent={
+                <span className="text-xs">
+                  {shortenAddress(props.selectedAddress)}
+                </span>
+              }
+              fallbackComponent={
+                <span className="text-xs">
+                  {shortenAddress(props.selectedAddress)}
+                </span>
+              }
+            />
             <ChevronDownIcon className="size-3 text-muted-foreground/70" />
           </AccountProvider>
         </Button>
@@ -533,12 +545,12 @@ function WalletSelector(props: {
                           <AccountName
                             className="text-sm"
                             loadingComponent={
-                              <span className="font-mono text-sm">
+                              <span className="text-sm">
                                 {shortenAddress(wallet.address)}
                               </span>
                             }
                             fallbackComponent={
-                              <span className="font-mono text-sm">
+                              <span className="text-sm">
                                 {shortenAddress(wallet.address)}
                               </span>
                             }
