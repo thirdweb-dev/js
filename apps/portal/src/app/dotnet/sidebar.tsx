@@ -81,7 +81,7 @@ const walletActions: SidebarLink = (() => {
             href: `${parentSlug}/switchnetwork`,
           },
           {
-            name: "SignAuthorization (Experimental)",
+            name: "SignAuthorization",
             href: `${parentSlug}/signauthorization`,
           },
         ],
