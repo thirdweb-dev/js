@@ -23,8 +23,11 @@ export function smartWalletGetCapabilities(args: {
       paymasterService: {
         supported: "sponsorGas" in config ? config.sponsorGas : false,
       },
-      atomicBatch: {
-        supported: account?.sendBatchTransaction !== undefined,
+      atomic: {
+        status:
+          account?.sendBatchTransaction !== undefined
+            ? "supported"
+            : "unsupported",
       },
     },
   };

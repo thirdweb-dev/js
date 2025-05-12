@@ -111,7 +111,7 @@ describe.sequential("injected wallet", () => {
 
     const result = await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
-    expect(result).toEqual("0x123456");
+    expect(result.id).toEqual("0x123456");
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
       method: "wallet_sendCalls",
       params: [
@@ -132,7 +132,7 @@ describe.sequential("injected wallet", () => {
           capabilities: undefined,
           chainId: numberToHex(ANVIL_CHAIN.id),
           from: TEST_ACCOUNT_A.address,
-          version: "1.0",
+          version: "2.0.0",
         },
       ],
     });
@@ -159,7 +159,7 @@ describe.sequential("injected wallet", () => {
       calls: [preparedTx, preparedTx2],
     });
 
-    expect(result).toEqual("0x123456");
+    expect(result.id).toEqual("0x123456");
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
       method: "wallet_sendCalls",
       params: [
@@ -180,7 +180,7 @@ describe.sequential("injected wallet", () => {
           capabilities: undefined,
           chainId: numberToHex(ANVIL_CHAIN.id),
           from: TEST_ACCOUNT_A.address,
-          version: "1.0",
+          version: "2.0.0",
         },
       ],
     });
@@ -194,7 +194,7 @@ describe.sequential("injected wallet", () => {
       ...SEND_CALLS_OPTIONS,
     });
 
-    expect(result).toEqual("0x123456");
+    expect(result.id).toEqual("0x123456");
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
       method: "wallet_sendCalls",
       params: [
@@ -215,7 +215,7 @@ describe.sequential("injected wallet", () => {
           capabilities: undefined,
           chainId: numberToHex(sepolia.id),
           from: TEST_ACCOUNT_A.address,
-          version: "1.0",
+          version: "2.0.0",
         },
       ],
     });
@@ -231,7 +231,7 @@ describe.sequential("injected wallet", () => {
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
-      "[Error: io.metamask does not support wallet_sendCalls, reach out to them directly to request EIP-5792 support.]",
+      `[Error: io.metamask errored calling wallet_sendCalls, with error: {"code":-32601,"message":"some nonsense the wallet sends us about not supporting"}]`,
     );
   });
 });

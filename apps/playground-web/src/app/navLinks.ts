@@ -7,62 +7,40 @@ const staticSidebarLinks: SidebarLink[] = [
     isCollapsible: false,
     links: [
       {
-        name: "Connect Wallet",
-        expanded: false,
-        links: [
-          {
-            name: "Button",
-            href: "/connect/sign-in/button",
-          },
-          {
-            name: "Embed",
-            href: "/connect/sign-in/embed",
-          },
-          {
-            name: "Headless",
-            href: "/connect/sign-in/headless",
-          },
-        ],
+        name: "ConnectButton",
+        href: "/connect/sign-in/button",
       },
       {
-        name: "In-App Wallet",
-        expanded: false,
-        links: [
-          {
-            name: "Any Auth",
-            href: "/connect/in-app-wallet",
-          },
-          {
-            name: "Ecosystems",
-            href: "/connect/in-app-wallet/ecosystem",
-          },
-          {
-            name: "Sponsor Gas",
-            href: "/connect/in-app-wallet/sponsor",
-          },
-        ],
+        name: "ConnectEmbed",
+        href: "/connect/sign-in/embed",
       },
       {
-        name: "Account Abstraction",
-        expanded: false,
-        links: [
-          {
-            name: "Connect",
-            href: "/connect/account-abstraction/connect",
-          },
-          {
-            name: "EIP-4337",
-            href: "/connect/account-abstraction/sponsor",
-          },
-          {
-            name: "EIP-7702",
-            href: "/connect/account-abstraction/7702",
-          },
-          {
-            name: "Native (zkSync)",
-            href: "/connect/account-abstraction/native-aa",
-          },
-        ],
+        name: "Headless Connect",
+        href: "/connect/sign-in/headless",
+      },
+      {
+        name: "In-App Wallets",
+        href: "/connect/in-app-wallet",
+      },
+      {
+        name: "Ecosystem Wallets",
+        href: "/connect/in-app-wallet/ecosystem",
+      },
+      {
+        name: "EIP-4337",
+        href: "/connect/account-abstraction/sponsor",
+      },
+      {
+        name: "EIP-7702",
+        href: "/connect/account-abstraction/7702",
+      },
+      {
+        name: "EIP-5792",
+        href: "/connect/account-abstraction/5792",
+      },
+      {
+        name: "Native AA (zkSync)",
+        href: "/connect/account-abstraction/native-aa",
       },
       {
         name: "Auth",
@@ -77,7 +55,7 @@ const staticSidebarLinks: SidebarLink[] = [
         href: "/connect/blockchain-api",
       },
       {
-        name: "Headless UI",
+        name: "Headless Components",
         expanded: false,
         links: [
           {

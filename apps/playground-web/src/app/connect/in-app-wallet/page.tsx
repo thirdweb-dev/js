@@ -53,6 +53,7 @@ function UIIntegration() {
         const wallets = [
           inAppWallet(
             // built-in auth methods
+            // or bring your own auth endpoint
             { auth: {
               options: [
               "google",
@@ -70,8 +71,12 @@ function UIIntegration() {
               "guest",
               ]
               }
+            },
+            // optional execution mode, defaults to "EOA"
+            executionMode: {
+              mode: "EIP7702", // or "EIP4337" or "EOA"
+              sponsorGas: true, // sponsor gas for all transactions
             }
-            // or bring your own auth endpoint
           )
         ];
 
