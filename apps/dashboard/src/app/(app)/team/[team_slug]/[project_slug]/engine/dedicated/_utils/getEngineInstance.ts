@@ -45,5 +45,9 @@ export async function getEngineInstance(params: {
     result: EngineInstance;
   };
 
+  if (!json.result.url.endsWith("/")) {
+    json.result.url += "/";
+  }
+
   return json.result;
 }
