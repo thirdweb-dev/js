@@ -11,7 +11,7 @@ export function ConfigureCustomChain(props: {
   chainSlug: string;
 }) {
   const { chainSlug } = props;
-  const isSlugNumber = Number.isInteger(Number.parseInt(chainSlug));
+  const isSlugNumber = Number.isInteger(Number(chainSlug));
   const [isConfigured, setIsConfigured] = useState(false);
 
   if (isConfigured) {

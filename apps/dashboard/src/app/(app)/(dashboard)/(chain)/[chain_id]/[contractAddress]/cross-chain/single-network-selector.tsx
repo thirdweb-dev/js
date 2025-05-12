@@ -29,7 +29,7 @@ export function SingleNetworkSelector(props: {
         return false;
       }
 
-      if (Number.isInteger(Number.parseInt(searchValue))) {
+      if (Number.isInteger(Number(searchValue))) {
         return String(chain.chainId).startsWith(searchValue);
       }
       return chain.name.toLowerCase().includes(searchValue.toLowerCase());

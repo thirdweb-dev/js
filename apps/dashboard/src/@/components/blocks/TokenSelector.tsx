@@ -46,7 +46,7 @@ export function TokenSelector(props: {
         return false;
       }
 
-      if (Number.isInteger(Number.parseInt(searchValue))) {
+      if (Number.isInteger(Number(searchValue))) {
         return String(token.chainId).startsWith(searchValue);
       }
       return (
