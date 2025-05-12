@@ -11,6 +11,7 @@ interface ImageUploadProps {
   variant?: React.ComponentProps<typeof Button>["variant"];
   className?: string;
   multiple?: boolean;
+  accept: string;
 }
 
 export function ImageUploadButton(props: ImageUploadProps) {
@@ -34,7 +35,7 @@ export function ImageUploadButton(props: ImageUploadProps) {
         ref={fileInputRef}
         type="file"
         multiple={props.multiple}
-        accept="image/*"
+        accept={props.accept}
         onChange={handleFileChange}
         className="hidden"
         aria-label="Upload image"

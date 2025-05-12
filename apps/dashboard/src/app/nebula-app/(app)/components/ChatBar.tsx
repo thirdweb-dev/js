@@ -254,6 +254,7 @@ export function ChatBar(props: {
                 <ImageUploadButton
                   multiple
                   value={undefined}
+                  accept="image/jpeg,image/png,image/webp"
                   onChange={(files) => {
                     const totalFiles = files.length + images.length;
 
