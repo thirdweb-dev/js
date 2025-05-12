@@ -375,7 +375,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/cross-spawn": "^6.0.6",
     "@types/prompts": "2.4.9",
-    "@types/react": "19.1.2",
+    "@types/react": "19.1.4",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.4.1",
     "@vitest/coverage-v8": "3.1.2",
