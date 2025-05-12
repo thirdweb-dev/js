@@ -141,10 +141,14 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  *
  * ### Connect to a backend account
  *
+ * for usage in backends, you might also need to provide a 'storage' to store auth tokens. In-memory usually works for most purposes.
+ *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  *
- * const wallet = inAppWallet();
+ * const wallet = inAppWallet({
+ *   storage: inMemoryStorage, // for usage in backends/scripts
+ * });
  *
  * const account = await wallet.connect({
  *   client,
