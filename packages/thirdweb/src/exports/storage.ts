@@ -11,3 +11,4 @@ export {
   type ResolveArweaveSchemeOptions,
 } from "../utils/arweave.js";
 export type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
+export { inMemoryStorage } from "../utils/storage/inMemoryStorage.js";
