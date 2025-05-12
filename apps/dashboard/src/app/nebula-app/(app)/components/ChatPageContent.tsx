@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, MessageSquareXIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -263,7 +263,10 @@ export function ChatPageContent(props: {
   const showEmptyState =
     !userHasSubmittedMessage &&
     messages.length === 0 &&
+    !props.session &&
     !props.initialParams?.q;
+
+  const sessionWithNoMessages = props.session && messages.length === 0;
 
   const connectedWalletsMeta: WalletMeta[] = connectedWallets.map((x) => ({
     address: x.getAccount()?.address || "",
@@ -318,17 +321,35 @@ export function ChatPageContent(props: {
             </div>
           ) : (
             <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
-              <Chats
-                messages={messages}
-                isChatStreaming={isChatStreaming}
-                authToken={props.authToken}
-                sessionId={sessionId}
-                className="min-w-0 pt-6 pb-32"
-                client={client}
-                enableAutoScroll={enableAutoScroll}
-                setEnableAutoScroll={setEnableAutoScroll}
-                sendMessage={handleSendMessage}
-              />
+              {sessionWithNoMessages && (
+                <div className="container flex max-h-full max-w-[800px] flex-1 flex-col justify-center py-8">
+                  <div className="flex flex-col items-center justify-center p-4">
+                    <div className="mb-5 rounded-full border bg-card p-3">
+                      <MessageSquareXIcon className="size-6 text-muted-foreground" />
+                    </div>
+                    <p className="mb-1 text-center text-foreground">
+                      No messages found
+                    </p>
+                    <p className="text-balance text-center text-muted-foreground text-sm">
+                      This session was aborted before receiving any messages
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {messages.length > 0 && (
+                <Chats
+                  messages={messages}
+                  isChatStreaming={isChatStreaming}
+                  authToken={props.authToken}
+                  sessionId={sessionId}
+                  className="min-w-0 pt-6 pb-32"
+                  client={client}
+                  enableAutoScroll={enableAutoScroll}
+                  setEnableAutoScroll={setEnableAutoScroll}
+                  sendMessage={handleSendMessage}
+                />
+              )}
 
               <div className="container max-w-[800px]">
                 <ChatBar
