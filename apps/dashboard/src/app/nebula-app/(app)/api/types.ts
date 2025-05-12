@@ -6,11 +6,8 @@ type SessionContextFilter = {
 type NebulaUserMessageContentItem =
   | {
       type: "image";
-      image_url: string;
-    }
-  | {
-      type: "image";
-      b64: string;
+      image_url: string | null;
+      b64: string | null;
     }
   | {
       type: "text";

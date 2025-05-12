@@ -55,7 +55,9 @@ export function NebulaImage(
             height={props.type === "response" ? props.height : undefined}
             src={src}
             className="w-full rounded-lg border hover:border-active-border"
-            skeleton={<div className="animate-skeleton bg-muted" />}
+            skeleton={
+              <div className="min-h-[300px] animate-skeleton bg-muted" />
+            }
           />
         </DialogTrigger>
 

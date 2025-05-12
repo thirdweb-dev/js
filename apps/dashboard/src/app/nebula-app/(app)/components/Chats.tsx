@@ -202,11 +202,11 @@ function RenderMessage(props: {
                 <NebulaImage
                   type="submitted"
                   url={
-                    "b64" in msg
+                    typeof msg.b64 === "string"
                       ? msg.b64.startsWith("data:image")
                         ? msg.b64
                         : `data:image/png;base64,${msg.b64}`
-                      : msg.image_url
+                      : (msg.image_url ?? "")
                   }
                   client={props.client}
                 />

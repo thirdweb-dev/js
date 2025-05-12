@@ -82,7 +82,11 @@ export function ChatBar(props: {
     if (images.length > 0) {
       for (const image of images) {
         if (image.b64) {
-          userMessage.content.push({ type: "image", b64: image.b64 });
+          userMessage.content.push({
+            type: "image",
+            b64: image.b64,
+            image_url: null,
+          });
         }
       }
     }
