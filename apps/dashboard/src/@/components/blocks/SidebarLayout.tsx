@@ -137,7 +137,7 @@ function RenderSidebarGroup(props: {
         }
 
         if ("separator" in link) {
-          return <SidebarSeparator className="my-1" />;
+          return <SidebarSeparator key={Math.random()} className="my-1" />;
         }
 
         return (
