@@ -6,7 +6,49 @@ export const metadata = createMetadata({
 		"Instantiate a SmartWallet for enhanced user interactions with blockchain applications.",
 });
 
-# SmartWallet.Create
+# Native Account Abstraction (via EIP-7702 Smart EOAs)
+
+With the recent Ethereum upgrade Pectra, EIP-7702 allows you to upgrade your EOA and get SmartWallet-like functionality with:
+- Much cheaper gas costs, batching functionality
+- No account separation - your wallet address does not change, not even on zksync chains (once they implement EIP-7702)
+- Much faster execution, with the option of paying for gas yourself or having thirdweb manage gas sponsorship, similar to SmartWallet.
+
+The API is also drastically simplified!
+
+### ExecutionMode.EIP7702Sponsored
+Upgrade to an EIP7702 smart account, unlocking all functionality of 4337 without the downsides, and thirdweb handles the execution and gas sponsorship for you!
+```csharp
+var smartEoa = await InAppWallet.Create(
+    client: thirdwebClient,
+    authProvider: AuthProvider.Google,
+    executionMode: ExecutionMode.EIP7702Sponsored
+);
+```
+
+### ExecutionMode.EIP7702
+Upgrade to an EIP7702 smart account, unlocking all functionality of 4337 without the downsides, but sponsoring gas yourself.
+```csharp
+var smartEoa = await InAppWallet.Create(
+    client: thirdwebClient,
+    authProvider: AuthProvider.Google,
+    executionMode: ExecutionMode.EIP7702
+);
+```
+
+### ExecutionMode.EOA
+"Normal" EOA Execution, no smart account functionality
+```csharp
+var basicEoa = await InAppWallet.Create(
+    client: thirdwebClient,
+    authProvider: AuthProvider.Google,
+    // does not need to be explicitly passed, is the default but we're showing it here
+    executionMode: ExecutionMode.EOA
+);
+```
+
+_When using EIP-7702 execution modes - if not already delegated to a smart account - an EIP-7702 authorization will be signed and bundled with your first transaction, similar to how 4337 works with initcode, but without the large gas costs, slower execution and chain specific requirements._
+
+# SmartWallet (via EIP-4337 Bundlers)
 
 Instantiate a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through account abstraction. This wallet type is especially useful for creating a user-friendly experience in decentralized applications.
 
