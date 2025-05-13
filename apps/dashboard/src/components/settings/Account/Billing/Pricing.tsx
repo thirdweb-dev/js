@@ -29,6 +29,7 @@ interface BillingPricingProps {
   team: Team;
   trialPeriodEndedAt: string | undefined;
   getTeam: () => Promise<Team>;
+  highlightPlan: Team["billingPlan"] | undefined;
 }
 
 type CtaLink =
@@ -49,6 +50,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   team,
   trialPeriodEndedAt,
   getTeam,
+  highlightPlan,
 }) => {
   const validTeamPlan = getValidTeamPlan(team);
   const [isPending, startTransition] = useTransition();
@@ -65,17 +67,28 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
   const isCurrentPlanScheduledToCancel = team.planCancellationDate !== null;
 
   const highlightGrowthPlan =
-    !isCurrentPlanScheduledToCancel &&
-    (validTeamPlan === "free" ||
-      validTeamPlan === "starter" ||
-      validTeamPlan === "growth_legacy");
+    highlightPlan === "growth" ||
+    (!highlightPlan &&
+      !isCurrentPlanScheduledToCancel &&
+      (validTeamPlan === "free" ||
+        validTeamPlan === "starter" ||
+        validTeamPlan === "growth_legacy"));
 
   const highlightStarterPlan =
-    !isCurrentPlanScheduledToCancel && validTeamPlan === "starter_legacy";
+    highlightPlan === "starter" ||
+    (!highlightPlan &&
+      !isCurrentPlanScheduledToCancel &&
+      validTeamPlan === "starter_legacy");
   const highlightAcceleratePlan =
-    !isCurrentPlanScheduledToCancel && validTeamPlan === "growth";
+    highlightPlan === "accelerate" ||
+    (!highlightPlan &&
+      !isCurrentPlanScheduledToCancel &&
+      validTeamPlan === "growth");
   const highlightScalePlan =
-    !isCurrentPlanScheduledToCancel && validTeamPlan === "accelerate";
+    highlightPlan === "scale" ||
+    (!highlightPlan &&
+      !isCurrentPlanScheduledToCancel &&
+      validTeamPlan === "accelerate");
 
   return (
     <div>

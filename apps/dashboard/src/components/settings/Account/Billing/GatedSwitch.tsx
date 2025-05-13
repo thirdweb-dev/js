@@ -1,9 +1,14 @@
 import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { TeamPlanBadge } from "../../../../app/(app)/components/TeamPlanBadge";
+import { ExternalLinkIcon } from "lucide-react";
+import {
+  TeamPlanBadge,
+  getTeamPlanBadgeLabel,
+} from "../../../../app/(app)/components/TeamPlanBadge";
 import { planToTierRecordForGating } from "./planToTierRecord";
 
 type SwitchProps = React.ComponentProps<typeof Switch>;
@@ -26,26 +31,40 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
   return (
     <ToolTipLabel
       hoverable
-      contentClassName="max-w-[300px]"
       label={
         isUpgradeRequired ? (
-          <span>
-            To access this feature, <br /> Upgrade to the{" "}
-            <TrackedLinkTW
-              target="_blank"
-              href={`/team/${props.teamSlug}/~/settings/billing`}
-              category="advancedFeature"
-              label={props.trackingLabel}
-              className="text-link-foreground capitalize hover:text-foreground"
-            >
-              {props.requiredPlan} plan
-            </TrackedLinkTW>
-          </span>
+          <div className="w-full min-w-[280px]">
+            <h3 className="font-medium text-base">
+              <span className="capitalize">
+                {getTeamPlanBadgeLabel(props.requiredPlan)}+
+              </span>{" "}
+              plan required
+            </h3>
+            <p className="mb-3.5 text-muted-foreground">
+              Upgrade your plan to use this feature
+            </p>
+
+            <div className="flex w-full flex-col gap-2">
+              <Button asChild size="sm" className="justify-start gap-2">
+                <TrackedLinkTW
+                  target="_blank"
+                  href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${props.requiredPlan}`}
+                  category="advancedFeature"
+                  label="checkout"
+                >
+                  {`Upgrade to ${getTeamPlanBadgeLabel(props.requiredPlan)} plan`}
+                  <ExternalLinkIcon className="size-4" />
+                </TrackedLinkTW>
+              </Button>
+            </div>
+          </div>
         ) : undefined
       }
     >
       <div className="inline-flex items-center gap-2">
-        {isUpgradeRequired && <TeamPlanBadge plan={props.requiredPlan} />}
+        {isUpgradeRequired && (
+          <TeamPlanBadge plan={props.requiredPlan} postfix="+" />
+        )}
         <Switch
           {...props.switchProps}
           checked={props.switchProps?.checked && !isUpgradeRequired}

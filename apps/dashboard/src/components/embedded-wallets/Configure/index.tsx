@@ -179,6 +179,7 @@ export const InAppWalletSettingsUI: React.FC<
     !!config.applicationImageUrl?.length || !!config.applicationName?.length;
 
   const authRequiredPlan = "accelerate";
+  const brandingRequiredPlan = "starter";
 
   // accelerate or higher plan required
   const canEditSmsCountries =
@@ -275,7 +276,7 @@ export const InAppWalletSettingsUI: React.FC<
           form={form}
           teamPlan={props.teamPlan}
           teamSlug={props.teamSlug}
-          requiredPlan={authRequiredPlan}
+          requiredPlan={brandingRequiredPlan}
         />
 
         <NativeAppsFieldset form={form} />
