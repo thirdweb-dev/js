@@ -45,6 +45,8 @@ import flowBanner from "./temp-assets/flowBanner.png";
 import flowCTA from "./temp-assets/flowCTA.png";
 import mantleBanner from "./temp-assets/mantle.png";
 import metalBanner from "./temp-assets/metalBanner.png";
+import onyxBanner from "./temp-assets/onyxBanner.png";
+import onyxCTA from "./temp-assets/onyxCTA.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
 
 import plumeCTA from "./temp-assets/plumeCTA.png";
@@ -73,6 +75,7 @@ import worldChainCTA from "./temp-assets/worldChainCTA.jpg";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import zetachainBanner from "./temp-assets/zetachainBanner.png";
 import zetachainCTA from "./temp-assets/zetachainCTA.png";
+import zkCandyBanner from "./temp-assets/zkCandyBanner.jpg";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
 // END TEMPORARY
@@ -554,6 +557,18 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
+  //Onyx Mainnet
+  80888: {
+    headerImgUrl: onyxBanner.src,
+    about:
+      "Onyx is a layer 3 blockchain secured by Ethereum and Base providing developers and institutions a secure financial-purposed decentralized blockchain for banking and securities based applications. Powered by XCN.",
+    cta: {
+      backgroundImageUrl: onyxCTA.src,
+      title: "Unlock the potential of your application with Onyx Connect",
+      buttonLink: "https://onyx.org/",
+      buttonText: "Learn More",
+    },
+  },
   //Plume Testnet
   98864: {
     headerImgUrl: plumeBanner.src,
@@ -718,7 +733,7 @@ const chainMetaRecord = {
       buttonText: "Learn More",
     },
   },
-  //zkCandy
+  //zkCandy Testnet
   302: {
     headerImgUrl: thirdwebBanner.src,
     about:
@@ -728,6 +743,19 @@ const chainMetaRecord = {
       title: "",
       buttonLink: "https://zkcandy.io/",
       buttonText: "Learn more",
+    },
+  },
+
+  //zkCandy Mainnet
+  320: {
+    headerImgUrl: zkCandyBanner.src,
+    about:
+      "ZKcandy is an AI-powered Layer-2 aiming to redefine what’s possible in gaming and entertainment. As a ZK Chain built on ZKsync’s Elastic Network, it focuses on building immersive gaming ecosystems where players make the most of today’s AI capabilities. Emerged from a groundbreaking collaboration between ZKsync and the award-winning game studio iCandy Interactive, It's the first L2 ZK chain for gaming in the ZKsync ecosystem.",
+    cta: {
+      backgroundImageUrl: zkCandyBanner.src,
+      title: " ",
+      buttonLink: "https://litepaper.zkcandy.io/dev-guide/",
+      buttonText: "Learn More",
     },
   },
   //zkSync
