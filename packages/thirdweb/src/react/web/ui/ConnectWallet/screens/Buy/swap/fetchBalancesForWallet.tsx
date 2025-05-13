@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -9,7 +10,11 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import type { WalletId } from "../../../../../../../wallets/wallet-types.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
+import { useChainMetadata } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
 import type {
   SupportedTokens,
   TokenInfo,
@@ -32,7 +37,6 @@ type FetchBalancesParams = {
   sourceSupportedTokens: SupportedTokens;
   toChain: Chain;
   toToken: ERC20OrNativeToken;
-  tokenAmount: string;
   mode: PayUIOptions["mode"];
   client: ThirdwebClient;
 };
@@ -43,13 +47,70 @@ export type TokenBalance = {
   token: TokenInfo;
 };
 
-export async function fetchBalancesForWallet({
+type WalletKey = {
+  id: WalletId;
+  address: string;
+};
+
+export function useWalletsAndBalances(props: {
+  sourceSupportedTokens: SupportedTokens;
+  toChain: Chain;
+  toToken: ERC20OrNativeToken;
+  mode: PayUIOptions["mode"];
+  client: ThirdwebClient;
+}) {
+  const activeAccount = useActiveAccount();
+  const connectedWallets = useConnectedWallets();
+  const chainInfo = useChainMetadata(props.toChain);
+
+  return useQuery({
+    queryKey: [
+      "wallets-and-balances",
+      props.sourceSupportedTokens,
+      props.toChain.id,
+      props.toToken,
+      props.mode,
+      activeAccount?.address,
+      connectedWallets.map((w) => w.getAccount()?.address),
+    ],
+    enabled:
+      !!props.sourceSupportedTokens && !!chainInfo.data && !!activeAccount,
+    queryFn: async () => {
+      const entries = await Promise.all(
+        connectedWallets.map(async (wallet) => {
+          const balances = await fetchBalancesForWallet({
+            wallet,
+            accountAddress: activeAccount?.address,
+            sourceSupportedTokens: props.sourceSupportedTokens || [],
+            toChain: props.toChain,
+            toToken: props.toToken,
+            mode: props.mode,
+            client: props.client,
+          });
+          return [
+            {
+              id: wallet.id,
+              address: wallet.getAccount()?.address || "",
+            } as WalletKey,
+            balances,
+          ] as const;
+        }),
+      );
+      const map = new Map<WalletKey, TokenBalance[]>();
+      for (const entry of entries) {
+        map.set(entry[0], entry[1]);
+      }
+      return map;
+    },
+  });
+}
+
+async function fetchBalancesForWallet({
   wallet,
   accountAddress,
   sourceSupportedTokens,
   toChain,
   toToken,
-  tokenAmount,
   mode,
   client,
 }: FetchBalancesParams): Promise<TokenBalance[]> {
@@ -133,7 +194,7 @@ export async function fetchBalancesForWallet({
           b.chain.id === chainId &&
           b.token.address.toLowerCase() === token.address.toLowerCase(),
       );
-      if (!isNative && !isAlreadyFetched) {
+      if (isAlreadyFetched && !isNative) {
         // ERC20 on insight-enabled chain already handled by insight call
         continue;
       }
@@ -148,11 +209,12 @@ export async function fetchBalancesForWallet({
             });
 
             const include =
-              token.address === destinationToken.address &&
+              token.address.toLowerCase() ===
+                destinationToken.address.toLowerCase() &&
               chain.id === toChain.id
-                ? mode === "fund_wallet" && account.address === accountAddress
-                  ? false
-                  : Number(balance.displayValue) > Number(tokenAmount)
+                ? !(
+                    mode === "fund_wallet" && account.address === accountAddress
+                  )
                 : balance.value > 0n;
 
             if (include) {
