@@ -22,6 +22,8 @@ import {
 
 /**
  * Mints a new ERC721 token with the given minter signature
+ * This method is only available on the `TokenERC721` contract.
+ *
  * @param options - The transaction options.
  * @example
  * ```ts

@@ -19,6 +19,7 @@ import {
 
 /**
  * Mints a new ERC1155 token with the given minter signature
+ * This method is only available on the `TokenERC1155` contract.
  * @param options - The transaction options.
  * @example
  * ```ts

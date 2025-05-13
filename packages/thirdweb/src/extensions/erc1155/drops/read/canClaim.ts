@@ -18,7 +18,7 @@ export type CanClaimResult = {
 
 /**
  * Check if a user can claim a drop.
- *
+ * This method is only available on the `DropERC1155` contract.
  * @param options - The options for the transaction.
  * @returns Whether the user can claim the drop.
  *
