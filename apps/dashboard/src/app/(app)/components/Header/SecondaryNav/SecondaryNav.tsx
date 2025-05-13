@@ -15,7 +15,6 @@ export function SecondaryNav(props: {
   connectButton: React.ReactNode;
   client: ThirdwebClient;
   accountAddress: string;
-  getChangelogs: () => Promise<NotificationMetadata[]>;
   getInboxNotifications: () => Promise<NotificationMetadata[]>;
   markNotificationAsRead: (id: string) => Promise<void>;
 }) {
@@ -24,7 +23,6 @@ export function SecondaryNav(props: {
       <SecondaryNavLinks />
       <div className="flex items-center gap-3">
         <NotificationButtonUI
-          getChangelogs={props.getChangelogs}
           getInboxNotifications={props.getInboxNotifications}
           markNotificationAsRead={props.markNotificationAsRead}
         />

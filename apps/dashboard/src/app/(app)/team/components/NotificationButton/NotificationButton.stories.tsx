@@ -67,114 +67,46 @@ function randomNotifications(count: number): NotificationMetadata[] {
 
 export const AllUnread: Story = {
   args: {
-    notificationTabs: {
-      inbox: {
-        notifications: randomNotifications(10),
-        isPending: false,
-      },
-      changelogs: {
-        notifications: randomNotifications(30),
-        isPending: false,
-      },
-    },
+    notifications: randomNotifications(10),
+    isPending: false,
     markNotificationAsRead: () => Promise.resolve(),
   },
 };
 
 export const Loading: Story = {
   args: {
-    notificationTabs: {
-      inbox: {
-        notifications: [],
-        isPending: true,
-      },
-      changelogs: {
-        notifications: [],
-        isPending: true,
-      },
-    },
+    notifications: [],
+    isPending: true,
     markNotificationAsRead: () => Promise.resolve(),
   },
 };
 
 export const NoNotifications: Story = {
   args: {
-    notificationTabs: {
-      inbox: {
-        notifications: [],
-        isPending: false,
-      },
-      changelogs: {
-        notifications: [],
-        isPending: false,
-      },
-    },
+    notifications: [],
+    isPending: false,
     markNotificationAsRead: () => Promise.resolve(),
   },
 };
 
 export const AllRead: Story = {
   args: {
-    notificationTabs: {
-      inbox: {
-        notifications: randomNotifications(30).map((x) => ({
-          ...x,
-          isRead: true,
-        })),
-        isPending: false,
-      },
-      changelogs: {
-        notifications: randomNotifications(30).map((x) => ({
-          ...x,
-          isRead: true,
-        })),
-        isPending: false,
-      },
-    },
+    notifications: randomNotifications(30).map((x) => ({
+      ...x,
+      isRead: true,
+    })),
+    isPending: false,
     markNotificationAsRead: () => Promise.resolve(),
   },
 };
 
 export const MixedNotifications: Story = {
   args: {
-    notificationTabs: {
-      inbox: {
-        notifications: randomNotifications(10).map((x) => ({
-          ...x,
-          isRead: Math.random() > 0.5,
-        })),
-        isPending: false,
-      },
-      changelogs: {
-        notifications: randomNotifications(30).map((x) => ({
-          ...x,
-          isRead: Math.random() > 0.5,
-        })),
-        isPending: false,
-      },
-    },
-    markNotificationAsRead: () => Promise.resolve(),
-  },
-};
-
-export const NoUnreadInboxNotifications: Story = {
-  args: {
-    notificationTabs: {
-      inbox: {
-        notifications: randomNotifications(5).map((x) => ({
-          ...x,
-          isRead: true,
-        })),
-        isPending: false,
-      },
-      changelogs: {
-        notifications: randomNotifications(30).map((x) => ({
-          ...x,
-          isRead: Math.random() > 0.5,
-        })),
-        isPending: false,
-      },
-    },
+    notifications: randomNotifications(10).map((x) => ({
+      ...x,
+      isRead: Math.random() > 0.5,
+    })),
+    isPending: false,
     markNotificationAsRead: () => Promise.resolve(),
   },
 };

@@ -147,7 +147,6 @@ function Variant(props: {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
 
-  const getChangelogsStub = () => Promise.resolve([]);
   const getInboxNotificationsStub = () => Promise.resolve([]);
   const markNotificationAsReadStub = () => Promise.resolve();
 
@@ -166,7 +165,6 @@ function Variant(props: {
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
         client={storybookThirdwebClient}
-        getChangelogNotifications={getChangelogsStub}
         getInboxNotifications={getInboxNotificationsStub}
         markNotificationAsRead={markNotificationAsReadStub}
       />

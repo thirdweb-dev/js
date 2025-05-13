@@ -8,12 +8,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TabButtons } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { formatDistance } from "date-fns";
-import { ActivityIcon, BellIcon, InboxIcon } from "lucide-react";
+import { BellIcon, InboxIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { cleanupReadNotifications } from "./fetch-notifications";
 
 export type NotificationMetadata = {
@@ -24,19 +24,7 @@ export type NotificationMetadata = {
   createdAt: string;
 };
 
-type NotificationTabs = {
-  changelogs: {
-    notifications: NotificationMetadata[];
-    isPending: boolean;
-  };
-  inbox: {
-    notifications: NotificationMetadata[];
-    isPending: boolean;
-  };
-};
-
 export function NotificationButtonUI(props: {
-  getChangelogs: () => Promise<NotificationMetadata[]>;
   getInboxNotifications: () => Promise<NotificationMetadata[]>;
   markNotificationAsRead: (id: string) => Promise<void>;
 }) {
@@ -45,21 +33,9 @@ export function NotificationButtonUI(props: {
     queryFn: props.getInboxNotifications,
   });
 
-  const changelogsQuery = useQuery({
-    queryKey: ["changelogs"],
-    queryFn: props.getChangelogs,
-  });
-
   const [readNotifications, setReadNotifications] = useState<Set<string>>(
     new Set(),
   );
-
-  const changelogNotifications = useMemo(() => {
-    return (changelogsQuery.data || []).map((notification) => ({
-      ...notification,
-      isRead: notification.isRead || readNotifications.has(notification.id),
-    }));
-  }, [changelogsQuery.data, readNotifications]);
 
   const inboxNotifications = useMemo(() => {
     return (inboxNotificationsQuery.data || []).map((notification) => ({
@@ -68,58 +44,30 @@ export function NotificationButtonUI(props: {
     }));
   }, [inboxNotificationsQuery.data, readNotifications]);
 
-  // Ensure we don't keep adding things to the IndexedDB storage by removing notification ids that are no longer being displayed
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (changelogNotifications.length > 0 && inboxNotifications.length > 0) {
-      cleanupReadNotifications({
-        changelogs: changelogNotifications,
-        updates: inboxNotifications,
-      });
-    }
-  }, [changelogNotifications, inboxNotifications]);
-
   const markAsRead = useCallback(
     async (id: string) => {
       setReadNotifications((prev) => new Set([...prev, id]));
       await props.markNotificationAsRead(id);
+      await cleanupReadNotifications(inboxNotifications);
     },
-    [props.markNotificationAsRead],
+    [props.markNotificationAsRead, inboxNotifications],
   );
-
-  const notificationTabs: NotificationTabs = {
-    inbox: {
-      notifications: inboxNotifications,
-      isPending: inboxNotificationsQuery.isPending,
-    },
-    changelogs: {
-      notifications: changelogNotifications,
-      isPending: changelogsQuery.isPending,
-    },
-  };
 
   return (
     <NotificationButtonInner
-      notificationTabs={notificationTabs}
+      notifications={inboxNotifications}
+      isPending={inboxNotificationsQuery.isPending}
       markNotificationAsRead={markAsRead}
     />
   );
 }
 
 export function NotificationButtonInner(props: {
-  notificationTabs: NotificationTabs;
+  notifications: NotificationMetadata[];
+  isPending: boolean;
   markNotificationAsRead: (id: string) => Promise<void>;
 }) {
-  const hasUnreadInboxNotifications =
-    props.notificationTabs.inbox.notifications.some((x) => !x.isRead);
-  const [tab, setTab] = useState<keyof NotificationTabs>("inbox");
-
-  const unreadNotifications = {
-    inbox: props.notificationTabs.inbox.notifications.filter((x) => !x.isRead),
-    changelogs: props.notificationTabs.changelogs.notifications.filter(
-      (x) => !x.isRead,
-    ),
-  };
+  const unreadCount = props.notifications.filter((x) => !x.isRead).length;
 
   return (
     <Popover>
@@ -128,9 +76,16 @@ export function NotificationButtonInner(props: {
           className="relative size-10 rounded-full bg-background p-0"
           variant="outline"
         >
-          <BellIcon className="size-4 text-muted-foreground" />
-          {hasUnreadInboxNotifications && (
-            <div className="absolute top-0 right-0 flex size-2.5 items-center justify-center rounded-full bg-red-500" />
+          <BellIcon
+            className={cn(
+              "size-4 text-muted-foreground",
+              unreadCount > 0 && "text-foreground",
+            )}
+          />
+          {unreadCount > 0 && (
+            <div className="-top-1.5 -right-1.5 absolute flex items-center justify-center rounded-full bg-[#e1002d] px-1 py-0.5 text-white text-xs">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </div>
           )}
         </Button>
       </PopoverTrigger>
@@ -140,64 +95,28 @@ export function NotificationButtonInner(props: {
         sideOffset={10}
         side="bottom"
       >
-        <TabButtons
-          tabClassName="!text-sm"
-          tabContainerClassName="px-2 pt-1.5"
-          tabs={[
-            {
-              isActive: tab === "inbox",
-              name: (
-                <BadgeTab
-                  name="Inbox"
-                  unreadCount={unreadNotifications.inbox.length}
-                />
-              ),
-              onClick: () => setTab("inbox"),
-            },
-            {
-              isActive: tab === "changelogs",
-              name: (
-                <BadgeTab
-                  name="Changelog"
-                  unreadCount={unreadNotifications.changelogs.length}
-                />
-              ),
-              onClick: () => setTab("changelogs"),
-            },
-          ]}
+        <div className="flex gap-2 border-b px-4 py-4">
+          <span className="font-semibold">Notifications</span>
+          <BadgeTab unreadCount={unreadCount} />
+        </div>
+        <NotificationContent
+          notifications={props.notifications}
+          isPending={props.isPending}
+          icon={InboxIcon}
+          markNotificationAsRead={props.markNotificationAsRead}
         />
-
-        {tab === "inbox" && (
-          <NotificationContent
-            notifications={props.notificationTabs.inbox.notifications}
-            isPending={props.notificationTabs.inbox.isPending}
-            icon={InboxIcon}
-            markNotificationAsRead={props.markNotificationAsRead}
-          />
-        )}
-
-        {tab === "changelogs" && (
-          <NotificationContent
-            notifications={props.notificationTabs.changelogs.notifications}
-            isPending={props.notificationTabs.changelogs.isPending}
-            icon={ActivityIcon}
-            markNotificationAsRead={props.markNotificationAsRead}
-          />
-        )}
       </PopoverContent>
     </Popover>
   );
 }
 
 function BadgeTab(props: {
-  name: string;
   unreadCount: number;
 }) {
   return (
     <span className="flex items-center gap-2">
-      {props.name}
       {props.unreadCount > 0 && (
-        <span className="rounded-lg bg-accent px-1.5 py-1 text-xs">
+        <span className="rounded-xl border bg-card px-1.5 py-0.5 text-xs">
           {props.unreadCount}
         </span>
       )}

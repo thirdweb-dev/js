@@ -31,7 +31,6 @@ export type TeamHeaderCompProps = {
   createProject: (team: Team) => void;
   client: ThirdwebClient;
   accountAddress: string;
-  getChangelogNotifications: () => Promise<NotificationMetadata[]>;
   getInboxNotifications: () => Promise<NotificationMetadata[]>;
   markNotificationAsRead: (id: string) => Promise<void>;
 };
@@ -117,7 +116,6 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
-        getChangelogs={props.getChangelogNotifications}
         getInboxNotifications={props.getInboxNotifications}
         markNotificationAsRead={props.markNotificationAsRead}
       />
@@ -202,7 +200,6 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
 
       <div className="flex items-center gap-3">
         <NotificationButtonUI
-          getChangelogs={props.getChangelogNotifications}
           getInboxNotifications={props.getInboxNotifications}
           markNotificationAsRead={props.markNotificationAsRead}
         />

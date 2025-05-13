@@ -30,18 +30,13 @@ async function fetchGhostPosts(tag: string) {
 // Clean up the indexedDB storage of read notification IDs
 // This is to prevent the storage from growing indefinitely
 // Remove notification IDs from storage that are no longer shown to the user
-export async function cleanupReadNotifications(params: {
-  changelogs: NotificationMetadata[];
-  updates: NotificationMetadata[];
-}) {
-  const { changelogs, updates } = params;
+export async function cleanupReadNotifications(
+  notifications: NotificationMetadata[],
+) {
   const readIds = await getReadNotificationIds();
 
   // Get all current notification IDs
-  const currentIds = new Set([
-    ...changelogs.map((item) => item.id),
-    ...updates.map((item) => item.id),
-  ]);
+  const currentIds = new Set([...notifications.map((item) => item.id)]);
 
   // remove ids that are no longer being displayed
   const usedIds = new Set(
@@ -57,23 +52,6 @@ export async function markNotificationAsRead(id: string) {
 
   // Clean up old notification IDs periodically (every 10th notification marked as read)
   await set(READ_NOTIFICATIONS_KEY, Array.from(readIds));
-}
-
-export async function getChangelogNotifications(): Promise<
-  NotificationMetadata[]
-> {
-  const [changelogs, readIds] = await Promise.all([
-    fetchGhostPosts("changelog"),
-    getReadNotificationIds(),
-  ]);
-
-  return changelogs.map((item) => ({
-    id: item.id,
-    title: item.title,
-    href: item.url,
-    isRead: readIds.has(item.id),
-    createdAt: item.published_at,
-  }));
 }
 
 export async function getInboxNotifications(): Promise<NotificationMetadata[]> {

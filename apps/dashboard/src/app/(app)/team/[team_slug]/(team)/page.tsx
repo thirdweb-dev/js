@@ -1,13 +1,13 @@
 import { getWalletConnections } from "@/api/analytics";
 import { type Project, getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { subDays } from "date-fns";
-import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
+import { Changelog } from "./_components/Changelog";
 import { InviteTeamMembersButton } from "./_components/invite-team-members-button";
 import {
   type ProjectWithAnalytics,
@@ -52,20 +52,30 @@ export default async function Page(props: {
         </div>
       </div>
 
-      <div className="container flex grow flex-col gap-6 pt-8 pb-20">
-        <Alert variant={"info"}>
-          <CircleAlertIcon className="h-4 w-4" />
-          <AlertTitle>Looking for Engines?</AlertTitle>
-          <AlertDescription>
-            Engines, contracts, project settings, and more are now managed
-            within projects. Open or create a project to access them.
-          </AlertDescription>
-        </Alert>
-        <TeamProjectsPage
-          projects={projectsWithTotalWallets}
-          team={team}
-          client={client}
-        />
+      <div className="container flex grow flex-col gap-4 lg:flex-row">
+        {/* left */}
+        <div className="flex grow flex-col gap-6 pt-8 lg:pb-20">
+          <DismissibleAlert
+            title="Looking for Engines?"
+            description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
+            localStorageId={`${team.id}-engines-alert`}
+          />
+
+          <TeamProjectsPage
+            projects={projectsWithTotalWallets}
+            team={team}
+            client={client}
+          />
+        </div>
+
+        {/* right */}
+        <div className="w-full px-4 py-8 lg:w-[300px]">
+          <h2 className="mb-3 font-semibold text-2xl tracking-tight">
+            Changelog
+          </h2>
+
+          <Changelog />
+        </div>
       </div>
     </div>
   );

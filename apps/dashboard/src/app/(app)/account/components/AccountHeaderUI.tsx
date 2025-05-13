@@ -24,7 +24,6 @@ export type AccountHeaderCompProps = {
   account: Pick<Account, "email" | "id" | "image">;
   client: ThirdwebClient;
   accountAddress: string;
-  getChangelogNotifications: () => Promise<NotificationMetadata[]>;
   getInboxNotifications: () => Promise<NotificationMetadata[]>;
   markNotificationAsRead: (id: string) => Promise<void>;
 };
@@ -78,7 +77,6 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
-        getChangelogs={props.getChangelogNotifications}
         getInboxNotifications={props.getInboxNotifications}
         markNotificationAsRead={props.markNotificationAsRead}
       />
@@ -126,7 +124,6 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
 
       <div className="flex items-center gap-3">
         <NotificationButtonUI
-          getChangelogs={props.getChangelogNotifications}
           getInboxNotifications={props.getInboxNotifications}
           markNotificationAsRead={props.markNotificationAsRead}
         />

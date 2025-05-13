@@ -26,7 +26,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { formatDate } from "date-fns";
-import { PlusIcon, SearchIcon } from "lucide-react";
+import { ArrowDownNarrowWideIcon, PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -251,10 +251,10 @@ function SearchInput(props: {
   return (
     <div className="relative grow">
       <Input
-        placeholder="Search Projects by name or Client ID"
+        placeholder="Project name or Client ID"
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="bg-background pl-9 lg:w-[400px]"
+        className="bg-background pl-9 lg:w-[320px]"
       />
       <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
@@ -298,8 +298,8 @@ function SelectBy(props: {
       }}
     >
       <SelectTrigger className="min-w-[200px] bg-background capitalize">
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Sort by</span>
+        <div className="flex items-center gap-2">
+          <ArrowDownNarrowWideIcon className="size-4 text-muted-foreground" />
           {valueToLabel[props.value]}
         </div>
       </SelectTrigger>
