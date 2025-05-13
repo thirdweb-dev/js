@@ -18,6 +18,7 @@ export type ClaimToParams = {
 
 /**
  * Claim ERC1155 NFTs to a specified address
+ * This method is only available on the `DropERC1155` contract.
  * @param options - The options for the transaction
  * @extension ERC1155
  * @example

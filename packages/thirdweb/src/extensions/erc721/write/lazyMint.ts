@@ -19,6 +19,8 @@ export type LazyMintParams = {
 
 /**
  * Lazily mints ERC721 tokens.
+ * This method is only available on the `DropERC721` contract.
+ *
  * @param options - The options for the lazy minting process.
  * @returns A promise that resolves to the prepared contract call.
  * @extension ERC721

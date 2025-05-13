@@ -23,6 +23,7 @@ export type ResetClaimEligibilityParams = GetClaimConditionsParams;
 
 /**
  * Reset the claim eligibility for all users.
+ * This method is only available on the `DropERC1155` contract.
  * @param options
  * @returns the prepared transaction
  * @extension ERC1155

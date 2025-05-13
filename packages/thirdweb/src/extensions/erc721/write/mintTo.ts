@@ -17,6 +17,8 @@ export type MintToParams = WithOverrides<{
 
 /**
  * Mints a new ERC721 token and assigns it to the specified address.
+ * This method is only available on the `TokenERC721` contract.
+ *
  * If the `nft` parameter is a string, it will be used as the token URI.
  * If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
  * @param options - The transaction options.

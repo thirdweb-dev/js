@@ -22,6 +22,7 @@ export type ClaimToBatchParams = WithOverrides<{
  * This extension batches multiple `claimTo` extensions into one single multicall.
  * Keep in mind that there is a limit of how many NFTs you can claim per transaction.
  * This limit varies depends on the network that you are transacting on.
+ * This method is only available on the `DropERC721` contract.
  *
  * You are recommended to experiment with the number to figure out the best number for your chain of choice.
  * @extension ERC721
