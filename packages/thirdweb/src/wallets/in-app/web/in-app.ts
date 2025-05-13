@@ -23,7 +23,7 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * const account = await wallet.connect({
  *   client,
  *   chain,
- *   strategy: "google",
+ *   strategy: "google", // or "apple", "facebook","discord", "github", "twitch", "x", "telegram", "line", "coinbase", etc
  * });
  * ```
  *
@@ -31,15 +31,21 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  *
  * ### Enable smart accounts and sponsor gas for your users:
  *
+ * With the `executionMode` option, you can enable smart accounts and sponsor gas for your users.
+ *
+ * **Using EIP-7702** (recommended):
+ *
+ * On chains with EIP-7702 enabled, you can upgrade the inapp wallet to a smart account, keeping the same address and performance as the regular EOA.
+ *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * import { sepolia } from "thirdweb/chains";
  *
  * const wallet = inAppWallet({
- *  smartAccount: {
- *   chain: sepolia,
+ *  executionMode: {
+ *   mode: "EIP7702",
  *   sponsorGas: true,
- * },
+ *  },
  * });
  *
  * // account will be a smart account with sponsored gas enabled
@@ -49,7 +55,27 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
+ * **Using EIP-4337**:
+ *
+ * On chains without EIP-7702 enabled, you can still use smart accounts using EIP-4337, this will return a different address (the smart contract address) than the regular EOA.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets/in-app";
+ *
+ * const wallet = inAppWallet({
+ *  executionMode: {
+ *   mode: "EIP4337",
+ *   smartAccount: {
+ *    chain: sepolia, // chain required for EIP-4337
+ *    sponsorGas: true,
+ *   }
+ *  },
+ * });
+ * ```
+ *
  * ### Login with email
+ *
+ * To login with email, you can use the `preAuthenticate` function to first send a verification code to the user's email, then login with the verification code.
  *
  * ```ts
  * import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
@@ -73,22 +99,10 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
- * ### Login with SIWE
- * ```ts
- * import { inAppWallet, createWallet } from "thirdweb/wallets";
- *
- * const rabby = createWallet("io.rabby");
- * const inAppWallet = inAppWallet();
- *
- * const account = await inAppWallet.connect({
- *    strategy: "wallet",
- *    chain: mainnet,
- *    wallet: rabby,
- *    client: MY_CLIENT
- * });
- * ```
- *
  * ### Login with phone number
+ *
+ * Similar to email, you can login with a phone number by first sending a verification code to the user's phone number, then login with the verification code.
+ *
  * ```ts
  * import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
  *
@@ -111,7 +125,27 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
+ * ### Login with another wallet (SIWE)
+ *
+ * You can also login to the in-app wallet with another existing wallet by signing a standard Sign in with Ethereum (SIWE) message.
+ *
+ * ```ts
+ * import { inAppWallet, createWallet } from "thirdweb/wallets";
+ *
+ * const rabby = createWallet("io.rabby");
+ * const inAppWallet = inAppWallet();
+ *
+ * const account = await inAppWallet.connect({
+ *    strategy: "wallet",
+ *    chain: mainnet,
+ *    wallet: rabby,
+ *    client: MY_CLIENT
+ * });
+ * ```
+ *
  * ### Login with passkey
+ *
+ * You can also login with a passkey. This mode requires specifying whether it should create a new passkey, or sign in with an existing passkey. We recommend checking if the user has a passkey stored in their browser to automatically login with it.
  *
  * ```ts
  * import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
@@ -128,6 +162,11 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * ```
  *
  * ### Connect to a guest account
+ *
+ * You can also connect to a guest account, this will create a new account for the user instantly and store it in the browser's local storage.
+ *
+ * You can later "upgrade" this account by linking another auth method, like email or phone for example. This will preserve the account's address and history.
+ *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  *
@@ -141,19 +180,19 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  *
  * ### Connect to a backend account
  *
- * for usage in backends, you might also need to provide a 'storage' to store auth tokens. In-memory usually works for most purposes.
+ * For usage in backends, you can create wallets with the `backend` strategy and a stable walletSecret.
+ *
+ * Make sure to keep that walletSecret safe as it is the key to access that wallet, never expose it to the client.
  *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  *
- * const wallet = inAppWallet({
- *   storage: inMemoryStorage, // for usage in backends/scripts
- * });
+ * const wallet = inAppWallet();
  *
  * const account = await wallet.connect({
  *   client,
  *   strategy: "backend",
- *   walletSecret: "...", // Provided by your app
+ *   walletSecret: "...", // Your own secret, keep it safe
  * });
  * ```
  *
@@ -189,22 +228,29 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
- * ### Specify a logo for your login page (Connect UI)
+ * ### Specify a logo, icon and name for your login page (Connect UI)
+ *
+ * You can specify a logo, icon and name for your login page to customize how in-app wallets are displayed in the Connect UI components (ConnectButton and ConnectEmbed).
+ *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
  *  metadata: {
- *   image: {
- *    src: "https://example.com/logo.png",
- *    alt: "My logo",
- *    width: 100,
- *    height: 100,
+ *    name: "My App",
+ *    icon: "https://example.com/icon.png",
+ *    image: {
+ *      src: "https://example.com/logo.png",
+ *      alt: "My logo",
+ *      width: 100,
+ *      height: 100,
  *   },
  *  },
  * });
  * ```
  *
  * ### Hide the ability to export the private key within the Connect Modal UI
+ *
+ * By default, the Connect Modal will show a button to export the private key of the wallet. You can hide this button by setting the `hidePrivateKeyExport` option to `true`.
  *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
@@ -228,7 +274,7 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  *
  * ### Override storage for the wallet state
  *
- * By default, wallet state is stored in the browser's local storage. You can override this behavior by providing a custom storage object, useful for server side integrations.
+ * By default, wallet state is stored in the browser's local storage if in the browser, or in-memory storage if not in the browser. You can override this behavior by providing a custom storage object, useful for server side and CLI integrations.
  *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
