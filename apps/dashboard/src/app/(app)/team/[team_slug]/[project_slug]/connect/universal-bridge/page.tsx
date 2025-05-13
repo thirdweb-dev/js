@@ -32,6 +32,7 @@ export default async function Page(props: {
     from: searchParams.from,
     to: searchParams.to,
     interval: searchParams.interval,
+    defaultRange: "last-30",
   });
 
   return (
