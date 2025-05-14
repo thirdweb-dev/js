@@ -117,6 +117,21 @@ export const connectLinks: Array<{
   },
 ] as const;
 
+const apisLinks = [
+  {
+    name: "Insight",
+    href: "https://insight-api.thirdweb.com/reference",
+  },
+  {
+    name: "Engine Cloud",
+    href: "https://engine.thirdweb.com/reference#tag/write",
+  },
+  {
+    name: "Universal Bridge",
+    href: "https://bridge.thirdweb.com/reference",
+  },
+];
+
 const supportLinks = [
   {
     name: "Get thirdweb support",
@@ -221,7 +236,15 @@ export function Header() {
               <DocSearch variant="search" />
             </div>
 
-            <div className="xl:px-2">
+            <div className="xl:px-1">
+              <DropdownLinks
+                links={apisLinks}
+                onLinkClick={() => setShowBurgerMenu(false)}
+                category="APIs"
+              />
+            </div>
+
+            <div className="xl:px-1">
               <DropdownLinks
                 links={supportLinks}
                 onLinkClick={() => setShowBurgerMenu(false)}
