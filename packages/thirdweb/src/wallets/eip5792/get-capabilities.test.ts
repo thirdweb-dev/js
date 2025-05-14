@@ -124,8 +124,8 @@ describe.sequential("in-app wallet", async () => {
         paymasterService: {
           supported: false,
         },
-        atomicBatch: {
-          supported: false,
+        atomic: {
+          status: "unsupported",
         },
       },
     });
@@ -167,8 +167,8 @@ describe.sequential("in-app wallet", async () => {
           paymasterService: {
             supported: true,
           },
-          atomicBatch: {
-            supported: true,
+          atomic: {
+            status: "supported",
           },
         },
       });
@@ -196,8 +196,8 @@ describe.sequential("in-app wallet", async () => {
           paymasterService: {
             supported: false,
           },
-          atomicBatch: {
-            supported: true,
+          atomic: {
+            status: "supported",
           },
         },
       });
@@ -259,8 +259,8 @@ describe.sequential("smart wallet", async () => {
         paymasterService: {
           supported: true,
         },
-        atomicBatch: {
-          supported: true,
+        atomic: {
+          status: "supported",
         },
       },
     });
@@ -280,8 +280,8 @@ describe.sequential("smart wallet", async () => {
 
     expect(capabilities).toEqual({
       [FORKED_ETHEREUM_CHAIN.id]: {
-        atomicBatch: {
-          supported: true,
+        atomic: {
+          status: "supported",
         },
         paymasterService: {
           supported: false,

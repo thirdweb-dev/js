@@ -3,10 +3,11 @@ import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
 import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
-import { CheckoutEmbed } from "./components/client/CheckoutEmbed.client";
-import type { CheckoutParams } from "./components/types";
+import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
+import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
+import type { PayParams } from "./components/types";
 
-const title = "thirdweb Checkout";
+const title = "thirdweb Pay";
 const description = "Fast, secure, and simple payments.";
 
 export const metadata: Metadata = {
@@ -20,19 +21,30 @@ export const metadata: Metadata = {
 
 export default async function RoutesPage({
   searchParams,
-}: { searchParams: Promise<CheckoutParams> }) {
+}: { searchParams: Promise<PayParams> }) {
   const params = await searchParams;
 
-  if (!params.chainId || Array.isArray(params.chainId)) {
+  // If no query parameters are provided, show the form
+  if (
+    !params.chainId &&
+    !params.recipientAddress &&
+    !params.tokenAddress &&
+    !params.amount
+  ) {
+    return <PaymentLinkForm />;
+  }
+
+  // Validate query parameters
+  if (Array.isArray(params.chainId)) {
     throw new Error("A single chainId parameter is required.");
   }
-  if (!params.recipientAddress || Array.isArray(params.recipientAddress)) {
+  if (Array.isArray(params.recipientAddress)) {
     throw new Error("A single recipientAddress parameter is required.");
   }
-  if (!params.tokenAddress || Array.isArray(params.tokenAddress)) {
+  if (Array.isArray(params.tokenAddress)) {
     throw new Error("A single tokenAddress parameter is required.");
   }
-  if (!params.amount || Array.isArray(params.amount)) {
+  if (Array.isArray(params.amount)) {
     throw new Error("A single amount parameter is required.");
   }
   if (Array.isArray(params.clientId)) {
@@ -70,7 +82,7 @@ export default async function RoutesPage({
   };
 
   return (
-    <CheckoutEmbed
+    <PayPageEmbed
       redirectUri={params.redirectUri}
       chainId={Number(params.chainId)}
       recipientAddress={params.recipientAddress}

@@ -1,5 +1,129 @@
 # thirdweb
 
+## 5.99.1
+
+### Patch Changes
+
+- [#7016](https://github.com/thirdweb-dev/js/pull/7016) [`1985de8`](https://github.com/thirdweb-dev/js/commit/1985de89aae5196233789221ad06f1b6554d27fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose inMemoryStorage for inAppWallet backend usage
+
+- [#7034](https://github.com/thirdweb-dev/js/pull/7034) [`fc65350`](https://github.com/thirdweb-dev/js/commit/fc6535069beefa419f827c23673f386100a60fd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Preload wallet balances on pay embed
+
+- [#7038](https://github.com/thirdweb-dev/js/pull/7038) [`da3fc99`](https://github.com/thirdweb-dev/js/commit/da3fc99c0bb71043b902867a5003bc3d34041269) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Default to in-memory storage when creating inapp wallets outside the browser
+
+## 5.99.0
+
+### Minor Changes
+
+- [#7003](https://github.com/thirdweb-dev/js/pull/7003) [`58e343c`](https://github.com/thirdweb-dev/js/commit/58e343c10ccbab638f612591fb62761abc988b3e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Breaking change: EIP-5792 support
+
+  We've significantly improved our EIP-5792 apis, which come with some breaking changes:
+
+  ### New Functions Added
+
+  1. **`useSendAndConfirmCalls`**
+
+     - Description: Hook to send and wait for confirmation of EIP-5792 calls
+     - Returns: React Query mutation object with transaction receipts
+     - Example:
+
+     ```tsx
+     const { mutate: sendAndConfirmCalls, data: result } =
+       useSendAndConfirmCalls();
+     await sendAndConfirmCalls({
+       client,
+       calls: [tx1, tx2],
+     });
+     console.log("Transaction hash:", result.receipts?.[0]?.transactionHash);
+     ```
+
+  2. **`useWaitForCallsReceipt`**
+     - Description: Hook to wait for the receipt of EIP-5792 calls, perfect for splitting submitting the call and waiting for receipt
+     - Returns: React Query object with call receipts
+     - Example:
+     ```tsx
+     const { mutate: sendCalls, data: result } = useSendCalls();
+     const { data: receipt, isLoading } = useWaitForCallsReceipt(result);
+     ```
+
+  ### Breaking Changes
+
+  #### `useSendCalls` Changes
+
+  **Before**
+
+  ```tsx
+  // mutation returns id a string
+  const sendCalls = useSendCalls({ client });
+  ```
+
+  **After**
+
+  ```tsx
+  // no longer needs client
+  // mutation returns an object with id
+  const sendCalls = useSendCalls();
+  ```
+
+  Waiting for call receipts is now done separately, via the `useWaitForCallsReceipt`.
+
+  **Before**
+
+  ```tsx
+  const { mutate: sendCalls, data: receipt } = useSendCalls({
+    client,
+    waitForBundle: true,
+  });
+  ```
+
+  **After**
+
+  ```tsx
+  const { mutate: sendCalls, data: result } = useSendCalls();
+  const { data: receipt, isLoading } = useWaitForCallsReceipt(result);
+  ```
+
+  You can also use the helper `useSendAndConfirmCalls` to combine both submitting and waiting for confirmation.
+
+  ```tsx
+  const { mutate: sendAndConfirmCalls, data: receipt } =
+    useSendAndConfirmCalls();
+  ```
+
+  #### `sendCalls` Changes
+
+  **Before**:
+
+  ```tsx
+  // Old output type
+  type SendCallsResult = string;
+  ```
+
+  **After**:
+
+  ```tsx
+  // New output type
+  type SendCallsResult = {
+    id: string;
+    client: ThirdwebClient;
+    chain: Chain;
+    wallet: Wallet;
+  };
+  ```
+
+## 5.98.2
+
+### Patch Changes
+
+- [#7009](https://github.com/thirdweb-dev/js/pull/7009) [`5a13ad4`](https://github.com/thirdweb-dev/js/commit/5a13ad45217d2a941c7d799ed925b0ee7cc41e80) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Automatically trigger SIWE sign in when a wallet is connected
+
+- [#7011](https://github.com/thirdweb-dev/js/pull/7011) [`98eda9d`](https://github.com/thirdweb-dev/js/commit/98eda9dd3d3bc6f60779c1d5b1bebb14927d92db) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Auto-login on autoconnect of IAW in all cases
+
+## 5.98.1
+
+### Patch Changes
+
+- [#7004](https://github.com/thirdweb-dev/js/pull/7004) [`6f1d4b1`](https://github.com/thirdweb-dev/js/commit/6f1d4b1fcf680235731a2900d423cf0e7a95194e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle tx with value on engineAccount
+
 ## 5.98.0
 
 ### Minor Changes

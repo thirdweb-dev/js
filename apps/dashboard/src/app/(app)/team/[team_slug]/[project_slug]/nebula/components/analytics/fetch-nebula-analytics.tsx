@@ -1,4 +1,5 @@
 import "server-only";
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 import { unstable_cache } from "next/cache";
 
 export type NebulaAnalyticsDataItem = {
@@ -18,7 +19,7 @@ export const fetchNebulaAnalytics = unstable_cache(
     to: string;
     period: "day" | "week" | "month" | "year" | "all";
   }) => {
-    const analyticsEndpoint = process.env.ANALYTICS_SERVICE_URL as string;
+    const analyticsEndpoint = ANALYTICS_SERVICE_URL;
     const url = new URL(`${analyticsEndpoint}/v2/nebula/usage`);
     url.searchParams.set("teamId", params.teamId);
     url.searchParams.set("projectId", params.projectId);

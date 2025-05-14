@@ -23,3 +23,7 @@ export function setCookie(name: string, value: string, days = 365) {
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
   document.cookie = `${name}=${value};path=/;expires=${date.toUTCString()}`;
 }
+
+export function deleteCookie(name: string) {
+  document.cookie = `${name}=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+}

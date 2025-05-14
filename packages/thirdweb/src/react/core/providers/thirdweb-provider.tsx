@@ -46,13 +46,14 @@ export function ThirdwebProviderCore(props: {
                             // invalidate any readContract queries for this chainId:contractAddress
                             [
                               "readContract",
-                              variables.__contract?.chain.id,
-                              variables.__contract?.address,
+                              variables.__contract?.chain.id ||
+                                variables.chain.id,
+                              variables.__contract?.address || variables.to,
                             ] as const,
                         }),
                         invalidateWalletBalance(
                           queryClient,
-                          variables.__contract?.chain.id,
+                          variables.__contract?.chain.id || variables.chain.id,
                         ),
                       ]);
                     });

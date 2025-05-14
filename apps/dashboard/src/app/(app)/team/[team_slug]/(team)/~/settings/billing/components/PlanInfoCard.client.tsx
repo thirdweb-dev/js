@@ -7,9 +7,12 @@ import { PlanInfoCardUI } from "./PlanInfoCard";
 export function PlanInfoCardClient(props: {
   subscriptions: TeamSubscription[];
   team: Team;
+  openPlanSheetButtonByDefault: boolean;
+  highlightPlan: Team["billingPlan"] | undefined;
 }) {
   return (
     <PlanInfoCardUI
+      openPlanSheetButtonByDefault={props.openPlanSheetButtonByDefault}
       team={props.team}
       subscriptions={props.subscriptions}
       getTeam={async () => {
@@ -26,6 +29,7 @@ export function PlanInfoCardClient(props: {
 
         return res.data.result;
       }}
+      highlightPlan={props.highlightPlan}
     />
   );
 }

@@ -1,4 +1,6 @@
-import { API_SERVER_URL, THIRDWEB_API_SECRET } from "../constants/env";
+import "server-only";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { API_SERVER_SECRET } from "../constants/server-envs";
 
 export type SMSCountryTiers = {
   tier1: string[];
@@ -9,18 +11,21 @@ export type SMSCountryTiers = {
 };
 
 export async function getSMSCountryTiers() {
-  if (!THIRDWEB_API_SECRET) {
+  if (!API_SERVER_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
   }
-  const res = await fetch(`${API_SERVER_URL}/v1/sms/list-country-tiers`, {
-    headers: {
-      "Content-Type": "application/json",
-      "x-service-api-key": THIRDWEB_API_SECRET,
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/sms/list-country-tiers`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "x-service-api-key": API_SERVER_SECRET,
+      },
+      next: {
+        revalidate: 15 * 60, //15 minutes
+      },
     },
-    next: {
-      revalidate: 15 * 60, //15 minutes
-    },
-  });
+  );
 
   if (!res.ok) {
     console.error(

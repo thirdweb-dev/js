@@ -8,8 +8,8 @@ const teamPlanToBadgeVariant: Record<
 > = {
   // gray
   free: "secondary",
-  starter: "secondary",
   // yellow
+  starter: "warning",
   starter_legacy: "warning",
   growth_legacy: "warning",
   // green
@@ -20,7 +20,7 @@ const teamPlanToBadgeVariant: Record<
   pro: "default",
 };
 
-function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
+export function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
   if (plan === "growth_legacy") {
     return "Growth - Legacy";
   }
@@ -33,13 +33,14 @@ function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
 export function TeamPlanBadge(props: {
   plan: Team["billingPlan"];
   className?: string;
+  postfix?: string;
 }) {
   return (
     <Badge
       variant={teamPlanToBadgeVariant[props.plan]}
       className={cn("px-1.5 capitalize", props.className)}
     >
-      {getTeamPlanBadgeLabel(props.plan)}
+      {`${getTeamPlanBadgeLabel(props.plan)}${props.postfix || ""}`}
     </Badge>
   );
 }

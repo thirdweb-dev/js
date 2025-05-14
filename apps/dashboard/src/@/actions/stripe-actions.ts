@@ -2,13 +2,12 @@ import "server-only";
 
 import Stripe from "stripe";
 import type { Team } from "../api/team";
+import { STRIPE_SECRET_KEY } from "../constants/server-envs";
 
 let existingStripe: Stripe | undefined;
 
 function getStripe() {
   if (!existingStripe) {
-    const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-
     if (!STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY is not set");
     }

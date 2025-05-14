@@ -63,6 +63,7 @@ import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenContent } from "./swap/SwapScreenContent.js";
 import { TokenSelectorScreen } from "./swap/TokenSelectorScreen.js";
 import { TransferFlow } from "./swap/TransferFlow.js";
+import { useWalletsAndBalances } from "./swap/fetchBalancesForWallet.js";
 import {
   type SupportedChainAndTokens,
   useBuySupportedDestinations,
@@ -217,6 +218,15 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       props.supportedTokens,
     );
   }, [props.supportedTokens, supportedSourcesQuery.data, payOptions]);
+
+  // preload wallets and balances
+  useWalletsAndBalances({
+    client: props.client,
+    sourceSupportedTokens: sourceSupportedTokens || [],
+    toChain: toChain,
+    toToken: toToken,
+    mode: payOptions.mode,
+  });
 
   const { fromChain, setFromChain, fromToken, setFromToken } =
     useFromTokenSelectionStates({

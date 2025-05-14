@@ -1,5 +1,6 @@
 "use client";
 
+import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import {
@@ -7,9 +8,7 @@ import {
   TrackedUnderlineLink,
 } from "@/components/ui/tracked-link";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { ArrowRightIcon } from "lucide-react";
-import { XIcon } from "lucide-react";
 import { AAFooter } from "./AAFooterSection";
 
 const TRACKING_CATEGORY = "smart-wallet";
@@ -100,27 +99,12 @@ function GasCreditAlert(props: {
   teamSlug: string;
   projectId: string;
 }) {
-  const [isVisible, setIsVisible] = useLocalStorage(
-    `gas-credit-${props.projectId}`,
-    true,
-    false,
-  );
-
-  if (!isVisible) return null;
-
   return (
-    <div className="relative rounded-lg border border-border bg-card p-4">
-      <Button
-        onClick={() => setIsVisible(false)}
-        className="absolute top-4 right-4 h-auto w-auto p-1 text-muted-foreground"
-        aria-label="Close alert"
-        variant="ghost"
-      >
-        <XIcon className="size-5" />
-      </Button>
-      <div>
-        <h2 className="mb-0.5 font-semibold">OP Gas Credit Program</h2>
-        <p className="text-muted-foreground text-sm">
+    <DismissibleAlert
+      localStorageId={`${props.projectId}-gas-credit-alert`}
+      title="OP Gas Credit Program"
+      description={
+        <>
           Redeem credits towards gas Sponsorship. <br className="lg:hidden" />
           <TrackedUnderlineLink
             target="_blank"
@@ -130,22 +114,26 @@ function GasCreditAlert(props: {
           >
             Learn More
           </TrackedUnderlineLink>
-        </p>
-
-        <div className="mt-4 flex items-center gap-4">
-          <Button asChild variant="outline" size="sm" className="bg-background">
-            <TrackedLinkTW
-              href={`/team/${props.teamSlug}/~/settings/credits`}
-              target="_blank"
-              className="gap-2"
-              category={TRACKING_CATEGORY}
-              label="claim-credits"
+          <div className="mt-4 flex items-center gap-4">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="bg-background"
             >
-              Claim your credits <ArrowRightIcon className="size-4" />
-            </TrackedLinkTW>
-          </Button>
-        </div>
-      </div>
-    </div>
+              <TrackedLinkTW
+                href={`/team/${props.teamSlug}/~/settings/credits`}
+                target="_blank"
+                className="gap-2"
+                category={TRACKING_CATEGORY}
+                label="claim-credits"
+              >
+                Claim your credits <ArrowRightIcon className="size-4" />
+              </TrackedLinkTW>
+            </Button>
+          </div>
+        </>
+      }
+    />
   );
 }

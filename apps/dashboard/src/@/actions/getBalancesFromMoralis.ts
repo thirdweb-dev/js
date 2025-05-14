@@ -2,6 +2,7 @@
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
+import { MORALIS_API_KEY } from "../constants/server-envs";
 import { serverThirdwebClient } from "../constants/thirdweb-client.server";
 
 type BalanceQueryResponse = Array<{
@@ -60,7 +61,7 @@ export async function getTokenBalancesFromMoralis(params: {
     const resp = await fetch(tokenBalanceEndpoint, {
       method: "GET",
       headers: {
-        "x-api-key": process.env.MORALIS_API_KEY || "",
+        "x-api-key": MORALIS_API_KEY,
       },
     });
 

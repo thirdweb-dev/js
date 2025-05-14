@@ -70,14 +70,15 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
         if (client.teamId) {
           headers.set("x-team-id", client.teamId);
         }
-      }
+      } else {
+        // only set secret key or client id if we are NOT using the auth token!
+        if (secretKey) {
+          headers.set("x-secret-key", secretKey);
+        }
 
-      if (secretKey) {
-        headers.set("x-secret-key", secretKey);
-      }
-
-      if (clientId) {
-        headers.set("x-client-id", clientId);
+        if (clientId) {
+          headers.set("x-client-id", clientId);
+        }
       }
 
       if (ecosystem) {

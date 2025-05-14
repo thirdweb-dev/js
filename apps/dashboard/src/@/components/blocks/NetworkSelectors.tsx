@@ -71,7 +71,7 @@ export function MultiNetworkSelector(props: {
         return false;
       }
 
-      if (Number.isInteger(Number.parseInt(searchValue))) {
+      if (Number.isInteger(Number(searchValue))) {
         return String(chain.chainId).startsWith(searchValue);
       }
       return chain.name.toLowerCase().includes(searchValue.toLowerCase());
@@ -144,18 +144,26 @@ export function SingleNetworkSelector(props: {
   side?: "left" | "right" | "top" | "bottom";
   disableChainId?: boolean;
   align?: "center" | "start" | "end";
+  disableTestnets?: boolean;
   placeholder?: string;
   client: ThirdwebClient;
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
   const chainsToShow = useMemo(() => {
-    if (!props.chainIds) {
-      return allChains;
+    let chains = allChains;
+
+    if (props.disableTestnets) {
+      chains = chains.filter((chain) => !chain.testnet);
     }
-    const chainIdSet = new Set(props.chainIds);
-    return allChains.filter((chain) => chainIdSet.has(chain.chainId));
-  }, [allChains, props.chainIds]);
+
+    if (props.chainIds) {
+      const chainIdSet = new Set(props.chainIds);
+      chains = chains.filter((chain) => chainIdSet.has(chain.chainId));
+    }
+
+    return chains;
+  }, [allChains, props.chainIds, props.disableTestnets]);
 
   const options = useMemo(() => {
     return chainsToShow.map((chain) => {
@@ -173,7 +181,7 @@ export function SingleNetworkSelector(props: {
         return false;
       }
 
-      if (Number.isInteger(Number.parseInt(searchValue))) {
+      if (Number.isInteger(Number(searchValue))) {
         return String(chain.chainId).startsWith(searchValue);
       }
       return chain.name.toLowerCase().includes(searchValue.toLowerCase());
@@ -218,6 +226,7 @@ export function SingleNetworkSelector(props: {
     <SelectWithSearch
       searchPlaceholder="Search by Name or Chain ID"
       value={String(props.chainId)}
+      showCheck={false}
       options={options}
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));

@@ -17,6 +17,7 @@ import {
 
 /**
  * Mints a new ERC20 token with the given minter signature
+ * This method is only available on the `TokenERC20` contract.
  * @param options - The transaction options.
  * @extension ERC20
  * @example

@@ -14,20 +14,23 @@ export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalle
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
 export { useAutoConnect } from "../react/native/hooks/wallets/useAutoConnect.js";
-export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";
 export { useConnect } from "../react/core/hooks/wallets/useConnect.js";
 export { useConnectedWallets } from "../react/core/hooks/wallets/useConnectedWallets.js";
 export { useDisconnect } from "../react/core/hooks/wallets/useDisconnect.js";
 export { useIsAutoConnecting } from "../react/core/hooks/wallets/useIsAutoConnecting.js";
 export { useSetActiveWallet } from "../react/core/hooks/wallets/useSetActiveWallet.js";
 export { useSetActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useSetActiveWalletConnectionStatus.js";
-export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
 export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitchActiveWalletChain.js";
-export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 export { useProfiles } from "../react/native/hooks/wallets/useProfiles.js";
 export { useLinkProfile } from "../react/native/hooks/wallets/useLinkProfile.js";
 export { useUnlinkProfile } from "../react/native/hooks/wallets/useUnlinkProfile.js";
+
+// eip5792
+export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";
+export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
+export { useSendAndConfirmCalls } from "../react/core/hooks/wallets/useSendAndConfirmCalls.js";
+export { useWaitForCallsReceipt } from "../react/core/hooks/wallets/useWaitForCallsReceipt.js";
 
 // contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";

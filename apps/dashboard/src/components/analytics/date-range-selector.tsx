@@ -80,7 +80,7 @@ export function DateRangeSelector(props: {
 export function getLastNDaysRange(id: DurationId) {
   const durationInfo = durationPresets.find((preset) => preset.id === id);
   if (!durationInfo) {
-    throw new Error("Invalid duration id");
+    throw new Error(`Invalid duration id: ${id}`);
   }
 
   const todayDate = new Date(Date.now() + 1000 * 60 * 60 * 24); // add 1 day to avoid timezone issues

@@ -1,4 +1,4 @@
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { Suspense } from "react";
 import { getAuthToken } from "../../../../../app/(app)/api/lib/getAuthToken";
 import { CouponsClient } from "./CouponsClient";
@@ -11,7 +11,7 @@ async function AsyncCoupons(props: {
   const authToken = await getAuthToken();
 
   const allCouponsPromise = fetch(
-    `${API_SERVER_URL}/v1/active-coupons?teamId=${props.teamId}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/active-coupons?teamId=${props.teamId}`,
     {
       headers: {
         authorization: `Bearer ${authToken}`,
@@ -20,7 +20,7 @@ async function AsyncCoupons(props: {
   );
 
   const accountCouponPromise = fetch(
-    `${API_SERVER_URL}/v1/active-coupon?teamId=${props.teamId}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/active-coupon?teamId=${props.teamId}`,
     {
       headers: {
         authorization: `Bearer ${authToken}`,

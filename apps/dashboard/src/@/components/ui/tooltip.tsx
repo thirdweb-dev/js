@@ -54,11 +54,11 @@ export function ToolTipLabel(props: {
           align={props.align}
           sideOffset={10}
           className={cn(
-            "max-w-[400px] whitespace-normal leading-relaxed",
+            "max-w-[400px] whitespace-normal p-0 leading-relaxed",
             props.contentClassName,
           )}
         >
-          <div className="flex items-center gap-1.5 p-2 text-sm">
+          <div className="flex items-center gap-1.5 p-4 text-sm">
             {props.leftIcon}
             {props.label}
             {props.rightIcon}

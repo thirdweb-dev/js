@@ -1,4 +1,4 @@
-export type CheckoutParams = {
+export type PayParams = {
   chainId: string;
   recipientAddress: string;
   tokenAddress: string;

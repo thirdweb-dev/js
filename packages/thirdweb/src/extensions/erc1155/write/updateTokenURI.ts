@@ -20,6 +20,7 @@ export type UpdateTokenURIParams = {
  * which means it uses `setTokenURI` under the hood.
  * While the `setTokenURI` method only takes in a uri string, this extension takes in a user-friendly [`NFTInput`](https://portal.thirdweb.com/references/typescript/v5/NFTInput),
  * upload that content to IPFS and pass the IPFS URI (of said `NFTInput`) to the underlying `setTokenURI` method.
+ * This method is only available on the `TokenERC1155` contract.
  *
  * This extension does not validate the NFTInput so make sure you are passing the proper content that you want to update.
  *

@@ -68,6 +68,11 @@ export const sidebar: SideBar = {
       icon: <ShieldQuestionIcon />,
     },
     {
+      name: "Migrate from v2",
+      href: `${engineV3Slug}/migrate`,
+      icon: <WrenchIcon />,
+    },
+    {
       name: "Troubleshoot",
       href: `${engineV3Slug}/troubleshoot`,
       icon: <WrenchIcon />,

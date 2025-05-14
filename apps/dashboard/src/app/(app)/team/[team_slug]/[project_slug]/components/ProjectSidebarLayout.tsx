@@ -50,9 +50,13 @@ export function ProjectSidebarLayout(props: {
           tracking: tracking("account-abstraction"),
         },
         {
-          label: "Universal Bridge",
           href: `${layoutPath}/connect/universal-bridge`,
           icon: PayIcon,
+          label: (
+            <span className="flex items-center gap-2">
+              Universal Bridge <Badge>New</Badge>
+            </span>
+          ),
           tracking: tracking("universal-bridge"),
         },
         {

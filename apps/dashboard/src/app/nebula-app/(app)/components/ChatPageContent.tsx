@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, MessageSquareXIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -20,7 +20,11 @@ import {
 } from "thirdweb/react";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
-import type { NebulaSessionHistoryMessage, SessionInfo } from "../api/types";
+import type {
+  NebulaSessionHistoryMessage,
+  NebulaUserMessage,
+  SessionInfo,
+} from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { newSessionsStore } from "../stores";
 import { ChatBar, type WalletMeta } from "./ChatBar";
@@ -135,12 +139,14 @@ export function ChatPageContent(props: {
   }, [contextFilters, props.authToken]);
 
   const handleSendMessage = useCallback(
-    async (message: string) => {
+    async (message: NebulaUserMessage) => {
       setUserHasSubmittedMessage(true);
       setMessages((prev) => [
         ...prev,
-        { text: message, type: "user" },
-        // instant loading indicator feedback to user
+        {
+          type: "user",
+          content: message.content,
+        },
         {
           type: "presence",
           texts: [],
@@ -148,7 +154,10 @@ export function ChatPageContent(props: {
       ]);
 
       // handle hardcoded replies first
-      const lowerCaseMessage = message.toLowerCase();
+      const lowerCaseMessage = message.content
+        .find((x) => x.type === "text")
+        ?.text.toLowerCase();
+
       const interceptedReply = examplePrompts.find(
         (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
       )?.interceptedReply;
@@ -175,13 +184,18 @@ export function ChatPageContent(props: {
           currentSessionId = session.id;
         }
 
+        const firstTextMessage =
+          message.role === "user"
+            ? message.content.find((x) => x.type === "text")?.text || ""
+            : "";
+
         // add this session on sidebar
-        if (messages.length === 0) {
+        if (messages.length === 0 && firstTextMessage) {
           const prevValue = newSessionsStore.getValue();
           newSessionsStore.setValue([
             {
               id: currentSessionId,
-              title: message,
+              title: firstTextMessage,
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             },
@@ -193,7 +207,7 @@ export function ChatPageContent(props: {
 
         await handleNebulaPrompt({
           abortController,
-          message,
+          message: message,
           sessionId: currentSessionId,
           authToken: props.authToken,
           setMessages,
@@ -234,14 +248,25 @@ export function ChatPageContent(props: {
       !hasDoneAutoPrompt.current
     ) {
       hasDoneAutoPrompt.current = true;
-      handleSendMessage(props.initialParams.q);
+      handleSendMessage({
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: props.initialParams.q,
+          },
+        ],
+      });
     }
   }, [props.initialParams?.q, messages.length, handleSendMessage]);
 
   const showEmptyState =
     !userHasSubmittedMessage &&
     messages.length === 0 &&
+    !props.session &&
     !props.initialParams?.q;
+
+  const sessionWithNoMessages = props.session && messages.length === 0;
 
   const connectedWalletsMeta: WalletMeta[] = connectedWallets.map((x) => ({
     address: x.getAccount()?.address || "",
@@ -282,6 +307,7 @@ export function ChatPageContent(props: {
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
+                onLoginClick={undefined}
                 showAurora={true}
                 isConnectingWallet={connectionStatus === "connecting"}
                 sendMessage={handleSendMessage}
@@ -290,21 +316,40 @@ export function ChatPageContent(props: {
                 setContext={setContextFilters}
                 connectedWallets={connectedWalletsMeta}
                 setActiveWallet={handleSetActiveWallet}
+                allowImageUpload={true}
               />
             </div>
           ) : (
             <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
-              <Chats
-                messages={messages}
-                isChatStreaming={isChatStreaming}
-                authToken={props.authToken}
-                sessionId={sessionId}
-                className="min-w-0 pt-6 pb-32"
-                client={client}
-                enableAutoScroll={enableAutoScroll}
-                setEnableAutoScroll={setEnableAutoScroll}
-                sendMessage={handleSendMessage}
-              />
+              {sessionWithNoMessages && (
+                <div className="container flex max-h-full max-w-[800px] flex-1 flex-col justify-center py-8">
+                  <div className="flex flex-col items-center justify-center p-4">
+                    <div className="mb-5 rounded-full border bg-card p-3">
+                      <MessageSquareXIcon className="size-6 text-muted-foreground" />
+                    </div>
+                    <p className="mb-1 text-center text-foreground">
+                      No messages found
+                    </p>
+                    <p className="text-balance text-center text-muted-foreground text-sm">
+                      This session was aborted before receiving any messages
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {messages.length > 0 && (
+                <Chats
+                  messages={messages}
+                  isChatStreaming={isChatStreaming}
+                  authToken={props.authToken}
+                  sessionId={sessionId}
+                  className="min-w-0 pt-6 pb-32"
+                  client={client}
+                  enableAutoScroll={enableAutoScroll}
+                  setEnableAutoScroll={setEnableAutoScroll}
+                  sendMessage={handleSendMessage}
+                />
+              )}
 
               <div className="container max-w-[800px]">
                 <ChatBar
@@ -326,6 +371,8 @@ export function ChatPageContent(props: {
                     setContextFilters(v);
                     handleUpdateContextFilters(v);
                   }}
+                  allowImageUpload={true}
+                  onLoginClick={undefined}
                 />
               </div>
             </div>
@@ -402,7 +449,7 @@ function getLastUsedChainIds(): string[] | null {
 
 export async function handleNebulaPrompt(params: {
   abortController: AbortController;
-  message: string;
+  message: NebulaUserMessage;
   sessionId: string;
   authToken: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
@@ -552,6 +599,20 @@ export async function handleNebulaPrompt(params: {
           });
           return;
         }
+
+        case "error": {
+          hasReceivedResponse = true;
+          setMessages((prev) => {
+            return [
+              ...prev,
+              {
+                text: res.data.errorMessage,
+                type: "error",
+              },
+            ];
+          });
+          return;
+        }
       }
     },
     context: contextFilters,
@@ -654,7 +715,15 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
 
       case "user": {
         messages.push({
-          text: message.content,
+          content:
+            typeof message.content === "string"
+              ? [
+                  {
+                    type: "text",
+                    text: message.content,
+                  },
+                ]
+              : message.content,
           type: message.role,
         });
         break;

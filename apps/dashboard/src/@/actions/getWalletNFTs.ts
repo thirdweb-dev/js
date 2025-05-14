@@ -12,7 +12,8 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { getVercelEnv } from "../../lib/vercel-utils";
 import { isAlchemySupported } from "../../lib/wallet/nfts/isAlchemySupported";
 import { isMoralisSupported } from "../../lib/wallet/nfts/isMoralisSupported";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/env";
+import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/public-envs";
+import { MORALIS_API_KEY } from "../constants/server-envs";
 
 type WalletNFTApiReturn =
   | { result: WalletNFT[]; error?: undefined }
@@ -59,13 +60,13 @@ export async function getWalletNFTs(params: {
     }
   }
 
-  if (isMoralisSupported(chainId) && process.env.MORALIS_API_KEY) {
+  if (isMoralisSupported(chainId) && MORALIS_API_KEY) {
     const url = generateMoralisUrl({ chainId, owner });
 
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "X-API-Key": process.env.MORALIS_API_KEY,
+        "X-API-Key": MORALIS_API_KEY,
       },
       next: {
         revalidate: 10, // cache for 10 seconds
@@ -148,7 +149,7 @@ async function getWalletNFTsFromInsight(params: {
 
   const response = await fetch(url, {
     headers: {
-      "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
+      "x-client-id": NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
     },
   });
 

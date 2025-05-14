@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 
 export async function isNebulaAuthTokenValid(token: string) {
   const res = await fetch(`${NEXT_PUBLIC_NEBULA_URL}/auth/verify`, {

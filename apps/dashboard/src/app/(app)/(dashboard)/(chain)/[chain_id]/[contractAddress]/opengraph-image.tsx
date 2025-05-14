@@ -1,5 +1,6 @@
+import { isProd } from "@/constants/env-utils";
+import { API_ROUTES_CLIENT_ID } from "@/constants/server-envs";
 /* eslint-disable @next/next/no-img-element */
-import { isProd } from "@/constants/env";
 import { ImageResponse } from "@vercel/og";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
@@ -125,8 +126,8 @@ function textShortener(text: string) {
   return `${words.join(" ")} ...`;
 }
 
-const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
+const IPFS_GATEWAY = API_ROUTES_CLIENT_ID
+  ? `https://${API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {

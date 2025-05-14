@@ -7,7 +7,19 @@ export function useSessionsWithLocalOverrides(
 ) {
   const newAddedSessions = useStore(newSessionsStore);
   const deletedSessions = useStore(deletedSessionsStore);
-  return [...newAddedSessions, ..._sessions].filter((s) => {
+  const mergedSessions = [..._sessions];
+
+  for (const session of newAddedSessions) {
+    // if adding a new session that has same id as existing session, update the existing session
+    const index = mergedSessions.findIndex((s) => s.id === session.id);
+    if (index !== -1) {
+      mergedSessions[index] = session;
+    } else {
+      mergedSessions.push(session);
+    }
+  }
+
+  return mergedSessions.filter((s) => {
     return !deletedSessions.some((d) => d === s.id);
   });
 }

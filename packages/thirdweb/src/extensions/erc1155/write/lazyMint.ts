@@ -37,6 +37,7 @@ export type LazyMintParams = {
 
 /**
  * Lazily mints ERC1155 tokens.
+ * This method is only available on the `DropERC1155` contract.
  * @param options - The options for the lazy minting process.
  * @returns A promise that resolves to the prepared contract call.
  * @extension ERC1155

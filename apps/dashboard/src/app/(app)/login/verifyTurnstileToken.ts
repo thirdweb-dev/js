@@ -1,4 +1,5 @@
 import "server-only";
+import { TURNSTILE_SECRET_KEY } from "@/constants/server-envs";
 import { ipAddress } from "@vercel/functions";
 import { headers } from "next/headers";
 
@@ -51,7 +52,7 @@ export async function verifyTurnstileToken(turnstileToken: string) {
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
     {
       body: JSON.stringify({
-        secret: process.env.TURNSTILE_SECRET_KEY,
+        secret: TURNSTILE_SECRET_KEY,
         response: turnstileToken,
         remoteip: ip,
       }),

@@ -13,6 +13,8 @@ interface BillingProps {
   subscriptions: TeamSubscription[];
   twAccount: Account;
   client: ThirdwebClient;
+  openPlanSheetButtonByDefault: boolean;
+  highlightPlan: Team["billingPlan"] | undefined;
 }
 
 export const Billing: React.FC<BillingProps> = ({
@@ -20,6 +22,8 @@ export const Billing: React.FC<BillingProps> = ({
   subscriptions,
   twAccount,
   client,
+  openPlanSheetButtonByDefault,
+  highlightPlan,
 }) => {
   const validPayment =
     team.billingStatus === "validPayment" || team.billingStatus === "pastDue";
@@ -27,7 +31,12 @@ export const Billing: React.FC<BillingProps> = ({
   return (
     <div className="flex flex-col gap-12">
       <div>
-        <PlanInfoCardClient team={team} subscriptions={subscriptions} />
+        <PlanInfoCardClient
+          team={team}
+          subscriptions={subscriptions}
+          openPlanSheetButtonByDefault={openPlanSheetButtonByDefault}
+          highlightPlan={highlightPlan}
+        />
       </div>
 
       <CreditsInfoCard

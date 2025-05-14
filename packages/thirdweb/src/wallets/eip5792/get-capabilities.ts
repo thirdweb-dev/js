@@ -1,8 +1,12 @@
 import { getAddress } from "../../utils/address.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
+import {
+  type CoinbaseWalletCreationOptions,
+  isCoinbaseSDKWallet,
+} from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
+import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isWalletConnect } from "../wallet-connect/controller.js";
 import type { WalletId } from "../wallet-types.js";
@@ -10,6 +14,7 @@ import type { WalletCapabilities, WalletCapabilitiesRecord } from "./types.js";
 
 export type GetCapabilitiesOptions<ID extends WalletId = WalletId> = {
   wallet: Wallet<ID>;
+  chainId?: number;
 };
 
 export type GetCapabilitiesResult = Prettify<
@@ -38,6 +43,7 @@ export type GetCapabilitiesResult = Prettify<
  */
 export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,
+  chainId,
 }: GetCapabilitiesOptions<ID>): Promise<GetCapabilitiesResult> {
   const account = wallet.getAccount();
   if (!account) {
@@ -60,13 +66,6 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
     return inAppWalletGetCapabilities({ wallet });
   }
 
-  if (isCoinbaseSDKWallet(wallet)) {
-    const { coinbaseSDKWalletGetCapabilities } = await import(
-      "../coinbase/coinbase-web.js"
-    );
-    return coinbaseSDKWalletGetCapabilities({ wallet });
-  }
-
   // TODO: Add Wallet Connect support
   if (isWalletConnect(wallet)) {
     return {
@@ -74,14 +73,37 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
     };
   }
 
-  // Default to injected wallet
-  const provider = getInjectedProvider(wallet.id);
+  let provider: Ethereum;
+  if (isCoinbaseSDKWallet(wallet)) {
+    const { getCoinbaseWebProvider } = await import(
+      "../coinbase/coinbase-web.js"
+    );
+    const config = wallet.getConfig() as CoinbaseWalletCreationOptions;
+    provider = (await getCoinbaseWebProvider(config)) as Ethereum;
+  } else {
+    provider = getInjectedProvider(wallet.id);
+  }
 
   try {
-    return await provider.request({
+    const result = await provider.request({
       method: "wallet_getCapabilities",
       params: [getAddress(account.address)],
     });
+    const capabilities = {} as WalletCapabilitiesRecord<
+      WalletCapabilities,
+      number
+    >;
+    for (const [chainId, capabilities_] of Object.entries(result)) {
+      capabilities[Number(chainId)] = {};
+      const capabilitiesCopy = {} as WalletCapabilities;
+      for (const [key, value] of Object.entries(capabilities_)) {
+        capabilitiesCopy[key] = value;
+      }
+      capabilities[Number(chainId)] = capabilitiesCopy;
+    }
+    return (
+      typeof chainId === "number" ? capabilities[chainId] : capabilities
+    ) as never;
   } catch (error: unknown) {
     if (/unsupport|not support|not available/i.test((error as Error).message)) {
       return {

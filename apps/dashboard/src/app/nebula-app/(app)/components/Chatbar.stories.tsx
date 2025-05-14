@@ -27,7 +27,7 @@ const userWalletAddress = "0x2d7B4e58bb163462cba2e705090a4EC56A958F2a";
 function Story() {
   return (
     <ThirdwebProvider>
-      <div className="container flex max-w-6xl flex-col gap-14 py-10">
+      <div className="container flex max-w-[800px] flex-col gap-14 py-10">
         <Variant
           label="Not Streaming"
           isStreaming={false}
@@ -127,6 +127,15 @@ function Story() {
         />
 
         <Variant
+          label="No Image Upload"
+          isStreaming={false}
+          showContextSelector={true}
+          connectedWallets={[]}
+          activeAccountAddress={undefined}
+          allowImageUpload={false}
+        />
+
+        <Variant
           label="Connecting Wallet"
           isStreaming={false}
           isConnectingWallet={true}
@@ -148,6 +157,7 @@ function Variant(props: {
   connectedWallets: WalletMeta[];
   activeAccountAddress: string | undefined;
   isConnectingWallet?: boolean;
+  allowImageUpload?: boolean;
 }) {
   const [context, setContext] = useState<NebulaContext | undefined>(
     props.context,
@@ -159,6 +169,7 @@ function Variant(props: {
         isConnectingWallet={props.isConnectingWallet || false}
         client={storybookThirdwebClient}
         abortChatStream={() => {}}
+        onLoginClick={undefined}
         isChatStreaming={props.isStreaming}
         sendMessage={() => {}}
         prefillMessage={props.prefillMessage}
@@ -166,6 +177,9 @@ function Variant(props: {
         setContext={setContext}
         showContextSelector={props.showContextSelector}
         connectedWallets={props.connectedWallets}
+        allowImageUpload={
+          props.allowImageUpload === undefined ? true : props.allowImageUpload
+        }
         setActiveWallet={(wallet) => {
           setContext({
             chainIds: context?.chainIds || [],

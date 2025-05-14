@@ -1,11 +1,11 @@
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export async function getRecommendedMembers(params: {
   teamId: string;
   authToken: string;
 }) {
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${params.teamId}/members/recommended`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}/members/recommended`,
     {
       headers: {
         "Content-Type": "application/json",

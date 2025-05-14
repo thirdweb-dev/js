@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export type ProjectContract = {
   id: string;
@@ -15,7 +15,7 @@ export async function getProjectContracts(options: {
   authToken: string;
 }) {
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${options.teamId}/projects/${options.projectId}/contracts`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/projects/${options.projectId}/contracts`,
     {
       headers: {
         Authorization: `Bearer ${options.authToken}`,

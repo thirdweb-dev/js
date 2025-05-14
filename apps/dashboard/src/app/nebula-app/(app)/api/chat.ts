@@ -1,7 +1,8 @@
-import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 // TODO - copy the source of this library to dashboard
 import { stream } from "fetch-event-stream";
 import type { NebulaTxData } from "../components/Chats";
+import type { NebulaUserMessage } from "./types";
 
 export type NebulaContext = {
   chainIds: string[] | null;
@@ -42,7 +43,7 @@ export type NebulaSwapData = {
 };
 
 export async function promptNebula(params: {
-  message: string;
+  message: NebulaUserMessage;
   sessionId: string;
   authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
@@ -50,7 +51,7 @@ export async function promptNebula(params: {
   context: undefined | NebulaContext;
 }) {
   const body: Record<string, string | boolean | object> = {
-    message: params.message,
+    messages: [params.message],
     stream: true,
     session_id: params.sessionId,
   };
@@ -151,6 +152,24 @@ export async function promptNebula(params: {
         break;
       }
 
+      case "error": {
+        const data = JSON.parse(event.data) as {
+          code: number;
+          error: {
+            message: string;
+          };
+        };
+
+        params.handleStream({
+          event: "error",
+          data: {
+            code: data.code,
+            errorMessage: data.error.message,
+          },
+        });
+        break;
+      }
+
       case "init": {
         const data = JSON.parse(event.data);
         params.handleStream({
@@ -241,6 +260,13 @@ type ChatStreamedResponse =
         chain_ids: number[];
         networks: NebulaContext["networks"];
       };
+    }
+  | {
+      event: "error";
+      data: {
+        code: number;
+        errorMessage: string;
+      };
     };
 
 type ChatStreamedEvent =
@@ -267,5 +293,9 @@ type ChatStreamedEvent =
     }
   | {
       event: "context";
+      data: string;
+    }
+  | {
+      event: "error";
       data: string;
     };

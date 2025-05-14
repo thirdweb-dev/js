@@ -1,0 +1,243 @@
+# Migrating from Engine v2 to v3
+
+This guide outlines the key changes required to migrate your applications from Engine v2 to Engine v3. We'll cover common operations and highlight the differences in API requests and authentication.
+
+## Writing to a contract
+
+Migrating your contract write operations from v2 to v3 involves changes to the endpoint, authentication mechanism, and request payload structure.
+
+#### OLD (v2)
+
+The v2 approach used your dedicated engine url, with a specific endpoint for each chain and contract and backend wallet address in the header.
+
+```bash
+curl -X POST "<engine_url>/contract/<chain>/<contract_address>/write" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "x-backend-wallet-address: <backend_wallet_address>" \
+  -d '{
+    "functionName": "function transferFrom(address from, address to, uint256 amount)",
+    "args": [
+      "0x1946267d81Fb8aDeeEa28e6B98bcD446c8248473",
+      "0x3EcDBF3B911d0e9052b64850693888b008e18373",
+      "0"
+    ]
+  }'
+```
+
+#### NEW (v3)
+
+The v3 approach uses a generic POST endpoint, with authentication via secret key and vault access token. Contract, chain, and execution details are now part of a structured JSON payload.
+
+```bash
+curl -X POST "https://engine.thirdweb.com/v1/write/contract" \
+  -H "Content-Type: application/json" \
+  -H "x-secret-key: <your-project-secret-key>" \
+  -H "x-vault-access-token: <your-vault-access-token>" \
+  -d '{
+    "executionOptions": {
+      "from": "<your-server-wallet-address>",
+      "chainId": "84532"
+    },
+    "params": [
+      {
+        "contractAddress": "0x...",
+        "method": "function transferFrom(address from, address to, uint256 amount)",
+        "params": [
+            "0x1946267d81Fb8aDeeEa28e6B98bcD446c8248473",
+            "0x3EcDBF3B911d0e9052b64850693888b008e18373",
+            "0"
+        ]
+      }
+    ]
+  }'
+```
+
+#### Key Differences:
+
+*   **API Endpoint:** The endpoint has changed from a specific path per chain and contract (`<engine_url>/contract/<chain>/<contract_address>/write`) to a general endpoint (`https://engine.thirdweb.com/v1/write/contract`).
+*   **Authentication:**
+    *   V2 used an `Authorization: Bearer <access_token>` header for general API access and an `x-backend-wallet-address` header to specify the sender.
+    *   V3 uses an `x-secret-key` header (your project's secret key, found in your thirdweb dashboard) for authentication. Your backend wallet is managed by thirdweb Vault, an `x-vault-access-token` header is required for all write operations.
+*   **Request Structure:**
+    *   **Sender & Chain:** In V2, the sender wallet was a header, and the chain was part of the URL. In V3, these are specified in the request body within an `executionOptions` object: `from` for the sender wallet address and `chainId` for the target chain.
+    *   **Contract Call:** V2 took `functionName` and `args` directly in the body. V3 uses a `params` array in the request body. Each element in this array is an object defining the target `contractAddress`, the partial or full `method` signature (e.g., `"function mintTo(address to, uint256 amount)"`), and the `params` (arguments) for that method.
+*   **Function Specification:** While V3 supports using just the method name (e.g., "transferFrom") in the `method` field, providing the full function signature (e.g., "function transferFrom(address from, address to, uint256 amount)") is highly recommended for optimal performance as it avoids an ABI lookup. V2 only required the `functionName`.
+
+---
+
+## Check the status of a transaction
+
+Querying transaction status has also been updated, moving from a direct ID lookup via GET to a POST request with a filter-based search.
+
+#### OLD (v2)
+
+In v2, transaction status was fetched using a GET request with the `queue_id` in the URL.
+
+```bash
+curl -X GET "<engine_url>/transaction/status/<queue_id>" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+#### NEW (v3)
+
+V3 uses a search endpoint with a POST request, where transaction identifiers are passed in the request body using filters.
+
+```bash
+curl --location 'https://engine.thirdweb.com/v1/transactions/search' \
+--header 'x-secret-key: <your-project-secret-key>' \
+--header 'Content-Type: application/json' \
+--data '{
+  "filters": [
+    {
+      "field": "id",
+      "values": [
+        "750cb3eb-d297-4d8e-8d29-76dea99ba294" // transaction id
+      ],
+      "operation": "OR"
+    }
+  ]
+}'
+```
+
+#### Key Differences:
+
+*   **API Endpoint & Method:** The V2 `GET` endpoint (`<engine_url>/transaction/status/<queue_id>`) is replaced by a V3 `POST` endpoint (`https://engine.thirdweb.com/v1/transactions/search`).
+*   **Authentication:**
+    *   V2 used an `Authorization: Bearer <access_token>` header.
+    *   V3 uses an `x-secret-key` header (your project's secret key).
+*   **Querying Transaction Status:**
+    *   In V2, the `queue_id` was passed directly in the URL path.
+    *   In V3, you send a `POST` request with a JSON body containing a `filters` array. To find a specific transaction, you filter by its `id` (the equivalent of V2's `queue_id`). This filter-based approach is more flexible for querying transactions based on various criteria.
+
+---
+
+## Reading from a contract
+
+Reading data from a smart contract has also been updated in v3, shifting from URL-based parameters to a structured JSON payload over POST.
+
+#### OLD (v2)
+
+In v2, contract reads were GET requests. The chain, contract address, function name, and arguments were specified in the URL path and query parameters.
+
+```bash
+curl -X GET "<engine_url>/contract/<chain>/<contract_address>/read?functionName=balanceOf&args=0x3EcDBF3B911d0e9052b64850693888b008e18373" \
+  -H "Authorization: Bearer <access_token>"
+```
+
+#### NEW (v3)
+
+V3 uses a POST request to a dedicated read endpoint. All parameters, including chain, contract details, method signature, and arguments, are provided in the JSON body.
+
+```bash
+curl https://engine.thirdweb.com/v1/read/contract \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'x-secret-key: <your-project-secret-key>' \
+  --data '{
+  "params": [
+    {
+      "contractAddress": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "method": "function balanceOf(address account) returns (uint256)",
+      "params": [
+        "0xeb0effdfb4dc5b3d5d3ac6ce29f3ed213e95d675"
+      ]
+    }
+  ],
+  "readOptions": {
+    "chainId": "84532"
+  }
+}'
+```
+
+#### Key Differences:
+
+*   **API Endpoint & Method:** 
+    *   V2 used a `GET` request to `<engine_url>/contract/<chain>/<contract_address>/read` with function details as query parameters.
+    *   V3 uses a `POST` request to the generic endpoint `https://engine.thirdweb.com/v1/read/contract`.
+*   **Authentication:** 
+    *   V2 used an `Authorization: Bearer <access_token>` header.
+    *   V3 uses an `x-secret-key: <your-project-secret-key>` header.
+*   **Request Structure:** 
+    *   In V2, the chain and contract address were part of the URL path, and the function name (`functionName`) and its arguments (`args`) were URL query parameters.
+    *   In V3, the request body is a JSON object. It includes a `params` array (where each object specifies `contractAddress`, the partial or full `method` signature, and its `params`) and a `readOptions` object to specify the `chainId`.
+*   **Function Specification:** Similar to contract writes, while V3 supports using just the method name (e.g., "balanceOf") in the `method` field, providing the full function signature (e.g., "function balanceOf(address account) returns (uint256)") is highly recommended for optimal performance as it avoids an ABI lookup. V2 primarily used just the function name in the `functionName` query parameter.
+
+---
+
+## Extension functions
+
+Engine v2 has a large number of endpoints to do specific contract calls, like mintTo, claimTo, etc.
+
+Engine v3 does not have these endpoints yet, but they are coming soon. In the meantime, if your backend is written in typescript, we recommend using the [thirdweb SDK](/references/typescript/v5/functions#extensions) to do these operations:
+
+##### OLD (v2)
+
+```ts
+const response = await fetch(
+"<engine_url>/contract/<chain_id>/<nft_contract_address>/erc1155/mint-to",
+{
+    method: "POST",
+    headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer <thirdweb_secret_key>",
+    "x-backend-wallet-address": "<backend_wallet_address>",
+    },
+    body: JSON.stringify({
+    receiver: "0x...",
+    metadataWithSupply: {
+        metadata: {
+        name: "Acme Inc. Superfan",
+        description: "Created with thirdweb Engine",
+        image:
+            "ipfs://QmciR3WLJsf2BgzTSjbG5zCxsrEQ8PqsHK7JWGWsDSNo46/nft.png",
+        },
+        supply: "1",
+    },
+    }),
+},
+);
+const data = await response.json();
+const queueId = data.queueId;
+```
+
+#### NEW (v3) - using the thirdweb SDK
+
+```ts
+// Create a thirdweb client
+const client = createThirdwebClient({
+  secretKey: "<your-project-secret-key>",
+});
+
+// Create a server wallet
+const serverWallet = Engine.serverWallet({
+  client,
+  address: "<your-server-wallet-address>",
+  vaultAccessToken: "<your-vault-access-token>",
+});
+
+// instead of a dedicated endpoint, you can use the thirdweb SDK to do the operation
+const transaction = mintTo({
+  contract: getContract({
+    client,
+    address: "<nft_contract_address>", // Address of the ERC1155 token contract
+    chain: baseSepolia, // Chain of the ERC1155 token contract
+  }),
+  to: "0x...", // The address of the user to mint to
+  supply: 1n, // The quantity of NFTs to mint
+  nft: {
+    name: "Acme Inc. Superfan",
+    description: "Created with thirdweb Engine",
+    image:
+      "ipfs://QmciR3WLJsf2BgzTSjbG5zCxsrEQ8PqsHK7JWGWsDSNo46/nft.png",
+  },
+});
+
+// Enqueue the transaction via Engine
+const { transactionId } =
+  await serverWallet.enqueueTransaction({
+    transaction,
+  });
+```
+
+The entire thirdweb SDK is available to use with engine v3 in this manner using the [`Engine` namespace](/references/typescript/v5/functions#engine). Check the [thirdweb SDK docs](/references/typescript/v5/functions#extensions) for all available functions.

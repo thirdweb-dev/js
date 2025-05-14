@@ -16,6 +16,7 @@ export type MintAdditionalSupplyToBatchParams = WithOverrides<{
 
 /**
  * This extension batches multiple `mintAdditionalSupplyToBatch` extensions into one single multicall.
+ * This method is only available on the `TokenERC1155` contract.
  * Keep in mind that there is a limit of how many NFTs you can mint per transaction.
  * This limit varies depends on the network that you are transacting on.
  *

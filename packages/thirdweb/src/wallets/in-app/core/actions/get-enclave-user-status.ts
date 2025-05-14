@@ -17,7 +17,7 @@ export async function getUserStatus({
   authToken: string;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
-}): Promise<UserStatus | undefined> {
+}): Promise<UserStatus> {
   const clientFetch = getClientFetch(client, ecosystem);
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/accounts`,
@@ -32,12 +32,10 @@ export async function getUserStatus({
   );
 
   if (!response.ok) {
-    if (response.status === 401) {
-      // 401 response indicates there is no user logged in, so we return undefined
-      return undefined;
-    }
-    const result = await response.json();
-    throw new Error(`Failed to get user status: ${result.message}`);
+    const result = await response.text().catch(() => {
+      return "Unknown error";
+    });
+    throw new Error(`Failed to get user info: ${result}`);
   }
 
   return (await response.json()) as UserStatus;

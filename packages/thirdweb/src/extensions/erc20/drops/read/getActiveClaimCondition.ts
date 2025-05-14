@@ -5,6 +5,7 @@ import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditio
 
 /**
  * Retrieves the active claim condition.
+ * This method is only available on the `DropERC20` contract.
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.

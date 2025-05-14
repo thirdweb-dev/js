@@ -1,6 +1,6 @@
 import type { Address } from "../../utils/address.js";
 import type { Hex } from "../../utils/encoding/hex.js";
-import type { OneOf } from "../../utils/type-utils.js";
+import type { OneOf, Prettify } from "../../utils/type-utils.js";
 
 export type WalletCapabilities = {
   [capability: string]: unknown;
@@ -42,9 +42,48 @@ export type EIP5792Call = OneOf<
     }
 >;
 
-export type GetCallsStatusResponse = {
-  status: "PENDING" | "CONFIRMED";
-  receipts: WalletCallReceipt<bigint, "success" | "reverted">[];
+type WalletGetCallsStatusReturnType<
+  numberType = Hex,
+  bigintType = Hex,
+  receiptStatus = Hex,
+> = Prettify<{
+  atomic: boolean;
+  chainId: numberType;
+  id: string;
+  receipts?: WalletCallReceipt<bigintType, receiptStatus>[] | undefined;
+  status: number;
+  version: string;
+}>;
+
+export type GetCallsStatusResponse = Prettify<
+  Omit<
+    WalletGetCallsStatusReturnType<number, bigint, "success" | "reverted">,
+    "status"
+  > & {
+    statusCode: number;
+    status: "pending" | "success" | "failure" | undefined;
+  }
+>;
+
+export type GetCallsStatusRawResponse = {
+  version: string;
+  id: `0x${string}`;
+  chainId: `0x${string}`;
+  status: number; // See "Status Codes"
+  atomic: boolean;
+  receipts?: {
+    logs: {
+      address: `0x${string}`;
+      data: `0x${string}`;
+      topics: `0x${string}`[];
+    }[];
+    status: `0x${string}`; // Hex 1 or 0 for success or failure, respectively
+    blockHash: `0x${string}`;
+    blockNumber: `0x${string}`;
+    gasUsed: `0x${string}`;
+    transactionHash: `0x${string}`;
+  }[];
+  capabilities?: Record<string, unknown>;
 };
 
 export type WalletCallReceipt<quantity = Hex, status = Hex> = {

@@ -89,7 +89,7 @@ describe.sequential("injected wallet", async () => {
     const promise = getCallsStatus({
       wallet: wallet,
       client: TEST_CLIENT,
-      bundleId: "test",
+      id: "test",
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -107,17 +107,23 @@ describe.sequential("injected wallet", async () => {
     const result = await getCallsStatus({
       wallet: wallet,
       client: TEST_CLIENT,
-      bundleId: "test",
+      id: "test",
     });
 
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
       method: "wallet_getCallsStatus",
       params: ["test"],
     });
-    expect(result).toEqual({
-      status: "CONFIRMED",
-      receipts: [],
-    });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "atomic": false,
+        "chainId": undefined,
+        "receipts": [],
+        "status": "success",
+        "statusCode": 200,
+        "version": "2.0.0",
+      }
+    `);
   });
 
   test("without support should fail", async () => {
@@ -127,7 +133,7 @@ describe.sequential("injected wallet", async () => {
     const promise = getCallsStatus({
       wallet: wallet,
       client: TEST_CLIENT,
-      bundleId: "test",
+      id: "test",
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -152,19 +158,15 @@ describe.sequential("in-app wallet", async () => {
     });
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
 
-    const bundleId = await sendCalls({
+    const callResult = await sendCalls({
       wallet: wallet,
       ...SEND_CALLS_OPTIONS,
     });
 
-    const result = await getCallsStatus({
-      wallet: wallet,
-      client: TEST_CLIENT,
-      bundleId,
-    });
+    const result = await getCallsStatus(callResult);
 
-    expect(result.status).toEqual("CONFIRMED");
-    expect(result.receipts.length).toEqual(2);
+    expect(result.status).toEqual("success");
+    expect(result.receipts?.length).toEqual(2);
   });
 
   test("with smart account", async () => {
@@ -177,19 +179,15 @@ describe.sequential("in-app wallet", async () => {
       sendBatchTransaction,
     });
 
-    const bundleId = await sendCalls({
+    const callResult = await sendCalls({
       wallet: wallet,
       ...SEND_CALLS_OPTIONS,
     });
 
-    const result = await getCallsStatus({
-      wallet: wallet,
-      client: TEST_CLIENT,
-      bundleId,
-    });
+    const result = await getCallsStatus(callResult);
 
-    expect(result.status).toEqual("CONFIRMED");
-    expect(result.receipts.length).toEqual(1);
+    expect(result.status).toEqual("success");
+    expect(result.receipts?.length).toEqual(1);
   });
 
   test("with pending transaction", async () => {
@@ -202,26 +200,22 @@ describe.sequential("in-app wallet", async () => {
       sendTransaction,
     });
 
-    const bundleId = await sendCalls({
+    const callResult = await sendCalls({
       wallet: wallet,
       ...SEND_CALLS_OPTIONS,
     });
 
-    const result = await getCallsStatus({
-      wallet: wallet,
-      client: TEST_CLIENT,
-      bundleId,
-    });
+    const result = await getCallsStatus(callResult);
 
-    expect(result.status).toEqual("PENDING");
-    expect(result.receipts.length).toEqual(0);
+    expect(result.status).toEqual("pending");
+    expect(result.receipts?.length).toEqual(0);
   });
 
   test("unknown bundle id should fail", async () => {
     const promise = getCallsStatus({
       wallet: wallet,
       client: TEST_CLIENT,
-      bundleId: "unknown",
+      id: "unknown",
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -235,7 +229,7 @@ describe.sequential("in-app wallet", async () => {
     const promise = getCallsStatus({
       wallet: wallet,
       client: TEST_CLIENT,
-      bundleId: "test",
+      id: "test",
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(

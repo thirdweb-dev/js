@@ -4,20 +4,18 @@ import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { getCallsStatus } from "./get-calls-status.js";
-import type { GetCallsStatusResponse, WalletSendCallsId } from "./types.js";
-
+import type { GetCallsStatusResponse } from "./types.js";
 const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<GetCallsStatusResponse>>();
 
-export type WaitForBundleOptions = Prettify<{
-  bundleId: WalletSendCallsId;
-  wallet: Wallet;
+export type WaitForCallsReceiptOptions = Prettify<{
+  id: string;
   client: ThirdwebClient;
   chain: Chain;
+  wallet: Wallet;
   maxBlocksWaitTime?: number;
 }>;
-
 /**
  * Waits for the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle to be confirmed.
  *
@@ -30,23 +28,35 @@ export type WaitForBundleOptions = Prettify<{
  * @beta
  * @example
  * ```ts
- * import { waitForBundle } from "thirdweb/wallets/eip5792";
- * const result = await waitForBundle({
+ * import { waitForCallsReceipt } from "thirdweb/wallets/eip5792";
+ * const result = await waitForCallsReceipt({
  *   client,
  *   chain,
  *   wallet,
- *   bundleId: "0x123...",
+ *   id: "0x123...",
  * });
+ * ```
+ *
+ * Example with useSendCalls:
+ * ```ts
+ * const sendResult = await sendCalls({
+ *   client,
+ *   chain,
+ *   wallet,
+ *   calls: [...],
+ * });
+ * const confirmResult = await waitForCallsReceipt(sendResult);
+ * console.log("Transaction confirmed: ", confirmResult.receipts?.[0].transactionHash);
  * ```
  * @extension EIP5792
  */
-export function waitForBundle(
-  options: WaitForBundleOptions,
+export function waitForCallsReceipt(
+  options: WaitForCallsReceiptOptions,
 ): Promise<GetCallsStatusResponse> {
-  const { bundleId, chain, wallet, client } = options;
+  const { id, chain, wallet, client } = options;
 
   const chainId = chain.id;
-  const key = `${chainId}:calls_${bundleId}`;
+  const key = `${chainId}:calls_${id}`;
   const maxBlocksWaitTime =
     options.maxBlocksWaitTime ?? DEFAULT_MAX_BLOCKS_WAIT_TIME;
 
@@ -74,14 +84,14 @@ export function waitForBundle(
           const result = await getCallsStatus({
             wallet,
             client,
-            bundleId,
+            id,
           });
-
-          if (result.status === "CONFIRMED") {
+          if (result.status === "success" || result.status === "failure") {
             // stop the polling
             unwatch();
             // resolve the top level promise with the result
             resolve(result);
+            return;
           }
         } catch {
           // noop, we'll try again on the next blocks

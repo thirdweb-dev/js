@@ -1,5 +1,6 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
+import { ANALYTICS_SERVICE_URL } from "../../constants/server-envs";
 
 export type RPCUsageDataItem = {
   date: string;
@@ -16,7 +17,7 @@ export const fetchRPCUsage = unstable_cache(
     to: string;
     period: "day" | "week" | "month" | "year" | "all";
   }) => {
-    const analyticsEndpoint = process.env.ANALYTICS_SERVICE_URL as string;
+    const analyticsEndpoint = ANALYTICS_SERVICE_URL;
     const url = new URL(`${analyticsEndpoint}/v2/rpc/usage-types`);
     url.searchParams.set("teamId", params.teamId);
     if (params.projectId) {
@@ -79,7 +80,7 @@ export const getLast24HoursRPCUsage = unstable_cache(
     projectId?: string;
     authToken: string;
   }) => {
-    const analyticsEndpoint = process.env.ANALYTICS_SERVICE_URL as string;
+    const analyticsEndpoint = ANALYTICS_SERVICE_URL;
     const url = new URL(`${analyticsEndpoint}/v2/rpc/24-hours`);
     url.searchParams.set("teamId", params.teamId);
     if (params.projectId) {

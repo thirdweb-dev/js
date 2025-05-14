@@ -11,7 +11,6 @@ import { useCallback, useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../login/auth-actions";
 import {
-  getChangelogNotifications,
   getInboxNotifications,
   markNotificationAsRead,
 } from "../../team/components/NotificationButton/fetch-notifications";
@@ -59,7 +58,6 @@ export function AccountHeader(props: {
     account: props.account,
     client,
     accountAddress: props.accountAddress,
-    getChangelogNotifications: getChangelogNotifications,
     getInboxNotifications: getInboxNotifications,
     markNotificationAsRead: markNotificationAsRead,
   };

@@ -1,5 +1,5 @@
 import { CodeServer } from "@/components/ui/code/code.server";
-import { isProd } from "@/constants/env";
+import { isProd } from "@/constants/env-utils";
 import { ClientIDSection } from "../components/ProjectFTUX/ClientIDSection";
 import { WaitingForIntegrationCard } from "../components/WaitingForIntegrationCard/WaitingForIntegrationCard";
 

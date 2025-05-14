@@ -1,6 +1,6 @@
 "use client";
 
-import { isProd } from "@/constants/env";
+import { isProd } from "@/constants/env-utils";
 import { createStore, useStore } from "@/lib/reactive";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";

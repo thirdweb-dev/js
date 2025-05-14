@@ -87,7 +87,7 @@ export function ChatSidebar(props: {
               return (
                 <ChatSidebarLink
                   sessionId={session.id}
-                  title={session.title || session.id}
+                  title={session.title || "Untitled Chat"}
                   key={session.id}
                   authToken={props.authToken}
                 />

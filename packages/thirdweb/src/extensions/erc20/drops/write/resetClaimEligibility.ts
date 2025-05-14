@@ -12,6 +12,7 @@ import {
 
 /**
  * Reset the claim eligibility for all users.
+ * This method is only available on the `DropERC20` contract.
  * @param options
  * @returns the prepared transaction
  * @extension ERC20

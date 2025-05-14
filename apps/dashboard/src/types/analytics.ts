@@ -1,3 +1,5 @@
+import type { Address } from "thirdweb";
+
 export interface WalletStats {
   date: string;
   uniqueWalletsConnected: number;
@@ -41,6 +43,26 @@ export interface RpcMethodStats {
   date: string;
   evmMethod: string;
   count: number;
+}
+
+export interface UniversalBridgeStats {
+  date: string;
+  chainId: number;
+  status: "completed" | "failed";
+  type: "onchain" | "onramp";
+  count: number;
+  amountUsdCents: number;
+  developerFeeUsdCents: number;
+}
+
+export interface UniversalBridgeWalletStats {
+  date: string;
+  chainId: number;
+  walletAddress: Address;
+  type: "onchain" | "onramp";
+  count: number;
+  amountUsdCents: number;
+  developerFeeUsdCents: number;
 }
 
 export interface AnalyticsQueryParams {

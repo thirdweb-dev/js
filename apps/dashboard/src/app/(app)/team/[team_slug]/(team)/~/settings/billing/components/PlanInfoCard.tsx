@@ -28,11 +28,15 @@ export function PlanInfoCardUI(props: {
   subscriptions: TeamSubscription[];
   team: Team;
   getTeam: () => Promise<Team>;
+  openPlanSheetButtonByDefault: boolean;
+  highlightPlan: Team["billingPlan"] | undefined;
 }) {
-  const { subscriptions, team } = props;
+  const { subscriptions, team, openPlanSheetButtonByDefault } = props;
   const validPlan = getValidTeamPlan(team);
   const isActualFreePlan = team.billingPlan === "free";
-  const [isPlanSheetOpen, setIsPlanSheetOpen] = useState(false);
+  const [isPlanSheetOpen, setIsPlanSheetOpen] = useState(
+    openPlanSheetButtonByDefault,
+  );
 
   const planSub = subscriptions.find(
     (subscription) => subscription.type === "PLAN",
@@ -54,6 +58,7 @@ export function PlanInfoCardUI(props: {
         isOpen={isPlanSheetOpen}
         onOpenChange={setIsPlanSheetOpen}
         getTeam={props.getTeam}
+        highlightPlan={props.highlightPlan}
       />
 
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
@@ -298,6 +303,7 @@ function ViewPlansSheet(props: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   getTeam: () => Promise<Team>;
+  highlightPlan: Team["billingPlan"] | undefined;
 }) {
   return (
     <Sheet open={props.isOpen} onOpenChange={props.onOpenChange}>
@@ -309,6 +315,7 @@ function ViewPlansSheet(props: {
           team={props.team}
           trialPeriodEndedAt={props.trialPeriodEndedAt}
           getTeam={props.getTeam}
+          highlightPlan={props.highlightPlan}
         />
       </SheetContent>
     </Sheet>

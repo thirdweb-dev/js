@@ -23,6 +23,7 @@ export type UpdateTokenURIParams = {
  * upload that content to IPFS and pass the IPFS URI (of said `NFTInput`) to the underlying `setTokenURI` method.
  *
  * This extension does not validate the NFTInput so make sure you are passing the proper content that you want to update.
+ * This method is only available on the `TokenERC721` contract.
  *
  * @extension ERC721
  * @returns the prepared transaction from `setTokenURI`

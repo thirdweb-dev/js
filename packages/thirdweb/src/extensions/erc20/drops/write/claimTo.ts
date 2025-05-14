@@ -18,6 +18,8 @@ export type ClaimToParams = {
 
 /**
  * Claim ERC20 NFTs to a specified address
+ * This method is only available on the `DropERC20` contract.
+ *
  * @param options - The options for the transaction
  * @extension ERC20
  * @example

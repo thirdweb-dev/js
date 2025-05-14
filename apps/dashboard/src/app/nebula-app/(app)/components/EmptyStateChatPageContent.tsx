@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { NebulaContext } from "../api/chat";
+import type { NebulaUserMessage } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { NebulaIcon } from "../icons/NebulaIcon";
 import { nebulaAppThirdwebClient } from "../utils/nebulaThirdwebClient";
 import { ChatBar, type WalletMeta } from "./ChatBar";
 
 export function EmptyStateChatPageContent(props: {
-  sendMessage: (message: string) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   prefillMessage: string | undefined;
   context: NebulaContext | undefined;
   setContext: (context: NebulaContext | undefined) => void;
@@ -18,6 +19,8 @@ export function EmptyStateChatPageContent(props: {
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
   showAurora: boolean;
+  allowImageUpload: boolean;
+  onLoginClick: undefined | (() => void);
 }) {
   return (
     <div className="overflow-hidden py-10 lg:py-16">
@@ -40,6 +43,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
+            onLoginClick={props.onLoginClick}
             isConnectingWallet={props.isConnectingWallet}
             showContextSelector={true}
             context={props.context}
@@ -53,6 +57,7 @@ export function EmptyStateChatPageContent(props: {
               // the page will switch so, no need to handle abort here
             }}
             prefillMessage={props.prefillMessage}
+            allowImageUpload={props.allowImageUpload}
           />
           <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">
@@ -61,7 +66,12 @@ export function EmptyStateChatPageContent(props: {
                 <ExamplePrompt
                   key={prompt.title}
                   label={prompt.title}
-                  onClick={() => props.sendMessage(prompt.message)}
+                  onClick={() =>
+                    props.sendMessage({
+                      role: "user",
+                      content: [{ type: "text", text: prompt.message }],
+                    })
+                  }
                 />
               );
             })}

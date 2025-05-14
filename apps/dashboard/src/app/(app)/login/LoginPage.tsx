@@ -4,7 +4,7 @@ import { getRawAccountAction } from "@/actions/getAccount";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { TURNSTILE_SITE_KEY } from "@/constants/env";
+import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
@@ -20,8 +20,14 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import {
+  LAST_USED_PROJECT_ID,
+  LAST_USED_TEAM_ID,
+} from "../../../constants/cookies";
+import { deleteCookie } from "../../../lib/cookie";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
+import { LAST_VISITED_TEAM_PAGE_PATH } from "../team/components/last-visited-page/consts";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 import { isAccountOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
@@ -116,6 +122,8 @@ export function LoginAndOnboardingPage(props: {
         redirectPath={props.redirectPath}
         loginWithInAppWallet={props.loginWithInAppWallet}
       />
+
+      <ResetLastUsedCookies />
     </div>
   );
 }
@@ -137,6 +145,16 @@ function LoginPageContainer(props: {
       />
     </>
   );
+}
+
+function ResetLastUsedCookies() {
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    deleteCookie(LAST_USED_PROJECT_ID);
+    deleteCookie(LAST_USED_TEAM_ID);
+    deleteCookie(LAST_VISITED_TEAM_PAGE_PATH);
+  }, []);
+  return null;
 }
 
 function LoginAndOnboardingPageContent(props: {
@@ -261,7 +279,7 @@ function CustomConnectEmbed(props: {
           // match the theme of the rest of the app
           theme: theme === "light" ? "light" : "dark",
         }}
-        siteKey={TURNSTILE_SITE_KEY}
+        siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
         onSuccess={(token) => setTurnstileToken(token)}
       />
       <ClientOnly ssr={<ConnectEmbedSizedLoadingCard />}>

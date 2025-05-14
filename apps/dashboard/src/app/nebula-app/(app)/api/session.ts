@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 import { fetchWithAuthToken } from "utils/fetchWithAuthToken";
 import type { NebulaContext } from "./chat";
 import type {

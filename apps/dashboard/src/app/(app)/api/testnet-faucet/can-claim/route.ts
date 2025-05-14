@@ -1,10 +1,10 @@
 import { getTeams } from "@/api/team";
+import { NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/public-envs";
 import {
   DISABLE_FAUCET_CHAIN_IDS,
   THIRDWEB_ACCESS_TOKEN,
-  THIRDWEB_ENGINE_FAUCET_WALLET,
   THIRDWEB_ENGINE_URL,
-} from "@/constants/env";
+} from "@/constants/server-envs";
 import { ipAddress } from "@vercel/functions";
 import { cacheTtl } from "lib/redis";
 import { NextResponse } from "next/server";
@@ -68,7 +68,7 @@ export const GET = async (req: NextRequest) => {
 
   if (
     !THIRDWEB_ENGINE_URL ||
-    !THIRDWEB_ENGINE_FAUCET_WALLET ||
+    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
     !THIRDWEB_ACCESS_TOKEN ||
     isFaucetDisabled
   ) {

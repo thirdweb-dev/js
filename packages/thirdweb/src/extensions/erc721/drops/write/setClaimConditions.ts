@@ -21,6 +21,7 @@ export type SetClaimConditionsParams = {
 
 /**
  * Set the claim conditions for a ERC721 drop
+ * This method is only available on the `DropERC721` contract.
  * @param options
  * @returns the prepared transaction
  * @extension ERC721

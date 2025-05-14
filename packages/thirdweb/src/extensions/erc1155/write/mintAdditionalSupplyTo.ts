@@ -13,6 +13,7 @@ export type MintAdditionalSupplyToParams = {
 
 /**
  * Mints a "supply" number of additional ERC1155 tokens to the specified "to" address.
+ * This method is only available on the `TokenERC1155` contract.
  * @param options - The transaction options.
  * @returns A promise that resolves to the transaction result.
  * @extension ERC1155

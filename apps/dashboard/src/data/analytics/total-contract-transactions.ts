@@ -1,4 +1,4 @@
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "../../@/constants/env";
+import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "../../@/constants/public-envs";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
 // This is weird aggregation response type, this will be changed later in insight
@@ -28,7 +28,7 @@ export async function getTotalContractTransactions(params: {
     `https://insight.${thirdwebDomain}.com/v1/transactions/${params.contractAddress}?${queryParams}`,
     {
       headers: {
-        "x-client-id": DASHBOARD_THIRDWEB_CLIENT_ID,
+        "x-client-id": NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
       },
     },
   );

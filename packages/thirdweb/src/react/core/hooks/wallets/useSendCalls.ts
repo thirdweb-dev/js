@@ -3,16 +3,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   type SendCallsOptions,
+  type SendCallsResult,
   sendCalls,
 } from "../../../../wallets/eip5792/send-calls.js";
-import type {
-  GetCallsStatusResponse,
-  WalletSendCallsId,
-} from "../../../../wallets/eip5792/types.js";
-import { waitForBundle } from "../../../../wallets/eip5792/wait-for-bundle.js";
+import { waitForCallsReceipt } from "../../../../wallets/eip5792/wait-for-calls-receipt.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { invalidateWalletBalance } from "../../providers/invalidateWalletBalance.js";
 import { useActiveWallet } from "./useActiveWallet.js";
@@ -46,7 +42,7 @@ import { useActiveWallet } from "./useActiveWallet.js";
       amount: 100,
       spender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
     });
- * const { mutate: sendCalls, data: bundleId } = useSendCalls({ client });
+ * const { mutate: sendCalls, data: id } = useSendCalls();
  * await sendCalls({
  *   wallet,
  *   client,
@@ -55,16 +51,19 @@ import { useActiveWallet } from "./useActiveWallet.js";
  * ```
  * Await the bundle's full confirmation:
  * ```tsx
- * const { mutate: sendCalls, data: bundleId } = useSendCalls({ client, waitForResult: true });
+ * const { mutate: sendCalls, data } = useSendCalls();
+ * const { data: result, isLoading } = useWaitForCallsReceipt(data); 
  * await sendCalls({
  *   wallet,
  *   client,
  *   calls: [sendTx1, sendTx2],
  * });
+ * 
+ * console.log("Receipts:", result.receipts);
  * ```
  * Sponsor transactions with a paymaster:
  * ```ts
- * const { mutate: sendCalls, data: bundleId } = useSendCalls();
+ * const { mutate: sendCalls, data: id } = useSendCalls();
  * await sendCalls({
  *   client,
  *   calls: [sendTx1, sendTx2],
@@ -75,15 +74,11 @@ import { useActiveWallet } from "./useActiveWallet.js";
  *   }
  * });
  * ```
- *
  *  We recommend proxying any paymaster calls via an API route you setup and control.
  * @extension EIP5792
  */
-export function useSendCalls({
-  client,
-  waitForResult = true,
-}: { client: ThirdwebClient; waitForResult?: boolean }): UseMutationResult<
-  GetCallsStatusResponse | WalletSendCallsId,
+export function useSendCalls(): UseMutationResult<
+  SendCallsResult,
   Error,
   Omit<SendCallsOptions, "chain" | "wallet"> & { wallet?: Wallet } // Optional wallet override
 > {
@@ -100,52 +95,40 @@ export function useSendCalls({
         );
       }
 
-      const callsPromise = sendCalls({ ...options, wallet });
-      if (!waitForResult) {
-        return callsPromise;
-      }
-
-      const result = await waitForBundle({
-        bundleId: await callsPromise,
-        wallet,
-        client,
-        chain,
-      });
-      return result;
+      return sendCalls({ ...options, wallet });
     },
-    onSettled: async (_result, _error, variables) => {
+    onSettled: async (result, _error, variables) => {
       // Attempt to invalidate any reads related to the sent transactions
-      const chain = activeWallet?.getChain();
-      if (!_result || !activeWallet || !chain) {
+      if (!result) {
         return;
       }
+      const call = variables.calls[0];
+      if (!call) {
+        return;
+      }
+      const chain = call.__contract?.chain || call.chain;
 
-      if (typeof _result === "string") {
-        await waitForBundle({
-          bundleId: _result,
-          wallet: activeWallet,
-          client,
-          chain,
-        }).catch((error) => {
+      waitForCallsReceipt(result)
+        .then(() => {
+          for (const call of variables.calls) {
+            queryClient.invalidateQueries({
+              queryKey: [
+                "readContract",
+                call.__contract?.chain.id || chain.id,
+                call.__contract?.address || call.to,
+              ],
+            });
+          }
+          invalidateWalletBalance(queryClient, chain.id);
+        })
+        .catch((error) => {
           console.error(
             "Failed to confirm sent bundle and invalidate queries",
-            _result,
+            result,
             error,
           );
           return undefined;
         });
-      }
-
-      for (const call of variables.calls) {
-        queryClient.invalidateQueries({
-          queryKey: [
-            "readContract",
-            call.__contract?.chain.id,
-            call.__contract?.address,
-          ],
-        });
-      }
-      invalidateWalletBalance(queryClient, chain.id);
     },
   });
 }

@@ -118,6 +118,8 @@ function Story(props: {
           team={team}
           subscriptions={zeroUsageOnDemandSubs}
           getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          openPlanSheetButtonByDefault={false}
         />
       </BadgeContainer>
 
@@ -129,6 +131,8 @@ function Story(props: {
           }}
           subscriptions={zeroUsageOnDemandSubs}
           getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          openPlanSheetButtonByDefault={false}
         />
       </BadgeContainer>
 
@@ -137,6 +141,8 @@ function Story(props: {
           team={team}
           subscriptions={trialPlanZeroUsageOnDemandSubs}
           getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          openPlanSheetButtonByDefault={false}
         />
       </BadgeContainer>
 
@@ -145,6 +151,8 @@ function Story(props: {
           team={team}
           subscriptions={subsWith1Usage}
           getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          openPlanSheetButtonByDefault={false}
         />
       </BadgeContainer>
 
@@ -153,6 +161,8 @@ function Story(props: {
           team={team}
           subscriptions={subsWith4Usage}
           getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          openPlanSheetButtonByDefault={false}
         />
       </BadgeContainer>
     </div>

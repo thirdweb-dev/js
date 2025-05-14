@@ -33,7 +33,12 @@ export const UserPresenceError: Story = {
   args: {
     messages: [
       {
-        text: randomLorem(10),
+        content: [
+          {
+            type: "text",
+            text: randomLorem(10),
+          },
+        ],
         type: "user",
       },
       {
@@ -205,8 +210,13 @@ export const Markdown: Story = {
         request_id: undefined,
       },
       {
-        text: responseWithCodeMarkdown,
         type: "user",
+        content: [
+          {
+            type: "text",
+            text: responseWithCodeMarkdown,
+          },
+        ],
       },
     ],
   },

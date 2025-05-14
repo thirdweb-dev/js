@@ -17,6 +17,7 @@ import {
 export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
 /**
  * Retrieves the active claim condition.
+ * This method is only available on the `DropERC1155` contract.
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.

@@ -1,21 +1,25 @@
 import "server-only";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { ChainService } from "../../app/(app)/(dashboard)/(chain)/types/chain";
-import { API_SERVER_URL, THIRDWEB_API_SECRET } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { API_SERVER_SECRET } from "../constants/server-envs";
 
 export async function getGasSponsoredChains() {
-  if (!THIRDWEB_API_SECRET) {
+  if (!API_SERVER_SECRET) {
     throw new Error("API_SERVER_SECRET is not set");
   }
-  const res = await fetch(`${API_SERVER_URL}/v1/chains/gas-sponsored`, {
-    headers: {
-      "Content-Type": "application/json",
-      "x-service-api-key": THIRDWEB_API_SECRET,
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/chains/gas-sponsored`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "x-service-api-key": API_SERVER_SECRET,
+      },
+      next: {
+        revalidate: 15 * 60, //15 minutes
+      },
     },
-    next: {
-      revalidate: 15 * 60, //15 minutes
-    },
-  });
+  );
 
   if (!res.ok) {
     console.error(
@@ -37,7 +41,7 @@ export async function getGasSponsoredChains() {
 
 export function getChains() {
   return fetch(
-    `${API_SERVER_URL}/v1/chains`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/chains`,
     // revalidate every 60 minutes
     { next: { revalidate: 60 * 60 } },
   ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>;
@@ -45,7 +49,7 @@ export function getChains() {
 
 export function getChainServices() {
   return fetch(
-    `${API_SERVER_URL}/v1/chains/services`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/chains/services`,
     // revalidate every 60 minutes
     { next: { revalidate: 60 * 60 } },
   ).then((res) => res.json()) as Promise<{

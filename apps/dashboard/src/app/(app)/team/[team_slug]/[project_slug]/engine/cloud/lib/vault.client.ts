@@ -1,7 +1,7 @@
 "use client";
 
 import type { Project } from "@/api/projects";
-import { THIRDWEB_VAULT_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import {
   type VaultClient,
   createAccessToken,
@@ -22,7 +22,7 @@ export async function initVaultClient() {
     return vc;
   }
   vc = await createVaultClient({
-    baseUrl: THIRDWEB_VAULT_URL,
+    baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
   });
   return vc;
 }
@@ -163,6 +163,52 @@ export async function createWalletAccessToken(props: {
               useropV07: {},
             },
             metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+          },
+          {
+            type: "eoa:read",
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+          },
+          {
+            type: "eoa:create",
+            requiredMetadataPatterns: [
               {
                 key: "projectId",
                 rule: {

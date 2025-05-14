@@ -1,7 +1,7 @@
-import { isProd } from "@/constants/env";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { ThirdwebClient } from "thirdweb";
 import { type ChainMetadata, getRpcUrlForChain } from "thirdweb/chains";
+import { isProd } from "../@/constants/env-utils";
 import { hostnameEndsWith } from "../utils/url";
 
 export function getDashboardChainRpc(

@@ -11,7 +11,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../../login/auth-actions";
 import {
-  getChangelogNotifications,
   getInboxNotifications,
   markNotificationAsRead,
 } from "../NotificationButton/fetch-notifications";
@@ -64,7 +63,6 @@ export function TeamHeaderLoggedIn(props: {
     },
     client: props.client,
     accountAddress: props.accountAddress,
-    getChangelogNotifications: getChangelogNotifications,
     getInboxNotifications: getInboxNotifications,
     markNotificationAsRead: markNotificationAsRead,
   };

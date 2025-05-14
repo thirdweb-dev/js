@@ -27,6 +27,7 @@ export type MintToParams = Prettify<
 
 /**
  * Mints a specified amount of tokens to a given address.
+ * This method is only available on the `TokenERC20` contract.
  * @param options - The options for minting tokens.
  * @returns A prepared transaction object.
  * @extension ERC20

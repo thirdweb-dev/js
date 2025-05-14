@@ -1,5 +1,5 @@
 import "server-only";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
 const TeamAccountRole = {
@@ -33,7 +33,7 @@ export async function getMembers(teamSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/members`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/members`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export async function getMemberById(teamSlug: string, memberId: string) {
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamSlug}/members/${memberId}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/members/${memberId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

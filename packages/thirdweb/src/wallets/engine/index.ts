@@ -102,12 +102,13 @@ export function engineAccount(options: EngineAccountOptions): Account {
         // engine wants a hex string here so we serialize it
         data: transaction.data || "0x",
         // value is always required
-        value: toHex(transaction.value ?? 0n),
+        value: transaction.value ?? 0n,
         // optional authorization list
         authorizationList: transaction.authorizationList,
 
         txOverrides: {
           gas: transaction.gas,
+          value: transaction.value,
         },
       };
 

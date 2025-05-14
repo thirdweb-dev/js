@@ -1,7 +1,7 @@
 "use server";
 
 import type { Team } from "@/api/team";
-import { API_SERVER_URL } from "@/constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 
 export async function updateTeam(params: {
@@ -14,14 +14,17 @@ export async function updateTeam(params: {
     throw new Error("No auth token");
   }
 
-  const res = await fetch(`${API_SERVER_URL}/v1/teams/${params.teamId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(params.value),
     },
-    body: JSON.stringify(params.value),
-  });
+  );
 
   if (!res.ok) {
     return {

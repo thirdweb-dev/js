@@ -1,4 +1,4 @@
-import { getTeamBySlug } from "@/api/team";
+import { type Team, getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { Billing } from "components/settings/Account/Billing";
@@ -10,8 +10,13 @@ export default async function Page(props: {
   params: Promise<{
     team_slug: string;
   }>;
+  searchParams: Promise<{
+    showPlans?: string | string[];
+    highlight?: string | string[];
+  }>;
 }) {
   const params = await props.params;
+  const searchParams = await props.searchParams;
   const pagePath = `/team/${params.team_slug}/settings/billing`;
 
   const [account, team, authToken] = await Promise.all([
@@ -41,6 +46,12 @@ export default async function Page(props: {
 
   return (
     <Billing
+      highlightPlan={
+        typeof searchParams.highlight === "string"
+          ? (searchParams.highlight as Team["billingPlan"])
+          : undefined
+      }
+      openPlanSheetButtonByDefault={searchParams.showPlans === "true"}
       team={team}
       subscriptions={subscriptions}
       twAccount={account}

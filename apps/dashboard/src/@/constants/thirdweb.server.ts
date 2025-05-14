@@ -1,7 +1,7 @@
 import {
-  DASHBOARD_THIRDWEB_CLIENT_ID,
-  IPFS_GATEWAY_URL,
-} from "@/constants/env";
+  NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+  NEXT_PUBLIC_IPFS_GATEWAY_URL,
+} from "@/constants/public-envs";
 import {
   THIRDWEB_BUNDLER_DOMAIN,
   THIRDWEB_INAPP_WALLET_DOMAIN,
@@ -74,10 +74,10 @@ export function getConfiguredThirdwebClient(options: {
   return createThirdwebClient({
     teamId: options.teamId,
     secretKey: options.secretKey,
-    clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
+    clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
     config: {
       storage: {
-        gatewayUrl: IPFS_GATEWAY_URL,
+        gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
       },
     },
   });

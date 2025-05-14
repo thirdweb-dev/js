@@ -5,6 +5,8 @@ import * as ById from "../../__generated__/IDrop/read/getClaimConditionById.js";
 
 /**
  * Retrieves the active claim condition.
+ * This method is only available on the `DropERC721` contract.
+ *
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.
@@ -28,6 +30,8 @@ export async function getActiveClaimCondition(
 
 /**
  * Checks if the `getActiveClaimCondition` method is supported by the given contract.
+ * This method is only available on the `DropERC721` contract.
+ *
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
  * @returns A boolean indicating if the `getActiveClaimCondition` method is supported.
  * @extension ERC721

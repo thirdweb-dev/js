@@ -1,7 +1,8 @@
 "use server";
 import "server-only";
 
-import { NEBULA_APP_SECRET_KEY, NEXT_PUBLIC_NEBULA_URL } from "@/constants/env";
+import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
+import { NEBULA_APP_SECRET_KEY } from "@/constants/server-envs";
 import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";

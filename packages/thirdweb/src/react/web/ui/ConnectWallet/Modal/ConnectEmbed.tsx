@@ -247,6 +247,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       chain={preferredChain}
       appMetadata={props.appMetadata}
       client={props.client}
+      siweAuth={siweAuth}
       wallets={wallets}
       accountAbstraction={props.accountAbstraction}
       timeout={

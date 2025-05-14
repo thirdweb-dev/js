@@ -1,7 +1,7 @@
 "use server";
 
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
 
 export async function reSubscribePlan(options: {
   teamId: string;
@@ -14,7 +14,7 @@ export async function reSubscribePlan(options: {
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${options.teamId}/checkout/resubscribe-plan`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/checkout/resubscribe-plan`,
     {
       method: "PUT",
       headers: {

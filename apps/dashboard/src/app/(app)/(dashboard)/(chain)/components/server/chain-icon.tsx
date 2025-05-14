@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import "server-only";
-import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { fallbackChainIcon } from "../../../../../../utils/chain-icons";
 
 export async function ChainIcon(props: {

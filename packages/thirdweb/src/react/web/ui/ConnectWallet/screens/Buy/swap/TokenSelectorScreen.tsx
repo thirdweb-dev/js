@@ -4,7 +4,6 @@ import {
   ChevronRightIcon,
   Cross2Icon,
 } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -43,13 +42,8 @@ import { FiatValue } from "./FiatValue.js";
 import { WalletRow } from "./WalletRow.js";
 import {
   type TokenBalance,
-  fetchBalancesForWallet,
+  useWalletsAndBalances,
 } from "./fetchBalancesForWallet.js";
-
-type WalletKey = {
-  id: WalletId;
-  address: string;
-};
 
 export function TokenSelectorScreen(props: {
   client: ThirdwebClient;
@@ -71,46 +65,12 @@ export function TokenSelectorScreen(props: {
   const chainInfo = useChainMetadata(props.toChain);
   const theme = useCustomTheme();
 
-  const walletsAndBalances = useQuery({
-    queryKey: [
-      "wallets-and-balances",
-      props.sourceSupportedTokens,
-      props.toChain.id,
-      props.toToken,
-      props.tokenAmount,
-      props.mode,
-      activeAccount?.address,
-      connectedWallets.map((w) => w.getAccount()?.address),
-    ],
-    enabled: !!props.sourceSupportedTokens && !!chainInfo.data,
-    queryFn: async () => {
-      const entries = await Promise.all(
-        connectedWallets.map(async (wallet) => {
-          const balances = await fetchBalancesForWallet({
-            wallet,
-            accountAddress: activeAccount?.address,
-            sourceSupportedTokens: props.sourceSupportedTokens || [],
-            toChain: props.toChain,
-            toToken: props.toToken,
-            tokenAmount: props.tokenAmount,
-            mode: props.mode,
-            client: props.client,
-          });
-          return [
-            {
-              id: wallet.id,
-              address: wallet.getAccount()?.address || "",
-            } as WalletKey,
-            balances,
-          ] as const;
-        }),
-      );
-      const map = new Map<WalletKey, TokenBalance[]>();
-      for (const entry of entries) {
-        map.set(entry[0], entry[1]);
-      }
-      return map;
-    },
+  const walletsAndBalances = useWalletsAndBalances({
+    client: props.client,
+    sourceSupportedTokens: props.sourceSupportedTokens || [],
+    toChain: props.toChain,
+    toToken: props.toToken,
+    mode: props.mode,
   });
 
   if (

@@ -64,7 +64,6 @@ function Variants(props: {
                 email: "foo@example.com",
               }}
               client={storybookThirdwebClient}
-              getChangelogNotifications={() => Promise.resolve([])}
               getInboxNotifications={() => Promise.resolve([])}
               markNotificationAsRead={() => Promise.resolve()}
             />

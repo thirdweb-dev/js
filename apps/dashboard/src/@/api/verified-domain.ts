@@ -2,7 +2,7 @@
 import "server-only";
 
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { API_SERVER_URL } from "../constants/env";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
 
 export type VerifiedDomainResponse =
   | {
@@ -27,7 +27,7 @@ export async function checkDomainVerification(
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamIdOrSlug}/verified-domain`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/verified-domain`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ export async function createDomainVerification(
   }
 
   const res = await fetch(
-    `${API_SERVER_URL}/v1/teams/${teamIdOrSlug}/verified-domain`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/verified-domain`,
     {
       method: "POST",
       body: JSON.stringify({ domain }),
