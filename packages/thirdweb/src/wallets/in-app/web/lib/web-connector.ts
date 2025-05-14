@@ -1,5 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
+import { inMemoryStorage } from "../../../../utils/storage/inMemoryStorage.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
@@ -86,7 +88,7 @@ export class InAppWebConnector implements InAppConnector {
     this.ecosystem = ecosystem;
     this.passkeyDomain = passkeyDomain;
     this.storage = new ClientScopedStorage({
-      storage: storage ?? webLocalStorage,
+      storage: storage ?? getDefaultStorage(),
       clientId: client.clientId,
       ecosystem: ecosystem,
     });
@@ -488,4 +490,12 @@ export class InAppWebConnector implements InAppConnector {
 
 function assertUnreachable(x: never, message?: string): never {
   throw new Error(message ?? `Invalid param: ${x}`);
+}
+
+function getDefaultStorage(): AsyncStorage {
+  if (typeof window !== "undefined" && window.localStorage) {
+    return webLocalStorage;
+  }
+  // default to in-memory storage if we're not in the browser
+  return inMemoryStorage;
 }
