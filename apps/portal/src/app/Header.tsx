@@ -120,10 +120,6 @@ export const connectLinks: Array<{
 const supportLinks = [
   {
     name: "Get thirdweb support",
-    href: "https://thirdweb.com/support",
-  },
-  {
-    name: "Knowledge Base",
     href: "/knowledge-base",
   },
   {
