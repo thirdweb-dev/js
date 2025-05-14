@@ -1,0 +1,48 @@
+import { DocImage } from "@doc";
+import setApproval from "../../../assets/set-approval-forall.png";
+
+
+# Airdrop Contract Troubleshooting
+
+Airdropping NFTs to your community is a popular way to provide utility in many NFT-based projects. Using the [airdrop contracts](https://thirdweb.com/explore/airdrop), you can airdrop any ERC20, ERC721, or ERC1155 tokens.
+
+To get started, here is a quick overview of how to airdrop NFTs:
+
+- Deploy your NFT/token contract and mint tokens  
+- Deploy the airdrop contract  
+- Approve the airdrop contract in your NFT contract via `approve` or `setApprovalForAll`. We recommend `setApprovalForAll` for large airdrops so you don’t need to approve each token ID individually.  
+- Enter your NFT/token parameters into the airdrop contract’s `airdrop` function and execute
+
+<aside>
+Note: We recommend testing the airdrop contract with a small number of tokens on **testnet** before executing the full airdrop on mainnet.
+</aside>
+
+If you encounter an error after following these steps, verify the following:
+
+- You have enough funds in your wallet to cover gas fees  
+- The airdrop contract has been granted approval on the NFT contract. See the example below:  
+
+ <DocImage src={setApproval} />
+
+- Your airdrop parameters use the correct formatting:  
+  - **recipients** must be an array of quoted addresses: `["0x...","0x...","0x..."]`  
+  - **token ID** must be an array of numeric IDs: `[0,1,2]`
+
+## Common Airdrop Issues
+
+1. NFTs aren’t minted/claimed  
+2. Trying to airdrop too many NFTs at once  
+3. Airdropping NFTs to invalid wallet addresses
+
+**NFTs aren’t minted/claimed**  
+Make sure you’ve minted the NFTs to your wallet first. You can only airdrop tokens you already own.
+
+**Trying to airdrop too many NFTs at once**  
+Most chains limit a single transaction to around 100 recipients. Split large lists into batches of 100 addresses or fewer.
+
+**Airdropping NFTs to invalid wallet addresses**  
+If you see `execution reverted: ERC1155: transfer to non ERC1155Receiver implementer`, one or more addresses in your list aren’t valid ERC1155 recipients. Remove any invalid addresses and try again.
+
+---
+
+Can’t get this working? [**Contact our support team**](https://thirdweb.com/support) for help.  

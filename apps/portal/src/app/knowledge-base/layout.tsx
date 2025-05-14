@@ -11,11 +11,8 @@ export default async function Layout(props: { children: React.ReactNode }) {
 }
 
 export const metadata = createMetadata({
-  title: "thirdweb Nebula Documentation",
-  image: {
-    title: "Nebula Docs",
-    icon: "nebula",
-  },
+  title: "thirdweb Knowledge Base",
+
   description:
-    "thirdweb Nebula Docs : explore the Nebula API Reference and unlock the most powerful AI to interact with the blockchain yet.",
+    "This Knowledge Base collects concise guides and troubleshooting tips for common web3 development challenges—especially when using thirdweb, but many articles apply to any web3 project.",
 });
