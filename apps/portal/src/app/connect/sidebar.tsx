@@ -242,6 +242,10 @@ export const sidebar: SideBar = {
           href: "https://thirdweb.com/routes",
         },
         {
+          name: "Onramp Providers",
+          href: `${paySlug}/onramp-providers`,
+        },
+        {
           name: "Service Fees",
           href: `${paySlug}/fees`,
         },
