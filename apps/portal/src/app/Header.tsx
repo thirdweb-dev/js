@@ -130,6 +130,10 @@ const apisLinks = [
     name: "Universal Bridge",
     href: "https://bridge.thirdweb.com/reference",
   },
+  {
+    name: "Nebula",
+    href: "/nebula/api-reference",
+  },
 ];
 
 const supportLinks = [

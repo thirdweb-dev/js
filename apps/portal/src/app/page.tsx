@@ -180,12 +180,6 @@ function LearningResourcesSection() {
           description="API interface for LLMs"
           icon={NebulaIcon}
         />
-        <ArticleCardIndex
-          title="Contracts"
-          description="Solidity contracts and deployment tools"
-          href="/contracts"
-          icon={ContractsIcon}
-        />
       </Grid>
     </section>
   );
