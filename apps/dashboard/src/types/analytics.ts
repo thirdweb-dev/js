@@ -14,14 +14,6 @@ export interface WalletUserStats {
   totalUsers: number;
 }
 
-export interface AggregatedStats {
-  date: string;
-  totalUsers: number;
-  newUsers: number;
-  returningUsers: number;
-  totalVolumeUsdCents: number;
-}
-
 export interface InAppWalletStats {
   date: string;
   authenticationMethod: string;

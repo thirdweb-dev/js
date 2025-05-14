@@ -31,7 +31,7 @@ export function EmptyStateContent({
   link?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-2 text-foreground">
+    <div className="flex w-full flex-col items-center justify-center gap-2 text-foreground">
       <div className="flex size-8 items-center justify-center rounded-md border bg-card">
         <PlugIcon className="size-4" />
       </div>

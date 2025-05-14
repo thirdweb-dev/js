@@ -54,7 +54,7 @@ export default async function Page(props: {
             projectId={project.id}
             teamId={project.teamId}
             range={range}
-            interval={interval as "day" | "week"}
+            interval={interval}
           />
         </ResponsiveSuspense>
       </div>
