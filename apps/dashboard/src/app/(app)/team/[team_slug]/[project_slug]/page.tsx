@@ -9,6 +9,7 @@ import {
 } from "components/analytics/date-range-selector";
 import type {
   InAppWalletStats,
+  UniversalBridgeStats,
   UserOpStats,
   WalletStats,
   WalletUserStats,
@@ -16,12 +17,16 @@ import type {
 
 import {
   getInAppWalletUsage,
+  getUniversalBridgeUsage,
   getUserOpUsage,
   getWalletConnections,
   getWalletUsers,
   isProjectActive,
 } from "@/api/analytics";
-import { EmptyStateCard } from "app/(app)/team/components/Analytics/EmptyStateCard";
+import {
+  EmptyStateCard,
+  EmptyStateContent,
+} from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { RangeSelector } from "components/analytics/range-selector";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -116,6 +121,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
         <div className="container flex max-w-7xl grow flex-col">
           <Suspense fallback={<GenericLoadingPage />}>
             <ProjectAnalytics
+              params={params}
               project={project}
               range={range}
               interval={interval}
@@ -133,12 +139,13 @@ export default async function ProjectOverviewPage(props: PageProps) {
 
 async function ProjectAnalytics(props: {
   project: Project;
+  params: PageParams;
   range: Range;
   interval: "day" | "week";
   searchParams: PageSearchParams;
   client: ThirdwebClient;
 }) {
-  const { project, range, interval, searchParams, client } = props;
+  const { project, params, range, interval, searchParams, client } = props;
 
   // Fetch all analytics data in parallel
   const [
@@ -147,6 +154,7 @@ async function ProjectAnalytics(props: {
     inAppWalletUsage,
     userOpUsageTimeSeries,
     userOpUsage,
+    universalBridgeUsage,
   ] = await Promise.allSettled([
     // Aggregated wallet connections
     getWalletConnections({
@@ -187,22 +195,30 @@ async function ProjectAnalytics(props: {
       to: range.to,
       period: "all",
     }),
+    // Universal Bridge
+    getUniversalBridgeUsage({
+      teamId: project.teamId,
+      projectId: project.id,
+      from: range.from,
+      to: range.to,
+      period: interval,
+    }),
   ]);
 
   return (
     <div className="flex grow flex-col gap-6">
       {walletUserStatsTimeSeries.status === "fulfilled" &&
+      universalBridgeUsage.status === "fulfilled" &&
       walletUserStatsTimeSeries.value.some((w) => w.totalUsers !== 0) ? (
         <div className="">
-          <UsersChartCard
+          <AppHighlightsCard
             chartKey={
-              (searchParams.usersChart as
-                | "totalUsers"
-                | "activeUsers"
-                | "newUsers"
-                | "returningUsers") ?? "activeUsers"
+              (searchParams.appHighlights as keyof AggregatedMetrics) ??
+              "totalVolume"
             }
+            params={params}
             userStats={walletUserStatsTimeSeries.value}
+            volumeStats={universalBridgeUsage.value}
             searchParams={searchParams}
           />
         </div>
@@ -267,14 +283,14 @@ async function ProjectAnalytics(props: {
   );
 }
 
-type UserMetrics = {
-  totalUsers: number;
+type AggregatedMetrics = {
   activeUsers: number;
   newUsers: number;
-  returningUsers: number;
+  totalVolume: number;
+  feesCollected: number;
 };
 
-type TimeSeriesMetrics = UserMetrics & {
+type TimeSeriesMetrics = AggregatedMetrics & {
   date: string;
 };
 
@@ -283,52 +299,82 @@ type TimeSeriesMetrics = UserMetrics & {
  */
 function processTimeSeriesData(
   userStats: WalletUserStats[],
+  volumeStats: UniversalBridgeStats[],
 ): TimeSeriesMetrics[] {
   const metrics: TimeSeriesMetrics[] = [];
 
-  let cumulativeUsers = 0;
   for (const stat of userStats) {
-    cumulativeUsers += stat.newUsers ?? 0;
+    const volume = volumeStats
+      .filter((v) => v.date === stat.date && v.status === "completed")
+      .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
+
+    const fees = volumeStats
+      .filter((v) => v.date === stat.date && v.status === "completed")
+      .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
+
     metrics.push({
       date: stat.date,
       activeUsers: stat.totalUsers ?? 0,
-      returningUsers: stat.returningUsers ?? 0,
       newUsers: stat.newUsers ?? 0,
-      totalUsers: cumulativeUsers,
+      totalVolume: volume,
+      feesCollected: fees,
     });
   }
 
   return metrics;
 }
 
-function UsersChartCard({
+function AppHighlightsCard({
   chartKey,
   userStats,
+  volumeStats,
+  params,
   searchParams,
 }: {
-  chartKey: keyof UserMetrics;
+  chartKey: keyof AggregatedMetrics;
   userStats: WalletUserStats[];
+  volumeStats: UniversalBridgeStats[];
+  params: PageParams;
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const timeSeriesData = processTimeSeriesData(userStats);
+  const timeSeriesData = processTimeSeriesData(userStats, volumeStats);
 
   const chartConfig = {
-    activeUsers: { label: "Active Users", color: "hsl(var(--chart-1))" },
-    totalUsers: { label: "Total Users", color: "hsl(var(--chart-2))" },
-    newUsers: { label: "New Users", color: "hsl(var(--chart-3))" },
-    returningUsers: {
-      label: "Returning Users",
-      color: "hsl(var(--chart-4))",
+    totalVolume: {
+      label: "Total Volume",
+      color: "hsl(var(--chart-2))",
+      isCurrency: true,
+      emptyContent: (
+        <EmptyStateContent
+          metric="Payments"
+          description="Onramp, swap, and bridge with thirdweb's Universal Bridge."
+          link="https://portal.thirdweb.com/connect/pay/overview"
+        />
+      ),
     },
+    feesCollected: {
+      label: "Fee Revenue",
+      color: "hsl(var(--chart-4))",
+      isCurrency: true,
+      emptyContent: (
+        <EmptyStateContent
+          metric="Fees"
+          description="Your app hasn't collected any fees yet."
+          link={`/team/${params.team_slug}/${params.project_slug}/connect/universal-bridge/settings`}
+        />
+      ),
+    },
+    activeUsers: { label: "Active Users", color: "hsl(var(--chart-1))" },
+    newUsers: { label: "New Users", color: "hsl(var(--chart-3))" },
   } as const;
 
   return (
     <CombinedBarChartCard
       className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
-      title="Users"
+      title="App Highlights"
       chartConfig={chartConfig}
       activeChart={chartKey}
-      queryKey="usersChart"
+      queryKey="appHighlights"
       data={timeSeriesData}
       aggregateFn={(_data, key) =>
         // If there is only one data point, use that one, otherwise use the previous

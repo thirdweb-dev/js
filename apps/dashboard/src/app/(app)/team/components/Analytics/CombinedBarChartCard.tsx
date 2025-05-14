@@ -5,7 +5,12 @@ import { BarChart } from "./BarChart";
 import { Stat } from "./Stat";
 
 type CombinedBarChartConfig<K extends string> = {
-  [key in K]: { label: string; color: string };
+  [key in K]: {
+    label: string;
+    color: string;
+    isCurrency?: boolean;
+    emptyContent?: React.ReactNode;
+  };
 };
 
 // TODO - don't reload page on tab change -> make this a client component, load all the charts at once on server and switch between them on client
@@ -72,7 +77,7 @@ export function CombinedBarChartCard<
                   <Stat
                     label={chartConfig[key].label}
                     value={
-                      isCurrency
+                      isCurrency || chartConfig[key].isCurrency
                         ? toUSD(aggregateFn(data, key) ?? 0)
                         : (aggregateFn(data, key) ?? 0)
                     }
@@ -95,6 +100,7 @@ export function CombinedBarChartCard<
           chartConfig={chartConfig}
           data={data}
           activeKey={activeChart}
+          emptyChartContent={chartConfig[activeChart].emptyContent}
         />
       </CardContent>
     </Card>

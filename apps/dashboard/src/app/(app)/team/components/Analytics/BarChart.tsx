@@ -41,7 +41,7 @@ export function BarChart({
       }}
       className="aspect-auto h-[250px] w-full pt-6"
     >
-      {data.length === 0 ? (
+      {data.length === 0 || data.every((d) => d[activeKey] === 0) ? (
         <EmptyChartState> {emptyChartContent} </EmptyChartState>
       ) : (
         <RechartsBarChart
@@ -87,7 +87,7 @@ export function BarChart({
                   });
                 }}
                 valueFormatter={(v: unknown) =>
-                  isCurrency
+                  isCurrency || chartConfig[activeKey]?.isCurrency
                     ? toUSD(v as number)
                     : formatTickerNumber(v as number)
                 }
