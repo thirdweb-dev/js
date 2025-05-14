@@ -41,6 +41,8 @@ import creatorCTA from "./temp-assets/creatorCTA.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import somniaBanner from "./temp-assets/somniaBanner.png";
 
+import NeoXBanner from "./temp-assets/NeoXBanner.jpg";
+import NeoXCTA from "./temp-assets/NeoXCTA.jpg";
 import flowBanner from "./temp-assets/flowBanner.png";
 import flowCTA from "./temp-assets/flowCTA.png";
 import mantleBanner from "./temp-assets/mantle.png";
@@ -544,6 +546,30 @@ const chainMetaRecord = {
     headerImgUrl: metalBanner.src,
     about:
       "Metal L2 is a banking-focused Layer 2 blockchain built on the Optimism Superchain, designed to enable direct on-chain fiat deposits through its connection to The Digital Banking Network—an open-source blockchain banking protocol developed by Metallicus",
+  },
+  //NEO X
+  47763: {
+    headerImgUrl: NeoXBanner.src,
+    about:
+      "Neo X is an EVM-compatible sidechain built by Neo, incorporating Neo's distinctive dBFT consensus mechanism. Serving as a bridge between Neo N3 and the widely used EVM network, Neo X will play a crucial role in expanding the Neo ecosystem and offering developers more opportunities for innovation.",
+    cta: {
+      backgroundImageUrl: NeoXCTA.src,
+      title: "Learn more about Neo X",
+      buttonLink: "https://x.neo.org/",
+      buttonText: "Learn More",
+    },
+  },
+  //NEO X Testnet
+  12227332: {
+    headerImgUrl: NeoXBanner.src,
+    about:
+      "Neo X is an EVM-compatible sidechain built by Neo, incorporating Neo's distinctive dBFT consensus mechanism. Serving as a bridge between Neo N3 and the widely used EVM network, Neo X will play a crucial role in expanding the Neo ecosystem and offering developers more opportunities for innovation.",
+    cta: {
+      backgroundImageUrl: NeoXCTA.src,
+      title: "Learn more about Neo X",
+      buttonLink: "https://x.neo.org/",
+      buttonText: "Learn More",
+    },
   },
   //0G-Newton-Testnet
   16600: {
