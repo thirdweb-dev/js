@@ -15,7 +15,7 @@ export function useSessionsWithLocalOverrides(
     if (index !== -1) {
       mergedSessions[index] = session;
     } else {
-      mergedSessions.push(session);
+      mergedSessions.unshift(session);
     }
   }
 
