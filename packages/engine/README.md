@@ -29,10 +29,10 @@ const result = await writeContract({
     },
     params: [
       {
-        contractAddress: "0x1234567891234567891234567891234567891234",
+        contractAddress: "0x1234567890123456789012345678901234567890",
         method: "function transfer(address to, uint256 amount)",
         params: [
-          "0x1234567891234567891234567891234567891234",
+          "0x1234567890123456789012345678901234567890",
           "1000000000000000000",
         ],
       },
