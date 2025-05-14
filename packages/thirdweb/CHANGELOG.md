@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.99.1
+
+### Patch Changes
+
+- [#7016](https://github.com/thirdweb-dev/js/pull/7016) [`1985de8`](https://github.com/thirdweb-dev/js/commit/1985de89aae5196233789221ad06f1b6554d27fc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose inMemoryStorage for inAppWallet backend usage
+
+- [#7034](https://github.com/thirdweb-dev/js/pull/7034) [`fc65350`](https://github.com/thirdweb-dev/js/commit/fc6535069beefa419f827c23673f386100a60fd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Preload wallet balances on pay embed
+
+- [#7038](https://github.com/thirdweb-dev/js/pull/7038) [`da3fc99`](https://github.com/thirdweb-dev/js/commit/da3fc99c0bb71043b902867a5003bc3d34041269) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Default to in-memory storage when creating inapp wallets outside the browser
+
 ## 5.99.0
 
 ### Minor Changes
