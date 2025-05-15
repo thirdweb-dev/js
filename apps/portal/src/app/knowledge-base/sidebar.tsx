@@ -1,12 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
-import {
-  BracesIcon,
-  CodeIcon,
-  ExternalLinkIcon,
-  RocketIcon,
-  WrenchIcon,
-} from "lucide-react";
+import { BracesIcon, CodeIcon, RocketIcon } from "lucide-react";
 
 export const sidebar: SideBar = {
   name: "Support Knowledge Base",
@@ -15,11 +9,6 @@ export const sidebar: SideBar = {
       name: "Get Started",
       href: "/knowledge-base/get-started",
       icon: <RocketIcon />,
-    },
-    {
-      name: "Playground",
-      href: "https://playground.thirdweb.com/",
-      icon: <ExternalLinkIcon />,
     },
     {
       separator: true,
@@ -49,46 +38,10 @@ export const sidebar: SideBar = {
             },
           ],
         },
-        {
-          name: "API Reference",
-          icon: <BracesIcon />,
-          links: [
-            {
-              name: "Universal Bridge",
-              expanded: true,
-              links: [
-                {
-                  name: "Bridge",
-                  href: "https://bridge.thirdweb.com/reference",
-                },
-              ],
-            },
-            {
-              name: "Insight",
-              expanded: true,
-              links: [
-                {
-                  name: "Insight service",
-                  href: "https://insight-api.thirdweb.com/reference",
-                },
-              ],
-            },
-            {
-              name: "Engine",
-              expanded: true,
-              links: [
-                {
-                  name: "Engine Cloud API",
-                  href: "https://engine.thirdweb.com/reference#tag/write",
-                },
-              ],
-            },
-          ],
-        },
       ],
     },
     {
-      name: "Help",
+      name: "Troubleshoot",
       isCollapsible: false,
       links: [
         {
@@ -101,13 +54,6 @@ export const sidebar: SideBar = {
             },
           ],
         },
-      ],
-    },
-    {
-      name: "Troubleshoot",
-      icon: <WrenchIcon />,
-      isCollapsible: false,
-      links: [
         {
           name: "Contracts",
           icon: <CodeIcon />,

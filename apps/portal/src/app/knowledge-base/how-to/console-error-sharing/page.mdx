@@ -1,4 +1,4 @@
-import { DocImage } from "@doc";
+import { DocImage, Step, Steps } from "@doc";
 import ScreenshotConsole from "../../assets/screenshot-console.png";
 import TabConsole from "../../assets/tab-console.png";
 import Inspect from "../../assets/inspect-console.png";
@@ -7,27 +7,38 @@ import Inspect from "../../assets/inspect-console.png";
 
 Follow these steps to capture and share your browser console errors:
 
-1. **Open your app**  
-   Navigate to the page where you’re seeing errors.
+<Steps>
 
-2. **Inspect the page**  
-   Right-click and choose **Inspect** (or **Inspect Element**) to open DevTools.  
+<Step title="Open your app">
+Navigate to the page where you’re seeing errors.
+</Step>
+
+<Step title="Inspect the page">
+Right-click and choose **Inspect** (or **Inspect Element**) to open DevTools.  
    <DocImage src={Inspect} />
+</Step>
 
-3. **Switch to the Console**  
-   Click on the **Console** tab to view logs and errors.  
+<Step title="Switch to the Console">
+ Click on the **Console** tab to view logs and errors.  
    <DocImage src={TabConsole} />
+</Step>
 
-4. **Capture the error**  
-   Screenshot any red error messages in **Console**.  
+<Step title="Capture the error">
+ Screenshot any red error messages in **Console**.  
   <DocImage src={ScreenshotConsole} />
+</Step>
 
-5. **Share with us**  
-   Send your screenshots to our support team.
+<Step title="Share with us">
+ Send your screenshots to our support team.
+</Step>
+
+</Steps>
+
 
 By following these steps, you’ll give us the full error context so we can resolve your issue quickly.
 
 ---
+
 
 Still stuck? [**Contact our support team**](https://thirdweb.com/support)  
 
