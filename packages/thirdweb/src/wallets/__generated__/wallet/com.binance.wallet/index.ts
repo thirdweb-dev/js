@@ -13,7 +13,7 @@ export const wallet = {
     mac: null,
     windows: null,
     linux: null,
-    chrome: null,
+    chrome: "https://www.binance.com/en/download",
     firefox: null,
     safari: null,
     edge: null,
@@ -26,6 +26,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://www.binance.com/en/web3wallet",
   },
 } as const;

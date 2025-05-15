@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://www.paybolt.com",
   },
 } as const;

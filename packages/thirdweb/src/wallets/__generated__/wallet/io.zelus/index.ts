@@ -26,6 +26,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://rollingloud.bridge.zelus.io",
   },
 } as const;

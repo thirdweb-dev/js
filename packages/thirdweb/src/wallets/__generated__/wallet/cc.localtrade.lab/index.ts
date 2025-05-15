@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://docs.localtrade.cc/products/defi-wallet-mvp-for-ios",
   },
 } as const;

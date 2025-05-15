@@ -28,6 +28,6 @@ export const wallet = {
   },
   desktop: {
     native: "vimwallet://",
-    universal: null,
+    universal: "https://www.nufinetes.com",
   },
 } as const;
