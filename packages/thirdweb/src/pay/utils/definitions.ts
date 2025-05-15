@@ -43,20 +43,6 @@ export const getPayBuyWithCryptoHistoryEndpoint = () =>
   `${getPayBaseUrl()}/buy-with-crypto/history/v1`;
 
 /**
- * Endpoint to get a list of supported destination chains and tokens for thirdweb pay.
- * @internal
- */
-export const getPaySupportedDestinations = () =>
-  `${getPayBaseUrl()}/destination-tokens/v1`;
-
-/**
- * Endpoint to get a list of supported source chains + tokens for thirdweb pay.
- * @internal
- */
-export const getPaySupportedSources = () =>
-  `${getPayBaseUrl()}/buy-with-crypto/source-tokens/v1`;
-
-/**
  * Endpoint to get buy history for a given wallet address.
  * This includes both "Buy with Crypto" and "Buy with Fiat" transactions.
  * @internal

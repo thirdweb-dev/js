@@ -1,5 +1,6 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
+import * as Bridge from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
@@ -14,7 +15,6 @@ import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
-import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 import type { SupportedTokens } from "../../utils/defaultTokens.js";
@@ -42,49 +42,49 @@ import { hasSponsoredTransactionsEnabled } from "../../utils/wallet.js";
  */
 export type SendTransactionPayModalConfig =
   | {
-      metadata?: {
-        name?: string;
-        image?: string;
+    metadata?: {
+      name?: string;
+      image?: string;
+    };
+    locale?: LocaleId;
+    supportedTokens?: SupportedTokens;
+    theme?: Theme | "light" | "dark";
+    buyWithCrypto?:
+    | false
+    | {
+      testMode?: boolean;
+    };
+    buyWithFiat?:
+    | false
+    | {
+      prefillSource?: {
+        currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
       };
-      locale?: LocaleId;
-      supportedTokens?: SupportedTokens;
-      theme?: Theme | "light" | "dark";
-      buyWithCrypto?:
-        | false
+      testMode?: boolean;
+      preferredProvider?: FiatProvider;
+    };
+    purchaseData?: object;
+    /**
+     * Callback to be called when the user successfully completes the purchase.
+     */
+    onPurchaseSuccess?: (
+      info:
         | {
-            testMode?: boolean;
-          };
-      buyWithFiat?:
-        | false
+          type: "crypto";
+          status: BuyWithCryptoStatus;
+        }
         | {
-            prefillSource?: {
-              currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
-            };
-            testMode?: boolean;
-            preferredProvider?: FiatProvider;
-          };
-      purchaseData?: object;
-      /**
-       * Callback to be called when the user successfully completes the purchase.
-       */
-      onPurchaseSuccess?: (
-        info:
-          | {
-              type: "crypto";
-              status: BuyWithCryptoStatus;
-            }
-          | {
-              type: "fiat";
-              status: BuyWithFiatStatus;
-            }
-          | {
-              type: "transaction";
-              chainId: number;
-              transactionHash: Hex;
-            },
-      ) => void;
-      showThirdwebBranding?: boolean;
-    }
+          type: "fiat";
+          status: BuyWithFiatStatus;
+        }
+        | {
+          type: "transaction";
+          chainId: number;
+          transactionHash: Hex;
+        },
+    ) => void;
+    showThirdwebBranding?: boolean;
+  }
   | false;
 
 /**
@@ -179,22 +179,26 @@ export function useSendTransactionCore(args: {
 
         (async () => {
           try {
-            const [_nativeValue, _erc20Value, supportedDestinations] =
-              await Promise.all([
-                resolvePromisedValue(tx.value),
-                resolvePromisedValue(tx.erc20Value),
-                fetchBuySupportedDestinations(tx.client).catch((err) => {
-                  trackPayEvent({
-                    client: tx.client,
-                    walletAddress: account.address,
-                    walletType: wallet?.id,
-                    toChainId: tx.chain.id,
-                    event: "pay_transaction_modal_pay_api_error",
-                    error: err?.message,
-                  });
-                  return null;
-                }),
-              ]);
+            const [_nativeValue, _erc20Value] = await Promise.all([
+              resolvePromisedValue(tx.value),
+              resolvePromisedValue(tx.erc20Value),
+            ]);
+
+            const supportedDestinations = await Bridge.routes({
+              client: tx.client,
+              destinationChainId: tx.chain.id,
+              destinationTokenAddress: _erc20Value?.tokenAddress,
+            }).catch((err) => {
+              trackPayEvent({
+                client: tx.client,
+                walletAddress: account.address,
+                walletType: wallet?.id,
+                toChainId: tx.chain.id,
+                event: "pay_transaction_modal_pay_api_error",
+                error: err?.message,
+              });
+              return null;
+            });
 
             if (!supportedDestinations) {
               // could not fetch supported destinations, just send the tx
@@ -202,21 +206,7 @@ export function useSendTransactionCore(args: {
               return;
             }
 
-            if (
-              !supportedDestinations
-                .map((x) => x.chain.id)
-                .includes(tx.chain.id) ||
-              (_erc20Value &&
-                !supportedDestinations.some(
-                  (x) =>
-                    x.chain.id === tx.chain.id &&
-                    x.tokens.find(
-                      (t) =>
-                        t.address.toLowerCase() ===
-                        _erc20Value.tokenAddress.toLowerCase(),
-                    ),
-                ))
-            ) {
+            if (supportedDestinations.length === 0) {
               trackPayEvent({
                 client: tx.client,
                 walletAddress: account.address,
@@ -224,7 +214,11 @@ export function useSendTransactionCore(args: {
                 toChainId: tx.chain.id,
                 toToken: _erc20Value?.tokenAddress || undefined,
                 event: "pay_transaction_modal_chain_token_not_supported",
-                error: `chain ${tx.chain.id} ${_erc20Value ? `/ token ${_erc20Value?.tokenAddress}` : ""} not supported`,
+                error: JSON.stringify({
+                  chain: tx.chain.id,
+                  token: _erc20Value?.tokenAddress,
+                  message: "chain/token not supported",
+                }),
               });
               // chain/token not supported, just send the tx
               sendTx();
@@ -242,11 +236,11 @@ export function useSendTransactionCore(args: {
               }),
               _erc20Value?.tokenAddress
                 ? getTokenBalance({
-                    client: tx.client,
-                    account,
-                    chain: tx.chain,
-                    tokenAddress: _erc20Value.tokenAddress,
-                  })
+                  client: tx.client,
+                  account,
+                  chain: tx.chain,
+                  tokenAddress: _erc20Value.tokenAddress,
+                })
                 : undefined,
               getTransactionGasCost(tx, account.address),
             ]);
