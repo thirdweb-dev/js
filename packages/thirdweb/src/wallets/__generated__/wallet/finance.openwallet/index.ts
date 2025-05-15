@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://openwallet.finance/",
   },
 } as const;

@@ -8,7 +8,7 @@ export const wallet = {
   image_id: "fe06c7ed-3df1-4cc7-9686-c920914abd00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/nonbank/id222",
+    ios: "https://apps.apple.com/us/app/nonbank-defi-crypto-wallet-app/id6477441479",
     android: "https://play.google.com/store/apps/details?id=io.nonbank",
     mac: null,
     windows: null,

@@ -29,6 +29,7 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal:
+      "https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc",
   },
 } as const;

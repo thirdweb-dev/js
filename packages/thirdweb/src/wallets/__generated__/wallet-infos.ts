@@ -201,7 +201,7 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   },
   {
     id: "com.fastex.wallet",
-    name: "Fastex Wallet",
+    name: "Yo Wallet",
     hasMobileSupport: true,
   },
   {
@@ -1972,6 +1972,51 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.imem",
     name: "iMe",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.socios.app",
+    name: "Socios.com - Wallet & Tokens",
+    hasMobileSupport: true,
+  },
+  {
+    id: "io.bimwallet",
+    name: "BIM Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.adftechnology",
+    name: "ADF Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.reown.appkit-lab",
+    name: "Flutter Sample Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.reown",
+    name: "React Native Sample Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "com.reown.docs",
+    name: "Kotlin Sample Internal Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "io.yowallet",
+    name: "YoWallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "org.hot-labs",
+    name: "HOT Wallet",
+    hasMobileSupport: true,
+  },
+  {
+    id: "ai.purewallet",
+    name: "PureWallet app",
     hasMobileSupport: true,
   },
   {

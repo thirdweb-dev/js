@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://apps.apple.com/us/app/bettatrade/id6474153866",
   },
 } as const;

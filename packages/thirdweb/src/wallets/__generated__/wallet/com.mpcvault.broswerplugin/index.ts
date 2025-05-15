@@ -28,6 +28,6 @@ export const wallet = {
   },
   desktop: {
     native: "com.mpcvault.mobileapp://wccallback",
-    universal: null,
+    universal: "https://console.mpcvault.com",
   },
 } as const;

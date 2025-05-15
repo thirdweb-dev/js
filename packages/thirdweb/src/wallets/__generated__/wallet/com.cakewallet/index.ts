@@ -5,7 +5,7 @@ export const wallet = {
   id: "com.cakewallet",
   name: "Cake Wallet",
   homepage: "https://cakewallet.com/",
-  image_id: "547998c5-7908-4f11-bdc3-93da789d8c00",
+  image_id: "b05af25b-fa4d-4f91-a4cb-2f8f7d544000",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=iphone",

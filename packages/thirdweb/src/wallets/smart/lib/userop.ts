@@ -785,6 +785,25 @@ export async function createAndSignUserOp(options: {
   return signedUserOp;
 }
 
+/**
+ * Prepare a user operation for signing.
+ * @param options - The options for preparing the user operation
+ * @returns - The prepared user operation
+ * @example
+ * ```ts
+ * import { prepareUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOp = await prepareUserOp({
+ *  transactions,
+ *  adminAccount,
+ *  client,
+ *  smartWalletOptions,
+ * });
+ * ```
+ *
+ * You can then sign the user operation with signUserOp(). and send it to the bundler with bundlerUserOp().
+ * @walletUtils
+ */
 export async function prepareUserOp(options: {
   transactions: PreparedTransaction[];
   adminAccount: Account;
