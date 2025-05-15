@@ -88,7 +88,7 @@ function TransactionInfo(props: {
     <div className="relative flex h-[48px] items-center gap-2.5 rounded-lg px-2 py-1 hover:bg-accent">
       <ChainIconClient
         client={props.client}
-        className="size-8"
+        className="size-8 rounded-full border"
         src={chainMeta?.icon?.url || ""}
       />
 
@@ -167,9 +167,18 @@ export function TransactionsSection(props: {
       const url = new URL(
         `https://insight.${isProd ? "thirdweb" : "thirdweb-dev"}.com/v1/wallets/${account.address}/transactions`,
       );
-      url.searchParams.set("limit", "10");
+      url.searchParams.set("limit", "20");
       url.searchParams.set("decode", "true");
       url.searchParams.set("clientId", nebulaAppThirdwebClient.clientId);
+
+      const threeMonthsAgoUnixTime = Math.floor(
+        (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
+      );
+
+      url.searchParams.set(
+        "filter_block_timestamp_gte",
+        `${threeMonthsAgoUnixTime}`,
+      );
 
       for (const chain of chains) {
         url.searchParams.append("chain", chain.toString());
@@ -177,10 +186,10 @@ export function TransactionsSection(props: {
 
       const response = await fetch(url.toString());
       const json = (await response.json()) as {
-        data: WalletTransaction[];
+        data?: WalletTransaction[];
       };
 
-      return json.data;
+      return json.data ?? [];
     },
     retry: false,
     enabled: !!account && !!activeChain,
