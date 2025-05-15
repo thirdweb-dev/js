@@ -144,6 +144,7 @@ export type WriteContractResponses = {
       transactions: Array<{
         id: string;
         batchIndex: number;
+        clientId: string;
         chainId: string;
         from: string | null;
         transactionParams:
@@ -188,6 +189,7 @@ export type WriteContractResponses = {
       transactions: Array<{
         id: string;
         batchIndex: number;
+        clientId: string;
         chainId: string;
         from: string | null;
         transactionParams:
@@ -273,6 +275,7 @@ export type SendTransactionResponses = {
       transactions: Array<{
         id: string;
         batchIndex: number;
+        clientId: string;
         chainId: string;
         from: string | null;
         transactionParams:
@@ -317,6 +320,7 @@ export type SendTransactionResponses = {
       transactions: Array<{
         id: string;
         batchIndex: number;
+        clientId: string;
         chainId: string;
         from: string | null;
         transactionParams:
@@ -876,6 +880,7 @@ export type SearchTransactionsResponses = {
       transactions: Array<{
         id: string;
         batchIndex: number;
+        clientId: string;
         chainId: string;
         from: string | null;
         transactionParams:
@@ -1013,5 +1018,5 @@ export type GetTransactionAnalyticsSummaryResponse =
   GetTransactionAnalyticsSummaryResponses[keyof GetTransactionAnalyticsSummaryResponses];
 
 export type ClientOptions = {
-  baseUrl: "http://localhost:3009" | (string & {});
+  baseUrl: "https://engine.thirdweb.com" | (string & {});
 };

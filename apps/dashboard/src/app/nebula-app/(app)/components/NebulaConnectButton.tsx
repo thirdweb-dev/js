@@ -21,6 +21,7 @@ export const NebulaConnectWallet = (props: {
   connectButtonClassName?: string;
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
+  customDetailsButton?: (address: string) => React.ReactElement;
 }) => {
   const router = useDashboardRouter();
   const { theme } = useTheme();
@@ -63,6 +64,7 @@ export const NebulaConnectWallet = (props: {
     );
   }
 
+  const { customDetailsButton } = props;
   return (
     <ConnectButton
       theme={getSDKTheme(t)}
@@ -90,6 +92,9 @@ export const NebulaConnectWallet = (props: {
       }}
       detailsButton={{
         className: props.detailsButtonClassName,
+        render: customDetailsButton
+          ? () => customDetailsButton(account.address)
+          : undefined,
       }}
       chains={allChainsV5}
       // we have an AutoConnect already added in root layout with AA configuration

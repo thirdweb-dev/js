@@ -16,7 +16,7 @@ import {
 const STORAGE_KEY = "thirdweb:ub-analytics-range";
 
 type SavedRange = {
-  rangeType: string;
+  rangeType: "custom" | DurationId | undefined;
   interval: "day" | "week";
 };
 
@@ -47,7 +47,10 @@ export function PayAnalyticsFilter() {
             from: undefined,
             to: undefined,
             interval: savedRange.interval,
-            defaultRange: (savedRange.rangeType || "last-30") as DurationId,
+            defaultRange:
+              savedRange.rangeType === "custom"
+                ? "last-30"
+                : savedRange.rangeType || "last-30",
           });
 
           setResponsiveSearchParams((v) => ({
@@ -57,7 +60,6 @@ export function PayAnalyticsFilter() {
             interval: savedRange.interval,
           }));
         } catch (e) {
-          localStorage.removeItem(STORAGE_KEY);
           console.error("Failed to parse saved range:", e);
         }
       }

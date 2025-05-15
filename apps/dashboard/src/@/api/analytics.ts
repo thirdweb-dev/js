@@ -48,15 +48,15 @@ async function fetchAnalytics(
     );
   }
   // client id DEBUG OVERRIDE
-  // ANALYTICS_SERVICE_URL.searchParams.delete("projectId");
-  // ANALYTICS_SERVICE_URL.searchParams.delete("teamId");
-  // ANALYTICS_SERVICE_URL.searchParams.append(
+  // analyticsServiceUrl.searchParams.delete("projectId");
+  // analyticsServiceUrl.searchParams.delete("teamId");
+  // analyticsServiceUrl.searchParams.append(
   //   "teamId",
-  //   "team_clmb33q9w00gn1x0u2ri8z0k0",
+  //   "team_cm0lde33r02344w129k5hm2xz",
   // );
-  // ANALYTICS_SERVICE_URL.searchParams.append(
+  // analyticsServiceUrl.searchParams.append(
   //   "projectId",
-  //   "prj_clyqwud5y00u1na7nzxnzlz7o",
+  //   "prj_cm4rqwx9b002qrnsnr37wqpo6",
   // );
 
   return fetch(analyticsServiceUrl, {
@@ -377,7 +377,7 @@ export async function getEcosystemWalletUsage(args: {
 
 export async function getUniversalBridgeUsage(args: {
   teamId: string;
-  projectId: string;
+  projectId?: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
@@ -395,11 +395,10 @@ export async function getUniversalBridgeUsage(args: {
     console.error(
       `Failed to fetch universal bridge stats: ${res?.status} - ${res.statusText} - ${reason}`,
     );
-    return null;
+    return [];
   }
 
   const json = await res.json();
-
   return json.data as UniversalBridgeStats[];
 }
 
@@ -430,6 +429,5 @@ export async function getUniversalBridgeWalletUsage(args: {
   }
 
   const json = await res.json();
-
   return json.data as UniversalBridgeWalletStats[];
 }

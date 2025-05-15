@@ -47,15 +47,18 @@ export function PayNewCustomers(props: {
         value: newUsers,
       });
     }
-    const lastPeriod = newUsersData[newUsersData.length - 2];
-    const currentPeriod = newUsersData[newUsersData.length - 1];
+    const lastPeriod = newUsersData[newUsersData.length - 3];
+    const currentPeriod = newUsersData[newUsersData.length - 2];
     // Calculate the percent change from last period to current period
     const trend =
-      lastPeriod && currentPeriod && lastPeriod.value > 0
+      lastPeriod &&
+      currentPeriod &&
+      lastPeriod.value > 0 &&
+      currentPeriod.value > 0
         ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : lastPeriod?.value === 0
+        : lastPeriod?.value === 0 && (currentPeriod?.value || 0) > 0
           ? 100
-          : 0;
+          : undefined;
     return { graphData: newUsersData, trend };
   }, [props.data, props.dateFormat]);
   const isEmpty = useMemo(
@@ -87,7 +90,7 @@ export function PayNewCustomers(props: {
               }}
             />
 
-            {!isEmpty && (
+            {!isEmpty && typeof trend !== "undefined" && (
               <SkeletonContainer
                 loadedData={trend}
                 className="rounded-2xl"

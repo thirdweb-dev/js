@@ -49,14 +49,17 @@ export function Payouts(props: {
         value: total / 100,
       });
     }
-    const lastPeriod = cleanedData[cleanedData.length - 2];
-    const currentPeriod = cleanedData[cleanedData.length - 1];
+    const lastPeriod = cleanedData[cleanedData.length - 3];
+    const currentPeriod = cleanedData[cleanedData.length - 2];
     const trend =
-      lastPeriod && currentPeriod && lastPeriod.value > 0
+      lastPeriod &&
+      currentPeriod &&
+      lastPeriod.value > 0 &&
+      currentPeriod.value > 0
         ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : lastPeriod?.value === 0
+        : lastPeriod?.value === 0 && (currentPeriod?.value || 0) > 0
           ? 100
-          : 0;
+          : undefined;
     return {
       graphData: cleanedData,
       totalPayoutsUSD: totalPayouts / 100,
@@ -91,7 +94,7 @@ export function Payouts(props: {
             }}
           />
 
-          {!isEmpty && (
+          {!isEmpty && typeof trend !== "undefined" && (
             <SkeletonContainer
               className="rounded-2xl"
               loadedData={trend}

@@ -1,6 +1,7 @@
 import {
   getClientTransactions,
   getInAppWalletUsage,
+  getUniversalBridgeUsage,
   getUserOpUsage,
   getWalletConnections,
   getWalletUsers,
@@ -14,6 +15,7 @@ import { redirect } from "next/navigation";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
 import type {
   InAppWalletStats,
+  UniversalBridgeStats,
   WalletStats,
   WalletUserStats,
 } from "types/analytics";
@@ -24,7 +26,10 @@ import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
 
 import { getTeamBySlug } from "@/api/team";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { EmptyStateCard } from "app/(app)/team/components/Analytics/EmptyStateCard";
+import {
+  EmptyStateCard,
+  EmptyStateContent,
+} from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { Suspense } from "react";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
@@ -100,6 +105,7 @@ async function OverviewPageContent(props: {
     userOpUsage,
     clientTransactionsTimeSeries,
     clientTransactions,
+    universalBridgeUsage,
   ] = await Promise.all([
     // Aggregated wallet connections
     getWalletConnections({
@@ -148,6 +154,13 @@ async function OverviewPageContent(props: {
       to: range.to,
       period: "all",
     }),
+    // Universal Bridge
+    getUniversalBridgeUsage({
+      teamId: teamId,
+      from: range.from,
+      to: range.to,
+      period: interval,
+    }),
   ]);
 
   const isEmpty =
@@ -164,8 +177,9 @@ async function OverviewPageContent(props: {
     <div className="flex grow flex-col gap-6">
       {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
         <div className="">
-          <UsersChartCard
+          <AppHighlightsCard
             userStats={walletUserStatsTimeSeries}
+            volumeStats={universalBridgeUsage}
             searchParams={searchParams}
           />
         </div>
@@ -218,70 +232,96 @@ async function OverviewPageContent(props: {
   );
 }
 
-type UserMetrics = {
-  totalUsers: number;
+type AggregatedMetrics = {
   activeUsers: number;
   newUsers: number;
-  returningUsers: number;
+  totalVolume: number;
+  feesCollected: number;
 };
 
-type TimeSeriesMetrics = UserMetrics & {
+type TimeSeriesMetrics = AggregatedMetrics & {
   date: string;
 };
 
 function processTimeSeriesData(
   userStats: WalletUserStats[],
+  volumeStats: UniversalBridgeStats[],
 ): TimeSeriesMetrics[] {
   const metrics: TimeSeriesMetrics[] = [];
 
-  let cumulativeUsers = 0;
   for (const stat of userStats) {
-    cumulativeUsers += stat.newUsers ?? 0;
+    const volume = volumeStats
+      .filter((v) => v.date === stat.date && v.status === "completed")
+      .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
+
+    const fees = volumeStats
+      .filter((v) => v.date === stat.date && v.status === "completed")
+      .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
+
     metrics.push({
       date: stat.date,
       activeUsers: stat.totalUsers ?? 0,
-      returningUsers: stat.returningUsers ?? 0,
       newUsers: stat.newUsers ?? 0,
-      totalUsers: cumulativeUsers,
+      totalVolume: volume,
+      feesCollected: fees,
     });
   }
 
   return metrics;
 }
 
-function UsersChartCard({
+function AppHighlightsCard({
   userStats,
+  volumeStats,
   searchParams,
 }: {
   userStats: WalletUserStats[];
+  volumeStats: UniversalBridgeStats[];
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const timeSeriesData = processTimeSeriesData(userStats);
+  const timeSeriesData = processTimeSeriesData(userStats, volumeStats);
 
   const chartConfig = {
-    activeUsers: { label: "Active Users", color: "hsl(var(--chart-1))" },
-    totalUsers: { label: "Total Users", color: "hsl(var(--chart-2))" },
-    newUsers: { label: "New Users", color: "hsl(var(--chart-3))" },
-    returningUsers: {
-      label: "Returning Users",
-      color: "hsl(var(--chart-4))",
+    totalVolume: {
+      label: "Total Volume",
+      color: "hsl(var(--chart-2))",
+      isCurrency: true,
+      emptyContent: (
+        <EmptyStateContent
+          metric="Payments"
+          description="Onramp, swap, and bridge with thirdweb's Universal Bridge."
+          link="https://portal.thirdweb.com/connect/pay/overview"
+        />
+      ),
     },
+    feesCollected: {
+      label: "Fee Revenue",
+      color: "hsl(var(--chart-4))",
+      isCurrency: true,
+      emptyContent: (
+        <EmptyStateContent
+          metric="Fees"
+          description="Your apps haven't collected any fees yet."
+          link={"https://portal.thirdweb.com/connect/pay/fees"}
+        />
+      ),
+    },
+    activeUsers: { label: "Active Users", color: "hsl(var(--chart-1))" },
+    newUsers: { label: "New Users", color: "hsl(var(--chart-3))" },
   } as const;
 
   return (
     <CombinedBarChartCard
       className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
-      title="Users"
+      title="App Highlights"
       chartConfig={chartConfig}
       activeChart={
-        (searchParams?.usersChart as keyof UserMetrics) ?? "activeUsers"
+        (searchParams?.appHighlights as keyof AggregatedMetrics) ??
+        "totalVolume"
       }
       data={timeSeriesData}
       aggregateFn={(_data, key) =>
-        // If there is only one data point, use that one, otherwise use the previous
-        timeSeriesData.filter((d) => (d[key] as number) > 0).length >= 2
-          ? timeSeriesData[timeSeriesData.length - 2]?.[key]
-          : timeSeriesData[timeSeriesData.length - 1]?.[key]
+        timeSeriesData.reduce((acc, curr) => acc + curr[key], 0)
       }
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
@@ -291,7 +331,7 @@ function UsersChartCard({
             1
           : undefined
       }
-      queryKey="usersChart"
+      queryKey="appHighlights"
       existingQueryParams={searchParams}
     />
   );

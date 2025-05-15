@@ -1,4 +1,6 @@
-import { Callout, Step, Steps, Tabs, TabsContent, TabsTrigger, TabsList } from "@doc";
+import { Callout, Step, Steps, Tabs, TabsContent, TabsTrigger, TabsList, DocImage } from "@doc";
+import CreateVault from '../assets/create-vault.png';
+import SendTransaction from '../assets/send-transaction.png';
 
 # Get started
 
@@ -19,7 +21,8 @@ Learn how to get started with thirdweb Engine. This guide will walk you through 
 		Create a vault to manage your Engine's server wallets. After setup, you can manage your Vault to create additional access tokens or rotate admin keys.
 
 		<Callout variant="info" title="Vault">
-			Vault is thirdweb's key management service designed to store smart server wallets non-custodially. Learn more about [Vault].
+			Vault is thirdweb's key management service designed to store smart server wallets non-custodially. [Learn more about Vault.](/vault)
+			<DocImage src={CreateVault} alt="Create Vault"/>
 		</Callout>
 	</Step>
 
@@ -35,6 +38,7 @@ Learn how to get started with thirdweb Engine. This guide will walk you through 
 		To verify your server wallet setup and see how transactions work, you can send a test transaction in the next step. This sends a no-op transaction—a transaction with zero value—to your own wallet.
 
 		You can send additional test transactions or proceed with the full setup whenever you're ready.
+		<DocImage src={SendTransaction} alt="Send Test Transaction"/>
 	</Step>
 
 	<Step title="Integrate with your app">

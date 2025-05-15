@@ -14,11 +14,11 @@ export default async function Page(props: {
     team_slug: string;
     project_slug: string;
   }>;
-  searchParams: {
+  searchParams: Promise<{
     from?: string | undefined | string[];
     to?: string | undefined | string[];
     interval?: string | undefined | string[];
-  };
+  }>;
 }) {
   const params = await props.params;
   const project = await getProject(params.team_slug, params.project_slug);
@@ -36,7 +36,7 @@ export default async function Page(props: {
   });
 
   return (
-    <ResponsiveSearchParamsProvider value={props.searchParams}>
+    <ResponsiveSearchParamsProvider value={searchParams}>
       <div>
         <div className="mb-4 flex justify-start">
           <PayAnalyticsFilter />

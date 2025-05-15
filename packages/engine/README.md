@@ -5,23 +5,38 @@ This package is a thin openAPI wrapper for insight, our in-house indexer.
 ## Configuration
 
 ```ts
-import { configure } from "@thirdweb-dev/insight";
+import { configure } from "@thirdweb-dev/engine";
 
 // call this once at the startup of your application
 configure({
-  clientId: "<YOUR_CLIENT_ID>",
+  secretKey: "<PROJECT_SECRET_KEY>",
 });
 ```
 
 ## Example Usage
 
 ```ts
-import { getV1Events } from "@thirdweb-dev/insight";
+import { writeContract } from "@thirdweb-dev/engine";
 
-const events = await getV1Events({
-  query: {
-    chain: [1, 137],
-    filter_address: "0x1234567890123456789012345678901234567890",
+const result = await writeContract({
+  headers: {
+    "x-vault-access-token": "<VAULT_ACCESS_TOKEN>",
+  },
+  body: {
+    executionOptions: {
+      from: "0x1234567891234567891234567891234567891234",
+      chainId: "1",
+    },
+    params: [
+      {
+        contractAddress: "0x1234567890123456789012345678901234567890",
+        method: "function transfer(address to, uint256 amount)",
+        params: [
+          "0x1234567890123456789012345678901234567890",
+          "1000000000000000000",
+        ],
+      },
+    ],
   },
 });
 ```
