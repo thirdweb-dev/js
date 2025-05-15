@@ -1,1 +1,10 @@
-export const UNIVERSAL_BRIDGE_URL = "https://bridge.thirdweb.com/v1";
+import { getThirdwebDomains } from "../utils/domains.js";
+
+const getBridgeBaseUrl = () => {
+  const bridgeDomain: string = getThirdwebDomains().bridge;
+  return bridgeDomain.startsWith("localhost")
+    ? `http://${bridgeDomain}`
+    : `https://${bridgeDomain}`;
+};
+
+export const UNIVERSAL_BRIDGE_URL = `${getBridgeBaseUrl()}/v1`;
