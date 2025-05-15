@@ -5,7 +5,9 @@ import { Callout, Details } from "@doc";
 <Details summary="How is pricing calculated for Engine Cloud?">
 Pricing is calculated through the number of write requests (ex: /v1/write/contract) made through the Engine API. Requests cost $1 per 1,000 requests. Read requests made through Engine API are free, within the RPC limits/plan. 
 
-For transactions completed through server wallets paid through the user's thirdweb account, users will pay a 5% premium on the gas fee of each transaction completed. 
+For transactions through server wallets paid through the user's thirdweb account, users will pay a 5% premium on the gas fee of each transaction completed on any mainnet as part of account abstraction fees. There are no gas charges for testnets.
+
+**Please note: Legacy pricing plans may be subject to the 10% fee instead of 5%. Please update your pricing plan to avoid being subject to the 10% fee.** 
 
 The breakdown for usage and transaction fees can be found in your usage dashboard under the team overview. 
 </Details>
