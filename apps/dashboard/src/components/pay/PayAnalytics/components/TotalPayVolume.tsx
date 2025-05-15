@@ -24,11 +24,10 @@ export function TotalPayVolume(props: {
   };
 }) {
   const uniqueId = useId();
-  const [successType, setSuccessType] = useState<"success" | "fail">("success");
   const [type, setType] = useState<"all" | "crypto" | "fiat">("all");
 
   const graphData: GraphData[] | undefined = useMemo(() => {
-    let data = (() => {
+    const data = (() => {
       switch (type) {
         case "crypto": {
           return props.data?.filter((x) => x.type === "onchain");
@@ -43,13 +42,6 @@ export function TotalPayVolume(props: {
           throw new Error("Invalid tab");
         }
       }
-    })();
-
-    data = (() => {
-      if (successType === "fail") {
-        return data.filter((x) => x.status === "failed");
-      }
-      return data.filter((x) => x.status === "completed");
     })();
 
     const dates = new Set<string>();
@@ -72,15 +64,13 @@ export function TotalPayVolume(props: {
       });
     }
     return cleanedData;
-  }, [props.data, type, successType, props.dateFormat]);
+  }, [props.data, type, props.dateFormat]);
 
   const isEmpty =
     graphData.length === 0 || graphData.every((x) => x.value === 0);
   const chartColor = isEmpty
     ? "hsl(var(--muted-foreground))"
-    : successType === "success"
-      ? "hsl(var(--chart-1))"
-      : "hsl(var(--chart-3))";
+    : "hsl(var(--chart-1))";
 
   return (
     <div className="flex flex-1 flex-col">
@@ -102,21 +92,6 @@ export function TotalPayVolume(props: {
                 <SelectItem value="all">Total</SelectItem>
                 <SelectItem value="crypto">Crypto</SelectItem>
                 <SelectItem value="fiat">Fiat</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={successType}
-              onValueChange={(value: "success" | "fail") => {
-                setSuccessType(value);
-              }}
-            >
-              <SelectTrigger className="bg-transparent">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="success">Successful</SelectItem>
-                <SelectItem value="fail">Failed</SelectItem>
               </SelectContent>
             </Select>
           </div>

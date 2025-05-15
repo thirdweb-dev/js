@@ -3,7 +3,7 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useId, useMemo } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeWalletStats } from "types/analytics";
-import { CardHeading, ChangeBadge, NoDataOverlay, chartHeight } from "./common";
+import { CardHeading, NoDataOverlay, chartHeight } from "./common";
 
 type GraphDataItem = {
   date: string;
@@ -20,7 +20,7 @@ export function PayNewCustomers(props: {
   /**
    * For each date, compute the total number of wallets that have never existed before in the time series
    */
-  const { graphData, trend } = useMemo(() => {
+  const { graphData } = useMemo(() => {
     const dates = new Set<string>();
     for (const item of props.data) {
       if (!dates.has(item.date)) {
@@ -47,19 +47,7 @@ export function PayNewCustomers(props: {
         value: newUsers,
       });
     }
-    const lastPeriod = newUsersData[newUsersData.length - 3];
-    const currentPeriod = newUsersData[newUsersData.length - 2];
-    // Calculate the percent change from last period to current period
-    const trend =
-      lastPeriod &&
-      currentPeriod &&
-      lastPeriod.value > 0 &&
-      currentPeriod.value > 0
-        ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : lastPeriod?.value === 0 && (currentPeriod?.value || 0) > 0
-          ? 100
-          : undefined;
-    return { graphData: newUsersData, trend };
+    return { graphData: newUsersData };
   }, [props.data, props.dateFormat]);
   const isEmpty = useMemo(
     () => graphData.length === 0 || graphData.every((x) => x.value === 0),
@@ -89,17 +77,6 @@ export function PayNewCustomers(props: {
                 );
               }}
             />
-
-            {!isEmpty && typeof trend !== "undefined" && (
-              <SkeletonContainer
-                loadedData={trend}
-                className="rounded-2xl"
-                skeletonData={1}
-                render={(v) => {
-                  return <ChangeBadge percent={v} />;
-                }}
-              />
-            )}
           </div>
         </div>
       </div>
@@ -125,7 +102,7 @@ export function PayNewCustomers(props: {
                       {payload?.date}
                     </p>
                     <p className="text-base text-medium">
-                      Customers: {payload?.value}
+                      New Customers: {payload?.value}
                     </p>
                   </div>
                 );

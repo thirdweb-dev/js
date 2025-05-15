@@ -1,7 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-
 export function NoDataOverlay() {
   return (
     <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-card/50 text-muted-foreground text-sm backdrop-blur-sm">
@@ -12,39 +8,6 @@ export function NoDataOverlay() {
 
 export function CardHeading(props: { children: React.ReactNode }) {
   return <h3 className="font-medium text-base">{props.children}</h3>;
-}
-
-export function ChangeBadge(props: { percent: number }) {
-  const percentValue = `${props.percent.toFixed(0)}%`;
-  let label = "No change compared to prior range";
-  if (props.percent !== 0) {
-    label = `
-      ${props.percent >= 0 ? "Increase" : "Decrease"} of ${percentValue} compared to prior range
-    `;
-  }
-  return (
-    <ToolTipLabel label={label}>
-      <div>
-        <Badge
-          variant={props.percent >= 0 ? "success" : "destructive"}
-          className="gap-1 px-2 py-1.5 text-sm"
-        >
-          {props.percent >= 0 ? (
-            <ArrowUpIcon className="size-4 " />
-          ) : (
-            <ArrowDownIcon className="size-4" />
-          )}
-
-          {new Intl.NumberFormat("en-US", {
-            style: "percent",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-            signDisplay: "never",
-          }).format(props.percent)}
-        </Badge>
-      </div>
-    </ToolTipLabel>
-  );
 }
 
 export function TableData({ children }: { children: React.ReactNode }) {
