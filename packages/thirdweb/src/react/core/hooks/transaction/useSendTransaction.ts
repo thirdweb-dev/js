@@ -42,49 +42,49 @@ import { hasSponsoredTransactionsEnabled } from "../../utils/wallet.js";
  */
 export type SendTransactionPayModalConfig =
   | {
-    metadata?: {
-      name?: string;
-      image?: string;
-    };
-    locale?: LocaleId;
-    supportedTokens?: SupportedTokens;
-    theme?: Theme | "light" | "dark";
-    buyWithCrypto?:
-    | false
-    | {
-      testMode?: boolean;
-    };
-    buyWithFiat?:
-    | false
-    | {
-      prefillSource?: {
-        currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+      metadata?: {
+        name?: string;
+        image?: string;
       };
-      testMode?: boolean;
-      preferredProvider?: FiatProvider;
-    };
-    purchaseData?: object;
-    /**
-     * Callback to be called when the user successfully completes the purchase.
-     */
-    onPurchaseSuccess?: (
-      info:
+      locale?: LocaleId;
+      supportedTokens?: SupportedTokens;
+      theme?: Theme | "light" | "dark";
+      buyWithCrypto?:
+        | false
         | {
-          type: "crypto";
-          status: BuyWithCryptoStatus;
-        }
+            testMode?: boolean;
+          };
+      buyWithFiat?:
+        | false
         | {
-          type: "fiat";
-          status: BuyWithFiatStatus;
-        }
-        | {
-          type: "transaction";
-          chainId: number;
-          transactionHash: Hex;
-        },
-    ) => void;
-    showThirdwebBranding?: boolean;
-  }
+            prefillSource?: {
+              currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+            };
+            testMode?: boolean;
+            preferredProvider?: FiatProvider;
+          };
+      purchaseData?: object;
+      /**
+       * Callback to be called when the user successfully completes the purchase.
+       */
+      onPurchaseSuccess?: (
+        info:
+          | {
+              type: "crypto";
+              status: BuyWithCryptoStatus;
+            }
+          | {
+              type: "fiat";
+              status: BuyWithFiatStatus;
+            }
+          | {
+              type: "transaction";
+              chainId: number;
+              transactionHash: Hex;
+            },
+      ) => void;
+      showThirdwebBranding?: boolean;
+    }
   | false;
 
 /**
@@ -236,11 +236,11 @@ export function useSendTransactionCore(args: {
               }),
               _erc20Value?.tokenAddress
                 ? getTokenBalance({
-                  client: tx.client,
-                  account,
-                  chain: tx.chain,
-                  tokenAddress: _erc20Value.tokenAddress,
-                })
+                    client: tx.client,
+                    account,
+                    chain: tx.chain,
+                    tokenAddress: _erc20Value.tokenAddress,
+                  })
                 : undefined,
               getTransactionGasCost(tx, account.address),
             ]);
