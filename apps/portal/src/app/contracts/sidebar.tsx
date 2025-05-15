@@ -799,6 +799,11 @@ export const sidebar: SideBar = {
             },
           ],
         },
+        // stylus
+        {
+          name: "Arbitrum Stylus",
+          href: `${buildSlug}/stylus`,
+        },
       ],
     },
     { separator: true },

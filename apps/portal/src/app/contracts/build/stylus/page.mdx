@@ -1,0 +1,66 @@
+import { DocImage } from "@doc";
+import { Tabs, TabsList, TabsContent } from "@/components/ui/tabs";
+import stylusPublishPage from "./assets/stylus-publish-page.png";
+import stylusDeployPage from "./assets/stylus-deploy-page.png";
+
+# Arbitrum Stylus
+
+Integrate thirdweb tools in Stylus contract (Rust) development workflow.
+
+Use thirdweb CLI to create, publish, and deploy contracts written with Stylus. The deployed contracts can be used via thirdweb dashboard or SDK.
+
+## Prerequisites
+- Rust toolchain should be installed (https://www.rust-lang.org/tools/install)
+- Solidity (solc) should be installed (https://docs.soliditylang.org/en/latest/installing-solidity.html)
+
+You can also use the Stylus quickstart guide for reference: https://docs.arbitrum.io/stylus/quickstart
+
+## Getting started
+
+To get started, setup a starter repo (can be skipped if you already have a Stylus project):
+
+<Tabs defaultValue="forge">
+	<TabsContent value="forge">
+	```bash
+	npx thirdweb create-stylus
+	```
+	</TabsContent>
+</Tabs>
+
+This will setup a project containing a template contract.
+
+## Publishing and Deploying
+
+Use one of these commands to publish or deploy your Stylus contract.
+
+<Tabs defaultValue="forge">
+	<TabsContent value="forge">
+	```bash
+	npx thirdweb publish-stylus -k <YOUR SECRET KEY>
+	```
+	</TabsContent>
+</Tabs>
+
+OR
+
+<Tabs defaultValue="forge">
+	<TabsContent value="forge">
+	```bash
+	npx thirdweb deploy-stylus -k <YOUR SECRET KEY>
+	```
+	</TabsContent>
+</Tabs>
+
+Publishing a contract saves the contract metadata to an onchain registry, and creates a contract page from where you can deploy a specific version of this contract multiple times.
+
+This is what you should see:
+
+<DocImage src={stylusPublishPage} />
+
+
+
+After deployment, the contract will be available on thirdweb dashboard. You can interact with it via dashboard or integrate it in your app using the code snippets as shown below:
+
+<DocImage src={stylusDeployPage} />
+
+More templates for Stylus Rust contracts and use-case specific installable modules are coming soon.
