@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
-import { CardHeading, ChangeBadge, NoDataOverlay, chartHeight } from "./common";
+import { CardHeading, NoDataOverlay, chartHeight } from "./common";
 
 type GraphData = {
   date: string;
@@ -24,7 +24,7 @@ export function Payouts(props: {
     props.data.every((x) => x.developerFeeUsdCents === 0);
 
   const barColor = isEmpty ? "hsl(var(--accent))" : "hsl(var(--chart-1))";
-  const { graphData, totalPayoutsUSD, trend } = useMemo(() => {
+  const { graphData, totalPayoutsUSD } = useMemo(() => {
     const dates = new Set<string>();
     for (const item of props.data) {
       if (!dates.has(item.date)) {
@@ -49,21 +49,9 @@ export function Payouts(props: {
         value: total / 100,
       });
     }
-    const lastPeriod = cleanedData[cleanedData.length - 3];
-    const currentPeriod = cleanedData[cleanedData.length - 2];
-    const trend =
-      lastPeriod &&
-      currentPeriod &&
-      lastPeriod.value > 0 &&
-      currentPeriod.value > 0
-        ? (currentPeriod.value - lastPeriod.value) / lastPeriod.value
-        : lastPeriod?.value === 0 && (currentPeriod?.value || 0) > 0
-          ? 100
-          : undefined;
     return {
       graphData: cleanedData,
       totalPayoutsUSD: totalPayouts / 100,
-      trend,
     };
   }, [props.data, props.dateFormat]);
 
@@ -93,17 +81,6 @@ export function Payouts(props: {
               );
             }}
           />
-
-          {!isEmpty && typeof trend !== "undefined" && (
-            <SkeletonContainer
-              className="rounded-2xl"
-              loadedData={trend}
-              skeletonData={1}
-              render={(percent) => {
-                return <ChangeBadge percent={percent} />;
-              }}
-            />
-          )}
         </div>
 
         <div className="relative flex w-full justify-center">
