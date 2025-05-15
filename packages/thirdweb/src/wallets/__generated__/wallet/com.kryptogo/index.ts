@@ -28,6 +28,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://kryptogo.com/wallet",
   },
 } as const;

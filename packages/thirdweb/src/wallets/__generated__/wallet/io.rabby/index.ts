@@ -28,6 +28,7 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal:
+      "https://chrome.google.com/webstore/detail/rabby/acmacodkjbdgmoleebolmdjonilkdbch",
   },
 } as const;

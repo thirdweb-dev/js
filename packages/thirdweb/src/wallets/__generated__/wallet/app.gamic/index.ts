@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "gamic://",
-    universal: null,
+    universal: "https://gamic.app/",
   },
 } as const;

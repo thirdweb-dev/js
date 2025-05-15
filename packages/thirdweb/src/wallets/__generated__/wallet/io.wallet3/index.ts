@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "wallet3://",
-    universal: null,
+    universal: "https://wallet3.io",
   },
 } as const;

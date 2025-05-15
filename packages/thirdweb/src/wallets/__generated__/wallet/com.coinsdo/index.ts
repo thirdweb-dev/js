@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "coinwallet://",
-    universal: null,
+    universal: "https://www.coinsdo.com/wallet_coinsdo.html",
   },
 } as const;
