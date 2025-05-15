@@ -43,6 +43,7 @@ export function PaymentHistory(props: {
       });
       return res;
     },
+    refetchInterval: 10_000,
   });
   const isEmpty = useMemo(
     () => !payPurchaseData?.data.length,
@@ -68,8 +69,8 @@ export function PaymentHistory(props: {
           <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
             <thead>
               <TableHeadingRow>
-                <TableHeading> Paid </TableHeading>
-                <TableHeading> Bought </TableHeading>
+                <TableHeading> Sent </TableHeading>
+                <TableHeading> Received </TableHeading>
                 <TableHeading>Type</TableHeading>
                 <TableHeading>Status</TableHeading>
                 <TableHeading>Recipient</TableHeading>

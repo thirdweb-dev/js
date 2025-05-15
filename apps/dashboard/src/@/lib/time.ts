@@ -39,9 +39,10 @@ export function getFiltersFromSearchParams(params: {
         };
 
   const defaultInterval =
-    differenceInCalendarDays(range.to, range.from) > 30
-      ? "week"
-      : ("day" as const);
+    params.interval ??
+    (differenceInCalendarDays(range.to, range.from) > 30
+      ? ("week" as const)
+      : ("day" as const));
 
   return {
     range,
@@ -50,6 +51,6 @@ export function getFiltersFromSearchParams(params: {
         ? ("day" as const)
         : params.interval === "week"
           ? ("week" as const)
-          : defaultInterval,
+          : (defaultInterval as "day" | "week"),
   };
 }
