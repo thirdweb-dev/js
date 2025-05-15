@@ -106,13 +106,14 @@ function decryptFromEnclave(
 export type VaultClient = {
   baseUrl: string;
   publicKey: Uint8Array;
+  headers: Record<string, string>;
 };
 
-export async function createVaultClient({
-  baseUrl,
-}: {
-  baseUrl: string;
+export async function createVaultClient(clientOptions?: {
+  baseUrl?: string;
+  secretKey?: string;
 }): Promise<VaultClient> {
+  const baseUrl = clientOptions?.baseUrl ?? "https://engine.thirdweb.com";
   // Construct the full URL for the fetch call
   const url = new URL("api/v1/enclave", baseUrl).toString();
 
@@ -120,13 +121,18 @@ export async function createVaultClient({
     publicKey: string;
   };
 
+  const headers = {
+    // Indicate we accept JSON responses
+    Accept: "application/json",
+    ...(clientOptions?.secretKey
+      ? { "x-secret-key": clientOptions?.secretKey }
+      : {}),
+  };
+
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        // Indicate we accept JSON responses
-        Accept: "application/json",
-      },
+      headers,
     });
 
     // fetch doesn't throw on HTTP errors (like 4xx, 5xx) by default.
@@ -149,7 +155,8 @@ export async function createVaultClient({
     const publicKeyBytes = hexToBytes(data.publicKey);
 
     return {
-      baseUrl: baseUrl, // Store baseUrl
+      baseUrl, // Store baseUrl
+      headers,
       publicKey: publicKeyBytes,
     };
   } catch (error) {
@@ -180,6 +187,7 @@ async function sendRequest<P extends Payload>({
     const response = await fetch(url, {
       method: "POST",
       headers: {
+        ...client.headers,
         "Content-Type": "application/json",
         Accept: "application/json", // Good practice to specify accept header
       },
