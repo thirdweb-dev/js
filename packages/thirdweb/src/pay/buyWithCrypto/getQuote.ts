@@ -1,4 +1,5 @@
 import { Value } from "ox";
+import * as ox__AbiFunction from "ox/AbiFunction";
 import * as Bridge from "../../bridge/index.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -260,14 +261,22 @@ export async function getBuyWithCryptoQuote(
       );
     }
 
-    const approvalData: QuoteApprovalInfo | undefined = approvalTx
-      ? {
-          chainId: firstStep.originToken.chainId,
-          tokenAddress: firstStep.originToken.address,
-          spenderAddress: approvalTx.to,
-          amountWei: quote.originAmount.toString(),
-        }
-      : undefined;
+    let approvalData: QuoteApprovalInfo | undefined;
+    if (approvalTx) {
+      const abiFunction = ox__AbiFunction.from([
+        "function approve(address spender, uint256 amount)",
+      ]);
+      const [spender, amount] = ox__AbiFunction.decodeData(
+        abiFunction,
+        approvalTx.data,
+      );
+      approvalData = {
+        chainId: firstStep.originToken.chainId,
+        tokenAddress: firstStep.originToken.address,
+        spenderAddress: spender,
+        amountWei: amount.toString(),
+      };
+    }
 
     const swapRoute: BuyWithCryptoQuote = {
       transactionRequest: {
@@ -341,7 +350,7 @@ export async function getBuyWithCryptoQuote(
           slippageBPS: 0,
           feesUSDCents: 0,
           gasCostUSDCents: 0,
-          durationSeconds: 0,
+          durationSeconds: firstStep.estimatedExecutionTimeMs / 1000,
         },
 
         maxSlippageBPS: 0,
