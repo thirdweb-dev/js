@@ -33,6 +33,10 @@ type ExecutionResult4337Serialized =
       status: "QUEUED";
     }
   | {
+      status: "FAILED";
+      error: string;
+    }
+  | {
       status: "SUBMITTED";
       monitoringStatus: "WILL_MONITOR" | "CANNOT_MONITOR";
       userOpHash: string;

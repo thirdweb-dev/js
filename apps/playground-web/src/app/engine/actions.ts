@@ -1,12 +1,18 @@
 "use server";
 
-import { Engine } from "@thirdweb-dev/engine";
-
+import { Engine, defineChain, encode, getContract } from "thirdweb";
+import { multicall } from "thirdweb/extensions/common";
+import * as ERC20 from "thirdweb/extensions/erc20";
+import * as ERC1155 from "thirdweb/extensions/erc1155";
+import { THIRDWEB_CLIENT } from "../../lib/client";
 const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
+const ENGINE_VAULT_ACCESS_TOKEN = process.env
+  .ENGINE_VAULT_ACCESS_TOKEN as string;
 
-const engine = new Engine({
-  url: process.env.ENGINE_URL as string,
-  accessToken: process.env.ENGINE_ACCESS_TOKEN as string,
+const serverWallet = Engine.serverWallet({
+  address: BACKEND_WALLET_ADDRESS,
+  client: THIRDWEB_CLIENT,
+  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
 });
 
 export async function airdrop_tokens_with_engine(params: {
@@ -17,20 +23,37 @@ export async function airdrop_tokens_with_engine(params: {
     amount: string;
   }[];
 }) {
-  const res = await engine.erc20.mintBatchTo(
-    params.chainId.toString(),
-    params.contractAddress,
-    BACKEND_WALLET_ADDRESS,
-    {
-      data: params.receivers,
-    },
+  const contract = getContract({
+    address: params.contractAddress,
+    chain: defineChain(params.chainId),
+    client: THIRDWEB_CLIENT,
+  });
+  const data = await Promise.all(
+    params.receivers.map((receiver) =>
+      encode(
+        ERC20.mintTo({
+          contract,
+          to: receiver.toAddress,
+          amount: receiver.amount,
+        }),
+      ),
+    ),
   );
+  const tx = multicall({
+    contract,
+    data,
+  });
 
-  return res.result;
+  const res = await serverWallet.enqueueTransaction({ transaction: tx });
+
+  return res.transactionId;
 }
 
 export async function get_engine_tx_status(queueId: string) {
-  const status = await engine.transaction.status(queueId);
+  const status = await Engine.getTransactionStatus({
+    client: THIRDWEB_CLIENT,
+    transactionId: queueId,
+  });
   return status;
 }
 
@@ -49,17 +72,19 @@ type MintNFTParams = {
 };
 
 export async function mint_erc1155_nft_with_engine(params: MintNFTParams) {
-  const res = await engine.erc1155.mintTo(
-    params.chainId.toString(),
-    params.contractAddress,
-    BACKEND_WALLET_ADDRESS,
-    {
-      receiver: params.toAddress,
-      metadataWithSupply: params.metadataWithSupply,
-    },
-  );
+  const tx = ERC1155.mintTo({
+    contract: getContract({
+      address: params.contractAddress,
+      chain: defineChain(params.chainId),
+      client: THIRDWEB_CLIENT,
+    }),
+    nft: params.metadataWithSupply.metadata,
+    to: params.toAddress,
+    supply: BigInt(params.metadataWithSupply.supply),
+  });
+  const res = await serverWallet.enqueueTransaction({ transaction: tx });
 
-  return res.result;
+  return res.transactionId;
 }
 
 type ClaimNFTParams = {
@@ -71,16 +96,17 @@ type ClaimNFTParams = {
 };
 
 export async function claim_erc1155_nft_with_engine(params: ClaimNFTParams) {
-  const res = await engine.erc1155.claimTo(
-    params.chainId.toString(),
-    params.contractAddress,
-    BACKEND_WALLET_ADDRESS,
-    {
-      receiver: params.receiverAddress,
-      quantity: params.quantity.toString(),
-      tokenId: params.tokenId,
-    },
-  );
+  const tx = ERC1155.claimTo({
+    contract: getContract({
+      address: params.contractAddress,
+      chain: defineChain(params.chainId),
+      client: THIRDWEB_CLIENT,
+    }),
+    to: params.receiverAddress,
+    tokenId: BigInt(params.tokenId),
+    quantity: BigInt(params.quantity),
+  });
+  const res = await serverWallet.enqueueTransaction({ transaction: tx });
 
-  return res.result;
+  return res.transactionId;
 }

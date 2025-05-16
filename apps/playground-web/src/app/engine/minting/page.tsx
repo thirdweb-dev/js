@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Mint NFTs"
+        title="Mint Dynamic NFTs"
         description={
           <>
             Allow your users to mint new tokens into any given contract. You
