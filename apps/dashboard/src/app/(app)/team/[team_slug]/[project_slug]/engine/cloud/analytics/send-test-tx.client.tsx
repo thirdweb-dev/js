@@ -252,6 +252,7 @@ export function SendTestTransaction(props: {
                   1740,
                   4202,
                   10200,
+                  13337,
                 ]}
                 client={thirdwebClient}
                 chainId={form.watch("chainId")}
