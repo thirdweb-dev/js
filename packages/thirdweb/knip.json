@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": ["src/exports/**", "scripts/**/*.{ts,mjs}", "src/cli/bin.ts", ""],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
-  "ignore": ["src/**/__generated__/**"],
+  "ignore": ["src/**/__generated__/**", "**/*.bench.ts"],
   "ignoreBinaries": ["printf"],
   "ignoreDependencies": [
     "@testing-library/jest-dom",
