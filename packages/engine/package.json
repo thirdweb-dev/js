@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/engine",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -23,7 +23,10 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/*", "src/*"],
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
   "dependencies": {
     "@hey-api/client-fetch": "0.10.0"
   },

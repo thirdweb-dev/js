@@ -1,5 +1,11 @@
 # @thirdweb-dev/insight
 
+## 3.0.1
+
+### Patch Changes
+
+- [#7050](https://github.com/thirdweb-dev/js/pull/7050) [`ae2ff74`](https://github.com/thirdweb-dev/js/commit/ae2ff743c05be7267e904ece9098601794b10dd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update openAPI spec
+
 ## 1.0.0
 
 ### Major Changes
