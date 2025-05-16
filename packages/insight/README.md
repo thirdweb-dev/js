@@ -1,4 +1,4 @@
-# Insight TypeScript SDK
+# Insight OpenAPI TypeScript Wrapper
 
 This package is a thin openAPI wrapper for insight, our in-house indexer.
 
