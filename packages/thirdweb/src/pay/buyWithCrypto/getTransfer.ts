@@ -1,5 +1,5 @@
 import { Value } from "ox";
-import * as Bridge from "../../bridge/index.js";
+import { Transfer } from "../../bridge/index.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
@@ -118,7 +118,7 @@ export async function getBuyWithCryptoTransfer(
             contract: tokenContract,
           });
     const amount = Value.from(params.amount, tokenDecimals);
-    const quote = await Bridge.Transfer.prepare({
+    const quote = await Transfer.prepare({
       chainId: params.chainId,
       tokenAddress: params.tokenAddress,
       amount,
