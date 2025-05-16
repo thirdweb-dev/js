@@ -1,0 +1,72 @@
+import { type WebhookResponse, getWebhooks } from "@/api/insight/webhooks";
+import { getProject } from "@/api/projects";
+import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { notFound } from "next/navigation";
+import { CreateWebhookModal } from "./components/CreateWebhookModal";
+import { WebhooksTable } from "./components/webhooks-table";
+
+export default async function WebhooksPage({
+  params,
+}: { params: { team_slug: string; project_slug: string } }) {
+  let webhooks: WebhookResponse[] = [];
+  let clientId = "";
+
+  try {
+    // Await params before accessing properties
+    const resolvedParams = await params;
+    const team_slug = resolvedParams.team_slug;
+    const project_slug = resolvedParams.project_slug;
+
+    const project = await getProject(team_slug, project_slug);
+
+    if (!project) {
+      notFound();
+    }
+
+    clientId = project.publishableKey;
+
+    const webhooksRes = await getWebhooks(clientId);
+    if (webhooksRes.data) {
+      webhooks = webhooksRes.data;
+    }
+  } catch (error) {
+    console.error("Error loading project or webhooks", error);
+  }
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="mb-1 font-bold text-2xl">Webhooks</h2>
+          <p className="text-muted-foreground">
+            Create and manage webhooks to get notified about blockchain events,
+            transactions and more.{" "}
+            <TrackedUnderlineLink
+              category="webhooks"
+              label="learn-more"
+              target="_blank"
+              href="https://portal.thirdweb.com/insight/webhooks"
+            >
+              Learn more about webhooks.
+            </TrackedUnderlineLink>
+          </p>
+        </div>
+        {webhooks.length > 0 && <CreateWebhookModal clientId={clientId} />}
+      </div>
+
+      {webhooks.length > 0 ? (
+        <WebhooksTable webhooks={webhooks} clientId={clientId} />
+      ) : (
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border p-12 text-center">
+          <div>
+            <h3 className="mb-1 font-medium text-lg">No webhooks found</h3>
+            <p className="text-muted-foreground">
+              Create a webhook to get started.
+            </p>
+          </div>
+          <CreateWebhookModal clientId={clientId} />
+        </div>
+      )}
+    </div>
+  );
+}
