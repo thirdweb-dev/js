@@ -13,7 +13,7 @@ export function MintCode() {
 
       <div className="h-4" />
       <h3 className="mb-2 font-semibold text-xl tracking-tight">
-        Send Transaction Request to Mint NFTs
+        Send Transaction Request to Mint Dynamic NFTs
       </h3>
       <Code code={engineMintCode} lang="typescript" />
 
@@ -36,48 +36,45 @@ export function MintCode() {
 const engineMintCode = `\
 const chainId = ${mintExample.chainId};
 const contractAddress = "${mintExample.contractAddress}";
-const url = \`\${YOUR_ENGINE_URL}\/contract/\${chainId}/\${contractAddress}\/erc1155\/mint-to\`;
-
-const response = await fetch(url, {
-  method: "POST",
-  headers: {
-    "Authorization": "Bearer YOUR_SECRET_TOKEN",
-    "Content-Type": "application/json",
-    "X-Backend-Wallet-Address": "YOUR_BACKEND_WALLET_ADDRESS",
-  },
-  body: JSON.stringify({
-    receiver: "0x....",
-    metadataWithSupply: {
-      metadata: {
-        name: "...",
-        description: "...",
-        image: "...", // ipfs or https link to your asset
-      },
-      supply: "1",
-    },
-  })
+const contract = getContract({
+  address: ${mintExample.contractAddress},
+  chain: defineChain(${mintExample.chainId}),
+  client: THIRDWEB_CLIENT,
 });
 
-const data = await response.json();
-console.log(data.queueId);
+const transaction = mintTo({
+    contract,
+    to: "0x....",
+    nft: {
+      name: "...",
+      description: "...",
+      image: "...", // ipfs or https link to your asset
+    },
+    supply: "1",
+  });
+
+const serverWallet = Engine.serverWallet({
+  address: BACKEND_WALLET_ADDRESS,
+  client: THIRDWEB_CLIENT,
+  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
+});
+
+const { transactionId } = await serverWallet.enqueueTransaction({ transaction });
 `;
 
 const getEngineStatusCode = `\
-function getEngineTxStatus(queueId: string) {
-  const url = \`\${YOUR_ENGINE_URL}\/transaction/\${queueId}\`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Authorization": "Bearer YOUR_SECRET_TOKEN",
-    },
-  });
-
-  const data = await response.json();
-  return data.result;
-}
-
-// you can keep polling for the status until you get a status of either "mined" or "errored" or "cancelled"
-const result = await getEngineTxStatus(queueId);
+const result = await Engine.getTransactionStatus({
+  client: THIRDWEB_CLIENT,
+  transactionId: transactionId,
+});
 
 console.log(result.status);
+
+// or wait for the transaction to be mined (polls status until it's mined)
+const result = await Engine.waitForTransactionHash({
+  client: THIRDWEB_CLIENT,
+  transactionId: transactionId,
+});
+
+console.log(result.transactionHash);
 `;

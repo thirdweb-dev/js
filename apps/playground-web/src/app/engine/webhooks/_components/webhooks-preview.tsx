@@ -71,7 +71,7 @@ export function EngineWebhooksPreview() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await claimMutation.mutateAsync(values.receiverAddress);
-    setQueueId(res.queueId);
+    setQueueId(res);
   }
 
   return (

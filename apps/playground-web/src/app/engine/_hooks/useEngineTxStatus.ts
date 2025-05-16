@@ -9,16 +9,64 @@ export function useEngineTxStatus(queueId: string | undefined) {
       if (!queueId) throw new Error("No queue ID provided");
       const res = await get_engine_tx_status(queueId);
 
-      const txStatus: EngineTxStatus = {
-        queueId: queueId,
-        status: res.result.status,
-        chainId: res.result.chainId,
-        transactionHash: res.result.transactionHash,
-        queuedAt: res.result.queuedAt,
-        sentAt: res.result.sentAt,
-        minedAt: res.result.minedAt,
-        cancelledAt: res.result.cancelledAt,
-      };
+      let txStatus: EngineTxStatus;
+      switch (res.status) {
+        case "QUEUED": {
+          txStatus = {
+            queueId: queueId,
+            status: "queued",
+            chainId: res.chain.id.toString(),
+            transactionHash: null,
+            queuedAt: res.createdAt,
+            sentAt: null,
+            minedAt: null,
+            cancelledAt: null,
+          };
+          break;
+        }
+        case "SUBMITTED": {
+          txStatus = {
+            queueId: queueId,
+            status: "sent",
+            chainId: res.chain.id.toString(),
+            transactionHash: null,
+            queuedAt: res.createdAt,
+            sentAt: res.createdAt,
+            minedAt: null,
+            cancelledAt: null,
+          };
+          break;
+        }
+        case "CONFIRMED": {
+          txStatus = {
+            queueId: queueId,
+            status: "mined",
+            chainId: res.chain.id.toString(),
+            transactionHash: res.transactionHash,
+            queuedAt: res.createdAt,
+            sentAt: res.confirmedAt,
+            minedAt: res.confirmedAt,
+            cancelledAt: null,
+          };
+          break;
+        }
+        case "FAILED": {
+          txStatus = {
+            queueId: queueId,
+            status: "errored",
+            chainId: res.chain.id.toString(),
+            transactionHash: null,
+            queuedAt: res.createdAt,
+            sentAt: null,
+            minedAt: null,
+            cancelledAt: res.cancelledAt,
+          };
+          break;
+        }
+        default: {
+          throw new Error(`Unknown engine tx status: ${res}`);
+        }
+      }
 
       return txStatus;
     },

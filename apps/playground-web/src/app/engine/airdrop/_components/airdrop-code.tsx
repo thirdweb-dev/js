@@ -34,49 +34,49 @@ export function AirdropCode() {
 }
 
 const engineAirdropSendCode = `\
-const chainId = ${airdropExample.chainId};
-const contractAddress = "${airdropExample.contractAddress}";
 const addresses = ${JSON.stringify(
   airdropExample.receivers.map((x) => ({
-    address: x.toAddress,
-    quantity: x.amount,
+    recipient: x.toAddress,
+    amount: x.amount,
   })),
   null,
   2,
 )};
 
-const url = \`\${YOUR_ENGINE_URL}\/contract/\${chainId}/\${contractAddress}\/erc1155\/airdrop\`;
-
-const response = await fetch(url, {
-  method: "POST",
-  headers: {
-    "Authorization": "Bearer YOUR_SECRET_TOKEN",
-    "Content-Type": "application/json",
-    "X-Backend-Wallet-Address": "YOUR_BACKEND_WALLET_ADDRESS",
-  },
-  body: JSON.stringify({ addresses }),
+const contract = getContract({
+  address: ${airdropExample.contractAddress},
+  chain: defineChain(${airdropExample.chainId}),
+  client: THIRDWEB_CLIENT,
 });
 
-const data = await response.json();
-const queueId = data.queueId;
+const transaction = airdropERC20({
+    contract,
+    tokenAddress: ${airdropExample.contractAddress},
+    contents: addresses,
+  });
+
+const serverWallet = Engine.serverWallet({
+  address: BACKEND_WALLET_ADDRESS,
+  client: THIRDWEB_CLIENT,
+  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
+});
+
+const { transactionId } = await serverWallet.enqueueTransaction({ transaction });
 `;
 
 const engineAirdropGetStatus = `\
-function getEngineTxStatus(queueId: string) {
-  const url = \`\${YOUR_ENGINE_URL}\/transaction/\${queueId}\`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Authorization": "Bearer YOUR_SECRET_TOKEN",
-    },
-  });
-
-  const data = await response.json();
-  return data.result;
-}
-
-// you can keep polling for the status until you get a status of either "mined" or "errored" or "cancelled"
-const result = await getEngineTxStatus(queueId);
+const result = await Engine.getTransactionStatus({
+  client: THIRDWEB_CLIENT,
+  transactionId: transactionId,
+});
 
 console.log(result.status);
+
+// or wait for the transaction to be mined (polls status until it's mined)
+const result = await Engine.waitForTransactionHash({
+  client: THIRDWEB_CLIENT,
+  transactionId: transactionId,
+});
+
+console.log(result.transactionHash);
 `;

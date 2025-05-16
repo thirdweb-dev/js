@@ -231,10 +231,10 @@ export function EngineMintPreview() {
     });
 
     // optimistic update
-    queryClient.setQueryData(["engineTxStatus", result.queueId], {
+    queryClient.setQueryData(["engineTxStatus", result], {
       status: "queued",
       chainId: mintExample.chainId.toString(),
-      queueId: result.queueId,
+      queueId: result,
       transactionHash: null,
       queuedAt: new Date().toISOString(),
       sentAt: null,
@@ -242,7 +242,7 @@ export function EngineMintPreview() {
       cancelledAt: null,
     } satisfies EngineTxStatus);
 
-    setQueueId(result.queueId);
+    setQueueId(result);
   };
 
   return (
