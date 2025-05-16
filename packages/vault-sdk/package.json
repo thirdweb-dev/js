@@ -32,7 +32,7 @@
     "@noble/curves": "1.8.2",
     "@noble/hashes": "1.7.2",
     "abitype": "1.0.8",
-    "jose": "6.0.10"
+    "jose": "6.0.11"
   },
   "devDependencies": {
     "rimraf": "6.0.1"
