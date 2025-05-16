@@ -52,6 +52,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250421.0",
     "@types/node": "22.14.1",
+    "@vitest/coverage-v8": "3.1.2",
     "typescript": "5.8.3",
     "vitest": "3.1.2"
   },
@@ -64,6 +65,7 @@
     "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
-    "test": "vitest run"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
   }
 }
