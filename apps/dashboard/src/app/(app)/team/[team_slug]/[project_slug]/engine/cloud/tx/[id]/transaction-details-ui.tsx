@@ -36,12 +36,17 @@ export function TransactionDetailsUI({
     transactionHash,
     confirmedAt,
     createdAt,
-    errorMessage,
     executionParams,
     executionResult,
   } = transaction;
 
   const status = executionResult?.status as keyof typeof statusDetails;
+  const errorMessage =
+    executionResult && "error" in executionResult
+      ? executionResult.error
+      : executionResult && "revertData" in executionResult
+        ? executionResult.revertData?.revertReason
+        : null;
 
   const chain = chainId ? idToChain.get(Number.parseInt(chainId)) : undefined;
   const explorer = chain?.explorers?.[0];

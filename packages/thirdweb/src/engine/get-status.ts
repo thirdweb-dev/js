@@ -49,6 +49,9 @@ export type ExecutionResult = Prettify<
     chain: Chain;
     from: string | undefined;
     id: string;
+    createdAt: string;
+    confirmedAt: string | null;
+    cancelledAt: string | null;
   }
 >;
 
@@ -105,6 +108,9 @@ export async function getTransactionStatus(args: {
   const executionResult = data.executionResult as ExecutionResult4337Serialized;
   return {
     ...executionResult,
+    createdAt: data.createdAt,
+    confirmedAt: data.confirmedAt,
+    cancelledAt: data.cancelledAt,
     chain: getCachedChain(Number(data.chainId)),
     from: data.from ?? undefined,
     id: data.id,
