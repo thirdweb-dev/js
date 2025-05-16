@@ -341,7 +341,7 @@ export async function getBuyWithCryptoQuote(
           slippageBPS: 0,
           feesUSDCents: 0,
           gasCostUSDCents: 0,
-          durationSeconds: 0,
+          durationSeconds: firstStep.estimatedExecutionTimeMs / 1000,
         },
 
         maxSlippageBPS: 0,

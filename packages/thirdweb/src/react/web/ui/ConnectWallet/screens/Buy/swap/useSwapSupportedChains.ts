@@ -120,7 +120,7 @@ export function useBuySupportedSources(options: {
         destinationTokenAddress: options.destinationTokenAddress,
         maxSteps: 1,
         sortBy: "popularity",
-        limit: 1000000,
+        limit: 50,
       });
 
       const tokens = new Set<string>();
@@ -133,6 +133,7 @@ export function useBuySupportedSources(options: {
           buyWithFiatEnabled: boolean;
           name: string;
           symbol: string;
+          icon?: string;
         }>
       > = [];
       for (const route of routes) {
@@ -157,6 +158,7 @@ export function useBuySupportedSources(options: {
               buyWithFiatEnabled: true,
               name: route.originToken.name,
               symbol: route.originToken.symbol,
+              icon: route.originToken.iconUri,
             },
           ];
         }
