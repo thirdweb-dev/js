@@ -510,8 +510,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               client={client}
               onBack={() => {
                 if (
-                  screen.id === "buy-with-crypto" ||
-                  screen.id === "buy-with-fiat"
+                  (screen.id === "buy-with-crypto" ||
+                    screen.id === "buy-with-fiat") &&
+                  enabledPaymentMethods.buyWithCryptoEnabled
                 ) {
                   setScreen({
                     id: "select-from-token",
