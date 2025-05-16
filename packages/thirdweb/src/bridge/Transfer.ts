@@ -1,9 +1,9 @@
 import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
-import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote } from "./types/Quote.js";
 
 /**
@@ -192,7 +192,7 @@ export async function prepare(
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/transfer/prepare`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/transfer/prepare`);
 
   const response = await clientFetch(url.toString(), {
     method: "POST",

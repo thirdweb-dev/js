@@ -35,6 +35,8 @@ async function fetchBuySupportedDestinations({
         originChainId,
         originTokenAddress,
         maxSteps: 1,
+        sortBy: "popularity",
+        limit: 1000000,
       });
       const tokens = new Set<string>();
       const chains = new Set<number>();
@@ -46,6 +48,7 @@ async function fetchBuySupportedDestinations({
           buyWithFiatEnabled: boolean;
           name: string;
           symbol: string;
+          icon?: string;
         }>
       > = [];
       for (const route of routes) {
@@ -70,6 +73,7 @@ async function fetchBuySupportedDestinations({
               buyWithFiatEnabled: true,
               name: route.destinationToken.name,
               symbol: route.destinationToken.symbol,
+              icon: route.destinationToken.iconUri,
             },
           ];
         }
@@ -115,6 +119,8 @@ export function useBuySupportedSources(options: {
         destinationChainId: options.destinationChainId,
         destinationTokenAddress: options.destinationTokenAddress,
         maxSteps: 1,
+        sortBy: "popularity",
+        limit: 1000000,
       });
 
       const tokens = new Set<string>();
