@@ -1,10 +1,10 @@
+import { type Status, status as bridgeStatus } from "../../bridge/index.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getClientFetch } from "../../utils/fetch.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
 } from "../utils/commonTypes.js";
-import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
@@ -123,7 +123,7 @@ export type ValidBuyWithCryptoStatus = Exclude<
  * }});
  * ```
  * @returns Object of type [`BuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoStatus)
- * @deprecated
+ * @deprecated use Bridge.status instead
  * @buyCrypto
  */
 export async function getBuyWithCryptoStatus(
@@ -133,26 +133,175 @@ export async function getBuyWithCryptoStatus(
     if (!buyWithCryptoTransaction.transactionHash) {
       throw new Error("Transaction hash is required");
     }
-    const queryString = new URLSearchParams({
-      transactionHash: buyWithCryptoTransaction.transactionHash,
-      chainId: buyWithCryptoTransaction.chainId.toString(),
-    }).toString();
-    const url = `${getPayBuyWithCryptoStatusUrl()}?${queryString}`;
+    const result = await bridgeStatus({
+      transactionHash: buyWithCryptoTransaction.transactionHash as Hex,
+      chainId: buyWithCryptoTransaction.chainId,
+      client: buyWithCryptoTransaction.client,
+    });
 
-    const response = await getClientFetch(buyWithCryptoTransaction.client)(url);
+    switch (result.status) {
+      case "COMPLETED": {
+        const originTransaction = result.transactions?.find(
+          (tx) => tx.chainId === buyWithCryptoTransaction.chainId,
+        );
+        const destinationTransaction = result.transactions?.find(
+          (tx) => tx.chainId !== buyWithCryptoTransaction.chainId,
+        );
 
-    // Assuming the response directly matches the BuyWithCryptoStatus interface
-    if (!response.ok) {
-      const error = await response.text().catch(() => null);
-      throw new Error(
-        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
-      );
+        return toBuyWithCryptoStatus({
+          originTransaction,
+          destinationTransaction,
+          originAmount: result.originAmount,
+          destinationAmount: result.destinationAmount,
+          originTokenAddress: result.originTokenAddress,
+          destinationTokenAddress: result.destinationTokenAddress,
+          originChainId: result.originChainId,
+          destinationChainId: result.destinationChainId,
+          status: result.status,
+          purchaseData: result.purchaseData as object | undefined,
+        });
+      }
+      case "PENDING": {
+        return toBuyWithCryptoStatus({
+          originAmount: result.originAmount,
+          originTokenAddress: result.originTokenAddress,
+          destinationTokenAddress: result.destinationTokenAddress,
+          originChainId: result.originChainId,
+          destinationChainId: result.destinationChainId,
+          status: result.status,
+        });
+      }
+      case "FAILED": {
+        const originTransaction = result.transactions?.find(
+          (tx) => tx.chainId === buyWithCryptoTransaction.chainId,
+        );
+        const destinationTransaction = result.transactions?.find(
+          (tx) => tx.chainId !== buyWithCryptoTransaction.chainId,
+        );
+        return toBuyWithCryptoStatus({
+          originTransaction,
+          destinationTransaction,
+          originAmount: BigInt(0), // TODO: get from API
+          destinationAmount: BigInt(0), // TODO: get from API
+          originTokenAddress: "", // TODO: get from API
+          destinationTokenAddress: "", // TODO: get from API
+          originChainId: 0, // TODO: get from API
+          destinationChainId: 0, // TODO: get from API
+          status: result.status,
+        });
+      }
+      default: {
+        return {
+          status: "NOT_FOUND",
+        };
+      }
     }
-
-    const data: BuyWithCryptoStatus = (await response.json()).result;
-    return data;
   } catch (error) {
     console.error("Fetch error:", error);
     throw new Error(`Fetch failed: ${error}`);
   }
+}
+
+function toBuyWithCryptoStatus(args: {
+  originTransaction?: Status["transactions"][number];
+  destinationTransaction?: Status["transactions"][number];
+  originAmount: bigint;
+  originTokenAddress: string;
+  destinationAmount?: bigint;
+  destinationTokenAddress: string;
+  originChainId: number;
+  destinationChainId: number;
+  status: Status["status"];
+  purchaseData?: object;
+}): BuyWithCryptoStatus {
+  const {
+    originTransaction,
+    destinationTransaction,
+    status,
+    purchaseData,
+    originAmount,
+    destinationAmount,
+    originTokenAddress,
+    destinationTokenAddress,
+    originChainId,
+    destinationChainId,
+  } = args;
+  return {
+    fromAddress: "", // TODO: get from API
+    toAddress: "",
+    quote: {
+      createdAt: new Date().toISOString(),
+      estimated: {
+        fromAmountUSDCents: 0,
+        toAmountMinUSDCents: 0,
+        toAmountUSDCents: 0,
+        slippageBPS: 0,
+        feesUSDCents: 0,
+        gasCostUSDCents: 0,
+        durationSeconds: 0,
+      },
+      fromAmount: originAmount.toString(), // TODO: get from API
+      fromAmountWei: originAmount.toString(),
+      toAmount: destinationAmount?.toString() ?? "", // TODO: get from API
+      toAmountWei: destinationAmount?.toString() ?? "",
+      toAmountMin: destinationAmount?.toString() ?? "", // TODO: get from API
+      toAmountMinWei: destinationAmount?.toString() ?? "",
+      fromToken: {
+        tokenAddress: originTokenAddress,
+        chainId: originChainId,
+        decimals: 18,
+        name: "",
+        symbol: "",
+        priceUSDCents: 0,
+      },
+      toToken: {
+        tokenAddress: destinationTokenAddress,
+        chainId: destinationChainId,
+        decimals: 18,
+        name: "",
+        symbol: "",
+        priceUSDCents: 0,
+      },
+    },
+    swapType:
+      originTransaction?.chainId === destinationTransaction?.chainId
+        ? "SAME_CHAIN"
+        : "CROSS_CHAIN", // TODO transfer type?
+    status: status,
+    subStatus: status === "COMPLETED" ? "SUCCESS" : "NONE",
+    purchaseData: purchaseData as object | undefined,
+    bridge: "STARPORT",
+    destination: {
+      amount: destinationAmount?.toString() ?? "",
+      amountWei: destinationAmount?.toString() ?? "",
+      token: {
+        tokenAddress: destinationTokenAddress,
+        chainId: destinationChainId,
+        decimals: 18,
+        name: "",
+        symbol: "",
+        priceUSDCents: 0,
+      },
+      amountUSDCents: 0,
+      completedAt: new Date().toISOString(),
+      explorerLink: "",
+      transactionHash: destinationTransaction?.transactionHash ?? "",
+    },
+    source: {
+      amount: originAmount.toString(),
+      amountWei: originAmount.toString(),
+      token: {
+        tokenAddress: originTokenAddress,
+        chainId: originChainId,
+        decimals: 18,
+        name: "",
+        symbol: "",
+        priceUSDCents: 0,
+      },
+      amountUSDCents: 0,
+      completedAt: new Date().toISOString(),
+      explorerLink: "",
+      transactionHash: originTransaction?.transactionHash ?? "",
+    },
+  };
 }

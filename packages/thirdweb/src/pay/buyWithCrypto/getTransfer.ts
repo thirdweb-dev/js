@@ -1,4 +1,5 @@
 import { Value } from "ox";
+import * as ox__AbiFunction from "ox/AbiFunction";
 import * as Bridge from "../../bridge/index.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -145,14 +146,22 @@ export async function getBuyWithCryptoTransfer(
     }
     const approvalTx = approvalTxs[0];
 
-    const approvalData: QuoteApprovalInfo | undefined = approvalTx
-      ? {
-          chainId: firstStep.originToken.chainId,
-          tokenAddress: firstStep.originToken.address,
-          spenderAddress: approvalTx.to,
-          amountWei: quote.originAmount.toString(),
-        }
-      : undefined;
+    let approvalData: QuoteApprovalInfo | undefined;
+    if (approvalTx) {
+      const abiFunction = ox__AbiFunction.from([
+        "function approve(address spender, uint256 amount)",
+      ]);
+      const [spender, amount] = ox__AbiFunction.decodeData(
+        abiFunction,
+        approvalTx.data,
+      );
+      approvalData = {
+        chainId: firstStep.originToken.chainId,
+        tokenAddress: firstStep.originToken.address,
+        spenderAddress: spender,
+        amountWei: amount.toString(),
+      };
+    }
 
     const txs = firstStep.transactions.filter((tx) => tx.action !== "approval");
     if (txs.length > 1) {
@@ -166,6 +175,8 @@ export async function getBuyWithCryptoTransfer(
         "This quote is incompatible with getBuyWithCryptoTransfer. Please use Bridge.Transfer.prepare instead.",
       );
     }
+
+    console.log("tx", quote);
 
     const transfer: BuyWithCryptoTransfer = {
       transactionRequest: {
