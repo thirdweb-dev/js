@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 0.0.3
+
+### Patch Changes
+
+- [#7058](https://github.com/thirdweb-dev/js/pull/7058) [`e71e7d7`](https://github.com/thirdweb-dev/js/commit/e71e7d70a66a9843166a518d38fe9d454258d587) Thanks [@d4mr](https://github.com/d4mr)! - added secret key and default vault url
+
 ## 0.0.2
 
 ### Patch Changes
