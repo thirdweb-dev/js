@@ -124,6 +124,7 @@ export async function status(options: status.Options): Promise<status.Result> {
   if (data.status === "FAILED") {
     return {
       status: "FAILED",
+      paymentId: data.paymentId,
       transactions: data.transactions,
     };
   }
@@ -137,12 +138,19 @@ export async function status(options: status.Options): Promise<status.Result> {
       originTokenAddress: data.originTokenAddress,
       destinationTokenAddress: data.destinationTokenAddress,
       transactions: data.transactions,
+      originToken: data.originToken,
+      destinationToken: data.destinationToken,
+      sender: data.sender,
+      receiver: data.receiver,
+      paymentId: data.paymentId,
+      purchaseData: data.purchaseData,
     };
   }
 
   if (data.status === "NOT_FOUND") {
     return {
       status: "NOT_FOUND",
+      paymentId: data.paymentId,
       transactions: [],
     };
   }
@@ -156,6 +164,11 @@ export async function status(options: status.Options): Promise<status.Result> {
     originTokenAddress: data.originTokenAddress,
     destinationTokenAddress: data.destinationTokenAddress,
     transactions: data.transactions,
+    originToken: data.originToken,
+    destinationToken: data.destinationToken,
+    sender: data.sender,
+    receiver: data.receiver,
+    paymentId: data.paymentId,
     purchaseData: data.purchaseData,
   };
 }

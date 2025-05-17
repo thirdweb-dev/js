@@ -1,6 +1,8 @@
 import { type Status, status as bridgeStatus } from "../../bridge/index.js";
+import type { Token } from "../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Hex } from "../../utils/encoding/hex.js";
+import { toTokens } from "../../utils/units.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
@@ -158,6 +160,11 @@ export async function getBuyWithCryptoStatus(
           originChainId: result.originChainId,
           destinationChainId: result.destinationChainId,
           status: result.status,
+          sender: result.sender,
+          receiver: result.receiver,
+          paymentId: result.paymentId,
+          originToken: result.originToken,
+          destinationToken: result.destinationToken,
           purchaseData: result.purchaseData as object | undefined,
         });
       }
@@ -169,6 +176,12 @@ export async function getBuyWithCryptoStatus(
           originChainId: result.originChainId,
           destinationChainId: result.destinationChainId,
           status: result.status,
+          sender: result.sender,
+          receiver: result.receiver,
+          paymentId: result.paymentId,
+          originToken: result.originToken,
+          destinationToken: result.destinationToken,
+          purchaseData: result.purchaseData as object | undefined,
         });
       }
       case "FAILED": {
@@ -182,12 +195,17 @@ export async function getBuyWithCryptoStatus(
           originTransaction,
           destinationTransaction,
           originAmount: BigInt(0), // TODO: get from API
-          destinationAmount: BigInt(0), // TODO: get from API
           originTokenAddress: "", // TODO: get from API
           destinationTokenAddress: "", // TODO: get from API
           originChainId: 0, // TODO: get from API
           destinationChainId: 0, // TODO: get from API
           status: result.status,
+          sender: "",
+          receiver: "",
+          paymentId: "",
+          originToken: undefined,
+          destinationToken: undefined,
+          purchaseData: result.purchaseData as object | undefined,
         });
       }
       default: {
@@ -213,6 +231,11 @@ function toBuyWithCryptoStatus(args: {
   destinationChainId: number;
   status: Status["status"];
   purchaseData?: object;
+  sender: string;
+  receiver: string;
+  paymentId: string;
+  originToken?: Token;
+  destinationToken?: Token;
 }): BuyWithCryptoStatus {
   const {
     originTransaction,
@@ -225,10 +248,14 @@ function toBuyWithCryptoStatus(args: {
     destinationTokenAddress,
     originChainId,
     destinationChainId,
+    sender,
+    receiver,
+    originToken,
+    destinationToken,
   } = args;
   return {
-    fromAddress: "", // TODO: get from API
-    toAddress: "",
+    fromAddress: sender,
+    toAddress: receiver,
     quote: {
       createdAt: new Date().toISOString(),
       estimated: {
@@ -240,26 +267,36 @@ function toBuyWithCryptoStatus(args: {
         gasCostUSDCents: 0,
         durationSeconds: 0,
       },
-      fromAmount: originAmount.toString(), // TODO: get from API
+      fromAmount: originToken
+        ? toTokens(originAmount, originToken.decimals).toString()
+        : "",
       fromAmountWei: originAmount.toString(),
-      toAmount: destinationAmount?.toString() ?? "", // TODO: get from API
-      toAmountWei: destinationAmount?.toString() ?? "",
-      toAmountMin: destinationAmount?.toString() ?? "", // TODO: get from API
-      toAmountMinWei: destinationAmount?.toString() ?? "",
+      toAmount:
+        destinationToken && destinationAmount
+          ? toTokens(destinationAmount, destinationToken.decimals).toString()
+          : "", // TODO: get from API
+      toAmountWei: destinationAmount ? destinationAmount.toString() : "",
+      toAmountMin: destinationToken
+        ? toTokens(
+            destinationAmount ?? BigInt(0),
+            destinationToken.decimals,
+          ).toString()
+        : "", // TODO: get from API
+      toAmountMinWei: destinationAmount ? destinationAmount.toString() : "",
       fromToken: {
         tokenAddress: originTokenAddress,
         chainId: originChainId,
-        decimals: 18,
-        name: "",
-        symbol: "",
+        decimals: originToken?.decimals ?? 18,
+        name: originToken?.name ?? "",
+        symbol: originToken?.symbol ?? "",
         priceUSDCents: 0,
       },
       toToken: {
         tokenAddress: destinationTokenAddress,
         chainId: destinationChainId,
-        decimals: 18,
-        name: "",
-        symbol: "",
+        decimals: destinationToken?.decimals ?? 18,
+        name: destinationToken?.name ?? "",
+        symbol: destinationToken?.symbol ?? "",
         priceUSDCents: 0,
       },
     },
