@@ -36,14 +36,6 @@ if (API_SERVER_SECRET) {
 
 export const THIRDWEB_ENGINE_URL = process.env.THIRDWEB_ENGINE_URL || "";
 
-if (THIRDWEB_ENGINE_URL) {
-  experimental_taintUniqueValue(
-    "Do not pass THIRDWEB_ENGINE_URL to the client",
-    process,
-    THIRDWEB_ENGINE_URL,
-  );
-}
-
 export const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN || "";
 
 if (THIRDWEB_ACCESS_TOKEN) {
