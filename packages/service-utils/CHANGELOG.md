@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.9
+
+### Patch Changes
+
+- [#7020](https://github.com/thirdweb-dev/js/pull/7020) [`feae304`](https://github.com/thirdweb-dev/js/commit/feae304da2c428ca33b1b0b4a9b08dafe8c7bfc1) Thanks [@jnsdls](https://github.com/jnsdls)! - Prioritize JWT over service API keys in authentication
+
 ## 0.9.8
 
 ### Patch Changes
