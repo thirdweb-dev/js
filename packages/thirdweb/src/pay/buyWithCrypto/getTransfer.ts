@@ -176,8 +176,6 @@ export async function getBuyWithCryptoTransfer(
       );
     }
 
-    console.log("tx", quote);
-
     const transfer: BuyWithCryptoTransfer = {
       transactionRequest: {
         ...tx,

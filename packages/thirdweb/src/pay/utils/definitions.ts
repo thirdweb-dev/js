@@ -8,13 +8,6 @@ const getPayBaseUrl = () => {
 };
 
 /**
- * Endpoint to get the status of a "Buy with Crypto" quote.
- * @internal
- */
-export const getPayBuyWithCryptoStatusUrl = () =>
-  `${getPayBaseUrl()}/buy-with-crypto/status/v1`;
-
-/**
  * Endpoint to get a "Buy with Fiat" quote.
  * @internal
  */
