@@ -1,0 +1,70 @@
+# Vault SDK
+
+The **@thirdweb-dev/vault-sdk** gives you a type-safe JavaScript/TypeScript client for interacting with a Vault instance from any Node.js or browser environment.
+
+It is built on top of the Vault HTTP API and handles:
+
+- End-to-end encryption to the TEEs (Nitro Enclaves) that protect your keys.
+- Type-safe request/response objects (generated from the Rust server types).
+- Convenience helpers for signing messages, transactions and typed data.
+- Utility helpers for JSON-Web-Token (JWT) based _signed access tokens_.
+
+Use the SDK whenever you need programmatic, non-interactive access to the Vault—CLI tooling, server-side scripts, CI/CD pipelines or browser-based dashboards.
+
+---
+
+## What you can do
+
+1. **Create and manage service accounts** – bootstrap a new Vault, rotate admin keys.
+2. **Create EOAs (wallets)** – generate new non-custodial accounts inside the Vault.
+3. **Sign payloads** – transactions, messages, typed-data, EIP-4337 user-ops, …
+4. **Mint access tokens** – granular, policy-based bearer tokens for internal or 3rd-party services.
+5. **Parse raw transactions** – normalise heterogeneous user input into canonical EVM tx objects.
+
+See the Installation guide for how to add the package and the API Reference for every function available.
+
+---
+
+## Quick example
+
+```ts
+import {
+  createVaultClient,
+  createEoa,
+  signMessage,
+} from "@thirdweb-dev/vault-sdk";
+
+// 1. Connect to your Vault instance
+const vault = await createVaultClient({
+  secretKey: "PROJECT_SECRET_KEY" /* Your thirdweb project secret key */,
+});
+
+// 2. Create a new wallet inside the Vault
+const { success, data: eoa } = await createEoa({
+  client: vault,
+  request: {
+    auth: { adminKey: process.env.VAULT_ADMIN_KEY! },
+    options: {
+      metadata: { purpose: "treasury" },
+    },
+  },
+});
+
+if (!success) throw new Error("Failed to create EOA");
+
+// 3. Sign a message with that wallet
+await signMessage({
+  client: vault,
+  request: {
+    auth: { adminKey: process.env.VAULT_ADMIN_KEY! },
+    options: {
+      from: eoa!.address,
+      message: "Hello from Vault ✨",
+    },
+  },
+});
+```
+
+---
+
+Continue with the **Installation** section to get started.

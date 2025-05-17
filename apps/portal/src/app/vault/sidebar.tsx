@@ -1,5 +1,6 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
+  Code2Icon,
   KeyIcon,
   MessageCircleQuestionIcon,
   RocketIcon,
@@ -44,6 +45,41 @@ export const sidebar: SideBar = {
         {
           name: "Access Control",
           href: "/vault/key-concepts/access-control",
+        },
+      ],
+    },
+    {
+      name: "TypeScript SDK",
+      icon: <Code2Icon />,
+      links: [
+        {
+          name: "Overview",
+          href: "/vault/sdk",
+        },
+        {
+          name: "Installation",
+          href: "/vault/sdk/installation",
+        },
+        {
+          name: "API Reference",
+          href: "/vault/sdk/api-reference",
+        },
+        {
+          name: "Guides",
+          links: [
+            {
+              name: "Creating & Managing EOAs",
+              href: "/vault/sdk/guides/creating-eoas",
+            },
+            {
+              name: "Signing Transactions & Messages",
+              href: "/vault/sdk/guides/signing",
+            },
+            {
+              name: "Managing Access Tokens",
+              href: "/vault/sdk/guides/access-tokens",
+            },
+          ],
         },
       ],
     },
