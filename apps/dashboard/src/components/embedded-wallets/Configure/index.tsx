@@ -178,7 +178,7 @@ export const InAppWalletSettingsUI: React.FC<
   const hasCustomBranding =
     !!config.applicationImageUrl?.length || !!config.applicationName?.length;
 
-  const authRequiredPlan = "accelerate";
+  const authRequiredPlan = "growth";
   const brandingRequiredPlan = "starter";
 
   // accelerate or higher plan required
