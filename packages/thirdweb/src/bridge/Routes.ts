@@ -1,7 +1,7 @@
 import type { Address as ox__Address, Hex as ox__Hex } from "ox";
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
-import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { Route } from "./types/Route.js";
 
 /**
@@ -133,7 +133,7 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/routes`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/routes`);
   if (originChainId) {
     url.searchParams.set("originChainId", originChainId.toString());
   }

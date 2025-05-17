@@ -43,7 +43,9 @@ export function WalletRow(props: {
     client,
     address,
   });
-  const addressOrENS = ensNameQuery.data || shortenAddress(address);
+  const addressOrENS = address
+    ? ensNameQuery.data || shortenAddress(address)
+    : "";
   return (
     <Container flex="row" style={{ justifyContent: "space-between" }}>
       <Container flex="row" center="y" gap="sm" color="secondaryText">

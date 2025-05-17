@@ -59,7 +59,6 @@ export function ExecutingTxScreen(props: {
       <ModalHeader title="Transaction" onBack={props.onBack} />
 
       <Spacer y="xxl" />
-      <Spacer y="xxl" />
 
       <Container flex="row" center="x">
         {status === "loading" && <Spinner size="xxl" color="accentText" />}
@@ -87,7 +86,6 @@ export function ExecutingTxScreen(props: {
           : ""}
       </Text>
 
-      <Spacer y="xxl" />
       <Spacer y="xxl" />
 
       {status === "failed" && (

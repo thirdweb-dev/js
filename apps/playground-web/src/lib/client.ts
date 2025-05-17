@@ -10,6 +10,7 @@ setThirdwebDomains({
   pay: process.env.NEXT_PUBLIC_PAY_URL,
   analytics: process.env.NEXT_PUBLIC_ANALYTICS_URL,
   insight: process.env.NEXT_PUBLIC_INSIGHT_URL,
+  bridge: process.env.NEXT_PUBLIC_BRIDGE_URL,
 });
 
 const isDev =

@@ -17,6 +17,7 @@ describe("Thirdweb Domains", () => {
     analytics: "c.thirdweb.com",
     insight: "insight.thirdweb.com",
     engineCloud: "engine.thirdweb.com",
+    bridge: "bridge.thirdweb.com",
   };
 
   beforeEach(() => {

@@ -3,6 +3,7 @@ import {
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
 } from "@/constants/public-envs";
 import {
+  THIRDWEB_BRIDGE_URL,
   THIRDWEB_BUNDLER_DOMAIN,
   THIRDWEB_INAPP_WALLET_DOMAIN,
   THIRDWEB_INSIGHT_API_DOMAIN,
@@ -35,6 +36,7 @@ export function getConfiguredThirdwebClient(options: {
       social: THIRDWEB_SOCIAL_API_DOMAIN,
       bundler: THIRDWEB_BUNDLER_DOMAIN,
       insight: THIRDWEB_INSIGHT_API_DOMAIN,
+      bridge: THIRDWEB_BRIDGE_URL,
     });
   }
 

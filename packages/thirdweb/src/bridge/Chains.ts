@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
-import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { Chain } from "./types/Chain.js";
 
 /**
@@ -54,7 +54,7 @@ export async function chains(options: chains.Options): Promise<chains.Result> {
   const { client } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/chains`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/chains`);
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {

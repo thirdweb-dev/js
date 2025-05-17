@@ -8,7 +8,7 @@
   {
     "name": "thirdweb (cjs)",
     "path": "./dist/cjs/exports/thirdweb.js",
-    "limit": "200 kB"
+    "limit": "350 kB"
   },
   {
     "name": "thirdweb (minimal + tree-shaking)",

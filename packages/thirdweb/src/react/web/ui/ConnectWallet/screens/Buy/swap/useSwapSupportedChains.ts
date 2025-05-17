@@ -1,27 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { Address as ox__Address } from "ox";
+import * as Bridge from "../../../../../../../bridge/index.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { defineChain } from "../../../../../../../chains/utils.js";
+import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import {
-  getPaySupportedDestinations,
-  getPaySupportedSources,
-} from "../../../../../../../pay/utils/definitions.js";
-import { getClientFetch } from "../../../../../../../utils/fetch.js";
-import { stringify } from "../../../../../../../utils/json.js";
+import type { Address } from "../../../../../../../utils/address.js";
 import { withCache } from "../../../../../../../utils/promise/withCache.js";
-
-type Response = {
-  result: Array<{
-    chainId: number;
-    tokens: Array<{
-      address: string;
-      buyWithCryptoEnabled: boolean;
-      buyWithFiatEnabled: boolean;
-      name: string;
-      symbol: string;
-    }>;
-  }>;
-};
 
 export type SupportedChainAndTokens = Array<{
   chain: Chain;
@@ -35,35 +19,73 @@ export type SupportedChainAndTokens = Array<{
   }>;
 }>;
 
-export async function fetchBuySupportedDestinations(
-  client: ThirdwebClient,
-  isTestMode?: boolean,
-): Promise<SupportedChainAndTokens> {
+async function fetchBuySupportedDestinations({
+  client,
+  originChainId,
+  originTokenAddress,
+}: {
+  client: ThirdwebClient;
+  originChainId?: number;
+  originTokenAddress?: Address;
+}): Promise<SupportedChainAndTokens> {
   return withCache(
     async () => {
-      const fetchWithHeaders = getClientFetch(client);
-      const res = await fetchWithHeaders(
-        `${getPaySupportedDestinations()}${isTestMode ? "?isTestMode=true" : ""}`,
-      );
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(`Failed to fetch supported destinations: ${error}`);
+      const routes = await Bridge.routes({
+        client,
+        originChainId,
+        originTokenAddress,
+        maxSteps: 1,
+        sortBy: "popularity",
+        limit: 1000000,
+      });
+      const tokens = new Set<string>();
+      const chains = new Set<number>();
+      const destinationTokens: Record<
+        number,
+        Array<{
+          address: Address;
+          buyWithCryptoEnabled: boolean;
+          buyWithFiatEnabled: boolean;
+          name: string;
+          symbol: string;
+          icon?: string;
+        }>
+      > = [];
+      for (const route of routes) {
+        const key = `${route.destinationToken.chainId}:${route.destinationToken.address}`;
+        if (!tokens.has(key)) {
+          tokens.add(key);
+          if (!chains.has(route.destinationToken.chainId)) {
+            chains.add(route.destinationToken.chainId);
+          }
+          const existing = destinationTokens[route.destinationToken.chainId];
+          if (!existing) {
+            destinationTokens[route.destinationToken.chainId] = [];
+          }
+          destinationTokens[route.destinationToken.chainId] = [
+            ...(existing || []),
+            {
+              address: ox__Address.checksum(
+                route.destinationToken.address,
+              ) as Address,
+              // We support both options for all tokens
+              buyWithCryptoEnabled: true,
+              buyWithFiatEnabled: true,
+              name: route.destinationToken.name,
+              symbol: route.destinationToken.symbol,
+              icon: route.destinationToken.iconUri,
+            },
+          ];
+        }
       }
-      const data = (await res.json()) as Response;
-      if (!data.result) {
-        throw new Error(
-          `Failed to parse supported destinations: ${data ? stringify(data) : undefined}`,
-        );
-      }
-      return data.result.map((item) => ({
-        chain: defineChain({
-          id: item.chainId,
-        }),
-        tokens: item.tokens,
+
+      return [...chains].map((chainId) => ({
+        chain: getCachedChain(chainId),
+        tokens: destinationTokens[chainId] || [],
       }));
     },
     {
-      cacheKey: "destination-tokens",
+      cacheKey: `buy-supported-destinations-${originChainId}:${originTokenAddress}`,
       cacheTime: 5 * 60 * 1000,
     },
   );
@@ -74,12 +96,12 @@ export async function fetchBuySupportedDestinations(
  */
 export function useBuySupportedDestinations(
   client: ThirdwebClient,
-  isTestMode?: boolean,
+  _isTestMode?: boolean,
 ) {
   return useQuery({
     queryKey: ["destination-tokens", client],
     queryFn: async () => {
-      return fetchBuySupportedDestinations(client, isTestMode);
+      return fetchBuySupportedDestinations({ client });
     },
   });
 }
@@ -92,26 +114,59 @@ export function useBuySupportedSources(options: {
   return useQuery({
     queryKey: ["source-tokens", options],
     queryFn: async () => {
-      const fetchWithHeaders = getClientFetch(options.client);
-      const baseUrl = getPaySupportedSources();
+      const routes = await Bridge.routes({
+        client: options.client,
+        destinationChainId: options.destinationChainId,
+        destinationTokenAddress: options.destinationTokenAddress,
+        maxSteps: 1,
+        sortBy: "popularity",
+        limit: 50,
+      });
 
-      const url = new URL(baseUrl);
-      url.searchParams.append(
-        "destinationChainId",
-        options.destinationChainId.toString(),
-      );
-      url.searchParams.append(
-        "destinationTokenAddress",
-        options.destinationTokenAddress,
-      );
+      const tokens = new Set<string>();
+      const chains = new Set<number>();
+      const originTokens: Record<
+        number,
+        Array<{
+          address: Address;
+          buyWithCryptoEnabled: boolean;
+          buyWithFiatEnabled: boolean;
+          name: string;
+          symbol: string;
+          icon?: string;
+        }>
+      > = [];
+      for (const route of routes) {
+        const key = `${route.originToken.chainId}:${route.originToken.address}`;
+        if (!tokens.has(key)) {
+          tokens.add(key);
+          if (!chains.has(route.originToken.chainId)) {
+            chains.add(route.originToken.chainId);
+          }
+          const existing = originTokens[route.originToken.chainId];
+          if (!existing) {
+            originTokens[route.originToken.chainId] = [];
+          }
+          originTokens[route.originToken.chainId] = [
+            ...(existing || []),
+            {
+              address: ox__Address.checksum(
+                route.originToken.address,
+              ) as Address,
+              // We support both options for all tokens
+              buyWithCryptoEnabled: true,
+              buyWithFiatEnabled: true,
+              name: route.originToken.name,
+              symbol: route.originToken.symbol,
+              icon: route.originToken.iconUri,
+            },
+          ];
+        }
+      }
 
-      const res = await fetchWithHeaders(url.toString());
-      const data = (await res.json()) as Response;
-      return data.result.map((item) => ({
-        chain: defineChain({
-          id: item.chainId,
-        }),
-        tokens: item.tokens,
+      return [...chains].map((chainId) => ({
+        chain: getCachedChain(chainId),
+        tokens: originTokens[chainId] || [],
       }));
     },
   });
