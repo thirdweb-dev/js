@@ -214,7 +214,7 @@ async function fetchBalancesForWallet({
               chain.id === toChain.id
                 ? !(
                     mode === "fund_wallet" && account.address === accountAddress
-                  )
+                  ) && balance.value > 0n
                 : balance.value > 0n;
 
             if (include) {
