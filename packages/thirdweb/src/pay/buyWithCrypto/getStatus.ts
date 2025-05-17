@@ -274,14 +274,14 @@ function toBuyWithCryptoStatus(args: {
       toAmount:
         destinationToken && destinationAmount
           ? toTokens(destinationAmount, destinationToken.decimals).toString()
-          : "", // TODO: get from API
+          : "",
       toAmountWei: destinationAmount ? destinationAmount.toString() : "",
       toAmountMin: destinationToken
         ? toTokens(
             destinationAmount ?? BigInt(0),
             destinationToken.decimals,
           ).toString()
-        : "", // TODO: get from API
+        : "",
       toAmountMinWei: destinationAmount ? destinationAmount.toString() : "",
       fromToken: {
         tokenAddress: originTokenAddress,
@@ -309,14 +309,19 @@ function toBuyWithCryptoStatus(args: {
     purchaseData: purchaseData as object | undefined,
     bridge: "STARPORT",
     destination: {
-      amount: destinationAmount?.toString() ?? "",
+      amount: destinationToken
+        ? toTokens(
+            destinationAmount ?? BigInt(0),
+            destinationToken.decimals,
+          ).toString()
+        : "",
       amountWei: destinationAmount?.toString() ?? "",
       token: {
         tokenAddress: destinationTokenAddress,
         chainId: destinationChainId,
-        decimals: 18,
-        name: "",
-        symbol: "",
+        decimals: destinationToken?.decimals ?? 18,
+        name: destinationToken?.name ?? "",
+        symbol: destinationToken?.symbol ?? "",
         priceUSDCents: 0,
       },
       amountUSDCents: 0,
@@ -325,14 +330,16 @@ function toBuyWithCryptoStatus(args: {
       transactionHash: destinationTransaction?.transactionHash ?? "",
     },
     source: {
-      amount: originAmount.toString(),
+      amount: originToken
+        ? toTokens(originAmount, originToken.decimals).toString()
+        : "",
       amountWei: originAmount.toString(),
       token: {
         tokenAddress: originTokenAddress,
         chainId: originChainId,
-        decimals: 18,
-        name: "",
-        symbol: "",
+        decimals: originToken?.decimals ?? 18,
+        name: originToken?.name ?? "",
+        symbol: originToken?.symbol ?? "",
         priceUSDCents: 0,
       },
       amountUSDCents: 0,
