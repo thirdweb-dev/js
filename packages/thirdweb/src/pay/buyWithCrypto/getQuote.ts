@@ -379,7 +379,22 @@ export async function getBuyWithCryptoQuote(
             100,
         },
       ],
-      processingFees: [],
+      // TODO (UB): add develope and platform fees in API
+      processingFees: [
+        {
+          token: {
+            tokenAddress: firstStep.originToken.address,
+            chainId: firstStep.originToken.chainId,
+            decimals: firstStep.originToken.decimals,
+            symbol: firstStep.originToken.symbol,
+            name: firstStep.originToken.name,
+            priceUSDCents: firstStep.originToken.priceUsd * 100,
+          },
+          amountUSDCents: 0,
+          amountWei: "0",
+          amount: "0",
+        },
+      ],
       client: params.client,
     };
 
