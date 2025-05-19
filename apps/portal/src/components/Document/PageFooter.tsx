@@ -1,5 +1,6 @@
 import {
   BadgeHelpIcon,
+  BrainIcon,
   type LucideIcon,
   ScrollTextIcon,
   VideoIcon,
@@ -37,16 +38,23 @@ function Links() {
 
       <FooterLinkItem
         prefix="Watch our"
-        label="Video Tutorials"
+        label="video Tutorials"
         href="https://www.youtube.com/@thirdweb_"
         icon={VideoIcon}
       />
 
       <FooterLinkItem
         prefix="View our"
-        label="Changelog"
+        label="changelog"
         href="/changelog"
         icon={ScrollTextIcon}
+      />
+
+      <FooterLinkItem
+        prefix="Using AI?"
+        label="View llms.txt"
+        href="/llms-full.txt"
+        icon={BrainIcon}
       />
     </ul>
   );

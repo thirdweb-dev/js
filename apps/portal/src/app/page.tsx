@@ -39,8 +39,7 @@ function Hero() {
             thirdweb Documentation
           </h1>
           <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
-            Frontend, Backend, and Onchain tools to build complete web3 apps —
-            on every EVM chain.
+            Development framework for building onchain apps, games, and agents.
           </p>
         </div>
       </div>
@@ -115,7 +114,7 @@ function ReferenceSection() {
         />
         <SDKCard
           title="Insight"
-          href="https://insight-api.thirdweb.com/reference"
+          href="https://insight.thirdweb.com/reference#tag/webhooks"
           icon={InsightIcon}
           isExternal
           iconClassName="text-muted-foreground"
@@ -124,13 +123,6 @@ function ReferenceSection() {
           title="Universal Bridge"
           href="https://bridge.thirdweb.com/reference"
           icon={BridgeIcon}
-          isExternal
-          iconClassName="text-muted-foreground"
-        />
-        <SDKCard
-          title="Contracts"
-          href="https://contracts.thirdweb.com/reference"
-          icon={ContractsIcon}
           isExternal
           iconClassName="text-muted-foreground"
         />
