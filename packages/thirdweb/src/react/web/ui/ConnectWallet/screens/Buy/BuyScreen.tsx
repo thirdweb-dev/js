@@ -436,7 +436,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         tokenList={(
           (toChain?.id ? destinationSupportedTokens[toChain.id] : undefined) ||
           []
-        ).filter((x) => x.address !== NATIVE_TOKEN_ADDRESS)}
+        ).filter(
+          (x) => x.address.toLowerCase() !== NATIVE_TOKEN_ADDRESS.toLowerCase(),
+        )}
         onTokenSelect={(tokenInfo) => {
           setToToken(tokenInfo);
           goBack();

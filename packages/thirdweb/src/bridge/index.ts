@@ -1,5 +1,6 @@
 export * as Buy from "./Buy.js";
 export * as Sell from "./Sell.js";
+export * as Transfer from "./Transfer.js";
 export { status } from "./Status.js";
 export { routes } from "./Routes.js";
 export { chains } from "./Chains.js";

@@ -1,9 +1,9 @@
 import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
-import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
 
 /**
@@ -112,12 +112,13 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/sell/quote`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/sell/quote`);
   url.searchParams.set("originChainId", originChainId.toString());
   url.searchParams.set("originTokenAddress", originTokenAddress);
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
   url.searchParams.set("sellAmountWei", amount.toString());
+  url.searchParams.set("amount", amount.toString());
   if (typeof maxSteps !== "undefined") {
     url.searchParams.set("maxSteps", maxSteps.toString());
   }
@@ -190,7 +191,7 @@ export declare namespace quote {
  * This will return a quote that might look like:
  * ```typescript
  * {
- *   originAmount: 1000000000000000000n,
+ *   originAmount: 2000000000n,
  *   destinationAmount:  9980000000000000000n,
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
@@ -199,11 +200,11 @@ export declare namespace quote {
  *     {
  *       originToken: {
  *         chainId: 1,
- *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *         symbol: "ETH",
- *         name: "Ethereum",
- *         decimals: 18,
- *         priceUsd: 2000,
+ *         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+ *         symbol: "USDC",
+ *         name: "USDC",
+ *         decimals: 6,
+ *         priceUsd: 1,
  *         iconUri: "https://..."
  *       },
  *       destinationToken: {
@@ -215,7 +216,7 @@ export declare namespace quote {
  *         priceUsd: 2000,
  *         iconUri: "https://..."
  *       },
- *       originAmount: 1000000000000000000n,
+ *       originAmount: 2000000000n,
  *       destinationAmount:  9980000000000000000n,
  *       estimatedExecutionTimeMs: 1000
  *     }
@@ -241,10 +242,10 @@ export declare namespace quote {
  *   expiration: 1741730936680,
  *   intent: {
  *     originChainId: 1,
- *     originTokenAddress: NATIVE_TOKEN_ADDRESS,
+ *     originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
  *     destinationChainId: 10,
- *     destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
- *     amount: 1000000000000000000n
+ *     destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *     amount: 2000000000n
  *   }
  * }
  * ```
@@ -325,7 +326,7 @@ export async function prepare(
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/sell/prepare`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/sell/prepare`);
 
   const response = await clientFetch(url.toString(), {
     method: "POST",
@@ -334,6 +335,7 @@ export async function prepare(
     },
     body: stringify({
       sellAmountWei: amount.toString(),
+      amount: amount.toString(),
       originChainId: originChainId.toString(),
       originTokenAddress,
       destinationChainId: destinationChainId.toString(),
@@ -374,6 +376,8 @@ export async function prepare(
       destinationChainId,
       destinationTokenAddress,
       amount,
+      sender,
+      receiver,
       purchaseData,
     },
   };
@@ -400,6 +404,8 @@ export declare namespace prepare {
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
       amount: bigint;
+      sender: ox__Address.Address;
+      receiver: ox__Address.Address;
       purchaseData?: unknown;
     };
   };
