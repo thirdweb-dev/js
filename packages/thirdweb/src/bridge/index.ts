@@ -5,6 +5,9 @@ export * as Routes from "./Routes.js";
 export * as Sell from "./Sell.js";
 export * as Status from "./Status.js";
 export * as Transfer from "./Transfer.js";
+export { status } from "./Status.js";
+export { routes } from "./Routes.js";
+export { chains } from "./Chains.js";
 
 export type * from "./types/Chain.js";
 export type * from "./types/Quote.js";

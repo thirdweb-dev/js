@@ -27,6 +27,10 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
+    name: "Bridge",
+    href: "/pay",
+  },
+  {
     name: "Engine",
     href: "/engine",
   },
@@ -120,7 +124,7 @@ export const connectLinks: Array<{
 const apisLinks = [
   {
     name: "Insight",
-    href: "https://insight-api.thirdweb.com/reference",
+    href: "https://insight.thirdweb.com/reference",
   },
   {
     name: "Engine Cloud",
