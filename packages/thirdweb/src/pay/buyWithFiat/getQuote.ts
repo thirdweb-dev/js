@@ -1,8 +1,11 @@
 import { prepare as prepareOnramp } from "../../bridge/Onramp.js";
+import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
+import { getContract } from "../../contract/contract.js";
+import { decimals } from "../../extensions/erc20/read/decimals.js";
 import type { CurrencyMeta } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
-import { toTokens, toWei } from "../../utils/units.js";
+import { toTokens, toUnits } from "../../utils/units.js";
 import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
@@ -291,8 +294,19 @@ export async function getBuyWithFiatQuote(
     // Choose provider or default to STRIPE
     const onrampProvider = mapProviderToOnramp(params.preferredProvider);
 
+    const d =
+      params.toTokenAddress !== NATIVE_TOKEN_ADDRESS
+        ? await decimals({
+            contract: getContract({
+              client: params.client,
+              address: params.toTokenAddress,
+              chain: getCachedChain(params.toChainId),
+            }),
+          })
+        : 18;
+
     // Prepare amount in wei if provided
-    const amountWei = params.toAmount ? toWei(params.toAmount) : undefined;
+    const amountWei = params.toAmount ? toUnits(params.toAmount, d) : undefined;
 
     // Call new Onramp.prepare to get the quote & link
     const prepared = await prepareOnramp({
@@ -314,32 +328,25 @@ export async function getBuyWithFiatQuote(
     const firstStep = hasSteps
       ? (prepared.steps[0] as (typeof prepared.steps)[number])
       : undefined;
-    const lastStep = hasSteps
-      ? (prepared.steps[
-          prepared.steps.length - 1
-        ] as (typeof prepared.steps)[number])
-      : undefined;
 
     // Estimated duration in seconds – sum of all step durations
-    const estimatedDurationSeconds = Math.ceil(
-      prepared.steps.reduce((acc, s) => acc + s.estimatedExecutionTimeMs, 0) /
-        1000,
+    const estimatedDurationSeconds = Math.max(
+      120,
+      Math.ceil(
+        prepared.steps.reduce((acc, s) => acc + s.estimatedExecutionTimeMs, 0) /
+          1000,
+      ),
     );
 
-    const estimatedToAmountMinWeiBigInt =
-      lastStep?.destinationAmount ?? prepared.destinationAmount;
+    const estimatedToAmountMinWeiBigInt = prepared.destinationAmount;
 
     const maxSlippageBPS = params.maxSlippageBPS ?? 0;
     const slippageWei =
       (estimatedToAmountMinWeiBigInt * BigInt(maxSlippageBPS)) / 10000n;
     const toAmountMinWeiBigInt = estimatedToAmountMinWeiBigInt - slippageWei;
 
-    const tokenDecimals = lastStep?.destinationToken.decimals ?? 18;
-    const estimatedToAmountMin = toTokens(
-      estimatedToAmountMinWeiBigInt,
-      tokenDecimals,
-    );
-    const toAmountMin = toTokens(toAmountMinWeiBigInt, tokenDecimals);
+    const estimatedToAmountMin = toTokens(estimatedToAmountMinWeiBigInt, d);
+    const toAmountMin = toTokens(toAmountMinWeiBigInt, d);
 
     // Helper to convert a Token → PayTokenInfo
     const tokenToPayTokenInfo = (token: {

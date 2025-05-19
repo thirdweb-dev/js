@@ -1,10 +1,9 @@
+import { status as onrampStatus } from "../../bridge/OnrampStatus.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getClientFetch } from "../../utils/fetch.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
 } from "../utils/commonTypes.js";
-import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 
 /**
  * Parameters for the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
@@ -156,7 +155,6 @@ export type BuyWithFiatStatus =
  * })
  *
  * // when the fiatStatus.status is "ON_RAMP_TRANSFER_COMPLETED" - the process is complete
- * // when the fiatStatus.status is "CRYPTO_SWAP_REQUIRED" - start the swap process
  * ```
  * @deprecated
  * @buyCrypto
@@ -165,25 +163,121 @@ export async function getBuyWithFiatStatus(
   params: GetBuyWithFiatStatusParams,
 ): Promise<BuyWithFiatStatus> {
   try {
-    const queryParams = new URLSearchParams({
-      intentId: params.intentId,
+    const result = await onrampStatus({
+      id: params.intentId,
+      client: params.client,
     });
 
-    const queryString = queryParams.toString();
-    const url = `${getPayBuyWithFiatStatusEndpoint()}?${queryString}`;
-
-    const response = await getClientFetch(params.client)(url);
-
-    if (!response.ok) {
-      const error = await response.text().catch(() => null);
-      throw new Error(
-        `HTTP error! status: ${response.status} - ${response.statusText}: ${error || "unknown error"}`,
-      );
+    return toBuyWithFiatStatus({ intentId: params.intentId, result });
+  } catch (error) {
+    // If the session is not found, the Onramp.status endpoint will return a 404 which we map to
+    // a `NONE` status (instead of throwing). Any other error is re-thrown so that the caller is aware.
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("404")) {
+      return buildPlaceholderStatus({
+        intentId: params.intentId,
+        status: "NONE",
+      });
     }
 
-    return (await response.json()).result;
-  } catch (error) {
     console.error("Fetch error:", error);
     throw new Error(`Fetch failed: ${error}`);
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Helpers
+////////////////////////////////////////////////////////////////////////////////
+
+function toBuyWithFiatStatus(args: {
+  intentId: string;
+  result: Awaited<ReturnType<typeof onrampStatus>>;
+}): BuyWithFiatStatus {
+  const { intentId, result } = args;
+
+  // Map status constants from the Bridge.Onramp.status response to BuyWithFiatStatus equivalents.
+  const STATUS_MAP: Record<
+    typeof result.status,
+    "NONE" | "PENDING_PAYMENT" | "PAYMENT_FAILED" | "ON_RAMP_TRANSFER_COMPLETED"
+  > = {
+    CREATED: "PENDING_PAYMENT",
+    PENDING: "PENDING_PAYMENT",
+    FAILED: "PAYMENT_FAILED",
+    COMPLETED: "ON_RAMP_TRANSFER_COMPLETED",
+  } as const;
+
+  const mappedStatus = STATUS_MAP[result.status];
+
+  return buildPlaceholderStatus({
+    intentId,
+    status: mappedStatus,
+    purchaseData: result.purchaseData,
+  });
+}
+
+function buildPlaceholderStatus(args: {
+  intentId: string;
+  status:
+    | "NONE"
+    | "PENDING_PAYMENT"
+    | "PAYMENT_FAILED"
+    | "ON_RAMP_TRANSFER_COMPLETED";
+  purchaseData?: unknown;
+}): BuyWithFiatStatus {
+  const { intentId, status, purchaseData } = args;
+
+  // Build a minimal—but type-complete—object that satisfies BuyWithFiatStatus.
+  const emptyToken: PayTokenInfo = {
+    chainId: 0,
+    tokenAddress: "",
+    decimals: 18,
+    priceUSDCents: 0,
+    name: "",
+    symbol: "",
+  };
+
+  type BuyWithFiatStatusWithData = Exclude<
+    BuyWithFiatStatus,
+    { status: "NOT_FOUND" }
+  >;
+
+  const quote: BuyWithFiatStatusWithData["quote"] = {
+    estimatedOnRampAmount: "0",
+    estimatedOnRampAmountWei: "0",
+
+    estimatedToTokenAmount: "0",
+    estimatedToTokenAmountWei: "0",
+
+    fromCurrency: {
+      amount: "0",
+      amountUnits: "USD",
+      decimals: 2,
+      currencySymbol: "USD",
+    },
+    fromCurrencyWithFees: {
+      amount: "0",
+      amountUnits: "USD",
+      decimals: 2,
+      currencySymbol: "USD",
+    },
+    onRampToken: emptyToken,
+    toToken: emptyToken,
+    estimatedDurationSeconds: 0,
+    createdAt: new Date().toISOString(),
+  } as BuyWithFiatStatusWithData["quote"];
+
+  // The source/destination fields can only be filled accurately when extra context is returned
+  // by the API. Since Bridge.Onramp.status doesn't yet provide these details, we omit them for
+  // now (they are optional).
+
+  const base: Exclude<BuyWithFiatStatus, { status: "NOT_FOUND" }> = {
+    intentId,
+    status,
+    toAddress: "",
+    fromAddress: "",
+    quote,
+    purchaseData: purchaseData as object | undefined,
+  };
+
+  return base;
 }
