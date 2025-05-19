@@ -3,36 +3,11 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
-import type { BridgeAction } from "./types/BridgeAction.js";
+import type { RouteStep } from "./types/Route.js";
 import type { Token } from "./types/Token.js";
 
 // export status within the Onramp module
 export { status } from "./OnrampStatus.js";
-
-// API-specific type for Transactions as returned by the Onramp prepare endpoint
-type ApiBridgeTransaction = {
-  id: string;
-  chainId: number;
-  maxPriorityFeePerGas?: string;
-  maxFeePerGas?: string;
-  to: string;
-  from?: string | null;
-  value?: string;
-  gas?: string;
-  data?: string;
-  type: "eip1559";
-  action: BridgeAction;
-};
-
-// Helper types based on OpenAPI spec for POST /v1/onramp/prepare response
-type OnrampStep = {
-  originToken: Token;
-  destinationToken: Token;
-  transactions: ApiBridgeTransaction[];
-  originAmount: string;
-  destinationAmount: string;
-  estimatedExecutionTimeMs: number;
-};
 
 type OnrampIntent = {
   onramp: "stripe" | "coinbase" | "transak";
@@ -54,10 +29,11 @@ type OnrampPrepareQuoteResponseData = {
   link: string;
   currency: string;
   currencyAmount: number;
-  destinationAmount: string;
+  destinationAmount: bigint;
+  destinationToken: Token;
   timestamp?: number;
   expiration?: number;
-  steps: OnrampStep[];
+  steps: RouteStep[];
   intent: OnrampIntent;
 };
 
@@ -231,11 +207,6 @@ export async function prepare(
     transactions: step.transactions.map((tx) => ({
       ...tx,
       value: tx.value ? BigInt(tx.value) : undefined,
-      gas: tx.gas ? BigInt(tx.gas) : undefined,
-      maxFeePerGas: tx.maxFeePerGas ? BigInt(tx.maxFeePerGas) : undefined,
-      maxPriorityFeePerGas: tx.maxPriorityFeePerGas
-        ? BigInt(tx.maxPriorityFeePerGas)
-        : undefined,
     })),
   }));
 
@@ -269,31 +240,5 @@ export declare namespace prepare {
     excludeChainIds?: string | string[];
   };
 
-  export type Result = Omit<
-    OnrampPrepareQuoteResponseData,
-    "destinationAmount" | "steps" | "intent"
-  > & {
-    destinationAmount: bigint;
-    steps: Array<
-      Omit<
-        OnrampStep,
-        "originAmount" | "destinationAmount" | "transactions"
-      > & {
-        originAmount: bigint;
-        destinationAmount: bigint;
-        transactions: Array<
-          Omit<
-            ApiBridgeTransaction,
-            "value" | "gas" | "maxFeePerGas" | "maxPriorityFeePerGas"
-          > & {
-            value?: bigint;
-            gas?: bigint;
-            maxFeePerGas?: bigint;
-            maxPriorityFeePerGas?: bigint;
-          }
-        >;
-      }
-    >;
-    intent: OnrampIntent;
-  };
+  export type Result = OnrampPrepareQuoteResponseData;
 }

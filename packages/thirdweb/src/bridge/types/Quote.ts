@@ -1,8 +1,4 @@
-import type { Hex as ox__Hex } from "ox";
-import type { Chain } from "../../chains/types.js";
-import type { ThirdwebClient } from "../../client/client.js";
-import type { BridgeAction } from "./BridgeAction.js";
-import type { Token } from "./Token.js";
+import type { RouteQuoteStep, RouteStep } from "./Route.js";
 
 export type Quote = {
   /**
@@ -28,13 +24,7 @@ export type Quote = {
   /**
    * The steps required to complete the quote.
    */
-  steps: Array<{
-    originToken: Token;
-    destinationToken: Token;
-    originAmount: bigint;
-    destinationAmount: bigint;
-    estimatedExecutionTimeMs: number;
-  }>;
+  steps: RouteQuoteStep[];
 };
 
 export type PreparedQuote = {
@@ -65,27 +55,5 @@ export type PreparedQuote = {
   /**
    * A series of steps required to complete the quote, along with the transactions to execute in order.
    */
-  steps: Array<{
-    originToken: Token;
-    destinationToken: Token;
-    originAmount: bigint;
-    destinationAmount: bigint;
-    estimatedExecutionTimeMs: number;
-    transactions: Array<{
-      data: ox__Hex.Hex;
-      to: ox__Hex.Hex;
-      value?: bigint | undefined;
-      chainId: number;
-      /**
-       * The action this transaction performs. This can be "approval", "transfer", "buy", or "sell".
-       */
-      action: BridgeAction;
-      /**
-       * The transaction ID, used for tracking purposes.
-       */
-      id: ox__Hex.Hex;
-      client: ThirdwebClient;
-      chain: Chain;
-    }>;
-  }>;
+  steps: RouteStep[];
 };

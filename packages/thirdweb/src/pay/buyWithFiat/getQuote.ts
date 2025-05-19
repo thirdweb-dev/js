@@ -1,9 +1,8 @@
+import { prepare as prepareOnramp } from "../../bridge/Onramp.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { CurrencyMeta } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
-import { getClientFetch } from "../../utils/fetch.js";
-import { stringify } from "../../utils/json.js";
+import { toTokens, toWei } from "../../utils/units.js";
 import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
-import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
  * @deprecated
@@ -274,41 +273,184 @@ export async function getBuyWithFiatQuote(
   params: GetBuyWithFiatQuoteParams,
 ): Promise<BuyWithFiatQuote> {
   try {
-    const clientFetch = getClientFetch(params.client);
+    // map preferred provider (FiatProvider) → onramp string expected by Onramp.prepare
+    const mapProviderToOnramp = (
+      provider?: FiatProvider,
+    ): "stripe" | "coinbase" | "transak" => {
+      switch (provider) {
+        case "STRIPE":
+          return "stripe";
+        case "TRANSAK":
+          return "transak";
+        default: // default to coinbase when undefined or any other value
+          return "coinbase";
+      }
+    };
 
-    const response = await clientFetch(getPayBuyWithFiatQuoteEndpoint(), {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: stringify({
-        toAddress: params.toAddress,
-        fromCurrencySymbol: params.fromCurrencySymbol,
-        toChainId: params.toChainId.toString(),
-        toTokenAddress: params.toTokenAddress,
-        fromAmount: params.fromAmount,
-        toAmount: params.toAmount,
-        maxSlippageBPS: params.maxSlippageBPS,
-        isTestMode: params.isTestMode,
-        purchaseData: params.purchaseData,
-        fromAddress: params.fromAddress,
-        toGasAmountWei: params.toGasAmountWei,
-        preferredProvider: params.preferredProvider,
-        multiHopSupported: true,
-      }),
+    // Choose provider or default to STRIPE
+    const onrampProvider = mapProviderToOnramp(params.preferredProvider);
+
+    // Prepare amount in wei if provided
+    const amountWei = params.toAmount ? toWei(params.toAmount) : undefined;
+
+    // Call new Onramp.prepare to get the quote & link
+    const prepared = await prepareOnramp({
+      client: params.client,
+      onramp: onrampProvider,
+      chainId: params.toChainId,
+      tokenAddress: params.toTokenAddress,
+      receiver: params.toAddress,
+      sender: params.fromAddress,
+      amount: amountWei,
+      purchaseData: params.purchaseData,
+      currency: params.fromCurrencySymbol,
+      maxSteps: 2,
     });
 
-    // Assuming the response directly matches the SwapResponse interface
-    if (!response.ok) {
-      const errorObj = await response.json();
-      if (errorObj && "error" in errorObj) {
-        throw errorObj;
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Determine tokens based on steps rules
+    const hasSteps = prepared.steps.length > 0;
+    const firstStep = hasSteps
+      ? (prepared.steps[0] as (typeof prepared.steps)[number])
+      : undefined;
+    const lastStep = hasSteps
+      ? (prepared.steps[
+          prepared.steps.length - 1
+        ] as (typeof prepared.steps)[number])
+      : undefined;
+
+    // Estimated duration in seconds – sum of all step durations
+    const estimatedDurationSeconds = Math.ceil(
+      prepared.steps.reduce((acc, s) => acc + s.estimatedExecutionTimeMs, 0) /
+        1000,
+    );
+
+    const estimatedToAmountMinWeiBigInt =
+      lastStep?.destinationAmount ?? prepared.destinationAmount;
+
+    const maxSlippageBPS = params.maxSlippageBPS ?? 0;
+    const slippageWei =
+      (estimatedToAmountMinWeiBigInt * BigInt(maxSlippageBPS)) / 10000n;
+    const toAmountMinWeiBigInt = estimatedToAmountMinWeiBigInt - slippageWei;
+
+    const tokenDecimals = lastStep?.destinationToken.decimals ?? 18;
+    const estimatedToAmountMin = toTokens(
+      estimatedToAmountMinWeiBigInt,
+      tokenDecimals,
+    );
+    const toAmountMin = toTokens(toAmountMinWeiBigInt, tokenDecimals);
+
+    // Helper to convert a Token → PayTokenInfo
+    const tokenToPayTokenInfo = (token: {
+      chainId: number;
+      address: string;
+      decimals: number;
+      symbol: string;
+      name: string;
+      priceUsd: number;
+    }): PayTokenInfo => ({
+      chainId: token.chainId,
+      tokenAddress: token.address,
+      decimals: token.decimals,
+      priceUSDCents: Math.round(token.priceUsd * 100),
+      name: token.name,
+      symbol: token.symbol,
+    });
+
+    // Determine the raw token objects using new simplified rules
+    // 1. toToken is always the destination token
+    const toTokenRaw = prepared.destinationToken;
+
+    // 2. onRampToken: if exactly one step -> originToken of that step, else toTokenRaw
+    const onRampTokenRaw =
+      prepared.steps.length === 1 && firstStep
+        ? firstStep.originToken
+        : toTokenRaw;
+
+    // 3. routingToken: if exactly two steps -> originToken of second step, else undefined
+    const routingTokenRaw =
+      prepared.steps.length === 2
+        ? (prepared.steps[1] as (typeof prepared.steps)[number]).originToken
+        : undefined;
+
+    // Amounts for onRampToken/raw
+    const onRampTokenAmountWei: bigint =
+      prepared.steps.length === 1 && firstStep
+        ? firstStep.originAmount
+        : prepared.destinationAmount;
+
+    const onRampTokenAmount = toTokens(
+      onRampTokenAmountWei,
+      onRampTokenRaw.decimals,
+    );
+
+    // Build info objects
+    const onRampTokenObject = {
+      amount: onRampTokenAmount,
+      amountWei: onRampTokenAmountWei.toString(),
+      amountUSDCents: Math.round(
+        Number(onRampTokenAmount) * onRampTokenRaw.priceUsd * 100,
+      ),
+      token: tokenToPayTokenInfo(onRampTokenRaw),
+    };
+
+    let routingTokenObject:
+      | {
+          amount: string;
+          amountWei: string;
+          amountUSDCents: number;
+          token: PayTokenInfo;
+        }
+      | undefined;
+
+    if (routingTokenRaw) {
+      const routingAmountWei = (
+        prepared.steps[1] as (typeof prepared.steps)[number]
+      ).originAmount;
+      const routingAmount = toTokens(
+        routingAmountWei,
+        routingTokenRaw.decimals,
+      );
+      routingTokenObject = {
+        amount: routingAmount,
+        amountWei: routingAmountWei.toString(),
+        amountUSDCents: Math.round(
+          Number(routingAmount) * routingTokenRaw.priceUsd * 100,
+        ),
+        token: tokenToPayTokenInfo(routingTokenRaw),
+      };
     }
 
-    return (await response.json()).result;
+    const buyWithFiatQuote: BuyWithFiatQuote = {
+      estimatedDurationSeconds,
+      estimatedToAmountMin: estimatedToAmountMin,
+      estimatedToAmountMinWei: estimatedToAmountMinWeiBigInt.toString(),
+      toAmountMinWei: toAmountMinWeiBigInt.toString(),
+      toAmountMin: toAmountMin,
+      fromCurrency: {
+        amount: prepared.currencyAmount.toString(),
+        amountUnits: prepared.currencyAmount.toFixed(2),
+        decimals: 2,
+        currencySymbol: prepared.currency,
+      },
+      fromCurrencyWithFees: {
+        amount: prepared.currencyAmount.toString(),
+        amountUnits: prepared.currencyAmount.toFixed(2),
+        decimals: 2,
+        currencySymbol: prepared.currency,
+      },
+      toToken: tokenToPayTokenInfo(toTokenRaw),
+      toAddress: params.toAddress,
+      fromAddress: params.fromAddress,
+      maxSlippageBPS: maxSlippageBPS,
+      intentId: prepared.id,
+      processingFees: [],
+      onRampToken: onRampTokenObject,
+      routingToken: routingTokenObject,
+      onRampLink: prepared.link,
+      provider: (params.preferredProvider ?? "COINBASE") as FiatProvider,
+    };
+
+    return buyWithFiatQuote;
   } catch (error) {
     console.error("Error getting buy with fiat quote", error);
     throw error;
