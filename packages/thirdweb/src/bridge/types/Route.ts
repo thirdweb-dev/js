@@ -26,7 +26,7 @@ export type RouteStep = {
   transactions: RouteTransaction[];
 };
 
-export type RouteTransaction = {
+type RouteTransaction = {
   data: ox__Hex.Hex;
   to: ox__Hex.Hex;
   value?: bigint | undefined;

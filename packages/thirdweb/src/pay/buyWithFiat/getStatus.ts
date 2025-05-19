@@ -24,11 +24,6 @@ export type GetBuyWithFiatStatusParams = {
   intentId: string;
 };
 
-export type ValidBuyWithFiatStatus = Exclude<
-  BuyWithFiatStatus,
-  { status: "NOT_FOUND" }
->;
-
 /**
  * The returned object from [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
  *

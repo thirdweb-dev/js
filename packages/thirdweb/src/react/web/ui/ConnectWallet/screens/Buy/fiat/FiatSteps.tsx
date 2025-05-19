@@ -11,26 +11,6 @@ import { Text } from "../../../../components/text.js";
 import { StepIcon } from "../Stepper.js";
 import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
 
-export type BuyWithFiatPartialQuote = {
-  fromCurrencySymbol: string;
-  fromCurrencyAmount: string;
-  onRampTokenAmount: string;
-  toTokenAmount: string;
-  onRampToken: {
-    tokenAddress: string;
-    name?: string;
-    symbol?: string;
-    chainId: number;
-  };
-
-  toToken: {
-    tokenAddress: string;
-    name?: string;
-    symbol?: string;
-    chainId: number;
-  };
-};
-
 export function StepContainer(props: {
   state?: FiatStatusMeta["progressStatus"];
   children: React.ReactNode;
