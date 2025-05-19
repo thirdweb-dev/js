@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.99.3
+
+### Patch Changes
+
+- [#7077](https://github.com/thirdweb-dev/js/pull/7077) [`c61e258`](https://github.com/thirdweb-dev/js/commit/c61e258ec365ca83ed575d301a9784974299da1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose getInstalledWallets() utility
+
 ## 5.99.2
 
 ### Patch Changes
