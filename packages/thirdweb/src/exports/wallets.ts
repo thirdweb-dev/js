@@ -160,6 +160,7 @@ export * as EIP1193 from "../adapters/eip1193/index.js";
 
 // injected
 export { injectedProvider } from "../wallets/injected/mipdStore.js";
+export { getInstalledWallets } from "../wallets/injected/mipdStore.js";
 
 export type { ConnectionManager } from "../wallets/manager/index.js";
 
