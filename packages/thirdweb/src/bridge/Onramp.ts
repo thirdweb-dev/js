@@ -6,6 +6,9 @@ import { stringify } from "../utils/json.js";
 import type { BridgeAction } from "./types/BridgeAction.js";
 import type { Token } from "./types/Token.js";
 
+// export status within the Onramp module
+export { status } from "./OnrampStatus.js";
+
 // API-specific type for Transactions as returned by the Onramp prepare endpoint
 type ApiBridgeTransaction = {
   id: string;
