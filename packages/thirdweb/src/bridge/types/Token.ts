@@ -7,4 +7,5 @@ export type Token = {
   symbol: string;
   name: string;
   iconUri?: string;
+  priceUsd: number;
 };

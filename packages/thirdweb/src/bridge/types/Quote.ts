@@ -1,6 +1,8 @@
 import type { Hex as ox__Hex } from "ox";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { BridgeAction } from "./BridgeAction.js";
+import type { Token } from "./Token.js";
 
 export type Quote = {
   /**
@@ -27,24 +29,8 @@ export type Quote = {
    * The steps required to complete the quote.
    */
   steps: Array<{
-    originToken: {
-      chainId: number;
-      address: ox__Hex.Hex;
-      symbol: string;
-      name: string;
-      decimals: number;
-      priceUsd: number;
-      iconUri: string;
-    };
-    destinationToken: {
-      chainId: number;
-      address: ox__Hex.Hex;
-      symbol: string;
-      name: string;
-      decimals: number;
-      priceUsd: number;
-      iconUri: string;
-    };
+    originToken: Token;
+    destinationToken: Token;
     originAmount: bigint;
     destinationAmount: bigint;
     estimatedExecutionTimeMs: number;
@@ -80,24 +66,8 @@ export type PreparedQuote = {
    * A series of steps required to complete the quote, along with the transactions to execute in order.
    */
   steps: Array<{
-    originToken: {
-      chainId: number;
-      address: ox__Hex.Hex;
-      symbol: string;
-      name: string;
-      decimals: number;
-      priceUsd: number;
-      iconUri: string;
-    };
-    destinationToken: {
-      chainId: number;
-      address: ox__Hex.Hex;
-      symbol: string;
-      name: string;
-      decimals: number;
-      priceUsd: number;
-      iconUri: string;
-    };
+    originToken: Token;
+    destinationToken: Token;
     originAmount: bigint;
     destinationAmount: bigint;
     estimatedExecutionTimeMs: number;
@@ -109,7 +79,7 @@ export type PreparedQuote = {
       /**
        * The action this transaction performs. This can be "approval", "transfer", "buy", or "sell".
        */
-      action: "approval" | "transfer" | "buy" | "sell";
+      action: BridgeAction;
       /**
        * The transaction ID, used for tracking purposes.
        */
