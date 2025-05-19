@@ -50,28 +50,13 @@ export type BuyWithFiatStatus =
        * - `NONE` - No status
        * - `PENDING_PAYMENT` - Payment is not done yet in the on-ramp provider
        * - `PAYMENT_FAILED` - Payment failed in the on-ramp provider
-       * - `PENDING_ON_RAMP_TRANSFER` - Payment is done but the on-ramp provider is yet to transfer the tokens to the user's wallet
-       * - `ON_RAMP_TRANSFER_IN_PROGRESS` - On-ramp provider is transferring the tokens to the user's wallet
        * - `ON_RAMP_TRANSFER_COMPLETED` - On-ramp provider has transferred the tokens to the user's wallet
-       * - `ON_RAMP_TRANSFER_FAILED` - On-ramp provider failed to transfer the tokens to the user's wallet
-       * - `CRYPTO_SWAP_REQUIRED` - On-ramp provider has sent the tokens to the user's wallet but a swap is required to convert it to the desired token
-       * - `CRYPTO_SWAP_IN_PROGRESS` - Swap is in progress
-       * - `CRYPTO_SWAP_COMPLETED` - Swap is completed and the user has received the desired token
-       * - `CRYPTO_SWAP_FALLBACK` - Swap failed and the user has received a fallback token which is not the desired token
        */
       status:
         | "NONE"
         | "PENDING_PAYMENT"
         | "PAYMENT_FAILED"
-        | "PENDING_ON_RAMP_TRANSFER"
-        | "ON_RAMP_TRANSFER_IN_PROGRESS"
-        | "ON_RAMP_TRANSFER_COMPLETED"
-        | "ON_RAMP_TRANSFER_FAILED"
-        | "CRYPTO_SWAP_REQUIRED"
-        | "CRYPTO_SWAP_COMPLETED"
-        | "CRYPTO_SWAP_FALLBACK"
-        | "CRYPTO_SWAP_IN_PROGRESS"
-        | "CRYPTO_SWAP_FAILED";
+        | "ON_RAMP_TRANSFER_COMPLETED";
       /**
        * The wallet address to which the desired tokens are sent to
        */
