@@ -16,6 +16,7 @@ import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
+import { DepositScreen } from "./DepositScreen.jsx";
 import { ExecutingTxScreen } from "./ExecutingScreen.js";
 
 type ModalProps = {
@@ -30,6 +31,7 @@ type ModalProps = {
   tx: PreparedTransaction;
   payOptions: PayUIOptions;
   onTxSent: (data: WaitForReceiptOptions) => void;
+  modalMode: "buy" | "deposit";
 };
 
 export function TransactionModal(props: ModalProps) {
@@ -89,6 +91,20 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
         tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
+      />
+    );
+  }
+
+  if (props.modalMode === "deposit") {
+    return (
+      <DepositScreen
+        client={props.client}
+        onBack={props.onBack}
+        chain={props.tx.chain}
+        connectLocale={localeQuery.data}
+        onDone={() => {
+          setScreen("execute-tx");
+        }}
       />
     );
   }

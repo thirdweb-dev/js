@@ -244,6 +244,21 @@ export function hasSponsoredTransactionsEnabled(wallet: Wallet | undefined) {
         sponsoredTransactionsEnabled = smartOptions.gasless;
       }
     }
+    if (options?.executionMode) {
+      const execMode = options.executionMode;
+      if (execMode.mode === "EIP4337") {
+        const smartOptions = execMode.smartAccount;
+        if (smartOptions && "sponsorGas" in smartOptions) {
+          sponsoredTransactionsEnabled = smartOptions.sponsorGas;
+        }
+        if (smartOptions && "gasless" in smartOptions) {
+          sponsoredTransactionsEnabled = smartOptions.gasless;
+        }
+      }
+      if (execMode.mode === "EIP7702") {
+        sponsoredTransactionsEnabled = execMode.sponsorGas || false;
+      }
+    }
   }
   return sponsoredTransactionsEnabled;
 }

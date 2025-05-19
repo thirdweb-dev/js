@@ -121,6 +121,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
         localeId={payModal?.locale || "en_US"}
         supportedTokens={payModal?.supportedTokens}
         theme={payModal?.theme || "dark"}
+        modalMode={data.mode}
         payOptions={{
           buyWithCrypto: payModal?.buyWithCrypto,
           buyWithFiat: payModal?.buyWithFiat,
