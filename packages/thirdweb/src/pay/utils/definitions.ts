@@ -8,13 +8,6 @@ const getPayBaseUrl = () => {
 };
 
 /**
- * Endpoint to get a "Buy with Fiat" quote.
- * @internal
- */
-export const getPayBuyWithFiatQuoteEndpoint = () =>
-  `${getPayBaseUrl()}/buy-with-fiat/quote/v1`;
-
-/**
  * Endpoint to get the status of a "Buy with Fiat" transaction status.
  * @internal
  */

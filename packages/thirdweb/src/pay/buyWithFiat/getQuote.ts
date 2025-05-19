@@ -1,5 +1,6 @@
 import { prepare as prepareOnramp } from "../../bridge/Onramp.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import type { CurrencyMeta } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import { toTokens, toWei } from "../../utils/units.js";
 import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
@@ -305,6 +306,7 @@ export async function getBuyWithFiatQuote(
       purchaseData: params.purchaseData,
       currency: params.fromCurrencySymbol,
       maxSteps: 2,
+      onrampTokenAddress: NATIVE_TOKEN_ADDRESS, // force onramp to native token to avoid missing gas issues
     });
 
     // Determine tokens based on steps rules
@@ -362,19 +364,19 @@ export async function getBuyWithFiatQuote(
 
     // 2. onRampToken: if exactly one step -> originToken of that step, else toTokenRaw
     const onRampTokenRaw =
-      prepared.steps.length === 1 && firstStep
+      prepared.steps.length > 0 && firstStep
         ? firstStep.originToken
         : toTokenRaw;
 
     // 3. routingToken: if exactly two steps -> originToken of second step, else undefined
     const routingTokenRaw =
-      prepared.steps.length === 2
+      prepared.steps.length > 1
         ? (prepared.steps[1] as (typeof prepared.steps)[number]).originToken
         : undefined;
 
     // Amounts for onRampToken/raw
     const onRampTokenAmountWei: bigint =
-      prepared.steps.length === 1 && firstStep
+      prepared.steps.length > 0 && firstStep
         ? firstStep.originAmount
         : prepared.destinationAmount;
 
@@ -428,13 +430,13 @@ export async function getBuyWithFiatQuote(
       toAmountMin: toAmountMin,
       fromCurrency: {
         amount: prepared.currencyAmount.toString(),
-        amountUnits: prepared.currencyAmount.toFixed(2),
+        amountUnits: Number(prepared.currencyAmount).toFixed(2),
         decimals: 2,
         currencySymbol: prepared.currency,
       },
       fromCurrencyWithFees: {
         amount: prepared.currencyAmount.toString(),
-        amountUnits: prepared.currencyAmount.toFixed(2),
+        amountUnits: Number(prepared.currencyAmount).toFixed(2),
         decimals: 2,
         currencySymbol: prepared.currency,
       },
