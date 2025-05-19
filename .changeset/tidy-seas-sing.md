@@ -30,7 +30,7 @@ const preparedOnramp = await Bridge.Onramp.prepare({
 });
 
 console.log(preparedOnramp.link); // URL to redirect the user to
-console.log(preparedOnramp.destinationAmount); // Amount of token user will receive
+console.log(preparedOnramp.currencyAmount); // Price in fiat currency
 ```
 
 ## Bridge.Onramp.status

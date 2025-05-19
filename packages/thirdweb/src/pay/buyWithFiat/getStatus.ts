@@ -157,27 +157,12 @@ export type BuyWithFiatStatus =
 export async function getBuyWithFiatStatus(
   params: GetBuyWithFiatStatusParams,
 ): Promise<BuyWithFiatStatus> {
-  try {
-    const result = await onrampStatus({
-      id: params.intentId,
-      client: params.client,
-    });
+  const result = await onrampStatus({
+    id: params.intentId,
+    client: params.client,
+  });
 
-    return toBuyWithFiatStatus({ intentId: params.intentId, result });
-  } catch (error) {
-    // If the session is not found, the Onramp.status endpoint will return a 404 which we map to
-    // a `NONE` status (instead of throwing). Any other error is re-thrown so that the caller is aware.
-    const message = error instanceof Error ? error.message : String(error);
-    if (message.includes("404")) {
-      return buildPlaceholderStatus({
-        intentId: params.intentId,
-        status: "NONE",
-      });
-    }
-
-    console.error("Fetch error:", error);
-    throw new Error(`Fetch failed: ${error}`);
-  }
+  return toBuyWithFiatStatus({ intentId: params.intentId, result });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
