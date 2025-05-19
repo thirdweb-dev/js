@@ -8,7 +8,7 @@ export { chains } from "./Chains.js";
 
 export type { Chain } from "./types/Chain.js";
 export type { Quote, PreparedQuote } from "./types/Quote.js";
-export type { Route } from "./types/Route.js";
+export type { Route, RouteQuoteStep, RouteStep } from "./types/Route.js";
 export type { Status } from "./types/Status.js";
 export type { Token } from "./types/Token.js";
 export type { BridgeAction } from "./types/BridgeAction.js";
