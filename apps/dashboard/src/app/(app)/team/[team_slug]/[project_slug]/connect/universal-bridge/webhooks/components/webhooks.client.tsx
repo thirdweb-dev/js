@@ -273,14 +273,14 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
             />
 
             <section>
-              <FormLabel>Secret Key</FormLabel>
+              <FormLabel>Webhook Secret</FormLabel>
 
               <CopyTextButton
                 textToCopy={secret}
                 className="!h-auto my-1 w-full justify-between truncate bg-card px-3 py-3 font-mono"
                 textToShow={shortenString(secret)}
                 copyIconPosition="right"
-                tooltip="Copy Secret Key"
+                tooltip="Copy Webhook Secret"
               />
               <FormDescription>
                 Passed as a bearer token in all webhook requests to verify the
@@ -293,7 +293,7 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                     setSecretStored(!!v);
                   }}
                 />
-                I confirm that I've securely stored my secret key
+                I confirm that I've securely stored my webhook secret
               </CheckboxWithLabel>
             </section>
 
