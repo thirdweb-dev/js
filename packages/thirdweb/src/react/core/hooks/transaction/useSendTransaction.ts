@@ -104,6 +104,7 @@ export type SendTransactionConfig = {
 };
 
 export type ShowModalData = {
+  mode: "buy" | "deposit";
   tx: PreparedTransaction;
   sendTx: () => void;
   rejectTx: (reason: Error) => void;
@@ -184,47 +185,6 @@ export function useSendTransactionCore(args: {
               resolvePromisedValue(tx.erc20Value),
             ]);
 
-            const supportedDestinations = await Bridge.routes({
-              client: tx.client,
-              destinationChainId: tx.chain.id,
-              destinationTokenAddress: _erc20Value?.tokenAddress,
-            }).catch((err) => {
-              trackPayEvent({
-                client: tx.client,
-                walletAddress: account.address,
-                walletType: wallet?.id,
-                toChainId: tx.chain.id,
-                event: "pay_transaction_modal_pay_api_error",
-                error: err?.message,
-              });
-              return null;
-            });
-
-            if (!supportedDestinations) {
-              // could not fetch supported destinations, just send the tx
-              sendTx();
-              return;
-            }
-
-            if (supportedDestinations.length === 0) {
-              trackPayEvent({
-                client: tx.client,
-                walletAddress: account.address,
-                walletType: wallet?.id,
-                toChainId: tx.chain.id,
-                toToken: _erc20Value?.tokenAddress || undefined,
-                event: "pay_transaction_modal_chain_token_not_supported",
-                error: JSON.stringify({
-                  chain: tx.chain.id,
-                  token: _erc20Value?.tokenAddress,
-                  message: "chain/token not supported",
-                }),
-              });
-              // chain/token not supported, just send the tx
-              sendTx();
-              return;
-            }
-
             const nativeValue = _nativeValue || 0n;
             const erc20Value = _erc20Value?.amountWei || 0n;
 
@@ -256,7 +216,54 @@ export function useSendTransactionCore(args: {
               (nativeCost > 0n && nativeBalance.value < nativeCost);
 
             if (shouldShowModal) {
+              const supportedDestinations = await Bridge.routes({
+                client: tx.client,
+                destinationChainId: tx.chain.id,
+                destinationTokenAddress: _erc20Value?.tokenAddress,
+              }).catch((err) => {
+                trackPayEvent({
+                  client: tx.client,
+                  walletAddress: account.address,
+                  walletType: wallet?.id,
+                  toChainId: tx.chain.id,
+                  event: "pay_transaction_modal_pay_api_error",
+                  error: err?.message,
+                });
+                return null;
+              });
+
+              if (
+                !supportedDestinations ||
+                supportedDestinations.length === 0
+              ) {
+                // not a supported destination -> show deposit screen
+                trackPayEvent({
+                  client: tx.client,
+                  walletAddress: account.address,
+                  walletType: wallet?.id,
+                  toChainId: tx.chain.id,
+                  toToken: _erc20Value?.tokenAddress || undefined,
+                  event: "pay_transaction_modal_chain_token_not_supported",
+                  error: JSON.stringify({
+                    chain: tx.chain.id,
+                    token: _erc20Value?.tokenAddress,
+                    message: "chain/token not supported",
+                  }),
+                });
+
+                showPayModal({
+                  mode: "deposit",
+                  tx,
+                  sendTx,
+                  rejectTx: reject,
+                  resolveTx: resolve,
+                });
+                return;
+              }
+
+              // chain is supported, show buy mode
               showPayModal({
+                mode: "buy",
                 tx,
                 sendTx,
                 rejectTx: reject,

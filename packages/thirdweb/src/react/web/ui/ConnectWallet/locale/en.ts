@@ -68,7 +68,7 @@ const connectLocaleEn: ConnectLocale = {
   },
   receiveFundsScreen: {
     title: "Receive Funds",
-    instruction: "Copy the wallet address to send funds to this wallet",
+    instruction: "Copy the address to send funds to this wallet",
   },
   sendFundsScreen: {
     title: "Send Funds",

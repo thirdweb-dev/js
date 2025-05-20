@@ -1,3 +1,4 @@
+import type { ChainMetadata } from "../../../../../../../chains/types.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { GetWalletBalanceResult } from "../../../../../../../wallets/utils/getWalletBalance.js";
@@ -9,6 +10,7 @@ export type TransactionCostAndData = {
   walletBalance: GetWalletBalanceResult;
   transactionValueWei: bigint;
   gasCostWei: bigint;
+  chainMetadata: ChainMetadata;
 };
 
 export type SelectedScreen =

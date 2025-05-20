@@ -24,6 +24,7 @@ export function ExecutingTxScreen(props: {
     payModal: false,
   });
   const [txHash, setTxHash] = useState<Hex | undefined>();
+  const [txError, setTxError] = useState<Error | undefined>();
   const chainExplorers = useChainExplorers(props.tx.chain);
   const [status, setStatus] = useState<"loading" | "failed" | "sent">(
     "loading",
@@ -31,6 +32,7 @@ export function ExecutingTxScreen(props: {
 
   const sendTx = useCallback(async () => {
     setStatus("loading");
+    setTxError(undefined);
     try {
       const txData = await sendTxCore.mutateAsync(props.tx);
       setTxHash(txData.transactionHash);
@@ -40,6 +42,7 @@ export function ExecutingTxScreen(props: {
       // Do not reject the transaction here, because the user may want to try again
       // we only reject on modal close
       console.error(e);
+      setTxError(e as Error);
       setStatus("failed");
     }
   }, [sendTxCore, props.tx, props.onTxSent]);
@@ -81,9 +84,7 @@ export function ExecutingTxScreen(props: {
       </Text>
       <Spacer y="sm" />
       <Text color="danger" center size="sm">
-        {status === "failed" && sendTxCore.error
-          ? sendTxCore.error.message
-          : ""}
+        {status === "failed" && txError ? txError.message || "" : ""}
       </Text>
 
       <Spacer y="xxl" />

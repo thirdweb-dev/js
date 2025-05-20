@@ -16,6 +16,7 @@ import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
+import { DepositScreen } from "./DepositScreen.js";
 import { ExecutingTxScreen } from "./ExecutingScreen.js";
 
 type ModalProps = {
@@ -30,6 +31,7 @@ type ModalProps = {
   tx: PreparedTransaction;
   payOptions: PayUIOptions;
   onTxSent: (data: WaitForReceiptOptions) => void;
+  modalMode: "buy" | "deposit";
 };
 
 export function TransactionModal(props: ModalProps) {
@@ -50,7 +52,10 @@ export function TransactionModal(props: ModalProps) {
         toToken: props.tx.erc20Value
           ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
           : undefined,
-        event: "open_pay_transaction_modal",
+        event:
+          props.modalMode === "buy"
+            ? "open_pay_transaction_modal"
+            : "open_pay_deposit_modal",
       });
 
       return null;
@@ -89,6 +94,20 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
         tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
+      />
+    );
+  }
+
+  if (props.modalMode === "deposit") {
+    return (
+      <DepositScreen
+        client={props.client}
+        onBack={props.onBack}
+        tx={props.tx}
+        connectLocale={localeQuery.data}
+        onDone={() => {
+          setScreen("execute-tx");
+        }}
       />
     );
   }
