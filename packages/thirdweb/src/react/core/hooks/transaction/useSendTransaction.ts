@@ -234,7 +234,10 @@ export function useSendTransactionCore(args: {
                 return null;
               });
 
-              if (!supportedDestinations) {
+              if (
+                !supportedDestinations ||
+                supportedDestinations.length === 0
+              ) {
                 // not a supported detination -> show deposit screen
                 trackPayEvent({
                   client: tx.client,

@@ -18,6 +18,7 @@ export function useTransactionCostAndData(args: {
   transaction: PreparedTransaction;
   account: Account | undefined;
   supportedDestinations: SupportedChainAndTokens;
+  refetchIntervalMs?: number;
 }) {
   const { transaction, account, supportedDestinations } = args;
   // Compute query key of the transaction first
@@ -62,22 +63,24 @@ export function useTransactionCostAndData(args: {
 
       const erc20Value = await resolvePromisedValue(transaction.erc20Value);
       if (erc20Value) {
-        const [tokenBalance, tokenMeta, gasCostWei] = await Promise.all([
-          getWalletBalance({
-            address: account.address,
-            chain: transaction.chain,
-            client: transaction.client,
-            tokenAddress: erc20Value.tokenAddress,
-          }),
-          getCurrencyMetadata({
-            contract: getContract({
-              address: erc20Value.tokenAddress,
+        const [tokenBalance, tokenMeta, gasCostWei, chainMetadata] =
+          await Promise.all([
+            getWalletBalance({
+              address: account.address,
               chain: transaction.chain,
               client: transaction.client,
+              tokenAddress: erc20Value.tokenAddress,
             }),
-          }),
-          getTransactionGasCost(transaction, account?.address),
-        ]);
+            getCurrencyMetadata({
+              contract: getContract({
+                address: erc20Value.tokenAddress,
+                chain: transaction.chain,
+                client: transaction.client,
+              }),
+            }),
+            getTransactionGasCost(transaction, account?.address),
+            getChainMetadata(transaction.chain),
+          ]);
         const transactionValueWei = erc20Value.amountWei;
         const walletBalance = tokenBalance;
         const currency = {
@@ -95,6 +98,7 @@ export function useTransactionCostAndData(args: {
         return {
           token: currency,
           decimals: tokenMeta.decimals,
+          chainMetadata,
           walletBalance,
           gasCostWei,
           transactionValueWei,
@@ -121,6 +125,7 @@ export function useTransactionCostAndData(args: {
           symbol: chainMetadata.nativeCurrency.symbol,
           icon: chainMetadata.icon?.url,
         },
+        chainMetadata,
         decimals: 18,
         walletBalance,
         gasCostWei,
@@ -128,12 +133,6 @@ export function useTransactionCostAndData(args: {
       } satisfies TransactionCostAndData;
     },
     enabled: !!transaction && !!txQueryKey,
-    refetchInterval: () => {
-      if (transaction.erc20Value) {
-        // if erc20 value is set, we don't need to poll
-        return undefined;
-      }
-      return 30_000;
-    },
+    refetchInterval: args.refetchIntervalMs || 30_000,
   });
 }

@@ -16,7 +16,7 @@ import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
-import { DepositScreen } from "./DepositScreen.jsx";
+import { DepositScreen } from "./DepositScreen.js";
 import { ExecutingTxScreen } from "./ExecutingScreen.js";
 
 type ModalProps = {
@@ -100,7 +100,7 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
       <DepositScreen
         client={props.client}
         onBack={props.onBack}
-        chain={props.tx.chain}
+        tx={props.tx}
         connectLocale={localeQuery.data}
         onDone={() => {
           setScreen("execute-tx");
