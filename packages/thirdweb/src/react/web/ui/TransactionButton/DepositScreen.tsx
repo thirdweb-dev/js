@@ -13,6 +13,7 @@ import {
 } from "../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { hasSponsoredTransactionsEnabled } from "../../../core/utils/wallet.js";
 import { ErrorState } from "../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { CoinsIcon } from "../ConnectWallet/icons/CoinsIcon.js";
@@ -20,11 +21,11 @@ import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
 import { useTransactionCostAndData } from "../ConnectWallet/screens/Buy/main/useBuyTxStates.js";
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { formatTokenBalance } from "../ConnectWallet/screens/formatTokenBalance.js";
+import { isNativeToken } from "../ConnectWallet/screens/nativeToken.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { QRCode } from "../components/QRCode.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
-import { Spinner } from "../components/Spinner.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
@@ -99,6 +100,8 @@ export function DepositScreen(props: {
     refetchIntervalMs: 10_000,
   });
   const theme = useCustomTheme();
+  const sponsoredTransactionsEnabled =
+    hasSponsoredTransactionsEnabled(activeWallet);
 
   if (transactionCostAndDataError) {
     return (
@@ -122,13 +125,16 @@ export function DepositScreen(props: {
     return <LoadingScreen />;
   }
 
+  const totalCost =
+    isNativeToken(transactionCostAndData.token) && !sponsoredTransactionsEnabled
+      ? transactionCostAndData.transactionValueWei +
+        transactionCostAndData.gasCostWei
+      : transactionCostAndData.transactionValueWei;
   const insufficientFunds =
-    transactionCostAndData.walletBalance.value <
-    transactionCostAndData.transactionValueWei;
+    transactionCostAndData.walletBalance.value < totalCost;
   const requiredFunds = transactionCostAndData.walletBalance.value
-    ? transactionCostAndData.transactionValueWei -
-      transactionCostAndData.walletBalance.value
-    : transactionCostAndData.transactionValueWei;
+    ? totalCost - transactionCostAndData.walletBalance.value
+    : totalCost;
 
   const openFaucetLink = () => {
     window.open(
@@ -175,29 +181,26 @@ export function DepositScreen(props: {
               client={client}
             />
           )}
-          {transactionCostAndData.walletBalance.value ? (
+          {transactionCostAndData.walletBalance.value !== undefined &&
+          !transactionCostAndDataFetching ? (
             <Container flex="row" gap="3xs" center="y">
-              {transactionCostAndDataFetching ? (
-                <Spinner size="sm" color="secondaryText" />
-              ) : (
-                <>
-                  <Text size="xs" color="secondaryText" weight={500}>
-                    {formatTokenBalance(
-                      transactionCostAndData.walletBalance,
-                      false,
-                    )}
-                  </Text>
-                  <TokenSymbol
-                    token={transactionCostAndData.token}
-                    chain={props.tx.chain}
-                    size="xs"
-                    color="secondaryText"
-                  />
-                </>
-              )}
+              <Text size="xs" color="secondaryText" weight={500}>
+                {formatTokenBalance(
+                  transactionCostAndData.walletBalance,
+                  false,
+                )}
+              </Text>
+              <TokenSymbol
+                token={transactionCostAndData.token}
+                chain={props.tx.chain}
+                size="xs"
+                color="secondaryText"
+              />
             </Container>
           ) : (
-            <Skeleton width="70px" height={fontSize.xs} />
+            <Container flex="row" gap="3xs" center="y">
+              <Skeleton width="70px" height={fontSize.xs} />
+            </Container>
           )}
         </Container>
       </Container>
