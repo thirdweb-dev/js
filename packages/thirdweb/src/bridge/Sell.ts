@@ -251,7 +251,7 @@ export declare namespace quote {
  * ```
  *
  * ## Sending the transactions
- * The `transactions` array is a series of [ox](https://oxlib.sh) EIP-1559 transactions that must be executed one after the other in order to fulfill the complete route. There are a few things to keep in mind when executing these transactions:
+ * The `transactions` array is a series of transactions ready to be executed (with `sendTransaction`) must be executed one after the other in order to fulfill the complete route. There are a few things to keep in mind when executing these transactions:
  *  - Approvals will have the `approval` action specified. You can perform approvals with `sendAndConfirmTransaction`, then proceed to the next transaction.
  *  - All transactions are assumed to be executed by the `sender` address, regardless of which chain they are on. The final transaction will use the `receiver` as the recipient address.
  *  - If an `expiration` timestamp is provided, all transactions must be executed before that time to guarantee successful execution at the specified price.

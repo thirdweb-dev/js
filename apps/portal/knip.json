@@ -8,7 +8,6 @@
     "@thirdweb-dev/chains",
     "@thirdweb-dev/wallets",
     "thirdweb",
-    "@types/mdx",
     "@types/flexsearch"
   ],
   "entry": [

@@ -8,6 +8,8 @@ import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import cotiBanner from "./temp-assets/COTI_Banner.jpg";
 import cotiCTA from "./temp-assets/COTI_CTA.jpg";
+import eduBanner from "./temp-assets/EDUBanner.jpeg";
+import eduCTA from "./temp-assets/EDUCTA.png";
 import hemiSepoliaBanner from "./temp-assets/HemiBanner.png";
 import hemiSepoliaCTA from "./temp-assets/HemiCTA.png";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
@@ -376,6 +378,31 @@ const chainMetaRecord = {
     about:
       "Monetize your passion, your way. Discover the freedom to grow with our creator-focused platform.",
   },
+  //EDUMainnet
+  41923: {
+    headerImgUrl: eduBanner.src,
+    about:
+      "Education On-Chain - A Layer 3 blockchain preparing students and learners for the future of work while advancing onchain education finance (EduFi).",
+    cta: {
+      backgroundImageUrl: eduCTA.src,
+      title: "Education On-Chain",
+      buttonLink: "https://educhain.xyz/",
+      buttonText: "Learn More",
+    },
+  },
+  //EDU Testnet <Open Campus Codex>
+  656476: {
+    headerImgUrl: eduBanner.src,
+    about:
+      "Education On-Chain - A Layer 3 blockchain preparing students and learners for the future of work while advancing onchain education finance (EduFi).",
+    cta: {
+      backgroundImageUrl: eduCTA.src,
+      title: "Education On-Chain",
+      buttonLink: "https://educhain.xyz/",
+      buttonText: "Learn More",
+    },
+  },
+
   //Etherlink Testnet
   128123: {
     headerImgUrl: etherlinkBanner.src,
