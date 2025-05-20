@@ -79,7 +79,7 @@ interface OnrampApiRequestBody {
  * });
  *
  * console.log(preparedOnramp.link); // URL to redirect the user to
- * console.log(preparedOnramp.destinationAmount); // Amount of token user will receive
+ * console.log(preparedOnramp.currencyAmount); // Amount in fiat the user will pay
  * ```
  *
  * This function returns a quote that might look like:
