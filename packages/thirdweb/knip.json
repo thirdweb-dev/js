@@ -1,13 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["src/exports/**", "scripts/**/*.{ts,mjs}", "src/cli/bin.ts", ""],
+  "entry": [
+    "src/exports/**",
+    "scripts/**/*.{ts,mjs}",
+    "src/cli/bin.ts",
+    "src/transaction/actions/send-batch-transaction.ts"
+  ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
-  "ignore": ["src/**/__generated__/**"],
+  "ignore": ["src/**/__generated__/**", "**/*.bench.ts"],
   "ignoreBinaries": ["printf"],
   "ignoreDependencies": [
     "@testing-library/jest-dom",
     "tslib",
-    "@size-limit/preset-big-lib",
     "@thirdweb-dev/insight",
     "@thirdweb-dev/engine"
   ],
