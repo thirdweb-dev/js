@@ -131,7 +131,9 @@ export function DepositScreen(props: {
     : transactionCostAndData.transactionValueWei;
 
   const openFaucetLink = () => {
-    window.open(`https://thirdweb.com/${props.tx.chain.id}`);
+    window.open(
+      `https://thirdweb.com/${props.tx.chain.id}?utm_source=ub_deposit`,
+    );
   };
 
   return (
@@ -146,7 +148,7 @@ export function DepositScreen(props: {
             <Text size="xs" center color="danger" multiline>
               You need{" "}
               {formatNumber(
-                Number(
+                Number.parseFloat(
                   toTokens(requiredFunds, transactionCostAndData.decimals),
                 ),
                 5,
