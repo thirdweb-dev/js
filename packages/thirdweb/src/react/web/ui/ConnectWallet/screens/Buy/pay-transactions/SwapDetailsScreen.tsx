@@ -13,49 +13,13 @@ import {
   useChainExplorers,
   useChainName,
 } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../../../../components/basic.js";
+import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { WalletRow } from "../swap/WalletRow.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";
-
-export function SwapDetailsScreen(props: {
-  status: ValidBuyWithCryptoStatus;
-  onBack: () => void;
-  client: ThirdwebClient;
-}) {
-  const { status: initialStatus, client } = props;
-  const statusQuery = useBuyWithCryptoStatus(
-    initialStatus.source?.transactionHash
-      ? {
-          client: client,
-          transactionHash: initialStatus.source.transactionHash,
-          chainId: initialStatus.source.token.chainId,
-        }
-      : undefined,
-  );
-
-  const status: ValidBuyWithCryptoStatus =
-    (statusQuery.data?.status !== "NOT_FOUND" ? statusQuery.data : undefined) ||
-    initialStatus;
-
-  return (
-    <Container>
-      <Container p="lg">
-        <ModalHeader title="Transaction Details" onBack={props.onBack} />
-      </Container>
-
-      <Line />
-
-      <Container p="lg">
-        <SwapTxDetailsTable type="status" status={status} client={client} />
-      </Container>
-    </Container>
-  );
-}
 
 type SwapTxDetailsData = {
   fromToken: {
