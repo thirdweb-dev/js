@@ -4,7 +4,6 @@ import * as ox__Bytes from "ox/Bytes";
 import * as ox__Ens from "ox/Ens";
 import * as ox__Hash from "ox/Hash";
 import * as ox__Hex from "ox/Hex";
-import { keccak256 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
@@ -47,7 +46,6 @@ const convertReverseNodeToBytes = (address: Address, chainId: number) => {
       [reverseNode, addressNode],
     ),
   );
-  keccak256;
   return addressReverseNode;
 };
 
