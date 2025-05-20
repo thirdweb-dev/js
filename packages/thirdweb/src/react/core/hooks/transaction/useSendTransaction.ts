@@ -2,7 +2,6 @@ import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import * as Bridge from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
-import { getChainMetadata } from "../../../../chains/utils.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
@@ -181,10 +180,9 @@ export function useSendTransactionCore(args: {
 
         (async () => {
           try {
-            const [_nativeValue, _erc20Value, _chainMeta] = await Promise.all([
+            const [_nativeValue, _erc20Value] = await Promise.all([
               resolvePromisedValue(tx.value),
               resolvePromisedValue(tx.erc20Value),
-              getChainMetadata(tx.chain),
             ]);
 
             const nativeValue = _nativeValue || 0n;

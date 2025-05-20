@@ -134,8 +134,6 @@ export function DepositScreen(props: {
     window.open(`https://thirdweb.com/${props.tx.chain.id}`);
   };
 
-  // TODO poll for receied funds, then enable the continue button
-
   return (
     <Container p="lg">
       <ModalHeader title={"Insufficient funds"} onBack={props.onBack} />
