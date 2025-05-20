@@ -50,7 +50,7 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250421.0",
+    "@cloudflare/workers-types": "4.20250520.0",
     "@types/node": "22.14.1",
     "@vitest/coverage-v8": "3.1.2",
     "typescript": "5.8.3",
