@@ -1,0 +1,155 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { createMetadata, Callout } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Universal Bridge - Test Mode",
+		icon: "thirdweb",
+	},
+	title: "Enable Test Mode for Universal bridge — thirdweb docs",
+	description: "Learn how to enable test mode for web3 payments with the thirdweb Universal bridge feature in our technical docs",
+});
+
+# Enable Test Mode
+
+Developers can turn on Test Mode to test both fiat-to-crypto transactions and crypto-to-crypto transactions on supported testnet chains. It is possible to test both at the same time or separately.
+
+## Buy With Fiat
+
+By setting `testMode` to `true` for Buy With Fiat, you can enable test experiences for our underlying providers (Coinbase, Stripe, and Transak).
+
+<Tabs defaultValue="connectbutton">
+
+<TabsList>
+	<TabsTrigger value="connectbutton">ConnectButton</TabsTrigger>
+	<TabsTrigger value="payembed">PayEmbed</TabsTrigger>
+	<TabsTrigger value="sendtxn">sendTransaction</TabsTrigger>
+</TabsList>
+
+<TabsContent value='connectbutton'>
+
+```tsx
+<ConnectButton
+	client={client}
+	detailsModal={{
+		payOptions: {
+			buyWithFiat: {
+				testMode: true, // defaults to false
+			},
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="payembed">
+
+```tsx
+<PayEmbed
+	client={client}
+	payOptions={{
+		buyWithFiat: {
+			testMode: true, // defaults to false
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="sendtxn">
+
+```tsx
+const { mutate: sendTransaction } = useSendTransaction({
+	payModal: {
+		buyWithFiat: {
+			testMode: true, // defaults to false
+		},
+	},
+});
+```
+
+</TabsContent>
+
+</Tabs>
+
+For Coinbase onramp, you can turn on "Mocked mode" when launching the Onramp experience. 
+
+At the bottom of the Onramp modal where it says "Secured by Coinbase", click 10 times on the word "Secured." This will navigate you to Onramp's Debug Menu. There, navigate to the Actions tab click on the toggle for "Enable Mocked Buy and Send." You can now exit the Debug Menu and proceed with mock buys and sends. Remember to click on the "Enable Mocked Buy and Send" toggle once you are done to enable actual buys and sends.
+
+For other providers, you can use the following information when using any provider in test mode:
+
+| Provider | Card Type    | Name        | Number              | Expiration Date | CVV          | Other Info                                                       |
+| -------- | ------------ | ----------- | ------------------- | --------------- | ------------ | ---------------------------------------------------------------- |
+| Kado     | Credit Card  | Test Credit | 4242 4242 4242 4242 | 01/25           | 123          | Test Phone Number: (234) 567-8909                                |
+| Kado     | Debit Card   | Test Debit  | 4659 1055 6905 1157 | 01/25           | 123          | Test Phone Number: (234) 567-8909                                |
+| Stripe   | Visa         | Any Name    | 4242 4242 4242 4242 | Any Future Date | Any 3 Digits | SSN: 000000000, Address line 1: address_full_match, OTP : 000000 |
+| Stripe   | Visa (Debit) | Any Name    | 4000 0566 5566 5556 | Any Future Date | Any 3 Digits | SSN: 000000000, Address line 1: address_full_match, OTP : 000000 |
+| Transak  | Visa         | Any Name    | 4111 1111 1111 1111 | 10/33           | 123          | Payment Authorization 3Ds screen password: **Checkout1!**        |
+
+For Stripe testing, you can view more test cards [here](https://docs.stripe.com/testing).
+
+For Transak testing, you can view detailed information [here](https://docs.transak.com/docs/test-credentials#card-payments).
+
+For Kado testing, you can view detailed information [here](https://docs.kado.money/integrations/integrate-kado/sandbox).
+
+## Buy With Crypto
+
+Buy With Crypto test mode will show only Testnets and native test currencies. If you have a custom that you would like supported in test mode, [please reach out to us](https://thirdweb.com/contact-us). You can see a list of supported testnets on the [thirdweb Chainlist page](https://thirdweb.com/chainlist?service=pay&type=testnet).
+
+<Tabs defaultValue="connectbutton">
+
+<TabsList>
+	<TabsTrigger value="connectbutton">ConnectButton</TabsTrigger>
+	<TabsTrigger value="payembed">PayEmbed</TabsTrigger>
+	<TabsTrigger value="sendtxn">sendTransaction</TabsTrigger>
+</TabsList>
+
+<TabsContent value='connectbutton'>
+
+```tsx
+<ConnectButton
+	client={client}
+	detailsModal={{
+		payOptions: {
+			buyWithCrypto: {
+				testMode: true, // defaults to false
+			},
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="payembed">
+
+```tsx
+<PayEmbed
+	client={client}
+	payOptions={{
+		buyWithCrypto: {
+			testMode: true, // defaults to false
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="sendtxn">
+
+```tsx
+const { mutate: sendTransaction } = useSendTransaction({
+	payModal: {
+		buyWithCrypto: {
+			testMode: true, // defaults to false
+		},
+	},
+});
+```
+
+</TabsContent>
+
+</Tabs>

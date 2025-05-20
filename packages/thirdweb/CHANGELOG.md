@@ -1,5 +1,26 @@
 # thirdweb
 
+## 5.99.3
+
+### Patch Changes
+
+- [#7077](https://github.com/thirdweb-dev/js/pull/7077) [`c61e258`](https://github.com/thirdweb-dev/js/commit/c61e258ec365ca83ed575d301a9784974299da1d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose getInstalledWallets() utility
+
+## 5.99.2
+
+### Patch Changes
+
+- [#7065](https://github.com/thirdweb-dev/js/pull/7065) [`61152dd`](https://github.com/thirdweb-dev/js/commit/61152dd0984adc36fdcd722e1382c716c6bf2368) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return timestamps in Engine.getTransactionStatus()
+
+- [#7069](https://github.com/thirdweb-dev/js/pull/7069) [`da2a2a0`](https://github.com/thirdweb-dev/js/commit/da2a2a0e86f6ab5b919667964e001f16e20326ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix buyWithCrypto false not respected when going back from quote
+
+- [#7040](https://github.com/thirdweb-dev/js/pull/7040) [`20b5ba9`](https://github.com/thirdweb-dev/js/commit/20b5ba943a3c22633c7c49ba82104a6057be10b0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Propagate 401 errors when connecting in-app wallet
+
+- [#7061](https://github.com/thirdweb-dev/js/pull/7061) [`8d47864`](https://github.com/thirdweb-dev/js/commit/8d478649678fa2016bd6a6b72873dd1aaa2f5e05) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose prepareUserOp utility function
+
+- Updated dependencies [[`ae2ff74`](https://github.com/thirdweb-dev/js/commit/ae2ff743c05be7267e904ece9098601794b10dd9)]:
+  - @thirdweb-dev/engine@3.0.1
+
 ## 5.99.1
 
 ### Patch Changes

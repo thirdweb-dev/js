@@ -51,9 +51,7 @@ export function useBuyWithFiatStatus(
       const data = query.state.data as BuyWithFiatStatus;
       const status = data?.status;
       if (
-        status === "ON_RAMP_TRANSFER_FAILED" ||
         status === "PAYMENT_FAILED" ||
-        status === "CRYPTO_SWAP_COMPLETED" ||
         // onRampToken and toToken being the same means there is no additional swap step
         (status === "ON_RAMP_TRANSFER_COMPLETED" &&
           data?.quote.toToken.chainId === data?.quote.onRampToken.chainId &&

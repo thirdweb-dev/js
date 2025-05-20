@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.metamask",
   name: "MetaMask",
   homepage: "https://metamask.io/",
-  image_id: "fda51881-4e76-454e-68bb-20995c3f0700",
+  image_id: "e30d09fe-c0dd-4b61-81e2-d6dc09eb9700",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/metamask/id1438144202",

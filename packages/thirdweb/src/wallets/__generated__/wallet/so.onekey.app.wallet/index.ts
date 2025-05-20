@@ -5,7 +5,7 @@ export const wallet = {
   id: "so.onekey.app.wallet",
   name: "OneKey",
   homepage: "https://onekey.so",
-  image_id: "0720d396-1d61-4985-e240-3194484f3100",
+  image_id: "2067c771-93e8-4b32-b388-b2a0e1d4dc00",
   app: {
     browser: "https://onekey.so",
     ios: "https://apps.apple.com/us/app/onekey-open-source-wallet/id1609559473",

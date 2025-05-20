@@ -1,6 +1,6 @@
-# Insight TypeScript SDK
+# Engine OpenAPI TypeScript wrapper
 
-This package is a thin openAPI wrapper for insight, our in-house indexer.
+This package is a thin OpenAPI wrapper for Engine, our backend onchain executor service.
 
 ## Configuration
 

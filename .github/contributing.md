@@ -14,7 +14,7 @@ We use [Turborepo](https://turbo.build/repo/docs) to manage the repository, and 
 
 We use [pnpm](https://pnpm.io) for package management across the repo. `pnpm` is similar to `npm` or `yarn` but with more efficient disk space usage.
 
-**With the v5 SDK, we've consolidated everything into a single project at [/packages/thirdweb](./packages/thirdweb). You can still find the legacy packages at [/legacy_packages](./legacy_packages).**
+**With the v5 SDK, we've consolidated everything into a single project at [/packages/thirdweb](../packages/thirdweb). You can still find the legacy packages at [/legacy_packages](../legacy_packages).**
 
 This single package provides a performant & lightweight SDK to interact with any EVM chain across Node, React, and React Native. Learn more about how to use the thirdweb SDK in our [documentation](https://portal.thirdweb.com/typescript/v5).
 

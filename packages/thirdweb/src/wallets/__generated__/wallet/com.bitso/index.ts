@@ -26,6 +26,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://bitso.com/web3-wallet",
   },
 } as const;

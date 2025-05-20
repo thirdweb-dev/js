@@ -95,12 +95,12 @@ function BackendWalletsSection(props: {
             </UnderlineLink>{" "}
             tab, or{" "}
             <TrackedUnderlineLink
-              href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
+              href="https://portal.thirdweb.com/engine/v2/configure-wallets/server-wallet"
               target="_blank"
               label="learn-more"
               category="engine"
             >
-              learn more about backend wallets.
+              learn more about server wallets.
             </TrackedUnderlineLink>
           </p>
         </div>

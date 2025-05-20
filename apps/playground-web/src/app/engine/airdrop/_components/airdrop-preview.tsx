@@ -32,10 +32,10 @@ export function EngineAirdropPreview() {
     const res = await airdropMutation.mutateAsync();
     updateEngineTxStatus({
       chainId: airdropExample.chainId,
-      queueId: res.queueId,
+      queueId: res,
     });
 
-    setQueueId(res.queueId);
+    setQueueId(res);
   };
 
   return (

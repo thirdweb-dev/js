@@ -3,13 +3,13 @@
 
 export const wallet = {
   id: "com.fastex.wallet",
-  name: "Fastex Wallet",
-  homepage: "https://fastexwallet.com",
+  name: "Yo Wallet",
+  homepage: "https://yowallet.io",
   image_id: "a38db32b-8291-4d25-9aae-4bf4b6e6f300",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/fastex-wallet/id6474118944",
-    android: null,
+    android: "https://play.google.com/store/apps/details?id=com.yowallet.app",
     mac: null,
     windows: null,
     linux: null,
@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: "com.fastex.wallet",
   mobile: {
-    native: "fastex-wallet://",
+    native: "yo-wallet://",
     universal: null,
   },
   desktop: {

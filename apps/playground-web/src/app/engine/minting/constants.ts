@@ -1,5 +1,5 @@
 export const mintExample = {
-  contractAddress: "0x8CD193648f5D4E8CD9fD0f8d3865052790A680f6",
+  contractAddress: "0x8a4E14591088bBce4a4Dcfa677C1af78d336d6FB",
   chainId: 84532,
   chainName: "Base Sepolia",
   chainExplorer: "https://base-sepolia.blockscout.com",

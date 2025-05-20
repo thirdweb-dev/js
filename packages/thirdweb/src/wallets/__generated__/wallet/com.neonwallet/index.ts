@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "neon://uri=",
-    universal: null,
+    universal: "https://neonwallet.com/",
   },
 } as const;

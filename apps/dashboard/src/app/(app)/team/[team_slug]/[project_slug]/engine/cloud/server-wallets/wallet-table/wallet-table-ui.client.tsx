@@ -19,12 +19,21 @@ import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
 import { SendIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
 import { Button } from "../../../../../../../../../@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../../../../../../../../@/components/ui/pagination";
 import { useThirdwebClient } from "../../../../../../../../../@/constants/thirdweb.client";
 import { useDashboardRouter } from "../../../../../../../../../@/lib/DashboardRouter";
 import { useV5DashboardChain } from "../../../../../../../../../lib/v5-adapter";
@@ -36,11 +45,17 @@ export function ServerWalletsTableUI({
   project,
   teamSlug,
   managementAccessToken,
+  totalRecords,
+  currentPage,
+  totalPages,
 }: {
   wallets: Wallet[];
   project: Project;
   teamSlug: string;
   managementAccessToken: string | undefined;
+  totalRecords: number;
+  currentPage: number;
+  totalPages: number;
 }) {
   const [showSigners, setShowSigners] = useState(false);
   return (
@@ -121,6 +136,60 @@ export function ServerWalletsTableUI({
           </TableBody>
         </Table>
       </TableContainer>
+      <div className="flex flex-col items-center p-6">
+        <div className="mb-4 text-muted-foreground text-sm">
+          Found {totalRecords} server wallets
+        </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <Link
+                href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${
+                  currentPage > 1 ? currentPage - 1 : 1
+                }`}
+                passHref
+                legacyBehavior
+              >
+                <PaginationPrevious
+                  className={
+                    currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </Link>
+            </PaginationItem>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <PaginationItem key={`page-${pageNumber}`}>
+                  <Link
+                    href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${pageNumber}`}
+                    passHref
+                  >
+                    <PaginationLink isActive={currentPage === pageNumber}>
+                      {pageNumber}
+                    </PaginationLink>
+                  </Link>
+                </PaginationItem>
+              ),
+            )}
+            <PaginationItem>
+              <Link
+                href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${
+                  currentPage < totalPages ? currentPage + 1 : totalPages
+                }`}
+                passHref
+              >
+                <PaginationNext
+                  className={
+                    currentPage >= totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
+              </Link>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }

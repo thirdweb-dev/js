@@ -27,6 +27,7 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal:
+      "https://chrome.google.com/webstore/detail/nabox-wallet/nknhiehlklippafakaeklbeglecifhad?hl=en",
   },
 } as const;

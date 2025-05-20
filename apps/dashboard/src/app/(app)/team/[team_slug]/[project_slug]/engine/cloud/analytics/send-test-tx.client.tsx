@@ -19,15 +19,10 @@ import { Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  arbitrumSepolia,
-  baseSepolia,
-  optimismSepolia,
-  sepolia,
-} from "thirdweb/chains";
 import * as z from "zod";
 import { CopyTextButton } from "../../../../../../../../@/components/ui/CopyTextButton";
 import { useTrack } from "../../../../../../../../hooks/analytics/useTrack";
+import { useAllChainsData } from "../../../../../../../../hooks/chains/allChains";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
 import { deleteUserAccessToken, getUserAccessToken } from "./utils";
@@ -53,6 +48,7 @@ export function SendTestTransaction(props: {
   const [hasSentTx, setHasSentTx] = useState(false);
   const router = useDashboardRouter();
   const trackEvent = useTrack();
+  const chainsQuery = useAllChainsData();
 
   const userAccessToken =
     props.userAccessToken ?? getUserAccessToken(props.project.id) ?? "";
@@ -227,32 +223,13 @@ export function SendTestTransaction(props: {
               <p className="text-sm">Network</p>
               <SingleNetworkSelector
                 className="bg-background"
-                chainIds={[
-                  baseSepolia.id,
-                  optimismSepolia.id,
-                  arbitrumSepolia.id,
-                  sepolia.id,
-                  1301,
-                  1946,
-                  1993,
-                  919,
-                  6342,
-                  10143,
-                  44787,
-                  80002,
-                  80069,
-                  98985,
-                  128123,
-                  167009,
-                  168587773,
-                  37714555429,
-                  1952959480,
-                  97,
-                  296,
-                  1740,
-                  4202,
-                  10200,
-                ]}
+                chainIds={chainsQuery.allChains
+                  .filter(
+                    (chain) =>
+                      chain.testnet === true &&
+                      chain.stackType !== "zksync_stack",
+                  )
+                  .map((chain) => chain.chainId)}
                 client={thirdwebClient}
                 chainId={form.watch("chainId")}
                 onChange={(chainId) => {

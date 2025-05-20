@@ -335,7 +335,6 @@ export async function createManagementAccessToken(props: {
   });
   if (res.success) {
     const data = res.data;
-    // store the management access token in the project
     await updateProjectClient(
       {
         projectId: props.project.id,
@@ -354,8 +353,9 @@ export async function createManagementAccessToken(props: {
         ],
       },
     );
+    return res;
   }
-  return res;
+  throw new Error(`Failed to create management access token: ${res.error}`);
 }
 
 export function maskSecret(secret: string) {

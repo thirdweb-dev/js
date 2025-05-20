@@ -436,7 +436,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         tokenList={(
           (toChain?.id ? destinationSupportedTokens[toChain.id] : undefined) ||
           []
-        ).filter((x) => x.address !== NATIVE_TOKEN_ADDRESS)}
+        ).filter(
+          (x) => x.address.toLowerCase() !== NATIVE_TOKEN_ADDRESS.toLowerCase(),
+        )}
         onTokenSelect={(tokenInfo) => {
           setToToken(tokenInfo);
           goBack();
@@ -510,8 +512,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               client={client}
               onBack={() => {
                 if (
-                  screen.id === "buy-with-crypto" ||
-                  screen.id === "buy-with-fiat"
+                  (screen.id === "buy-with-crypto" ||
+                    screen.id === "buy-with-fiat") &&
+                  enabledPaymentMethods.buyWithCryptoEnabled
                 ) {
                   setScreen({
                     id: "select-from-token",

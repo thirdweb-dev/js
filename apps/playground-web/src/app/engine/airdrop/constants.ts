@@ -1,5 +1,5 @@
 export const airdropExample = {
-  contractAddress: "0xcB30dB8FB977e8b27ae34c86aF16C4F5E428c0bE",
+  contractAddress: "0x6E238275023A2575136CF60f655B6B2C0C58b4ac",
   chainId: 84532,
   chainName: "Base Sepolia",
   chainExplorer: "https://base-sepolia.blockscout.com",

@@ -43,6 +43,7 @@ export const TEAM_PLANS: Record<
       "$100 Usage Credits",
       "Email support",
       "SMS Onboarding",
+      "Custom Wallet Branding & Auth",
       "30d User Analytics",
       "Gas grant for transactions",
     ],
@@ -55,8 +56,6 @@ export const TEAM_PLANS: Record<
     description: "For funded startups and mid-size businesses.",
     features: [
       "$250 Usage Credits",
-      "Custom Wallet Branding & Auth",
-      "Dedicated Engine Server",
       "24hr Guaranteed Support",
       "90d User Analytics",
     ],
@@ -68,7 +67,7 @@ export const TEAM_PLANS: Record<
     subTitle: "Everything in Accelerate, plus:",
     trialPeriodDays: 0,
     features: [
-      "$400 Usage Credits",
+      "$500 Usage Credits",
       "12hr Guaranteed Response",
       "Slack Channel Support",
       "Whitelabel Infra Support",
