@@ -20,6 +20,7 @@ export type BlueprintListItem = {
     name: string;
     path: string;
     method: string;
+    deprecated: boolean;
   }[];
 };
 
@@ -36,6 +37,7 @@ export type MinimalBlueprintSpec = {
   paths: {
     name: string;
     path: string;
+    deprecated: boolean;
   }[];
 };
 

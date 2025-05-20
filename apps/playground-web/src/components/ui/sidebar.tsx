@@ -11,6 +11,7 @@ import { CustomAccordion } from "./CustomAccordion";
 export type LinkMeta = {
   name: string;
   href: string;
+  crossedOut?: boolean;
 };
 
 export type LinkGroup = {
@@ -83,6 +84,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
       className={clsx(
         "block overflow-hidden text-ellipsis py-1 font-medium transition-colors duration-300 hover:text-foreground lg:text-base",
         isActive ? "text-foreground" : "text-muted-foreground",
+        "crossedOut" in link && link.crossedOut && "line-through",
       )}
     >
       {link.name}

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,6 +6,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { isProd } from "../../../lib/env";
@@ -53,8 +55,28 @@ export default async function Page(props: {
     <div>
       <Breadcrumbs />
       <h1 className="mt-3 mb-6 font-semibold text-2xl tracking-tight lg:text-3xl">
-        {title}
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              pathMetadata.deprecated && "text-muted-foreground line-through",
+            )}
+          >
+            {title}
+          </span>
+          {pathMetadata.deprecated && (
+            <Badge variant="destructive" className="text-xs">
+              Deprecated
+            </Badge>
+          )}
+        </div>
       </h1>
+      {pathMetadata.deprecated && (
+        <div className="mt-3 mb-6">
+          <div className="flex items-center gap-2">
+            <span>{pathMetadata.description}</span>
+          </div>
+        </div>
+      )}
       <BlueprintPlayground
         key={searchParams.path}
         metadata={pathMetadata}

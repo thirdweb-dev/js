@@ -29,6 +29,7 @@ export default function Page() {
                 return {
                   name: pathInfo.name,
                   link: `/insight/${blueprint.id}?path=${pathInfo.path}`,
+                  deprecated: pathInfo.deprecated,
                 };
               })}
             />
@@ -60,10 +61,19 @@ function BlueprintSection(props: {
                 <span className="flex items-center gap-3">
                   <Link
                     href={item.link}
-                    className="before:absolute before:inset-0"
+                    className={`${
+                      item.deprecated
+                        ? "line-through before:absolute before:inset-0"
+                        : ""
+                    }`}
                   >
                     {item.name}
                   </Link>
+                  {item.deprecated && (
+                    <span className="rounded bg-destructive/10 px-2 py-0.5 font-medium text-destructive text-xs">
+                      Deprecated
+                    </span>
+                  )}
                 </span>
               </TableCell>
             </TableRow>

@@ -141,6 +141,7 @@ export function getSidebarLinks() {
         return {
           name: pathInfo.name,
           href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
+          crossedOut: pathInfo.deprecated,
         };
       }),
     };
