@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { base } from "../../chains/chain-definitions/base.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../constants/addresses.js";
 import { convertFiatToCrypto } from "./fiatToCrypto.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
@@ -84,13 +86,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
     await expect(
       convertFiatToCrypto({
         chain: base,
-        to: TEST_ACCOUNT_A.address,
+        to: ZERO_ADDRESS,
         fromAmount: 1,
         from: "USD",
         client: TEST_CLIENT,
       }),
     ).rejects.toThrowError(
-      `Error: ${TEST_ACCOUNT_A.address} on chainId: ${base.id} is not a valid contract address.`,
+      `Error: ${ZERO_ADDRESS} on chainId: ${base.id} is not a valid contract address.`,
     );
   });
   it("should throw if response is not OK", async () => {

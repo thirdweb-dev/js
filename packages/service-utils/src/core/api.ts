@@ -1,4 +1,5 @@
 import type { AuthorizationInput } from "./authorize/index.js";
+import { getAuthHeaders } from "./get-auth-headers.js";
 import type { ServiceName } from "./services.js";
 
 export type UserOpData = {
@@ -240,7 +241,7 @@ export async function fetchTeamAndProject(
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
   const { apiUrl, serviceApiKey } = config;
-  const { teamId, clientId, incomingServiceApiKey } = authData;
+  const { teamId, clientId } = authData;
 
   const url = new URL("/v2/keys/use", apiUrl);
   if (clientId) {
@@ -250,6 +251,9 @@ export async function fetchTeamAndProject(
     url.searchParams.set("teamId", teamId);
   }
 
+  // compute the appropriate auth headers based on the auth data
+  const authHeaders = getAuthHeaders(authData, serviceApiKey);
+
   const retryCount = config.retryCount ?? 3;
   let error: unknown | undefined;
   for (let i = 0; i < retryCount; i++) {
@@ -257,13 +261,7 @@ export async function fetchTeamAndProject(
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          ...(authData.secretKey ? { "x-secret-key": authData.secretKey } : {}),
-          ...(authData.jwt ? { Authorization: `Bearer ${authData.jwt}` } : {}),
-          // use the incoming service api key if it exists, otherwise use the service api key
-          // this is done to ensure that the incoming service API key is VALID in the first place
-          "x-service-api-key": incomingServiceApiKey
-            ? incomingServiceApiKey
-            : serviceApiKey,
+          ...authHeaders,
           "content-type": "application/json",
         },
       });

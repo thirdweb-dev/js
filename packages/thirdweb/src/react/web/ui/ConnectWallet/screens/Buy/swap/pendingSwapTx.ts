@@ -11,9 +11,7 @@ type PendingTxInfo =
       intentId: string;
     };
 
-export const pendingTransactions = /* @__PURE__ */ createStore<PendingTxInfo[]>(
-  [],
-);
+const pendingTransactions = /* @__PURE__ */ createStore<PendingTxInfo[]>([]);
 
 /**
  * @internal

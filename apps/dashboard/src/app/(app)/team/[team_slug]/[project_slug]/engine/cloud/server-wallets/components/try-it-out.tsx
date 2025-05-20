@@ -186,7 +186,7 @@ export function TryItOut() {
 const sdkExample = () => `\
 import { createThirdwebClient, sendTransaction, getContract, Engine } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
-import { claimTo } from "thirdweb/extensions/1155";
+import { claimTo } from "thirdweb/extensions/erc1155";
 
 // Create a thirdweb client
 const client = createThirdwebClient({
@@ -228,7 +228,7 @@ const txHash = await Engine.waitForTransactionHash({
   client,
   transactionId,
 });
-console.log("Transaction hash:", result.transactionHash);
+console.log("Transaction hash:", txHash);
 `;
 
 const curlExample = () => `\

@@ -1,9 +1,9 @@
 import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
-import { UNIVERSAL_BRIDGE_URL } from "./constants.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
 
 /**
@@ -113,12 +113,13 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     "buyAmountWei" in options ? options.buyAmountWei : options.amount;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/quote`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/buy/quote`);
   url.searchParams.set("originChainId", originChainId.toString());
   url.searchParams.set("originTokenAddress", originTokenAddress);
   url.searchParams.set("destinationChainId", destinationChainId.toString());
   url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
   url.searchParams.set("buyAmountWei", amount.toString());
+  url.searchParams.set("amount", amount.toString());
   if (maxSteps) {
     url.searchParams.set("maxSteps", maxSteps.toString());
   }
@@ -199,7 +200,7 @@ export declare namespace quote {
  * This will return a quote that might look like:
  * ```typescript
  * {
- *   originAmount: 10000026098875381n,
+ *   originAmount: 2000030000n,
  *   destinationAmount: 1000000000000000000n,
  *   blockNumber: 22026509n,
  *   timestamp: 1741730936680,
@@ -208,11 +209,11 @@ export declare namespace quote {
  *     {
  *       originToken: {
  *         chainId: 1,
- *         address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
- *         symbol: "ETH",
- *         name: "Ethereum",
- *         decimals: 18,
- *         priceUsd: 2000,
+ *         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+ *         symbol: "USDC",
+ *         name: "USDC",
+ *         decimals: 6,
+ *         priceUsd: 1,
  *         iconUri: "https://..."
  *       },
  *       destinationToken: {
@@ -224,7 +225,7 @@ export declare namespace quote {
  *         priceUsd: 2000,
  *         iconUri: "https://..."
  *       },
- *       originAmount: 10000026098875381n,
+ *       originAmount: 2000030000n,
  *       destinationAmount: 1000000000000000000n,
  *       estimatedExecutionTimeMs: 1000
  *       transactions: [
@@ -250,7 +251,7 @@ export declare namespace quote {
  *   expiration: 1741730936680,
  *   intent: {
  *     originChainId: 1,
- *     originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+ *     originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
  *     destinationChainId: 10,
  *     destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
  *     amount: 1000000000000000000n
@@ -259,7 +260,7 @@ export declare namespace quote {
  * ```
  *
  * ## Sending the transactions
- * The `transactions` array is a series of [ox](https://oxlib.sh) EIP-1559 transactions that must be executed one after the other in order to fulfill the complete route. There are a few things to keep in mind when executing these transactions:
+ * The `transactions` array is a series of transactions ready to be executed (with `sendTransaction`) one after the other in order to fulfill the complete route. There are a few things to keep in mind when executing these transactions:
  *  - Approvals will have the `approval` action specified. You can perform approvals with `sendAndConfirmTransaction`, then proceed to the next transaction.
  *  - All transactions are assumed to be executed by the `sender` address, regardless of which chain they are on. The final transaction will use the `receiver` as the recipient address.
  *  - If an `expiration` timestamp is provided, all transactions must be executed before that time to guarantee successful execution at the specified price.
@@ -334,7 +335,7 @@ export async function prepare(
   } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${UNIVERSAL_BRIDGE_URL}/buy/prepare`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/buy/prepare`);
 
   const response = await clientFetch(url.toString(), {
     method: "POST",
@@ -342,7 +343,8 @@ export async function prepare(
       "Content-Type": "application/json",
     },
     body: stringify({
-      buyAmountWei: amount.toString(),
+      buyAmountWei: amount.toString(), // legacy
+      amount: amount.toString(),
       originChainId: originChainId.toString(),
       originTokenAddress,
       destinationChainId: destinationChainId.toString(),
@@ -382,6 +384,8 @@ export async function prepare(
       destinationChainId,
       destinationTokenAddress,
       amount,
+      sender,
+      receiver,
     },
   };
 }
@@ -407,6 +411,8 @@ export declare namespace prepare {
       destinationChainId: number;
       destinationTokenAddress: ox__Address.Address;
       amount: bigint;
+      sender: ox__Address.Address;
+      receiver: ox__Address.Address;
       purchaseData?: unknown;
     };
   };

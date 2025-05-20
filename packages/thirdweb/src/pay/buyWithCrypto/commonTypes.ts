@@ -10,16 +10,6 @@ export type QuoteTokenInfo = {
   symbol?: string;
 };
 
-export type QuoteTransactionRequest = {
-  data: string;
-  to: string;
-  value: string;
-  from: string;
-  chainId: number;
-  gasPrice: string;
-  gasLimit: string;
-};
-
 export type QuoteApprovalInfo = {
   chainId: number;
   tokenAddress: string;

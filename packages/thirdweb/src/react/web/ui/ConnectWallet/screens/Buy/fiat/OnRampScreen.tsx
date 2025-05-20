@@ -496,19 +496,12 @@ function useOnRampStatus(props: {
 
   switch (statusQuery.data?.status) {
     case "ON_RAMP_TRANSFER_COMPLETED":
-    case "CRYPTO_SWAP_COMPLETED":
-    case "CRYPTO_SWAP_REQUIRED":
       uiStatus = "completed";
       break;
-    case "CRYPTO_SWAP_FALLBACK":
-      uiStatus = "partialSuccess";
-      break;
-    case "ON_RAMP_TRANSFER_FAILED":
     case "PAYMENT_FAILED":
       uiStatus = "failed";
       break;
     case "PENDING_PAYMENT":
-    case "ON_RAMP_TRANSFER_IN_PROGRESS":
       uiStatus = "pending";
       break;
     default:
@@ -522,10 +515,7 @@ function useOnRampStatus(props: {
       return;
     }
 
-    if (
-      statusQuery.data &&
-      (uiStatus === "completed" || uiStatus === "partialSuccess")
-    ) {
+    if (statusQuery.data && uiStatus === "completed") {
       purchaseCbCalled.current = true;
       props.onSuccess(statusQuery.data);
     }
@@ -537,7 +527,7 @@ function useOnRampStatus(props: {
       return;
     }
 
-    if (uiStatus === "completed" || uiStatus === "partialSuccess") {
+    if (uiStatus === "completed") {
       try {
         if (props.openedWindow && !props.openedWindow.closed) {
           props.openedWindow.close();

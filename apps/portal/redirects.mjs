@@ -1046,6 +1046,27 @@ const v4ToV5Redirects = {
   "/references/wallets/:path*": "/typescript/v5/supported-wallets",
 };
 
+const payRedirects = {
+  "/connect/pay/overview": "/pay",
+  "/connect/pay/onramp-providers": "/pay/onramp-providers",
+  "/connect/pay/fees": "/pay/fees",
+  "/connect/pay/get-started": "/pay/get-started",
+  "/connect/pay/guides/accept-direct-payments":
+    "/pay/guides/accept-direct-payments",
+  "/connect/pay/guides/build-a-custom-experience":
+    "/pay/guides/build-a-custom-experience",
+  "/connect/pay/guides/cross-chain-swapping":
+    "/pay/guides/cross-chain-swapping",
+  "/connect/pay/customization/connectbutton":
+    "/pay/customization/connectbutton",
+  "/connect/pay/customization/payembed": "/pay/customization/payembed",
+  "/connect/pay/customization/send-transaction":
+    "/pay/customization/send-transaction",
+  "/connect/pay/webhooks": "/pay/webhooks",
+  "/connect/pay/testing-pay": "/pay/testing-pay",
+  "/connect/pay/faqs": "/pay/faqs",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -1066,6 +1087,7 @@ export const redirects = async () => {
     ...createRedirects(unrealEngineRedirects),
     ...createRedirects(v4ToV5Redirects),
     ...createRedirects(glossaryRedirects),
+    ...createRedirects(payRedirects),
   ];
 };
 

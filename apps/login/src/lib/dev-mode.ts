@@ -1,5 +1,6 @@
 import { setThirdwebDomains } from "thirdweb/utils";
 import {
+  THIRDWEB_BRIDGE_DOMAIN,
   THIRDWEB_BUNDLER_DOMAIN,
   THIRDWEB_INAPP_WALLET_DOMAIN,
   THIRDWEB_PAY_DOMAIN,
@@ -19,6 +20,7 @@ export function initDevMode() {
       storage: THIRDWEB_STORAGE_DOMAIN,
       social: THIRDWEB_SOCIAL_API_DOMAIN,
       bundler: THIRDWEB_BUNDLER_DOMAIN,
+      bridge: THIRDWEB_BRIDGE_DOMAIN,
     });
   }
 }

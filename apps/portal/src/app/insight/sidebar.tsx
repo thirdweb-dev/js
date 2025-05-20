@@ -82,13 +82,13 @@ export const sidebar: SideBar = {
         },
         {
           name: "API Reference",
-          href: "https://insight-api.thirdweb.com/reference#tag/webhooks",
+          href: "https://insight.thirdweb.com/reference#tag/webhooks",
         },
       ],
     },
     {
       name: "API Reference",
-      href: "https://insight-api.thirdweb.com/reference",
+      href: "https://insight.thirdweb.com/reference",
       icon: <BracesIcon />,
     },
     {
