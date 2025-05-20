@@ -155,6 +155,12 @@ function LearningResourcesSection() {
           icon={ConnectIcon}
         />
         <ArticleCardIndex
+          href="/pay"
+          title="Universal Bridge"
+          description="Bridge and onramp tokens on any chain"
+          icon={BridgeIcon}
+        />
+        <ArticleCardIndex
           href="/engine"
           title="Engine"
           description="Reliable transactions and monitoring"
