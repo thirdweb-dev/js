@@ -41,7 +41,7 @@ export default function Page() {
 
 function BlueprintSection(props: {
   title: string;
-  blueprints: { name: string; link: string }[];
+  blueprints: { name: string; link: string; deprecated?: boolean }[];
 }) {
   return (
     <div className="overflow-hidden rounded-lg border bg-card">

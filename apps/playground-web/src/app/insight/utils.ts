@@ -6,6 +6,9 @@ import type { OpenAPIV3 } from "openapi-types";
 export type BlueprintParameter = OpenAPIV3.ParameterObject;
 export type BlueprintPathMetadata = OpenAPIV3.PathItemObject;
 
+const THIRDWEB_INSIGHT_API_DOMAIN =
+  process.env.NEXT_PUBLIC_INSIGHT_URL || "insight.thirdweb.com";
+
 export type BlueprintListItem = {
   id: string;
   name: string;
@@ -40,7 +43,7 @@ export async function fetchBlueprintSpec(params: {
   blueprintId: string;
 }) {
   const res = await fetch(
-    `https://insight.thirdweb.com/v1/blueprints/${params.blueprintId}`,
+    `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/blueprints/${params.blueprintId}`,
   );
 
   if (!res.ok) {

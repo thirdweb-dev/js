@@ -109,7 +109,7 @@ function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
   const parameters = [..._parameters];
 
   // make chain query param required - its not required in open api spec - because it either has to be set in subdomain or as a query param
-  const chainIdParameter = parameters.find((p) => p.name === "chain");
+  const chainIdParameter = parameters.find((p) => p.name === "chain_id");
   if (chainIdParameter) {
     chainIdParameter.required = true;
   }
@@ -120,6 +120,12 @@ function modifyParametersForPlayground(_parameters: BlueprintParameter[]) {
   );
   if (clientIdParameterIndex !== -1) {
     parameters.splice(clientIdParameterIndex, 1);
+  }
+
+  // remove the chain parameter if it is present
+  const chainParameterIndex = parameters.findIndex((p) => p.name === "chain");
+  if (chainParameterIndex !== -1) {
+    parameters.splice(chainParameterIndex, 1);
   }
 
   return parameters;
@@ -163,7 +169,7 @@ function BlueprintPlaygroundUI(props: {
         values[param.name] = Math.floor(
           (Date.now() - 3 * 30 * 24 * 60 * 60 * 1000) / 1000,
         );
-      } else if (param.name === "chain") {
+      } else if (param.name === "chain_id") {
         values[param.name] = [];
       } else {
         values[param.name] = "";
@@ -466,7 +472,7 @@ function ParameterSection(props: {
                     key={param.name}
                     className={cn(
                       "grid items-center",
-                      param.name === "chain"
+                      param.name === "chain_id"
                         ? "grid-cols-1 lg:grid-cols-2"
                         : "grid-cols-2",
                     )}
@@ -485,14 +491,14 @@ function ParameterSection(props: {
                       )}
                     </div>
                     <div className="relative">
-                      {param.name === "chain" ? (
+                      {param.name === "chain_id" ? (
                         <MultiNetworkSelector
                           selectedBadgeClassName="bg-background"
                           selectedChainIds={
-                            props.form.watch("chain") as number[]
+                            props.form.watch("chain_id") as number[]
                           }
                           onChange={(chainIds) => {
-                            props.form.setValue("chain", chainIds, {
+                            props.form.setValue("chain_id", chainIds, {
                               shouldValidate: true,
                               shouldDirty: true,
                             });
@@ -821,6 +827,9 @@ function openAPIV3ParamToZodFormSchema(
 function createParametersFormSchema(parameters: BlueprintParameter[]) {
   const shape: z.ZodRawShape = {};
   for (const param of parameters) {
+    if (param.deprecated) {
+      continue;
+    }
     const paramSchema = openAPIV3ParamToZodFormSchema(
       param.schema,
       !!param.required,
