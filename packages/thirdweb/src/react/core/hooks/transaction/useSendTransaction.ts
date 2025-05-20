@@ -238,7 +238,7 @@ export function useSendTransactionCore(args: {
                 !supportedDestinations ||
                 supportedDestinations.length === 0
               ) {
-                // not a supported detination -> show deposit screen
+                // not a supported destination -> show deposit screen
                 trackPayEvent({
                   client: tx.client,
                   walletAddress: account.address,
