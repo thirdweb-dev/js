@@ -32,8 +32,8 @@ function useChainStatswithRPC(_rpcUrl: string) {
         method: "POST",
         body: JSON.stringify({
           jsonrpc: "2.0",
-          method: "eth_blockNumber",
-          params: [],
+          method: "eth_getBlockByNumber",
+          params: ["latest", false],
           id: 1,
         }),
       });
@@ -41,9 +41,12 @@ function useChainStatswithRPC(_rpcUrl: string) {
       const json = await res.json();
       const latency = (performance.now() - startTimeStamp).toFixed(0);
 
+      const blockNumber = Number.parseInt(json.result.number, 16);
+      const blockGasLimit = Number.parseInt(json.result.gasLimit, 16);
       return {
         latency,
-        blockNumber: Number.parseInt(json.result, 16),
+        blockNumber,
+        blockGasLimit,
       };
     },
     refetchInterval: (query) => {
@@ -109,6 +112,21 @@ export function ChainLiveStats(props: { rpc: string }) {
           <p className="fade-in-0 animate-in text-destructive-text">N/A</p>
         ) : stats.data ? (
           <p className="fade-in-0 animate-in">{stats.data.blockNumber}</p>
+        ) : (
+          <div className="flex h-[28px] w-[140px] py-1">
+            <Skeleton className="h-full w-full" />
+          </div>
+        )}
+      </PrimaryInfoItem>
+
+      {/* Block Gas Limit */}
+      <PrimaryInfoItem title="Block Gas Limit" titleIcon={<PulseDot />}>
+        {stats.isError ? (
+          <p className="fade-in-0 animate-in text-destructive-text">N/A</p>
+        ) : stats.data ? (
+          <p className="fade-in-0 animate-in">
+            {stats.data.blockGasLimit ?? "N/A"}
+          </p>
         ) : (
           <div className="flex h-[28px] w-[140px] py-1">
             <Skeleton className="h-full w-full" />
