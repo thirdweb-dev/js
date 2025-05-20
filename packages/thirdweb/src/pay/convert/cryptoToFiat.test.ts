@@ -1,10 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { base } from "../../chains/chain-definitions/base.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  ZERO_ADDRESS,
+} from "../../constants/addresses.js";
 import { convertCryptoToFiat } from "./cryptoToFiat.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
@@ -49,7 +51,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
     expect(data.result).toBe(0);
   });
 
-  it("should throw error for testnet chain (because testnets are not supported", async () => {
+  it("should throw error for testnet chain (because testnets are not supported)", async () => {
     await expect(
       convertCryptoToFiat({
         chain: sepolia,
@@ -81,13 +83,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
     await expect(
       convertCryptoToFiat({
         chain: base,
-        fromTokenAddress: TEST_ACCOUNT_A.address,
+        fromTokenAddress: ZERO_ADDRESS,
         fromAmount: 1,
         to: "USD",
         client: TEST_CLIENT,
       }),
     ).rejects.toThrowError(
-      `Error: ${TEST_ACCOUNT_A.address} on chainId: ${base.id} is not a valid contract address.`,
+      `Error: ${ZERO_ADDRESS} on chainId: ${base.id} is not a valid contract address.`,
     );
   });
   it("should throw if response is not OK", async () => {
