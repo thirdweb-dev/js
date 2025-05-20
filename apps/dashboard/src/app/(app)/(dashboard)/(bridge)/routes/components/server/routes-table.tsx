@@ -57,7 +57,7 @@ async function getRoutesToRender(params: SearchParams) {
     }
   }
   // Temporary, will update this after the /routes endpoint
-  let routes = await getRoutes({ limit: 100_000 });
+  let routes = await getRoutes({ limit: 500_000 });
 
   const totalCount = routes.length;
 
