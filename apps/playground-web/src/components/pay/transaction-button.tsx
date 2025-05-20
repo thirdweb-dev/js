@@ -13,6 +13,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { toWei } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
