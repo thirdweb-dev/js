@@ -45,7 +45,7 @@ const vault = await createVaultClient({
 });
 ```
 
-`createVaultClient` uses your secret key to establish a connection to the thirdweb vault instance. You can also a baseUrl that points to your own vault instance. Cache the resulting `vault` object and reuse it for all subsequent operations.
+`createVaultClient` uses your secret key to establish a connection to the thirdweb vault instance. You can also specify a baseUrl that points to your own vault instance. Cache the resulting `vault` object and reuse it for all subsequent operations.
 
 > **Tip**: If you run multiple Vault instances (dev, staging, prod) create one `VaultClient` per instance.
 
