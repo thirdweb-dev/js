@@ -2,7 +2,8 @@
 
 import { useTheme } from "next-themes";
 import { getContract } from "thirdweb";
-import { base, polygon } from "thirdweb/chains";
+import { prepareTransaction } from "thirdweb";
+import { base, baseSepolia, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
@@ -12,6 +13,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { toWei } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
@@ -98,6 +100,27 @@ export function PayTransactionButtonPreview() {
             }}
           >
             Buy VIP Pass
+          </TransactionButton>
+          <div className="h-10" />
+          <div className="flex items-center gap-2">Price: 0.1 ETH</div>
+          <TransactionButton
+            transaction={() => {
+              if (!account) throw new Error("No active account");
+              return prepareTransaction({
+                chain: baseSepolia,
+                client: THIRDWEB_CLIENT,
+                to: account.address,
+                value: toWei("0.1"),
+              });
+            }}
+            onError={(e) => {
+              console.error(e);
+            }}
+            payModal={{
+              theme: theme === "light" ? "light" : "dark",
+            }}
+          >
+            Send 0.1 ETH
           </TransactionButton>
         </div>
       )}

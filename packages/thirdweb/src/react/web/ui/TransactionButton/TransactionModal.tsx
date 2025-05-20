@@ -52,7 +52,10 @@ export function TransactionModal(props: ModalProps) {
         toToken: props.tx.erc20Value
           ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
           : undefined,
-        event: "open_pay_transaction_modal",
+        event:
+          props.modalMode === "buy"
+            ? "open_pay_transaction_modal"
+            : "open_pay_deposit_modal",
       });
 
       return null;
