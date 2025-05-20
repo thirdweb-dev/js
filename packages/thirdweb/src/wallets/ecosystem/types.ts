@@ -19,6 +19,11 @@ export type EcosystemWalletCreationOptions = {
      * The default country code to use for SMS authentication
      */
     defaultSmsCountryCode?: SupportedSmsCountry;
+
+    /**
+     * The list of allowed country codes to display in the country selector
+     */
+    allowedSmsCountryCodes?: SupportedSmsCountry[];
   };
   /**
    * The partnerId of the ecosystem wallet to connect to

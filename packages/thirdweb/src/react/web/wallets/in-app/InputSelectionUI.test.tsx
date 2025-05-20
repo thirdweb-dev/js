@@ -42,4 +42,27 @@ describe("InputSelectionUI", () => {
 
     expect(screen.getByRole("combobox")).toHaveValue("US +1");
   });
+
+  it("should filter countries based on allowedSmsCountryCodes", () => {
+    const mockGetCountrySelector = vi.mocked(getCountrySelector);
+    mockGetCountrySelector.mockReturnValue("IN +91");
+
+    render(
+      <InputSelectionUI
+        onSelect={vi.fn()}
+        placeholder=""
+        name=""
+        type=""
+        submitButtonText=""
+        format="phone"
+        allowedSmsCountryCodes={["IN", "BR"]}
+      />,
+    );
+
+    const options = screen.getAllByRole("option");
+    const optionTexts = options.map((o) => o.textContent);
+    expect(optionTexts.some((t) => t?.includes("India"))).toBe(true);
+    expect(optionTexts.some((t) => t?.includes("Brazil"))).toBe(true);
+    expect(optionTexts.some((t) => t?.includes("United States"))).toBe(false);
+  });
 });
