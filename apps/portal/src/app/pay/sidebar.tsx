@@ -21,7 +21,7 @@ export const sidebar: SideBar = {
   links: [
     {
       name: "Overview",
-      href: `${paySlug}/overview`,
+      href: `${paySlug}`,
       icon: <WalletIcon />,
     },
     {
