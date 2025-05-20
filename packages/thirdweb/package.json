@@ -60,6 +60,11 @@
       "import": "./dist/esm/exports/extensions/*.js",
       "default": "./dist/cjs/exports/extensions/*.js"
     },
+    "./login": {
+      "types": "./dist/types/exports/login.d.ts",
+      "import": "./dist/esm/exports/login.js",
+      "default": "./dist/cjs/exports/login.js"
+    },
     "./pay": {
       "types": "./dist/types/exports/pay.d.ts",
       "import": "./dist/esm/exports/pay.js",
@@ -147,66 +152,27 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react.native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ],
-      "bridge": [
-        "./dist/types/exports/bridge.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "login": ["./dist/types/exports/login.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react.native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"],
+      "bridge": ["./dist/types/exports/bridge.d.ts"]
     }
   },
   "browser": {
@@ -241,6 +207,7 @@
     "@walletconnect/ethereum-provider": "2.20.1",
     "@walletconnect/sign-client": "2.20.1",
     "abitype": "1.0.8",
+    "better-call": "1.0.9",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
@@ -251,7 +218,8 @@
     "prompts": "2.4.2",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.28.1"
+    "viem": "2.28.1",
+    "zod": "3.24.3"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -324,7 +292,7 @@
     "bench:compare": "bun run ./benchmarks/run.ts",
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "biome format ./src --write",
-    "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module esnext --noEmit",
+    "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
     "fix": "biome check ./src --fix",
     "knip": "knip",
     "build:generate": "bun scripts/generate/generate.ts",
@@ -335,7 +303,7 @@
     "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
     "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
-    "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "build:types": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf dist",
     "size": "size-limit",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",

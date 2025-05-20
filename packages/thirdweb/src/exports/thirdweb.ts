@@ -87,6 +87,11 @@ export * as Insight from "../insight/index.js";
 export * as Engine from "../engine/index.js";
 
 /**
+ * LOGIN
+ */
+export * as Login from "../login/index.js";
+
+/**
  * WALLETS
  */
 export {
