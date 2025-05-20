@@ -184,12 +184,7 @@ export function TryItOut() {
 }
 
 const sdkExample = () => `\
-import {
-  createThirdwebClient,
-  sendTransaction,
-  getContract,
-  Engine,
-} from "thirdweb";
+import {createThirdwebClient, sendTransaction, getContract, Engine} from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc1155";
 
