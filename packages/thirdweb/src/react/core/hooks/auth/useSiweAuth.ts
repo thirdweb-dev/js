@@ -97,7 +97,7 @@ export function useSiweAuth(
         import("../../../../auth/core/sign-login-payload.js"),
       ]);
 
-      if (payload.chain_id) {
+      if (payload.chain_id && Number(payload.chain_id) !== chain.id) {
         await activeWallet.switchChain(
           getCachedChain(Number(payload.chain_id)),
         );
