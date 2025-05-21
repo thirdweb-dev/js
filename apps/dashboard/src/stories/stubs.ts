@@ -333,7 +333,6 @@ export function newAccountStub(overrides?: Partial<Account>): Account {
     name: undefined,
     id: "foo",
     isStaff: false,
-    advancedEnabled: false,
     creatorWalletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
     ...overrides,
   };
