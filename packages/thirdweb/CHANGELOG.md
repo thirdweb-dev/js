@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.100.1
+
+### Patch Changes
+
+- [#7104](https://github.com/thirdweb-dev/js/pull/7104) [`30fafd1`](https://github.com/thirdweb-dev/js/commit/30fafd16db15ddd6f45b958a0acd30138f99e468) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix siwe auth always forcing a switch chain call
+
 ## 5.100.0
 
 ### Minor Changes
