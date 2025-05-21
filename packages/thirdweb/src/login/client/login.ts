@@ -1,6 +1,7 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { getAddress } from "../../utils/address.js";
 import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import { inAppWallet } from "../../wallets/in-app/web/in-app.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
@@ -121,8 +122,6 @@ export async function login(loginOptions: LoginOptions) {
       };
     }
 
-    // google login
-
     // wallet login
     case "wallet": {
       const account = await IAW.connect({
@@ -146,10 +145,10 @@ export async function login(loginOptions: LoginOptions) {
 
         return mapAccount(account, IAW, loginOptions.baseURL);
       }
+
+      throw new Error(`Invalid login type: ${loginOptions.type}`);
     }
   }
-
-  throw new Error("Invalid login type");
 }
 
 function mapAccount(
@@ -205,11 +204,14 @@ function mapAccount(
           : undefined,
       });
       // if the JWT is valid, we can simply return it
-      if (data?.address === account.address) {
+      if (
+        data?.address &&
+        getAddress(data.address) === getAddress(account.address)
+      ) {
         // set the JWT in the local state
         jwt_cache = {
           jwt: data.jwt,
-          expiresAt: data.expiresAt,
+          expiresAt: new Date(data.expiresAt),
         };
         // return the JWT
         return data.jwt;
@@ -265,7 +267,7 @@ function mapAccount(
       // set the jwt cache
       jwt_cache = {
         jwt: loginResponse.data.jwt,
-        expiresAt: loginResponse.data.expiresAt,
+        expiresAt: new Date(loginResponse.data.expiresAt),
       };
       return loginResponse.data.jwt;
     },

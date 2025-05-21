@@ -70,7 +70,7 @@ export function createAuthHandler({
   basePath = "/api/auth",
   ...options
 }: CreateAuthHandlerOptions) {
-  // re-map the server wallet to to the admin account option
+  // re-map the server wallet to the admin account option
   const twAuth = createAuth({ ...options, adminAccount: serverWallet });
 
   // payload generation endpoint
@@ -80,14 +80,13 @@ export function createAuthHandler({
       method: "GET",
       query: z.object({
         address: z.string().refine(isAddress, "Invalid address"),
-        chainId: z.number().optional(),
+        chainId: z.coerce.number().optional(),
       }),
     },
     (ctx) => {
-      const { address, chainId } = ctx.query;
       return twAuth.generatePayload({
-        address,
-        chainId: chainId ? Number(chainId) : undefined,
+        address: ctx.query.address,
+        chainId: ctx.query.chainId,
       });
     },
   );
@@ -127,23 +126,38 @@ export function createAuthHandler({
       // construct the JWT
       const jwt = await twAuth.generateJWT({ payload: result.payload });
 
-      const expiresAt = new Date(decodeJWT(jwt).payload.exp * 1000);
+      const decodedJWT = decodeJWT(jwt);
+      const expTime =
+        typeof decodedJWT.payload.exp === "string"
+          ? Number.parseInt(decodedJWT.payload.exp, 10)
+          : decodedJWT.payload.exp;
+
+      if (!expTime || Number.isNaN(expTime)) {
+        throw ctx.error(500, {
+          message: "Invalid JWT expiration time",
+        });
+      }
+
+      const expiresAt = new Date(expTime * 1000);
+      const thirtyDaysInSeconds = 60 * 60 * 24 * 30;
+      const maxAgeInSeconds = Math.min(
+        thirtyDaysInSeconds,
+        Math.floor((expiresAt.getTime() - Date.now()) / 1000),
+      );
 
       // try to set the JWT on the client's cookies
       ctx.setCookie("tw:jwt", jwt, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 30, // 30 days by default
-        // set the expiration date to the expiration time of the JWT, no point in setting it for longer
+        maxAge: maxAgeInSeconds,
         expires: expiresAt,
       });
 
       // return the constructed JWT
       return {
         jwt,
-        // have to decode it again to get the expiration time (lul)
-        expiresAt,
+        expiresAt: expiresAt.toISOString(),
       };
     },
   );
@@ -158,7 +172,7 @@ export function createAuthHandler({
       let [type, token] = ctx.headers.get("authorization")?.split(" ") ?? [];
 
       // if the token is set but the type is not Bearer, return a 401 error
-      if (token && type !== "Bearer") {
+      if (token && (!type || type !== "Bearer")) {
         throw ctx.error(401, {
           message: "Invalid authorization header",
         });
@@ -185,7 +199,7 @@ export function createAuthHandler({
       return {
         address: result.parsedJWT.aud,
         jwt: token,
-        expiresAt: new Date(result.parsedJWT.exp * 1000),
+        expiresAt: new Date(result.parsedJWT.exp * 1000).toISOString(),
       };
     },
   );
