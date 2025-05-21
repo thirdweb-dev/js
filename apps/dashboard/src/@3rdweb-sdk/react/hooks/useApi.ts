@@ -32,7 +32,6 @@ export type Account = {
   image?: string | null;
   name?: string;
   email?: string;
-  advancedEnabled: boolean;
   emailConfirmedAt?: string;
   unconfirmedEmail?: string;
   emailConfirmationWalletAddress?: string;
@@ -41,7 +40,6 @@ export type Account = {
     billing: "email" | "none";
     updates: "email" | "none";
   };
-  // TODO - add image URL
 };
 
 interface UpdateAccountNotificationsInput {
