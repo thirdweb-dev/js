@@ -49,9 +49,11 @@ A **signed access token (SAT)** is a JWT created entirely on the client side. Yo
 ```ts
 import { createSignedAccessToken } from "@thirdweb-dev/vault-sdk";
 
+
 const sat = await createSignedAccessToken({
   vaultClient: client,
-  baseAccessToken: res.data.accessToken,
+  baseAccessToken: process.env.BASE_ACCESS_TOKEN,
+
   additionalPolicies: [
     { type: "eoa:signMessage", chainId: 1 },
   ],
