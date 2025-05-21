@@ -1,3 +1,4 @@
+import { getTeamBySlug } from "@/api/team";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
@@ -25,6 +26,13 @@ export async function EcosystemLayoutSlug({
     params.team_slug,
   );
 
+  // Fetch team details to obtain team ID for further authenticated updates
+  const team = await getTeamBySlug(params.team_slug);
+
+  if (!team) {
+    redirect(ecosystemLayoutPath);
+  }
+
   if (!ecosystem) {
     redirect(ecosystemLayoutPath);
   }
@@ -35,6 +43,8 @@ export async function EcosystemLayoutSlug({
         ecosystem={ecosystem}
         ecosystemLayoutPath={ecosystemLayoutPath}
         teamIdOrSlug={params.team_slug}
+        authToken={authToken}
+        teamId={team.id}
       />
 
       <SidebarLayout

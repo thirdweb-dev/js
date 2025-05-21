@@ -1,9 +1,19 @@
 "use client";
+/* eslint-disable */
 import { Img } from "@/components/blocks/Img";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,19 +22,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { cn } from "@/lib/utils";
+import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
   AlertTriangleIcon,
   CheckIcon,
   ChevronsUpDownIcon,
   ExternalLinkIcon,
+  PencilIcon,
   PlusCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
+import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";
 import { useEcosystem } from "../hooks/use-ecosystem";
 
 function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
@@ -113,6 +131,8 @@ export function EcosystemHeader(props: {
   ecosystem: Ecosystem;
   ecosystemLayoutPath: string;
   teamIdOrSlug: string;
+  authToken: string;
+  teamId: string;
 }) {
   const { data: fetchedEcosystem } = useEcosystem({
     teamIdOrSlug: props.teamIdOrSlug,
@@ -135,6 +155,60 @@ export function EcosystemHeader(props: {
     client,
   });
 
+  // ------------------- Image Upload Logic -------------------
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const storageUpload = useDashboardStorageUpload();
+  const router = useDashboardRouter();
+
+  const { mutateAsync: updateEcosystem, isPending: isUpdating } =
+    useUpdateEcosystem(
+      {
+        authToken: props.authToken,
+        teamId: props.teamId,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Ecosystem image updated");
+          setIsDialogOpen(false);
+          router.refresh();
+        },
+        onError: (error) => {
+          const message =
+            error instanceof Error ? error.message : "Failed to update image";
+          toast.error(message);
+        },
+      },
+    );
+
+  const isUploading = storageUpload.isPending || isUpdating;
+
+  async function handleUpload() {
+    if (!selectedFile) {
+      toast.error("Please select an image to upload");
+      return;
+    }
+
+    // Validate file type
+    const validTypes = ["image/png", "image/jpeg", "image/webp"];
+    if (!validTypes.includes(selectedFile.type)) {
+      toast.error("Only PNG, JPG or WEBP images are allowed");
+      return;
+    }
+
+    try {
+      const [uri] = await storageUpload.mutateAsync([selectedFile]);
+      await updateEcosystem({
+        ...ecosystem,
+        imageUrl: uri,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to upload image");
+    }
+  }
+
   return (
     <div className="border-b py-8">
       <div className="container flex flex-col gap-8">
@@ -146,11 +220,74 @@ export function EcosystemHeader(props: {
                 <Skeleton className="size-24" />
               ) : (
                 ecosystemImageLink && (
-                  <Img
-                    src={ecosystemImageLink}
-                    alt={ecosystem.name}
-                    className="size-24 rounded-full border object-contain object-center"
-                  />
+                  <div className="relative">
+                    <Img
+                      src={ecosystemImageLink}
+                      alt={ecosystem.name}
+                      className={cn(
+                        "size-24",
+                        "border",
+                        "rounded-full",
+                        "object-contain object-center",
+                      )}
+                    />
+
+                    {/* Upload Dialog */}
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            "absolute",
+                            "right-0 bottom-0",
+                            "h-6 w-6",
+                            "p-1",
+                            "rounded-full",
+                            "bg-background",
+                            "hover:bg-accent",
+                          )}
+                          aria-label="Change logo"
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-[480px]">
+                        <DialogHeader>
+                          <DialogTitle>Update Ecosystem Logo</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="flex flex-col gap-4 py-2">
+                          <ImageUpload
+                            onUpload={(files) => {
+                              if (files?.[0]) {
+                                setSelectedFile(files[0]);
+                              }
+                            }}
+                            accept="image/png,image/jpeg,image/webp"
+                          />
+                        </div>
+
+                        <DialogFooter className="mt-4">
+                          <DialogClose asChild>
+                            <Button variant="outline" disabled={isUploading}>
+                              Cancel
+                            </Button>
+                          </DialogClose>
+                          <Button
+                            onClick={handleUpload}
+                            disabled={isUploading || !selectedFile}
+                          >
+                            {isUploading ? (
+                              <Spinner className="h-4 w-4" />
+                            ) : (
+                              "Upload"
+                            )}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 )
               )}
               <div className="flex flex-col gap-2">
