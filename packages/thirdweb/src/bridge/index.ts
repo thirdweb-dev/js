@@ -19,5 +19,5 @@ export type {
 export type { Status } from "./types/Status.js";
 export type { Token } from "./types/Token.js";
 export type { ApiError } from "./types/Errors.js";
-export type { BridgeAction } from "./types/BridgeAction.js";
+export type { Action } from "./types/BridgeAction.js";
 export type { WebhookPayload } from "./Webhook.js";

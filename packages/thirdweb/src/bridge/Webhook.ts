@@ -1,3 +1,48 @@
+import { z } from "zod/v4-mini";
+import { isAddress } from "../utils/address.js";
+import { isHex } from "../utils/encoding/hex.js";
+
+const hexSchema = z
+  .string()
+  .check(z.refine(isHex, { message: "Invalid hex string" }));
+const addressSchema = z
+  .string()
+  .check(z.refine(isAddress, { message: "Invalid address" }));
+
+const webhookSchema = z.union([
+  z.object({
+    version: z.literal(1),
+    data: z.object({}),
+  }),
+  z.object({
+    version: z.literal(2),
+    data: z.object({
+      paymentId: z.string(),
+      // only exists when the payment was triggered from a developer specified payment link
+      paymentLinkId: z.optional(z.string()),
+      clientId: z.string(),
+      action: z.enum(["TRANSFER", "BUY", "SELL"]),
+      status: z.enum(["PENDING", "FAILED", "COMPLETED"]),
+      originToken: addressSchema,
+      originAmount: z.string(),
+      destinationToken: addressSchema,
+      destinationAmount: z.string(),
+      sender: addressSchema,
+      receiver: addressSchema,
+      type: z.string(),
+      transactions: z.array(hexSchema),
+      developerFeeBps: z.coerce.number(),
+      developerFeeRecipient: addressSchema,
+      purchaseData: z.record(z.string(), z.unknown()),
+    }),
+  }),
+]);
+
+export type WebhookPayload = Exclude<
+  z.infer<typeof webhookSchema>,
+  { version: 1 }
+>;
+
 /**
  * Parses an incoming webhook from thirdweb.
  *
@@ -5,7 +50,7 @@
  * @param headers - The webhook headers received from thirdweb.
  * @param secret - The webhook secret to verify the payload with.
  */
-export async function parse<T extends Record<string, unknown>>(
+export async function parse(
   /**
    * Raw text body received from thirdweb.
    */
@@ -74,14 +119,14 @@ export async function parse<T extends Record<string, unknown>>(
   }
 
   // Parse the payload as JSON
-  let parsedPayload: unknown;
+  let payloadObject: unknown;
   try {
-    parsedPayload = JSON.parse(payload) as unknown;
+    payloadObject = JSON.parse(payload) as unknown;
   } catch {
     throw new Error("Invalid webhook payload: not valid JSON");
   }
 
-  validateWebhookPayload<T>(parsedPayload);
+  const parsedPayload = webhookSchema.parse(payloadObject);
 
   // v1 is no longer supported
   if (parsedPayload.version === 1) {
@@ -92,188 +137,3 @@ export async function parse<T extends Record<string, unknown>>(
 
   return parsedPayload;
 }
-
-/**
- * Validates that the payload matches the WebhookPayload type structure.
- * @throws {Error} If the payload is missing required fields or has invalid types
- */
-function validateWebhookPayload<T extends Record<string, unknown>>(
-  payload: unknown,
-): asserts payload is WebhookPayload<T> {
-  if (!payload || typeof payload !== "object") {
-    throw new Error("Invalid webhook payload: must be an object");
-  }
-
-  const p = payload as Record<string, unknown>;
-
-  if (typeof p.version !== "number") {
-    throw new Error("Invalid webhook payload: version must be a number");
-  }
-
-  if (p.version === 1) {
-    if (!p.data || typeof p.data !== "object") {
-      throw new Error(
-        "Invalid webhook payload: version 1 must have a data object",
-      );
-    }
-    return;
-  }
-
-  if (p.version === 2) {
-    if (!p.data || typeof p.data !== "object") {
-      throw new Error(
-        "Invalid webhook payload: version 2 must have a data object",
-      );
-    }
-
-    const data = p.data as Record<string, unknown>;
-    const requiredFields = [
-      "transactionId",
-      "paymentId",
-      "clientId",
-      "action",
-      "status",
-      "originToken",
-      "originAmount",
-      "destinationToken",
-      "destinationAmount",
-      "sender",
-      "receiver",
-      "type",
-      "transactions",
-      "developerFeeBps",
-      "developerFeeRecipient",
-      "purchaseData",
-    ] as const;
-
-    for (const field of requiredFields) {
-      if (!(field in data)) {
-        throw new Error(
-          `Invalid webhook payload: missing required field '${field}'`,
-        );
-      }
-    }
-
-    // Type-specific validations
-    if (typeof data.transactionId !== "string") {
-      throw new Error(
-        "Invalid webhook payload: transactionId must be a string",
-      );
-    }
-    if (typeof data.paymentId !== "string") {
-      throw new Error("Invalid webhook payload: paymentId must be a string");
-    }
-
-    if (data.paymentLinkId && typeof data.paymentLinkId !== "string") {
-      throw new Error(
-        "Invalid webhook payload: paymentLinkId must be a string if it exists",
-      );
-    }
-
-    if (typeof data.clientId !== "string") {
-      throw new Error("Invalid webhook payload: clientId must be a string");
-    }
-    if (
-      typeof data.action !== "string" ||
-      !["TRANSFER", "BUY", "SELL", "ONRAMP"].includes(data.action)
-    ) {
-      throw new Error(
-        "Invalid webhook payload: action must be one of: TRANSFER, BUY, SELL",
-      );
-    }
-    if (
-      typeof data.status !== "string" ||
-      !["PENDING", "FAILED", "COMPLETED"].includes(data.status)
-    ) {
-      throw new Error(
-        "Invalid webhook payload: status must be one of: PENDING, FAILED, COMPLETED",
-      );
-    }
-    if (typeof data.originToken !== "string") {
-      throw new Error("Invalid webhook payload: originToken must be a string");
-    }
-    if (typeof data.originAmount !== "string") {
-      throw new Error("Invalid webhook payload: originAmount must be a string");
-    }
-    if (
-      typeof data.destinationToken !== "string" ||
-      !data.destinationToken.startsWith("0x")
-    ) {
-      throw new Error(
-        "Invalid webhook payload: destinationToken must be a valid hex address",
-      );
-    }
-    if (typeof data.destinationAmount !== "string") {
-      throw new Error(
-        "Invalid webhook payload: destinationAmount must be a string",
-      );
-    }
-    if (typeof data.sender !== "string" || !data.sender.startsWith("0x")) {
-      throw new Error(
-        "Invalid webhook payload: sender must be a valid hex address",
-      );
-    }
-    if (typeof data.receiver !== "string" || !data.receiver.startsWith("0x")) {
-      throw new Error(
-        "Invalid webhook payload: receiver must be a valid hex address",
-      );
-    }
-    if (typeof data.type !== "string") {
-      throw new Error("Invalid webhook payload: type must be a string");
-    }
-    if (!Array.isArray(data.transactions)) {
-      throw new Error("Invalid webhook payload: transactions must be an array");
-    }
-    if (typeof data.developerFeeBps !== "number") {
-      throw new Error(
-        "Invalid webhook payload: developerFeeBps must be a number",
-      );
-    }
-    if (
-      typeof data.developerFeeRecipient !== "string" ||
-      !data.developerFeeRecipient.startsWith("0x")
-    ) {
-      throw new Error(
-        "Invalid webhook payload: developerFeeRecipient must be a valid hex address",
-      );
-    }
-    if (typeof data.purchaseData !== "object" || data.purchaseData === null) {
-      throw new Error(
-        "Invalid webhook payload: purchaseData must be an object",
-      );
-    }
-  } else {
-    throw new Error(
-      `Invalid webhook payload: unsupported version ${p.version}`,
-    );
-  }
-}
-
-export type WebhookPayload<T = Record<string, unknown>> =
-  | {
-      version: 1;
-      data: Record<string, unknown>;
-    }
-  | {
-      version: 2;
-      data: {
-        transactionId: string;
-        paymentId: string;
-        // only exists when the payment was triggered from a developer specified payment link
-        paymentLinkId?: string | undefined;
-        clientId: string;
-        action: "TRANSFER" | "BUY" | "SELL";
-        status: "PENDING" | "FAILED" | "COMPLETED";
-        originToken: string;
-        originAmount: string;
-        destinationToken: `0x${string}`;
-        destinationAmount: string;
-        sender: `0x${string}`;
-        receiver: `0x${string}`;
-        type: string;
-        transactions: string[];
-        developerFeeBps: number;
-        developerFeeRecipient: `0x${string}`;
-        purchaseData: T;
-      };
-    };

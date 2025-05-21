@@ -24,19 +24,21 @@ describe("parseIncomingWebhook", () => {
   const validPayload: WebhookPayload = {
     version: 2,
     data: {
-      transactionId: "tx123",
       paymentId: "pay123",
       clientId: "client123",
       action: "TRANSFER",
       status: "COMPLETED",
-      originToken: "ETH",
+      originToken: "0x1234567890123456789012345678901234567890" as const,
       originAmount: "1.0",
       destinationToken: "0x1234567890123456789012345678901234567890",
       destinationAmount: "1.0",
       sender: "0x1234567890123456789012345678901234567890",
       receiver: "0x1234567890123456789012345678901234567890",
       type: "transfer",
-      transactions: ["tx1", "tx2"],
+      transactions: [
+        "0x1234567890123456789012345678901234567890",
+        "0x1234567890123456789012345678901234567890",
+      ],
       developerFeeBps: 100,
       developerFeeRecipient: "0x1234567890123456789012345678901234567890",
       purchaseData: {},
@@ -104,7 +106,7 @@ describe("parseIncomingWebhook", () => {
 
     await expect(
       parse(JSON.stringify(validPayload), headers, secret, 300),
-    ).rejects.toThrow("Webhook timestamp is too old");
+    ).rejects.toThrow(/Webhook timestamp is too old/);
   });
 
   it("should throw error for invalid JSON payload", async () => {
@@ -168,9 +170,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(invalidPayload, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: must be an object",
-      );
+      await expect(
+        parse(invalidPayload, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for missing version", async () => {
@@ -186,9 +188,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: version must be a number",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for missing data object", async () => {
@@ -202,9 +204,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: version 2 must have a data object",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for missing required fields", async () => {
@@ -222,9 +224,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: missing required field 'paymentId'",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid action type", async () => {
@@ -242,9 +244,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: action must be one of: TRANSFER, BUY, SELL",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid status type", async () => {
@@ -262,9 +264,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: status must be one of: PENDING, FAILED, COMPLETED",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid hex address", async () => {
@@ -282,9 +284,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: destinationToken must be a valid hex address",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid transactions array", async () => {
@@ -302,9 +304,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: transactions must be an array",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid developerFeeBps type", async () => {
@@ -312,7 +314,7 @@ describe("parseIncomingWebhook", () => {
         version: 2,
         data: {
           ...validPayload.data,
-          developerFeeBps: "100", // Invalid type (string instead of number)
+          developerFeeBps: "not-a-number", // Invalid value (cannot coerce to number)
         },
       };
       const payloadString = JSON.stringify(invalidPayload);
@@ -322,9 +324,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: developerFeeBps must be a number",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid purchaseData type", async () => {
@@ -342,32 +344,12 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: purchaseData must be an object",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     // Additional tests for full branch coverage
-
-    it("should throw error for invalid transactionId type", async () => {
-      const invalidPayload = {
-        version: 2,
-        data: {
-          ...validPayload.data,
-          transactionId: 123, // number instead of string
-        },
-      };
-      const payloadString = JSON.stringify(invalidPayload);
-      const signature = await generateSignature(testTimestamp, payloadString);
-      const headers = {
-        "x-payload-signature": signature,
-        "x-timestamp": testTimestamp,
-      };
-
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: transactionId must be a string",
-      );
-    });
 
     it("should throw error for invalid paymentId type", async () => {
       const invalidPayload = {
@@ -384,9 +366,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: paymentId must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid paymentLinkId type", async () => {
@@ -404,9 +386,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: paymentLinkId must be a string if it exists",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid clientId type", async () => {
@@ -424,9 +406,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: clientId must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid originToken type", async () => {
@@ -444,9 +426,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: originToken must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid originAmount type", async () => {
@@ -464,9 +446,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: originAmount must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid destinationAmount type", async () => {
@@ -484,9 +466,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: destinationAmount must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid sender address", async () => {
@@ -504,9 +486,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: sender must be a valid hex address",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid receiver address", async () => {
@@ -524,9 +506,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: receiver must be a valid hex address",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid type field", async () => {
@@ -544,9 +526,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: type must be a string",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for invalid developerFeeRecipient address", async () => {
@@ -564,9 +546,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: developerFeeRecipient must be a valid hex address",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
 
     it("should throw error for version 1 payload missing data object", async () => {
@@ -581,9 +563,9 @@ describe("parseIncomingWebhook", () => {
         "x-timestamp": testTimestamp,
       };
 
-      await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-        "Invalid webhook payload: version 1 must have a data object",
-      );
+      await expect(
+        parse(payloadString, headers, secret),
+      ).rejects.toHaveProperty("name", "$ZodError");
     });
   });
 
@@ -599,8 +581,9 @@ describe("parseIncomingWebhook", () => {
       "x-timestamp": testTimestamp,
     };
 
-    await expect(parse(payloadString, headers, secret)).rejects.toThrow(
-      "Invalid webhook payload: unsupported version 3",
+    await expect(parse(payloadString, headers, secret)).rejects.toHaveProperty(
+      "name",
+      "$ZodError",
     );
   });
 });
