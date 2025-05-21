@@ -8,4 +8,4 @@ export const DEFAULT_FEE_RECIPIENT =
   "0x1af20c6b23373350ad464700b5965ce4b0d2ad94";
 
 export const DEFAULT_FEE_BPS = 250;
-export const DEFAULT_FEE_BPS_NEW = 150;
+export const DEFAULT_FEE_BPS_NEW = 200;
