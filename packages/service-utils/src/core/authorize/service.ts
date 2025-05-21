@@ -19,7 +19,7 @@ export function authorizeService(
   if (!team.enabledScopes.includes(serviceConfig.serviceScope)) {
     return {
       authorized: false,
-      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions for this team in your dashboard: https://thirdweb.com`,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope} for team: ${team.name} (${team.id}). You can view the restrictions for this team in your dashboard: https://thirdweb.com`,
       errorCode: "SERVICE_UNAUTHORIZED",
       status: 403,
     };
@@ -42,7 +42,7 @@ export function authorizeService(
   if (!service) {
     return {
       authorized: false,
-      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope}. You can view the restrictions on this project in your dashboard: https://thirdweb.com`,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope} for project: ${project.name} (${project.publishableKey}). You can view the restrictions on this project in your dashboard: https://thirdweb.com`,
       errorCode: "SERVICE_UNAUTHORIZED",
       status: 403,
     };
@@ -56,7 +56,7 @@ export function authorizeService(
     if (!isActionAllowed) {
       return {
         authorized: false,
-        errorMessage: `Invalid request: Unauthorized action: ${serviceConfig.serviceScope} ${serviceConfig.serviceAction}. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
+        errorMessage: `Invalid request: Unauthorized action: ${serviceConfig.serviceScope} ${serviceConfig.serviceAction} for project: ${project.name} (${project.publishableKey}). You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
         errorCode: "SERVICE_ACTION_UNAUTHORIZED",
         status: 403,
       };

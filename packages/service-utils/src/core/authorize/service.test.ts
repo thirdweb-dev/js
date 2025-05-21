@@ -31,8 +31,8 @@ describe("authorizeService", () => {
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
-    expect(result.errorMessage).toBe(
-      "Invalid request: Unauthorized service: nebula. You can view the restrictions for this team in your dashboard: https://thirdweb.com",
+    expect(result.errorMessage).toContain(
+      "Invalid request: Unauthorized service: nebula",
     );
     expect(result.errorCode).toBe("SERVICE_UNAUTHORIZED");
     expect(result.status).toBe(403);
@@ -52,8 +52,8 @@ describe("authorizeService", () => {
       // biome-ignore lint/suspicious/noExplicitAny: test only
     ) as any;
     expect(result.authorized).toBe(false);
-    expect(result.errorMessage).toBe(
-      "Invalid request: Unauthorized action: storage unauthorized-action. You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key",
+    expect(result.errorMessage).toContain(
+      "Invalid request: Unauthorized action: storage unauthorized-action",
     );
     expect(result.errorCode).toBe("SERVICE_ACTION_UNAUTHORIZED");
     expect(result.status).toBe(403);
