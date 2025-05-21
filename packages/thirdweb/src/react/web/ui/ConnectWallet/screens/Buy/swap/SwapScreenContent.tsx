@@ -389,7 +389,7 @@ export function SwapScreenContent(props: {
           {quoteQuery.isLoading ? (
             <>
               Getting price quote
-              <Spinner size="sm" color="accentText" />
+              <Spinner size="sm" color="accentButtonText" />
             </>
           ) : (
             "Continue"
