@@ -31,6 +31,7 @@ export type LoginOptions = (
     }
 ) & {
   client: ThirdwebClient;
+  chain: Chain;
   options?: {
     sponsorGas?: boolean;
     redirectUrl?: string;
@@ -40,10 +41,12 @@ export type LoginOptions = (
   baseURL?: string;
 };
 
+export type LoginResult = Awaited<ReturnType<typeof login>>;
+
 export async function login(loginOptions: LoginOptions) {
   const IAW = inAppWallet({
     auth: {
-      mode: "redirect",
+      mode: "popup",
       options: [],
       redirectUrl: loginOptions.options?.redirectUrl,
       passkeyDomain: loginOptions.options?.passkeyDomain,
@@ -62,6 +65,7 @@ export async function login(loginOptions: LoginOptions) {
         client: loginOptions.client,
         strategy: "jwt",
         jwt: loginOptions.jwt,
+        chain: loginOptions.chain,
       });
 
       return mapAccount(account, IAW, loginOptions.baseURL);
@@ -87,6 +91,7 @@ export async function login(loginOptions: LoginOptions) {
             phoneNumber: loginOptions.phoneNumber,
             verificationCode,
             client: loginOptions.client,
+            chain: loginOptions.chain,
           });
 
           return mapAccount(account, IAW, loginOptions.baseURL);
@@ -115,6 +120,7 @@ export async function login(loginOptions: LoginOptions) {
             email: loginOptions.email,
             verificationCode,
             client: loginOptions.client,
+            chain: loginOptions.chain,
           });
 
           return mapAccount(account, IAW, loginOptions.baseURL);
@@ -141,6 +147,7 @@ export async function login(loginOptions: LoginOptions) {
         const account = await IAW.connect({
           client: loginOptions.client,
           strategy: loginOptions.type,
+          chain: loginOptions.chain,
         });
 
         return mapAccount(account, IAW, loginOptions.baseURL);

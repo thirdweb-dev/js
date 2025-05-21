@@ -11,6 +11,7 @@ setThirdwebDomains({
   analytics: process.env.NEXT_PUBLIC_ANALYTICS_URL,
   insight: process.env.NEXT_PUBLIC_INSIGHT_URL,
   bridge: process.env.NEXT_PUBLIC_BRIDGE_URL,
+  engineCloud: process.env.NEXT_PUBLIC_ENGINE_CLOUD_URL,
 });
 
 const isDev =

@@ -2,7 +2,7 @@ export * as Client from "./client/index.js";
 export * as Server from "./server/index.js";
 
 // client
-export { login, type LoginOptions as LoginParams } from "./client/login.js";
+export { login, type LoginOptions, type LoginResult } from "./client/login.js";
 
 // server
 export {
