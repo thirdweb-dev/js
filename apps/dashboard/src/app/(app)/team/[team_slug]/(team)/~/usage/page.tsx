@@ -8,7 +8,6 @@ import { getClientThirdwebClient } from "../../../../../../../@/constants/thirdw
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
-import { getAccountUsage } from "./getAccountUsage";
 import { Usage } from "./overview/components/Usage";
 
 export default async function Page(props: {
@@ -31,8 +30,7 @@ export default async function Page(props: {
     loginRedirect(`/team/${params.team_slug}/~/usage`);
   }
 
-  const [accountUsage, subscriptions, projects, rpcUsage] = await Promise.all([
-    getAccountUsage(),
+  const [subscriptions, projects, rpcUsage] = await Promise.all([
     getTeamSubscriptions(team.slug),
     getProjects(team.slug),
     fetchRPCUsage({
@@ -48,7 +46,7 @@ export default async function Page(props: {
     }),
   ]);
 
-  if (!accountUsage || !subscriptions) {
+  if (!subscriptions) {
     return (
       <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
         Something went wrong. Please try again later.
@@ -63,8 +61,6 @@ export default async function Page(props: {
 
   return (
     <Usage
-      // TODO - remove accountUsage when we have all the data available from team
-      usage={accountUsage}
       subscriptions={subscriptions}
       account={account}
       team={team}

@@ -53,27 +53,6 @@ interface ConfirmEmailInput {
   confirmationToken: string;
 }
 
-interface UsageStorage {
-  sumFileSizeBytes: number;
-}
-
-export interface UsageBillableByService {
-  usage: {
-    storage: UsageStorage;
-  };
-  limits: {
-    storage: number;
-  };
-  rateLimits: {
-    storage: number;
-    rpc: number;
-  };
-  rateLimitedAt: {
-    storage?: string;
-    rpc?: string;
-  };
-}
-
 interface BillingProduct {
   name: string;
   id: string;
