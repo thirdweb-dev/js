@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -159,6 +160,10 @@ export function EcosystemHeader(props: {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // Name editing state
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  const [tempName, setTempName] = useState(ecosystem.name);
+
   const storageUpload = useDashboardStorageUpload();
   const router = useDashboardRouter();
 
@@ -170,7 +175,7 @@ export function EcosystemHeader(props: {
       },
       {
         onSuccess: () => {
-          toast.success("Ecosystem image updated");
+          toast.success("Ecosystem updated");
           setIsDialogOpen(false);
           router.refresh();
         },
@@ -206,6 +211,25 @@ export function EcosystemHeader(props: {
     } catch (err) {
       console.error(err);
       toast.error("Failed to upload image");
+    }
+  }
+
+  async function handleNameSave() {
+    const trimmed = tempName.trim();
+    if (!trimmed || trimmed === ecosystem.name) {
+      setIsNameDialogOpen(false);
+      return;
+    }
+    try {
+      await updateEcosystem({
+        ...ecosystem,
+        name: trimmed,
+      });
+      setIsNameDialogOpen(false);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update name");
     }
   }
 
@@ -296,6 +320,52 @@ export function EcosystemHeader(props: {
                 ) : (
                   <h2 className="font-semibold text-3xl text-foreground tracking-tight">
                     {ecosystem.name}
+                    <Dialog
+                      open={isNameDialogOpen}
+                      onOpenChange={setIsNameDialogOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="ml-2 h-5 w-5 rounded-full p-1 hover:bg-accent"
+                          aria-label="Edit name"
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+
+                      <DialogContent className="max-w-[480px]">
+                        <DialogHeader>
+                          <DialogTitle>Edit Ecosystem Name</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="flex flex-col gap-4 py-2">
+                          <Input
+                            value={tempName}
+                            onChange={(e) => setTempName(e.target.value)}
+                          />
+                        </div>
+
+                        <DialogFooter className="mt-4">
+                          <DialogClose asChild>
+                            <Button variant="outline" disabled={isUpdating}>
+                              Cancel
+                            </Button>
+                          </DialogClose>
+                          <Button
+                            onClick={handleNameSave}
+                            disabled={isUpdating || !tempName.trim()}
+                          >
+                            {isUpdating ? (
+                              <Spinner className="h-4 w-4" />
+                            ) : (
+                              "Save"
+                            )}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </h2>
                 )}
                 {!ecosystem.slug ? (
@@ -306,7 +376,7 @@ export function EcosystemHeader(props: {
                       textToCopy={`ecosystem.${ecosystem.slug}`}
                       textToShow={`ecosystem.${ecosystem.slug}`}
                       copyIconPosition="right"
-                      tooltip="Copy Ecosytem slug"
+                      tooltip="Copy Ecosystem slug"
                       variant="ghost"
                       className="-translate-x-2 px-2 py-0.5 text-muted-foreground"
                     />
