@@ -123,6 +123,10 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
+    name: "Nebula",
+    href: "/nebula/api-reference",
+  },
+  {
     name: "Insight",
     href: "https://insight.thirdweb.com/reference",
   },
@@ -139,11 +143,7 @@ const apisLinks = [
 const supportLinks = [
   {
     name: "Get thirdweb support",
-    href: "https://thirdweb.com/support",
-  },
-  {
-    name: "Knowledge Base",
-    href: "https://support.thirdweb.com",
+    href: "/knowledge-base",
   },
   {
     name: "Contact Sales",

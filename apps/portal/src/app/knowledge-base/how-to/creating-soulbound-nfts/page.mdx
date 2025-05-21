@@ -1,0 +1,47 @@
+import { DocImage } from "@doc";
+import Soulbound from "../../assets/soulbound-explorer.png";
+import Permissions from "../../assets/permissions-soulbound.png";
+
+# What is a Soulbound Token
+
+Let’s first understand what a Soulbound Token (SBT) is:
+
+A **Soulbound Token** is a unique digital asset that cannot be transferred to another wallet. Once minted, it remains permanently tied to the owner’s wallet—perfect for credentials, achievement badges, or any on-chain proof of identity.
+
+## How to make your tokens Soulbound or Non-Transferrable
+
+The easiest way is via the **Permissions** tab on your thirdweb contract dashboard. For a visual walkthrough, check out our [guide on making NFTs non-transferable](https://blog.thirdweb.com/guides/make-your-nft-non-transferable/?utm_source=dc).
+
+If you prefer using the **Explorer**, follow these steps:
+
+1. **Connect your wallet**  
+   Ensure your wallet is connected to the Dashboard/Explorer and set to the same network as your contract.
+
+2. **Select the correct network**  
+   Verify the network selector (top-right) matches your contract’s deployment chain (e.g., Ethereum Mainnet, Goerli).
+
+3. **Open the Explorer**  
+   In the thirdweb Dashboard, select your contract and switch to the **Explorer** tab.
+
+4. **Choose `revokeRole` under write**  
+   The `revokeRole` function requires two inputs: **Role** and **Account**.
+
+5. **Convert `TRANSFER_ROLE` to bytes32**  
+   Use a [keccak256 tool](https://emn178.github.io/online-tools/keccak_256.html) to hash the string `TRANSFER_ROLE`, then prefix with `0x`.  
+   For example:  
+   `0x8502233096d909befbda0999bb8ea2f3a6be3c138b9fbf003752a4c8bce86f6c`
+
+6. **Set the account to the zero address**  
+   Enter `0x0000000000000000000000000000000000000000` to revoke transfer rights from every wallet.
+
+7. **Confirm the on-chain transaction**  
+   Click “write” and approve the transaction in your wallet.  
+  
+   <DocImage src={Soulbound} />
+
+8. **Verify in Permissions**  
+   Refresh the **Permissions** tab to confirm that `TRANSFER_ROLE` is revoked for the zero address.  
+  
+   <DocImage src={Permissions} />
+
+That’s it—your tokens are officially soulbound!  

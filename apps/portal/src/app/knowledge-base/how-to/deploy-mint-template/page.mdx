@@ -1,0 +1,73 @@
+import { DocImage } from "@doc";
+import deployGithub from "../../assets/deploy-github.png";
+import newProject from "../../assets/new-project-github.png";
+import newProjectName from "../../assets/new-project-name-github.png";
+import newVercel from "../../assets/add-new-vercel.png";
+import createVercel from "../../assets/create-project-vercel.png";
+import variablesVercel from "../../assets/variables-vercel.png";
+import deployVercel from "../../assets/deploy-vercel.png";
+
+
+
+# How to deploy an NFT Mint site template [NO CODE]
+
+## Prerequisites
+
+- [GitHub account](https://github.com)  
+- [thirdweb account](https://thirdweb.com/)  
+- [Vercel account](https://vercel.com/)
+  
+
+## Step-by-Step Guide
+
+### 1. Initial Setup
+
+- Navigate to the [NFT Minting Template repository](https://github.com/thirdweb-example/nft-minting-template)  
+- Click **Deploy with Vercel**  
+
+   <DocImage src={deployGithub} />
+
+### 2. Configure Git Repository
+
+- **Choose your Git provider** (GitHub, GitLab, or Bitbucket)  
+- **Set up your repository details**:  
+  - **Git Scope**: Select your GitHub username or organization  
+  - **Repository Name**: Enter a name (e.g., `my-nft-minting-website`)  
+  - **Team**: Select your team if applicable  
+
+  <DocImage src={newProject} />
+  <DocImage src={newProjectName} />
+  
+
+### 3. Create Thirdweb Project
+
+- Go to the [thirdweb dashboard](https://thirdweb.com/team/~/~/) and create a new project  
+- Enter your project name (e.g., `NFT MINTING TEMPLATE`)  
+- Configure allowed domains:  
+  - Add your custom domain (e.g., `mydomain.com`)  
+  - Add `localhost:<port>` for local development  
+- Click **Create** and save your Client ID and Secret Key  
+
+<DocImage src={newVercel} />
+<DocImage src={createVercel} />
+  
+
+### 4. Configure Environment Variables
+
+- In Vercel, add the following:  
+  ![](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6d1ff84-8c0e-4bcb-8dd6-edab3b3c175b/3ce22022-f27e-46cf-b460-2038d5e61dbe/image.png)  
+  - `NEXT_PUBLIC_THIRDWEB_CLIENT_ID`: Your thirdweb Client ID  
+  - `THIRDWEB_SECRET_KEY`: Your thirdweb Secret Key  
+  - `NFT_CONTRACT_ADDRESS`: Your NFT contract address  
+  - `NFT_CONTRACT_CHAIN_ID`: Chain ID (e.g., 43113 for Avalanche testnet)  
+  - `NFT_CONTRACT_TOKEN_ID`: `0` for ERC-721 or the token ID for ERC-1155  
+
+  <DocImage src={variablesVercel} />
+
+### 5. Deploy
+
+- Click **Deploy** in the Vercel dashboard  
+- Wait for the build and deployment to complete  
+- Access your new mint site via the provided Vercel URL
+
+<DocImage src={deployVercel} />

@@ -8,7 +8,6 @@ import { ReactIcon } from "../icons";
 import { TypeScriptIcon } from "../icons";
 import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
-import { ContractsIcon } from "../icons/products/ContractsIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
 import { NebulaIcon } from "../icons/products/NebulaIcon";
@@ -177,12 +176,6 @@ function LearningResourcesSection() {
           title="Nebula"
           description="API interface for LLMs"
           icon={NebulaIcon}
-        />
-        <ArticleCardIndex
-          title="Contracts"
-          description="Solidity contracts and deployment tools"
-          href="/contracts"
-          icon={ContractsIcon}
         />
       </Grid>
     </section>

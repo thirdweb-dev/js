@@ -1,0 +1,25 @@
+# Issue linking device on the authorization page via Thirdweb CLI
+
+Encountering issues when linking a new device via the authorization page.
+
+### Error
+
+How to authorize your account using `secretKey` for the thirdweb CLI
+
+### Solution
+
+You can authorize the CLI with a `secretKey` in just a couple of steps:
+
+1. **Get your `secretKey`**  
+   Head over to the thirdweb dashboard and generate a key: https://thirdweb.com/team/~/~/.
+
+2. **Deploy with your `secretKey`**  
+   Run the following command: `npx thirdweb deploy -k secretKey`
+
+3. **Use the same pattern for other commands**  
+   You can also use other methods like `upload`, `publish`, and `build` using the same format:  
+   - `npx thirdweb upload -k secretKey`  
+   - `npx thirdweb publish -k secretKey`  
+   - `npx thirdweb build -k secretKey`
+
+That’s it! The CLI will now use your `secretKey` to authenticate every command. 
