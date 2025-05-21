@@ -1,0 +1,105 @@
+# Guide – Managing Access Tokens
+
+Access tokens let you delegate finely-scoped permissions to services, cron jobs or external partners without sharing the admin key.
+
+This guide covers:
+
+1. Creating a **base** access token (server-side)
+2. Deriving short-lived **signed** tokens client-side
+3. Listing and revoking tokens
+
+---
+
+## 1. Create a base token
+
+Base tokens are created **once** and stored securely (e.g. in your secrets manager). They cannot be scoped by expiry – instead you define *policies* that control which operations are allowed.
+
+```ts
+import { createVaultClient, createAccessToken } from "@thirdweb-dev/vault-sdk";
+
+const client = await createVaultClient({ secretKey: "PROJECT_SECRET_KEY" });
+
+const res = await createAccessToken({
+  client,
+  request: {
+    auth: { adminKey: process.env.VAULT_ADMIN_KEY! },
+    options: {
+      policies: [
+        {
+          type: "eoa:signMessage",
+          allowlist: ["0xEoaAddress"],
+          messagePattern: "^0x.*", // only allow hex messages
+        },
+      ],
+      expiresAt: new Date("2030-01-01").toISOString(),
+      metadata: { env: "prod", owner: "backend" },
+    },
+  },
+});
+
+console.log("base token", res.data.accessToken);
+```
+
+---
+
+## 2. Create a signed access token (JWT)
+
+A **signed access token (SAT)** is a JWT created entirely on the client side. You derive it from a base token, embed additional policies and set a short expiry.
+
+```ts
+import { createSignedAccessToken } from "@thirdweb-dev/vault-sdk";
+
+
+const sat = await createSignedAccessToken({
+  vaultClient: client,
+  baseAccessToken: process.env.BASE_ACCESS_TOKEN,
+
+  additionalPolicies: [
+    { type: "eoa:signMessage", chainId: 1 },
+  ],
+  expiryTimestamp: Math.floor(Date.now() / 1000) + 300, // 5 minutes
+});
+
+// Prefix: vt_sat_<JWT>
+console.log(sat);
+```
+
+Send SATs to un-trusted environments (browser, serverless) – they only work until the expiry timestamp and can be revoked centrally by revoking their base token.
+
+---
+
+## 3. List & revoke
+
+```ts
+import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
+
+// List the first 10 tokens created by "backend"
+const list = await listAccessTokens({
+  client,
+  request: {
+    auth: { adminKey: process.env.VAULT_ADMIN_KEY! },
+    options: { page: 1, pageSize: 10 },
+  },
+});
+
+const tokenId = list.data.items[0].id;
+
+// Revoke it
+await revokeAccessToken({
+  client,
+  request: {
+    auth: { adminKey: process.env.VAULT_ADMIN_KEY! },
+    options: { id: tokenId },
+  },
+});
+```
+
+Once revoked, **all signed tokens derived** from the base are automatically invalidated.
+
+---
+
+### Best practices
+
+1. **Never ship base tokens to browsers** – always derive SATs.
+2. **Keep expiries short** (minutes) for web-apps and serverless functions.
+3. **Scope by metadata** to share the same policies across many EOAs. 
