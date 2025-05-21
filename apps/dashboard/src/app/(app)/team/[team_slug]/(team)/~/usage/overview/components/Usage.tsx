@@ -4,10 +4,7 @@ import type { TeamSubscription } from "@/api/team-subscription";
 import type { RPCUsageDataItem } from "@/api/usage/rpc";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { Button } from "@/components/ui/button";
-import type {
-  Account,
-  UsageBillableByService,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { InAppWalletUsersChartCardUI } from "components/embedded-wallets/Analytics/InAppWalletUsersChartCard";
 import { subMonths } from "date-fns";
 import Link from "next/link";
@@ -18,8 +15,6 @@ import { SponsoredTransactionsTable } from "./SponsoredTransactionsTable";
 import { UsageCard } from "./UsageCard";
 
 type UsageProps = {
-  // TODO - remove when we have all the data available from team
-  usage: UsageBillableByService;
   subscriptions: TeamSubscription[];
   account: Account;
   team: Team;
@@ -39,7 +34,6 @@ const compactNumberFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export const Usage: React.FC<UsageProps> = ({
-  usage: usageData,
   subscriptions,
   account,
   team,
@@ -48,20 +42,18 @@ export const Usage: React.FC<UsageProps> = ({
   rpcUsage,
 }) => {
   const gatewayMetrics = useMemo(() => {
-    if (!usageData) {
-      return {};
-    }
-
     return {
       title: "Unlimited Requests",
       total: (
         <span className="text-muted-foreground">
-          {compactNumberFormatter.format(usageData.rateLimits.storage)} Requests
-          Per Second
+          {compactNumberFormatter.format(
+            team.capabilities.storage.upload.rateLimit,
+          )}{" "}
+          Requests Per Second
         </span>
       ),
     };
-  }, [usageData]);
+  }, [team.capabilities.storage.upload.rateLimit]);
 
   const usageSub = subscriptions.find((sub) => sub.type === "USAGE");
 
@@ -138,7 +130,7 @@ export const Usage: React.FC<UsageProps> = ({
       <ThirdwebBarChart
         header={{
           title: "RPC Requests",
-          description: `Your plan allows for ${usageData.rateLimits.rpc} requests per second`,
+          description: `Your plan allows for ${team.capabilities.rpc.rateLimit} requests per second`,
           titleClassName: "text-xl mb-0.5",
         }}
         data={rpcUsageData}
