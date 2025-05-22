@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
-  Box,
   Flex,
   FormControl,
   Input,
@@ -539,19 +538,17 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                         </Card>
                       }
                     >
-                      <Box
-                        borderRadius="lg"
-                        cursor="pointer"
+                      <div
+                        className={cn(
+                          "rounded-lg overflow-hidden cursor-pointer",
+                          isSelected(nft) &&
+                            "outline outline-3 outline-purple-500",
+                        )}
                         onClick={() =>
                           isSelected(nft)
                             ? form.setValue("selected", undefined)
                             : form.setValue("selected", nft)
                         }
-                        outline={isSelected(nft) ? "3px solid" : undefined}
-                        outlineColor={
-                          isSelected(nft) ? "purple.500" : undefined
-                        }
-                        overflow="hidden"
                       >
                         <NFTMediaWithEmptyState
                           metadata={nft.metadata}
@@ -559,7 +556,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                           height="140px"
                           requireInteraction
                         />
-                      </Box>
+                      </div>
                     </Tooltip>
                   );
                 })}

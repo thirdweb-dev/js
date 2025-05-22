@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   FormControl,
   Image,
@@ -93,7 +92,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
       <Flex gap={6} w="full">
         <FormControl isInvalid={!!form.formState.errors.logo} w="auto">
           <FormLabel>Image</FormLabel>
-          <Box width="141px">
+          <div className="w-[141px]">
             <FileInput
               accept={{ "image/*": [] }}
               value={logoUrl}
@@ -111,7 +110,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               )}
               helperText="Image"
             />
-          </Box>
+          </div>
           <FormErrorMessage>
             {form.formState.errors?.logo?.message as unknown as string}
           </FormErrorMessage>

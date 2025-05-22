@@ -9,7 +9,6 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
-  Box,
   Flex,
   Menu,
   MenuButton,
@@ -647,7 +646,10 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
             </div>
 
             <div className="flex flex-row">
-              <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+              <AdminOnly
+                contract={contract}
+                fallback={<div className="pb-5" />}
+              >
                 <Flex justifyContent="center" alignItems="center" gap={3}>
                   {(hasRemovedPhases || hasAddedPhases) && (
                     <Text color="red.500" fontWeight="bold">

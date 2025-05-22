@@ -39,7 +39,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   let systemMetricsPanel = <Spinner className="h-4 w-4" />;
   if (!systemMetricsQuery.data || systemMetricsQuery.isError) {
     systemMetricsPanel = (
-      <Card p={8}>
+      <Card className="p-8">
         <div className="flex flex-col gap-4">
           <div className="flex flex-row items-center gap-2">
             <InfoIcon className="size-4" />
@@ -65,7 +65,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     );
   } else {
     systemMetricsPanel = (
-      <Card p={16}>
+      <Card className="p-16">
         <div className="flex flex-col gap-4">
           <div className="-mb-2 flex flex-row items-center gap-2">
             <ChartAreaIcon className="size-4" />
@@ -106,7 +106,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     const msToMine = queueMetricsQuery.data.result.latency?.msToMine;
 
     queueMetricsPanel = (
-      <Card p={8}>
+      <Card className="p-8">
         <div className="flex flex-col gap-6">
           <div className="flex flex-row items-center gap-2">
             <Heading size="title.md">Queue Metrics</Heading>

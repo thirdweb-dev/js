@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  SimpleGrid,
-  Skeleton,
-  Stat,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react";
+import { SimpleGrid, Skeleton, StatLabel, StatNumber } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
@@ -20,7 +14,7 @@ export const AccountsCount: React.FC<AccountsCountProps> = ({ contract }) => {
   const totalAccountsQuery = useReadContract(totalAccounts, { contract });
   return (
     <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 3, md: 6 }}>
-      <Card as={Stat}>
+      <Card className="[&>*]:m-0">
         <StatLabel mb={{ base: 1, md: 0 }}>Total Accounts</StatLabel>
         <Skeleton isLoaded={totalAccountsQuery.isSuccess}>
           <StatNumber>{totalAccountsQuery.data?.toString()}</StatNumber>

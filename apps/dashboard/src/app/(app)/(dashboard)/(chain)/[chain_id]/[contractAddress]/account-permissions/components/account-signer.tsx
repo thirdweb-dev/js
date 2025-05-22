@@ -34,7 +34,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
     endTimestamp,
   } = item;
   return (
-    <Card position="relative" p={8}>
+    <Card className="relative p-8">
       <Flex direction="column" gap={8}>
         <Flex flexDir="column" gap={2} mt={{ base: 4, md: 0 }}>
           <Flex

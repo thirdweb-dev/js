@@ -122,13 +122,13 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
             </LinkButton>
           )}
           {publishedContract?.readme && (
-            <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
+            <Card className="relative flex flex-col gap-2 p-6">
               <MarkdownRenderer markdownText={publishedContract?.readme} />
             </Card>
           )}
 
           {publishedContract?.changelog && (
-            <Card as={Flex} flexDir="column" gap={2} p={0}>
+            <Card className="flex flex-col gap-2 p-0">
               <Heading px={6} pt={5} pb={2} size="title.sm">
                 {publishedContract?.version} Release Notes
               </Heading>
@@ -141,7 +141,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
             </Card>
           )}
           {contractFunctions && (
-            <Card p={0}>
+            <Card className="p-0">
               <ContractFunctionsOverview
                 functions={contractFunctions}
                 events={contractEvents}

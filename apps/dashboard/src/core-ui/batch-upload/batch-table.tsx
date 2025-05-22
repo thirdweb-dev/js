@@ -1,7 +1,6 @@
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
-  Box,
   type BoxProps,
   Flex,
   IconButton,
@@ -50,7 +49,7 @@ const FileVideo: React.FC<
       ? replaceIpfsUrl(src, client)
       : src,
   );
-  return <Box as="video" {...props} src={video} />;
+  return <video {...props} src={video} />;
 };
 interface BatchTableProps {
   data: NFTInput[];

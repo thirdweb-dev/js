@@ -5,7 +5,6 @@ import {
   Flex,
   SimpleGrid,
   Spinner,
-  Stat,
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
@@ -121,7 +120,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
       <div className="flex flex-col gap-8">
         <Flex gap={4} flexDir="column">
           <SimpleGrid spacing={{ base: 3, md: 6 }} columns={{ base: 2, md: 4 }}>
-            <Card as={Stat}>
+            <Card className="[&>*]:m-0">
               <StatLabel mb={{ base: 1, md: 0 }}>
                 {nativeBalanceQuery.data?.symbol}
               </StatLabel>
@@ -145,7 +144,11 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
               (balanceQuery?.data || [])
                 ?.filter((bl) => bl.name !== "Native Token")
                 ?.map((balance) => (
-                  <Card as={Stat} key={balance.token_address} maxWidth="2xs">
+                  <Card
+                    className="[&>*]:m-0"
+                    key={balance.token_address}
+                    style={{ maxWidth: "20rem" }}
+                  >
                     <StatLabel as={Heading} size="label.lg">
                       {balance.name === "Native Token"
                         ? v4Chain?.nativeCurrency.symbol || "Native Token"

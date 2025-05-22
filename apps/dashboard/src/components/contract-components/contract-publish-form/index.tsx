@@ -2,7 +2,7 @@
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Box, Divider, Flex, IconButton } from "@chakra-ui/react";
+import { Divider, Flex, IconButton } from "@chakra-ui/react";
 import type { Abi } from "abitype";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
@@ -365,13 +365,13 @@ export function ContractPublishForm(props: {
             >
               {!account ? (
                 <>
-                  <Box />
+                  <div />
                   <CustomConnectWallet isLoggedIn={!!props.jwt} />
                 </>
               ) : fieldsetToShow === "landing" &&
                 form.watch("deployType") === "standard" ? (
                 <>
-                  <Box />
+                  <div />
                   <Button
                     onClick={() => setFieldsetToShow("networks")}
                     colorScheme="primary"
@@ -384,7 +384,7 @@ export function ContractPublishForm(props: {
                 (form.watch("deployType") === "autoFactory" ||
                   form.watch("deployType") === "customFactory") ? (
                 <>
-                  <Box />
+                  <div />
                   <Button
                     onClick={() => setFieldsetToShow("factory")}
                     colorScheme="primary"
@@ -397,7 +397,7 @@ export function ContractPublishForm(props: {
                 fieldsetToShow !== "implParams" &&
                 deployParams?.length > 0 ? (
                 <>
-                  <Box />
+                  <div />
                   <Button
                     isDisabled={disableNext}
                     onClick={() => setFieldsetToShow("contractParams")}
@@ -411,7 +411,7 @@ export function ContractPublishForm(props: {
                 deployParams?.length === 0 &&
                 implDeployParams?.length > 0 ? (
                 <>
-                  <Box />
+                  <div />
                   <Button
                     isDisabled={disableNext}
                     onClick={() => setFieldsetToShow("implParams")}
@@ -423,7 +423,7 @@ export function ContractPublishForm(props: {
               ) : fieldsetToShow === "contractParams" &&
                 implDeployParams?.length > 0 ? (
                 <>
-                  <Box />
+                  <div />
                   <Button
                     onClick={() => setFieldsetToShow("implParams")}
                     colorScheme="primary"
