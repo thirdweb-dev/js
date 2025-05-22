@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Flex } from "@chakra-ui/react";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
@@ -36,7 +37,7 @@ export const ClaimPriceInput = (props: {
       }
     >
       <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
-        <div className="min-w-[70px] w-full md:w-1/2">
+        <div className="w-full min-w-[70px] md:w-1/2">
           <PriceInput
             w="full"
             value={field.price?.toString() || ""}

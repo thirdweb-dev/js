@@ -24,13 +24,12 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
   disabledText,
   infoText,
   className,
-  ...stackProps
 }) => {
   return (
     <Tooltip
       label={
         disabled && (
-          <Card bgColor="backgroundHighlight">
+          <Card className="bg-backgroundHighlight">
             <Text>{disabledText}</Text>
           </Card>
         )
@@ -42,16 +41,13 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
     >
       <Card
         className={cn(
-          "flex flex-col gap-2 rounded-md p-5",
+          "flex flex-col gap-2 rounded-md p-5 md:w-[350px]",
           disabled
-            ? "pointer-events-none cursor-not-allowed"
+            ? "pointer-events-none cursor-not-allowed bg-backgroundHighlight"
             : "cursor-pointer",
+          isActive && "border-primary-500",
           className,
         )}
-        width={{ base: "inherit", md: "350px" }}
-        borderColor={isActive ? "primary.500" : undefined}
-        bgColor={disabled ? "backgroundHighlight" : undefined}
-        {...stackProps}
         onClick={onClick}
       >
         <Flex flexDirection="row" justifyContent="space-between">
@@ -89,7 +85,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
                 p={0}
                 shouldWrapChildren
                 label={
-                  <Card bgColor="backgroundHighlight">
+                  <Card className="bg-backgroundHighlight">
                     <Text>{infoText}</Text>
                   </Card>
                 }

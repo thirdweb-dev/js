@@ -1,7 +1,6 @@
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
-  type BoxProps,
   Flex,
   IconButton,
   Image,
@@ -28,6 +27,7 @@ import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { NFTInput } from "thirdweb/utils";
 import { useThirdwebClient } from "../../@/constants/thirdweb.client";
+import { cn } from "../../@/lib/utils";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
   const client = useThirdwebClient();
@@ -40,17 +40,36 @@ const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
 };
 
 const FileVideo: React.FC<
-  BoxProps &
-    Omit<React.ComponentProps<"video">, "ref" | "src"> & { src: string | File }
-> = ({ src, ...props }) => {
+  React.VideoHTMLAttributes<HTMLVideoElement> & { src: string | File }
+> = ({
+  src,
+  className = "",
+  autoPlay,
+  playsInline,
+  muted,
+  loop,
+  ...videoProps
+}) => {
   const client = useThirdwebClient();
   const video = useImageFileOrUrl(
     typeof src === "string" && src.startsWith("ipfs://")
       ? replaceIpfsUrl(src, client)
       : src,
   );
-  return <video {...props} src={video} />;
+
+  return (
+    <video
+      src={video}
+      autoPlay={autoPlay}
+      playsInline={playsInline}
+      muted={muted}
+      loop={loop}
+      className={cn("h-24 w-24 flex-shrink-0 object-contain", className)}
+      {...videoProps}
+    />
+  );
 };
+
 interface BatchTableProps {
   data: NFTInput[];
   portalRef: React.RefObject<HTMLDivElement | null>;
@@ -89,16 +108,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         Header: "Animation Url",
         accessor: (row) => row.animation_url,
         Cell: ({ cell: { value } }: { cell: { value?: string } }) => (
-          <FileVideo
-            flexShrink={0}
-            boxSize={24}
-            objectFit="contain"
-            src={value || ""}
-            autoPlay
-            playsInline
-            muted
-            loop
-          />
+          <FileVideo src={value || ""} autoPlay playsInline muted loop />
         ),
       },
       { Header: "Name", accessor: (row) => row.name },

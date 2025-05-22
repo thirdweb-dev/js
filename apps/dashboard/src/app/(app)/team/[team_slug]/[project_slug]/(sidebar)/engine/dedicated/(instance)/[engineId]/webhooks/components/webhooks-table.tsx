@@ -101,7 +101,7 @@ const columns = [
           bg="transparent"
           boxShadow="none"
           label={
-            <Card bgColor="backgroundHighlight">
+            <Card className="bg-backgroundHighlight">
               <Text>{format(date, "PP pp z")}</Text>
             </Card>
           }

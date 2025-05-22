@@ -26,7 +26,7 @@ export const Card: React.FC<CardProps> = ({
         style={{ padding: outlineBorder.width }}
       >
         <div
-          className="absolute inset-0 -z-10"
+          className="-z-10 absolute inset-0"
           style={{ background: outlineBorder.gradient }}
         />
         <div className={baseClasses} {...props}>
