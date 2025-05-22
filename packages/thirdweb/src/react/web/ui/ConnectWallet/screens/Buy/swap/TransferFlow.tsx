@@ -23,6 +23,7 @@ type TransferFlowProps = {
   tokenAmount: string;
   transactionMode?: boolean;
   payOptions?: PayUIOptions;
+  paymentLinkId: undefined | string;
 };
 
 export function TransferFlow(props: TransferFlowProps) {

@@ -48,6 +48,7 @@ export function FiatScreenContent(props: {
   payer: PayerInfo;
   setTokenAmount: (amount: string) => void;
   setHasEditedAmount: (hasEdited: boolean) => void;
+  paymentLinkId: undefined | string;
 }) {
   const {
     toToken,
@@ -58,6 +59,7 @@ export function FiatScreenContent(props: {
     toChain,
     showCurrencySelector,
     selectedCurrency,
+    paymentLinkId,
   } = props;
   const defaultRecipientAddress = (
     props.payOptions as Extract<PayUIOptions, { mode: "direct_payment" }>
@@ -97,6 +99,7 @@ export function FiatScreenContent(props: {
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
           preferredProvider: preferredProvider,
+          paymentLinkId: paymentLinkId,
         }
       : undefined,
   );

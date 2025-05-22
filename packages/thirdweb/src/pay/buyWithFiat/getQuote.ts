@@ -95,6 +95,11 @@ export type GetBuyWithFiatQuoteParams = {
    * By default, we choose a recommended provider based on the location of the user, KYC status, and currency.
    */
   preferredProvider?: FiatProvider;
+
+  /**
+   * @hidden
+   */
+  paymentLinkId?: string;
 };
 
 /**
@@ -321,6 +326,7 @@ export async function getBuyWithFiatQuote(
       currency: params.fromCurrencySymbol,
       maxSteps: 2,
       onrampTokenAddress: NATIVE_TOKEN_ADDRESS, // force onramp to native token to avoid missing gas issues
+      paymentLinkId: params.paymentLinkId,
     });
 
     // Determine tokens based on steps rules

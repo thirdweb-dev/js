@@ -190,6 +190,7 @@ export async function prepare(
     amount,
     purchaseData,
     feePayer,
+    paymentLinkId,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -209,6 +210,7 @@ export async function prepare(
       receiver,
       purchaseData,
       feePayer,
+      paymentLinkId,
     }),
   });
   if (!response.ok) {
@@ -258,6 +260,10 @@ export declare namespace prepare {
     client: ThirdwebClient;
     purchaseData?: unknown;
     feePayer?: "sender" | "receiver";
+    /**
+     * @hidden
+     */
+    paymentLinkId?: string;
   };
 
   type Result = PreparedQuote & {

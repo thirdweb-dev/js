@@ -83,6 +83,11 @@ export type GetBuyWithCryptoQuoteParams = {
    * For example, if you want to allow a maximum slippage of 0.5%, you should specify `50` bps.
    */
   maxSlippageBPS?: number;
+
+  /**
+   * @hidden
+   */
+  paymentLinkId?: string;
 } & (
   | {
       /**
@@ -203,6 +208,7 @@ export async function getBuyWithCryptoQuote(
           amount: amount,
           purchaseData: params.purchaseData,
           client: params.client,
+          paymentLinkId: params.paymentLinkId,
         });
       } else if (params.fromAmount) {
         const originTokenContract = getContract({
@@ -224,6 +230,7 @@ export async function getBuyWithCryptoQuote(
           amount: amount,
           purchaseData: params.purchaseData,
           client: params.client,
+          paymentLinkId: params.paymentLinkId,
         });
       }
       throw new Error(
