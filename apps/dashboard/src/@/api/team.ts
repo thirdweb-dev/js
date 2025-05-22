@@ -84,7 +84,7 @@ export async function getDefaultTeam() {
   return null;
 }
 
-export async function getLastVisitedTeamOrDefaultTeam() {
+export async function getLastVisitedTeam() {
   const token = await getAuthToken();
   if (!token) {
     return null;
@@ -100,5 +100,5 @@ export async function getLastVisitedTeamOrDefaultTeam() {
     }
   }
 
-  return getDefaultTeam();
+  return null;
 }
