@@ -59,6 +59,7 @@ function Story() {
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <BadgeContainer label="0 Contracts">
           <ContractTableUI
+            variant="contract"
             client={storybookThirdwebClient}
             contracts={[]}
             removeContractFromProject={removeContractStub}
@@ -68,6 +69,7 @@ function Story() {
 
         <BadgeContainer label="1 Contract">
           <ContractTableUI
+            variant="contract"
             client={storybookThirdwebClient}
             contracts={[popularPolygonNFTs[0] as ProjectContract]}
             pageSize={10}
@@ -77,6 +79,7 @@ function Story() {
 
         <BadgeContainer label="5 Contracts, 1 chain">
           <ContractTableUI
+            variant="contract"
             client={storybookThirdwebClient}
             contracts={popularPolygonNFTs}
             pageSize={10}
@@ -86,6 +89,7 @@ function Story() {
 
         <BadgeContainer label="10 Contracts, 2 chains">
           <ContractTableUI
+            variant="contract"
             client={storybookThirdwebClient}
             contracts={[...popularPolygonNFTs, ...EthereumPopularNFTs]}
             pageSize={10}
@@ -95,6 +99,7 @@ function Story() {
 
         <BadgeContainer label="15 Contracts, 3 chains">
           <ContractTableUI
+            variant="contract"
             client={storybookThirdwebClient}
             contracts={[
               ...popularPolygonNFTs,
@@ -120,5 +125,7 @@ function projectContractStub(
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     id: `${chainId}-${contractAddress}`,
+    deploymentType: null,
+    contractType: null,
   };
 }

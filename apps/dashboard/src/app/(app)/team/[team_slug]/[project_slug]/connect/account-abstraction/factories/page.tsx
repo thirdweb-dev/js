@@ -113,6 +113,7 @@ async function AsyncYourFactories(props: {
     teamId: props.teamId,
     projectId: props.projectId,
     authToken: props.authToken,
+    deploymentType: undefined,
   });
 
   const factories = (

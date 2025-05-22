@@ -147,6 +147,8 @@ function AddToProjectModalContent(props: {
         teamId: params.teamId,
         projectId: params.projectId,
         chainId: props.chainId,
+        deploymentType: undefined,
+        contractType: undefined,
       },
       {
         onSuccess: () => {

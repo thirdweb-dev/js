@@ -126,8 +126,10 @@ const getClaimConditionTypeFromPhase = (
   if (!phase.snapshot) {
     return "public";
   }
+
   if (phase.snapshot) {
     if (
+      phase.price === "0" &&
       typeof phase.snapshot !== "string" &&
       phase.snapshot.length === 1 &&
       phase.snapshot.some(

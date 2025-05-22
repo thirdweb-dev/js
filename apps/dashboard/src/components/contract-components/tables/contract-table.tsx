@@ -45,9 +45,11 @@ export function ContractTable(props: {
   teamId: string;
   projectId: string;
   client: ThirdwebClient;
+  variant: "asset" | "contract";
 }) {
   return (
     <ContractTableUI
+      variant={props.variant}
       contracts={props.contracts}
       client={props.client}
       pageSize={props.pageSize}
@@ -67,6 +69,7 @@ export function ContractTableUI(props: {
   pageSize: number;
   removeContractFromProject: (contractId: string) => Promise<void>;
   client: ThirdwebClient;
+  variant: "asset" | "contract";
 }) {
   // instantly update the table without waiting for router refresh by adding deleted contract ids to the state
   const [deletedContractIds, setDeletedContractIds] = useState<string[]>([]);
@@ -213,13 +216,19 @@ export function ContractTableUI(props: {
         {contracts.length === 0 && (
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
             <div className="text-center">
-              <p className="mb-3">No contracts added to project</p>
-              <Button variant="outline" asChild className="bg-background">
-                <Link href="/explore" target="_blank">
-                  Discover Contracts
-                  <ExternalLinkIcon className="ml-2 size-4" />
-                </Link>
-              </Button>
+              {props.variant === "asset" ? (
+                <p className="mb-3">No assets found</p>
+              ) : (
+                <p className="mb-3">No contracts found</p>
+              )}
+              {props.variant === "contract" && (
+                <Button variant="outline" asChild className="bg-background">
+                  <Link href="/explore" target="_blank">
+                    Discover Contracts
+                    <ExternalLinkIcon className="ml-2 size-4" />
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         )}
@@ -331,7 +340,7 @@ function RemoveContractButton(props: {
   onContractRemoved?: () => void;
   contractId: string;
 }) {
-  const removeMuation = useMutation({
+  const removeMutation = useMutation({
     mutationFn: props.removeContractFromProject,
   });
 
@@ -340,7 +349,7 @@ function RemoveContractButton(props: {
       variant="ghost"
       onClick={(e) => {
         e.stopPropagation();
-        removeMuation.mutateAsync(props.contractId, {
+        removeMutation.mutateAsync(props.contractId, {
           onSuccess: () => {
             props.onContractRemoved?.();
             toast.success("Contract removed successfully");
@@ -350,10 +359,10 @@ function RemoveContractButton(props: {
           },
         });
       }}
-      disabled={removeMuation.isPending}
+      disabled={removeMutation.isPending}
       className="justify-start gap-2"
     >
-      {removeMuation.isPending ? (
+      {removeMutation.isPending ? (
         <Spinner className="size-4" />
       ) : (
         <XIcon className="size-4 text-destructive-text" />

@@ -9,11 +9,13 @@ export async function getSortedDeployedContracts(params: {
   teamId: string;
   projectId: string;
   authToken: string;
+  deploymentType: string | undefined;
 }) {
   const contracts = await getProjectContracts({
     teamId: params.teamId,
     projectId: params.projectId,
     authToken: params.authToken,
+    deploymentType: params.deploymentType,
   });
 
   const chainIds = Array.from(new Set(contracts.map((c) => c.chainId)));

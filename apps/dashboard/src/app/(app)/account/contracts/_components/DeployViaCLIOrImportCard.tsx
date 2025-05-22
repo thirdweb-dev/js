@@ -19,6 +19,7 @@ export function DeployViaCLIOrImportCard(props: {
   return (
     <div className="rounded-lg border bg-card p-4 lg:p-6">
       <ImportModal
+        type="contract"
         client={client}
         isOpen={importModalOpen}
         onClose={() => {

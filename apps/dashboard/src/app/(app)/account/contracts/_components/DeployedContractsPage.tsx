@@ -44,11 +44,13 @@ async function DeployedContractsPageAsync(props: {
     teamId: props.teamId,
     projectId: props.projectId,
     authToken: props.authToken,
+    deploymentType: undefined,
   });
 
   return (
     <ClientOnly ssr={<Loading />}>
       <ContractTable
+        variant="contract"
         contracts={deployedContracts}
         pageSize={10}
         teamId={props.teamId}

@@ -26,6 +26,7 @@ export function DeployedContractsPageHeader(props: {
         }}
         teamId={props.teamId}
         projectId={props.projectId}
+        type="contract"
       />
 
       <div className="container flex max-w-7xl flex-col gap-3 py-10 lg:flex-row lg:items-center lg:justify-between">

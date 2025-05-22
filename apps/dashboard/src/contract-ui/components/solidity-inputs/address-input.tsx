@@ -1,7 +1,7 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Input } from "@/components/ui/input";
-import { Box, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -108,7 +108,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   }, [inputNameWatch, localInput, address]);
 
   const helperTextLeft = resolvingEns ? (
-    <Spinner boxSize={3} mr={1} size="xs" speed="0.6s" />
+    <Spinner className="size-3" />
   ) : resolvedAddress || ensFound ? (
     <CheckIcon className="size-3 text-green-500" />
   ) : null;
@@ -116,13 +116,9 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const helperTextRight = resolvingEns ? (
     "Resolving ENS..."
   ) : resolvedAddress ? (
-    <Box as="span" fontFamily="mono">
-      {ensQuery?.data?.address}
-    </Box>
+    <span className="font-mono">{ensQuery?.data?.address}</span>
   ) : ensFound ? (
-    <Box as="span" fontFamily="mono">
-      {ensQuery?.data?.ensName}
-    </Box>
+    <span className="font-mono">{ensQuery?.data?.ensName}</span>
   ) : null;
 
   return (
@@ -138,12 +134,10 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
       />
 
       {!hasError && (helperTextLeft || helperTextRight) && (
-        <p className="mt-2 text-muted-foreground text-sm">
-          <div className="items-center gap-1">
-            {helperTextLeft}
-            {helperTextRight}
-          </div>
-        </p>
+        <div className="mt-2 flex items-center gap-1 text-muted-foreground text-sm">
+          {helperTextLeft}
+          {helperTextRight}
+        </div>
       )}
     </>
   );

@@ -687,6 +687,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   contractAddress: contractAddr,
                   projectId: importSelection.project.id,
                   teamId: importSelection.team.id,
+                  deploymentType: undefined,
+                  contractType: undefined,
                 });
               }
             } catch (e) {
@@ -694,8 +696,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               console.error("failed to deploy contract", e);
               trackEvent({
                 category: "custom-contract",
-                action: "error",
-                label: "success",
+                action: "deploy",
+                label: "error",
                 ...publisherAnalyticsData,
                 chainId: walletChain.id,
                 metadataUri: metadata.metadataUri,

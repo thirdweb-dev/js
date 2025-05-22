@@ -7,21 +7,28 @@ export type ProjectContract = {
   chainId: string;
   createdAt: string;
   updatedAt: string;
+  deploymentType: string | null;
+  contractType: string | null;
 };
 
 export async function getProjectContracts(options: {
   teamId: string;
   projectId: string;
   authToken: string;
+  deploymentType: string | undefined;
 }) {
-  const res = await fetch(
+  const url = new URL(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/projects/${options.projectId}/contracts`,
-    {
-      headers: {
-        Authorization: `Bearer ${options.authToken}`,
-      },
-    },
   );
+  if (options.deploymentType) {
+    url.searchParams.set("deploymentType", options.deploymentType);
+  }
+
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${options.authToken}`,
+    },
+  });
 
   if (!res.ok) {
     const errorMessage = await res.text();

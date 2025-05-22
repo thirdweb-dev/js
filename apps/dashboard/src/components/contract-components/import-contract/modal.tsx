@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { ExternalLinkIcon, PlusIcon } from "lucide-react";
+import { ArrowDownToLineIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,6 +38,7 @@ type ImportModalProps = {
   teamId: string;
   projectId: string;
   client: ThirdwebClient;
+  type: "contract" | "asset";
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -50,14 +51,16 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
         }
       }}
     >
-      <DialogContent dialogOverlayClassName="rounded-lg">
-        <DialogHeader>
+      <DialogContent
+        dialogOverlayClassName="rounded-lg"
+        className="gap-0 overflow-hidden p-0"
+      >
+        <DialogHeader className="p-6">
           <DialogTitle className="font-semibold text-2xl tracking-tight">
-            Import Contract
+            Import {props.type === "contract" ? "Contract" : "Asset"}
           </DialogTitle>
           <DialogDescription>
-            Import an already deployed contract into thirdweb by entering a
-            contract address below.
+            Import a deployed contract in your project
           </DialogDescription>
         </DialogHeader>
 
@@ -65,6 +68,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           teamId={props.teamId}
           projectId={props.projectId}
           client={props.client}
+          type={props.type}
         />
       </DialogContent>
     </Dialog>
@@ -91,6 +95,7 @@ function ImportForm(props: {
   teamId: string;
   projectId: string;
   client: ThirdwebClient;
+  type: "contract" | "asset";
 }) {
   const router = useDashboardRouter();
   const activeChainId = useActiveWalletChain()?.id;
@@ -150,6 +155,8 @@ function ImportForm(props: {
                 chainId: chainId.toString(),
                 teamId: props.teamId,
                 projectId: props.projectId,
+                deploymentType: props.type === "contract" ? undefined : "asset",
+                contractType: undefined,
               },
               {
                 onSuccess: () => {
@@ -172,34 +179,35 @@ function ImportForm(props: {
           }
         })}
       >
-        <FormField
-          control={form.control}
-          name="contractAddress"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contract Address</FormLabel>
-              <FormControl>
-                <Input placeholder="0x..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="h-3" />
-        <div>
-          <Label className="mb-3 inline-block">Network</Label>
-          <SingleNetworkSelector
-            client={props.client}
-            chainId={form.watch("chainId")}
-            onChange={(v) => form.setValue("chainId", v)}
-            side="top"
+        <div className="px-6">
+          <FormField
+            control={form.control}
+            name="contractAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contract Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="0x..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
+
+          <div className="h-3" />
+          <div>
+            <Label className="mb-3 inline-block">Network</Label>
+            <SingleNetworkSelector
+              client={props.client}
+              chainId={form.watch("chainId")}
+              onChange={(v) => form.setValue("chainId", v)}
+              side="top"
+              disableChainId
+            />
+          </div>
         </div>
 
-        <div className="h-8" />
-
-        <div className="flex justify-end">
+        <div className="mt-8 flex justify-end border-t bg-card p-6">
           {addContractToProject.isSuccess &&
           addContractToProject.data?.result ? (
             <Button asChild className="gap-2">
@@ -215,12 +223,10 @@ function ImportForm(props: {
               {addContractToProject.isPending ? (
                 <Spinner className="size-4" />
               ) : (
-                <PlusIcon className="size-4" />
+                <ArrowDownToLineIcon className="size-4" />
               )}
 
-              {addContractToProject.isPending
-                ? "Importing contract"
-                : "Import Contract"}
+              {addContractToProject.isPending ? "Importing" : "Import"}
             </Button>
           )}
         </div>

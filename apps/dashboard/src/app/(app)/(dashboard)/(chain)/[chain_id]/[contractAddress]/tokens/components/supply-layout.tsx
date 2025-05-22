@@ -14,7 +14,7 @@ export function TokenDetailsCardUI(props: {
       </h2>
       <div className="flex flex-col gap-5 p-6 lg:flex-row">
         <Stat
-          label="Total Supply"
+          label="Circulating Supply"
           isPending={!tokenSupply}
           value={
             tokenSupply

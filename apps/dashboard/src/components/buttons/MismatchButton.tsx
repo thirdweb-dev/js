@@ -245,15 +245,15 @@ export const MismatchButton = forwardRef<
         <DialogContent
           className={cn(
             "gap-0 p-0",
-            dialog === "no-funds" && "max-w-[480px]",
-            dialog === "pay" && "max-w-[360px] border-none bg-transparent",
+            dialog === "no-funds" && "md:!max-w-[480px]",
+            dialog === "pay" && "md:!max-w-[360px] border-none bg-transparent",
           )}
           dialogCloseClassName="focus:ring-0"
         >
           <DynamicHeight>
             {dialog === "no-funds" && (
               <NoFundsDialogContent
-                chain={activeWalletChain}
+                chain={txChain}
                 openPayModal={() => {
                   trackEvent({
                     category: "pay",
@@ -305,7 +305,8 @@ export const MismatchButton = forwardRef<
                     }
                   },
                   prefillBuy: {
-                    chain: activeWalletChain,
+                    amount: "0.01",
+                    chain: txChain,
                   },
                 }}
               />

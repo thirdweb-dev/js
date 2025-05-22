@@ -3,6 +3,7 @@ import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import {
   BookTextIcon,
   BoxIcon,
+  CoinsIcon,
   HomeIcon,
   SettingsIcon,
   WalletIcon,
@@ -52,11 +53,7 @@ export function ProjectSidebarLayout(props: {
         {
           href: `${layoutPath}/connect/universal-bridge`,
           icon: PayIcon,
-          label: (
-            <span className="flex items-center gap-2">
-              Universal Bridge <Badge>New</Badge>
-            </span>
-          ),
+          label: "Universal Bridge",
           tracking: tracking("universal-bridge"),
         },
         {
@@ -64,6 +61,16 @@ export function ProjectSidebarLayout(props: {
           label: "Contracts",
           icon: ContractIcon,
           tracking: tracking("contracts"),
+        },
+        {
+          href: `${layoutPath}/assets`,
+          label: (
+            <span className="flex items-center gap-2">
+              Assets <Badge>New</Badge>
+            </span>
+          ),
+          icon: CoinsIcon,
+          tracking: tracking("assets"),
         },
         {
           href: `${layoutPath}/engine`,
