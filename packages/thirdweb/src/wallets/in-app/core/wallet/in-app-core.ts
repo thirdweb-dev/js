@@ -55,9 +55,11 @@ export function createInAppWallet(args: {
   let adminAccount: Account | undefined = undefined; // Admin account if smartAccountOptions were provided with connection
   let chain: Chain | undefined = undefined;
   let client: ThirdwebClient | undefined;
+  let authToken: string | null = null;
 
   return {
     id: walletId,
+    getAuthToken: () => authToken,
     subscribe: emitter.subscribe,
     getChain() {
       if (!chain) {
@@ -114,6 +116,12 @@ export function createInAppWallet(args: {
       account = connectedAccount;
       adminAccount = _adminAccount;
       chain = connectedChain;
+      try {
+        authToken = await connector.storage.getAuthCookie();
+      } catch (error) {
+        console.error("Failed to retrieve auth token:", error);
+        authToken = null;
+      }
       trackConnect({
         client: options.client,
         ecosystem,
@@ -168,6 +176,12 @@ export function createInAppWallet(args: {
       account = connectedAccount;
       adminAccount = _adminAccount;
       chain = connectedChain;
+      try {
+        authToken = await connector.storage.getAuthCookie();
+      } catch (error) {
+        console.error("Failed to retrieve auth token:", error);
+        authToken = null;
+      }
       trackConnect({
         client: options.client,
         ecosystem,
@@ -194,6 +208,7 @@ export function createInAppWallet(args: {
       account = undefined;
       adminAccount = undefined;
       chain = undefined;
+      authToken = null;
       emitter.emit("disconnect", undefined);
     },
     switchChain: async (newChain) => {

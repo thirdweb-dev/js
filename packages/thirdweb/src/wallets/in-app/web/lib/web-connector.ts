@@ -50,7 +50,7 @@ export class InAppWebConnector implements InAppConnector {
   private client: ThirdwebClient;
   private ecosystem?: Ecosystem;
   private querier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
-  private storage: ClientScopedStorage;
+  public storage: ClientScopedStorage;
 
   private wallet?: IWebWallet;
   /**

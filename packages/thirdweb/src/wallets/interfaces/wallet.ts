@@ -151,8 +151,18 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    * This is useful for smart wallets to get the underlying personal account
    */
   getAdminAccount?: () => Account | undefined;
-};
 
+  /**
+   * Get the authentication token for the wallet.
+   *
+   * This method is not available for on all wallets. This method will be `undefined` if the wallet does not support it.
+   * @example
+   * ```ts
+   * const authToken = await wallet.getAuthToken();
+   * ```
+   */
+  getAuthToken?: () => string | null;
+};
 /**
  * Account interface
  *

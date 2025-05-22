@@ -40,10 +40,11 @@ export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js"
 
 // wallet hooks
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
-export { useAdminWallet } from "../react/core/hooks/wallets/useAdminWallet.js";
 export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
+export { useAdminWallet } from "../react/core/hooks/wallets/useAdminWallet.js";
+export { useAuthToken } from "../react/core/hooks/wallets/useAuthToken.js";
 export { useAutoConnect } from "../react/web/hooks/wallets/useAutoConnect.js";
 export { useConnect } from "../react/core/hooks/wallets/useConnect.js";
 export { useConnectedWallets } from "../react/core/hooks/wallets/useConnectedWallets.js";

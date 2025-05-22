@@ -29,7 +29,7 @@ type NativeConnectorOptions = {
 export class InAppNativeConnector implements InAppConnector {
   private client: ThirdwebClient;
   private ecosystem?: Ecosystem;
-  private storage: ClientScopedStorage;
+  public storage: ClientScopedStorage;
   private passkeyDomain?: string;
   private wallet?: IWebWallet;
 
