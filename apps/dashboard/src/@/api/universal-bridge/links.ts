@@ -1,3 +1,5 @@
+import "server-only";
+
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { UB_BASE_URL } from "./constants";
 
