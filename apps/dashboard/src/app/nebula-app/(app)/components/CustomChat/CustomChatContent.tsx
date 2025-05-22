@@ -151,12 +151,11 @@ function CustomChatContentLoggedIn(props: {
           payload.conversationId = sessionId;
         }
         const response = await fetch(
-          "https://proxy.cors.sh/https://siwa-slack-bot-u8ne.chainsaw-dev.zeet.app/siwa",
+          "https://siwa-api.thirdweb-dev.com/api/chat",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-cors-api-key": "temp_3f2b6d4409a86dc7f4b7c45840dbd8e9", // replace with your cors.sh API key
             },
             body: JSON.stringify(payload),
             signal: abortController.signal,
