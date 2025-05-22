@@ -1,1 +1,1 @@
-export type BridgeAction = "approval" | "transfer" | "buy" | "sell";
+export type Action = "approval" | "transfer" | "buy" | "sell";

@@ -85,7 +85,7 @@ export function PayWithCreditCard(props: {
             {props.value
               ? `${props.currency.symbol}${formatNumber(
                   Number(props.value),
-                  6,
+                  2,
                 )}`
               : "--"}
           </Text>

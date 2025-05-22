@@ -2,6 +2,7 @@ import type { Hex as ox__Hex } from "ox";
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
+import { ApiError } from "./types/Errors.js";
 
 /**
  * Retrieves the status of an Onramp session created via {@link Bridge.Onramp.prepare}. The
@@ -72,9 +73,12 @@ export async function status(options: status.Options): Promise<status.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(
-      `${errorJson.code || response.status} | ${errorJson.message || response.statusText} - ${errorJson.correlationId || "N/A"}`,
-    );
+    throw new ApiError({
+      code: errorJson.code || "UNKNOWN_ERROR",
+      message: errorJson.message || response.statusText,
+      correlationId: errorJson.correlationId || undefined,
+      statusCode: response.status,
+    });
   }
 
   const { data }: { data: status.Result } = await response.json();

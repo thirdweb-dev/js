@@ -2,6 +2,7 @@ import type { Address as ox__Address, Hex as ox__Hex } from "ox";
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
+import { ApiError } from "./types/Errors.js";
 import type { Route } from "./types/Route.js";
 
 /**
@@ -162,7 +163,12 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code} | ${errorJson.message}`);
+    throw new ApiError({
+      code: errorJson.code || "UNKNOWN_ERROR",
+      message: errorJson.message || response.statusText,
+      correlationId: errorJson.correlationId || undefined,
+      statusCode: response.status,
+    });
   }
 
   const { data }: { data: Route[] } = await response.json();

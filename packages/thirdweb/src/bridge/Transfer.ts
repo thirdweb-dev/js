@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
+import { ApiError } from "./types/Errors.js";
 import type { PreparedQuote } from "./types/Quote.js";
 
 /**
@@ -212,9 +213,12 @@ export async function prepare(
   });
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(
-      `${errorJson.code} | ${errorJson.message} - ${errorJson.correlationId}`,
-    );
+    throw new ApiError({
+      code: errorJson.code || "UNKNOWN_ERROR",
+      message: errorJson.message || response.statusText,
+      correlationId: errorJson.correlationId || undefined,
+      statusCode: response.status,
+    });
   }
 
   const { data }: { data: PreparedQuote } = await response.json();

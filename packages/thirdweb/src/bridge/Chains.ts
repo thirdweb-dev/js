@@ -2,6 +2,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import type { Chain } from "./types/Chain.js";
+import { ApiError } from "./types/Errors.js";
 
 /**
  * Retrieves supported Universal Bridge chains.
@@ -59,7 +60,12 @@ export async function chains(options: chains.Options): Promise<chains.Result> {
   const response = await clientFetch(url.toString());
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(`${errorJson.code} | ${errorJson.message}`);
+    throw new ApiError({
+      code: errorJson.code || "UNKNOWN_ERROR",
+      message: errorJson.message || response.statusText,
+      correlationId: errorJson.correlationId || undefined,
+      statusCode: response.status,
+    });
   }
 
   const { data }: { data: Chain[] } = await response.json();
