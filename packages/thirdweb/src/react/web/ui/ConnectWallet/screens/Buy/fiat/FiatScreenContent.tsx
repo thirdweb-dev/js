@@ -1,15 +1,13 @@
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { FiatProvider } from "../../../../../../../pay/utils/commonTypes.js";
 import {
-  type Theme,
-  iconSize,
-  spacing,
-} from "../../../../../../core/design-system/index.js";
+  type FiatProvider,
+  FiatProviders,
+} from "../../../../../../../pay/utils/commonTypes.js";
+import type { Theme } from "../../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useBuyWithFiatQuote } from "../../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { PREFERRED_FIAT_PROVIDER_STORAGE_KEY } from "../../../../../../core/utils/storage.js";
@@ -26,6 +24,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
+import { PayProviderSelection } from "../PayProviderSelection.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
 import type { SelectedScreen } from "../main/types.js";
 import { FiatFees } from "../swap/Fees.js";
@@ -84,6 +83,19 @@ export function FiatScreenContent(props: {
       : undefined,
   );
 
+  const supportedProviders = (() => {
+    if (!buyWithFiatOptions) return [...FiatProviders];
+    const options = buyWithFiatOptions?.supportedProviders ?? [];
+    const optionsWithPreferred =
+      options.length > 0
+        ? new Set([
+            ...(preferredProvider ? [preferredProvider] : []),
+            ...options,
+          ])
+        : FiatProviders;
+    return Array.from(optionsWithPreferred);
+  })();
+
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
@@ -98,8 +110,8 @@ export function FiatScreenContent(props: {
           isTestMode: buyWithFiatOptions?.testMode,
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
-          preferredProvider: preferredProvider,
           paymentLinkId: paymentLinkId,
+          preferredProvider: preferredProvider ?? "COINBASE",
         }
       : undefined,
   );
@@ -159,6 +171,7 @@ export function FiatScreenContent(props: {
                 </Text>
                 <Spacer y="lg" />
                 <Providers
+                  supportedProviders={supportedProviders}
                   preferredProvider={
                     preferredProvider || fiatQuoteQuery.data?.provider
                   }
@@ -188,35 +201,13 @@ export function FiatScreenContent(props: {
             currency={selectedCurrency}
             onSelectCurrency={showCurrencySelector}
           />
-          <Container
-            bg="tertiaryBg"
-            flex="row"
-            borderColor="borderColor"
-            style={{
-              paddingLeft: spacing.md,
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderBottom: "none",
-            }}
-          >
-            <Text size="xs" color="secondaryText">
-              Provider
-            </Text>
-            <Button variant="ghost" onClick={showProviders}>
-              <Container flex="row" center="y" gap="xxs" color="secondaryText">
-                <Text size="xs">
-                  {preferredProvider
-                    ? `${preferredProvider.charAt(0).toUpperCase() + preferredProvider.slice(1).toLowerCase()}`
-                    : fiatQuoteQuery.data?.provider
-                      ? `${fiatQuoteQuery.data?.provider.charAt(0).toUpperCase() + fiatQuoteQuery.data?.provider.slice(1).toLowerCase()}`
-                      : ""}
-                </Text>
-                <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-              </Container>
-            </Button>
-          </Container>
+          {/** Shows preferred or quoted provider and conditional selection */}
+          <PayProviderSelection
+            onShowProviders={showProviders}
+            quotedProvider={fiatQuoteQuery.data?.provider}
+            preferredProvider={preferredProvider}
+            supportedProviders={supportedProviders}
+          />
           {/* Estimated time + View fees button */}
           <EstimatedTimeAndFees
             quoteIsLoading={fiatQuoteQuery.isLoading}
