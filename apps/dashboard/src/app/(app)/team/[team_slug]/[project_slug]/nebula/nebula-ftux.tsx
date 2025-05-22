@@ -4,6 +4,7 @@ import { WaitingForIntegrationCard } from "../components/WaitingForIntegrationCa
 
 export function NebulaFTUX(props: {
   secretKeyMasked: string;
+  teamId: string;
   projectId: string;
 }) {
   return (
@@ -50,6 +51,7 @@ export function NebulaFTUX(props: {
     >
       <SecretKeySection
         secretKeyMasked={props.secretKeyMasked}
+        teamId={props.teamId}
         projectId={props.projectId}
       />
       <div className="h-4" />

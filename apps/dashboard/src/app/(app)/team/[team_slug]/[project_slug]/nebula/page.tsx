@@ -60,6 +60,7 @@ export default async function Page(props: {
         <div className="container mt-6 max-w-7xl">
           <NebulaFTUX
             secretKeyMasked={project.secretKeys[0]?.masked || ""}
+            teamId={team.id}
             projectId={project.id}
           />
         </div>

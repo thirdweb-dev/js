@@ -63,6 +63,7 @@ function IntegrateAPIKeySection({
           {secretKeyMasked && (
             <SecretKeySection
               secretKeyMasked={secretKeyMasked}
+              teamId={project.teamId}
               projectId={project.id}
             />
           )}

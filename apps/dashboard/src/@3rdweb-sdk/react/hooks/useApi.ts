@@ -322,13 +322,14 @@ export type RotateSecretKeyAPIReturnType = {
   };
 };
 
-export async function rotateSecretKeyClient(projectId: string) {
+export async function rotateSecretKeyClient(params: {
+  teamId: string;
+  projectId: string;
+}) {
   const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
-    pathname: "/v2/keys/rotate-secret-key",
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/rotate-secret-key`,
     method: "POST",
-    body: JSON.stringify({
-      projectId,
-    }),
+    body: JSON.stringify({}),
     headers: {
       "Content-Type": "application/json",
     },

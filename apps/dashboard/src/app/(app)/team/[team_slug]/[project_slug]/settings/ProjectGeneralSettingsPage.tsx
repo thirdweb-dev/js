@@ -165,7 +165,10 @@ export function ProjectGeneralSettingsPage(props: {
       }}
       showNebulaSettings={props.showNebulaSettings}
       rotateSecretKey={async () => {
-        return rotateSecretKeyClient(props.project.id);
+        return rotateSecretKeyClient({
+          teamId: props.project.teamId,
+          projectId: props.project.id,
+        });
       }}
       teamsWithRole={props.teamsWithRole}
       transferProject={async (newTeam) => {

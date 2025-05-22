@@ -6,6 +6,7 @@ import { RotateSecretKeyButton } from "../../settings/ProjectGeneralSettingsPage
 
 export function SecretKeySection(props: {
   secretKeyMasked: string;
+  teamId: string;
   projectId: string;
 }) {
   const [secretKeyMasked, setSecretKeyMasked] = useState(props.secretKeyMasked);
@@ -26,7 +27,10 @@ export function SecretKeySection(props: {
 
         <RotateSecretKeyButton
           rotateSecretKey={async () => {
-            return rotateSecretKeyClient(props.projectId);
+            return rotateSecretKeyClient({
+              teamId: props.teamId,
+              projectId: props.projectId,
+            });
           }}
           onSuccess={(data) => {
             setSecretKeyMasked(data.data.secretMasked);
