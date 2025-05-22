@@ -4,7 +4,7 @@ import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { uppercaseFirstLetter } from "./utils.js";
+import { getProviderLabel } from "./utils.js";
 
 /**
  * Shows the selected payment provider based on the preferred provider OR the quoted provider.
@@ -25,7 +25,7 @@ export const PayProviderSelection = (props: {
       style={{ padding: spacing.md }}
     >
       <Text size="xs">
-        {uppercaseFirstLetter(
+        {getProviderLabel(
           props.preferredProvider ?? props.quotedProvider ?? "",
         )}
       </Text>

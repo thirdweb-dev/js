@@ -44,7 +44,7 @@ import { StepConnectorArrow } from "../swap/StepConnector.js";
 import { WalletRow } from "../swap/WalletRow.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
 import type { PayerInfo } from "../types.js";
-import { uppercaseFirstLetter } from "../utils.js";
+import { getProviderLabel } from "../utils.js";
 import { StepContainer } from "./FiatSteps.js";
 
 type OnRampScreenState = {
@@ -214,7 +214,7 @@ function StepUI(props: {
         />
         <Container flex="column" gap="3xs" center="y" style={{ flex: "1" }}>
           <Text size="sm" color="primaryText">
-            {uppercaseFirstLetter(step.action)}
+            {getProviderLabel(step.action)}
           </Text>
 
           <Container

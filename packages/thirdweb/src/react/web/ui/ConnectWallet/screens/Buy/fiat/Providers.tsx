@@ -2,7 +2,7 @@ import type { FiatProvider } from "../../../../../../../pay/utils/commonTypes.js
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Link } from "../../../../components/text.js";
-import { uppercaseFirstLetter } from "../utils.js";
+import { getProviderLabel } from "../utils.js";
 /**
  * @internal
  */
@@ -44,7 +44,7 @@ export function Providers(props: {
               size="sm"
               hoverColor="primaryText"
             >
-              {uppercaseFirstLetter(provider)}
+              {getProviderLabel(provider)}
             </Link>
           </Button>
         </Container>
