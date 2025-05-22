@@ -1,12 +1,12 @@
 "use client";
 
-import CustomChatContent from "./CustomChatContent";
-import type { ExamplePrompt } from "../../data/examplePrompts";
-import type { ThirdwebClient } from "thirdweb";
-import { useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { XIcon, MessageCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MessageCircleIcon, XIcon } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import type { ExamplePrompt } from "../../data/examplePrompts";
+import CustomChatContent from "./CustomChatContent";
 
 export function CustomChatButton(props: {
   isLoggedIn: boolean;
@@ -53,7 +53,7 @@ export function CustomChatButton(props: {
       <div
         className={cn(
           "slide-in-from-bottom-20 zoom-in-95 fade-in-0 fixed bottom-0 left-0 z-50 flex h-[80vh] w-[100vw] animate-in flex-col overflow-hidden rounded-t-2xl border bg-background shadow-2xl duration-200 lg:right-6 lg:bottom-6 lg:left-auto lg:h-[80vh] lg:max-w-xl lg:rounded-xl",
-          !isOpen && "hidden"
+          !isOpen && "hidden",
         )}
         ref={ref}
       >
@@ -90,4 +90,4 @@ export function CustomChatButton(props: {
       </div>
     </>
   );
-} 
+}

@@ -1,7 +1,7 @@
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
-import { AlertCircleIcon, ThumbsUpIcon, ThumbsDownIcon } from "lucide-react";
+import { AlertCircleIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { NebulaSwapData } from "../api/chat";
@@ -457,7 +457,10 @@ function StyledMarkdownRenderer(props: {
   );
 }
 
-function FeedbackButtons({ sessionId, messageText }: { sessionId: string | undefined; messageText: string }) {
+function FeedbackButtons({
+  sessionId,
+  messageText,
+}: { sessionId: string | undefined; messageText: string }) {
   const [feedback, setFeedback] = useState<"good" | "bad" | null>(null);
   const [loading, setLoading] = useState(false);
   const [thankYou, setThankYou] = useState(false);
@@ -484,7 +487,11 @@ function FeedbackButtons({ sessionId, messageText }: { sessionId: string | undef
   }
 
   if (thankYou) {
-    return <div className="mt-2 text-xs text-muted-foreground">Thank you for your feedback!</div>;
+    return (
+      <div className="mt-2 text-xs text-muted-foreground">
+        Thank you for your feedback!
+      </div>
+    );
   }
 
   return (

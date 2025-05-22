@@ -129,7 +129,7 @@ export default async function SupportPage() {
     teamId: undefined,
   });
 
-  const supportPromptPrefix ="";
+  const supportPromptPrefix = "";
   const examplePrompts = [
     "ERC20 - Transfer Amount Exceeds Allowance",
     "Replacement transaction underpriced / Replacement fee too low",

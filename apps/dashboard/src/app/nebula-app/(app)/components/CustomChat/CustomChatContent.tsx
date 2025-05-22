@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -142,7 +142,8 @@ function CustomChatContentLoggedIn(props: {
         setChatAbortController(abortController);
         // --- Custom API call ---
         const payload: any = {
-          message: messageToSend.content.find((x) => x.type === "text")?.text ?? "",
+          message:
+            messageToSend.content.find((x) => x.type === "text")?.text ?? "",
           authToken: props.authToken,
           conversationId: "25000000005",
         };
@@ -159,7 +160,7 @@ function CustomChatContentLoggedIn(props: {
             },
             body: JSON.stringify(payload),
             signal: abortController.signal,
-          }
+          },
         );
         const data = await response.json();
         // If the response contains a conversationId, set it as the sessionId for future messages
