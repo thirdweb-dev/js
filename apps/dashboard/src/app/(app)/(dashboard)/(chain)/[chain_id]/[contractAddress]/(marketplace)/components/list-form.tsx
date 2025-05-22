@@ -1,6 +1,7 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
@@ -540,7 +541,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                     >
                       <div
                         className={cn(
-                          "rounded-lg overflow-hidden cursor-pointer",
+                          "cursor-pointer overflow-hidden rounded-lg",
                           isSelected(nft) &&
                             "outline outline-3 outline-purple-500",
                         )}
@@ -549,6 +550,17 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                             ? form.setValue("selected", undefined)
                             : form.setValue("selected", nft)
                         }
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            isSelected(nft)
+                              ? form.setValue("selected", undefined)
+                              : form.setValue("selected", nft);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-pressed={isSelected(nft)}
                       >
                         <NFTMediaWithEmptyState
                           metadata={nft.metadata}

@@ -32,15 +32,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
   const v5Chain = useV5DashboardChain(chain.chainId);
 
   return (
-    <Card
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: 16,
-        alignItems: "center",
-      }}
-      maxW={{ base: "100%", md: "49%" }}
-    >
+    <Card className="flex max-w-full flex-row items-center gap-4 md:max-w-49%">
       <Input
         placeholder={`Amount in ${symbol}. ex: 0.001`}
         onChange={handleChange}

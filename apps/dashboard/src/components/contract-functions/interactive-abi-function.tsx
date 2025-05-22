@@ -368,19 +368,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
 
   return (
     <FormProvider {...form}>
-      <Card
-        gridColumn={{ base: "span 12", md: "span 9" }}
-        borderRadius="none"
-        bg="transparent"
-        border="none"
-        as={Flex}
-        flexDirection="column"
-        gap={4}
-        boxShadow="none"
-        flexGrow={1}
-        w="100%"
-        p={0}
-      >
+      <Card className="flex w-full flex-grow grid-cols-12 flex-col gap-4 rounded-none border-none bg-transparent p-0 shadow-none md:grid-cols-9">
         <Flex
           position="relative"
           w="100%"
