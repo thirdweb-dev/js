@@ -34,13 +34,13 @@ export function CountrySelector({
       ? supportedSmsCountries.filter((c) =>
           allowedCountryCodes.includes(c.countryIsoCode as SupportedSmsCountry),
         )
-      : supportedSmsCountries ?? [
+      : (supportedSmsCountries ?? [
           {
             countryIsoCode: "US",
             countryName: "United States",
             phoneNumberCode: 1,
           },
-        ];
+        ]);
 
   return (
     <>
