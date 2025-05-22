@@ -1,10 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   type AuthorizedWallet,
   useRevokeAuthorizedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useDisclosure } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -12,7 +12,6 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb/utils";
-import { Button, Text } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { shortenString } from "utils/usedapp-external";
 import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
@@ -33,7 +32,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
   const [revokeAuthorizedWalletId, setRevokeAuthorizedWalletId] = useState<
     string | undefined
   >(undefined);
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
 
   const columns = [
     columnHelper.accessor("deviceName", {
@@ -44,9 +43,9 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
           return;
         }
         if (isAddress(value)) {
-          return <Text>{shortenString(value, false)}</Text>;
+          return <span className="text-sm">{shortenString(value, false)}</span>;
         }
-        return <Text>{value}</Text>;
+        return <span className="text-sm">{value}</span>;
       },
     }),
 
@@ -59,7 +58,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
           return;
         }
         const createdDate = format(new Date(value), "MMM dd, yyyy");
-        return <Text>{createdDate}</Text>;
+        return <span className="text-sm">{createdDate}</span>;
       },
     }),
 
@@ -73,8 +72,7 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         return (
           <Button
             onClick={() => handleOpen(value)}
-            variant="outline"
-            color="red"
+            variant="destructive"
             size="sm"
           >
             Revoke Access
@@ -86,11 +84,11 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
 
   const handleOpen = (authorizedWalletId: AuthorizedWallet["id"]) => {
     setRevokeAuthorizedWalletId(authorizedWalletId);
-    onOpen();
+    setIsOpen(true);
   };
 
   const handleClose = () => {
-    onClose();
+    setIsOpen(false);
     setRevokeAuthorizedWalletId(undefined);
   };
 

@@ -1,12 +1,11 @@
+import { Button } from "@/components/ui/button";
 import {
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import { Button } from "tw-components";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type AuthorizedWalletRevokeModalProps = {
   isOpen: boolean;
@@ -19,25 +18,33 @@ export const AuthorizedWalletRevokeModal: React.FC<
   AuthorizedWalletRevokeModalProps
 > = ({ isOpen, onClose, onSubmit, authorizedWalletId }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Are you sure you want to revoke this device?</ModalHeader>
-        <ModalCloseButton />
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="p-0">
+        <DialogHeader className="p-6">
+          <DialogTitle className="font-semibold text-2xl tracking-tight">
+            Are you sure you want to revoke this device?
+          </DialogTitle>
+        </DialogHeader>
 
-        <ModalFooter>
-          <Button mr={3} onClick={onClose} variant="ghost">
+        <DialogFooter className="gap-4 border-border border-t bg-card p-6">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button
+            variant="destructive"
             onClick={() => onSubmit(authorizedWalletId)}
-            variant="outline"
-            colorScheme="red"
           >
             Revoke
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
