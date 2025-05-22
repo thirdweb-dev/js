@@ -19,6 +19,7 @@ import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccoun
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../../core/hooks/wallets/useIsAutoConnecting.js";
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
+import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
@@ -184,8 +185,38 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
+
+  // profiles for linking requirement
+  const { data: profiles } = useProfiles({ client: props.client });
+
+  // Determine if wallet requires an email and user doesn't have one linked
+  const needsEmailLink = (() => {
+    if (!activeWallet || !profiles) {
+      return false;
+    }
+
+    const walletConfig = (
+      activeWallet as unknown as {
+        getConfig?: () => { auth?: { required?: string[] } } | undefined;
+      }
+    ).getConfig?.();
+
+    const required = walletConfig?.auth?.required || [];
+    const requiresEmail = required.includes("email");
+
+    if (!requiresEmail) {
+      return false;
+    }
+
+    const hasEmail = profiles.some((p) => !!p.details.email);
+
+    return !hasEmail;
+  })();
+
   const show =
-    !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
+    !activeAccount ||
+    (siweAuth.requiresAuth && !siweAuth.isLoggedIn) ||
+    needsEmailLink;
   const connectionManager = useConnectionManager();
 
   // Add props.chain and props.chains to defined chains store

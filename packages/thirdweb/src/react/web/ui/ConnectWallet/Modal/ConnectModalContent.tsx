@@ -1,7 +1,10 @@
 "use client";
-import { Suspense, lazy, useCallback } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
+import { getProfiles } from "../../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
@@ -13,11 +16,13 @@ import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccoun
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useSetActiveWallet } from "../../../../core/hooks/wallets/useSetActiveWallet.js";
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
+import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { LinkProfileScreen } from "../screens/LinkProfileScreen.js";
 import { SignatureScreen } from "../screens/SignatureScreen.js";
 import { StartScreen } from "../screens/StartScreen.js";
 import type { WelcomeScreen } from "../screens/types.js";
@@ -84,44 +89,146 @@ export const ConnectModalContent = (props: {
   const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
   const connectionManager = useConnectionManager();
 
+  // state to hold wallet awaiting email link
+  const [pendingWallet, setPendingWallet] = useState<Wallet | undefined>();
+
+  // get profiles to observe email linking
+  const profilesQuery = useProfiles({ client: props.client });
+
   const handleConnected = useCallback(
-    (wallet: Wallet) => {
-      if (shouldSetActive) {
-        setActiveWallet(wallet);
-      } else {
-        connectionManager.addConnectedWallet(wallet);
+    async (wallet: Wallet) => {
+      // we will only set active wallet and call onConnect once requirements are met
+      const finalizeConnection = (w: Wallet) => {
+        if (shouldSetActive) {
+          setActiveWallet(w);
+        } else {
+          connectionManager.addConnectedWallet(w);
+        }
+
+        if (props.onConnect) {
+          props.onConnect(w);
+        }
+
+        onModalUnmount(() => {
+          setSelectionData({});
+          setScreen(initialScreen);
+          setModalVisibility(true);
+        });
+      };
+
+      // ----------------------------------------------------------------
+      // Enforce required profile linking (currently only "email")
+      // ----------------------------------------------------------------
+      type WalletConfig = {
+        auth?: {
+          required?: string[];
+        };
+        partnerId?: string;
+      };
+
+      const walletWithConfig = wallet as unknown as {
+        getConfig?: () => WalletConfig | undefined;
+      };
+
+      const walletConfig = walletWithConfig.getConfig
+        ? walletWithConfig.getConfig()
+        : undefined;
+      const required = walletConfig?.auth?.required as string[] | undefined;
+      const requiresEmail = required?.includes("email");
+
+      console.log("wallet", walletConfig);
+
+      console.log("requiresEmail", requiresEmail);
+
+      if (requiresEmail) {
+        try {
+          const ecosystem = isEcosystemWallet(wallet)
+            ? { id: wallet.id, partnerId: walletConfig?.partnerId }
+            : undefined;
+
+          const profiles = await getProfiles({
+            client: props.client,
+            ecosystem,
+          });
+
+          console.log("profiles", profiles);
+
+          const hasEmail = (profiles as Profile[]).some(
+            (p) => !!p.details.email,
+          );
+
+          console.log("hasEmail", hasEmail);
+
+          if (!hasEmail) {
+            setPendingWallet(wallet);
+            setScreen(reservedScreens.linkProfile);
+            return; // defer activation until linked
+          }
+        } catch (err) {
+          console.error("Failed to fetch profiles for required linking", err);
+          // if fetching profiles fails, just continue the normal flow
+        }
       }
 
-      if (props.onConnect) {
-        props.onConnect(wallet);
-      }
+      // ----------------------------------------------------------------
+      // Existing behavior (sign in step / close modal)
+      // ----------------------------------------------------------------
 
-      onModalUnmount(() => {
-        setSelectionData({});
-        setModalVisibility(true);
-      });
-
-      // show sign in screen if required
       if (showSignatureScreen) {
         setScreen(reservedScreens.signIn);
       } else {
-        setScreen(initialScreen);
+        finalizeConnection(wallet);
         onClose?.();
       }
     },
     [
-      setModalVisibility,
-      onClose,
-      props.onConnect,
-      setActiveWallet,
-      showSignatureScreen,
-      setScreen,
-      setSelectionData,
       shouldSetActive,
-      initialScreen,
+      setActiveWallet,
       connectionManager,
+      props.onConnect,
+      setSelectionData,
+      setModalVisibility,
+      props.client,
+      setScreen,
+      showSignatureScreen,
+      initialScreen,
+      onClose,
     ],
   );
+
+  // Effect to watch for email linking completion
+  useEffect(() => {
+    if (!pendingWallet) {
+      return;
+    }
+    const profiles = profilesQuery.data;
+    if (!profiles) {
+      return;
+    }
+    const hasEmail = profiles.some((p) => !!p.details.email);
+    if (hasEmail) {
+      // finalize connection now
+      if (shouldSetActive) {
+        setActiveWallet(pendingWallet);
+      } else {
+        connectionManager.addConnectedWallet(pendingWallet);
+      }
+      props.onConnect?.(pendingWallet);
+      setPendingWallet(undefined);
+      setScreen(initialScreen);
+      onClose?.();
+    }
+  }, [
+    profilesQuery.data,
+    pendingWallet,
+    shouldSetActive,
+    setActiveWallet,
+    connectionManager,
+    props.onConnect,
+    setScreen,
+    initialScreen,
+    onClose,
+  ]);
 
   const handleBack = useCallback(() => {
     setSelectionData({});
@@ -145,7 +252,9 @@ export const ConnectModalContent = (props: {
       onShowAll={() => {
         setScreen(reservedScreens.showAll);
       }}
-      done={handleConnected}
+      done={async (w) => {
+        await handleConnected(w);
+      }}
       goBack={props.wallets.length > 1 ? handleBack : undefined}
       setModalVisibility={setModalVisibility}
       client={props.client}
@@ -195,8 +304,8 @@ export const ConnectModalContent = (props: {
         <SmartConnectUI
           key={wallet.id}
           accountAbstraction={props.accountAbstraction}
-          done={(smartWallet) => {
-            handleConnected(smartWallet);
+          done={async (smartWallet) => {
+            await handleConnected(smartWallet);
           }}
           personalWallet={wallet}
           onBack={goBack}
@@ -217,8 +326,8 @@ export const ConnectModalContent = (props: {
         key={wallet.id}
         wallet={wallet}
         onBack={goBack}
-        done={() => {
-          handleConnected(wallet);
+        done={async () => {
+          await handleConnected(wallet);
         }}
         setModalVisibility={props.setModalVisibility}
         chain={props.chain}
@@ -245,6 +354,16 @@ export const ConnectModalContent = (props: {
     />
   );
 
+  const linkProfileScreen = (
+    <LinkProfileScreen
+      onBack={handleBack}
+      locale={props.connectLocale}
+      client={props.client}
+      walletConnect={props.walletConnect}
+      wallet={pendingWallet}
+    />
+  );
+
   return (
     <ScreenSetupContext.Provider value={props.screenSetup}>
       {props.size === "wide" ? (
@@ -256,6 +375,7 @@ export const ConnectModalContent = (props: {
               {screen === reservedScreens.main && getStarted}
               {screen === reservedScreens.getStarted && getStarted}
               {screen === reservedScreens.showAll && showAll}
+              {screen === reservedScreens.linkProfile && linkProfileScreen}
               {typeof screen !== "string" && getWalletUI(screen)}
             </>
           }
@@ -266,6 +386,7 @@ export const ConnectModalContent = (props: {
           {screen === reservedScreens.main && walletList}
           {screen === reservedScreens.getStarted && getStarted}
           {screen === reservedScreens.showAll && showAll}
+          {screen === reservedScreens.linkProfile && linkProfileScreen}
           {typeof screen !== "string" && getWalletUI(screen)}
         </ConnectModalCompactLayout>
       )}

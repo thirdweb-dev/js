@@ -27,6 +27,7 @@ export const WALLETS = [
         "farcaster",
         "line",
       ],
+      required: ["email"],
       mode: "redirect",
       passkeyDomain: getDomain(),
     },

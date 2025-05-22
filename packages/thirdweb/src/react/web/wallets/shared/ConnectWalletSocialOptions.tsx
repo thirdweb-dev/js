@@ -37,6 +37,8 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Input, InputContainer } from "../../ui/components/formElements.js";
+import { Text } from "../../ui/components/text.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
@@ -132,9 +134,15 @@ export const ConnectWalletSocialOptions = (
     enabled: isEcosystemWallet(wallet),
     retry: false,
   });
-  const authOptions = isEcosystemWallet(wallet)
+  const authOptions: AuthOption[] = isEcosystemWallet(wallet)
     ? (ecosystemAuthOptions ?? defaultAuthOptions)
     : (wallet.getConfig()?.auth?.options ?? defaultAuthOptions);
+
+  // If we're in linking mode AND the wallet requires an email, restrict options to email only
+  const requiresEmail = (
+    (wallet.getConfig()?.auth as { required?: string[] } | undefined)
+      ?.required || []
+  ).includes("email");
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
@@ -318,6 +326,20 @@ export const ConnectWalletSocialOptions = (
   }
 
   const showOnlyIcons = socialLogins.length > 2;
+
+  // ------------------------------------------------------------
+  // When wallet requires an email, show a dedicated prompt
+  // ------------------------------------------------------------
+  if (props.isLinking && requiresEmail) {
+    return (
+      <VerifyEmailPrompt
+        select={props.select}
+        setData={setData}
+        locale={props.locale}
+        disabled={props.disabled}
+      />
+    );
+  }
 
   return (
     <Container
@@ -552,3 +574,67 @@ const SocialButton = /* @__PURE__ */ styled(Button)({
     padding: spacing.sm,
   },
 });
+
+// --------------------------------------------
+// VerifyEmailPrompt Component
+// --------------------------------------------
+
+function VerifyEmailPrompt(props: {
+  select: () => void;
+  setData: (v: ConnectWalletSelectUIState) => void;
+  locale: InAppWalletLocale;
+  disabled?: boolean;
+}) {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | undefined>();
+
+  const isValidEmail = email ? validateEmail(email.toLowerCase()) : false;
+
+  const handleContinue = () => {
+    if (!isValidEmail) {
+      setError(props.locale.invalidEmail);
+      return;
+    }
+    props.setData({ emailLogin: email });
+    props.select();
+  };
+
+  return (
+    <Container flex="column" gap="lg">
+      <Spacer y="md" />
+      <Text size="md" center weight={600} color="primaryText">
+        Verify your email
+      </Text>
+      <InputContainer data-error={!!error}>
+        <Input
+          variant="transparent"
+          type="email"
+          placeholder={props.locale.emailPlaceholder}
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) setError(undefined);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleContinue();
+            }
+          }}
+        />
+      </InputContainer>
+      {error && (
+        <Text size="sm" color="danger">
+          {error}
+        </Text>
+      )}
+      <Button
+        variant="accent"
+        fullWidth
+        onClick={handleContinue}
+        disabled={props.disabled}
+      >
+        Continue
+      </Button>
+    </Container>
+  );
+}
