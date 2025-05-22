@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
-import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
 import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
 import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
 import type { PayParams } from "./components/types";
@@ -59,7 +58,7 @@ export default async function PayPage({
   const client =
     params.clientId && !Array.isArray(params.clientId)
       ? createThirdwebClient({ clientId: params.clientId })
-      : getClientThirdwebClient(undefined);
+      : payAppThirdwebClient;
 
   const tokenContract = getContract({
     client: payAppThirdwebClient,

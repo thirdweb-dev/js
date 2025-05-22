@@ -86,6 +86,7 @@ export function OnRampScreen(props: {
     payer: props.payer,
     theme: props.theme,
     isAutoMode,
+    paymentLinkId: props.paymentLinkId,
   });
   const firstStepChainId = state.steps[0]?.step.token.chainId;
   return (
@@ -289,6 +290,7 @@ function useOnRampScreenState(props: {
   payer: PayerInfo;
   theme: "light" | "dark";
   isAutoMode?: boolean;
+  paymentLinkId?: string;
 }): OnRampScreenState {
   const onRampSteps = getOnRampSteps(props.quote);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -323,6 +325,7 @@ function useOnRampScreenState(props: {
     client: props.client,
     payer: props.payer,
     isFiatFlow: true,
+    paymentLinkId: props.paymentLinkId,
   });
 
   // Track swap status
