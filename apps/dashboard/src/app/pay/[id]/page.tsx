@@ -62,7 +62,8 @@ export default async function PayPage({
       amount={paymentLink.amount ? BigInt(paymentLink.amount) : undefined}
       token={token}
       clientId={paymentLink.clientId}
-      name={paymentLink.label}
+      name={paymentLink.title}
+      image={paymentLink.imageUrl}
       theme={theme}
     />
   );
