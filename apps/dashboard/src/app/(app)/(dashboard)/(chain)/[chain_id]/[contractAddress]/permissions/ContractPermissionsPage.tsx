@@ -25,7 +25,7 @@ export const ContractPermissionsPage: React.FC<
 
   if (!detectedPermissionEnumerable) {
     return (
-      <Card as={Flex} flexDir="column" gap={3}>
+      <Card className="flex flex-col gap-3">
         {/* TODO  extract this out into it's own component and make it better */}
         <Heading size="subtitle.md">
           Missing PermissionsEnumerable Extension

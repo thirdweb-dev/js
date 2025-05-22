@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -116,13 +116,9 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const helperTextRight = resolvingEns ? (
     "Resolving ENS..."
   ) : resolvedAddress ? (
-    <Box as="span" fontFamily="mono">
-      {ensQuery?.data?.address}
-    </Box>
+    <span className="font-mono">{ensQuery?.data?.address}</span>
   ) : ensFound ? (
-    <Box as="span" fontFamily="mono">
-      {ensQuery?.data?.ensName}
-    </Box>
+    <span className="font-mono">{ensQuery?.data?.ensName}</span>
   ) : null;
 
   return (

@@ -1,4 +1,5 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
+import { Flex } from "@chakra-ui/react";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { useClaimConditionsFormContext } from "..";
@@ -36,14 +37,14 @@ export const ClaimPriceInput = (props: {
       }
     >
       <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
-        <Box w={{ base: "100%", md: "50%" }} minW="70px">
+        <div className="w-full min-w-[70px] md:w-1/2">
           <PriceInput
             w="full"
             value={field.price?.toString() || ""}
             onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
           />
-        </Box>
-        <Box w={{ base: "100%", md: isColumn ? "50%" : "100%" }}>
+        </div>
+        <div className={cn("w-full", isColumn ? "md:w-1/2" : "md:w-full")}>
           <CurrencySelector
             contractChainId={props.contractChainId}
             isDisabled={formDisabled}
@@ -55,7 +56,7 @@ export const ClaimPriceInput = (props: {
               )
             }
           />
-        </Box>
+        </div>
       </Flex>
     </CustomFormControl>
   );

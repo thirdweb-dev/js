@@ -287,7 +287,7 @@ const ChainLastBlockTimestamp = ({
   }
 
   return (
-    <Card bgColor="backgroundHighlight">
+    <Card className="bg-backgroundHighlight">
       <Text>{format(ethBlockQuery.data, "PP pp z")}</Text>
     </Card>
   );
@@ -405,7 +405,7 @@ const RemoveModal = ({
               subscription.
             </Text>
 
-            <Card as={Flex} flexDir="column" gap={4}>
+            <Card className="flex flex-col gap-4">
               <FormControl>
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>

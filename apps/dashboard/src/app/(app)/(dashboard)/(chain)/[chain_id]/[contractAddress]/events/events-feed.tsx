@@ -11,7 +11,6 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box,
   ButtonGroup,
   Divider,
   Flex,
@@ -114,7 +113,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
           </FormControl>
         </div>
       </Flex>
-      <Card p={0} overflow="hidden">
+      <Card className="overflow-hidden p-0">
         <SimpleGrid
           gap={2}
           columns={12}
@@ -198,14 +197,14 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           alignItems="center"
           _last={{ borderBottomWidth: 0 }}
         >
-          <Box gridColumn="span 3">
+          <div className="col-span-3">
             <div className="flex flex-row items-center gap-3">
               <Tooltip
                 p={0}
                 bg="transparent"
                 boxShadow="none"
                 label={
-                  <Card py={2} px={4} bgColor="backgroundHighlight">
+                  <Card className="bg-backgroundHighlight px-4 py-2">
                     <Text size="label.sm">
                       Copy transaction hash to clipboard
                     </Text>
@@ -227,9 +226,9 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 {transaction.transactionHash.slice(0, 32)}...
               </Text>
             </div>
-          </Box>
+          </div>
 
-          <Box gridColumn="span 1" />
+          <div className="col-span-1" />
 
           <ButtonGroup
             size="sm"
@@ -262,7 +261,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
             )}
           </ButtonGroup>
 
-          <Box gridColumn="span 3">
+          <div className="col-span-3">
             <div className="flex flex-row justify-between gap-2">
               <Text fontFamily="mono" noOfLines={1}>
                 {transaction.blockNumber}
@@ -271,7 +270,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 <ChevronDownIcon className="size-4" />
               </div>
             </div>
-          </Box>
+          </div>
         </SimpleGrid>
       </AccordionButton>
       <AccordionPanel>
@@ -312,15 +311,15 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 key={`${transaction.transactionHash}_${event.logIndex}`}
               >
                 <SimpleGrid columns={12} gap={2}>
-                  <Box gridColumn="span 3">
+                  <div className="col-span-3">
                     <Text fontWeight="bold">{event.eventName}</Text>
-                  </Box>
-                  <Box gridColumn="span 9">
+                  </div>
+                  <div className="col-span-9">
                     <CodeClient
                       code={stringify(event.args, null, 2)}
                       lang="json"
                     />
-                  </Box>
+                  </div>
                 </SimpleGrid>
 
                 {arr.length - 1 === idx ? null : <Divider />}
@@ -353,7 +352,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
             bg="transparent"
             boxShadow="none"
             label={
-              <Card py={2} px={4} bgColor="backgroundHighlight">
+              <Card className="bg-backgroundHighlight px-4 py-2">
                 <Text size="label.sm">{description}</Text>
               </Card>
             }

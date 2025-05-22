@@ -1,7 +1,7 @@
 "use client";
 
 import { voteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
-import { Divider, Flex, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Divider, Flex, StatLabel, StatNumber } from "@chakra-ui/react";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
@@ -61,7 +61,11 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
         <Heading size="title.sm">Voting Tokens</Heading>
         <div className="flex flex-row gap-2">
           {voteTokenBalancesQuery.data?.map((balance) => (
-            <Card as={Stat} key={balance.address} maxWidth="240px">
+            <Card
+              className="[&>*]:m-0"
+              key={balance.address}
+              style={{ maxWidth: 240 }}
+            >
               <StatLabel>
                 {balance.address?.toLowerCase() === address?.toLowerCase()
                   ? "Your Balance"

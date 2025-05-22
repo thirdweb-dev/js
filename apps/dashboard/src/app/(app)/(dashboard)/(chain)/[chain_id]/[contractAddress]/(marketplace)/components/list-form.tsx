@@ -1,10 +1,10 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
-  Box,
   Flex,
   FormControl,
   Input,
@@ -539,19 +539,28 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                         </Card>
                       }
                     >
-                      <Box
-                        borderRadius="lg"
-                        cursor="pointer"
+                      <div
+                        className={cn(
+                          "cursor-pointer overflow-hidden rounded-lg",
+                          isSelected(nft) &&
+                            "outline outline-3 outline-purple-500",
+                        )}
                         onClick={() =>
                           isSelected(nft)
                             ? form.setValue("selected", undefined)
                             : form.setValue("selected", nft)
                         }
-                        outline={isSelected(nft) ? "3px solid" : undefined}
-                        outlineColor={
-                          isSelected(nft) ? "purple.500" : undefined
-                        }
-                        overflow="hidden"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            isSelected(nft)
+                              ? form.setValue("selected", undefined)
+                              : form.setValue("selected", nft);
+                          }
+                        }}
+                        tabIndex={0}
+                        role="button"
+                        aria-pressed={isSelected(nft)}
                       >
                         <NFTMediaWithEmptyState
                           metadata={nft.metadata}
@@ -559,7 +568,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                           height="140px"
                           requireInteraction
                         />
-                      </Box>
+                      </div>
                     </Tooltip>
                   );
                 })}

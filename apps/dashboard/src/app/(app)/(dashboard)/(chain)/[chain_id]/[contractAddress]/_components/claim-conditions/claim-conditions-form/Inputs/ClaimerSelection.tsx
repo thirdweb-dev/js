@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Box, Flex, Select } from "@chakra-ui/react";
+import { Flex, Select } from "@chakra-ui/react";
 import { UploadIcon } from "lucide-react";
 import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
@@ -147,10 +147,7 @@ export const ClaimerSelection = () => {
             </Flex>
           </Flex>
         ) : (
-          <Box
-            w={{ base: "100%", md: "50%" }}
-            display={{ base: "none", md: "block" }}
-          />
+          <div className="hidden w-full md:block md:w-1/2" />
         )}
       </Flex>
     </CustomFormControl>
