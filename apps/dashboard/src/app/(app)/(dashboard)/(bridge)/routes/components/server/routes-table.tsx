@@ -7,7 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Address } from "thirdweb";
-import { checksumAddress } from "thirdweb/utils";
 import { getRoutes } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
 import { RouteListCard } from "./routelist-card";
@@ -25,18 +24,15 @@ export type SearchParams = Partial<{
 
 // 120 is divisible by 2, 3, and 4 so card layout looks nice
 const DEFAULT_PAGE_SIZE = 120;
-const DEFAULT_PAGE = 1;
 
 async function getRoutesToRender(params: SearchParams) {
   const filters: Partial<{
-    limit: number;
-    offset: number;
+    originQuery?: string;
+    destinationQuery?: string;
     originChainId?: number;
     originTokenAddress?: Address;
     destinationChainId?: number;
     destinationTokenAddress?: Address;
-    originTextQuery?: string;
-    destinationTextQuery?: string;
   }> = {};
 
   if (params.type === "origin" || typeof params.type === "undefined") {
@@ -45,7 +41,7 @@ async function getRoutesToRender(params: SearchParams) {
     } else if (Number.isInteger(Number(params.query))) {
       filters.originChainId = Number(params.query);
     } else if (params.query) {
-      filters.originTextQuery = params.query;
+      filters.originQuery = params.query;
     }
   } else if (params.type === "destination") {
     if (params.query?.startsWith("0x")) {
@@ -53,69 +49,20 @@ async function getRoutesToRender(params: SearchParams) {
     } else if (Number.isInteger(Number(params.query))) {
       filters.destinationChainId = Number(params.query);
     } else if (params.query) {
-      filters.destinationTextQuery = params.query;
+      filters.destinationQuery = params.query;
     }
   }
-  // Temporary, will update this after the /routes endpoint
-  let routes = await getRoutes({ limit: 500_000 });
-
-  const totalCount = routes.length;
-
-  if (filters.originChainId) {
-    routes = routes.filter(
-      (route) => route.originToken.chainId === filters.originChainId,
-    );
-  }
-  if (filters.originTokenAddress) {
-    const originTokenAddress = filters.originTokenAddress;
-    routes = routes.filter(
-      (route) =>
-        checksumAddress(route.originToken.address) ===
-        checksumAddress(originTokenAddress),
-    );
-  }
-  if (filters.destinationChainId) {
-    routes = routes.filter(
-      (route) => route.destinationToken.chainId === filters.destinationChainId,
-    );
-  }
-  if (filters.destinationTokenAddress) {
-    const destinationTokenAddress = filters.destinationTokenAddress;
-    routes = routes.filter(
-      (route) =>
-        checksumAddress(route.destinationToken.address) ===
-        checksumAddress(destinationTokenAddress),
-    );
-  }
-
-  if (filters.originTextQuery) {
-    const originTextQuery = filters.originTextQuery.toLowerCase();
-    routes = routes.filter((route) => {
-      return (
-        route.originToken.name.toLowerCase().includes(originTextQuery) ||
-        route.originToken.symbol.toLowerCase().includes(originTextQuery)
-      );
-    });
-  }
-
-  if (filters.destinationTextQuery) {
-    const destinationTextQuery = filters.destinationTextQuery.toLowerCase();
-    routes = routes.filter((route) => {
-      return (
-        route.destinationToken.name
-          .toLowerCase()
-          .includes(destinationTextQuery) ||
-        route.destinationToken.symbol
-          .toLowerCase()
-          .includes(destinationTextQuery)
-      );
-    });
-  }
+  const routes = await getRoutes({
+    limit: DEFAULT_PAGE_SIZE,
+    offset: DEFAULT_PAGE_SIZE * ((params.page || 1) - 1),
+    originQuery: filters.originQuery,
+    destinationQuery: filters.destinationQuery,
+  });
 
   return {
-    routesToRender: routes,
-    totalCount,
-    filteredCount: routes.length,
+    routesToRender: routes.data,
+    totalCount: routes.meta.totalCount,
+    filteredCount: routes.meta.filteredCount,
   };
 }
 
@@ -128,10 +75,9 @@ export async function RoutesData(props: {
     props.searchParams,
   );
 
-  // pagination
-  const totalPages = Math.ceil(routesToRender.length / DEFAULT_PAGE_SIZE);
+  const totalPages = Math.ceil(filteredCount / DEFAULT_PAGE_SIZE);
 
-  const activePage = Number(props.searchParams.page || DEFAULT_PAGE);
+  const activePage = Number(props.searchParams.page || 1);
   const pageSize = DEFAULT_PAGE_SIZE;
   const startIndex = (activePage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
