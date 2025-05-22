@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import type { FiatProvider } from "src/pay/utils/commonTypes.js";
+import type { FiatProvider } from "../../../../../../pay/utils/commonTypes.js";
 import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
