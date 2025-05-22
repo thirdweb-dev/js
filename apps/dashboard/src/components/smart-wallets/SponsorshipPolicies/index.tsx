@@ -3,7 +3,6 @@
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  Box,
   Divider,
   Flex,
   FormControl,
@@ -709,7 +708,7 @@ export function AccountAbstractionSettingsPage(
 
         <Divider />
 
-        <Box alignSelf="flex-end">
+        <div className="self-end">
           <Button
             type="submit"
             colorScheme="primary"
@@ -717,7 +716,7 @@ export function AccountAbstractionSettingsPage(
           >
             Save changes
           </Button>
-        </Box>
+        </div>
       </Flex>
     </Flex>
   );

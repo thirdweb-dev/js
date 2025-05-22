@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
-import { Box, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "app/(app)/team/[team_slug]/(team)/~/usage/storage/your-files";
 import { IpfsUploadButton } from "components/ipfs-upload/button";
@@ -66,9 +66,7 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
             }}
             storageUpload={storageUpload}
           >
-            <Box display={{ base: "none", md: "block" }} mr={1} as="span">
-              Upload to
-            </Box>
+            <span className="mr-1 hidden md:block">Upload to</span>
             IPFS
           </IpfsUploadButton>
         </InputRightElement>

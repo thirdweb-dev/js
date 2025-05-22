@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
-  Box,
   Divider,
   Flex,
   GridItem,
@@ -210,12 +209,7 @@ function ContractFunctionInputs(props: {
           <Divider my={2} />
           <Flex flexDir="column" gap={3}>
             <Heading size="label.lg">Inputs</Heading>
-            <Box
-              borderTopRadius="lg"
-              p={0}
-              overflowX="auto"
-              position="relative"
-            >
+            <div className="relative overflow-x-auto rounded-t-lg p-0">
               <Table size="sm">
                 <Thead>
                   <Tr>
@@ -263,7 +257,7 @@ function ContractFunctionInputs(props: {
                   ))}
                 </Tbody>
               </Table>
-            </Box>
+            </div>
           </Flex>
         </>
       ) : null}
@@ -478,7 +472,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           )}
 
           {events.length > 0 && selectedFunction && (
-            <Box px={4} pt={2} overflowX="hidden">
+            <div className="overflow-x-hidden px-4 pt-2">
               {events.map((fn) => (
                 <FunctionsOrEventsListItem
                   key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
@@ -487,7 +481,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                   setSelectedFunction={setSelectedFunction}
                 />
               ))}
-            </Box>
+            </div>
           )}
         </List>
       </GridItem>

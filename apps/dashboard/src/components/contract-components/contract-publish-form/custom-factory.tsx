@@ -1,6 +1,5 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
-  Box,
   Flex,
   FormControl,
   IconButton,
@@ -77,7 +76,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
         {fields.map((field, index) => (
           <div key={field.id}>
             <FormControl isRequired as={Flex} gap={4}>
-              <Box w={{ base: "full", md: "40%" }}>
+              <div className="w-full md:w-[40%]">
                 <Controller
                   name={`customFactoryAddresses[${index}].key`}
                   control={form.control}
@@ -93,14 +92,14 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
                     );
                   }}
                 />
-              </Box>
-              <Box w="full">
+              </div>
+              <div className="w-full">
                 <Input
                   isRequired
                   {...form.register(`customFactoryAddresses[${index}].value`)}
                   placeholder="Factory contract address"
                 />
-              </Box>
+              </div>
               <IconButton
                 isDisabled={fields.length === 1 || form.formState.isSubmitting}
                 icon={<TrashIcon className="size-5" />}

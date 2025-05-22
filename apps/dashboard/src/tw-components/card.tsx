@@ -1,85 +1,43 @@
-import { Box, type BoxProps } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
+import type * as React from "react";
 
-type DefaultedBoxProps = Pick<
-  BoxProps,
-  "shadow" | "py" | "px" | "borderRadius" | "borderWidth" | "borderColor"
->;
-
-const defaultBoxProps: Required<DefaultedBoxProps> = {
-  shadow: "sm",
-  px: 4,
-  py: 4,
-  borderRadius: "xl",
-  borderWidth: "1px",
-  borderColor: "borderColor",
-};
-
-const borderRadiusMap = {
-  "3xl": "2xl",
-  "2xl": "xl",
-  xl: "lg",
-  lg: "md",
-  md: "sm",
-  sm: "none",
-  none: "none",
-};
-
-interface CardProps extends BoxProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   outlineBorder?: {
     gradient: string;
     width: string;
   };
 }
 
-function getBorderRadius(
-  borderRadius: BoxProps["borderRadius"],
-): BoxProps["borderRadius"] {
-  try {
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    return (borderRadiusMap as any)[borderRadius as any];
-  } catch {
-    return borderRadius;
-  }
-}
-
 export const Card: React.FC<CardProps> = ({
+  className,
   children,
   outlineBorder,
-  ...requiredBoxProps
+  ...props
 }) => {
-  const combinedProps = { ...{ ...defaultBoxProps, ...requiredBoxProps } };
+  const baseClasses = cn(
+    "rounded-xl border border-border bg-card shadow-sm px-4 py-4",
+    className,
+  );
 
+  if (outlineBorder) {
+    return (
+      <div
+        className="relative overflow-hidden"
+        style={{ padding: outlineBorder.width }}
+      >
+        <div
+          className="absolute inset-0 -z-10"
+          style={{ background: outlineBorder.gradient }}
+        />
+        <div className={baseClasses} {...props}>
+          {children}
+        </div>
+      </div>
+    );
+  }
   return (
-    <>
-      {outlineBorder ? (
-        <Box
-          p={outlineBorder.width}
-          borderRadius={combinedProps.borderRadius}
-          position="relative"
-          overflow="hidden"
-          w={combinedProps.w || combinedProps.width}
-        >
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            w="full"
-            h="full"
-            bgGradient={outlineBorder.gradient}
-          />
-
-          <Box
-            {...combinedProps}
-            w="full"
-            borderRadius={getBorderRadius(combinedProps.borderRadius)}
-          >
-            {children}
-          </Box>
-        </Box>
-      ) : (
-        <Box {...combinedProps}>{children}</Box>
-      )}
-    </>
+    <div className={baseClasses} {...props}>
+      {children}
+    </div>
   );
 };
