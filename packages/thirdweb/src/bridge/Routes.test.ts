@@ -155,7 +155,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.routes", () => {
         offset: 1000,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: InvalidRoutesRequest | The provided request is invalid.]`,
+      "[Error: The provided request is invalid.]",
     );
   });
 });

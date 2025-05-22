@@ -1,7 +1,7 @@
 import type { Hex as ox__Hex } from "ox";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { BridgeAction } from "./BridgeAction.js";
+import type { Action } from "./BridgeAction.js";
 import type { Token } from "./Token.js";
 
 export type Route = {
@@ -35,7 +35,7 @@ export type RouteTransaction = {
   /**
    * The action this transaction performs. This can be "approval", "transfer", "buy", or "sell".
    */
-  action: BridgeAction;
+  action: Action;
   /**
    * The transaction ID, used for tracking purposes.
    */

@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
+import { ApiError } from "./types/Errors.js";
 import type { RouteStep } from "./types/Route.js";
 import type { Token } from "./types/Token.js";
 
@@ -191,9 +192,12 @@ export async function prepare(
 
   if (!response.ok) {
     const errorJson = await response.json();
-    throw new Error(
-      `${errorJson.code || response.status} | ${errorJson.message || response.statusText} - ${errorJson.correlationId || "N/A"}`,
-    );
+    throw new ApiError({
+      code: errorJson.code || "UNKNOWN_ERROR",
+      message: errorJson.message || response.statusText,
+      correlationId: errorJson.correlationId || undefined,
+      statusCode: response.status,
+    });
   }
 
   const { data }: { data: OnrampPrepareQuoteResponseData } =

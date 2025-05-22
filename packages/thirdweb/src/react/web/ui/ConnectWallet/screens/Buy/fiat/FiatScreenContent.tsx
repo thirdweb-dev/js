@@ -5,7 +5,6 @@ import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { FiatProvider } from "../../../../../../../pay/utils/commonTypes.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import {
   type Theme,
   iconSize,
@@ -25,7 +24,6 @@ import { Spinner } from "../../../../components/Spinner.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
@@ -227,77 +225,43 @@ export function FiatScreenContent(props: {
         {/* Error message */}
         {errorMsg && (
           <div>
-            {errorMsg.data?.minimumAmountEth ? (
-              <Text color="danger" size="sm" center multiline>
-                Minimum amount is{" "}
-                {formatNumber(Number(errorMsg.data.minimumAmountEth), 6)}{" "}
-                <TokenSymbol
-                  token={toToken}
-                  chain={toChain}
-                  size="sm"
-                  inline
-                  color="danger"
-                />
-              </Text>
-            ) : (
-              <div>
-                <Text color="danger" size="xs" center multiline>
-                  {errorMsg.title}
-                </Text>
-                <Text size="xs" center multiline>
-                  {errorMsg.message}
-                </Text>
-              </div>
-            )}
+            <Text color="danger" size="xs" center multiline>
+              {errorMsg.title}
+            </Text>
+            <Text size="xs" center multiline>
+              {errorMsg.message}
+            </Text>
           </div>
         )}
       </Container>
 
-      {errorMsg?.data?.minimumAmountEth ? (
-        <Button
-          variant="accent"
-          fullWidth
-          onClick={() => {
-            props.setTokenAmount(
-              formatNumber(
-                Number(errorMsg.data?.minimumAmountEth),
-                6,
-              ).toString(),
-            );
-            props.setHasEditedAmount(true);
-          }}
-        >
-          Set Minimum
-        </Button>
-      ) : (
-        <Button
-          variant={disableSubmit ? "outline" : "accent"}
-          data-disabled={disableSubmit}
-          disabled={disableSubmit}
-          fullWidth
-          onClick={() => {
-            trackPayEvent({
-              event: "confirm_onramp_quote",
-              client: client,
-              walletAddress: payer.account.address,
-              walletType: payer.wallet.id,
-              toChainId: toChain.id,
-              toToken: isNativeToken(toToken) ? undefined : toToken.address,
-            });
-            handleSubmit();
-          }}
-          gap="xs"
-        >
-          {fiatQuoteQuery.isLoading ? (
-            <>
-              Getting price quote
-              <Spinner size="sm" color="accentButtonText" />
-            </>
-          ) : (
-            "Continue"
-          )}
-        </Button>
-      )}
+      <Button
+        variant={disableSubmit ? "outline" : "accent"}
+        data-disabled={disableSubmit}
+        disabled={disableSubmit}
+        fullWidth
+        onClick={() => {
+          trackPayEvent({
+            event: "confirm_onramp_quote",
+            client: client,
+            walletAddress: payer.account.address,
+            walletType: payer.wallet.id,
+            toChainId: toChain.id,
+            toToken: isNativeToken(toToken) ? undefined : toToken.address,
+          });
+          handleSubmit();
+        }}
+        gap="xs"
+      >
+        {fiatQuoteQuery.isLoading ? (
+          <>
+            Getting price quote
+            <Spinner size="sm" color="accentButtonText" />
+          </>
+        ) : (
+          "Continue"
+        )}
+      </Button>
     </Container>
   );
 }
