@@ -5,7 +5,8 @@ import { UB_BASE_URL } from "./constants";
 
 type PaymentLink = {
   clientId: string;
-  label?: string;
+  title?: string;
+  imageUrl?: string;
   receiver: string;
   destinationToken: {
     address: string;
@@ -36,7 +37,8 @@ export async function getPaymentLink(props: {
   const { data } = await res.json();
   return {
     clientId: data.clientId,
-    label: data.label,
+    title: data.title,
+    imageUrl: data.imageUrl,
     receiver: data.receiver,
     destinationToken: data.destinationToken,
     amount: data.amount ? BigInt(data.amount) : undefined,
