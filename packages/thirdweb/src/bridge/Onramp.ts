@@ -51,6 +51,7 @@ interface OnrampApiRequestBody {
   currency?: string;
   maxSteps?: number;
   excludeChainIds?: string;
+  paymentLinkId?: string;
 }
 
 /**
@@ -142,6 +143,7 @@ export async function prepare(
     currency,
     maxSteps,
     excludeChainIds,
+    paymentLinkId,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -179,6 +181,9 @@ export async function prepare(
     apiRequestBody.excludeChainIds = Array.isArray(excludeChainIds)
       ? excludeChainIds.join(",")
       : excludeChainIds;
+  }
+  if (paymentLinkId !== undefined) {
+    apiRequestBody.paymentLinkId = paymentLinkId;
   }
 
   const response = await clientFetch(url, {
@@ -238,6 +243,10 @@ export declare namespace prepare {
     currency?: string;
     maxSteps?: number;
     excludeChainIds?: string | string[];
+    /**
+     * @hidden
+     */
+    paymentLinkId?: string;
   };
 
   export type Result = OnrampPrepareQuoteResponseData;

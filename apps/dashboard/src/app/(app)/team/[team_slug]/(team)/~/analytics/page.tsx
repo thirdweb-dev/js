@@ -320,14 +320,16 @@ function AppHighlightsCard({
         "totalVolume"
       }
       data={timeSeriesData}
-      aggregateFn={(_data, key) =>
-        timeSeriesData.reduce((acc, curr) => acc + curr[key], 0)
-      }
-      // Get the trend from the last two COMPLETE periods
+      aggregateFn={(_data, key) => {
+        if (key === "activeUsers") {
+          return Math.max(...timeSeriesData.map((d) => d[key]));
+        }
+        return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
+      }}
       trendFn={(data, key) =>
-        data.filter((d) => (d[key] as number) > 0).length >= 3
+        data.filter((d) => (d[key] as number) > 0).length >= 2
           ? ((data[data.length - 2]?.[key] as number) ?? 0) /
-              ((data[data.length - 3]?.[key] as number) ?? 0) -
+              ((data[0]?.[key] as number) ?? 0) -
             1
           : undefined
       }

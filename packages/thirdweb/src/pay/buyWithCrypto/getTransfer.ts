@@ -60,6 +60,11 @@ export type GetBuyWithCryptoTransferParams = {
    * For direct transfers, specify who will pay for the transfer fee. Can be "sender" or "receiver".
    */
   feePayer?: "sender" | "receiver";
+
+  /**
+   * @hidden
+   */
+  paymentLinkId?: string;
 };
 
 /**
@@ -127,6 +132,7 @@ export async function getBuyWithCryptoTransfer(
       receiver: params.toAddress,
       client: params.client,
       feePayer: params.feePayer,
+      paymentLinkId: params.paymentLinkId,
     });
 
     const firstStep = quote.steps[0];

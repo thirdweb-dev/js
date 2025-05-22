@@ -83,6 +83,7 @@ export type BuyScreenProps = {
   connectOptions: PayEmbedConnectOptions | undefined;
   hiddenWallets?: WalletId[];
   isEmbed: boolean;
+  paymentLinkId?: string;
 };
 
 /**
@@ -151,6 +152,7 @@ type BuyScreenContentProps = {
   hiddenWallets?: WalletId[];
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
+  paymentLinkId?: string;
 };
 
 /**
@@ -347,6 +349,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       <OnRampScreen
         title={props.title}
         transactionMode={payOptions.mode === "transaction"}
+        paymentLinkId={props.paymentLinkId}
         quote={screen.quote}
         onBack={() => {
           setScreen({
@@ -395,6 +398,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           });
         }}
         onSuccess={onSwapSuccess}
+        paymentLinkId={props.paymentLinkId}
       />
     );
   }
@@ -530,6 +534,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
               {screen.id === "buy-with-crypto" && activeAccount && (
                 <SwapScreenContent
                   setScreen={setScreen}
+                  paymentLinkId={props.paymentLinkId}
                   tokenAmount={deferredTokenAmount}
                   toChain={toChain}
                   toToken={toToken}
@@ -585,6 +590,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   payer={payer}
                   setTokenAmount={setTokenAmount}
                   setHasEditedAmount={setHasEditedAmount}
+                  paymentLinkId={props.paymentLinkId}
                 />
               )}
 

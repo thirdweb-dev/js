@@ -36,7 +36,7 @@ async function fetchBuySupportedDestinations({
         originTokenAddress,
         maxSteps: 1,
         sortBy: "popularity",
-        limit: 1000000,
+        limit: 1_000_000,
       });
       const tokens = new Set<string>();
       const chains = new Set<number>();

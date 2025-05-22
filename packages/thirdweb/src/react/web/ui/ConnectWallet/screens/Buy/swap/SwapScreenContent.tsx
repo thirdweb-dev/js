@@ -55,6 +55,7 @@ export function SwapScreenContent(props: {
   setTokenAmount: (amount: string) => void;
   setHasEditedAmount: (hasEdited: boolean) => void;
   disableTokenSelection: boolean;
+  paymentLinkId: undefined | string;
 }) {
   const {
     setScreen,
@@ -121,6 +122,7 @@ export function SwapScreenContent(props: {
           toAmount: tokenAmount,
           client,
           purchaseData: payOptions.purchaseData,
+          paymentLinkId: props.paymentLinkId,
         }
       : undefined;
 

@@ -6,6 +6,7 @@ import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.clien
 import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
 import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
 import type { PayParams } from "./components/types";
+import { payAppThirdwebClient } from "./constants";
 
 const title = "thirdweb Pay";
 const description = "Fast, secure, and simple payments.";
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RoutesPage({
+export default async function PayPage({
   searchParams,
 }: { searchParams: Promise<PayParams> }) {
   const params = await searchParams;
@@ -61,7 +62,7 @@ export default async function RoutesPage({
       : getClientThirdwebClient(undefined);
 
   const tokenContract = getContract({
-    client: getClientThirdwebClient(undefined), // for this RPC call, use the dashboard client
+    client: payAppThirdwebClient,
     // eslint-disable-next-line no-restricted-syntax
     chain: defineChain(Number(params.chainId)),
     address: params.tokenAddress,

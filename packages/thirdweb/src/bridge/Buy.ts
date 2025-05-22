@@ -332,6 +332,7 @@ export async function prepare(
     amount,
     purchaseData,
     maxSteps,
+    paymentLinkId,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -353,6 +354,7 @@ export async function prepare(
       receiver,
       purchaseData,
       maxSteps,
+      paymentLinkId,
     }),
   });
   if (!response.ok) {
@@ -402,6 +404,10 @@ export declare namespace prepare {
     client: ThirdwebClient;
     purchaseData?: unknown;
     maxSteps?: number;
+    /**
+     * @hidden
+     */
+    paymentLinkId?: string;
   };
 
   type Result = PreparedQuote & {

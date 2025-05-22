@@ -144,6 +144,11 @@ export type PayEmbedProps = {
   style?: React.CSSProperties;
 
   className?: string;
+
+  /**
+   * @hidden
+   */
+  paymentLinkId?: string;
 };
 
 /**
@@ -365,6 +370,7 @@ export function PayEmbed(props: PayEmbedProps) {
             client={props.client}
             connectLocale={localeQuery.data}
             hiddenWallets={props.hiddenWallets}
+            paymentLinkId={props.paymentLinkId}
             payOptions={
               props.payOptions || {
                 mode: "fund_wallet",

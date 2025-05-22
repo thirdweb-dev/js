@@ -1,6 +1,6 @@
 import {
+  NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
-  NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
 } from "@/constants/public-envs";
 import {
   THIRDWEB_BRIDGE_URL,
@@ -12,12 +12,11 @@ import {
   THIRDWEB_SOCIAL_API_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
 } from "constants/urls";
+import { getVercelEnv } from "lib/vercel-utils";
 import { createThirdwebClient } from "thirdweb";
 import { setThirdwebDomains } from "thirdweb/utils";
-import { getVercelEnv } from "../../../../lib/vercel-utils";
 
-// returns a thirdweb client with optional JWT passed in
-function getNebulaThirdwebClient() {
+function getPayThirdwebClient() {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
@@ -34,7 +33,7 @@ function getNebulaThirdwebClient() {
 
   return createThirdwebClient({
     secretKey: undefined,
-    clientId: NEXT_PUBLIC_NEBULA_APP_CLIENT_ID,
+    clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
     config: {
       storage: {
         gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
@@ -43,4 +42,4 @@ function getNebulaThirdwebClient() {
   });
 }
 
-export const nebulaAppThirdwebClient = getNebulaThirdwebClient();
+export const payAppThirdwebClient = getPayThirdwebClient();

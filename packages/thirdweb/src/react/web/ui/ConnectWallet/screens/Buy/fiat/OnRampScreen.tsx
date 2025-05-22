@@ -71,6 +71,7 @@ export function OnRampScreen(props: {
   payer: PayerInfo;
   onSuccess: (status: BuyWithFiatStatus) => void;
   receiverAddress: string;
+  paymentLinkId?: string;
 }) {
   const connectedWallets = useConnectedWallets();
   const isAutoMode = isInAppSigner({
@@ -615,6 +616,7 @@ function useSwapMutation(props: {
   client: ThirdwebClient;
   payer: PayerInfo;
   isFiatFlow: boolean;
+  paymentLinkId?: string;
 }) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -646,6 +648,7 @@ function useSwapMutation(props: {
         toTokenAddress: toToken.tokenAddress,
         fromAddress: account.address,
         toAddress: account.address,
+        paymentLinkId: props.paymentLinkId,
         client: props.client,
       });
 

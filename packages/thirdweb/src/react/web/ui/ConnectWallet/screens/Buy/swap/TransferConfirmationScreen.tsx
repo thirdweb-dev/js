@@ -52,6 +52,7 @@ type TransferConfirmationScreenProps = {
   transactionMode?: boolean;
   payOptions?: PayUIOptions;
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
+  paymentLinkId: undefined | string;
 };
 
 export function TransferConfirmationScreen(
@@ -70,6 +71,7 @@ export function TransferConfirmationScreen(
     transactionMode,
     setTransactionHash,
     payOptions,
+    paymentLinkId,
   } = props;
   const [step, setStep] = useState<"approve" | "transfer" | "execute">(
     "transfer",
@@ -105,6 +107,7 @@ export function TransferConfirmationScreen(
           payOptions?.mode === "direct_payment"
             ? payOptions.paymentInfo.feePayer
             : undefined,
+        paymentLinkId: paymentLinkId,
       });
       return transferResponse;
     },
