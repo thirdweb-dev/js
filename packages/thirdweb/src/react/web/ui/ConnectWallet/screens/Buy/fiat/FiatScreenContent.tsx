@@ -111,7 +111,7 @@ export function FiatScreenContent(props: {
           purchaseData: props.payOptions.purchaseData,
           fromAddress: payer.account.address,
           paymentLinkId: paymentLinkId,
-          preferredProvider: preferredProvider ?? "COINBASE",
+          preferredProvider: preferredProvider ?? supportedProviders[0],
         }
       : undefined,
   );
