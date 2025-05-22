@@ -1,1 +1,1 @@
-export { login, type LoginOptions as LoginParams } from "./login.js";
+export { login, type LoginOptions, type LoginResult } from "./login.js";

@@ -4,7 +4,7 @@ export const metadataBase = process.env.VERCEL_ENV
   ? new URL("https://playground.thirdweb.com")
   : undefined;
 
-const getDomain = () => {
+export const getDomain = () => {
   if (process.env.VERCEL_ENV === "production") {
     return "thirdweb.com";
   }

@@ -297,7 +297,7 @@
     "knip": "knip",
     "build:generate": "bun scripts/generate/generate.ts",
     "build:generate-wallets": "bun scripts/wallets/generate.ts",
-    "dev": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
+    "dev": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --outDir ./dist/esm --watch",
     "dev:cjs": "printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json && tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false --watch",
     "dev:esm": "printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
     "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
