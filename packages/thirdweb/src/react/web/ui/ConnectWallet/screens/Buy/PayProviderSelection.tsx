@@ -56,7 +56,7 @@ export const PayProviderSelection = (props: {
         <Button
           variant="ghost"
           onClick={props.onShowProviders}
-          style={{ padding: 0 }}
+          style={{ padding: 0 }} // Padding is managed within children as the button is conditional
         >
           {ProviderItem}
         </Button>
