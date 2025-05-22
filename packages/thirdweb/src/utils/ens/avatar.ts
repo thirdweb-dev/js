@@ -74,7 +74,7 @@ async function isImageUri(options: ParseAvatarOptions): Promise<boolean> {
       return false;
     }
     // fail in NodeJS, since the error is not cors but any other network issue
-    if (Object.hasOwn(globalThis, "Image")) {
+    if (!Object.hasOwn(globalThis, "Image")) {
       return false;
     }
     // in case of cors, use image api to validate if given url is an actual image
