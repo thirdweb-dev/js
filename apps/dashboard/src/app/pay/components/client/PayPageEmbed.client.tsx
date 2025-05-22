@@ -20,7 +20,7 @@ export function PayPageEmbed({
   chainId: number;
   recipientAddress: string;
   paymentLinkId?: string;
-  amount: bigint;
+  amount?: bigint;
   token: { name: string; symbol: string; address: string; decimals: number };
   name?: string;
   image?: string;
@@ -54,7 +54,7 @@ export function PayPageEmbed({
           paymentInfo: {
             chain,
             sellerAddress: recipientAddress,
-            amount: toTokens(amount, token.decimals),
+            amount: amount ? toTokens(amount, token.decimals) : "0.01",
             token: token.address === NATIVE_TOKEN_ADDRESS ? undefined : token,
           },
           onPurchaseSuccess: (result) => {

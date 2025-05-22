@@ -11,7 +11,7 @@ type PaymentLink = {
     decimals: number;
     chainId: number;
   };
-  amount: bigint;
+  amount: bigint | undefined;
   purchaseData: unknown;
 };
 
@@ -32,5 +32,12 @@ export async function getPaymentLink(props: {
   }
 
   const { data } = await res.json();
-  return data as PaymentLink;
+  return {
+    clientId: data.clientId,
+    label: data.label,
+    receiver: data.receiver,
+    destinationToken: data.destinationToken,
+    amount: data.amount ? BigInt(data.amount) : undefined,
+    purchaseData: data.purchaseData,
+  } as PaymentLink;
 }

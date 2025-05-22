@@ -59,7 +59,7 @@ export default async function PayPage({
       paymentLinkId={id}
       chainId={Number(paymentLink.destinationToken.chainId)}
       recipientAddress={paymentLink.receiver}
-      amount={BigInt(paymentLink.amount)}
+      amount={paymentLink.amount ? BigInt(paymentLink.amount) : undefined}
       token={token}
       clientId={paymentLink.clientId}
       name={paymentLink.label}
