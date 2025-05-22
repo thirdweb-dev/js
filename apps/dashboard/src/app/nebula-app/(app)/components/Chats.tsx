@@ -1,8 +1,8 @@
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
-import { AlertCircleIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { AlertCircleIcon, ThumbsUpIcon, ThumbsDownIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { NebulaSwapData } from "../api/chat";
 import type { NebulaUserMessage, NebulaUserMessageContent } from "../api/types";
@@ -224,6 +224,40 @@ function RenderMessage(props: {
     );
   }
 
+  // Feedback for assistant messages
+  if (props.message.type === "assistant") {
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-3">
+          {/* Left Icon */}
+          <div className="-translate-y-[2px] relative shrink-0">
+            <div className="flex size-9 items-center justify-center rounded-full border bg-card">
+              <NebulaIcon className="size-5 text-muted-foreground" />
+            </div>
+          </div>
+          {/* Right Message */}
+          <div className="min-w-0 grow">
+            <ScrollShadow className="rounded-lg">
+              <RenderResponse
+                message={message}
+                isMessagePending={props.isMessagePending}
+                client={props.client}
+                sendMessage={props.sendMessage}
+                nextMessage={props.nextMessage}
+                sessionId={props.sessionId}
+                authToken={props.authToken}
+              />
+            </ScrollShadow>
+            <FeedbackButtons
+              sessionId={props.sessionId}
+              messageText={message.type === "assistant" ? message.text : ""}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-3">
       {/* Left Icon */}
@@ -420,5 +454,57 @@ function StyledMarkdownRenderer(props: {
       li={{ className: "text-foreground" }}
       inlineCode={{ className: "border-none" }}
     />
+  );
+}
+
+function FeedbackButtons({ sessionId, messageText }: { sessionId: string | undefined; messageText: string }) {
+  const [feedback, setFeedback] = useState<"good" | "bad" | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [thankYou, setThankYou] = useState(false);
+
+  async function sendFeedback(rating: "good" | "bad") {
+    setLoading(true);
+    try {
+      await fetch("https://siwa-api.thirdweb-dev.com/v1/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: sessionId,
+          message: messageText,
+          rating,
+        }),
+      });
+      setFeedback(rating);
+      setThankYou(true);
+    } catch (e) {
+      // handle error
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (thankYou) {
+    return <div className="mt-2 text-xs text-muted-foreground">Thank you for your feedback!</div>;
+  }
+
+  return (
+    <div className="flex gap-2 mt-2">
+      <button
+        className="p-1 rounded-full border hover:bg-muted-foreground/10"
+        onClick={() => sendFeedback("good")}
+        disabled={loading}
+        aria-label="Thumbs up"
+      >
+        <ThumbsUpIcon className="size-4 text-green-500" />
+      </button>
+      <button
+        className="p-1 rounded-full border hover:bg-muted-foreground/10"
+        onClick={() => sendFeedback("bad")}
+        disabled={loading}
+        aria-label="Thumbs down"
+      >
+        <ThumbsDownIcon className="size-4 text-red-500" />
+      </button>
+    </div>
   );
 }

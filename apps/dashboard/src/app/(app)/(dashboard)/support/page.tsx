@@ -10,7 +10,7 @@ import contractsIcon from "../../../../../public/assets/support/contracts.png";
 import engineIcon from "../../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../../public/assets/support/wallets.png";
-import { NebulaChatButton } from "../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -129,8 +129,7 @@ export default async function SupportPage() {
     teamId: undefined,
   });
 
-  const supportPromptPrefix =
-    "You are a Customer Success Agent at thirdweb, assisting customers with blockchain and Web3-related issues. Use the following details to craft a professional, empathetic response: ";
+  const supportPromptPrefix ="";
   const examplePrompts = [
     "ERC20 - Transfer Amount Exceeds Allowance",
     "Replacement transaction underpriced / Replacement fee too low",
@@ -157,14 +156,14 @@ export default async function SupportPage() {
               team.
             </p>
             <div className="mt-6 flex w-full flex-col items-center gap-3">
-              <NebulaChatButton
+              <CustomChatButton
                 isLoggedIn={!!accountAddress}
                 networks="all"
                 isFloating={false}
                 pageType="support"
-                label="Ask Nebula AI for support"
+                label="Ask Siwa AI for support"
                 client={client}
-                nebulaParams={{
+                customApiParams={{
                   messagePrefix: supportPromptPrefix,
                   chainIds: [],
                   wallet: accountAddress ?? undefined,
@@ -173,6 +172,7 @@ export default async function SupportPage() {
                   title: prompt,
                   message: prompt,
                 }))}
+                authToken={authToken || undefined}
               />
 
               <Link
