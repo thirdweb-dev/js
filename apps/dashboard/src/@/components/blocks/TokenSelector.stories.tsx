@@ -35,14 +35,28 @@ function Variant(props: {
   label: string;
   selectedChainId?: number;
 }) {
-  const [tokenAddress, setTokenAddress] = useState<string>("");
+  const [token, setToken] = useState<
+    | {
+        address: string;
+        chainId: number;
+      }
+    | undefined
+  >(undefined);
+
   return (
     <BadgeContainer label={props.label}>
       <TokenSelector
-        tokenAddress={tokenAddress}
+        addNativeTokenIfMissing={false}
+        showCheck={false}
+        selectedToken={token}
         chainId={props.selectedChainId}
         client={storybookThirdwebClient}
-        onChange={setTokenAddress}
+        onChange={(v) => {
+          setToken({
+            address: v.address,
+            chainId: v.chainId,
+          });
+        }}
       />
     </BadgeContainer>
   );

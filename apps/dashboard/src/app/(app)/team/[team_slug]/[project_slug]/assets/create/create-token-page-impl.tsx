@@ -10,7 +10,9 @@ import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useRef } from "react";
 import { toast } from "sonner";
 import {
+  NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
+  getAddress,
   getContract,
   sendAndConfirmTransaction,
   toUnits,
@@ -286,6 +288,11 @@ export function CreateTokenAssetPage(props: {
           formValues.saleEnabled && salePercent > 0
             ? formValues.salePrice
             : "0",
+        currencyAddress:
+          getAddress(formValues.saleTokenAddress) ===
+          getAddress(NATIVE_TOKEN_ADDRESS)
+            ? undefined
+            : formValues.saleTokenAddress,
         startTime: new Date(),
         metadata: {
           name:

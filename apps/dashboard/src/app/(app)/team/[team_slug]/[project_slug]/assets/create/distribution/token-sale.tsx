@@ -1,22 +1,22 @@
 "use client";
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useAllChainsData } from "hooks/chains/allChains";
+import type { ThirdwebClient } from "thirdweb";
 import type { TokenDistributionForm } from "../form";
 
 export function TokenSaleSection(props: {
   form: TokenDistributionForm;
   chainId: string;
+  client: ThirdwebClient;
 }) {
   const totalSupply = Number(props.form.watch("supply"));
   const sellSupply = Math.floor(
     (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
   );
-  const { idToChain } = useAllChainsData();
-  const selectedChainMeta = idToChain.get(Number(props.chainId));
 
   const isEnabled = props.form.watch("saleEnabled");
   return (
@@ -43,7 +43,7 @@ export function TokenSaleSection(props: {
         </div>
 
         {isEnabled && (
-          <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="mt-4 flex flex-col gap-6">
             <FormFieldSetup
               label="Sell % of Total Supply"
               isRequired
@@ -66,23 +66,46 @@ export function TokenSaleSection(props: {
               </div>
             </FormFieldSetup>
 
-            <FormFieldSetup
-              label="Price per Token"
-              isRequired
-              errorMessage={props.form.formState.errors.salePrice?.message}
-            >
-              <div className="relative">
-                <DecimalInput
-                  value={props.form.watch("salePrice")}
-                  onChange={(value) => {
-                    props.form.setValue("salePrice", value);
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <FormFieldSetup
+                label="Price per Token"
+                isRequired
+                errorMessage={props.form.formState.errors.salePrice?.message}
+              >
+                <div className="relative">
+                  <DecimalInput
+                    value={props.form.watch("salePrice")}
+                    onChange={(value) => {
+                      props.form.setValue("salePrice", value);
+                    }}
+                  />
+                </div>
+              </FormFieldSetup>
+
+              <FormFieldSetup
+                label="Currency"
+                isRequired
+                errorMessage={
+                  props.form.formState.errors.saleTokenAddress?.message
+                }
+              >
+                <TokenSelector
+                  className="bg-background"
+                  addNativeTokenIfMissing={true}
+                  showCheck={true}
+                  disableAddress={true}
+                  selectedToken={{
+                    address: props.form.watch("saleTokenAddress"),
+                    chainId: Number(props.chainId),
                   }}
+                  onChange={(value) => {
+                    props.form.setValue("saleTokenAddress", value.address);
+                  }}
+                  client={props.client}
+                  chainId={Number(props.chainId)}
                 />
-                <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
-                  {selectedChainMeta?.nativeCurrency.symbol || "ETH"}
-                </span>
-              </div>
-            </FormFieldSetup>
+              </FormFieldSetup>
+            </div>
           </div>
         )}
       </div>

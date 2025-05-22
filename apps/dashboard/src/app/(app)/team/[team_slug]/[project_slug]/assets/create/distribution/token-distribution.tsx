@@ -6,7 +6,7 @@ import {
   type Segment,
 } from "@/components/blocks/distribution-chart";
 import { Input } from "@/components/ui/input";
-import {} from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import { Form } from "../../../../../../../../@/components/ui/form";
 import { StepCard } from "../create-token-card";
 import type {
@@ -22,6 +22,7 @@ export function TokenDistributionFieldset(props: {
   onPrevious: () => void;
   form: TokenDistributionForm;
   chainId: string;
+  client: ThirdwebClient;
 }) {
   const { form } = props;
 
@@ -60,7 +61,11 @@ export function TokenDistributionFieldset(props: {
             </div>
 
             <TokenAirdropSection form={form} />
-            <TokenSaleSection form={form} chainId={props.chainId} />
+            <TokenSaleSection
+              form={form}
+              chainId={props.chainId}
+              client={props.client}
+            />
           </div>
         </StepCard>
       </form>

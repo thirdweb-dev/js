@@ -1,12 +1,13 @@
 "use client";
 
-import {} from "@/components/blocks/multi-step-status/multi-step-status";
-import {} from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+  getAddress,
+} from "thirdweb";
 import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import {
   type CreateAssetFormValues,
@@ -26,6 +27,8 @@ export type CreateTokenFunctions = {
   mintTokens: (values: CreateAssetFormValues) => Promise<void>;
   airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
 };
+
+const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
 
 export function CreateTokenAssetPageUI(props: {
   accountAddress: string;
@@ -64,6 +67,7 @@ export function CreateTokenAssetPageUI(props: {
     values: {
       // sale fieldset
       saleAllocationPercentage: "0",
+      saleTokenAddress: checksummedNativeTokenAddress,
       salePrice: "0.1",
       supply: "1000000",
       saleEnabled: false,
@@ -78,6 +82,13 @@ export function CreateTokenAssetPageUI(props: {
     <div>
       {step === "token-info" && (
         <TokenInfoFieldset
+          onChainUpdated={() => {
+            // if the chain is updated, set the sale token address to the native token address
+            tokenDistributionForm.setValue(
+              "saleTokenAddress",
+              checksummedNativeTokenAddress,
+            );
+          }}
           client={props.client}
           form={tokenInfoForm}
           onNext={() => {
@@ -88,6 +99,7 @@ export function CreateTokenAssetPageUI(props: {
 
       {step === "distribution" && (
         <TokenDistributionFieldset
+          client={props.client}
           form={tokenDistributionForm}
           accountAddress={props.accountAddress}
           chainId={tokenInfoForm.watch("chain")}

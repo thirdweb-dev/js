@@ -1,9 +1,7 @@
 "use client";
 import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import {} from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {} from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -14,11 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
+import { useTrack } from "hooks/analytics/useTrack";
 import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { toDateTimeLocal } from "utils/date-utils";
-import { useTrack } from "../../../../../../../../../hooks/analytics/useTrack";
 import {
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,

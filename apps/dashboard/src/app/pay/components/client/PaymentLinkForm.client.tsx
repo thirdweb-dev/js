@@ -27,6 +27,7 @@ import { resolveEns } from "../../../../lib/ens";
 export function PaymentLinkForm() {
   const [chainId, setChainId] = useState<number>();
   const [recipientAddress, setRecipientAddress] = useState("");
+  // TODO - clean this up later
   const [tokenAddressWithChain, setTokenAddressWithChain] = useState("");
   const [amount, setAmount] = useState("");
   const [title, setTitle] = useState("");
@@ -171,6 +172,10 @@ export function PaymentLinkForm() {
     tokenAddressWithChain,
   ]);
 
+  const [selectedChainId, selectedTokenAddress] = tokenAddressWithChain
+    ? tokenAddressWithChain.split(":")
+    : [];
+
   return (
     <Card className="mx-auto w-full max-w-[500px]">
       <CardHeader>
@@ -203,9 +208,20 @@ export function PaymentLinkForm() {
               Token
             </Label>
             <TokenSelector
-              tokenAddress={tokenAddressWithChain}
+              showCheck={false}
+              addNativeTokenIfMissing={false}
+              selectedToken={
+                selectedChainId && selectedTokenAddress
+                  ? {
+                      chainId: Number(selectedChainId),
+                      address: selectedTokenAddress,
+                    }
+                  : undefined
+              }
               chainId={chainId ?? undefined}
-              onChange={setTokenAddressWithChain}
+              onChange={(value) => {
+                setTokenAddressWithChain(`${value.chainId}:${value.address}`);
+              }}
               className="w-full"
               client={payAppThirdwebClient}
               disabled={!chainId}

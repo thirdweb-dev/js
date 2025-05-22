@@ -1,9 +1,15 @@
 import { useCallback, useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+  getAddress,
+} from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
+import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { useTokensData } from "../../../hooks/tokens/tokens";
 import { replaceIpfsUrl } from "../../../lib/sdk";
 import { fallbackChainIcon } from "../../../utils/chain-icons";
+import type { TokenMetadata } from "../../api/universal-bridge/tokens";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Img } from "./Img";
@@ -11,37 +17,87 @@ import { SelectWithSearch } from "./select-with-search";
 
 type Option = { label: string; value: string };
 
+const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
+
 export function TokenSelector(props: {
-  tokenAddress: string | undefined;
-  onChange: (tokenAddress: string) => void;
+  selectedToken: { chainId: number; address: string } | undefined;
+  onChange: (token: TokenMetadata) => void;
   className?: string;
   popoverContentClassName?: string;
   chainId?: number;
   side?: "left" | "right" | "top" | "bottom";
-  disableChainId?: boolean;
+  disableAddress?: boolean;
   align?: "center" | "start" | "end";
   placeholder?: string;
   client: ThirdwebClient;
   disabled?: boolean;
   enabled?: boolean;
+  showCheck: boolean;
+  addNativeTokenIfMissing: boolean;
 }) {
-  const { tokens, isFetching } = useTokensData({
+  const tokensQuery = useTokensData({
     chainId: props.chainId,
     enabled: props.enabled,
   });
 
+  const { idToChain } = useAllChainsData();
+
+  const tokens = useMemo(() => {
+    if (!tokensQuery.data) {
+      return [];
+    }
+
+    if (props.addNativeTokenIfMissing) {
+      const hasNativeToken = tokensQuery.data.some(
+        (token) => token.address === checksummedNativeTokenAddress,
+      );
+
+      if (!hasNativeToken && props.chainId) {
+        return [
+          {
+            name:
+              idToChain.get(props.chainId)?.nativeCurrency.name ??
+              "Native Token",
+            symbol:
+              idToChain.get(props.chainId)?.nativeCurrency.symbol ?? "ETH",
+            decimals: 18,
+            chainId: props.chainId,
+            address: checksummedNativeTokenAddress,
+          } satisfies TokenMetadata,
+          ...tokensQuery.data,
+        ];
+      }
+    }
+    return tokensQuery.data;
+  }, [
+    tokensQuery.data,
+    props.chainId,
+    props.addNativeTokenIfMissing,
+    idToChain,
+  ]);
+
+  const addressChainToToken = useMemo(() => {
+    const value = new Map<string, TokenMetadata>();
+    for (const token of tokens) {
+      value.set(`${token.chainId}:${token.address}`, token);
+    }
+    return value;
+  }, [tokens]);
+
   const options = useMemo(() => {
-    return tokens.allTokens.map((token) => {
-      return {
-        label: token.symbol,
-        value: `${token.chainId}:${token.address}`,
-      };
-    });
-  }, [tokens.allTokens]);
+    return (
+      tokens.map((token) => {
+        return {
+          label: token.symbol,
+          value: `${token.chainId}:${token.address}`,
+        };
+      }) || []
+    );
+  }, [tokens]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {
-      const token = tokens.addressChainToToken.get(option.value);
+      const token = addressChainToToken.get(option.value);
       if (!token) {
         return false;
       }
@@ -55,12 +111,12 @@ export function TokenSelector(props: {
         token.address.toLowerCase().includes(searchValue.toLowerCase())
       );
     },
-    [tokens],
+    [addressChainToToken],
   );
 
   const renderOption = useCallback(
     (option: Option) => {
-      const token = tokens.addressChainToToken.get(option.value);
+      const token = addressChainToToken.get(option.value);
       if (!token) {
         return option.label;
       }
@@ -87,8 +143,8 @@ export function TokenSelector(props: {
             {token.symbol}
           </span>
 
-          {!props.disableChainId && (
-            <Badge variant="outline" className="gap-2 max-sm:hidden">
+          {!props.disableAddress && (
+            <Badge variant="outline" className="gap-2 py-1 max-sm:hidden">
               <span className="text-muted-foreground">Address</span>
               {shortenAddress(token.address, 4)}
             </Badge>
@@ -96,27 +152,37 @@ export function TokenSelector(props: {
         </div>
       );
     },
-    [tokens, props.disableChainId, props.client],
+    [addressChainToToken, props.disableAddress, props.client],
   );
+
+  const selectedValue = props.selectedToken
+    ? `${props.selectedToken.chainId}:${props.selectedToken.address}`
+    : undefined;
 
   return (
     <SelectWithSearch
       searchPlaceholder="Search by name or symbol"
-      value={props.tokenAddress}
+      value={selectedValue}
       options={options}
       onValueChange={(tokenAddress) => {
-        props.onChange(tokenAddress);
+        const token = addressChainToToken.get(tokenAddress);
+        if (!token) {
+          return;
+        }
+        props.onChange(token);
       }}
       closeOnSelect={true}
-      showCheck={false}
+      showCheck={props.showCheck}
       placeholder={
-        isFetching ? "Loading Tokens..." : props.placeholder || "Select Token"
+        tokensQuery.isPending
+          ? "Loading Tokens..."
+          : props.placeholder || "Select Token"
       }
       overrideSearchFn={searchFn}
       renderOption={renderOption}
       className={props.className}
       popoverContentClassName={props.popoverContentClassName}
-      disabled={isFetching || props.disabled}
+      disabled={tokensQuery.isPending || props.disabled}
       side={props.side}
       align={props.align}
     />

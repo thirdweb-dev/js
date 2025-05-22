@@ -60,6 +60,7 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
+  saleTokenAddress: z.string(),
   salePrice: z.string().refine(
     (value) => {
       const number = Number(value);

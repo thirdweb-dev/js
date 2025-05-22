@@ -3,7 +3,6 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
-import {} from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import {
   FormControl,
@@ -25,6 +24,7 @@ export function TokenInfoFieldset(props: {
   client: ThirdwebClient;
   onNext: () => void;
   form: TokenInfoForm;
+  onChainUpdated: () => void;
 }) {
   const { form } = props;
   return (
@@ -104,6 +104,7 @@ export function TokenInfoFieldset(props: {
                     chainId={Number(form.watch("chain"))}
                     onChange={(chain) => {
                       form.setValue("chain", chain.toString());
+                      props.onChainUpdated();
                     }}
                     disableChainId
                   />
