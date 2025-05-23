@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { Changelog } from "./_components/Changelog";
+import { FreePlanUpsellBannerUI } from "./_components/FreePlanUpsellBannerUI";
 import { InviteTeamMembersButton } from "./_components/invite-team-members-button";
 import {
   type ProjectWithAnalytics,
@@ -55,11 +56,18 @@ export default async function Page(props: {
       <div className="container flex grow flex-col gap-4 lg:flex-row">
         {/* left */}
         <div className="flex grow flex-col gap-6 pt-8 lg:pb-20">
-          <DismissibleAlert
-            title="Looking for Engines?"
-            description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
-            localStorageId={`${team.id}-engines-alert`}
-          />
+          {team.billingPlan === "free" ? (
+            <FreePlanUpsellBannerUI
+              teamSlug={team.slug}
+              highlightPlan="growth"
+            />
+          ) : (
+            <DismissibleAlert
+              title="Looking for Engines?"
+              description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
+              localStorageId={`${team.id}-engines-alert`}
+            />
+          )}
 
           <TeamProjectsPage
             projects={projectsWithTotalWallets}

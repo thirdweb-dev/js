@@ -1,6 +1,10 @@
+"use client";
+
 import type { Team } from "@/api/team";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useTrack } from "../../../hooks/analytics/useTrack";
 
 const teamPlanToBadgeVariant: Record<
   Team["billingPlan"],
@@ -31,11 +35,12 @@ export function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
 }
 
 export function TeamPlanBadge(props: {
+  teamSlug: string;
   plan: Team["billingPlan"];
   className?: string;
   postfix?: string;
 }) {
-  return (
+  const badge = (
     <Badge
       variant={teamPlanToBadgeVariant[props.plan]}
       className={cn("px-1.5 capitalize", props.className)}
@@ -43,4 +48,25 @@ export function TeamPlanBadge(props: {
       {`${getTeamPlanBadgeLabel(props.plan)}${props.postfix || ""}`}
     </Badge>
   );
+
+  const track = useTrack();
+
+  if (props.plan === "free") {
+    return (
+      <Link
+        href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true`}
+        onClick={() => {
+          track({
+            category: "billing",
+            action: "show_plans",
+            label: "team_badge",
+          });
+        }}
+      >
+        {badge}
+      </Link>
+    );
+  }
+
+  return badge;
 }

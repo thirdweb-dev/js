@@ -113,6 +113,7 @@ export function ApplyForOpCredits(props: {
             <TeamPlanBadge
               className="absolute top-5 right-6"
               plan={creditsRecord.plan}
+              teamSlug={team.slug}
             />
           </div>
 

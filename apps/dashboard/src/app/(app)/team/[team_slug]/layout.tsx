@@ -1,8 +1,8 @@
 import { getTeamBySlug } from "@/api/team";
 import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { PosthogIdentifierServer } from "components/wallets/PosthogIdentifierServer";
 import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getAuthToken } from "../../api/lib/getAuthToken";
@@ -37,17 +37,25 @@ export default async function RootTeamLayout(props: {
   return (
     <div className="flex min-h-dvh flex-col">
       <div className="flex grow flex-col">
-        {team.billingPlan === "starter_legacy" && (
-          <StarterLegacyDiscontinuedBanner teamSlug={team_slug} />
-        )}
+        {(() => {
+          // Show only one banner at a time following priority:
+          // 1. Service cut off (invalid payment)
+          // 2. Past due invoices
+          // 3. Starter legacy plan discontinued notice
+          if (team.billingStatus === "invalidPayment") {
+            return <ServiceCutOffBanner teamSlug={team_slug} />;
+          }
 
-        {team.billingStatus === "pastDue" && (
-          <PastDueBanner teamSlug={team_slug} />
-        )}
+          if (team.billingStatus === "pastDue") {
+            return <PastDueBanner teamSlug={team_slug} />;
+          }
 
-        {team.billingStatus === "invalidPayment" && (
-          <ServiceCutOffBanner teamSlug={team_slug} />
-        )}
+          if (team.billingPlan === "starter_legacy") {
+            return <StarterLegacyDiscontinuedBanner teamSlug={team_slug} />;
+          }
+
+          return null;
+        })()}
 
         {props.children}
       </div>
@@ -80,12 +88,14 @@ function StarterLegacyDiscontinuedBanner(props: {
           size="sm"
           className="mt-3 gap-2 border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800"
         >
-          <Link
+          <TrackedLinkTW
             href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true`}
+            category="billingBanner"
+            label="starterLegacy_selectPlan"
           >
             Select a new plan
             <ArrowRightIcon className="size-4" />
-          </Link>
+          </TrackedLinkTW>
         </Button>
       </div>
     </div>

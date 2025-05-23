@@ -116,7 +116,7 @@ function TeamRow(props: {
         <div>
           <div className="flex items-center gap-3">
             <p className="font-semibold text-sm">{props.team.name}</p>
-            <TeamPlanBadge plan={plan} />
+            <TeamPlanBadge plan={plan} teamSlug={props.team.slug} />
           </div>
           <p className="text-muted-foreground text-sm capitalize">
             {props.role.toLowerCase()}

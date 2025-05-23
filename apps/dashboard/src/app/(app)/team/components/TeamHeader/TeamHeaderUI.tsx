@@ -66,7 +66,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             />
             <span> {currentTeam.name} </span>
             <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
-            <TeamPlanBadge plan={teamPlan} />
+            <TeamPlanBadge plan={teamPlan} teamSlug={currentTeam.slug} />
           </Link>
 
           <TeamAndProjectSelectorPopoverButton

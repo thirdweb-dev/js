@@ -63,7 +63,11 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
     >
       <div className="inline-flex items-center gap-2">
         {isUpgradeRequired && (
-          <TeamPlanBadge plan={props.requiredPlan} postfix="+" />
+          <TeamPlanBadge
+            plan={props.requiredPlan}
+            teamSlug={props.teamSlug}
+            postfix="+"
+          />
         )}
         <Switch
           {...props.switchProps}

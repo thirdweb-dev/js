@@ -15,7 +15,7 @@ export function PlanCard({ creditsRecord, teamSlug }: PlanCardProps) {
         <h2 className="font-semibold text-foreground text-lg tracking-tight">
           {creditsRecord.upTo || "Up To"} {creditsRecord.credits} Gas Credits
         </h2>
-        <TeamPlanBadge plan={creditsRecord.plan} />
+        <TeamPlanBadge plan={creditsRecord.plan} teamSlug={teamSlug} />
       </div>
 
       <div className="flex flex-col gap-2 px-6 py-4">

@@ -115,7 +115,10 @@ export function TeamSelectionUI(props: {
                         <TeamVerifiedIcon domain={team.verifiedDomain} />
                       </div>
 
-                      <TeamPlanBadge plan={team.billingPlan} />
+                      <TeamPlanBadge
+                        plan={team.billingPlan}
+                        teamSlug={team.slug}
+                      />
                     </Link>
                   </Button>
                 </li>

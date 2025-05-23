@@ -101,7 +101,10 @@ export default async function Page(props: {
                     >
                       {team.name}
                     </Link>
-                    <TeamPlanBadge plan={team.billingPlan} />
+                    <TeamPlanBadge
+                      plan={team.billingPlan}
+                      teamSlug={team.slug}
+                    />
                     <ChevronRightIcon className="ml-auto size-4 text-muted-foreground group-hover:text-foreground" />
                   </div>
                 );

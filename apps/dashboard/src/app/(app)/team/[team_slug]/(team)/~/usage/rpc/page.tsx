@@ -86,7 +86,7 @@ export default async function RPCUsage(props: {
               <div className="font-bold text-2xl capitalize">
                 {currentRateLimit.toLocaleString()} RPS
               </div>
-              <TeamPlanBadge plan={currentPlan} />
+              <TeamPlanBadge plan={currentPlan} teamSlug={team.slug} />
             </div>
           </CardContent>
         </Card>
