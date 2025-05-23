@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.10
+
+### Patch Changes
+
+- [#7114](https://github.com/thirdweb-dev/js/pull/7114) [`4b9a506`](https://github.com/thirdweb-dev/js/commit/4b9a506fdfaf8d8be5767d3c719f0b77f86131e9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error messages for 403 responses
+
 ## 0.9.9
 
 ### Patch Changes
