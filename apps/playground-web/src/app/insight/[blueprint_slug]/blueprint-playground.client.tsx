@@ -35,6 +35,7 @@ import {
 import { z } from "zod";
 import { MultiNetworkSelector } from "../../../components/blocks/NetworkSelectors";
 import type { BlueprintParameter, BlueprintPathMetadata } from "../utils";
+import { AggregateParameterInput } from "./aggregate-parameter-input.client";
 
 export function BlueprintPlayground(props: {
   metadata: BlueprintPathMetadata;
@@ -426,7 +427,6 @@ function ParameterSection(props: {
   supportedChainIds: number[];
   className?: string;
 }) {
-  const url = `${props.domain}${props.path}`;
   return (
     <div className={cn("p-4 py-6", props.className)}>
       <h3 className="mb-3 font-medium text-sm"> {props.title} </h3>
@@ -449,12 +449,6 @@ function ParameterSection(props: {
           const showTip = description !== undefined || example !== undefined;
 
           const hasError = !!props.form.formState.errors[param.name];
-
-          const placeholder = url.includes(`{${param.name}}`)
-            ? `{${param.name}}`
-            : url.includes(`:${param.name}`)
-              ? `:${param.name}`
-              : "Value";
 
           return (
             <FormField
@@ -521,7 +515,8 @@ function ParameterSection(props: {
                             }}
                             showTip={showTip}
                             hasError={hasError}
-                            placeholder={placeholder}
+                            placeholder={param.description || param.name}
+                            endpointPath={props.path}
                           />
 
                           {showTip && (
@@ -586,6 +581,7 @@ function ParameterInput(props: {
   showTip: boolean;
   hasError: boolean;
   placeholder: string;
+  endpointPath: string;
 }) {
   const { param, field, showTip, hasError, placeholder } = props;
 
@@ -619,6 +615,18 @@ function ParameterInput(props: {
           })}
         </SelectContent>
       </Select>
+    );
+  }
+
+  if (param.name === "aggregate") {
+    return (
+      <AggregateParameterInput
+        field={field}
+        showTip={showTip}
+        hasError={hasError}
+        placeholder={placeholder}
+        endpointPath={props.endpointPath}
+      />
     );
   }
 
