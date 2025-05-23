@@ -18,7 +18,7 @@ const ZERO_BYTES32 =
  * @returns A promise that resolves to an object containing the implementation address and bytecode.
  * @example
  * ```ts
- * import { resolveImplementation } from "thirdweb";
+ * import { resolveImplementation } from "thirdweb/utils";
  * const implementation = await resolveImplementation(contract);
  * ```
  * @contract
