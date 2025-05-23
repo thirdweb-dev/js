@@ -43,6 +43,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
+            placeholder={"Ask Nebula"}
             onLoginClick={props.onLoginClick}
             isConnectingWallet={props.isConnectingWallet}
             showContextSelector={true}
@@ -82,10 +83,7 @@ export function EmptyStateChatPageContent(props: {
   );
 }
 
-function ExamplePrompt(props: {
-  label: string;
-  onClick: () => void;
-}) {
+function ExamplePrompt(props: { label: string; onClick: () => void }) {
   return (
     <Button
       variant="outline"

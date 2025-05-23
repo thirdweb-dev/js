@@ -339,6 +339,7 @@ export function ChatPageContent(props: {
 
               {messages.length > 0 && (
                 <Chats
+                  teamId={undefined}
                   messages={messages}
                   isChatStreaming={isChatStreaming}
                   authToken={props.authToken}
@@ -353,6 +354,7 @@ export function ChatPageContent(props: {
 
               <div className="container max-w-[800px]">
                 <ChatBar
+                  placeholder="Ask Nebula"
                   isConnectingWallet={connectionStatus === "connecting"}
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}

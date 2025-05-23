@@ -3,7 +3,9 @@ import { getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
+import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
 import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
+import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -77,6 +79,19 @@ export default async function ProjectLayout(props: {
         <ProjectSidebarLayout layoutPath={layoutPath}>
           {props.children}
         </ProjectSidebarLayout>
+      </div>
+      <div className="fixed right-6 bottom-6 z-50">
+        <CustomChatButton
+          isLoggedIn={true}
+          networks="all"
+          isFloating={true}
+          pageType="support"
+          label="Ask AI Assistant"
+          examplePrompts={siwaExamplePrompts}
+          teamId={team.id}
+          clientId={project.publishableKey}
+          authToken={authToken}
+        />
       </div>
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </SidebarProvider>

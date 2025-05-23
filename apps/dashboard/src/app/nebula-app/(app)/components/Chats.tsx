@@ -1,9 +1,11 @@
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
-import { AlertCircleIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { AlertCircleIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "../../../../@/components/ui/button";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 import type { NebulaSwapData } from "../api/chat";
 import type { NebulaUserMessage, NebulaUserMessageContent } from "../api/types";
 import { NebulaIcon } from "../icons/NebulaIcon";
@@ -72,6 +74,7 @@ export function Chats(props: {
   enableAutoScroll: boolean;
   useSmallText?: boolean;
   sendMessage: (message: NebulaUserMessage) => void;
+  teamId: string | undefined;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -153,6 +156,7 @@ export function Chats(props: {
                     nextMessage={props.messages[index + 1]}
                     authToken={props.authToken}
                     sessionId={props.sessionId}
+                    teamId={props.teamId}
                   />
                 </div>
               );
@@ -172,6 +176,7 @@ function RenderMessage(props: {
   sendMessage: (message: NebulaUserMessage) => void;
   nextMessage: ChatMessage | undefined;
   authToken: string;
+  teamId: string | undefined;
   sessionId: string | undefined;
 }) {
   const { message } = props;
@@ -220,6 +225,41 @@ function RenderMessage(props: {
 
           return null;
         })}
+      </div>
+    );
+  }
+
+  // Feedback for assistant messages
+  if (props.message.type === "assistant") {
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-3">
+          {/* Left Icon */}
+          <div className="-translate-y-[2px] relative shrink-0">
+            <div className="flex size-9 items-center justify-center rounded-full border bg-card">
+              <NebulaIcon className="size-5 text-muted-foreground" />
+            </div>
+          </div>
+          {/* Right Message */}
+          <div className="min-w-0 grow">
+            <ScrollShadow className="rounded-lg">
+              <RenderResponse
+                message={message}
+                isMessagePending={props.isMessagePending}
+                client={props.client}
+                sendMessage={props.sendMessage}
+                nextMessage={props.nextMessage}
+                sessionId={props.sessionId}
+                authToken={props.authToken}
+              />
+            </ScrollShadow>
+            <FeedbackButtons
+              sessionId={props.sessionId}
+              authToken={props.authToken}
+              teamId={props.teamId}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -420,5 +460,83 @@ function StyledMarkdownRenderer(props: {
       li={{ className: "text-foreground" }}
       inlineCode={{ className: "border-none" }}
     />
+  );
+}
+
+function FeedbackButtons({
+  sessionId,
+  authToken,
+  teamId,
+}: {
+  sessionId: string | undefined;
+  authToken: string;
+  teamId: string | undefined;
+}) {
+  const [, setFeedback] = useState<1 | -1 | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [thankYou, setThankYou] = useState(false);
+  const trackEvent = useTrack();
+
+  async function sendFeedback(rating: 1 | -1) {
+    setLoading(true);
+    try {
+      trackEvent({
+        category: "siwa",
+        action: "submit-feedback",
+        rating: rating === 1 ? "good" : "bad",
+        sessionId,
+        teamId,
+      });
+      const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
+      await fetch(`${apiUrl}/v1/chat/feedback`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+          ...(teamId ? { "x-team-id": teamId } : {}),
+        },
+        body: JSON.stringify({
+          conversationId: sessionId,
+          feedbackRating: rating,
+        }),
+      });
+      setFeedback(rating);
+      setThankYou(true);
+    } catch {
+      // TODO handle error
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (thankYou) {
+    return (
+      <div className="mt-2 text-muted-foreground text-xs">
+        Thank you for your feedback!
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-2 flex gap-2">
+      <Button
+        className="rounded-full border p-2 hover:bg-muted-foreground/10"
+        variant="ghost"
+        onClick={() => sendFeedback(-1)}
+        disabled={loading}
+        aria-label="Thumbs down"
+      >
+        <ThumbsDownIcon className="size-4 text-red-500" />
+      </Button>
+      <Button
+        className="rounded-full border p-2 hover:bg-muted-foreground/10"
+        variant="ghost"
+        onClick={() => sendFeedback(1)}
+        disabled={loading}
+        aria-label="Thumbs up"
+      >
+        <ThumbsUpIcon className="size-4 text-green-500" />
+      </Button>
+    </div>
   );
 }

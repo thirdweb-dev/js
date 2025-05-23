@@ -68,6 +68,7 @@ export function ChatBar(props: {
   isConnectingWallet: boolean;
   allowImageUpload: boolean;
   onLoginClick: undefined | (() => void);
+  placeholder: string;
 }) {
   const [message, setMessage] = useState(props.prefillMessage || "");
   const selectedChainIds = props.context?.chainIds?.map((x) => Number(x)) || [];
@@ -142,7 +143,7 @@ export function ChatBar(props: {
         <div className="p-2">
           <div className="max-h-[200px] overflow-y-auto">
             <AutoResizeTextarea
-              placeholder={"Ask Nebula"}
+              placeholder={props.placeholder}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => {
