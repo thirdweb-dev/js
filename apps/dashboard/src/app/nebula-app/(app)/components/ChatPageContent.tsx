@@ -339,6 +339,7 @@ export function ChatPageContent(props: {
 
               {messages.length > 0 && (
                 <Chats
+                  teamId={undefined}
                   messages={messages}
                   isChatStreaming={isChatStreaming}
                   authToken={props.authToken}

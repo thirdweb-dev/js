@@ -70,9 +70,8 @@ function CustomChatContentLoggedIn(props: {
       const textMessage = userMessage.content.find((x) => x.type === "text");
 
       trackEvent({
-        category: "floating_siwa",
-        action: "send",
-        label: "message",
+        category: "siwa",
+        action: "send-message",
         message: textMessage?.text,
         sessionId: sessionId,
       });
@@ -159,6 +158,7 @@ function CustomChatContentLoggedIn(props: {
         />
       ) : (
         <Chats
+          teamId={props.teamId}
           messages={messages}
           isChatStreaming={isChatStreaming}
           authToken={props.authToken}
@@ -172,7 +172,7 @@ function CustomChatContentLoggedIn(props: {
         />
       )}
       <ChatBar
-        placeholder={"Ask AI"}
+        placeholder={"Ask AI Assistant"}
         onLoginClick={undefined}
         client={props.client}
         isConnectingWallet={connectionStatus === "connecting"}

@@ -227,6 +227,7 @@ function Variant(props: {
 }) {
   return (
     <Chats
+      teamId={undefined}
       enableAutoScroll={false}
       setEnableAutoScroll={() => {}}
       client={storybookThirdwebClient}

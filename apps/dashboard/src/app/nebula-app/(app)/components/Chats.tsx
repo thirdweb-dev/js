@@ -5,6 +5,7 @@ import { AlertCircleIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button } from "../../../../@/components/ui/button";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 import type { NebulaSwapData } from "../api/chat";
 import type { NebulaUserMessage, NebulaUserMessageContent } from "../api/types";
 import { NebulaIcon } from "../icons/NebulaIcon";
@@ -254,7 +255,6 @@ function RenderMessage(props: {
             </ScrollShadow>
             <FeedbackButtons
               sessionId={props.sessionId}
-              messageText={message.type === "assistant" ? message.text : ""}
               authToken={props.authToken}
               teamId={props.teamId}
             />
@@ -465,22 +465,28 @@ function StyledMarkdownRenderer(props: {
 
 function FeedbackButtons({
   sessionId,
-  messageText,
   authToken,
   teamId,
 }: {
   sessionId: string | undefined;
-  messageText: string;
   authToken: string;
   teamId: string | undefined;
 }) {
-  const [, setFeedback] = useState<"good" | "bad" | null>(null);
+  const [, setFeedback] = useState<1 | -1 | null>(null);
   const [loading, setLoading] = useState(false);
   const [thankYou, setThankYou] = useState(false);
+  const trackEvent = useTrack();
 
-  async function sendFeedback(rating: "good" | "bad") {
+  async function sendFeedback(rating: 1 | -1) {
     setLoading(true);
     try {
+      trackEvent({
+        category: "siwa",
+        action: "submit-feedback",
+        rating: rating === 1 ? "good" : "bad",
+        sessionId,
+        teamId,
+      });
       const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
       await fetch(`${apiUrl}/v1/chat/feedback`, {
         method: "POST",
@@ -491,8 +497,7 @@ function FeedbackButtons({
         },
         body: JSON.stringify({
           conversationId: sessionId,
-          message: messageText,
-          rating,
+          feedbackRating: rating,
         }),
       });
       setFeedback(rating);
@@ -517,7 +522,7 @@ function FeedbackButtons({
       <Button
         className="rounded-full border p-2 hover:bg-muted-foreground/10"
         variant="ghost"
-        onClick={() => sendFeedback("bad")}
+        onClick={() => sendFeedback(-1)}
         disabled={loading}
         aria-label="Thumbs down"
       >
@@ -526,7 +531,7 @@ function FeedbackButtons({
       <Button
         className="rounded-full border p-2 hover:bg-muted-foreground/10"
         variant="ghost"
-        onClick={() => sendFeedback("good")}
+        onClick={() => sendFeedback(1)}
         disabled={loading}
         aria-label="Thumbs up"
       >
