@@ -19,6 +19,7 @@ const buttonVariants = cva(
           "bg-secondary hover:bg-secondary/80 text-secondary-foreground ",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        pink: "border border-nebula-pink-foreground !text-nebula-pink-foreground bg-[hsl(var(--nebula-pink-foreground)/5%)] hover:bg-nebula-pink-foreground/10 dark:!text-foreground dark:bg-nebula-pink-foreground/10 dark:hover:bg-nebula-pink-foreground/20",
         upsell:
           "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200",
       },

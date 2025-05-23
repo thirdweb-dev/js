@@ -22,5 +22,8 @@ export { WalletsSmartIcon } from "./products/wallets/WalletsSmartIcon";
 //sidebar
 export { NebulaSideIcon } from "./sidebar/NebulaSideIcon";
 
+// nebula chat
+export { NebulaIcon } from "./NebulaIcon";
+
 // general purposes
 export { ExternalLinkIcon } from "./ExternalLinkIcon";

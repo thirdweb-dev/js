@@ -6,6 +6,8 @@ import { Fira_Code, Inter } from "next/font/google";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import { StickyTopContainer } from "../components/Document/StickyTopContainer";
+import { CustomChatButton } from "../components/SiwaChat/CustomChatButton";
+import { examplePrompts } from "../components/SiwaChat/examplePrompts";
 import { Banner } from "../components/others/Banner";
 import { EnableSmoothScroll } from "../components/others/SmoothScroll";
 import { PHProvider } from "../lib/posthog/Posthog";
@@ -66,6 +68,17 @@ export default function RootLayout({
               showSpinner={false}
             />
             <EnableSmoothScroll />
+
+            {/* Siwa AI Chat Widget Floating Button */}
+            <CustomChatButton
+              label="Ask AI"
+              networks={null}
+              pageType="support"
+              customApiParams={{}}
+              examplePrompts={examplePrompts}
+              authToken={undefined}
+              requireLogin={false}
+            />
 
             <div className="relative flex min-h-screen flex-col">
               <StickyTopContainer>

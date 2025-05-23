@@ -36,6 +36,9 @@ module.exports = {
       lg: "var(--radius)",
       md: "calc(var(--radius) - 2px)",
       sm: "calc(var(--radius) - 4px)",
+      xl: "calc(var(--radius) + 4px)",
+      "2xl": "1rem",
+      "3xl": "1.5rem",
       full: "9999px",
       none: "0",
     },
@@ -76,6 +79,9 @@ module.exports = {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
+        },
+        "nebula-pink": {
+          foreground: "hsl(var(--nebula-pink-foreground))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",

@@ -47,6 +47,7 @@ html {
     --success-text: 142.09 70.56% 35.29%;
     --warning-text: 38 92% 40%;
     --destructive-text: 357.15deg 100% 68.72%;
+    --nebula-pink-foreground: 321 90% 51%;
 
     /* Borders */
     --border: 0 0% 85%;
@@ -83,6 +84,7 @@ html {
     --destructive-text: 360 72% 55%;
     --success-text: 142 75% 50%;
     --inverted-foreground: 0 0% 0%;
+    --nebula-pink-foreground: 321 90% 51%;
 
     /* Borders */
     --border: 0 0% 15%;
@@ -157,5 +159,13 @@ button {
 }
 
 .hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
