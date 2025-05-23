@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -10,6 +9,7 @@ import contractsIcon from "../../../../../public/assets/support/contracts.png";
 import engineIcon from "../../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../../public/assets/support/wallets.png";
+import { getTeams } from "../../../../@/api/team";
 import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import {
   getAuthToken,
@@ -118,24 +118,21 @@ const HELP_PRODUCTS = [
   },
 ] as const;
 
+export const siwaExamplePrompts = [
+  "I see thirdweb support reference # in my console log please help me",
+  "What does this contract revert error mean",
+  "I want to add inapp wallet with sign in with X/twitter auth to my react app",
+  "Here is my code can you tell me why i'm seeing this error",
+];
+
 export default async function SupportPage() {
   const [authToken, accountAddress] = await Promise.all([
     getAuthToken(),
     getAuthTokenWalletAddress(),
   ]);
 
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: undefined,
-  });
-
-  const supportPromptPrefix = "";
-  const examplePrompts = [
-    "ERC20 - Transfer Amount Exceeds Allowance",
-    "Replacement transaction underpriced / Replacement fee too low",
-    "Nonce too low: next nonce #, tx nonce #",
-    "Nonce too high",
-  ];
+  const teams = await getTeams();
+  const teamId = teams?.[0]?.id ?? undefined;
 
   return (
     <main className="flex flex-col gap-12 pb-12">
@@ -161,18 +158,14 @@ export default async function SupportPage() {
                 networks="all"
                 isFloating={false}
                 pageType="support"
-                label="Ask Siwa AI for support"
-                client={client}
-                customApiParams={{
-                  messagePrefix: supportPromptPrefix,
-                  chainIds: [],
-                  wallet: accountAddress ?? undefined,
-                }}
+                label="Ask AI for support"
                 examplePrompts={examplePrompts.map((prompt) => ({
                   title: prompt,
                   message: prompt,
                 }))}
                 authToken={authToken || undefined}
+                teamId={teamId}
+                clientId={undefined}
               />
 
               <Link

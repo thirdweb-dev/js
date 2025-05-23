@@ -6,12 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import {
-  useActiveWallet,
-  useActiveWalletConnectionStatus,
-} from "thirdweb/react";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import type { NebulaContext } from "../../api/chat";
-// import { createSession } from "../../api/session"; // REMOVE
 import type { NebulaUserMessage } from "../../api/types";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
@@ -21,17 +17,11 @@ import type { ChatMessage } from "../Chats";
 
 export default function CustomChatContent(props: {
   authToken: string | undefined;
+  teamId: string | undefined;
+  clientId: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
-  pageType: "chain" | "contract" | "support";
   networks: NebulaContext["networks"];
-  customApiParams:
-    | {
-        messagePrefix: string;
-        chainIds: number[];
-        wallet: string | undefined;
-      }
-    | undefined;
   requireLogin?: boolean;
 }) {
   if (props.requireLogin !== false && !props.authToken) {
@@ -41,28 +31,22 @@ export default function CustomChatContent(props: {
   return (
     <CustomChatContentLoggedIn
       networks={props.networks}
+      teamId={props.teamId}
+      clientId={props.clientId}
       authToken={props.authToken || ""}
       client={props.client}
-      customApiParams={props.customApiParams}
       examplePrompts={props.examplePrompts}
-      pageType={props.pageType}
     />
   );
 }
 
 function CustomChatContentLoggedIn(props: {
   authToken: string;
+  teamId: string | undefined;
+  clientId: string | undefined;
   client: ThirdwebClient;
-  pageType: "chain" | "contract" | "support";
   examplePrompts: ExamplePrompt[];
   networks: NebulaContext["networks"];
-  customApiParams:
-    | {
-        messagePrefix: string;
-        chainIds: number[];
-        wallet: string | undefined;
-      }
-    | undefined;
 }) {
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>([]);
@@ -75,19 +59,6 @@ function CustomChatContentLoggedIn(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
-  const activeWallet = useActiveWallet();
-
-  const [contextFilters, setContextFilters] = useState<
-    NebulaContext | undefined
-  >(() => {
-    return {
-      chainIds:
-        props.customApiParams?.chainIds.map((chainId) => chainId.toString()) ||
-        null,
-      walletAddress: props.customApiParams?.wallet || null,
-      networks: props.networks,
-    };
-  });
 
   const handleSendMessage = useCallback(
     async (userMessage: NebulaUserMessage) => {
@@ -103,7 +74,6 @@ function CustomChatContentLoggedIn(props: {
         action: "send",
         label: "message",
         message: textMessage?.text,
-        page: props.pageType,
         sessionId: sessionId,
       });
 
@@ -120,47 +90,32 @@ function CustomChatContentLoggedIn(props: {
         },
       ]);
 
-      const messagePrefix = props.customApiParams?.messagePrefix;
-
       // if this is first message, set the message prefix
       // deep clone `userMessage` to avoid mutating the original message, its a pretty small object so JSON.parse is fine
       const messageToSend = JSON.parse(
         JSON.stringify(userMessage),
       ) as NebulaUserMessage;
 
-      // if this is first message, set the message prefix
-      if (messagePrefix && !userHasSubmittedMessage) {
-        const textMessage = messageToSend.content.find(
-          (x) => x.type === "text",
-        );
-        if (textMessage) {
-          textMessage.text = `${messagePrefix}\n\n${textMessage.text}`;
-        }
-      }
-
       try {
         setChatAbortController(abortController);
         // --- Custom API call ---
-        const payload: any = {
+        const payload = {
           message:
             messageToSend.content.find((x) => x.type === "text")?.text ?? "",
-          authToken: props.authToken,
-          conversationId: "25000000005",
+          conversationId: sessionId,
         };
-        if (sessionId) {
-          payload.conversationId = sessionId;
-        }
-        const response = await fetch(
-          "https://siwa-api.thirdweb-dev.com/api/chat",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-            signal: abortController.signal,
+        const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
+        const response = await fetch(`${apiUrl}/v1/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${props.authToken}`,
+            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+            ...(props.clientId ? { "x-client-id": props.clientId } : {}),
           },
-        );
+          body: JSON.stringify(payload),
+          signal: abortController.signal,
+        });
         const data = await response.json();
         // If the response contains a conversationId, set it as the sessionId for future messages
         if (data.conversationId && data.conversationId !== sessionId) {
@@ -183,7 +138,7 @@ function CustomChatContentLoggedIn(props: {
           {
             type: "assistant",
             request_id: undefined,
-            text: "Sorry, something went wrong.",
+            text: `Sorry, something went wrong. ${error instanceof Error ? error.message : "Unknown error"}`,
           },
         ]);
       } finally {
@@ -191,15 +146,7 @@ function CustomChatContentLoggedIn(props: {
         setEnableAutoScroll(false);
       }
     },
-    [
-      props.authToken,
-      contextFilters,
-      sessionId,
-      props.customApiParams?.messagePrefix,
-      userHasSubmittedMessage,
-      trackEvent,
-      props.pageType,
-    ],
+    [props.authToken, props.clientId, props.teamId, sessionId, trackEvent],
   );
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
@@ -225,22 +172,14 @@ function CustomChatContentLoggedIn(props: {
         />
       )}
       <ChatBar
+        placeholder={"Ask AI"}
         onLoginClick={undefined}
         client={props.client}
         isConnectingWallet={connectionStatus === "connecting"}
-        context={contextFilters}
-        setContext={setContextFilters}
+        context={undefined}
+        setContext={() => {}}
         showContextSelector={false}
-        connectedWallets={
-          props.customApiParams?.wallet && activeWallet
-            ? [
-                {
-                  address: props.customApiParams.wallet,
-                  walletId: activeWallet.id,
-                },
-              ]
-            : []
-        }
+        connectedWallets={[]}
         setActiveWallet={() => {}}
         abortChatStream={() => {
           chatAbortController?.abort();
@@ -275,12 +214,12 @@ function LoggedOutStateChatContent() {
 
       <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
         How can I help you <br className="max-sm:hidden" />
-        onchain today?
+        today?
       </h1>
 
       <div className="h-3" />
       <p className="text-base text-muted-foreground">
-        Sign in to use Nebula AI
+        Sign in to use AI Assistant
       </p>
       <div className="h-5" />
 
@@ -298,7 +237,7 @@ function LoggedOutStateChatContent() {
 }
 
 function EmptyStateChatPageContent(props: {
-  sendMessage: (message: any) => void;
+  sendMessage: (message: NebulaUserMessage) => void;
   examplePrompts: { title: string; message: string }[];
 }) {
   return (
@@ -313,7 +252,7 @@ function EmptyStateChatPageContent(props: {
 
       <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
         How can I help you <br className="max-sm:hidden" />
-        onchain today?
+        today?
       </h1>
 
       <div className="h-6" />

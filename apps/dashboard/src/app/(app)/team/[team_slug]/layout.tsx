@@ -5,6 +5,7 @@ import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { getAuthToken } from "../../api/lib/getAuthToken";
 import { EnsureValidConnectedWalletLoginServer } from "../../components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { isTeamOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
@@ -18,10 +19,15 @@ export default async function RootTeamLayout(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const { team_slug } = await props.params;
+  const authToken = await getAuthToken();
   const team = await getTeamBySlug(team_slug).catch(() => null);
 
   if (!team) {
     redirect("/team");
+  }
+
+  if (!authToken) {
+    redirect("/login");
   }
 
   if (!isTeamOnboardingComplete(team)) {

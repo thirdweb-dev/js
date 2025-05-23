@@ -20,6 +20,7 @@ import { supportedERCs } from "./_utils/detectedFeatures/supportedERCs";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
 import { getContractPageSidebarLinks } from "./_utils/getContractPageSidebarLinks";
+import { examplePrompts } from "../../../../../nebula-app/(app)/data/examplePrompts";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -94,14 +95,6 @@ Users may be considering integrating the contract into their applications. Discu
 
 The following is the user's message:`;
 
-  const examplePrompts: string[] = [
-    "What does this contract do?",
-    "What permissions or roles exist in this contract?",
-    "Which functions are used the most?",
-    "Has this contract been used recently?",
-    "Who are the largest holders/users of this?",
-  ];
-
   return (
     <ContractPageLayout
       chainMetadata={chainMetadata}
@@ -124,10 +117,7 @@ The following is the user's message:`;
           chainIds: [chainId],
           wallet: accountAddress ?? undefined,
         }}
-        examplePrompts={examplePrompts.map((prompt) => ({
-          title: prompt,
-          message: prompt,
-        }))}
+        examplePrompts={examplePrompts}
       />
       {props.children}
     </ContractPageLayout>

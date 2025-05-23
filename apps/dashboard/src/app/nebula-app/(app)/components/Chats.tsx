@@ -4,6 +4,7 @@ import { MarkdownRenderer } from "components/contract-components/published-contr
 import { AlertCircleIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "../../../../@/components/ui/button";
 import type { NebulaSwapData } from "../api/chat";
 import type { NebulaUserMessage, NebulaUserMessageContent } from "../api/types";
 import { NebulaIcon } from "../icons/NebulaIcon";
@@ -72,6 +73,7 @@ export function Chats(props: {
   enableAutoScroll: boolean;
   useSmallText?: boolean;
   sendMessage: (message: NebulaUserMessage) => void;
+  teamId: string | undefined;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -153,6 +155,7 @@ export function Chats(props: {
                     nextMessage={props.messages[index + 1]}
                     authToken={props.authToken}
                     sessionId={props.sessionId}
+                    teamId={props.teamId}
                   />
                 </div>
               );
@@ -172,6 +175,7 @@ function RenderMessage(props: {
   sendMessage: (message: NebulaUserMessage) => void;
   nextMessage: ChatMessage | undefined;
   authToken: string;
+  teamId: string | undefined;
   sessionId: string | undefined;
 }) {
   const { message } = props;
@@ -251,6 +255,8 @@ function RenderMessage(props: {
             <FeedbackButtons
               sessionId={props.sessionId}
               messageText={message.type === "assistant" ? message.text : ""}
+              authToken={props.authToken}
+              teamId={props.teamId}
             />
           </div>
         </div>
@@ -460,17 +466,29 @@ function StyledMarkdownRenderer(props: {
 function FeedbackButtons({
   sessionId,
   messageText,
-}: { sessionId: string | undefined; messageText: string }) {
-  const [feedback, setFeedback] = useState<"good" | "bad" | null>(null);
+  authToken,
+  teamId,
+}: {
+  sessionId: string | undefined;
+  messageText: string;
+  authToken: string;
+  teamId: string | undefined;
+}) {
+  const [, setFeedback] = useState<"good" | "bad" | null>(null);
   const [loading, setLoading] = useState(false);
   const [thankYou, setThankYou] = useState(false);
 
   async function sendFeedback(rating: "good" | "bad") {
     setLoading(true);
     try {
-      await fetch("https://siwa-api.thirdweb-dev.com/v1/feedback", {
+      const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
+      await fetch(`${apiUrl}/v1/chat/feedback`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+          ...(teamId ? { "x-team-id": teamId } : {}),
+        },
         body: JSON.stringify({
           conversationId: sessionId,
           message: messageText,
@@ -479,8 +497,8 @@ function FeedbackButtons({
       });
       setFeedback(rating);
       setThankYou(true);
-    } catch (e) {
-      // handle error
+    } catch {
+      // TODO handle error
     } finally {
       setLoading(false);
     }
@@ -488,30 +506,32 @@ function FeedbackButtons({
 
   if (thankYou) {
     return (
-      <div className="mt-2 text-xs text-muted-foreground">
+      <div className="mt-2 text-muted-foreground text-xs">
         Thank you for your feedback!
       </div>
     );
   }
 
   return (
-    <div className="flex gap-2 mt-2">
-      <button
-        className="p-1 rounded-full border hover:bg-muted-foreground/10"
-        onClick={() => sendFeedback("good")}
-        disabled={loading}
-        aria-label="Thumbs up"
-      >
-        <ThumbsUpIcon className="size-4 text-green-500" />
-      </button>
-      <button
-        className="p-1 rounded-full border hover:bg-muted-foreground/10"
+    <div className="mt-2 flex gap-2">
+      <Button
+        className="rounded-full border p-2 hover:bg-muted-foreground/10"
+        variant="ghost"
         onClick={() => sendFeedback("bad")}
         disabled={loading}
         aria-label="Thumbs down"
       >
         <ThumbsDownIcon className="size-4 text-red-500" />
-      </button>
+      </Button>
+      <Button
+        className="rounded-full border p-2 hover:bg-muted-foreground/10"
+        variant="ghost"
+        onClick={() => sendFeedback("good")}
+        disabled={loading}
+        aria-label="Thumbs up"
+      >
+        <ThumbsUpIcon className="size-4 text-green-500" />
+      </Button>
     </div>
   );
 }

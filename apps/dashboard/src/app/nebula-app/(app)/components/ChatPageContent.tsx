@@ -353,6 +353,7 @@ export function ChatPageContent(props: {
 
               <div className="container max-w-[800px]">
                 <ChatBar
+                  placeholder="Ask Nebula"
                   isConnectingWallet={connectionStatus === "connecting"}
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}

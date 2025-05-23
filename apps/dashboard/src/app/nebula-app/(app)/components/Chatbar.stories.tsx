@@ -166,6 +166,7 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <ChatBar
+        placeholder={"Ask Nebula"}
         isConnectingWallet={props.isConnectingWallet || false}
         client={storybookThirdwebClient}
         abortChatStream={() => {}}

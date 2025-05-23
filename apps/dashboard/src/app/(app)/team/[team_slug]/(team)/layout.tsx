@@ -5,6 +5,8 @@ import { TabPathLinks } from "@/components/ui/tabs";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
 import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
+import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
+import { examplePrompts } from "../../../../nebula-app/(app)/data/examplePrompts";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -91,6 +93,23 @@ export default async function TeamLayout(props: {
       </div>
 
       <main className="flex grow flex-col">{props.children}</main>
+      <div className="fixed right-6 bottom-6 z-50">
+        <CustomChatButton
+          isLoggedIn={true}
+          networks="all"
+          isFloating={true}
+          pageType="support"
+          label="Ask AI Assistant"
+          customApiParams={{
+            messagePrefix: `You are helping a user in the team "${team.name}". `,
+            chainIds: [],
+            wallet: undefined,
+          }}
+          examplePrompts={examplePrompts}
+          teamId={team.id}
+          authToken={authToken}
+        />
+      </div>
       <AppFooter />
     </div>
   );

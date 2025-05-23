@@ -4,9 +4,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import type { ExamplePrompt } from "../../data/examplePrompts";
+import { createThirdwebClient } from "thirdweb";
+import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "../../../../../@/constants/public-envs";
 import CustomChatContent from "./CustomChatContent";
+
+// Create a thirdweb client for the chat functionality
+const client = createThirdwebClient({
+  clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+});
 
 export function CustomChatButton(props: {
   isLoggedIn: boolean;
@@ -14,25 +19,16 @@ export function CustomChatButton(props: {
   isFloating: boolean;
   pageType: "chain" | "contract" | "support";
   label: string;
-  client: ThirdwebClient;
-  customApiParams: any;
-  examplePrompts: ExamplePrompt[];
+  examplePrompts: string[];
   authToken: string | undefined;
+  teamId: string | undefined;
+  clientId: string | undefined;
   requireLogin?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
   const closeModal = useCallback(() => setIsOpen(false), []);
   const ref = useRef<HTMLDivElement>(null);
-
-  // Close on outside click
-  // (optional: can add if you want exact Nebula behavior)
-  // useEffect(() => { ... }, [onOutsideClick]);
-
-  if (isDismissed) {
-    return null;
-  }
 
   return (
     <>
@@ -59,7 +55,7 @@ export function CustomChatButton(props: {
       >
         {/* Header with close button */}
         <div className="flex items-center justify-between border-b px-4 py-2">
-          <div className="font-semibold text-lg flex items-center gap-2">
+          <div className="flex items-center gap-2 font-semibold text-lg">
             <MessageCircleIcon className="size-5 text-muted-foreground" />
             {props.label}
           </div>
@@ -78,10 +74,13 @@ export function CustomChatButton(props: {
           {hasBeenOpened && isOpen && (
             <CustomChatContent
               authToken={props.authToken}
-              client={props.client}
-              examplePrompts={props.examplePrompts}
-              pageType={props.pageType}
-              customApiParams={props.customApiParams}
+              teamId={props.teamId}
+              client={client}
+              clientId={props.clientId}
+              examplePrompts={props.examplePrompts.map((prompt) => ({
+                message: prompt,
+                title: prompt,
+              }))}
               networks={props.networks}
               requireLogin={props.requireLogin}
             />

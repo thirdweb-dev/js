@@ -12,6 +12,8 @@ import {
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
+import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
+import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
 
 export default async function ProjectLayout(props: {
   children: React.ReactNode;
@@ -77,6 +79,19 @@ export default async function ProjectLayout(props: {
         <ProjectSidebarLayout layoutPath={layoutPath}>
           {props.children}
         </ProjectSidebarLayout>
+      </div>
+      <div className="fixed right-6 bottom-6 z-50">
+        <CustomChatButton
+          isLoggedIn={true}
+          networks="all"
+          isFloating={true}
+          pageType="support"
+          label="Ask AI Assistant"
+          examplePrompts={siwaExamplePrompts}
+          teamId={team.id}
+          clientId={project.publishableKey}
+          authToken={authToken}
+        />
       </div>
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </SidebarProvider>
