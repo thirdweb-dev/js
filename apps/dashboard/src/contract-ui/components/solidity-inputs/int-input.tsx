@@ -1,8 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputRightElement } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
 import { useCallback } from "react";
 import { toWei } from "thirdweb";
-import { Button } from "tw-components";
 import type { SolidityInputWithTypeProps } from ".";
 import { validateInt } from "./helpers";
 
@@ -47,21 +47,28 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
 
   const formValue = form.watch(inputName) || "";
 
+  const showConversionButton =
+    formValue.includes(".") || formValue.includes(",");
+
   return (
-    <InputGroup>
+    <div className="relative">
       <Input
         placeholder={solidityType}
         {...restOfInputProps}
         value={form.watch(inputName)}
         onChange={handleChange}
+        className={cn(
+          showConversionButton && "pr-28",
+          restOfInputProps.className,
+        )}
       />
-      {(formValue.includes(".") || formValue.includes(",")) && (
-        <InputRightElement width="auto" px={1}>
+      {showConversionButton && (
+        <div className="absolute inset-y-0 right-0 flex items-center pr-1">
           <Button variant="ghost" size="sm" onClick={handleConversion}>
             Convert to WEI
           </Button>
-        </InputRightElement>
+        </div>
       )}
-    </InputGroup>
+    </div>
   );
 };
