@@ -3,6 +3,7 @@ type ErrorCode =
   | "ROUTE_NOT_FOUND"
   | "AMOUNT_TOO_LOW"
   | "AMOUNT_TOO_HIGH"
+  | "INTERNAL_SERVER_ERROR"
   | "UNKNOWN_ERROR";
 
 export class ApiError extends Error {
