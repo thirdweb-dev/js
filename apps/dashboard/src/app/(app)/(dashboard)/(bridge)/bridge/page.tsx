@@ -37,7 +37,7 @@ export default async function RoutesPage({
         className="-bottom-12 -right-12 pointer-events-none absolute lg:right-0 lg:bottom-0"
       />
 
-      <div className="absolute bottom-24 inset-x-0 z-20">
+      <div className="absolute inset-x-0 bottom-24 z-20">
         <div className="container mx-auto px-4">
           <div className="relative overflow-hidden rounded-lg border-2 border-green-500/20 bg-gradient-to-br from-card/80 to-card/50 p-4 shadow-[inset_0_1px_2px_0_rgba(0,0,0,0.02)]">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
