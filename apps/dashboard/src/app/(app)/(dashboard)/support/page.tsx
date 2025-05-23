@@ -119,10 +119,11 @@ const HELP_PRODUCTS = [
 ] as const;
 
 export const siwaExamplePrompts = [
-  "I see thirdweb support reference # in my console log please help me",
-  "What does this contract revert error mean",
-  "I want to add inapp wallet with sign in with X/twitter auth to my react app",
-  "Here is my code can you tell me why i'm seeing this error",
+  "How do I add in-app wallet with sign in with google to my react app?",
+  "How do I send a transaction in Unity?",
+  "What does this contract revert error mean?",
+  "I see thirdweb support id in my console log, can you help me?",
+  "Here is my code, can you tell me why I'm seeing this error?",
 ];
 
 export default async function SupportPage() {
@@ -159,10 +160,7 @@ export default async function SupportPage() {
                 isFloating={false}
                 pageType="support"
                 label="Ask AI for support"
-                examplePrompts={examplePrompts.map((prompt) => ({
-                  title: prompt,
-                  message: prompt,
-                }))}
+                examplePrompts={siwaExamplePrompts}
                 authToken={authToken || undefined}
                 teamId={teamId}
                 clientId={undefined}
