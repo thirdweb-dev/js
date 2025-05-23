@@ -45,7 +45,7 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
-import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 import {
   LAST_USED_PROJECT_ID,
   LAST_USED_TEAM_ID,

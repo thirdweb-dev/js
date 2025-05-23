@@ -30,7 +30,7 @@ import { toast } from "sonner";
 import { type ThirdwebClient, getAddress, isAddress } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { z } from "zod";
-import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 
 type ImportModalProps = {
   isOpen: boolean;

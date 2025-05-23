@@ -25,7 +25,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Chain, ThirdwebClient } from "thirdweb";
-import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 
