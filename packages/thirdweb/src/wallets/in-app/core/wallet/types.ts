@@ -83,6 +83,11 @@ export type InAppWalletCreationOptions =
          * The default country code to use for SMS authentication
          */
         defaultSmsCountryCode?: SupportedSmsCountry;
+
+        /**
+         * The list of allowed country codes to display in the country selector
+         */
+        allowedSmsCountryCodes?: SupportedSmsCountry[];
       };
       /**
        * Metadata to display in the Connect Modal

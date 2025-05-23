@@ -451,6 +451,9 @@ export const ConnectWalletSocialOptions = (
             defaultSmsCountryCode={
               wallet.getConfig()?.auth?.defaultSmsCountryCode
             }
+            allowedSmsCountryCodes={
+              wallet.getConfig()?.auth?.allowedSmsCountryCodes
+            }
           />
         ) : (
           <WalletTypeRowButton

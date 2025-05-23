@@ -21,19 +21,26 @@ export function getCountrySelector(countryIsoCode: SupportedSmsCountry) {
 export function CountrySelector({
   countryCode,
   setCountryCode,
+  allowedCountryCodes,
 }: {
   countryCode: string;
   setCountryCode: React.Dispatch<React.SetStateAction<string>>;
+  allowedCountryCodes?: SupportedSmsCountry[];
 }) {
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const supportedCountriesForSms = supportedSmsCountries ?? [
-    {
-      countryIsoCode: "US",
-      countryName: "United States",
-      phoneNumberCode: 1,
-    },
-  ];
+  const supportedCountriesForSms =
+    allowedCountryCodes && allowedCountryCodes.length > 0
+      ? supportedSmsCountries.filter((c) =>
+          allowedCountryCodes.includes(c.countryIsoCode as SupportedSmsCountry),
+        )
+      : (supportedSmsCountries ?? [
+          {
+            countryIsoCode: "US",
+            countryName: "United States",
+            phoneNumberCode: 1,
+          },
+        ]);
 
   return (
     <>

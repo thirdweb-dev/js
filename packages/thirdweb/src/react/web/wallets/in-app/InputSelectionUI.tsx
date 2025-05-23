@@ -24,11 +24,16 @@ export function InputSelectionUI(props: {
   format?: "phone";
   disabled?: boolean;
   defaultSmsCountryCode?: SupportedSmsCountry;
+  allowedSmsCountryCodes?: SupportedSmsCountry[];
 }) {
   const [countryCodeInfo, setCountryCodeInfo] = useState(
     props.defaultSmsCountryCode
       ? getCountrySelector(props.defaultSmsCountryCode)
-      : "US +1",
+      : props.allowedSmsCountryCodes &&
+          props.allowedSmsCountryCodes.length > 0 &&
+          props.allowedSmsCountryCodes[0]
+        ? getCountrySelector(props.allowedSmsCountryCodes[0])
+        : "US +1",
   );
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | undefined>();
@@ -69,6 +74,7 @@ export function InputSelectionUI(props: {
           <CountrySelector
             countryCode={countryCodeInfo}
             setCountryCode={setCountryCodeInfo}
+            allowedCountryCodes={props.allowedSmsCountryCodes}
           />
         )}
         <Input
