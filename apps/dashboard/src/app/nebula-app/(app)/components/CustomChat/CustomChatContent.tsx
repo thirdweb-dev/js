@@ -158,7 +158,6 @@ function CustomChatContentLoggedIn(props: {
         />
       ) : (
         <Chats
-          teamId={props.teamId}
           messages={messages}
           isChatStreaming={isChatStreaming}
           authToken={props.authToken}

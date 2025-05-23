@@ -202,7 +202,6 @@ function FloatingChatContentLoggedIn(props: {
         />
       ) : (
         <Chats
-          teamId={undefined}
           messages={messages}
           isChatStreaming={isChatStreaming}
           authToken={props.authToken}
