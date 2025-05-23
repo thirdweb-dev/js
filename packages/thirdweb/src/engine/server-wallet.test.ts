@@ -3,13 +3,14 @@ import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { typedData } from "../../test/src/typed-data.js";
 import { arbitrumSepolia } from "../chains/chain-definitions/arbitrum-sepolia.js";
+import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import { getContract } from "../contract/contract.js";
 import { setContractURI } from "../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
+import { mintTo } from "../extensions/erc20/write/mintTo.js";
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
-import { setThirdwebDomains } from "../utils/domains.js";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   ENTRYPOINT_ADDRESS_v0_6,
@@ -32,12 +33,12 @@ describe.runIf(
     let serverWallet: Engine.ServerWallet;
 
     beforeAll(async () => {
-      setThirdwebDomains({
-        rpc: "rpc.thirdweb-dev.com",
-        storage: "storage.thirdweb-dev.com",
-        bundler: "bundler.thirdweb-dev.com",
-        engineCloud: "engine.thirdweb-dev.com",
-      });
+      // setThirdwebDomains({
+      //   rpc: "rpc.thirdweb-dev.com",
+      //   storage: "storage.thirdweb-dev.com",
+      //   bundler: "bundler.thirdweb-dev.com",
+      //   engineCloud: "engine.thirdweb-dev.com",
+      // });
       serverWallet = Engine.serverWallet({
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
@@ -81,7 +82,7 @@ describe.runIf(
       });
       const claimTx = claimTo({
         contract: nftContract,
-        to: TEST_ACCOUNT_B.address,
+        to: serverWallet.address,
         tokenId: 0n,
         quantity: 1n,
       });
@@ -97,16 +98,15 @@ describe.runIf(
     });
 
     it("should send a extension tx", async () => {
-      const nftContract = getContract({
+      const tokenContract = getContract({
         client: TEST_CLIENT,
-        chain: sepolia,
-        address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+        chain: baseSepolia,
+        address: "0x87C52295891f208459F334975a3beE198fE75244",
       });
-      const claimTx = claimTo({
-        contract: nftContract,
-        to: TEST_ACCOUNT_B.address,
-        tokenId: 0n,
-        quantity: 1n,
+      const claimTx = mintTo({
+        contract: tokenContract,
+        to: serverWallet.address,
+        amount: "0.001",
       });
       const tx = await sendTransaction({
         account: serverWallet,
